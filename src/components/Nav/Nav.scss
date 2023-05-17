@@ -1,0 +1,12 @@
+.nav {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+  gap: 0.5em;
+
+  .main-title {
+    font-weight: 600;
+  }
+
+  border-bottom: 1px solid lightgray;
+}
