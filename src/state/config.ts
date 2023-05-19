@@ -5,6 +5,11 @@ const profiles = atom<Array<any>>({
   default: [],
 })
 
+const userValues = atom<Array<{field: string, value: string}>>({
+  key: 'config.userValues',
+  default: [],
+})
+
 const startingPoints = atom<Array<any>>({
   key: 'config.startingPoints',
   default: [],
@@ -13,4 +18,5 @@ const startingPoints = atom<Array<any>>({
 export default {
   profiles,
   startingPoints,
+  userValues
 }
