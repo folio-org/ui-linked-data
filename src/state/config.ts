@@ -10,8 +10,6 @@ const startingPoints = atom<Array<any>>({
   default: [],
 })
 
-// const profilesToShow = atom<Array<string>>({})
-
 export default {
   profiles,
   startingPoints,
