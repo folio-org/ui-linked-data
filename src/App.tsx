@@ -1,21 +1,29 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { FC } from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Edit, Load, Main } from './views'
 import { Nav } from './components/Nav/Nav'
 import { RecoilRoot } from 'recoil'
 
-function App() {
+import './App.scss'
+
+type IApp = {
+  // pass base URIs from the wrapper as props here?
+  routePrefix?: string,
+}
+
+export const App: FC<IApp> = ({
+  routePrefix = ''
+}) => {
   return (
     <RecoilRoot>
-      <BrowserRouter>
+      <BrowserRouter basename={routePrefix}>
         <Nav />
-        <Routes>
-          <Route path='/edit' element={<Edit />} />
-          <Route path='/load' element={<Load />} />
-          <Route path='/' element={<Main />} />
-        </Routes>
+        <Switch>
+          <Route path='/edit' component={Edit} />
+          <Route path='/load' component={Load} />
+          <Route path='' component={Main} />
+        </Switch>
       </BrowserRouter>
     </RecoilRoot>
   )
 }
-
-export default App
