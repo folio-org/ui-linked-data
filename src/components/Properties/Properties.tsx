@@ -20,24 +20,16 @@ export const Properties = () => {
 
       let ul;
       if (els.length > 0){
-        const lis = els.flat().map(el => <li style={{
-          marginLeft: 20
-        }}>{el}</li>)
+        const lis = els.flat().map(el => <li className="property-subitem">{el}</li>)
 
-        ul = <ul  style={{borderTop: '1px solid #000'}} key={e.id}>{ lis }</ul>
+        ul = <ul className="property-subitems" key={e.id}>{ lis }</ul>
       }
       return (
       <li 
-        style={{
-          border: '1px solid #000',
-          marginBottom: 10,
-          marginTop: 10
-        }}
+        className="property"
         key={e.id}
       >
-        <span style={{
-          padding: 5
-        }}>
+        <span>
           {e.propertyLabel}
           </span>
         {ul}

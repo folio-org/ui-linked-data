@@ -18,7 +18,7 @@ export const PropertyTemplate: FC<PropertyTemplateProps> = ({
   }
 
   if (entry.type === 'literal') return (
-    <div className="input-wrapper" style={{padding: 10}}>
+    <div className="input-wrapper">
       <div>{entry.propertyLabel}</div>
       <Input
         placeholder={entry.propertyLabel}

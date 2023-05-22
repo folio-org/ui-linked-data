@@ -1,5 +1,6 @@
 import { useRecoilValue } from "recoil"
 import state from "../../state/state"
+import "./Preview.scss"
 
 export const Preview = () => {
   const profiles = useRecoilValue(state.config.profiles)
@@ -35,9 +36,7 @@ export const Preview = () => {
   }
 
   return (
-    <div style={{
-      minWidth: '15em'
-    }}>
+    <div className="preview-panel">
       <div>Preview pane</div>
       {
         userValues.map(val => Boolean(val.value) && <div>

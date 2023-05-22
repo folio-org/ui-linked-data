@@ -10,3 +10,21 @@
     min-width: 10em;
   }
 }
+
+.property{
+  border: 1px solid #000;
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  span {
+    padding: 5px;
+  }
+}
+
+.property-subitems {
+  border-top: 1px solid #000;
+}
+
+.property-subitem{
+  margin-left: 20px;
+}
