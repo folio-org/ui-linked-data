@@ -24,9 +24,12 @@ type PropertyTemplate = Omit<CommonParams, 'contact'> & {
   repeatable: boolean,
   type: string | URL, // "literal" | "resource"
   valueConstraint: ValueConstraint,
+}
+
+type PropertyTemplateUserValue = PropertyTemplate & {
   userValue?: {
     '@type': URL,
-    '@value': string
+    '@value': string | undefined
   }
 }
 
