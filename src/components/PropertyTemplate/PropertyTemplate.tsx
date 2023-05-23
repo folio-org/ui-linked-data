@@ -12,7 +12,7 @@ type PropertyTemplateProps = {
 export const PropertyTemplate: FC<PropertyTemplateProps> = ({
   entry
 }) => {
-  const setUserValue = useSetRecoilState(state.config.userValues);
+  const setUserValue = useSetRecoilState(state.inputs.userValues);
   const replaceItemAtIndex = (arr, index, newValue) => {
     return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
   }

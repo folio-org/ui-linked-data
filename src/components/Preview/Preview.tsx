@@ -4,7 +4,7 @@ import "./Preview.scss"
 
 export const Preview = () => {
   const profiles = useRecoilValue(state.config.profiles)
-  const userValues = useRecoilValue(state.config.userValues)
+  const userValues = useRecoilValue(state.inputs.userValues)
   const generateJsonFor = (propertyTemplates: PropertyTemplateUserValue[]) => {
       const labels = userValues.map(uv => uv.field);
       return propertyTemplates.reduce<PropertyTemplateUserValue[]>((arr, val) => {
