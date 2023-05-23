@@ -8,8 +8,8 @@ export const Properties = () => {
   ?.find((i) => i.name === "BIBFRAME 2.0 Monograph")
   ?.json["Profile"]
 
-  const renderData = (data) => {
-    return data?.map((e: PropertyTemplate) => {
+  const renderData = (data: PropertyTemplate[]) => {
+    return data?.map((e: PropertyTemplate, index) => {
       const els = [];
 
       if (e.valueConstraint.valueTemplateRefs.length > 0){
@@ -20,14 +20,14 @@ export const Properties = () => {
 
       let ul;
       if (els.length > 0){
-        const lis = els.flat().map(el => <li className="property-subitem">{el}</li>)
+        const lis = els.flat().map(el => <li key={el} className="property-subitem">{el}</li>)
 
         ul = <ul className="property-subitems" key={e.id}>{ lis }</ul>
       }
       return (
       <li 
         className="property"
-        key={e.id}
+        key={index}
       >
         <span>
           {e.propertyLabel}
@@ -48,8 +48,8 @@ export const Properties = () => {
       <div>BIBFRAME (Monograph) Profiles:</div>
       <ul>
         {
-          profiles.length && aside.map(data => 
-            <div>
+          profiles.length && aside.map((data, index) => 
+            <div key={index}>
               {
                 renderData(data)
               }
