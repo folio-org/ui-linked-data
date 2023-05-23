@@ -17,7 +17,7 @@ export const EditSection = () => {
             .json["Profile"]
             .resourceTemplates[0]
             .propertyTemplates
-            .map((e: PropertyTemplate) => <PropertyTemplate entry={e} />)
+            .map((e: PropertyTemplate) => <PropertyTemplate key={e.propertyLabel} entry={e} />)
         }
         -------------
         {
@@ -26,7 +26,7 @@ export const EditSection = () => {
             .json["Profile"]
             .resourceTemplates[1]
             .propertyTemplates
-            .map((e: PropertyTemplate) => <PropertyTemplate entry={e} />)
+            .map((e: PropertyTemplate) => <PropertyTemplate key={e.propertyLabel} entry={e} />)
         }
       </div>
     </div>

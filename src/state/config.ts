@@ -12,5 +12,5 @@ const startingPoints = atom<Array<any>>({
 
 export default {
   profiles,
-  startingPoints,
+  startingPoints
 }

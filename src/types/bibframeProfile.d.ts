@@ -26,6 +26,13 @@ type PropertyTemplate = Omit<CommonParams, 'contact'> & {
   valueConstraint: ValueConstraint,
 }
 
+type PropertyTemplateUserValue = PropertyTemplate & {
+  userValue?: {
+    '@type': URL,
+    '@value': string | undefined
+  }
+}
+
 type ValueConstraint = {
   valueLanguage: string,
   languageURI: URL,
