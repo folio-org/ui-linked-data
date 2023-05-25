@@ -2,7 +2,7 @@ import { ChangeEvent, FC } from "react"
 import { Input } from "../Input/Input"
 import { useSetRecoilState } from "recoil"
 import state from "../../state/state"
-import { replaceItemAtIndex } from "../../utils"
+import { replaceItemAtIndex } from "../../helpers/common.helper"
 
 interface Props {
     label: string

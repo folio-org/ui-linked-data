@@ -3,7 +3,6 @@ import { FC, useState } from "react"
 import './PropertyTemplate.scss'
 
 import { getComponentType } from "./PropertyTemplate.utils"
-import { loadSimpleLookup } from "../../utils/network"
 
 import { LiteralField } from "../LiteralField/LiteralField"
 import { SimpleLookupField } from "../SimpleLookupField/SimpleLookupField";

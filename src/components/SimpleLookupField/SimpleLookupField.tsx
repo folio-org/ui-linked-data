@@ -1,7 +1,8 @@
 import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { aplhabeticSortLabel, loadSimpleLookup } from '../../utils';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../constants';
+import { aplhabeticSortLabel } from '../../helpers/common.helper';
+import { loadSimpleLookup } from '../../helpers/profile.helper';
 
 interface Props {
     uri: string;
