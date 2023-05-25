@@ -341,7 +341,3 @@ export const getComponentType = (propertyTemplate: PropertyTemplate): FieldType 
     })
     return type
 }
-
-export const replaceItemAtIndex = <T, K>(arr: T[], index: number, newValue: K) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-}
