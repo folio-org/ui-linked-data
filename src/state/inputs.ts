@@ -1,5 +1,5 @@
 import { atom } from 'recoil'
-const userValues = atom<Array<{field: string, value: string}>>({
+const userValues = atom<UserValue[]>({
     key: 'config.userValues',
     default: [],
 })
