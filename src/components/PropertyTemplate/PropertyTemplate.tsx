@@ -4,6 +4,7 @@ import { Input } from "../Input/Input"
 import './PropertyTemplate.scss'
 import { useSetRecoilState } from "recoil"
 import state from "../../state/state"
+import { getComponentType } from "./PropertyTemplate.utils"
 
 type PropertyTemplateProps = {
   entry: PropertyTemplate
@@ -15,9 +16,11 @@ export const PropertyTemplate: FC<PropertyTemplateProps> = ({
   const setUserValue = useSetRecoilState(state.inputs.userValues);
   const replaceItemAtIndex = (arr, index, newValue) => {
     return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+  const componentType = getComponentType(entry);
   }
 
-  if (entry.type === 'literal') return (
+  if (componentType === 'LITERAL') {
+    return (
     <div className="input-wrapper">
       <div>{entry.propertyLabel}</div>
       <Input
@@ -46,6 +49,8 @@ export const PropertyTemplate: FC<PropertyTemplateProps> = ({
     </div>
   )
 
+    )
+  }
   return null && (
     <div className="input-wrapper">
       <div>{entry.propertyLabel}</div>

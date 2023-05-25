@@ -18,7 +18,7 @@ type ResourceTemplate = CommonParams & {
 }
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
-  propertyURI: URL,
+  propertyURI: string,
   propertyLabel: string,
   mandatory: boolean,
   repeatable: boolean,
@@ -28,25 +28,27 @@ type PropertyTemplate = Omit<CommonParams, 'contact'> & {
 
 type PropertyTemplateUserValue = PropertyTemplate & {
   userValue?: {
-    '@type': URL,
+    '@type': string,
     '@value': string | undefined
   }
 }
 
 type ValueConstraint = {
   valueLanguage: string,
-  languageURI: URL,
+  languageURI: string,
   languageLabel: string,
   valueDataType: ValueDataType,
   valueTemplateRefs: Array<string>,
-  useValuesFrom: Array<URL>,
+  useValuesFrom: Array<string>,
   editable: boolean,
   remark: string,
 }
 
 type ValueDataType = {
-  dataTypeURI: URL,
+  dataTypeURI: string,
   dataTypeLabel: string,
   dataTypeLabelHint: string,
   remark: string,
 }
+
+type FieldType = "META" | "HIDE" | "REF" | "LITERAL" | "SIMPLE" | "COMPLEX";
