@@ -1,6 +1,8 @@
 // TODO: caching, abort controllers
 
-const BASE_PATH = localStorage.getItem('ok_url') 
+import { OKAPI_PREFIX } from "../constants/api.constants"
+
+const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) 
   // || .env declared  
   || 'http://localhost:8080'
 

@@ -1,10 +1,10 @@
-import { useRecoilState, useRecoilValue } from "recoil"
+import { useRecoilValue } from "recoil"
 import { postRecord } from "../../common/api/records.api"
 import state from "../../state/state"
 import "./Preview.scss"
 
 export const Preview = () => {
-  const [selectedProfile, ] = useRecoilState(state.config.selectedProfile)
+  const selectedProfile = useRecoilValue(state.config.selectedProfile)
   const userValues = useRecoilValue(state.inputs.userValues)
 
   const generateJsonFor = (propertyTemplates: PropertyTemplate[]) => {
@@ -36,13 +36,6 @@ export const Preview = () => {
     const workJson = generateJsonFor(workPropertyTemplate.propertyTemplates)
     const instanceJson = generateJsonFor(instancePropertyTemplate.propertyTemplates)
 
-    // const newJson = JSON.stringify([workJson, instanceJson])
-    // now merge them together
-    // ??
-    // console.log('ud', userValues)
-    // console.log('wj ij', [workJson, instanceJson])
-    // console.log('sel pr', selectedProfile)
-
     const recordEntry: RecordEntry = {
       graphName: String(Math.ceil(Math.random() * 100000)),
       configuration: {
@@ -70,7 +63,7 @@ export const Preview = () => {
         </div>)
       }
       <br />
-      <button onClick={generateJson}>Generate JSON</button>
+      <button onClick={generateJson}>Post Record</button>
     </div>
   )
 }

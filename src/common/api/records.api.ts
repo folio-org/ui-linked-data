@@ -1,4 +1,4 @@
-import { MAX_LIMIT } from "../constants/api.constants"
+import { MAX_LIMIT, OKAPI_PREFIX } from "../constants/api.constants"
 import baseApi from "./base.api"
 
 type GetRecord = {
@@ -11,8 +11,8 @@ type GetAllRecords = {
 }
 
 // this OR use recoil: arg -> state -> apply state -> call fetch -> set state
-const tenant = localStorage.getItem('ok_tenant') || ''
-const token = localStorage.getItem('ok_token') || ''
+const tenant = localStorage.getItem(`${OKAPI_PREFIX}_tenant`) || ''
+const token = localStorage.getItem(`${OKAPI_PREFIX}_token`) || ''
 
 const headers = tenant ? {
   'x-okapi-tenant': tenant,

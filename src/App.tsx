@@ -5,6 +5,7 @@ import { Nav } from './components/Nav/Nav'
 import { RecoilRoot } from 'recoil'
 
 import './App.scss'
+import { OKAPI_PREFIX } from './common/constants/api.constants'
 
 type Okapi = {
   token: string,
@@ -23,7 +24,7 @@ export const App: FC<IContainer> = ({
 }) => {
   if (okapi) {
     for (const [k, v] of Object.entries(okapi)) {
-      localStorage.setItem(`okapi_${k}`, v)
+      localStorage.setItem(`${OKAPI_PREFIX}_${k}`, v)
     }
   }
 
