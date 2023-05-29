@@ -6,14 +6,27 @@ import { RecoilRoot } from 'recoil'
 
 import './App.scss'
 
-type IApp = {
-  // pass base URIs from the wrapper as props here?
-  routePrefix?: string,
+type Okapi = {
+  token: string,
+  tenant: string,
+  url: string,
 }
 
-export const App: FC<IApp> = ({
-  routePrefix = ''
+type IContainer = {
+  routePrefix?: string,
+  okapi?: Okapi
+}
+
+export const App: FC<IContainer> = ({
+  routePrefix = '',
+  okapi,
 }) => {
+  if (okapi) {
+    for (const [k, v] of Object.entries(okapi)) {
+      localStorage.setItem(`okapi_${k}`, v)
+    }
+  }
+
   return (
     <RecoilRoot>
       <BrowserRouter basename={routePrefix}>

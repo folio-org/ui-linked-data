@@ -1,18 +1,21 @@
-import { useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { postRecord } from "../../common/api/records.api"
 import state from "../../state/state"
 import "./Preview.scss"
 
 export const Preview = () => {
-  const profiles = useRecoilValue(state.config.profiles)
+  const [selectedProfile, ] = useRecoilState(state.config.selectedProfile)
   const userValues = useRecoilValue(state.inputs.userValues)
-  const generateJsonFor = (propertyTemplates: PropertyTemplateUserValue[]) => {
+
+  const generateJsonFor = (propertyTemplates: PropertyTemplate[]) => {
       const labels = userValues.map(uv => uv.field);
-      return propertyTemplates.reduce<PropertyTemplateUserValue[]>((arr, val) => {
+      return propertyTemplates.reduce<PropertyTemplate[]>((arr, val) => {
         const v = {...val}
+
         if (labels.includes(val.propertyLabel)){
           v.userValue = {
             '@type': v.propertyURI,
-            '@value':  userValues.find(uv => uv.field === val.propertyLabel)?.value
+            '@value': userValues.find(uv => uv.field === val.propertyLabel)?.value
           }
         }
 
@@ -22,30 +25,52 @@ export const Preview = () => {
   }
 
   const generateJson = () => {
-    const profile = profiles
-    .find((i) => i.name === "BIBFRAME 2.0 Monograph")
-      .json["Profile"]
+    if (!selectedProfile) {
+      return
+    }
 
-    const workJson = generateJsonFor(profile.resourceTemplates[0].propertyTemplates)
-    const instanceJson = generateJsonFor(profile.resourceTemplates[1].propertyTemplates)
+    const [
+      workPropertyTemplate,
+      instancePropertyTemplate,
+    ] = selectedProfile.json["Profile"].resourceTemplates
+    const workJson = generateJsonFor(workPropertyTemplate.propertyTemplates)
+    const instanceJson = generateJsonFor(instancePropertyTemplate.propertyTemplates)
 
-    const newJson = JSON.stringify([workJson, instanceJson])
-    console.log(newJson)
+    // const newJson = JSON.stringify([workJson, instanceJson])
+    // now merge them together
+    // ??
+    // console.log('ud', userValues)
+    // console.log('wj ij', [workJson, instanceJson])
+    // console.log('sel pr', selectedProfile)
+
+    const recordEntry: RecordEntry = {
+      graphName: String(Math.ceil(Math.random() * 100000)),
+      configuration: {
+        instanceValues: instanceJson,
+        workValues: workJson,
+      }
+    }
+
+    postRecord(recordEntry)
+
+    // take selected profile
+    // insert workJson, instanceJson in their respectable positions in the selected ptofile
+    // post the selected profile with rt.pt inserted
 
     return
   }
 
   return (
     <div className="preview-panel">
-      <div>Preview pane</div>
+      <strong>Preview pane</strong>
       {
-        userValues.map(val => Boolean(val.value) && <div>
+        userValues.map((val, i) => Boolean(val.value) && <div key={i}>
           <div>{val.field}</div>
           <strong>{val.value}</strong>
         </div>)
       }
       <br />
-      <button onClick={generateJson}>Generate</button>
+      <button onClick={generateJson}>Generate JSON</button>
     </div>
   )
 }

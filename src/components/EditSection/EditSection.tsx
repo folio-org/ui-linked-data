@@ -5,30 +5,23 @@ import { PropertyTemplate } from "../PropertyTemplate/PropertyTemplate"
 import './EditSection.scss'
 
 export const EditSection = () => {
-  const profiles = useRecoilValue(state.config.profiles)
+  const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates
 
-  return (
-    <div>
-      <div style={{fontWeight: 'bold'}}>Edit pane</div>
+  return resourceTemplates ? (
+    <div className="edit-section">
       <div className="input-group">
         {
-          profiles.length > 0 && profiles
-            .find((i) => i.name === "BIBFRAME 2.0 Monograph")
-            .json["Profile"]
-            .resourceTemplates[0]
-            .propertyTemplates
+          resourceTemplates.find((i) => i.id === 'lc:RT:bf2:Monograph:Work')
+            ?.propertyTemplates
             .map((e: PropertyTemplate) => <PropertyTemplate key={e.propertyLabel} entry={e} />)
         }
-        -------------
+        <hr />
         {
-          profiles.length > 0 && profiles
-            .find((i) => i.name === "BIBFRAME 2.0 Monograph")
-            .json["Profile"]
-            .resourceTemplates[1]
-            .propertyTemplates
+          resourceTemplates.find((i) => i.id === 'lc:RT:bf2:Monograph:Instance')
+            ?.propertyTemplates
             .map((e: PropertyTemplate) => <PropertyTemplate key={e.propertyLabel} entry={e} />)
         }
       </div>
     </div>
-  )
+  ) : null
 }

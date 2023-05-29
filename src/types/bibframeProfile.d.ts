@@ -1,10 +1,11 @@
 type CommonParams = {
   id: string,
-  contact: string,
-  remark: string,
+  contact?: string,
+  remark?: string,
 }
 
 type BibframeProfile = CommonParams & {
+  author: string,
   title: string,
   description: string,
   date: string,
@@ -12,23 +13,20 @@ type BibframeProfile = CommonParams & {
 }
 
 type ResourceTemplate = CommonParams & {
-  resourceURI: URL,
+  resourceURI: URL | string,
   resourceLabel: string,
   propertyTemplates: Array<>,
 }
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
-  propertyURI: string,
+  propertyURI: URL | string,
   propertyLabel: string,
   mandatory: boolean,
   repeatable: boolean,
   type: string | URL, // "literal" | "resource"
   valueConstraint: ValueConstraint,
-}
-
-type PropertyTemplateUserValue = PropertyTemplate & {
   userValue?: {
-    '@type': URL,
+    '@type': URL | string,
     '@value': string | undefined
   }
 }
@@ -46,7 +44,7 @@ type ValueConstraint = {
   languageLabel: string,
   valueDataType: ValueDataType,
   valueTemplateRefs: Array<string>,
-  useValuesFrom: Array<string>,
+  useValuesFrom: Array<URL | string>,
   editable: boolean,
   remark: string,
 }
@@ -59,3 +57,29 @@ type ValueDataType = {
 }
 
 type FieldType = "META" | "HIDE" | "REF" | "LITERAL" | "SIMPLE" | "COMPLEX";
+type ProfileMetadata = {
+  createDate: string,
+  updateDate: string,
+  updateUser: string,
+}
+
+type ProfileEntry = {
+  configType: string,
+  created: string,
+  id: string,
+  json: {
+    Profile: BibframeProfile,
+  },
+  metadata: ProfileMetadata,
+  modified: string,
+  name: string,
+}
+
+type RecordEntry = {
+  id?: number,
+  graphName: string,
+  configuration: {
+    workValues: Array<PropertyTemplate>,
+    instanceValues: Array<PropertyTemplate>,
+  },
+}

@@ -2,6 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  overflow: hidden;
 
   a {
     font-weight: 500;
@@ -36,7 +37,6 @@
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.25s;
   }
@@ -48,6 +48,12 @@
     outline: 4px auto -webkit-focus-ring-color;
   }
   
+  hr {
+    width:100%;
+    text-align:left;
+    margin-left:0;
+  }
+
   @media (prefers-color-scheme: light) {
     :root {
       color: #213547;

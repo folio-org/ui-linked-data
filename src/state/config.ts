@@ -1,8 +1,13 @@
 import { atom } from 'recoil'
 
-const profiles = atom<Array<any>>({
+const profiles = atom<Array<ProfileEntry>>({
   key: 'config.profiles',
   default: [],
+})
+
+const selectedProfile = atom<ProfileEntry | null>({
+  key: 'config.selectedProfile',
+  default: null,
 })
 
 const startingPoints = atom<Array<any>>({
@@ -13,4 +18,5 @@ const startingPoints = atom<Array<any>>({
 export default {
   profiles,
   startingPoints,
+  selectedProfile,
 }
