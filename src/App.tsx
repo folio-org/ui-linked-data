@@ -5,15 +5,29 @@ import { Nav } from './components/Nav/Nav'
 import { RecoilRoot } from 'recoil'
 
 import './App.scss'
+import { OKAPI_PREFIX } from './common/constants/api.constants'
 
-type IApp = {
-  // pass base URIs from the wrapper as props here?
-  routePrefix?: string,
+type Okapi = {
+  token: string,
+  tenant: string,
+  url: string,
 }
 
-export const App: FC<IApp> = ({
-  routePrefix = ''
+type IContainer = {
+  routePrefix?: string,
+  okapi?: Okapi
+}
+
+export const App: FC<IContainer> = ({
+  routePrefix = '',
+  okapi,
 }) => {
+  if (okapi) {
+    for (const [k, v] of Object.entries(okapi)) {
+      localStorage.setItem(`${OKAPI_PREFIX}_${k}`, v)
+    }
+  }
+
   return (
     <RecoilRoot>
       <BrowserRouter basename={routePrefix}>

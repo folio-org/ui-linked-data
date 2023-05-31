@@ -1,5 +1,9 @@
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
+.edit-section {
+  margin-top: 2em;
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
 }

@@ -1,20 +1,23 @@
 import { useRecoilValue } from "recoil"
+import { RESOURCE_TEMPLATE_IDS } from "../../common/constants/bibframe.constants"
 import state from "../../state/state"
 import './Properties.scss'
 
 export const Properties = () => {
+  const selectedProfile = useRecoilValue(state.config.selectedProfile)
   const profiles = useRecoilValue(state.config.profiles)
-  const profile = profiles
-  ?.find((i) => i.name === "BIBFRAME 2.0 Monograph")
-  ?.json["Profile"]
+
+  if (!selectedProfile) {
+    return null
+  }
 
   const renderData = (data: PropertyTemplate[]) => {
     return data?.map((e: PropertyTemplate, index) => {
       const els = [];
 
-      if (e.valueConstraint.valueTemplateRefs.length > 0){
+      if (e.valueConstraint.valueTemplateRefs.length > 0) {
         const resourceTemplates = profiles.map(e=>e.json.Profile.resourceTemplates);
-        const data = e.valueConstraint.valueTemplateRefs.map(id => resourceTemplates.flat().find(el => el.id === id).resourceLabel)
+        const data = e.valueConstraint.valueTemplateRefs.map(id => resourceTemplates.flat().find(el => el.id === id)?.resourceLabel)
         els.push(data)
       }
 
@@ -39,25 +42,28 @@ export const Properties = () => {
   }
 
   const aside = [
-    profile?.resourceTemplates[0].propertyTemplates,
-    profile?.resourceTemplates[1].propertyTemplates
+    selectedProfile.json.Profile.resourceTemplates[0],
+    selectedProfile.json.Profile.resourceTemplates[1]
   ]
 
-  return (
+  return selectedProfile ? (
     <div className="properties">
-      <div>BIBFRAME (Monograph) Profiles:</div>
       <ul>
         {
-          profiles.length && aside.map((data, index) => 
+          aside.map((data: ResourceTemplate, index) => 
             <div key={index}>
+              <strong>
+                {
+                  RESOURCE_TEMPLATE_IDS[data.id]
+                }
+              </strong>
               {
-                renderData(data)
+                renderData(data.propertyTemplates)
               }
-              -----------------
             </div>
           )
       }
       </ul>
     </div>
-  )
+  ) : null
 }

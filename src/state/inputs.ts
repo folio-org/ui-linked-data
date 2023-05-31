@@ -4,7 +4,6 @@ const userValues = atom<UserValue[]>({
     default: [],
 })
 
-
 export default {
     userValues
 }
