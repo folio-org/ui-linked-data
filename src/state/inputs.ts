@@ -5,5 +5,5 @@ const userValues = atom<UserValue[]>({
 })
 
 export default {
-  userValues
+    userValues
 }
