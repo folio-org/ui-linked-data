@@ -1,9 +1,11 @@
 import { FC } from "react"
-import { Input } from "../Input/Input"
 
 import './PropertyTemplate.scss'
-import { useSetRecoilState } from "recoil"
-import state from "../../state/state"
+
+import { getComponentType } from "./PropertyTemplate.utils"
+
+import { LiteralField } from "../LiteralField/LiteralField"
+import { SimpleLookupField } from "../SimpleLookupField/SimpleLookupField";
 
 type PropertyTemplateProps = {
   entry: PropertyTemplate
@@ -12,44 +14,22 @@ type PropertyTemplateProps = {
 export const PropertyTemplate: FC<PropertyTemplateProps> = ({
   entry
 }) => {
-  const setUserValue = useSetRecoilState(state.inputs.userValues);
-  const replaceItemAtIndex = (arr, index, newValue) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+  const componentType = getComponentType(entry);
+
+  const fieldComponent = () => {
+    if (componentType === 'LITERAL') {
+      return <LiteralField label={entry.propertyLabel} />
+    } else if (componentType === 'SIMPLE') {
+      return <SimpleLookupField uri={entry.valueConstraint.useValuesFrom[0]} />
+    } else {
+      return null
+    }
   }
 
-  if (entry.type === 'literal') return (
+  return (
     <div className="input-wrapper">
       <div>{entry.propertyLabel}</div>
-      <Input
-        placeholder={entry.propertyLabel}
-        onChange={(v) => setUserValue((oldValue)=>{
-          const index = oldValue.findIndex(val => val.field === entry.propertyLabel)
-
-          const newValue = {
-            field: entry.propertyLabel,
-            value: v.target.value
-          }
-
-          if (index === -1){
-            return [
-              ...oldValue,
-              newValue
-            ]
-          }
-          
-          return replaceItemAtIndex(oldValue, index, newValue)
-        })}
-      />
-      {/* <div>
-        {JSON.stringify(entry)}
-      </div> */}
-    </div>
-  )
-
-  return null && (
-    <div className="input-wrapper">
-      <div>{entry.propertyLabel}</div>
-      <div>(complex)</div>
+      { fieldComponent() }
     </div>
   )
 }
