@@ -84,7 +84,8 @@ export default function useConfig() {
               name: resourceTemplate.resourceLabel,
               id: resourceTemplate.id,
               path: pathToField,
-              type: 'dropdownOption'
+              type: 'dropdownOption',
+              uri: resourceTemplate.resourceURI
             }) 
           }
 

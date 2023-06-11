@@ -26,6 +26,13 @@ export const fetchUserInputScheme = async () => {
           }
         }
       ],
+      "http://id.loc.gov/ontologies/bibframe/title": [
+        {
+          "id": "lc:RT:bf2:WorkTitle",
+          "uri": "http://id.loc.gov/ontologies/bibframe/Title",
+          "label": "Work Title"
+        }
+      ],
       "http://id.loc.gov/ontologies/bflc/governmentPubType": [
         {
           "id": null,

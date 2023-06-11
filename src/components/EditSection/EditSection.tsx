@@ -4,6 +4,7 @@ import { LiteralField } from "../LiteralField/LiteralField"
 
 import './EditSection.scss'
 import { replaceItemAtIndex } from "../../common/helpers/common.helper"
+import { DropdownField } from "../DropdownField/DropdownField"
 
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates
@@ -30,19 +31,42 @@ export const EditSection = () => {
     })
   }
 
-  const drawField = (group) => {
+  const drawField = (group: [string, RenderedField]) => {
     const data = group[1]
     const value = data.value
     return value?.map(field => {
       if (data.type === 'LITERAL'){
         return <LiteralField 
-          key={field.path}
-          label={data.name} 
+          key={field.uri}
+          label={data.name ?? ''} 
           id={data.path} 
           value={field} 
           onChange={changeValue}
         />
       } 
+
+      if (data.fields?.size && data.fields.size > 0) {
+        if (data.type === 'dropdown'){
+          const options = Array.from(data.fields.entries()).map(option => {
+            const { name, uri, id } = option[1]
+            return {
+              label: name ?? '',
+              value: uri ?? '',
+              uri: uri ?? '',
+              id: id,
+            }
+          })
+          return ( 
+            <DropdownField 
+              options={options}
+              name={data.name ?? ''}
+              id={data.path}
+              onChange={changeValue}
+              value={options.find(option => option.id === data.value?.[0])}
+            />
+          )
+        }
+      }
 
       return null
     })
@@ -52,7 +76,7 @@ export const EditSection = () => {
     <div className="edit-section">
       {
         Array.from(normalizedFields.entries()).map(block => {
-          return Array.from(block[1].fields?.entries())?.map((group) => {
+          return Array.from<[string, RenderedField]>(block[1].fields?.entries())?.map((group) => {
             return (
               <div className="group" key={group[1].name}>
                 <h3>{ group[1].name }</h3>
