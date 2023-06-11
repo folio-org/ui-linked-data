@@ -4,6 +4,12 @@ const userValues = atom<UserValue[]>({
     default: [],
 })
 
+const userInputScheme = atom<any>({
+    key: 'config.userInputScheme',
+    default: {}
+})
+
 export default {
-    userValues
+    userValues,
+    userInputScheme
 }
