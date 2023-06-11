@@ -54,6 +54,11 @@ export const Preview = () => {
 
   const componentsTree = getTransformedPreviewComponents(userValues);
 
+  const getTitleFromId = (fieldId: string) => {
+    const parts = fieldId.split('_')
+    return parts[parts.length - 1]
+  }
+
   return (
     <div className="preview-panel">
       <strong>Preview pane</strong>

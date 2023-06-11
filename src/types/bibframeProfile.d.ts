@@ -83,3 +83,7 @@ type RecordEntry = {
 interface PreparedFields {
   [key: string]: ResourceTemplate;
 }
+
+interface PreparedFields { 
+  [key: string]: ResourceTemplate 
+}

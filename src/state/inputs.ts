@@ -9,6 +9,11 @@ const userInputScheme = atom<Record<string, any>>({
   default: {},
 });
 
+const userInputScheme = atom<any>({
+    key: 'config.userInputScheme',
+    default: {}
+})
+
 export default {
   userValues,
   userInputScheme,
