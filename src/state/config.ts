@@ -15,8 +15,13 @@ const startingPoints = atom<Array<any>>({
   default: [],
 })
 
+const preparedFields = atom<PreparedFields>({
+  key: 'config.preparedFields',
+  default: {},
+})
 export default {
   profiles,
   startingPoints,
   selectedProfile,
+  preparedFields,
 }

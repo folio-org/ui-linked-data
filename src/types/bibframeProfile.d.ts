@@ -15,7 +15,7 @@ type BibframeProfile = CommonParams & {
 type ResourceTemplate = CommonParams & {
   resourceURI: URL | string,
   resourceLabel: string,
-  propertyTemplates: Array<>,
+  propertyTemplates: PropertyTemplate[],
 }
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
@@ -78,4 +78,8 @@ type RecordEntry = {
     workValues: Array<PropertyTemplate>,
     instanceValues: Array<PropertyTemplate>,
   },
+}
+
+interface PreparedFields { 
+  [key: string]: ResourceTemplate 
 }
