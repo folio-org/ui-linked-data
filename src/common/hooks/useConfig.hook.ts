@@ -39,7 +39,7 @@ export default function useConfig() {
     level: number,
     json?: any
   ) => {
-    const pathToField = `${path}_${propertyTemplate.propertyLabel}`
+    let pathToField = `${path}_${propertyTemplate.propertyLabel}`
     const fieldType = getComponentType(propertyTemplate)
     const groupMap: RenderedFieldMap = parent.get(propertyTemplate.propertyURI)?.fields ?? new Map()
     const groupJson = json?.[propertyTemplate.propertyURI]
@@ -54,13 +54,46 @@ export default function useConfig() {
     }
 
     if (fieldType === 'LITERAL'){
-      return parent.set(propertyTemplate.propertyURI, {
+      parent.set(propertyTemplate.propertyURI, {
         type: fieldType,
         path: pathToField,
         name: propertyTemplate.propertyLabel,
         uri: propertyTemplate.valueConstraint?.useValuesFrom[0],
         value: groupJson
       })
+    } else if (fieldType === 'REF'){
+      // Dropdown
+      if (propertyTemplate.valueConstraint.valueTemplateRefs.length > 1){
+        const options = propertyTemplate.valueConstraint.valueTemplateRefs;
+        parent.set(propertyTemplate.propertyURI, {
+          type: 'dropdown',
+          path: pathToField,
+          fields: groupMap,
+          name: propertyTemplate.propertyLabel,
+          value: [groupJson?.[0].id] // Dropdown always has only one answer
+        })
+
+        options.forEach((ref)=>{
+          const resourceTemplate = fields[ref]
+          pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`
+          const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map()
+          
+          if (fieldsMap.size === 0) {
+            groupMap.set?.(resourceTemplate.resourceURI, {
+              fields: fieldsMap,
+              name: resourceTemplate.resourceLabel,
+              id: resourceTemplate.id,
+              path: pathToField,
+              type: 'dropdownOption'
+            }) 
+          }
+
+          resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
+            // Option has no value, only parent dropdown has this one, so json argument is undefined
+            parseField(optionPropertyTemplate, fields, fieldsMap, pathToField, level + 1, undefined)
+          })
+        })
+      }
     }
   }
 

@@ -5,7 +5,7 @@ interface UserValue {
 
 type RenderedFieldMap = Map<string, RenderedField>
 
-type FieldRenderType = FieldType | 'block' | 'group'
+type FieldRenderType = FieldType | 'block' | 'group' | 'hidden' | 'dropdown' | 'dropdownOption'
 type RenderedFieldValue = {
     id?: Nullable<string>,
     label?: string,
@@ -17,5 +17,6 @@ type RenderedField = {
   path: string,
   name?: string,
   uri?: string,
-  value?: RenderedFieldValue[]
+  value?: RenderedFieldValue[],
+  id?: string
 }
