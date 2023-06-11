@@ -3,22 +3,6 @@ import state from '../../state/state'
 import { fetchProfiles, fetchStartingPoints, fetchUserInputScheme } from '../api/profiles.api'
 import { getComponentType } from '../helpers/common.helper'
 
-type RenderedFieldMap = Map<string, RenderedField>
-
-type FieldRenderType = FieldType | 'block' | 'group'
-type RenderedField = {
-  type: FieldRenderType,
-  fields?: RenderedFieldMap,
-  path: string,
-  name?: string,
-  uri?: string,
-  value?: {
-    id?: string,
-    label?: string,
-    uri?: string,
-  }[]
-}
-
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles)
   const setStartingPoints = useSetRecoilState(state.config.startingPoints)
