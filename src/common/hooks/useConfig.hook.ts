@@ -1,6 +1,8 @@
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import state from '../../state/state'
 import { fetchProfiles, fetchStartingPoints, fetchUserInputScheme } from '../api/profiles.api'
+import { getComponentType } from '../helpers/common.helper'
+
 type RenderedFieldMap = Map<string, RenderedField>
 
 type FieldRenderType = FieldType | 'block' | 'group'
@@ -45,6 +47,39 @@ export default function useConfig() {
     return preparedFields
   }
 
+  const parseField = (
+    propertyTemplate: PropertyTemplate, 
+    fields: PreparedFields, 
+    parent: RenderedFieldMap, 
+    path: string, 
+    level: number,
+    json?: any
+  ) => {
+    const pathToField = `${path}_${propertyTemplate.propertyLabel}`
+    const fieldType = getComponentType(propertyTemplate)
+    const groupMap: RenderedFieldMap = parent.get(propertyTemplate.propertyURI)?.fields ?? new Map()
+    const groupJson = json?.[propertyTemplate.propertyURI]
+
+    if (!groupMap.size) {
+      parent.set(propertyTemplate.propertyURI, {
+        type: level === 1 ? 'group' : (fieldType ?? 'UNKNOWN'),
+        path: pathToField,
+        fields: groupMap,
+        name: propertyTemplate.propertyLabel,
+      })
+    }
+
+    if (fieldType === 'LITERAL'){
+      return parent.set(propertyTemplate.propertyURI, {
+        type: fieldType,
+        path: pathToField,
+        name: propertyTemplate.propertyLabel,
+        uri: propertyTemplate.valueConstraint?.useValuesFrom[0],
+        value: groupJson
+      })
+    }
+  }
+
   const parseUserInputScheme = (scheme: any, fields: PreparedFields): void => {
     // Going through all block that we need to render (work, instance, item)
     const blocksIds: [string, string][] = [
@@ -69,7 +104,7 @@ export default function useConfig() {
       })
       
       block.propertyTemplates.forEach(propertyTemplate => {
-        // TODO: Parsing an each field
+        parseField(propertyTemplate, fields, blockMap, block.resourceLabel, 1, blockJson)
       })
     })
 
