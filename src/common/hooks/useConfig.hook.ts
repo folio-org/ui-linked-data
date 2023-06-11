@@ -53,7 +53,7 @@ export default function useConfig() {
       })
     }
 
-    if (fieldType === 'LITERAL'){
+    if (fieldType === 'LITERAL' || fieldType === 'SIMPLE'){
       parent.set(propertyTemplate.propertyURI, {
         type: fieldType,
         path: pathToField,

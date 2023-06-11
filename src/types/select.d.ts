@@ -11,8 +11,11 @@ interface ReactMultiselectOption {
 }
 
 interface MultiselectOption { 
-    label: string 
+    label: string,
+    __isNew__?: boolean,
     value: {
-        [key: string]: unknown
+        id?: string
+        label: string
+        uri?: Nullable<string>
     }
 }

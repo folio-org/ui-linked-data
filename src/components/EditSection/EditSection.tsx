@@ -5,6 +5,7 @@ import { LiteralField } from "../LiteralField/LiteralField"
 import './EditSection.scss'
 import { replaceItemAtIndex } from "../../common/helpers/common.helper"
 import { DropdownField } from "../DropdownField/DropdownField"
+import { SimpleLookupField } from "../SimpleLookupField/SimpleLookupField"
 
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates
@@ -12,12 +13,12 @@ export const EditSection = () => {
 
   const setUserValue = useSetRecoilState(state.inputs.userValues);
 
-  const changeValue = (value: RenderedFieldValue, fieldId: string) => {
+  const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string) => {
     return setUserValue((oldValue)=>{
         const index = oldValue.findIndex(val => val.field === fieldId)
         const newValue = {
             field: fieldId,
-            value: [value]
+            value: value instanceof Array ? value : [value]
         }
 
         if (index === -1){
@@ -34,6 +35,20 @@ export const EditSection = () => {
   const drawField = (group: [string, RenderedField]) => {
     const data = group[1]
     const value = data.value
+
+    if (group[1].type === 'SIMPLE' ) {
+      return (
+        <SimpleLookupField 
+          label={group[1].name ?? ''} 
+          uri={group[1].uri ?? ''} 
+          id={group[1].path ?? ''} 
+          value={group[1].value ?? []} 
+          onChange={changeValue}
+          key={group[1].path}
+        /> 
+      )
+    }
+
     return value?.map(field => {
       if (data.type === 'LITERAL'){
         return <LiteralField 
@@ -63,6 +78,7 @@ export const EditSection = () => {
               id={data.path}
               onChange={changeValue}
               value={options.find(option => option.id === data.value?.[0])}
+              key={group[1].path}
             />
           )
         }
