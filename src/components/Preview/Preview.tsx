@@ -53,13 +53,31 @@ export const Preview = () => {
     return
   }
 
+  const getTitleFromId = (fieldId: string) => {
+    const parts = fieldId.split('_')
+    return parts[parts.length - 1]
+  }
+
   return (
     <div className="preview-panel">
       <strong>Preview pane</strong>
-      {
-        userValues.map((val, i) => Boolean(val.value) && <div key={i}>
-          <div>{val.field}</div>
-          <strong>{val.value}</strong>
+    { 
+        userValues.map((userInput, i) => userInput.value?.length > 0 && <div key={i} className="preview-block">
+          <strong>{getTitleFromId(userInput.field)}</strong>
+          {
+            userInput.value?.map((val) => {
+              if (val.uri) {
+                return (
+                  <div key={val.uri}>
+                    <a href={val.uri} target="__blank">{val.label}</a>
+                  </div>
+                )
+              }
+              return (
+                <div key={val.uri}>{val.label}</div>
+            )})
+          }
+          
         </div>)
       }
       <br />
