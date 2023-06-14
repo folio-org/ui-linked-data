@@ -8,18 +8,19 @@ export const Preview = () => {
   const userValues = useRecoilValue(state.inputs.userValues)
 
   const generateJsonFor = (propertyTemplates: PropertyTemplate[]) => {
-      const labels = userValues.map(uv => uv.field);
-      return propertyTemplates.reduce<PropertyTemplate[]>((arr, val) => {
-        const v = {...val}
+      const labels = userValues.map(({field}) => field);
+      return propertyTemplates.reduce<PropertyTemplate[]>((arr, currentValue) => {
+        const updatedValue = {...currentValue}
 
-        if (labels.includes(val.propertyLabel)){
-          v.userValue = {
-            '@type': v.propertyURI,
-            '@value': userValues.find(uv => uv.field === val.propertyLabel)?.value
+        if (labels.includes(currentValue.propertyLabel)){
+          updatedValue.userValue = {
+            '@type': updatedValue.propertyURI,
+            '@value': userValues.find(({field}) => field === currentValue.propertyLabel)?.value
           }
         }
 
-        arr.push(v)
+        arr.push(updatedValue)
+        
         return arr
       }, [])
   }
@@ -62,20 +63,16 @@ export const Preview = () => {
     <div className="preview-panel">
       <strong>Preview pane</strong>
     { 
-        userValues.map((userInput, i) => userInput.value?.length > 0 && <div key={i} className="preview-block">
-          <strong>{getTitleFromId(userInput.field)}</strong>
+        userValues.map(({value, field}) => value?.length > 0 && <div key={field} className="preview-block">
+          <strong>{getTitleFromId(field)}</strong>
           {
-            userInput.value?.map((val) => {
-              if (val.uri) {
-                return (
-                  <div key={val.uri}>
-                    <a href={val.uri} target="__blank">{val.label}</a>
+            value?.map(({uri, label}) => (
+              uri ? (
+                  <div key={uri}>
+                    <a href={uri} target="__blank">{label}</a>
                   </div>
-                )
-              }
-              return (
-                <div key={val.uri}>{val.label}</div>
-            )})
+              ) : <div key={uri}>{label}</div>
+            ))
           }
           
         </div>)

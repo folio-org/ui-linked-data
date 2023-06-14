@@ -12,16 +12,18 @@ interface Props {
     onChange: (value: RenderedFieldValue[], fieldId: string) => void,
 }
 
+const generateDefaultValue = (fieldValue: RenderedFieldValue[]) => fieldValue?.map(({label, id, uri}) => ({
+    label: label ?? '',
+    value: {
+        id: id ?? '',
+        label: label ?? '',
+        uri: uri,
+    }
+}))
+
 export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }) => {
     const [options, setOptions] = useState<MultiselectOption[]>([])
-    const [localValue, setLocalValue] = useState<MultiselectOption[]>(value?.map((v) => ({
-        label: v.label ?? '',
-        value: {
-            id: v.id ?? '',
-            label: v.label ?? '',
-            uri: v.uri,
-        }
-    })))
+    const [localValue, setLocalValue] = useState<MultiselectOption[]>(generateDefaultValue(value))
 
     const getOptions = (data: LoadSimpleLookupResponseItem[], parentURI?: string): MultiselectOption[] => {
         const options = data.filter((dataItem)=>{
@@ -52,41 +54,35 @@ export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }
         setOptions(optionsForDisplay)
     }
 
-    const getOptionLabel = (option: ReactMultiselectOption): string => {
-        if (option.__isNew__){
-          return `${option.label} (uncontrolled)`;
-        } else {
-          return option.label
-        }
-    }
+    const getOptionLabel = (option: ReactMultiselectOption): string => option.__isNew__ 
+        ? `${option.label} (uncontrolled)` 
+        :  option.label
 
     const handleOnChange = (options: MultiselectOption[]) => {
-        const newValue = options.map<RenderedFieldValue>(e => ({
+        const newValue = options.map<RenderedFieldValue>(({value}) => ({
             id: null,
-            uri: e.value?.uri,
-            label: e.value.label
+            uri: value?.uri,
+            label: value.label
         }))
 
         onChange(newValue, id)
         setLocalValue(options)
     }
 
-    const getNewOptionData = (inputValue: string) => {
-        console.log(inputValue)
-
-        return {
+    const getNewOptionData = (inputValue: string) => ({
+        label: inputValue,
+        value: {
+            uri: null,
             label: inputValue,
-            value: {
-                uri: null,
-                label: inputValue,
-            },
-            __isNew__: true
-        }
-    }
+        },
+        __isNew__: true
+    })
 
     useEffect(()=>{
         if (value){
             loadOptions()
+
+            // ToDo: workaround for setting a default value and should be re-written.
             handleOnChange(localValue)
         }
 

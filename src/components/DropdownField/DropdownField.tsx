@@ -23,6 +23,7 @@ export const DropdownField: FC<Props> = ({ options, name, id, onChange, value })
     }
 
     useEffect(()=>{
+        // ToDo: workaround for setting a default value and should be re-written.
         if (value) {
             onChange({
                 uri: value.uri,
