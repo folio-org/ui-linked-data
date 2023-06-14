@@ -32,37 +32,36 @@ export const EditSection = () => {
     })
   }
 
-  const drawField = (group: [string, RenderedField]) => {
-    const data = group[1]
-    const value = data.value
+  const drawField = (group: RenderedField) => {
+    const value = group.value
 
-    if (group[1].type === FieldType.SIMPLE) {
+    if (group.type === FieldType.SIMPLE) {
       return (
         <SimpleLookupField
-          label={data.name ?? ''} 
-          uri={data.uri ?? ''} 
-          id={data.path ?? ''} 
-          value={data.value ?? []} 
+          label={group.name ?? ''} 
+          uri={group.uri ?? ''} 
+          id={group.path ?? ''} 
+          value={value ?? []} 
           onChange={changeValue}
-          key={data.path}
+          key={group.path}
         /> 
       )
     }
 
     return value?.map(field => {
-      if (data.type === FieldType.LITERAL) {
+      if (group.type === FieldType.LITERAL) {
         return <LiteralField 
           key={field.uri}
-          label={data.name ?? ''} 
-          id={data.path} 
+          label={group.name ?? ''} 
+          id={group.path} 
           value={field} 
           onChange={changeValue}
         />
       } 
 
-      if (data.fields?.size && data.fields.size > 0) {
-        if (data.type === UIFieldRenderType.dropdown){
-          const options = Array.from(data.fields.values()).map(({ name, uri, id }) => ({
+      if (group.fields?.size && group.fields.size > 0) {
+        if (group.type === UIFieldRenderType.dropdown){
+          const options = Array.from(group.fields.values()).map(({ name, uri, id }) => ({
             label: name ?? '',
             value: uri ?? '',
             uri: uri ?? '',
@@ -72,11 +71,11 @@ export const EditSection = () => {
           return ( 
             <DropdownField 
               options={options}
-              name={data.name ?? ''}
-              id={data.path}
+              name={group.name ?? ''}
+              id={group.path}
               onChange={changeValue}
-              value={options.find(({ id }) => id === data.value?.[0])}
-              key={group[1].path}
+              value={options.find(({ id }) => id === value?.[0])}
+              key={group.path}
             />
           )
         }
@@ -89,16 +88,13 @@ export const EditSection = () => {
   return resourceTemplates ? (
     <div className="edit-section">
       {
-        Array.from(normalizedFields.values()).map(block => {
-          return Array.from<[string, RenderedField]>(block.fields?.entries())?.map((group) => {
-            return (
-              <div className="group" key={group[1].name}>
-                <h3>{ group[1].name }</h3>
-                { drawField(group) }
-              </div>
-            )
-          })
-        })
+        Array.from(normalizedFields.values()).map(block => (
+          Array.from<RenderedField>(block.fields?.values())?.map((group) => (
+            <div className="group" key={group.name}>
+              <h3>{ group.name }</h3>
+              { drawField(group) }
+            </div>
+          ))))
       }
     </div>
   ) : null
