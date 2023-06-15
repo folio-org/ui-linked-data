@@ -13,6 +13,7 @@ export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates
   const normalizedFields = useRecoilValue(state.config.normalizedFields)
 
+  const userValue = useRecoilValue(state.inputs.userValues)
   const setUserValue = useSetRecoilState(state.inputs.userValues);
 
   const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string) => {
@@ -32,8 +33,25 @@ export const EditSection = () => {
     })
   }
 
+  const drawDependentFields = (group: RenderedField, userValue: UserValue[]) => {
+    const selectedUserValue = userValue.find(({field}) => field === group.path)?.['value']?.[0]
+    const selectedFields = group.fields?.get(selectedUserValue?.uri);
+    let dependingFields = null;
+
+    if (selectedFields?.fields) {
+      const selectedFieldsList: RenderedField[] = Array.from(selectedFields?.fields?.values())
+
+      dependingFields = selectedFieldsList.map((field) => (
+        <div key={field.id}>{drawField(field)}</div>
+      ));
+    }
+
+    return dependingFields;
+  } 
+
   const drawField = (group: RenderedField) => {
-    const value = group.value
+    const value = group.value;
+    const isLiteralGroupType = group.type === FieldType.LITERAL;
 
     if (group.type === FieldType.SIMPLE) {
       return (
@@ -48,8 +66,16 @@ export const EditSection = () => {
       )
     }
 
+    if (isLiteralGroupType && !value) {
+      return <LiteralField
+        label={group.name ?? ''} 
+        id={group.path}
+        onChange={changeValue}
+      />
+    } 
+
     return value?.map(field => {
-      if (group.type === FieldType.LITERAL) {
+      if (isLiteralGroupType) {
         return <LiteralField 
           key={field.uri}
           label={group.name ?? ''} 
@@ -68,15 +94,20 @@ export const EditSection = () => {
             id,
           }));
 
-          return ( 
-            <DropdownField 
-              options={options}
-              name={group.name ?? ''}
-              id={group.path}
-              onChange={changeValue}
-              value={options.find(({ id }) => id === value?.[0])}
-              key={group.path}
-            />
+          const selectedOption = options.find(({ id }) => id === value?.[0]);
+          
+          return (
+            <>
+              <DropdownField 
+                options={options}
+                name={group.name ?? ''}
+                id={group.path}
+                onChange={changeValue}
+                value={selectedOption}
+                key={group.path}
+              />
+              {drawDependentFields(group, userValue)}
+            </>
           )
         }
       }

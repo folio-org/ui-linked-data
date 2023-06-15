@@ -63,7 +63,7 @@ export const Preview = () => {
     <div className="preview-panel">
       <strong>Preview pane</strong>
     { 
-        userValues.map(({value, field}) => value?.length > 0 && <div key={field} className="preview-block">
+        userValues.map(({value, field}) => (value?.length > 0 && <div key={field} className="preview-block">
           <strong>{getTitleFromId(field)}</strong>
           {
             value?.map(({uri, label}) => (
@@ -75,7 +75,7 @@ export const Preview = () => {
             ))
           }
           
-        </div>)
+        </div>))
       }
       <br />
       <button onClick={generateJson}>Post Record</button>
