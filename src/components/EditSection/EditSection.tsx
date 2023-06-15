@@ -94,7 +94,7 @@ export const EditSection = () => {
             id,
           }));
 
-          const selectedOption = options.find(({ id }) => id === value?.[0]);
+          const selectedOption = options.find(({ id }) => id === value?.[0]) || options[0];
           
           return (
             <>
