@@ -25,8 +25,8 @@
 
 export const normalizeProfile = () => {
   // return null
-}
+};
 
 export const denormalizeProfile = () => {
   // return null
-}
+};
