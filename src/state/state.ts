@@ -1,7 +1,7 @@
-import config from './config'
-import inputs from './inputs'
+import config from './config';
+import inputs from './inputs';
 
 export default {
   config,
-  inputs
-}
+  inputs,
+};

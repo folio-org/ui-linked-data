@@ -1,85 +1,85 @@
 type CommonParams = {
-  id: string,
-  contact?: string,
-  remark?: string,
-}
+  id: string;
+  contact?: string;
+  remark?: string;
+};
 
 type BibframeProfile = CommonParams & {
-  author: string,
-  title: string,
-  description: string,
-  date: string,
-  resourceTemplates: Array<ResourceTemplate>,
-}
+  author: string;
+  title: string;
+  description: string;
+  date: string;
+  resourceTemplates: Array<ResourceTemplate>;
+};
 
 type ResourceTemplate = CommonParams & {
-  resourceURI: string,
-  resourceLabel: string,
-  propertyTemplates: PropertyTemplate[],
-}
+  resourceURI: string;
+  resourceLabel: string;
+  propertyTemplates: PropertyTemplate[];
+};
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
-  propertyURI: string,
-  propertyLabel: string,
-  mandatory: boolean,
-  repeatable: boolean,
-  type: string | URL, // "literal" | "resource"
-  valueConstraint: ValueConstraint
-}
+  propertyURI: string;
+  propertyLabel: string;
+  mandatory: boolean;
+  repeatable: boolean;
+  type: string | URL; // "literal" | "resource"
+  valueConstraint: ValueConstraint;
+};
 
 type PropertyTemplateUserValue = PropertyTemplate & {
   userValue?: {
-    '@type': string,
-    '@value': string | undefined
-  }
-}
+    '@type': string;
+    '@value': string | undefined;
+  };
+};
 
 type ValueConstraint = {
-  valueLanguage: string,
-  languageURI: string,
-  languageLabel: string,
-  valueDataType: ValueDataType,
-  valueTemplateRefs: Array<string>,
-  useValuesFrom: Array<string>,
-  editable: boolean,
-  remark: string,
-}
+  valueLanguage: string;
+  languageURI: string;
+  languageLabel: string;
+  valueDataType: ValueDataType;
+  valueTemplateRefs: Array<string>;
+  useValuesFrom: Array<string>;
+  editable: boolean;
+  remark: string;
+};
 
 type ValueDataType = {
-  dataTypeURI: string,
-  dataTypeLabel: string,
-  dataTypeLabelHint: string,
-  remark: string,
-}
+  dataTypeURI: string;
+  dataTypeLabel: string;
+  dataTypeLabelHint: string;
+  remark: string;
+};
 
-type FieldType = "META" | "HIDE" | "REF" | "LITERAL" | "SIMPLE" | "COMPLEX" | "UNKNOWN";
+type FieldType = 'META' | 'HIDE' | 'REF' | 'LITERAL' | 'SIMPLE' | 'COMPLEX' | 'UNKNOWN';
 type ProfileMetadata = {
-  createDate: string,
-  updateDate: string,
-  updateUser: string,
-}
+  createDate: string;
+  updateDate: string;
+  updateUser: string;
+};
 
 type ProfileEntry = {
-  configType: string,
-  created: string,
-  id: string,
+  configType: string;
+  created: string;
+  id: string;
   json: {
-    Profile: BibframeProfile,
-  },
-  metadata: ProfileMetadata,
-  modified: string,
-  name: string,
-}
+    Profile: BibframeProfile;
+  };
+  metadata: ProfileMetadata;
+  modified: string;
+  name: string;
+};
 
 type RecordEntry = {
-  id?: number,
-  graphName: string,
+  id?: number;
+  graphName: string;
   configuration: {
-    workValues: Array<PropertyTemplate>,
-    instanceValues: Array<PropertyTemplate>,
-  },
-}
+    workValues: Array<PropertyTemplate>;
+    instanceValues: Array<PropertyTemplate>;
+  };
+};
 
-interface PreparedFields { 
-  [key: string]: ResourceTemplate 
+interface PreparedFields {
+  [key: string]: ResourceTemplate;
 }

@@ -1,15 +1,15 @@
-import { atom } from 'recoil'
+import { atom } from 'recoil';
 const userValues = atom<UserValue[]>({
-    key: 'config.userValues',
-    default: [],
-})
+  key: 'config.userValues',
+  default: [],
+});
 
 const userInputScheme = atom<any>({
-    key: 'config.userInputScheme',
-    default: {}
-})
+  key: 'config.userInputScheme',
+  default: {},
+});
 
 export default {
-    userValues,
-    userInputScheme
-}
+  userValues,
+  userInputScheme,
+};
