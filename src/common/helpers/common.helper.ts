@@ -7,6 +7,7 @@ export const replaceItemAtIndex = <T, K>(arr: T[], index: number, newValue: K) =
 export const aplhabeticSortLabel = <T extends { label: string }>(a: T, b: T): 0 | -1 | 1 => {
   if (a.label < b.label) return -1;
   if (a.label > b.label) return 1;
+
   return 0;
 };
 

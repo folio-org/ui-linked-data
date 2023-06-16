@@ -1,33 +1,31 @@
-import { FC } from "react"
+import { FC } from 'react';
 
-import './PropertyTemplate.scss'
+import './PropertyTemplate.scss';
 
-import { LiteralField } from "../LiteralField/LiteralField"
-import { SimpleLookupField } from "../SimpleLookupField/SimpleLookupField";
+import { LiteralField } from '../LiteralField/LiteralField';
+import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
 
 type PropertyTemplateProps = {
-  entry: PropertyTemplate
-}
+  entry: PropertyTemplate;
+};
 
-export const PropertyTemplate: FC<PropertyTemplateProps> = ({
-  entry
-}) => {
+export const PropertyTemplate: FC<PropertyTemplateProps> = ({ entry }) => {
   const componentType = getComponentType(entry);
 
   const fieldComponent = () => {
     if (componentType === 'LITERAL') {
-      return <LiteralField label={entry.propertyLabel} />
+      return <LiteralField label={entry.propertyLabel} />;
     } else if (componentType === 'SIMPLE') {
-      return <SimpleLookupField uri={entry.valueConstraint.useValuesFrom[0]} />
+      return <SimpleLookupField uri={entry.valueConstraint.useValuesFrom[0]} />;
     } else {
-      return null
+      return null;
     }
-  }
+  };
 
   return (
     <div className="input-wrapper">
       <div>{entry.propertyLabel}</div>
-      { fieldComponent() }
+      {fieldComponent()}
     </div>
-  )
-}
+  );
+};
