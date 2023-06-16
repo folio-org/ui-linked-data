@@ -3,5 +3,5 @@ export const Main = () => {
     <div>
       <div>Hello World!</div>
     </div>
-  )
-}
+  );
+};
