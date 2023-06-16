@@ -1,6 +1,7 @@
 interface UserValue {
   field: string;
   value: RenderedFieldValue[];
+  hasChildren?: boolean;
 }
 
 type RenderedFieldMap = Map<string, RenderedField>;
@@ -19,4 +20,16 @@ type RenderedField = {
   uri?: string;
   value?: RenderedFieldValue[];
   id?: string;
+};
+
+type PreviewMap = Map<string, PreviewBlock>;
+
+type PreviewBlock = {
+  title: string;
+  groups: Map<string, PreviewGroup>;
+};
+
+type PreviewGroup = {
+  title: string;
+  value: RenderedFieldValue[];
 };

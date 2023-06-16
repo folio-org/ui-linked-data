@@ -1,6 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { postRecord } from '../../common/api/records.api';
 import state from '../../state/state';
+import usePreviewTree from '../../common/hooks/usePreviewTree.hook';
 import './Preview.scss';
 
 export const Preview = () => {
@@ -51,19 +52,17 @@ export const Preview = () => {
     return;
   };
 
-  const getTitleFromId = (fieldId: string) => {
-    const parts = fieldId.split('_');
-    return parts[parts.length - 1];
-  };
+  const componentsTree = usePreviewTree(userValues);
 
   return (
     <div className="preview-panel">
       <strong>Preview pane</strong>
-      {userValues.map(
-        ({ value, field }) =>
-          value?.length > 0 && (
-            <div key={field} className="preview-block">
-              <strong>{getTitleFromId(field)}</strong>
+      {Array.from(componentsTree?.values()).map(({ title: blockTitle, groups }: PreviewBlock) => (
+        <div key={blockTitle}>
+          <h3>{blockTitle}</h3>
+          {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (
+            <div key={`${groupTitle}`} className="preview-block">
+              <strong>{groupTitle}</strong>
               {value?.map(({ uri, label }) =>
                 uri ? (
                   <div key={uri}>
@@ -76,8 +75,9 @@ export const Preview = () => {
                 ),
               )}
             </div>
-          ),
-      )}
+          ))}
+        </div>
+      ))}
       <br />
       <button onClick={generateJson}>Post Record</button>
     </div>

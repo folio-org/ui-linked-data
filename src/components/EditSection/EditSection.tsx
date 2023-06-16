@@ -16,13 +16,17 @@ export const EditSection = () => {
   const userValue = useRecoilValue(state.inputs.userValues);
   const setUserValue = useSetRecoilState(state.inputs.userValues);
 
-  const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string) => {
+  const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string, isDynamicField?: boolean) => {
     return setUserValue(oldValue => {
       const index = oldValue.findIndex(({ field }) => field === fieldId);
-      const newValue = {
+      const newValue: UserValue = {
         field: fieldId,
         value: value instanceof Array ? value : [value],
       };
+
+      if (isDynamicField) {
+        newValue.hasChildren = true;
+      }
 
       return index === -1 ? [...oldValue, newValue] : replaceItemAtIndex(oldValue, index, newValue);
     });
