@@ -1,8 +1,9 @@
 import { FC } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+import RecoilizeDebugger from 'recoilize';
 import { Edit, Load, Main } from './views';
 import { Nav } from './components/Nav/Nav';
-import { RecoilRoot } from 'recoil';
 
 import './App.scss';
 import { OKAPI_PREFIX } from './common/constants/api.constants';
@@ -25,8 +26,11 @@ export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
     }
   }
 
+  const app = document.getElementById('editor-root');
+
   return (
     <RecoilRoot>
+      <RecoilizeDebugger root={app} />
       <BrowserRouter basename={routePrefix}>
         <Nav />
         <Switch>
