@@ -1,9 +1,9 @@
-import { atom } from 'recoil'
+import { atom } from 'recoil';
 const userValues = atom<UserValue[]>({
-    key: 'config.userValues',
-    default: [],
-})
+  key: 'config.userValues',
+  default: [],
+});
 
 export default {
-    userValues
-}
+  userValues,
+};
