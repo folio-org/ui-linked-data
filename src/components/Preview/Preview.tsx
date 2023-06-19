@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { postRecord } from '../../common/api/records.api';
 import state from '../../state/state';
-import usePreviewTree from '../../common/hooks/usePreviewTree.hook';
+import getTransformedPreviewComponents from '../../common/helpers/preview.helper';
 import './Preview.scss';
 
 export const Preview = () => {
@@ -52,7 +52,7 @@ export const Preview = () => {
     return;
   };
 
-  const componentsTree = usePreviewTree(userValues);
+  const componentsTree = getTransformedPreviewComponents(userValues);
 
   return (
     <div className="preview-panel">

@@ -1,4 +1,4 @@
-export default function usePreviewTree(userValues: UserValue[] = []): PreviewMap {
+export default function getTransformedPreviewComponents(userValues: UserValue[] = []): PreviewMap {
   const tree: PreviewMap = new Map();
 
   userValues.forEach(elem => {
