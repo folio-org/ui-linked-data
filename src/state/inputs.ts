@@ -4,7 +4,7 @@ const userValues = atom<UserValue[]>({
   default: [],
 });
 
-const userInputScheme = atom<any>({
+const userInputScheme = atom<Record<string, any>>({
   key: 'config.userInputScheme',
   default: {},
 });

@@ -19,7 +19,7 @@ const preparedFields = atom<PreparedFields>({
   key: 'config.preparedFields',
   default: {},
 });
-const normalizedFields = atom<Map<any, any>>({
+const normalizedFields = atom<Map<string, any>>({
   key: 'config.normalizedFields',
   default: new Map(),
 });

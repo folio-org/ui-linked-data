@@ -2,8 +2,8 @@ import { useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import { fetchProfiles, fetchStartingPoints, fetchUserInputScheme } from '../api/profiles.api';
 import { getComponentType } from '../helpers/common.helper';
-import { FieldType, PROFILE_NAMES } from '../constants/bibframe.constants';
-import { UIFieldRenderType, UI_BLOCKS } from '../constants/uiControls.constants';
+import { FieldType, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '../constants/bibframe.constants';
+import { UIFieldRenderType } from '../constants/uiControls.constants';
 
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -117,33 +117,36 @@ export default function useConfig() {
     }
   };
 
-  const parseUserInputScheme = (scheme: any, fields: PreparedFields): void => {
+  const parseUserInputScheme = (scheme: any, fields: PreparedFields, selectedProfile: ProfileEntry): void => {
     // Going through all block that we need to render (work, instance, item)
     const schemeMap: RenderedFieldMap = new Map();
+    const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
 
     // Iterate on bibframe profiles and the user input scheme at the same time.
-    UI_BLOCKS.forEach(blockId => {
-      const block = fields[blockId[0]]; // Data from the other profile
-      const blockJson = scheme[blockId[1]]; // Data from user input json
-      const blockMap: RenderedFieldMap = new Map();
+    selectedProfile?.json.Profile.resourceTemplates
+      .filter(({ id }) => supportedEntries.includes(id))
+      .forEach(({ id, resourceURI }) => {
+        const block = fields[id]; // Data from the other profile
+        const blockJson = scheme[resourceURI]; // Data from user input json
+        const blockMap: RenderedFieldMap = new Map();
 
-      schemeMap.set(block.resourceLabel, {
-        type: UIFieldRenderType.block,
-        fields: blockMap,
-        path: block.resourceLabel,
-      });
-
-      block.propertyTemplates.forEach(propertyTemplate => {
-        parseField({
-          propertyTemplate,
-          fields,
-          parent: blockMap,
+        schemeMap.set(block.resourceLabel, {
+          type: UIFieldRenderType.block,
+          fields: blockMap,
           path: block.resourceLabel,
-          level: 1,
-          json: blockJson,
+        });
+
+        block.propertyTemplates.forEach(propertyTemplate => {
+          parseField({
+            propertyTemplate,
+            fields,
+            parent: blockMap,
+            path: block.resourceLabel,
+            level: 1,
+            json: blockJson,
+          });
         });
       });
-    });
 
     setNormalizedFields(schemeMap);
   };
@@ -158,11 +161,12 @@ export default function useConfig() {
   const getProfiles = async (): Promise<any> => {
     const userInput = await getUserInputScheme();
     const response = await fetchProfiles();
+    // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
 
     setProfiles(response);
     setSelectedProfile(monograph);
-    parseUserInputScheme(userInput, prepareFields(response));
+    parseUserInputScheme(userInput, prepareFields(response), monograph);
 
     return response;
   };

@@ -35,10 +35,10 @@ export const getComponentType = (propertyTemplate: PropertyTemplate): FieldType 
   }
 
   let type: FieldType = 'SIMPLE';
-  if (propertyTemplate.valueConstraint.useValuesFrom.length == 0) return 'UNKNOWN';
+  if (propertyTemplate.valueConstraint.useValuesFrom.length === 0) return 'UNKNOWN';
 
   propertyTemplate.valueConstraint.useValuesFrom.forEach(cs => {
-    if (lookupConfig[cs] && lookupConfig[cs].type.toLowerCase() == 'complex') {
+    if (lookupConfig[cs] && lookupConfig[cs].type.toLowerCase() === 'complex') {
       type = 'COMPLEX';
     }
   });
