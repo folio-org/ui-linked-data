@@ -1,6 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { postRecord } from '../../common/api/records.api';
 import state from '../../state/state';
+import getTransformedPreviewComponents from '../../common/helpers/preview.helper';
 import './Preview.scss';
 
 export const Preview = () => {
@@ -8,18 +9,19 @@ export const Preview = () => {
   const userValues = useRecoilValue(state.inputs.userValues);
 
   const generateJsonFor = (propertyTemplates: PropertyTemplate[]) => {
-    const labels = userValues.map(uv => uv.field);
-    return propertyTemplates.reduce<PropertyTemplate[]>((arr, val) => {
-      const v = { ...val };
+    const labels = userValues.map(({ field }) => field);
+    return propertyTemplates.reduce<PropertyTemplate[]>((arr, currentValue) => {
+      const updatedValue = { ...currentValue };
 
-      if (labels.includes(val.propertyLabel)) {
-        v.userValue = {
-          '@type': v.propertyURI,
-          '@value': userValues.find(uv => uv.field === val.propertyLabel)?.value,
+      if (labels.includes(currentValue.propertyLabel)) {
+        updatedValue.userValue = {
+          '@type': updatedValue.propertyURI,
+          '@value': userValues.find(({ field }) => field === currentValue.propertyLabel)?.value,
         };
       }
 
-      arr.push(v);
+      arr.push(updatedValue);
+
       return arr;
     }, []);
   };
@@ -50,18 +52,32 @@ export const Preview = () => {
     return;
   };
 
+  const componentsTree = getTransformedPreviewComponents(userValues);
+
   return (
     <div className="preview-panel">
       <strong>Preview pane</strong>
-      {userValues.map(
-        (val, i) =>
-          Boolean(val.value) && (
-            <div key={i}>
-              <div>{val.field}</div>
-              <strong>{val.value}</strong>
+      {Array.from(componentsTree?.values()).map(({ title: blockTitle, groups }: PreviewBlock) => (
+        <div key={blockTitle}>
+          <h3>{blockTitle}</h3>
+          {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (
+            <div key={`${groupTitle}`} className="preview-block">
+              <strong>{groupTitle}</strong>
+              {value?.map(({ uri, label }) =>
+                uri ? (
+                  <div key={uri}>
+                    <a href={uri} target="__blank">
+                      {label}
+                    </a>
+                  </div>
+                ) : (
+                  <div key={uri}>{label}</div>
+                ),
+              )}
             </div>
-          ),
-      )}
+          ))}
+        </div>
+      ))}
       <br />
       <button onClick={generateJson}>Post Record</button>
     </div>

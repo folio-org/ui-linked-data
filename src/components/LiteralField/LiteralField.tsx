@@ -1,30 +1,35 @@
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, useEffect, useState } from 'react';
 import { Input } from '../Input/Input';
-import { useSetRecoilState } from 'recoil';
-import state from '../../state/state';
-import { replaceItemAtIndex } from '../../common/helpers/common.helper';
 
 interface Props {
   label: string;
+  id: string;
+  value?: RenderedFieldValue;
+  onChange: (value: RenderedFieldValue, fieldId: string) => void;
 }
 
-export const LiteralField: FC<Props> = ({ label }) => {
-  const setUserValue = useSetRecoilState(state.inputs.userValues);
+export const LiteralField: FC<Props> = ({ label, id, value = undefined, onChange }) => {
+  const [localValue, setLocalValue] = useState<RenderedFieldValue | undefined>(value);
+
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-    return setUserValue(oldValue => {
-      const index = oldValue.findIndex(val => val.field === label);
-
-      const newValue: UserValue = {
-        field: label,
-        value: event.target.value,
-      };
-
-      if (index === -1) {
-        return [...oldValue, newValue];
-      }
-
-      return replaceItemAtIndex(oldValue, index, newValue);
-    });
+    const newValue = {
+      id: null,
+      label: event.target.value,
+      uri: null,
+    };
+    onChange(newValue, id);
+    setLocalValue(newValue);
   };
-  return <Input placeholder={label} onChange={handleOnChange} />;
+
+  useEffect(() => {
+    if (value) onChange(value, id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div>
+      <div>{label}</div>
+      <Input placeholder={label} onChange={handleOnChange} value={localValue?.label ?? ''} />
+    </div>
+  );
 };

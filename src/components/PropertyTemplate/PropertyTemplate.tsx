@@ -2,8 +2,6 @@ import { FC } from 'react';
 
 import './PropertyTemplate.scss';
 
-import { getComponentType } from './PropertyTemplate.utils';
-
 import { LiteralField } from '../LiteralField/LiteralField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
 

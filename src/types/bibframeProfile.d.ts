@@ -13,13 +13,13 @@ type BibframeProfile = CommonParams & {
 };
 
 type ResourceTemplate = CommonParams & {
-  resourceURI: URL | string;
+  resourceURI: string;
   resourceLabel: string;
-  propertyTemplates: Array<>;
+  propertyTemplates: PropertyTemplate[];
 };
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
-  propertyURI: URL | string;
+  propertyURI: string;
   propertyLabel: string;
   mandatory: boolean;
   repeatable: boolean;
@@ -40,7 +40,7 @@ type ValueConstraint = {
   languageLabel: string;
   valueDataType: ValueDataType;
   valueTemplateRefs: Array<string>;
-  useValuesFrom: Array<URL | string>;
+  useValuesFrom: Array<string>;
   editable: boolean;
   remark: string;
 };
@@ -52,7 +52,7 @@ type ValueDataType = {
   remark: string;
 };
 
-type FieldType = 'META' | 'HIDE' | 'REF' | 'LITERAL' | 'SIMPLE' | 'COMPLEX';
+type FieldType = 'META' | 'HIDE' | 'REF' | 'LITERAL' | 'SIMPLE' | 'COMPLEX' | 'UNKNOWN';
 type ProfileMetadata = {
   createDate: string;
   updateDate: string;
@@ -79,3 +79,7 @@ type RecordEntry = {
     instanceValues: Array<PropertyTemplate>;
   };
 };
+
+interface PreparedFields {
+  [key: string]: ResourceTemplate;
+}
