@@ -34,7 +34,7 @@ export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }
       })
       .reduce<MultiselectOption[]>((arr, option) => {
         const optionUri = option[ID_KEY];
-        const label = option[AUTHORITATIVE_LABEL_URI][0][VALUE_KEY] ?? '';
+        const label = option[AUTHORITATIVE_LABEL_URI]?.[0]?.[VALUE_KEY] ?? '';
         arr.push({
           value: { label, uri: optionUri },
           label,
