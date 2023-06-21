@@ -40,13 +40,31 @@ export const EditSection = () => {
     if (selectedFields?.fields) {
       const selectedFieldsList: RenderedField[] = Array.from(selectedFields?.fields?.values());
 
-      dependingFields = selectedFieldsList.map(field => <div key={field.id}>{drawField(field)}</div>);
+      dependingFields = selectedFieldsList.map(field => drawField(field));
     }
 
     return dependingFields;
   };
 
-  const drawField = (group: RenderedField) => {
+  const drawComplexGroup = (group: RenderedField) => {
+    const groupFields = group.fields;
+
+    if (!groupFields) {
+      return null;
+    }
+
+    return Array.from(groupFields.values()).reduce((accum: unknown[], { type, fields }) => {
+      if (type === UIFieldRenderType.hidden && fields) {
+        Array.from(fields.values()).forEach(entry => {
+          accum.push(drawField(entry, entry.path));
+        });
+      }
+
+      return accum;
+    }, []);
+  };
+
+  const drawField = (group: RenderedField, key?: string) => {
     const value = group.value;
     const isLiteralGroupType = group.type === FieldType.LITERAL;
 
@@ -58,13 +76,21 @@ export const EditSection = () => {
           id={group.path ?? ''}
           value={value ?? []}
           onChange={changeValue}
-          key={group.path}
+          key={key || group.path}
         />
       );
     }
 
+    if (group.type === FieldType.COMPLEX) {
+      return <div key={key || group.path}>Complex</div>;
+    }
+
+    if (group.type === UIFieldRenderType.groupComplex) {
+      return drawComplexGroup(group);
+    }
+
     if (isLiteralGroupType && !value) {
-      return <LiteralField label={group.name ?? ''} id={group.path} onChange={changeValue} />;
+      return <LiteralField key={key || group.path} label={group.name ?? ''} id={group.path} onChange={changeValue} />;
     }
 
     return value?.map(field => {
@@ -86,17 +112,16 @@ export const EditSection = () => {
           const selectedOption = options.find(({ id }) => id === value?.[0]) || options[0];
 
           return (
-            <>
+            <div key={group.path}>
               <DropdownField
                 options={options}
                 name={group.name ?? ''}
                 id={group.path}
                 onChange={changeValue}
                 value={selectedOption}
-                key={group.path}
               />
               {drawDependentFields(group, userValue)}
-            </>
+            </div>
           );
         }
       }
@@ -107,14 +132,16 @@ export const EditSection = () => {
 
   return resourceTemplates ? (
     <div className="edit-section">
-      {Array.from(normalizedFields.values()).map(block =>
-        Array.from<RenderedField>(block.fields?.values())?.map(group => (
-          <div className="group" key={group.name}>
-            <h3>{group.name}</h3>
-            {drawField(group)}
-          </div>
-        )),
-      )}
+      {Array.from(normalizedFields.values()).map(block => (
+        <div key={block.path}>
+          {Array.from<RenderedField>(block.fields?.values())?.map(group => (
+            <div className="group" key={group.path}>
+              <h3>{group.name}</h3>
+              <>{drawField(group)}</>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   ) : null;
 };

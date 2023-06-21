@@ -1,17 +1,18 @@
 export default function getTransformedPreviewComponents(userValues: UserValue[] = []): PreviewMap {
   const tree: PreviewMap = new Map();
 
-  userValues.forEach(elem => {
-    const value = elem.value;
-    const hasChildren = elem.hasChildren;
-    const parsedPath = elem.field.split('_');
+  userValues.forEach(({ field, value, hasChildren }) => {
+    const parsedPath = field.split('_');
     const block = parsedPath[0].split(' ')[1];
     const group = parsedPath[1];
+    const uiControl = parsedPath[parsedPath.length - 1];
     const existingBlock = tree.get(block);
 
     if (hasChildren || !value.length) {
       return;
     }
+
+    const updatedValue = value.map(elem => ({ ...elem, field: uiControl }));
 
     if (!existingBlock) {
       tree.set(block, {
@@ -21,7 +22,7 @@ export default function getTransformedPreviewComponents(userValues: UserValue[] 
             group,
             {
               title: group,
-              value,
+              value: updatedValue,
             },
           ],
         ]),
@@ -32,12 +33,10 @@ export default function getTransformedPreviewComponents(userValues: UserValue[] 
       if (!existingGroup) {
         existingBlock.groups.set(group, {
           title: group,
-          value,
+          value: updatedValue,
         });
       } else {
-        const currentValue = existingGroup.value;
-
-        existingGroup.value = [...currentValue, ...value];
+        existingGroup.value = [...existingGroup.value, ...updatedValue];
       }
     }
   });

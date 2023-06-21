@@ -4,6 +4,7 @@ import { fetchProfiles, fetchStartingPoints, fetchUserInputScheme } from '../api
 import { getComponentType } from '../helpers/common.helper';
 import { FieldType, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '../constants/bibframe.constants';
 import { UIFieldRenderType } from '../constants/uiControls.constants';
+import { generateGroupKey } from '../helpers/profileSchema.helper';
 
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -54,12 +55,14 @@ export default function useConfig() {
   }) => {
     let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
     const fieldType = getComponentType(propertyTemplate);
-    const groupMap: RenderedFieldMap = parent.get(propertyTemplate.propertyURI)?.fields ?? new Map();
-    const groupJson = json?.[propertyTemplate.propertyURI];
+    // TODO: workaround and should be replaced with another unique identifier
+    const key = generateGroupKey(propertyTemplate.propertyURI, parent, level);
+    const groupMap: RenderedFieldMap = parent.get(key)?.fields ?? new Map();
+    const groupJson = json?.[key];
 
     if (!groupMap.size) {
-      parent.set(propertyTemplate.propertyURI, {
-        type: level === 1 ? UIFieldRenderType.group : fieldType ?? FieldType.UNKNOWN,
+      parent.set(key, {
+        type: (level === 1 ? UIFieldRenderType.group : fieldType) ?? FieldType.UNKNOWN,
         path: pathToField,
         fields: groupMap,
         name: propertyTemplate.propertyLabel,
@@ -67,7 +70,7 @@ export default function useConfig() {
     }
 
     if (fieldType === FieldType.LITERAL || fieldType === FieldType.SIMPLE) {
-      parent.set(propertyTemplate.propertyURI, {
+      parent.set(key, {
         type: fieldType,
         path: pathToField,
         name: propertyTemplate.propertyLabel,
@@ -75,45 +78,60 @@ export default function useConfig() {
         value: groupJson,
       });
     } else if (fieldType === FieldType.REF) {
-      // Dropdown
-      if (propertyTemplate.valueConstraint.valueTemplateRefs.length > 1) {
-        const options = propertyTemplate.valueConstraint.valueTemplateRefs;
-        parent.set(propertyTemplate.propertyURI, {
-          type: UIFieldRenderType.dropdown,
-          path: pathToField,
-          fields: groupMap,
-          name: propertyTemplate.propertyLabel,
-          value: [groupJson?.[0].id], // Dropdown always has only one answer
-        });
+      const { valueTemplateRefs } = propertyTemplate.valueConstraint;
 
-        options.forEach(ref => {
-          const resourceTemplate = fields[ref];
-          pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`;
-          const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map();
+      if (valueTemplateRefs.length <= 0) {
+        return;
+      }
 
-          if (fieldsMap.size === 0) {
-            groupMap.set?.(resourceTemplate.resourceURI, {
-              fields: fieldsMap,
-              name: resourceTemplate.resourceLabel,
-              id: resourceTemplate.id,
-              path: pathToField,
-              type: UIFieldRenderType.dropdownOption,
-              uri: resourceTemplate.resourceURI,
-            });
-          }
+      // Dropdown and nested groups
+      const isDropdown = valueTemplateRefs.length > 1;
 
-          resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
-            // Option has no value, only parent dropdown has this one, so json argument is undefined
-            parseField({
-              propertyTemplate: optionPropertyTemplate,
-              fields,
-              parent: fieldsMap,
-              path: pathToField,
-              level: level + 1,
-            });
+      parent.set(key, {
+        type: isDropdown ? UIFieldRenderType.dropdown : UIFieldRenderType.groupComplex,
+        path: pathToField,
+        fields: groupMap,
+        name: propertyTemplate.propertyLabel,
+        value: isDropdown ? [groupJson?.[0].id] : undefined, // Dropdown always has only one answer
+      });
+
+      valueTemplateRefs.forEach(ref => {
+        const resourceTemplate = fields[ref];
+        pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`;
+        const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map();
+
+        if (fieldsMap.size === 0) {
+          groupMap.set?.(resourceTemplate.resourceURI, {
+            fields: fieldsMap,
+            name: resourceTemplate.resourceLabel,
+            id: resourceTemplate.id,
+            path: pathToField,
+            type: isDropdown ? UIFieldRenderType.dropdownOption : UIFieldRenderType.hidden,
+            uri: resourceTemplate.resourceURI,
+          });
+        }
+
+        resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
+          // For dropdown, Option has no value, only parent dropdown has this one, so json argument is undefined
+          parseField({
+            propertyTemplate: optionPropertyTemplate,
+            fields,
+            parent: fieldsMap,
+            path: pathToField,
+            level: level + 1,
+            json: !isDropdown ? groupJson?.[0]?.[resourceTemplate.resourceURI] : undefined,
           });
         });
-      }
+      });
+    } else if (fieldType === FieldType.COMPLEX) {
+      // TODO: define required fields and values for Complex field
+      parent.set(propertyTemplate.propertyURI, {
+        type: fieldType,
+        path: pathToField,
+        fields: groupMap,
+        name: propertyTemplate.propertyLabel,
+        value: groupJson,
+      });
     }
   };
 

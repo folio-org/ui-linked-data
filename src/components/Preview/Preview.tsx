@@ -63,7 +63,7 @@ export const Preview = () => {
           {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (
             <div key={`${groupTitle}`} className="preview-block">
               <strong>{groupTitle}</strong>
-              {value?.map(({ uri, label }) =>
+              {value?.map(({ uri, label, field }) =>
                 uri ? (
                   <div key={uri}>
                     <a href={uri} target="__blank">
@@ -71,7 +71,7 @@ export const Preview = () => {
                     </a>
                   </div>
                 ) : (
-                  <div key={uri}>{label}</div>
+                  <div key={field}>{label}</div>
                 ),
               )}
             </div>
