@@ -6,7 +6,7 @@ interface UserValue {
 
 type RenderedFieldMap = Map<string, RenderedField>;
 
-type FieldRenderType = FieldType | 'block' | 'group' | 'hidden' | 'dropdown' | 'dropdownOption';
+type FieldRenderType = FieldType | 'block' | 'group' | 'groupComplex' | 'hidden' | 'dropdown' | 'dropdownOption';
 type RenderedFieldValue = {
   id?: Nullable<string>;
   label?: string;
@@ -31,5 +31,7 @@ type PreviewBlock = {
 
 type PreviewGroup = {
   title: string;
-  value: RenderedFieldValue[];
+  value: PreviewFieldValue[];
 };
+
+type PreviewFieldValue = Partial<RenderedFieldValue> & { field: string };
