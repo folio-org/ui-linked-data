@@ -36,10 +36,7 @@ export default function getTransformedPreviewComponents(userValues: UserValue[] 
           value: updatedValue,
         });
       } else {
-        const currentValue = existingGroup.value;
-        const updatedValue = value.map(elem => ({ ...elem, field: uiControl }));
-
-        existingGroup.value = [...currentValue, ...updatedValue];
+        existingGroup.value = [...existingGroup.value, ...updatedValue];
       }
     }
   });
