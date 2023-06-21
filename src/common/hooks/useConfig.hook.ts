@@ -55,6 +55,7 @@ export default function useConfig() {
   }) => {
     let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
     const fieldType = getComponentType(propertyTemplate);
+    // TODO: workaround and should be replaced with another unique identifier
     const key = generateGroupKey(propertyTemplate.propertyURI, parent, level);
     const groupMap: RenderedFieldMap = parent.get(key)?.fields ?? new Map();
     const groupJson = json?.[key];
