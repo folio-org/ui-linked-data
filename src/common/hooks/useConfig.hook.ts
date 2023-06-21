@@ -77,85 +77,53 @@ export default function useConfig() {
         value: groupJson,
       });
     } else if (fieldType === FieldType.REF) {
-      // Dropdown
-      if (propertyTemplate.valueConstraint.valueTemplateRefs.length > 1) {
-        const options = propertyTemplate.valueConstraint.valueTemplateRefs;
+      const { valueTemplateRefs } = propertyTemplate.valueConstraint;
 
-        parent.set(key, {
-          type: UIFieldRenderType.dropdown,
-          path: pathToField,
-          fields: groupMap,
-          name: propertyTemplate.propertyLabel,
-          value: [groupJson?.[0].id], // Dropdown always has only one answer
-        });
-
-        options.forEach(ref => {
-          const resourceTemplate = fields[ref];
-          pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`;
-          const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map();
-
-          if (fieldsMap.size === 0) {
-            groupMap.set?.(resourceTemplate.resourceURI, {
-              fields: fieldsMap,
-              name: resourceTemplate.resourceLabel,
-              id: resourceTemplate.id,
-              path: pathToField,
-              type: UIFieldRenderType.dropdownOption,
-              uri: resourceTemplate.resourceURI,
-            });
-          }
-
-          resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
-            // Option has no value, only parent dropdown has this one, so json argument is undefined
-            parseField({
-              propertyTemplate: optionPropertyTemplate,
-              fields,
-              parent: fieldsMap,
-              path: pathToField,
-              level: level + 1,
-            });
-          });
-        });
-      } else {
-        // Nested (complex) groups
-        const options = propertyTemplate.valueConstraint.valueTemplateRefs;
-
-        parent.set(key, {
-          type: UIFieldRenderType.groupComplex,
-          path: pathToField,
-          fields: groupMap,
-          name: propertyTemplate.propertyLabel,
-        });
-
-        options.forEach(ref => {
-          const resourceTemplate = fields[ref];
-          pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`;
-          const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map();
-
-          if (fieldsMap.size === 0) {
-            groupMap.set?.(resourceTemplate.resourceURI, {
-              fields: fieldsMap,
-              name: resourceTemplate.resourceLabel,
-              id: resourceTemplate.id,
-              path: pathToField,
-              type: UIFieldRenderType.hidden,
-              uri: resourceTemplate.resourceURI,
-            });
-          }
-
-          resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
-            parseField({
-              propertyTemplate: optionPropertyTemplate,
-              fields,
-              parent: fieldsMap,
-              path: pathToField,
-              level: level + 1,
-              json: groupJson?.[0]?.[resourceTemplate.resourceURI],
-            });
-          });
-        });
+      if (valueTemplateRefs.length <= 0) {
+        return;
       }
+
+      // Dropdown and nested groups
+      const isDropdown = valueTemplateRefs.length > 1;
+
+      parent.set(key, {
+        type: isDropdown ? UIFieldRenderType.dropdown : UIFieldRenderType.groupComplex,
+        path: pathToField,
+        fields: groupMap,
+        name: propertyTemplate.propertyLabel,
+        value: isDropdown ? [groupJson?.[0].id] : undefined, // Dropdown always has only one answer
+      });
+
+      valueTemplateRefs.forEach(ref => {
+        const resourceTemplate = fields[ref];
+        pathToField = `${pathToField}_${resourceTemplate.resourceLabel}`;
+        const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceTemplate.resourceURI)?.fields ?? new Map();
+
+        if (fieldsMap.size === 0) {
+          groupMap.set?.(resourceTemplate.resourceURI, {
+            fields: fieldsMap,
+            name: resourceTemplate.resourceLabel,
+            id: resourceTemplate.id,
+            path: pathToField,
+            type: isDropdown ? UIFieldRenderType.dropdownOption : UIFieldRenderType.hidden,
+            uri: resourceTemplate.resourceURI,
+          });
+        }
+
+        resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
+          // For dropdown, Option has no value, only parent dropdown has this one, so json argument is undefined
+          parseField({
+            propertyTemplate: optionPropertyTemplate,
+            fields,
+            parent: fieldsMap,
+            path: pathToField,
+            level: level + 1,
+            json: !isDropdown ? groupJson?.[0]?.[resourceTemplate.resourceURI] : undefined,
+          });
+        });
+      });
     } else if (fieldType === FieldType.COMPLEX) {
+      // TODO: define required fields and values for Complex field
       parent.set(propertyTemplate.propertyURI, {
         type: fieldType,
         path: pathToField,
