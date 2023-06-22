@@ -8,6 +8,7 @@ import { DropdownField } from '../DropdownField/DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
 import { FieldType } from '../../common/constants/bibframe.constants';
 import { UIFieldRenderType } from '../../common/constants/uiControls.constants';
+import { ComplexLookupField } from '../ComplexLookupField/ComplexLookupField';
 
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
@@ -81,7 +82,15 @@ export const EditSection = () => {
     }
 
     if (group.type === FieldType.COMPLEX) {
-      return <div key={key || group.path}>Complex</div>;
+      return (
+        <ComplexLookupField
+          key={key || group.path}
+          label={group.name ?? ''}
+          id={group.path ?? ''}
+          value={value?.[0]}
+          onChange={changeValue}
+        />
+      );
     }
 
     if (group.type === UIFieldRenderType.groupComplex) {
