@@ -86,13 +86,16 @@ export default function useConfig() {
 
       // Dropdown and nested groups
       const isDropdown = valueTemplateRefs.length > 1;
+      // TODO: Workaround. Check if it works correctly if groupJson has some elements
+      // Dropdown always has only one answer
+      const value = isDropdown ? [groupJson?.[0]?.id] : undefined;
 
       parent.set(key, {
         type: isDropdown ? UIFieldRenderType.dropdown : UIFieldRenderType.groupComplex,
         path: pathToField,
         fields: groupMap,
         name: propertyTemplate.propertyLabel,
-        value: isDropdown ? [groupJson?.[0]?.id] : undefined, // Dropdown always has only one answer
+        value,
       });
 
       valueTemplateRefs.forEach(ref => {
@@ -118,6 +121,7 @@ export default function useConfig() {
           let json = undefined;
 
           if (!isDropdown) {
+            // TODO: Workaround. Check if it works correctly if groupJson has some elements
             json = groupJson?.[0]?.[resourceTemplate.resourceURI];
           } else if (isComplexField) {
             json = groupJson?.[resourceTemplate.resourceURI];
