@@ -92,7 +92,7 @@ export default function useConfig() {
         path: pathToField,
         fields: groupMap,
         name: propertyTemplate.propertyLabel,
-        value: isDropdown ? [groupJson?.[0].id] : undefined, // Dropdown always has only one answer
+        value: isDropdown ? [groupJson?.[0]?.id] : undefined, // Dropdown always has only one answer
       });
 
       valueTemplateRefs.forEach(ref => {
@@ -113,13 +113,23 @@ export default function useConfig() {
 
         resourceTemplate.propertyTemplates.forEach(optionPropertyTemplate => {
           // For dropdown, Option has no value, only parent dropdown has this one, so json argument is undefined
+          const optionFieldType = getComponentType(optionPropertyTemplate);
+          const isComplexField = optionFieldType === FieldType.COMPLEX;
+          let json = undefined;
+
+          if (!isDropdown) {
+            json = groupJson?.[0]?.[resourceTemplate.resourceURI];
+          } else if (isComplexField) {
+            json = groupJson?.[resourceTemplate.resourceURI];
+          }
+
           parseField({
             propertyTemplate: optionPropertyTemplate,
             fields,
             parent: fieldsMap,
             path: pathToField,
             level: level + 1,
-            json: !isDropdown ? groupJson?.[0]?.[resourceTemplate.resourceURI] : undefined,
+            json,
           });
         });
       });
@@ -130,7 +140,7 @@ export default function useConfig() {
         path: pathToField,
         fields: groupMap,
         name: propertyTemplate.propertyLabel,
-        value: groupJson,
+        value: json?.[propertyTemplate.propertyURI],
       });
     }
   };

@@ -1,9 +1,9 @@
-import { FC, SyntheticEvent } from 'react';
+import { FC, ChangeEvent } from 'react';
 
 type InputProps = {
   placeholder?: string;
   value: string;
-  onChange?: (arg: SyntheticEvent) => void;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Input: FC<InputProps> = ({ placeholder, value, onChange }) => {

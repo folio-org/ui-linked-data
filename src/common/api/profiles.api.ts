@@ -73,5 +73,31 @@ export const fetchUserInputScheme = async () => {
         },
       ],
     },
+    'http://id.loc.gov/ontologies/bibframe/Instance': {
+      'http://id.loc.gov/ontologies/bibframe/contribution': [
+        {
+          'http://id.loc.gov/ontologies/bibframe/Contribution': {
+            'http://id.loc.gov/ontologies/bibframe/agent': {
+              'http://id.loc.gov/ontologies/bibframe/Person': {
+                'http://www.w3.org/2002/07/owl#sameAs': [
+                  {
+                    id: 'test',
+                    uri: 'test',
+                    label: 'Spearman, Frank H. (Frank Hamilton), 1859-1937',
+                  },
+                ],
+              },
+            },
+            'http://id.loc.gov/ontologies/bibframe/role': [
+              {
+                id: 'lc:RT:bf2:Agent:bfRole',
+                uri: 'http://id.loc.gov/ontologies/bibframe/Role',
+                label: 'Author',
+              },
+            ],
+          },
+        },
+      ],
+    },
   });
 };
