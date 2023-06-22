@@ -81,8 +81,8 @@ export const fetchUserInputScheme = async () => {
               'http://id.loc.gov/ontologies/bibframe/Person': {
                 'http://www.w3.org/2002/07/owl#sameAs': [
                   {
-                    id: 'test',
-                    uri: 'test',
+                    id: '',
+                    uri: 'http://id.loc.gov/authorities/names/n87914389',
                     label: 'Spearman, Frank H. (Frank Hamilton), 1859-1937',
                   },
                 ],

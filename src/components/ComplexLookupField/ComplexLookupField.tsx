@@ -23,6 +23,7 @@ export const ComplexLookupField: FC<Props> = ({ label, id, value = undefined, on
   };
 
   useEffect(() => {
+    // ToDo: workaround for setting a default value and should be re-written.
     if (value) onChange(value, id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
