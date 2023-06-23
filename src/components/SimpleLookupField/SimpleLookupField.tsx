@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
+import CreatableSelect from 'react-select';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../constants';
 import { aplhabeticSortLabel } from '../../common/helpers/common.helper';
 import { loadSimpleLookup } from '../../common/helpers/api.helper';

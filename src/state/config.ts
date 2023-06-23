@@ -10,15 +10,11 @@ const selectedProfile = atom<ProfileEntry | null>({
   default: null,
 });
 
-const startingPoints = atom<Array<any>>({
-  key: 'config.startingPoints',
-  default: [],
-});
-
 const preparedFields = atom<PreparedFields>({
   key: 'config.preparedFields',
   default: {},
 });
+
 const normalizedFields = atom<Map<string, any>>({
   key: 'config.normalizedFields',
   default: new Map(),
@@ -26,7 +22,6 @@ const normalizedFields = atom<Map<string, any>>({
 
 export default {
   profiles,
-  startingPoints,
   selectedProfile,
   preparedFields,
   normalizedFields,

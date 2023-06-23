@@ -4,7 +4,7 @@ export const ID_KEY = '@id';
 export const VALUE_KEY = '@value';
 
 // TODO: Make correct types
-export const lookupConfig = {
+export const lookupConfig: Record<string, any> = {
   'http://id.loc.gov/authorities/childrensSubjects': {
     name: 'childrensSubjects',
     type: 'complex',
@@ -92,7 +92,6 @@ export const lookupConfig = {
       },
     ],
   },
-
   'http://id.loc.gov/authorities/performanceMediums': {
     name: 'Works',
     processor: 'lcAuthorities',
@@ -106,7 +105,6 @@ export const lookupConfig = {
       },
     ],
   },
-
   'http://id.loc.gov/authorities/subjects': {
     name: 'subjects',
     type: 'complex',
@@ -148,7 +146,6 @@ export const lookupConfig = {
       },
     ],
   },
-
   HierarchicalGeographic: {
     name: 'names',
     type: 'complex',

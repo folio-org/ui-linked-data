@@ -4,6 +4,7 @@ import './PropertyTemplate.scss';
 
 import { LiteralField } from '../LiteralField/LiteralField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
+import { getComponentType } from '../../common/helpers/common.helper';
 
 type PropertyTemplateProps = {
   entry: PropertyTemplate;

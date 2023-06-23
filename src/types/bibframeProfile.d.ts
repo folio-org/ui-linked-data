@@ -71,14 +71,16 @@ type ProfileEntry = {
   name: string;
 };
 
-type RecordEntry = {
-  id?: number;
-  graphName: string;
-  configuration: {
-    workValues: Array<PropertyTemplate>;
-    instanceValues: Array<PropertyTemplate>;
-  };
+type RecursiveRecordSchema = Record<string, Array<RecursiveRecordSchema | string>>;
+
+type RecordEntry = RecursiveRecordSchema & {
+  id: number;
+  profile: string;
 };
+
+interface PreparedFields {
+  [key: string]: ResourceTemplate;
+}
 
 interface PreparedFields {
   [key: string]: ResourceTemplate;
