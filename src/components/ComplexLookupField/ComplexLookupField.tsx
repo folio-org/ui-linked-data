@@ -12,10 +12,10 @@ export const ComplexLookupField: FC<Props> = ({ label, id, value = undefined, on
   const [localValue, setLocalValue] = useState<RenderedFieldValue | undefined>(value);
 
   // TODO: should open a modal with current input value and search data using it
-  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
       id: null,
-      label: event.target.value,
+      label: value,
       uri: null,
     };
 
