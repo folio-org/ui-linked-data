@@ -7,6 +7,10 @@ export const PROFILE_NAMES = {
   MONOGRAPH: 'BIBFRAME 2.0 Monograph',
 };
 
+export const PROFILE_IDS = {
+  MONOGRAPH: 'lc:profile:bf2:Monograph',
+}
+
 export enum FieldType {
   META = 'META',
   HIDE = 'HIDE',
