@@ -18,7 +18,10 @@ type IContainer = {
   okapi?: Okapi;
 };
 
-export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
+export const App: FC<IContainer> = ({
+  routePrefix = '',
+  okapi,
+}) => {
   // TODO: decide on a place to manage okapi props
   // Since we use localStorage might as well manage in the wrapper
   useEffect(() => {

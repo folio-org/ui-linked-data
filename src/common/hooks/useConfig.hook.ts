@@ -53,7 +53,14 @@ export default function useConfig() {
     return preparedFields;
   };
 
-  const parseField = ({ propertyTemplate, fields, parent, path, level, userValue }: IParseField) => {
+  const parseField = ({
+    propertyTemplate,
+    fields,
+    parent,
+    path,
+    level,
+    userValue,
+  }: IParseField) => {
     let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
     const fieldType = getComponentType(propertyTemplate);
 
@@ -184,7 +191,7 @@ export default function useConfig() {
             fields: blockMap,
             path: block.resourceLabel,
           });
-
+  
           block.propertyTemplates.forEach(propertyTemplate => {
             parseField({
               propertyTemplate,
@@ -195,7 +202,7 @@ export default function useConfig() {
               userValue: entry,
             });
           });
-        });
+        })
       });
 
     setNormalizedFields(schemeMap);
