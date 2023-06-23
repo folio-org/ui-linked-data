@@ -17,8 +17,8 @@ async function doRequest(url: string, requestParams: RequestInit) {
     }
 
     return response;
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
   }
 }
 

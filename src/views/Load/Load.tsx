@@ -1,46 +1,37 @@
 import { useEffect, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { getAllRecords, getRecord } from '../../common/api/records.api';
+import useConfig from '../../common/hooks/useConfig.hook';
 import state from '../../state/state';
 
 import './Load.scss';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
-  const setUserValues = useSetRecoilState(state.inputs.userValues);
+  const setRecord = useSetRecoilState(state.inputs.record);
+
+  const { getProfiles } = useConfig();
 
   useEffect(() => {
     getAllRecords({
       pageNumber: 0,
-    }).then(res => {
-      setAvailableRecords(res.content);
-    });
+    })
+      .then(res => {
+        setAvailableRecords(res?.content);
+      })
+      .catch(err => console.error('Error fetching record list: ', err));
   }, []);
 
   const fetchRecord = async (recordId: string) => {
-    const record: RecordEntry = await getRecord({ recordId });
+    try {
+      const record: RecordEntry = await getRecord({ recordId });
 
-    // TODO: work on an appropriate schema for the record
-    const values = [
-      ...record.configuration.instanceValues
-        .filter(i => i.type === 'literal')
-        .map(i => {
-          return {
-            field: i.propertyLabel,
-            value: i.userValue?.['@value'] || '',
-          };
-        }),
-      ...record.configuration.workValues
-        .filter(i => i.type === 'literal')
-        .map(i => {
-          return {
-            field: i.propertyLabel,
-            value: i.userValue?.['@value'] || '',
-          };
-        }),
-    ];
-
-    setUserValues(values);
+      // TODO: refactor when the new schema and different build flow is available
+      setRecord(record);
+      getProfiles();
+    } catch (err) {
+      console.error('Error fetching record: ', err);
+    }
   };
 
   return (
@@ -51,11 +42,11 @@ export const Load = () => {
       </div>
       <strong>Available records:</strong>
       <div className="button-group">
-        {availableRecords?.map((i: RecordEntry) => (
-          <button key={i.id || i.graphName} onClick={() => fetchRecord(i.graphName)}>
-            {i.graphName}
+        {availableRecords?.map(({ id }: RecordEntry) => (
+          <button key={id} onClick={() => fetchRecord(String(id))}>
+            {`Record ID: ${id}`}
           </button>
-        ))}
+        )) || <div>No available records</div>}
       </div>
     </div>
   );

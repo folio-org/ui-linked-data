@@ -12,7 +12,6 @@ import { UIFieldRenderType } from '../../common/constants/uiControls.constants';
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
-
   const userValue = useRecoilValue(state.inputs.userValues);
   const setUserValue = useSetRecoilState(state.inputs.userValues);
 

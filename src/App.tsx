@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Edit, Load, Main } from './views';
 import { Nav } from './components/Nav/Nav';
@@ -19,11 +19,23 @@ type IContainer = {
 };
 
 export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
-  if (okapi) {
-    for (const [k, v] of Object.entries(okapi)) {
-      localStorage.setItem(`${OKAPI_PREFIX}_${k}`, v);
+  // TODO: decide on a place to manage okapi props
+  // Since we use localStorage might as well manage in the wrapper
+  useEffect(() => {
+    if (okapi) {
+      for (const [key, value] of Object.entries(okapi)) {
+        localStorage.setItem(`${OKAPI_PREFIX}_${key}`, value);
+      }
     }
-  }
+
+    return () => {
+      if (okapi) {
+        for (const key of Object.keys(okapi)) {
+          localStorage.removeItem(`${OKAPI_PREFIX}_${key}`);
+        }
+      }
+    };
+  }, [okapi]);
 
   return (
     <RecoilRoot>

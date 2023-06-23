@@ -1,63 +1,28 @@
 import { useRecoilValue } from 'recoil';
-import { postRecord } from '../../common/api/records.api';
 import state from '../../state/state';
 import getTransformedPreviewComponents from '../../common/helpers/preview.helper';
 import './Preview.scss';
+import { applyUserValues } from '../../common/helpers/profile.helper';
+import { postRecord } from '../../common/api/records.api';
+import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 
 export const Preview = () => {
-  const selectedProfile = useRecoilValue(state.config.selectedProfile);
   const userValues = useRecoilValue(state.inputs.userValues);
+  const normalizedFields = useRecoilValue(state.config.normalizedFields);
+  const { profile, id } = useRecoilValue(state.inputs.record);
 
-  const generateJsonFor = (propertyTemplates: PropertyTemplate[]) => {
-    const labels = userValues.map(({ field }) => field);
-    return propertyTemplates.reduce<PropertyTemplate[]>((arr, currentValue) => {
-      const updatedValue = { ...currentValue };
-
-      if (labels.includes(currentValue.propertyLabel)) {
-        updatedValue.userValue = {
-          '@type': updatedValue.propertyURI,
-          '@value': userValues.find(({ field }) => field === currentValue.propertyLabel)?.value,
-        };
-      }
-
-      arr.push(updatedValue);
-
-      return arr;
-    }, []);
-  };
-
-  const generateJson = () => {
-    if (!selectedProfile) {
-      return;
-    }
-
-    const [workPropertyTemplate, instancePropertyTemplate] = selectedProfile.json['Profile'].resourceTemplates;
-    const workJson = generateJsonFor(workPropertyTemplate.propertyTemplates);
-    const instanceJson = generateJsonFor(instancePropertyTemplate.propertyTemplates);
-
-    const recordEntry: RecordEntry = {
-      graphName: String(Math.ceil(Math.random() * 100000)),
-      configuration: {
-        instanceValues: instanceJson,
-        workValues: workJson,
-      },
+  const formatAndPostRecord = async () => {
+    const parsed = await applyUserValues(normalizedFields, userValues);
+    const result = {
+      ...parsed,
+      profile: profile ?? PROFILE_IDS.MONOGRAPH,
+      id: id ?? Math.ceil(Math.random() * 100000),
     };
 
-    postRecord(recordEntry);
-
-    // take selected profile
-    // insert workJson, instanceJson in their respectable positions in the selected ptofile
-    // post the selected profile with rt.pt inserted
-
-    return;
+    postRecord(result);
   };
 
   const componentsTree = getTransformedPreviewComponents(userValues);
-
-  const getTitleFromId = (fieldId: string) => {
-    const parts = fieldId.split('_')
-    return parts[parts.length - 1]
-  }
 
   return (
     <div className="preview-panel">
@@ -84,7 +49,7 @@ export const Preview = () => {
         </div>
       ))}
       <br />
-      <button onClick={generateJson}>Post Record</button>
+      <button onClick={formatAndPostRecord}>Post Record</button>
     </div>
   );
 };

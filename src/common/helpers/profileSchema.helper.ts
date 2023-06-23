@@ -13,3 +13,5 @@ export const generateGroupKey = (defaultKey: string, parentGroup: RenderedFieldM
 };
 
 export const parseGroupKey = (key: string) => key.split(GROUP_KEY_SEPARATOR)[0];
+
+export const hasGroupKey = (key: string) => key.includes(`${GROUP_KEY_SEPARATOR}${GROUP_KEY_SUFFIX}`);
