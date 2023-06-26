@@ -53,7 +53,14 @@ export default function useConfig() {
     return preparedFields;
   };
 
-  const parseField = ({ propertyTemplate, fields, parent, path, level, userValue }: IParseField) => {
+  const parseField = ({
+    propertyTemplate,
+    fields,
+    parent,
+    path,
+    level,
+    userValue,
+  }: IParseField) => {
     let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
     const fieldType = getComponentType(propertyTemplate);
 
@@ -178,7 +185,7 @@ export default function useConfig() {
         const blockMap: RenderedFieldMap = new Map();
 
         // TODO: why do we use user record as the base for iteration? It can be empty
-        (record[resourceURI] || TEMPORARY_FALLBACK_RECORD[resourceURI])?.forEach((entry: Record<string, any>) => {
+        (record?.[resourceURI] || TEMPORARY_FALLBACK_RECORD[resourceURI])?.forEach((entry: Record<string, any>) => {
           schemeMap.set(block.resourceURI, {
             type: UIFieldRenderType.block,
             fields: blockMap,
@@ -195,13 +202,13 @@ export default function useConfig() {
               userValue: entry,
             });
           });
-        });
+        })
       });
 
     setNormalizedFields(schemeMap);
   };
 
-  const getProfiles = async (): Promise<any> => {
+  const getProfiles = async (record?: RecordEntry): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
@@ -209,8 +216,8 @@ export default function useConfig() {
     setProfiles(response);
     setSelectedProfile(monograph);
     // Purge user values
-    setUserValues([]);
-    parseRecord(userRecord, prepareFields(response), monograph);
+    setUserValues([])
+    parseRecord(userRecord || record, prepareFields(response), monograph);
 
     return response;
   };

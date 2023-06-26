@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useSetRecoilState } from 'recoil';
 import { getAllRecords, getRecord } from '../../common/api/records.api';
 import useConfig from '../../common/hooks/useConfig.hook';
@@ -11,6 +12,7 @@ export const Load = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
 
   const { getProfiles } = useConfig();
+  const history = useHistory();
 
   useEffect(() => {
     getAllRecords({
@@ -24,11 +26,13 @@ export const Load = () => {
 
   const fetchRecord = async (recordId: string) => {
     try {
-      const record: RecordEntry = await getRecord({ recordId });
+      const response: RecordEntry = await getRecord({ recordId });
 
       // TODO: refactor when the new schema and different build flow is available
-      setRecord(record);
-      getProfiles();
+      setRecord(response);
+
+      getProfiles(response);
+      history.push('/edit');
     } catch (err) {
       console.error('Error fetching record: ', err);
     }

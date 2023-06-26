@@ -1,4 +1,5 @@
-import { FC, ChangeEvent } from 'react';
+import { ChangeEvent, FC } from 'react';
+import './Input.scss';
 
 type InputProps = {
   placeholder?: string;
@@ -7,5 +8,5 @@ type InputProps = {
 };
 
 export const Input: FC<InputProps> = ({ placeholder, value, onChange }) => {
-  return <input value={value} placeholder={placeholder} onChange={onChange} />;
+  return <input className="input" value={value} placeholder={placeholder} onChange={onChange} />;
 };

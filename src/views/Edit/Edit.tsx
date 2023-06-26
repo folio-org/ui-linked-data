@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import useConfig from '../../common/hooks/useConfig.hook';
 import { EditSection } from '../../components/EditSection/EditSection';
@@ -12,10 +12,6 @@ export const Edit = () => {
 
   const { getProfiles } = useConfig();
 
-  useEffect(() => {
-    getProfiles();
-  }, []);
-
   return selectedProfile ? (
     <div className="edit-page">
       <Properties />
@@ -23,6 +19,11 @@ export const Edit = () => {
       <Preview />
     </div>
   ) : (
-    <div>Loading ...</div>
+    <div>
+      <Link to="/load">Select a record for editing</Link> or{' '}
+      <Link to="#" onClick={() => getProfiles()}>
+        Start from scratch
+      </Link>
+    </div>
   );
 };
