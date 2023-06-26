@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '../../state/state';
-import getTransformedPreviewComponents from '../../common/helpers/preview.helper';
+import getTransformedPreviewComponents, { getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
 import { applyUserValues } from '../../common/helpers/profile.helper';
 import { postRecord } from '../../common/api/records.api';
@@ -30,11 +30,12 @@ export const Preview = () => {
   };
 
   const componentsTree = getTransformedPreviewComponents(userValues);
+  const sortedPreviewComponents = getSortedPreviewBlocks(Array.from(componentsTree?.values()));
 
   return (
     <div className="preview-panel">
       <strong>Preview pane</strong>
-      {Array.from(componentsTree?.values()).map(({ title: blockTitle, groups }: PreviewBlock) => (
+      {sortedPreviewComponents.map(({ title: blockTitle, groups }: PreviewBlock) => (
         <div key={blockTitle}>
           <h3>{blockTitle}</h3>
           {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (

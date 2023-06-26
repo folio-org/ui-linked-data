@@ -35,3 +35,7 @@ type PreviewGroup = {
 };
 
 type PreviewFieldValue = Partial<RenderedFieldValue> & { field: string };
+
+type PreviewBlockSortValues = {
+  [key: string]: number;
+};

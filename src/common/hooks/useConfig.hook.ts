@@ -53,14 +53,7 @@ export default function useConfig() {
     return preparedFields;
   };
 
-  const parseField = ({
-    propertyTemplate,
-    fields,
-    parent,
-    path,
-    level,
-    userValue,
-  }: IParseField) => {
+  const parseField = ({ propertyTemplate, fields, parent, path, level, userValue }: IParseField) => {
     let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
     const fieldType = getComponentType(propertyTemplate);
 
@@ -138,25 +131,13 @@ export default function useConfig() {
         }
 
         propertyTemplates.forEach(optionPropertyTemplate => {
-          // For dropdown, Option has no value, only parent dropdown has this one, so json argument is undefined
-          const optionFieldType = getComponentType(optionPropertyTemplate);
-          const isComplexField = optionFieldType === FieldType.COMPLEX;
-          let updatedUserValue = matchingEntry;
-
-          if (!isDropdown) {
-            // TODO: Workaround. Check if it works correctly if groupJson has some elements
-            updatedUserValue = groupJson?.[0]?.[resourceURI];
-          } else if (isComplexField) {
-            updatedUserValue = groupJson?.[resourceURI];
-          }
-
           parseField({
             propertyTemplate: optionPropertyTemplate,
             fields,
             parent: fieldsMap,
             path: pathToField,
             level: level + 1,
-            userValue: updatedUserValue,
+            userValue: matchingEntry,
           });
         });
       });
@@ -202,7 +183,7 @@ export default function useConfig() {
               userValue: entry,
             });
           });
-        })
+        });
       });
 
     setNormalizedFields(schemeMap);
@@ -216,7 +197,7 @@ export default function useConfig() {
     setProfiles(response);
     setSelectedProfile(monograph);
     // Purge user values
-    setUserValues([])
+    setUserValues([]);
     parseRecord(userRecord || record, prepareFields(response), monograph);
 
     return response;

@@ -43,3 +43,15 @@ export default function getTransformedPreviewComponents(userValues: UserValue[] 
 
   return tree;
 }
+
+const PREVIEW_BLOCKS_SORT_VALUES: PreviewBlockSortValues = {
+  Work: 0,
+  Instance: 1,
+  Item: 2,
+};
+
+export const getSortedPreviewBlocks = (data: PreviewBlock[]) =>
+  data.sort(
+    ({ title: firstElemTitle }, { title: secondElemTitle }) =>
+      PREVIEW_BLOCKS_SORT_VALUES[firstElemTitle] - PREVIEW_BLOCKS_SORT_VALUES[secondElemTitle],
+  );
