@@ -10,8 +10,7 @@
     ".": {
       "import": "./dist/marva-next.es.js",
       "require": "./dist/marva-next.umd.js"
-    },
-    "./dist/style.css": "./dist/style.css"
+    }
   },
   "main": "./dist/marva-next.umd.js",
   "module": "./dist/marva-next.es.js",
@@ -24,17 +23,18 @@
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}"
   },
   "dependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^5.7.3",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "@r2wc/react-to-web-component": "^2.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.13",
+    "@types/react-dom": "^18.2.6",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",

@@ -5,9 +5,9 @@ const userValues = atom<UserValue[]>({
   default: [],
 });
 
-const record = atom<Record<string, any>>({
+const record = atom<Record<string, any> | null>({
   key: 'inputs.record',
-  default: {},
+  default: null,
 });
 
 export default {

@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import getTransformedPreviewComponents from '../../common/helpers/preview.helper';
 import './Preview.scss';
@@ -7,19 +7,26 @@ import { postRecord } from '../../common/api/records.api';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 
 export const Preview = () => {
-  const userValues = useRecoilValue(state.inputs.userValues);
+  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
+  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
-  const { profile, id } = useRecoilValue(state.inputs.record);
+  const [record, setRecord] = useRecoilState(state.inputs.record);
 
   const formatAndPostRecord = async () => {
     const parsed = await applyUserValues(normalizedFields, userValues);
     const result = {
       ...parsed,
-      profile: profile ?? PROFILE_IDS.MONOGRAPH,
-      id: id ?? Math.ceil(Math.random() * 100000),
+      profile: record?.profile ?? PROFILE_IDS.MONOGRAPH,
+      id: record?.id ?? Math.ceil(Math.random() * 100000),
     };
 
     postRecord(result);
+  };
+
+  const discardRecord = () => {
+    setUserValues([]);
+    setRecord(null);
+    setSelectedProfile(null);
   };
 
   const componentsTree = getTransformedPreviewComponents(userValues);
@@ -50,6 +57,7 @@ export const Preview = () => {
       ))}
       <br />
       <button onClick={formatAndPostRecord}>Post Record</button>
+      <button onClick={discardRecord}>Discard Record</button>
     </div>
   );
 };

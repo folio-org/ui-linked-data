@@ -12,29 +12,15 @@ export default defineConfig(() => (
     ],
     build: {
       lib: {
-        entry: path.resolve(__dirname, 'src/App.tsx'),
+        entry: path.resolve(__dirname, 'src/embed.tsx'),
         name: 'marva-next',
         formats: ['es', 'umd'],
         fileName: (format) => `marva-next.${format}.js`,
       },
-      rollupOptions: {
-        external: [
-          'react',
-          'react-dom',
-          'react-router-dom',
-          'react-router',
-        ],
-        output: {
-          globals: {
-            react: 'React',
-            'react-dom': 'ReactDOM',
-            'react-router-dom': 'react-router-dom',
-            'react-router': 'react-router',
-          },
-        },
-      },
-    }
+    },
+    envPrefix: 'EDITOR_',
   } : {
-    plugins: [react()]
+    plugins: [react()],
+    envPrefix: 'EDITOR_',
   }
 ))

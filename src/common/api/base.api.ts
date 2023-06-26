@@ -2,10 +2,7 @@
 
 import { OKAPI_PREFIX } from '../constants/api.constants';
 
-const BASE_PATH =
-  localStorage.getItem(`${OKAPI_PREFIX}_url`) ||
-  // || .env declared
-  'http://localhost:8080';
+const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || import.meta.env.EDITOR_API_BASE_PATH;
 
 async function doRequest(url: string, requestParams: RequestInit) {
   try {
