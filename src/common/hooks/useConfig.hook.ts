@@ -179,7 +179,7 @@ export default function useConfig() {
             fields: blockMap,
             path: block.resourceLabel,
           });
-  
+
           block.propertyTemplates.forEach(propertyTemplate => {
             parseField({
               propertyTemplate,
