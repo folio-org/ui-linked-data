@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '../../state/state';
-import getTransformedPreviewComponents, { getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
+import { getTransformedPreviewComponents, getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
 import { applyUserValues } from '../../common/helpers/profile.helper';
 import { postRecord } from '../../common/api/records.api';
