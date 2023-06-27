@@ -1,4 +1,4 @@
-export default function getTransformedPreviewComponents(userValues: UserValue[] = []): PreviewMap {
+export const getTransformedPreviewComponents = (userValues: UserValue[] = []): PreviewMap => {
   const tree: PreviewMap = new Map();
 
   userValues.forEach(({ field, value, hasChildren }) => {
@@ -42,4 +42,16 @@ export default function getTransformedPreviewComponents(userValues: UserValue[] 
   });
 
   return tree;
-}
+};
+
+const PREVIEW_BLOCKS_SORT_VALUES: PreviewBlockSortValues = {
+  Work: 0,
+  Instance: 1,
+  Item: 2,
+};
+
+export const getSortedPreviewBlocks = (data: PreviewBlock[]) =>
+  data.sort(
+    ({ title: firstElemTitle }, { title: secondElemTitle }) =>
+      PREVIEW_BLOCKS_SORT_VALUES[firstElemTitle] - PREVIEW_BLOCKS_SORT_VALUES[secondElemTitle],
+  );
