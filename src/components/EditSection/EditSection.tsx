@@ -9,6 +9,7 @@ import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
 import { FieldType } from '../../common/constants/bibframe.constants';
 import { UIFieldRenderType } from '../../common/constants/uiControls.constants';
 import { ComplexLookupField } from '../ComplexLookupField/ComplexLookupField';
+import { getUserValueByPath } from '../../common/helpers/uiControls.helper';
 
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
@@ -33,7 +34,8 @@ export const EditSection = () => {
   };
 
   const drawDependentFields = (group: RenderedField, userValue: UserValue[]) => {
-    const selectedUserValue = userValue.find(({ field }) => field === group.path)?.['value']?.[0];
+    // Dropdown can have only one selected option
+    const selectedUserValue = getUserValueByPath(userValue, group.path)?.[0];
     const selectedFields = group.fields?.get(selectedUserValue?.uri);
     let dependingFields = null;
 
@@ -98,7 +100,18 @@ export const EditSection = () => {
     }
 
     if (isLiteralGroupType && !value) {
-      return <LiteralField key={key || group.path} label={group.name ?? ''} id={group.path} onChange={changeValue} />;
+      // Literal can have only one value
+      const literalValue = getUserValueByPath(userValue, group.path)?.[0];
+
+      return (
+        <LiteralField
+          key={key || group.path}
+          label={group.name ?? ''}
+          id={group.path}
+          value={literalValue}
+          onChange={changeValue}
+        />
+      );
     }
 
     return value?.map(field => {
