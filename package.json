@@ -15,8 +15,8 @@
   "module": "./dist/marva-next.es.js",
   "scripts": {
     "dev": "vite",
-    "build": "export EDITOR_BUILD_TYPE=0 && vite build",
-    "build:lib": "export EDITOR_BUILD_TYPE=1 && vite build",
+    "build": "export EDITOR_BUILD_TYPE=0 && tsc && vite build",
+    "build:lib": "export EDITOR_BUILD_TYPE=1 && tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}"
