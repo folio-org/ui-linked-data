@@ -1,6 +1,5 @@
 {
-  "name": "marva-next",
-  "private": true,
+  "name": "@folio-eis/marva-next",
   "version": "0.0.0",
   "type": "module",
   "files": [
