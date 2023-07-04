@@ -5,6 +5,8 @@ import './Preview.scss';
 import { applyUserValues } from '../../common/helpers/profile.helper';
 import { postRecord } from '../../common/api/records.api';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
+import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
+import { localStorageService } from '../../common/services/storage';
 
 export const Preview = () => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -12,15 +14,30 @@ export const Preview = () => {
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
   const [record, setRecord] = useRecoilState(state.inputs.record);
 
-  const formatAndPostRecord = async () => {
+  const onClickSaveRecord = async () => {
+    const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
     const parsed = await applyUserValues(normalizedFields, userValues);
+
+    // TODO: save a new record or update the existing one
+    await formatAndPostRecord(profile, parsed);
+    saveRecordLocally(profile, parsed);
+  };
+
+  const formatAndPostRecord = async (profile: any, parsedRecord: Record<string, object>) => {
     const result = {
-      ...parsed,
-      profile: record?.profile ?? PROFILE_IDS.MONOGRAPH,
+      ...parsedRecord,
+      profile,
       id: record?.id ?? Math.ceil(Math.random() * 100000),
     };
 
     postRecord(result);
+  };
+
+  const saveRecordLocally = (profile: string, parsedRecord: Record<string, object>) => {
+    // TODO: check id of the created record in response and use it for key generation
+    const storageKey = generateRecordBackupKey(profile, record?.id);
+
+    localStorageService.serialize(storageKey, parsedRecord);
   };
 
   const discardRecord = () => {
@@ -57,7 +74,7 @@ export const Preview = () => {
         </div>
       ))}
       <br />
-      <button onClick={formatAndPostRecord}>Post Record</button>
+      <button onClick={onClickSaveRecord}>Post Record</button>
       <button onClick={discardRecord}>Discard Record</button>
     </div>
   );

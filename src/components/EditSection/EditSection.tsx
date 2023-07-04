@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import { LiteralField } from '../LiteralField/LiteralField';
@@ -6,18 +7,50 @@ import './EditSection.scss';
 import { replaceItemAtIndex } from '../../common/helpers/common.helper';
 import { DropdownField } from '../DropdownField/DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
-import { FieldType } from '../../common/constants/bibframe.constants';
+import { FieldType, PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { UIFieldRenderType } from '../../common/constants/uiControls.constants';
 import { ComplexLookupField } from '../ComplexLookupField/ComplexLookupField';
 import { getUserValueByPath } from '../../common/helpers/uiControls.helper';
+import { applyUserValues } from '../../common/helpers/profile.helper';
+import { AUTOMATICALLY_SAVING_INTERVAL } from '../../common/constants/storage.constants';
+import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
+import { localStorageService } from '../../common/services/storage';
 
 export const EditSection = () => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
   const userValue = useRecoilValue(state.inputs.userValues);
   const setUserValue = useSetRecoilState(state.inputs.userValues);
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
+  const record = useRecoilValue(state.inputs.record);
+
+  useEffect(() => {
+    if (!isEdited) return;
+
+    const saveRecordLocally = setInterval(async () => {
+      try {
+        const parsed = await applyUserValues(normalizedFields, userValue);
+
+        if (parsed) {
+          const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+          const key = generateRecordBackupKey(profile, record?.id);
+
+          localStorageService.serialize(key, parsed);
+        }
+      } catch (error) {
+        console.error('Unable to automatically save changes:', error);
+      }
+    }, AUTOMATICALLY_SAVING_INTERVAL);
+
+    return () => clearInterval(saveRecordLocally);
+  }, [isEdited]);
 
   const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string, isDynamicField?: boolean) => {
+    if (!isEdited) {
+      setIsEdited(true);
+    }
+
     return setUserValue(oldValue => {
       const index = oldValue.findIndex(({ field }) => field === fieldId);
       const newValue: UserValue = {
