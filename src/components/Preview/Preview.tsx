@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import classNames from 'classnames';
 import state from '../../state/state';
 import { getTransformedPreviewComponents, getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
@@ -8,13 +9,14 @@ import { postRecord, putRecord } from '../../common/api/records.api';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
+import { StatusType } from '../../common/constants/status.constants';
 
 export const Preview = () => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
   const [record, setRecord] = useRecoilState(state.inputs.record);
-  const [errors, setError] = useState<Record<string, string | null>>({});
+  const [status, setStatus] = useState<StatusEntry | undefined>();
 
   const onClickSaveRecord = async () => {
     const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
@@ -32,12 +34,12 @@ export const Preview = () => {
         await putRecord(record.id, formattedRecord);
       }
 
-      setError(oldValue => ({ ...oldValue, saveRecord: null }));
+      setStatus({ type: StatusType.success, message: 'Record saved successfully' });
     } catch (error) {
       const message = 'Cannot save the record';
       console.error(message, error);
 
-      setError(oldValue => ({ ...oldValue, saveRecord: message }));
+      setStatus({ type: StatusType.error, message });
     }
 
     const recordId = record?.id || response?.id;
@@ -72,7 +74,6 @@ export const Preview = () => {
 
   const componentsTree = getTransformedPreviewComponents(userValues);
   const sortedPreviewComponents = getSortedPreviewBlocks(Array.from(componentsTree?.values()));
-  const errrorsList = Object.values(errors)?.filter(errorMessage => errorMessage);
 
   return (
     <div className="preview-panel">
@@ -106,13 +107,7 @@ export const Preview = () => {
           <button onClick={discardRecord}>Discard Record</button>
         </div>
 
-        {errrorsList?.length > 0 && (
-          <ul>
-            {errrorsList.map(errorMessage => (
-              <li key={errorMessage}>Error: {errorMessage}</li>
-            ))}
-          </ul>
-        )}
+        {status && <p className={classNames(['status-message', status.type])}>{status.message}</p>}
       </div>
     </div>
   );
