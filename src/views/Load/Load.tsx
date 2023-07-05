@@ -6,6 +6,7 @@ import useConfig from '../../common/hooks/useConfig.hook';
 import state from '../../state/state';
 
 import './Load.scss';
+import { localStorageService } from '../../common/services/storage';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
@@ -26,6 +27,19 @@ export const Load = () => {
 
   const fetchRecord = async (recordId: string) => {
     try {
+      // TODO: uncomment and replace the existing code in the 'try' block after the refactoring is complete
+      /* const locallySavedData = localStorageService.deserialize(recordId);
+      let recordData: RecordEntry = locallySavedData;
+
+      if (!locallySavedData) {
+        recordData = await getRecord({ recordId });
+      }
+
+      setRecord(recordData);
+
+      getProfiles(recordData);
+      history.push('/edit'); */
+
       const response: RecordEntry = await getRecord({ recordId });
 
       // TODO: refactor when the new schema and different build flow is available
