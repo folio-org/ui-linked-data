@@ -62,3 +62,17 @@ export const postRecord = async (recordEntry: RecordEntry) => {
     },
   });
 };
+
+export const putRecord = async (recordId: number, recordEntry: RecordEntry) => {
+  return baseApi.request({
+    url: `${postRecordUrl}/${recordId}`,
+    requestParams: {
+      method: 'PUT',
+      body: JSON.stringify(recordEntry),
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+      },
+    },
+  });
+};

@@ -7,11 +7,7 @@ export const getTitleFromId = (fieldId: string) => {
   return parts[parts.length - 1];
 };
 
-const traverseSchema = async (
-  schema: RenderedFieldMap,
-  userValues: Array<UserValue>,
-  container: Record<string, any>,
-) => {
+const traverseSchema = (schema: RenderedFieldMap, userValues: Array<UserValue>, container: Record<string, any>) => {
   if (!userValues.length || !schema.size) {
     return;
   }
@@ -29,12 +25,12 @@ const traverseSchema = async (
   }
 };
 
-export const applyUserValues = async (schema: RenderedFieldMap, userValues: Array<UserValue>) => {
+export const applyUserValues = (schema: RenderedFieldMap, userValues: Array<UserValue>) => {
   const result: Record<string, object> = {};
   const userValuesWithContent = userValues.filter(({ value }) => value.length);
 
   try {
-    await traverseSchema(schema, userValuesWithContent, result);
+    traverseSchema(schema, userValuesWithContent, result);
   } catch (err) {
     console.error('Unable to traverse schema: ', err);
   }

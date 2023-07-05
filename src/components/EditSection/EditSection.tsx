@@ -28,9 +28,9 @@ export const EditSection = () => {
   useEffect(() => {
     if (!isEdited) return;
 
-    const saveRecordLocally = setInterval(async () => {
+    const saveRecordLocally = setInterval(() => {
       try {
-        const parsed = await applyUserValues(normalizedFields, userValue);
+        const parsed = applyUserValues(normalizedFields, userValue);
 
         if (parsed) {
           const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;

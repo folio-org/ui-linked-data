@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import { getTransformedPreviewComponents, getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
 import { applyUserValues } from '../../common/helpers/profile.helper';
-import { postRecord } from '../../common/api/records.api';
+import { postRecord, putRecord } from '../../common/api/records.api';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
@@ -13,29 +14,52 @@ export const Preview = () => {
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const normalizedFields = useRecoilValue(state.config.normalizedFields);
   const [record, setRecord] = useRecoilState(state.inputs.record);
+  const [errors, setError] = useState<Record<string, string | null>>({});
 
   const onClickSaveRecord = async () => {
     const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-    const parsed = await applyUserValues(normalizedFields, userValues);
+    const parsed = applyUserValues(normalizedFields, userValues);
+    // TODO: define a type
+    let response: any;
 
-    // TODO: save a new record or update the existing one
-    await formatAndPostRecord(profile, parsed);
-    saveRecordLocally(profile, parsed);
+    try {
+      const formattedRecord = formatRecord(profile, parsed);
+
+      if (!record?.id) {
+        // TODO: check if API provides an id
+        response = await postRecord(formattedRecord);
+      } else {
+        await putRecord(record.id, formattedRecord);
+      }
+
+      setError(oldValue => ({ ...oldValue, saveRecord: null }));
+    } catch (error) {
+      const message = 'Cannot save the record';
+      console.error(message, error);
+
+      setError(oldValue => ({ ...oldValue, saveRecord: message }));
+    }
+
+    const recordId = record?.id || response?.id;
+
+    saveRecordLocally(profile, parsed, recordId);
   };
 
-  const formatAndPostRecord = async (profile: any, parsedRecord: Record<string, object>) => {
-    const result = {
+  const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
+    const formattedRecord: RecordEntry = {
       ...parsedRecord,
       profile,
-      id: record?.id ?? Math.ceil(Math.random() * 100000),
     };
 
-    postRecord(result);
+    if (record?.id) {
+      formattedRecord.id = record?.id;
+    }
+
+    return formattedRecord;
   };
 
-  const saveRecordLocally = (profile: string, parsedRecord: Record<string, object>) => {
-    // TODO: check id of the created record in response and use it for key generation
-    const storageKey = generateRecordBackupKey(profile, record?.id);
+  const saveRecordLocally = (profile: string, parsedRecord: Record<string, object>, recordId: number) => {
+    const storageKey = generateRecordBackupKey(profile, recordId);
 
     localStorageService.serialize(storageKey, parsedRecord);
   };
@@ -48,6 +72,7 @@ export const Preview = () => {
 
   const componentsTree = getTransformedPreviewComponents(userValues);
   const sortedPreviewComponents = getSortedPreviewBlocks(Array.from(componentsTree?.values()));
+  const errrorsList = Object.values(errors)?.filter(errorMessage => errorMessage);
 
   return (
     <div className="preview-panel">
@@ -74,8 +99,21 @@ export const Preview = () => {
         </div>
       ))}
       <br />
-      <button onClick={onClickSaveRecord}>Post Record</button>
-      <button onClick={discardRecord}>Discard Record</button>
+
+      <div>
+        <div>
+          <button onClick={onClickSaveRecord}>Post Record</button>
+          <button onClick={discardRecord}>Discard Record</button>
+        </div>
+
+        {errrorsList?.length > 0 && (
+          <ul>
+            {errrorsList.map(errorMessage => (
+              <li key={errorMessage}>Error: {errorMessage}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
