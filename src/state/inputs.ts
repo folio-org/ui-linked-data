@@ -5,7 +5,7 @@ const userValues = atom<UserValue[]>({
   default: [],
 });
 
-const record = atom<Record<string, any> | null>({
+const record = atom<RecordEntry | null>({
   key: 'inputs.record',
   default: null,
 });

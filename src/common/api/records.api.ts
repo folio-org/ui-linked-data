@@ -1,7 +1,7 @@
 import { MAX_LIMIT, OKAPI_PREFIX } from '../constants/api.constants';
 import baseApi from './base.api';
 
-type GetRecord = {
+type SingleRecord = {
   recordId: string;
 };
 
@@ -21,9 +21,11 @@ const headers = tenant
     }
   : undefined;
 
-const getRecordUrl = '/bibframes/:recordId';
-export const getRecord = async ({ recordId }: GetRecord) => {
-  const url = getRecordUrl.replace(':recordId', recordId);
+const recordsUrl = '/bibframes';
+const singleRecordUrl = '/bibframes/:recordId';
+
+export const getRecord = async ({ recordId }: SingleRecord) => {
+  const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
 
   return baseApi.getJson({
     url,
@@ -33,7 +35,6 @@ export const getRecord = async ({ recordId }: GetRecord) => {
   });
 };
 
-const getAllRecordsUrl = '/bibframes';
 export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIMIT }: GetAllRecords) => {
   const stringParams = new URLSearchParams({
     pageSize: String(pageSize),
@@ -41,19 +42,36 @@ export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIM
   }).toString();
 
   return baseApi.getJson({
-    url: `${getAllRecordsUrl}?${stringParams}`,
+    url: `${recordsUrl}?${stringParams}`,
     requestParams: {
       headers,
     },
   });
 };
 
-const postRecordUrl = '/bibframes';
 export const postRecord = async (recordEntry: RecordEntry) => {
+  const url = baseApi.generateUrl(recordsUrl);
+
   return baseApi.request({
-    url: postRecordUrl,
+    url,
     requestParams: {
       method: 'POST',
+      body: JSON.stringify(recordEntry),
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+      },
+    },
+  });
+};
+
+export const putRecord = async (recordId: string | number, recordEntry: RecordEntry) => {
+  const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'PUT',
       body: JSON.stringify(recordEntry),
       headers: {
         ...headers,

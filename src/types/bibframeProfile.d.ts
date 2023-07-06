@@ -74,7 +74,7 @@ type ProfileEntry = {
 type RecursiveRecordSchema = Record<string, Array<RecursiveRecordSchema | string>>;
 
 type RecordEntry = RecursiveRecordSchema & {
-  id: number;
+  id?: number;
   profile: string;
 };
 

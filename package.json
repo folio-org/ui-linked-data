@@ -22,13 +22,14 @@
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}"
   },
   "dependencies": {
+    "@r2wc/react-to-web-component": "^2.0.2",
+    "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^5.7.3",
-    "recoil": "^0.7.7",
-    "@r2wc/react-to-web-component": "^2.0.2"
+    "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
