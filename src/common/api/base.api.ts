@@ -50,7 +50,16 @@ const getJson = async ({
   return response;
 };
 
+type URLParam = { name: string; value: string | number };
+
+const generateUrl = (url: string, param?: URLParam) => {
+  if (!param) return url;
+
+  return url.replace(param.name, param.value.toString());
+};
+
 export default {
   request,
   getJson,
+  generateUrl,
 };

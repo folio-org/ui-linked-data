@@ -1,7 +1,7 @@
 type StorageItemValue = string | typeof Array | Record<string, object>;
 
 abstract class StorageService {
-  constructor(private readonly storage: typeof localStorage | typeof sessionStorage) {}
+  constructor(private readonly storage: Storage) {}
 
   serialize(key: string, value: StorageItemValue) {
     const serializedValue = typeof value === 'string' ? value : JSON.stringify(value);
