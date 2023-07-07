@@ -11,12 +11,13 @@ export const PROFILE_IDS = {
   MONOGRAPH: 'lc:profile:bf2:Monograph',
 }
 
-export enum FieldType {
-  META = 'META',
-  HIDE = 'HIDE',
-  REF = 'REF',
-  LITERAL = 'LITERAL',
-  SIMPLE = 'SIMPLE',
-  COMPLEX = 'COMPLEX',
-  UNKNOWN = 'UNKNOWN',
+export const CONSTRAINTS: Constraints = {
+  repeatable: false,
+  editable: true,
+  mandatory: false,
+  defaults: [],
+  useValuesFrom: [],
+  valueDataType: {
+    dataTypeURI: ''
+  }
 }

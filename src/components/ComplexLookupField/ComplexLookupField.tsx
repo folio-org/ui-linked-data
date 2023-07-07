@@ -1,32 +1,30 @@
-import { ChangeEvent, FC, useEffect, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { Input } from '../Input/Input';
 
 interface Props {
   label: string;
-  id: string;
-  value?: RenderedFieldValue;
-  onChange: (value: RenderedFieldValue, fieldId: string) => void;
+  uuid: string;
+  value?: UserValueContents;
+  onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
-export const ComplexLookupField: FC<Props> = ({ label, id, value = undefined, onChange }) => {
-  const [localValue, setLocalValue] = useState<RenderedFieldValue | undefined>(value);
+const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING'
+
+export const ComplexLookupField: FC<Props> = ({ label, value = undefined, uuid, onChange }) => {
+  const [localValue, setLocalValue] = useState<UserValueContents>(value || {});
 
   // TODO: should open a modal with current input value and search data using it
   const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
-      id: null,
       label: value,
-      uri: null,
+      meta: {
+        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+      }
     };
 
+    onChange(uuid, [newValue])
     setLocalValue(newValue);
   };
-
-  useEffect(() => {
-    // ToDo: workaround for setting a default value and should be re-written.
-    if (value) onChange(value, id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div>

@@ -1,1 +1,1 @@
-export const AUTOMATICALLY_SAVING_INTERVAL = 60 * 1000;
+export const AUTOSAVE_INTERVAL = 60 * 1000;

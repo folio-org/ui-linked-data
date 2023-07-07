@@ -6,7 +6,6 @@ import useConfig from '../../common/hooks/useConfig.hook';
 import state from '../../state/state';
 
 import './Load.scss';
-import { localStorageService } from '../../common/services/storage';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
