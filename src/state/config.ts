@@ -10,19 +10,31 @@ const selectedProfile = atom<ProfileEntry | null>({
   default: null,
 });
 
-const preparedFields = atom<PreparedFields>({
+const preparedFields = atom<ResourceTemplates>({
   key: 'config.preparedFields',
   default: {},
 });
 
-const normalizedFields = atom<Map<string, any>>({
-  key: 'config.normalizedFields',
+const initialSchemaKey = atom<string | null>({
+  key: 'config.initialSchemaKey',
+  default: null,
+});
+
+const schema = atom<Map<string, any>>({
+  key: 'config.schema',
   default: new Map(),
+});
+
+const selectedEntries = atom<Array<string>>({
+  key: 'config.selectedEntries',
+  default: [],
 });
 
 export default {
   profiles,
   selectedProfile,
   preparedFields,
-  normalizedFields,
+  schema,
+  initialSchemaKey,
+  selectedEntries,
 };

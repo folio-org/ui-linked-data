@@ -1,8 +1,8 @@
 import { atom } from 'recoil';
 
-const userValues = atom<UserValue[]>({
+const userValues = atom<UserValues>({
   key: 'inputs.userValues',
-  default: [],
+  default: {},
 });
 
 const record = atom<RecordEntry | null>({

@@ -53,6 +53,7 @@ type ValueDataType = {
 };
 
 type FieldType = 'META' | 'HIDE' | 'REF' | 'LITERAL' | 'SIMPLE' | 'COMPLEX' | 'UNKNOWN';
+
 type ProfileMetadata = {
   createDate: string;
   updateDate: string;
@@ -78,10 +79,6 @@ type RecordEntry = RecursiveRecordSchema & {
   profile: string;
 };
 
-interface PreparedFields {
-  [key: string]: ResourceTemplate;
-}
-
-interface PreparedFields {
+interface ResourceTemplates {
   [key: string]: ResourceTemplate;
 }

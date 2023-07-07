@@ -1,39 +1,24 @@
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import { fetchProfiles } from '../api/profiles.api';
-import { getComponentType } from '../helpers/common.helper';
-import { FieldType, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '../constants/bibframe.constants';
-import { UIFieldRenderType } from '../constants/uiControls.constants';
-import { generateGroupKey } from '../helpers/profileSchema.helper';
+import { getAdvancedFieldType } from '../helpers/common.helper';
+import { CONSTRAINTS, PROFILE_NAMES } from '../constants/bibframe.constants';
+import { AdvancedFieldType } from '../constants/uiControls.constants';
+import { v4 as uuidv4 } from 'uuid';
 
-type IParseField = {
-  propertyTemplate: PropertyTemplate;
-  fields: PreparedFields;
-  parent: RenderedFieldMap;
-  path: string;
-  level: number;
-  userValue?: Record<string, any>;
-};
-
-const TEMPORARY_FALLBACK_RECORD: Record<string, string | Array<any>> = {
-  profile: 'lc:profile:bf2:Monograph',
-  'http://id.loc.gov/ontologies/bibframe/Work': [{}],
-  'http://id.loc.gov/ontologies/bibframe/Instance': [{}],
-  'http://id.loc.gov/ontologies/bibframe/Item': [{}],
-};
-
-// TODO: split & naming
+// TODO: split & naming ?
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const userRecord = useRecoilValue(state.inputs.record);
   const setPreparedFields = useSetRecoilState(state.config.preparedFields);
-  const setNormalizedFields = useSetRecoilState(state.config.normalizedFields);
+  const setSchema = useSetRecoilState(state.config.schema);
+  const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
+  const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
 
-  const prepareFields = (profiles: ProfileEntry[]): PreparedFields => {
-    const preparedFields = profiles.reduce<PreparedFields>((fields, profile) => {
-      const resourceTemplate = profile.json.Profile.resourceTemplates.reduce<PreparedFields>(
+  const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
+    const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
+      const resourceTemplate = profile.json.Profile.resourceTemplates.reduce<ResourceTemplates>(
         (resourceObject, resourceTemplate) => {
           resourceObject[resourceTemplate.id] = resourceTemplate;
 
@@ -53,159 +38,244 @@ export default function useConfig() {
     return preparedFields;
   };
 
-  const parseField = ({
-    propertyTemplate,
-    fields,
-    parent,
-    path,
-    level,
-    userValue,
-  }: IParseField) => {
-    let pathToField = `${path}_${propertyTemplate.propertyLabel}`;
-    const fieldType = getComponentType(propertyTemplate);
+  type TraverseProfile = {
+    entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+    templates: ResourceTemplates;
+    uuid?: string;
+    path?: Array<string>;
+    base?: Map<string, SchemaEntry>;
+    auxType?: AdvancedFieldType;
+    firstOfSameType?: boolean;
+    selectedEntries?: Array<string>;
+    record?: Record<string, any> | Array<any>,
+  };
 
-    // TODO: workaround and should be replaced with another unique identifier
-    const key = generateGroupKey(propertyTemplate.propertyURI, parent, level);
-    const groupMap: RenderedFieldMap = parent.get(key)?.fields ?? new Map();
-    const groupJson = userValue?.[key];
+  const traverseProfile = ({
+    entry,
+    templates,
+    uuid = uuidv4(),
+    path = [],
+    base = new Map(),
+    auxType,
+    firstOfSameType = false,
+    selectedEntries = [],
+    record,
+  }: TraverseProfile) => {
+    const type = auxType || getAdvancedFieldType(entry);
+    const updatedPath = [...path, uuid];
+    const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
+    const isRecordArray = Array.isArray(record);
 
-    if (!groupMap.size) {
-      parent.set(key, {
-        type: (level === 1 ? UIFieldRenderType.group : fieldType) ?? FieldType.UNKNOWN,
-        path: pathToField,
-        fields: groupMap,
-        name: propertyTemplate.propertyLabel,
-      });
-    }
+    if (branchEnds.includes(type)) {
+      const {
+        propertyURI,
+        propertyLabel,
+        mandatory,
+        repeatable,
+        valueConstraint: { useValuesFrom, editable, valueDataType },
+      } = entry as PropertyTemplate;
 
-    if (fieldType === FieldType.LITERAL || fieldType === FieldType.SIMPLE) {
-      const withFormat = groupJson?.map((item: any) => {
-        return item.id || item.label || item.uri
-          ? item
-          : {
-              id: null,
-              uri: null,
-              label: item,
-            };
-      });
+      const constraints = {
+        ...CONSTRAINTS,
+        mandatory: Boolean(mandatory),
+        repeatable: Boolean(repeatable),
+        editable: Boolean(editable),
+        useValuesFrom,
+        valueDataType,
+      };
 
-      parent.set(key, {
-        type: fieldType,
-        path: pathToField,
-        name: propertyTemplate.propertyLabel,
-        uri: propertyTemplate.valueConstraint?.useValuesFrom[0],
-        value: withFormat,
-      });
-    } else if (fieldType === FieldType.REF) {
-      const { valueTemplateRefs } = propertyTemplate.valueConstraint;
-
-      if (valueTemplateRefs.length <= 0) {
-        return;
-      }
-
-      // Dropdown and nested groups
-      const isDropdown = valueTemplateRefs.length > 1;
-      // TODO: Workaround. Check if it works correctly if groupJson has some elements
-      // Dropdown always has only one answer
-      const value = isDropdown ? [groupJson?.[0]?.id] : undefined;
-
-      parent.set(key, {
-        type: isDropdown ? UIFieldRenderType.dropdown : UIFieldRenderType.groupComplex,
-        path: pathToField,
-        fields: groupMap,
-        name: propertyTemplate.propertyLabel,
-        value,
-      });
-
-      valueTemplateRefs.forEach(ref => {
-        const { propertyTemplates, resourceLabel, resourceURI, id } = fields[ref];
-        pathToField = `${pathToField}_${resourceLabel}`;
-        const fieldsMap: RenderedFieldMap = groupMap.get?.(resourceURI)?.fields ?? new Map();
-
-        // find the matching entry in the groupJson array
-        // TODO: might fail in case of duplicate input fields ([{val}, {val}]); need to loop
-        const matchingEntry = groupJson?.find((entry: any) => Object.keys(entry).includes(resourceURI))?.[resourceURI];
-
-        if (fieldsMap.size === 0) {
-          groupMap.set?.(resourceURI, {
-            fields: fieldsMap,
-            name: resourceLabel,
-            id: id,
-            path: pathToField,
-            type: isDropdown ? UIFieldRenderType.dropdownOption : UIFieldRenderType.hidden,
-            uri: resourceURI,
-          });
+      !isRecordArray && record?.[propertyURI] && setUserValues((oldValue) => ({
+        ...oldValue,
+        [uuid]: {
+          uuid,
+          contents: record?.[propertyURI].map((entry: any) => (
+            typeof entry === 'string'
+              ? {
+                label: entry
+              } : {
+                label: entry.label,
+                meta: {
+                  parentURI: entry.uri,
+                  uri: entry.uri,
+                }
+              }
+          ))
         }
+      }))
 
-        propertyTemplates.forEach(optionPropertyTemplate => {
-          parseField({
-            propertyTemplate: optionPropertyTemplate,
-            fields,
-            parent: fieldsMap,
-            path: pathToField,
-            level: level + 1,
-            userValue: matchingEntry,
+      base.set(uuid, {
+        uuid,
+        type,
+        path: updatedPath,
+        displayName: propertyLabel,
+        uri: propertyURI,
+        constraints,
+      });
+
+    } else {
+      switch (type) {
+        // parent types
+        case AdvancedFieldType.profile: {
+          const { title, id, resourceTemplates } = (entry as ProfileEntry).json.Profile;
+          const uuidArray = resourceTemplates.map(() => uuidv4());
+
+          base.set(uuid, {
+            uuid,
+            type,
+            path: updatedPath,
+            displayName: title,
+            bfid: id,
+            children: uuidArray,
           });
-        });
-      });
-    } else if (fieldType === FieldType.COMPLEX) {
-      // TODO: define required fields and values for Complex field
-      parent.set(propertyTemplate.propertyURI, {
-        type: fieldType,
-        path: pathToField,
-        fields: groupMap,
-        name: propertyTemplate.propertyLabel,
-        value: userValue?.[propertyTemplate.propertyURI],
-      });
+
+          resourceTemplates.map((entry, i) => {
+            traverseProfile({
+              entry,
+              templates,
+              uuid: uuidArray[i],
+              path: updatedPath,
+              base,
+              selectedEntries,
+              record,
+            });
+          });
+
+          return;
+        }
+        case AdvancedFieldType.hidden:
+        case AdvancedFieldType.dropdownOption:
+        case AdvancedFieldType.block: {
+          const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
+          const uuidArray = propertyTemplates.map(() => uuidv4());
+
+          if (type === AdvancedFieldType.dropdownOption && firstOfSameType) {
+            selectedEntries.push(uuid);
+          }
+
+          base.set(uuid, {
+            uuid,
+            type,
+            path: updatedPath,
+            displayName: resourceLabel,
+            bfid: id,
+            uri: resourceURI,
+            children: uuidArray,
+          });
+
+          propertyTemplates.map((entry, i) => {
+            traverseProfile({
+              entry,
+              templates,
+              uuid: uuidArray[i],
+              path: updatedPath,
+              base,
+              selectedEntries,
+              record: isRecordArray ? record.find((entry) => Object.keys(entry).includes(resourceURI))?.[resourceURI] : record?.[resourceURI],
+            });
+          });
+
+          return;
+        }
+        // parent-intermediate-? types
+        case AdvancedFieldType.group:
+        case AdvancedFieldType.groupComplex:
+        case AdvancedFieldType.dropdown: {
+          const {
+            propertyURI,
+            propertyLabel,
+            mandatory,
+            repeatable,
+            valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
+          } = entry as PropertyTemplate;
+
+          const constraints = {
+            ...CONSTRAINTS,
+            mandatory: Boolean(mandatory),
+            repeatable: Boolean(repeatable),
+            editable: Boolean(editable),
+            useValuesFrom,
+            valueDataType,
+          };
+
+          const uuidArray = valueTemplateRefs.map(() => uuidv4());
+
+          base.set(uuid, {
+            uuid,
+            type,
+            path: updatedPath,
+            displayName: propertyLabel,
+            uri: propertyURI,
+            constraints,
+            children: uuidArray,
+          });
+
+          // TODO: how to avoid circular references when handling META | HIDE
+          type !== AdvancedFieldType.group &&
+            valueTemplateRefs.forEach((item, i) => {
+              const entry = templates[item];
+
+              traverseProfile({
+                entry,
+                auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+                templates,
+                uuid: uuidArray[i],
+                path: updatedPath,
+                base,
+                firstOfSameType: i === 0,
+                selectedEntries,
+                record: isRecordArray ? record.find((entry) => Object.keys(entry).includes(propertyURI))?.[propertyURI] : record?.[propertyURI],
+              });
+            });
+
+          return;
+        }
+        default: {
+          console.log('Not implemented.', entry);
+
+          return;
+        }
+      }
     }
   };
 
-  const parseRecord = (record: any, fields: PreparedFields, selectedProfile: ProfileEntry): void => {
-    // Going through all block that we need to render (work, instance, item)
-    const schemeMap: RenderedFieldMap = new Map();
-    const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
+  const buildSchema = (
+    profile: ProfileEntry,
+    templates:
+    ResourceTemplates,
+    record: Record<string, any> | Array<any>
+  ) => {
+    const base = new Map();
+    const initKey = uuidv4();
+    const selectedEntries: Array<string> = [];
 
-    // Iterate on bibframe profiles and the user input scheme at the same time.
-    selectedProfile?.json.Profile.resourceTemplates
-      .filter(({ id }) => supportedEntries.includes(id))
-      .forEach(({ id, resourceURI }) => {
-        const block = fields[id]; // Data from the other profile
-        const blockMap: RenderedFieldMap = new Map();
+    traverseProfile({
+      entry: profile,
+      uuid: initKey,
+      templates,
+      base,
+      selectedEntries,
+      record,
+    });
 
-        // TODO: why do we use user record as the base for iteration? It can be empty
-        (record?.[resourceURI] || TEMPORARY_FALLBACK_RECORD[resourceURI])?.forEach((entry: Record<string, any>) => {
-          schemeMap.set(block.resourceURI, {
-            type: UIFieldRenderType.block,
-            fields: blockMap,
-            path: block.resourceLabel,
-          });
+    setInitialSchemaKey(initKey);
+    setSelectedEntries(selectedEntries);
+    setSchema(base);
 
-          block.propertyTemplates.forEach(propertyTemplate => {
-            parseField({
-              propertyTemplate,
-              fields,
-              parent: blockMap,
-              path: block.resourceLabel,
-              level: 1,
-              userValue: entry,
-            });
-          });
-        })
-      });
-
-    setNormalizedFields(schemeMap);
+    return base;
   };
 
   const getProfiles = async (record?: RecordEntry): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
+    const templates = prepareFields(response);
 
     setProfiles(response);
     setSelectedProfile(monograph);
     // Purge user values
-    setUserValues([]);
-    parseRecord(userRecord || record, prepareFields(response), monograph);
+    setUserValues({});
+
+    buildSchema(monograph, templates, record || {});
 
     return response;
   };

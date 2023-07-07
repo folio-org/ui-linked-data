@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import state from '../../state/state';
-import { getTransformedPreviewComponents, getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
 import { applyUserValues } from '../../common/helpers/profile.helper';
 import { postRecord, putRecord } from '../../common/api/records.api';
@@ -10,19 +9,23 @@ import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
 import { StatusType } from '../../common/constants/status.constants';
+import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
 
 export const Preview = () => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
+  const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const normalizedFields = useRecoilValue(state.config.normalizedFields);
-  const [record, setRecord] = useRecoilState(state.inputs.record);
+  const record = useRecoilValue(state.inputs.record);
   const [status, setStatus] = useState<StatusEntry | undefined>();
+  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey)
 
   const onClickSaveRecord = async () => {
     const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-    const parsed = applyUserValues(normalizedFields, userValues);
+    const parsed = applyUserValues(schema, userValues, initialSchemaKey);
     // TODO: define a type
     let response: any;
+
+    if (!parsed) return;
 
     try {
       const formattedRecord = formatRecord(profile, parsed);
@@ -67,38 +70,54 @@ export const Preview = () => {
   };
 
   const discardRecord = () => {
-    setUserValues([]);
-    setRecord(null);
+    setUserValues({});
     setSelectedProfile(null);
   };
 
-  const componentsTree = getTransformedPreviewComponents(userValues);
-  const sortedPreviewComponents = getSortedPreviewBlocks(Array.from(componentsTree?.values()));
+  type Fields = {
+    schema: Map<string, SchemaEntry>;
+    uuid: string | null;
+    level?: number;
+    paths: Array<string>,
+  }
+
+  // TODO: potentially reuse <Fields /> from EditSection ?
+  const Fields = ({
+    schema,
+    uuid,
+    paths,
+    level = 0
+  }: Fields) => {
+    if (!uuid || !paths?.includes(uuid)) return null;
+
+    const { displayName, children, type } = schema.get(uuid) || {}
+
+    return (
+      <div className={classNames({ 'preview-block': level === 2 })}>
+        {
+          type !== AdvancedFieldType.profile && type !== AdvancedFieldType.hidden && <strong>{displayName}</strong>
+        }
+        {
+          children?.map((uuid: string) => <Fields key={uuid} uuid={uuid} schema={schema} paths={paths} level={level + 1} />)
+        }
+        {
+          !children && userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri } = {} }) => (
+            <div key={`${label}${uri}`}>
+              <div>
+                {
+                  uri || parentUri ? <a href={uri || parentUri}>{label}</a> : label
+                }
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    )
+  }
 
   return (
     <div className="preview-panel">
-      <strong>Preview pane</strong>
-      {sortedPreviewComponents.map(({ title: blockTitle, groups }: PreviewBlock) => (
-        <div key={blockTitle}>
-          <h3>{blockTitle}</h3>
-          {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (
-            <div key={`${groupTitle}`} className="preview-block">
-              <strong>{groupTitle}</strong>
-              {value?.map(({ uri, label, field }) =>
-                uri ? (
-                  <div key={uri}>
-                    <a href={uri} target="__blank">
-                      {label}
-                    </a>
-                  </div>
-                ) : (
-                  <div key={field}>{label}</div>
-                ),
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+      <Fields schema={schema} uuid={initialSchemaKey} paths={Object.keys(userValues).map((key) => schema.get(key)?.path).flat()} />
       <br />
 
       <div>
