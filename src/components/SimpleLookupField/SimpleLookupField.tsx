@@ -1,30 +1,27 @@
-import { FC, useEffect, useState } from 'react';
-import CreatableSelect from 'react-select';
+import { FC, useState } from 'react';
+import CreatableSelect, { MultiValue } from 'react-select';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../constants';
 import { aplhabeticSortLabel } from '../../common/helpers/common.helper';
 import { loadSimpleLookup } from '../../common/helpers/api.helper';
 
 interface Props {
   uri: string;
-  label: string;
-  id: string;
-  value: RenderedFieldValue[];
-  onChange: (value: RenderedFieldValue[], fieldId: string) => void;
+  displayName: string;
+  uuid: string;
+  value?: UserValueContents[],
+  parentUri?: string,
+  onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
-const generateDefaultValue = (fieldValue: RenderedFieldValue[]) =>
-  fieldValue?.map(({ label, id, uri }) => ({
-    label: label ?? '',
-    value: {
-      id: id ?? '',
-      label: label ?? '',
-      uri: uri,
-    },
-  }));
-
-export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }) => {
+// TODO: add value subscription, add uncontrolled opts handling
+export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, onChange, parentUri }) => {
   const [options, setOptions] = useState<MultiselectOption[]>([]);
-  const [localValue, setLocalValue] = useState<MultiselectOption[]>(generateDefaultValue(value));
+  const [localValue, setLocalValue] = useState<MultiselectOption[]>(value?.map(({ label = '', meta: { uri } = {}}) => ({
+    value: { label, uri },
+    label,
+    __isNew__: false,
+  })) || [])
+  const [isLoading, setIsLoading] = useState(false)
 
   const getOptions = (data: LoadSimpleLookupResponseItem[], parentURI?: string): MultiselectOption[] => {
     const options = data
@@ -35,9 +32,11 @@ export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }
       .reduce<MultiselectOption[]>((arr, option) => {
         const optionUri = option[ID_KEY];
         const label = option[AUTHORITATIVE_LABEL_URI]?.[0]?.[VALUE_KEY] ?? '';
+
         arr.push({
           value: { label, uri: optionUri },
           label,
+          __isNew__: false,
         });
 
         return arr;
@@ -49,60 +48,47 @@ export const SimpleLookupField: FC<Props> = ({ uri, label, id, value, onChange }
   const loadOptions = async (): Promise<void> => {
     if (options.length > 0) return;
 
+    setIsLoading(true);
+
     const response = await loadSimpleLookup(uri);
+
     if (!response) return;
 
     const optionsForDisplay = getOptions(response, uri).sort(aplhabeticSortLabel);
+    
     setOptions(optionsForDisplay);
+    setIsLoading(false);
   };
 
-  const getOptionLabel = (option: ReactMultiselectOption): string =>
-    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
+  const getOptionLabel = (option: MultiselectOption): string => (
+    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label
+  );
 
-  const handleOnChange = (options: MultiselectOption[]) => {
-    const newValue = options.map<RenderedFieldValue>(({ value }) => ({
-      id: null,
-      uri: value?.uri,
+  const handleOnChange = (options: MultiValue<MultiselectOption>) => {
+    const newValue = options.map<UserValueContents>(({ value }) => ({
       label: value.label,
+      meta: {
+        uri: value?.uri,
+        parentUri
+      }
     }));
 
-    onChange(newValue, id);
-    setLocalValue(options);
+    onChange(uuid, newValue);
+    setLocalValue([...options]);
   };
-
-  const getNewOptionData = (inputValue: string) => ({
-    label: inputValue,
-    value: {
-      uri: null,
-      label: inputValue,
-    },
-    __isNew__: true,
-  });
-
-  useEffect(() => {
-    if (value) {
-      loadOptions();
-
-      // ToDo: workaround for setting a default value and should be re-written.
-      handleOnChange(localValue);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div>
-      {label}
+      {displayName}
       <CreatableSelect
         isSearchable
         isClearable
+        isLoading={isLoading}
         isMulti
-        // TODO: Make a correct type
         options={options}
         onMenuOpen={loadOptions}
         getOptionLabel={getOptionLabel}
         onChange={handleOnChange}
-        getNewOptionData={getNewOptionData}
         value={localValue}
       />
     </div>

@@ -13,17 +13,20 @@ import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
 
 export const RecordControls = memo(() => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
+  const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const normalizedFields = useRecoilValue(state.config.normalizedFields);
+  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const [status, setStatus] = useState<StatusEntry | undefined>();
   const [isVisibleCloseModal, setIsVisibleCloseModal] = useState(false);
 
   const saveRecord = async () => {
     const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-    const parsed = applyUserValues(normalizedFields, userValues);
+    const parsed = applyUserValues(schema, userValues, initialSchemaKey);
     // TODO: define a type
     let response: any;
+
+    if (!parsed) return;
 
     try {
       const formattedRecord = formatRecord(profile, parsed);
@@ -68,7 +71,7 @@ export const RecordControls = memo(() => {
   };
 
   const discardRecord = () => {
-    setUserValues([]);
+    setUserValues({});
     setRecord(null);
     setSelectedProfile(null);
   };

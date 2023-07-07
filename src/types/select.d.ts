@@ -12,7 +12,7 @@ interface ReactMultiselectOption {
 
 interface MultiselectOption {
   label: string;
-  __isNew__?: boolean;
+  __isNew__: boolean;
   value: {
     id?: string;
     label: string;

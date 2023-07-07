@@ -1,38 +1,53 @@
 import { useRecoilValue } from 'recoil';
+import classNames from 'classnames';
 import state from '../../state/state';
-import { getTransformedPreviewComponents, getSortedPreviewBlocks } from '../../common/helpers/preview.helper';
 import './Preview.scss';
+import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
 import { RecordControls } from '../RecordControls/RecordControls';
 
 export const Preview = () => {
   const userValues = useRecoilValue(state.inputs.userValues);
-  const componentsTree = getTransformedPreviewComponents(userValues);
-  const sortedPreviewComponents = getSortedPreviewBlocks(Array.from(componentsTree?.values()));
+  const schema = useRecoilValue(state.config.schema);
+  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+
+  type Fields = {
+    schema: Map<string, SchemaEntry>;
+    uuid: string | null;
+    level?: number;
+    paths: Array<string>;
+  };
+
+  // TODO: potentially reuse <Fields /> from EditSection ?
+  const Fields = ({ schema, uuid, paths, level = 0 }: Fields) => {
+    if (!uuid || !paths?.includes(uuid)) return null;
+
+    const { displayName, children, type } = schema.get(uuid) || {};
+
+    return (
+      <div className={classNames({ 'preview-block': level === 2 })}>
+        {type !== AdvancedFieldType.profile && type !== AdvancedFieldType.hidden && <strong>{displayName}</strong>}
+        {children?.map((uuid: string) => (
+          <Fields key={uuid} uuid={uuid} schema={schema} paths={paths} level={level + 1} />
+        ))}
+        {!children &&
+          userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri } = {} }) => (
+            <div key={`${label}${uri}`}>
+              <div>{uri || parentUri ? <a href={uri || parentUri}>{label}</a> : label}</div>
+            </div>
+          ))}
+      </div>
+    );
+  };
 
   return (
     <div className="preview-panel">
-      <strong>Preview pane</strong>
-      {sortedPreviewComponents.map(({ title: blockTitle, groups }: PreviewBlock) => (
-        <div key={blockTitle}>
-          <h3>{blockTitle}</h3>
-          {Array.from<PreviewGroup>(groups.values()).map(({ title: groupTitle, value }) => (
-            <div key={`${groupTitle}`} className="preview-block">
-              <strong>{groupTitle}</strong>
-              {value?.map(({ uri, label, field }) =>
-                uri ? (
-                  <div key={uri}>
-                    <a href={uri} target="__blank">
-                      {label}
-                    </a>
-                  </div>
-                ) : (
-                  <div key={field}>{label}</div>
-                ),
-              )}
-            </div>
-          ))}
-        </div>
-      ))}
+      <Fields
+        schema={schema}
+        uuid={initialSchemaKey}
+        paths={Object.keys(userValues)
+          .map(key => schema.get(key)?.path)
+          .flat()}
+      />
       <br />
 
       <RecordControls />

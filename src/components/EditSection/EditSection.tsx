@@ -1,28 +1,33 @@
-import { useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useEffect, FC, memo, useCallback, useMemo } from 'react';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import state from '../../state/state';
 import { LiteralField } from '../LiteralField/LiteralField';
 
 import './EditSection.scss';
-import { replaceItemAtIndex } from '../../common/helpers/common.helper';
 import { DropdownField } from '../DropdownField/DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
-import { FieldType, PROFILE_IDS } from '../../common/constants/bibframe.constants';
-import { UIFieldRenderType } from '../../common/constants/uiControls.constants';
+import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { ComplexLookupField } from '../ComplexLookupField/ComplexLookupField';
-import { getUserValueByPath } from '../../common/helpers/uiControls.helper';
 import { applyUserValues } from '../../common/helpers/profile.helper';
-import { AUTOMATICALLY_SAVING_INTERVAL } from '../../common/constants/storage.constants';
+import { AUTOSAVE_INTERVAL } from '../../common/constants/storage.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
+import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
+import classNames from 'classnames';
 
-export const EditSection = () => {
+type Fields = {
+  schema: Map<string, SchemaEntry>;
+  uuid: string;
+  level?: number;
+};
+
+export const EditSection = memo(() => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const normalizedFields = useRecoilValue(state.config.normalizedFields);
-  const userValue = useRecoilValue(state.inputs.userValues);
-  const setUserValue = useSetRecoilState(state.inputs.userValues);
-  const isEdited = useRecoilValue(state.status.recordIsEdited);
-  const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
+  const schema = useRecoilValue(state.config.schema);
+  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
+  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
+  const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const record = useRecoilValue(state.inputs.record);
 
   useEffect(() => {
@@ -30,7 +35,7 @@ export const EditSection = () => {
 
     const saveRecordLocally = setInterval(() => {
       try {
-        const parsed = applyUserValues(normalizedFields, userValue);
+        const parsed = applyUserValues(schema, userValues, initialSchemaKey);
 
         if (parsed) {
           const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
@@ -41,161 +46,122 @@ export const EditSection = () => {
       } catch (error) {
         console.error('Unable to automatically save changes:', error);
       }
-    }, AUTOMATICALLY_SAVING_INTERVAL);
+    }, AUTOSAVE_INTERVAL);
 
     return () => clearInterval(saveRecordLocally);
   }, [isEdited]);
 
-  const changeValue = (value: RenderedFieldValue | RenderedFieldValue[], fieldId: string, isDynamicField?: boolean) => {
+  const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {
       setIsEdited(true);
     }
 
-    return setUserValue(oldValue => {
-      const index = oldValue.findIndex(({ field }) => field === fieldId);
-      const newValue: UserValue = {
-        field: fieldId,
-        value: value instanceof Array ? value : [value],
-      };
-
-      if (isDynamicField) {
-        newValue.hasChildren = true;
-      }
-
-      return index === -1 ? [...oldValue, newValue] : replaceItemAtIndex(oldValue, index, newValue);
-    });
+    setUserValues(oldValue => ({
+      ...oldValue,
+      [uuid]: {
+        uuid,
+        contents,
+      },
+    }));
   };
 
-  const drawDependentFields = (group: RenderedField, userValue: UserValue[]) => {
-    // Dropdown can have only one selected option
-    const selectedUserValue = getUserValueByPath(userValue, group.path)?.[0];
-    const selectedFields = group.fields?.get(selectedUserValue?.uri);
-    let dependingFields = null;
-
-    if (selectedFields?.fields) {
-      const selectedFieldsList: RenderedField[] = Array.from(selectedFields?.fields?.values());
-
-      dependingFields = selectedFieldsList.map(field => drawField(field));
-    }
-
-    return dependingFields;
-  };
-
-  const drawComplexGroup = (group: RenderedField) => {
-    const groupFields = group.fields;
-
-    if (!groupFields) {
-      return null;
-    }
-
-    return Array.from(groupFields.values()).reduce((accum: unknown[], { type, fields }) => {
-      if (type === UIFieldRenderType.hidden && fields) {
-        Array.from(fields.values()).forEach(entry => {
-          accum.push(drawField(entry, entry.path));
-        });
-      }
-
-      return accum;
-    }, []);
-  };
-
-  const drawField = (group: RenderedField, key?: string) => {
-    const value = group.value;
-    const isLiteralGroupType = group.type === FieldType.LITERAL;
-
-    if (group.type === FieldType.SIMPLE) {
-      return (
-        <SimpleLookupField
-          label={group.name ?? ''}
-          uri={group.uri ?? ''}
-          id={group.path ?? ''}
-          value={value ?? []}
-          onChange={changeValue}
-          key={key || group.path}
-        />
-      );
-    }
-
-    if (group.type === FieldType.COMPLEX) {
-      return (
-        <ComplexLookupField
-          key={key || group.path}
-          label={group.name ?? ''}
-          id={group.path ?? ''}
-          value={value?.[0]}
-          onChange={changeValue}
-        />
-      );
-    }
-
-    if (group.type === UIFieldRenderType.groupComplex) {
-      return drawComplexGroup(group);
-    }
-
-    if (isLiteralGroupType && !value) {
-      // Literal can have only one value
-      const literalValue = getUserValueByPath(userValue, group.path)?.[0];
-
-      return (
-        <LiteralField
-          key={key || group.path}
-          label={group.name ?? ''}
-          id={group.path}
-          value={literalValue}
-          onChange={changeValue}
-        />
-      );
-    }
-
-    return value?.map(field => {
-      if (isLiteralGroupType) {
+  const drawComponent = useCallback((schema: Map<string, SchemaEntry>, { uuid, displayName = '', type, children, constraints }: SchemaEntry) => {
+      if (type === AdvancedFieldType.literal) {
         return (
-          <LiteralField key={field.uri} label={group.name ?? ''} id={group.path} value={field} onChange={changeValue} />
+          <LiteralField
+            displayName={displayName}
+            uuid={uuid}
+            value={userValues[uuid]?.contents[0].label}
+            onChange={onChange}
+          />
         );
       }
 
-      if (group.fields?.size && group.fields.size > 0) {
-        if (group.type === UIFieldRenderType.dropdown) {
-          const options = Array.from(group.fields.values()).map(({ name, uri, id }) => ({
-            label: name ?? '',
-            value: uri ?? '',
-            uri: uri ?? '',
-            id,
+      if (type === AdvancedFieldType.dropdown && children) {
+        const options = children
+          .map(id => schema.get(id))
+          .map((entry) => ({
+            label: entry?.displayName ?? '',
+            value: entry?.uri ?? '', // TBD
+            uri: entry?.uri ?? '',
+            id: entry?.uuid,
           }));
 
-          const selectedOption = options.find(({ id }) => id === value?.[0]) || options[0];
+        const selectedOption = options?.find(({ id }) => id && selectedEntries.includes(id));
 
-          return (
-            <div key={group.path}>
-              <DropdownField
-                options={options}
-                name={group.name ?? ''}
-                id={group.path}
-                onChange={changeValue}
-                value={selectedOption}
-              />
-              {drawDependentFields(group, userValue)}
-            </div>
-          );
-        }
+        const handleChange = (option: any) => {
+          setSelectedEntries([...selectedEntries.filter(id => id !== selectedOption?.id), option.id]);
+        };
+
+        return (
+          <DropdownField
+            options={options}
+            name={displayName}
+            uuid={uuid}
+            onChange={handleChange}
+            value={selectedOption}
+          />
+        );
+      }
+
+      if (type === AdvancedFieldType.simple) {
+        return <SimpleLookupField
+          uri={constraints?.useValuesFrom[0] || ''}
+          displayName={displayName}
+          uuid={uuid}
+          onChange={onChange}
+          parentUri={constraints?.valueDataType?.dataTypeURI}
+          value={userValues[uuid]?.contents}
+        />;
+      }
+
+      if (type === AdvancedFieldType.complex) {
+        return <ComplexLookupField
+          label={displayName}
+          uuid={uuid}
+          onChange={onChange}
+          value={userValues[uuid]?.contents?.[0]}
+        />;
       }
 
       return null;
-    });
-  };
+    },
+    [selectedEntries, setSelectedEntries],
+  );
 
-  return resourceTemplates ? (
-    <div className="edit-section">
-      {Array.from(normalizedFields.values()).map(block => (
-        <div key={block.path}>
-          {Array.from<RenderedField>(block.fields?.values())?.map(group => (
-            <div className="group" key={group.path}>
-              <h3>{group.name}</h3>
-              <>{drawField(group)}</>
-            </div>
-          ))}
+  const Fields: FC<Fields> = useCallback(({ schema, uuid, level = 0 }) => {
+      const entry = schema.get(uuid);
+
+      if (!entry) return null;
+
+      const { displayName, type, children } = entry;
+
+      const isDropdownAndSelected = type === AdvancedFieldType.dropdownOption && selectedEntries.includes(uuid);
+      const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption
+      return (
+        <div className={classNames({ 'edit-section-group': level === 2 })}>
+          {type === AdvancedFieldType.block && (
+            <strong>
+              {displayName}
+            </strong>
+          )}
+          {(type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) && (
+            <span>
+              {displayName}
+            </span>
+          )}
+          {drawComponent(schema, entry)}
+          {shouldRenderChildren && children?.map(uuid => <Fields schema={schema} uuid={uuid} key={uuid} level={level + 1} />)}
         </div>
-      ))}
-    </div>
-  ) : null;
-};
+      );
+    },
+    [drawComponent, selectedEntries],
+  );
+
+  const memoisedFields = useMemo(
+    () => schema && initialSchemaKey && <Fields schema={schema} uuid={initialSchemaKey} />,
+    [Fields, initialSchemaKey, schema],
+  );
+
+  return resourceTemplates ? <div className="edit-section">{memoisedFields}</div> : null;
+});
