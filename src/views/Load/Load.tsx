@@ -32,9 +32,11 @@ export const Load = () => {
       const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
       const storageKey = generateRecordBackupKey(profile, recordId);
       const locallySavedData = localStorageService.deserialize(storageKey);
-      let recordData: RecordEntry = { id: recordId, ...locallySavedData[profile] };
+      let recordData: RecordEntry;
 
-      if (!locallySavedData) {
+      if (locallySavedData) {
+        recordData = { id: recordId, ...locallySavedData[profile] };
+      } else {
         recordData = await getRecord({ recordId });
       }
 

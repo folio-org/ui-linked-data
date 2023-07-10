@@ -1,25 +1,28 @@
 import { Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import useConfig from '../../common/hooks/useConfig.hook';
 import { EditSection } from '../../components/EditSection/EditSection';
 import { Preview } from '../../components/Preview/Preview';
 import { Properties } from '../../components/Properties/Properties';
 import state from '../../state/state';
 import './Edit.scss';
+import { localStorageService } from '../../common/services/storage';
+import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
+import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
+  const setRecord = useSetRecoilState(state.inputs.record);
 
   const { getProfiles } = useConfig();
 
   const onClickStartFromScratch = () => {
-    // TODO: uncomment when refactoring completed
-    /* const key = generateRecordBackupKey();
+    const key = generateRecordBackupKey();
     const recordData = localStorageService.deserialize(key);
 
     if (recordData) {
-      setRecord(recordData);
-    } */
+      setRecord({ id: '', ...recordData[PROFILE_IDS.MONOGRAPH] });
+    }
 
     getProfiles();
   };
