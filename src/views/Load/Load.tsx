@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { getAllRecords, getRecord } from '../../common/api/records.api';
 import useConfig from '../../common/hooks/useConfig.hook';
 import state from '../../state/state';
+import { localStorageService } from '../../common/services/storage';
+import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
+import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 
 import './Load.scss';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
-  const setRecord = useSetRecoilState(state.inputs.record);
+  const [record, setRecord] = useRecoilState(state.inputs.record);
 
   const { getProfiles } = useConfig();
   const history = useHistory();
@@ -26,25 +29,17 @@ export const Load = () => {
 
   const fetchRecord = async (recordId: string) => {
     try {
-      // TODO: uncomment and replace the existing code in the 'try' block after the refactoring is complete
-      /* const locallySavedData = localStorageService.deserialize(recordId);
-      let recordData: RecordEntry = locallySavedData;
+      const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+      const storageKey = generateRecordBackupKey(profile, recordId);
+      const locallySavedData = localStorageService.deserialize(storageKey);
+      let recordData: RecordEntry = { id: recordId, ...locallySavedData[profile] };
 
       if (!locallySavedData) {
         recordData = await getRecord({ recordId });
       }
 
       setRecord(recordData);
-
       getProfiles(recordData);
-      history.push('/edit'); */
-
-      const response: RecordEntry = await getRecord({ recordId });
-
-      // TODO: refactor when the new schema and different build flow is available
-      setRecord(response);
-
-      getProfiles(response);
       history.push('/edit');
     } catch (err) {
       console.error('Error fetching record: ', err);

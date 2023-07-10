@@ -1,8 +1,8 @@
 import { useEffect, FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import classNames from 'classnames';
 import state from '../../state/state';
 import { LiteralField } from '../LiteralField/LiteralField';
-
 import './EditSection.scss';
 import { DropdownField } from '../DropdownField/DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField/SimpleLookupField';
@@ -13,7 +13,6 @@ import { AUTOSAVE_INTERVAL } from '../../common/constants/storage.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
 import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
-import classNames from 'classnames';
 
 type Fields = {
   schema: Map<string, SchemaEntry>;
@@ -37,19 +36,19 @@ export const EditSection = memo(() => {
       try {
         const parsed = applyUserValues(schema, userValues, initialSchemaKey);
 
-        if (parsed) {
-          const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-          const key = generateRecordBackupKey(profile, record?.id);
+        if (!parsed) return;
 
-          localStorageService.serialize(key, parsed);
-        }
+        const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+        const key = generateRecordBackupKey(profile, record?.id);
+
+        localStorageService.serialize(key, parsed);
       } catch (error) {
         console.error('Unable to automatically save changes:', error);
       }
     }, AUTOSAVE_INTERVAL);
 
     return () => clearInterval(saveRecordLocally);
-  }, [isEdited]);
+  }, [isEdited, userValues]);
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {
@@ -65,7 +64,8 @@ export const EditSection = memo(() => {
     }));
   };
 
-  const drawComponent = useCallback((schema: Map<string, SchemaEntry>, { uuid, displayName = '', type, children, constraints }: SchemaEntry) => {
+  const drawComponent = useCallback(
+    (schema: Map<string, SchemaEntry>, { uuid, displayName = '', type, children, constraints }: SchemaEntry) => {
       if (type === AdvancedFieldType.literal) {
         return (
           <LiteralField
@@ -80,7 +80,7 @@ export const EditSection = memo(() => {
       if (type === AdvancedFieldType.dropdown && children) {
         const options = children
           .map(id => schema.get(id))
-          .map((entry) => ({
+          .map(entry => ({
             label: entry?.displayName ?? '',
             value: entry?.uri ?? '', // TBD
             uri: entry?.uri ?? '',
@@ -105,23 +105,27 @@ export const EditSection = memo(() => {
       }
 
       if (type === AdvancedFieldType.simple) {
-        return <SimpleLookupField
-          uri={constraints?.useValuesFrom[0] || ''}
-          displayName={displayName}
-          uuid={uuid}
-          onChange={onChange}
-          parentUri={constraints?.valueDataType?.dataTypeURI}
-          value={userValues[uuid]?.contents}
-        />;
+        return (
+          <SimpleLookupField
+            uri={constraints?.useValuesFrom[0] || ''}
+            displayName={displayName}
+            uuid={uuid}
+            onChange={onChange}
+            parentUri={constraints?.valueDataType?.dataTypeURI}
+            value={userValues[uuid]?.contents}
+          />
+        );
       }
 
       if (type === AdvancedFieldType.complex) {
-        return <ComplexLookupField
-          label={displayName}
-          uuid={uuid}
-          onChange={onChange}
-          value={userValues[uuid]?.contents?.[0]}
-        />;
+        return (
+          <ComplexLookupField
+            label={displayName}
+            uuid={uuid}
+            onChange={onChange}
+            value={userValues[uuid]?.contents?.[0]}
+          />
+        );
       }
 
       return null;
@@ -129,7 +133,8 @@ export const EditSection = memo(() => {
     [selectedEntries, setSelectedEntries],
   );
 
-  const Fields: FC<Fields> = useCallback(({ schema, uuid, level = 0 }) => {
+  const Fields: FC<Fields> = useCallback(
+    ({ schema, uuid, level = 0 }) => {
       const entry = schema.get(uuid);
 
       if (!entry) return null;
@@ -137,21 +142,14 @@ export const EditSection = memo(() => {
       const { displayName, type, children } = entry;
 
       const isDropdownAndSelected = type === AdvancedFieldType.dropdownOption && selectedEntries.includes(uuid);
-      const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption
+      const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption;
       return (
         <div className={classNames({ 'edit-section-group': level === 2 })}>
-          {type === AdvancedFieldType.block && (
-            <strong>
-              {displayName}
-            </strong>
-          )}
-          {(type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) && (
-            <span>
-              {displayName}
-            </span>
-          )}
+          {type === AdvancedFieldType.block && <strong>{displayName}</strong>}
+          {(type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) && <span>{displayName}</span>}
           {drawComponent(schema, entry)}
-          {shouldRenderChildren && children?.map(uuid => <Fields schema={schema} uuid={uuid} key={uuid} level={level + 1} />)}
+          {shouldRenderChildren &&
+            children?.map(uuid => <Fields schema={schema} uuid={uuid} key={uuid} level={level + 1} />)}
         </div>
       );
     },

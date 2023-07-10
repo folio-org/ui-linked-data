@@ -8,7 +8,7 @@ interface Props {
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
-const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING'
+const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING';
 
 export const ComplexLookupField: FC<Props> = ({ label, value = undefined, uuid, onChange }) => {
   const [localValue, setLocalValue] = useState<UserValueContents>(value || {});
@@ -19,17 +19,17 @@ export const ComplexLookupField: FC<Props> = ({ label, value = undefined, uuid, 
       label: value,
       meta: {
         uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
-      }
+      },
     };
 
-    onChange(uuid, [newValue])
+    onChange(uuid, [newValue]);
     setLocalValue(newValue);
   };
 
   return (
     <div>
       <div>{label}</div>
-      <Input placeholder={label} onChange={handleOnChange} value={localValue?.label ?? ''} />
+      <Input placeholder={label} onChange={handleOnChange} value={localValue?.label ?? ''} disabled={true} />
     </div>
   );
 };
