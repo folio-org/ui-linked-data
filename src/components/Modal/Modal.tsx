@@ -1,9 +1,12 @@
-import { FC, ReactNode, memo, useEffect, useState } from 'react';
+import { FC, ReactNode, memo } from 'react';
 import ReactModal from 'react-modal';
+import classNames from 'classnames';
 import './Modal.scss';
 
 interface Props extends ReactModal.Props {
+  isOpen: boolean;
   title: string;
+  className?: string;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   onSubmit: () => void;
@@ -13,24 +16,19 @@ interface Props extends ReactModal.Props {
 }
 
 export const Modal: FC<Props> = memo(
-  ({ isOpen, title, submitButtonLabel, cancelButtonLabel, onSubmit, onCancel, onClose, children }) => {
-    const [isVisible, setIsVisible] = useState(isOpen);
+  ({ isOpen, className, title, submitButtonLabel, cancelButtonLabel, onSubmit, onCancel, onClose, children }) => {
     const rootElement = document.getElementById('editor-root') as HTMLElement;
-
-    useEffect(() => {
-      setIsVisible(isOpen);
-    }, [isOpen]);
 
     return (
       <ReactModal
-        isOpen={isVisible}
+        isOpen={isOpen}
         appElement={rootElement}
         role="dialog"
         shouldCloseOnOverlayClick={true}
         shouldCloseOnEsc={true}
         onRequestClose={onClose}
         overlayClassName="overlay"
-        className="modal"
+        className={classNames(['modal', className])}
       >
         <div className="modal-header">
           <h3>{title}</h3>

@@ -17,8 +17,8 @@ export const RecordControls = memo(() => {
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [record, setRecord] = useRecoilState(state.inputs.record);
-  const [status, setStatus] = useState<StatusEntry | undefined>();
-  const [isVisibleCloseModal, setIsVisibleCloseModal] = useState(false);
+  const [status, setStatus] = useState<StatusEntry | null>(null);
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
 
   const saveRecord = async () => {
     const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
@@ -77,7 +77,7 @@ export const RecordControls = memo(() => {
   };
 
   const onClickCloseButton = () => {
-    setIsVisibleCloseModal(true);
+    setIsCloseModalOpen(true);
   };
 
   return (
@@ -86,12 +86,10 @@ export const RecordControls = memo(() => {
         <button onClick={saveRecord}>Post Record</button>
         <button onClick={onClickCloseButton}>Discard Record</button>
       </div>
-
       {status && <p className={classNames(['status-message', status.type])}>{status.message}</p>}
-
       <ModalCloseRecord
-        isOpen={isVisibleCloseModal}
-        toggleIsOpen={setIsVisibleCloseModal}
+        isOpen={isCloseModalOpen}
+        toggleIsOpen={setIsCloseModalOpen}
         saveRecord={saveRecord}
         discardRecord={discardRecord}
       />
