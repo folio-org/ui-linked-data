@@ -4,11 +4,10 @@ import path from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { env } from 'process';
 
-export default defineConfig(() => {
-  return env.npm_config_type === 'library'
+export default defineConfig(() =>
+  env.npm_config_type === 'library'
     ? {
         plugins: [react(), cssInjectedByJsPlugin()],
-
         build: {
           lib: {
             entry: path.resolve(__dirname, 'src/embed.tsx'),
@@ -17,11 +16,10 @@ export default defineConfig(() => {
             fileName: format => `marva-next.${format}.js`,
           },
         },
-
         envPrefix: 'EDITOR_',
       }
     : {
         plugins: [react()],
         envPrefix: 'EDITOR_',
-      };
-});
+      },
+);
