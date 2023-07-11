@@ -9,6 +9,7 @@ import './Edit.scss';
 import { localStorageService } from '../../common/services/storage';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
+import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
@@ -18,13 +19,15 @@ export const Edit = () => {
 
   const onClickStartFromScratch = () => {
     const key = generateRecordBackupKey();
-    const recordData = localStorageService.deserialize(key);
+    const savedRecordData = localStorageService.deserialize(key);
+    // TODO: set selected profile
+    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, ...savedRecordData[PROFILE_IDS.MONOGRAPH] } : null;
 
-    if (recordData) {
-      setRecord({ id: '', ...recordData[PROFILE_IDS.MONOGRAPH] });
+    if (record) {
+      setRecord(record);
     }
 
-    getProfiles();
+    getProfiles(record);
   };
 
   return selectedProfile ? (

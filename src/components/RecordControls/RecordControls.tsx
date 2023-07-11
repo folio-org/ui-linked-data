@@ -10,6 +10,7 @@ import { StatusType } from '../../common/constants/status.constants';
 import state from '../../state/state';
 import './RecordControls.scss';
 import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
+import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
 
 export const RecordControls = memo(() => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -32,7 +33,7 @@ export const RecordControls = memo(() => {
       // TODO: define a type
       let response: any;
 
-      if (!record?.id) {
+      if (!record?.id || record.id === DEFAULT_RECORD_ID) {
         response = await postRecord(formattedRecord);
       } else {
         response = await putRecord(record.id, formattedRecord);
@@ -41,7 +42,7 @@ export const RecordControls = memo(() => {
       const parsedResponse = await response.json();
       const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntry;
 
-      deleteRecordLocally(currentRecordId);
+      deleteRecordLocally(profile, currentRecordId);
       saveRecordLocally(profile, parsed, parsedResponse?.id);
       setRecord(updatedRecord);
       setStatus({ type: StatusType.success, message: 'Record saved successfully' });
@@ -62,10 +63,12 @@ export const RecordControls = memo(() => {
     return formattedRecord;
   };
 
-  const deleteRecordLocally = (recordId?: number) => {
+  const deleteRecordLocally = (profile: string, recordId?: number | string) => {
     if (!recordId) return;
 
-    localStorageService.delete(recordId.toString());
+    const storageKey = generateRecordBackupKey(profile, recordId);
+
+    localStorageService.delete(storageKey);
   };
 
   const saveRecordLocally = (profile: string, parsedRecord: Record<string, object>, recordId: number) => {
