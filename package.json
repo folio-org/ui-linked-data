@@ -15,8 +15,8 @@
   "module": "./dist/marva-next.es.js",
   "scripts": {
     "dev": "vite",
-    "build": "cross-env EDITOR_BUILD_TYPE=0 && tsc && vite build",
-    "build:lib": "cross-env EDITOR_BUILD_TYPE=1 && tsc && vite build",
+    "build": "tsc && vite build",
+    "build:lib": "npm run build --type=library",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}"
@@ -43,7 +43,6 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
-    "cross-env": "^7.0.3",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-react-hooks": "^4.6.0",
