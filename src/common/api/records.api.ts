@@ -79,3 +79,18 @@ export const putRecord = async (recordId: string | number, recordEntry: RecordEn
     },
   });
 };
+
+export const deleteRecord = async (recordId: string | number) => {
+  const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'DELETE',
+      headers: {
+        ...headers,
+        'content-type': 'application/json',
+      },
+    },
+  });
+};
