@@ -1,5 +1,7 @@
 // https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 
+import { GROUP_BY_LEVEL } from "../constants/bibframe.constants";
+
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>,
   userValues: UserValues,
@@ -16,14 +18,14 @@ const traverseSchema = async ({
   index = 0,
 }: TraverseSchema) => {
   const { children, uri, bfid } = schema.get(key) || {}
-  const selector = uri || bfid || '';
+  const selector = uri || bfid;
   const userValueMatch = userValues[key]
   const shouldProceed = Object.keys(userValues).map((uuid) => schema.get(uuid)?.path).flat().includes(key)
   const lastWordLetter = uri?.split('/').at(-1)?.[0]
   const isArray = lastWordLetter && /[a-z]/.test(lastWordLetter) || index === 1
 
-  if (userValueMatch && uri) {
-    const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri } = {}}) => {
+  if (userValueMatch && uri && selector) {
+    const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {}}) => {
       if (parentUri) {
         // TODO: workaround for the agreed API schema, not the best ?
         return {
@@ -38,12 +40,12 @@ const traverseSchema = async ({
           uri,
         }
       } else {
-        return label
+        return type ? { label } : label;
       }
     })
 
     container[selector] = withFormat;
-  } else if (shouldProceed || index < 2) {
+  } else if (selector && (shouldProceed || index < GROUP_BY_LEVEL)) {
     container[selector] = isArray ? shouldProceed ? [{}] : [] : {};
     const containerSelector = isArray ? container[selector].at(-1) : container[selector]
 

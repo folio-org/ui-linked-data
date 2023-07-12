@@ -84,11 +84,16 @@ export default function useConfig() {
         valueDataType,
       };
 
-      !isRecordArray && record?.[propertyURI] && setUserValues((oldValue) => ({
+      // TODO: Potentially dangerous HACK ([0])
+      // Might be removed with the API schema change
+      // If not, refactor to include all indices
+      const withContentsSelected = isRecordArray ? record[0] : record;
+
+      withContentsSelected?.[propertyURI] && setUserValues((oldValue) => ({
         ...oldValue,
         [uuid]: {
           uuid,
-          contents: record?.[propertyURI].map((entry: any) => (
+          contents: withContentsSelected?.[propertyURI].map((entry: any) => (
             typeof entry === 'string'
               ? {
                 label: entry
@@ -97,6 +102,7 @@ export default function useConfig() {
                 meta: {
                   parentURI: entry.uri,
                   uri: entry.uri,
+                  type,
                 }
               }
           ))
