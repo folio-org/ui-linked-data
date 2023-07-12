@@ -1,4 +1,4 @@
-import { MAX_LIMIT, OKAPI_PREFIX } from '../constants/api.constants';
+import { BIBFRAME_API_ENDPOINT, MAX_LIMIT, OKAPI_PREFIX } from '../constants/api.constants';
 import baseApi from './base.api';
 
 type SingleRecord = {
@@ -21,8 +21,7 @@ const headers = tenant
     }
   : undefined;
 
-const recordsUrl = '/bibframes';
-const singleRecordUrl = '/bibframes/:recordId';
+const singleRecordUrl = `${BIBFRAME_API_ENDPOINT}/:recordId`;
 
 export const getRecord = async ({ recordId }: SingleRecord) => {
   const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
@@ -42,7 +41,7 @@ export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIM
   }).toString();
 
   return baseApi.getJson({
-    url: `${recordsUrl}?${stringParams}`,
+    url: `${BIBFRAME_API_ENDPOINT}?${stringParams}`,
     requestParams: {
       headers,
     },
@@ -50,7 +49,7 @@ export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIM
 };
 
 export const postRecord = async (recordEntry: RecordEntry) => {
-  const url = baseApi.generateUrl(recordsUrl);
+  const url = baseApi.generateUrl(BIBFRAME_API_ENDPOINT);
 
   return baseApi.request({
     url,

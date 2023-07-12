@@ -82,3 +82,9 @@ type RecordEntry = RecursiveRecordSchema & {
 interface ResourceTemplates {
   [key: string]: ResourceTemplate;
 }
+
+// TODO: define type and format for data received from API
+type RecordData = {
+  id?: number | string;
+  label?: string;
+};
