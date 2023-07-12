@@ -18,7 +18,7 @@ export const LiteralField: FC<Props> = ({ displayName, uuid, value = '', onChang
   }
 
   return (
-    <div>
+    <div id={uuid}>
       <div>{displayName}</div>
       <Input placeholder={displayName} onChange={handleOnChange} value={localValue} />
     </div>

@@ -27,7 +27,7 @@ export const ComplexLookupField: FC<Props> = ({ label, value = undefined, uuid, 
   };
 
   return (
-    <div>
+    <div id={uuid}>
       <div>{label}</div>
       <Input placeholder={label} onChange={handleOnChange} value={localValue?.label ?? ''} disabled={true} />
     </div>

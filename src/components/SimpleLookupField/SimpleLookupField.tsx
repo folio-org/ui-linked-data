@@ -78,7 +78,7 @@ export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, on
   };
 
   return (
-    <div>
+    <div id={uuid}>
       {displayName}
       <CreatableSelect
         isSearchable

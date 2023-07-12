@@ -18,7 +18,7 @@ export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value 
   };
 
   return (
-    <div>
+    <div id={uuid}>
       {name} <br />
       <Select options={options} isSearchable={false} onChange={handleOnChange} value={localValue} />
     </div>

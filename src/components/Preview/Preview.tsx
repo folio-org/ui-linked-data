@@ -41,6 +41,7 @@ export const Preview = () => {
 
   return (
     <div className="preview-panel">
+      <h3>Preview</h3>
       <Fields
         schema={schema}
         uuid={initialSchemaKey}
@@ -49,7 +50,6 @@ export const Preview = () => {
           .flat()}
       />
       <br />
-
       <RecordControls />
     </div>
   );
