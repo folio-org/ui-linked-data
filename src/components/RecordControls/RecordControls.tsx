@@ -2,7 +2,7 @@ import { memo, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { applyUserValues } from '../../common/helpers/profile.helper';
-import { postRecord, putRecord } from '../../common/api/records.api';
+import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '../../common/api/records.api';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { localStorageService } from '../../common/services/storage';
@@ -11,6 +11,7 @@ import state from '../../state/state';
 import './RecordControls.scss';
 import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
 import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
+import { ModalDeleteRecord } from '../ModalDeleteRecord/ModalCloseRecord';
 
 export const RecordControls = memo(() => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -20,9 +21,11 @@ export const RecordControls = memo(() => {
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const [status, setStatus] = useState<StatusEntry | null>(null);
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+  const currentRecordId = record?.id;
 
   const saveRecord = async () => {
-    const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
     const parsed = applyUserValues(schema, userValues, initialSchemaKey);
     const currentRecordId = record?.id;
 
@@ -77,6 +80,20 @@ export const RecordControls = memo(() => {
     localStorageService.serialize(storageKey, parsedRecord);
   };
 
+  const deleteRecord = async () => {
+    try {
+      if (!currentRecordId) return;
+
+      await deleteRecordRequest(currentRecordId);
+      deleteRecordLocally(profile, currentRecordId);
+    } catch (error) {
+      const message = 'Cannot delete the record';
+      console.error(message, error);
+
+      setStatus({ type: StatusType.error, message });
+    }
+  };
+
   const discardRecord = () => {
     setUserValues({});
     setRecord(null);
@@ -87,17 +104,28 @@ export const RecordControls = memo(() => {
     setIsCloseModalOpen(true);
   };
 
+  const onClickDeleteButton = () => {
+    setIsDeleteModalOpen(true);
+  };
+
   return (
     <div>
       <div>
         <button onClick={saveRecord}>Save Record</button>
         <button onClick={onClickCloseButton}>Close Record</button>
+        <button onClick={onClickDeleteButton}>Delete Record</button>
       </div>
       {status && <p className={classNames(['status-message', status.type])}>{status.message}</p>}
       <ModalCloseRecord
         isOpen={isCloseModalOpen}
         toggleIsOpen={setIsCloseModalOpen}
         saveRecord={saveRecord}
+        discardRecord={discardRecord}
+      />
+      <ModalDeleteRecord
+        isOpen={isDeleteModalOpen}
+        toggleIsOpen={setIsDeleteModalOpen}
+        deleteRecord={deleteRecord}
         discardRecord={discardRecord}
       />
     </div>
