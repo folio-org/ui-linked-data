@@ -1,63 +1,41 @@
 import { useRecoilValue } from 'recoil';
-import { RESOURCE_TEMPLATE_IDS } from '../../common/constants/bibframe.constants';
+import { GROUP_BY_LEVEL } from '../../common/constants/bibframe.constants';
+import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
 import state from '../../state/state';
+import { Fields, IDrawComponent } from '../Fields/Fields';
 import './Properties.scss';
 
 export const Properties = () => {
-  const selectedProfile = useRecoilValue(state.config.selectedProfile);
-  const profiles = useRecoilValue(state.config.profiles);
+  const schema = useRecoilValue(state.config.schema);
+  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
 
-  if (!selectedProfile) {
+  if (!schema.size) {
     return null;
   }
 
-  const renderData = (data: PropertyTemplate[]) => {
-    return data?.map((e: PropertyTemplate, index) => {
-      const els = [];
-
-      if (e.valueConstraint.valueTemplateRefs.length > 0) {
-        const resourceTemplates = profiles.map(e => e.json.Profile.resourceTemplates);
-        const data = e.valueConstraint.valueTemplateRefs.map(
-          id => resourceTemplates.flat().find(el => el.id === id)?.resourceLabel,
-        );
-        els.push(data);
+  const drawComponent = ({
+    entry: {
+      displayName,
+      type,
+      uuid,
+    },
+    level = 0,
+  }: IDrawComponent) => {
+    if (level <= GROUP_BY_LEVEL && type !== AdvancedFieldType.profile) {
+      if (type === AdvancedFieldType.block) {
+        return <strong>{displayName}</strong>;
+      } else {
+        return <div onClick={() => document.getElementById(uuid)?.scrollIntoView({ behavior: 'smooth' })}>{displayName}</div>;
       }
+    }
 
-      let ul;
-      if (els.length > 0) {
-        const lis = els.flat().map(el => (
-          <li key={el} className="property-subitem">
-            {el}
-          </li>
-        ));
+    return null;
+  }
 
-        ul = (
-          <ul className="property-subitems" key={e.id}>
-            {lis}
-          </ul>
-        );
-      }
-      return (
-        <li className="property" key={index}>
-          <span>{e.propertyLabel}</span>
-          {ul}
-        </li>
-      );
-    });
-  };
-
-  const aside = [selectedProfile.json.Profile.resourceTemplates[0], selectedProfile.json.Profile.resourceTemplates[1]];
-
-  return selectedProfile ? (
+  return (
     <div className="properties">
-      <ul>
-        {aside.map((data: ResourceTemplate, index) => (
-          <div key={index}>
-            <strong>{RESOURCE_TEMPLATE_IDS[data.id]}</strong>
-            {renderData(data.propertyTemplates)}
-          </div>
-        ))}
-      </ul>
+      <h3>Properties</h3>
+      <Fields schema={schema} uuid={initialSchemaKey} drawComponent={drawComponent} groupClassName='group' />
     </div>
-  ) : null;
+  );
 };

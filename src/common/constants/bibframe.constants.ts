@@ -1,5 +1,6 @@
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
-  'lc:RT:bf2:Monograph:Work': 'Work',
+  // TODO: revise after demo
+  // 'lc:RT:bf2:Monograph:Work': 'Work',
   'lc:RT:bf2:Monograph:Instance': 'Instance',
 };
 
@@ -21,3 +22,5 @@ export const CONSTRAINTS: Constraints = {
     dataTypeURI: ''
   }
 }
+
+export const GROUP_BY_LEVEL = 2;

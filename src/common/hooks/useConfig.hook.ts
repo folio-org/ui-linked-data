@@ -2,7 +2,7 @@ import { useSetRecoilState } from 'recoil';
 import state from '../../state/state';
 import { fetchProfiles } from '../api/profiles.api';
 import { getAdvancedFieldType } from '../helpers/common.helper';
-import { CONSTRAINTS, PROFILE_NAMES } from '../constants/bibframe.constants';
+import { CONSTRAINTS, GROUP_BY_LEVEL, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '../constants/bibframe.constants';
 import { AdvancedFieldType } from '../constants/uiControls.constants';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -147,6 +147,10 @@ export default function useConfig() {
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
           const uuidArray = propertyTemplates.map(() => uuidv4());
+          const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
+          const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
+
+          if (!supportedEntries.includes(id) && isProfileResourceTemplate) return;
 
           if (type === AdvancedFieldType.dropdownOption && firstOfSameType) {
             selectedEntries.push(uuid);
