@@ -48,6 +48,14 @@ export const Load = () => {
     }
   };
 
+  // TODO: Workaroud for demo; define type and format for data received from API
+  const generateButtonLabel = ({ id, label }: RecordData) => {
+    const labelString = label?.length ? `${label}, ` : '';
+    const idString = `Record ID: ${id}`;
+
+    return `${labelString}${idString}`;
+  };
+
   return (
     <div className="load">
       <strong>BIBFRAME Profiles:</strong>
@@ -56,9 +64,9 @@ export const Load = () => {
       </div>
       <strong>Available records:</strong>
       <div className="button-group">
-        {availableRecords?.map(({ id }: RecordEntry) => (
+        {availableRecords?.map(({ id, label }: RecordData) => (
           <button key={id} onClick={() => fetchRecord(String(id))}>
-            {`Record ID: ${id}`}
+            {generateButtonLabel({ id, label })}
           </button>
         )) || <div>No available records</div>}
       </div>
