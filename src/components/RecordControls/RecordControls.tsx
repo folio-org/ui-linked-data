@@ -1,4 +1,5 @@
 import { memo, useState } from 'react';
+import { useHistory } from 'react-router';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { applyUserValues } from '../../common/helpers/profile.helper';
@@ -11,13 +12,16 @@ import state from '../../state/state';
 import './RecordControls.scss';
 import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
 import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
-import { ModalDeleteRecord } from '../ModalDeleteRecord/ModalCloseRecord';
+import { ModalDeleteRecord } from '../ModalDeleteRecord/ModalDeleteRecord';
+import UserNotificationFactory from '../../common/services/userNotification/userNotification.factory';
 
 export const RecordControls = memo(() => {
+  const history = useHistory();
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const [status, setStatus] = useState<StatusEntry | null>(null);
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
@@ -48,12 +52,12 @@ export const RecordControls = memo(() => {
       deleteRecordLocally(profile, currentRecordId);
       saveRecordLocally(profile, parsed, parsedResponse?.id);
       setRecord(updatedRecord);
-      setStatus({ type: StatusType.success, message: 'Record saved successfully' });
+      setStatus(UserNotificationFactory.createMessage(StatusType.success, 'Record saved successfully'));
     } catch (error) {
       const message = 'Cannot save the record';
       console.error(message, error);
 
-      setStatus({ type: StatusType.error, message });
+      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
     }
   };
 
@@ -86,11 +90,18 @@ export const RecordControls = memo(() => {
 
       await deleteRecordRequest(currentRecordId);
       deleteRecordLocally(profile, currentRecordId);
+      discardRecord();
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.success, 'Resource description deleted'),
+      ]);
+
+      history.replace('/load');
     } catch (error) {
       const message = 'Cannot delete the record';
       console.error(message, error);
 
-      setStatus({ type: StatusType.error, message });
+      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
     }
   };
 
@@ -122,12 +133,7 @@ export const RecordControls = memo(() => {
         saveRecord={saveRecord}
         discardRecord={discardRecord}
       />
-      <ModalDeleteRecord
-        isOpen={isDeleteModalOpen}
-        toggleIsOpen={setIsDeleteModalOpen}
-        deleteRecord={deleteRecord}
-        discardRecord={discardRecord}
-      />
+      <ModalDeleteRecord isOpen={isDeleteModalOpen} toggleIsOpen={setIsDeleteModalOpen} deleteRecord={deleteRecord} />
     </div>
   );
 });
