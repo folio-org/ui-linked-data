@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 
 import './App.scss';
 import { OKAPI_PREFIX } from './common/constants/api.constants';
+import { CommonStatus } from './components/CommonStatus/CommonStatus';
 
 type Okapi = {
   token: string;
@@ -18,10 +19,7 @@ type IContainer = {
   okapi?: Okapi;
 };
 
-export const App: FC<IContainer> = ({
-  routePrefix = '',
-  okapi,
-}) => {
+export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
   // TODO: decide on a place to manage okapi props
   // Since we use localStorage might as well manage in the wrapper
   useEffect(() => {
@@ -44,6 +42,7 @@ export const App: FC<IContainer> = ({
     <RecoilRoot>
       <BrowserRouter basename={routePrefix}>
         <Nav />
+        <CommonStatus />
         <Switch>
           <Route path="/edit" component={Edit} />
           <Route path="/load" component={Load} />

@@ -5,18 +5,11 @@ interface Props {
   isOpen: boolean;
   toggleIsOpen: (value: boolean) => void;
   deleteRecord: () => Promise<void>;
-  discardRecord: () => void;
 }
 
-export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, deleteRecord, discardRecord }) => {
+export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, deleteRecord }) => {
   const closeModal = () => {
     toggleIsOpen(false);
-  };
-
-  const onClickDeleteButton = async () => {
-    await deleteRecord();
-
-    discardRecord();
   };
 
   return (
@@ -26,7 +19,7 @@ export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, delete
       submitButtonLabel="Delete"
       cancelButtonLabel="Return"
       onClose={closeModal}
-      onSubmit={onClickDeleteButton}
+      onSubmit={deleteRecord}
       onCancel={closeModal}
     >
       <div>
