@@ -5,23 +5,22 @@ import { EditSection } from '../../components/EditSection/EditSection';
 import { Preview } from '../../components/Preview/Preview';
 import { Properties } from '../../components/Properties/Properties';
 import state from '../../state/state';
-import './Edit.scss';
-import { localStorageService } from '../../common/services/storage';
-import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
+import { getSavedRecord } from '../../common/helpers/record.helper';
+import './Edit.scss';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
   const setRecord = useSetRecoilState(state.inputs.record);
-
   const { getProfiles } = useConfig();
 
   const onClickStartFromScratch = () => {
-    const key = generateRecordBackupKey();
-    const savedRecordData = localStorageService.deserialize(key);
-    // TODO: set selected profile
-    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, ...savedRecordData[PROFILE_IDS.MONOGRAPH] } : null;
+    // TODO: set default selected profile
+    const defaultProfile = PROFILE_IDS.MONOGRAPH;
+    const profile = selectedProfile?.id ?? defaultProfile;
+    const savedRecordData = getSavedRecord(profile);
+    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, ...savedRecordData[defaultProfile] } : null;
 
     if (record) {
       setRecord(record);
