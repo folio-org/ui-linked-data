@@ -25,10 +25,7 @@ export const Edit = () => {
       : null;
     const typedRecord = record as unknown as RecordEntry;
 
-    if (typedRecord) {
-      setRecord(typedRecord);
-    }
-
+    typedRecord && setRecord(typedRecord);
     getProfiles(typedRecord);
   };
 

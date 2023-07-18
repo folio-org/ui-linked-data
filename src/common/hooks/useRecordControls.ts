@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '../../common/helpers/profile.helper';
@@ -18,7 +17,6 @@ export const useRecordControls = () => {
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
-  const [status, setStatus] = useState<StatusEntry | null>(null);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
   const currentRecordId = record?.id;
@@ -42,12 +40,18 @@ export const useRecordControls = () => {
       deleteRecordLocally(profile, currentRecordId);
       setIsEdited(false);
       setRecord(updatedRecord);
-      setStatus(UserNotificationFactory.createMessage(StatusType.success, 'Record saved successfully'));
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.success, 'Record saved successfully'),
+      ]);
     } catch (error) {
       const message = 'Cannot save the record';
       console.error(message, error);
 
-      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, message),
+      ]);
     }
   };
 
@@ -74,9 +78,12 @@ export const useRecordControls = () => {
       const message = 'Cannot delete the record';
       console.error(message, error);
 
-      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, message),
+      ]);
     }
   };
 
-  return { status, saveRecord, deleteRecord, discardRecord };
+  return { saveRecord, deleteRecord, discardRecord };
 };
