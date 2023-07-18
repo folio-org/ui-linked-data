@@ -3,7 +3,7 @@ type UserValueContents = {
   meta?: {
     uri?: string;
     parentUri?: string;
-    type?: string,
+    type?: string;
   };
 };
 
