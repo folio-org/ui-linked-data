@@ -11,17 +11,13 @@ export const formatRecord = (profile: any, parsedRecord: Record<string, object>)
   return formattedRecord;
 };
 
-export const deleteRecordLocally = (profile: string, recordId?: number | string) => {
+export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
 
   localStorageService.delete(storageKey);
 };
 
-export const saveRecordLocally = (
-  profile: string,
-  parsedRecord: Record<string, object>,
-  recordId: string | number | undefined,
-) => {
+export const saveRecordLocally = (profile: string, parsedRecord: RecursiveRecordSchema, recordId: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
   const newRecord = {
     createdAt: new Date().getTime(),
@@ -31,19 +27,19 @@ export const saveRecordLocally = (
   localStorageService.serialize(storageKey, newRecord);
 };
 
-export const getSavedRecord = (profile: string, recordId?: string | number | undefined) => {
+export const getSavedRecord = (profile: string, recordId?: RecordID): LocallySavedRecord | null => {
   const key = generateRecordBackupKey(profile, recordId);
   const savedRecordData = localStorageService.deserialize(key);
 
-  return savedRecordData ? autoClearSavedData(profile, savedRecordData) : null;
+  return savedRecordData ? autoClearSavedData(savedRecordData, profile, recordId) : null;
 };
 
-export const autoClearSavedData = (profile: string, savedRecordData: any) => {
+export const autoClearSavedData = (savedRecordData: LocallySavedRecord, profile: string, recordId?: RecordID) => {
   const shouldBeCleared = savedRecordData.createdAt + AUTOCLEAR_TIMEOUT <= new Date().getTime();
 
   if (!shouldBeCleared) return savedRecordData;
 
-  deleteRecordLocally(profile);
+  deleteRecordLocally(profile, recordId);
 
   return null;
 };

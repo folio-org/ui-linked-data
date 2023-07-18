@@ -4,10 +4,8 @@ import { useRecoilState } from 'recoil';
 import { getAllRecords, getRecord } from '../../common/api/records.api';
 import useConfig from '../../common/hooks/useConfig.hook';
 import state from '../../state/state';
-import { localStorageService } from '../../common/services/storage';
-import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
 import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
-
+import { getSavedRecord } from '../../common/helpers/record.helper';
 import './Load.scss';
 
 export const Load = () => {
@@ -30,10 +28,9 @@ export const Load = () => {
   const fetchRecord = async (recordId: string) => {
     try {
       const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-      const storageKey = generateRecordBackupKey(profile, recordId);
-      const locallySavedData = localStorageService.deserialize(storageKey);
+      const locallySavedData = getSavedRecord(profile, recordId);
       const recordData: RecordEntry = locallySavedData
-        ? { id: recordId, ...locallySavedData.data[profile] }
+        ? { id: recordId, profile, ...locallySavedData.data[profile] }
         : await getRecord({ recordId });
 
       setRecord(recordData);

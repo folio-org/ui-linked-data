@@ -20,13 +20,16 @@ export const Edit = () => {
     const defaultProfile = PROFILE_IDS.MONOGRAPH;
     const profile = selectedProfile?.id ?? defaultProfile;
     const savedRecordData = getSavedRecord(profile);
-    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, ...savedRecordData[defaultProfile] } : null;
+    const record = savedRecordData
+      ? { id: DEFAULT_RECORD_ID, profile: defaultProfile, ...savedRecordData.data[defaultProfile] }
+      : null;
+    const typedRecord = record as unknown as RecordEntry;
 
-    if (record) {
-      setRecord(record);
+    if (typedRecord) {
+      setRecord(typedRecord);
     }
 
-    getProfiles(record);
+    getProfiles(typedRecord);
   };
 
   return selectedProfile ? (
