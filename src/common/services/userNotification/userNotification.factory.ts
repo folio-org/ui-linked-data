@@ -1,5 +1,6 @@
 import { StatusType as Status } from '../../constants/status.constants';
 import { Success, Error as ErrorNotification, Info, Warning } from './notificationTypes';
+import BaseNotification from './notificationTypes/base';
 
 const notificationMap = {
   [Status.success]: Success,
@@ -9,7 +10,7 @@ const notificationMap = {
 };
 
 // TODO: define the default message type
-const DefaultNotification = Info as unknown as StatusEntry;
+const DefaultNotification = Info as unknown as BaseNotification;
 
 type notificationTypes = (typeof notificationMap)[StatusType];
 type ExtractInstanceType<T> = T extends new () => infer R ? R : typeof DefaultNotification;

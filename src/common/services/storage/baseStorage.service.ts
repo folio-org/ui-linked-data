@@ -1,4 +1,4 @@
-type StorageItemValue = string | typeof Array | Record<string, object>;
+type StorageItemValue = string | typeof Array | Record<string, object | string | number>;
 
 abstract class StorageService {
   constructor(private readonly storage: Storage) {}

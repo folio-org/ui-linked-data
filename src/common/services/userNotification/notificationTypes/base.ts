@@ -7,7 +7,7 @@ export interface INotification {
   message: string;
 }
 
-export default class BaseNotification implements INotification {
+export default abstract class BaseNotification implements INotification {
   id: string;
   type: StatusType;
   message: string;

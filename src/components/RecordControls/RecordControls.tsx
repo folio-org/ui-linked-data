@@ -1,115 +1,13 @@
 import { memo, useState } from 'react';
-import { useHistory } from 'react-router';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import classNames from 'classnames';
-import { applyUserValues } from '../../common/helpers/profile.helper';
-import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '../../common/api/records.api';
-import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
-import { generateRecordBackupKey } from '../../common/helpers/progressBackup.helper';
-import { localStorageService } from '../../common/services/storage';
-import { StatusType } from '../../common/constants/status.constants';
-import state from '../../state/state';
 import './RecordControls.scss';
 import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
-import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
 import { ModalDeleteRecord } from '../ModalDeleteRecord/ModalDeleteRecord';
-import UserNotificationFactory from '../../common/services/userNotification/userNotification.factory';
+import { useRecordControls } from '../../common/hooks/useRecordControls';
 
 export const RecordControls = memo(() => {
-  const history = useHistory();
-  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
-  const schema = useRecoilValue(state.config.schema);
-  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
-  const [record, setRecord] = useRecoilState(state.inputs.record);
-  const [status, setStatus] = useState<StatusEntry | null>(null);
+  const { saveRecord, deleteRecord, discardRecord } = useRecordControls();
   const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-  const currentRecordId = record?.id;
-
-  const saveRecord = async () => {
-    const parsed = applyUserValues(schema, userValues, initialSchemaKey);
-    const currentRecordId = record?.id;
-
-    if (!parsed) return;
-
-    try {
-      const formattedRecord = formatRecord(profile, parsed);
-      // TODO: define a type
-      let response: any;
-
-      if (!record?.id || record.id === DEFAULT_RECORD_ID) {
-        response = await postRecord(formattedRecord);
-      } else {
-        response = await putRecord(record.id, formattedRecord);
-      }
-
-      const parsedResponse = await response.json();
-      const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntry;
-
-      deleteRecordLocally(profile, currentRecordId);
-      saveRecordLocally(profile, parsed, parsedResponse?.id);
-      setRecord(updatedRecord);
-      setStatus(UserNotificationFactory.createMessage(StatusType.success, 'Record saved successfully'));
-    } catch (error) {
-      const message = 'Cannot save the record';
-      console.error(message, error);
-
-      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
-    }
-  };
-
-  const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-    const formattedRecord: RecordEntry = {
-      ...parsedRecord[profile],
-      profile,
-    };
-
-    return formattedRecord;
-  };
-
-  const deleteRecordLocally = (profile: string, recordId?: number | string) => {
-    if (!recordId) return;
-
-    const storageKey = generateRecordBackupKey(profile, recordId);
-
-    localStorageService.delete(storageKey);
-  };
-
-  const saveRecordLocally = (profile: string, parsedRecord: Record<string, object>, recordId: number) => {
-    const storageKey = generateRecordBackupKey(profile, recordId);
-
-    localStorageService.serialize(storageKey, parsedRecord);
-  };
-
-  const deleteRecord = async () => {
-    try {
-      if (!currentRecordId) return;
-
-      await deleteRecordRequest(currentRecordId);
-      deleteRecordLocally(profile, currentRecordId);
-      discardRecord();
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'Resource description deleted'),
-      ]);
-
-      history.replace('/load');
-    } catch (error) {
-      const message = 'Cannot delete the record';
-      console.error(message, error);
-
-      setStatus(UserNotificationFactory.createMessage(StatusType.error, message));
-    }
-  };
-
-  const discardRecord = () => {
-    setUserValues({});
-    setRecord(null);
-    setSelectedProfile(null);
-  };
 
   const onClickCloseButton = () => {
     setIsCloseModalOpen(true);
@@ -126,7 +24,6 @@ export const RecordControls = memo(() => {
         <button onClick={onClickCloseButton}>Close Record</button>
         <button onClick={onClickDeleteButton}>Delete Record</button>
       </div>
-      {status && <p className={classNames(['status-message', status.type])}>{status.message}</p>}
       <ModalCloseRecord
         isOpen={isCloseModalOpen}
         toggleIsOpen={setIsCloseModalOpen}
