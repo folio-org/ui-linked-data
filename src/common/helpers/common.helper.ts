@@ -1,4 +1,4 @@
-import { lookupConfig } from '../../constants';
+import { lookupConfig } from '../constants/lookup.constants';
 import { BaseFieldType, AdvancedFieldType } from '../constants/uiControls.constants';
 
 export const aplhabeticSortLabel = <T extends { label: string }>(a: T, b: T): 0 | -1 | 1 => {
