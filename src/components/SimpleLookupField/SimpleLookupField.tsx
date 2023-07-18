@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import CreatableSelect, { MultiValue } from 'react-select';
-import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../constants';
+import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../common/constants/lookup.constants';
 import { aplhabeticSortLabel } from '../../common/helpers/common.helper';
 import { loadSimpleLookup } from '../../common/helpers/api.helper';
 
