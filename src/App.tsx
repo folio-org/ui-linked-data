@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil';
 import './App.scss';
 import { OKAPI_PREFIX } from './common/constants/api.constants';
 import { CommonStatus } from './components/CommonStatus/CommonStatus';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 type Okapi = {
   token: string;
@@ -39,16 +40,18 @@ export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
   }, [okapi]);
 
   return (
-    <RecoilRoot>
-      <BrowserRouter basename={routePrefix}>
-        <Nav />
-        <CommonStatus />
-        <Switch>
-          <Route path="/edit" component={Edit} />
-          <Route path="/load" component={Load} />
-          <Route path="" component={Main} />
-        </Switch>
-      </BrowserRouter>
-    </RecoilRoot>
+    <ErrorBoundary>
+      <RecoilRoot>
+        <BrowserRouter basename={routePrefix}>
+          <Nav />
+          <CommonStatus />
+          <Switch>
+            <Route path="/edit" component={Edit} />
+            <Route path="/load" component={Load} />
+            <Route path="" component={Main} />
+          </Switch>
+        </BrowserRouter>
+      </RecoilRoot>
+    </ErrorBoundary>
   );
 };
