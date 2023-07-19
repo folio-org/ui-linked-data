@@ -20,7 +20,9 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}",
-    "test:unit": "jest --coverage"
+    "test:unit:all": "jest",
+    "test:unit:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage"
   },
   "dependencies": {
     "@r2wc/react-to-web-component": "^2.0.2",
