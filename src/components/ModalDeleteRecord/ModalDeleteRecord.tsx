@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-import { Modal } from '../Modal/Modal';
+import { Modal } from '../Modal';
 
 interface Props {
   isOpen: boolean;

@@ -1,13 +1,13 @@
 import { useHistory } from 'react-router';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { applyUserValues } from '../../common/helpers/profile.helper';
-import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '../../common/api/records.api';
-import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
-import { StatusType } from '../../common/constants/status.constants';
-import state from '../../state/state';
-import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
-import { deleteRecordLocally, formatRecord } from '../../common/helpers/record.helper';
-import UserNotificationFactory from '../services/userNotification/userNotification.factory';
+import { applyUserValues } from '@helpers/profile.helper';
+import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@api/records.api';
+import { PROFILE_IDS } from '@constants/bibframe.constants';
+import { StatusType } from '@constants/status.constants';
+import state from '@state';
+import { DEFAULT_RECORD_ID } from '@constants/storage.constants';
+import { deleteRecordLocally, formatRecord } from '@helpers/record.helper';
+import { UserNotificationFactory } from '@services/userNotification';
 
 export const useRecordControls = () => {
   const history = useHistory();

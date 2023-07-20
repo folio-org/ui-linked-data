@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useRecoilState } from 'recoil';
-import { getAllRecords, getRecord } from '../../common/api/records.api';
-import useConfig from '../../common/hooks/useConfig.hook';
-import state from '../../state/state';
-import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
-import { getSavedRecord } from '../../common/helpers/record.helper';
+import { getAllRecords, getRecord } from '@api/records.api';
+import useConfig from '@hooks/useConfig.hook';
+import state from '@state';
+import { PROFILE_IDS } from '@constants/bibframe.constants';
+import { getSavedRecord } from '@helpers/record.helper';
 import './Load.scss';
 
 export const Load = () => {

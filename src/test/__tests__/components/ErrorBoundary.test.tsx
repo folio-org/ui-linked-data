@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ErrorBoundary } from '../../../components/ErrorBoundary';
+import { ErrorBoundary } from '@components/ErrorBoundary';
 
 describe('Error Boundary', () => {
   test('renders Error Boundary component', () => {

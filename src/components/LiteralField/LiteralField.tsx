@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Input } from '../Input/Input';
+import { Input } from '../Input';
 
 interface Props {
   displayName: string;
@@ -15,7 +15,7 @@ export const LiteralField: FC<Props> = ({ displayName, uuid, value = '', onChang
     setLocalValue(value);
 
     onChange(uuid, [{ label: value }]);
-  }
+  };
 
   return (
     <div id={uuid}>

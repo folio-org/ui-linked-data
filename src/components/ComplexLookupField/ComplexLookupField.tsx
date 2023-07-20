@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useState } from 'react';
-import { Input } from '../Input/Input';
+import { Input } from '../Input';
 
 interface Props {
   label: string;
