@@ -3,7 +3,6 @@
     "baseUrl": ".",
     "paths": {
       "marva-next": ["src/main.tsx"],
-      "@src/*": ["src/*"],
       "@api/*": ["src/common/api/*"],
       "@constants/*": ["src/common/constants/*"],
       "@helpers/*": ["src/common/helpers/*"],
@@ -11,7 +10,8 @@
       "@services/*": ["src/common/services/*"],
       "@components/*": ["src/components/*"],
       "@state": ["src/state"],
-      "@views": ["src/views"]
+      "@views": ["src/views"],
+      "@src/*": ["src/*"]
     }
   }
 }
