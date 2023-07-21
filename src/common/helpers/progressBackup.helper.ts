@@ -1,5 +1,5 @@
-import { PROFILE_IDS } from '../constants/bibframe.constants';
-import { DEFAULT_RECORD_ID } from '../constants/storage.constants';
+import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 
 // TODO: define default profile that will be used for saving a new record
 export const generateRecordBackupKey = (

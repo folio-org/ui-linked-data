@@ -1,13 +1,12 @@
 import { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Edit, Load, Main } from './views';
-import { Nav } from './components/Nav/Nav';
 import { RecoilRoot } from 'recoil';
-
+import { Edit, Load, Main } from '@views';
+import { OKAPI_PREFIX } from '@common/constants/api.constants';
+import { CommonStatus } from '@components/CommonStatus';
+import { ErrorBoundary } from '@components/ErrorBoundary';
+import { Nav } from '@components/Nav';
 import './App.scss';
-import { OKAPI_PREFIX } from './common/constants/api.constants';
-import { CommonStatus } from './components/CommonStatus/CommonStatus';
-import { ErrorBoundary } from './components/ErrorBoundary';
 
 type Okapi = {
   token: string;

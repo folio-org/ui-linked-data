@@ -1,9 +1,9 @@
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
-import state from '../../state/state';
+import state from '@state';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { RecordControls } from '../RecordControls';
 import './Preview.scss';
-import { AdvancedFieldType } from '../../common/constants/uiControls.constants';
-import { RecordControls } from '../RecordControls/RecordControls';
 
 export const Preview = () => {
   const userValues = useRecoilValue(state.inputs.userValues);

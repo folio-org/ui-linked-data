@@ -1,8 +1,8 @@
 import { memo, useState } from 'react';
+import { useRecordControls } from '@common/hooks/useRecordControls';
+import { ModalCloseRecord } from '../ModalCloseRecord';
+import { ModalDeleteRecord } from '../ModalDeleteRecord';
 import './RecordControls.scss';
-import { ModalCloseRecord } from '../ModalCloseRecord/ModalCloseRecord';
-import { ModalDeleteRecord } from '../ModalDeleteRecord/ModalDeleteRecord';
-import { useRecordControls } from '../../common/hooks/useRecordControls';
 
 export const RecordControls = memo(() => {
   const { saveRecord, deleteRecord, discardRecord } = useRecordControls();

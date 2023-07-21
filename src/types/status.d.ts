@@ -1,4 +1,4 @@
-type StatusType = keyof typeof import('../common/constants/status.constants').StatusType;
+type StatusType = keyof typeof import('@common/constants/status.constants').StatusType;
 
 type StatusEntry = {
   id?: string;

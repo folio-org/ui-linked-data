@@ -1,7 +1,7 @@
 // TODO: caching, abort controllers
 
-import { EDITOR_API_BASE_PATH, OKAPI_PREFIX } from '../constants/api.constants';
-import { getEnvVariable } from '../helpers/env.helper';
+import { EDITOR_API_BASE_PATH, OKAPI_PREFIX } from '@common/constants/api.constants';
+import { getEnvVariable } from '@common/helpers/env.helper';
 
 const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || getEnvVariable(EDITOR_API_BASE_PATH);
 

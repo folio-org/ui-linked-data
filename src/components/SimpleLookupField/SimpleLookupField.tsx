@@ -1,27 +1,29 @@
 import { FC, useState } from 'react';
 import CreatableSelect, { MultiValue } from 'react-select';
-import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '../../common/constants/lookup.constants';
-import { aplhabeticSortLabel } from '../../common/helpers/common.helper';
-import { loadSimpleLookup } from '../../common/helpers/api.helper';
+import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
+import { aplhabeticSortLabel } from '@common/helpers/common.helper';
+import { loadSimpleLookup } from '@common/helpers/api.helper';
 
 interface Props {
   uri: string;
   displayName: string;
   uuid: string;
-  value?: UserValueContents[],
-  parentUri?: string,
+  value?: UserValueContents[];
+  parentUri?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
 // TODO: add value subscription, add uncontrolled opts handling
 export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, onChange, parentUri }) => {
   const [options, setOptions] = useState<MultiselectOption[]>([]);
-  const [localValue, setLocalValue] = useState<MultiselectOption[]>(value?.map(({ label = '', meta: { uri } = {}}) => ({
-    value: { label, uri },
-    label,
-    __isNew__: false,
-  })) || [])
-  const [isLoading, setIsLoading] = useState(false)
+  const [localValue, setLocalValue] = useState<MultiselectOption[]>(
+    value?.map(({ label = '', meta: { uri } = {} }) => ({
+      value: { label, uri },
+      label,
+      __isNew__: false,
+    })) || [],
+  );
+  const [isLoading, setIsLoading] = useState(false);
 
   const getOptions = (data: LoadSimpleLookupResponseItem[], parentURI?: string): MultiselectOption[] => {
     const options = data
@@ -55,22 +57,21 @@ export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, on
     if (!response) return;
 
     const optionsForDisplay = getOptions(response, uri).sort(aplhabeticSortLabel);
-    
+
     setOptions(optionsForDisplay);
     setIsLoading(false);
   };
 
-  const getOptionLabel = (option: MultiselectOption): string => (
-    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label
-  );
+  const getOptionLabel = (option: MultiselectOption): string =>
+    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChange = (options: MultiValue<MultiselectOption>) => {
     const newValue = options.map<UserValueContents>(({ value }) => ({
       label: value.label,
       meta: {
         uri: value?.uri,
-        parentUri
-      }
+        parentUri,
+      },
     }));
 
     onChange(uuid, newValue);

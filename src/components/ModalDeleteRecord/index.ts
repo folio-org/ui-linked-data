@@ -1,0 +1,1 @@
+export { ModalDeleteRecord } from './ModalDeleteRecord';

@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import useConfig from '../../common/hooks/useConfig.hook';
-import { EditSection } from '../../components/EditSection/EditSection';
-import { Preview } from '../../components/Preview/Preview';
-import { Properties } from '../../components/Properties/Properties';
-import state from '../../state/state';
-import { PROFILE_IDS } from '../../common/constants/bibframe.constants';
-import { DEFAULT_RECORD_ID } from '../../common/constants/storage.constants';
-import { getSavedRecord } from '../../common/helpers/record.helper';
+import state from '@state';
+import useConfig from '@common/hooks/useConfig.hook';
+import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
+import { getSavedRecord } from '@common/helpers/record.helper';
+import { EditSection } from '@components/EditSection';
+import { Preview } from '@components/Preview';
+import { Properties } from '@components/Properties';
 import './Edit.scss';
 
 export const Edit = () => {

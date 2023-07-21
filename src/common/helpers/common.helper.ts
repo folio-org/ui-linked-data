@@ -1,5 +1,5 @@
-import { lookupConfig } from '../constants/lookup.constants';
-import { BaseFieldType, AdvancedFieldType } from '../constants/uiControls.constants';
+import { lookupConfig } from '@common/constants/lookup.constants';
+import { BaseFieldType, AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 export const aplhabeticSortLabel = <T extends { label: string }>(a: T, b: T): 0 | -1 | 1 => {
   if (a.label < b.label) return -1;
@@ -54,7 +54,7 @@ export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedField
     const baseType = getPropertyTemplateType(struct as PropertyTemplate);
 
     if (baseType === BaseFieldType.LITERAL) return AdvancedFieldType.literal;
-    
+
     if (baseType === BaseFieldType.SIMPLE) return AdvancedFieldType.simple;
 
     if (baseType === BaseFieldType.COMPLEX) return AdvancedFieldType.complex; // TODO: define required fields and values for Complex field

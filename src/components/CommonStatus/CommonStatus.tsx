@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useRecoilState } from 'recoil';
-import state from '../../state/state';
 import classNames from 'classnames';
+import state from '@state';
 
 export const CommonStatus: FC = () => {
   const [statusMessages, setStatusMessage] = useRecoilState(state.status.commonMessages);

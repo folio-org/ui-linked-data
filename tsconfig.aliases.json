@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "marva-next": ["src/main.tsx"],
+      "@common/*": ["src/common/*"],
+      "@components/*": ["src/components/*"],
+      "@state": ["src/state"],
+      "@views": ["src/views"],
+      "@src/*": ["src/*"]
+    }
+  }
+}

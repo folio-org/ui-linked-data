@@ -1,4 +1,4 @@
-import { BIBFRAME_API_ENDPOINT, MAX_LIMIT, OKAPI_PREFIX } from '../constants/api.constants';
+import { BIBFRAME_API_ENDPOINT, MAX_LIMIT, OKAPI_PREFIX } from '@common/constants/api.constants';
 import baseApi from './base.api';
 
 type SingleRecord = {

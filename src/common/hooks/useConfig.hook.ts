@@ -1,10 +1,15 @@
 import { useSetRecoilState } from 'recoil';
-import state from '../../state/state';
-import { fetchProfiles } from '../api/profiles.api';
-import { getAdvancedFieldType } from '../helpers/common.helper';
-import { CONSTRAINTS, GROUP_BY_LEVEL, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '../constants/bibframe.constants';
-import { AdvancedFieldType } from '../constants/uiControls.constants';
 import { v4 as uuidv4 } from 'uuid';
+import state from '@state';
+import { fetchProfiles } from '@common/api/profiles.api';
+import { getAdvancedFieldType } from '@common/helpers/common.helper';
+import {
+  CONSTRAINTS,
+  GROUP_BY_LEVEL,
+  PROFILE_NAMES,
+  RESOURCE_TEMPLATE_IDS,
+} from '@common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 // TODO: split & naming ?
 export default function useConfig() {
@@ -47,7 +52,7 @@ export default function useConfig() {
     auxType?: AdvancedFieldType;
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
-    record?: Record<string, any> | Array<any>,
+    record?: Record<string, any> | Array<any>;
   };
 
   const traverseProfile = ({
@@ -89,25 +94,27 @@ export default function useConfig() {
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
 
-      withContentsSelected?.[propertyURI] && setUserValues((oldValue) => ({
-        ...oldValue,
-        [uuid]: {
-          uuid,
-          contents: withContentsSelected?.[propertyURI].map((entry: any) => (
-            typeof entry === 'string'
-              ? {
-                label: entry
-              } : {
-                label: entry.label,
-                meta: {
-                  parentURI: entry.uri,
-                  uri: entry.uri,
-                  type,
-                }
-              }
-          ))
-        }
-      }))
+      withContentsSelected?.[propertyURI] &&
+        setUserValues(oldValue => ({
+          ...oldValue,
+          [uuid]: {
+            uuid,
+            contents: withContentsSelected?.[propertyURI].map((entry: any) =>
+              typeof entry === 'string'
+                ? {
+                    label: entry,
+                  }
+                : {
+                    label: entry.label,
+                    meta: {
+                      parentURI: entry.uri,
+                      uri: entry.uri,
+                      type,
+                    },
+                  },
+            ),
+          },
+        }));
 
       base.set(uuid, {
         uuid,
@@ -117,7 +124,6 @@ export default function useConfig() {
         uri: propertyURI,
         constraints,
       });
-
     } else {
       switch (type) {
         // parent types
@@ -180,7 +186,9 @@ export default function useConfig() {
               path: updatedPath,
               base,
               selectedEntries,
-              record: isRecordArray ? record.find((entry) => Object.keys(entry).includes(resourceURI))?.[resourceURI] : record?.[resourceURI],
+              record: isRecordArray
+                ? record.find(entry => Object.keys(entry).includes(resourceURI))?.[resourceURI]
+                : record?.[resourceURI],
             });
           });
 
@@ -226,14 +234,17 @@ export default function useConfig() {
 
               traverseProfile({
                 entry,
-                auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+                auxType:
+                  type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
                 templates,
                 uuid: uuidArray[i],
                 path: updatedPath,
                 base,
                 firstOfSameType: i === 0,
                 selectedEntries,
-                record: isRecordArray ? record.find((entry) => Object.keys(entry).includes(propertyURI))?.[propertyURI] : record?.[propertyURI],
+                record: isRecordArray
+                  ? record.find(entry => Object.keys(entry).includes(propertyURI))?.[propertyURI]
+                  : record?.[propertyURI],
               });
             });
 
@@ -250,9 +261,8 @@ export default function useConfig() {
 
   const buildSchema = (
     profile: ProfileEntry,
-    templates:
-    ResourceTemplates,
-    record: Record<string, any> | Array<any>
+    templates: ResourceTemplates,
+    record: Record<string, any> | Array<any>,
   ) => {
     const base = new Map();
     const initKey = uuidv4();
