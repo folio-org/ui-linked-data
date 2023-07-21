@@ -1,6 +1,7 @@
 // https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 
 import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
@@ -10,16 +11,23 @@ type TraverseSchema = {
   index?: number;
 };
 
-const traverseSchema = async ({ schema, userValues, container, key, index = 0 }: TraverseSchema) => {
-  const { children, uri, bfid } = schema.get(key) || {};
+const traverseSchema = ({
+  schema,
+  userValues,
+  container,
+  key,
+  index = 0,
+}: TraverseSchema) => {
+  const { children, uri, bfid, type } = schema.get(key) || {}
   const selector = uri || bfid;
   const userValueMatch = userValues[key];
-  const shouldProceed = Object.keys(userValues)
-    .map(uuid => schema.get(uuid)?.path)
-    .flat()
-    .includes(key);
-  const lastWordLetter = uri?.split('/').at(-1)?.[0];
-  const isArray = (lastWordLetter && /[a-z]/.test(lastWordLetter)) || index === 1;
+  const shouldProceed = Object.keys(userValues).map((uuid) => schema.get(uuid)?.path).flat().includes(key);
+  const isArray = ![
+    AdvancedFieldType.block,
+    AdvancedFieldType.hidden,
+    AdvancedFieldType.dropdownOption,
+    AdvancedFieldType.profile,
+  ].includes(type as AdvancedFieldType);
 
   if (userValueMatch && uri && selector) {
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
