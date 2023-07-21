@@ -11,5 +11,5 @@ export default {
     '\\.(css|sass|scss)$': 'identity-obj-proxy',
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   },
-  setupFiles: ['<rootDir>/src/test/__mock__/env.helper.mock.ts'],
+  setupFiles: ['<rootDir>/src/test/__mock__/setupMocks.ts'],
 };
