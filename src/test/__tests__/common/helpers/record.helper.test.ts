@@ -112,14 +112,10 @@ describe('record.helper', () => {
     });
 
     test('invokes "deleteRecordLocally" and returns null', () => {
-      const newSavedRecord = {
-        ...storedRecord,
-        createdAt: date,
-      };
       jest.spyOn(Date.prototype, 'getTime').mockReturnValue(date + AUTOCLEAR_TIMEOUT);
       jest.spyOn(RecordHelper, 'deleteRecordLocally');
 
-      const result = RecordHelper.autoClearSavedData(newSavedRecord, profile, recordId);
+      const result = RecordHelper.autoClearSavedData(storedRecord, profile, recordId);
 
       expect(RecordHelper.deleteRecordLocally).toHaveBeenCalledWith(profile, recordId);
       expect(result).toBeNull();
