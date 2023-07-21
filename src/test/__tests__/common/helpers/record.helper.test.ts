@@ -29,7 +29,7 @@ describe('record.helper', () => {
   test('formatRecord - returns formatted record data', () => {
     const testResult = {
       profile,
-      instance: [{}],
+      Instance: [{}],
     };
 
     const result = RecordHelper.formatRecord(profile, record);
