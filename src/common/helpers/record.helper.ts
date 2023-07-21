@@ -1,5 +1,5 @@
-import { AUTOCLEAR_TIMEOUT } from '../constants/storage.constants';
-import { localStorageService } from '../services/storage';
+import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
+import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 
 export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {

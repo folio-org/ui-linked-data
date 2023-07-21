@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FC, memo, ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
-import { AdvancedFieldType } from '@constants/uiControls.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import state from '@state';
 
 export type IDrawComponent = {

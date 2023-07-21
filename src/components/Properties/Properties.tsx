@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil';
-import { GROUP_BY_LEVEL } from '@constants/bibframe.constants';
-import { AdvancedFieldType } from '@constants/uiControls.constants';
+import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import state from '@state';
 import { Fields, IDrawComponent } from '../Fields';
 import './Properties.scss';

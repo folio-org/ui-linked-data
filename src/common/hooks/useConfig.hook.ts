@@ -1,10 +1,15 @@
 import { useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
-import { fetchProfiles } from '@api/profiles.api';
-import { getAdvancedFieldType } from '@helpers/common.helper';
-import { CONSTRAINTS, GROUP_BY_LEVEL, PROFILE_NAMES, RESOURCE_TEMPLATE_IDS } from '@constants/bibframe.constants';
-import { AdvancedFieldType } from '@constants/uiControls.constants';
+import { fetchProfiles } from '@common/api/profiles.api';
+import { getAdvancedFieldType } from '@common/helpers/common.helper';
+import {
+  CONSTRAINTS,
+  GROUP_BY_LEVEL,
+  PROFILE_NAMES,
+  RESOURCE_TEMPLATE_IDS,
+} from '@common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 // TODO: split & naming ?
 export default function useConfig() {

@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { useRecordControls } from '@hooks/useRecordControls';
+import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalCloseRecord } from '../ModalCloseRecord';
 import { ModalDeleteRecord } from '../ModalDeleteRecord';
 import './RecordControls.scss';

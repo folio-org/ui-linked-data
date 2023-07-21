@@ -1,4 +1,4 @@
-import { StatusType as Status } from '../../constants/status.constants';
+import { StatusType as Status } from '@common/constants/status.constants';
 import { Success, Error as ErrorNotification, Info, Warning } from './notificationTypes';
 import BaseNotification from './notificationTypes/base';
 

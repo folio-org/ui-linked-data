@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import state from '@state';
-import { AdvancedFieldType } from '@constants/uiControls.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordControls } from '../RecordControls';
 import './Preview.scss';
 

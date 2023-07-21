@@ -1,16 +1,16 @@
 import { useEffect, memo, useCallback, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import state from '@state';
+import { applyUserValues } from '@common/helpers/profile.helper';
+import { saveRecordLocally } from '@common/helpers/record.helper';
+import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { Fields } from '../Fields';
 import { LiteralField } from '../LiteralField';
 import { DropdownField } from '../DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField';
 import { ComplexLookupField } from '../ComplexLookupField';
-import { applyUserValues } from '@helpers/profile.helper';
-import { saveRecordLocally } from '@helpers/record.helper';
-import { PROFILE_IDS } from '@constants/bibframe.constants';
-import { AUTOSAVE_INTERVAL } from '@constants/storage.constants';
-import { AdvancedFieldType } from '@constants/uiControls.constants';
-import { Fields } from '../Fields';
 import './EditSection.scss';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
