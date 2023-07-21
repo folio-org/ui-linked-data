@@ -17,14 +17,14 @@ export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
   localStorageService.delete(storageKey);
 };
 
-export const generateRecordData = (record: RecursiveRecordSchema) => {
+export const generateRecordData = (record: SavedRecordData) => {
   return {
     createdAt: new Date().getTime(),
     data: record,
   };
 };
 
-export const generateAndSaveRecord = (storageKey: string, record: RecursiveRecordSchema) => {
+export const generateAndSaveRecord = (storageKey: string, record: SavedRecordData) => {
   const newRecord = generateRecordData(record);
 
   localStorageService.serialize(storageKey, newRecord);
@@ -32,7 +32,7 @@ export const generateAndSaveRecord = (storageKey: string, record: RecursiveRecor
   return newRecord;
 };
 
-export const saveRecordLocally = (profile: string, record: RecursiveRecordSchema, recordId: RecordID) => {
+export const saveRecordLocally = (profile: string, record: SavedRecordData, recordId: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
 
   return generateAndSaveRecord(storageKey, record);
