@@ -9,7 +9,7 @@ describe('record.helper', () => {
   const key = 'testKey';
   const record = {
     [profile]: {
-      instance: [{}],
+      Instance: [{}],
     },
   };
   const date = 111111111;
