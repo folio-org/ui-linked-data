@@ -21,7 +21,7 @@ export const Edit = () => {
     const profile = selectedProfile?.id ?? defaultProfile;
     const savedRecordData = getSavedRecord(profile);
     const record = savedRecordData
-      ? { id: DEFAULT_RECORD_ID, profile: defaultProfile, ...savedRecordData.data[defaultProfile] }
+      ? { id: DEFAULT_RECORD_ID, profile: defaultProfile, ...savedRecordData.data?.[defaultProfile] }
       : null;
     const typedRecord = record as unknown as RecordEntry;
 
