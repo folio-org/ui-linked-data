@@ -1,7 +1,7 @@
 import { lookupConfig } from '@common/constants/lookup.constants';
 import { BaseFieldType, AdvancedFieldType } from '@common/constants/uiControls.constants';
 
-export const aplhabeticSortLabel = <T extends { label: string }>(a: T, b: T): 0 | -1 | 1 => {
+export const alphabeticSortLabel = <T extends { label: string }>(a: T, b: T): 0 | -1 | 1 => {
   if (a.label < b.label) return -1;
   if (a.label > b.label) return 1;
 
@@ -66,8 +66,6 @@ export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedField
       const {
         valueConstraint: { valueTemplateRefs },
       } = struct as PropertyTemplate;
-
-      if (valueTemplateRefs.length <= 0) return AdvancedFieldType.__fallback; // TODO -- what type ?
 
       if (valueTemplateRefs.length > 1) return AdvancedFieldType.dropdown;
 
