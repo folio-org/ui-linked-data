@@ -1,4 +1,4 @@
-import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
+import { generateRecordBackupKey } from '@common/helpers/progressBackup.helper';
 
 describe('progressBackup.helper', () => {
   describe('generateRecordBackupKey', () => {
@@ -7,7 +7,7 @@ describe('progressBackup.helper', () => {
       recordId: number | string | undefined,
       testResult: string,
     ) {
-      const result = ProgressBackupHelper.generateRecordBackupKey(profile, recordId);
+      const result = generateRecordBackupKey(profile, recordId);
 
       expect(result).toBe(testResult);
     }
