@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import CreatableSelect, { MultiValue } from 'react-select';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
-import { aplhabeticSortLabel } from '@common/helpers/common.helper';
+import { alphabeticSortLabel } from '@common/helpers/common.helper';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 
 interface Props {
@@ -56,7 +56,7 @@ export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, on
 
     if (!response) return;
 
-    const optionsForDisplay = getOptions(response, uri).sort(aplhabeticSortLabel);
+    const optionsForDisplay = getOptions(response, uri).sort(alphabeticSortLabel);
 
     setOptions(optionsForDisplay);
     setIsLoading(false);
