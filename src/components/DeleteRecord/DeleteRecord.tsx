@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { useRecoilValue } from 'recoil';
 import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -14,7 +14,7 @@ const DeleteRecord: FC = () => {
 
   return (
     <>
-      <button onClick={openModal} disabled={isDisabled}>
+      <button data-testid="delete-record-button" onClick={openModal} disabled={isDisabled}>
         Delete Record
       </button>
       <ModalDeleteRecord isOpen={isModalOpen} toggleIsOpen={setIsModalOpen} deleteRecord={deleteRecord} />
@@ -22,4 +22,4 @@ const DeleteRecord: FC = () => {
   );
 };
 
-export default DeleteRecord;
+export default memo(DeleteRecord);

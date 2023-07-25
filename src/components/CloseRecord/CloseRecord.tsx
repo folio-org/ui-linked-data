@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
-import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { useModalControls } from '@common/hooks/useModalControls';
+import { ModalCloseRecord } from '@components/ModalCloseRecord';
 
 const CloseRecord: FC = () => {
   const { saveRecord, discardRecord } = useRecordControls();
@@ -9,7 +9,9 @@ const CloseRecord: FC = () => {
 
   return (
     <>
-      <button onClick={openModal}>Close Record</button>
+      <button data-testid="close-record-button" onClick={openModal}>
+        Close Record
+      </button>
       <ModalCloseRecord
         isOpen={isModalOpen}
         toggleIsOpen={setIsModalOpen}
@@ -20,4 +22,4 @@ const CloseRecord: FC = () => {
   );
 };
 
-export default CloseRecord;
+export default memo(CloseRecord);

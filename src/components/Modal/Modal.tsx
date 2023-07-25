@@ -15,11 +15,21 @@ interface Props extends ReactModal.Props {
   children?: ReactNode;
 }
 
-export const Modal: FC<Props> = memo(
-  ({ isOpen, className, title, submitButtonLabel, cancelButtonLabel, onSubmit, onCancel, onClose, children }) => {
-    const rootElement = document.getElementById('editor-root') as HTMLElement;
+const Modal: FC<Props> = ({
+  isOpen,
+  className,
+  title,
+  submitButtonLabel,
+  cancelButtonLabel,
+  onSubmit,
+  onCancel,
+  onClose,
+  children,
+}) => {
+  const rootElement = document.getElementById('editor-root') as HTMLElement;
 
-    return (
+  return (
+    isOpen && (
       <ReactModal
         isOpen={isOpen}
         appElement={rootElement}
@@ -39,6 +49,8 @@ export const Modal: FC<Props> = memo(
           <button onClick={onCancel}>{cancelButtonLabel}</button>
         </div>
       </ReactModal>
-    );
-  },
-);
+    )
+  );
+};
+
+export default memo(Modal);
