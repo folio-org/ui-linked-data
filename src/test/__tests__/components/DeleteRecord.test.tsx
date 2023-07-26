@@ -6,7 +6,7 @@ import { DeleteRecord } from '@components/DeleteRecord';
 import { openModal } from '@src/test/__mock__/useModalControls.mock';
 
 describe('DeleteRecord', () => {
-  const mockRecord = {
+  const mockedRecord = {
     id: 'testId',
     profile: 'testProfile',
   } as RecordEntry;
@@ -21,7 +21,7 @@ describe('DeleteRecord', () => {
   const getButtonElement = () => screen.getByTestId('delete-record-button');
 
   test('renders "Delete record" button and it is not disabled', () => {
-    renderComponent(mockRecord);
+    renderComponent(mockedRecord);
 
     const button = getButtonElement();
 
@@ -36,7 +36,7 @@ describe('DeleteRecord', () => {
   });
 
   test('triggers "openModal" function', () => {
-    renderComponent(mockRecord);
+    renderComponent(mockedRecord);
     fireEvent.click(getButtonElement());
 
     expect(openModal).toHaveBeenCalledTimes(1);

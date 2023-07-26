@@ -22,10 +22,6 @@ describe('record.helper', () => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
   test('formatRecord - returns formatted record data', () => {
     const testResult = {
       profile,
