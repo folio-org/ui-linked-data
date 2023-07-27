@@ -47,6 +47,11 @@
   }
   button:hover {
     border-color: #646cff;
+
+    &:disabled {
+      border-color: transparent;
+      cursor: default;
+    }
   }
   button:focus,
   button:focus-visible {
