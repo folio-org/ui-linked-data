@@ -1,9 +1,10 @@
+import { openModal } from '@src/test/__mocks__/useModalControls.mock';
+import '@src/test/__mocks__/useRecordControls.mock';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { RecoilRoot } from 'recoil';
 import state from '@state';
 import { DeleteRecord } from '@components/DeleteRecord';
-import { openModal } from '@src/test/__mock__/useModalControls.mock';
 
 describe('DeleteRecord', () => {
   const mockedRecord = {

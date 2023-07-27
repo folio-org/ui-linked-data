@@ -1,7 +1,7 @@
+import { saveRecord } from '@src/test/__mocks__/useRecordControls.mock';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { SaveRecord } from '@components/SaveRecord';
-import { saveRecord } from '@src/test/__mock__/useRecordControls.mock';
 
 describe('SaveRecord', () => {
   beforeEach(() => render(<SaveRecord />));
