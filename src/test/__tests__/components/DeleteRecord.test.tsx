@@ -1,5 +1,6 @@
-import { openModal } from '@src/test/__mocks__/useModalControls.mock';
-import '@src/test/__mocks__/useRecordControls.mock';
+import { openModal } from '@src/test/__mocks__/common/hooks/useModalControls.mock';
+import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@src/test/__mocks__/components/Modal.mock';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { RecoilRoot } from 'recoil';
@@ -21,11 +22,12 @@ describe('DeleteRecord', () => {
 
   const getButtonElement = () => screen.getByTestId('delete-record-button');
 
-  test('renders "Delete record" button and it is not disabled', () => {
+  test('renders Modal component and "Delete record" button which is not disabled', () => {
     renderComponent(mockedRecord);
 
     const button = getButtonElement();
 
+    expect(screen.getByTestId('modal-component')).toBeInTheDocument();
     expect(button).toBeInTheDocument();
     expect(button).not.toBeDisabled();
   });

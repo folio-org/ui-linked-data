@@ -29,27 +29,25 @@ const Modal: FC<Props> = ({
   const rootElement = document.getElementById('editor-root') as HTMLElement;
 
   return (
-    isOpen && (
-      <ReactModal
-        isOpen={isOpen}
-        appElement={rootElement}
-        role="dialog"
-        shouldCloseOnOverlayClick={true}
-        shouldCloseOnEsc={true}
-        onRequestClose={onClose}
-        overlayClassName="overlay"
-        className={classNames(['modal', className])}
-      >
-        <div className="modal-header">
-          <h3>{title}</h3>
-        </div>
-        {!!children && <div>{children}</div>}
-        <div className="modal-controls">
-          <button onClick={onSubmit}>{submitButtonLabel}</button>
-          <button onClick={onCancel}>{cancelButtonLabel}</button>
-        </div>
-      </ReactModal>
-    )
+    <ReactModal
+      isOpen={isOpen}
+      appElement={rootElement}
+      role="dialog"
+      shouldCloseOnOverlayClick={true}
+      shouldCloseOnEsc={true}
+      onRequestClose={onClose}
+      overlayClassName="overlay"
+      className={classNames(['modal', className])}
+    >
+      <div className="modal-header">
+        <h3>{title}</h3>
+      </div>
+      {!!children && <div>{children}</div>}
+      <div className="modal-controls">
+        <button onClick={onSubmit}>{submitButtonLabel}</button>
+        <button onClick={onCancel}>{cancelButtonLabel}</button>
+      </div>
+    </ReactModal>
   );
 };
 

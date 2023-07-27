@@ -1,1 +1,1 @@
-import './env.helper.mock';
+import './common/helpers/env.helper.mock';
