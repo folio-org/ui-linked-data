@@ -93,3 +93,5 @@ type UserValue = {
   uuid: string;
   values: Array<string>;
 };
+
+type Schema = Map<string, SchemaEntry>;

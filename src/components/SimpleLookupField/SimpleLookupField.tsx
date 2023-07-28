@@ -10,11 +10,20 @@ interface Props {
   uuid: string;
   value?: UserValueContents[];
   parentUri?: string;
+  isDisabled?: boolean;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
 // TODO: add value subscription, add uncontrolled opts handling
-export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, onChange, parentUri }) => {
+export const SimpleLookupField: FC<Props> = ({
+  uri,
+  displayName,
+  uuid,
+  value,
+  onChange,
+  parentUri,
+  isDisabled = false,
+}) => {
   const [options, setOptions] = useState<MultiselectOption[]>([]);
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri } = {} }) => ({
@@ -86,6 +95,7 @@ export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, on
         isClearable
         isLoading={isLoading}
         isMulti
+        isDisabled={isDisabled}
         options={options}
         onMenuOpen={loadOptions}
         getOptionLabel={getOptionLabel}

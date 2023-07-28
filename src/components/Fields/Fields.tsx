@@ -8,6 +8,7 @@ export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
   entry: SchemaEntry;
   level?: number;
+  disabledFields?: any;
 };
 
 type Fields = {
@@ -16,11 +17,12 @@ type Fields = {
   level?: number;
   groupByLevel?: number;
   groupClassName?: string;
-  drawComponent?: ({ schema, entry, level }: IDrawComponent) => ReactElement | null;
+  disabledFields?: any;
+  drawComponent?: ({ schema, entry, level, disabledFields }: IDrawComponent) => ReactElement | null;
 };
 
 export const Fields: FC<Fields> = memo(
-  ({ schema, uuid, drawComponent, groupByLevel = 2, level = 0, groupClassName = '' }) => {
+  ({ schema, uuid, drawComponent, groupByLevel = 2, level = 0, groupClassName = '', disabledFields }) => {
     const selectedEntries = useRecoilValue(state.config.selectedEntries);
     const entry = uuid && schema.get(uuid);
 
@@ -38,6 +40,7 @@ export const Fields: FC<Fields> = memo(
             schema,
             entry,
             level,
+            disabledFields,
           })}
         {shouldRenderChildren &&
           children?.map(uuid => (
@@ -48,6 +51,7 @@ export const Fields: FC<Fields> = memo(
               key={uuid}
               level={level + 1}
               groupClassName={groupClassName}
+              disabledFields={disabledFields}
             />
           ))}
       </div>
