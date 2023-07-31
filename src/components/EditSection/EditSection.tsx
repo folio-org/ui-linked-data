@@ -3,7 +3,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { saveRecordLocally } from '@common/helpers/record.helper';
-import { getDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
+import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -158,7 +158,7 @@ export const EditSection = memo(() => {
     [selectedEntries],
   );
 
-  const disabledFields = getDisabledFields(schema);
+  const disabledFields = getAllDisabledFields(schema);
 
   return resourceTemplates ? (
     <div className="edit-section">

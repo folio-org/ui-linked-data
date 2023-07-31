@@ -7,9 +7,8 @@ const DISABLED_FIELD_TYPES = [
   AdvancedFieldType.dropdown,
 ];
 
-export const getComplexLookups = (schema: Schema) => {
-  return Array.from(schema.values()).filter(elem => elem.type === AdvancedFieldType.complex);
-};
+export const getComplexLookups = (schema: Schema) =>
+  Array.from(schema.values()).filter(({ type }) => type === AdvancedFieldType.complex);
 
 export const getGroupsWithComplexLookups = (schema: Schema, complexLookupFields: SchemaEntry[]) =>
   complexLookupFields.map(({ path }) =>
@@ -24,7 +23,9 @@ export const getGroupsWithComplexLookups = (schema: Schema, complexLookupFields:
     }, null as SchemaEntry | null),
   );
 
-export const traverseGroup = (schema: Schema, disabledFields: Schema, childElements: string[] | undefined) => {
+export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: string[] | undefined, fields?: Schema) => {
+  const disabledFields = fields ?? new Map();
+
   childElements?.forEach(element => {
     const schemaElem = schema.get(element);
 
@@ -35,12 +36,14 @@ export const traverseGroup = (schema: Schema, disabledFields: Schema, childEleme
     }
 
     if (schemaElem.children) {
-      traverseGroup(schema, disabledFields, schemaElem.children);
+      getDisabledFieldsWithinGroup(schema, schemaElem.children, disabledFields);
     }
   });
+
+  return disabledFields;
 };
 
-export const getDisabledFields = (schema: Schema) => {
+export const getAllDisabledFields = (schema: Schema) => {
   const complexLookupFields = getComplexLookups(schema);
   const disabledFields = new Map();
 
@@ -48,7 +51,9 @@ export const getDisabledFields = (schema: Schema) => {
     const complexLookupGroups = getGroupsWithComplexLookups(schema, complexLookupFields);
 
     complexLookupGroups.forEach(group => {
-      traverseGroup(schema, disabledFields, group?.children);
+      const disabledFieldsWithinGroup = getDisabledFieldsWithinGroup(schema, group?.children);
+
+      disabledFieldsWithinGroup.forEach((disabledField, key) => disabledFields.set(key, disabledField));
     });
   }
 
