@@ -11,7 +11,6 @@ import {
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
-// TODO: split & naming ?
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);

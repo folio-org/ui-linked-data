@@ -7,6 +7,7 @@ import useConfig from '@common/hooks/useConfig.hook';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import './Load.scss';
+import { ItemSearch } from '@components/ItemSearch';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
@@ -51,11 +52,9 @@ export const Load = () => {
 
   return (
     <div className="load">
-      <strong>BIBFRAME Profiles:</strong>
-      <div>
-        <button>Monograph</button>
-      </div>
-      <strong>Available records:</strong>
+      <ItemSearch />
+      <br />
+      <strong>Other Available Records:</strong>
       <div className="button-group">
         {availableRecords?.map(({ id, label }: RecordData) => (
           <button key={id} onClick={() => fetchRecord(String(id))}>

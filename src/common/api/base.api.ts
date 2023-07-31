@@ -24,19 +24,20 @@ async function doRequest(url: string, requestParams: RequestInit) {
 
 type ReqParams = {
   url: string;
-  urlParams?: Record<string, unknown>;
+  urlParams?: Record<string, string>;
   requestParams?: RequestInit;
 };
 
-const request = async ({ url, requestParams = {} }: ReqParams) => {
-  const response = await doRequest(url, { ...requestParams });
+const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
+  const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
+  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, { ...requestParams });
 
   return response;
 };
 
 const getJson = async ({
   url,
-  urlParams = {},
+  urlParams,
   requestParams = {
     method: 'GET',
   },
