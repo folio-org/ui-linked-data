@@ -35,13 +35,12 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 };
 
 export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIMIT }: GetAllRecords) => {
-  const stringParams = new URLSearchParams({
-    pageSize: String(pageSize),
-    pageNumber: String(pageNumber),
-  }).toString();
-
   return baseApi.getJson({
-    url: `${BIBFRAME_API_ENDPOINT}?${stringParams}`,
+    url: BIBFRAME_API_ENDPOINT,
+    urlParams: {
+      pageSize: String(pageSize),
+      pageNumber: String(pageNumber),
+    },
     requestParams: {
       headers,
     },

@@ -1,0 +1,14 @@
+.item-search {
+  display: flex;
+  flex-direction: column;
+
+  .search-input {
+    width: auto;
+    margin-right: 1rem;
+  }
+
+  .search-controls {
+    display: flex;
+    flex-direction: row;
+  }
+}

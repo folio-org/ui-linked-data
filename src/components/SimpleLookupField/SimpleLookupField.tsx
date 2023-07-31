@@ -62,8 +62,9 @@ export const SimpleLookupField: FC<Props> = ({ uri, displayName, uuid, value, on
     setIsLoading(false);
   };
 
-  const getOptionLabel = (option: MultiselectOption): string =>
-    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
+  const getOptionLabel = (option: MultiselectOption): string => (
+    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label
+  );
 
   const handleOnChange = (options: MultiValue<MultiselectOption>) => {
     const newValue = options.map<UserValueContents>(({ value }) => ({
