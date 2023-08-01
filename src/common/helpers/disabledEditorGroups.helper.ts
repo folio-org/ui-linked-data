@@ -10,7 +10,7 @@ const DISABLED_FIELD_TYPES = [
 export const getComplexLookups = (schema: Schema) =>
   Array.from(schema.values()).filter(({ type }) => type === AdvancedFieldType.complex);
 
-export const getGroupsWithComplexLookups = (schema: Schema, complexLookupFields: SchemaEntry[]) =>
+export const getGroupsWithComplexLookups = (complexLookupFields: SchemaEntry[], schema: Schema) =>
   complexLookupFields.map(({ path }) =>
     path.reduce((accum, current) => {
       const entry = schema.get(current);
@@ -26,8 +26,8 @@ export const getGroupsWithComplexLookups = (schema: Schema, complexLookupFields:
 export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: string[] | undefined, fields?: Schema) => {
   const disabledFields = fields ?? new Map();
 
-  childElements?.forEach(element => {
-    const schemaElem = schema.get(element);
+  childElements?.forEach(elementId => {
+    const schemaElem = schema.get(elementId);
 
     if (!schemaElem || !schemaElem.type) return;
 
@@ -48,7 +48,7 @@ export const getAllDisabledFields = (schema: Schema) => {
   const disabledFields = new Map();
 
   if (complexLookupFields.length) {
-    const complexLookupGroups = getGroupsWithComplexLookups(schema, complexLookupFields);
+    const complexLookupGroups = getGroupsWithComplexLookups(complexLookupFields, schema);
 
     complexLookupGroups.forEach(group => {
       const disabledFieldsWithinGroup = getDisabledFieldsWithinGroup(schema, group?.children);
