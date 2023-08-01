@@ -7,9 +7,10 @@ interface Props {
   uuid: string;
   onChange: (value: ReactSelectOption, fieldId: string, isDynamicField?: boolean) => void;
   value?: ReactSelectOption;
+  isDisabled?: boolean;
 }
 
-export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value }) => {
+export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value, isDisabled = false }) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
 
   const handleOnChange = (option: any) => {
@@ -20,7 +21,13 @@ export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value 
   return (
     <div id={uuid}>
       {name} <br />
-      <Select options={options} isSearchable={false} onChange={handleOnChange} value={localValue} />
+      <Select
+        options={options}
+        isSearchable={false}
+        onChange={handleOnChange}
+        value={localValue}
+        isDisabled={isDisabled}
+      />
     </div>
   );
 };

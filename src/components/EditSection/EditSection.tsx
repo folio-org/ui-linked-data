@@ -3,6 +3,7 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { saveRecordLocally } from '@common/helpers/record.helper';
+import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -71,10 +72,14 @@ export const EditSection = memo(() => {
     ({
       schema,
       entry: { uuid, displayName = '', type, children, constraints },
+      disabledFields,
     }: {
       schema: Map<string, SchemaEntry>;
       entry: SchemaEntry;
+      disabledFields?: Schema;
     }) => {
+      const isDisabled = !!disabledFields?.get(uuid);
+
       if (type === AdvancedFieldType.block) {
         return <strong id={uuid}>{displayName}</strong>;
       }
@@ -90,6 +95,7 @@ export const EditSection = memo(() => {
             uuid={uuid}
             value={userValues[uuid]?.contents[0].label}
             onChange={onChange}
+            isDisabled={isDisabled}
           />
         );
       }
@@ -117,6 +123,7 @@ export const EditSection = memo(() => {
             uuid={uuid}
             onChange={handleChange}
             value={selectedOption}
+            isDisabled={isDisabled}
           />
         );
       }
@@ -130,6 +137,7 @@ export const EditSection = memo(() => {
             onChange={onChange}
             parentUri={constraints?.valueDataType?.dataTypeURI}
             value={userValues[uuid]?.contents}
+            isDisabled={isDisabled}
           />
         );
       }
@@ -150,12 +158,15 @@ export const EditSection = memo(() => {
     [selectedEntries],
   );
 
+  const disabledFields = getAllDisabledFields(schema);
+
   return resourceTemplates ? (
     <div className="edit-section">
       <h3>Edit</h3>
       <Fields
         drawComponent={drawComponent}
         schema={schema}
+        disabledFields={disabledFields}
         uuid={initialSchemaKey}
         groupClassName="edit-section-group"
       />
