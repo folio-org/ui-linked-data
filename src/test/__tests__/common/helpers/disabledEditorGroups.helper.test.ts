@@ -82,12 +82,6 @@ describe('disabledEditorGroups.helper', () => {
 
   describe('getAllDisabledFields', () => {
     test('returns a map with a 4 disabled fields', () => {
-      const testResult = new Map([
-        ['testKey-3', { path: ['testKey-1'], uuid: 'testKey-3', type: 'complex' }],
-        ['testKey-4', { path: ['testKey-2'], uuid: 'testKey-4', type: 'complex' }],
-        ['testKey-5', { path: ['testKey-1'], uuid: 'testKey-5', type: 'simple' }],
-        ['testKey-6', { path: ['testKey-2'], uuid: 'testKey-6', type: 'literal' }],
-      ]);
       const schema = new Map();
       const spyGetComplexLookups = jest.spyOn(DisabledEditorGroups, 'getComplexLookups').mockReturnValue([
         { path: ['testKey-1'], uuid: 'testKey-3', type: 'complex' },
@@ -101,14 +95,24 @@ describe('disabledEditorGroups.helper', () => {
         ]);
       const spyGetDisabledFieldsWithinGroup = jest
         .spyOn(DisabledEditorGroups, 'getDisabledFieldsWithinGroup')
-        .mockReturnValue(
+        .mockReturnValueOnce(
           new Map([
             ['testKey-3', { path: ['testKey-1'], uuid: 'testKey-3', type: 'complex' }],
-            ['testKey-4', { path: ['testKey-2'], uuid: 'testKey-4', type: 'complex' }],
             ['testKey-5', { path: ['testKey-1'], uuid: 'testKey-5', type: 'simple' }],
+          ]),
+        )
+        .mockReturnValueOnce(
+          new Map([
+            ['testKey-4', { path: ['testKey-2'], uuid: 'testKey-4', type: 'complex' }],
             ['testKey-6', { path: ['testKey-2'], uuid: 'testKey-6', type: 'literal' }],
           ]),
         );
+      const testResult = new Map([
+        ['testKey-3', { path: ['testKey-1'], uuid: 'testKey-3', type: 'complex' }],
+        ['testKey-4', { path: ['testKey-2'], uuid: 'testKey-4', type: 'complex' }],
+        ['testKey-5', { path: ['testKey-1'], uuid: 'testKey-5', type: 'simple' }],
+        ['testKey-6', { path: ['testKey-2'], uuid: 'testKey-6', type: 'literal' }],
+      ]);
 
       const result = DisabledEditorGroups.getAllDisabledFields(schema);
 
