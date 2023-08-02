@@ -11,17 +11,14 @@ type TraverseSchema = {
   index?: number;
 };
 
-const traverseSchema = ({
-  schema,
-  userValues,
-  container,
-  key,
-  index = 0,
-}: TraverseSchema) => {
-  const { children, uri, bfid, type } = schema.get(key) || {}
+const traverseSchema = ({ schema, userValues, container, key, index = 0 }: TraverseSchema) => {
+  const { children, uri, bfid, type } = schema.get(key) || {};
   const selector = uri || bfid;
   const userValueMatch = userValues[key];
-  const shouldProceed = Object.keys(userValues).map((uuid) => schema.get(uuid)?.path).flat().includes(key);
+  const shouldProceed = Object.keys(userValues)
+    .map(uuid => schema.get(uuid)?.path)
+    .flat()
+    .includes(key);
   const isArray = ![
     AdvancedFieldType.block,
     AdvancedFieldType.hidden,
@@ -76,4 +73,19 @@ export const applyUserValues = (schema: Map<string, SchemaEntry>, userValues: Us
   traverseSchema({ schema, userValues, container: result, key: initKey });
 
   return result;
+};
+
+export const shouldSelectDropdownOption = (
+  resourceURI: string,
+  record?: Record<string, any> | Array<any>,
+  firstOfSameType?: boolean,
+) => {
+  const shouldSelectFirstOption = !record && firstOfSameType;
+  // Copied from useConfig.hook.ts:
+  // TODO: Potentially dangerous HACK ([0])
+  // Might be removed with the API schema change
+  // If not, refactor to include all indices
+  const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[resourceURI];
+
+  return isSelectedOptionInRecord || shouldSelectFirstOption;
 };
