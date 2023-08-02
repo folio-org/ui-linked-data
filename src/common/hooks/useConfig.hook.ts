@@ -10,6 +10,7 @@ import {
   RESOURCE_TEMPLATE_IDS,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -163,7 +164,10 @@ export default function useConfig() {
 
           if (!supportedEntries.includes(id) && isProfileResourceTemplate) return;
 
-          if (type === AdvancedFieldType.dropdownOption && firstOfSameType) {
+          if (
+            type === AdvancedFieldType.dropdownOption &&
+            shouldSelectDropdownOption(resourceURI, record, firstOfSameType)
+          ) {
             selectedEntries.push(uuid);
           }
 
