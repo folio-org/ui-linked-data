@@ -52,7 +52,7 @@ export const Load = () => {
 
   return (
     <div className="load">
-      <ItemSearch />
+      <ItemSearch fetchRecord={fetchRecord} />
       <br />
       <strong>Other Available Records:</strong>
       <div className="button-group">

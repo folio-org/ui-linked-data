@@ -1,5 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ItemSearch } from '@components/ItemSearch';
 import { getByIdentifier } from '@common/api/search.api';
 
@@ -8,23 +7,27 @@ jest.mock('@common/api/search.api', () => ({
   getByIdentifier: jest.fn(),
 }));
 
+const fetchRecord = jest.fn();
+
 describe('Item Search', () => {
   const id = 'lccn';
 
-  beforeEach(() => render(<ItemSearch />));
+  beforeEach(() => render(<ItemSearch fetchRecord={fetchRecord} />));
 
   test('renders Item Search component', () => {
     expect(screen.getByTestId('id-search')).toBeInTheDocument();
   });
 
-  test('triggers search control', () => {
+  test('triggers search control', async () => {
     const ctl = screen.getByTestId(id);
 
     fireEvent.click(ctl);
-    expect(ctl).toBeChecked();
+    await waitFor(() => {
+      expect(ctl).toBeChecked();
+    });
   });
 
-  test('searches the selected identifier for query', () => {
+  test('searches the selected identifier for query', async () => {
     const ctl = screen.getByTestId(id);
     const event = {
       target: {
@@ -35,6 +38,9 @@ describe('Item Search', () => {
     fireEvent.click(ctl);
     fireEvent.change(screen.getByTestId('id-search-input'), event);
     fireEvent.click(screen.getByTestId('id-search-button'));
-    expect(getByIdentifier).toHaveBeenCalledWith(id, event.target.value);
+
+    await waitFor(() => {
+      expect(getByIdentifier).toHaveBeenCalledWith(id, event.target.value);
+    });
   });
 });

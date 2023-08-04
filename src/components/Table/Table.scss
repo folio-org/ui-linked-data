@@ -1,0 +1,13 @@
+.table {
+  width: 100%;
+
+  tr,
+  td {
+    border: 1px solid black;
+    text-align: center;
+  }
+
+  .clickable {
+    cursor: pointer;
+  }
+}
