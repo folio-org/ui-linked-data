@@ -1,6 +1,5 @@
 import { App } from '@src/App';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
 
 describe('App', () => {
   beforeEach(() => render(<App okapi={{ token: 'token', tenant: 'tenant', url: 'url' }} />));

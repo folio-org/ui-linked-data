@@ -14,4 +14,7 @@ export default {
   restoreMocks: true,
   resetMocks: true,
   setupFiles: ['<rootDir>/src/test/__mocks__/setupMocks.ts'],
+  setupFilesAfterEnv: [
+    "<rootDir>/src/test/setupTests.ts"
+  ]
 };
