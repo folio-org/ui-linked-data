@@ -1,17 +1,25 @@
 import baseApi from './base.api';
 
-export type ItemSearchResponse = Partial<{
+export type ItemSearchResponse = {
   search_query: string;
-  content: Partial<{
+  content: {
     id: string;
-    title: string;
-    authors: {
-      name?: string;
+    title?: string;
+    identifiers?: {
+      value?: string;
+      type?: string;
     }[];
-    dateOfPublication: string;
-    editionStatement: string;
-  }>[];
-}>;
+    contributors?: {
+      name?: string;
+      primary?: boolean;
+    }[];
+    publications?: {
+      publisher?: string;
+      dateOfPublication?: string;
+    }[];
+    editionStatement?: string;
+  }[];
+};
 
 const getByIdentifierUrl = '/search/bibframe';
 export const getByIdentifier = async (id: string, query: string) => {

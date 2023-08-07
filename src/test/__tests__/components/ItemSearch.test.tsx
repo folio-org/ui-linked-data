@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ItemSearch } from '@components/ItemSearch';
 import { getByIdentifier } from '@common/api/search.api';
+import { RecoilRoot } from 'recoil';
 
 jest.mock('@common/api/search.api', () => ({
   ...jest.requireActual('@common/api/search.api'),
@@ -12,7 +13,13 @@ const fetchRecord = jest.fn();
 describe('Item Search', () => {
   const id = 'lccn';
 
-  beforeEach(() => render(<ItemSearch fetchRecord={fetchRecord} />));
+  beforeEach(() =>
+    render(
+      <RecoilRoot>
+        <ItemSearch fetchRecord={fetchRecord} />
+      </RecoilRoot>,
+    ),
+  );
 
   test('renders Item Search component', () => {
     expect(screen.getByTestId('id-search')).toBeInTheDocument();
