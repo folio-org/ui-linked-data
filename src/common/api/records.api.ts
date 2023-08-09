@@ -1,4 +1,4 @@
-import { BIBFRAME_API_ENDPOINT, MAX_LIMIT, OKAPI_PREFIX } from '@common/constants/api.constants';
+import { BIBFRAME_API_ENDPOINT, MAX_LIMIT } from '@common/constants/api.constants';
 import baseApi from './base.api';
 
 type SingleRecord = {
@@ -10,17 +10,6 @@ type GetAllRecords = {
   pageNumber?: number;
 };
 
-// this OR use recoil: arg -> state -> apply state -> call fetch -> set state
-const tenant = localStorage.getItem(`${OKAPI_PREFIX}_tenant`) || '';
-const token = localStorage.getItem(`${OKAPI_PREFIX}_token`) || '';
-
-const headers = tenant
-  ? {
-      'x-okapi-tenant': tenant,
-      'x-okapi-token': token,
-    }
-  : undefined;
-
 const singleRecordUrl = `${BIBFRAME_API_ENDPOINT}/:recordId`;
 
 export const getRecord = async ({ recordId }: SingleRecord) => {
@@ -28,9 +17,6 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 
   return baseApi.getJson({
     url,
-    requestParams: {
-      headers,
-    },
   });
 };
 
@@ -40,9 +26,6 @@ export const getAllRecords = async ({ pageSize = MAX_LIMIT, pageNumber = MAX_LIM
     urlParams: {
       pageSize: String(pageSize),
       pageNumber: String(pageNumber),
-    },
-    requestParams: {
-      headers,
     },
   });
 };
@@ -56,7 +39,6 @@ export const postRecord = async (recordEntry: RecordEntry) => {
       method: 'POST',
       body: JSON.stringify(recordEntry),
       headers: {
-        ...headers,
         'content-type': 'application/json',
       },
     },
@@ -72,7 +54,6 @@ export const putRecord = async (recordId: string | number, recordEntry: RecordEn
       method: 'PUT',
       body: JSON.stringify(recordEntry),
       headers: {
-        ...headers,
         'content-type': 'application/json',
       },
     },
@@ -87,7 +68,6 @@ export const deleteRecord = async (recordId: string | number) => {
     requestParams: {
       method: 'DELETE',
       headers: {
-        ...headers,
         'content-type': 'application/json',
       },
     },

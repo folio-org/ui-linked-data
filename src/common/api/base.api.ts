@@ -3,7 +3,23 @@
 import { EDITOR_API_BASE_PATH, OKAPI_PREFIX } from '@common/constants/api.constants';
 import { getEnvVariable } from '@common/helpers/env.helper';
 
+type ReqParams = {
+  url: string;
+  urlParams?: Record<string, string>;
+  requestParams?: RequestInit;
+};
+
 const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || getEnvVariable(EDITOR_API_BASE_PATH);
+// this OR use recoil: arg -> state -> apply state -> call fetch -> set state
+const tenant = localStorage.getItem(`${OKAPI_PREFIX}_tenant`) || '';
+const token = localStorage.getItem(`${OKAPI_PREFIX}_token`) || '';
+
+const headers = tenant
+  ? {
+      'x-okapi-tenant': tenant,
+      'x-okapi-token': token,
+    }
+  : undefined;
 
 async function doRequest(url: string, requestParams: RequestInit) {
   try {
@@ -22,15 +38,9 @@ async function doRequest(url: string, requestParams: RequestInit) {
   }
 }
 
-type ReqParams = {
-  url: string;
-  urlParams?: Record<string, string>;
-  requestParams?: RequestInit;
-};
-
 const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
   const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
-  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, { ...requestParams });
+  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, { ...requestParams, headers });
 
   return response;
 };

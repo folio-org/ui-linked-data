@@ -63,7 +63,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'No match for query'),
+        UserNotificationFactory.createMessage(StatusType.error, 'No resource descriptions match your query.'),
       ]);
     }
   };
@@ -83,13 +83,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
           Search
         </button>
-        {data && (
-          <Table
-            onRowClick={onRowClick}
-            header={header}
-            data={data}
-          />
-        )}
+        {data && <Table onRowClick={onRowClick} header={header} data={data} />}
       </div>
     </div>
   );
