@@ -40,6 +40,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [searchBy, setSearchBy] = useState(Identifiers.ISBN);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
+  const [message, setMessage] = useState('');
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
 
   const drawControls = () =>
@@ -50,7 +51,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       </div>
     ));
 
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => setQuery(value);
+  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    message && setMessage('');
+    setQuery(value);
+  };
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
   const fetchData = async (searchBy: string, query: string) => {
@@ -59,11 +63,13 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     try {
       const result = await getByIdentifier(searchBy, query);
 
+      if (!result.content.length) return setMessage('No resource descriptions match your query');
+
       setData(formatKnownItemSearchData(result));
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'No resource descriptions match your query.'),
+        UserNotificationFactory.createMessage(StatusType.error, 'Error fetching data'),
       ]);
     }
   };
@@ -83,7 +89,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
           Search
         </button>
-        {data && <Table onRowClick={onRowClick} header={header} data={data} />}
+        {data ? <Table onRowClick={onRowClick} header={header} data={data} /> : <div>{message}</div>}
       </div>
     </div>
   );
