@@ -43,16 +43,21 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [message, setMessage] = useState('');
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
 
+  const clearMessage = () => message && setMessage('');
+
   const drawControls = () =>
     Object.values(Identifiers).map(id => (
       <div key={id}>
-        <input data-testid={id} id={id} type="radio" checked={searchBy === id} onChange={() => setSearchBy(id)} />
+        <input data-testid={id} id={id} type="radio" checked={searchBy === id} onChange={() => {
+          clearMessage();
+          setSearchBy(id);
+        }} />
         <label htmlFor={id}>{id.toUpperCase()}</label>
       </div>
     ));
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    message && setMessage('');
+    clearMessage();
 
     setQuery(value);
   };
@@ -62,6 +67,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const fetchData = async (searchBy: string, query: string) => {
     if (!query) return;
 
+    clearMessage();
     data && setData(null);
 
     try {
