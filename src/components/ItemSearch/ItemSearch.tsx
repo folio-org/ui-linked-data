@@ -53,12 +53,16 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     message && setMessage('');
+
     setQuery(value);
   };
+
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
   const fetchData = async (searchBy: string, query: string) => {
     if (!query) return;
+
+    data && setData(null);
 
     try {
       const result = await getByIdentifier(searchBy, query);
@@ -89,7 +93,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
           Search
         </button>
-        {data ? <Table onRowClick={onRowClick} header={header} data={data} /> : <div>{message}</div>}
+        {message ? <div>{message}</div> : data && <Table onRowClick={onRowClick} header={header} data={data} />}
       </div>
     </div>
   );
