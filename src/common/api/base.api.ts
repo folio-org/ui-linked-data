@@ -14,7 +14,7 @@ const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || getEnvVariable(
 const tenant = localStorage.getItem(`${OKAPI_PREFIX}_tenant`) || '';
 const token = localStorage.getItem(`${OKAPI_PREFIX}_token`) || '';
 
-const headers = tenant
+const okapiHeaders = tenant
   ? {
       'x-okapi-tenant': tenant,
       'x-okapi-token': token,
@@ -40,7 +40,10 @@ async function doRequest(url: string, requestParams: RequestInit) {
 
 const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
   const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
-  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, { ...requestParams, headers });
+  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, {
+    ...requestParams,
+    headers: { ...requestParams.headers, ...okapiHeaders },
+  });
 
   return response;
 };
