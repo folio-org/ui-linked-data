@@ -75,6 +75,7 @@ type SchemaEntry = {
   uuid: string;
   bfid?: string;
   uri?: string;
+  uriBFLite?: string;
   displayName?: string;
   type?: string;
   children?: Array<string>;
@@ -95,3 +96,7 @@ type UserValue = {
 };
 
 type Schema = Map<string, SchemaEntry>;
+
+type BFMapEntry = Record<string, string>;
+
+type BFLiteMap = Record<string, string | BFMapEntry>;

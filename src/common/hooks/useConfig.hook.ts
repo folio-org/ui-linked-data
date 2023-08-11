@@ -11,6 +11,7 @@ import {
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
+import { mapBibframeUri } from '@common/helpers/bibframe.helper';
 
 export default function useConfig() {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -122,6 +123,7 @@ export default function useConfig() {
         path: updatedPath,
         displayName: propertyLabel,
         uri: propertyURI,
+        uriBFLite: mapBibframeUri(propertyURI, base, path),
         constraints,
       });
     } else {
@@ -178,6 +180,7 @@ export default function useConfig() {
             displayName: resourceLabel,
             bfid: id,
             uri: resourceURI,
+            uriBFLite: mapBibframeUri(resourceURI),
             children: uuidArray,
           });
 
@@ -226,6 +229,7 @@ export default function useConfig() {
             path: updatedPath,
             displayName: propertyLabel,
             uri: propertyURI,
+            uriBFLite: mapBibframeUri(propertyURI),
             constraints,
             children: uuidArray,
           });
