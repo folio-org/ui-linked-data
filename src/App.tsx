@@ -1,12 +1,13 @@
 import { FC, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { Edit, Load, Main } from '@views';
 import { OKAPI_PREFIX } from '@common/constants/api.constants';
 import { CommonStatus } from '@components/CommonStatus';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Nav } from '@components/Nav';
 import './App.scss';
+import { ROUTES } from '@common/constants/routes.constants';
+import { Search, Edit, Load, Main } from '@views';
 
 type Okapi = {
   token: string;
@@ -17,6 +18,13 @@ type Okapi = {
 type IContainer = {
   routePrefix?: string;
   okapi?: Okapi;
+};
+
+const componentsMap: Record<string, JSX.Element> = {
+  [ROUTES.SEARCH.uri]: <Search />,
+  [ROUTES.EDIT.uri]: <Edit />,
+  [ROUTES.LOAD.uri]: <Load />,
+  [ROUTES.MAIN.uri]: <Main />,
 };
 
 export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
@@ -44,11 +52,11 @@ export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
         <BrowserRouter basename={routePrefix}>
           <Nav />
           <CommonStatus />
-          <Switch>
-            <Route path="/edit" component={Edit} />
-            <Route path="/load" component={Load} />
-            <Route path="" component={Main} />
-          </Switch>
+          <Routes>
+            {Object.values(ROUTES).map(({ uri }) => (
+              <Route path={uri} element={componentsMap[uri]} key={uri} />
+            ))}
+          </Routes>
         </BrowserRouter>
       </RecoilRoot>
     </ErrorBoundary>

@@ -1,38 +1,38 @@
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 
-describe('search.helper', () => {
-  describe('formatResult', () => {
-    const mockData = {
-      search_query: 'isbn=12345*',
-      content: [
+export const itemSearchMockData = {
+  search_query: 'isbn=12345*',
+  content: [
+    {
+      id: 'mock-id',
+      title: 'mock-title',
+      identifiers: [
         {
-          id: 'mock-id',
-          title: 'mock-title',
-          identifiers: [
-            {
-              value: 'mock-val',
-              type: 'ISBN',
-            },
-          ],
-          contributors: [
-            {
-              name: 'mock-name',
-              primary: true,
-            },
-          ],
-          publications: [
-            {
-              publisher: 'mock-publisher',
-              dateOfPublication: 'mock-date',
-            },
-          ],
-          editionStatement: 'mock-edition',
+          value: 'mock-val',
+          type: 'ISBN',
         },
       ],
-    };
+      contributors: [
+        {
+          name: 'mock-name',
+          primary: true,
+        },
+      ],
+      publications: [
+        {
+          publisher: 'mock-publisher',
+          dateOfPublication: 'mock-date',
+        },
+      ],
+      editionStatement: 'mock-edition',
+    },
+  ],
+};
 
+describe('search.helper', () => {
+  describe('formatResult', () => {
     test('returns formatted data for the correct arg', () => {
-      const formatted = formatKnownItemSearchData(mockData);
+      const formatted = formatKnownItemSearchData(itemSearchMockData);
 
       expect(formatted).toEqual([
         {

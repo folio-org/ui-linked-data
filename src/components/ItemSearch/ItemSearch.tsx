@@ -15,6 +15,10 @@ enum Identifiers {
 }
 
 const header: Row = {
+  actionItems: {
+    label: 'Actions',
+    className: 'action-items',
+  },
   id: {
     label: 'ISBN/LCCN',
   },
@@ -62,6 +66,29 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     setQuery(value);
   };
 
+  const applyRowActionItems = (rows: Row[]): Row[] => (
+    rows.map(row => ({
+      ...row,
+      actionItems: {
+        children: (
+          <div className="action-items__container">
+            <button
+              data-testid="edit-button"
+              onClick={ev => {
+                ev.stopPropagation();
+
+                fetchRecord((row.__meta as Record<string, any>).id);
+              }}
+            >
+              &#9997;
+            </button>
+          </div>
+        ),
+        className: 'action-items',
+      },
+    }))
+  );
+
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
   const fetchData = async (searchBy: string, query: string) => {
@@ -75,7 +102,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
       if (!result.content.length) return setMessage('No resource descriptions match your query');
 
-      setData(formatKnownItemSearchData(result));
+      setData(applyRowActionItems(formatKnownItemSearchData(result)));
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,

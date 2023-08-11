@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
@@ -8,9 +8,12 @@ import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { deleteRecordLocally, formatRecord } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import useConfig from '@common/hooks/useConfig.hook';
+import { getSavedRecord } from '@common/helpers/record.helper';
+import { getRecord } from '@common/api/records.api';
+import { ROUTES } from '@common/constants/routes.constants';
 
 export const useRecordControls = () => {
-  const history = useHistory();
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
@@ -20,6 +23,26 @@ export const useRecordControls = () => {
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
   const currentRecordId = record?.id;
+
+  const { getProfiles } = useConfig();
+  const navigate = useNavigate();
+
+  const fetchRecord = async (recordId: string) => {
+    try {
+      const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+      const locallySavedData = getSavedRecord(profile, recordId);
+      const recordData: RecordEntry = locallySavedData
+        ? { id: recordId, profile, ...locallySavedData.data[profile] }
+        : await getRecord({ recordId });
+
+      setRecord(recordData);
+      getProfiles(recordData);
+
+      navigate(ROUTES.EDIT.uri);
+    } catch (err) {
+      console.error('Error fetching record: ', err);
+    }
+  };
 
   const saveRecord = async () => {
     const parsed = applyUserValues(schema, userValues, initialSchemaKey);
@@ -73,7 +96,7 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.success, 'Resource description deleted'),
       ]);
 
-      history.replace('/load');
+      navigate(ROUTES.LOAD.uri);
     } catch (error) {
       const message = 'Cannot delete the record';
       console.error(message, error);
@@ -85,5 +108,5 @@ export const useRecordControls = () => {
     }
   };
 
-  return { saveRecord, deleteRecord, discardRecord };
+  return { fetchRecord, saveRecord, deleteRecord, discardRecord };
 };
