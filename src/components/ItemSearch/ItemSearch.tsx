@@ -52,10 +52,16 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const drawControls = () =>
     Object.values(Identifiers).map(id => (
       <div key={id}>
-        <input data-testid={id} id={id} type="radio" checked={searchBy === id} onChange={() => {
-          clearMessage();
-          setSearchBy(id);
-        }} />
+        <input
+          data-testid={id}
+          id={id}
+          type="radio"
+          checked={searchBy === id}
+          onChange={() => {
+            clearMessage();
+            setSearchBy(id);
+          }}
+        />
         <label htmlFor={id}>{id.toUpperCase()}</label>
       </div>
     ));
@@ -66,7 +72,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     setQuery(value);
   };
 
-  const applyRowActionItems = (rows: Row[]): Row[] => (
+  const applyRowActionItems = (rows: Row[]): Row[] =>
     rows.map(row => ({
       ...row,
       actionItems: {
@@ -82,12 +88,18 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
             >
               &#9997;
             </button>
+            <button
+              onClick={ev => {
+                ev.stopPropagation();
+              }}
+            >
+              &#128064;
+            </button>
           </div>
         ),
         className: 'action-items',
       },
-    }))
-  );
+    }));
 
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
