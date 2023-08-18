@@ -29,7 +29,7 @@ export const ModalCloseRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, saveRec
       onSubmit={onClickSaveAndCloseButton}
       onCancel={discardRecord}
     >
-      <div>
+      <div data-testid="modal-close-record-content">
         <p>Do you really want to close the record? All unsaved changes will be lost.</p>
       </div>
     </Modal>
