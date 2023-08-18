@@ -22,7 +22,7 @@ export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, delete
       onSubmit={deleteRecord}
       onCancel={closeModal}
     >
-      <div>
+      <div data-testid="modal-delete-record-content">
         <p>Do you really want to delete the record?</p>
       </div>
     </Modal>
