@@ -9,11 +9,13 @@ import { EditSection } from '@components/EditSection';
 import { Preview } from '@components/Preview';
 import { Properties } from '@components/Properties';
 import './Edit.scss';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
+  const { formatMessage } = useIntl();
 
   const onClickStartFromScratch = () => {
     // TODO: set default selected profile
@@ -37,10 +39,17 @@ export const Edit = () => {
     </div>
   ) : (
     <div>
-      <Link to="/load">Select a record for editing</Link> or{' '}
-      <Link to="#" onClick={onClickStartFromScratch}>
-        Start from scratch
-      </Link>
+      <FormattedMessage
+        id="marva.select-or-start-from-scratch"
+        values={{
+          select: <Link to="/load">{formatMessage({ id: 'marva.select-for-editing' })}</Link>,
+          startFromScratch: (
+            <Link to="#" onClick={onClickStartFromScratch}>
+              {formatMessage({ id: 'marva.start-from-scratch' })}
+            </Link>
+          ),
+        }}
+      />
     </div>
   );
 };

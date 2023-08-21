@@ -2,6 +2,7 @@ import { FC, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import classNames from 'classnames';
 import state from '@state';
+import { FormattedMessage } from 'react-intl';
 
 const DELETE_TIMEOUT = 5000;
 
@@ -26,7 +27,7 @@ export const CommonStatus: FC = () => {
     <div className="common-status" data-testid="common-status">
       {statusMessages.map(({ id, type, message }) => (
         <div key={id} className={classNames(['status-message', type])}>
-          {message} <button onClick={() => deleteMessage(id)}>x</button>
+          <FormattedMessage id={message} /> <button onClick={() => deleteMessage(id)}>x</button>
         </div>
       ))}
     </div>

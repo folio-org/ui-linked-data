@@ -1,23 +1,18 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
-import { OKAPI_PREFIX } from '@common/constants/api.constants';
+import { RecoilRoot, useRecoilValue } from 'recoil';
 import { CommonStatus } from '@components/CommonStatus';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Nav } from '@components/Nav';
 import './App.scss';
 import { ROUTES } from '@common/constants/routes.constants';
 import { Search, Edit, Load, Main } from '@views';
-
-type Okapi = {
-  token: string;
-  tenant: string;
-  url: string;
-};
+import { IntlProvider } from 'react-intl';
+import { i18nMessages } from './common/i18n/messages';
+import state from '@state';
 
 type IContainer = {
   routePrefix?: string;
-  okapi?: Okapi;
 };
 
 const componentsMap: Record<string, JSX.Element> = {
@@ -27,28 +22,12 @@ const componentsMap: Record<string, JSX.Element> = {
   [ROUTES.MAIN.uri]: <Main />,
 };
 
-export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
-  // TODO: decide on a place to manage okapi props
-  // Since we use localStorage might as well manage in the wrapper
-  useEffect(() => {
-    if (okapi) {
-      for (const [key, value] of Object.entries(okapi)) {
-        localStorage.setItem(`${OKAPI_PREFIX}_${key}`, value);
-      }
-    }
-
-    return () => {
-      if (okapi) {
-        for (const key of Object.keys(okapi)) {
-          localStorage.removeItem(`${OKAPI_PREFIX}_${key}`);
-        }
-      }
-    };
-  }, [okapi]);
-
+const Container: FC<IContainer> = ({ routePrefix = '' }) => {
+  const locale = useRecoilValue(state.config.locale);
+  
   return (
-    <ErrorBoundary>
-      <RecoilRoot>
+    <IntlProvider messages={i18nMessages[locale]} locale={locale} defaultLocale="en-US">
+      <ErrorBoundary>
         <BrowserRouter basename={routePrefix}>
           <Nav />
           <CommonStatus />
@@ -58,7 +37,13 @@ export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
             ))}
           </Routes>
         </BrowserRouter>
-      </RecoilRoot>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </IntlProvider>
   );
 };
+
+export const App: FC<IContainer> = ({ routePrefix = '' }) => (
+  <RecoilRoot>
+    <Container routePrefix={routePrefix} />
+  </RecoilRoot>
+);

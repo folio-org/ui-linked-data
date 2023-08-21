@@ -2,7 +2,7 @@ import { App } from '@src/App';
 import { render, screen } from '@testing-library/react';
 
 describe('App', () => {
-  beforeEach(() => render(<App okapi={{ token: 'token', tenant: 'tenant', url: 'url' }} />));
+  beforeEach(() => render(<App />));
 
   test('renders Nav component', () => {
     expect(screen.getByTestId('nav')).toBeInTheDocument();

@@ -59,7 +59,7 @@ describe('Item Search', () => {
     fireEvent.click(screen.getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(screen.getByText('No resource descriptions match your query')).toBeInTheDocument();
+      expect(screen.getByText('marva.search-no-descriptions-match')).toBeInTheDocument();
     });
   });
 
@@ -71,7 +71,7 @@ describe('Item Search', () => {
     fireEvent.click(screen.getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(screen.getByText('Error fetching data')).toBeInTheDocument();
+      expect(screen.getByText('marva.search-error-fetching')).toBeInTheDocument();
     });
   });
 

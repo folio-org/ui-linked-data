@@ -1,18 +1,18 @@
 export const ROUTES = {
   SEARCH: {
     uri: '/search',
-    name: 'Search',
+    name: 'marva.search',
   },
   LOAD: {
     uri: '/load',
-    name: 'Load',
+    name: 'marva.load',
   },
   EDIT: {
     uri: '/edit',
-    name: 'Edit',
+    name: 'marva.edit',
   },
   MAIN: {
     uri: '/',
-    name: 'Main',
+    name: 'marva.main',
   },
 }

@@ -1,7 +1,8 @@
 // TODO: caching, abort controllers
 
-import { EDITOR_API_BASE_PATH, OKAPI_PREFIX } from '@common/constants/api.constants';
+import { EDITOR_API_BASE_PATH, OKAPI_CONFIG } from '@common/constants/api.constants';
 import { getEnvVariable } from '@common/helpers/env.helper';
+import { localStorageService } from '@common/services/storage';
 
 type ReqParams = {
   url: string;
@@ -9,10 +10,13 @@ type ReqParams = {
   requestParams?: RequestInit;
 };
 
-const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || getEnvVariable(EDITOR_API_BASE_PATH);
-// this OR use recoil: arg -> state -> apply state -> call fetch -> set state
-const tenant = localStorage.getItem(`${OKAPI_PREFIX}_tenant`) || '';
-const token = localStorage.getItem(`${OKAPI_PREFIX}_token`) || '';
+const {
+  url,
+  tenant,
+  token,
+} = localStorageService.deserialize(OKAPI_CONFIG) || {};
+
+const BASE_PATH = url || getEnvVariable(EDITOR_API_BASE_PATH);
 
 const okapiHeaders = tenant
   ? {
