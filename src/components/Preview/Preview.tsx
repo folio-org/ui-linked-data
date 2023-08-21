@@ -4,6 +4,7 @@ import state from '@state';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordControls } from '../RecordControls';
 import './Preview.scss';
+import { FormattedMessage } from 'react-intl';
 
 export const Preview = () => {
   const userValues = useRecoilValue(state.inputs.userValues);
@@ -41,7 +42,9 @@ export const Preview = () => {
 
   return (
     <div className="preview-panel">
-      <h3>Preview</h3>
+      <h3>
+        <FormattedMessage id='marva.preview' />
+      </h3>
       <Fields
         schema={schema}
         uuid={initialSchemaKey}

@@ -4,6 +4,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import state from '@state';
 import { Fields, IDrawComponent } from '../Fields';
 import './Properties.scss';
+import { FormattedMessage } from 'react-intl';
 
 export const Properties = () => {
   const schema = useRecoilValue(state.config.schema);
@@ -29,7 +30,9 @@ export const Properties = () => {
 
   return (
     <div className="properties">
-      <h3>Properties</h3>
+      <h3>
+        <FormattedMessage id='marva.properties' />
+      </h3>
       <Fields schema={schema} uuid={initialSchemaKey} drawComponent={drawComponent} groupClassName="group" />
     </div>
   );

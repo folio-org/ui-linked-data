@@ -13,6 +13,7 @@ import { DropdownField } from '../DropdownField';
 import { SimpleLookupField } from '../SimpleLookupField';
 import { ComplexLookupField } from '../ComplexLookupField';
 import './EditSection.scss';
+import { FormattedMessage } from 'react-intl';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -162,7 +163,9 @@ export const EditSection = memo(() => {
 
   return resourceTemplates ? (
     <div className="edit-section">
-      <h3>Edit</h3>
+      <h3>
+        <FormattedMessage id='marva.edit' />
+      </h3>
       <Fields
         drawComponent={drawComponent}
         schema={schema}
@@ -172,7 +175,7 @@ export const EditSection = memo(() => {
       />
       {showScrollToTop && (
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="back-to-top">
-          Back to top
+          <FormattedMessage id='marva.back-to-top' />
         </button>
       )}
     </div>

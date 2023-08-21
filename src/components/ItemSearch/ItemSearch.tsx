@@ -6,6 +6,7 @@ import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
 import state from '@state';
 import { ChangeEvent, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
 
@@ -16,23 +17,23 @@ enum Identifiers {
 
 const header: Row = {
   actionItems: {
-    label: 'Actions',
+    label: <FormattedMessage id='marva.actions' />,
     className: 'action-items',
   },
   id: {
-    label: 'ISBN/LCCN',
+    label: <FormattedMessage id='marva.isbn-lccn' />,
   },
   title: {
-    label: 'Title',
+    label: <FormattedMessage id='marva.title' />,
   },
   author: {
-    label: 'Author',
+    label: <FormattedMessage id='marva.author' />,
   },
   date: {
-    label: 'Publication Date',
+    label: <FormattedMessage id='marva.pub-date' />,
   },
   edition: {
-    label: 'Edition',
+    label: <FormattedMessage id='marva.edition' />,
   },
 };
 
@@ -46,6 +47,8 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [data, setData] = useState<null | Row[]>(null);
   const [message, setMessage] = useState('');
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+
+  const { formatMessage } = useIntl();
 
   const clearMessage = () => message && setMessage('');
 
@@ -112,31 +115,33 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     try {
       const result = await getByIdentifier(searchBy, query);
 
-      if (!result.content.length) return setMessage('No resource descriptions match your query');
+      if (!result.content.length) return setMessage(formatMessage({ id: 'marva.search-no-descriptions-match' }));
 
       setData(applyRowActionItems(formatKnownItemSearchData(result)));
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'Error fetching data'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
       ]);
     }
   };
 
   return (
     <div data-testid="id-search" className="item-search">
-      <strong>Search by Identifier:</strong>
+      <strong>
+        <FormattedMessage id="marva.search-by-identifier" />
+      </strong>
       <div className="search-controls">{drawControls()}</div>
       <div>
         <Input
           testid="id-search-input"
-          placeholder={`Search by ${searchBy.toUpperCase()}...`}
+          placeholder={formatMessage({ id: 'marva.search-by' }, { by: searchBy.toUpperCase() })}
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
         />
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
-          Search
+          <FormattedMessage id="marva.search" />
         </button>
         {message ? <div>{message}</div> : data && <Table onRowClick={onRowClick} header={header} data={data} />}
       </div>
