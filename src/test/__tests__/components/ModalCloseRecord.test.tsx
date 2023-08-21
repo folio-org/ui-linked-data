@@ -1,4 +1,3 @@
-import '@src/test/__mocks__/components/ReactModal.mock';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
 
@@ -10,7 +9,7 @@ describe('ModalCloseRecord', () => {
   beforeEach(() => {
     render(
       <ModalCloseRecord
-        isOpen={false}
+        isOpen={true}
         toggleIsOpen={toggleIsOpen}
         saveRecord={saveRecord}
         discardRecord={discardRecord}
@@ -19,7 +18,6 @@ describe('ModalCloseRecord', () => {
   });
 
   test('renders modal component', () => {
-    expect(screen.getByTestId('modal-component')).toBeInTheDocument();
     expect(screen.getByTestId('modal-close-record-content')).toBeInTheDocument();
   });
 

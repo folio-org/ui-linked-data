@@ -1,4 +1,3 @@
-import '@src/test/__mocks__/components/ReactModal.mock';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
 
@@ -7,11 +6,10 @@ describe('ModalCloseRecord', () => {
   const deleteRecord = jest.fn();
 
   beforeEach(() => {
-    render(<ModalDeleteRecord isOpen={false} toggleIsOpen={toggleIsOpen} deleteRecord={deleteRecord} />);
+    render(<ModalDeleteRecord isOpen={true} toggleIsOpen={toggleIsOpen} deleteRecord={deleteRecord} />);
   });
 
   test('renders modal component', () => {
-    expect(screen.getByTestId('modal-component')).toBeInTheDocument();
     expect(screen.getByTestId('modal-delete-record-content')).toBeInTheDocument();
   });
 

@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo } from 'react';
+import { FC, ReactNode, memo, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import classNames from 'classnames';
 import './Modal.scss';
@@ -9,6 +9,7 @@ interface Props extends ReactModal.Props {
   className?: string;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
+  shouldCloseOnEsc?: boolean;
   onSubmit: () => void;
   onCancel: () => void;
   onClose: () => void;
@@ -21,38 +22,43 @@ const Modal: FC<Props> = ({
   title,
   submitButtonLabel,
   cancelButtonLabel,
+  shouldCloseOnEsc = true,
   onSubmit,
   onCancel,
   onClose,
   children,
 }) => {
-  const rootElement = document.getElementById('editor-root') as HTMLElement;
+  useEffect(() => {
+    function handleEscape(event: KeyboardEvent) {
+      if (!shouldCloseOnEsc || event.key !== 'Escape') return;
 
-  return (
-    <ReactModal
-      isOpen={isOpen}
-      appElement={rootElement}
-      role="dialog"
-      shouldCloseOnOverlayClick={true}
-      shouldCloseOnEsc={true}
-      onRequestClose={onClose}
-      overlayClassName="overlay"
-      className={classNames(['modal', className])}
-    >
-      <div className="modal-header">
-        <h3>{title}</h3>
+      onClose();
+    }
+
+    window.addEventListener('keydown', handleEscape);
+
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, []);
+
+  return isOpen ? (
+    <>
+      <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
+      <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
+        <div className="modal-header">
+          <h3>{title}</h3>
+        </div>
+        {!!children && <div>{children}</div>}
+        <div className="modal-controls">
+          <button onClick={onSubmit} data-testid="modal-button-submit">
+            {submitButtonLabel}
+          </button>
+          <button onClick={onCancel} data-testid="modal-button-cancel">
+            {cancelButtonLabel}
+          </button>
+        </div>
       </div>
-      {!!children && <div>{children}</div>}
-      <div className="modal-controls">
-        <button onClick={onSubmit} data-testid="modal-button-submit">
-          {submitButtonLabel}
-        </button>
-        <button onClick={onCancel} data-testid="modal-button-cancel">
-          {cancelButtonLabel}
-        </button>
-      </div>
-    </ReactModal>
-  );
+    </>
+  ) : null;
 };
 
 export default memo(Modal);
