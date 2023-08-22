@@ -28,7 +28,7 @@ jest.mock('react-intl', () => {
 
       return value;
     },
-    IntlProvider: ({ children, ...rest }: any) => (
+    IntlProvider: ({ children, defaultLocale, ...rest }: any) => (
       <div {...rest}>{children}</div>
     ),
     useIntl: () => intl,

@@ -2,8 +2,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ItemSearch } from '@components/ItemSearch';
 import { RecoilRoot } from 'recoil';
 import { itemSearchMockData } from '../common/helpers/search.helper.test';
-import * as searchApi from '@common/api/search.api';
 import { CommonStatus } from '@components/CommonStatus';
+import * as searchApi from '@common/api/search.api';
+
+let getByIdentifierMock: jest.SpyInstance<Promise<any>, [id: string, query: string], any>;
 
 const fetchRecord = jest.fn();
 
@@ -15,14 +17,16 @@ describe('Item Search', () => {
     },
   };
 
-  beforeEach(() =>
+  beforeEach(() => {
+    getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
+
     render(
       <RecoilRoot>
         <CommonStatus />
         <ItemSearch fetchRecord={fetchRecord} />
       </RecoilRoot>,
-    ),
-  );
+    )
+  });
 
   test('renders Item Search component', () => {
     expect(screen.getByTestId('id-search')).toBeInTheDocument();
@@ -38,8 +42,6 @@ describe('Item Search', () => {
   });
 
   test('searches the selected identifier for query', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
-
     const ctl = screen.getByTestId(id);
 
     fireEvent.click(ctl);
@@ -52,7 +54,6 @@ describe('Item Search', () => {
   });
 
   test('returns message if the response is empty', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve({ ...itemSearchMockData, content: [] }));
 
     fireEvent.change(screen.getByTestId('id-search-input'), event);
@@ -64,7 +65,6 @@ describe('Item Search', () => {
   });
 
   test('displays error notification if API call throws', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
     getByIdentifierMock.mockReturnValueOnce(Promise.reject(new Error()));
 
     fireEvent.change(screen.getByTestId('id-search-input'), event);
@@ -76,7 +76,6 @@ describe('Item Search', () => {
   });
 
   test('calls fetchRecord on action item edit button click', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
     fireEvent.change(screen.getByTestId('id-search-input'), event);
@@ -90,7 +89,6 @@ describe('Item Search', () => {
   });
 
   test('calls fetchRecord on row click', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
     fireEvent.change(screen.getByTestId('id-search-input'), event);
@@ -104,7 +102,6 @@ describe('Item Search', () => {
   });
 
   test('returns out of fetchData if no query present', async () => {
-    const getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier');
     fireEvent.click(screen.getByTestId('id-search-button'));
 
     await waitFor(() => {

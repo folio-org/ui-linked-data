@@ -28,7 +28,7 @@ export const Load = () => {
   };
 
   return (
-    <div className="load">
+    <div data-testid='load' className="load">
       <strong><FormattedMessage id='marva.other-records' /></strong>
       <div className="button-group">
         {availableRecords?.map(({ id, label }: RecordData) => (
