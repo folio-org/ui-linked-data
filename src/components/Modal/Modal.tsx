@@ -1,9 +1,8 @@
 import { FC, ReactNode, memo, useEffect } from 'react';
-import ReactModal from 'react-modal';
 import classNames from 'classnames';
 import './Modal.scss';
 
-interface Props extends ReactModal.Props {
+interface Props {
   isOpen: boolean;
   title: string;
   className?: string;
