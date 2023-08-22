@@ -16,5 +16,5 @@ export default {
   setupFiles: ['<rootDir>/src/test/__mocks__/setupMocks.ts'],
   setupFilesAfterEnv: [
     "<rootDir>/src/test/setupTests.ts"
-  ]
+  ],
 };
