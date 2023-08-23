@@ -6,7 +6,7 @@ customElements.define(
   r2wc(App, {
     props: {
       routePrefix: 'string',
-      okapi: 'json',
+      config: 'json',
     },
   }),
 );
