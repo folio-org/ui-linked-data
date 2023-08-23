@@ -10,24 +10,28 @@ type ReqParams = {
   requestParams?: RequestInit;
 };
 
-const {
-  url,
-  tenant,
-  token,
-} = localStorageService.deserialize(OKAPI_CONFIG) || {};
-
-const BASE_PATH = url || getEnvVariable(EDITOR_API_BASE_PATH);
-
-const okapiHeaders = tenant
-  ? {
-      'x-okapi-tenant': tenant,
-      'x-okapi-token': token,
-    }
-  : undefined;
-
 async function doRequest(url: string, requestParams: RequestInit) {
+  const {
+    basePath = getEnvVariable(EDITOR_API_BASE_PATH),
+    tenant,
+    token,
+  } = localStorageService.deserialize(OKAPI_CONFIG) || {};
+  
+  const okapiHeaders = tenant
+    ? {
+        'x-okapi-tenant': tenant,
+        'x-okapi-token': token,
+      }
+    : undefined;
+
   try {
-    const response = await fetch(`${BASE_PATH}${url}`, requestParams);
+    const response = await fetch(`${basePath}${url}`, {
+      ...requestParams,
+      headers: {
+        ...okapiHeaders,
+        ...requestParams.headers,
+      }
+    });
 
     if (!response.ok) {
       const errorBody = await response.text();
@@ -46,7 +50,6 @@ const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
   const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
   const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, {
     ...requestParams,
-    headers: { ...requestParams.headers, ...okapiHeaders },
   });
 
   return response;

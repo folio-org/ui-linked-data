@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import { IntlProvider } from 'react-intl';
@@ -11,9 +11,12 @@ import { i18nMessages } from '@common/i18n/messages';
 import { Search, Edit, Load, Main } from '@views';
 import state from '@state';
 import './App.scss';
+import { localStorageService } from '@common/services/storage';
+import { OKAPI_CONFIG } from '@common/constants/api.constants';
 
 type IContainer = {
   routePrefix?: string;
+  config?: string;
 };
 
 const componentsMap: Record<string, JSX.Element> = {
@@ -44,8 +47,15 @@ const Container: FC<IContainer> = ({ routePrefix = '' }) => {
   );
 };
 
-export const App: FC<IContainer> = ({ routePrefix = '' }) => (
-  <RecoilRoot>
-    <Container routePrefix={routePrefix} />
-  </RecoilRoot>
-);
+export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
+  useEffect(() => {
+    // TODO: localStorage cleanups on unmount (probably has to happen in the wrapper)
+    config && localStorageService.serialize(OKAPI_CONFIG, config);
+  }, [config]);
+
+  return (
+    <RecoilRoot>
+      <Container routePrefix={routePrefix} />
+    </RecoilRoot>
+  );
+};

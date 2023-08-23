@@ -35,6 +35,11 @@ const BASE_LOCALE = {
   'marva.close': 'Close',
   'marva.delete': 'Delete',
   'marva.return': 'Return',
+  'marva.record-save-success': 'Record saved successfully',
+  'marva.cant-save-record': 'Cannot save the record',
+  'marva.cant-delete-record': 'Cannot delete the record',
+  'marva.resource-description-deleted': 'Resource description deleted',
+  'marva.app-fail': 'An error occurred. Please, reload the page.',
 };
 
 export const i18nMessages = {
@@ -74,6 +79,11 @@ export const i18nMessages = {
     'marva.close': 'Schließen',
     'marva.delete': 'Löschen',
     'marva.return': 'Zurück',
+    'marva.record-save-success': 'Datensatz erfolgreich gespeichert',
+    'marva.cant-save-record': 'Der Datensatz kann nicht gespeichert werden',
+    'marva.cant-delete-record': 'Der Datensatz kann nicht gelöscht werden',
+    'marva.resource-description-deleted': 'Ressourcenbeschreibung gelöscht',
+    'marva.app-fail': 'Es ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu.',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

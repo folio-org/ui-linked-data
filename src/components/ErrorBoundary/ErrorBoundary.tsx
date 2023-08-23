@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 interface Props {
   children?: ReactNode;
@@ -28,7 +29,9 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div data-testid="errorBoundary">
-          <h1>An error occurred. Please, reload the page.</h1>
+          <h1>
+            <FormattedMessage id='marva.app-fail' />
+          </h1>
         </div>
       );
     }
