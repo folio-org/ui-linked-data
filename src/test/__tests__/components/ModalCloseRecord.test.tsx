@@ -1,10 +1,15 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
+import { createModalContainer } from '@src/test/__mocks__/components/Modal.mock';
 
 describe('ModalCloseRecord', () => {
   const toggleIsOpen = jest.fn();
   const saveRecord = jest.fn();
   const discardRecord = jest.fn();
+
+  beforeAll(() => {
+    createModalContainer();
+  });
 
   beforeEach(() => {
     render(

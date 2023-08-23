@@ -1,5 +1,7 @@
 import { FC, ReactNode, memo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import classNames from 'classnames';
+import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import './Modal.scss';
 
 interface Props {
@@ -27,6 +29,8 @@ const Modal: FC<Props> = ({
   onClose,
   children,
 }) => {
+  const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
+
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
       if (!shouldCloseOnEsc || event.key !== 'Escape') return;
@@ -39,25 +43,28 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  return isOpen ? (
-    <>
-      <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
-      <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
-        <div className="modal-header">
-          <h3>{title}</h3>
-        </div>
-        {!!children && <div>{children}</div>}
-        <div className="modal-controls">
-          <button onClick={onSubmit} data-testid="modal-button-submit">
-            {submitButtonLabel}
-          </button>
-          <button onClick={onCancel} data-testid="modal-button-cancel">
-            {cancelButtonLabel}
-          </button>
-        </div>
-      </div>
-    </>
-  ) : null;
+  return isOpen
+    ? createPortal(
+        <>
+          <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
+          <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
+            <div className="modal-header">
+              <h3>{title}</h3>
+            </div>
+            {!!children && <div>{children}</div>}
+            <div className="modal-controls">
+              <button onClick={onSubmit} data-testid="modal-button-submit">
+                {submitButtonLabel}
+              </button>
+              <button onClick={onCancel} data-testid="modal-button-cancel">
+                {cancelButtonLabel}
+              </button>
+            </div>
+          </div>
+        </>,
+        portalElement,
+      )
+    : null;
 };
 
 export default memo(Modal);

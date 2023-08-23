@@ -1,5 +1,6 @@
-import { Modal } from '@components/Modal';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { Modal } from '@components/Modal';
+import { createModalContainer } from '@src/test/__mocks__/components/Modal.mock';
 
 describe('Modal', () => {
   const props = {
@@ -9,6 +10,10 @@ describe('Modal', () => {
     onCancel: jest.fn(),
     onClose: jest.fn(),
   };
+
+  beforeAll(() => {
+    createModalContainer();
+  });
 
   test('renders null', () => {
     const updatedProps = { ...props, isOpen: false };

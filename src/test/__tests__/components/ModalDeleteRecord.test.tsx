@@ -1,9 +1,14 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
+import { createModalContainer } from '@src/test/__mocks__/components/Modal.mock';
 
 describe('ModalCloseRecord', () => {
   const toggleIsOpen = jest.fn();
   const deleteRecord = jest.fn();
+
+  beforeAll(() => {
+    createModalContainer();
+  });
 
   beforeEach(() => {
     render(<ModalDeleteRecord isOpen={true} toggleIsOpen={toggleIsOpen} deleteRecord={deleteRecord} />);
