@@ -8,7 +8,7 @@ import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { deleteRecordLocally, formatRecord } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import useConfig from '@common/hooks/useConfig.hook';
+import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';

@@ -7,9 +7,13 @@ jest.mock('react-intl', () => {
 
   return {
     ...jest.requireActual('react-intl'),
-    FormattedMessage: ({ id, children }: any) => {
+    FormattedMessage: ({ id, children, values }: any) => {
       if (children) {
         return children([id]);
+      }
+
+      if (values) {
+        return (Object.values(values) as [FC]).map((v: FC, key) => ({ ...v, key }));
       }
 
       return id;
@@ -28,9 +32,7 @@ jest.mock('react-intl', () => {
 
       return value;
     },
-    IntlProvider: ({ children, defaultLocale, ...rest }: any) => (
-      <div {...rest}>{children}</div>
-    ),
+    IntlProvider: ({ children, defaultLocale, ...rest }: any) => <div {...rest}>{children}</div>,
     useIntl: () => intl,
     injectIntl: (Component: FC) => (props: any) => <Component {...props} intl={intl} />,
   };

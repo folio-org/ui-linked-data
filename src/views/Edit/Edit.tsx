@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '@state';
-import useConfig from '@common/hooks/useConfig.hook';
+import { useConfig } from '@common/hooks/useConfig.hook';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord } from '@common/helpers/record.helper';
@@ -19,12 +19,9 @@ export const Edit = () => {
 
   const onClickStartFromScratch = () => {
     // TODO: set default selected profile
-    const defaultProfile = PROFILE_IDS.MONOGRAPH;
-    const profile = selectedProfile?.id ?? defaultProfile;
+    const profile = PROFILE_IDS.MONOGRAPH;
     const savedRecordData = getSavedRecord(profile);
-    const record = savedRecordData
-      ? { id: DEFAULT_RECORD_ID, profile: defaultProfile, ...savedRecordData.data?.[defaultProfile] }
-      : null;
+    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, profile, ...savedRecordData.data?.[profile] } : null;
     const typedRecord = record as unknown as RecordEntry;
 
     typedRecord && setRecord(typedRecord);
@@ -32,7 +29,7 @@ export const Edit = () => {
   };
 
   return selectedProfile ? (
-    <div className="edit-page">
+    <div data-testid="edit-page" className="edit-page">
       <Properties />
       <EditSection />
       <Preview />
@@ -44,7 +41,7 @@ export const Edit = () => {
         values={{
           select: <Link to="/load">{formatMessage({ id: 'marva.select-for-editing' })}</Link>,
           startFromScratch: (
-            <Link to="#" onClick={onClickStartFromScratch}>
+            <Link data-testid="start-from-scratch" to="#" onClick={onClickStartFromScratch}>
               {formatMessage({ id: 'marva.start-from-scratch' })}
             </Link>
           ),
