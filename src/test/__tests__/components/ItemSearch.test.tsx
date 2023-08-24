@@ -25,7 +25,7 @@ describe('Item Search', () => {
         <CommonStatus />
         <ItemSearch fetchRecord={fetchRecord} />
       </RecoilRoot>,
-    )
+    );
   });
 
   test('renders Item Search component', () => {
@@ -60,7 +60,7 @@ describe('Item Search', () => {
     fireEvent.click(screen.getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(screen.getByText('marva.search-no-descriptions-match')).toBeInTheDocument();
+      expect(screen.getByText('marva.search-no-rds-match')).toBeInTheDocument();
     });
   });
 

@@ -17,23 +17,23 @@ enum Identifiers {
 
 const header: Row = {
   actionItems: {
-    label: <FormattedMessage id='marva.actions' />,
+    label: <FormattedMessage id="marva.actions" />,
     className: 'action-items',
   },
   id: {
-    label: <FormattedMessage id='marva.isbn-lccn' />,
+    label: <FormattedMessage id="marva.isbn-lccn" />,
   },
   title: {
-    label: <FormattedMessage id='marva.title' />,
+    label: <FormattedMessage id="marva.title" />,
   },
   author: {
-    label: <FormattedMessage id='marva.author' />,
+    label: <FormattedMessage id="marva.author" />,
   },
   date: {
-    label: <FormattedMessage id='marva.pub-date' />,
+    label: <FormattedMessage id="marva.pub-date" />,
   },
   edition: {
-    label: <FormattedMessage id='marva.edition' />,
+    label: <FormattedMessage id="marva.edition" />,
   },
 };
 
@@ -115,7 +115,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     try {
       const result = await getByIdentifier(searchBy, query);
 
-      if (!result.content.length) return setMessage(formatMessage({ id: 'marva.search-no-descriptions-match' }));
+      if (!result.content.length) return setMessage('marva.search-no-rds-match');
 
       setData(applyRowActionItems(formatKnownItemSearchData(result)));
     } catch (e) {
@@ -143,7 +143,13 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
           <FormattedMessage id="marva.search" />
         </button>
-        {message ? <div>{message}</div> : data && <Table onRowClick={onRowClick} header={header} data={data} />}
+        {message ? (
+          <div>
+            <FormattedMessage id={message} />
+          </div>
+        ) : (
+          data && <Table onRowClick={onRowClick} header={header} data={data} />
+        )}
       </div>
     </div>
   );
