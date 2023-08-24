@@ -6,8 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import * as recordsApi from '@common/api/records.api';
 import { fetchRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 
-const withLabel = 'test-id, Record ID: 1';
-const withoutLabel = 'Record ID: 2';
+const withLabel = 'test-id, Resource description ID: 1';
+const withoutLabel = 'Resource description ID: 2';
 
 describe('Load', () => {
   beforeEach(async () => {

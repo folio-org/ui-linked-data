@@ -16,26 +16,32 @@ export const Load = () => {
       .then(res => {
         setAvailableRecords(res?.content);
       })
-      .catch(err => console.error('Error fetching record list: ', err));
+      .catch(err => console.error('Error fetching resource descriptions: ', err));
   }, []);
 
   // TODO: Workaroud for demo; define type and format for data received from API
   const generateButtonLabel = ({ id, label }: RecordData) => {
     const labelString = label?.length ? `${label}, ` : '';
-    const idString = `Record ID: ${id}`;
+    const idString = `Resource description ID: ${id}`;
 
     return `${labelString}${idString}`;
   };
 
   return (
-    <div data-testid='load' className="load">
-      <strong><FormattedMessage id='marva.other-records' /></strong>
+    <div data-testid="load" className="load">
+      <strong>
+        <FormattedMessage id="marva.other-available-rds" />
+      </strong>
       <div className="button-group">
         {availableRecords?.map(({ id, label }: RecordData) => (
           <button key={id} onClick={() => fetchRecord(String(id))}>
             {generateButtonLabel({ id, label })}
           </button>
-        )) || <div><FormattedMessage id='marva.no-records' /></div>}
+        )) || (
+          <div>
+            <FormattedMessage id="marva.no-available-rds" />
+          </div>
+        )}
       </div>
     </div>
   );

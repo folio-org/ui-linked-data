@@ -16,7 +16,7 @@ const DeleteRecord: FC = () => {
   return (
     <>
       <button data-testid="delete-record-button" onClick={openModal} disabled={isDisabled}>
-        <FormattedMessage id='marva.delete-record' />
+        <FormattedMessage id="marva.delete-rd" />
       </button>
       <ModalDeleteRecord isOpen={isModalOpen} toggleIsOpen={setIsModalOpen} deleteRecord={deleteRecord} />
     </>

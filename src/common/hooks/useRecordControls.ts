@@ -65,14 +65,14 @@ export const useRecordControls = () => {
       setRecord(updatedRecord);
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.record-save-success'),
+        UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-save-success'),
       ]);
     } catch (error) {
-      console.error('Cannot save the record', error);
+      console.error('Cannot save the resource description', error);
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-save-record'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-save-rd'),
       ]);
     }
   };
@@ -92,16 +92,16 @@ export const useRecordControls = () => {
       discardRecord();
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.resource-description-deleted'),
+        UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-deleted'),
       ]);
 
       navigate(ROUTES.LOAD.uri);
     } catch (error) {
-      console.error('Cannot delete the record', error);
+      console.error('Cannot delete the resource description', error);
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-delete-record'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-delete-rd'),
       ]);
     }
   };

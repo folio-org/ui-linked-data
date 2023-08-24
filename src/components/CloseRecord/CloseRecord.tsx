@@ -11,7 +11,7 @@ const CloseRecord: FC = () => {
   return (
     <>
       <button data-testid="close-record-button" onClick={openModal}>
-        <FormattedMessage id='marva.close-record' />
+        <FormattedMessage id="marva.close-rd" />
       </button>
       <ModalCloseRecord
         isOpen={isModalOpen}
