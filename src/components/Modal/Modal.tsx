@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import './Modal.scss';
+// TODO: Uncomment for using with Shadow DOM
+// import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 interface Props {
   isOpen: boolean;
@@ -30,6 +32,8 @@ const Modal: FC<Props> = ({
   children,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
+  // TODO: uncomment for using with Shadow DOM
+  // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {

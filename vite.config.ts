@@ -13,6 +13,8 @@ export default defineConfig(() => {
     '@views': path.resolve(__dirname, './src/views'),
   };
 
+  // config type "library" is used for building a web-component,
+  // which is used for the embedded application
   return env.npm_config_type === 'library'
     ? {
         plugins: [react(), cssInjectedByJsPlugin()],
