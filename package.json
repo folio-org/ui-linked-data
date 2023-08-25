@@ -25,7 +25,6 @@
     "test:unit:coverage": "jest --coverage"
   },
   "dependencies": {
-    "@r2wc/react-to-web-component": "^2.0.2",
     "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
