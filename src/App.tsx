@@ -1,56 +1,61 @@
 import { FC, useEffect } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
-import { Edit, Load, Main } from '@views';
-import { OKAPI_PREFIX } from '@common/constants/api.constants';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { RecoilRoot, useRecoilValue } from 'recoil';
+import { IntlProvider } from 'react-intl';
 import { CommonStatus } from '@components/CommonStatus';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Nav } from '@components/Nav';
+import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { ROUTES } from '@common/constants/routes.constants';
+import { i18nMessages } from '@common/i18n/messages';
+import { Search, Edit, Load, Main } from '@views';
+import state from '@state';
 import './App.scss';
-
-type Okapi = {
-  token: string;
-  tenant: string;
-  url: string;
-};
+import { localStorageService } from '@common/services/storage';
+import { OKAPI_CONFIG } from '@common/constants/api.constants';
 
 type IContainer = {
   routePrefix?: string;
-  okapi?: Okapi;
+  config?: string;
 };
 
-export const App: FC<IContainer> = ({ routePrefix = '', okapi }) => {
-  // TODO: decide on a place to manage okapi props
-  // Since we use localStorage might as well manage in the wrapper
-  useEffect(() => {
-    if (okapi) {
-      for (const [key, value] of Object.entries(okapi)) {
-        localStorage.setItem(`${OKAPI_PREFIX}_${key}`, value);
-      }
-    }
+const componentsMap: Record<string, JSX.Element> = {
+  [ROUTES.SEARCH.uri]: <Search />,
+  [ROUTES.EDIT.uri]: <Edit />,
+  [ROUTES.LOAD.uri]: <Load />,
+  [ROUTES.MAIN.uri]: <Main />,
+};
 
-    return () => {
-      if (okapi) {
-        for (const key of Object.keys(okapi)) {
-          localStorage.removeItem(`${OKAPI_PREFIX}_${key}`);
-        }
-      }
-    };
-  }, [okapi]);
+const Container: FC<IContainer> = ({ routePrefix = '' }) => {
+  const locale = useRecoilValue(state.config.locale);
 
   return (
-    <ErrorBoundary>
-      <RecoilRoot>
+    <IntlProvider messages={i18nMessages[locale]} locale={locale} defaultLocale="en-US">
+      <ErrorBoundary>
         <BrowserRouter basename={routePrefix}>
           <Nav />
           <CommonStatus />
-          <Switch>
-            <Route path="/edit" component={Edit} />
-            <Route path="/load" component={Load} />
-            <Route path="" component={Main} />
-          </Switch>
+          <Routes>
+            {Object.values(ROUTES).map(({ uri }) => (
+              <Route path={uri} element={componentsMap[uri]} key={uri} />
+            ))}
+          </Routes>
+          <div id={MODAL_CONTAINER_ID} />
         </BrowserRouter>
-      </RecoilRoot>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </IntlProvider>
+  );
+};
+
+export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
+  useEffect(() => {
+    // TODO: localStorage cleanups on unmount (probably has to happen in the wrapper)
+    config && localStorageService.serialize(OKAPI_CONFIG, config);
+  }, [config]);
+
+  return (
+    <RecoilRoot>
+      <Container routePrefix={routePrefix} />
+    </RecoilRoot>
   );
 };

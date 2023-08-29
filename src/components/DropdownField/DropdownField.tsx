@@ -19,7 +19,7 @@ export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value,
   };
 
   return (
-    <div id={uuid}>
+    <div id={uuid} data-testid="dropdown-field">
       {name} <br />
       <Select
         options={options}

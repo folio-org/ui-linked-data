@@ -6,6 +6,7 @@ import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
 import state from '@state';
 import { ChangeEvent, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
 
@@ -15,20 +16,24 @@ enum Identifiers {
 }
 
 const header: Row = {
+  actionItems: {
+    label: <FormattedMessage id="marva.actions" />,
+    className: 'action-items',
+  },
   id: {
-    label: 'ISBN/LCCN',
+    label: <FormattedMessage id="marva.isbn-lccn" />,
   },
   title: {
-    label: 'Title',
+    label: <FormattedMessage id="marva.title" />,
   },
   author: {
-    label: 'Author',
+    label: <FormattedMessage id="marva.author" />,
   },
   date: {
-    label: 'Publication Date',
+    label: <FormattedMessage id="marva.pub-date" />,
   },
   edition: {
-    label: 'Edition',
+    label: <FormattedMessage id="marva.edition" />,
   },
 };
 
@@ -40,55 +45,110 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [searchBy, setSearchBy] = useState(Identifiers.ISBN);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
+  const [message, setMessage] = useState('');
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+
+  const { formatMessage } = useIntl();
+
+  const clearMessage = () => message && setMessage('');
 
   const drawControls = () =>
     Object.values(Identifiers).map(id => (
       <div key={id}>
-        <input data-testid={id} id={id} type="radio" checked={searchBy === id} onChange={() => setSearchBy(id)} />
+        <input
+          data-testid={id}
+          id={id}
+          type="radio"
+          checked={searchBy === id}
+          onChange={() => {
+            clearMessage();
+            setSearchBy(id);
+          }}
+        />
         <label htmlFor={id}>{id.toUpperCase()}</label>
       </div>
     ));
 
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => setQuery(value);
+  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    clearMessage();
+
+    setQuery(value);
+  };
+
+  const applyRowActionItems = (rows: Row[]): Row[] =>
+    rows.map(row => ({
+      ...row,
+      actionItems: {
+        children: (
+          <div className="action-items__container">
+            <button
+              data-testid="edit-button"
+              onClick={ev => {
+                ev.stopPropagation();
+
+                fetchRecord((row.__meta as Record<string, any>).id);
+              }}
+            >
+              &#9997;
+            </button>
+            <button
+              onClick={ev => {
+                ev.stopPropagation();
+              }}
+            >
+              &#128064;
+            </button>
+          </div>
+        ),
+        className: 'action-items',
+      },
+    }));
+
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
   const fetchData = async (searchBy: string, query: string) => {
     if (!query) return;
 
+    clearMessage();
+    data && setData(null);
+
     try {
       const result = await getByIdentifier(searchBy, query);
 
-      setData(formatKnownItemSearchData(result));
+      if (!result.content.length) return setMessage('marva.search-no-rds-match');
+
+      setData(applyRowActionItems(formatKnownItemSearchData(result)));
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'No match for query'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
       ]);
     }
   };
 
   return (
     <div data-testid="id-search" className="item-search">
-      <strong>Search by Identifier:</strong>
+      <strong>
+        <FormattedMessage id="marva.search-by-identifier" />
+      </strong>
       <div className="search-controls">{drawControls()}</div>
       <div>
         <Input
           testid="id-search-input"
-          placeholder={`Search by ${searchBy.toUpperCase()}...`}
+          placeholder={formatMessage({ id: 'marva.search-by' }, { by: searchBy.toUpperCase() })}
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
         />
         <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
-          Search
+          <FormattedMessage id="marva.search" />
         </button>
-        {data && (
-          <Table
-            onRowClick={onRowClick}
-            header={header}
-            data={data}
-          />
+        {message ? (
+          <div>
+            <FormattedMessage id={message} />
+          </div>
+        ) : (
+          data && <Table onRowClick={onRowClick} header={header} data={data} />
         )}
       </div>
     </div>

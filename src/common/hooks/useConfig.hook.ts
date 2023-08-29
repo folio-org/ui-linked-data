@@ -13,7 +13,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { mapBibframeUri } from '@common/helpers/bibframe.helper';
 
-export default function useConfig() {
+export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
@@ -308,4 +308,4 @@ export default function useConfig() {
   };
 
   return { getProfiles, prepareFields };
-}
+};

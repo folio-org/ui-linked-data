@@ -1,3 +1,6 @@
+import { OKAPI_CONFIG } from '@common/constants/api.constants';
+import { LOCALES } from '@common/i18n/locales';
+import { localStorageService } from '@common/services/storage';
 import { atom } from 'recoil';
 
 const profiles = atom<Array<ProfileEntry>>({
@@ -30,6 +33,11 @@ const selectedEntries = atom<Array<string>>({
   default: [],
 });
 
+const locale = atom<typeof LOCALES[keyof typeof LOCALES]>({
+  key: 'config.locale',
+  default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH,
+})
+
 export default {
   profiles,
   selectedProfile,
@@ -37,4 +45,5 @@ export default {
   schema,
   initialSchemaKey,
   selectedEntries,
+  locale,
 };

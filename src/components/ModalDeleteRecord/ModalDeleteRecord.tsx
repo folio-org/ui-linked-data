@@ -1,4 +1,5 @@
 import { FC, memo } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '../Modal';
 
 interface Props {
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, deleteRecord }) => {
+  const { formatMessage } = useIntl();
+
   const closeModal = () => {
     toggleIsOpen(false);
   };
@@ -15,15 +18,15 @@ export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, delete
   return (
     <Modal
       isOpen={isOpen}
-      title="Delete record"
-      submitButtonLabel="Delete"
-      cancelButtonLabel="Return"
+      title={formatMessage({ id: 'marva.delete-rd' })}
+      submitButtonLabel={formatMessage({ id: 'marva.delete' })}
+      cancelButtonLabel={formatMessage({ id: 'marva.return' })}
       onClose={closeModal}
       onSubmit={deleteRecord}
       onCancel={closeModal}
     >
-      <div>
-        <p>Do you really want to delete the record?</p>
+      <div data-testid="modal-delete-record-content">
+        <FormattedMessage id="marva.confirm-delete-rd" />
       </div>
     </Modal>
   );

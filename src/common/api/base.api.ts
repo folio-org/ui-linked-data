@@ -1,13 +1,37 @@
 // TODO: caching, abort controllers
 
-import { EDITOR_API_BASE_PATH, OKAPI_PREFIX } from '@common/constants/api.constants';
+import { EDITOR_API_BASE_PATH, OKAPI_CONFIG } from '@common/constants/api.constants';
 import { getEnvVariable } from '@common/helpers/env.helper';
+import { localStorageService } from '@common/services/storage';
 
-const BASE_PATH = localStorage.getItem(`${OKAPI_PREFIX}_url`) || getEnvVariable(EDITOR_API_BASE_PATH);
+type ReqParams = {
+  url: string;
+  urlParams?: Record<string, string>;
+  requestParams?: RequestInit;
+};
 
 async function doRequest(url: string, requestParams: RequestInit) {
+  const {
+    basePath = getEnvVariable(EDITOR_API_BASE_PATH),
+    tenant,
+    token,
+  } = localStorageService.deserialize(OKAPI_CONFIG) || {};
+  
+  const okapiHeaders = tenant
+    ? {
+        'x-okapi-tenant': tenant,
+        'x-okapi-token': token,
+      }
+    : undefined;
+
   try {
-    const response = await fetch(`${BASE_PATH}${url}`, requestParams);
+    const response = await fetch(`${basePath}${url}`, {
+      ...requestParams,
+      headers: {
+        ...okapiHeaders,
+        ...requestParams.headers,
+      }
+    });
 
     if (!response.ok) {
       const errorBody = await response.text();
@@ -22,15 +46,11 @@ async function doRequest(url: string, requestParams: RequestInit) {
   }
 }
 
-type ReqParams = {
-  url: string;
-  urlParams?: Record<string, string>;
-  requestParams?: RequestInit;
-};
-
 const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
   const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
-  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, { ...requestParams });
+  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, {
+    ...requestParams,
+  });
 
   return response;
 };

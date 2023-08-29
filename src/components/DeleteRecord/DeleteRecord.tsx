@@ -5,6 +5,7 @@ import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
 import { useModalControls } from '@common/hooks/useModalControls';
+import { FormattedMessage } from 'react-intl';
 
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
@@ -15,7 +16,7 @@ const DeleteRecord: FC = () => {
   return (
     <>
       <button data-testid="delete-record-button" onClick={openModal} disabled={isDisabled}>
-        Delete Record
+        <FormattedMessage id="marva.delete-rd" />
       </button>
       <ModalDeleteRecord isOpen={isModalOpen} toggleIsOpen={setIsModalOpen} deleteRecord={deleteRecord} />
     </>
