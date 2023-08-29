@@ -11,7 +11,7 @@ describe('Dropdown Field', () => {
     render(<DropdownField options={options} name={'test name'} uuid={uuid} onChange={onChangeFn} value={options[0]} />);
   });
 
-  test('renders Literal Field component', () => {
+  test('renders Dropdown Field component', () => {
     expect(screen.getByTestId('dropdown-field')).toBeInTheDocument();
     expect(screen.getByTestId('mock-select')).toBeInTheDocument();
   });
