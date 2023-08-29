@@ -56,13 +56,13 @@ describe('Properties', () => {
       ],
     ]);
 
-    test('render Properties with one "div" element', () => {
+    test('render Properties with one "properties-button" element', () => {
       renderComponent(schema, initialSchemaKey);
 
       expect(screen.getAllByTestId('properties-button').length).toBe(1);
     });
 
-    test('click on the rendered "div" element', () => {
+    test('click on the rendered "properties-button" element', () => {
       const scrollIntoViewMock = jest.fn();
       window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
