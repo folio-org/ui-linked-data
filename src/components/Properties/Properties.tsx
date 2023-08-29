@@ -20,7 +20,12 @@ export const Properties = () => {
         return <strong>{displayName}</strong>;
       } else {
         return (
-          <div onClick={() => document.getElementById(uuid)?.scrollIntoView({ behavior: 'smooth' })}>{displayName}</div>
+          <div
+            onClick={() => document.getElementById(uuid)?.scrollIntoView({ behavior: 'smooth' })}
+            data-testid="properties-button"
+          >
+            {displayName}
+          </div>
         );
       }
     }
@@ -31,7 +36,7 @@ export const Properties = () => {
   return (
     <div className="properties">
       <h3>
-        <FormattedMessage id='marva.properties' />
+        <FormattedMessage id="marva.properties" />
       </h3>
       <Fields schema={schema} uuid={initialSchemaKey} drawComponent={drawComponent} groupClassName="group" />
     </div>
