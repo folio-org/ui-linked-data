@@ -1,12 +1,15 @@
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
+import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-  const formattedRecord: RecordEntry = {
-    ...parsedRecord[profile],
-    profile,
-  };
+  const formattedRecord: RecordEntry | RecordEntryNew = IS_NEW_API_ENABLED
+    ? (parsedRecord as RecordEntryNew)
+    : {
+        ...parsedRecord[profile],
+        profile,
+      };
 
   return formattedRecord;
 };

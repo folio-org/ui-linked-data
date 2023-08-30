@@ -79,6 +79,10 @@ type RecordEntry = RecursiveRecordSchema & {
   profile: string;
 };
 
+type RecordEntryNew = RecursiveRecordSchema & {
+  type?: string;
+};
+
 interface ResourceTemplates {
   [key: string]: ResourceTemplate;
 }

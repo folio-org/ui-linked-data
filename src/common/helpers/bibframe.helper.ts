@@ -13,6 +13,7 @@ export const mapBibframeUri = (uri: string | undefined, schema?: Schema, path?: 
 
     path?.forEach(elem => {
       const schemaElem = schema?.get(elem);
+
       if (!schemaElem || !schemaElem.uri) return;
 
       const mappedUriTypped = mappedUri as BFMapEntry;
@@ -26,4 +27,10 @@ export const mapBibframeUri = (uri: string | undefined, schema?: Schema, path?: 
 
     return updatedUri;
   }
+};
+
+export const applyMappedRecordData = (record: any, uriBFLite: string | undefined) => {
+  if (!uriBFLite) return null;
+
+  return record[uriBFLite];
 };

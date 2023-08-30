@@ -3,6 +3,7 @@ import { getAllRecords } from '@common/api/records.api';
 import './Load.scss';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { FormattedMessage } from 'react-intl';
+import { PROFILE_URIS } from '@common/constants/bibframe.constants';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
@@ -12,6 +13,7 @@ export const Load = () => {
   useEffect(() => {
     getAllRecords({
       pageNumber: 0,
+      type: PROFILE_URIS.MONOGRAPH, // TODO: pass URI of the selected profile
     })
       .then(res => {
         setAvailableRecords(res?.content);

@@ -94,6 +94,7 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
+      const uriBFLite = mapBibframeUri(propertyURI, base, path);
 
       withContentsSelected?.[propertyURI] &&
         setUserValues(oldValue => ({
@@ -123,7 +124,7 @@ export const useConfig = () => {
         path: updatedPath,
         displayName: propertyLabel,
         uri: propertyURI,
-        uriBFLite: mapBibframeUri(propertyURI, base, path),
+        uriBFLite,
         constraints,
       });
     } else {

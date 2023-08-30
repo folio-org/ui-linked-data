@@ -1,6 +1,7 @@
 // https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 
-import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { GROUP_BY_LEVEL, PROFILE_URIS } from '@common/constants/bibframe.constants';
+import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 type TraverseSchema = {
@@ -9,22 +10,37 @@ type TraverseSchema = {
   container: Record<string, any>;
   key: string;
   index?: number;
+  profile?: string;
 };
 
-const traverseSchema = ({ schema, userValues, container, key, index = 0 }: TraverseSchema) => {
-  const { children, uri, bfid, type } = schema.get(key) || {};
-  const selector = uri || bfid;
+const getNonArrayTypes = () => {
+  const nonArrayTypes = [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
+
+  if (!IS_NEW_API_ENABLED) {
+    nonArrayTypes.push(AdvancedFieldType.block);
+  }
+
+  return nonArrayTypes;
+};
+
+const traverseSchema = ({
+  schema,
+  userValues,
+  container,
+  key,
+  index = 0,
+  profile = PROFILE_URIS.MONOGRAPH,
+}: TraverseSchema) => {
+  const { children, uri, uriBFLite, bfid, type } = schema.get(key) || {};
+  const uriSelector = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+  const selector = uriSelector || bfid;
   const userValueMatch = userValues[key];
   const shouldProceed = Object.keys(userValues)
     .map(uuid => schema.get(uuid)?.path)
     .flat()
     .includes(key);
-  const isArray = ![
-    AdvancedFieldType.block,
-    AdvancedFieldType.hidden,
-    AdvancedFieldType.dropdownOption,
-    AdvancedFieldType.profile,
-  ].includes(type as AdvancedFieldType);
+
+  const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
 
   if (userValueMatch && uri && selector) {
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
@@ -48,8 +64,15 @@ const traverseSchema = ({ schema, userValues, container, key, index = 0 }: Trave
 
     container[selector] = withFormat;
   } else if (selector && (shouldProceed || index < GROUP_BY_LEVEL)) {
-    container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
-    const containerSelector = isArray ? container[selector].at(-1) : container[selector];
+    let containerSelector: Record<string, any>;
+
+    if (IS_NEW_API_ENABLED && type === AdvancedFieldType.profile) {
+      container.type = profile;
+      containerSelector = container;
+    } else {
+      container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
+      containerSelector = isArray ? container[selector].at(-1) : container[selector];
+    }
 
     children?.forEach(uuid =>
       traverseSchema({
