@@ -1,6 +1,7 @@
 import { getByIdentifier } from '@common/api/search.api';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
+import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
@@ -10,30 +11,40 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
 
-enum Identifiers {
+export enum Identifiers {
   ISBN = 'isbn',
   LCCN = 'lccn',
 }
 
-const header: Row = {
+const initHeader: Row = {
   actionItems: {
     label: <FormattedMessage id="marva.actions" />,
     className: 'action-items',
+    position: 0,
   },
-  id: {
-    label: <FormattedMessage id="marva.isbn-lccn" />,
+  isbn: {
+    label: <FormattedMessage id="marva.isbn" />,
+    position: 1,
+  },
+  lccn: {
+    label: <FormattedMessage id="marva.lccn" />,
+    position: 2,
   },
   title: {
     label: <FormattedMessage id="marva.title" />,
+    position: 3,
   },
   author: {
     label: <FormattedMessage id="marva.author" />,
+    position: 4,
   },
   date: {
     label: <FormattedMessage id="marva.pub-date" />,
+    position: 5,
   },
   edition: {
     label: <FormattedMessage id="marva.edition" />,
+    position: 6,
   },
 };
 
@@ -46,8 +57,8 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
   const [message, setMessage] = useState('');
+  const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-
   const { formatMessage } = useIntl();
 
   const clearMessage = () => message && setMessage('');
@@ -104,6 +115,15 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       },
     }));
 
+  const canSwapRows = (row1: Identifiers, row2: Identifiers) =>
+    searchBy === row1 && header[row2].position < header[row1].position;
+
+  const swapIdentifiers = () => {
+    if (canSwapRows(Identifiers.ISBN, Identifiers.LCCN) || canSwapRows(Identifiers.LCCN, Identifiers.ISBN)) {
+      setHeader(swapRowPositions(header, Identifiers.LCCN, Identifiers.ISBN));
+    }
+  };
+
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
   const fetchData = async (searchBy: string, query: string) => {
@@ -117,6 +137,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
       if (!result.content.length) return setMessage('marva.search-no-rds-match');
 
+      swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result)));
     } catch (e) {
       setStatusMessages(currentStatus => [
