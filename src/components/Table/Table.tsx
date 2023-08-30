@@ -6,6 +6,7 @@ export type Cell = {
   label?: string;
   children?: JSX.Element;
   className?: string;
+  position?: number;
 };
 
 export type Row = Record<string, Cell | Record<string, any>>;
@@ -19,11 +20,13 @@ export type Table = {
 };
 
 export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }: Table) => {
+  const sortedHeaderEntries = Object.entries(header).sort(([_key1, value1], [_key2, value2]) => value1.position - value2.position);
+
   return (
     <table data-testid="table" className={classNames('table', className)}>
       <thead>
         <tr>
-          {Object.entries(header).map(([key, { label, className }]) => (
+          {sortedHeaderEntries.map(([key, { label, className }]) => (
             <th
               key={key}
               className={classNames({ clickable: onHeaderCellClick, [className]: className })}
@@ -42,7 +45,7 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }
             className={classNames({ clickable: onRowClick })}
             onClick={() => onRowClick?.(row)}
           >
-            {Object.keys(header).map(key => {
+            {sortedHeaderEntries.map(([key]) => {
               const { label, children, className } = row?.[key] || {};
 
               return (
