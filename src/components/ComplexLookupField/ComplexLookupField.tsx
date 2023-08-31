@@ -27,9 +27,15 @@ export const ComplexLookupField: FC<Props> = ({ label, value = undefined, uuid, 
   };
 
   return (
-    <div id={uuid}>
+    <div id={uuid} data-testid="complex-lookup">
       <div>{label}</div>
-      <Input placeholder={label} onChange={handleOnChange} value={localValue?.label ?? ''} disabled={true} />
+      <Input
+        placeholder={label}
+        onChange={handleOnChange}
+        value={localValue?.label ?? ''}
+        disabled={true}
+        testid="complex-lookup-input"
+      />
     </div>
   );
 };
