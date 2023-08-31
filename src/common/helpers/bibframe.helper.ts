@@ -16,9 +16,9 @@ export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, pat
 
       if (!schemaElem || !schemaElem.uri) return;
 
-      const mappedUriTypped = mappedUri as BFMapEntry;
+      const mappedUriTyped = mappedUri as BFMapEntry;
       const schemaElemUri = schemaElem.uri as string;
-      const pathUri = mappedUriTypped?.[schemaElemUri];
+      const pathUri = mappedUriTyped?.[schemaElemUri];
 
       if (pathUri) {
         updatedUri = pathUri;
