@@ -12,6 +12,7 @@ import {
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { mapBibframeUri } from '@common/helpers/bibframe.helper';
+import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -95,13 +96,14 @@ export const useConfig = () => {
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
       const uriBFLite = mapBibframeUri(propertyURI, base, path);
+      const definedPropertyUri = IS_NEW_API_ENABLED ? uriBFLite || propertyURI : propertyURI;
 
-      withContentsSelected?.[propertyURI] &&
+      withContentsSelected?.[definedPropertyUri] &&
         setUserValues(oldValue => ({
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[propertyURI].map((entry: any) =>
+            contents: withContentsSelected?.[definedPropertyUri].map((entry: any) =>
               typeof entry === 'string'
                 ? {
                     label: entry,
@@ -161,6 +163,8 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdownOption:
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
+          const uriBFLite = mapBibframeUri(resourceURI, base, path);
+          const definedResourceUri = IS_NEW_API_ENABLED ? uriBFLite || resourceURI : resourceURI;
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
@@ -169,7 +173,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(resourceURI, record, firstOfSameType)
+            shouldSelectDropdownOption(definedResourceUri, record, firstOfSameType)
           ) {
             selectedEntries.push(uuid);
           }
@@ -181,7 +185,7 @@ export const useConfig = () => {
             displayName: resourceLabel,
             bfid: id,
             uri: resourceURI,
-            uriBFLite: mapBibframeUri(resourceURI),
+            uriBFLite,
             children: uuidArray,
           });
 
@@ -194,8 +198,8 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(resourceURI))?.[resourceURI]
-                : record?.[resourceURI],
+                ? record.find(entry => Object.keys(entry).includes(definedResourceUri))?.[definedResourceUri]
+                : record?.[definedResourceUri],
             });
           });
 
@@ -212,6 +216,8 @@ export const useConfig = () => {
             repeatable,
             valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
           } = entry as PropertyTemplate;
+          const uriBFLite = mapBibframeUri(propertyURI, base, path);
+          const definedPropertyUri = IS_NEW_API_ENABLED ? uriBFLite || propertyURI : propertyURI;
 
           const constraints = {
             ...CONSTRAINTS,
@@ -230,7 +236,7 @@ export const useConfig = () => {
             path: updatedPath,
             displayName: propertyLabel,
             uri: propertyURI,
-            uriBFLite: mapBibframeUri(propertyURI),
+            uriBFLite,
             constraints,
             children: uuidArray,
           });
@@ -251,8 +257,8 @@ export const useConfig = () => {
                 firstOfSameType: i === 0,
                 selectedEntries,
                 record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(propertyURI))?.[propertyURI]
-                  : record?.[propertyURI],
+                  ? record.find(entry => Object.keys(entry).includes(definedPropertyUri))?.[definedPropertyUri]
+                  : record?.[definedPropertyUri],
               });
             });
 
