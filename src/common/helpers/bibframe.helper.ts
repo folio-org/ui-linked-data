@@ -1,6 +1,6 @@
 import { BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 
-export const mapBibframeUri = (uri: string | undefined, schema?: Schema, path?: string[]) => {
+export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, path?: string[]) => {
   if (!uri || !BF2_TO_BFLITE_MAP[uri]) return undefined;
 
   const mappedUri = BF2_TO_BFLITE_MAP[uri];
@@ -27,10 +27,4 @@ export const mapBibframeUri = (uri: string | undefined, schema?: Schema, path?: 
 
     return updatedUri;
   }
-};
-
-export const applyMappedRecordData = (record: any, uriBFLite: string | undefined) => {
-  if (!uriBFLite) return null;
-
-  return record[uriBFLite];
 };

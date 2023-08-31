@@ -11,7 +11,7 @@ import {
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
-import { mapBibframeUri } from '@common/helpers/bibframe.helper';
+import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const useConfig = () => {
@@ -95,15 +95,14 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
-      const uriBFLite = mapBibframeUri(propertyURI, base, path);
-      const definedPropertyUri = IS_NEW_API_ENABLED ? uriBFLite || propertyURI : propertyURI;
+      const { uriBFLite, updatedUri } = getUris(propertyURI, base, path);
 
-      withContentsSelected?.[definedPropertyUri] &&
+      withContentsSelected?.[updatedUri] &&
         setUserValues(oldValue => ({
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[definedPropertyUri].map((entry: any) =>
+            contents: withContentsSelected?.[updatedUri].map((entry: any) =>
               typeof entry === 'string'
                 ? {
                     label: entry,
@@ -163,8 +162,7 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdownOption:
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
-          const uriBFLite = mapBibframeUri(resourceURI, base, path);
-          const definedResourceUri = IS_NEW_API_ENABLED ? uriBFLite || resourceURI : resourceURI;
+          const { uriBFLite, updatedUri } = getUris(resourceURI, base, path);
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
@@ -173,7 +171,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(definedResourceUri, record, firstOfSameType)
+            shouldSelectDropdownOption(updatedUri, record, firstOfSameType)
           ) {
             selectedEntries.push(uuid);
           }
@@ -198,8 +196,8 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(definedResourceUri))?.[definedResourceUri]
-                : record?.[definedResourceUri],
+                ? record.find(entry => Object.keys(entry).includes(updatedUri))?.[updatedUri]
+                : record?.[updatedUri],
             });
           });
 
@@ -216,8 +214,7 @@ export const useConfig = () => {
             repeatable,
             valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
           } = entry as PropertyTemplate;
-          const uriBFLite = mapBibframeUri(propertyURI, base, path);
-          const definedPropertyUri = IS_NEW_API_ENABLED ? uriBFLite || propertyURI : propertyURI;
+          const { uriBFLite, updatedUri } = getUris(propertyURI, base, path);
 
           const constraints = {
             ...CONSTRAINTS,
@@ -257,8 +254,8 @@ export const useConfig = () => {
                 firstOfSameType: i === 0,
                 selectedEntries,
                 record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(definedPropertyUri))?.[definedPropertyUri]
-                  : record?.[definedPropertyUri],
+                  ? record.find(entry => Object.keys(entry).includes(updatedUri))?.[updatedUri]
+                  : record?.[updatedUri],
               });
             });
 
@@ -271,6 +268,13 @@ export const useConfig = () => {
         }
       }
     }
+  };
+
+  const getUris = (uri: string, schema?: Schema, path?: string[]) => {
+    const uriBFLite = getMappedBFLiteUri(uri, schema, path);
+    const updatedUri = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+
+    return { uriBFLite, updatedUri };
   };
 
   const buildSchema = (
