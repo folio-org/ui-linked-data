@@ -36,8 +36,11 @@ describe('search.helper', () => {
 
       expect(formatted).toEqual([
         {
-          id: {
-            label: '12345',
+          isbn: {
+            label: 'mock-val',
+          },
+          lccn: {
+            label: undefined,
           },
           title: {
             label: 'mock-title',

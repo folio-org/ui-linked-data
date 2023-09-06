@@ -25,7 +25,7 @@ export const Preview = () => {
     const { displayName, children, type } = schema.get(uuid) || {};
 
     return (
-      <div className={classNames({ 'preview-block': level === 2 })}>
+      <div className={classNames({ 'preview-block': level === 2 })} data-testid='preview-fields'>
         {type !== AdvancedFieldType.profile && type !== AdvancedFieldType.hidden && <strong>{displayName}</strong>}
         {children?.map((uuid: string) => (
           <Fields key={uuid} uuid={uuid} schema={schema} paths={paths} level={level + 1} />

@@ -1,16 +1,21 @@
 import { ItemSearchResponse } from '@common/api/search.api';
+import { Identifiers } from '@components/ItemSearch/ItemSearch';
 import { Row } from '@components/Table';
 import { alphabeticSortLabel } from './common.helper';
 
 const __TEMP_RESULT_MAX_AMOUNT = 10;
-const QUERY_DELIMITER = '=';
-const WILDCARD = '*';
 
-export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => {  
+const findIdentifier = (id: Identifiers, identifiers?: { value?: string; type?: string }[]) =>
+  identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
+
+export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => {
   return result.content
-    .map(({ id, title, contributors, publications, editionStatement }) => ({
-      id: {
-        label: result?.search_query && result.search_query.split(QUERY_DELIMITER).at(-1)?.replace(WILDCARD, ''),
+    .map(({ id, title, contributors, publications, editionStatement, identifiers }) => ({
+      isbn: {
+        label: findIdentifier(Identifiers.ISBN, identifiers),
+      },
+      lccn: {
+        label: findIdentifier(Identifiers.LCCN, identifiers),
       },
       title: {
         label: title,

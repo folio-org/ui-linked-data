@@ -1,0 +1,75 @@
+import { Preview } from '@components/Preview';
+import state from '@state';
+import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
+
+const initialSchemaKey = 'uuid0';
+
+const userValues = {
+  uuid1: {
+    uuid: 'uuid1',
+    contents: [
+      {
+        label: 'uuid1-label',
+        meta: {
+          uri: 'uuid1-uri',
+        },
+      },
+    ],
+  },
+  uuid3: {
+    uuid: 'uuid3',
+    contents: [
+      {
+        label: 'uuid3-label',
+      },
+    ],
+  },
+};
+
+const schema = new Map([
+  ['uuid0', { path: [], uuid: 'uuid0', children: ['uuid1', 'uuid2'] }],
+  ['uuid1', { path: ['uuid0', 'uuid1'], uuid: 'uuid1' }],
+  ['uuid2', { path: ['uuid0', 'uuid2'], uuid: 'uuid2', type: 'simple', children: ['uuid3'], displayName: 'uuid2' }],
+  ['uuid3', { path: ['uuid0', 'uuid2', 'uuid3'], uuid: 'uuid3' }],
+]);
+
+describe('Preview', () => {
+  const { getAllByTestId, getByText } = screen;
+
+  beforeEach(() =>
+    render(
+      <RecoilRoot
+        initializeState={snapshot => {
+          snapshot.set(state.config.schema, schema);
+          snapshot.set(state.config.initialSchemaKey, initialSchemaKey);
+          snapshot.set(state.inputs.userValues, userValues);
+        }}
+      >
+        <BrowserRouter>
+          <Preview />
+        </BrowserRouter>
+      </RecoilRoot>,
+    ),
+  );
+
+  test('renders Preview component if a profile is selected', () => {
+    expect(getAllByTestId('preview-fields')[0]).toBeInTheDocument();
+  });
+
+  test('renders Fields component recursively if an entry has children', () => {
+    expect(getByText('uuid2')).toBeInTheDocument();
+  });
+
+  test('renders user values if an entry has no children', () => {
+    expect(getByText('uuid3-label')).toBeInTheDocument();
+  });
+
+  test('renders a link within user values if the user value is of lookup type (contains uri)', () => {
+    expect(screen.getByRole('link', { name: userValues.uuid1.contents[0].label })).toHaveAttribute(
+      'href',
+      userValues.uuid1.contents[0].meta.uri,
+    );
+  });
+});
