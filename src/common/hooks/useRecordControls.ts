@@ -31,7 +31,7 @@ export const useRecordControls = () => {
     try {
       const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
-      const recordData: RecordEntry = locallySavedData
+      const recordData: RecordEntryDeprecated = locallySavedData
         ? { id: recordId, profile, ...locallySavedData.data[profile] }
         : await getRecord({ recordId });
 
@@ -58,7 +58,7 @@ export const useRecordControls = () => {
           ? await postRecord(formattedRecord)
           : await putRecord(record.id, formattedRecord);
       const parsedResponse = await response.json();
-      const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntry;
+      const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntryDeprecated;
 
       deleteRecordLocally(profile, currentRecordId);
       setIsEdited(false);

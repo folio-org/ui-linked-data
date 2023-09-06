@@ -33,7 +33,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/Identifier': 'http://bibfra.me/vocab/marc/otherIdentifier',
     'http://id.loc.gov/ontologies/bibframe/Local': 'http://bibfra.me/vocab/marc/localIdentifier',
     'http://id.loc.gov/ontologies/bibframe/Ean': 'http://bibfra.me/vocab/marc/ean',
-    'http://id.loc.gov/ontologies/bibframe/supplementaryContent': '', // TODO:
+    'http://id.loc.gov/ontologies/bibframe/supplementaryContent': 'http://bibfra.me/vocab/marc/supplementaryContent',
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/link',
   },
 };

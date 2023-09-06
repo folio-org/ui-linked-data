@@ -9,7 +9,7 @@ export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, pat
   if (uriType === 'string') {
     return BF2_TO_BFLITE_MAP[uri] as string;
   } else if (uriType === 'object') {
-    let updatedUri = undefined;
+    let updatedUri;
 
     path?.forEach(elem => {
       const schemaElem = schema?.get(elem);

@@ -37,7 +37,7 @@ export const getAllRecords = async ({
   });
 };
 
-export const postRecord = async (recordEntry: RecordEntry | RecordEntryNew) => {
+export const postRecord = async (recordEntry: RecordEntryDeprecated | RecordEntry) => {
   const url = baseApi.generateUrl(BIBFRAME_API_ENDPOINT);
 
   return baseApi.request({
@@ -52,7 +52,7 @@ export const postRecord = async (recordEntry: RecordEntry | RecordEntryNew) => {
   });
 };
 
-export const putRecord = async (recordId: string | number, recordEntry: RecordEntry | RecordEntryNew) => {
+export const putRecord = async (recordId: string | number, recordEntry: RecordEntryDeprecated | RecordEntry) => {
   const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
 
   return baseApi.request({

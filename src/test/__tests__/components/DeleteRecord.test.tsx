@@ -10,9 +10,9 @@ describe('DeleteRecord', () => {
   const mockedRecord = {
     id: 'testId',
     profile: 'testProfile',
-  } as RecordEntry;
+  } as RecordEntryDeprecated;
 
-  const renderComponent = (recordState: RecordEntry | null) =>
+  const renderComponent = (recordState: RecordEntryDeprecated | null) =>
     render(
       <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.record, recordState)}>
         <DeleteRecord />

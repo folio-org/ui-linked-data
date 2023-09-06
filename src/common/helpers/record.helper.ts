@@ -4,8 +4,8 @@ import { generateRecordBackupKey } from './progressBackup.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-  const formattedRecord: RecordEntry | RecordEntryNew = IS_NEW_API_ENABLED
-    ? (parsedRecord as RecordEntryNew)
+  const formattedRecord: RecordEntryDeprecated | RecordEntry = IS_NEW_API_ENABLED
+    ? (parsedRecord as RecordEntry)
     : {
         ...parsedRecord[profile],
         profile,

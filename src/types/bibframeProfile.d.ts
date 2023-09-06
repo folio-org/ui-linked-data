@@ -74,12 +74,12 @@ type ProfileEntry = {
 
 type RecursiveRecordSchema = Record<string, Array<RecursiveRecordSchema | string>>;
 
-type RecordEntry = RecursiveRecordSchema & {
+type RecordEntryDeprecated = RecursiveRecordSchema & {
   id?: number | string;
   profile: string;
 };
 
-type RecordEntryNew = RecursiveRecordSchema & {
+type RecordEntry = RecursiveRecordSchema & {
   type?: string;
 };
 

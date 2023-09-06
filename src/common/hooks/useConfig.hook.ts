@@ -95,14 +95,14 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
-      const { uriBFLite, updatedUri } = getUris(propertyURI, base, path);
+      const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
-      withContentsSelected?.[updatedUri] &&
+      withContentsSelected?.[uriWithSelector] &&
         setUserValues(oldValue => ({
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[updatedUri].map((entry: any) =>
+            contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
               typeof entry === 'string'
                 ? {
                     label: entry,
@@ -162,7 +162,7 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdownOption:
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
-          const { uriBFLite, updatedUri } = getUris(resourceURI, base, path);
+          const { uriBFLite, uriWithSelector } = getUris(resourceURI, base, path);
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
@@ -171,7 +171,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(updatedUri, record, firstOfSameType)
+            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType)
           ) {
             selectedEntries.push(uuid);
           }
@@ -196,8 +196,8 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(updatedUri))?.[updatedUri]
-                : record?.[updatedUri],
+                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                : record?.[uriWithSelector],
             });
           });
 
@@ -214,7 +214,7 @@ export const useConfig = () => {
             repeatable,
             valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
           } = entry as PropertyTemplate;
-          const { uriBFLite, updatedUri } = getUris(propertyURI, base, path);
+          const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
           const constraints = {
             ...CONSTRAINTS,
@@ -254,8 +254,8 @@ export const useConfig = () => {
                 firstOfSameType: i === 0,
                 selectedEntries,
                 record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(updatedUri))?.[updatedUri]
-                  : record?.[updatedUri],
+                  ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                  : record?.[uriWithSelector],
               });
             });
 
@@ -272,9 +272,9 @@ export const useConfig = () => {
 
   const getUris = (uri: string, schema?: Schema, path?: string[]) => {
     const uriBFLite = getMappedBFLiteUri(uri, schema, path);
-    const updatedUri = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+    const uriWithSelector = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
 
-    return { uriBFLite, updatedUri };
+    return { uriBFLite, uriWithSelector };
   };
 
   const buildSchema = (
@@ -302,7 +302,7 @@ export const useConfig = () => {
     return base;
   };
 
-  const getProfiles = async (record?: RecordEntry): Promise<any> => {
+  const getProfiles = async (record?: RecordEntryDeprecated): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);

@@ -5,7 +5,7 @@ const userValues = atom<UserValues>({
   default: {},
 });
 
-const record = atom<RecordEntry | null>({
+const record = atom<RecordEntryDeprecated | null>({
   key: 'inputs.record',
   default: null,
 });
