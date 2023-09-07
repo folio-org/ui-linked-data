@@ -10,7 +10,11 @@ export const PROFILE_NAMES = {
 
 export const PROFILE_IDS = {
   MONOGRAPH: 'lc:profile:bf2:Monograph',
-}
+};
+
+export const PROFILE_URIS = {
+  MONOGRAPH: 'http://bibfra.me/vocab/marc/Monograph',
+};
 
 export const CONSTRAINTS: Constraints = {
   repeatable: false,
@@ -19,8 +23,8 @@ export const CONSTRAINTS: Constraints = {
   defaults: [],
   useValuesFrom: [],
   valueDataType: {
-    dataTypeURI: ''
-  }
-}
+    dataTypeURI: '',
+  },
+};
 
 export const GROUP_BY_LEVEL = 2;

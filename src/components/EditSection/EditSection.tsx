@@ -164,7 +164,7 @@ export const EditSection = memo(() => {
   return resourceTemplates ? (
     <div className="edit-section">
       <h3>
-        <FormattedMessage id='marva.edit' />
+        <FormattedMessage id="marva.edit" />
       </h3>
       <Fields
         drawComponent={drawComponent}
@@ -175,7 +175,7 @@ export const EditSection = memo(() => {
       />
       {showScrollToTop && (
         <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="back-to-top">
-          <FormattedMessage id='marva.back-to-top' />
+          <FormattedMessage id="marva.back-to-top" />
         </button>
       )}
     </div>

@@ -11,6 +11,8 @@ import {
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
+import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
+import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -93,13 +95,14 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = isRecordArray ? record[0] : record;
+      const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
-      withContentsSelected?.[propertyURI] &&
+      withContentsSelected?.[uriWithSelector] &&
         setUserValues(oldValue => ({
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[propertyURI].map((entry: any) =>
+            contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
               typeof entry === 'string'
                 ? {
                     label: entry,
@@ -122,6 +125,7 @@ export const useConfig = () => {
         path: updatedPath,
         displayName: propertyLabel,
         uri: propertyURI,
+        uriBFLite,
         constraints,
       });
     } else {
@@ -158,6 +162,7 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdownOption:
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
+          const { uriBFLite, uriWithSelector } = getUris(resourceURI, base, path);
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
@@ -166,7 +171,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(resourceURI, record, firstOfSameType)
+            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType)
           ) {
             selectedEntries.push(uuid);
           }
@@ -178,6 +183,7 @@ export const useConfig = () => {
             displayName: resourceLabel,
             bfid: id,
             uri: resourceURI,
+            uriBFLite,
             children: uuidArray,
           });
 
@@ -190,8 +196,8 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(resourceURI))?.[resourceURI]
-                : record?.[resourceURI],
+                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                : record?.[uriWithSelector],
             });
           });
 
@@ -208,6 +214,7 @@ export const useConfig = () => {
             repeatable,
             valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
           } = entry as PropertyTemplate;
+          const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
           const constraints = {
             ...CONSTRAINTS,
@@ -226,6 +233,7 @@ export const useConfig = () => {
             path: updatedPath,
             displayName: propertyLabel,
             uri: propertyURI,
+            uriBFLite,
             constraints,
             children: uuidArray,
           });
@@ -246,8 +254,8 @@ export const useConfig = () => {
                 firstOfSameType: i === 0,
                 selectedEntries,
                 record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(propertyURI))?.[propertyURI]
-                  : record?.[propertyURI],
+                  ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                  : record?.[uriWithSelector],
               });
             });
 
@@ -260,6 +268,13 @@ export const useConfig = () => {
         }
       }
     }
+  };
+
+  const getUris = (uri: string, schema?: Schema, path?: string[]) => {
+    const uriBFLite = getMappedBFLiteUri(uri, schema, path);
+    const uriWithSelector = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+
+    return { uriBFLite, uriWithSelector };
   };
 
   const buildSchema = (
@@ -287,7 +302,7 @@ export const useConfig = () => {
     return base;
   };
 
-  const getProfiles = async (record?: RecordEntry): Promise<any> => {
+  const getProfiles = async (record?: RecordEntryDeprecated): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
