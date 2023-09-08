@@ -28,3 +28,5 @@ export const CONSTRAINTS: Constraints = {
 };
 
 export const GROUP_BY_LEVEL = 2;
+
+export const GROUPS_WITHOUT_ROOT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/provisionActivity'];
