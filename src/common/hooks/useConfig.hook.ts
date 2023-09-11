@@ -235,37 +235,43 @@ export const useConfig = () => {
             children: uuidArray,
           });
 
+          // TODO: how to avoid circular references when handling META | HIDE
+          if (type === AdvancedFieldType.group) return;
+
           let isSelectedOption = false;
           const setIsSelectedOption = (value: boolean) => (isSelectedOption = value);
+          const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI);
 
-          // TODO: how to avoid circular references when handling META | HIDE
-          type !== AdvancedFieldType.group &&
-            valueTemplateRefs.forEach((item, i) => {
-              const entry = templates[item];
-              const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI);
+          valueTemplateRefs.forEach((item, i) => {
+            const entry = templates[item];
 
-              traverseProfile({
-                entry,
-                auxType:
-                  type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
-                templates,
-                uuid: uuidArray[i],
-                path: updatedPath,
-                base,
-                firstOfSameType: i === 0,
-                selectedEntries,
-                record: generateRecordForDropdown({
-                  record,
-                  uriWithSelector,
-                  hasNoRootWrapper,
-                }),
-                dropdownOptionSelection: {
-                  hasNoRootWrapper,
-                  isSelectedOption,
-                  setIsSelectedOption,
-                },
-              });
+            traverseProfile({
+              entry,
+              auxType:
+                type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+              templates,
+              uuid: uuidArray[i],
+              path: updatedPath,
+              base,
+              firstOfSameType: i === 0,
+              selectedEntries,
+              record: generateRecordForDropdown({
+                record,
+                uriWithSelector,
+                hasNoRootWrapper,
+              }),
+              dropdownOptionSelection: {
+                hasNoRootWrapper,
+                isSelectedOption,
+                setIsSelectedOption,
+              },
             });
+          });
+
+          // Select the first dropdown option if nothing was selected
+          if (hasNoRootWrapper && !isSelectedOption) {
+            selectedEntries.push(uuidArray[0]);
+          }
 
           return;
         }
