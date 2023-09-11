@@ -92,3 +92,9 @@ type RecordData = {
   id?: number | string;
   label?: string;
 };
+
+type DropdownOptionSelection = {
+  hasNoRootWrapper: boolean;
+  isSelectedOption: boolean;
+  setIsSelectedOption: (value: boolean) => boolean;
+};

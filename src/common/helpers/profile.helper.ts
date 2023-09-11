@@ -25,7 +25,7 @@ const getNonArrayTypes = () => {
   return nonArrayTypes;
 };
 
-const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_ROOT_WRAPPER.includes(uri);
+export const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_ROOT_WRAPPER.includes(uri);
 
 export const getLookupLabelKey = (uriBFLite: string | undefined) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -33,7 +33,7 @@ export const getLookupLabelKey = (uriBFLite: string | undefined) => {
   return uriBFLite ? BFLITE_LABELS_MAP[typedUriBFLite] : BFLITE_URIS.TERM;
 };
 
-const generateLookupValue = (uriBFLite: string | undefined, label: string | undefined, uri: string | undefined) => {
+const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
   const keyName = getLookupLabelKey(uriBFLite);
 
   return IS_NEW_API_ENABLED
@@ -126,17 +126,36 @@ export const applyUserValues = (schema: Map<string, SchemaEntry>, userValues: Us
   return result;
 };
 
-export const shouldSelectDropdownOption = (
-  resourceURI: string,
-  record?: Record<string, any> | Array<any>,
-  firstOfSameType?: boolean,
-) => {
-  const shouldSelectFirstOption = !record && firstOfSameType;
+export const shouldSelectDropdownOption = ({
+  uri,
+  record,
+  firstOfSameType,
+  dropdownOptionSelection,
+}: {
+  uri: string;
+  record?: Record<string, any> | Array<any>;
+  firstOfSameType?: boolean;
+  dropdownOptionSelection?: DropdownOptionSelection;
+}) => {
+  const { hasNoRootWrapper, isSelectedOption, setIsSelectedOption } =
+    dropdownOptionSelection as DropdownOptionSelection;
+
+  const shouldSelectFirstOption = (!record || hasNoRootWrapper) && firstOfSameType;
   // Copied from useConfig.hook.ts:
   // TODO: Potentially dangerous HACK ([0])
   // Might be removed with the API schema change
   // If not, refactor to include all indices
-  const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[resourceURI];
+  const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
 
-  return isSelectedOptionInRecord || shouldSelectFirstOption;
+  if (hasNoRootWrapper) {
+    if (!isSelectedOption && (isSelectedOptionInRecord || shouldSelectFirstOption)) {
+      setIsSelectedOption?.(true);
+
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return isSelectedOptionInRecord || shouldSelectFirstOption;
+  }
 };

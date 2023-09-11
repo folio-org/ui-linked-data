@@ -57,6 +57,7 @@ export const useConfig = () => {
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
+    dropdownOptionSelection?: DropdownOptionSelection;
   };
 
   const traverseProfile = ({
@@ -69,6 +70,7 @@ export const useConfig = () => {
     firstOfSameType = false,
     selectedEntries = [],
     record,
+    dropdownOptionSelection,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -166,7 +168,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType)
+            shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
           }
@@ -233,6 +235,9 @@ export const useConfig = () => {
             children: uuidArray,
           });
 
+          let isSelectedOption = false;
+          const setIsSelectedOption = (value: boolean) => (isSelectedOption = value);
+
           // TODO: how to avoid circular references when handling META | HIDE
           type !== AdvancedFieldType.group &&
             valueTemplateRefs.forEach((item, i) => {
@@ -254,6 +259,11 @@ export const useConfig = () => {
                   uriWithSelector,
                   hasNoRootWrapper,
                 }),
+                dropdownOptionSelection: {
+                  hasNoRootWrapper,
+                  isSelectedOption,
+                  setIsSelectedOption,
+                },
               });
             });
 
@@ -311,7 +321,7 @@ export const useConfig = () => {
     // Purge user values
     setUserValues({});
 
-    buildSchema(monograph, templates, /* BFLITE_RECORD_EXAMPLE */ record || {});
+    buildSchema(monograph, templates, record || {});
 
     return response;
   };
