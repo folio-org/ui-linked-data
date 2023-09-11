@@ -5,8 +5,13 @@ import { getLookupLabelKey } from './profile.helper';
 
 export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite: string | undefined) => {
   const keyName = getLookupLabelKey(uriBFLite);
-  const label = IS_NEW_API_ENABLED ? entry[keyName] : entry.uri;
-  const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entry.label;
+  const { uri: entryUri, label: entryLabel } = entry;
+  const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entryLabel;
+  let label = entryUri;
+
+  if (IS_NEW_API_ENABLED) {
+    label = Array.isArray(entry[keyName]) ? entry[keyName][0] : entry[keyName];
+  }
 
   return {
     label,
