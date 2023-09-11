@@ -1,6 +1,6 @@
 export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Instance': 'http://bibfra.me/vocab/lite/Instance',
-  'http://id.loc.gov/ontologies/bibframe/title': 'http://bibfra.me/vocab/bf/title',
+  'http://id.loc.gov/ontologies/bibframe/title': 'http://bibfra.me/vocab/marc/title',
   'http://id.loc.gov/ontologies/bibframe/Title': 'http://bibfra.me/vocab/marc/Title',
   'http://id.loc.gov/ontologies/bflc/nonSortNum': 'http://bibfra.me/vocab/bflc/nonSortNum',
   'http://id.loc.gov/ontologies/bibframe/mainTitle': 'http://bibfra.me/vocab/marc/mainTitle',
@@ -53,8 +53,17 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   },
 };
 
-export const BF_LITE_URIS = {
+export const BFLITE_URIS = {
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
+  CODE: 'http://bibfra.me/vocab/marc/code',
+  TERM: 'http://bibfra.me/vocab/marc/term',
+};
+
+export const BFLITE_LABELS_MAP = {
+  'http://bibfra.me/vocab/lite/place': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
+  'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
 };

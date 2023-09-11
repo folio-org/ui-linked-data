@@ -5,14 +5,16 @@ import { fetchProfiles } from '@common/api/profiles.api';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import {
   CONSTRAINTS,
+  GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
+import { getLookupLabelKey, shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -45,6 +47,21 @@ export const useConfig = () => {
     return preparedFields;
   };
 
+  const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite: string | undefined) => {
+    const keyName = getLookupLabelKey(uriBFLite);
+    const label = IS_NEW_API_ENABLED ? entry[keyName] : entry.uri;
+    const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entry.label;
+
+    return {
+      label,
+      meta: {
+        parentURI: uri,
+        uri,
+        type,
+      },
+    };
+  };
+
   type TraverseProfile = {
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
     templates: ResourceTemplates;
@@ -55,6 +72,7 @@ export const useConfig = () => {
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
+    hasNoRootWrapper?: boolean;
   };
 
   const traverseProfile = ({
@@ -67,6 +85,7 @@ export const useConfig = () => {
     firstOfSameType = false,
     selectedEntries = [],
     record,
+    hasNoRootWrapper = false,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -102,20 +121,13 @@ export const useConfig = () => {
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
-              typeof entry === 'string'
+            contents: withContentsSelected?.[uriWithSelector].map((entry: any) => {
+              return typeof entry === 'string'
                 ? {
                     label: entry,
                   }
-                : {
-                    label: entry.label,
-                    meta: {
-                      parentURI: entry.uri,
-                      uri: entry.uri,
-                      type,
-                    },
-                  },
-            ),
+                : generateUserValueObject(entry, type, uriBFLite);
+            }),
           },
         }));
 
@@ -171,7 +183,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType)
+            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType, hasNoRootWrapper)
           ) {
             selectedEntries.push(uuid);
           }
@@ -242,6 +254,17 @@ export const useConfig = () => {
           type !== AdvancedFieldType.group &&
             valueTemplateRefs.forEach((item, i) => {
               const entry = templates[item];
+              const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI);
+
+              let recordData;
+
+              if (hasNoRootWrapper) {
+                recordData = record;
+              } else {
+                recordData = isRecordArray
+                  ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                  : record?.[uriWithSelector];
+              }
 
               traverseProfile({
                 entry,
@@ -253,9 +276,8 @@ export const useConfig = () => {
                 base,
                 firstOfSameType: i === 0,
                 selectedEntries,
-                record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-                  : record?.[uriWithSelector],
+                record: recordData,
+                hasNoRootWrapper,
               });
             });
 
@@ -313,7 +335,7 @@ export const useConfig = () => {
     // Purge user values
     setUserValues({});
 
-    buildSchema(monograph, templates, record || {});
+    buildSchema(monograph, templates, /* BFLITE_RECORD_EXAMPLE */ record || {});
 
     return response;
   };
