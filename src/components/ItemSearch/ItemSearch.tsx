@@ -14,6 +14,13 @@ import './ItemSearch.scss';
 export enum Identifiers {
   ISBN = 'isbn',
   LCCN = 'lccn',
+  TITLE = 'title',
+}
+
+enum DisplayIdentifiers {
+  isbn = 'marva.isbn',
+  lccn = 'marva.lccn',
+  title = 'marva.title',
 }
 
 const initHeader: Row = {
@@ -53,7 +60,7 @@ type ItemSearch = {
 };
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
-  const [searchBy, setSearchBy] = useState(Identifiers.ISBN);
+  const [searchBy, setSearchBy] = useState<Identifiers | null>(null);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
   const [message, setMessage] = useState('');
@@ -76,11 +83,15 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
             setSearchBy(id);
           }}
         />
-        <label htmlFor={id}>{id.toUpperCase()}</label>
+        <label htmlFor={id}><FormattedMessage id={DisplayIdentifiers[id]} /></label>
       </div>
     ));
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+    if (!searchBy) {
+      return setMessage('marva.search-select-index');
+    }
+
     clearMessage();
 
     setQuery(value);
@@ -150,18 +161,22 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   return (
     <div data-testid="id-search" className="item-search">
       <strong>
-        <FormattedMessage id="marva.search-by-identifier" />
+        <FormattedMessage id="marva.search-by" />
       </strong>
       <div className="search-controls">{drawControls()}</div>
       <div>
         <Input
           testid="id-search-input"
-          placeholder={formatMessage({ id: 'marva.search-by' }, { by: searchBy.toUpperCase() })}
+          placeholder={formatMessage({ id: 'marva.search-by-sth' }, { by: searchBy && formatMessage({ id: DisplayIdentifiers[searchBy] }) })}
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
         />
-        <button data-testid="id-search-button" onClick={() => fetchData(searchBy, query)}>
+        <button
+          data-testid="id-search-button"
+          onClick={() => searchBy && fetchData(searchBy, query)}
+          disabled={!query || !searchBy}
+        >
           <FormattedMessage id="marva.search" />
         </button>
         {message ? (

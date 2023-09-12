@@ -38,6 +38,7 @@ describe('Item Search', () => {
     const searchControl = getByTestId(id);
 
     fireEvent.click(searchControl);
+
     await waitFor(() => {
       expect(searchControl).toBeChecked();
     });
@@ -58,6 +59,7 @@ describe('Item Search', () => {
   test('returns message if the response is empty', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve({ ...itemSearchMockData, content: [] }));
 
+    fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
@@ -67,15 +69,23 @@ describe('Item Search', () => {
   test('displays error notification if API call throws', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.reject(new Error()));
 
+    fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
     expect(await findByText('marva.search-error-fetching')).toBeInTheDocument();
   });
 
+  test('returns message if no search control selected', async () => {
+    fireEvent.change(getByTestId('id-search-input'), event);
+
+    expect(await findByText('marva.search-select-index')).toBeInTheDocument();
+  });
+
   test('calls fetchRecord on action item edit button click', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
+    fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
@@ -89,6 +99,7 @@ describe('Item Search', () => {
   test('calls fetchRecord on row click', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
+    fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
@@ -109,8 +120,8 @@ describe('Item Search', () => {
 
   test('swaps ISBN/LCCN cols with ISBN being first if querying by it', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
+    
     fireEvent.click(getByTestId(id));
-
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 

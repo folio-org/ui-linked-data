@@ -13,10 +13,10 @@ const BASE_LOCALE = {
   'marva.delete-rd': 'Delete resource description',
   'marva.no-available-rds': 'No available resource descriptions.',
   'marva.other-available-rds': 'Other Available Resource Descriptions:',
-  'marva.search-by-identifier': 'Search By Identifier:',
+  'marva.search-by': 'Search By',
   'marva.search-no-rds-match': 'No resource descriptions match your query',
   'marva.search-error-fetching': 'Error fetching data',
-  'marva.search-by': 'Search by {by}...',
+  'marva.search-by-sth': 'Search by {by}...',
   'marva.actions': 'Actions',
   'marva.isbn-lccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
@@ -31,8 +31,7 @@ const BASE_LOCALE = {
   'marva.back-to-top': 'Back to top',
   'marva.properties': 'Properties',
   'marva.preview': 'Preview',
-  'marva.confirm-close-rd':
-    'Do you really want to close the resource description? All unsaved changes will be lost.',
+  'marva.confirm-close-rd': 'Do you really want to close the resource description? All unsaved changes will be lost.',
   'marva.confirm-delete-rd': 'Do you really want to delete the resource description?',
   'marva.save-close': 'Save and close',
   'marva.close': 'Close',
@@ -43,6 +42,7 @@ const BASE_LOCALE = {
   'marva.cant-delete-rd': 'Cannot delete the resource description',
   'marva.rd-deleted': 'Resource description deleted',
   'marva.app-fail': 'An error occurred. Please, reload the page.',
+  'marva.search-select-index': 'Please select an index',
 };
 
 export const i18nMessages = {
@@ -60,10 +60,10 @@ export const i18nMessages = {
     'marva.delete-rd': 'Ressourcenbeschreibung löschen',
     'marva.no-available-rds': 'Keine verfügbaren Ressourcenbeschreibungen.',
     'marva.other-available-rds': 'Andere verfügbare Ressourcenbeschreibungen:',
-    'marva.search-by-identifier': 'Suche nach Kennung:',
+    'marva.search-by': 'Suche nach',
     'marva.search-no-rds-match': 'Keine Ressourcenbeschreibungen stimmen mit Ihrer Suchanfrage überein',
     'marva.search-error-fetching': 'Fehler beim Abrufen der Daten',
-    'marva.search-by': 'Suche nach {by}...',
+    'marva.search-by-sth': 'Suche nach {by}...',
     'marva.actions': 'Aktionen',
     'marva.isbn-lccn': 'ISBN/LCCN',
     'marva.isbn': 'ISBN',
@@ -90,6 +90,7 @@ export const i18nMessages = {
     'marva.cant-delete-rd': 'Die Ressourcenbeschreibung kann nicht gelöscht werden',
     'marva.rd-deleted': 'Ressourcenbeschreibung gelöscht',
     'marva.app-fail': 'Es ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu.',
+    'marva.search-select-index': 'Bitte wählen Sie ein Index',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,
