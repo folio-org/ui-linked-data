@@ -137,16 +137,15 @@ export const shouldSelectDropdownOption = ({
   firstOfSameType?: boolean;
   dropdownOptionSelection?: DropdownOptionSelection;
 }) => {
-  const { hasNoRootWrapper, isSelectedOption, setIsSelectedOption } =
-    dropdownOptionSelection as DropdownOptionSelection;
-
   // Copied from useConfig.hook.ts:
   // TODO: Potentially dangerous HACK ([0])
   // Might be removed with the API schema change
   // If not, refactor to include all indices
   const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
 
-  if (hasNoRootWrapper) {
+  if (dropdownOptionSelection?.hasNoRootWrapper) {
+    const { isSelectedOption, setIsSelectedOption } = dropdownOptionSelection;
+
     if (!isSelectedOption && isSelectedOptionInRecord) {
       setIsSelectedOption?.(true);
 
@@ -155,7 +154,7 @@ export const shouldSelectDropdownOption = ({
       return false;
     }
   } else {
-    const shouldSelectFirstOption = (!record || hasNoRootWrapper) && firstOfSameType;
+    const shouldSelectFirstOption = (!record || dropdownOptionSelection?.hasNoRootWrapper) && firstOfSameType;
 
     return isSelectedOptionInRecord || shouldSelectFirstOption;
   }
