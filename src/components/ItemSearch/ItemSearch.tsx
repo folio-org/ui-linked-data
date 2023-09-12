@@ -167,7 +167,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       <div>
         <Input
           testid="id-search-input"
-          placeholder={formatMessage({ id: 'marva.search-by-sth' }, { by: searchBy && formatMessage({ id: DisplayIdentifiers[searchBy] }) })}
+          placeholder={formatMessage({ id: 'marva.search-by-sth' }, { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` })}
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}

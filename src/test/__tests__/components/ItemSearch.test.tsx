@@ -17,7 +17,7 @@ describe('Item Search', () => {
     },
   };
 
-  const { getByTestId, findByText } = screen;
+  const { getByTestId, findByText, findByTestId } = screen;
 
   beforeEach(() => {
     getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
@@ -125,9 +125,9 @@ describe('Item Search', () => {
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    const lccnCol = await screen.findByText('LCCN');
-    const isbnCol = await screen.findByText('ISBN');
+    const lccnCol = await findByTestId('th-lccn');
+    const isbnCol = await findByTestId('th-isbn');
 
-    expect(lccnCol.compareDocumentPosition(isbnCol)).toBe(2);
+    expect(lccnCol.compareDocumentPosition(isbnCol)).toBe(4);
   });
 });

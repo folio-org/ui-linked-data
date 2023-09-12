@@ -29,6 +29,7 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }
           {sortedHeaderEntries.map(([key, { label, className }]) => (
             <th
               key={key}
+              data-testid={`th-${key}`}
               className={classNames({ clickable: onHeaderCellClick, [className]: className })}
               onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
             >
