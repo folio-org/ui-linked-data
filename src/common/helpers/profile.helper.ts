@@ -83,27 +83,21 @@ const traverseSchema = ({
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
 
-    const { profile: profileType, block, dropdown, dropdownOption } = AdvancedFieldType;
+    const { profile: profileType, block, dropdownOption } = AdvancedFieldType;
 
     if (IS_NEW_API_ENABLED) {
       if (type === profileType) {
         container.type = profile;
         containerSelector = container;
-      } else if (type === block) {
+      } else if (type === block || shouldHaveRootWrapper) {
         containerSelector = {};
         container[selector] = [containerSelector];
-      } else if (type === dropdown && !hasNoRootElement(uri)) {
-        containerSelector = [];
-        container[selector] = containerSelector;
-      } else if (type === dropdownOption && !shouldHaveRootWrapper) {
+      } else if (type === dropdownOption) {
         containerSelector = {};
         container.push({ [selector]: containerSelector });
       } else if (hasNoRootElement(uri)) {
         containerSelector = container;
         hasRootWrapper = true;
-      } else if (shouldHaveRootWrapper) {
-        containerSelector = {};
-        container[selector] = [containerSelector];
       } else {
         containerSelector = isArray ? [] : {};
         container[selector] = containerSelector;
