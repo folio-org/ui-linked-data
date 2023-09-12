@@ -83,22 +83,34 @@ const traverseSchema = ({
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
 
-    if (IS_NEW_API_ENABLED && type === AdvancedFieldType.profile) {
-      container.type = profile;
-      containerSelector = container;
-    } else {
-      if (IS_NEW_API_ENABLED && hasNoRootElement(uri)) {
+    const { profile: profileType, block, dropdown, dropdownOption } = AdvancedFieldType;
+
+    if (IS_NEW_API_ENABLED) {
+      if (type === profileType) {
+        container.type = profile;
+        containerSelector = container;
+      } else if (type === block) {
+        containerSelector = {};
+        container[selector] = containerSelector;
+      } else if (type === dropdown && !hasNoRootElement(uri)) {
+        containerSelector = [];
+        container[selector] = containerSelector;
+      } else if (type === dropdownOption && !shouldHaveRootWrapper) {
+        containerSelector = {};
+        container.push({ [selector]: containerSelector });
+      } else if (hasNoRootElement(uri)) {
         containerSelector = container;
         hasRootWrapper = true;
+      } else if (shouldHaveRootWrapper) {
+        containerSelector = {};
+        container[selector] = [containerSelector];
       } else {
-        if (shouldHaveRootWrapper) {
-          containerSelector = {};
-          container[selector] = [containerSelector];
-        } else {
-          container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
-          containerSelector = isArray ? container[selector].at(-1) : container[selector];
-        }
+        containerSelector = isArray ? [] : {};
+        container[selector] = containerSelector;
       }
+    } else {
+      container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
+      containerSelector = isArray ? container[selector].at(-1) : container[selector];
     }
 
     children?.forEach(uuid =>
