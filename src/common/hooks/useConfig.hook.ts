@@ -15,6 +15,7 @@ import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
+import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -238,8 +239,7 @@ export const useConfig = () => {
           // TODO: how to avoid circular references when handling META | HIDE
           if (type === AdvancedFieldType.group) return;
 
-          let isSelectedOption = false;
-          const setIsSelectedOption = (value: boolean) => (isSelectedOption = value);
+          const { getValue: getIsSelectedOption, setValue } = useMemoizedValue();
           const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI);
 
           valueTemplateRefs.forEach((item, i) => {
@@ -262,14 +262,14 @@ export const useConfig = () => {
               }),
               dropdownOptionSelection: {
                 hasNoRootWrapper,
-                isSelectedOption,
-                setIsSelectedOption,
+                isSelectedOption: getIsSelectedOption(),
+                setIsSelectedOption: setValue,
               },
             });
           });
 
           // Select the first dropdown option if nothing was selected
-          if (hasNoRootWrapper && !isSelectedOption) {
+          if (hasNoRootWrapper && !getIsSelectedOption()) {
             selectedEntries.push(uuidArray[0]);
           }
 
