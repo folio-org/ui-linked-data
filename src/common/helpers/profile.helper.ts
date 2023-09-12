@@ -91,7 +91,7 @@ const traverseSchema = ({
         containerSelector = container;
       } else if (type === block) {
         containerSelector = {};
-        container[selector] = containerSelector;
+        container[selector] = [containerSelector];
       } else if (type === dropdown && !hasNoRootElement(uri)) {
         containerSelector = [];
         container[selector] = containerSelector;

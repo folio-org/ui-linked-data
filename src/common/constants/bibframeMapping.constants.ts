@@ -30,6 +30,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Identifier': 'http://library.link/identifier/UNKNOWN', // TODO: update when defined
   'http://id.loc.gov/ontologies/bibframe/local': 'http://bibfra.me/vocab/lite/LocalId',
   'http://id.loc.gov/ontologies/bibframe/Ean': 'http://bibfra.me/vocab/identifier/Ean',
+  'http://id.loc.gov/ontologies/bibframe/qualifier': 'http://bibfra.me/vocab/marc/qualifier',
   'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/marc/accessLocation',
   'http://id.loc.gov/ontologies/bibframe/media': 'http://bibfra.me/vocab/marc/media',
   'http://id.loc.gov/ontologies/bibframe/carrier': 'http://bibfra.me/vocab/marc/carrier',
