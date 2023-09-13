@@ -18,6 +18,7 @@ export const useRecordControls = () => {
   const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+  const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
@@ -45,7 +46,7 @@ export const useRecordControls = () => {
   };
 
   const saveRecord = async () => {
-    const parsed = applyUserValues(schema, userValues, initialSchemaKey);
+    const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
     if (!parsed) return;

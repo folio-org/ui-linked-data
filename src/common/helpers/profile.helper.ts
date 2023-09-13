@@ -1,13 +1,20 @@
 // https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 
-import { GROUPS_WITHOUT_ROOT_WRAPPER, GROUP_BY_LEVEL, PROFILE_URIS } from '@common/constants/bibframe.constants';
-import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import {
+  GROUPS_WITHOUT_ROOT_WRAPPER,
+  GROUP_BY_LEVEL,
+  LOOKUPS_WITH_SIMPLE_STRUCTURE,
+  PROFILE_URIS,
+} from '@common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { getLookupLabelKey } from './schema.helper';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
   userValues: UserValues;
+  selectedEntries?: string[];
   container: Record<string, any>;
   key: string;
   index?: number;
@@ -25,16 +32,14 @@ const getNonArrayTypes = () => {
   return nonArrayTypes;
 };
 
-export const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_ROOT_WRAPPER.includes(uri);
-
-export const getLookupLabelKey = (uriBFLite: string | undefined) => {
-  const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
-
-  return uriBFLite ? BFLITE_LABELS_MAP[typedUriBFLite] : BFLITE_URIS.TERM;
-};
+const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_ROOT_WRAPPER.includes(uri);
 
 const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
   const keyName = getLookupLabelKey(uriBFLite);
+
+  if (uriBFLite && LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite)) {
+    return label;
+  }
 
   return IS_NEW_API_ENABLED
     ? {
@@ -52,6 +57,7 @@ const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) =
 const traverseSchema = ({
   schema,
   userValues,
+  selectedEntries = [],
   container,
   key,
   index = 0,
@@ -90,12 +96,27 @@ const traverseSchema = ({
         container.type = profile;
         containerSelector = container;
       } else if (type === block || shouldHaveRootWrapper) {
+        if (type === dropdownOption && !selectedEntries.includes(key)) {
+          // Only fields from the selected option should be processed and saved
+          return;
+        }
+
+        // Groups like "Provision Activity" don't have "block" wrapper,
+        // their child elements like "dropdown options" are placed at the top level,
+        // where any other blocks are placed.
         containerSelector = {};
         container[selector] = [containerSelector];
       } else if (type === dropdownOption) {
+        if (!selectedEntries.includes(key)) {
+          // Only fields from the selected option should be processed and saved
+          return;
+        }
+
         containerSelector = {};
         container.push({ [selector]: containerSelector });
       } else if (hasNoRootElement(uri)) {
+        // Some groups like "Provision Activity" should not have a root node,
+        // and they put their children directly in the block node
         containerSelector = container;
         hasRootWrapper = true;
       } else {
@@ -111,6 +132,7 @@ const traverseSchema = ({
       traverseSchema({
         schema,
         userValues,
+        selectedEntries,
         container: containerSelector,
         key: uuid,
         index: index + 1,
@@ -120,14 +142,23 @@ const traverseSchema = ({
   }
 };
 
-export const applyUserValues = (schema: Map<string, SchemaEntry>, userValues: UserValues, initKey: string | null) => {
+export const applyUserValues = (
+  schema: Map<string, SchemaEntry>,
+  initKey: string | null,
+  userInput: {
+    userValues: UserValues;
+    selectedEntries: string[];
+  },
+) => {
+  const { userValues, selectedEntries } = userInput;
+
   if (!Object.keys(userValues).length || !schema.size || !initKey) {
     return;
   }
 
   const result: Record<string, any> = {};
 
-  traverseSchema({ schema, userValues, container: result, key: initKey });
+  traverseSchema({ schema, userValues, selectedEntries, container: result, key: initKey });
 
   return result;
 };
