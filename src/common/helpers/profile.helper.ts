@@ -36,22 +36,27 @@ const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_RO
 
 const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
   const keyName = getLookupLabelKey(uriBFLite);
+  let value;
 
-  if (uriBFLite && LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite)) {
-    return label;
-  }
-
-  return IS_NEW_API_ENABLED
-    ? {
+  if (IS_NEW_API_ENABLED) {
+    if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)) {
+      value = label;
+    } else {
+      value = {
         [keyName]: [label],
         [BFLITE_URIS.LINK]: [uri],
-      }
-    : // TODO: workaround for the agreed API schema, not the best ?
-      {
-        id: null,
-        label,
-        uri,
       };
+    }
+  } else {
+    // TODO: workaround for the agreed API schema, not the best ?
+    value = {
+      id: null,
+      label,
+      uri,
+    };
+  }
+
+  return value;
 };
 
 const traverseSchema = ({
@@ -179,6 +184,7 @@ export const shouldSelectDropdownOption = ({
   // Might be removed with the API schema change
   // If not, refactor to include all indices
   const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
+  let shouldSelectOption = false;
 
   if (dropdownOptionSelection?.hasNoRootWrapper) {
     const { isSelectedOption, setIsSelectedOption } = dropdownOptionSelection;
@@ -186,13 +192,15 @@ export const shouldSelectDropdownOption = ({
     if (!isSelectedOption && isSelectedOptionInRecord) {
       setIsSelectedOption?.(true);
 
-      return true;
+      shouldSelectOption = true;
     } else {
-      return false;
+      shouldSelectOption = false;
     }
   } else {
     const shouldSelectFirstOption = (!record || dropdownOptionSelection?.hasNoRootWrapper) && firstOfSameType;
 
-    return isSelectedOptionInRecord || shouldSelectFirstOption;
+    shouldSelectOption = isSelectedOptionInRecord || shouldSelectFirstOption;
   }
+
+  return shouldSelectOption;
 };

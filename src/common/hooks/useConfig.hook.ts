@@ -107,13 +107,13 @@ export const useConfig = () => {
           ...oldValue,
           [uuid]: {
             uuid,
-            contents: withContentsSelected?.[uriWithSelector].map((entry: any) => {
-              return typeof entry === 'string'
+            contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
+              typeof entry === 'string'
                 ? {
                     label: entry,
                   }
-                : generateUserValueObject(entry, type, uriBFLite);
-            }),
+                : generateUserValueObject(entry, type, uriBFLite),
+            ),
           },
         }));
 
