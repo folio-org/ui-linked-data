@@ -1,6 +1,7 @@
 // https://redux.js.org/usage/structuring-reducers/normalizing-state-shape
 
 import {
+  COMPLEX_GROUPS,
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
@@ -32,28 +33,23 @@ const getNonArrayTypes = () => {
   return nonArrayTypes;
 };
 
-const hasNoRootElement = (uri: string | undefined) => !!uri && GROUPS_WITHOUT_ROOT_WRAPPER.includes(uri);
+const hasElement = (collection: string[], uri: string | undefined) => !!uri && collection.includes(uri);
 
 const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
-  const keyName = getLookupLabelKey(uriBFLite);
-  let value;
+  // TODO: workaround for the agreed API schema, not the best ?
+  let value: LookupValue = {
+    id: null,
+    label,
+    uri,
+  };
 
   if (IS_NEW_API_ENABLED) {
-    if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)) {
-      value = label;
-    } else {
-      value = {
-        [keyName]: [label],
-        [BFLITE_URIS.LINK]: [uri],
-      };
-    }
-  } else {
-    // TODO: workaround for the agreed API schema, not the best ?
-    value = {
-      id: null,
-      label,
-      uri,
-    };
+    value = LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)
+      ? label
+      : {
+          [getLookupLabelKey(uriBFLite)]: [label],
+          [BFLITE_URIS.LINK]: [uri],
+        };
   }
 
   return value;
@@ -94,13 +90,13 @@ const traverseSchema = ({
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
 
-    const { profile: profileType, block, dropdownOption } = AdvancedFieldType;
+    const { profile: profileType, block, dropdownOption, hidden } = AdvancedFieldType;
 
     if (IS_NEW_API_ENABLED) {
       if (type === profileType) {
         container.type = profile;
         containerSelector = container;
-      } else if (type === block || shouldHaveRootWrapper) {
+      } else if (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) {
         if (type === dropdownOption && !selectedEntries.includes(key)) {
           // Only fields from the selected option should be processed and saved
           return;
@@ -119,7 +115,7 @@ const traverseSchema = ({
 
         containerSelector = {};
         container.push({ [selector]: containerSelector });
-      } else if (hasNoRootElement(uri)) {
+      } else if (type === hidden || hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri)) {
         // Some groups like "Provision Activity" should not have a root node,
         // and they put their children directly in the block node
         containerSelector = container;

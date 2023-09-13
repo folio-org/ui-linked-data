@@ -98,3 +98,5 @@ type DropdownOptionSelection = {
   isSelectedOption: boolean;
   setIsSelectedOption: (value: boolean) => boolean;
 };
+
+type LookupValue = string | Record<string, (string | undefined)[] | string | Nullish> | Nullish;
