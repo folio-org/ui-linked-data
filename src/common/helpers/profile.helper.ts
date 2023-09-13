@@ -90,9 +90,11 @@ const traverseSchema = ({
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
 
-    const { profile: profileType, block, dropdownOption, hidden } = AdvancedFieldType;
+    const { profile: profileType, block, dropdownOption, groupComplex, hidden } = AdvancedFieldType;
 
     if (IS_NEW_API_ENABLED) {
+      const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
+
       if (type === profileType) {
         container.type = profile;
         containerSelector = container;
@@ -115,11 +117,14 @@ const traverseSchema = ({
 
         containerSelector = {};
         container.push({ [selector]: containerSelector });
-      } else if (type === hidden || hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri)) {
+      } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
         // Some groups like "Provision Activity" should not have a root node,
-        // and they put their children directly in the block node
+        // and they put their children directly in the block node.
         containerSelector = container;
-        hasRootWrapper = true;
+
+        if (isGroupWithoutRootWrapper) {
+          hasRootWrapper = true;
+        }
       } else {
         containerSelector = isArray ? [] : {};
         container[selector] = containerSelector;
