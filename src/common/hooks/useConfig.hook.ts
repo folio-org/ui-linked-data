@@ -5,6 +5,7 @@ import { fetchProfiles } from '@common/api/profiles.api';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import {
   CONSTRAINTS,
+  GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
@@ -13,6 +14,8 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
+import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
+import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -55,6 +58,8 @@ export const useConfig = () => {
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
+    dropdownOptionSelection?: DropdownOptionSelection;
+    hasHiddenParent?: boolean;
   };
 
   const traverseProfile = ({
@@ -67,11 +72,12 @@ export const useConfig = () => {
     firstOfSameType = false,
     selectedEntries = [],
     record,
+    dropdownOptionSelection,
+    hasHiddenParent = false,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
-    const isRecordArray = Array.isArray(record);
 
     if (branchEnds.includes(type)) {
       const {
@@ -94,7 +100,7 @@ export const useConfig = () => {
       // TODO: Potentially dangerous HACK ([0])
       // Might be removed with the API schema change
       // If not, refactor to include all indices
-      const withContentsSelected = isRecordArray ? record[0] : record;
+      const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
       withContentsSelected?.[uriWithSelector] &&
@@ -107,14 +113,7 @@ export const useConfig = () => {
                 ? {
                     label: entry,
                   }
-                : {
-                    label: entry.label,
-                    meta: {
-                      parentURI: entry.uri,
-                      uri: entry.uri,
-                      type,
-                    },
-                  },
+                : generateUserValueObject(entry, type, uriBFLite),
             ),
           },
         }));
@@ -171,7 +170,7 @@ export const useConfig = () => {
 
           if (
             type === AdvancedFieldType.dropdownOption &&
-            shouldSelectDropdownOption(uriWithSelector, record, firstOfSameType)
+            shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
           }
@@ -188,6 +187,13 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
+            const isHiddenType = IS_NEW_API_ENABLED && type === AdvancedFieldType.hidden;
+            const selectedRecord = generateRecordForDropdown({
+              record,
+              uriWithSelector,
+              hasRootWrapper: !isHiddenType,
+            });
+
             traverseProfile({
               entry,
               templates,
@@ -195,9 +201,8 @@ export const useConfig = () => {
               path: updatedPath,
               base,
               selectedEntries,
-              record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-                : record?.[uriWithSelector],
+              record: selectedRecord,
+              hasHiddenParent: isHiddenType,
             });
           });
 
@@ -239,25 +244,43 @@ export const useConfig = () => {
           });
 
           // TODO: how to avoid circular references when handling META | HIDE
-          type !== AdvancedFieldType.group &&
-            valueTemplateRefs.forEach((item, i) => {
-              const entry = templates[item];
+          if (type === AdvancedFieldType.group) return;
 
-              traverseProfile({
-                entry,
-                auxType:
-                  type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
-                templates,
-                uuid: uuidArray[i],
-                path: updatedPath,
-                base,
-                firstOfSameType: i === 0,
-                selectedEntries,
-                record: isRecordArray
-                  ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-                  : record?.[uriWithSelector],
-              });
+          const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
+          const hasNoRootWrapper =
+            IS_NEW_API_ENABLED && (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent);
+
+          valueTemplateRefs.forEach((item, i) => {
+            const entry = templates[item];
+            const selectedRecord = generateRecordForDropdown({
+              record,
+              uriWithSelector,
+              hasRootWrapper: !hasNoRootWrapper,
             });
+
+            traverseProfile({
+              entry,
+              auxType:
+                type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+              templates,
+              uuid: uuidArray[i],
+              path: updatedPath,
+              base,
+              firstOfSameType: i === 0,
+              selectedEntries,
+              record: selectedRecord,
+              dropdownOptionSelection: {
+                hasNoRootWrapper,
+                isSelectedOption: getIsSelectedOption(),
+                setIsSelectedOption: setValue,
+              },
+            });
+          });
+
+          // Select the first dropdown option if nothing was selected
+          if (hasNoRootWrapper && !getIsSelectedOption()) {
+            selectedEntries.push(uuidArray[0]);
+          }
 
           return;
         }

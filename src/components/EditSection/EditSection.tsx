@@ -34,7 +34,7 @@ export const EditSection = memo(() => {
 
     const autoSaveRecord = setInterval(() => {
       try {
-        const parsed = applyUserValues(schema, userValues, initialSchemaKey);
+        const parsed = applyUserValues(schema, initialSchemaKey, { userValues, selectedEntries });
 
         if (!parsed) return;
 

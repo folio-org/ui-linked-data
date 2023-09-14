@@ -28,3 +28,9 @@ export const CONSTRAINTS: Constraints = {
 };
 
 export const GROUP_BY_LEVEL = 2;
+
+export const GROUPS_WITHOUT_ROOT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/provisionActivity'];
+
+export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/marc/issuance'];
+
+export const COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/electronicLocator'];

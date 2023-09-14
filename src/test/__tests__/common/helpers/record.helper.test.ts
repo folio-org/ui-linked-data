@@ -2,6 +2,8 @@ import * as RecordHelper from '@common/helpers/record.helper';
 import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
 import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
+import * as FeatureConstants from '@common/constants/feature.constants';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('record.helper', () => {
   const profile = 'test:profile:id';
@@ -18,8 +20,11 @@ describe('record.helper', () => {
     data: record,
   };
 
+  const mockImportedConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
+
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
+    mockImportedConstant(false);
   });
 
   test('formatRecord - returns formatted record data', () => {

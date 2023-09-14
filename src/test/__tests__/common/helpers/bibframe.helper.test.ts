@@ -1,13 +1,9 @@
 import { getMappedBFLiteUri } from '@src/common/helpers/bibframe.helper';
 import * as BibframeMappingConstants from '@src/common/constants/bibframeMapping.constants';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('bibframe.helper', () => {
-  const mockImportedConstant = (value: Record<string, string | object>) => {
-    Object.defineProperty(BibframeMappingConstants, 'BF2_TO_BFLITE_MAP', {
-      value,
-      writable: true,
-    });
-  };
+  const mockImportedConstant = getMockedImportedConstant(BibframeMappingConstants, 'BF2_TO_BFLITE_MAP');
 
   describe('getMappedBFLiteUri', () => {
     test('returns undefined', () => {

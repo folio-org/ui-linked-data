@@ -2,12 +2,12 @@ import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 
 describe('profile.helper', () => {
   describe('shouldSelectDropdownOption', () => {
-    const resourceURI = 'testUri';
+    const uri = 'testUri';
 
     test('returns true for the first dropdown option', () => {
       const firstOfSameType = true;
 
-      const result = shouldSelectDropdownOption(resourceURI, undefined, firstOfSameType);
+      const result = shouldSelectDropdownOption({ uri, firstOfSameType });
 
       expect(result).toBeTruthy();
     });
@@ -16,13 +16,13 @@ describe('profile.helper', () => {
       const firstOfSameType = false;
       const record = [{ testUri: {} }];
 
-      const result = shouldSelectDropdownOption(resourceURI, record, firstOfSameType);
+      const result = shouldSelectDropdownOption({ uri, record, firstOfSameType });
 
       expect(result).toBeTruthy();
     });
 
     test('returns false', () => {
-      const result = shouldSelectDropdownOption(resourceURI);
+      const result = shouldSelectDropdownOption({ uri });
 
       expect(result).toBeFalsy();
     });
