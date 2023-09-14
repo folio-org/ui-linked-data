@@ -187,15 +187,13 @@ export const shouldSelectDropdownOption = ({
   const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
   let shouldSelectOption = false;
 
-  if (dropdownOptionSelection?.hasNoRootWrapper) {
+  if (IS_NEW_API_ENABLED && dropdownOptionSelection?.hasNoRootWrapper) {
     const { isSelectedOption, setIsSelectedOption } = dropdownOptionSelection;
 
-    if (!isSelectedOption && isSelectedOptionInRecord) {
-      setIsSelectedOption?.(true);
+    shouldSelectOption = !isSelectedOption && isSelectedOptionInRecord;
 
-      shouldSelectOption = true;
-    } else {
-      shouldSelectOption = false;
+    if (shouldSelectOption) {
+      setIsSelectedOption?.(true);
     }
   } else {
     const shouldSelectFirstOption = (!record || dropdownOptionSelection?.hasNoRootWrapper) && firstOfSameType;
