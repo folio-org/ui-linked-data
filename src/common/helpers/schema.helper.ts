@@ -11,8 +11,8 @@ export const getLookupLabelKey = (uriBFLite: string | undefined) => {
 export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite: string | undefined) => {
   const keyName = getLookupLabelKey(uriBFLite);
   const { uri: entryUri, label: entryLabel } = entry;
-  const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entryLabel;
-  let label = entryUri;
+  const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entryUri;
+  let label = entryLabel;
 
   if (IS_NEW_API_ENABLED) {
     label = Array.isArray(entry[keyName]) ? entry[keyName][0] : entry[keyName];

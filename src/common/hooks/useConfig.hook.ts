@@ -187,7 +187,7 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
-            const isHiddenType = type === AdvancedFieldType.hidden;
+            const isHiddenType = IS_NEW_API_ENABLED && type === AdvancedFieldType.hidden;
             const selectedRecord = generateRecordForDropdown({
               record,
               uriWithSelector,
@@ -247,7 +247,8 @@ export const useConfig = () => {
           if (type === AdvancedFieldType.group) return;
 
           const { getValue: getIsSelectedOption, setValue } = useMemoizedValue();
-          const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent;
+          const hasNoRootWrapper =
+            IS_NEW_API_ENABLED && (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent);
 
           valueTemplateRefs.forEach((item, i) => {
             const entry = templates[item];
