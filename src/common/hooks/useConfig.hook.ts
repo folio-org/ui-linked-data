@@ -59,6 +59,7 @@ export const useConfig = () => {
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
     dropdownOptionSelection?: DropdownOptionSelection;
+    hasHiddenParent?: boolean;
   };
 
   const traverseProfile = ({
@@ -72,6 +73,7 @@ export const useConfig = () => {
     selectedEntries = [],
     record,
     dropdownOptionSelection,
+    hasHiddenParent = false,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -186,6 +188,18 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
+            let selectedRecord;
+            let isHiddenNode = false;
+
+            if (type === AdvancedFieldType.hidden) {
+              selectedRecord = record;
+              isHiddenNode = true;
+            } else {
+              selectedRecord = isRecordArray
+                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+                : record?.[uriWithSelector];
+            }
+
             traverseProfile({
               entry,
               templates,
@@ -193,9 +207,8 @@ export const useConfig = () => {
               path: updatedPath,
               base,
               selectedEntries,
-              record: isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-                : record?.[uriWithSelector],
+              record: selectedRecord,
+              hasHiddenParent: isHiddenNode,
             });
           });
 
@@ -244,6 +257,13 @@ export const useConfig = () => {
 
           valueTemplateRefs.forEach((item, i) => {
             const entry = templates[item];
+            const selectedRecord = hasHiddenParent
+              ? record
+              : generateRecordForDropdown({
+                  record,
+                  uriWithSelector,
+                  hasNoRootWrapper,
+                });
 
             traverseProfile({
               entry,
@@ -255,11 +275,7 @@ export const useConfig = () => {
               base,
               firstOfSameType: i === 0,
               selectedEntries,
-              record: generateRecordForDropdown({
-                record,
-                uriWithSelector,
-                hasNoRootWrapper,
-              }),
+              record: selectedRecord,
               dropdownOptionSelection: {
                 hasNoRootWrapper,
                 isSelectedOption: getIsSelectedOption(),
