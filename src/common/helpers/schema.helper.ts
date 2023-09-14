@@ -28,6 +28,14 @@ export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uri
   };
 };
 
+export const getSelectedRecord = (uriWithSelector: string, record?: Record<string, any> | Array<any> | undefined) => {
+  const isRecordArray = Array.isArray(record);
+
+  return isRecordArray
+    ? record?.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
+    : record?.[uriWithSelector];
+};
+
 export const generateRecordForDropdown = ({
   record,
   uriWithSelector,
@@ -36,17 +44,4 @@ export const generateRecordForDropdown = ({
   record: Record<string, any> | Array<any> | undefined;
   uriWithSelector: string;
   hasNoRootWrapper: boolean;
-}) => {
-  const isRecordArray = Array.isArray(record);
-  let recordData;
-
-  if (hasNoRootWrapper) {
-    recordData = record;
-  } else {
-    recordData = isRecordArray
-      ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-      : record?.[uriWithSelector];
-  }
-
-  return recordData;
-};
+}) => (hasNoRootWrapper ? record : getSelectedRecord(uriWithSelector, record));

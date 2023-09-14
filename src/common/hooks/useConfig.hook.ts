@@ -78,7 +78,6 @@ export const useConfig = () => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
-    const isRecordArray = Array.isArray(record);
 
     if (branchEnds.includes(type)) {
       const {
@@ -101,7 +100,7 @@ export const useConfig = () => {
       // TODO: Potentially dangerous HACK ([0])
       // Might be removed with the API schema change
       // If not, refactor to include all indices
-      const withContentsSelected = isRecordArray ? record[0] : record;
+      const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
       withContentsSelected?.[uriWithSelector] &&
@@ -188,17 +187,12 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
-            let selectedRecord;
-            let isHiddenNode = false;
-
-            if (type === AdvancedFieldType.hidden) {
-              selectedRecord = record;
-              isHiddenNode = true;
-            } else {
-              selectedRecord = isRecordArray
-                ? record.find(entry => Object.keys(entry).includes(uriWithSelector))?.[uriWithSelector]
-                : record?.[uriWithSelector];
-            }
+            const isHiddenType = type === AdvancedFieldType.hidden;
+            const selectedRecord = generateRecordForDropdown({
+              record,
+              uriWithSelector,
+              hasNoRootWrapper: isHiddenType,
+            });
 
             traverseProfile({
               entry,
@@ -208,7 +202,7 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: selectedRecord,
-              hasHiddenParent: isHiddenNode,
+              hasHiddenParent: isHiddenType,
             });
           });
 
@@ -253,17 +247,15 @@ export const useConfig = () => {
           if (type === AdvancedFieldType.group) return;
 
           const { getValue: getIsSelectedOption, setValue } = useMemoizedValue();
-          const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI);
+          const hasNoRootWrapper = GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent;
 
           valueTemplateRefs.forEach((item, i) => {
             const entry = templates[item];
-            const selectedRecord = hasHiddenParent
-              ? record
-              : generateRecordForDropdown({
-                  record,
-                  uriWithSelector,
-                  hasNoRootWrapper,
-                });
+            const selectedRecord = generateRecordForDropdown({
+              record,
+              uriWithSelector,
+              hasNoRootWrapper,
+            });
 
             traverseProfile({
               entry,
