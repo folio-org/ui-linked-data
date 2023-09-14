@@ -36,9 +36,9 @@ export const getSelectedRecord = (uriWithSelector: string, record?: Record<strin
 export const generateRecordForDropdown = ({
   record,
   uriWithSelector,
-  hasNoRootWrapper,
+  hasRootWrapper,
 }: {
   record: Record<string, any> | Array<any> | undefined;
   uriWithSelector: string;
-  hasNoRootWrapper: boolean;
-}) => (hasNoRootWrapper ? record : getSelectedRecord(uriWithSelector, record));
+  hasRootWrapper: boolean;
+}) => (hasRootWrapper ? getSelectedRecord(uriWithSelector, record) : record);

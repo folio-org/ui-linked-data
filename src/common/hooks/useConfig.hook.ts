@@ -191,7 +191,7 @@ export const useConfig = () => {
             const selectedRecord = generateRecordForDropdown({
               record,
               uriWithSelector,
-              hasNoRootWrapper: isHiddenType,
+              hasRootWrapper: !isHiddenType,
             });
 
             traverseProfile({
@@ -246,7 +246,7 @@ export const useConfig = () => {
           // TODO: how to avoid circular references when handling META | HIDE
           if (type === AdvancedFieldType.group) return;
 
-          const { getValue: getIsSelectedOption, setValue } = useMemoizedValue();
+          const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
           const hasNoRootWrapper =
             IS_NEW_API_ENABLED && (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent);
 
@@ -255,7 +255,7 @@ export const useConfig = () => {
             const selectedRecord = generateRecordForDropdown({
               record,
               uriWithSelector,
-              hasNoRootWrapper,
+              hasRootWrapper: !hasNoRootWrapper,
             });
 
             traverseProfile({

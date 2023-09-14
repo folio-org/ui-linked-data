@@ -1,8 +1,8 @@
-export const useMemoizedValue = () => {
-  let value = false;
+export const useMemoizedValue = <T>(defaultValue: T) => {
+  let value = defaultValue;
 
   const getValue = () => value;
-  const setValue = (newValue: boolean) => (value = newValue);
+  const setValue = (newValue: T) => (value = newValue);
 
   return { getValue, setValue };
 };
