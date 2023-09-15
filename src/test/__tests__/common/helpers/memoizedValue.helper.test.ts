@@ -6,16 +6,21 @@ describe('memoizedValue.helper', () => {
   test('useMemoizedValue - get default value', () => {
     const { getValue } = useMemoizedValue(defaultValue);
 
-    expect(getValue()).toBe(defaultValue);
+    const result = getValue();
+
+    expect(result).toBe(defaultValue);
   });
 
   test('useMemoizedValue - update value', () => {
     const updatedValue = true;
     const { getValue, setValue } = useMemoizedValue(defaultValue);
 
-    expect(getValue()).toBe(defaultValue);
+    const defaultResult = getValue();
+    expect(defaultResult).toBe(defaultValue);
 
     setValue(updatedValue);
-    expect(getValue()).toBe(updatedValue);
+    const updatedResult = getValue();
+
+    expect(updatedResult).toBe(updatedValue);
   });
 });

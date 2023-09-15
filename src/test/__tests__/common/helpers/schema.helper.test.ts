@@ -124,7 +124,7 @@ describe('schema.helper', () => {
   });
 
   describe('generateRecordForDropdown', () => {
-    test('returns the entire record', () => {
+    test('returns the original record', () => {
       const record = { testKey: 'value' };
       const uriWithSelector = 'testUri';
       const hasRootWrapper = false;
