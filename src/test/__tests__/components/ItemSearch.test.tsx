@@ -4,6 +4,7 @@ import { RecoilRoot } from 'recoil';
 import { itemSearchMockData } from '../common/helpers/search.helper.test';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
+import { BrowserRouter } from 'react-router-dom';
 
 let getByIdentifierMock: jest.SpyInstance<Promise<any>, [id: string, query: string], any>;
 
@@ -24,8 +25,10 @@ describe('Item Search', () => {
 
     render(
       <RecoilRoot>
-        <CommonStatus />
-        <ItemSearch fetchRecord={fetchRecord} />
+        <BrowserRouter>
+          <CommonStatus />
+          <ItemSearch fetchRecord={fetchRecord} />
+        </BrowserRouter>
       </RecoilRoot>,
     );
   });

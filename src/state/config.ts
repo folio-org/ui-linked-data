@@ -23,7 +23,7 @@ const initialSchemaKey = atom<string | null>({
   default: null,
 });
 
-const schema = atom<Map<string, any>>({
+const schema = atom<Map<string, SchemaEntry>>({
   key: 'config.schema',
   default: new Map(),
 });
@@ -38,6 +38,11 @@ const locale = atom<typeof LOCALES[keyof typeof LOCALES]>({
   default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH,
 })
 
+const collectRecordDataForPreview = atom<boolean>({
+  key: 'config.collectRecordDataForPreview',
+  default: false,
+});
+
 export default {
   profiles,
   selectedProfile,
@@ -46,4 +51,5 @@ export default {
   initialSchemaKey,
   selectedEntries,
   locale,
+  collectRecordDataForPreview,
 };

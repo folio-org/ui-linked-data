@@ -4,6 +4,10 @@
   font-weight: 400;
   overflow: hidden;
 
+  button {
+    all: revert;
+  }
+
   a {
     font-weight: 500;
     color: #646cff;
@@ -43,6 +47,10 @@
     font-family: inherit;
     cursor: pointer;
     transition: border-color 0.25s;
+
+    &:disabled {
+      filter: grayscale(100%);
+    }
   }
   button:hover {
     border-color: #646cff;

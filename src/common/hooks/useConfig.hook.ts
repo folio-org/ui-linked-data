@@ -25,6 +25,7 @@ export const useConfig = () => {
   const setSchema = useSetRecoilState(state.config.schema);
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
+  const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -60,6 +61,7 @@ export const useConfig = () => {
     record?: Record<string, any> | Array<any>;
     dropdownOptionSelection?: DropdownOptionSelection;
     hasHiddenParent?: boolean;
+    userValues?: UserValues;
   };
 
   const traverseProfile = ({
@@ -74,6 +76,7 @@ export const useConfig = () => {
     record,
     dropdownOptionSelection,
     hasHiddenParent = false,
+    userValues,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -103,20 +106,19 @@ export const useConfig = () => {
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
-      withContentsSelected?.[uriWithSelector] &&
-        setUserValues(oldValue => ({
-          ...oldValue,
-          [uuid]: {
-            uuid,
-            contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
-              typeof entry === 'string'
-                ? {
-                    label: entry,
-                  }
-                : generateUserValueObject(entry, type, uriBFLite),
-            ),
-          },
-        }));
+
+      if (withContentsSelected?.[uriWithSelector] && userValues) {
+        userValues[uuid] = {
+          uuid,
+          contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
+            typeof entry === 'string'
+              ? {
+                  label: entry,
+                }
+              : generateUserValueObject(entry, type, uriBFLite),
+          ),
+        };
+      }
 
       base.set(uuid, {
         uuid,
@@ -152,6 +154,7 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record,
+              userValues,
             });
           });
 
@@ -203,6 +206,7 @@ export const useConfig = () => {
               selectedEntries,
               record: selectedRecord,
               hasHiddenParent: isHiddenType,
+              userValues,
             });
           });
 
@@ -269,6 +273,7 @@ export const useConfig = () => {
               firstOfSameType: i === 0,
               selectedEntries,
               record: selectedRecord,
+              userValues,
               dropdownOptionSelection: {
                 hasNoRootWrapper,
                 isSelectedOption: getIsSelectedOption(),
@@ -308,6 +313,7 @@ export const useConfig = () => {
     const base = new Map();
     const initKey = uuidv4();
     const selectedEntries: Array<string> = [];
+    const userValues: UserValues = {};
 
     traverseProfile({
       entry: profile,
@@ -316,16 +322,24 @@ export const useConfig = () => {
       base,
       selectedEntries,
       record,
+      userValues,
     });
 
+    setUserValues(userValues);
     setInitialSchemaKey(initKey);
     setSelectedEntries(selectedEntries);
     setSchema(base);
 
-    return base;
+    return { base, userValues, initKey };
   };
 
-  const getProfiles = async (record?: RecordEntryDeprecated): Promise<any> => {
+  type GetProfiles = {
+    record?: RecordEntryDeprecated;
+    recordId?: string;
+    asPreview?: boolean;
+  };
+
+  const getProfiles = async ({ record, recordId, asPreview }: GetProfiles): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
@@ -333,10 +347,20 @@ export const useConfig = () => {
 
     setProfiles(response);
     setSelectedProfile(monograph);
-    // Purge user values
     setUserValues({});
 
-    buildSchema(monograph, templates, record || {});
+    const { base, userValues, initKey } = buildSchema(monograph, templates, record || {});
+
+    asPreview &&
+      recordId &&
+      setPreviewContent(prev => ({
+        ...prev,
+        [recordId]: {
+          base,
+          userValues,
+          initKey,
+        },
+      }));
 
     return response;
   };
