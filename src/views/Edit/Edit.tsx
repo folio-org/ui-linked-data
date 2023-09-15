@@ -10,6 +10,7 @@ import { Preview } from '@components/Preview';
 import { Properties } from '@components/Properties';
 import './Edit.scss';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { RecordControls } from '@components/RecordControls';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
@@ -25,14 +26,17 @@ export const Edit = () => {
     const typedRecord = record as unknown as RecordEntryDeprecated;
 
     typedRecord && setRecord(typedRecord);
-    getProfiles(typedRecord);
+    getProfiles({ record: typedRecord });
   };
 
   return selectedProfile ? (
     <div data-testid="edit-page" className="edit-page">
       <Properties />
       <EditSection />
-      <Preview />
+      <div>
+        <Preview />
+        <RecordControls />
+      </div>
     </div>
   ) : (
     <div>

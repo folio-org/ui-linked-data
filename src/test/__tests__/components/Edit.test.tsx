@@ -59,7 +59,7 @@ describe('Edit', () => {
     test('gets profiles without saved record', async () => {
       fireEvent.click(screen.getByTestId('start-from-scratch'));
 
-      expect(getProfiles).toHaveBeenCalledWith(null);
+      expect(getProfiles).toHaveBeenCalledWith({ record: null });
     });
 
     test('gets profiles with saved record', async () => {
@@ -72,9 +72,11 @@ describe('Edit', () => {
       fireEvent.click(screen.getByTestId('start-from-scratch'));
 
       expect(getProfiles).toHaveBeenCalledWith({
-        id: DEFAULT_RECORD_ID,
-        profile: PROFILE_IDS.MONOGRAPH,
-        ...mockContents,
+        record: {
+          id: DEFAULT_RECORD_ID,
+          profile: PROFILE_IDS.MONOGRAPH,
+          ...mockContents,
+        },
       });
     });
   });

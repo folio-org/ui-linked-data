@@ -22,26 +22,32 @@ export const useRecordControls = () => {
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
   const currentRecordId = record?.id;
 
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
 
-  const fetchRecord = async (recordId: string) => {
+  const fetchRecord = async (recordId: string, asPreview = false) => {
     try {
       const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
-      const recordData: RecordEntryDeprecated = locallySavedData
+      const recordData: RecordEntryDeprecated = (locallySavedData && !asPreview)
         ? { id: recordId, profile, ...locallySavedData.data[profile] }
         : await getRecord({ recordId });
 
       setRecord(recordData);
-      getProfiles(recordData);
+      getProfiles({ record: recordData, recordId, asPreview });
 
-      navigate(ROUTES.EDIT.uri);
-    } catch (err) {
-      console.error('Error fetching record: ', err);
+      !asPreview && navigate(ROUTES.EDIT.uri);
+    } catch (_err) {
+      console.error('Error fetching record.');
+
+      setStatusMessages(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
+      ]);
     }
   };
 

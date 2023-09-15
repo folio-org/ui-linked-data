@@ -3,12 +3,13 @@ import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { FullDisplay } from '@components/FullDisplay';
 import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
 import state from '@state';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
 
 export enum Identifiers {
@@ -56,7 +57,7 @@ const initHeader: Row = {
 };
 
 type ItemSearch = {
-  fetchRecord: (id: string) => Promise<void>;
+  fetchRecord: (id: string, collectPreviewValues?: boolean) => Promise<void>;
 };
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
@@ -66,7 +67,22 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [message, setMessage] = useState('');
   const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
+
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    // apply disabled/enabled state to row action items
+    data && setData(applyRowActionItems(data));
+  }, [previewContent]);
+
+  useEffect(
+    () => () => {
+      // clear out preview content on page leave
+      !data && setPreviewContent({});
+    },
+    [data],
+  );
 
   const clearMessage = () => message && setMessage('');
 
@@ -83,7 +99,9 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
             setSearchBy(id);
           }}
         />
-        <label htmlFor={id}><FormattedMessage id={DisplayIdentifiers[id]} /></label>
+        <label htmlFor={id}>
+          <FormattedMessage id={DisplayIdentifiers[id]} />
+        </label>
       </div>
     ));
 
@@ -104,6 +122,18 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         children: (
           <div className="action-items__container">
             <button
+              onClick={ev => {
+                ev.stopPropagation();
+
+                const recordId: string = (row.__meta as Record<string, any>).id;
+
+                fetchRecord(recordId, true);
+              }}
+              disabled={Object.keys(previewContent).length > 1}
+            >
+              ℹ️
+            </button>
+            <button
               data-testid="edit-button"
               onClick={ev => {
                 ev.stopPropagation();
@@ -111,14 +141,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
                 fetchRecord((row.__meta as Record<string, any>).id);
               }}
             >
-              &#9997;
-            </button>
-            <button
-              onClick={ev => {
-                ev.stopPropagation();
-              }}
-            >
-              &#128064;
+              ✏️
             </button>
           </div>
         ),
@@ -167,7 +190,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       <div>
         <Input
           testid="id-search-input"
-          placeholder={formatMessage({ id: 'marva.search-by-sth' }, { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` })}
+          placeholder={formatMessage(
+            { id: 'marva.search-by-sth' },
+            { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` },
+          )}
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
@@ -187,6 +213,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
           data && <Table onRowClick={onRowClick} header={header} data={data} />
         )}
       </div>
+      <FullDisplay />
     </div>
   );
 };
