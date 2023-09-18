@@ -13,8 +13,11 @@ export const FullDisplay = () => {
       {Object.entries(previewContent).map(([key, { base, userValues, initKey }]) => (
         <div key={key}>
           <div className="full-display-controls">
-            <button onClick={() => fetchRecord(key)}>✏️</button>
+            <button data-testid="preview-fetch" onClick={() => fetchRecord(key)}>
+              ✏️
+            </button>
             <button
+              data-testid="preview-remove"
               onClick={() => {
                 const { [key]: _, ...withoutKey } = previewContent;
                 setPreviewContent(withoutKey);
@@ -23,7 +26,11 @@ export const FullDisplay = () => {
               ❌
             </button>
           </div>
-          <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless />
+          {Object.keys(userValues).length ? (
+            <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless />
+          ) : (
+            <div>Resource description {key} is empty</div>
+          )}
         </div>
       ))}
     </div>

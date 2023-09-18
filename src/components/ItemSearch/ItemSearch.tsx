@@ -76,13 +76,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     data && setData(applyRowActionItems(data));
   }, [previewContent]);
 
-  useEffect(
-    () => () => {
-      // clear out preview content on page leave
-      !data && setPreviewContent({});
-    },
-    [data],
-  );
+  useEffect(() => {
+    // clear out preview content on page load
+    !data && setPreviewContent({});
+  }, [])
 
   const clearMessage = () => message && setMessage('');
 
@@ -115,7 +112,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     setQuery(value);
   };
 
-  const applyRowActionItems = (rows: Row[]): Row[] =>
+  // state update is not always reflected in the fn
+  // alternatively, pass a flag to manually enable the icons
+  // even if the preview content hasn't been flushed yet
+  const applyRowActionItems = (rows: Row[], infoButtonDisabled?: boolean): Row[] =>
     rows.map(row => ({
       ...row,
       actionItems: {
@@ -129,7 +129,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
                 fetchRecord(recordId, true);
               }}
-              disabled={Object.keys(previewContent).length > 1}
+              disabled={infoButtonDisabled ?? Object.keys(previewContent).length > 1}
             >
               ℹ️
             </button>
@@ -164,6 +164,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     if (!query) return;
 
     clearMessage();
+    setPreviewContent({});
     data && setData(null);
 
     try {
@@ -172,7 +173,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       if (!result.content.length) return setMessage('marva.search-no-rds-match');
 
       swapIdentifiers();
-      setData(applyRowActionItems(formatKnownItemSearchData(result)));
+      setData(applyRowActionItems(formatKnownItemSearchData(result), false));
     } catch (e) {
       setStatusMessages(currentStatus => [
         ...currentStatus,
