@@ -4,9 +4,11 @@ import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import {
+  COMPLEX_GROUPS_WITHOUT_WRAPPER,
   CONSTRAINTS,
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
+  HIDDEN_WRAPPERS,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
 } from '@common/constants/bibframe.constants';
@@ -190,7 +192,8 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
-            const isHiddenType = IS_NEW_API_ENABLED && type === AdvancedFieldType.hidden;
+            const isHiddenType =
+              IS_NEW_API_ENABLED && (type === AdvancedFieldType.hidden || HIDDEN_WRAPPERS.includes(resourceURI));
             const selectedRecord = generateRecordForDropdown({
               record,
               uriWithSelector,
@@ -252,7 +255,10 @@ export const useConfig = () => {
 
           const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
           const hasNoRootWrapper =
-            IS_NEW_API_ENABLED && (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) || hasHiddenParent);
+            IS_NEW_API_ENABLED &&
+            (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
+              COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
+              hasHiddenParent);
 
           valueTemplateRefs.forEach((item, i) => {
             const entry = templates[item];

@@ -34,3 +34,7 @@ export const GROUPS_WITHOUT_ROOT_WRAPPER = ['http://id.loc.gov/ontologies/bibfra
 export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/marc/issuance'];
 
 export const COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/electronicLocator'];
+
+export const HIDDEN_WRAPPERS = ['http://www.w3.org/2000/01/rdf-schema#label'];
+
+export const COMPLEX_GROUPS_WITHOUT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/note'];
