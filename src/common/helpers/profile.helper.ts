@@ -33,9 +33,9 @@ const getNonArrayTypes = () => {
   return nonArrayTypes;
 };
 
-const hasElement = (collection: string[], uri: string | undefined) => !!uri && collection.includes(uri);
+export const hasElement = (collection: string[], uri?: string) => !!uri && collection.includes(uri);
 
-const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
+export const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
   // TODO: workaround for the agreed API schema, not the best ?
   let value: LookupValue = {
     id: null,
