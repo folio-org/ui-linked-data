@@ -1,6 +1,6 @@
 import { ItemSearchResponse } from '@common/api/search.api';
-import { Identifiers } from '@components/ItemSearch/ItemSearch';
 import { Row } from '@components/Table';
+import { Identifiers } from '@common/constants/search.constants';
 import { alphabeticSortLabel } from './common.helper';
 
 const __TEMP_RESULT_MAX_AMOUNT = 10;

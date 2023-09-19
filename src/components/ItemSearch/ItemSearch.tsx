@@ -1,28 +1,17 @@
+import { useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { Identifiers } from '@common/constants/search.constants';
+import SearchControls from '@components/SearchControls/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
-import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
 import state from '@state';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
-
-export enum Identifiers {
-  ISBN = 'isbn',
-  LCCN = 'lccn',
-  TITLE = 'title',
-}
-
-enum DisplayIdentifiers {
-  isbn = 'marva.isbn',
-  lccn = 'marva.lccn',
-  title = 'marva.title',
-}
 
 const initHeader: Row = {
   actionItems: {
@@ -69,8 +58,6 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
 
-  const { formatMessage } = useIntl();
-
   useEffect(() => {
     // apply disabled/enabled state to row action items
     data && setData(applyRowActionItems(data));
@@ -79,38 +66,9 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   useEffect(() => {
     // clear out preview content on page load
     !data && setPreviewContent({});
-  }, [])
+  }, []);
 
   const clearMessage = () => message && setMessage('');
-
-  const drawControls = () =>
-    Object.values(Identifiers).map(id => (
-      <div key={id}>
-        <input
-          data-testid={id}
-          id={id}
-          type="radio"
-          checked={searchBy === id}
-          onChange={() => {
-            clearMessage();
-            setSearchBy(id);
-          }}
-        />
-        <label htmlFor={id}>
-          <FormattedMessage id={DisplayIdentifiers[id]} />
-        </label>
-      </div>
-    ));
-
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (!searchBy) {
-      return setMessage('marva.search-select-index');
-    }
-
-    clearMessage();
-
-    setQuery(value);
-  };
 
   // state update is not always reflected in the fn
   // alternatively, pass a flag to manually enable the icons
@@ -174,7 +132,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
       swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result), false));
-    } catch (e) {
+    } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
@@ -187,25 +145,16 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       <strong>
         <FormattedMessage id="marva.search-by" />
       </strong>
-      <div className="search-controls">{drawControls()}</div>
+      <SearchControls
+        searchBy={searchBy}
+        setSearchBy={setSearchBy}
+        query={query}
+        setQuery={setQuery}
+        setMessage={setMessage}
+        clearMessage={clearMessage}
+        fetchData={fetchData}
+      />
       <div>
-        <Input
-          testid="id-search-input"
-          placeholder={formatMessage(
-            { id: 'marva.search-by-sth' },
-            { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` },
-          )}
-          className="search-input"
-          value={query}
-          onChange={onChangeSearchInput}
-        />
-        <button
-          data-testid="id-search-button"
-          onClick={() => searchBy && fetchData(searchBy, query)}
-          disabled={!query || !searchBy}
-        >
-          <FormattedMessage id="marva.search" />
-        </button>
         {message ? (
           <div>
             <FormattedMessage id={message} />
