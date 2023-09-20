@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
@@ -7,7 +7,7 @@ import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { Identifiers } from '@common/constants/search.constants';
-import SearchControls from '@components/SearchControls/SearchControls';
+import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
 import state from '@state';
@@ -68,7 +68,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     !data && setPreviewContent({});
   }, []);
 
-  const clearMessage = () => message && setMessage('');
+  const clearMessage = useCallback(() => message && setMessage(''), [message]);
 
   // state update is not always reflected in the fn
   // alternatively, pass a flag to manually enable the icons

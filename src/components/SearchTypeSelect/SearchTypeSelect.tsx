@@ -9,7 +9,7 @@ type Props = {
 };
 
 const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) => (
-  <div className="search-controls">
+  <div data-testid="id-search-type-select" className="search-controls">
     {Object.values(Identifiers).map(id => (
       <div key={id}>
         <input

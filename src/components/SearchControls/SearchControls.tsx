@@ -19,7 +19,8 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     if (!searchBy) {
-      return setMessage('marva.search-select-index');
+      setMessage('marva.search-select-index');
+      return;
     }
 
     clearMessage();
@@ -29,7 +30,7 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
   const onClickSearchButton = () => searchBy && fetchData(searchBy, query);
 
   return (
-    <>
+    <div data-testid="id-search-controls">
       <SearchTypeSelect searchBy={searchBy} setSearchBy={setSearchBy} clearMessage={clearMessage} />
       <div>
         <Input
@@ -46,7 +47,7 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
           <FormattedMessage id="marva.search" />
         </button>
       </div>
-    </>
+    </div>
   );
 };
 
