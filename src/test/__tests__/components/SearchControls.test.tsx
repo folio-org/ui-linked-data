@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SearchControls } from '@components/SearchControls';
-import { Identifiers } from '@common/constants/search.constants';
+import { SearchIdentifiers } from '@common/constants/search.constants';
 
 describe('SearchControls', () => {
   const { getByTestId } = screen;
@@ -11,7 +11,7 @@ describe('SearchControls', () => {
   const fetchData = jest.fn();
 
   const props = {
-    searchBy: 'test search by' as Identifiers | null,
+    searchBy: 'test search by' as SearchIdentifiers | null,
     query: 'test query',
     setSearchBy,
     setQuery,

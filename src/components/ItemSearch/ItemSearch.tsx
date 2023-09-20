@@ -6,7 +6,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { Identifiers } from '@common/constants/search.constants';
+import { SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
@@ -50,7 +50,7 @@ type ItemSearch = {
 };
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
-  const [searchBy, setSearchBy] = useState<Identifiers | null>(null);
+  const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
   const [message, setMessage] = useState('');
@@ -107,12 +107,15 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       },
     }));
 
-  const canSwapRows = (row1: Identifiers, row2: Identifiers) =>
+  const canSwapRows = (row1: SearchIdentifiers, row2: SearchIdentifiers) =>
     searchBy === row1 && header[row2].position < header[row1].position;
 
   const swapIdentifiers = () => {
-    if (canSwapRows(Identifiers.ISBN, Identifiers.LCCN) || canSwapRows(Identifiers.LCCN, Identifiers.ISBN)) {
-      setHeader(swapRowPositions(header, Identifiers.LCCN, Identifiers.ISBN));
+    if (
+      canSwapRows(SearchIdentifiers.ISBN, SearchIdentifiers.LCCN) ||
+      canSwapRows(SearchIdentifiers.LCCN, SearchIdentifiers.ISBN)
+    ) {
+      setHeader(swapRowPositions(header, SearchIdentifiers.LCCN, SearchIdentifiers.ISBN));
     }
   };
 

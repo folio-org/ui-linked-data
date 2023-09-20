@@ -1,16 +1,16 @@
 import { Dispatch, FC, SetStateAction, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { DisplayIdentifiers, Identifiers } from '@common/constants/search.constants';
+import { SearchDisplayIdentifiers, SearchIdentifiers } from '@common/constants/search.constants';
 
 type Props = {
-  searchBy: Identifiers | null;
-  setSearchBy: Dispatch<SetStateAction<Identifiers | null>>;
-  clearMessage: () => void;
+  searchBy: SearchIdentifiers | null;
+  setSearchBy: Dispatch<SetStateAction<SearchIdentifiers | null>>;
+  clearMessage: VoidFunction;
 };
 
 const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) => (
   <div data-testid="id-search-type-select" className="search-controls">
-    {Object.values(Identifiers).map(id => (
+    {Object.values(SearchIdentifiers).map(id => (
       <div key={id}>
         <input
           data-testid={id}
@@ -23,7 +23,7 @@ const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) =>
           }}
         />
         <label htmlFor={id}>
-          <FormattedMessage id={DisplayIdentifiers[id]} />
+          <FormattedMessage id={SearchDisplayIdentifiers[id]} />
         </label>
       </div>
     ))}

@@ -1,16 +1,16 @@
 import { ChangeEvent, FC, memo, Dispatch, SetStateAction } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { DisplayIdentifiers, Identifiers } from '@common/constants/search.constants';
+import { SearchDisplayIdentifiers, SearchIdentifiers } from '@common/constants/search.constants';
 import { Input } from '@components/Input';
 import { SearchTypeSelect } from '@components/SearchTypeSelect';
 
 type Props = {
-  searchBy: Identifiers | null;
-  setSearchBy: Dispatch<SetStateAction<Identifiers | null>>;
+  searchBy: SearchIdentifiers | null;
+  setSearchBy: Dispatch<SetStateAction<SearchIdentifiers | null>>;
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
   setMessage: Dispatch<SetStateAction<string>>;
-  clearMessage: () => void;
+  clearMessage: VoidFunction;
   fetchData: (searchBy: string, query: string) => Promise<void>;
 };
 
@@ -37,7 +37,7 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
           testid="id-search-input"
           placeholder={formatMessage(
             { id: 'marva.search-by-sth' },
-            { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` },
+            { by: searchBy && ` ${formatMessage({ id: SearchDisplayIdentifiers[searchBy] })}` },
           )}
           className="search-input"
           value={query}

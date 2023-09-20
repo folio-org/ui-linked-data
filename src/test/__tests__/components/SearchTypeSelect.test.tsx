@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { SearchTypeSelect } from '@components/SearchTypeSelect';
-import { Identifiers } from '@common/constants/search.constants';
+import { SearchIdentifiers } from '@common/constants/search.constants';
 
 describe('SearchTypeSelect', () => {
   const { getByTestId } = screen;
-  const searchBy = 'lccn' as Identifiers | null;
+  const searchBy = 'lccn' as SearchIdentifiers | null;
   const setSearchBy = jest.fn();
   const clearMessage = jest.fn();
   const id = 'lccn';
