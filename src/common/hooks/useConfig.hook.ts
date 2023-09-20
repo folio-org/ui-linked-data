@@ -108,7 +108,6 @@ export const useConfig = () => {
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
-
       if (withContentsSelected?.[uriWithSelector] && userValues) {
         userValues[uuid] = {
           uuid,
@@ -357,16 +356,17 @@ export const useConfig = () => {
 
     const { base, userValues, initKey } = buildSchema(monograph, templates, record || {});
 
-    asPreview &&
-      recordId &&
-      setPreviewContent(prev => ({
-        ...prev,
-        [recordId]: {
+    if (asPreview && recordId) {
+      setPreviewContent(prev => [
+        ...prev.filter(({ id }) => id !== recordId),
+        {
+          id: recordId,
           base,
           userValues,
           initKey,
         },
-      }));
+      ]);
+    }
 
     return response;
   };
