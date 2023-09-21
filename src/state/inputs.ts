@@ -5,9 +5,9 @@ const userValues = atom<UserValues>({
   default: {},
 });
 
-const previewContent = atom<Record<string, { base: Map<string, any>, userValues: UserValues, initKey: string }>>({
+const previewContent = atom<PreviewContent[]>({
   key: 'inputs.previewContent',
-  default: {},
+  default: [],
 });
 
 const record = atom<RecordEntryDeprecated | null>({

@@ -65,7 +65,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
   useEffect(() => {
     // clear out preview content on page load
-    !data && setPreviewContent({});
+    !data && setPreviewContent([]);
   }, []);
 
   const clearMessage = useCallback(() => message && setMessage(''), [message]);
@@ -125,7 +125,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     if (!query) return;
 
     clearMessage();
-    setPreviewContent({});
+    setPreviewContent([]);
     data && setData(null);
 
     try {
