@@ -148,6 +148,24 @@ const traverseSchema = ({
   }
 };
 
+export const filterUserValues = (userValues: UserValues) => {
+  const filteredUserValues = {} as UserValues;
+
+  const filteredValues = Object.values(userValues).filter(value => {
+    if (!value.contents.length) return false;
+
+    const filteredContents = value.contents.filter(content => content.label?.length);
+
+    if (!filteredContents.length) return false;
+
+    return true;
+  });
+
+  filteredValues.forEach(val => (filteredUserValues[val.uuid] = val));
+
+  return filteredUserValues;
+};
+
 export const applyUserValues = (
   schema: Map<string, SchemaEntry>,
   initKey: string | null,
@@ -162,9 +180,10 @@ export const applyUserValues = (
     return;
   }
 
+  const filteredValues = filterUserValues(userValues);
   const result: Record<string, any> = {};
 
-  traverseSchema({ schema, userValues, selectedEntries, container: result, key: initKey });
+  traverseSchema({ schema, userValues: filteredValues, selectedEntries, container: result, key: initKey });
 
   return result;
 };
