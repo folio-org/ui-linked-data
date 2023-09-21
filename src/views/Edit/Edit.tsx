@@ -11,12 +11,18 @@ import { Properties } from '@components/Properties';
 import './Edit.scss';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { RecordControls } from '@components/RecordControls';
+import { useEffect } from 'react';
 
 export const Edit = () => {
   const selectedProfile = useRecoilValue(state.config.selectedProfile);
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
   const { formatMessage } = useIntl();
+
+  useEffect(() => {
+    // first case is for embedded mode, second is for standalone mode
+    (document.getElementById('ModuleContainer') || document.getElementById('editor-root'))?.scrollTo({ top: 0 });
+  }, []);
 
   const onClickStartFromScratch = () => {
     // TODO: set default selected profile
