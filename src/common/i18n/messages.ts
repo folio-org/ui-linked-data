@@ -21,8 +21,8 @@ const BASE_LOCALE = {
   'marva.isbn-lccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
   'marva.lccn': 'LCCN',
-  'marva.title': 'Title',
-  'marva.contributor': 'Contributor',
+  'marva.title': 'TITLE', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+  'marva.contributor': 'CONTRIBUTOR', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.author': 'Author',
   'marva.pub-date': 'Publication Date',
   'marva.edition': 'Edition',
@@ -69,8 +69,8 @@ export const i18nMessages = {
     'marva.isbn-lccn': 'ISBN/LCCN',
     'marva.isbn': 'ISBN',
     'marva.lccn': 'LCCN',
-    'marva.title': 'Titel',
-    'marva.contributor': 'Mitwirkender',
+    'marva.title': 'TITEL', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+    'marva.contributor': 'MITWIRKENDER', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
     'marva.author': 'Autor',
     'marva.pub-date': 'Veröffentlichungsdatum',
     'marva.edition': 'Edition',
