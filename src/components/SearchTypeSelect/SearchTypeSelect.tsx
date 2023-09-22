@@ -24,15 +24,9 @@ const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) =>
         />
         <label htmlFor={id}>
           <FormattedMessage id={SearchDisplayIdentifiers[id]}>
-            {text => (
-              <>
-                {text.map(textElem => {
-                  const typedTextElem = textElem as string;
-
-                  return typedTextElem.toUpperCase();
-                })}
-              </>
-            )}
+            {/* {TODO: check this change in Production mode;
+              Solution with type assertion don't work in Production build} */}
+            {text => <>{text.map(textElem => textElem?.toString().toUpperCase())}</>}
           </FormattedMessage>
         </label>
       </div>
