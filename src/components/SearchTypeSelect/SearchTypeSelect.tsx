@@ -23,7 +23,17 @@ const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) =>
           }}
         />
         <label htmlFor={id}>
-          <FormattedMessage id={SearchDisplayIdentifiers[id]} />
+          <FormattedMessage id={SearchDisplayIdentifiers[id]}>
+            {text => (
+              <>
+                {text.map(textElem => {
+                  const typedTextElem = textElem as string;
+
+                  return typedTextElem.toUpperCase();
+                })}
+              </>
+            )}
+          </FormattedMessage>
         </label>
       </div>
     ))}
