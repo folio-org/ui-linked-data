@@ -12,8 +12,7 @@ export const PROFILE_IDS = {
   MONOGRAPH: 'lc:profile:bf2:Monograph',
 };
 
-export const PROFILE_URIS = {
-  MONOGRAPH: 'http://bibfra.me/vocab/marc/Monograph',
+export const TYPE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
 };
 
