@@ -14,6 +14,7 @@ export const PROFILE_IDS = {
 
 export const PROFILE_URIS = {
   MONOGRAPH: 'http://bibfra.me/vocab/marc/Monograph',
+  INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
 };
 
 export const CONSTRAINTS: Constraints = {

@@ -13,7 +13,7 @@ export const Load = () => {
   useEffect(() => {
     getAllRecords({
       pageNumber: 0,
-      type: PROFILE_URIS.MONOGRAPH, // TODO: pass URI of the selected profile
+      type: PROFILE_URIS.INSTANCE, // TODO: pass URI of the selected profile
     })
       .then(res => {
         setAvailableRecords(res?.content);

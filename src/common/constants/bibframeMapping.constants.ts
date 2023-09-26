@@ -17,14 +17,14 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/editionStatement': 'http://bibfra.me/vocab/marc/edition',
   'http://id.loc.gov/ontologies/bibframe/provisionActivity': 'https://bibfra.me/vocab/marc/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/Publication': 'http://bibfra.me/vocab/marc/publication',
-  'http://id.loc.gov/ontologies/bibframe/place': 'http://bibfra.me/vocab/lite/place',
-  'http://id.loc.gov/ontologies/bflc/simplePlace': 'http://bibfra.me/vocab/bflc/simplePlace',
+  'http://id.loc.gov/ontologies/bibframe/place': 'http://bibfra.me/vocab/lite/providerPlace',
+  'http://id.loc.gov/ontologies/bflc/simplePlace': 'http://bibfra.me/vocab/lite/place',
   'http://id.loc.gov/ontologies/bflc/simpleAgent': 'http://bibfra.me/vocab/lite/name',
   'http://id.loc.gov/ontologies/bflc/simpleDate': 'http://bibfra.me/vocab/lite/simpleDate',
   'http://id.loc.gov/ontologies/bibframe/Distribution': 'http://bibfra.me/vocab/marc/distribution',
   'http://id.loc.gov/ontologies/bibframe/Manufacture': 'http://bibfra.me/vocab/marc/manufacture',
   'http://id.loc.gov/ontologies/bibframe/Production': 'http://bibfra.me/vocab/marc/production',
-  'http://id.loc.gov/ontologies/bibframe/identifiedBy': 'http://bibfra.me/vocab/lite/map',
+  'http://id.loc.gov/ontologies/bibframe/identifiedBy': 'http://library.link/vocab/map',
   'http://id.loc.gov/ontologies/bibframe/Lccn': 'http://library.link/identifier/LCCN',
   'http://id.loc.gov/ontologies/bibframe/Isbn': 'http://library.link/identifier/ISBN',
   'http://id.loc.gov/ontologies/bibframe/Identifier': 'http://library.link/identifier/UNKNOWN', // TODO: update when defined
@@ -64,8 +64,9 @@ export const BFLITE_URIS = {
 };
 
 export const BFLITE_LABELS_MAP = {
-  'http://bibfra.me/vocab/lite/place': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/lite/providerPlace': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
   'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/marc/copyright': BFLITE_URIS.LABEL,
 };

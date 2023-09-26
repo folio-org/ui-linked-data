@@ -5,7 +5,7 @@ import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
   const formattedRecord: RecordEntryDeprecated | RecordEntry = IS_NEW_API_ENABLED
-    ? (parsedRecord as RecordEntry)
+    ? { resource: parsedRecord as RecursiveRecordSchema }
     : {
         ...parsedRecord[profile],
         profile,

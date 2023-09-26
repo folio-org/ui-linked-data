@@ -25,7 +25,7 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 export const getAllRecords = async ({
   pageSize = MAX_LIMIT,
   pageNumber = MAX_LIMIT,
-  type = PROFILE_URIS.MONOGRAPH,
+  type = PROFILE_URIS.INSTANCE,
 }: GetAllRecords) => {
   return baseApi.getJson({
     url: BIBFRAME_API_ENDPOINT,

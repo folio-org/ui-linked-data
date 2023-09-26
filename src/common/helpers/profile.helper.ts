@@ -5,7 +5,6 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
-  PROFILE_URIS,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
@@ -19,7 +18,6 @@ type TraverseSchema = {
   container: Record<string, any>;
   key: string;
   index?: number;
-  profile?: string;
   shouldHaveRootWrapper?: boolean;
 };
 
@@ -62,7 +60,6 @@ const traverseSchema = ({
   container,
   key,
   index = 0,
-  profile = PROFILE_URIS.MONOGRAPH,
   shouldHaveRootWrapper = false,
 }: TraverseSchema) => {
   const { children, uri, uriBFLite, bfid, type } = schema.get(key) || {};
@@ -96,7 +93,6 @@ const traverseSchema = ({
       const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
 
       if (type === profileType) {
-        container.type = profile;
         containerSelector = container;
       } else if (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) {
         if (type === dropdownOption && !selectedEntries.includes(key)) {
@@ -108,7 +104,7 @@ const traverseSchema = ({
         // their child elements like "dropdown options" are placed at the top level,
         // where any other blocks are placed.
         containerSelector = {};
-        container[selector] = [containerSelector];
+        container[selector] = type === block ? containerSelector : [containerSelector];
       } else if (type === dropdownOption) {
         if (!selectedEntries.includes(key)) {
           // Only fields from the selected option should be processed and saved
