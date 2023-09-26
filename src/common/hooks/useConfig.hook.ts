@@ -339,7 +339,7 @@ export const useConfig = () => {
   };
 
   type GetProfiles = {
-    record?: RecordEntryDeprecated;
+    record?: RecordEntryDeprecated | RecordEntry;
     recordId?: string;
     asPreview?: boolean;
   };
@@ -354,7 +354,8 @@ export const useConfig = () => {
     setSelectedProfile(monograph);
     setUserValues({});
 
-    const { base, userValues, initKey } = buildSchema(monograph, templates, record || {});
+    const recordData = (IS_NEW_API_ENABLED ? record?.resource : record) || {};
+    const { base, userValues, initKey } = buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {
       setPreviewContent(prev => [

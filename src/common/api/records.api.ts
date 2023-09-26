@@ -1,6 +1,6 @@
 import { BIBFRAME_API_ENDPOINT, MAX_LIMIT } from '@common/constants/api.constants';
 import baseApi from './base.api';
-import { PROFILE_URIS } from '@common/constants/bibframe.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SingleRecord = {
   recordId: string;
@@ -25,7 +25,7 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 export const getAllRecords = async ({
   pageSize = MAX_LIMIT,
   pageNumber = MAX_LIMIT,
-  type = PROFILE_URIS.MONOGRAPH,
+  type = TYPE_URIS.INSTANCE,
 }: GetAllRecords) => {
   return baseApi.getJson({
     url: BIBFRAME_API_ENDPOINT,

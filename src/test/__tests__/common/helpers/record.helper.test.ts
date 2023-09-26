@@ -27,15 +27,35 @@ describe('record.helper', () => {
     mockImportedConstant(false);
   });
 
-  test('formatRecord - returns formatted record data', () => {
-    const testResult = {
-      profile,
-      Instance: [{}],
-    };
+  describe('formatRecord', () => {
+    function testFormatRecord(testResult: Record<string, object | string>, isNewApiEnabled: boolean = false) {
+      if (isNewApiEnabled) {
+        mockImportedConstant(true);
+      }
 
-    const result = RecordHelper.formatRecord(profile, record);
+      const result = RecordHelper.formatRecord(profile, record);
 
-    expect(result).toEqual(testResult);
+      expect(result).toEqual(testResult);
+    }
+
+    test('returns formatted record data', () => {
+      const testResult = {
+        profile,
+        Instance: [{}],
+      };
+
+      testFormatRecord(testResult);
+    });
+
+    test('returns formatted record data for the new API', () => {
+      const testResult = {
+        resource: {
+          Instance: {},
+        },
+      };
+
+      testFormatRecord(testResult, true);
+    });
   });
 
   test('deleteRecordLocally - invokes "localStorageService.delete" with generated key', () => {

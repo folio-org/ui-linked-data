@@ -33,9 +33,10 @@ export const useRecordControls = () => {
     try {
       const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
-      const recordData: RecordEntryDeprecated = (locallySavedData && !asPreview)
-        ? { id: recordId, profile, ...locallySavedData.data[profile] }
-        : await getRecord({ recordId });
+      const recordData: RecordEntryDeprecated =
+        locallySavedData && !asPreview
+          ? { id: recordId, profile, ...locallySavedData.data[profile] }
+          : await getRecord({ recordId });
 
       setRecord(recordData);
       getProfiles({ record: recordData, recordId, asPreview });
