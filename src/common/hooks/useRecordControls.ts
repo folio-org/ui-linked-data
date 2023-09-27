@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { PROFILE_IDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -23,15 +23,15 @@ export const useRecordControls = () => {
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-  const currentRecordId = record?.id;
+  const profile = PROFILE_IDS.MONOGRAPH;
+  const currentRecordId = record?.resource?.[TYPE_URIS.INSTANCE]?.id;
 
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
     try {
-      const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+      const profile = PROFILE_IDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
       const recordData: RecordEntryDeprecated =
         locallySavedData && !asPreview
@@ -62,9 +62,9 @@ export const useRecordControls = () => {
       const formattedRecord = formatRecord(profile, parsed);
       // TODO: define a type
       const response: any =
-        !record?.id || record.id === DEFAULT_RECORD_ID
+        !record?.resource?.[TYPE_URIS.INSTANCE]?.id || record.resource[TYPE_URIS.INSTANCE].id === DEFAULT_RECORD_ID
           ? await postRecord(formattedRecord)
-          : await putRecord(record.id, formattedRecord);
+          : await putRecord(record.resource[TYPE_URIS.INSTANCE]?.id, formattedRecord);
       const parsedResponse = await response.json();
       const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntryDeprecated;
 

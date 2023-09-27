@@ -1,5 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_LABELS_MAP, BFLITE_URIS, BF_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
@@ -24,6 +24,7 @@ export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uri
       parentURI: uri,
       uri,
       type,
+      bfLabel: entry[BF_URIS.LABEL],
     },
   };
 };

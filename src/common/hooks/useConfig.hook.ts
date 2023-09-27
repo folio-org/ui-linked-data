@@ -18,6 +18,7 @@ import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
 import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
+import { BF_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -169,14 +170,35 @@ export const useConfig = () => {
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
+          const isDropdownOptionType = type === AdvancedFieldType.dropdownOption;
+          const isHiddenType = type === AdvancedFieldType.hidden;
 
           if (!supportedEntries.includes(id) && isProfileResourceTemplate) return;
 
           if (
-            type === AdvancedFieldType.dropdownOption &&
+            isDropdownOptionType &&
             shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
+          }
+
+          if (isDropdownOptionType || isHiddenType) {
+            let label;
+
+            if (isDropdownOptionType) {
+              const selectedRecord = Array.isArray(record) ? record?.[0] : record;
+
+              label = selectedRecord?.[uriWithSelector]?.[BF_URIS.LABEL];
+            } else if (isHiddenType) {
+              label = Array.isArray(record) && record?.[0]?.[BF_URIS.LABEL];
+            }
+
+            if (userValues && label) {
+              userValues[uuid] = {
+                uuid,
+                contents: [{ label, meta: { type } }],
+              };
+            }
           }
 
           base.set(uuid, {

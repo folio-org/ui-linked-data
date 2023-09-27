@@ -79,9 +79,7 @@ type RecordEntryDeprecated = RecursiveRecordSchema & {
   profile: string;
 };
 
-type RecordEntry = {
-  resource: RecursiveRecordSchema;
-};
+type RecordEntry = RecursiveRecordSchema;
 
 interface ResourceTemplates {
   [key: string]: ResourceTemplate;
