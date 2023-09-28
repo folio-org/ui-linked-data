@@ -67,6 +67,50 @@ export const useConfig = () => {
     userValues?: UserValues;
   };
 
+  const enrichUserValuesWithLabels = ({
+    record,
+    userValues,
+    uuid,
+    type,
+    uriBFLite,
+    uriWithSelector,
+  }: {
+    record?: Record<string, any> | Array<any>;
+    userValues?: UserValues;
+    uuid: string;
+    type?: string;
+    uriBFLite?: string;
+    uriWithSelector: string;
+  }) => {
+    const isDropdownOptionType = type === AdvancedFieldType.dropdownOption;
+    const isHiddenType = type === AdvancedFieldType.hidden;
+    const isBlockType = type === AdvancedFieldType.block;
+
+    if (isDropdownOptionType || isHiddenType || isBlockType) {
+      let label;
+
+      if (isDropdownOptionType) {
+        const selectedRecord = Array.isArray(record) ? record?.[0] : record;
+
+        label = selectedRecord?.[uriWithSelector]?.[BF_URIS.LABEL];
+      } else if (isHiddenType) {
+        label = Array.isArray(record) && record?.[0]?.[BF_URIS.LABEL];
+      } else if (isBlockType) {
+        const typedRecord = record as RecordEntry;
+        const selectedRecord = uriBFLite ? typedRecord?.[uriBFLite] : undefined;
+
+        label = selectedRecord?.[BF_URIS.LABEL];
+      }
+
+      if (userValues && label) {
+        userValues[uuid] = {
+          uuid,
+          contents: [{ label, meta: { type } }],
+        };
+      }
+    }
+  };
+
   const traverseProfile = ({
     entry,
     templates,
@@ -170,36 +214,17 @@ export const useConfig = () => {
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
-          const isDropdownOptionType = type === AdvancedFieldType.dropdownOption;
-          const isHiddenType = type === AdvancedFieldType.hidden;
 
           if (!supportedEntries.includes(id) && isProfileResourceTemplate) return;
 
           if (
-            isDropdownOptionType &&
+            type === AdvancedFieldType.dropdownOption &&
             shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
           }
 
-          if (isDropdownOptionType || isHiddenType) {
-            let label;
-
-            if (isDropdownOptionType) {
-              const selectedRecord = Array.isArray(record) ? record?.[0] : record;
-
-              label = selectedRecord?.[uriWithSelector]?.[BF_URIS.LABEL];
-            } else if (isHiddenType) {
-              label = Array.isArray(record) && record?.[0]?.[BF_URIS.LABEL];
-            }
-
-            if (userValues && label) {
-              userValues[uuid] = {
-                uuid,
-                contents: [{ label, meta: { type } }],
-              };
-            }
-          }
+          enrichUserValuesWithLabels({ record, userValues, uuid, type, uriBFLite, uriWithSelector });
 
           base.set(uuid, {
             uuid,

@@ -5,6 +5,7 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
+  TYPES_WITH_EXTRA_LABEL,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, BF_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
@@ -80,6 +81,11 @@ export const enrichContainerSelectorWithLabel = (
   }
 };
 
+export const hasTypeWithExtraLabel = (userValueMatch: UserValue) =>
+  userValueMatch?.contents?.some(
+    ({ meta }) => meta?.type && TYPES_WITH_EXTRA_LABEL.includes(meta?.type as AdvancedFieldType),
+  );
+
 const traverseSchema = ({
   schema,
   userValues,
@@ -99,11 +105,8 @@ const traverseSchema = ({
     .includes(key);
 
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
-  const isMetaType = userValueMatch?.contents?.some(
-    ({ meta }) => meta?.type === AdvancedFieldType.dropdownOption || meta?.type === AdvancedFieldType.hidden,
-  );
 
-  if (userValueMatch && uri && selector && !isMetaType) {
+  if (userValueMatch && uri && selector && !hasTypeWithExtraLabel(userValueMatch)) {
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type, bfLabel } = {} }) => {
       if (parentUri || uri) {
         return generateLookupValue({ uriBFLite, label, uri: parentUri || uri, bfLabel });
@@ -134,6 +137,11 @@ const traverseSchema = ({
         // their child elements like "dropdown options" are placed at the top level,
         // where any other blocks are placed.
         containerSelector = {};
+
+        if (type === block) {
+          enrichContainerSelectorWithLabel(block, userValueMatch, containerSelector);
+        }
+
         container[selector] = type === block ? containerSelector : [containerSelector];
       } else if (type === dropdownOption) {
         if (!selectedEntries.includes(key)) {
@@ -142,14 +150,14 @@ const traverseSchema = ({
         }
 
         containerSelector = {};
-        enrichContainerSelectorWithLabel(AdvancedFieldType.dropdownOption, userValueMatch, containerSelector);
+        enrichContainerSelectorWithLabel(dropdownOption, userValueMatch, containerSelector);
 
         container.push({ [selector]: containerSelector });
       } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
         // Some groups like "Provision Activity" should not have a root node,
         // and they put their children directly in the block node.
         containerSelector = container;
-        enrichContainerSelectorWithLabel(AdvancedFieldType.hidden, userValueMatch, containerSelector);
+        enrichContainerSelectorWithLabel(hidden, userValueMatch, containerSelector);
 
         if (isGroupWithoutRootWrapper) {
           hasRootWrapper = true;
