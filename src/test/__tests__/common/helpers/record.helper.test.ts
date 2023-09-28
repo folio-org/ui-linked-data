@@ -33,7 +33,7 @@ describe('record.helper', () => {
         mockImportedConstant(true);
       }
 
-      const result = RecordHelper.formatRecord(profile, record);
+      const result = RecordHelper.formatRecord(profile, record as unknown as RecordEntry);
 
       expect(result).toEqual(testResult);
     }

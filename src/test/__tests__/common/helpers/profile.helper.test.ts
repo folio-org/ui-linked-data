@@ -53,7 +53,7 @@ describe('profile.helper', () => {
           uri,
         };
 
-        const result = generateLookupValue(undefined, label, uri);
+        const result = generateLookupValue({ label, uri });
 
         expect(result).toEqual(testResult);
       });
@@ -71,7 +71,7 @@ describe('profile.helper', () => {
       test('returns passed label for lookups with non-hierarchical structure', () => {
         mockLookupConstant([uriBFLite]);
 
-        const result = generateLookupValue(uriBFLite, label);
+        const result = generateLookupValue({ uriBFLite, label });
 
         expect(result).toBe(label);
       });
@@ -85,7 +85,7 @@ describe('profile.helper', () => {
           test_label_uri: ['test_uri'],
         };
 
-        const result = generateLookupValue(uriBFLite, label, uri);
+        const result = generateLookupValue({ uriBFLite, label, uri });
 
         expect(result).toEqual(testResult);
       });

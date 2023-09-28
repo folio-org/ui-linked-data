@@ -361,7 +361,7 @@ export const useConfig = () => {
   };
 
   type GetProfiles = {
-    record?: RecordEntryDeprecated | RecordEntry;
+    record?: RecordEntry;
     recordId?: string;
     asPreview?: boolean;
   };

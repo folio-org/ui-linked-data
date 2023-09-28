@@ -10,7 +10,7 @@ const previewContent = atom<PreviewContent[]>({
   default: [],
 });
 
-const record = atom<RecordEntryDeprecated | RecordEntry | null>({
+const record = atom<RecordEntry | null>({
   key: 'inputs.record',
   default: null,
 });

@@ -1,17 +1,18 @@
 import { FC, memo } from 'react';
 import { useRecoilValue } from 'recoil';
+import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
 import { useModalControls } from '@common/hooks/useModalControls';
-import { FormattedMessage } from 'react-intl';
+import { getRecordId } from '@common/helpers/record.helper';
 
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
   const { deleteRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const isDisabled = !record || record?.id === DEFAULT_RECORD_ID;
+  const isDisabled = !record || getRecordId(record) === DEFAULT_RECORD_ID;
 
   return (
     <>

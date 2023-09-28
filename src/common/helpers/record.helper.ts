@@ -2,10 +2,13 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
-export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-  const formattedRecord: RecordEntryDeprecated | RecordEntry = IS_NEW_API_ENABLED
-    ? { resource: parsedRecord as RecursiveRecordSchema }
+export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
+
+export const formatRecord = (profile: any, parsedRecord: RecordEntry) => {
+  const formattedRecord = IS_NEW_API_ENABLED
+    ? { resource: parsedRecord }
     : {
         ...parsedRecord[profile],
         profile,

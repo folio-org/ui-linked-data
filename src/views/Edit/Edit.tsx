@@ -29,7 +29,7 @@ export const Edit = () => {
     const profile = PROFILE_IDS.MONOGRAPH;
     const savedRecordData = getSavedRecord(profile);
     const record = savedRecordData ? { id: DEFAULT_RECORD_ID, profile, ...savedRecordData.data?.[profile] } : null;
-    const typedRecord = record as unknown as RecordEntryDeprecated;
+    const typedRecord = record as unknown as RecordEntry;
 
     typedRecord && setRecord(typedRecord);
     getProfiles({ record: typedRecord });
