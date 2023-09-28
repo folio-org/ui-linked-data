@@ -44,6 +44,7 @@ const BASE_LOCALE = {
   'marva.rd-deleted': 'Resource description deleted',
   'marva.app-fail': 'An error occurred. Please, reload the page.',
   'marva.search-select-index': 'Please select an index',
+  'marva.search-invalid-lccn': 'LCCN is invalid, please correct',
 };
 
 export const i18nMessages = {

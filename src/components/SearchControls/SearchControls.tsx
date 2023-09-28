@@ -11,7 +11,7 @@ type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
   setMessage: Dispatch<SetStateAction<string>>;
   clearMessage: VoidFunction;
-  fetchData: (searchBy: string, query: string) => Promise<void>;
+  fetchData: (searchBy: SearchIdentifiers, query: string) => Promise<void>;
 };
 
 const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, setMessage, clearMessage, fetchData }) => {
