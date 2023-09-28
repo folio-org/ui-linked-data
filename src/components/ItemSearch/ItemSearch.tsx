@@ -12,6 +12,7 @@ import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
 import state from '@state';
 import './ItemSearch.scss';
+import { normalizeLccn } from '@common/helpers/validations.helper';
 
 const initHeader: Row = {
   actionItems: {
@@ -121,15 +122,31 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
-  const fetchData = async (searchBy: string, query: string) => {
+  const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
+    if (type === SearchIdentifiers.LCCN) {
+      const normalized = normalizeLccn(query);
+
+      !normalized && setMessage('marva.search-invalid-lccn');
+
+      return normalized;
+    }
+
+    return query
+  }
+
+  const fetchData = async (searchBy: SearchIdentifiers, query: string) => {
     if (!query) return;
+
+    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+
+    if (!updatedQuery) return;
 
     clearMessage();
     setPreviewContent([]);
     data && setData(null);
 
     try {
-      const result = await getByIdentifier(searchBy, query);
+      const result = await getByIdentifier(searchBy, updatedQuery as string);
 
       if (!result.content.length) return setMessage('marva.search-no-rds-match');
 
