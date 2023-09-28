@@ -4,7 +4,7 @@ import state from '@state';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { getSavedRecord } from '@common/helpers/record.helper';
+import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { EditSection } from '@components/EditSection';
 import { Preview } from '@components/Preview';
 import { Properties } from '@components/Properties';
@@ -28,7 +28,8 @@ export const Edit = () => {
     // TODO: set default selected profile
     const profile = PROFILE_IDS.MONOGRAPH;
     const savedRecordData = getSavedRecord(profile);
-    const record = savedRecordData ? { id: DEFAULT_RECORD_ID, profile, ...savedRecordData.data?.[profile] } : null;
+    const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
+    const record = typedSavedRecord ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID) : null;
     const typedRecord = record as unknown as RecordEntry;
 
     typedRecord && setRecord(typedRecord);

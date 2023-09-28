@@ -34,9 +34,7 @@ export const useRecordControls = () => {
       const profile = PROFILE_IDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
       const recordData: RecordEntry =
-        locallySavedData && !asPreview
-          ? { id: recordId, profile, ...locallySavedData.data[profile] }
-          : await getRecord({ recordId });
+        locallySavedData && !asPreview ? locallySavedData.data : await getRecord({ recordId });
 
       setRecord(recordData);
       getProfiles({ record: recordData, recordId, asPreview });
