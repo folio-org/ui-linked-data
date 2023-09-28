@@ -2,7 +2,7 @@ import { useEffect, memo, useCallback, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
-import { saveRecordLocally } from '@common/helpers/record.helper';
+import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
 import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
 import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
@@ -38,9 +38,9 @@ export const EditSection = memo(() => {
 
         if (!parsed) return;
 
-        const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+        const profile = PROFILE_IDS.MONOGRAPH;
 
-        saveRecordLocally(profile, parsed, record?.id);
+        saveRecordLocally(profile, parsed, getRecordId(record) as string);
       } catch (error) {
         console.error('Unable to automatically save changes:', error);
       }

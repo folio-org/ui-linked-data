@@ -18,6 +18,7 @@ import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
 import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
+import { BF_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -64,6 +65,50 @@ export const useConfig = () => {
     dropdownOptionSelection?: DropdownOptionSelection;
     hasHiddenParent?: boolean;
     userValues?: UserValues;
+  };
+
+  const enrichUserValuesWithLabels = ({
+    record,
+    userValues,
+    uuid,
+    type,
+    uriBFLite,
+    uriWithSelector,
+  }: {
+    record?: Record<string, any> | Array<any>;
+    userValues?: UserValues;
+    uuid: string;
+    type?: string;
+    uriBFLite?: string;
+    uriWithSelector: string;
+  }) => {
+    const isDropdownOptionType = type === AdvancedFieldType.dropdownOption;
+    const isHiddenType = type === AdvancedFieldType.hidden;
+    const isBlockType = type === AdvancedFieldType.block;
+
+    if (isDropdownOptionType || isHiddenType || isBlockType) {
+      let label;
+
+      if (isDropdownOptionType) {
+        const selectedRecord = Array.isArray(record) ? record?.[0] : record;
+
+        label = selectedRecord?.[uriWithSelector]?.[BF_URIS.LABEL];
+      } else if (isHiddenType) {
+        label = Array.isArray(record) && record?.[0]?.[BF_URIS.LABEL];
+      } else if (isBlockType) {
+        const typedRecord = record as RecordEntry;
+        const selectedRecord = uriBFLite ? typedRecord?.[uriBFLite] : undefined;
+
+        label = selectedRecord?.[BF_URIS.LABEL];
+      }
+
+      if (userValues && label) {
+        userValues[uuid] = {
+          uuid,
+          contents: [{ label, meta: { type } }],
+        };
+      }
+    }
   };
 
   const traverseProfile = ({
@@ -178,6 +223,8 @@ export const useConfig = () => {
           ) {
             selectedEntries.push(uuid);
           }
+
+          enrichUserValuesWithLabels({ record, userValues, uuid, type, uriBFLite, uriWithSelector });
 
           base.set(uuid, {
             uuid,
@@ -339,7 +386,7 @@ export const useConfig = () => {
   };
 
   type GetProfiles = {
-    record?: RecordEntryDeprecated | RecordEntry;
+    record?: RecordEntry;
     recordId?: string;
     asPreview?: boolean;
   };

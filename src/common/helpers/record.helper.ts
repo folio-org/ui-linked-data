@@ -2,10 +2,20 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
-export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-  const formattedRecord: RecordEntryDeprecated | RecordEntry = IS_NEW_API_ENABLED
-    ? { resource: parsedRecord as RecursiveRecordSchema }
+export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
+
+export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
+  resource: {
+    ...record.resource,
+    [TYPE_URIS.INSTANCE]: { ...record.resource[TYPE_URIS.INSTANCE], id },
+  },
+});
+
+export const formatRecord = (profile: any, parsedRecord: Record<string, object> | RecordEntry) => {
+  const formattedRecord = IS_NEW_API_ENABLED
+    ? { resource: parsedRecord }
     : {
         ...parsedRecord[profile],
         profile,
@@ -37,8 +47,10 @@ export const generateAndSaveRecord = (storageKey: string, record: SavedRecordDat
 
 export const saveRecordLocally = (profile: string, record: SavedRecordData, recordId: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
+  const formattedRecord = formatRecord(profile, record);
+  const updatedRecord = getRecordWithUpdatedID(formattedRecord as RecordEntry, recordId);
 
-  return generateAndSaveRecord(storageKey, record);
+  return generateAndSaveRecord(storageKey, updatedRecord);
 };
 
 export const getSavedRecord = (profile: string, recordId?: RecordID): LocallySavedRecord | null => {

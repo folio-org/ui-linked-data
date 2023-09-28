@@ -37,7 +37,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/carrier': 'http://bibfra.me/vocab/marc/carrier',
   'http://id.loc.gov/ontologies/bibframe/dimensions': 'http://bibfra.me/vocab/marc/dimensions',
   'http://id.loc.gov/ontologies/bflc/projectedProvisionDate': 'http://bibfra.me/vocab/bflc/projectedProvisionDate',
-  'http://id.loc.gov/ontologies/bibframe/copyrightDate': 'http://bibfra.me/vocab/lite/copyrightDate',
+  'http://id.loc.gov/ontologies/bibframe/copyrightDate': 'http://bibfra.me/vocab/lite/date',
   'http://id.loc.gov/ontologies/bibframe/issuance': 'http://bibfra.me/vocab/marc/issuance',
   'http://id.loc.gov/ontologies/bibframe/status': 'http://bibfra.me/vocab/marc/status',
   'http://www.w3.org/2000/01/rdf-schema#label': {
@@ -69,4 +69,8 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/copyright': BFLITE_URIS.LABEL,
+};
+
+export const BF_URIS = {
+  LABEL: 'http://www.w3.org/2000/01/rdf-schema#label',
 };

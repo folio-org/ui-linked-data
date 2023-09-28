@@ -72,15 +72,14 @@ type ProfileEntry = {
   name: string;
 };
 
-type RecursiveRecordSchema = Record<string, Array<RecursiveRecordSchema | string>>;
-
-type RecordEntryDeprecated = RecursiveRecordSchema & {
-  id?: number | string;
-  profile: string;
+type RecursiveRecordSchema = {
+  [key: string]: string[] | number[] | number | string | RecursiveRecordSchema;
 };
 
 type RecordEntry = {
-  resource: RecursiveRecordSchema;
+  [key: string]: {
+    [key: string]: RecursiveRecordSchema;
+  };
 };
 
 interface ResourceTemplates {

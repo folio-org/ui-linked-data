@@ -4,6 +4,7 @@ type UserValueContents = {
     uri?: string;
     parentUri?: string;
     type?: string;
+    bfLabel?: string;
   };
 };
 
