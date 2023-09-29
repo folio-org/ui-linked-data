@@ -5,10 +5,18 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('schema.helper', () => {
-  const { getLookupLabelKey, generateUserValueObject, getSelectedRecord, generateRecordForDropdown } = SchemaHelper;
+  const {
+    getLookupLabelKey,
+    getAdvancedValuesField,
+    generateAdvancedFieldObject,
+    generateUserValueObject,
+    getSelectedRecord,
+    generateRecordForDropdown,
+  } = SchemaHelper;
   const mockFeatureConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
+  const mockAdvancedFieldsConstant = getMockedImportedConstant(BibframeMappingConstants, 'ADVANCED_FIELDS');
 
   describe('getLookupLabelKey', () => {
     test('returns mapped value', () => {
@@ -39,6 +47,42 @@ describe('schema.helper', () => {
       const result = getLookupLabelKey();
 
       expect(result).toBe(termUri);
+    });
+  });
+
+  describe('getAdvancedValuesField', () => {
+    test('returns mapped value', () => {
+      const uriBFLite = 'testUriBFLite';
+      const valueUri = 'testValueUri';
+      mockAdvancedFieldsConstant({ testUriBFLite: { valueUri } });
+
+      const result = getAdvancedValuesField(uriBFLite);
+
+      expect(result).toBe(valueUri);
+    });
+
+    test('returns undefined', () => {
+      const result = getAdvancedValuesField();
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('generateAdvancedFieldObject', () => {
+    test('returns mapped value', () => {
+      const advancedValueField = 'testUriBFLite';
+      const label = 'testUriBFLite';
+      const testResult = { testUriBFLite: ['testUriBFLite'] };
+
+      const result = generateAdvancedFieldObject({ advancedValueField, label });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns undefined', () => {
+      const result = generateAdvancedFieldObject({});
+
+      expect(result).toBeUndefined();
     });
   });
 

@@ -9,7 +9,7 @@ import {
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { getLookupLabelKey } from './schema.helper';
+import { generateAdvancedFieldObject, getAdvancedValuesField, getLookupLabelKey } from './schema.helper';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
@@ -82,9 +82,13 @@ const traverseSchema = ({
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
 
   if (userValueMatch && uri && selector) {
+    const advancedValueField = getAdvancedValuesField(uriBFLite);
+
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
       if (parentUri || uri) {
         return generateLookupValue({ uriBFLite, label, uri: parentUri || uri });
+      } else if (advancedValueField) {
+        return generateAdvancedFieldObject({ advancedValueField, label });
       } else {
         return type ? { label } : label;
       }
