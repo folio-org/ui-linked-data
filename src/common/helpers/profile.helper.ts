@@ -5,9 +5,8 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
-  TYPES_WITH_EXTRA_LABEL,
 } from '@common/constants/bibframe.constants';
-import { BFLITE_URIS, BF_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getLookupLabelKey } from './schema.helper';
@@ -38,12 +37,10 @@ export const generateLookupValue = ({
   uriBFLite,
   label,
   uri,
-  bfLabel,
 }: {
   uriBFLite?: string;
   label?: string;
   uri?: string;
-  bfLabel?: string;
 }) => {
   // TODO: workaround for the agreed API schema, not the best ?
   let value: LookupValue = {
@@ -59,32 +56,10 @@ export const generateLookupValue = ({
           [getLookupLabelKey(uriBFLite)]: [label],
           [BFLITE_URIS.LINK]: [uri],
         };
-
-    if (typeof value === 'object' && bfLabel) {
-      value[BF_URIS.LABEL] = bfLabel;
-    }
   }
 
   return value;
 };
-
-export const enrichContainerSelectorWithLabel = (
-  type: AdvancedFieldType,
-  userValueMatch: UserValue,
-  containerSelector: Record<string, any>,
-) => {
-  const userValueContent = userValueMatch?.contents[0];
-  const generatedLabel = userValueContent?.meta?.type === type ? userValueContent.label : undefined;
-
-  if (containerSelector && generatedLabel) {
-    containerSelector[BF_URIS.LABEL] = generatedLabel;
-  }
-};
-
-export const hasTypeWithExtraLabel = (userValueMatch: UserValue) =>
-  userValueMatch?.contents?.some(
-    ({ meta }) => meta?.type && TYPES_WITH_EXTRA_LABEL.includes(meta?.type as AdvancedFieldType),
-  );
 
 const traverseSchema = ({
   schema,
@@ -106,10 +81,10 @@ const traverseSchema = ({
 
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
 
-  if (userValueMatch && uri && selector && !hasTypeWithExtraLabel(userValueMatch)) {
-    const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type, bfLabel } = {} }) => {
+  if (userValueMatch && uri && selector) {
+    const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
       if (parentUri || uri) {
-        return generateLookupValue({ uriBFLite, label, uri: parentUri || uri, bfLabel });
+        return generateLookupValue({ uriBFLite, label, uri: parentUri || uri });
       } else {
         return type ? { label } : label;
       }
@@ -137,11 +112,6 @@ const traverseSchema = ({
         // their child elements like "dropdown options" are placed at the top level,
         // where any other blocks are placed.
         containerSelector = {};
-
-        if (type === block) {
-          enrichContainerSelectorWithLabel(block, userValueMatch, containerSelector);
-        }
-
         container[selector] = type === block ? containerSelector : [containerSelector];
       } else if (type === dropdownOption) {
         if (!selectedEntries.includes(key)) {
@@ -150,14 +120,11 @@ const traverseSchema = ({
         }
 
         containerSelector = {};
-        enrichContainerSelectorWithLabel(dropdownOption, userValueMatch, containerSelector);
-
         container.push({ [selector]: containerSelector });
       } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
         // Some groups like "Provision Activity" should not have a root node,
         // and they put their children directly in the block node.
         containerSelector = container;
-        enrichContainerSelectorWithLabel(hidden, userValueMatch, containerSelector);
 
         if (isGroupWithoutRootWrapper) {
           hasRootWrapper = true;
