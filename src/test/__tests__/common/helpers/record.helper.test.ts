@@ -3,6 +3,7 @@ import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
 import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import * as FeatureConstants from '@common/constants/feature.constants';
+import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('record.helper', () => {
@@ -28,33 +29,41 @@ describe('record.helper', () => {
   });
 
   describe('formatRecord', () => {
-    function testFormatRecord(testResult: Record<string, object | string>, isNewApiEnabled: boolean = false) {
+    function testFormatRecord(
+      initialRecord: Record<string, object> | RecordEntry,
+      testResult: Record<string, object | string>,
+      isNewApiEnabled: boolean = false,
+    ) {
       if (isNewApiEnabled) {
         mockImportedConstant(true);
       }
 
-      const result = RecordHelper.formatRecord(profile, record as unknown as RecordEntry);
+      const result = RecordHelper.formatRecord(profile, initialRecord);
 
       expect(result).toEqual(testResult);
     }
 
     test('returns formatted record data', () => {
+      const initialRecord = { [profile]: { Instance: [{}] } };
       const testResult = {
         profile,
         Instance: [{}],
       };
 
-      testFormatRecord(testResult);
+      testFormatRecord(initialRecord, testResult);
     });
 
     test('returns formatted record data for the new API', () => {
+      const initialRecord = {
+        Instance: {},
+      };
       const testResult = {
         resource: {
           Instance: {},
         },
       };
 
-      testFormatRecord(testResult, true);
+      testFormatRecord(initialRecord, testResult, true);
     });
   });
 
@@ -85,11 +94,24 @@ describe('record.helper', () => {
   });
 
   test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
+    const testInstanceUri = 'testInstanceUri';
+    const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
+    mockImportedConstant({ INSTANCE: testInstanceUri });
+    const record = { resource: { [testInstanceUri]: {} } };
+    const testRecord = {
+      resource: { [testInstanceUri]: { id: 'testId' } },
+    };
+    const storedRecord = {
+      createdAt: date,
+      data: testRecord,
+    };
+
+    jest.spyOn(RecordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
     jest.spyOn(RecordHelper, 'generateAndSaveRecord').mockReturnValue(storedRecord);
 
     const result = RecordHelper.saveRecordLocally(profile, record, recordId);
 
-    expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, record);
+    expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, testRecord);
     expect(result).toEqual(storedRecord);
   });
 
