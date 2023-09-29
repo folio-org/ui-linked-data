@@ -1,5 +1,3 @@
-import { AdvancedFieldType } from './uiControls.constants';
-
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   // TODO: revise after demo
   // 'lc:RT:bf2:Monograph:Work': 'Work',
@@ -40,9 +38,3 @@ export const COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/electronic
 export const HIDDEN_WRAPPERS = ['http://www.w3.org/2000/01/rdf-schema#label'];
 
 export const COMPLEX_GROUPS_WITHOUT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/note'];
-
-export const TYPES_WITH_EXTRA_LABEL = [
-  AdvancedFieldType.block,
-  AdvancedFieldType.hidden,
-  AdvancedFieldType.dropdownOption,
-];
