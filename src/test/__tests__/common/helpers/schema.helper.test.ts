@@ -53,11 +53,12 @@ describe('schema.helper', () => {
   describe('getAdvancedValuesField', () => {
     test('returns mapped value', () => {
       const uriBFLite = 'testUriBFLite';
-      mockAdvancedFieldsConstant({ testUriBFLite: { valueUri: 'testValueUri' } });
+      const valueUri = 'testValueUri';
+      mockAdvancedFieldsConstant({ testUriBFLite: { valueUri } });
 
       const result = getAdvancedValuesField(uriBFLite);
 
-      expect(result).toBe('testValueUri');
+      expect(result).toBe(valueUri);
     });
 
     test('returns undefined', () => {
