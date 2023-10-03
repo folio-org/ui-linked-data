@@ -6,8 +6,8 @@ import { Edit } from '@views';
 import state from '@state';
 import { BrowserRouter } from 'react-router-dom';
 import * as recordHelper from '@common/helpers/record.helper';
-import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import * as BibframeConstants from '@src/common/constants/bibframe.constants';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 const monograph = {
   id: 'id',
@@ -25,11 +25,14 @@ const monograph = {
   },
 };
 
-const mockContents = {
-  mock: 'contents',
-};
-
 describe('Edit', () => {
+  const testInstanceUri = 'testInstanceUri';
+  const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
+  mockImportedConstant({ INSTANCE: testInstanceUri });
+  const mockContents = {
+    resource: { [testInstanceUri]: {} },
+  };
+
   const renderComponent = (recordState: ProfileEntry | null) =>
     render(
       <RecoilRoot initializeState={snapshot => snapshot.set(state.config.selectedProfile, recordState)}>
@@ -64,19 +67,18 @@ describe('Edit', () => {
 
     test('gets profiles with saved record', async () => {
       jest.spyOn(recordHelper, 'getSavedRecord').mockReturnValue({
-        data: {
-          [PROFILE_IDS.MONOGRAPH]: mockContents,
-        },
-      } as LocallySavedRecord);
+        data: mockContents,
+        createdAt: 100500,
+      });
+      const testRecord = {
+        resource: { testInstanceUri: { id: 'testId' } },
+      };
+      jest.spyOn(recordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
 
       fireEvent.click(screen.getByTestId('start-from-scratch'));
 
       expect(getProfiles).toHaveBeenCalledWith({
-        record: {
-          id: DEFAULT_RECORD_ID,
-          profile: PROFILE_IDS.MONOGRAPH,
-          ...mockContents,
-        },
+        record: testRecord,
       });
     });
   });
