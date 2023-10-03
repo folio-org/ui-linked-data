@@ -9,9 +9,18 @@ type InputProps = {
   className?: string;
   testid?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onPressEnter?: VoidFunction;
 };
 
-export const Input: FC<InputProps> = ({ placeholder, value = '', disabled = false, className, testid, onChange }) => (
+export const Input: FC<InputProps> = ({
+  placeholder,
+  value = '',
+  disabled = false,
+  className,
+  testid,
+  onChange,
+  onPressEnter,
+}) => (
   <input
     data-testid={testid}
     className={classNames('input', className)}
@@ -19,5 +28,8 @@ export const Input: FC<InputProps> = ({ placeholder, value = '', disabled = fals
     placeholder={placeholder}
     onChange={onChange}
     disabled={disabled}
+    onKeyDown={({ key }) => {
+      (key === 'Enter' || key == 'NumpadEnter') && onPressEnter?.();
+    }}
   />
 );
