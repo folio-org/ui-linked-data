@@ -1,5 +1,16 @@
 const MIN_SERIAL_NUMBER_CHARS = 6;
 const MAX_LCCN_CHARS = 12;
+const YEAR_INDEX = 4;
+
+const combineLccnParts = (first: string, second = '') => {
+  const secondLen = second?.length || 0;
+
+  return first?.concat(
+    secondLen < MIN_SERIAL_NUMBER_CHARS
+      ? `${'0'.repeat(MIN_SERIAL_NUMBER_CHARS - secondLen)}${second}`
+      : second,
+  );
+}
 
 export const normalizeLccn = (lccn: string) => {
   const normalizeable = validateLccn(lccn, false);
@@ -8,12 +19,17 @@ export const normalizeLccn = (lccn: string) => {
 
   const [beforeHyphen, afterHyphen] = (normalizeable as string).split(/-(.*)/s);
   const afterHyphenLen = afterHyphen?.length || 0;
+  const containsHyphen = afterHyphenLen > 0;
 
-  return beforeHyphen.concat(
-    afterHyphenLen || 0 < MIN_SERIAL_NUMBER_CHARS
-      ? `${'0'.repeat(MIN_SERIAL_NUMBER_CHARS - afterHyphenLen)}${afterHyphen ?? ''}`
-      : afterHyphen,
-  );
+  let first = beforeHyphen;
+  let second = afterHyphen;
+
+  if (!containsHyphen) {
+    first = beforeHyphen.slice(0, YEAR_INDEX);
+    second = beforeHyphen.slice(YEAR_INDEX);
+  }
+
+  return combineLccnParts(first, second);
 };
 
 export const validateLccn = (lccn: string, normalized = true) => {
@@ -27,7 +43,7 @@ export const validateLccn = (lccn: string, normalized = true) => {
     const regexForNonNormalizedLccn = /^([a-z]{0}|[a-z]{2})\d{4}([\d]*-?[\d]){0,6}$/gi;
 
     const preformatted = lccn.replaceAll(/\s+/g, '').split('/')[0];
-    
+
     // TODO: try to have a single regexp rule?
     const passes =
       regexForNonNormalizedLccn.test(preformatted) &&

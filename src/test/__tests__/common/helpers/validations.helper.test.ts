@@ -15,6 +15,8 @@ describe('validations.helper', () => {
 
     test('backfills with zeroes', () => {
       expect(normalizeLccn('1234-567')).toEqual('1234000567');
+      expect(normalizeLccn('1234567')).toEqual('1234000567');
+      expect(normalizeLccn('1234')).toEqual('1234000000');
     });
   });
 
