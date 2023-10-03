@@ -27,7 +27,7 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
     setQuery(value);
   };
 
-  const onClickSearchButton = () => searchBy && fetchData(searchBy, query);
+  const doSearch = () => searchBy && fetchData(searchBy, query);
 
   return (
     <div data-testid="id-search-controls">
@@ -42,8 +42,9 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
+          onPressEnter={doSearch}
         />
-        <button data-testid="id-search-button" onClick={onClickSearchButton} disabled={!query || !searchBy}>
+        <button data-testid="id-search-button" onClick={doSearch} disabled={!query || !searchBy}>
           <FormattedMessage id="marva.search" />
         </button>
       </div>
