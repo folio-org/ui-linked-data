@@ -6,9 +6,16 @@
   }
 
   .edit-section-group {
+    position: relative;
     border: 1px solid black;
     margin: 0.5rem 0;
     padding: 0.5rem;
+  }
+
+  .group-name-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
   }
 
   .back-to-top {

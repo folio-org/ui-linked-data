@@ -17,7 +17,7 @@ interface Props {
 // TODO: add value subscription, add uncontrolled opts handling
 export const SimpleLookupField: FC<Props> = ({
   uri,
-  displayName,
+  displayName = '',
   uuid,
   value,
   onChange,
@@ -71,9 +71,8 @@ export const SimpleLookupField: FC<Props> = ({
     setIsLoading(false);
   };
 
-  const getOptionLabel = (option: MultiselectOption): string => (
-    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label
-  );
+  const getOptionLabel = (option: MultiselectOption): string =>
+    option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChange = (options: MultiValue<MultiselectOption>) => {
     const newValue = options.map<UserValueContents>(({ value }) => ({
@@ -90,7 +89,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   return (
     <div id={uuid}>
-      {displayName}
+      {displayName.length > 0 && displayName}
       <CreatableSelect
         isSearchable
         isClearable

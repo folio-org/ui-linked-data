@@ -1,19 +1,21 @@
 import { useEffect, memo, useCallback, useState } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
+import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
 import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
-import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { GROUP_BY_LEVEL, PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { Fields } from '../Fields';
-import { LiteralField } from '../LiteralField';
-import { DropdownField } from '../DropdownField';
-import { SimpleLookupField } from '../SimpleLookupField';
-import { ComplexLookupField } from '../ComplexLookupField';
+import { IS_REPEATABLE_FIELDS_ENABLED } from '@common/constants/feature.constants';
+import { Fields } from '@components/Fields';
+import { LiteralField } from '@components/LiteralField';
+import { DropdownField } from '@components/DropdownField';
+import { SimpleLookupField } from '@components/SimpleLookupField';
+import { ComplexLookupField } from '@components/ComplexLookupField';
+import { DuplicateGroup } from '@components/DuplicateGroup';
 import './EditSection.scss';
-import { FormattedMessage } from 'react-intl';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -27,7 +29,15 @@ export const EditSection = memo(() => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
 
-  const onWindowScroll = () => setShowScrollToTop(window.scrollY > WINDOW_SCROLL_OFFSET_TRIG);
+  const onWindowScroll = () => {
+    const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
+
+    if (showScrollToTop === updatedValue) {
+      return;
+    }
+
+    setShowScrollToTop(updatedValue);
+  };
 
   useEffect(() => {
     if (!isEdited) return;
@@ -69,35 +79,61 @@ export const EditSection = memo(() => {
     }));
   };
 
+  const drawTitleWithDuplicateButton = (hasButton: boolean = false, name?: string) =>
+    hasButton && (
+      <div className="group-name-container">
+        {name && <span>{name}</span>}
+        <DuplicateGroup />
+      </div>
+    );
+
   const drawComponent = useCallback(
     ({
       schema,
       entry: { uuid, displayName = '', type, children, constraints },
       disabledFields,
+      level,
     }: {
       schema: Map<string, SchemaEntry>;
       entry: SchemaEntry;
       disabledFields?: Schema;
+      level?: number;
     }) => {
       const isDisabled = !!disabledFields?.get(uuid);
+      const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL;
+      const componentTitle = hasDuplicateGroupButton ? '' : displayName;
+      const drawTitle = () => drawTitleWithDuplicateButton(hasDuplicateGroupButton, displayName);
 
       if (type === AdvancedFieldType.block) {
-        return <strong id={uuid}>{displayName}</strong>;
+        return (
+          <div>
+            {drawTitle()}
+            {!hasDuplicateGroupButton && <strong id={uuid}>{displayName}</strong>}
+          </div>
+        );
       }
 
       if (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) {
-        return <span id={uuid}>{displayName}</span>;
+        return (
+          <div>
+            {drawTitle()}
+            {!hasDuplicateGroupButton && <span id={uuid}>{displayName}</span>}
+          </div>
+        );
       }
 
       if (type === AdvancedFieldType.literal) {
         return (
-          <LiteralField
-            displayName={displayName}
-            uuid={uuid}
-            value={userValues[uuid]?.contents[0].label}
-            onChange={onChange}
-            isDisabled={isDisabled}
-          />
+          <div>
+            {drawTitle()}
+            <LiteralField
+              displayName={componentTitle}
+              uuid={uuid}
+              value={userValues[uuid]?.contents[0].label}
+              onChange={onChange}
+              isDisabled={isDisabled}
+            />
+          </div>
         );
       }
 
@@ -118,39 +154,48 @@ export const EditSection = memo(() => {
         };
 
         return (
-          <DropdownField
-            options={options}
-            name={displayName}
-            uuid={uuid}
-            onChange={handleChange}
-            value={selectedOption}
-            isDisabled={isDisabled}
-          />
+          <div>
+            {drawTitle()}
+            <DropdownField
+              options={options}
+              name={componentTitle}
+              uuid={uuid}
+              onChange={handleChange}
+              value={selectedOption}
+              isDisabled={isDisabled}
+            />
+          </div>
         );
       }
 
       if (type === AdvancedFieldType.simple) {
         return (
-          <SimpleLookupField
-            uri={constraints?.useValuesFrom[0] || ''}
-            displayName={displayName}
-            uuid={uuid}
-            onChange={onChange}
-            parentUri={constraints?.valueDataType?.dataTypeURI}
-            value={userValues[uuid]?.contents}
-            isDisabled={isDisabled}
-          />
+          <div>
+            {drawTitle()}
+            <SimpleLookupField
+              uri={constraints?.useValuesFrom[0] || ''}
+              displayName={componentTitle}
+              uuid={uuid}
+              onChange={onChange}
+              parentUri={constraints?.valueDataType?.dataTypeURI}
+              value={userValues[uuid]?.contents}
+              isDisabled={isDisabled}
+            />
+          </div>
         );
       }
 
       if (type === AdvancedFieldType.complex) {
         return (
-          <ComplexLookupField
-            label={displayName}
-            uuid={uuid}
-            onChange={onChange}
-            value={userValues[uuid]?.contents?.[0]}
-          />
+          <div>
+            {drawTitle()}
+            <ComplexLookupField
+              label={componentTitle}
+              uuid={uuid}
+              onChange={onChange}
+              value={userValues[uuid]?.contents?.[0]}
+            />
+          </div>
         );
       }
 
