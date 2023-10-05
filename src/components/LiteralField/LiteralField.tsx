@@ -9,7 +9,7 @@ interface Props {
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
-export const LiteralField: FC<Props> = ({ displayName, uuid, value = '', isDisabled = false, onChange }) => {
+export const LiteralField: FC<Props> = ({ displayName = '', uuid, value = '', isDisabled = false, onChange }) => {
   const [localValue, setLocalValue] = useState(value);
 
   const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +20,7 @@ export const LiteralField: FC<Props> = ({ displayName, uuid, value = '', isDisab
 
   return (
     <div data-testid="literal-field" id={uuid}>
-      {displayName.length > 0 && <div>{displayName}</div>}
+      {displayName.length > 0 && <div data-testid="literal-field-label">{displayName}</div>}
       <Input placeholder={displayName} onChange={handleOnChange} value={localValue} disabled={isDisabled} />
     </div>
   );

@@ -28,7 +28,7 @@ export const ComplexLookupField: FC<Props> = ({ label = '', value = undefined, u
 
   return (
     <div id={uuid} data-testid="complex-lookup">
-      {label.length > 0 && <div>{label}</div>}
+      {label.length > 0 && <div data-testid="complex-lookup-label">{label}</div>}
       <Input
         placeholder={label}
         onChange={handleOnChange}

@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import Select from 'react-select';
 
-interface Props {
+export interface Props {
   options: ReactSelectOption[];
   name: string;
   uuid: string;
@@ -20,11 +20,7 @@ export const DropdownField: FC<Props> = ({ options, name = '', uuid, onChange, v
 
   return (
     <div id={uuid} data-testid="dropdown-field">
-      {name.length > 0 && (
-        <>
-          {name} <br />
-        </>
-      )}
+      {name.length > 0 && <div data-testid="dropdown-field-label">{name}</div>}
       <Select
         options={options}
         isSearchable={false}
