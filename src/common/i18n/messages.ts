@@ -45,6 +45,8 @@ const BASE_LOCALE = {
   'marva.app-fail': 'An error occurred. Please, reload the page.',
   'marva.search-select-index': 'Please select an index',
   'marva.search-invalid-lccn': 'LCCN is invalid, please correct',
+  'marva.advanced-search': 'Advanced search',
+  'marva.cancel': 'Cancel',
 };
 
 export const i18nMessages = {

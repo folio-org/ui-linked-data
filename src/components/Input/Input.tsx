@@ -20,16 +20,22 @@ export const Input: FC<InputProps> = ({
   testid,
   onChange,
   onPressEnter,
-}) => (
-  <input
-    data-testid={testid}
-    className={classNames('input', className)}
-    value={value}
-    placeholder={placeholder}
-    onChange={onChange}
-    disabled={disabled}
-    onKeyDown={({ key }) => {
-      (key === 'Enter' || key == 'NumpadEnter') && onPressEnter?.();
-    }}
-  />
-);
+}) => {
+  return (
+    <input
+      data-testid={testid}
+      className={classNames('input', className)}
+      value={value}
+      placeholder={placeholder}
+      onChange={onChange}
+      disabled={disabled}
+      onKeyDown={({ key, target }) => {
+        if ((key === 'Enter' || key == 'NumpadEnter') && onPressEnter) {
+          onPressEnter();
+
+          (target as HTMLElement).blur();
+        };
+      }}
+    />
+  );
+}

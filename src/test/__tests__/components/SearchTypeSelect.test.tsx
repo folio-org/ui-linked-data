@@ -1,7 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { SearchTypeSelect } from '@components/SearchTypeSelect';
 import { SearchIdentifiers } from '@common/constants/search.constants';
+import { BrowserRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 
+// TODO: remove router wrappings once <Link /> in <SearchTypeSelect /> is replaced with <Button />
 describe('SearchTypeSelect', () => {
   const { getByTestId } = screen;
   const searchBy = 'lccn' as SearchIdentifiers | null;
@@ -10,7 +13,13 @@ describe('SearchTypeSelect', () => {
   const id = 'lccn';
 
   beforeEach(() => {
-    render(<SearchTypeSelect searchBy={searchBy} setSearchBy={setSearchBy} clearMessage={clearMessage} />);
+    render(
+      <BrowserRouter>
+        <RecoilRoot>
+          <SearchTypeSelect searchBy={searchBy} setSearchBy={setSearchBy} clearMessage={clearMessage} />
+        </RecoilRoot>
+      </BrowserRouter>,
+    );
   });
 
   test('renders SearchTypeSelect component', () => {

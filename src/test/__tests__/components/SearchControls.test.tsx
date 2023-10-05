@@ -1,7 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SearchControls } from '@components/SearchControls';
 import { SearchIdentifiers } from '@common/constants/search.constants';
+import { RecoilRoot } from 'recoil';
+import { BrowserRouter } from 'react-router-dom';
 
+// TODO: remove router wrappings once <Link /> in <SearchTypeSelect /> is replaced with <Button />
 describe('SearchControls', () => {
   const { getByTestId } = screen;
   const setSearchBy = jest.fn();
@@ -24,14 +27,26 @@ describe('SearchControls', () => {
   const buttonElementId = 'id-search-button';
 
   test('renders "SearchControls" component', () => {
-    render(<SearchControls {...props} />);
+    render(
+      <BrowserRouter>
+        <RecoilRoot>
+          <SearchControls {...props} />
+        </RecoilRoot>
+      </BrowserRouter>,
+    );
 
     expect(getByTestId('id-search-controls')).toBeInTheDocument();
   });
 
   describe('input field', () => {
     function testInputField(componentProps: typeof props, value: string = '', assertCallback: () => void) {
-      render(<SearchControls {...componentProps} />);
+      render(
+        <BrowserRouter>
+          <RecoilRoot>
+            <SearchControls {...componentProps} />
+          </RecoilRoot>
+        </BrowserRouter>,
+      );
       const inputElement = getByTestId(inputElementId);
 
       fireEvent.change(inputElement, { target: { value } });
@@ -64,7 +79,13 @@ describe('SearchControls', () => {
 
   describe('Search button', () => {
     function testSearchButton(componentProps: typeof props, callTimes: number) {
-      render(<SearchControls {...componentProps} />);
+      render(
+        <BrowserRouter>
+          <RecoilRoot>
+            <SearchControls {...componentProps} />
+          </RecoilRoot>
+        </BrowserRouter>,
+      );
       const buttonElement = getByTestId(buttonElementId);
 
       fireEvent.click(buttonElement);

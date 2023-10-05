@@ -13,6 +13,7 @@ import { Table, Row } from '@components/Table';
 import state from '@state';
 import './ItemSearch.scss';
 import { normalizeLccn } from '@common/helpers/validations.helper';
+import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 
 const initHeader: Row = {
   actionItems: {
@@ -58,6 +59,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
 
   useEffect(() => {
     // apply disabled/enabled state to row action items
@@ -131,19 +133,19 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       return normalized;
     }
 
-    return query
-  }
+    return query;
+  };
 
   const fetchData = async (searchBy: SearchIdentifiers, query: string) => {
     if (!query) return;
 
-    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
-
-    if (!updatedQuery) return;
-
     clearMessage();
     setPreviewContent([]);
     data && setData(null);
+
+    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+
+    if (!updatedQuery) return;
 
     try {
       const result = await getByIdentifier(searchBy, updatedQuery as string);
@@ -184,6 +186,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         )}
       </div>
       <FullDisplay />
+      <AdvancedSearchModal isOpen={isAdvancedSearchOpen} toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)} />
     </div>
   );
 };
