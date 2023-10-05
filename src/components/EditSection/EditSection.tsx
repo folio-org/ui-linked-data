@@ -79,7 +79,7 @@ export const EditSection = memo(() => {
     }));
   };
 
-  const drawTitleWithDuplicateButton = (hasButton: boolean = false, name?: string) =>
+  const drawTitleWithDuplicateButton = (hasButton = false, name?: string) =>
     hasButton && (
       <div className="group-name-container">
         {name && <span>{name}</span>}
