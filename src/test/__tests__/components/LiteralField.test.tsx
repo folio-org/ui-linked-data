@@ -6,11 +6,25 @@ const displayName = 'displayName';
 const uuid = uuidv4();
 const onChangeFn = jest.fn();
 
-describe('Literal Field', () => {
-  beforeEach(() => render(<LiteralField displayName={displayName} uuid={uuid} onChange={onChangeFn} />));
+const { getByTestId, getByPlaceholderText, queryByTestId } = screen;
 
-  test('renders Literal Field component', () => {
-    expect(screen.getByTestId('literal-field')).toBeInTheDocument();
+describe('Literal Field', () => {
+  function renderComponent(labelText: string = displayName) {
+    render(<LiteralField displayName={labelText} uuid={uuid} onChange={onChangeFn} />);
+  }
+
+  test('renders Literal Field component with label', () => {
+    renderComponent();
+
+    expect(getByTestId('literal-field')).toBeInTheDocument();
+    expect(queryByTestId('literal-field-label')).toBeInTheDocument();
+  });
+
+  test('renders Literal Field component without label', () => {
+    renderComponent('');
+
+    expect(getByTestId('literal-field')).toBeInTheDocument();
+    expect(queryByTestId('literal-field-label')).not.toBeInTheDocument();
   });
 
   test('triggers handleOnChange', () => {
@@ -20,7 +34,9 @@ describe('Literal Field', () => {
       },
     };
 
-    fireEvent.change(screen.getByPlaceholderText(displayName), event);
+    renderComponent();
+    fireEvent.change(getByPlaceholderText(displayName), event);
+
     expect(onChangeFn).toHaveBeenCalledWith(uuid, [{ label: event.target.value }]);
   });
 });
