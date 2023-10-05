@@ -16,18 +16,20 @@ import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DuplicateGroup } from '@components/DuplicateGroup';
 import './EditSection.scss';
+import { useProfileSchema } from '@common/hooks/useProfileSchema';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
 export const EditSection = memo(() => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const schema = useRecoilValue(state.config.schema);
+  const [schema, setSchema] = useRecoilState(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
+  const { duplicateEntry } = useProfileSchema();
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -79,18 +81,18 @@ export const EditSection = memo(() => {
     }));
   };
 
-  const drawTitleWithDuplicateButton = (hasButton = false, name?: string) =>
+  const drawTitleWithDuplicateButton = (hasButton = false, name?: string, onClickButton?: () => void) =>
     hasButton && (
       <div className="group-name-container">
         {name && <span>{name}</span>}
-        <DuplicateGroup />
+        <DuplicateGroup onClick={onClickButton} />
       </div>
     );
 
   const drawComponent = useCallback(
     ({
       schema,
-      entry: { uuid, displayName = '', type, children, constraints },
+      entry,
       disabledFields,
       level,
     }: {
@@ -99,10 +101,16 @@ export const EditSection = memo(() => {
       disabledFields?: Schema;
       level?: number;
     }) => {
+      const { uuid, displayName = '', type, children, constraints } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
       const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL;
       const componentTitle = hasDuplicateGroupButton ? '' : displayName;
-      const drawTitle = () => drawTitleWithDuplicateButton(hasDuplicateGroupButton, displayName);
+      const onClickDuplicateGroup = () => {
+        const updatedSchema = duplicateEntry(schema, entry);
+
+        setSchema(updatedSchema);
+      };
+      const drawTitle = () => drawTitleWithDuplicateButton(hasDuplicateGroupButton, displayName, onClickDuplicateGroup);
 
       if (type === AdvancedFieldType.block) {
         return (
