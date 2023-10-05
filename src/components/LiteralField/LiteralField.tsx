@@ -20,7 +20,7 @@ export const LiteralField: FC<Props> = ({ displayName = '', uuid, value = '', is
 
   return (
     <div data-testid="literal-field" id={uuid}>
-      {displayName.length > 0 && <div data-testid="literal-field-label">{displayName}</div>}
+      {displayName.trim() ? <div data-testid="literal-field-label">{displayName}</div> : null}
       <Input placeholder={displayName} onChange={handleOnChange} value={localValue} disabled={isDisabled} />
     </div>
   );

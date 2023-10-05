@@ -89,7 +89,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   return (
     <div id={uuid}>
-      {displayName.length > 0 && <div data-testid="simple-lookup-label">displayName</div>}
+      {displayName.trim() ? <div data-testid="simple-lookup-label">displayName</div> : null}
       <CreatableSelect
         isSearchable
         isClearable

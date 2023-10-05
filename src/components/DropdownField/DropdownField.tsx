@@ -20,7 +20,7 @@ export const DropdownField: FC<Props> = ({ options, name = '', uuid, onChange, v
 
   return (
     <div id={uuid} data-testid="dropdown-field">
-      {name.length > 0 && <div data-testid="dropdown-field-label">{name}</div>}
+      {name.trim() ? <div data-testid="dropdown-field-label">{name}</div> : null}
       <Select
         options={options}
         isSearchable={false}
