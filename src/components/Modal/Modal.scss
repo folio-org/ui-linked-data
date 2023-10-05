@@ -21,4 +21,11 @@
   outline: none;
   padding: 1.25rem;
   z-index: 11;
+
+  .modal-controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
 }

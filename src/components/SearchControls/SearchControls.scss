@@ -1,0 +1,15 @@
+.id-search-controls {
+  width: 50%;
+
+  .input-box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+
+    .search-input {
+      flex-grow: 1;
+    }
+  }
+}

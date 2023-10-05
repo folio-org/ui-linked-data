@@ -3,6 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { SearchDisplayIdentifiers, SearchIdentifiers } from '@common/constants/search.constants';
 import { Input } from '@components/Input';
 import { SearchTypeSelect } from '@components/SearchTypeSelect';
+import './SearchControls.scss';
 
 type Props = {
   searchBy: SearchIdentifiers | null;
@@ -14,7 +15,15 @@ type Props = {
   fetchData: (searchBy: SearchIdentifiers, query: string) => Promise<void>;
 };
 
-const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, setMessage, clearMessage, fetchData }) => {
+const SearchControls: FC<Props> = ({
+  searchBy,
+  setSearchBy,
+  query,
+  setQuery,
+  setMessage,
+  clearMessage,
+  fetchData,
+}) => {
   const { formatMessage } = useIntl();
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -30,9 +39,9 @@ const SearchControls: FC<Props> = ({ searchBy, setSearchBy, query, setQuery, set
   const doSearch = () => searchBy && fetchData(searchBy, query);
 
   return (
-    <div data-testid="id-search-controls">
+    <div data-testid="id-search-controls" className="id-search-controls">
       <SearchTypeSelect searchBy={searchBy} setSearchBy={setSearchBy} clearMessage={clearMessage} />
-      <div>
+      <div className="input-box">
         <Input
           testid="id-search-input"
           placeholder={formatMessage(
