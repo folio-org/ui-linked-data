@@ -12,7 +12,6 @@ export const useProfileSchema = () => {
     selectedEntries: string[],
   ) => {
     const updatedSchema = _.cloneDeep(schema);
-
     traverseSchemaEntries({ schema: updatedSchema, entry, selectedEntries });
 
     return updatedSchema;
@@ -25,11 +24,12 @@ export const useProfileSchema = () => {
   }: {
     schema: Map<string, SchemaEntry>;
     entry: SchemaEntry;
-    selectedEntries: string[];
+    selectedEntries?: string[];
   }) => {
     const { uuid, path, children } = entry;
     const updatedEntryUuid = uuidv4();
-    const updatedEntry = getCopiedEntry({ schema, entry, uuid: updatedEntryUuid, selectedEntries });
+    const updatedEntry = getCopiedEntry(entry, updatedEntryUuid);
+    updatedEntry.children = getUpdatedChildren({ schema, children, selectedEntries });
 
     const parentEntryUuid = path[path.length - 2];
     const parentEntry = schema.get(parentEntryUuid);
@@ -38,15 +38,58 @@ export const useProfileSchema = () => {
     const updatedParentEntry = getUpdatedParentEntry({
       parentEntry,
       originalEntryUuid: uuid,
-      updatedEntryUuid,
+      updatedEntryUuid: updatedEntryUuid,
     });
 
     if (updatedParentEntry) {
       schema.set(parentEntryUuid, updatedParentEntry);
       schema.set(updatedEntryUuid, updatedEntry);
     }
+  };
 
-    updatedEntry.children = getUpdatedChildren(schema, children);
+  const getCopiedEntry = (entry: SchemaEntry, uuid: string) => {
+    const { path } = entry;
+    const copiedEntry = _.cloneDeep(entry);
+
+    copiedEntry.uuid = uuid;
+    copiedEntry.path = getUpdatedPath(path, uuid);
+
+    return copiedEntry;
+  };
+
+  const getUpdatedChildren = ({
+    schema,
+    children,
+    selectedEntries,
+  }: {
+    schema: Map<string, SchemaEntry>;
+    children: string[] | undefined;
+    selectedEntries?: string[];
+  }) => {
+    const updatedChildren = [] as string[];
+
+    children?.forEach((entryUuid: string) => {
+      const entry = schema.get(entryUuid);
+
+      if (!entry) return;
+
+      const { children } = entry;
+      const updatedEntryUuid = uuidv4();
+      const updatedSelectedEntries = getUpdatedSelectedEntries(selectedEntries, entry.uuid, updatedEntryUuid);
+      const updatedEntry = getCopiedEntry(entry, updatedEntryUuid);
+
+      if (updatedSelectedEntries) {
+        setSelectedEntries(updatedSelectedEntries);
+      }
+
+      updatedEntry.children = getUpdatedChildren({ schema, children });
+
+      schema.set(updatedEntryUuid, updatedEntry);
+
+      updatedChildren.push(updatedEntryUuid);
+    });
+
+    return updatedChildren;
   };
 
   const getUpdatedParentEntry = ({
@@ -68,61 +111,20 @@ export const useProfileSchema = () => {
       // Add the UUID of the copied entry to the parent element's array of children,
       // saving the order of the elements
       children?.splice(originalEntryIndex + 1, 0, updatedEntryUuid);
-
       updatedParentEntry.path = getUpdatedPath(path, updatedEntryUuid);
     }
 
     return updatedParentEntry;
   };
 
-  const getCopiedEntry = ({
-    schema,
-    entry,
-    uuid,
-    selectedEntries,
-  }: {
-    schema: Map<string, SchemaEntry>;
-    entry: SchemaEntry;
-    uuid: string;
-    selectedEntries?: string[];
-  }) => {
-    const { path, children } = entry;
-    const copiedEntry = _.cloneDeep(entry);
-
-    copiedEntry.uuid = uuid;
-    copiedEntry.path = getUpdatedPath(path, uuid);
-    copiedEntry.children = getUpdatedChildren(schema, children, selectedEntries);
-
-    return copiedEntry;
-  };
-
-  const getUpdatedChildren = (
-    schema: Map<string, SchemaEntry>,
-    children: string[] | undefined,
-    selectedEntries?: string[] | undefined,
+  const getUpdatedSelectedEntries = (
+    selectedEntries: string[] | undefined,
+    originalEntryUuid: string,
+    updatedEntryUuid: string,
   ) => {
-    const updatedChildren = [] as string[];
+    if (!selectedEntries?.includes(originalEntryUuid)) return;
 
-    children?.forEach((entryUuid: string) => {
-      const entry = schema.get(entryUuid);
-
-      if (!entry) return;
-
-      const updatedEntryUuid = uuidv4();
-      const updatedEntry = getCopiedEntry({ schema, entry, uuid: updatedEntryUuid });
-
-      if (selectedEntries?.includes(entry.uuid)) {
-        const updatedSelectedEntries = [...selectedEntries, updatedEntryUuid];
-
-        setSelectedEntries(updatedSelectedEntries);
-      }
-
-      schema.set(updatedEntryUuid, updatedEntry);
-
-      updatedChildren.push(updatedEntryUuid);
-    });
-
-    return updatedChildren;
+    return [...selectedEntries, updatedEntryUuid];
   };
 
   const getUpdatedPath = (path: string[], uuid: string) => {
