@@ -29,7 +29,7 @@ export const EditSection = memo(() => {
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
-  const { duplicateEntry } = useProfileSchema();
+  const { getUpdatedSchemaWithCopiedEntries } = useProfileSchema();
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -106,7 +106,7 @@ export const EditSection = memo(() => {
       const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL;
       const componentTitle = hasDuplicateGroupButton ? '' : displayName;
       const onClickDuplicateGroup = () => {
-        const updatedSchema = duplicateEntry(schema, entry);
+        const updatedSchema = getUpdatedSchemaWithCopiedEntries(schema, entry, selectedEntries);
 
         setSchema(updatedSchema);
       };
