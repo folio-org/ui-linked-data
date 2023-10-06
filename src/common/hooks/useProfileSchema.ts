@@ -2,57 +2,95 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useProfileSchema = () => {
-  const getUpdateParentElement = ({
+  const getUpdatedParentEntry = ({
     parentEntry,
-    originalElemUuid,
-    copiedElemUuid,
+    originalEntryUuid,
+    updatedEntryUuid,
   }: {
     parentEntry?: SchemaEntry;
-    originalElemUuid: string;
-    copiedElemUuid: string;
+    originalEntryUuid: string;
+    updatedEntryUuid: string;
   }) => {
     if (!parentEntry) return;
 
-    const copiedParentElem = _.cloneDeep(parentEntry);
-    const { children } = copiedParentElem;
-    const originalElemIndex = children?.indexOf(originalElemUuid);
+    const updatedParentEntry = _.cloneDeep(parentEntry);
+    const { children, path } = updatedParentEntry;
+    const originalEntryIndex = children?.indexOf(originalEntryUuid);
 
-    if (originalElemIndex) {
-      const copiedElementIndex = originalElemIndex + 1;
+    if (originalEntryIndex) {
+      const updatedEntryIndex = originalEntryIndex + 1;
 
-      children?.splice(copiedElementIndex, 0, copiedElemUuid);
+      children?.splice(updatedEntryIndex, 0, updatedEntryUuid);
+      updatedParentEntry.path = [...path.slice(0, path.length - 1), updatedEntryUuid];
     }
 
-    return copiedParentElem;
+    return updatedParentEntry;
   };
 
   const duplicateEntry = (schema: Map<string, SchemaEntry>, entry: SchemaEntry) => {
-    const { uuid, path } = entry;
+    const updatedSchema = _.cloneDeep(schema);
+    traverseSchemaEntries({ schema: updatedSchema, entry });
 
-    const copiedSchema = _.cloneDeep(schema);
+    return updatedSchema;
+  };
+
+  const traverseSchemaEntries = ({
+    schema,
+    entry,
+    parent,
+  }: {
+    schema: Map<string, SchemaEntry>;
+    entry: SchemaEntry;
+    parent?: SchemaEntry;
+  }) => {
+    const { uuid, path, children } = entry;
+
+    const updatedEntry = _.cloneDeep(entry);
     const copiedGroupUuid = uuidv4();
-    const copiedGroup = _.cloneDeep(entry);
-    copiedGroup.uuid = copiedGroupUuid;
+    updatedEntry.uuid = copiedGroupUuid;
+    updatedEntry.path = [...path.slice(0, path.length - 1), copiedGroupUuid];
 
     const parentEntryUuid = path[path.length - 2];
-    const parentEntry = copiedSchema.get(parentEntryUuid);
+    const parentEntry = parent || schema.get(parentEntryUuid);
 
     // update parent entry
-    const updatedParentEntry = getUpdateParentElement({
+    const updatedParentEntry = getUpdatedParentEntry({
       parentEntry,
-      originalElemUuid: uuid,
-      copiedElemUuid: copiedGroupUuid,
+      originalEntryUuid: uuid,
+      updatedEntryUuid: copiedGroupUuid,
     });
 
     if (updatedParentEntry) {
-      copiedSchema.delete(parentEntryUuid);
-      copiedSchema.set(parentEntryUuid, updatedParentEntry);
-      copiedSchema.set(copiedGroupUuid, copiedGroup);
+      schema.set(parentEntryUuid, updatedParentEntry);
+      schema.set(copiedGroupUuid, updatedEntry);
     }
 
-    // TODO: copy and update children entries
+    updatedEntry.children = getUpdatedChildren(schema, children);
+  };
 
-    return copiedSchema;
+  const getUpdatedChildren = (schema: Map<string, SchemaEntry>, children: string[] | undefined) => {
+    const updatedChildren = [] as string[];
+
+    children?.forEach((entryUuid: string) => {
+      const entry = schema.get(entryUuid);
+
+      if (!entry) return;
+
+      const { path, children } = entry;
+
+      const updatedEntry = _.cloneDeep(entry);
+      const updatedEntryUuid = uuidv4();
+
+      updatedEntry.uuid = updatedEntryUuid;
+      updatedEntry.path = [...path.slice(0, path.length - 1), updatedEntryUuid];
+      updatedEntry.children = getUpdatedChildren(schema, children);
+
+      schema.set(updatedEntryUuid, updatedEntry);
+
+      updatedChildren.push(updatedEntryUuid);
+    });
+
+    return updatedChildren;
   };
 
   return { duplicateEntry };
