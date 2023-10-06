@@ -2,31 +2,6 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useProfileSchema = () => {
-  const getUpdatedParentEntry = ({
-    parentEntry,
-    originalEntryUuid,
-    updatedEntryUuid,
-  }: {
-    parentEntry?: SchemaEntry;
-    originalEntryUuid: string;
-    updatedEntryUuid: string;
-  }) => {
-    if (!parentEntry) return;
-
-    const updatedParentEntry = _.cloneDeep(parentEntry);
-    const { children, path } = updatedParentEntry;
-    const originalEntryIndex = children?.indexOf(originalEntryUuid);
-
-    if (originalEntryIndex) {
-      const updatedEntryIndex = originalEntryIndex + 1;
-
-      children?.splice(updatedEntryIndex, 0, updatedEntryUuid);
-      updatedParentEntry.path = [...path.slice(0, path.length - 1), updatedEntryUuid];
-    }
-
-    return updatedParentEntry;
-  };
-
   const duplicateEntry = (schema: Map<string, SchemaEntry>, entry: SchemaEntry) => {
     const updatedSchema = _.cloneDeep(schema);
     traverseSchemaEntries({ schema: updatedSchema, entry });
@@ -44,11 +19,8 @@ export const useProfileSchema = () => {
     parent?: SchemaEntry;
   }) => {
     const { uuid, path, children } = entry;
-
-    const updatedEntry = _.cloneDeep(entry);
-    const copiedGroupUuid = uuidv4();
-    updatedEntry.uuid = copiedGroupUuid;
-    updatedEntry.path = [...path.slice(0, path.length - 1), copiedGroupUuid];
+    const updatedEntryUuid = uuidv4();
+    const updatedEntry = getCopiedEntry(schema, entry, updatedEntryUuid);
 
     const parentEntryUuid = path[path.length - 2];
     const parentEntry = parent || schema.get(parentEntryUuid);
@@ -57,15 +29,52 @@ export const useProfileSchema = () => {
     const updatedParentEntry = getUpdatedParentEntry({
       parentEntry,
       originalEntryUuid: uuid,
-      updatedEntryUuid: copiedGroupUuid,
+      updatedEntryUuid,
     });
 
     if (updatedParentEntry) {
       schema.set(parentEntryUuid, updatedParentEntry);
-      schema.set(copiedGroupUuid, updatedEntry);
+      schema.set(updatedEntryUuid, updatedEntry);
     }
 
     updatedEntry.children = getUpdatedChildren(schema, children);
+  };
+
+  const getUpdatedParentEntry = ({
+    parentEntry,
+    originalEntryUuid,
+    updatedEntryUuid,
+  }: {
+    parentEntry?: SchemaEntry;
+    originalEntryUuid: string;
+    updatedEntryUuid: string;
+  }) => {
+    if (!parentEntry) return;
+
+    const updatedParentEntry = _.cloneDeep(parentEntry);
+    const { children, path } = updatedParentEntry;
+    const originalEntryIndex = children?.indexOf(originalEntryUuid);
+
+    if (originalEntryIndex) {
+      // Add the UUID of the copied entry to the parent element's array of children,
+      // saving the order of the elements
+      children?.splice(originalEntryIndex + 1, 0, updatedEntryUuid);
+
+      updatedParentEntry.path = getUpdatedPath(path, updatedEntryUuid);
+    }
+
+    return updatedParentEntry;
+  };
+
+  const getCopiedEntry = (schema: Map<string, SchemaEntry>, entry: SchemaEntry, uuid: string) => {
+    const { path, children } = entry;
+    const copiedEntry = _.cloneDeep(entry);
+
+    copiedEntry.uuid = uuid;
+    copiedEntry.path = getUpdatedPath(path, uuid);
+    copiedEntry.children = getUpdatedChildren(schema, children);
+
+    return copiedEntry;
   };
 
   const getUpdatedChildren = (schema: Map<string, SchemaEntry>, children: string[] | undefined) => {
@@ -76,14 +85,8 @@ export const useProfileSchema = () => {
 
       if (!entry) return;
 
-      const { path, children } = entry;
-
-      const updatedEntry = _.cloneDeep(entry);
       const updatedEntryUuid = uuidv4();
-
-      updatedEntry.uuid = updatedEntryUuid;
-      updatedEntry.path = [...path.slice(0, path.length - 1), updatedEntryUuid];
-      updatedEntry.children = getUpdatedChildren(schema, children);
+      const updatedEntry = getCopiedEntry(schema, entry, updatedEntryUuid);
 
       schema.set(updatedEntryUuid, updatedEntry);
 
@@ -91,6 +94,13 @@ export const useProfileSchema = () => {
     });
 
     return updatedChildren;
+  };
+
+  const getUpdatedPath = (path: string[], uuid: string) => {
+    const updatedPath = [...path];
+    updatedPath[path.length - 1] = uuid;
+
+    return updatedPath;
   };
 
   return { duplicateEntry };
