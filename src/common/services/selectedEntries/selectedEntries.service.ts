@@ -7,16 +7,16 @@ export class SelectedEntriesService implements ISelectedEntries {
     return this.selectedEntries;
   }
 
-  addNew(selectedOptionId?: string, newOptionId?: string) {
-    const filteredSelectedentries = this.selectedEntries.filter(id => id !== selectedOptionId);
+  addNew(selectedEntryUuid?: string, newEntryUuid?: string) {
+    const filteredSelectedEntries = this.selectedEntries.filter(uuid => uuid !== selectedEntryUuid);
 
-    if (!newOptionId) return;
+    if (!newEntryUuid) return;
 
-    this.selectedEntries = [...filteredSelectedentries, newOptionId];
+    this.selectedEntries = [...filteredSelectedEntries, newEntryUuid];
   }
 
   addDuplicated(originalEntryUuid: string, updatedEntryUuid: string) {
-    if (!this.selectedEntries?.includes(originalEntryUuid)) return;
+    if (!this.selectedEntries.includes(originalEntryUuid)) return;
 
     this.selectedEntries.push(updatedEntryUuid);
   }
