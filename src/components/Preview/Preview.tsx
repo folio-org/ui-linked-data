@@ -45,7 +45,7 @@ export const Preview: FC<Preview> = ({ altSchema, altUserValues, altInitKey, hea
         {children?.map((uuid: string) => (
           <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />
         ))}
-        {!children &&
+        {(!children || !children.length) &&
           userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri } = {} }) => (
             <div key={`${label}${uri}`}>
               <div>
