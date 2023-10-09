@@ -11,7 +11,10 @@ export class SchemaWithDuplicatesService {
   }
 
   duplicateEntry(entry: SchemaEntry) {
-    const { uuid, path, children } = entry;
+    const { uuid, path, children, constraints } = entry;
+
+    if (!constraints?.repeatable) return;
+
     const updatedEntryUuid = uuidv4();
     const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
     updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);

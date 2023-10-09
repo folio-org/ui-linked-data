@@ -8,9 +8,9 @@ export class SelectedEntriesService implements ISelectedEntries {
   }
 
   addNew(selectedEntryUuid?: string, newEntryUuid?: string) {
-    const filteredSelectedEntries = this.selectedEntries.filter(uuid => uuid !== selectedEntryUuid);
-
     if (!newEntryUuid) return;
+
+    const filteredSelectedEntries = this.selectedEntries.filter(uuid => uuid !== selectedEntryUuid);
 
     this.selectedEntries = [...filteredSelectedEntries, newEntryUuid];
   }
