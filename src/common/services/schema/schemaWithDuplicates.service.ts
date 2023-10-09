@@ -57,10 +57,9 @@ export class SchemaWithDuplicatesService {
       updatedEntry.children = this.getUpdatedChildren(children);
 
       this.schema.set(updatedEntryUuid, updatedEntry);
+      this.selectedEntries.addDuplicated(entry.uuid, updatedEntryUuid);
 
       updatedChildren.push(updatedEntryUuid);
-
-      this.selectedEntries.addDuplicated(entry.uuid, updatedEntryUuid);
     });
 
     return updatedChildren;

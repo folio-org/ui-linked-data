@@ -7,7 +7,7 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 export const useProfileSchema = () => {
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
 
-  const getUpdatedSchemaWithCopiedEntries = (
+  const getSchemaWithCopiedEntries = (
     schema: Map<string, SchemaEntry>,
     entry: SchemaEntry,
     selectedEntries: string[],
@@ -21,5 +21,5 @@ export const useProfileSchema = () => {
     return updatedSchema.get();
   };
 
-  return { getUpdatedSchemaWithCopiedEntries };
+  return { getSchemaWithCopiedEntries };
 };
