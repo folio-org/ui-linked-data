@@ -12,16 +12,14 @@ export class SchemaWithDuplicatesService {
 
   duplicateEntry(entry: SchemaEntry) {
     const { uuid, path, children } = entry;
-
-    // the path contains the uuid of the parent element and the uuid of the current entry,
-    // so the uuid of the parent element is second from the end
-    const parentEntryUuid = path[path.length - 2];
-    const parentEntry = this.schema.get(parentEntryUuid);
-
     const updatedEntryUuid = uuidv4();
     const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
     updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
 
+    // the path contains the UUID of the parent element and the UUID of the current entry,
+    // so the UUID of the parent element is second from the end
+    const parentEntryUuid = path[path.length - 2];
+    const parentEntry = this.schema.get(parentEntryUuid);
     const updatedParentEntry = this.getUpdatedParentEntry({
       parentEntry,
       originalEntryUuid: uuid,
@@ -55,7 +53,6 @@ export class SchemaWithDuplicatesService {
       const { children } = entry;
       const updatedEntryUuid = uuidv4();
       const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
-
       updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
 
       this.schema.set(updatedEntryUuid, updatedEntry);
