@@ -12,13 +12,13 @@ export const useProfileSchema = () => {
     entry: SchemaEntry,
     selectedEntries: string[],
   ) => {
-    const updatedSelectedEntriesService = new SelectedEntriesService(selectedEntries);
-    const updatedSchemaService = new SchemaWithDuplicatesService(schema, updatedSelectedEntriesService);
-    updatedSchemaService.duplicateEntry(entry);
+    const selectedEntriesService = new SelectedEntriesService(selectedEntries);
+    const schemaWithDuplicatesService = new SchemaWithDuplicatesService(schema, selectedEntriesService);
+    schemaWithDuplicatesService.duplicateEntry(entry);
 
-    setSelectedEntries(updatedSelectedEntriesService.get());
+    setSelectedEntries(selectedEntriesService.get());
 
-    return updatedSchemaService.get();
+    return schemaWithDuplicatesService.get();
   };
 
   return { getSchemaWithCopiedEntries };
