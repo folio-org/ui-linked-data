@@ -68,7 +68,6 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
   'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/copyright': BFLITE_URIS.LABEL,
 };
 
 export const ADVANCED_FIELDS = {

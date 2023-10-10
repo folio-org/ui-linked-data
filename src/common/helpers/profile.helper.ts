@@ -85,7 +85,7 @@ const traverseSchema = ({
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
-      if (parentUri || uri) {
+      if ((parentUri || uri) && !advancedValueField) {
         return generateLookupValue({ uriBFLite, label, uri: parentUri || uri });
       } else if (advancedValueField) {
         return generateAdvancedFieldObject({ advancedValueField, label });
