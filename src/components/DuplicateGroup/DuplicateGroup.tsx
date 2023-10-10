@@ -2,7 +2,7 @@ import { FC, memo } from 'react';
 import './DuplicateGroup.scss';
 
 interface Props {
-  onClick?: () => void;
+  onClick?: VoidFunction;
 }
 
 export const DuplicateGroup: FC<Props> = memo(({ onClick }) => (

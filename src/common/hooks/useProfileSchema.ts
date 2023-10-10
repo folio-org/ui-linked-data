@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { useSetRecoilState } from 'recoil';
 import state from '@state';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
