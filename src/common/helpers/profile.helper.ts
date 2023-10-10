@@ -192,7 +192,7 @@ export const shouldSelectDropdownOption = ({
   // TODO: Potentially dangerous HACK ([0])
   // Might be removed with the API schema change
   // If not, refactor to include all indices
-  const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
+  const isSelectedOptionInRecord = Array.isArray(record) ? record?.[0]?.[uri] : record?.[uri];
   let shouldSelectOption = false;
 
   if (IS_NEW_API_ENABLED && dropdownOptionSelection?.hasNoRootWrapper) {
