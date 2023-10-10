@@ -17,6 +17,7 @@ import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DuplicateGroup } from '@components/DuplicateGroup';
 import './EditSection.scss';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
+import { SelectedEntriesService } from '@common/services/selectedEntries';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -30,6 +31,7 @@ export const EditSection = memo(() => {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
   const { getSchemaWithCopiedEntries } = useProfileSchema();
+  const selectedEntriesService = new SelectedEntriesService(selectedEntries);
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -158,7 +160,9 @@ export const EditSection = memo(() => {
         const selectedOption = options?.find(({ id }) => id && selectedEntries.includes(id));
 
         const handleChange = (option: any) => {
-          setSelectedEntries([...selectedEntries.filter(id => id !== selectedOption?.id), option.id]);
+          selectedEntriesService.addNew(selectedOption?.id, option.id);
+
+          setSelectedEntries(selectedEntriesService.get());
         };
 
         return (
