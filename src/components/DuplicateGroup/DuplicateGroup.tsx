@@ -1,8 +1,12 @@
-import { memo } from 'react';
+import { FC, memo } from 'react';
 import './DuplicateGroup.scss';
 
-export const DuplicateGroup = memo(() => (
-  <button data-testid="id-duplicate-group" className="duplicate-group">
+interface Props {
+  onClick?: VoidFunction;
+}
+
+export const DuplicateGroup: FC<Props> = memo(({ onClick }) => (
+  <button data-testid="id-duplicate-group" className="duplicate-group" onClick={onClick}>
     <span>+</span>
   </button>
 ));
