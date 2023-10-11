@@ -57,7 +57,7 @@ export const useRecordControls = () => {
     if (!parsed) return;
 
     try {
-      const formattedRecord = formatRecord(profile, parsed) as RecordEntry;
+      const formattedRecord = formatRecord(parsed) as RecordEntry;
       // TODO: define a type
       const recordId = getRecordId(record);
       const response: any =
