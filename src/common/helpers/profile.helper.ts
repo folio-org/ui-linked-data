@@ -80,6 +80,7 @@ const traverseSchema = ({
     .includes(key);
 
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
+  const isArrayContainer = !!selector && Array.isArray(container[selector]);
 
   if (userValueMatch && uri && selector) {
     const advancedValueField = getAdvancedValuesField(uriBFLite);
@@ -94,7 +95,12 @@ const traverseSchema = ({
       }
     });
 
-    container[selector] = withFormat;
+    if (isArrayContainer && container[selector].length) {
+      // Add duplicated group
+      container[selector].push(...withFormat);
+    } else {
+      container[selector] = withFormat;
+    }
   } else if (selector && (shouldProceed || index < GROUP_BY_LEVEL)) {
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
@@ -116,7 +122,13 @@ const traverseSchema = ({
         // their child elements like "dropdown options" are placed at the top level,
         // where any other blocks are placed.
         containerSelector = {};
-        container[selector] = type === block ? containerSelector : [containerSelector];
+
+        if (isArrayContainer) {
+          // Add duplicated group
+          container[selector].push(containerSelector);
+        } else {
+          container[selector] = type === block ? containerSelector : [containerSelector];
+        }
       } else if (type === dropdownOption) {
         if (!selectedEntries.includes(key)) {
           // Only fields from the selected option should be processed and saved
@@ -135,7 +147,13 @@ const traverseSchema = ({
         }
       } else {
         containerSelector = isArray ? [] : {};
-        container[selector] = containerSelector;
+
+        if (container[selector] && isArrayContainer) {
+          // Add duplicated group
+          containerSelector = container[selector];
+        } else {
+          container[selector] = containerSelector;
+        }
       }
     } else {
       container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
