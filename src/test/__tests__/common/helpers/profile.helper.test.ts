@@ -2,7 +2,6 @@ import { hasElement, generateLookupValue, shouldSelectDropdownOption } from '@co
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import * as BibframeConstants from '@common/constants/bibframe.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
 import * as SchemaHelper from '@common/helpers/schema.helper';
 
 describe('profile.helper', () => {
@@ -35,38 +34,13 @@ describe('profile.helper', () => {
   });
 
   describe('generateLookupValue', () => {
-    const mockFeatureConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
     const mockLookupConstant = getMockedImportedConstant(BibframeConstants, 'LOOKUPS_WITH_SIMPLE_STRUCTURE');
     const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
-
-    describe('generateLookupValue for Bibframe', () => {
-      beforeAll(() => {
-        mockFeatureConstant(false);
-      });
-
-      test('returns generated value', () => {
-        const label = 'test_label';
-        const uri = 'test_uri';
-        const testResult = {
-          id: null,
-          label,
-          uri,
-        };
-
-        const result = generateLookupValue({ label, uri });
-
-        expect(result).toEqual(testResult);
-      });
-    });
 
     describe('generateLookupValue for BibframeLite', () => {
       const label = 'test_label';
       const uriBFLite = 'test_uriBFLite';
       const uri = 'test_uri';
-
-      beforeAll(() => {
-        mockFeatureConstant(true);
-      });
 
       test('returns passed label for lookups with non-hierarchical structure', () => {
         mockLookupConstant([uriBFLite]);

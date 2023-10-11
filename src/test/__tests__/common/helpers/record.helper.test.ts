@@ -2,7 +2,6 @@ import * as RecordHelper from '@common/helpers/record.helper';
 import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
 import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
@@ -21,39 +20,21 @@ describe('record.helper', () => {
     data: record,
   };
 
-  const mockImportedConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
-
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
-    mockImportedConstant(false);
   });
 
   describe('formatRecord', () => {
     function testFormatRecord(
       initialRecord: Record<string, object> | RecordEntry,
       testResult: Record<string, object | string>,
-      isNewApiEnabled: boolean = false,
     ) {
-      if (isNewApiEnabled) {
-        mockImportedConstant(true);
-      }
-
-      const result = RecordHelper.formatRecord(profile, initialRecord);
+      const result = RecordHelper.formatRecord(initialRecord);
 
       expect(result).toEqual(testResult);
     }
 
     test('returns formatted record data', () => {
-      const initialRecord = { [profile]: { Instance: [{}] } };
-      const testResult = {
-        profile,
-        Instance: [{}],
-      };
-
-      testFormatRecord(initialRecord, testResult);
-    });
-
-    test('returns formatted record data for the new API', () => {
       const initialRecord = {
         Instance: {},
       };
@@ -63,7 +44,7 @@ describe('record.helper', () => {
         },
       };
 
-      testFormatRecord(initialRecord, testResult, true);
+      testFormatRecord(initialRecord, testResult);
     });
   });
 

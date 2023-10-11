@@ -15,7 +15,6 @@ import {
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
-import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
 import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
@@ -191,8 +190,7 @@ export const useConfig = () => {
           });
 
           propertyTemplates.map((entry, i) => {
-            const isHiddenType =
-              IS_NEW_API_ENABLED && (type === AdvancedFieldType.hidden || HIDDEN_WRAPPERS.includes(resourceURI));
+            const isHiddenType = type === AdvancedFieldType.hidden || HIDDEN_WRAPPERS.includes(resourceURI);
             const selectedRecord = generateRecordForDropdown({
               record,
               uriWithSelector,
@@ -254,10 +252,9 @@ export const useConfig = () => {
 
           const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
           const hasNoRootWrapper =
-            IS_NEW_API_ENABLED &&
-            (GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
-              COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
-              hasHiddenParent);
+            GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
+            COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
+            hasHiddenParent;
 
           valueTemplateRefs.forEach((item, i) => {
             const entry = templates[item];
@@ -305,7 +302,7 @@ export const useConfig = () => {
 
   const getUris = (uri: string, schema?: Schema, path?: string[]) => {
     const uriBFLite = getMappedBFLiteUri(uri, schema, path);
-    const uriWithSelector = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+    const uriWithSelector = uriBFLite || uri;
 
     return { uriBFLite, uriWithSelector };
   };
@@ -354,7 +351,7 @@ export const useConfig = () => {
     setSelectedProfile(monograph);
     setUserValues({});
 
-    const recordData = (IS_NEW_API_ENABLED ? record?.resource : record) || {};
+    const recordData = record?.resource || {};
     const { base, userValues, initKey } = buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {

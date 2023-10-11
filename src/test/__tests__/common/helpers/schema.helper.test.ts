@@ -1,6 +1,5 @@
 import * as SchemaHelper from '@common/helpers/schema.helper';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
@@ -13,7 +12,6 @@ describe('schema.helper', () => {
     getSelectedRecord,
     generateRecordForDropdown,
   } = SchemaHelper;
-  const mockFeatureConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
   const mockAdvancedFieldsConstant = getMockedImportedConstant(BibframeMappingConstants, 'ADVANCED_FIELDS');
@@ -87,27 +85,7 @@ describe('schema.helper', () => {
   });
 
   describe('generateUserValueObject', () => {
-    test('returns an object which was generated from the simple entry', () => {
-      mockFeatureConstant(false);
-      jest.spyOn(SchemaHelper, 'getLookupLabelKey').mockReturnValueOnce('testKey');
-      const entry = { uri: 'testUri', label: 'testLabel' };
-      const type = 'testType' as AdvancedFieldType;
-      const testResult = {
-        label: 'testLabel',
-        meta: {
-          parentURI: 'testUri',
-          uri: 'testUri',
-          type: 'testType',
-        },
-      };
-
-      const result = generateUserValueObject(entry, type);
-
-      expect(result).toEqual(testResult);
-    });
-
     test('returns an object which was generated from the nested entry', () => {
-      mockFeatureConstant(true);
       mockBFUrisConstant({ LINK: 'testLink' });
       jest.spyOn(SchemaHelper, 'getLookupLabelKey').mockReturnValueOnce('testKey');
       const entry = { uri: 'testUri', label: 'testLabel', testKey: 'testLabelKey' };

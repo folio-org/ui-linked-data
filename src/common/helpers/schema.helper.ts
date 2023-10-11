@@ -1,6 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
-import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -24,18 +23,12 @@ export const generateAdvancedFieldObject = ({
 
 export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite?: string) => {
   const keyName = getLookupLabelKey(uriBFLite);
-  const { uri: entryUri, label: entryLabel } = entry;
-  const uri = IS_NEW_API_ENABLED ? BFLITE_URIS.LINK : entryUri;
-  let label = entryLabel;
+  const uri = BFLITE_URIS.LINK;
+  let label = Array.isArray(entry[keyName]) ? entry[keyName][0] : entry[keyName];
+  const advancedValueField = getAdvancedValuesField(uriBFLite);
 
-  if (IS_NEW_API_ENABLED) {
-    const advancedValueField = getAdvancedValuesField(uriBFLite);
-
-    if (advancedValueField) {
-      label = entry[advancedValueField];
-    } else {
-      label = Array.isArray(entry[keyName]) ? entry[keyName][0] : entry[keyName];
-    }
+  if (advancedValueField) {
+    label = entry[advancedValueField];
   }
 
   return {
