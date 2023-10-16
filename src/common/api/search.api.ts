@@ -1,10 +1,13 @@
 import baseApi from './base.api';
 
 export type ItemSearchResponse = {
-  search_query: string;
+  searchQuery: string;
   content: {
     id: string;
-    title?: string;
+    titles?: {
+      value?: string;
+      type?: string;
+    }[];
     identifiers?: {
       value?: string;
       type?: string;

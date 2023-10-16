@@ -14,7 +14,7 @@ describe('Item Search', () => {
   const id = 'lccn';
   const event = {
     target: {
-      value: '1234',
+      value: '1234-1',
     },
   };
 
@@ -55,7 +55,7 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith(id, event.target.value + '000000');
+      expect(getByIdentifierMock).toHaveBeenCalledWith(id, "1234000001");
     });
   });
 
