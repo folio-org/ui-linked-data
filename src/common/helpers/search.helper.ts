@@ -10,7 +10,7 @@ const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; t
 
 export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => {
   return result.content
-    .map(({ id, title, contributors, publications, editionStatement, identifiers }) => ({
+    .map(({ id, titles, contributors, publications, editionStatement, identifiers }) => ({
       isbn: {
         label: findIdentifier(SearchIdentifiers.ISBN, identifiers),
       },
@@ -18,7 +18,7 @@ export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => 
         label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
       },
       title: {
-        label: title,
+        label: titles?.map(({ value }) => value).join('; '),
       },
       author: {
         label: contributors?.map(({ name }) => name).join('; '),
