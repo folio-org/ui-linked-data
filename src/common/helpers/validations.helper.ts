@@ -1,35 +1,25 @@
 const MIN_SERIAL_NUMBER_CHARS = 6;
-const MAX_LCCN_CHARS = 12;
-const YEAR_INDEX = 4;
 
 const combineLccnParts = (first: string, second = '') => {
-  const secondLen = second?.length || 0;
+  const secondLen = second.length;
+
+  if (first.length >= MIN_SERIAL_NUMBER_CHARS) return first;
 
   return first?.concat(
-    secondLen < MIN_SERIAL_NUMBER_CHARS
-      ? `${'0'.repeat(MIN_SERIAL_NUMBER_CHARS - secondLen)}${second}`
-      : second,
+    secondLen < MIN_SERIAL_NUMBER_CHARS ? `${'0'.repeat(MIN_SERIAL_NUMBER_CHARS - secondLen)}${second}` : second,
   );
-}
+};
 
 export const normalizeLccn = (lccn: string) => {
   const normalizeable = validateLccn(lccn, false);
 
   if (!normalizeable) return null;
 
-  const [beforeHyphen, afterHyphen] = (normalizeable as string).split(/-(.*)/s);
-  const afterHyphenLen = afterHyphen?.length || 0;
-  const containsHyphen = afterHyphenLen > 0;
+  const typedNormalizeable = normalizeable as string;
 
-  let first = beforeHyphen;
-  let second = afterHyphen;
+  const [prefix, suffix] = typedNormalizeable.split(/-(.*)/s);
 
-  if (!containsHyphen) {
-    first = beforeHyphen.slice(0, YEAR_INDEX);
-    second = beforeHyphen.slice(YEAR_INDEX);
-  }
-
-  return combineLccnParts(first, second);
+  return combineLccnParts(prefix, suffix);
 };
 
 export const validateLccn = (lccn: string, normalized = true) => {
@@ -40,16 +30,14 @@ export const validateLccn = (lccn: string, normalized = true) => {
   } else {
     // test for optional 2-letter prefix, then 4-digit (year),
     // then and 0 to 6 digits with one or less hyphens in between
-    const regexForNonNormalizedLccn = /^([a-z]{0}|[a-z]{2})\d{4}([\d]*-?[\d]){0,6}$/gi;
+    const regexForNonNormalizedLccn = /^\d{4}(\d{6}|-\d{1,6})$/g;
 
     const preformatted = lccn.replaceAll(/\s+/g, '').split('/')[0];
 
     // TODO: try to have a single regexp rule?
-    const passes =
-      regexForNonNormalizedLccn.test(preformatted) &&
-      preformatted.length < MAX_LCCN_CHARS &&
-      (preformatted.match(/-/g) || []).length <= 1;
+    const passes = regexForNonNormalizedLccn.test(preformatted)
 
+    // if passes, return string with only digits and letters in it
     return passes ? preformatted : passes;
   }
 };
