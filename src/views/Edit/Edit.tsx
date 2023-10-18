@@ -6,11 +6,9 @@ import { PROFILE_IDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { EditSection } from '@components/EditSection';
-import { Preview } from '@components/Preview';
 import { Properties } from '@components/Properties';
 import './Edit.scss';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { RecordControls } from '@components/RecordControls';
 import { useEffect } from 'react';
 
 export const Edit = () => {
@@ -40,10 +38,6 @@ export const Edit = () => {
     <div data-testid="edit-page" className="edit-page">
       <Properties />
       <EditSection />
-      <div>
-        <Preview />
-        <RecordControls />
-      </div>
     </div>
   ) : (
     <div>
