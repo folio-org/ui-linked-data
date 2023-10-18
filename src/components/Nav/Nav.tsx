@@ -1,5 +1,6 @@
 import { ROUTES } from '@common/constants/routes.constants';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
+import { RecordControls } from '@components/RecordControls';
 import state from '@state';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -21,6 +22,7 @@ export const Nav = () => {
             <FormattedMessage id={name} />
           </Link>
         ))}
+      <RecordControls />
       <select className='locale-select' onChange={({ target: { value } }) => setLocale(value)}>
         {Object.values(LOCALES).map(locale => (
           <option key={locale} value={locale}>
