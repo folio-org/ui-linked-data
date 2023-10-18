@@ -1,5 +1,5 @@
 import { useEffect, memo, useCallback, useState } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
@@ -32,6 +32,7 @@ export const EditSection = memo(() => {
   const record = useRecoilValue(state.inputs.record);
   const { getSchemaWithCopiedEntries } = useProfileSchema();
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
+  const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -68,6 +69,12 @@ export const EditSection = memo(() => {
 
     return () => window.removeEventListener('scroll', onWindowScroll);
   });
+
+  useEffect(() => {
+    setIsEditSectionOpen(true);
+
+    return () => setIsEditSectionOpen(false)
+  }, [])
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {

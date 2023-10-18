@@ -5,6 +5,12 @@ const isAdvancedSearchOpen = atom<boolean>({
   default: false,
 });
 
+const isEditSectionOpen = atom<boolean>({
+  key: 'ui.isEditSectionOpen',
+  default: false,
+});
+
 export default {
   isAdvancedSearchOpen,
+  isEditSectionOpen,
 };
