@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import state from '@state';
 import { useConfig } from '@common/hooks/useConfig.hook';
-import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { EditSection } from '@components/EditSection';
@@ -24,7 +24,7 @@ export const Edit = () => {
 
   const onClickStartFromScratch = () => {
     // TODO: set default selected profile
-    const profile = PROFILE_IDS.MONOGRAPH;
+    const profile = PROFILE_BFIDS.MONOGRAPH;
     const savedRecordData = getSavedRecord(profile);
     const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
     const record = typedSavedRecord ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID) : null;

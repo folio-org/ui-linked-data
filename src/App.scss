@@ -64,6 +64,11 @@
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
+  input:disabled {
+    margin: 0;
+    opacity: 0.5;
+    background-color: #e6e6e6;
+  }
 
   hr {
     width: 100%;

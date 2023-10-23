@@ -1,8 +1,15 @@
 .properties {
-  .group {
-    border: 1px solid black;
-    margin: 0.5em 0;
-    padding: 0 0.5em;
-    cursor: pointer;
+  .profile-entity {
+    .group {
+      border: 1px solid black;
+      margin: 0.5em 0;
+      padding: 0 0.5em;
+      cursor: pointer;
+    }
+
+    display: flex;
+    flex-direction: column-reverse;
   }
+
+  max-width: 15rem;
 }

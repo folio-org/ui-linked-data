@@ -1,6 +1,6 @@
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   // TODO: revise after demo
-  // 'lc:RT:bf2:Monograph:Work': 'Work',
+  'lc:RT:bf2:Monograph:Work': 'Work',
   'lc:RT:bf2:Monograph:Instance': 'Instance',
 };
 
@@ -8,8 +8,9 @@ export const PROFILE_NAMES = {
   MONOGRAPH: 'BIBFRAME 2.0 Monograph',
 };
 
-export const PROFILE_IDS = {
+export const PROFILE_BFIDS = {
   MONOGRAPH: 'lc:profile:bf2:Monograph',
+  WORK: 'lc:RT:bf2:Monograph:Work',
 };
 
 export const TYPE_URIS = {
