@@ -23,13 +23,10 @@ export const generateAdvancedFieldObject = ({
 
 export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite?: string) => {
   const keyName = getLookupLabelKey(uriBFLite);
-  const uri = BFLITE_URIS.LINK;
-  let label = Array.isArray(entry[keyName]) ? entry[keyName][0] : entry[keyName];
   const advancedValueField = getAdvancedValuesField(uriBFLite);
-
-  if (advancedValueField) {
-    label = entry[advancedValueField];
-  }
+  const labelKeyName = advancedValueField || keyName;
+  const uri = BFLITE_URIS.LINK;
+  const label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
 
   return {
     label,
