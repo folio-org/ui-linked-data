@@ -1,11 +1,11 @@
-import { useEffect, memo, useCallback, useState } from 'react';
+import { useEffect, memo, useCallback, useState, useMemo } from 'react';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
 import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
-import { GROUP_BY_LEVEL, PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { GROUP_BY_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IS_REPEATABLE_FIELDS_ENABLED } from '@common/constants/feature.constants';
@@ -53,7 +53,7 @@ export const EditSection = memo(() => {
 
         if (!parsed) return;
 
-        const profile = PROFILE_IDS.MONOGRAPH;
+        const profile = PROFILE_BFIDS.MONOGRAPH;
 
         saveRecordLocally(profile, parsed, getRecordId(record) as string);
       } catch (error) {
@@ -73,8 +73,8 @@ export const EditSection = memo(() => {
   useEffect(() => {
     setIsEditSectionOpen(true);
 
-    return () => setIsEditSectionOpen(false)
-  }, [])
+    return () => setIsEditSectionOpen(false);
+  }, []);
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {
@@ -223,7 +223,7 @@ export const EditSection = memo(() => {
     [selectedEntries],
   );
 
-  const disabledFields = getAllDisabledFields(schema);
+  const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
   return resourceTemplates ? (
     <div className="edit-section">

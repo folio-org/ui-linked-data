@@ -1,3 +1,4 @@
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 const DISABLED_FIELD_TYPES = [
@@ -7,8 +8,25 @@ const DISABLED_FIELD_TYPES = [
   AdvancedFieldType.dropdown,
 ];
 
+const DISABLED_PARENT_BFIDS = [PROFILE_BFIDS.WORK];
+
 export const getComplexLookups = (schema: Schema) =>
   Array.from(schema.values()).filter(({ type }) => type === AdvancedFieldType.complex);
+
+export const getDisabledParentDescendants = (schema: Schema) => {
+  const schemaValues = Array.from(schema.values());
+  const parentUuids = schemaValues.reduce((acc: any, { uuid }) => {
+    const entry = schema.get(uuid);
+
+    if (entry?.bfid && DISABLED_PARENT_BFIDS.includes(entry.bfid)) {
+      return [...acc, entry.uuid];
+    }
+
+    return acc;
+  }, []);
+
+  return schemaValues.filter(({ path }) => path.some(pathEntry => parentUuids.includes(pathEntry)));
+};
 
 export const getGroupsWithComplexLookups = (complexLookupFields: SchemaEntry[], schema: Schema) =>
   complexLookupFields.map(({ path }) =>
@@ -45,6 +63,8 @@ export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: stri
 
 export const getAllDisabledFields = (schema: Schema) => {
   const complexLookupFields = getComplexLookups(schema);
+  const disabledParentDescendants = getDisabledParentDescendants(schema);
+
   const disabledFields = new Map();
 
   if (complexLookupFields.length) {
@@ -55,6 +75,10 @@ export const getAllDisabledFields = (schema: Schema) => {
 
       disabledFieldsWithinGroup.forEach((disabledField, key) => disabledFields.set(key, disabledField));
     });
+  }
+
+  if (disabledParentDescendants.length) {
+    disabledParentDescendants.forEach(disabledField => disabledFields.set(disabledField.uuid, disabledField));
   }
 
   return disabledFields;

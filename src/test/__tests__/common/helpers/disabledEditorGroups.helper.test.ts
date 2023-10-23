@@ -1,3 +1,4 @@
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import * as DisabledEditorGroups from '@common/helpers/disabledEditorGroups.helper';
 
 describe('disabledEditorGroups.helper', () => {
@@ -129,6 +130,27 @@ describe('disabledEditorGroups.helper', () => {
       const result = DisabledEditorGroups.getAllDisabledFields(schema);
 
       expect(result.size).toBe(0);
+    });
+  });
+
+  describe('getDisabledParentDescendants', () => {
+    test('should return the disabled parent and its descendants', () => {
+      const schema = new Map([
+        ['testKey-1', { path: ['testKey-1'], bfid: PROFILE_BFIDS.WORK, uuid: 'testKey-1' }],
+        ['testKey-4', { path: ['testKey-1', 'testKey-2'], uuid: 'testKey-4' }],
+        ['testKey-5', { path: ['testKey-1', 'testKey-2', 'testKey-5'], uuid: 'testKey-5' }],
+        ['testKey-6', { path: ['testKey-2'], uuid: 'testKey-6' }],
+      ]);
+
+      const testResult = [
+        { path: ['testKey-1'], bfid: PROFILE_BFIDS.WORK, uuid: 'testKey-1' },
+        { path: ['testKey-1', 'testKey-2'], uuid: 'testKey-4' },
+        { path: ['testKey-1', 'testKey-2', 'testKey-5'], uuid: 'testKey-5' },
+      ];
+
+      const result = DisabledEditorGroups.getDisabledParentDescendants(schema);
+
+      expect(result).toEqual(testResult);
     });
   });
 });
