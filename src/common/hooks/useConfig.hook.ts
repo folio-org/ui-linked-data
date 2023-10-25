@@ -63,6 +63,7 @@ export const useConfig = () => {
     dropdownOptionSelection?: DropdownOptionSelection;
     hasHiddenParent?: boolean;
     userValues?: UserValues;
+    parentEntryType?: AdvancedFieldType;
   };
 
   const traverseProfile = ({
@@ -78,6 +79,7 @@ export const useConfig = () => {
     dropdownOptionSelection,
     hasHiddenParent = false,
     userValues,
+    parentEntryType,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -107,28 +109,40 @@ export const useConfig = () => {
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
 
-      if (withContentsSelected?.[uriWithSelector] && userValues) {
-        userValues[uuid] = {
-          uuid,
-          contents: withContentsSelected?.[uriWithSelector].map((entry: any) =>
-            typeof entry === 'string'
-              ? {
-                  label: entry,
-                }
-              : generateUserValueObject(entry, type, uriBFLite),
-          ),
-        };
-      }
+      if (withContentsSelected?.[uriWithSelector]?.length > 1 && parentEntryType === AdvancedFieldType.block) {
+        const copiedGroupsUuid = withContentsSelected?.[uriWithSelector].map(() => uuidv4());
 
-      base.set(uuid, {
-        uuid,
-        type,
-        path: updatedPath,
-        displayName: propertyLabel,
-        uri: propertyURI,
-        uriBFLite,
-        constraints,
-      });
+        updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
+
+        withContentsSelected[uriWithSelector].forEach((_: Record<string, any>, index: number) => {
+          processSimpleUIConrol({
+            base,
+            recordData: withContentsSelected?.[uriWithSelector],
+            userValues,
+            uuid: copiedGroupsUuid[index],
+            type,
+            uriBFLite,
+            path,
+            propertyLabel,
+            propertyURI,
+            constraints,
+            index,
+          });
+        });
+      } else {
+        processSimpleUIConrol({
+          base,
+          recordData: withContentsSelected?.[uriWithSelector],
+          userValues,
+          uuid,
+          type,
+          uriBFLite,
+          path,
+          propertyLabel,
+          propertyURI,
+          constraints,
+        });
+      }
     } else {
       switch (type) {
         // parent types
@@ -207,6 +221,7 @@ export const useConfig = () => {
               record: selectedRecord,
               hasHiddenParent: isHiddenType,
               userValues,
+              parentEntryType: type,
             });
           });
 
@@ -455,6 +470,68 @@ export const useConfig = () => {
       selectedEntries?.push(uuidArray[0]);
     }
   };
+
+  const processSimpleUIConrol = ({
+    base,
+    recordData,
+    userValues,
+    uuid,
+    type,
+    uriBFLite,
+    path,
+    propertyLabel,
+    propertyURI,
+    constraints,
+    index,
+  }: {
+    base: Map<string, SchemaEntry>;
+    recordData: Array<Record<string, any>>;
+    userValues?: UserValues;
+    uuid: string;
+    type: AdvancedFieldType;
+    uriBFLite?: string;
+    path: string[];
+    propertyLabel: string;
+    propertyURI: string;
+    constraints: Constraints;
+    index?: number;
+  }) => {
+    if (recordData && userValues) {
+      let contents = recordData.map((entry: any) => generateUserValueContent(entry, type, uriBFLite));
+
+      if (index !== undefined) {
+        const selectedRecordData = recordData?.[index];
+
+        contents = [generateUserValueContent(selectedRecordData, type, uriBFLite)];
+      }
+
+      userValues[uuid] = {
+        uuid,
+        contents,
+      };
+    }
+
+    base.set(uuid, {
+      uuid,
+      type,
+      path: [...path, uuid],
+      displayName: propertyLabel,
+      uri: propertyURI,
+      uriBFLite,
+      constraints,
+    });
+  };
+
+  const generateUserValueContent = (
+    entry: string | Record<string, any> | Array<Record<string, any>>,
+    type: AdvancedFieldType,
+    uriBFLite?: string,
+  ) =>
+    typeof entry === 'string'
+      ? {
+          label: entry,
+        }
+      : generateUserValueObject(entry, type, uriBFLite);
 
   return { getProfiles, prepareFields };
 };
