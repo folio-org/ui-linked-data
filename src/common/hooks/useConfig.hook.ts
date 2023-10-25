@@ -216,77 +216,52 @@ export const useConfig = () => {
         case AdvancedFieldType.group:
         case AdvancedFieldType.groupComplex:
         case AdvancedFieldType.dropdown: {
-          const {
-            propertyURI,
-            propertyLabel,
-            mandatory,
-            repeatable,
-            valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
-          } = entry as PropertyTemplate;
-          const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
+          const { propertyURI } = entry as PropertyTemplate;
+          const { uriWithSelector } = getUris(propertyURI, base, path);
 
-          const constraints = {
-            ...CONSTRAINTS,
-            mandatory: Boolean(mandatory),
-            repeatable: Boolean(repeatable),
-            editable: Boolean(editable),
-            useValuesFrom,
-            valueDataType,
-          };
-
-          const uuidArray = valueTemplateRefs.map(() => uuidv4());
-
-          base.set(uuid, {
-            uuid,
-            type,
-            path: updatedPath,
-            displayName: propertyLabel,
-            uri: propertyURI,
-            uriBFLite,
-            constraints,
-            children: uuidArray,
-          });
-
-          // TODO: how to avoid circular references when handling META | HIDE
-          if (type === AdvancedFieldType.group) return;
-
-          const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
             hasHiddenParent;
 
-          valueTemplateRefs.forEach((item, i) => {
-            const entry = templates[item];
-            const selectedRecord = generateRecordForDropdown({
-              record,
-              uriWithSelector,
-              hasRootWrapper: !hasNoRootWrapper,
-            });
+          const selectedRecord = generateRecordForDropdown({
+            record,
+            uriWithSelector,
+            hasRootWrapper: !hasNoRootWrapper,
+          });
 
-            traverseProfile({
+          if (selectedRecord?.length) {
+            const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
+
+            updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
+
+            selectedRecord.forEach((recordData: Record<string, any> | Array<any>, index: string) => {
+              processGroup({
+                uuid: copiedGroupsUuid[index],
+                entry,
+                base,
+                type,
+                path,
+                templates,
+                selectedEntries,
+                record: recordData,
+                userValues,
+                hasNoRootWrapper,
+              });
+            });
+          } else {
+            processGroup({
+              uuid,
               entry,
-              auxType:
-                type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
-              templates,
-              uuid: uuidArray[i],
-              path: updatedPath,
               base,
-              firstOfSameType: i === 0,
+              type,
+              path,
+              templates,
               selectedEntries,
               record: selectedRecord,
               userValues,
-              dropdownOptionSelection: {
-                hasNoRootWrapper,
-                isSelectedOption: getIsSelectedOption(),
-                setIsSelectedOption: setValue,
-              },
+              hasNoRootWrapper,
             });
-          });
-
-          // Select the first dropdown option if nothing was selected
-          if (hasNoRootWrapper && !getIsSelectedOption()) {
-            selectedEntries.push(uuidArray[0]);
           }
 
           return;
@@ -367,6 +342,118 @@ export const useConfig = () => {
     }
 
     return response;
+  };
+
+  const updateParentEntryChildren = ({
+    base,
+    copiedGroupsUuid,
+    path,
+    uuid,
+  }: {
+    base: Map<string, SchemaEntry>;
+    copiedGroupsUuid: string[];
+    path: string[];
+    uuid: string;
+  }) => {
+    const parentElemUuid = path[path.length - 1];
+    const parentElem = base.get(parentElemUuid);
+    const children = parentElem?.children;
+    const originalEntryIndex = children?.indexOf(uuid);
+
+    if (originalEntryIndex !== undefined && originalEntryIndex >= 0 && parentElem) {
+      const start = parentElem.children?.slice(0, originalEntryIndex) || [];
+      const end = parentElem.children?.slice(originalEntryIndex + 1, parentElem.children?.length) || [];
+
+      parentElem.children = [...start, ...copiedGroupsUuid, ...end];
+    }
+  };
+
+  const processGroup = ({
+    uuid,
+    entry,
+    base,
+    type,
+    path,
+    templates,
+    selectedEntries,
+    record,
+    userValues,
+    hasNoRootWrapper,
+  }: {
+    uuid: string;
+    entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+    base: Map<string, SchemaEntry>;
+    type: AdvancedFieldType;
+    path: string[];
+    templates: ResourceTemplates;
+    selectedEntries?: Array<string>;
+    record: Record<string, any> | Array<any>;
+    userValues?: UserValues;
+    hasNoRootWrapper: boolean;
+  }) => {
+    const {
+      propertyURI,
+      propertyLabel,
+      mandatory,
+      repeatable,
+      valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
+    } = entry as PropertyTemplate;
+    const { uriBFLite } = getUris(propertyURI, base, path);
+
+    const constraints = {
+      ...CONSTRAINTS,
+      mandatory: Boolean(mandatory),
+      repeatable: Boolean(repeatable),
+      editable: Boolean(editable),
+      useValuesFrom,
+      valueDataType,
+    };
+
+    const newUUid = uuid;
+    const uuidArray = valueTemplateRefs.map(() => uuidv4());
+
+    base.set(newUUid, {
+      uuid: newUUid,
+      type,
+      path: [...path, newUUid],
+      displayName: propertyLabel,
+      uri: propertyURI,
+      uriBFLite,
+      constraints,
+      children: uuidArray,
+    });
+
+    // TODO: how to avoid circular references when handling META | HIDE
+    if (type === AdvancedFieldType.group) return;
+
+    const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
+
+    valueTemplateRefs.forEach((item, i) => {
+      const entry = templates[item];
+
+      traverseProfile({
+        entry,
+        auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+        templates,
+        uuid: uuidArray[i],
+        path: [...path, newUUid],
+        base,
+        firstOfSameType: i === 0,
+        selectedEntries,
+        record,
+        userValues,
+        dropdownOptionSelection: {
+          hasNoRootWrapper,
+          isSelectedOption: getIsSelectedOption(),
+          setIsSelectedOption: setValue,
+        },
+      });
+    });
+
+    // Select the first dropdown option if nothing was selected
+    if (hasNoRootWrapper && !getIsSelectedOption()) {
+      selectedEntries?.push(uuidArray[0]);
+    }
   };
 
   return { getProfiles, prepareFields };
