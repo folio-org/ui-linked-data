@@ -60,6 +60,7 @@ export const useConfig = () => {
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
+    hasSelectedRecord?: boolean;
     dropdownOptionSelection?: DropdownOptionSelection;
     hasHiddenParent?: boolean;
     userValues?: UserValues;
@@ -76,6 +77,7 @@ export const useConfig = () => {
     firstOfSameType = false,
     selectedEntries = [],
     record,
+    hasSelectedRecord,
     dropdownOptionSelection,
     hasHiddenParent = false,
     userValues,
@@ -108,16 +110,17 @@ export const useConfig = () => {
       // If not, refactor to include all indices
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
       const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
+      const selectedRecord = withContentsSelected?.[uriWithSelector];
 
-      if (withContentsSelected?.[uriWithSelector]?.length > 1 && parentEntryType === AdvancedFieldType.block) {
-        const copiedGroupsUuid = withContentsSelected?.[uriWithSelector].map(() => uuidv4());
+      if (selectedRecord?.length > 1 && parentEntryType === AdvancedFieldType.block) {
+        const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
 
         updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
-        withContentsSelected[uriWithSelector].forEach((_: Record<string, any>, index: number) => {
+        selectedRecord.forEach((_: Record<string, any>, index: number) => {
           processSimpleUIConrol({
             base,
-            recordData: withContentsSelected?.[uriWithSelector],
+            recordData: selectedRecord,
             userValues,
             uuid: copiedGroupsUuid[index],
             type,
@@ -132,7 +135,7 @@ export const useConfig = () => {
       } else {
         processSimpleUIConrol({
           base,
-          recordData: withContentsSelected?.[uriWithSelector],
+          recordData: selectedRecord,
           userValues,
           uuid,
           type,
@@ -203,14 +206,16 @@ export const useConfig = () => {
             children: uuidArray,
           });
 
-          propertyTemplates.map((entry, i) => {
-            const isHiddenType = type === AdvancedFieldType.hidden || HIDDEN_WRAPPERS.includes(resourceURI);
-            const selectedRecord = generateRecordForDropdown({
-              record,
-              uriWithSelector,
-              hasRootWrapper: !isHiddenType,
-            });
+          const isHiddenType = type === AdvancedFieldType.hidden || HIDDEN_WRAPPERS.includes(resourceURI);
+          const selectedRecord = hasSelectedRecord
+            ? record
+            : generateRecordForDropdown({
+                record,
+                uriWithSelector,
+                hasRootWrapper: !isHiddenType,
+              });
 
+          propertyTemplates.map((entry, i) => {
             traverseProfile({
               entry,
               templates,
@@ -233,6 +238,9 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdown: {
           const { propertyURI } = entry as PropertyTemplate;
           const { uriWithSelector } = getUris(propertyURI, base, path);
+          const {
+            valueConstraint: { valueTemplateRefs },
+          } = entry as PropertyTemplate;
 
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
@@ -244,6 +252,7 @@ export const useConfig = () => {
             uriWithSelector,
             hasRootWrapper: !hasNoRootWrapper,
           });
+          const filteredRecordData = getFilteredRecorData({ valueTemplateRefs, templates, base, path, selectedRecord });
 
           if (selectedRecord?.length) {
             const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
@@ -263,6 +272,20 @@ export const useConfig = () => {
                 userValues,
                 hasNoRootWrapper,
               });
+            });
+          } else if (hasNoRootWrapper && filteredRecordData?.length) {
+            processGroupsWithoutWrapper({
+              valueTemplateRefs,
+              base,
+              path,
+              uuid,
+              templates,
+              selectedRecord,
+              entry,
+              type,
+              selectedEntries,
+              userValues,
+              hasNoRootWrapper,
             });
           } else {
             processGroup({
@@ -394,6 +417,7 @@ export const useConfig = () => {
     record,
     userValues,
     hasNoRootWrapper,
+    hasSelectedRecord,
   }: {
     uuid: string;
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
@@ -405,6 +429,7 @@ export const useConfig = () => {
     record: Record<string, any> | Array<any>;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
+    hasSelectedRecord?: boolean;
   }) => {
     const {
       propertyURI,
@@ -456,6 +481,7 @@ export const useConfig = () => {
         firstOfSameType: i === 0,
         selectedEntries,
         record,
+        hasSelectedRecord,
         userValues,
         dropdownOptionSelection: {
           hasNoRootWrapper,
@@ -469,6 +495,62 @@ export const useConfig = () => {
     if (hasNoRootWrapper && !getIsSelectedOption()) {
       selectedEntries?.push(uuidArray[0]);
     }
+  };
+
+  const processGroupsWithoutWrapper = ({
+    valueTemplateRefs,
+    base,
+    path,
+    uuid,
+    templates,
+    selectedRecord,
+    entry,
+    type,
+    selectedEntries,
+    userValues,
+    hasNoRootWrapper,
+  }: {
+    valueTemplateRefs: string[];
+    base: Map<string, SchemaEntry>;
+    path: string[];
+    uuid: string;
+    templates: ResourceTemplates;
+    selectedRecord: Record<string, any>;
+    entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+    type: AdvancedFieldType;
+    selectedEntries: Array<string>;
+    userValues?: UserValues;
+    hasNoRootWrapper: boolean;
+  }) => {
+    valueTemplateRefs.forEach(item => {
+      const entryData = templates[item];
+      const { uriBFLite } = getUris(entryData.resourceURI, base, path);
+
+      if (!uriBFLite) return;
+      const recordData = selectedRecord?.[uriBFLite];
+
+      if (recordData?.length) {
+        const copiedGroupsUuid = recordData?.map(() => uuidv4()) || [];
+
+        updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
+
+        recordData?.forEach((recordItem: Record<string, any>, index: number) => {
+          processGroup({
+            uuid: copiedGroupsUuid[index],
+            entry,
+            base,
+            type,
+            path,
+            templates,
+            selectedEntries,
+            record: recordItem,
+            userValues,
+            hasNoRootWrapper,
+            hasSelectedRecord: true,
+          });
+        });
+      }
+    });
   };
 
   const processSimpleUIConrol = ({
@@ -532,6 +614,28 @@ export const useConfig = () => {
           label: entry,
         }
       : generateUserValueObject(entry, type, uriBFLite);
+
+  const getFilteredRecorData = ({
+    valueTemplateRefs,
+    templates,
+    base,
+    path,
+    selectedRecord,
+  }: {
+    valueTemplateRefs: string[];
+    templates: ResourceTemplates;
+    base: Map<string, SchemaEntry>;
+    path: string[];
+    selectedRecord: Record<string, any>;
+  }) =>
+    valueTemplateRefs.filter(templateRef => {
+      const entryData = templates[templateRef];
+      const { uriBFLite } = getUris(entryData?.resourceURI, base, path);
+
+      if (!uriBFLite) return;
+
+      return selectedRecord?.[uriBFLite];
+    });
 
   return { getProfiles, prepareFields };
 };
