@@ -522,21 +522,30 @@ export const useConfig = () => {
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
   }) => {
-    valueTemplateRefs.forEach(item => {
-      const entryData = templates[item];
+    const copiedUuids: Array<Array<string>> = generateCopiedGroupUuids({
+      valueTemplateRefs,
+      templates,
+      base,
+      path,
+      selectedRecord,
+    });
+    const uuidList = copiedUuids?.flat();
+
+    updateParentEntryChildren({ base, copiedGroupsUuid: uuidList, path, uuid });
+
+    valueTemplateRefs.forEach((templateRef, templateRefIndex: number) => {
+      const entryData = templates[templateRef];
       const { uriBFLite } = getUris(entryData.resourceURI, base, path);
 
       if (!uriBFLite) return;
       const recordData = selectedRecord?.[uriBFLite];
 
       if (recordData?.length) {
-        const copiedGroupsUuid = recordData?.map(() => uuidv4()) || [];
+        const copiedGroupsUuid = copiedUuids[templateRefIndex];
 
-        updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
-
-        recordData?.forEach((recordItem: Record<string, any>, index: number) => {
+        recordData?.forEach((recordItem: Record<string, any>, recordItemIndex: number) => {
           processGroup({
-            uuid: copiedGroupsUuid[index],
+            uuid: copiedGroupsUuid?.[recordItemIndex],
             entry,
             base,
             type,
@@ -636,6 +645,42 @@ export const useConfig = () => {
 
       return selectedRecord?.[uriBFLite];
     });
+
+  const generateCopiedGroupUuids = ({
+    valueTemplateRefs,
+    templates,
+    base,
+    path,
+    selectedRecord,
+  }: {
+    valueTemplateRefs: string[];
+    templates: ResourceTemplates;
+    base: Map<string, SchemaEntry>;
+    path: string[];
+    selectedRecord: Record<string, any>;
+  }) => {
+    const copiedGroupUuids: Array<Array<string>> = [];
+
+    valueTemplateRefs.forEach(item => {
+      const entryData = templates[item];
+      const { uriBFLite } = getUris(entryData.resourceURI, base, path);
+
+      if (!uriBFLite) return;
+
+      const recordData = selectedRecord?.[uriBFLite];
+
+      if (!recordData?.length) {
+        copiedGroupUuids.push([]);
+
+        return;
+      }
+
+      const uuidList = recordData?.map(() => uuidv4()) || [];
+      copiedGroupUuids.push(uuidList);
+    });
+
+    return copiedGroupUuids;
+  };
 
   return { getProfiles, prepareFields };
 };
