@@ -2,6 +2,7 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
 
@@ -12,9 +13,21 @@ export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
   },
 });
 
-export const formatRecord = (parsedRecord: Record<string, object> | RecordEntry) => ({
-  resource: parsedRecord,
-});
+export const formatRecord = (parsedRecord: Record<string, object> | RecordEntry) => {
+  const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES];
+  
+  delete parsedRecord[BFLITE_URIS.INSTANTIATES];
+
+  return {
+    resource: {
+      ...parsedRecord,
+      [TYPE_URIS.INSTANCE]: {
+        ...parsedRecord[TYPE_URIS.INSTANCE],
+        [BFLITE_URIS.INSTANTIATES]: [workComponent],
+      },
+    },
+  };
+};
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);

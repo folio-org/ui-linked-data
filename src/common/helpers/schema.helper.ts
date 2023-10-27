@@ -1,5 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -51,4 +52,17 @@ export const generateRecordForDropdown = ({
   record?: Record<string, any> | Array<any>;
   uriWithSelector: string;
   hasRootWrapper: boolean;
-}) => (hasRootWrapper ? getSelectedRecord(uriWithSelector, record) : record);
+}) => {
+  let recordWithSelector = record;
+
+  if (hasRootWrapper) {
+    // in bflite, the work component resides within the instance component
+    if (uriWithSelector === BFLITE_URIS.INSTANTIATES) {
+      recordWithSelector = getSelectedRecord(TYPE_URIS.INSTANCE, record);
+    }
+
+    return getSelectedRecord(uriWithSelector, recordWithSelector);
+  }
+
+  return record || null;
+};

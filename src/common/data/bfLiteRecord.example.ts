@@ -2,6 +2,52 @@
 export const BFLITE_RECORD_EXAMPLE = {
   resource: {
     'http://bibfra.me/vocab/lite/Instance': {
+      // Work component[]
+      'http://bibfra.me/vocab/lite/instantiates': [
+        {
+          id: 'sampleId',
+          'http://bibfra.me/vocab/lite/language': ['sampleLanguage'],
+          'http://bibfra.me/vocab/lite/classification': [
+            {
+              id: 'sampleId',
+              'http://bibfra.me/vocab/marc/code': ['sampleCode'],
+              'http://bibfra.me/vocab/marc/source': ['sampleSource'],
+            },
+          ],
+          'http://bibfra.me/vocab/lite/creator': [
+            {
+              'http://bibfra.me/vocab/lite/Person': {
+                id: 'sampleId',
+                'http://bibfra.me/vocab/lite/name': ['sampleName'],
+              },
+            },
+          ],
+          'http://bibfra.me/vocab/lite/contributor': [
+            {
+              'http://bibfra.me/vocab/lite/Organization': {
+                id: 'sampleId',
+                'http://bibfra.me/vocab/lite/name': [
+                  'sampleName',
+                ],
+              },
+            },
+          ],
+          'http://bibfra.me/vocab/marc/tableOfContents': [
+            "sampleTableOfContents",
+          ],
+          'http://bibfra.me/vocab/marc/summary': [
+            'sampleSummary',
+          ],
+          'http://bibfra.me/vocab/marc/content': [
+            {
+              id: 'sampleId',
+              'http://bibfra.me/vocab/marc/code': ['sampleCode'],
+              'http://bibfra.me/vocab/marc/term': ['sampleTerm'],
+              'http://bibfra.me/vocab/lite/link': ['sampleLink'],
+            },
+          ],
+        },
+      ],
       'http://bibfra.me/vocab/marc/title': [
         {
           'http://bibfra.me/vocab/marc/Title': {

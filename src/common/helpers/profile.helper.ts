@@ -5,6 +5,7 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
+  WRAPPERS_TO_HIDE_WHEN_DEPARSING,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -81,7 +82,10 @@ const traverseSchema = ({
 
     if (type === profileType) {
       containerSelector = container;
-    } else if (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) {
+    } else if (
+      (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) &&
+      !WRAPPERS_TO_HIDE_WHEN_DEPARSING.includes(selector)
+    ) {
       if (type === dropdownOption && !selectedEntries.includes(key)) {
         // Only fields from the selected option should be processed and saved
         return;

@@ -1,5 +1,20 @@
+export const BFLITE_URIS = {
+  NAME: 'http://bibfra.me/vocab/lite/name',
+  LABEL: 'http://bibfra.me/vocab/lite/label',
+  LINK: 'http://bibfra.me/vocab/lite/link',
+  CODE: 'http://bibfra.me/vocab/marc/code',
+  TERM: 'http://bibfra.me/vocab/marc/term',
+  SOURCE: 'http://bibfra.me/vocab/marc/source',
+  EDITION: 'http://bibfra.me/vocab/marc/edition',
+  EDITION_TYPE: 'http://bibfra.me/vocab/marc/editionType',
+  TABLE_OF_CONTENTS: 'http://bibfra.me/vocab/marc/tableOfContents',
+  SUMMARY: 'http://bibfra.me/vocab/marc/summary',
+  INSTANTIATES: 'http://bibfra.me/vocab/lite/instantiates',
+};
+
 export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Instance': 'http://bibfra.me/vocab/lite/Instance',
+  'http://id.loc.gov/ontologies/bibframe/Work': 'http://bibfra.me/vocab/lite/instantiates',
   'http://id.loc.gov/ontologies/bibframe/title': 'http://bibfra.me/vocab/marc/title',
   'http://id.loc.gov/ontologies/bibframe/Title': 'http://bibfra.me/vocab/marc/Title',
   'http://id.loc.gov/ontologies/bflc/nonSortNum': 'http://bibfra.me/vocab/bflc/nonSortNum',
@@ -17,6 +32,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/provisionActivity': 'https://bibfra.me/vocab/marc/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/Publication': 'http://bibfra.me/vocab/marc/publication',
   'http://id.loc.gov/ontologies/bibframe/place': 'http://bibfra.me/vocab/lite/providerPlace',
+  'http://id.loc.gov/ontologies/bibframe/content': 'http://bibfra.me/vocab/marc/content',
   'http://id.loc.gov/ontologies/bflc/simplePlace': 'http://bibfra.me/vocab/lite/place',
   'http://id.loc.gov/ontologies/bflc/simpleAgent': 'http://bibfra.me/vocab/lite/name',
   'http://id.loc.gov/ontologies/bflc/simpleDate': 'http://bibfra.me/vocab/lite/date',
@@ -39,9 +55,25 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/copyrightDate': 'http://bibfra.me/vocab/marc/copyright',
   'http://id.loc.gov/ontologies/bibframe/issuance': 'http://bibfra.me/vocab/marc/issuance',
   'http://id.loc.gov/ontologies/bibframe/status': 'http://bibfra.me/vocab/marc/status',
+  // 'http://id.loc.gov/ontologies/bibframe/ClassificationDdc': 'http://bibfra.me/vocab/lite/classification',
+  // 'http://id.loc.gov/ontologies/bibframe/classificationPortion': BFLITE_URIS.CODE,
+  // 'http://id.loc.gov/ontologies/bibframe/itemPortion': 'http://bibfra.me/vocab/marc/itemNumber',
+  'http://id.loc.gov/ontologies/bibframe/source': BFLITE_URIS.EDITION,
+  'http://id.loc.gov/ontologies/bibframe/edition': BFLITE_URIS.EDITION_TYPE,
+  'http://id.loc.gov/ontologies/bibframe/Person': 'http://bibfra.me/vocab/lite/Person',
+  'http://id.loc.gov/ontologies/bibframe/Family': 'http://bibfra.me/vocab/lite/Family',
+  'http://id.loc.gov/ontologies/bibframe/Organization': 'http://bibfra.me/vocab/lite/Organization',
+  'http://id.loc.gov/ontologies/bibframe/Meeting': 'http://bibfra.me/vocab/lite/Meeting',
+  'http://id.loc.gov/ontologies/bibframe/summary': BFLITE_URIS.SUMMARY,
+  'http://id.loc.gov/ontologies/bibframe/language': 'http://bibfra.me/vocab/lite/language',
+  // collision
+  // 'http://id.loc.gov/ontologies/bibframe/contribution': 'http://bibfra.me/vocab/lite/contributor',
+  // 'http://id.loc.gov/ontologies/bibframe/contribution': 'http://bibfra.me/vocab/lite/creator',
   'http://www.w3.org/2000/01/rdf-schema#label': {
     'http://id.loc.gov/ontologies/bibframe/note': 'http://bibfra.me/vocab/lite/note',
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/note',
+    'http://id.loc.gov/ontologies/bibframe/summary': BFLITE_URIS.SUMMARY,
+    'http://id.loc.gov/ontologies/bibframe/TableOfContents': BFLITE_URIS.TABLE_OF_CONTENTS,
   },
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#value': {
     'http://id.loc.gov/ontologies/bibframe/Lccn': 'http://bibfra.me/vocab/lite/name',
@@ -56,14 +88,13 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/title': 'http://bibfra.me/vocab/lite/date',
     'http://id.loc.gov/ontologies/bibframe/provisionActivity': 'http://bibfra.me/vocab/lite/providerDate',
   },
-};
-
-export const BFLITE_URIS = {
-  NAME: 'http://bibfra.me/vocab/lite/name',
-  LABEL: 'http://bibfra.me/vocab/lite/label',
-  LINK: 'http://bibfra.me/vocab/lite/link',
-  CODE: 'http://bibfra.me/vocab/marc/code',
-  TERM: 'http://bibfra.me/vocab/marc/term',
+  'http://www.w3.org/2002/07/owl#sameAs': {
+    'http://id.loc.gov/ontologies/bibframe/language': 'http://bibfra.me/vocab/lite/language',
+    'http://id.loc.gov/ontologies/bibframe/Person': BFLITE_URIS.NAME,
+    'http://id.loc.gov/ontologies/bibframe/Family': BFLITE_URIS.NAME,
+    'http://id.loc.gov/ontologies/bibframe/Organization': BFLITE_URIS.NAME,
+    'http://id.loc.gov/ontologies/bibframe/Meeting': BFLITE_URIS.NAME,
+  },
 };
 
 export const BFLITE_LABELS_MAP = {
@@ -71,6 +102,12 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
   'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/marc/content': BFLITE_URIS.CODE, // code/link? NAME?
+  'http://bibfra.me/vocab/lite/classification': BFLITE_URIS.SOURCE,
+  'http://bibfra.me/vocab/lite/Person': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/lite/Family': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/lite/Organization': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/lite/Meeting': BFLITE_URIS.NAME,
 };
 
 export const ADVANCED_FIELDS = {

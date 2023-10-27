@@ -15,11 +15,9 @@ export const getComplexLookups = (schema: Schema) =>
 
 export const getDisabledParentDescendants = (schema: Schema) => {
   const schemaValues = Array.from(schema.values());
-  const parentUuids = schemaValues.reduce((acc: any, { uuid }) => {
-    const entry = schema.get(uuid);
-
-    if (entry?.bfid && DISABLED_PARENT_BFIDS.includes(entry.bfid)) {
-      return [...acc, entry.uuid];
+  const parentUuids = schemaValues.reduce((acc: any, { uuid, bfid }) => {
+    if (bfid && DISABLED_PARENT_BFIDS.includes(bfid)) {
+      return [...acc, uuid];
     }
 
     return acc;
