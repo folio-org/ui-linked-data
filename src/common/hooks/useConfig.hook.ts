@@ -153,7 +153,7 @@ export const useConfig = () => {
       }
     } else {
       switch (type) {
-        // parent types
+        // parent types (i.e Monograph)
         case AdvancedFieldType.profile: {
           const { title, id, resourceTemplates } = (entry as ProfileEntry).json.Profile;
           const uuidArray = resourceTemplates.map(() => uuidv4());
@@ -184,6 +184,7 @@ export const useConfig = () => {
         }
         case AdvancedFieldType.hidden:
         case AdvancedFieldType.dropdownOption:
+        // i.e. Work, Instance, Item
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
           const { uriBFLite, uriWithSelector } = getUris(resourceURI, base, path);
@@ -318,7 +319,7 @@ export const useConfig = () => {
           return;
         }
         default: {
-          console.log('Not implemented.', entry);
+          console.error('Not implemented.', entry);
 
           return;
         }
