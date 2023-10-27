@@ -112,7 +112,7 @@ export const EditSection = memo(() => {
     }) => {
       const { uuid, displayName = '', type, children, constraints } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
-      const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL;
+      const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL && !isDisabled;
       const componentTitle = hasDuplicateGroupButton ? '' : displayName;
       const onClickDuplicateGroup = () => {
         const updatedSchema = getSchemaWithCopiedEntries(schema, entry, selectedEntries);

@@ -1,5 +1,7 @@
+import { v4 as uuidv4 } from 'uuid';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
+import { getUris } from './bibframe.helper';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
@@ -65,4 +67,73 @@ export const generateRecordForDropdown = ({
   }
 
   return record || null;
+};
+
+export const generateUserValueContent = (
+  entry: string | Record<string, any> | Array<Record<string, any>>,
+  type: AdvancedFieldType,
+  uriBFLite?: string,
+) =>
+  typeof entry === 'string'
+    ? {
+        label: entry,
+      }
+    : generateUserValueObject(entry, type, uriBFLite);
+
+export const getFilteredRecordData = ({
+  valueTemplateRefs,
+  templates,
+  base,
+  path,
+  selectedRecord,
+}: {
+  valueTemplateRefs: string[];
+  templates: ResourceTemplates;
+  base: Map<string, SchemaEntry>;
+  path: string[];
+  selectedRecord: Record<string, any>;
+}) =>
+  valueTemplateRefs.filter(templateRef => {
+    const entryData = templates[templateRef];
+    const { uriBFLite } = getUris(entryData?.resourceURI, base, path);
+
+    if (!uriBFLite) return;
+
+    return selectedRecord?.[uriBFLite];
+  });
+
+export const generateCopiedGroupUuids = ({
+  valueTemplateRefs,
+  templates,
+  base,
+  path,
+  selectedRecord,
+}: {
+  valueTemplateRefs: string[];
+  templates: ResourceTemplates;
+  base: Map<string, SchemaEntry>;
+  path: string[];
+  selectedRecord: Record<string, any>;
+}) => {
+  const copiedGroupUuids: Array<Array<string>> = [];
+
+  valueTemplateRefs.forEach(item => {
+    const entryData = templates[item];
+    const { uriBFLite } = getUris(entryData.resourceURI, base, path);
+
+    if (!uriBFLite) return;
+
+    const recordData = selectedRecord?.[uriBFLite];
+
+    if (!recordData?.length) {
+      copiedGroupUuids.push([]);
+
+      return;
+    }
+
+    const uuidList = recordData?.map(() => uuidv4()) || [];
+    copiedGroupUuids.push(uuidList);
+  });
+
+  return copiedGroupUuids;
 };

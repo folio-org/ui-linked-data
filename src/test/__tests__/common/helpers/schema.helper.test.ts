@@ -1,7 +1,11 @@
+import * as uuid from 'uuid';
 import * as SchemaHelper from '@common/helpers/schema.helper';
+import * as BibframeHelper from '@common/helpers/bibframe.helper';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+
+jest.mock('uuid');
 
 describe('schema.helper', () => {
   const {
@@ -11,6 +15,9 @@ describe('schema.helper', () => {
     generateUserValueObject,
     getSelectedRecord,
     generateRecordForDropdown,
+    generateUserValueContent,
+    getFilteredRecordData,
+    generateCopiedGroupUuids,
   } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
@@ -169,6 +176,98 @@ describe('schema.helper', () => {
       const result = generateRecordForDropdown({
         uriWithSelector,
         hasRootWrapper,
+      });
+
+      expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('generateUserValueContent', () => {
+    test('returns a simple object for string', () => {
+      const entry = 'testEntry';
+      const type = 'testType' as AdvancedFieldType;
+      const uriBFLite = 'uriBFLite';
+      const testResult = { label: 'testEntry' };
+
+      const result = generateUserValueContent(entry, type, uriBFLite);
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns a generated object for record', () => {
+      const entry = { key: 'testLabelValue' };
+      const type = 'testType' as AdvancedFieldType;
+      const uriBFLite = 'uriBFLite';
+      const linkUri = 'testLinkUri';
+      mockBFUrisConstant({ LINK: linkUri });
+      const generatedUserValue = {
+        label: 'testLabelValue',
+        meta: {
+          uri: linkUri,
+          parentURI: linkUri,
+          type,
+        },
+      };
+      jest.spyOn(SchemaHelper, 'generateUserValueObject').mockReturnValue(generatedUserValue);
+
+      const result = generateUserValueContent(entry, type, uriBFLite);
+
+      expect(result).toEqual(generatedUserValue);
+    });
+  });
+
+  describe('getFilteredRecordData', () => {
+    const valueTemplateRefs = ['testRef_1', 'testRef_2'];
+    const templates = { testRef_1: {} as ResourceTemplate };
+    const base = new Map();
+    const path = ['testUuid_1', 'testUuid_2'];
+
+    test('returns a list of template refs', () => {
+      const uriBFLite = 'testUriBFLite';
+      jest.spyOn(BibframeHelper, 'getUris').mockReturnValueOnce({ uriBFLite, uriWithSelector: uriBFLite });
+      const selectedRecord = { testUriBFLite: {} };
+      const testResult = ['testRef_1'];
+
+      const result = getFilteredRecordData({ valueTemplateRefs, templates, base, path, selectedRecord });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an empty array', () => {
+      jest
+        .spyOn(BibframeHelper, 'getUris')
+        .mockReturnValueOnce({ uriBFLite: undefined, uriWithSelector: 'testUriBFLite' });
+      const selectedRecord = { testUriBFLite_2: {} };
+
+      const result = getFilteredRecordData({ valueTemplateRefs, templates, base, path, selectedRecord });
+
+      expect(result.length).toBe(0);
+    });
+  });
+
+  describe('generateCopiedGroupUuids', () => {
+    test('returns a list of uuids', () => {
+      jest
+        .spyOn(BibframeHelper, 'getUris')
+        .mockReturnValueOnce({ uriBFLite: 'testUriBFLite_1', uriWithSelector: 'testUriBFLite_1' })
+        .mockReturnValueOnce({ uriBFLite: 'testUriBFLite_2', uriWithSelector: 'testUriBFLite_2' });
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('testUuid-1').mockReturnValueOnce('testUuid-2');
+      const valueTemplateRefs = ['testRef_1', 'testRef_2'];
+      const templates = {
+        testRef_1: { resourceURI: 'testUri_1' } as ResourceTemplate,
+        testRef_2: { resourceURI: 'testUri_2' } as ResourceTemplate,
+      };
+      const base = new Map();
+      const path = ['testUuid_1', 'testUuid_2'];
+      const selectedRecord = { testUriBFLite_1: [], testUriBFLite_2: [{}, {}] };
+      const testResult = [[], ['testUuid-1', 'testUuid-2']];
+
+      const result = generateCopiedGroupUuids({
+        valueTemplateRefs,
+        templates,
+        base,
+        path,
+        selectedRecord,
       });
 
       expect(result).toEqual(testResult);
