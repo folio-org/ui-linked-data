@@ -405,8 +405,8 @@ export const useConfig = () => {
     const originalEntryIndex = children?.indexOf(uuid);
 
     if (originalEntryIndex !== undefined && originalEntryIndex >= 0 && parentElem) {
-      const start = parentElem.children?.slice(0, originalEntryIndex) || [];
-      const end = parentElem.children?.slice(originalEntryIndex + 1, parentElem.children?.length) || [];
+      const start = children?.slice(0, originalEntryIndex) || [];
+      const end = children?.slice(originalEntryIndex + 1, children?.length) || [];
 
       parentElem.children = [...start, ...copiedGroupsUuid, ...end];
     }

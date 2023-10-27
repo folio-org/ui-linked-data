@@ -1,4 +1,4 @@
-import { getMappedBFLiteUri } from '@src/common/helpers/bibframe.helper';
+import * as BibframeHelper from '@src/common/helpers/bibframe.helper';
 import * as BibframeMappingConstants from '@src/common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
@@ -13,7 +13,7 @@ describe('bibframe.helper', () => {
       });
       const uri = 'testBF20Uri_3';
 
-      const result = getMappedBFLiteUri(uri);
+      const result = BibframeHelper.getMappedBFLiteUri(uri);
 
       expect(result).toBeUndefined();
     });
@@ -24,7 +24,7 @@ describe('bibframe.helper', () => {
       });
       const uri = 'testBF20Uri_1';
 
-      const result = getMappedBFLiteUri(uri);
+      const result = BibframeHelper.getMappedBFLiteUri(uri);
 
       expect(result).toBe('testBFLiteUri_1');
     });
@@ -42,9 +42,30 @@ describe('bibframe.helper', () => {
         ['pathItem_2', { uri: 'testBF20NestedUri_2' } as SchemaEntry],
       ]);
 
-      const result = getMappedBFLiteUri(uri, schema, path);
+      const result = BibframeHelper.getMappedBFLiteUri(uri, schema, path);
 
       expect(result).toBe('testBFLiteNestedUri_1');
+    });
+  });
+
+  describe('getUris', () => {
+    function testGetUris(testResult: Record<string, string | undefined>, mapperUri?: string) {
+      jest.spyOn(BibframeHelper, 'getMappedBFLiteUri').mockReturnValue(mapperUri);
+      const uri = 'testBF20Uri_1';
+      const schema = new Map([['pathItem_1', { uri: 'testBF20NestedUri_1' } as SchemaEntry]]);
+      const path = ['pathItem_1'];
+
+      const result = BibframeHelper.getUris(uri, schema, path);
+
+      expect(result).toEqual(testResult);
+    }
+
+    test('returns an object with uris', () => {
+      testGetUris({ uriBFLite: 'testBFLiteUri', uriWithSelector: 'testBFLiteUri' }, 'testBFLiteUri');
+    });
+
+    test('returns an object with empty uriBFLite', () => {
+      testGetUris({ uriBFLite: undefined, uriWithSelector: 'testBF20Uri_1' });
     });
   });
 });
