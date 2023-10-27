@@ -28,3 +28,10 @@ export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, pat
     return updatedUri;
   }
 };
+
+export const getUris = (uri: string, schema?: Schema, path?: string[]) => {
+  const uriBFLite = getMappedBFLiteUri(uri, schema, path);
+  const uriWithSelector = uriBFLite || uri;
+
+  return { uriBFLite, uriWithSelector };
+};

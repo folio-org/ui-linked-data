@@ -14,8 +14,13 @@ import {
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
-import { getMappedBFLiteUri } from '@common/helpers/bibframe.helper';
-import { generateRecordForDropdown, generateUserValueObject } from '@common/helpers/schema.helper';
+import { getUris } from '@common/helpers/bibframe.helper';
+import {
+  generateCopiedGroupUuids,
+  generateRecordForDropdown,
+  generateUserValueContent,
+  getFilteredRecordData,
+} from '@common/helpers/schema.helper';
 import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 export const useConfig = () => {
@@ -254,7 +259,13 @@ export const useConfig = () => {
             uriWithSelector,
             hasRootWrapper: !hasNoRootWrapper,
           });
-          const filteredRecordData = getFilteredRecorData({ valueTemplateRefs, templates, base, path, selectedRecord });
+          const filteredRecordData = getFilteredRecordData({
+            valueTemplateRefs,
+            templates,
+            base,
+            path,
+            selectedRecord,
+          });
 
           if (selectedRecord?.length) {
             const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
@@ -313,13 +324,6 @@ export const useConfig = () => {
         }
       }
     }
-  };
-
-  const getUris = (uri: string, schema?: Schema, path?: string[]) => {
-    const uriBFLite = getMappedBFLiteUri(uri, schema, path);
-    const uriWithSelector = uriBFLite || uri;
-
-    return { uriBFLite, uriWithSelector };
   };
 
   const buildSchema = (
@@ -631,75 +635,6 @@ export const useConfig = () => {
       uriBFLite,
       constraints,
     });
-  };
-
-  const generateUserValueContent = (
-    entry: string | Record<string, any> | Array<Record<string, any>>,
-    type: AdvancedFieldType,
-    uriBFLite?: string,
-  ) =>
-    typeof entry === 'string'
-      ? {
-          label: entry,
-        }
-      : generateUserValueObject(entry, type, uriBFLite);
-
-  const getFilteredRecorData = ({
-    valueTemplateRefs,
-    templates,
-    base,
-    path,
-    selectedRecord,
-  }: {
-    valueTemplateRefs: string[];
-    templates: ResourceTemplates;
-    base: Map<string, SchemaEntry>;
-    path: string[];
-    selectedRecord: Record<string, any>;
-  }) =>
-    valueTemplateRefs.filter(templateRef => {
-      const entryData = templates[templateRef];
-      const { uriBFLite } = getUris(entryData?.resourceURI, base, path);
-
-      if (!uriBFLite) return;
-
-      return selectedRecord?.[uriBFLite];
-    });
-
-  const generateCopiedGroupUuids = ({
-    valueTemplateRefs,
-    templates,
-    base,
-    path,
-    selectedRecord,
-  }: {
-    valueTemplateRefs: string[];
-    templates: ResourceTemplates;
-    base: Map<string, SchemaEntry>;
-    path: string[];
-    selectedRecord: Record<string, any>;
-  }) => {
-    const copiedGroupUuids: Array<Array<string>> = [];
-
-    valueTemplateRefs.forEach(item => {
-      const entryData = templates[item];
-      const { uriBFLite } = getUris(entryData.resourceURI, base, path);
-
-      if (!uriBFLite) return;
-
-      const recordData = selectedRecord?.[uriBFLite];
-
-      if (!recordData?.length) {
-        copiedGroupUuids.push([]);
-
-        return;
-      }
-
-      const uuidList = recordData?.map(() => uuidv4()) || [];
-      copiedGroupUuids.push(uuidList);
-    });
-
-    return copiedGroupUuids;
   };
 
   return { getProfiles, prepareFields };
