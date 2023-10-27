@@ -244,11 +244,11 @@ export const useConfig = () => {
         case AdvancedFieldType.group:
         case AdvancedFieldType.groupComplex:
         case AdvancedFieldType.dropdown: {
-          const { propertyURI } = entry as PropertyTemplate;
-          const { uriWithSelector } = getUris(propertyURI, base, path);
           const {
+            propertyURI,
             valueConstraint: { valueTemplateRefs },
           } = entry as PropertyTemplate;
+          const { uriWithSelector } = getUris(propertyURI, base, path);
 
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
@@ -458,13 +458,13 @@ export const useConfig = () => {
       valueDataType,
     };
 
-    const newUUid = uuid;
+    const newUuid = uuid;
     const uuidArray = valueTemplateRefs.map(() => uuidv4());
 
-    base.set(newUUid, {
-      uuid: newUUid,
+    base.set(newUuid, {
+      uuid: newUuid,
       type,
-      path: [...path, newUUid],
+      path: [...path, newUuid],
       displayName: propertyLabel,
       uri: propertyURI,
       uriBFLite,
@@ -499,7 +499,7 @@ export const useConfig = () => {
         auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
         templates,
         uuid: uuidArray[index],
-        path: [...path, newUUid],
+        path: [...path, newUuid],
         base,
         firstOfSameType: index === 0,
         selectedEntries,
