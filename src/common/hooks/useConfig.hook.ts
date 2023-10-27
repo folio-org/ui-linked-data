@@ -189,7 +189,9 @@ export const useConfig = () => {
           if (!supportedEntries.includes(id) && isProfileResourceTemplate) return;
 
           if (
-            type === AdvancedFieldType.dropdownOption &&
+            (type === AdvancedFieldType.dropdownOption &&
+              hasSelectedRecord &&
+              uriBFLite === dropdownOptionSelection?.selectedRecordUriBFLite) ||
             shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
@@ -418,6 +420,7 @@ export const useConfig = () => {
     userValues,
     hasNoRootWrapper,
     hasSelectedRecord,
+    selectedRecordUriBFLite,
   }: {
     uuid: string;
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
@@ -430,6 +433,7 @@ export const useConfig = () => {
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
     hasSelectedRecord?: boolean;
+    selectedRecordUriBFLite?: string;
   }) => {
     const {
       propertyURI,
@@ -468,25 +472,40 @@ export const useConfig = () => {
 
     const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
 
-    valueTemplateRefs.forEach((item, i) => {
+    valueTemplateRefs.forEach((item, index) => {
       const entry = templates[item];
+
+      const { uriBFLite } = getUris(entry.resourceURI, base, path);
+
+      if (uriBFLite === selectedRecordUriBFLite) {
+        setValue(true);
+      }
+
+      let recordData;
+
+      if (hasSelectedRecord) {
+        recordData = uriBFLite === selectedRecordUriBFLite ? record : undefined;
+      } else {
+        recordData = record;
+      }
 
       traverseProfile({
         entry,
         auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
         templates,
-        uuid: uuidArray[i],
+        uuid: uuidArray[index],
         path: [...path, newUUid],
         base,
-        firstOfSameType: i === 0,
+        firstOfSameType: index === 0,
         selectedEntries,
-        record,
+        record: recordData,
         hasSelectedRecord,
         userValues,
         dropdownOptionSelection: {
           hasNoRootWrapper,
           isSelectedOption: getIsSelectedOption(),
           setIsSelectedOption: setValue,
+          selectedRecordUriBFLite,
         },
       });
     });
@@ -556,6 +575,7 @@ export const useConfig = () => {
             userValues,
             hasNoRootWrapper,
             hasSelectedRecord: true,
+            selectedRecordUriBFLite: uriBFLite,
           });
         });
       }

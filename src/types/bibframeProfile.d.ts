@@ -96,6 +96,7 @@ type DropdownOptionSelection = {
   hasNoRootWrapper: boolean;
   isSelectedOption: boolean;
   setIsSelectedOption: (value: boolean) => boolean;
+  selectedRecordUriBFLite?: string;
 };
 
 type LookupValue = string | Record<string, (string | undefined)[] | string | Nullish> | Nullish;
