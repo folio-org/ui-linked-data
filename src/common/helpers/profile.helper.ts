@@ -143,23 +143,20 @@ const traverseSchema = ({
   }
 };
 
-export const filterUserValues = (userValues: UserValues) => {
-  const filteredUserValues = {} as UserValues;
+export const filterUserValues = (userValues: UserValues) =>
+  Object.values(userValues).reduce((accum, current) => {
+    const { contents, uuid } = current;
 
-  const filteredValues = Object.values(userValues).filter(value => {
-    if (!value.contents.length) return false;
+    if (!contents.length) return accum;
 
-    const filteredContents = value.contents.filter(content => content.label?.length);
+    const filteredContents = contents.filter(({ label }) => label?.length);
 
-    if (!filteredContents.length) return false;
+    if (!filteredContents.length) return accum;
 
-    return true;
-  });
+    accum[uuid] = current;
 
-  filteredValues.forEach(val => (filteredUserValues[val.uuid] = val));
-
-  return filteredUserValues;
-};
+    return accum;
+  }, {} as UserValues);
 
 export const applyUserValues = (
   schema: Map<string, SchemaEntry>,
