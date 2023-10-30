@@ -4,6 +4,7 @@ import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 describe('record.helper', () => {
   const profile = 'test:profile:id';
@@ -41,6 +42,41 @@ describe('record.helper', () => {
       const testResult = {
         resource: {
           Instance: {},
+        },
+      };
+
+      testFormatRecord(initialRecord, testResult);
+    });
+
+    test('embeds work entity into instance if there is data for work entity', () => {
+      const workComponent = 
+        {
+          testUri: 'testValue',
+        };
+      const initialRecord = {
+        [BibframeConstants.TYPE_URIS.INSTANCE]: {},
+        [BFLITE_URIS.INSTANTIATES]: workComponent,
+      };
+      const testResult = {
+        resource: {
+          [BibframeConstants.TYPE_URIS.INSTANCE]: {
+            [BFLITE_URIS.INSTANTIATES]: [workComponent],
+          },
+        },
+      };
+
+      testFormatRecord(initialRecord, testResult);
+    });
+
+    test("doesn't embed work entity into instance if it's empty", () => {
+      const workComponent = {};
+      const initialRecord = {
+        [BibframeConstants.TYPE_URIS.INSTANCE]: {},
+        [BFLITE_URIS.INSTANTIATES]: workComponent,
+      };
+      const testResult = {
+        resource: {
+          [BibframeConstants.TYPE_URIS.INSTANCE]: workComponent,
         },
       };
 

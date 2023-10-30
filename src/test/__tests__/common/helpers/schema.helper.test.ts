@@ -180,6 +180,20 @@ describe('schema.helper', () => {
 
       expect(result).toEqual(testResult);
     });
+
+    test('returns work from within the instance entity', () => {
+      const uriWithSelector = BibframeMappingConstants.BFLITE_URIS.INSTANTIATES;
+      const hasRootWrapper = true;
+      const testResult = { result: 'value' };
+      jest.spyOn(SchemaHelper, 'getSelectedRecord').mockReturnValueOnce(testResult).mockReturnValueOnce(testResult);
+
+      const result = generateRecordForDropdown({
+        uriWithSelector,
+        hasRootWrapper,
+      });
+
+      expect(result).toEqual(testResult);
+    });
   });
 
   describe('generateUserValueContent', () => {

@@ -13,18 +13,20 @@ export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
   },
 });
 
-export const formatRecord = (parsedRecord: Record<string, object> | RecordEntry) => {
+export const formatRecord = (parsedRecord: Record<string, Record<string, any>> | RecordEntry) => {
   const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES];
-  
+  const instanceComponent = parsedRecord[TYPE_URIS.INSTANCE];
+
+  if (workComponent && Object.keys(workComponent).length && instanceComponent) {
+    instanceComponent[BFLITE_URIS.INSTANTIATES as string] = [workComponent];
+  }
+
   delete parsedRecord[BFLITE_URIS.INSTANTIATES];
 
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: {
-        ...parsedRecord[TYPE_URIS.INSTANCE],
-        [BFLITE_URIS.INSTANTIATES]: [workComponent],
-      },
+      [TYPE_URIS.INSTANCE]: instanceComponent,
     },
   };
 };
