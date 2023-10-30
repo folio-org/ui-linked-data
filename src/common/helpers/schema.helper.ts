@@ -66,7 +66,7 @@ export const generateRecordForDropdown = ({
     return getSelectedRecord(uriWithSelector, recordWithSelector);
   }
 
-  return record || null;
+  return record;
 };
 
 export const generateUserValueContent = (
