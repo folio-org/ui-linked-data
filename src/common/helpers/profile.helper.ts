@@ -153,7 +153,7 @@ export const filterUserValues = (userValues: UserValues) =>
 
     if (!filteredContents.length) return accum;
 
-    accum[uuid] = current;
+    accum[uuid] = { ...current, contents: filteredContents };
 
     return accum;
   }, {} as UserValues);
