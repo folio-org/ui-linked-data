@@ -72,7 +72,7 @@ describe('profile.helper', () => {
   });
 
   describe('filterUserValues', () => {
-    test('returns an empty array', () => {
+    test('returns an empty object', () => {
       const userValues = {
         testId_1: { uuid: 'testId_1', contents: [] },
         testId_2: { uuid: 'testId_2', contents: [] },
@@ -83,7 +83,7 @@ describe('profile.helper', () => {
       expect(result).toEqual({});
     });
 
-    test('returns a filtered array of user values', () => {
+    test('returns an object with filtered user values', () => {
       const userValues = {
         testId_1: { uuid: 'testId_1', contents: [{ label: '' }] },
         testId_2: { uuid: 'testId_2', contents: [{ label: '' }, { label: 'testLabel_2' }] },
