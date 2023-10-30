@@ -6,14 +6,24 @@ describe('Complex Lookup Field', () => {
   const label = 'test-label';
   const uuid = 'test-uuid';
 
-  const { getByTestId } = screen;
+  const { getByTestId, queryByTestId } = screen;
 
-  beforeEach(() => {
-    render(<ComplexLookupField label={label} uuid={uuid} onChange={onChange} />);
+  function renderComponent(labelText: string = label) {
+    render(<ComplexLookupField label={labelText} uuid={uuid} onChange={onChange} />);
+  }
+
+  test('renders Complex Lookup Field component with label', () => {
+    renderComponent();
+
+    expect(getByTestId('complex-lookup')).toBeInTheDocument();
+    expect(queryByTestId('complex-lookup-label')).toBeInTheDocument();
   });
 
-  test('renders Complex Lookup Field component', () => {
+  test('renders Complex Lookup Field component without label', () => {
+    renderComponent('');
+
     expect(getByTestId('complex-lookup')).toBeInTheDocument();
+    expect(queryByTestId('complex-lookup-label')).not.toBeInTheDocument();
   });
 
   test('triggers onChange', () => {
@@ -23,6 +33,7 @@ describe('Complex Lookup Field', () => {
       },
     };
 
+    renderComponent();
     fireEvent.change(getByTestId('complex-lookup-input'), event);
 
     expect(onChange).toHaveBeenCalledWith(uuid, [

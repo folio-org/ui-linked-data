@@ -1,6 +1,6 @@
 import { BIBFRAME_API_ENDPOINT, MAX_LIMIT } from '@common/constants/api.constants';
 import baseApi from './base.api';
-import { PROFILE_URIS } from '@common/constants/bibframe.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SingleRecord = {
   recordId: string;
@@ -25,7 +25,7 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 export const getAllRecords = async ({
   pageSize = MAX_LIMIT,
   pageNumber = MAX_LIMIT,
-  type = PROFILE_URIS.MONOGRAPH,
+  type = TYPE_URIS.INSTANCE,
 }: GetAllRecords) => {
   return baseApi.getJson({
     url: BIBFRAME_API_ENDPOINT,
@@ -37,7 +37,7 @@ export const getAllRecords = async ({
   });
 };
 
-export const postRecord = async (recordEntry: RecordEntryDeprecated | RecordEntry) => {
+export const postRecord = async (recordEntry: RecordEntry) => {
   const url = baseApi.generateUrl(BIBFRAME_API_ENDPOINT);
 
   return baseApi.request({
@@ -52,7 +52,7 @@ export const postRecord = async (recordEntry: RecordEntryDeprecated | RecordEntr
   });
 };
 
-export const putRecord = async (recordId: string | number, recordEntry: RecordEntryDeprecated | RecordEntry) => {
+export const putRecord = async (recordId: string | number, recordEntry: RecordEntry) => {
   const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
 
   return baseApi.request({

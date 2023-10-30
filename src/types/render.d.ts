@@ -4,6 +4,7 @@ type UserValueContents = {
     uri?: string;
     parentUri?: string;
     type?: string;
+    bfLabel?: string;
   };
 };
 
@@ -100,3 +101,7 @@ type Schema = Map<string, SchemaEntry>;
 type BFMapEntry = Record<string, string>;
 
 type BFLiteMap = Record<string, string | BFMapEntry>;
+
+type IconType = {
+  className?: string;
+};

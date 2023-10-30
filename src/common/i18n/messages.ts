@@ -21,7 +21,8 @@ const BASE_LOCALE = {
   'marva.isbn-lccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
   'marva.lccn': 'LCCN',
-  'marva.title': 'TITLE',
+  'marva.title': 'TITLE', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+  'marva.contributor': 'CONTRIBUTOR', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.author': 'Author',
   'marva.pub-date': 'Publication Date',
   'marva.edition': 'Edition',
@@ -43,6 +44,9 @@ const BASE_LOCALE = {
   'marva.rd-deleted': 'Resource description deleted',
   'marva.app-fail': 'An error occurred. Please, reload the page.',
   'marva.search-select-index': 'Please select an index',
+  'marva.search-invalid-lccn': 'LCCN is invalid, please correct',
+  'marva.advanced-search': 'Advanced search',
+  'marva.cancel': 'Cancel',
 };
 
 export const i18nMessages = {
@@ -68,7 +72,8 @@ export const i18nMessages = {
     'marva.isbn-lccn': 'ISBN/LCCN',
     'marva.isbn': 'ISBN',
     'marva.lccn': 'LCCN',
-    'marva.title': 'TITEL',
+    'marva.title': 'TITEL', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+    'marva.contributor': 'MITWIRKENDER', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
     'marva.author': 'Autor',
     'marva.pub-date': 'Veröffentlichungsdatum',
     'marva.edition': 'Edition',

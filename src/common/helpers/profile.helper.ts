@@ -5,12 +5,11 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
-  PROFILE_URIS,
+  WRAPPERS_TO_HIDE_WHEN_DEPARSING,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { getLookupLabelKey } from './schema.helper';
+import { generateAdvancedFieldObject, getAdvancedValuesField, getLookupLabelKey } from './schema.helper';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
@@ -19,41 +18,20 @@ type TraverseSchema = {
   container: Record<string, any>;
   key: string;
   index?: number;
-  profile?: string;
   shouldHaveRootWrapper?: boolean;
 };
 
-const getNonArrayTypes = () => {
-  const nonArrayTypes = [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
-
-  if (!IS_NEW_API_ENABLED) {
-    nonArrayTypes.push(AdvancedFieldType.block);
-  }
-
-  return nonArrayTypes;
-};
+const getNonArrayTypes = () => [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
 
 export const hasElement = (collection: string[], uri?: string) => !!uri && collection.includes(uri);
 
-export const generateLookupValue = (uriBFLite?: string, label?: string, uri?: string) => {
-  // TODO: workaround for the agreed API schema, not the best ?
-  let value: LookupValue = {
-    id: null,
-    label,
-    uri,
-  };
-
-  if (IS_NEW_API_ENABLED) {
-    value = LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)
-      ? label
-      : {
-          [getLookupLabelKey(uriBFLite)]: [label],
-          [BFLITE_URIS.LINK]: [uri],
-        };
-  }
-
-  return value;
-};
+export const generateLookupValue = ({ uriBFLite, label, uri }: { uriBFLite?: string; label?: string; uri?: string }) =>
+  LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)
+    ? label
+    : {
+        [getLookupLabelKey(uriBFLite)]: [label],
+        [BFLITE_URIS.LINK]: [uri],
+      };
 
 const traverseSchema = ({
   schema,
@@ -62,11 +40,10 @@ const traverseSchema = ({
   container,
   key,
   index = 0,
-  profile = PROFILE_URIS.MONOGRAPH,
   shouldHaveRootWrapper = false,
 }: TraverseSchema) => {
   const { children, uri, uriBFLite, bfid, type } = schema.get(key) || {};
-  const uriSelector = IS_NEW_API_ENABLED ? uriBFLite || uri : uri;
+  const uriSelector = uriBFLite || uri;
   const selector = uriSelector || bfid;
   const userValueMatch = userValues[key];
   const shouldProceed = Object.keys(userValues)
@@ -75,63 +52,81 @@ const traverseSchema = ({
     .includes(key);
 
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
+  const isArrayContainer = !!selector && Array.isArray(container[selector]);
 
   if (userValueMatch && uri && selector) {
+    const advancedValueField = getAdvancedValuesField(uriBFLite);
+
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
-      if (parentUri || uri) {
-        return generateLookupValue(uriBFLite, label, parentUri || uri);
+      if ((parentUri || uri) && !advancedValueField) {
+        return generateLookupValue({ uriBFLite, label, uri: parentUri || uri });
+      } else if (advancedValueField) {
+        return generateAdvancedFieldObject({ advancedValueField, label });
       } else {
         return type ? { label } : label;
       }
     });
 
-    container[selector] = withFormat;
+    if (isArrayContainer && container[selector].length) {
+      // Add duplicated group
+      container[selector].push(...withFormat);
+    } else {
+      container[selector] = withFormat;
+    }
   } else if (selector && (shouldProceed || index < GROUP_BY_LEVEL)) {
     let containerSelector: Record<string, any>;
     let hasRootWrapper = shouldHaveRootWrapper;
 
     const { profile: profileType, block, dropdownOption, groupComplex, hidden } = AdvancedFieldType;
+    const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
 
-    if (IS_NEW_API_ENABLED) {
-      const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
+    if (type === profileType) {
+      containerSelector = container;
+    } else if (
+      (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) &&
+      !WRAPPERS_TO_HIDE_WHEN_DEPARSING.includes(selector)
+    ) {
+      if (type === dropdownOption && !selectedEntries.includes(key)) {
+        // Only fields from the selected option should be processed and saved
+        return;
+      }
 
-      if (type === profileType) {
-        container.type = profile;
-        containerSelector = container;
-      } else if (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) {
-        if (type === dropdownOption && !selectedEntries.includes(key)) {
-          // Only fields from the selected option should be processed and saved
-          return;
-        }
+      // Groups like "Provision Activity" don't have "block" wrapper,
+      // their child elements like "dropdown options" are placed at the top level,
+      // where any other blocks are placed.
+      containerSelector = {};
 
-        // Groups like "Provision Activity" don't have "block" wrapper,
-        // their child elements like "dropdown options" are placed at the top level,
-        // where any other blocks are placed.
-        containerSelector = {};
-        container[selector] = [containerSelector];
-      } else if (type === dropdownOption) {
-        if (!selectedEntries.includes(key)) {
-          // Only fields from the selected option should be processed and saved
-          return;
-        }
-
-        containerSelector = {};
-        container.push({ [selector]: containerSelector });
-      } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
-        // Some groups like "Provision Activity" should not have a root node,
-        // and they put their children directly in the block node.
-        containerSelector = container;
-
-        if (isGroupWithoutRootWrapper) {
-          hasRootWrapper = true;
-        }
+      if (isArrayContainer) {
+        // Add duplicated group
+        container[selector].push(containerSelector);
       } else {
-        containerSelector = isArray ? [] : {};
-        container[selector] = containerSelector;
+        container[selector] = type === block ? containerSelector : [containerSelector];
+      }
+    } else if (type === dropdownOption) {
+      if (!selectedEntries.includes(key)) {
+        // Only fields from the selected option should be processed and saved
+        return;
+      }
+
+      containerSelector = {};
+      container.push({ [selector]: containerSelector });
+    } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
+      // Some groups like "Provision Activity" should not have a root node,
+      // and they put their children directly in the block node.
+      containerSelector = container;
+
+      if (isGroupWithoutRootWrapper) {
+        hasRootWrapper = true;
       }
     } else {
-      container[selector] = isArray ? (shouldProceed ? [{}] : []) : {};
-      containerSelector = isArray ? container[selector].at(-1) : container[selector];
+      containerSelector = isArray ? [] : {};
+
+      if (container[selector] && isArrayContainer) {
+        // Add duplicated group
+        containerSelector = container[selector];
+      } else {
+        container[selector] = containerSelector;
+      }
     }
 
     children?.forEach(uuid =>
@@ -203,10 +198,10 @@ export const shouldSelectDropdownOption = ({
   // TODO: Potentially dangerous HACK ([0])
   // Might be removed with the API schema change
   // If not, refactor to include all indices
-  const isSelectedOptionInRecord = Array.isArray(record) && record?.[0]?.[uri];
+  const isSelectedOptionInRecord = Array.isArray(record) ? record?.[0]?.[uri] : record?.[uri];
   let shouldSelectOption = false;
 
-  if (IS_NEW_API_ENABLED && dropdownOptionSelection?.hasNoRootWrapper) {
+  if (dropdownOptionSelection?.hasNoRootWrapper) {
     const { isSelectedOption, setIsSelectedOption } = dropdownOptionSelection;
 
     shouldSelectOption = !isSelectedOption && isSelectedOptionInRecord;

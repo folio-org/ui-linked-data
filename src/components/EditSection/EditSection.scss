@@ -6,14 +6,32 @@
   }
 
   .edit-section-group {
+    position: relative;
     border: 1px solid black;
     margin: 0.5rem 0;
     padding: 0.5rem;
+  }
+
+  .group-name-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
   }
 
   .back-to-top {
     position: fixed;
     bottom: 1rem;
     right: 1rem;
+  }
+
+  .profile-entity {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 1rem;
+    
+    > * {
+      flex-grow: 1;
+    }
   }
 }

@@ -9,15 +9,33 @@ type InputProps = {
   className?: string;
   testid?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onPressEnter?: VoidFunction;
 };
 
-export const Input: FC<InputProps> = ({ placeholder, value = '', disabled = false, className, testid, onChange }) => (
-  <input
-    data-testid={testid}
-    className={classNames('input', className)}
-    value={value}
-    placeholder={placeholder}
-    onChange={onChange}
-    disabled={disabled}
-  />
-);
+export const Input: FC<InputProps> = ({
+  placeholder,
+  value = '',
+  disabled = false,
+  className,
+  testid,
+  onChange,
+  onPressEnter,
+}) => {
+  return (
+    <input
+      data-testid={testid}
+      className={classNames('input', className)}
+      value={value}
+      placeholder={placeholder}
+      onChange={onChange}
+      disabled={disabled}
+      onKeyDown={({ key, target }) => {
+        if ((key === 'Enter' || key == 'NumpadEnter') && onPressEnter) {
+          onPressEnter();
+
+          (target as HTMLElement).blur();
+        };
+      }}
+    />
+  );
+}

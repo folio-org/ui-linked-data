@@ -1,17 +1,32 @@
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { IS_NEW_API_ENABLED } from '@common/constants/feature.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
-export const formatRecord = (profile: any, parsedRecord: Record<string, object>) => {
-  const formattedRecord: RecordEntryDeprecated | RecordEntry = IS_NEW_API_ENABLED
-    ? (parsedRecord as RecordEntry)
-    : {
-        ...parsedRecord[profile],
-        profile,
-      };
+export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
 
-  return formattedRecord;
+export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
+  resource: {
+    ...record.resource,
+    [TYPE_URIS.INSTANCE]: { ...record.resource[TYPE_URIS.INSTANCE], id },
+  },
+});
+
+export const formatRecord = (parsedRecord: Record<string, object> | RecordEntry) => {
+  const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES];
+  
+  delete parsedRecord[BFLITE_URIS.INSTANTIATES];
+
+  return {
+    resource: {
+      ...parsedRecord,
+      [TYPE_URIS.INSTANCE]: {
+        ...parsedRecord[TYPE_URIS.INSTANCE],
+        [BFLITE_URIS.INSTANTIATES]: [workComponent],
+      },
+    },
+  };
 };
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
@@ -37,8 +52,10 @@ export const generateAndSaveRecord = (storageKey: string, record: SavedRecordDat
 
 export const saveRecordLocally = (profile: string, record: SavedRecordData, recordId: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
+  const formattedRecord = formatRecord(record);
+  const updatedRecord = getRecordWithUpdatedID(formattedRecord as RecordEntry, recordId);
 
-  return generateAndSaveRecord(storageKey, record);
+  return generateAndSaveRecord(storageKey, updatedRecord);
 };
 
 export const getSavedRecord = (profile: string, recordId?: RecordID): LocallySavedRecord | null => {

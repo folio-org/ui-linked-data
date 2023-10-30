@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { PROFILE_IDS } from '@common/constants/bibframe.constants';
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { deleteRecordLocally, formatRecord } from '@common/helpers/record.helper';
+import { deleteRecordLocally, formatRecord, getRecordId } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
@@ -23,20 +23,18 @@ export const useRecordControls = () => {
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
-  const currentRecordId = record?.id;
+  const profile = PROFILE_BFIDS.MONOGRAPH;
+  const currentRecordId = getRecordId(record);
 
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
     try {
-      const profile = record?.profile ?? PROFILE_IDS.MONOGRAPH;
+      const profile = PROFILE_BFIDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
-      const recordData: RecordEntryDeprecated =
-        locallySavedData && !asPreview
-          ? { id: recordId, profile, ...locallySavedData.data[profile] }
-          : await getRecord({ recordId });
+      const recordData: RecordEntry =
+        locallySavedData && !asPreview ? locallySavedData.data : await getRecord({ recordId });
 
       setRecord(recordData);
       getProfiles({ record: recordData, recordId, asPreview });
@@ -59,18 +57,18 @@ export const useRecordControls = () => {
     if (!parsed) return;
 
     try {
-      const formattedRecord = formatRecord(profile, parsed);
+      const formattedRecord = formatRecord(parsed) as RecordEntry;
       // TODO: define a type
+      const recordId = getRecordId(record);
       const response: any =
-        !record?.id || record.id === DEFAULT_RECORD_ID
+        !recordId || getRecordId(record) === DEFAULT_RECORD_ID
           ? await postRecord(formattedRecord)
-          : await putRecord(record.id, formattedRecord);
+          : await putRecord(recordId as string, formattedRecord);
       const parsedResponse = await response.json();
-      const updatedRecord = { ...record, id: parsedResponse?.id } as RecordEntryDeprecated;
 
-      deleteRecordLocally(profile, currentRecordId);
+      deleteRecordLocally(profile, currentRecordId as RecordID);
       setIsEdited(false);
-      setRecord(updatedRecord);
+      setRecord(parsedResponse);
       setCommonStatus(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-save-success'),
@@ -95,8 +93,8 @@ export const useRecordControls = () => {
     try {
       if (!currentRecordId) return;
 
-      await deleteRecordRequest(currentRecordId);
-      deleteRecordLocally(profile, currentRecordId);
+      await deleteRecordRequest(currentRecordId as unknown as string);
+      deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
       setCommonStatus(currentStatus => [
         ...currentStatus,

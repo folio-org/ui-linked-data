@@ -6,18 +6,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { fetchRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 
-const mockPreviewContent = {
-  key1: {
+const mockPreviewContent = [
+  {
+    id: 'k1',
     base: new Map(),
     userValues: {},
     initKey: 'key1',
   },
-  key2: {
+  {
+    id: 'k2',
     base: new Map(),
     userValues: {},
     initKey: 'key2',
   },
-};
+];
 
 describe('FullDisplay', () => {
   beforeEach(() =>
@@ -41,6 +43,6 @@ describe('FullDisplay', () => {
   test('removes a preview content entry on close button click', () => {
     fireEvent.click(getAllByTestId('preview-remove')[0]);
 
-    expect(getAllByTestId('preview-remove')).toHaveLength(Object.keys(mockPreviewContent).length - 1);
+    expect(getAllByTestId('preview-remove')).toHaveLength(mockPreviewContent.length - 1);
   });
 });

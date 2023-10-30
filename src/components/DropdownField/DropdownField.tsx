@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import Select from 'react-select';
 
-interface Props {
+export interface Props {
   options: ReactSelectOption[];
   name: string;
   uuid: string;
@@ -10,7 +10,7 @@ interface Props {
   isDisabled?: boolean;
 }
 
-export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value, isDisabled = false }) => {
+export const DropdownField: FC<Props> = ({ options, name = '', uuid, onChange, value, isDisabled = false }) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
 
   const handleOnChange = (option: any) => {
@@ -20,7 +20,7 @@ export const DropdownField: FC<Props> = ({ options, name, uuid, onChange, value,
 
   return (
     <div id={uuid} data-testid="dropdown-field">
-      {name} <br />
+      {name.trim() ? <div data-testid="dropdown-field-label">{name}</div> : null}
       <Select
         options={options}
         isSearchable={false}

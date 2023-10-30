@@ -34,7 +34,7 @@ export const Fields: FC<Fields> = memo(
     const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption;
 
     return (
-      <div className={classNames({ [groupClassName]: level === groupByLevel })}>
+      <div className={classNames({ [groupClassName]: level === groupByLevel, 'profile-entity': level === 0 })}>
         {drawComponent &&
           drawComponent({
             schema,

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import './Modal.scss';
+import { Times16 } from '@components/icons';
 // TODO: Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -10,6 +11,7 @@ interface Props {
   isOpen: boolean;
   title: string;
   className?: string;
+  submitButtonDisabled?: boolean;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
@@ -30,6 +32,7 @@ const Modal: FC<Props> = ({
   onCancel,
   onClose,
   children,
+  submitButtonDisabled,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: uncomment for using with Shadow DOM
@@ -54,14 +57,15 @@ const Modal: FC<Props> = ({
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className="modal-header">
               <h3>{title}</h3>
+              <button onClick={onClose} className='close-button'><Times16 /></button>
             </div>
-            {!!children && <div>{children}</div>}
+            {!!children && children}
             <div className="modal-controls">
-              <button onClick={onSubmit} data-testid="modal-button-submit">
-                {submitButtonLabel}
-              </button>
               <button onClick={onCancel} data-testid="modal-button-cancel">
                 {cancelButtonLabel}
+              </button>
+              <button disabled={submitButtonDisabled} onClick={onSubmit} data-testid="modal-button-submit">
+                {submitButtonLabel}
               </button>
             </div>
           </div>

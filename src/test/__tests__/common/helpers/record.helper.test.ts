@@ -2,7 +2,7 @@ import * as RecordHelper from '@common/helpers/record.helper';
 import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
 import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
+import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('record.helper', () => {
@@ -20,22 +20,32 @@ describe('record.helper', () => {
     data: record,
   };
 
-  const mockImportedConstant = getMockedImportedConstant(FeatureConstants, 'IS_NEW_API_ENABLED');
-
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
-    mockImportedConstant(false);
   });
 
-  test('formatRecord - returns formatted record data', () => {
-    const testResult = {
-      profile,
-      Instance: [{}],
-    };
+  describe('formatRecord', () => {
+    function testFormatRecord(
+      initialRecord: Record<string, object> | RecordEntry,
+      testResult: Record<string, object | string>,
+    ) {
+      const result = RecordHelper.formatRecord(initialRecord);
 
-    const result = RecordHelper.formatRecord(profile, record);
+      expect(result).toEqual(testResult);
+    }
 
-    expect(result).toEqual(testResult);
+    test('returns formatted record data', () => {
+      const initialRecord = {
+        Instance: {},
+      };
+      const testResult = {
+        resource: {
+          Instance: {},
+        },
+      };
+
+      testFormatRecord(initialRecord, testResult);
+    });
   });
 
   test('deleteRecordLocally - invokes "localStorageService.delete" with generated key', () => {
@@ -65,11 +75,24 @@ describe('record.helper', () => {
   });
 
   test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
+    const testInstanceUri = 'testInstanceUri';
+    const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
+    mockImportedConstant({ INSTANCE: testInstanceUri });
+    const record = { resource: { [testInstanceUri]: {} } };
+    const testRecord = {
+      resource: { [testInstanceUri]: { id: 'testId' } },
+    };
+    const storedRecord = {
+      createdAt: date,
+      data: testRecord,
+    };
+
+    jest.spyOn(RecordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
     jest.spyOn(RecordHelper, 'generateAndSaveRecord').mockReturnValue(storedRecord);
 
     const result = RecordHelper.saveRecordLocally(profile, record, recordId);
 
-    expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, record);
+    expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, testRecord);
     expect(result).toEqual(storedRecord);
   });
 

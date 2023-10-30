@@ -1,11 +1,15 @@
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 
 export const itemSearchMockData = {
-  search_query: 'isbn=12345*',
+  searchQuery: 'isbn=12345*',
   content: [
     {
       id: 'mock-id',
-      title: 'mock-title',
+      titles: [
+        {
+          value: 'mock-title',
+        }
+      ],
       identifiers: [
         {
           value: 'mock-val',

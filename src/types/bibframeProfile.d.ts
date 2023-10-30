@@ -72,15 +72,14 @@ type ProfileEntry = {
   name: string;
 };
 
-type RecursiveRecordSchema = Record<string, Array<RecursiveRecordSchema | string>>;
-
-type RecordEntryDeprecated = RecursiveRecordSchema & {
-  id?: number | string;
-  profile: string;
+type RecursiveRecordSchema = {
+  [key: string]: string[] | number[] | number | string | RecursiveRecordSchema;
 };
 
-type RecordEntry = RecursiveRecordSchema & {
-  type?: string;
+type RecordEntry = {
+  [key: string]: {
+    [key: string]: RecursiveRecordSchema;
+  };
 };
 
 interface ResourceTemplates {
@@ -97,6 +96,7 @@ type DropdownOptionSelection = {
   hasNoRootWrapper: boolean;
   isSelectedOption: boolean;
   setIsSelectedOption: (value: boolean) => boolean;
+  selectedRecordUriBFLite?: string;
 };
 
 type LookupValue = string | Record<string, (string | undefined)[] | string | Nullish> | Nullish;

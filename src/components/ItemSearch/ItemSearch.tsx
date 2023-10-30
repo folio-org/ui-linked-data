@@ -1,28 +1,19 @@
+import { useCallback, useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { SearchIdentifiers } from '@common/constants/search.constants';
+import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
-import { Input } from '@components/Input';
 import { Table, Row } from '@components/Table';
 import state from '@state';
-import { ChangeEvent, useEffect, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import './ItemSearch.scss';
-
-export enum Identifiers {
-  ISBN = 'isbn',
-  LCCN = 'lccn',
-  TITLE = 'title',
-}
-
-enum DisplayIdentifiers {
-  isbn = 'marva.isbn',
-  lccn = 'marva.lccn',
-  title = 'marva.title',
-}
+import { normalizeLccn } from '@common/helpers/validations.helper';
+import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 
 const initHeader: Row = {
   actionItems: {
@@ -61,15 +52,14 @@ type ItemSearch = {
 };
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
-  const [searchBy, setSearchBy] = useState<Identifiers | null>(null);
+  const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
   const [message, setMessage] = useState('');
   const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
-
-  const { formatMessage } = useIntl();
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
 
   useEffect(() => {
     // apply disabled/enabled state to row action items
@@ -78,39 +68,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
   useEffect(() => {
     // clear out preview content on page load
-    !data && setPreviewContent({});
-  }, [])
+    !data && setPreviewContent([]);
+  }, []);
 
-  const clearMessage = () => message && setMessage('');
-
-  const drawControls = () =>
-    Object.values(Identifiers).map(id => (
-      <div key={id}>
-        <input
-          data-testid={id}
-          id={id}
-          type="radio"
-          checked={searchBy === id}
-          onChange={() => {
-            clearMessage();
-            setSearchBy(id);
-          }}
-        />
-        <label htmlFor={id}>
-          <FormattedMessage id={DisplayIdentifiers[id]} />
-        </label>
-      </div>
-    ));
-
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (!searchBy) {
-      return setMessage('marva.search-select-index');
-    }
-
-    clearMessage();
-
-    setQuery(value);
-  };
+  const clearMessage = useCallback(() => message && setMessage(''), [message]);
 
   // state update is not always reflected in the fn
   // alternatively, pass a flag to manually enable the icons
@@ -149,32 +110,51 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       },
     }));
 
-  const canSwapRows = (row1: Identifiers, row2: Identifiers) =>
+  const canSwapRows = (row1: SearchIdentifiers, row2: SearchIdentifiers) =>
     searchBy === row1 && header[row2].position < header[row1].position;
 
   const swapIdentifiers = () => {
-    if (canSwapRows(Identifiers.ISBN, Identifiers.LCCN) || canSwapRows(Identifiers.LCCN, Identifiers.ISBN)) {
-      setHeader(swapRowPositions(header, Identifiers.LCCN, Identifiers.ISBN));
+    if (
+      canSwapRows(SearchIdentifiers.ISBN, SearchIdentifiers.LCCN) ||
+      canSwapRows(SearchIdentifiers.LCCN, SearchIdentifiers.ISBN)
+    ) {
+      setHeader(swapRowPositions(header, SearchIdentifiers.LCCN, SearchIdentifiers.ISBN));
     }
   };
 
   const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
 
-  const fetchData = async (searchBy: string, query: string) => {
+  const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
+    if (type === SearchIdentifiers.LCCN) {
+      const normalized = normalizeLccn(query);
+
+      !normalized && setMessage('marva.search-invalid-lccn');
+
+      return normalized;
+    }
+
+    return query;
+  };
+
+  const fetchData = async (searchBy: SearchIdentifiers, query: string) => {
     if (!query) return;
 
     clearMessage();
-    setPreviewContent({});
+    setPreviewContent([]);
     data && setData(null);
 
+    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+
+    if (!updatedQuery) return;
+
     try {
-      const result = await getByIdentifier(searchBy, query);
+      const result = await getByIdentifier(searchBy, updatedQuery as string);
 
       if (!result.content.length) return setMessage('marva.search-no-rds-match');
 
       swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result), false));
-    } catch (e) {
+    } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
@@ -187,25 +167,16 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
       <strong>
         <FormattedMessage id="marva.search-by" />
       </strong>
-      <div className="search-controls">{drawControls()}</div>
+      <SearchControls
+        searchBy={searchBy}
+        setSearchBy={setSearchBy}
+        query={query}
+        setQuery={setQuery}
+        setMessage={setMessage}
+        clearMessage={clearMessage}
+        fetchData={fetchData}
+      />
       <div>
-        <Input
-          testid="id-search-input"
-          placeholder={formatMessage(
-            { id: 'marva.search-by-sth' },
-            { by: searchBy && ` ${formatMessage({ id: DisplayIdentifiers[searchBy] })}` },
-          )}
-          className="search-input"
-          value={query}
-          onChange={onChangeSearchInput}
-        />
-        <button
-          data-testid="id-search-button"
-          onClick={() => searchBy && fetchData(searchBy, query)}
-          disabled={!query || !searchBy}
-        >
-          <FormattedMessage id="marva.search" />
-        </button>
         {message ? (
           <div>
             <FormattedMessage id={message} />
@@ -215,6 +186,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         )}
       </div>
       <FullDisplay />
+      <AdvancedSearchModal isOpen={isAdvancedSearchOpen} toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)} />
     </div>
   );
 };
