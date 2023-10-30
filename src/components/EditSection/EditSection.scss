@@ -29,9 +29,10 @@
     flex-direction: row-reverse;
     justify-content: space-between;
     gap: 1rem;
-    
+
     > * {
       flex-grow: 1;
+      width: 100%;
     }
   }
 }
