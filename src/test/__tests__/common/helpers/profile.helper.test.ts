@@ -1,4 +1,9 @@
-import { hasElement, generateLookupValue, shouldSelectDropdownOption } from '@common/helpers/profile.helper';
+import {
+  hasElement,
+  generateLookupValue,
+  filterUserValues,
+  shouldSelectDropdownOption,
+} from '@common/helpers/profile.helper';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import * as BibframeConstants from '@common/constants/bibframe.constants';
@@ -63,6 +68,33 @@ describe('profile.helper', () => {
 
         expect(result).toEqual(testResult);
       });
+    });
+  });
+
+  describe('filterUserValues', () => {
+    test('returns an empty object', () => {
+      const userValues = {
+        testId_1: { uuid: 'testId_1', contents: [] },
+        testId_2: { uuid: 'testId_2', contents: [] },
+      };
+
+      const result = filterUserValues(userValues);
+
+      expect(result).toEqual({});
+    });
+
+    test('returns an object with filtered user values', () => {
+      const userValues = {
+        testId_1: { uuid: 'testId_1', contents: [{ label: '' }] },
+        testId_2: { uuid: 'testId_2', contents: [{ label: '' }, { label: 'testLabel_2' }] },
+      };
+      const testResult = {
+        testId_2: { uuid: 'testId_2', contents: [{ label: 'testLabel_2' }] },
+      };
+
+      const result = filterUserValues(userValues);
+
+      expect(result).toEqual(testResult);
     });
   });
 
