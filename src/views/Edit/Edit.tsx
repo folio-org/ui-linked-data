@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { Properties } from '@components/Properties';
@@ -6,10 +7,9 @@ import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
+import { useRecordControls } from '@common/hooks/useRecordControls';
 import state from '@state';
 import './Edit.scss';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useParams } from 'react-router-dom';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
