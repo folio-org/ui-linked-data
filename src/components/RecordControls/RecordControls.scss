@@ -1,9 +1,5 @@
-.status-message {
-  &.success {
-    color: green;
-  }
-
-  &.error {
-    color: red;
-  }
+.record-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

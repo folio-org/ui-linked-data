@@ -8,15 +8,19 @@
   flex-direction: row;
   margin-bottom: 1em;
   padding: 0 0.5rem;
-  gap: 0.5em;
   border-bottom: 1px solid #d7d8da;
   background-color: white;
 
   nav {
     display: flex;
+    flex-wrap: wrap;
+    align-self: stretch;
     padding: 0 0.75rem 0 0.125rem;
 
     a {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
       padding: 0.875rem 0.75rem;
       line-height: 0.875rem;
       font-size: 0.875rem;
@@ -40,5 +44,15 @@
 
   .locale-select {
     margin-left: auto;
+  }
+
+  .nav-title {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    border-left: 1px solid #d7d8da;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0 1.5rem;
   }
 }

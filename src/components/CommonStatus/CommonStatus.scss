@@ -2,6 +2,16 @@
   padding: 0 0.5rem;
 }
 
+.status-message {
+  &.success {
+    color: green;
+  }
+
+  &.error {
+    color: red;
+  }
+}
+
 /* .status-message {
   position: fixed;
   top: 4.5rem;
