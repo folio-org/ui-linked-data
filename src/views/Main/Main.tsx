@@ -1,16 +1,7 @@
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Link } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
-export const Main = () => {
-  const { formatMessage } = useIntl();
-
-  return (
-    <div data-testid='main'>
-      <FormattedMessage id='marva.welcome' values={{
-        editLink: <Link to="/edit">{
-          formatMessage({ id: 'marva.start-editing' })
-        }</Link>
-      }}/>
-    </div>
-  );
-};
+export const Main = () => (
+  <div data-testid="main">
+    <FormattedMessage id="marva.welcome" />
+  </div>
+);

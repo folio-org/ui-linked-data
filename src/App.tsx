@@ -21,8 +21,9 @@ type IContainer = {
 
 const componentsMap: Record<string, JSX.Element> = {
   [ROUTES.SEARCH.uri]: <Search />,
-  [ROUTES.EDIT.uri]: <Edit />,
-  [ROUTES.LOAD.uri]: <Load />,
+  [ROUTES.RESOURCE_EDIT.uri]: <Edit />,
+  [ROUTES.RESOURCE_CREATE.uri]: <Edit />,
+  [ROUTES.DASHBOARD.uri]: <Load />,
   [ROUTES.MAIN.uri]: <Main />,
 };
 
@@ -35,11 +36,13 @@ const Container: FC<IContainer> = ({ routePrefix = '' }) => {
         <BrowserRouter basename={routePrefix}>
           <Nav />
           <CommonStatus />
-          <Routes>
-            {Object.values(ROUTES).map(({ uri }) => (
-              <Route path={uri} element={componentsMap[uri]} key={uri} />
-            ))}
-          </Routes>
+          <div className="main-content">
+            <Routes>
+              {Object.values(ROUTES).map(({ uri }) => (
+                <Route path={uri} element={componentsMap[uri]} key={uri} />
+              ))}
+            </Routes>
+          </div>
           <div id={MODAL_CONTAINER_ID} />
         </BrowserRouter>
       </ErrorBoundary>

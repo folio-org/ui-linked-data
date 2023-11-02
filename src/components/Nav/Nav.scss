@@ -1,12 +1,38 @@
-.nav {
+#editor-root .nav {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
   flex-direction: row;
   margin-bottom: 1em;
-  padding-bottom: 0.2rem;
+  padding: 0 0.5rem;
   gap: 0.5em;
-  border-bottom: 1px solid lightgray;
-  min-height: 3rem;
+  border-bottom: 1px solid #d7d8da;
+  background-color: white;
+
+  nav {
+    display: flex;
+    padding: 0 0.75rem 0 0.125rem;
+
+    a {
+      padding: 0.875rem 0.75rem;
+      line-height: 0.875rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #000;
+
+      &:hover {
+        background-color: #d7d8da;
+      }
+
+      &.active {
+        font-weight: 600;
+        background-color: #d7d8da;
+      }
+    }
+  }
 
   .main-title {
     font-weight: 600;

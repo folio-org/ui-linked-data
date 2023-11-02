@@ -38,8 +38,6 @@ export const useRecordControls = () => {
 
       setRecord(recordData);
       getProfiles({ record: recordData, recordId, asPreview });
-
-      !asPreview && navigate(ROUTES.EDIT.uri);
     } catch (_err) {
       console.error('Error fetching record.');
 
@@ -87,6 +85,8 @@ export const useRecordControls = () => {
     setUserValues({});
     setRecord(null);
     setSelectedProfile(null);
+
+    navigate('/dashboard');
   };
 
   const deleteRecord = async () => {
@@ -101,7 +101,7 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-deleted'),
       ]);
 
-      navigate(ROUTES.LOAD.uri);
+      navigate(ROUTES.DASHBOARD.uri);
     } catch (error) {
       console.error('Cannot delete the resource description', error);
 

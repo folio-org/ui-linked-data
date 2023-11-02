@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
-import { getAllRecords } from '@common/api/records.api';
-import './Load.scss';
-import { useRecordControls } from '@common/hooks/useRecordControls';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import { getAllRecords } from '@common/api/records.api';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import './Load.scss';
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<Record<string, any> | null>(null);
-
-  const { fetchRecord } = useRecordControls();
 
   useEffect(() => {
     getAllRecords({
@@ -36,9 +35,9 @@ export const Load = () => {
       </strong>
       <div className="button-group">
         {availableRecords?.map(({ id, label }: RecordData) => (
-          <button key={id} onClick={() => fetchRecord(String(id))}>
+          <Link key={id} to={generateEditResourceUrl(id)} className="button">
             {generateButtonLabel({ id, label })}
-          </button>
+          </Link>
         )) || (
           <div>
             <FormattedMessage id="marva.no-available-rds" />
