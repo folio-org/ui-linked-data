@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
+import './CommonStatus.scss';
 
 const DELETE_TIMEOUT = 5000;
 

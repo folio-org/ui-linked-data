@@ -1,7 +1,8 @@
+import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from '@common/constants/routes.constants';
 import { CommonStatus } from '@components/CommonStatus';
 import { Nav } from '@components/Nav';
-import { Routes, Route } from 'react-router-dom';
+import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import { Search } from '../Search';
 import { Edit } from '../Edit';
 import { Load } from '../Load';
@@ -20,7 +21,6 @@ export const Root = () => {
     <>
       <Nav />
       <CommonStatus />
-
       <div className="main-content">
         <Routes>
           {Object.values(ROUTES).map(({ uri }) => (
@@ -28,6 +28,7 @@ export const Root = () => {
           ))}
         </Routes>
       </div>
+      <div id={MODAL_CONTAINER_ID} />
     </>
   );
 };

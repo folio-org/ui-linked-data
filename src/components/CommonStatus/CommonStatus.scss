@@ -3,16 +3,6 @@
 }
 
 .status-message {
-  &.success {
-    color: green;
-  }
-
-  &.error {
-    color: red;
-  }
-}
-
-/* .status-message {
   position: fixed;
   top: 4.5rem;
   left: 0.5rem;
@@ -21,4 +11,12 @@
   border: 1px solid #d7d8da;
   border-radius: 8px;
   background: white;
-} */
+
+  &.success {
+    color: green;
+  }
+
+  &.error {
+    color: red;
+  }
+}
