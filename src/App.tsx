@@ -18,7 +18,7 @@ type IContainer = {
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: '*',
     element: <Root />,
     children: [
       {
