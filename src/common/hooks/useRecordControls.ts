@@ -86,7 +86,7 @@ export const useRecordControls = () => {
     setRecord(null);
     setSelectedProfile(null);
 
-    navigate('/dashboard');
+    navigate(ROUTES.DASHBOARD.uri);
   };
 
   const deleteRecord = async () => {
