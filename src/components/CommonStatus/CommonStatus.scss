@@ -1,16 +1,17 @@
 .common-status {
-  padding: 0 0.5rem;
+  position: fixed;
+  top: 3rem;
+  left: 0.75rem;
+  z-index: 10;
 }
 
 .status-message {
-  position: fixed;
-  top: 4.5rem;
-  left: 0.5rem;
-  z-index: 10;
+  margin-bottom: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #d7d8da;
   border-radius: 8px;
   background: white;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
 
   &.success {
     color: green;

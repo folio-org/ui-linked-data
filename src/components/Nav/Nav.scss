@@ -4,10 +4,11 @@
   top: 0;
   z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
   margin-bottom: 1em;
-  padding: 0 0.5rem;
+  padding-right: 0.75rem;
   border-bottom: 1px solid #d7d8da;
   background-color: white;
 
@@ -36,10 +37,6 @@
         background-color: #d7d8da;
       }
     }
-  }
-
-  .main-title {
-    font-weight: 600;
   }
 
   .locale-select {

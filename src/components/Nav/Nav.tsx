@@ -20,7 +20,6 @@ export const Nav = () => {
 
   return (
     <div data-testid="nav" className="nav">
-      <div className="main-title">marva::next</div>
       <nav>
         {Object.values(ROUTES)
           .filter(({ name }) => !NOT_SHOWN.includes(name))
