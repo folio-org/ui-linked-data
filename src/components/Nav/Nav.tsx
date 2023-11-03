@@ -9,14 +9,11 @@ import state from '@state';
 import './Nav.scss';
 
 const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
-
-const RESOURCE_URLS = [ROUTES.RESOURCE_CREATE.uri, ROUTES.RESOURCE_EDIT.uri];
+const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];
 
 export const Nav = () => {
   const setLocale = useSetRecoilState(state.config.locale);
-  const routePattern = useRoutePathPattern(RESOURCE_URLS);
-
-  const navTitle = routePattern === ROUTES.RESOURCE_CREATE.uri ? 'marva.create' : 'marva.edit';
+  const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
 
   return (
     <div data-testid="nav" className="nav">
@@ -29,9 +26,9 @@ export const Nav = () => {
             </NavLink>
           ))}
       </nav>
-      {routePattern && (
+      {resourceRoutePattern && (
         <div className="nav-title">
-          <FormattedMessage id={navTitle} />
+          <FormattedMessage id={'marva.edit'} />
         </div>
       )}
       <RecordControls />
