@@ -2,10 +2,13 @@
 
 import {
   COMPLEX_GROUPS,
+  FORCE_INCLUDE_WHEN_DEPARSING,
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
+  IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
-  WRAPPERS_TO_HIDE_WHEN_DEPARSING,
+  NONARRAY_DROPDOWN_OPTIONS,
+  FORCE_EXCLUDE_WHEN_DEPARSING,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -25,8 +28,18 @@ const getNonArrayTypes = () => [AdvancedFieldType.hidden, AdvancedFieldType.drop
 
 export const hasElement = (collection: string[], uri?: string) => !!uri && collection.includes(uri);
 
-export const generateLookupValue = ({ uriBFLite, label, uri }: { uriBFLite?: string; label?: string; uri?: string }) =>
-  LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string)
+export const generateLookupValue = ({
+  uriBFLite,
+  label,
+  uri,
+  type,
+}: {
+  uriBFLite?: string;
+  label?: string;
+  uri?: string;
+  type?: AdvancedFieldType;
+}) =>
+  LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex
     ? label
     : {
         [getLookupLabelKey(uriBFLite)]: [label],
@@ -59,7 +72,7 @@ const traverseSchema = ({
 
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
       if ((parentUri || uri) && !advancedValueField) {
-        return generateLookupValue({ uriBFLite, label, uri: parentUri || uri });
+        return generateLookupValue({ uriBFLite, label, uri: parentUri || uri, type: type as AdvancedFieldType });
       } else if (advancedValueField) {
         return generateAdvancedFieldObject({ advancedValueField, label });
       } else {
@@ -83,8 +96,11 @@ const traverseSchema = ({
     if (type === profileType) {
       containerSelector = container;
     } else if (
-      (type === block || hasElement(COMPLEX_GROUPS, uri) || shouldHaveRootWrapper) &&
-      !WRAPPERS_TO_HIDE_WHEN_DEPARSING.includes(selector)
+      (type === block ||
+        hasElement(COMPLEX_GROUPS, uri) ||
+        shouldHaveRootWrapper ||
+        (FORCE_INCLUDE_WHEN_DEPARSING.includes(selector) && type !== hidden)) &&
+      !FORCE_EXCLUDE_WHEN_DEPARSING.includes(selector)
     ) {
       if (type === dropdownOption && !selectedEntries.includes(key)) {
         // Only fields from the selected option should be processed and saved
@@ -109,8 +125,18 @@ const traverseSchema = ({
       }
 
       containerSelector = {};
-      container.push({ [selector]: containerSelector });
-    } else if (isGroupWithoutRootWrapper || type === hidden || type === groupComplex) {
+
+      if (NONARRAY_DROPDOWN_OPTIONS.includes(selector)) {
+        container[selector] = containerSelector;
+      } else {
+        container.push({ [selector]: containerSelector });
+      }
+    } else if (
+      isGroupWithoutRootWrapper ||
+      type === hidden ||
+      type === groupComplex ||
+      IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(selector)
+    ) {
       // Some groups like "Provision Activity" should not have a root node,
       // and they put their children directly in the block node.
       containerSelector = container;

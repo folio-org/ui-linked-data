@@ -55,7 +55,7 @@ describe('bibframe.helper', () => {
       const schema = new Map([['pathItem_1', { uri: 'testBF20NestedUri_1' } as SchemaEntry]]);
       const path = ['pathItem_1'];
 
-      const result = BibframeHelper.getUris(uri, schema, path);
+      const result = BibframeHelper.getUris({ uri, schema, path });
 
       expect(result).toEqual(testResult);
     }
@@ -66,6 +66,20 @@ describe('bibframe.helper', () => {
 
     test('returns an object with empty uriBFLite', () => {
       testGetUris({ uriBFLite: undefined, uriWithSelector: 'testBF20Uri_1' });
+    });
+
+    test('returns an object for duplicate bf2.0 uris', () => {
+      const duplicateUri = 'http://id.loc.gov/ontologies/bibframe/contribution';
+      const nextUri = 'http://id.loc.gov/ontologies/bibframe/Contribution';
+      const resultUri = 'http://bibfra.me/vocab/lite/contributor';
+
+      const result = BibframeHelper.getUris({ uri: duplicateUri, dataTypeURI: nextUri, schema: new Map() });
+      const testResult = {
+        uriBFLite: resultUri,
+        uriWithSelector: resultUri,
+      };
+
+      expect(result).toEqual(testResult);
     });
   });
 });
