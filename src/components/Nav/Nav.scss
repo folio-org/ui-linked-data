@@ -7,6 +7,7 @@
   flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 1em;
   padding-right: 0.75rem;
   border-bottom: 1px solid #d7d8da;
@@ -37,6 +38,18 @@
         background-color: #d7d8da;
       }
     }
+  }
+
+  .nav-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nav-language-select {
+    display: flex;
+    align-items: center;
+    margin-left: 0.75rem;
   }
 
   .locale-select {

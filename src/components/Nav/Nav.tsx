@@ -17,28 +17,34 @@ export const Nav = () => {
 
   return (
     <div data-testid="nav" className="nav">
-      <nav>
-        {Object.values(ROUTES)
-          .filter(({ name }) => !NOT_SHOWN.includes(name))
-          .map(({ uri, name }) => (
-            <NavLink to={uri} end key={uri}>
-              <FormattedMessage id={name} />
-            </NavLink>
-          ))}
-      </nav>
-      {resourceRoutePattern && (
-        <div className="nav-title">
-          <FormattedMessage id={'marva.edit'} />
+      <div className="nav-block">
+        <nav>
+          {Object.values(ROUTES)
+            .filter(({ name }) => !NOT_SHOWN.includes(name))
+            .map(({ uri, name }) => (
+              <NavLink to={uri} end key={uri}>
+                <FormattedMessage id={name} />
+              </NavLink>
+            ))}
+        </nav>
+        {resourceRoutePattern && (
+          <div className="nav-title">
+            <FormattedMessage id={'marva.edit'} />
+          </div>
+        )}
+      </div>
+      <div className="nav-block">
+        <RecordControls />
+        <div className="nav-language-select">
+          <select className="locale-select" onChange={({ target: { value } }) => setLocale(value)}>
+            {Object.values(LOCALES).map(locale => (
+              <option key={locale} value={locale}>
+                {LOCALE_DISPLAY_NAMES[locale]}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
-      <RecordControls />
-      <select className="locale-select" onChange={({ target: { value } }) => setLocale(value)}>
-        {Object.values(LOCALES).map(locale => (
-          <option key={locale} value={locale}>
-            {LOCALE_DISPLAY_NAMES[locale]}
-          </option>
-        ))}
-      </select>
+      </div>
     </div>
   );
 };
