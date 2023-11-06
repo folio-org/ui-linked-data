@@ -8,7 +8,7 @@ describe('App', () => {
     expect(screen.getByTestId('nav')).toBeInTheDocument();
   });
 
-  test('renders Main (default) component', () => {
-    expect(screen.getByTestId('main')).toBeInTheDocument();
+  test('renders Root (default) component', () => {
+    expect(screen.getByTestId('root')).toBeInTheDocument();
   });
 });

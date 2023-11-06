@@ -1,21 +1,21 @@
-import { useRecordControls } from '@common/hooks/useRecordControls';
+import { useRecoilState } from 'recoil';
+import { Link } from 'react-router-dom';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { Preview } from '@components/Preview';
 import state from '@state';
-import { useRecoilState } from 'recoil';
 import './FullDisplay.scss';
 
 export const FullDisplay = () => {
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
-  const { fetchRecord } = useRecordControls();
 
   return (
     <div className="full-display-container">
       {previewContent.map(({ id, base, userValues, initKey }) => (
         <div key={id}>
           <div className="full-display-controls">
-            <button data-testid="preview-fetch" onClick={() => fetchRecord(id)}>
+            <Link data-testid="preview-fetch" to={generateEditResourceUrl(id)} className="button">
               ✏️
-            </button>
+            </Link>
             <button
               data-testid="preview-remove"
               onClick={() => setPreviewContent(previewContent.filter(entry => entry.id !== id))}

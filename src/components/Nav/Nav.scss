@@ -1,18 +1,68 @@
-.nav {
+#editor-root .nav {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 1em;
-  padding-bottom: 0.2rem;
-  gap: 0.5em;
-  border-bottom: 1px solid lightgray;
-  min-height: 3rem;
+  padding-right: 0.75rem;
+  border-bottom: 1px solid #d7d8da;
+  background-color: white;
 
-  .main-title {
-    font-weight: 600;
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-self: stretch;
+    padding: 0 0.75rem 0 0.125rem;
+
+    a {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+      padding: 0.875rem 0.75rem;
+      line-height: 0.875rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: #000;
+
+      &:hover {
+        background-color: #d7d8da;
+      }
+
+      &.active {
+        font-weight: 600;
+        background-color: #d7d8da;
+      }
+    }
+  }
+
+  .nav-block {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nav-language-select {
+    display: flex;
+    align-items: center;
+    margin-left: 0.75rem;
   }
 
   .locale-select {
     margin-left: auto;
+  }
+
+  .nav-title {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    border-left: 1px solid #d7d8da;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0 1.5rem;
   }
 }

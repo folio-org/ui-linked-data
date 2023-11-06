@@ -2,11 +2,12 @@
 import { LOCALES } from './locales';
 
 const BASE_LOCALE = {
-  'marva.welcome': 'Welcome to the new Marva Editor. {editLink}',
+  'marva.welcome': 'Welcome to the new Marva Editor.',
   'marva.start-editing': 'Start editing.',
-  'marva.search': 'Search',
-  'marva.edit': 'Edit',
-  'marva.load': 'Load',
+  'marva.dashboard': 'My dashboard',
+  'marva.search': 'Search resources',
+  'marva.create': 'Create resource',
+  'marva.edit': 'Edit resource',
   'marva.main': 'Main',
   'marva.save-rd': 'Save resource description',
   'marva.close-rd': 'Close resource description',
@@ -53,11 +54,12 @@ export const i18nMessages = {
   [LOCALES.ENGLISH]: BASE_LOCALE,
   [LOCALES.GERMAN]: {
     ...BASE_LOCALE,
-    'marva.welcome': 'Willkommen beim neuen Marva-Editor. {editLink}',
+    'marva.welcome': 'Willkommen beim neuen Marva-Editor.',
     'marva.start-editing': 'Bearbeitung starten.',
-    'marva.search': 'Suchen',
-    'marva.edit': 'Bearbeiten',
-    'marva.load': 'Laden',
+    'marva.dashboard': 'Mein Armaturenbrett',
+    'marva.search': 'Ressourcen durchsuchen',
+    'marva.create': 'Ressource erstellen',
+    'marva.edit': 'Ressource bearbeiten',
     'marva.main': 'Haupt',
     'marva.save-rd': 'Ressourcenbeschreibung speichern',
     'marva.close-rd': 'Ressourcenbeschreibung schließen',

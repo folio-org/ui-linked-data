@@ -1,19 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
+import { normalizeLccn } from '@common/helpers/validations.helper';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { SearchIdentifiers } from '@common/constants/search.constants';
+import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
 import state from '@state';
 import './ItemSearch.scss';
-import { normalizeLccn } from '@common/helpers/validations.helper';
-import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 
 const initHeader: Row = {
   actionItems: {
@@ -94,16 +96,13 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
             >
               ℹ️
             </button>
-            <button
+            <Link
               data-testid="edit-button"
-              onClick={ev => {
-                ev.stopPropagation();
-
-                fetchRecord((row.__meta as Record<string, any>).id);
-              }}
+              to={generateEditResourceUrl((row.__meta as Record<string, any>).id)}
+              className="button"
             >
               ✏️
-            </button>
+            </Link>
           </div>
         ),
         className: 'action-items',
@@ -186,7 +185,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         )}
       </div>
       <FullDisplay />
-      <AdvancedSearchModal isOpen={isAdvancedSearchOpen} toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)} />
+      <AdvancedSearchModal
+        isOpen={isAdvancedSearchOpen}
+        toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
+      />
     </div>
   );
 };
