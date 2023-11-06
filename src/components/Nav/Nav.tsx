@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { ROUTES } from '@common/constants/routes.constants';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern.hook';
+import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
 import { RecordControls } from '@components/RecordControls';
 import state from '@state';

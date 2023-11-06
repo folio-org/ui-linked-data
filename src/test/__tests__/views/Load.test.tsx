@@ -1,10 +1,9 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import { Load } from '@views';
+import { Edit, Load } from '@views';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import * as recordsApi from '@common/api/records.api';
-import { fetchRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 
 const withLabel = 'test-id, Resource description ID: 1';
 const withoutLabel = 'Resource description ID: 2';
@@ -29,8 +28,11 @@ describe('Load', () => {
     await waitFor(() => {
       render(
         <RecoilRoot>
-          <BrowserRouter>
-            <Load />
+          <BrowserRouter basename="/">
+            <Routes>
+              <Route path="/" element={<Load />} />
+              <Route path="/resources/:resourceId/edit" element={<Edit />} />
+            </Routes>
           </BrowserRouter>
         </RecoilRoot>,
       );
@@ -46,9 +48,11 @@ describe('Load', () => {
     expect(await screen.findByText(withoutLabel)).toBeInTheDocument();
   });
 
-  test('calls fetchRecord on record click', async () => {
+  test('loads Edit page on record click', async () => {
     fireEvent.click(await screen.findByText(withLabel));
 
-    expect(fetchRecord).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(screen.getByTestId('edit-page')).toBeInTheDocument();
+    });
   });
 });
