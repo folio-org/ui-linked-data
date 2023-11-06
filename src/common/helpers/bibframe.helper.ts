@@ -1,3 +1,4 @@
+import { DUPLICATE_URI_REPLACEMENTS } from '@common/constants/bibframe.constants';
 import { BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 
 export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, path?: string[]) => {
@@ -29,7 +30,23 @@ export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, pat
   }
 };
 
-export const getUris = (uri: string, schema?: Schema, path?: string[]) => {
+type GetUris = {
+  uri: string;
+  dataTypeURI?: string;
+  schema?: Schema;
+  path?: string[];
+};
+
+export const getUris = ({ uri, dataTypeURI, schema, path }: GetUris) => {
+  if (Object.keys(DUPLICATE_URI_REPLACEMENTS).includes(uri) && dataTypeURI) {
+    const replacedUri = DUPLICATE_URI_REPLACEMENTS[uri][dataTypeURI];
+
+    return {
+      uriBFLite: replacedUri,
+      uriWithSelector: replacedUri,
+    };
+  }
+
   const uriBFLite = getMappedBFLiteUri(uri, schema, path);
   const uriWithSelector = uriBFLite || uri;
 

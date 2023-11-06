@@ -48,10 +48,32 @@ export const COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/electronic
 export const HIDDEN_WRAPPERS = ['http://www.w3.org/2000/01/rdf-schema#label'];
 
 // potentially can be merged with the above ? not sure
-export const WRAPPERS_TO_HIDE_WHEN_DEPARSING = [
+export const FORCE_EXCLUDE_WHEN_DEPARSING = [
   'http://id.loc.gov/ontologies/bibframe/Summary',
   'http://id.loc.gov/ontologies/bibframe/Language',
   'http://id.loc.gov/ontologies/bibframe/TableOfContents',
+  'http://id.loc.gov/ontologies/bibframe/agent',
 ];
 
 export const COMPLEX_GROUPS_WITHOUT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/note'];
+
+export const IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION = ['http://id.loc.gov/ontologies/bibframe/agent'];
+
+export const DUPLICATE_URI_REPLACEMENTS: Record<string, Record<string, string>> = {
+  'http://id.loc.gov/ontologies/bibframe/contribution': {
+    'http://id.loc.gov/ontologies/bibframe/Contribution': 'http://bibfra.me/vocab/lite/contributor',
+    'http://id.loc.gov/ontologies/bflc/PrimaryContribution': 'http://bibfra.me/vocab/lite/creator',
+  }
+};
+
+export const FORCE_INCLUDE_WHEN_DEPARSING = [
+  'http://bibfra.me/vocab/lite/contributor',
+  'http://bibfra.me/vocab/lite/creator',
+];
+
+export const NONARRAY_DROPDOWN_OPTIONS = [
+  'http://bibfra.me/vocab/lite/Person',
+  'http://bibfra.me/vocab/lite/Family',
+  'http://bibfra.me/vocab/lite/Organization',
+  'http://bibfra.me/vocab/lite/Meeting',
+];

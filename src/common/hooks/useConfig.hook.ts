@@ -9,6 +9,7 @@ import {
   GROUPS_WITHOUT_ROOT_WRAPPER,
   GROUP_BY_LEVEL,
   HIDDEN_WRAPPERS,
+  IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
 } from '@common/constants/bibframe.constants';
@@ -114,7 +115,7 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
-      const { uriBFLite, uriWithSelector } = getUris(propertyURI, base, path);
+      const { uriBFLite, uriWithSelector } = getUris({ uri: propertyURI, dataTypeURI: valueDataType?.dataTypeURI, schema: base, path });
       const selectedRecord = withContentsSelected?.[uriWithSelector];
 
       if (selectedRecord?.length > 1 && parentEntryType === AdvancedFieldType.block) {
@@ -187,7 +188,7 @@ export const useConfig = () => {
         // i.e. Work, Instance, Item
         case AdvancedFieldType.block: {
           const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
-          const { uriBFLite, uriWithSelector } = getUris(resourceURI, base, path);
+          const { uriBFLite, uriWithSelector } = getUris({ uri: resourceURI, schema: base, path });
           const uuidArray = propertyTemplates.map(() => uuidv4());
           const supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
           const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
@@ -246,14 +247,14 @@ export const useConfig = () => {
         case AdvancedFieldType.dropdown: {
           const {
             propertyURI,
-            valueConstraint: { valueTemplateRefs },
+            valueConstraint: { valueTemplateRefs, valueDataType },
           } = entry as PropertyTemplate;
-          const { uriWithSelector } = getUris(propertyURI, base, path);
+          const { uriWithSelector } = getUris({ uri: propertyURI, dataTypeURI: valueDataType?.dataTypeURI, schema: base, path });
 
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
-            hasHiddenParent;
+            (hasHiddenParent && !IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(propertyURI));
 
           const selectedRecord = generateRecordForDropdown({
             record,
@@ -447,7 +448,7 @@ export const useConfig = () => {
       repeatable,
       valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
     } = entry as PropertyTemplate;
-    const { uriBFLite } = getUris(propertyURI, base, path);
+    const { uriBFLite } = getUris({ uri: propertyURI, dataTypeURI: valueDataType?.dataTypeURI, schema: base, path });
 
     const constraints = {
       ...CONSTRAINTS,
@@ -480,7 +481,7 @@ export const useConfig = () => {
     valueTemplateRefs.forEach((item, index) => {
       const entry = templates[item];
 
-      const { uriBFLite } = getUris(entry.resourceURI, base, path);
+      const { uriBFLite } = getUris({ uri: entry.resourceURI, schema: base, path });
 
       if (uriBFLite === selectedRecordUriBFLite) {
         setValue(true);
@@ -559,7 +560,7 @@ export const useConfig = () => {
 
     valueTemplateRefs.forEach((templateRef, templateRefIndex: number) => {
       const entryData = templates[templateRef];
-      const { uriBFLite } = getUris(entryData.resourceURI, base, path);
+      const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
       if (!uriBFLite) return;
       const recordData = selectedRecord?.[uriBFLite];

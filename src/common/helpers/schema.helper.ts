@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
 import { getUris } from './bibframe.helper';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION, TYPE_URIS } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -57,6 +57,12 @@ export const generateRecordForDropdown = ({
 }) => {
   let recordWithSelector = record;
 
+
+  // return the record as is if uriWithSelector is not present in the bflite (intermediate)
+  if (IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(uriWithSelector)) {
+    return recordWithSelector;
+  }
+
   if (hasRootWrapper) {
     // in bflite, the work component resides within the instance component
     if (uriWithSelector === BFLITE_URIS.INSTANTIATES) {
@@ -95,7 +101,7 @@ export const getFilteredRecordData = ({
 }) =>
   valueTemplateRefs.filter(templateRef => {
     const entryData = templates[templateRef];
-    const { uriBFLite } = getUris(entryData?.resourceURI, base, path);
+    const { uriBFLite } = getUris({ uri: entryData?.resourceURI, schema: base, path });
 
     if (!uriBFLite) return;
 
@@ -119,7 +125,7 @@ export const generateCopiedGroupUuids = ({
 
   valueTemplateRefs.forEach(item => {
     const entryData = templates[item];
-    const { uriBFLite } = getUris(entryData.resourceURI, base, path);
+    const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
     if (!uriBFLite) return;
 
