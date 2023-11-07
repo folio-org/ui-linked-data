@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 import path from 'path';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { env } from 'process';
@@ -17,7 +18,7 @@ export default defineConfig(() => {
   // which is used for the embedded application
   return env.npm_config_type === 'library'
     ? {
-        plugins: [react(), cssInjectedByJsPlugin()],
+        plugins: [react(), svgr(), cssInjectedByJsPlugin()],
         build: {
           lib: {
             entry: path.resolve(__dirname, 'src/embed.tsx'),
@@ -30,7 +31,7 @@ export default defineConfig(() => {
         resolve: { alias },
       }
     : {
-        plugins: [react()],
+        plugins: [react(), svgr()],
         envPrefix: 'EDITOR_',
         resolve: { alias },
       };
