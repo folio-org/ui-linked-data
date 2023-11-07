@@ -1,10 +1,12 @@
+import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { ItemSearch } from '@components/ItemSearch';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { itemSearchMockData } from '../common/helpers/search.helper.test';
+import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
-import { BrowserRouter } from 'react-router-dom';
+import { Edit } from '@views';
 
 let getByIdentifierMock: jest.SpyInstance<Promise<any>, [id: string, query: string], any>;
 
@@ -23,11 +25,16 @@ describe('Item Search', () => {
   beforeEach(() => {
     getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
 
+    window.history.pushState({}, '', '/');
+
     render(
       <RecoilRoot>
-        <BrowserRouter>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<ItemSearch fetchRecord={fetchRecord} />} />
+            <Route path="/resources/:resourceId/edit" element={<Edit />} />
+          </Routes>
           <CommonStatus />
-          <ItemSearch fetchRecord={fetchRecord} />
         </BrowserRouter>
       </RecoilRoot>,
     );
@@ -55,7 +62,7 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith(id, "1234000001");
+      expect(getByIdentifierMock).toHaveBeenCalledWith(id, '1234000001');
     });
   });
 
@@ -95,7 +102,7 @@ describe('Item Search', () => {
     await waitFor(() => {
       fireEvent.click(getByTestId('edit-button'));
 
-      expect(fetchRecord).toHaveBeenCalled();
+      expect(getByTestId('edit-page')).toBeInTheDocument();
     });
   });
 
@@ -109,7 +116,7 @@ describe('Item Search', () => {
     await waitFor(() => {
       fireEvent.click(getByTestId('table-row'));
 
-      expect(fetchRecord).toHaveBeenCalled();
+      expect(getByTestId('edit-page')).toBeInTheDocument();
     });
   });
 
@@ -123,7 +130,7 @@ describe('Item Search', () => {
 
   test('swaps ISBN/LCCN cols with ISBN being first if querying by it', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
-    
+
     fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
