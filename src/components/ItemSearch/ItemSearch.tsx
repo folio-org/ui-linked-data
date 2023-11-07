@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
@@ -62,6 +62,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
   const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // apply disabled/enabled state to row action items
@@ -121,7 +122,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     }
   };
 
-  const onRowClick = ({ __meta }: Row) => fetchRecord((__meta as Record<string, any>).id);
+  const onRowClick = ({ __meta }: Row) => navigate(generateEditResourceUrl((__meta as Record<string, any>).id));
 
   const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
     if (type === SearchIdentifiers.LCCN) {
