@@ -26,8 +26,12 @@ export const Load = () => {
       type: TYPE_URIS.INSTANCE, // TODO: pass URI of the selected level of abstraction (Work, Instance, Item))
     })
       .then(res => {
-        setAvailableRecords(res?.content);
-        setPageMetadata({ number: res.number, totalElements: res.total_elements, totalPages: res.total_pages });
+        if (!res) return;
+
+        const { content, number, total_elements, total_pages } = res;
+
+        setAvailableRecords(content);
+        setPageMetadata({ number, totalElements: total_elements, totalPages: total_pages });
       })
       .catch(err => console.error('Error fetching resource descriptions: ', err));
   }, [currentPageNumber]);

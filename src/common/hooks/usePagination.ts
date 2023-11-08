@@ -1,11 +1,5 @@
 import { useState } from 'react';
 
-type PageMetadata = {
-  number: number;
-  totalElements: number;
-  totalPages: number;
-};
-
 export const usePagination = (
   { number = 0, totalElements = 0, totalPages = 0 }: PageMetadata,
   defaultPageNumber = 0,
