@@ -2,8 +2,8 @@ import { FC, ReactNode, memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import Times16 from '@src/assets/times-16.svg?react';
 import './Modal.scss';
-import { Times16 } from '@components/icons';
 // TODO: Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -57,7 +57,9 @@ const Modal: FC<Props> = ({
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className="modal-header">
               <h3>{title}</h3>
-              <button onClick={onClose} className='close-button'><Times16 /></button>
+              <button onClick={onClose} className="close-button">
+                <Times16 />
+              </button>
             </div>
             {!!children && children}
             <div className="modal-controls">
