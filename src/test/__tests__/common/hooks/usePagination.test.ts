@@ -16,7 +16,7 @@ describe('usePagination', () => {
     const { result }: any = renderHook(() => usePagination(pageMetadata, defaultPageNumber));
 
     act(() => {
-      result.current?.[functionName]();
+      result.current[functionName]?.();
     });
 
     expect(result.current.getCurrentPageNumber()).toBe(testResult);
