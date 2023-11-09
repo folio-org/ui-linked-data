@@ -7,7 +7,17 @@
     text-align: center;
   }
 
+  td {
+    padding: 0 0.5rem;
+  }
+
   .clickable {
     cursor: pointer;
+  }
+
+  .action-items__container {
+    > a {
+      display: block;
+    }
   }
 }

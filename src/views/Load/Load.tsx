@@ -3,12 +3,49 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { getAllRecords } from '@common/api/records.api';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { formatRecordListData } from '@common/helpers/recordsList.helper';
+import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { Pagination } from '@components/Pagination';
+import { Row, Table } from '@components/Table';
 import './Load.scss';
-import { usePagination } from '@common/hooks/usePagination';
 
 type AvailableRecords = Record<string, any>[] | null | undefined;
+
+const initHeader: Row = {
+  actionItems: {
+    label: <FormattedMessage id="marva.actions" />,
+    className: 'action-items',
+    position: 0,
+  },
+  title: {
+    label: <FormattedMessage id="marva.title" />,
+    position: 1,
+  },
+  id: {
+    label: <FormattedMessage id="marva.resource-id" />,
+    position: 2,
+  },
+};
+
+const applyRowActionItems = (rows: Row[]): Row[] =>
+  rows.map(row => ({
+    ...row,
+    actionItems: {
+      children: (
+        <div className="action-items__container">
+          <Link
+            data-testid="edit-button"
+            to={generateEditResourceUrl((row.__meta as Record<string, any>).id)}
+            className="button"
+          >
+            ✏️
+          </Link>
+        </div>
+      ),
+      className: 'action-items',
+    },
+  }));
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
@@ -29,26 +66,11 @@ export const Load = () => {
 
         const { content, total_elements, total_pages } = res;
 
-        setAvailableRecords(content);
+        setAvailableRecords(applyRowActionItems(formatRecordListData(content)));
         setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
       })
       .catch(err => console.error('Error fetching resource descriptions: ', err));
   }, [currentPageNumber]);
-
-  // TODO: Workaroud for demo; define type and format for data received from API
-  const generateButtonLabel = ({ id, label }: RecordData) => {
-    const labelString = label?.length ? `${label}, ` : '';
-    const idString = `Resource description ID: ${id}`;
-
-    return `${labelString}${idString}`;
-  };
-
-  const renderRecords = (availableRecords?: AvailableRecords) =>
-    availableRecords?.map(({ id, label }: RecordData) => (
-      <Link key={id} to={generateEditResourceUrl(id)} className="button">
-        {generateButtonLabel({ id, label })}
-      </Link>
-    ));
 
   return (
     <div data-testid="load" className="load">
@@ -58,14 +80,20 @@ export const Load = () => {
       <div className="button-group">
         {(
           <>
-            {renderRecords(availableRecords)}
-            {pageMetadata.totalElements > 0 && (
-              <Pagination
-                currentPage={currentPageNumber}
-                totalPages={pageMetadata.totalPages}
-                onPrevPageClick={onPrevPageClick}
-                onNextPageClick={onNextPageClick}
-              />
+            {availableRecords && (
+              <>
+                <div className="dashboard-table">
+                  <Table header={initHeader} data={availableRecords} />
+                </div>
+                {pageMetadata.totalElements > 0 && (
+                  <Pagination
+                    currentPage={currentPageNumber}
+                    totalPages={pageMetadata.totalPages}
+                    onPrevPageClick={onPrevPageClick}
+                    onNextPageClick={onNextPageClick}
+                  />
+                )}
+              </>
             )}
           </>
         ) || (

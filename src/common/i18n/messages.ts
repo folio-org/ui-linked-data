@@ -48,6 +48,7 @@ const BASE_LOCALE = {
   'marva.search-invalid-lccn': 'LCCN is invalid, please correct',
   'marva.advanced-search': 'Advanced search',
   'marva.cancel': 'Cancel',
+  'marva.resource-id': 'Resource ID',
 };
 
 export const i18nMessages = {
@@ -98,6 +99,7 @@ export const i18nMessages = {
     'marva.rd-deleted': 'Ressourcenbeschreibung gelöscht',
     'marva.app-fail': 'Es ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu.',
     'marva.search-select-index': 'Bitte wählen Sie ein Index',
+    'marva.resource-id': 'Ressource ID',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

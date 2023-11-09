@@ -173,13 +173,13 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
     try {
       const result = await getByIdentifier(searchBy, updatedQuery as string, pageNumber?.toString());
-      const { content, totalPages, totalElements } = result;
+      const { content, totalPages, totalRecords } = result;
 
       if (!content.length) return setMessage('marva.search-no-rds-match');
 
       swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result), false));
-      setPageMetadata({ totalPages, totalElements });
+      setPageMetadata({ totalPages, totalElements: totalRecords });
     } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
@@ -226,12 +226,14 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
               <div className="search-results-table">
                 <Table onRowClick={onRowClick} header={header} data={data} />
               </div>
-              <Pagination
-                currentPage={currentPageNumber}
-                totalPages={pageMetadata.totalPages}
-                onPrevPageClick={onPrevPageClick}
-                onNextPageClick={onNextPageClick}
-              />
+              {pageMetadata.totalElements > 0 && (
+                <Pagination
+                  currentPage={currentPageNumber}
+                  totalPages={pageMetadata.totalPages}
+                  onPrevPageClick={onPrevPageClick}
+                  onNextPageClick={onNextPageClick}
+                />
+              )}
             </>
           )
         )}
