@@ -1,3 +1,4 @@
+import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
 import baseApi from './base.api';
 
 export type ItemSearchResponse = {
@@ -25,6 +26,13 @@ export type ItemSearchResponse = {
 };
 
 const getByIdentifierUrl = '/search/bibframe';
-export const getByIdentifier = async (id: string, query: string) => {
-  return await baseApi.getJson({ url: getByIdentifierUrl, urlParams: { query: `${id}=${query}` } });
+export const getByIdentifier = async (
+  id: string,
+  query: string,
+  offset: string = '0',
+  limit: string = SEARCH_RESULTS_LIMIT.toString(),
+) => {
+  const urlParams: Record<string, string> | undefined = { query: `${id}=${query}`, offset, limit };
+
+  return await baseApi.getJson({ url: getByIdentifierUrl, urlParams });
 };

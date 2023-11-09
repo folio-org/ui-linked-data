@@ -11,3 +11,5 @@ export enum SearchDisplayIdentifiers {
   title = 'marva.title',
   contributor = 'marva.contributor',
 }
+
+export const SEARCH_RESULTS_LIMIT = 10;
