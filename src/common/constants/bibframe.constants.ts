@@ -1,3 +1,5 @@
+import { BFLITE_URIS } from './bibframeMapping.constants';
+
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   // TODO: revise after demo
   'lc:RT:bf2:Monograph:Work': 'Work',
@@ -34,7 +36,6 @@ export const GROUPS_WITHOUT_ROOT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/summary',
   'http://id.loc.gov/ontologies/bibframe/language',
-  'http://id.loc.gov/ontologies/bibframe/classification',
   'http://id.loc.gov/ontologies/bibframe/tableOfContents',
 ];
 
@@ -63,7 +64,7 @@ export const DUPLICATE_URI_REPLACEMENTS: Record<string, Record<string, string>> 
   'http://id.loc.gov/ontologies/bibframe/contribution': {
     'http://id.loc.gov/ontologies/bibframe/Contribution': 'http://bibfra.me/vocab/lite/contributor',
     'http://id.loc.gov/ontologies/bflc/PrimaryContribution': 'http://bibfra.me/vocab/lite/creator',
-  }
+  },
 };
 
 export const FORCE_INCLUDE_WHEN_DEPARSING = [
@@ -77,3 +78,10 @@ export const NONARRAY_DROPDOWN_OPTIONS = [
   'http://bibfra.me/vocab/lite/Organization',
   'http://bibfra.me/vocab/lite/Meeting',
 ];
+
+export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string }> = {
+  'http://id.loc.gov/ontologies/bibframe/ClassificationDdc': {
+    field: BFLITE_URIS.SOURCE,
+    value: 'ddc',
+  },
+};

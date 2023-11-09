@@ -11,7 +11,7 @@ export const BFLITE_RECORD_EXAMPLE = {
             {
               id: 'sampleId',
               'http://bibfra.me/vocab/marc/code': ['sampleCode'],
-              'http://bibfra.me/vocab/marc/source': ['sampleSource'],
+              'http://bibfra.me/vocab/marc/source': ['ddc'],
             },
           ],
           'http://bibfra.me/vocab/lite/creator': [

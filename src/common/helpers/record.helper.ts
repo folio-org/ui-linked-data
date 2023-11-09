@@ -1,7 +1,7 @@
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { IDENTIFIER_AS_VALUE, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
@@ -79,4 +79,19 @@ export const autoClearSavedData = (savedRecordData: LocallySavedRecord, profile:
   deleteRecordLocally(profile, recordId);
 
   return null;
+};
+
+export const checkIdentifierAsValue = (record: Record<string, string[]>, uri: string) => {
+  const identifierAsValueSelection = IDENTIFIER_AS_VALUE[uri];
+
+  if (identifierAsValueSelection) {
+    const { field, value } = identifierAsValueSelection;
+    const typedRecord = record as Record<string, string[]>;
+
+    if (typedRecord?.[field]?.includes(value)) {
+      return typedRecord;
+    }
+  }
+
+  return false;
 };

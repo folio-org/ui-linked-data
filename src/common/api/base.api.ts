@@ -30,7 +30,7 @@ async function doRequest(url: string, requestParams: RequestInit) {
       headers: {
         ...okapiHeaders,
         ...requestParams.headers,
-      }
+      },
     });
 
     if (!response.ok) {

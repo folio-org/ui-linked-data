@@ -3,6 +3,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
 import { getUris } from './bibframe.helper';
 import { IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION, TYPE_URIS } from '@common/constants/bibframe.constants';
+import { checkIdentifierAsValue } from '@common/helpers/record.helper';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -56,7 +57,10 @@ export const generateRecordForDropdown = ({
   hasRootWrapper: boolean;
 }) => {
   let recordWithSelector = record;
+  const identifierAsValueSelection =
+    record && checkIdentifierAsValue(record as Record<string, string[]>, uriWithSelector);
 
+  if (identifierAsValueSelection) return identifierAsValueSelection;
 
   // return the record as is if uriWithSelector is not present in the bflite (intermediate)
   if (IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(uriWithSelector)) {
