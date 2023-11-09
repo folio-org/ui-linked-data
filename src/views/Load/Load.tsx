@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { getAllRecords } from '@common/api/records.api';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { formatRecordListData } from '@common/helpers/recordsList.helper';
+import { formatRecordsListData } from '@common/helpers/recordsList.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { Pagination } from '@components/Pagination';
@@ -29,23 +29,23 @@ const initHeader: Row = {
 };
 
 const applyRowActionItems = (rows: Row[]): Row[] =>
-  rows.map(row => ({
-    ...row,
-    actionItems: {
-      children: (
-        <div className="action-items__container">
-          <Link
-            data-testid="edit-button"
-            to={generateEditResourceUrl((row.__meta as Record<string, any>).id)}
-            className="button"
-          >
-            ✏️
-          </Link>
-        </div>
-      ),
-      className: 'action-items',
-    },
-  }));
+  rows.map(row => {
+    const rowId = (row.__meta as Record<string, any>).id;
+
+    return {
+      ...row,
+      actionItems: {
+        children: (
+          <div className="action-items__container">
+            <Link data-testid={`edit-button-${rowId}`} to={generateEditResourceUrl(rowId)} className="button">
+              ✏️
+            </Link>
+          </div>
+        ),
+        className: 'action-items',
+      },
+    };
+  });
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
@@ -66,7 +66,7 @@ export const Load = () => {
 
         const { content, total_elements, total_pages } = res;
 
-        setAvailableRecords(applyRowActionItems(formatRecordListData(content)));
+        setAvailableRecords(applyRowActionItems(formatRecordsListData(content)));
         setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
       })
       .catch(err => console.error('Error fetching resource descriptions: ', err));

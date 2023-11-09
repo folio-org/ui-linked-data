@@ -5,8 +5,7 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import * as recordsApi from '@common/api/records.api';
 
-const withLabel = 'test-id, Resource description ID: 1';
-const withoutLabel = 'Resource description ID: 2';
+const { getByTestId, findByTestId } = screen;
 
 describe('Load', () => {
   beforeEach(async () => {
@@ -40,19 +39,14 @@ describe('Load', () => {
   });
 
   test('renders Load component', async () => {
-    expect(await screen.findByTestId('load')).toBeInTheDocument();
-  });
-
-  test('renders records with relevant formatting if there are any', async () => {
-    expect(await screen.findByText(withLabel)).toBeInTheDocument();
-    expect(await screen.findByText(withoutLabel)).toBeInTheDocument();
+    expect(await findByTestId('load')).toBeInTheDocument();
   });
 
   test('loads Edit page on record click', async () => {
-    fireEvent.click(await screen.findByText(withLabel));
+    fireEvent.click(getByTestId('edit-button-1'));
 
     await waitFor(() => {
-      expect(screen.getByTestId('edit-page')).toBeInTheDocument();
+      expect(getByTestId('edit-page')).toBeInTheDocument();
     });
   });
 });

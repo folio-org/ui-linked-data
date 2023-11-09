@@ -11,7 +11,7 @@ describe('SearchControls', () => {
   const setQuery = jest.fn();
   const setMessage = jest.fn();
   const clearMessage = jest.fn();
-  const fetchData = jest.fn();
+  const submitSearch = jest.fn();
 
   const props = {
     searchBy: 'test search by' as SearchIdentifiers | null,
@@ -20,7 +20,7 @@ describe('SearchControls', () => {
     setQuery,
     setMessage,
     clearMessage,
-    fetchData,
+    submitSearch,
   };
 
   const inputElementId = 'id-search-input';
@@ -90,7 +90,7 @@ describe('SearchControls', () => {
 
       fireEvent.click(buttonElement);
 
-      expect(fetchData).toHaveBeenCalledTimes(callTimes);
+      expect(submitSearch).toHaveBeenCalledTimes(callTimes);
     }
 
     test('invokes "fetchData" function', () => {

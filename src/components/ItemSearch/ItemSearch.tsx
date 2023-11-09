@@ -160,7 +160,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     return query;
   };
 
-  const fetchData = async (searchBy: SearchIdentifiers, query: string, pageNumber?: number) => {
+  const fetchData = async (searchBy: SearchIdentifiers, query: string, offset?: number) => {
     if (!query) return;
 
     clearMessage();
@@ -172,7 +172,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     if (!updatedQuery) return;
 
     try {
-      const result = await getByIdentifier(searchBy, updatedQuery as string, pageNumber?.toString());
+      const result = await getByIdentifier(searchBy, updatedQuery as string, offset?.toString());
       const { content, totalPages, totalRecords } = result;
 
       if (!content.length) return setMessage('marva.search-no-rds-match');
@@ -198,7 +198,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     if (!searchBy) return;
 
     clearPagination();
-    fetchData(searchBy, query);
+    fetchData(searchBy, query, 0);
   };
 
   return (

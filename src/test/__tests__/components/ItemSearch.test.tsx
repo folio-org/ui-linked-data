@@ -1,4 +1,6 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@src/test/__mocks__/common/hooks/usePagination.mock';
+import { getPageMetadata, getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -8,7 +10,11 @@ import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
 
-let getByIdentifierMock: jest.SpyInstance<Promise<any>, [id: string, query: string], any>;
+let getByIdentifierMock: jest.SpyInstance<
+  Promise<any>,
+  [id: string, query: string, offset?: string, limit?: string],
+  any
+>;
 
 const fetchRecord = jest.fn();
 
@@ -24,6 +30,8 @@ describe('Item Search', () => {
 
   beforeEach(() => {
     getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
+    getPageMetadata.mockReturnValue({ totalElements: 2, totalPages: 1 });
+    getCurrentPageNumber.mockReturnValue(1);
 
     window.history.pushState({}, '', '/');
 
@@ -62,7 +70,7 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith(id, '1234000001');
+      expect(getByIdentifierMock).toHaveBeenCalledWith(id, '1234000001', '0');
     });
   });
 
