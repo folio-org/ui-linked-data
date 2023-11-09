@@ -24,5 +24,12 @@ export const usePagination = ({ totalElements = 0, totalPages = 0 }: PageMetadat
     setCurrentPageNumber(nextPageNumber);
   };
 
-  return { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick };
+  return {
+    getPageMetadata,
+    setPageMetadata,
+    getCurrentPageNumber,
+    setCurrentPageNumber,
+    onPrevPageClick,
+    onNextPageClick,
+  };
 };

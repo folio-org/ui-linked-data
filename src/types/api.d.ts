@@ -8,3 +8,9 @@ interface LoadSimpleLookupResponseItem {
     '@type'?: string;
   }>;
 }
+
+type ResourceListItem = {
+  id: string;
+  label: string;
+  type?: string;
+};

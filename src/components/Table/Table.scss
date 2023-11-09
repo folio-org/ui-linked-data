@@ -1,13 +1,27 @@
 .table {
   width: 100%;
 
+  &.table-with-pagination {
+    margin-bottom: 2rem;
+  }
+
   tr,
   td {
     border: 1px solid black;
     text-align: center;
   }
 
+  td {
+    padding: 0 0.5rem;
+  }
+
   .clickable {
     cursor: pointer;
+  }
+
+  .action-items__container {
+    > a {
+      display: block;
+    }
   }
 }

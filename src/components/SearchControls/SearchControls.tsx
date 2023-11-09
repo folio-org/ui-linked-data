@@ -12,7 +12,7 @@ type Props = {
   setQuery: Dispatch<SetStateAction<string>>;
   setMessage: Dispatch<SetStateAction<string>>;
   clearMessage: VoidFunction;
-  fetchData: (searchBy: SearchIdentifiers, query: string) => Promise<void>;
+  submitSearch: VoidFunction;
 };
 
 const SearchControls: FC<Props> = ({
@@ -22,7 +22,7 @@ const SearchControls: FC<Props> = ({
   setQuery,
   setMessage,
   clearMessage,
-  fetchData,
+  submitSearch,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -35,8 +35,6 @@ const SearchControls: FC<Props> = ({
     clearMessage();
     setQuery(value);
   };
-
-  const doSearch = () => searchBy && fetchData(searchBy, query);
 
   return (
     <div data-testid="id-search-controls" className="id-search-controls">
@@ -51,9 +49,9 @@ const SearchControls: FC<Props> = ({
           className="search-input"
           value={query}
           onChange={onChangeSearchInput}
-          onPressEnter={doSearch}
+          onPressEnter={submitSearch}
         />
-        <button data-testid="id-search-button" onClick={doSearch} disabled={!query || !searchBy}>
+        <button data-testid="id-search-button" onClick={submitSearch} disabled={!query || !searchBy}>
           <FormattedMessage id="marva.search" />
         </button>
       </div>

@@ -3,17 +3,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
+import { usePagination } from '@common/hooks/usePagination';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { SearchIdentifiers } from '@common/constants/search.constants';
+import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
+import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
+import { Pagination } from '@components/Pagination';
 import state from '@state';
 import './ItemSearch.scss';
 
@@ -63,6 +66,21 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
   const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
   const navigate = useNavigate();
+  const {
+    getPageMetadata,
+    setPageMetadata,
+    getCurrentPageNumber,
+    setCurrentPageNumber,
+    onPrevPageClick,
+    onNextPageClick,
+  } = usePagination(DEFAULT_PAGES_METADATA);
+  const currentPageNumber = getCurrentPageNumber();
+  const pageMetadata = getPageMetadata();
+
+  const clearPagination = () => {
+    setPageMetadata(DEFAULT_PAGES_METADATA);
+    setCurrentPageNumber(0);
+  };
 
   useEffect(() => {
     // apply disabled/enabled state to row action items
@@ -71,7 +89,11 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
   useEffect(() => {
     // clear out preview content on page load
-    !data && setPreviewContent([]);
+
+    if (data) return;
+
+    setPreviewContent([]);
+    clearPagination();
   }, []);
 
   const clearMessage = useCallback(() => message && setMessage(''), [message]);
@@ -136,7 +158,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     return query;
   };
 
-  const fetchData = async (searchBy: SearchIdentifiers, query: string) => {
+  const fetchData = async (searchBy: SearchIdentifiers, query: string, offset?: number) => {
     if (!query) return;
 
     clearMessage();
@@ -148,18 +170,33 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     if (!updatedQuery) return;
 
     try {
-      const result = await getByIdentifier(searchBy, updatedQuery as string);
+      const result = await getByIdentifier(searchBy, updatedQuery as string, offset?.toString());
+      const { content, totalPages, totalRecords } = result;
 
-      if (!result.content.length) return setMessage('marva.search-no-rds-match');
+      if (!content.length) return setMessage('marva.search-no-rds-match');
 
       swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result), false));
+      setPageMetadata({ totalPages, totalElements: totalRecords });
     } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
       ]);
     }
+  };
+
+  useEffect(() => {
+    if (!searchBy || !query) return;
+
+    fetchData(searchBy, query, currentPageNumber * SEARCH_RESULTS_LIMIT);
+  }, [currentPageNumber]);
+
+  const submitSearch = () => {
+    if (!searchBy) return;
+
+    clearPagination();
+    fetchData(searchBy, query, 0);
   };
 
   return (
@@ -174,7 +211,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         setQuery={setQuery}
         setMessage={setMessage}
         clearMessage={clearMessage}
-        fetchData={fetchData}
+        submitSearch={submitSearch}
       />
       <div>
         {message ? (
@@ -182,7 +219,19 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
             <FormattedMessage id={message} />
           </div>
         ) : (
-          data && <Table onRowClick={onRowClick} header={header} data={data} />
+          data && (
+            <>
+              <Table onRowClick={onRowClick} header={header} data={data} className="table-with-pagination" />
+              {pageMetadata.totalElements > 0 && (
+                <Pagination
+                  currentPage={currentPageNumber}
+                  totalPages={pageMetadata.totalPages}
+                  onPrevPageClick={onPrevPageClick}
+                  onNextPageClick={onNextPageClick}
+                />
+              )}
+            </>
+          )
         )}
       </div>
       <FullDisplay />
