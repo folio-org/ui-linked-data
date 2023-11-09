@@ -1,0 +1,27 @@
+#editor-root {
+  .pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    &-button {
+      margin: 0 1.25rem;
+      height: 2rem;
+      width: 2rem;
+      padding: 0;
+      border-radius: 0;
+      background-color: transparent;
+
+      path {
+        fill: #255096;
+      }
+
+      &:disabled path {
+        fill: #8d9095;
+      }
+    }
+  }
+}

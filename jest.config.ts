@@ -9,12 +9,11 @@ export default {
   },
   moduleNameMapper: {
     '\\.(css|sass|scss)$': 'identity-obj-proxy',
+    '\\.(svg)(\\?react)$': '<rootDir>/src/test/__mocks__/svg.ts',
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   },
   restoreMocks: true,
   resetMocks: true,
   setupFiles: ['<rootDir>/src/test/__mocks__/setupMocks.ts'],
-  setupFilesAfterEnv: [
-    "<rootDir>/src/test/setupTests.ts"
-  ],
+  setupFilesAfterEnv: ['<rootDir>/src/test/setupTests.ts'],
 };
