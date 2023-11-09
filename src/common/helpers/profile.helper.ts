@@ -9,10 +9,12 @@ import {
   LOOKUPS_WITH_SIMPLE_STRUCTURE,
   NONARRAY_DROPDOWN_OPTIONS,
   FORCE_EXCLUDE_WHEN_DEPARSING,
+  IDENTIFIER_AS_VALUE,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { generateAdvancedFieldObject, getAdvancedValuesField, getLookupLabelKey } from './schema.helper';
+import { checkIdentifierAsValue } from '@common/helpers/record.helper';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
@@ -92,6 +94,7 @@ const traverseSchema = ({
 
     const { profile: profileType, block, dropdownOption, groupComplex, hidden } = AdvancedFieldType;
     const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
+    const identifierAsValueSelection = IDENTIFIER_AS_VALUE[selector];
 
     if (type === profileType) {
       containerSelector = container;
@@ -128,6 +131,12 @@ const traverseSchema = ({
 
       if (NONARRAY_DROPDOWN_OPTIONS.includes(selector)) {
         container[selector] = containerSelector;
+      } else if (identifierAsValueSelection) {
+        containerSelector = {
+          [identifierAsValueSelection.field]: [identifierAsValueSelection.value],
+        };
+        
+        container.push(containerSelector);
       } else {
         container.push({ [selector]: containerSelector });
       }
@@ -222,6 +231,7 @@ export const shouldSelectDropdownOption = ({
   // Might be removed with the API schema change
   // If not, refactor to include all indices
   const isSelectedOptionInRecord = Array.isArray(record) ? record?.[0]?.[uri] : record?.[uri];
+  const identifierAsValueSelection = record && checkIdentifierAsValue(record as Record<string, string[]>, uri);
   let shouldSelectOption = false;
 
   if (dropdownOptionSelection?.hasNoRootWrapper) {
@@ -232,6 +242,8 @@ export const shouldSelectDropdownOption = ({
     if (shouldSelectOption) {
       setIsSelectedOption?.(true);
     }
+  } else if (identifierAsValueSelection) {
+    shouldSelectOption = true;
   } else {
     const shouldSelectFirstOption = (!record || dropdownOptionSelection?.hasNoRootWrapper) && firstOfSameType;
 
