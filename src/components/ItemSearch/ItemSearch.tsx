@@ -223,9 +223,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         ) : (
           data && (
             <>
-              <div className="search-results-table">
-                <Table onRowClick={onRowClick} header={header} data={data} />
-              </div>
+              <Table onRowClick={onRowClick} header={header} data={data} className="table-with-pagination" />
               {pageMetadata.totalElements > 0 && (
                 <Pagination
                   currentPage={currentPageNumber}

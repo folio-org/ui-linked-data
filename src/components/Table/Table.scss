@@ -1,6 +1,10 @@
 .table {
   width: 100%;
 
+  &.table-with-pagination {
+    margin-bottom: 2rem;
+  }
+
   tr,
   td {
     border: 1px solid black;

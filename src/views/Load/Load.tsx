@@ -82,9 +82,7 @@ export const Load = () => {
           <>
             {availableRecords && (
               <>
-                <div className="dashboard-table">
-                  <Table header={initHeader} data={availableRecords} />
-                </div>
+                <Table header={initHeader} data={availableRecords} className="table-with-pagination" />
                 {pageMetadata.totalElements > 0 && (
                   <Pagination
                     currentPage={currentPageNumber}
