@@ -1,5 +1,5 @@
 type PageMetadata = {
-  number: number;
+  number?: number;
   totalElements: number;
   totalPages: number;
 };

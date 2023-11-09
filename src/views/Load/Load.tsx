@@ -13,7 +13,6 @@ type AvailableRecords = Record<string, any>[] | null | undefined;
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
   const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } = usePagination({
-    number: 0,
     totalElements: 0,
     totalPages: 0,
   });
@@ -28,10 +27,10 @@ export const Load = () => {
       .then(res => {
         if (!res) return;
 
-        const { content, number, total_elements, total_pages } = res;
+        const { content, total_elements, total_pages } = res;
 
         setAvailableRecords(content);
-        setPageMetadata({ number, totalElements: total_elements, totalPages: total_pages });
+        setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
       })
       .catch(err => console.error('Error fetching resource descriptions: ', err));
   }, [currentPageNumber]);

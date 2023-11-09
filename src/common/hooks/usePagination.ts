@@ -1,10 +1,7 @@
 import { useState } from 'react';
 
-export const usePagination = (
-  { number = 0, totalElements = 0, totalPages = 0 }: PageMetadata,
-  defaultPageNumber = 0,
-) => {
-  const [pageMetadata, setPageMetadata] = useState<PageMetadata>({ number, totalElements, totalPages });
+export const usePagination = ({ totalElements = 0, totalPages = 0 }: PageMetadata, defaultPageNumber = 0) => {
+  const [pageMetadata, setPageMetadata] = useState<PageMetadata>({ totalElements, totalPages });
   const [currentPageNumber, setCurrentPageNumber] = useState(defaultPageNumber);
 
   const getPageMetadata = () => pageMetadata;
