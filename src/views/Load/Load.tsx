@@ -6,6 +6,7 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { formatRecordsListData } from '@common/helpers/recordsList.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
 import { Row, Table } from '@components/Table';
 import './Load.scss';
@@ -49,10 +50,8 @@ const applyRowActionItems = (rows: Row[]): Row[] =>
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
-  const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } = usePagination({
-    totalElements: 0,
-    totalPages: 0,
-  });
+  const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
+    usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
 

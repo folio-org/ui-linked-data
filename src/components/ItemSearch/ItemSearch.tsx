@@ -11,6 +11,7 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
+import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
@@ -72,15 +73,12 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     setCurrentPageNumber,
     onPrevPageClick,
     onNextPageClick,
-  } = usePagination({
-    totalElements: 0,
-    totalPages: 0,
-  });
+  } = usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
 
   const clearPagination = () => {
-    setPageMetadata({ totalPages: 0, totalElements: 0 });
+    setPageMetadata(DEFAULT_PAGES_METADATA);
     setCurrentPageNumber(0);
   };
 
