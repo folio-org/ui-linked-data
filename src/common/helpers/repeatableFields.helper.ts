@@ -16,11 +16,14 @@ export const checkRepeatableGroup = ({
   const { type, children } = entry;
 
   let isRepeatableGroup = level === GROUP_BY_LEVEL && !isDisabled;
-  const isGroupType = type === AdvancedFieldType.group;
-  const isEntryWithChildren = hasChildEntry(schema, children);
 
-  if (isRepeatableGroup && isGroupType && !isEntryWithChildren) {
-    isRepeatableGroup = isEntryWithChildren;
+  if (isRepeatableGroup) {
+    const isGroupType = type === AdvancedFieldType.group;
+    const isEntryWithChildren = hasChildEntry(schema, children);
+
+    if (isGroupType && !isEntryWithChildren) {
+      isRepeatableGroup = isEntryWithChildren;
+    }
   }
 
   return isRepeatableGroup;
