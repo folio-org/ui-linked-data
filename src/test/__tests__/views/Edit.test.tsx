@@ -1,6 +1,6 @@
 import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { getProfiles } from '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fetchRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
+import { fetchRecord, clearRecordState } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { Edit } from '@views';
@@ -67,7 +67,6 @@ describe('Edit', () => {
       resource: { testInstanceUri: { id: 'testId' } },
     };
     jest.spyOn(recordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
-    jest.spyOn(recordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
 
     renderComponent(null);
 
@@ -75,5 +74,6 @@ describe('Edit', () => {
       record: testRecord,
     });
     expect(fetchRecord).not.toHaveBeenCalled();
+    expect(clearRecordState).toHaveBeenCalled();
   });
 });
