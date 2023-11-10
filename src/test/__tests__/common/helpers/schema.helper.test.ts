@@ -18,6 +18,7 @@ describe('schema.helper', () => {
     generateUserValueContent,
     getFilteredRecordData,
     generateCopiedGroupUuids,
+    hasChildEntry,
   } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
@@ -285,6 +286,37 @@ describe('schema.helper', () => {
       });
 
       expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('hasChildEntry', () => {
+    const schema = new Map([
+      ['testId_1', { id: 'testId_1' } as unknown as SchemaEntry],
+      ['testId_2', { id: 'testId_2' } as unknown as SchemaEntry],
+    ]);
+
+    test('returns false if there is no "children" passed', () => {
+      const result = hasChildEntry(schema);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false if "children" array is empty', () => {
+      const result = hasChildEntry(schema, []);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false', () => {
+      const result = hasChildEntry(schema, ['testId_3']);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns true', () => {
+      const result = hasChildEntry(schema, ['testId_1']);
+
+      expect(result).toBeTruthy();
     });
   });
 });

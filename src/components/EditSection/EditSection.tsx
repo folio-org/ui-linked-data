@@ -5,19 +5,19 @@ import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
 import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
-import { GROUP_BY_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { IS_REPEATABLE_FIELDS_ENABLED } from '@common/constants/feature.constants';
 import { Fields } from '@components/Fields';
 import { LiteralField } from '@components/LiteralField';
 import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DuplicateGroup } from '@components/DuplicateGroup';
-import './EditSection.scss';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
+import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
+import './EditSection.scss';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -112,7 +112,7 @@ export const EditSection = memo(() => {
     }) => {
       const { uuid, displayName = '', type, children, constraints } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
-      const hasDuplicateGroupButton = IS_REPEATABLE_FIELDS_ENABLED && level === GROUP_BY_LEVEL && !isDisabled;
+      const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled });
       const componentTitle = hasDuplicateGroupButton ? '' : displayName;
       const onClickDuplicateGroup = () => {
         const updatedSchema = getSchemaWithCopiedEntries(schema, entry, selectedEntries);
