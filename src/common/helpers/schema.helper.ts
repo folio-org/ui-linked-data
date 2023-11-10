@@ -147,3 +147,15 @@ export const generateCopiedGroupUuids = ({
 
   return copiedGroupUuids;
 };
+
+export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: string[]) => {
+  if (!children) return false;
+
+  return children.reduce((accum, current) => {
+    if (accum) return accum;
+
+    accum = !!schema.get(current);
+
+    return accum;
+  }, false);
+};
