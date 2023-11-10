@@ -32,7 +32,7 @@ export const getByIdentifier = async (
   offset: string = '0',
   limit: string = SEARCH_RESULTS_LIMIT.toString(),
 ) => {
-  const urlParams: Record<string, string> | undefined = { query: `${id}=${query}`, offset, limit };
+  const urlParams: Record<string, string> | undefined = { query: `${id}="${query}"`, offset, limit };
 
   return await baseApi.getJson({ url: getByIdentifierUrl, urlParams });
 };
