@@ -48,7 +48,7 @@ async function doRequest(url: string, requestParams: RequestInit) {
 
 const request = async ({ url, urlParams, requestParams = {} }: ReqParams) => {
   const withUrlParams = urlParams ? `?${new URLSearchParams(urlParams)}` : '';
-  const response = await doRequest(`${url}${decodeURIComponent(withUrlParams)}`, {
+  const response = await doRequest(`${url}${withUrlParams}`, {
     ...requestParams,
   });
 
