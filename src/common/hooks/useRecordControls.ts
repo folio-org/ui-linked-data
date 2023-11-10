@@ -81,11 +81,14 @@ export const useRecordControls = () => {
     }
   };
 
-  const discardRecord = () => {
+  const clearRecordState = () => {
     setUserValues({});
     setRecord(null);
     setSelectedProfile(null);
+  };
 
+  const discardRecord = () => {
+    clearRecordState();
     navigate(ROUTES.DASHBOARD.uri);
   };
 
@@ -112,5 +115,5 @@ export const useRecordControls = () => {
     }
   };
 
-  return { fetchRecord, saveRecord, deleteRecord, discardRecord };
+  return { fetchRecord, saveRecord, deleteRecord, discardRecord, clearRecordState };
 };

@@ -14,7 +14,7 @@ import './Edit.scss';
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
-  const { fetchRecord } = useRecordControls();
+  const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
 
   useEffect(() => {
@@ -28,6 +28,8 @@ export const Edit = () => {
 
       return;
     }
+
+    clearRecordState();
 
     const profile = PROFILE_BFIDS.MONOGRAPH;
     const savedRecordData = getSavedRecord(profile);
