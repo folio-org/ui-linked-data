@@ -9,12 +9,12 @@ describe('recordsList', () => {
       ];
       const testResult = [
         {
-          title: { label: 'testLabel_1' },
+          title: { label: 'testLabel_1', className: 'column-large' },
           id: { label: 'testId_1' },
           __meta: { id: 'testId_1' },
         },
         {
-          title: { label: 'testLabel_2' },
+          title: { label: 'testLabel_2', className: 'column-large' },
           id: { label: 'testId_2' },
           __meta: { id: 'testId_2' },
         },
