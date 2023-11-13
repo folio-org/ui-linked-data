@@ -5,23 +5,43 @@
     margin-bottom: 2rem;
   }
 
+  th {
+    vertical-align: bottom;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  th,
+  td {
+    padding: 0 0.5rem;
+  }
+
   tr,
   td {
     border: 1px solid black;
-    text-align: center;
   }
 
   td {
-    padding: 0 0.5rem;
+    &.column-large {
+      width: 80%;
+    }
   }
 
   .clickable {
     cursor: pointer;
   }
+}
 
-  .action-items__container {
-    > a {
-      display: block;
-    }
+#editor-root .action-items__container {
+  text-align: center;
+
+  .button,
+  button {
+    display: inline-block;
+    min-height: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0.6rem;
+    box-sizing: border-box;
+    text-align: center;
   }
 }
