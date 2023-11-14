@@ -74,7 +74,7 @@ export const Load = () => {
   return (
     <div data-testid="load" className="load">
       <strong>
-        <FormattedMessage id="marva.other-available-rds" />
+        <FormattedMessage id="marva.resources" />
       </strong>
       <div className="button-group">
         {(
