@@ -1,4 +1,4 @@
-export const checkIsDisabledButton = ({
+export const checkButtonDisabledState = ({
   resourceRoutePattern,
   isInitiallyLoaded,
   isEdited,

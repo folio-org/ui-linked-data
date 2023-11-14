@@ -5,7 +5,7 @@ import { RESOURCE_URLS, ROUTES } from '@common/constants/routes.constants';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
 import { RecordControls } from '@components/RecordControls';
-import { checkIsDisabledButton } from '@common/helpers/recordControls.helper';
+import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import state from '@state';
 import './Nav.scss';
 
@@ -24,7 +24,7 @@ export const Nav = () => {
           {Object.values(ROUTES)
             .filter(({ name }) => !NOT_SHOWN.includes(name))
             .map(({ uri, name }) =>
-              checkIsDisabledButton({ resourceRoutePattern, isInitiallyLoaded, isEdited }) &&
+              checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded, isEdited }) &&
               uri === ROUTES.RESOURCE_CREATE.uri ? (
                 <span key={uri} className="nav-link disabled">
                   <FormattedMessage id={name} />
