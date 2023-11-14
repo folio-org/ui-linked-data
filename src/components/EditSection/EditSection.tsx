@@ -28,6 +28,7 @@ export const EditSection = memo(() => {
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
+  const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
   const { getSchemaWithCopiedEntries } = useProfileSchema();
@@ -65,10 +66,15 @@ export const EditSection = memo(() => {
   }, [isEdited, userValues]);
 
   useEffect(() => {
+    setIsInititallyLoaded(true);
     window.addEventListener('scroll', onWindowScroll);
 
-    return () => window.removeEventListener('scroll', onWindowScroll);
-  });
+    return () => {
+      window.removeEventListener('scroll', onWindowScroll);
+
+      setIsInititallyLoaded(false);
+    };
+  }, []);
 
   useEffect(() => {
     setIsEditSectionOpen(true);
