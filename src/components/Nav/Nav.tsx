@@ -24,8 +24,8 @@ export const Nav = () => {
           {Object.values(ROUTES)
             .filter(({ name }) => !NOT_SHOWN.includes(name))
             .map(({ uri, name }) =>
-              checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded, isEdited }) &&
-              uri === ROUTES.RESOURCE_CREATE.uri ? (
+              uri === ROUTES.RESOURCE_CREATE.uri &&
+              checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded, isEdited }) ? (
                 <span key={uri} className="nav-link disabled">
                   <FormattedMessage id={name} />
                 </span>
