@@ -1,18 +1,28 @@
-.full-display-container {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
+.full-display {
+  &-container {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
 
-  > * {
-    flex: 1;
+    > * {
+      flex: 1;
+    }
   }
-}
 
-.full-display-controls {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: end;
-  gap: 0.5rem;
+  &-control-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-controls {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 0.5rem;
+  }
 }

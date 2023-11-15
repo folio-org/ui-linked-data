@@ -2,6 +2,7 @@ import { FormattedMessage } from 'react-intl';
 import { NavLink } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { RESOURCE_URLS, ROUTES } from '@common/constants/routes.constants';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
 import { RecordControls } from '@components/RecordControls';
@@ -18,7 +19,7 @@ export const Nav = () => {
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
 
   return (
-    <div data-testid="nav" className="nav">
+    <div data-testid="nav" className={DOM_ELEMENTS.classNames.nav}>
       <div className="nav-block">
         <nav>
           {Object.values(ROUTES)

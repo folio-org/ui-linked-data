@@ -2,8 +2,11 @@ import { lookupConfig } from '@common/constants/lookup.constants';
 import { BaseFieldType, AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 export const alphabeticSortLabel = <T extends { label?: string }>(a: T, b: T): 0 | -1 | 1 => {
-  if (!a.label || (!!b.label && b.label > a.label)) return -1;
-  if (!b.label || a.label > b.label) return 1;
+  const aLabel = typeof a.label === 'string' ? a.label.toLocaleLowerCase() : a.label;
+  const bLabel = typeof b.label === 'string' ? b.label.toLocaleLowerCase() : b.label;
+
+  if (!aLabel || (!!bLabel && bLabel > aLabel)) return -1;
+  if (!bLabel || aLabel > bLabel) return 1;
 
   return 0;
 };

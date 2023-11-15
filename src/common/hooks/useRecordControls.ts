@@ -4,7 +4,6 @@ import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
-import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { deleteRecordLocally, formatRecord, getRecordId } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -12,6 +11,7 @@ import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
+import state from '@state';
 
 export const useRecordControls = () => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -38,7 +38,7 @@ export const useRecordControls = () => {
         locallySavedData && !asPreview ? locallySavedData.data : await getRecord({ recordId });
 
       setRecord(recordData);
-      getProfiles({ record: recordData, recordId, asPreview });
+      await getProfiles({ record: recordData, recordId, asPreview });
     } catch (_err) {
       console.error('Error fetching record.');
 
