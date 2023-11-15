@@ -1,18 +1,20 @@
 import { FormattedMessage } from 'react-intl';
 import { NavLink } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { ROUTES } from '@common/constants/routes.constants';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { RESOURCE_URLS, ROUTES } from '@common/constants/routes.constants';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
 import { RecordControls } from '@components/RecordControls';
+import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import state from '@state';
 import './Nav.scss';
 
 const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
-const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];
 
 export const Nav = () => {
   const setLocale = useSetRecoilState(state.config.locale);
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
 
   return (
@@ -21,11 +23,18 @@ export const Nav = () => {
         <nav>
           {Object.values(ROUTES)
             .filter(({ name }) => !NOT_SHOWN.includes(name))
-            .map(({ uri, name }) => (
-              <NavLink to={uri} end key={uri}>
-                <FormattedMessage id={name} />
-              </NavLink>
-            ))}
+            .map(({ uri, name }) =>
+              uri === ROUTES.RESOURCE_CREATE.uri &&
+              checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded, isEdited }) ? (
+                <span key={uri} className="nav-link disabled">
+                  <FormattedMessage id={name} />
+                </span>
+              ) : (
+                <NavLink to={uri} end key={uri} className="nav-link">
+                  <FormattedMessage id={name} />
+                </NavLink>
+              ),
+            )}
         </nav>
         {resourceRoutePattern && (
           <div className="nav-title">

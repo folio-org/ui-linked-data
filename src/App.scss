@@ -55,6 +55,11 @@ body {
 
     &:disabled {
       filter: grayscale(100%);
+      color: #c6c6c6;
+
+      &:hover {
+        color: #c6c6c6;
+      }
     }
 
     &:hover {

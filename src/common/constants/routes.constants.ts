@@ -20,3 +20,5 @@ export const ROUTES = {
     name: 'marva.edit',
   },
 };
+
+export const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];

@@ -5,6 +5,11 @@ const recordIsEdited = atom<boolean>({
   default: false,
 });
 
+const recordIsInititallyLoaded = atom<boolean>({
+  key: 'status.record.isInititallyLoaded',
+  default: false,
+});
+
 const commonMessages = atom<StatusEntry[]>({
   key: 'status.common.messages',
   default: [],
@@ -12,5 +17,6 @@ const commonMessages = atom<StatusEntry[]>({
 
 export default {
   recordIsEdited,
+  recordIsInititallyLoaded,
   commonMessages,
 };

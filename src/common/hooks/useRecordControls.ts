@@ -22,6 +22,7 @@ export const useRecordControls = () => {
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
+  const [isInitiallyLoaded, setIsInititallyLoaded] = useRecoilState(state.status.recordIsInititallyLoaded);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
@@ -66,6 +67,9 @@ export const useRecordControls = () => {
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
       setIsEdited(false);
+      if (isInitiallyLoaded) {
+        setIsInititallyLoaded(false);
+      }
       setRecord(parsedResponse);
       setCommonStatus(currentStatus => [
         ...currentStatus,
