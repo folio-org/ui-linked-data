@@ -118,6 +118,7 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         children: (
           <div className="action-items__container">
             <button
+              data-testid="preview-button"
               onClick={async event => {
                 event.stopPropagation();
 

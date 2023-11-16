@@ -1,9 +1,11 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/hooks/usePagination.mock';
-import { getPageMetadata, getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
+import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { getPageMetadata, getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
+import { scrollElementIntoView } from '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { itemSearchMockData } from '../common/helpers/search.helper.test';
 import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
@@ -100,7 +102,26 @@ describe('Item Search', () => {
     expect(await findByText('marva.search-select-index')).toBeInTheDocument();
   });
 
-  test('calls fetchRecord on action item edit button click', async () => {
+  test('calls fetchRecord and scrollElementIntoView on action item Preview button click', async () => {
+    jest.useFakeTimers();
+
+    getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
+
+    fireEvent.click(getByTestId(id));
+    fireEvent.change(getByTestId('id-search-input'), event);
+    fireEvent.click(getByTestId('id-search-button'));
+
+    await waitFor(() => {
+      fireEvent.click(getByTestId('preview-button'));
+
+      expect(fetchRecord).toHaveBeenCalled();
+      expect(scrollElementIntoView).toHaveBeenCalled();
+    });
+
+    jest.clearAllTimers();
+  });
+
+  test('navigates to Edit page on action item edit button click', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
     fireEvent.click(getByTestId(id));
@@ -114,7 +135,7 @@ describe('Item Search', () => {
     });
   });
 
-  test('calls fetchRecord on row click', async () => {
+  test('navigates to Edit page on row click', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
     fireEvent.click(getByTestId(id));

@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { scrollToTop } from '@common/helpers/pageScrolling.helper';
 import classNames from 'classnames';
+import { scrollToTop } from '@common/helpers/pageScrolling.helper';
 
 type Props = {
   className?: string | string[];
