@@ -14,6 +14,7 @@ import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DuplicateGroup } from '@components/DuplicateGroup';
+import { ScrollToTop } from '@components/ScrollToTop';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
@@ -243,11 +244,7 @@ export const EditSection = memo(() => {
         uuid={initialSchemaKey}
         groupClassName="edit-section-group"
       />
-      {showScrollToTop && (
-        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="back-to-top">
-          <FormattedMessage id="marva.back-to-top" />
-        </button>
-      )}
+      {showScrollToTop && <ScrollToTop className="back-to-top" />}
     </div>
   ) : null;
 });

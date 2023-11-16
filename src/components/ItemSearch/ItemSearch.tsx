@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -9,9 +9,12 @@ import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
+import { scrollElementIntoView } from '@common/helpers/pageScrolling.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+import { SCROLL_DELAY_MS } from '@common/constants/pageScrolling.constnts';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
@@ -57,6 +60,8 @@ type ItemSearch = {
 };
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
+  const navElemRef = useRef<Element | null>();
+  const fullDisplayContainerElemRef = useRef<Element | null>();
   const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
   const [query, setQuery] = useState('');
   const [data, setData] = useState<null | Row[]>(null);
@@ -76,6 +81,11 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   } = usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
+
+  useEffect(() => {
+    navElemRef.current = document.querySelector(`.${DOM_ELEMENTS.classNames.nav}`);
+    fullDisplayContainerElemRef.current = document.querySelector(`.${DOM_ELEMENTS.classNames.fullDisplayContainer}`);
+  }, []);
 
   const clearPagination = () => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -108,12 +118,17 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         children: (
           <div className="action-items__container">
             <button
-              onClick={ev => {
-                ev.stopPropagation();
+              data-testid="preview-button"
+              onClick={async event => {
+                event.stopPropagation();
 
                 const recordId: string = (row.__meta as Record<string, any>).id;
 
-                fetchRecord(recordId, true);
+                await fetchRecord(recordId, true);
+
+                setTimeout(() => {
+                  scrollElementIntoView(fullDisplayContainerElemRef.current, navElemRef.current);
+                }, SCROLL_DELAY_MS);
               }}
               disabled={infoButtonDisabled ?? Object.keys(previewContent).length > 1}
             >
