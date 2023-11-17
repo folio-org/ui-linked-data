@@ -29,10 +29,16 @@ export default defineConfig(() => {
         },
         envPrefix: 'EDITOR_',
         resolve: { alias },
+        define: {
+          __IS_EMBEDDED_MODE__: true,
+        },
       }
     : {
         plugins: [react(), svgr()],
         envPrefix: 'EDITOR_',
         resolve: { alias },
+        define: {
+          __IS_EMBEDDED_MODE__: false,
+        },
       };
 });
