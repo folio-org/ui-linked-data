@@ -1,4 +1,5 @@
 import '@src/test/__mocks__/common/hooks/useConfig.mock';
+import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { getProfiles } from '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fetchRecord, clearRecordState } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { render, screen } from '@testing-library/react';

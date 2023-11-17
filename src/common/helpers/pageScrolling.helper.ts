@@ -13,7 +13,8 @@ export const scrollElementIntoView = (elem?: Element | null, navElem?: Element |
   const typedElem = elem as HTMLElement;
   const elementPosition = typedElem.offsetTop || 0;
   const navHeight = navElem?.clientHeight || 0;
-  const top = elementPosition - navHeight - SCROLL_OFFSET || 0;
+  const calculatedTop = elementPosition - navHeight - SCROLL_OFFSET;
+  const top = calculatedTop > 0 ? calculatedTop : 0;
 
   scrollEntity({ top, behavior: SCROLL_BEHAVIOR_SMOOTH });
 };

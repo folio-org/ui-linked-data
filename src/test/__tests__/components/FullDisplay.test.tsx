@@ -1,4 +1,5 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
