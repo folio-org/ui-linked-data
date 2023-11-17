@@ -30,7 +30,7 @@ export default defineConfig(() => {
         envPrefix: 'EDITOR_',
         resolve: { alias },
         define: {
-          __EMBEDDED_MODE__: true,
+          __IS_EMBEDDED_MODE__: true,
         },
       }
     : {
@@ -38,7 +38,7 @@ export default defineConfig(() => {
         envPrefix: 'EDITOR_',
         resolve: { alias },
         define: {
-          __EMBEDDED_MODE__: false,
+          __IS_EMBEDDED_MODE__: false,
         },
       };
 });

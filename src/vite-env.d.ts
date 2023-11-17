@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-declare const __EMBEDDED_MODE__: boolean;
+declare const __IS_EMBEDDED_MODE__: boolean;

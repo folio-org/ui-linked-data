@@ -1,0 +1,1 @@
+export const IS_EMBEDDED_MODE = __IS_EMBEDDED_MODE__;

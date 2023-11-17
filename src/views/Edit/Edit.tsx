@@ -6,6 +6,7 @@ import { Properties } from '@components/Properties';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
+import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import state from '@state';
@@ -18,8 +19,7 @@ export const Edit = () => {
   const { resourceId } = useParams();
 
   useEffect(() => {
-    // first case is for embedded mode, second is for standalone mode
-    (document.getElementById('ModuleContainer') || document.getElementById('editor-root'))?.scrollTo({ top: 0 });
+    scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
 
   useEffect(() => {
