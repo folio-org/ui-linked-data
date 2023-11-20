@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import './SearchTypeSelect.scss';
 import { useSetRecoilState } from 'recoil';
 import state from '@state';
+import { ADVANCED_SEARCH_ENABLED } from '@common/constants/feature.constants';
 
 type Props = {
   searchBy: SearchIdentifiers | null;
@@ -39,9 +40,11 @@ const SearchTypeSelect: FC<Props> = ({ searchBy, setSearchBy, clearMessage }) =>
           </label>
         </div>
       ))}
-      <Link to="#" onClick={() => setIsAdvancedSearchOpen(true)} className="advanced-search-button">
-        <FormattedMessage id="marva.advanced-search" />
-      </Link>
+      {ADVANCED_SEARCH_ENABLED && (
+        <Link to="#" onClick={() => setIsAdvancedSearchOpen(true)} className="advanced-search-button">
+          <FormattedMessage id="marva.advanced-search" />
+        </Link>
+      )}
     </div>
   );
 };
