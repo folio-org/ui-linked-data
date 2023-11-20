@@ -14,7 +14,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { SCROLL_DELAY_MS } from '@common/constants/pageScrolling.constnts';
+import { SCROLL_DELAY_MS } from '@common/constants/pageScrolling.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';

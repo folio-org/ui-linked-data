@@ -1,5 +1,5 @@
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { SCROLL_BEHAVIOR_SMOOTH, SCROLL_OFFSET } from '@common/constants/pageScrolling.constnts';
+import { SCROLL_BEHAVIOR_SMOOTH, SCROLL_OFFSET } from '@common/constants/pageScrolling.constants';
 import { EMBEDDED_MODULE_CONTAINER_ID } from '@common/constants/uiElements.constants';
 
 export const getScrollableEntity = () =>
