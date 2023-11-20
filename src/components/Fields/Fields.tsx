@@ -18,11 +18,21 @@ type Fields = {
   groupByLevel?: number;
   groupClassName?: string;
   disabledFields?: any;
+  scrollToEnabled?: boolean;
   drawComponent?: ({ schema, entry, level, disabledFields }: IDrawComponent) => ReactElement | null;
 };
 
 export const Fields: FC<Fields> = memo(
-  ({ schema, uuid, drawComponent, groupByLevel = 2, level = 0, groupClassName = '', disabledFields }) => {
+  ({
+    schema,
+    uuid,
+    drawComponent,
+    groupByLevel = 2,
+    level = 0,
+    groupClassName = '',
+    disabledFields,
+    scrollToEnabled = false,
+  }) => {
     const selectedEntries = useRecoilValue(state.config.selectedEntries);
     const entry = uuid && schema.get(uuid);
 
@@ -34,7 +44,10 @@ export const Fields: FC<Fields> = memo(
     const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption;
 
     return (
-      <div className={classNames({ [groupClassName]: level === groupByLevel, 'profile-entity': level === 0 })}>
+      <div
+        data-scroll-id={scrollToEnabled ? uuid : null}
+        className={classNames({ [groupClassName]: level === groupByLevel, 'profile-entity': level === 0 })}
+      >
         {drawComponent &&
           drawComponent({
             schema,
@@ -52,6 +65,7 @@ export const Fields: FC<Fields> = memo(
               level={level + 1}
               groupClassName={groupClassName}
               disabledFields={disabledFields}
+              scrollToEnabled={scrollToEnabled}
             />
           ))}
       </div>
