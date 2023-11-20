@@ -5,6 +5,8 @@ import state from '@state';
 import { Fields, IDrawComponent } from '../Fields';
 import './Properties.scss';
 import { FormattedMessage } from 'react-intl';
+import { scrollElementIntoView } from '@common/helpers/pageScrolling.helper';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 
 export const Properties = () => {
   const schema = useRecoilValue(state.config.schema);
@@ -21,7 +23,12 @@ export const Properties = () => {
       } else {
         return (
           <div
-            onClick={() => document.getElementById(uuid)?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() =>
+              scrollElementIntoView(
+                document.querySelector(`[data-scroll-id="${uuid}"]`),
+                document.querySelector(`.${DOM_ELEMENTS.classNames.nav}`),
+              )
+            }
             data-testid="properties-button"
           >
             {displayName}

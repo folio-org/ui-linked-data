@@ -130,18 +130,18 @@ export const EditSection = memo(() => {
 
       if (type === AdvancedFieldType.block) {
         return (
-          <div>
+          <div id={uuid}>
             {drawTitle()}
-            {!hasDuplicateGroupButton && <strong id={uuid}>{displayName}</strong>}
+            {!hasDuplicateGroupButton && <strong>{displayName}</strong>}
           </div>
         );
       }
 
       if (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) {
         return (
-          <div>
+          <div id={uuid}>
             {drawTitle()}
-            {!hasDuplicateGroupButton && <span id={uuid}>{displayName}</span>}
+            {!hasDuplicateGroupButton && <span>{displayName}</span>}
           </div>
         );
       }
@@ -243,6 +243,7 @@ export const EditSection = memo(() => {
         disabledFields={disabledFields}
         uuid={initialSchemaKey}
         groupClassName="edit-section-group"
+        scrollToEnabled={true}
       />
       {showScrollToTop && <ScrollToTop className="back-to-top" />}
     </div>
