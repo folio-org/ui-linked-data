@@ -49,6 +49,7 @@ const BASE_LOCALE = {
   'marva.advanced-search': 'Advanced search',
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
+  'marva.pagination.count': '{startCount} - {endCount} of {totalResultsCount}',
 };
 
 export const i18nMessages = {
@@ -100,6 +101,7 @@ export const i18nMessages = {
     'marva.app-fail': 'Es ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu.',
     'marva.search-select-index': 'Bitte wählen Sie ein Index',
     'marva.resource-id': 'Ressource ID',
+    'marva.pagination.count': '{startCount} - {endCount} von {totalResultsCount}',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,
