@@ -73,6 +73,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/note',
     'http://id.loc.gov/ontologies/bibframe/summary': BFLITE_URIS.SUMMARY,
     'http://id.loc.gov/ontologies/bibframe/TableOfContents': BFLITE_URIS.TABLE_OF_CONTENTS,
+    'http://id.loc.gov/ontologies/bibframe/extent': 'http://bibfra.me/vocab/lite/extent',
   },
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#value': {
     'http://id.loc.gov/ontologies/bibframe/Lccn': 'http://bibfra.me/vocab/lite/name',
