@@ -56,10 +56,7 @@ export const FORCE_EXCLUDE_WHEN_DEPARSING = [
   'http://id.loc.gov/ontologies/bibframe/agent',
 ];
 
-export const COMPLEX_GROUPS_WITHOUT_WRAPPER = [
-  'http://id.loc.gov/ontologies/bibframe/note',
-  'http://id.loc.gov/ontologies/bibframe/extent',
-];
+export const COMPLEX_GROUPS_WITHOUT_WRAPPER = ['http://id.loc.gov/ontologies/bibframe/note'];
 
 export const IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION = ['http://id.loc.gov/ontologies/bibframe/agent'];
 
