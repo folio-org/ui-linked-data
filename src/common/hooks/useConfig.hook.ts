@@ -115,8 +115,14 @@ export const useConfig = () => {
       // Might be removed with the API schema change
       // If not, refactor to include all indices
       const withContentsSelected = Array.isArray(record) ? record[0] : record;
-      const { uriBFLite, uriWithSelector } = getUris({ uri: propertyURI, dataTypeURI: valueDataType?.dataTypeURI, schema: base, path });
-      const selectedRecord = withContentsSelected?.[uriWithSelector];
+      const { uriBFLite, uriWithSelector } = getUris({
+        uri: propertyURI,
+        dataTypeURI: valueDataType?.dataTypeURI,
+        schema: base,
+        path,
+      });
+      const selectedRecord =
+        typeof withContentsSelected === 'string' ? [withContentsSelected] : withContentsSelected?.[uriWithSelector];
 
       if (selectedRecord?.length > 1 && parentEntryType === AdvancedFieldType.block) {
         const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
@@ -249,7 +255,12 @@ export const useConfig = () => {
             propertyURI,
             valueConstraint: { valueTemplateRefs, valueDataType },
           } = entry as PropertyTemplate;
-          const { uriWithSelector } = getUris({ uri: propertyURI, dataTypeURI: valueDataType?.dataTypeURI, schema: base, path });
+          const { uriWithSelector } = getUris({
+            uri: propertyURI,
+            dataTypeURI: valueDataType?.dataTypeURI,
+            schema: base,
+            path,
+          });
 
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
