@@ -33,6 +33,5 @@ export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => 
         id,
       },
     }))
-    .slice(0, __TEMP_RESULT_MAX_AMOUNT)
-    .sort((a, b) => alphabeticSortLabel(a?.title, b?.title));
+    .slice(0, __TEMP_RESULT_MAX_AMOUNT);
 };
