@@ -18,7 +18,6 @@ import { ScrollToTop } from '@components/ScrollToTop';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
-import { Prompt } from '@components/Prompt';
 import './EditSection.scss';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
@@ -75,7 +74,6 @@ export const EditSection = memo(() => {
       window.removeEventListener('scroll', onWindowScroll);
 
       setIsInititallyLoaded(false);
-      setIsEdited(false);
     };
   }, []);
 
@@ -236,7 +234,6 @@ export const EditSection = memo(() => {
 
   return resourceTemplates ? (
     <div className="edit-section">
-      <Prompt when={isEdited} />
       <h3>
         <FormattedMessage id="marva.edit" />
       </h3>

@@ -50,8 +50,6 @@ const BASE_LOCALE = {
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
   'marva.pagination-count': '{startCount} - {endCount} of {totalResultsCount}',
-  'marva.yes': 'Yes',
-  'marva.no': 'No',
 };
 
 export const i18nMessages = {
