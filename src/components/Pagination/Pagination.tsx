@@ -40,7 +40,7 @@ export const Pagination: FC<Props> = memo(
         >
           <LeftIcon />
         </button>
-        <div data-testid="count">
+        <div>
           <FormattedMessage
             id="marva.pagination-count"
             values={{
