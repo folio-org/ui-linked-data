@@ -50,6 +50,8 @@ const BASE_LOCALE = {
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
   'marva.pagination-count': '{startCount} - {endCount} of {totalResultsCount}',
+  'marva.yes': 'Yes',
+  'marva.no': 'No',
 };
 
 export const i18nMessages = {
@@ -102,6 +104,8 @@ export const i18nMessages = {
     'marva.search-select-index': 'Bitte wählen Sie ein Index',
     'marva.resource-id': 'Ressource ID',
     'marva.pagination-count': '{startCount} - {endCount} von {totalResultsCount}',
+    'marva.yes': 'Ja',
+    'marva.no': 'Nein',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,
