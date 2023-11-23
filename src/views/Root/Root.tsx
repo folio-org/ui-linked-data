@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { LOADING_CONTAINER_ID, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { CommonStatus } from '@components/CommonStatus';
 import { Nav } from '@components/Nav';
@@ -22,6 +22,7 @@ export const Root = () => {
         )}
       </div>
       <div id={MODAL_CONTAINER_ID} />
+      <div id={LOADING_CONTAINER_ID} />
     </div>
   );
 };

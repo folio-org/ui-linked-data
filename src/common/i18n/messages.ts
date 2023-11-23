@@ -16,8 +16,9 @@ const BASE_LOCALE = {
   'marva.resources': 'Resources:',
   'marva.search-by': 'Search By',
   'marva.search-no-rds-match': 'No resource descriptions match your query',
-  'marva.search-error-fetching': 'Error fetching data',
   'marva.search-by-sth': 'Search by{by}...',
+  'marva.error-fetching': 'Error fetching data',
+  'marva.error-loading-record': 'Error loading record',
   'marva.actions': 'Actions',
   'marva.isbn-lccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
@@ -49,6 +50,7 @@ const BASE_LOCALE = {
   'marva.advanced-search': 'Advanced search',
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
+  'marva.loading': 'Loading...',
 };
 
 export const i18nMessages = {
@@ -69,8 +71,9 @@ export const i18nMessages = {
     'marva.resources': 'Ressourcen:',
     'marva.search-by': 'Suche nach',
     'marva.search-no-rds-match': 'Keine Ressourcenbeschreibungen stimmen mit Ihrer Suchanfrage überein',
-    'marva.search-error-fetching': 'Fehler beim Abrufen der Daten',
     'marva.search-by-sth': 'Suche nach{by}...',
+    'marva.error-fetching': 'Fehler beim Abrufen der Daten',
+    'marva.error-loading-record': 'Fehler beim Laden des Datensatzes',
     'marva.actions': 'Aktionen',
     'marva.isbn-lccn': 'ISBN/LCCN',
     'marva.isbn': 'ISBN',
@@ -100,6 +103,7 @@ export const i18nMessages = {
     'marva.app-fail': 'Es ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu.',
     'marva.search-select-index': 'Bitte wählen Sie ein Index',
     'marva.resource-id': 'Ressource ID',
+    'marva.loading': 'Wird geladen...',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

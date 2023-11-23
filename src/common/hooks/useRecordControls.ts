@@ -44,7 +44,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
       ]);
     }
   };

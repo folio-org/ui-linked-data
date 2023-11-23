@@ -8,6 +8,7 @@ import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
+import { Loading } from '@components/Loading';
 import { Row, Table } from '@components/Table';
 import './Load.scss';
 
@@ -50,25 +51,36 @@ const applyRowActionItems = (rows: Row[]): Row[] =>
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
 
   useEffect(() => {
-    getAllRecords({
-      pageNumber: currentPageNumber,
-      type: TYPE_URIS.INSTANCE, // TODO: pass URI of the selected level of abstraction (Work, Instance, Item))
-    })
-      .then(res => {
-        if (!res) return;
+    async function loadRecords() {
+      setIsLoading(true);
 
-        const { content, total_elements, total_pages } = res;
+      try {
+        const response = await getAllRecords({
+          pageNumber: currentPageNumber,
+          type: TYPE_URIS.INSTANCE, // TODO: pass URI of the selected level of abstraction (Work, Instance, Item))
+        });
+
+        if (!response) return;
+
+        const { content, total_elements, total_pages } = response;
 
         setAvailableRecords(applyRowActionItems(formatRecordsListData(content)));
         setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
-      })
-      .catch(err => console.error('Error fetching resource descriptions: ', err));
+      } catch (error) {
+        console.error('Error fetching resource descriptions: ', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadRecords();
   }, [currentPageNumber]);
 
   return (
@@ -99,6 +111,8 @@ export const Load = () => {
           </div>
         )}
       </div>
+
+      {isLoading && <Loading />}
     </div>
   );
 };

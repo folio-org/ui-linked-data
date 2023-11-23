@@ -93,7 +93,7 @@ describe('Item Search', () => {
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    expect(await findByText('marva.search-error-fetching')).toBeInTheDocument();
+    expect(await findByText('marva.error-fetching')).toBeInTheDocument();
   });
 
   test('returns message if no search control selected', async () => {
