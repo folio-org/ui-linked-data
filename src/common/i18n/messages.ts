@@ -49,8 +49,6 @@ const BASE_LOCALE = {
   'marva.advanced-search': 'Advanced search',
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
-  'marva.yes': 'Yes',
-  'marva.no': 'No',
 };
 
 export const i18nMessages = {
