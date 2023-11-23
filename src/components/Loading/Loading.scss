@@ -1,10 +1,10 @@
-.overlay {
+.loader-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 10;
+  z-index: 15;
   background-color: rgba(255, 255, 255, 0.9);
 }
 
@@ -13,7 +13,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 11;
+  z-index: 20;
   display: flex;
 }
 

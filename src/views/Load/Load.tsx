@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { getAllRecords } from '@common/api/records.api';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
@@ -8,8 +9,8 @@ import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
-import { Loading } from '@components/Loading';
 import { Row, Table } from '@components/Table';
+import state from '@state';
 import './Load.scss';
 
 type AvailableRecords = Record<string, any>[] | null | undefined;
@@ -51,7 +52,7 @@ const applyRowActionItems = (rows: Row[]): Row[] =>
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
@@ -111,8 +112,6 @@ export const Load = () => {
           </div>
         )}
       </div>
-
-      {isLoading && <Loading />}
     </div>
   );
 };

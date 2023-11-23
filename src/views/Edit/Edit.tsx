@@ -1,26 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { Properties } from '@components/Properties';
-import { Loading } from '@components/Loading';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
-import state from '@state';
-import './Edit.scss';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import state from '@state';
+import './Edit.scss';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
 
   useEffect(() => {
@@ -64,7 +63,6 @@ export const Edit = () => {
     <div data-testid="edit-page" className="edit-page">
       <Properties />
       <EditSection />
-      {isLoading && <Loading />}
     </div>
   );
 };

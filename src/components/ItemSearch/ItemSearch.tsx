@@ -20,7 +20,6 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
 import { Pagination } from '@components/Pagination';
-import { Loading } from '@components/Loading';
 import state from '@state';
 import './ItemSearch.scss';
 
@@ -62,7 +61,7 @@ type ItemSearch = {
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const navElemRef = useRef<Element | null>();
-  const [isLoading, setIsLoading] = useState(false);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const fullDisplayContainerElemRef = useRef<Element | null>();
   const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
   const [query, setQuery] = useState('');
@@ -271,7 +270,6 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
         isOpen={isAdvancedSearchOpen}
         toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
       />
-      {isLoading && <Loading />}
     </div>
   );
 };

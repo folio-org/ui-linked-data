@@ -14,6 +14,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 
 export const useRecordControls = () => {
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
@@ -55,6 +56,8 @@ export const useRecordControls = () => {
 
     if (!parsed) return;
 
+    setIsLoading(true);
+
     try {
       const formattedRecord = formatRecord(parsed) as RecordEntry;
       // TODO: define a type
@@ -82,6 +85,8 @@ export const useRecordControls = () => {
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-save-rd'),
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
