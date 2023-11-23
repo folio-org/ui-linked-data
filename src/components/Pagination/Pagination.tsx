@@ -16,9 +16,9 @@ export type Props = {
 
 export const Pagination: FC<Props> = memo(
   ({ currentPage = 0, totalPages = 1, pageSize = 1, totalResultsCount = 1, onPrevPageClick, onNextPageClick }) => {
-    const isDisabledPrev = currentPage === 0;
+    const isFirstPage = currentPage === 0;
     const isDisabledNext = totalPages ? currentPage === totalPages - 1 : false;
-    const startCount = currentPage === 0 ? 1 : currentPage * pageSize + 1;
+    const startCount = isFirstPage ? 1 : currentPage * pageSize + 1;
     const pageNumber = currentPage + 1;
     let endCount;
 
@@ -34,7 +34,7 @@ export const Pagination: FC<Props> = memo(
       <div className="pagination" data-testid="pagination">
         <button
           onClick={onPrevPageClick}
-          disabled={isDisabledPrev}
+          disabled={isFirstPage}
           className="pagination-button"
           data-testid="backward-button"
         >
