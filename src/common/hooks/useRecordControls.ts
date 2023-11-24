@@ -14,6 +14,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 
 export const useRecordControls = () => {
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
@@ -44,7 +45,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
       ]);
     }
   };
@@ -54,6 +55,8 @@ export const useRecordControls = () => {
     const currentRecordId = record?.id;
 
     if (!parsed) return;
+
+    setIsLoading(true);
 
     try {
       const formattedRecord = formatRecord(parsed) as RecordEntry;
@@ -82,6 +85,8 @@ export const useRecordControls = () => {
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-save-rd'),
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -9,6 +9,8 @@ import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.h
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import './Edit.scss';
 
@@ -17,28 +19,44 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
 
   useEffect(() => {
     scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
 
   useEffect(() => {
-    if (resourceId) {
-      fetchRecord(resourceId);
+    async function loadRecord() {
+      setIsLoading(true);
 
-      return;
+      try {
+        if (resourceId) {
+          await fetchRecord(resourceId);
+          return;
+        }
+
+        clearRecordState();
+
+        const profile = PROFILE_BFIDS.MONOGRAPH;
+        const savedRecordData = getSavedRecord(profile);
+        const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
+        const record = typedSavedRecord ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID) : null;
+        const typedRecord = record as unknown as RecordEntry;
+
+        typedRecord && setRecord(typedRecord);
+        await getProfiles({ record: typedRecord });
+      } catch {
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-loading-resource'),
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
-    clearRecordState();
-
-    const profile = PROFILE_BFIDS.MONOGRAPH;
-    const savedRecordData = getSavedRecord(profile);
-    const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
-    const record = typedSavedRecord ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID) : null;
-    const typedRecord = record as unknown as RecordEntry;
-
-    typedRecord && setRecord(typedRecord);
-    getProfiles({ record: typedRecord });
+    loadRecord();
   }, [resourceId]);
 
   return (

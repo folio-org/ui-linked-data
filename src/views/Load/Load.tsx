@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { getAllRecords } from '@common/api/records.api';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
@@ -9,7 +10,10 @@ import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { DEFAULT_PAGES_METADATA, MAX_LIMIT } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
 import { Row, Table } from '@components/Table';
+import state from '@state';
 import './Load.scss';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 
 type AvailableRecords = Record<string, any>[] | null | undefined;
 
@@ -50,25 +54,42 @@ const applyRowActionItems = (rows: Row[]): Row[] =>
 
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
 
   useEffect(() => {
-    getAllRecords({
-      pageNumber: currentPageNumber,
-      type: TYPE_URIS.INSTANCE, // TODO: pass URI of the selected level of abstraction (Work, Instance, Item))
-    })
-      .then(res => {
-        if (!res) return;
+    async function loadRecords() {
+      setIsLoading(true);
 
-        const { content, total_elements, total_pages } = res;
+      try {
+        const response = await getAllRecords({
+          pageNumber: currentPageNumber,
+          type: TYPE_URIS.INSTANCE, // TODO: pass URI of the selected level of abstraction (Work, Instance, Item))
+        });
+
+        if (!response) return;
+
+        const { content, total_elements, total_pages } = response;
 
         setAvailableRecords(applyRowActionItems(formatRecordsListData(content)));
         setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
-      })
-      .catch(err => console.error('Error fetching resource descriptions: ', err));
+      } catch (error) {
+        console.error('Error fetching resource descriptions: ', error);
+
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadRecords();
   }, [currentPageNumber]);
 
   return (

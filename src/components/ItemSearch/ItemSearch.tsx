@@ -61,6 +61,7 @@ type ItemSearch = {
 
 export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
   const navElemRef = useRef<Element | null>();
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const fullDisplayContainerElemRef = useRef<Element | null>();
   const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
   const [query, setQuery] = useState('');
@@ -121,14 +122,25 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
               data-testid="preview-button"
               onClick={async event => {
                 event.stopPropagation();
+                setIsLoading(true);
 
-                const recordId: string = (row.__meta as Record<string, any>).id;
+                try {
+                  const recordId: string = (row.__meta as Record<string, any>).id;
 
-                await fetchRecord(recordId, true);
+                  await fetchRecord(recordId, true);
 
-                setTimeout(() => {
-                  scrollElementIntoView(fullDisplayContainerElemRef.current, navElemRef.current);
-                }, SCROLL_DELAY_MS);
+                  setTimeout(() => {
+                    setIsLoading(false);
+                    scrollElementIntoView(fullDisplayContainerElemRef.current, navElemRef.current);
+                  }, SCROLL_DELAY_MS);
+                } catch {
+                  setStatusMessages(currentStatus => [
+                    ...currentStatus,
+                    UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+                  ]);
+                } finally {
+                  setIsLoading(false);
+                }
               }}
               disabled={infoButtonDisabled ?? Object.keys(previewContent).length > 1}
             >
@@ -184,6 +196,8 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
 
     if (!updatedQuery) return;
 
+    setIsLoading(true);
+
     try {
       const result = await getByIdentifier(searchBy, updatedQuery as string, offset?.toString());
       const { content, totalPages, totalRecords } = result;
@@ -196,8 +210,10 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
     } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.search-error-fetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
