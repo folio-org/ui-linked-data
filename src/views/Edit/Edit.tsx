@@ -45,11 +45,11 @@ export const Edit = () => {
         const typedRecord = record as unknown as RecordEntry;
 
         typedRecord && setRecord(typedRecord);
-        getProfiles({ record: typedRecord });
+        await getProfiles({ record: typedRecord });
       } catch {
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-loading-record'),
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-loading-resource'),
         ]);
       } finally {
         setIsLoading(false);

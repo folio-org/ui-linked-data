@@ -12,6 +12,8 @@ import { Pagination } from '@components/Pagination';
 import { Row, Table } from '@components/Table';
 import state from '@state';
 import './Load.scss';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 
 type AvailableRecords = Record<string, any>[] | null | undefined;
 
@@ -53,6 +55,7 @@ const applyRowActionItems = (rows: Row[]): Row[] =>
 export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
@@ -76,6 +79,11 @@ export const Load = () => {
         setPageMetadata({ totalElements: total_elements, totalPages: total_pages });
       } catch (error) {
         console.error('Error fetching resource descriptions: ', error);
+
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+        ]);
       } finally {
         setIsLoading(false);
       }
