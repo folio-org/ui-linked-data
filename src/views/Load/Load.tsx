@@ -7,7 +7,7 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { formatRecordsListData } from '@common/helpers/recordsList.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
+import { DEFAULT_PAGES_METADATA, MAX_LIMIT } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
 import { Row, Table } from '@components/Table';
 import state from '@state';
@@ -99,6 +99,8 @@ export const Load = () => {
                   <Pagination
                     currentPage={currentPageNumber}
                     totalPages={pageMetadata.totalPages}
+                    pageSize={MAX_LIMIT}
+                    totalResultsCount={pageMetadata.totalElements}
                     onPrevPageClick={onPrevPageClick}
                     onNextPageClick={onNextPageClick}
                   />

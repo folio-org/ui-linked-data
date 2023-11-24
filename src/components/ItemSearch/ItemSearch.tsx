@@ -257,6 +257,8 @@ export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
                 <Pagination
                   currentPage={currentPageNumber}
                   totalPages={pageMetadata.totalPages}
+                  pageSize={SEARCH_RESULTS_LIMIT}
+                  totalResultsCount={pageMetadata.totalElements}
                   onPrevPageClick={onPrevPageClick}
                   onNextPageClick={onNextPageClick}
                 />
