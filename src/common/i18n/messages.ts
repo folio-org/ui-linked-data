@@ -52,6 +52,8 @@ const BASE_LOCALE = {
   'marva.resource-id': 'Resource ID',
   'marva.loading': 'Loading...',
   'marva.pagination-count': '{startCount} - {endCount} of {totalResultsCount}',
+  'marva.yes': 'Yes',
+  'marva.no': 'No',
 };
 
 export const i18nMessages = {
@@ -106,6 +108,8 @@ export const i18nMessages = {
     'marva.resource-id': 'Ressource ID',
     'marva.loading': 'Wird geladen...',
     'marva.pagination-count': '{startCount} - {endCount} von {totalResultsCount}',
+    'marva.yes': 'Ja',
+    'marva.no': 'Nein',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,
