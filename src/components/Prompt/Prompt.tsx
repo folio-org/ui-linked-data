@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { unstable_useBlocker as useBlocker } from 'react-router-dom';
+import { useBlocker } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { Modal } from '@components/Modal';
