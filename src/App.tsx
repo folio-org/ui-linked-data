@@ -18,7 +18,7 @@ type IContainer = {
 
 const routes: RouteObject[] = [
   {
-    path: '*',
+    path: '/',
     element: <Root />,
     children: [
       {
@@ -36,6 +36,10 @@ const routes: RouteObject[] = [
       {
         path: ROUTES.DASHBOARD.uri,
         element: <Load />,
+      },
+      {
+        path: '*',
+        element: <Load />, // TODO: create a component for 404 page
       },
     ],
   },

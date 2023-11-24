@@ -4,19 +4,19 @@ export const ROUTES = {
     name: 'marva.main',
   },
   DASHBOARD: {
-    uri: 'dashboard',
+    uri: '/dashboard',
     name: 'marva.dashboard',
   },
   SEARCH: {
-    uri: 'search',
+    uri: '/search',
     name: 'marva.search',
   },
   RESOURCE_CREATE: {
-    uri: 'resources/add-new',
+    uri: '/resources/add-new',
     name: 'marva.create',
   },
   RESOURCE_EDIT: {
-    uri: 'resources/:resourceId/edit',
+    uri: '/resources/:resourceId/edit',
     name: 'marva.edit',
   },
 };
