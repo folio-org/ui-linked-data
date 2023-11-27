@@ -9,6 +9,7 @@ import { RecordControls } from '@components/RecordControls';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import state from '@state';
 import './Nav.scss';
+import { LOCALE_SELECT_ENABLED } from '@common/constants/feature.constants';
 
 const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
 
@@ -45,15 +46,17 @@ export const Nav = () => {
       </div>
       <div className="nav-block">
         <RecordControls />
-        <div className="nav-language-select">
-          <select className="locale-select" onChange={({ target: { value } }) => setLocale(value)}>
-            {Object.values(LOCALES).map(locale => (
-              <option key={locale} value={locale}>
-                {LOCALE_DISPLAY_NAMES[locale]}
-              </option>
-            ))}
-          </select>
-        </div>
+        {LOCALE_SELECT_ENABLED && (
+          <div className="nav-language-select">
+            <select className="locale-select" onChange={({ target: { value } }) => setLocale(value)}>
+              {Object.values(LOCALES).map(locale => (
+                <option key={locale} value={locale}>
+                  {LOCALE_DISPLAY_NAMES[locale]}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
     </div>
   );
