@@ -22,7 +22,7 @@ import {
   generateUserValueContent,
   getFilteredRecordData,
 } from '@common/helpers/schema.helper';
-import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
+import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -487,7 +487,7 @@ export const useConfig = () => {
     // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
 
-    const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
+    const { getValue: getIsSelectedOption, setValue } = defineMemoizedValue(false);
 
     valueTemplateRefs.forEach((item, index) => {
       const entry = templates[item];

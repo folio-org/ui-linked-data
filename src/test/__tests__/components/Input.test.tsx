@@ -10,7 +10,9 @@ describe('Input', () => {
   let inputElement: HTMLElement;
 
   beforeEach(() => {
-    render(<Input placeholder={placeholder} value={value} testid={testId} onChange={onChange} onPressEnter={onPressEnter} />);
+    render(
+      <Input placeholder={placeholder} value={value} testid={testId} onChange={onChange} onPressEnter={onPressEnter} />,
+    );
 
     inputElement = screen.getByTestId(testId);
   });

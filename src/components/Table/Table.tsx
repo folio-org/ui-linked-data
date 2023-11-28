@@ -20,7 +20,9 @@ export type Table = {
 };
 
 export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }: Table) => {
-  const sortedHeaderEntries = Object.entries(header).sort(([_key1, value1], [_key2, value2]) => value1.position - value2.position);
+  const sortedHeaderEntries = Object.entries(header).sort(
+    ([_key1, value1], [_key2, value2]) => value1.position - value2.position,
+  );
 
   return (
     <table data-testid="table" className={classNames('table', className)}>
@@ -41,7 +43,7 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }
       <tbody>
         {data.map((row: Row) => (
           <tr
-            data-testid='table-row'
+            data-testid="table-row"
             key={(row.__meta as Record<string, any>)?.id || uuidv4()}
             className={classNames({ clickable: onRowClick })}
             onClick={() => onRowClick?.(row)}
@@ -50,11 +52,7 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }
               const { label, children, className } = row?.[key] || {};
 
               return (
-                <td
-                  className={classNames({ [className]: className })}
-                  data-testid={key}
-                  key={key}
-                >
+                <td className={classNames({ [className]: className })} data-testid={key} key={key}>
                   {(label || children) ?? ''}
                 </td>
               );

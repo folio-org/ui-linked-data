@@ -1,4 +1,4 @@
-export const useMemoizedValue = <T>(defaultValue: T) => {
+export const defineMemoizedValue = <T>(defaultValue: T) => {
   let value = defaultValue;
 
   const getValue = () => value;

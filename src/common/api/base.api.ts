@@ -16,7 +16,7 @@ async function doRequest(url: string, requestParams: RequestInit) {
     tenant,
     token,
   } = localStorageService.deserialize(OKAPI_CONFIG) || {};
-  
+
   const okapiHeaders = tenant
     ? {
         'x-okapi-tenant': tenant,

@@ -135,7 +135,7 @@ const traverseSchema = ({
         containerSelector = {
           [identifierAsValueSelection.field]: [identifierAsValueSelection.value],
         };
-        
+
         container.push(containerSelector);
       } else {
         container.push({ [selector]: containerSelector });

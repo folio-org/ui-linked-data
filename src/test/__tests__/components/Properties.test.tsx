@@ -4,6 +4,8 @@ import state from '@state';
 import { Properties } from '@src/components/Properties';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Properties', () => {
   const initialSchemaKey = 'test_0';
 
@@ -41,7 +43,7 @@ describe('Properties', () => {
 
     const { container } = renderComponent(schema, initialSchemaKey);
 
-    expect(container.getElementsByTagName('strong').length).toBe(1);
+    expect(container.getElementsByTagName('strong')).toHaveLength(1);
   });
 
   describe('render "group" type', () => {
@@ -59,7 +61,7 @@ describe('Properties', () => {
     test('render Properties with one "properties-button" element', () => {
       renderComponent(schema, initialSchemaKey);
 
-      expect(screen.getAllByTestId('properties-button').length).toBe(1);
+      expect(screen.getAllByTestId('properties-button')).toHaveLength(1);
     });
 
     test('click on the rendered "properties-button" element', () => {
@@ -70,7 +72,7 @@ describe('Properties', () => {
       fireEvent.click(screen.getByTestId('properties-button'));
 
       waitFor(() => {
-        expect(scrollIntoViewMock).toBeCalled();
+        expect(scrollIntoViewMock).toHaveBeenCalled();
       });
     });
   });

@@ -34,8 +34,8 @@ export const Input: FC<InputProps> = ({
           onPressEnter();
 
           (target as HTMLElement).blur();
-        };
+        }
       }}
     />
   );
-}
+};

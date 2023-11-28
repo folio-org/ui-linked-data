@@ -55,11 +55,11 @@ const initHeader: Row = {
   },
 };
 
-type ItemSearch = {
+type Props = {
   fetchRecord: (id: string, collectPreviewValues?: boolean) => Promise<void>;
 };
 
-export const ItemSearch = ({ fetchRecord }: ItemSearch) => {
+export const ItemSearch = ({ fetchRecord }: Props) => {
   const navElemRef = useRef<Element | null>();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const fullDisplayContainerElemRef = useRef<Element | null>();

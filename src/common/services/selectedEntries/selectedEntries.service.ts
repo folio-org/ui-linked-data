@@ -1,3 +1,5 @@
+import { ISelectedEntries } from './selectedEntries.interface';
+
 export class SelectedEntriesService implements ISelectedEntries {
   constructor(private selectedEntries: string[] = []) {
     this.selectedEntries = [...selectedEntries];

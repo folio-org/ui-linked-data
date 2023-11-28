@@ -32,6 +32,7 @@ jest.mock('react-intl', () => {
 
       return value;
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     IntlProvider: ({ children, defaultLocale, ...rest }: any) => <div {...rest}>{children}</div>,
     useIntl: () => intl,
     injectIntl: (Component: FC) => (props: any) => <Component {...props} intl={intl} />,

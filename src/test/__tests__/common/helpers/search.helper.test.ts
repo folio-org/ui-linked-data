@@ -8,7 +8,7 @@ export const itemSearchMockData = {
       titles: [
         {
           value: 'mock-title',
-        }
+        },
       ],
       identifiers: [
         {

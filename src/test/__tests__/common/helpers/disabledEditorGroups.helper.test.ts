@@ -22,7 +22,7 @@ describe('disabledEditorGroups.helper', () => {
 
       const result = DisabledEditorGroups.getComplexLookups(schema);
 
-      expect(result.length).toBe(0);
+      expect(result).toHaveLength(0);
     });
   });
 

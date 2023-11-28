@@ -29,7 +29,7 @@ const getByIdentifierUrl = '/search/bibframe';
 export const getByIdentifier = async (
   id: string,
   query: string,
-  offset: string = '0',
+  offset = '0',
   limit: string = SEARCH_RESULTS_LIMIT.toString(),
 ) => {
   const urlParams: Record<string, string> | undefined = { query: `(${id} all "${query}") sortby title`, offset, limit };

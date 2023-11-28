@@ -49,10 +49,9 @@ describe('record.helper', () => {
     });
 
     test('embeds work entity into instance if there is data for work entity', () => {
-      const workComponent = 
-        {
-          testUri: 'testValue',
-        };
+      const workComponent = {
+        testUri: 'testValue',
+      };
       const initialRecord = {
         [BibframeConstants.TYPE_URIS.INSTANCE]: {},
         [BFLITE_URIS.INSTANTIATES]: workComponent,
@@ -184,27 +183,29 @@ describe('record.helper', () => {
 
   describe('checkIdentifierAsValue', () => {
     const mockedIdentifierAsValueConstant = {
-      'sampleUri': {
+      sampleUri: {
         field: 'sampleField',
         value: 'sampleValue',
-      }
-    }
+      },
+    };
 
     beforeEach(() => {
       const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'IDENTIFIER_AS_VALUE');
       mockImportedConstant(mockedIdentifierAsValueConstant);
-    })
+    });
 
     test('returns false if no identifier as value selection', () => {
       expect(RecordHelper.checkIdentifierAsValue({}, 'nonExistentUri')).toEqual(false);
-    })
+    });
 
     test('returns false if identifier as value present but no corresponding value in record', () => {
       expect(RecordHelper.checkIdentifierAsValue({}, 'sampleUri')).toEqual(false);
-    })
+    });
 
     test('returns record if identifier as value and corresponding value in record present', () => {
-      expect(RecordHelper.checkIdentifierAsValue({ sampleField: ['sampleValue'] }, 'sampleUri')).toEqual({sampleField: ["sampleValue"]});
-    })
-  })
+      expect(RecordHelper.checkIdentifierAsValue({ sampleField: ['sampleValue'] }, 'sampleUri')).toEqual({
+        sampleField: ['sampleValue'],
+      });
+    });
+  });
 });
