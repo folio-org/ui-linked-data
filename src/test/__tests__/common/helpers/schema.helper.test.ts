@@ -256,7 +256,7 @@ describe('schema.helper', () => {
 
       const result = getFilteredRecordData({ valueTemplateRefs, templates, base, path, selectedRecord });
 
-      expect(result.length).toBe(0);
+      expect(result).toHaveLength(0);
     });
   });
 

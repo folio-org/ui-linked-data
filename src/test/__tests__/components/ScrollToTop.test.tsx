@@ -13,7 +13,7 @@ describe('ScrollToTop', () => {
   test('renders ScrollToTop with class names', () => {
     const { container } = render(<ScrollToTop className="test-class-name" />);
 
-    expect(container.getElementsByClassName('test-class-name').length).toBe(1);
+    expect(container.getElementsByClassName('test-class-name')).toHaveLength(1);
   });
 
   test('calls scrollToTop function on click', () => {
