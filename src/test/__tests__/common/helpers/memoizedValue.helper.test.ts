@@ -1,19 +1,19 @@
-import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
+import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 describe('memoizedValue.helper', () => {
   const defaultValue = false;
 
-  test('useMemoizedValue - get default value', () => {
-    const { getValue } = useMemoizedValue(defaultValue);
+  test('defineMemoizedValue - get default value', () => {
+    const { getValue } = defineMemoizedValue(defaultValue);
 
     const result = getValue();
 
     expect(result).toBe(defaultValue);
   });
 
-  test('useMemoizedValue - update value', () => {
+  test('defineMemoizedValue - update value', () => {
     const updatedValue = true;
-    const { getValue, setValue } = useMemoizedValue(defaultValue);
+    const { getValue, setValue } = defineMemoizedValue(defaultValue);
 
     const defaultResult = getValue();
     expect(defaultResult).toBe(defaultValue);
