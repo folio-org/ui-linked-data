@@ -17,7 +17,7 @@ describe('Literal Field', () => {
     renderComponent();
 
     expect(getByTestId('literal-field')).toBeInTheDocument();
-    expect(queryByTestId('literal-field-label')).toBeInTheDocument();
+    expect(getByTestId('literal-field-label')).toBeInTheDocument();
   });
 
   test('renders Literal Field component without label', () => {

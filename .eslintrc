@@ -18,7 +18,7 @@
   ],
   "overrides": [
     {
-      "files": ["src/test/**"],
+      "files": ["src/test/**/*.ts"],
       "plugins": ["jest"],
       "extends": ["plugin:jest/recommended"],
       "rules": {
@@ -30,12 +30,26 @@
         "jest/valid-expect": "error",
         "jest/no-mocks-import": "off",
         "jest/no-export": "off",
-        "jest/expect-expect": [
-          "error",
-          {
-            "assertFunctionNames": ["expect", "test*"]
-          }
-        ]
+        "jest/expect-expect": ["error", { "assertFunctionNames": ["expect", "test*"] }]
+      }
+    },
+    {
+      "files": ["src/test/**/*.tsx"],
+      "extends": ["plugin:testing-library/react"],
+      "rules": {
+        "testing-library/await-async-queries": "error",
+        "testing-library/no-await-sync-queries": "error",
+        "testing-library/await-async-utils": "warn",
+        "testing-library/no-wait-for-side-effects": "warn",
+        "testing-library/no-debugging-utils": "warn",
+        "testing-library/no-dom-import": "off",
+        "testing-library/no-node-access": ["warn", { "allowContainerFirstChild": true }],
+        "testing-library/no-render-in-lifecycle": ["error", { "allowTestingFrameworkSetupHook": "beforeEach" }],
+        "testing-library/no-unnecessary-act": ["warn", { "isStrict": false }],
+        "testing-library/prefer-screen-queries": "off",
+        "testing-library/prefer-presence-queries": ["error", { "absence": false, "presence": true }],
+        "testing-library/no-wait-for-multiple-assertions": "warn",
+        "testing-library/no-container": "warn"
       }
     }
   ],

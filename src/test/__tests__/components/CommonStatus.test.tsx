@@ -29,7 +29,7 @@ describe('CommonStatus', () => {
 
     const { container } = renderComponent(statusMessages);
 
-    expect(screen.queryByTestId('common-status')).toBeInTheDocument();
+    expect(screen.getByTestId('common-status')).toBeInTheDocument();
     expect(getStatusMessagesCount(container)).toBe(3);
   });
 
@@ -40,7 +40,7 @@ describe('CommonStatus', () => {
     ];
 
     const { container } = renderComponent(statusMessages);
-    const button = container.querySelector('button') as Element;
+    const button = screen.getAllByRole('button')[0];
 
     expect(getStatusMessagesCount(container)).toBe(2);
 

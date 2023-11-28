@@ -16,7 +16,7 @@ describe('Complex Lookup Field', () => {
     renderComponent();
 
     expect(getByTestId('complex-lookup')).toBeInTheDocument();
-    expect(queryByTestId('complex-lookup-label')).toBeInTheDocument();
+    expect(getByTestId('complex-lookup-label')).toBeInTheDocument();
   });
 
   test('renders Complex Lookup Field component without label', () => {
