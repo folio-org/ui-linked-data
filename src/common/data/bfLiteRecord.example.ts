@@ -26,18 +26,12 @@ export const BFLITE_RECORD_EXAMPLE = {
             {
               'http://bibfra.me/vocab/lite/Organization': {
                 id: 'sampleId',
-                'http://bibfra.me/vocab/lite/name': [
-                  'sampleName',
-                ],
+                'http://bibfra.me/vocab/lite/name': ['sampleName'],
               },
             },
           ],
-          'http://bibfra.me/vocab/marc/tableOfContents': [
-            "sampleTableOfContents",
-          ],
-          'http://bibfra.me/vocab/marc/summary': [
-            'sampleSummary',
-          ],
+          'http://bibfra.me/vocab/marc/tableOfContents': ['sampleTableOfContents'],
+          'http://bibfra.me/vocab/marc/summary': ['sampleSummary'],
           'http://bibfra.me/vocab/marc/content': [
             {
               id: 'sampleId',

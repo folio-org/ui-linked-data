@@ -8,12 +8,12 @@ describe('AdvancedSearchModal', () => {
   beforeAll(() => {
     createModalContainer();
   });
-  
+
   beforeEach(() => render(<AdvancedSearchModal isOpen={true} toggleIsOpen={toggleIsOpen} />));
 
   test('toggles isOpen', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
-    
+
     expect(toggleIsOpen).toHaveBeenCalled();
   });
 });

@@ -33,10 +33,10 @@ const selectedEntries = atom<Array<string>>({
   default: [],
 });
 
-const locale = atom<typeof LOCALES[keyof typeof LOCALES]>({
+const locale = atom<(typeof LOCALES)[keyof typeof LOCALES]>({
   key: 'config.locale',
   default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH,
-})
+});
 
 const collectRecordDataForPreview = atom<boolean>({
   key: 'config.collectRecordDataForPreview',

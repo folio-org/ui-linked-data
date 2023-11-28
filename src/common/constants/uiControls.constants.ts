@@ -19,5 +19,5 @@ export enum AdvancedFieldType {
   hidden = 'hidden',
   dropdown = 'dropdown',
   dropdownOption = 'dropdownOption',
-  __fallback = '__fallback'
+  __fallback = '__fallback',
 }

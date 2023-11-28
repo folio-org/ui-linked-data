@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import { useIntl } from 'react-intl';
 import { Modal } from '../Modal';
-import './AdvancedSearchModal.scss'
+import './AdvancedSearchModal.scss';
 
 interface Props {
   isOpen: boolean;

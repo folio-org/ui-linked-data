@@ -28,15 +28,18 @@ export const getDisabledParentDescendants = (schema: Schema) => {
 
 export const getGroupsWithComplexLookups = (complexLookupFields: SchemaEntry[], schema: Schema) =>
   complexLookupFields.map(({ path }) =>
-    path.reduce((accum, current) => {
-      const entry = schema.get(current);
+    path.reduce(
+      (accum, current) => {
+        const entry = schema.get(current);
 
-      if (entry?.type === AdvancedFieldType.group || entry?.type === AdvancedFieldType.groupComplex) {
-        accum = entry;
-      }
+        if (entry?.type === AdvancedFieldType.group || entry?.type === AdvancedFieldType.groupComplex) {
+          accum = entry;
+        }
 
-      return accum;
-    }, null as SchemaEntry | null),
+        return accum;
+      },
+      null as SchemaEntry | null,
+    ),
   );
 
 export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: string[] | undefined, fields?: Schema) => {
