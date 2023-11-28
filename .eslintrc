@@ -8,13 +8,12 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react-refresh"],
+  "plugins": ["@typescript-eslint"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier",
     "plugin:react-hooks/recommended",
-    "eslint-config-prettier"
+    "prettier"
   ],
   "overrides": [
     {
@@ -43,13 +42,13 @@
         "testing-library/no-wait-for-side-effects": "warn",
         "testing-library/no-debugging-utils": "warn",
         "testing-library/no-dom-import": "off",
-        "testing-library/no-node-access": ["warn", { "allowContainerFirstChild": true }],
+        "testing-library/no-node-access": "off",
         "testing-library/no-render-in-lifecycle": ["error", { "allowTestingFrameworkSetupHook": "beforeEach" }],
         "testing-library/no-unnecessary-act": ["warn", { "isStrict": false }],
         "testing-library/prefer-screen-queries": "off",
         "testing-library/prefer-presence-queries": ["error", { "absence": false, "presence": true }],
         "testing-library/no-wait-for-multiple-assertions": "warn",
-        "testing-library/no-container": "warn"
+        "testing-library/no-container": "off"
       }
     }
   ],
