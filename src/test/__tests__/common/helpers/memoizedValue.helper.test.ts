@@ -1,7 +1,7 @@
 import { useMemoizedValue } from '@common/helpers/memoizedValue.helper';
 
 describe('memoizedValue.helper', () => {
-  let defaultValue = false;
+  const defaultValue = false;
 
   test('useMemoizedValue - get default value', () => {
     const { getValue } = useMemoizedValue(defaultValue);

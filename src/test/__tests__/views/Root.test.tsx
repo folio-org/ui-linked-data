@@ -9,7 +9,7 @@ import state from '@state';
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
-useRoutePathPattern.mockImplementation(() => {});
+useRoutePathPattern.mockImplementation(() => null);
 
 describe('Root', () => {
   function renderRootComponent(isLoading = false) {

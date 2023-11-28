@@ -24,9 +24,12 @@ type Fields = {
 const createIndent = (level: number) => level > GROUP_BY_LEVEL && ' · '.repeat(level - GROUP_BY_LEVEL);
 
 export const Preview: FC<Preview> = ({ altSchema, altUserValues, altInitKey, headless = false }) => {
-  const userValues = altUserValues || useRecoilValue(state.inputs.userValues);
-  const schema = altSchema || useRecoilValue(state.config.schema);
-  const initialSchemaKey = altInitKey || useRecoilValue(state.config.initialSchemaKey);
+  const userValuesFromState = useRecoilValue(state.inputs.userValues);
+  const schemaFromState = useRecoilValue(state.config.schema);
+  const initialSchemaKeyFromState = useRecoilValue(state.config.initialSchemaKey);
+  const userValues = altUserValues || userValuesFromState;
+  const schema = altSchema || schemaFromState;
+  const initialSchemaKey = altInitKey || initialSchemaKeyFromState;
 
   // TODO: potentially reuse <Fields /> from EditSection ?
   const Fields = ({ base, uuid, paths, level = 0 }: Fields) => {

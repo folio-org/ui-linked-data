@@ -487,6 +487,7 @@ export const useConfig = () => {
     // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { getValue: getIsSelectedOption, setValue } = useMemoizedValue(false);
 
     valueTemplateRefs.forEach((item, index) => {

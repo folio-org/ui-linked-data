@@ -1,4 +1,5 @@
 import { SelectedEntriesService } from '@common/services/selectedEntries';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 
 describe('SelectedEntriesService', () => {
   const selectedEntries = ['test_01', 'test_02'];

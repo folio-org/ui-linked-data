@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 
 export class SchemaWithDuplicatesService {
   constructor(private schema: Map<string, SchemaEntry>, private selectedEntriesService: ISelectedEntries) {

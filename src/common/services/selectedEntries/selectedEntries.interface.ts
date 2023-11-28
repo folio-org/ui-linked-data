@@ -1,4 +1,4 @@
-interface ISelectedEntries {
+export interface ISelectedEntries {
   get: () => string[] | undefined;
 
   addNew: (originalEntryUuid: string, updatedEntryUuid: string) => void;

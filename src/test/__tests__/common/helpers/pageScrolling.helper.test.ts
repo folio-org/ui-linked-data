@@ -4,7 +4,7 @@ import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
-const getMockedScrollEntity = () => jest.spyOn(PageScrollingHelper, 'scrollEntity').mockImplementation(() => {});
+const getMockedScrollEntity = () => jest.spyOn(PageScrollingHelper, 'scrollEntity').mockImplementation(() => undefined);
 
 describe('pageScrolling.helper', () => {
   const mockIsEmbeddedModeConstant = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');

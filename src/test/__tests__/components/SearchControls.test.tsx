@@ -39,7 +39,7 @@ describe('SearchControls', () => {
   });
 
   describe('input field', () => {
-    function testInputField(componentProps: typeof props, value: string = '', assertCallback: () => void) {
+    function testInputField(componentProps: typeof props, value = '', assertCallback: () => void) {
       render(
         <BrowserRouter>
           <RecoilRoot>

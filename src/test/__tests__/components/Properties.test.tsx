@@ -4,6 +4,8 @@ import state from '@state';
 import { Properties } from '@src/components/Properties';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Properties', () => {
   const initialSchemaKey = 'test_0';
 
