@@ -1,7 +1,7 @@
 // TODO: potentially refactor to be 'The folio way'
 import { LOCALES } from './locales';
 
-const BASE_LOCALE = {
+export const BASE_LOCALE = {
   'marva.welcome': 'Welcome to the new Marva Editor.',
   'marva.start-editing': 'Start editing.',
   'marva.dashboard': 'My dashboard',

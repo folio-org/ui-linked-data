@@ -5,7 +5,7 @@ import { IntlProvider } from 'react-intl';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { ROUTES } from '@common/constants/routes.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
-import { i18nMessages } from '@common/i18n/messages';
+import { BASE_LOCALE, i18nMessages } from '@common/i18n/messages';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, Edit, Load } from '@views';
 import state from '@state';
@@ -51,7 +51,7 @@ const Container: FC<IContainer> = ({ routePrefix = '' }) => {
   const locale = useRecoilValue(state.config.locale);
 
   return (
-    <IntlProvider messages={i18nMessages[locale]} locale={locale} defaultLocale="en-US">
+    <IntlProvider messages={i18nMessages[locale] || BASE_LOCALE} locale={locale} defaultLocale="en-US">
       <ErrorBoundary>
         <RouterProvider router={createRouter(routePrefix)} />
       </ErrorBoundary>
