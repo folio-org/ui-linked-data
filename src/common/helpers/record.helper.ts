@@ -1,7 +1,8 @@
+import { cloneDeep } from 'lodash';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { IDENTIFIER_AS_VALUE, TYPE_URIS } from '@common/constants/bibframe.constants';
+import { IDENTIFIER_AS_VALUE, INSTANTIATES_TO_INSTANCE_FIELDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
@@ -13,7 +14,7 @@ export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
   },
 });
 
-export const formatRecord = (parsedRecord: Record<string, Record<string, any>> | RecordEntry) => {
+export const formatRecord = (parsedRecord: Record<string, Record<string, unknown>> | RecordEntry) => {
   const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES];
   const instanceComponent = parsedRecord[TYPE_URIS.INSTANCE];
 
@@ -26,9 +27,33 @@ export const formatRecord = (parsedRecord: Record<string, Record<string, any>> |
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: instanceComponent,
+      [TYPE_URIS.INSTANCE]: updateInstanciatesWithInstanceFields(instanceComponent),
     },
   };
+};
+
+export const updateInstanciatesWithInstanceFields = (instanceComponent: Record<string, unknown>) => {
+  const clonedInstance = cloneDeep(instanceComponent);
+  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string];
+
+  INSTANTIATES_TO_INSTANCE_FIELDS.forEach(fieldName => {
+    const componentToMove = clonedInstance[fieldName];
+
+    if (!componentToMove) return;
+
+    const updatedField = { [fieldName]: componentToMove };
+
+    if (instantiatesComponent) {
+      const currentInstanciates = [instantiatesComponent][0];
+      [instantiatesComponent][0] = { ...currentInstanciates, ...updatedField };
+    } else {
+      clonedInstance[BFLITE_URIS.INSTANTIATES as string] = [updatedField];
+    }
+
+    delete clonedInstance[fieldName];
+  });
+
+  return clonedInstance;
 };
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {

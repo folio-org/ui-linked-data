@@ -27,7 +27,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/ParallelTitle': 'http://bibfra.me/vocab/marc/ParallelTitle',
   'http://id.loc.gov/ontologies/bibframe/note': 'http://bibfra.me/vocab/lite/note',
   'http://id.loc.gov/ontologies/bibframe/responsibilityStatement':
-    'http://bibfra.me/vocab/marc/statementOfResponsibility',
+    'http://bibfra.me/vocab/marc/responsibilityStatement',
   'http://id.loc.gov/ontologies/bibframe/editionStatement': 'http://bibfra.me/vocab/marc/edition',
   'http://id.loc.gov/ontologies/bibframe/provisionActivity': 'https://bibfra.me/vocab/marc/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/Publication': 'http://bibfra.me/vocab/marc/publication',
