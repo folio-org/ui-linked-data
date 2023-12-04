@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { RecoilRoot, useRecoilValue } from 'recoil';
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from 'recoil';
 import { IntlProvider } from 'react-intl';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -13,7 +13,7 @@ import './App.scss';
 
 type IContainer = {
   routePrefix?: string;
-  config?: string;
+  config?: Record<string, string | Record<string, string>>;
 };
 
 const routes: RouteObject[] = [
@@ -47,8 +47,13 @@ const routes: RouteObject[] = [
 
 const createRouter = (basename: string) => createBrowserRouter(routes, { basename });
 
-const Container: FC<IContainer> = ({ routePrefix = '' }) => {
+const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const locale = useRecoilValue(state.config.locale);
+  const setCustomEvents = useSetRecoilState(state.config.customEvents);
+
+  useEffect(() => {
+    setCustomEvents(config?.customEvents as Record<string, string>);
+  }, [config])
 
   return (
     <IntlProvider messages={i18nMessages[locale] || BASE_LOCALE} locale={locale} defaultLocale="en-US">
@@ -67,7 +72,7 @@ export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
 
   return (
     <RecoilRoot>
-      <Container routePrefix={routePrefix} />
+      <Container routePrefix={routePrefix} config={config} />
     </RecoilRoot>
   );
 };

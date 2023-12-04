@@ -43,6 +43,11 @@ const collectRecordDataForPreview = atom<boolean>({
   default: false,
 });
 
+const customEvents = atom<Record<string, string> | null>({
+  key: 'config.customEvents',
+  default: null,
+})
+
 export default {
   profiles,
   selectedProfile,
@@ -52,4 +57,5 @@ export default {
   selectedEntries,
   locale,
   collectRecordDataForPreview,
+  customEvents,
 };
