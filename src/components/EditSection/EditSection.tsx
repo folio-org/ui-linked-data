@@ -20,6 +20,8 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
 import { Prompt } from '@components/Prompt';
 import './EditSection.scss';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -36,6 +38,7 @@ export const EditSection = memo(() => {
   const { getSchemaWithCopiedEntries } = useProfileSchema();
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
+  const customEvents = useRecoilValue(state.config.customEvents);
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -88,6 +91,8 @@ export const EditSection = memo(() => {
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {
       setIsEdited(true);
+
+      IS_EMBEDDED_MODE && customEvents?.BLOCK_NAVIGATION && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(customEvents.BLOCK_NAVIGATION))
     }
 
     setUserValues(oldValue => ({

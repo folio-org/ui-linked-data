@@ -50,7 +50,7 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  return isOpen
+  return isOpen && portalElement
     ? createPortal(
         <>
           <div className="overlay" onClick={onClose} data-testid="modal-overlay" />

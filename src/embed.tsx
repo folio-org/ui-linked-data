@@ -72,13 +72,14 @@ class MarvaNextComponent extends HTMLElement {
   private render() {
     const routePrefix = this.getAttribute('route-prefix') as string;
     const config = this.getAttribute('config') as string | undefined;
+    const deserializedConfig = config && JSON.parse(config);
 
     if (!this.mountElement) return;
 
     const root = ReactDOM.createRoot(this.mountElement);
     root.render(
       <React.StrictMode>
-        <App routePrefix={routePrefix} config={config} />
+        <App routePrefix={routePrefix} config={deserializedConfig} />
       </React.StrictMode>,
     );
   }
