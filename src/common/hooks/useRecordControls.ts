@@ -62,7 +62,7 @@ export const useRecordControls = () => {
       const formattedRecord = formatRecord(parsed) as RecordEntry;
       // TODO: define a type
       const recordId = getRecordId(record);
-      const response: any =
+      const response =
         !recordId || getRecordId(record) === DEFAULT_RECORD_ID
           ? await postRecord(formattedRecord)
           : await putRecord(recordId as string, formattedRecord);
