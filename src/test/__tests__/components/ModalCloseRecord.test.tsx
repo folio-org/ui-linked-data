@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
-import { createModalContainer } from '@src/test/__mocks__/components/Modal.mock';
+import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 
 describe('ModalCloseRecord', () => {
   const toggleIsOpen = jest.fn();

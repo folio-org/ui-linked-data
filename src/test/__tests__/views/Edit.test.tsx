@@ -38,6 +38,8 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Edit', () => {
   const testInstanceUri = 'testInstanceUri';
   const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
