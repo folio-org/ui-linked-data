@@ -22,6 +22,8 @@ const mockPreviewContent = [
   },
 ];
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('FullDisplay', () => {
   beforeEach(() =>
     render(

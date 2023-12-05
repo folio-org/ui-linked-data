@@ -4,6 +4,8 @@ import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
 import { Search } from '@views';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Search', () => {
   beforeEach(() =>
     render(

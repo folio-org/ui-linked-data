@@ -20,6 +20,8 @@ let getByIdentifierMock: jest.SpyInstance<
 
 const fetchRecord = jest.fn();
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Item Search', () => {
   const id = 'lccn';
   const event = {

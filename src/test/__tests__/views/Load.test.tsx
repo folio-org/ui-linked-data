@@ -8,6 +8,8 @@ import * as recordsApi from '@common/api/records.api';
 
 const { getByTestId, findByTestId } = screen;
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Load', () => {
   beforeEach(async () => {
     jest.spyOn(recordsApi, 'getAllRecords').mockImplementation(() =>

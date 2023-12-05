@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
-import { createModalContainer } from '@src/test/__mocks__/components/Modal.mock';
+import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 
 const toggleIsOpen = jest.fn();
 
