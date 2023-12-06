@@ -3,8 +3,8 @@ import * as ProgressBackupHelper from '@common/helpers/progressBackup.helper';
 import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
+import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 describe('record.helper', () => {
   const profile = 'test:profile:id';
@@ -20,16 +20,25 @@ describe('record.helper', () => {
     createdAt: date,
     data: record,
   };
+  const testInstanceUri = 'testInstanceUri';
+  const testInstanciatesUri = 'testInstanciatesUri';
+  const testInstantiatesToInstanceUri = 'testInstantiatesToInstanceUri';
+  const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
+  const mockInstantiatesToInstanceConstant = getMockedImportedConstant(
+    BibframeConstants,
+    'INSTANTIATES_TO_INSTANCE_FIELDS',
+  );
+  const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+  mockTypeUriConstant({ INSTANCE: testInstanceUri });
+  mockInstantiatesToInstanceConstant([]);
+  mockBFLiteUriConstant({ INSTANTIATES: testInstanciatesUri });
 
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
   });
 
   describe('formatRecord', () => {
-    function testFormatRecord(
-      initialRecord: Record<string, object> | RecordEntry,
-      testResult: Record<string, object | string>,
-    ) {
+    function testFormatRecord(initialRecord: ParsedRecord, testResult: Record<string, object | string>) {
       const result = RecordHelper.formatRecord(initialRecord);
 
       expect(result).toEqual(testResult);
@@ -37,11 +46,11 @@ describe('record.helper', () => {
 
     test('returns formatted record data', () => {
       const initialRecord = {
-        Instance: {},
+        [testInstanceUri]: {},
       };
       const testResult = {
         resource: {
-          Instance: {},
+          [testInstanceUri]: {},
         },
       };
 
@@ -53,13 +62,13 @@ describe('record.helper', () => {
         testUri: 'testValue',
       };
       const initialRecord = {
-        [BibframeConstants.TYPE_URIS.INSTANCE]: {},
-        [BFLITE_URIS.INSTANTIATES]: workComponent,
+        [testInstanceUri]: {},
+        [testInstanciatesUri]: workComponent,
       };
       const testResult = {
         resource: {
-          [BibframeConstants.TYPE_URIS.INSTANCE]: {
-            [BFLITE_URIS.INSTANTIATES]: [workComponent],
+          [testInstanceUri]: {
+            [testInstanciatesUri]: [workComponent],
           },
         },
       };
@@ -70,16 +79,66 @@ describe('record.helper', () => {
     test("doesn't embed work entity into instance if it's empty", () => {
       const workComponent = {};
       const initialRecord = {
-        [BibframeConstants.TYPE_URIS.INSTANCE]: {},
-        [BFLITE_URIS.INSTANTIATES]: workComponent,
+        [testInstanceUri]: {},
+        [testInstanciatesUri]: workComponent,
       };
       const testResult = {
         resource: {
-          [BibframeConstants.TYPE_URIS.INSTANCE]: workComponent,
+          [testInstanceUri]: workComponent,
         },
       };
 
       testFormatRecord(initialRecord, testResult);
+    });
+  });
+
+  describe('updateInstanciatesWithInstanceFields', () => {
+    test('returns initial Instance object', () => {
+      const instance = {
+        [testInstanciatesUri]: [{}],
+      } as unknown as Record<string, RecursiveRecordSchema>;
+
+      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+
+      expect(result).toEqual(instance);
+    });
+
+    test('returns updated Instance object that contained Instanciates', () => {
+      mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
+      const instance = {
+        [testInstanciatesUri]: [{ existingKey_1: ['existingUri_1'] }],
+        [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
+      } as unknown as Record<string, RecursiveRecordSchema[]>;
+      const testResult = {
+        [testInstanciatesUri]: [
+          {
+            existingKey_1: ['existingUri_1'],
+            [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
+          },
+        ],
+      };
+
+      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns initial Instance object that did not contain Instanciates', () => {
+      mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
+      const instance = {
+        [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
+      } as unknown as Record<string, RecursiveRecordSchema[]>;
+      const testResult = {
+        [testInstanciatesUri]: [
+          {
+            [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
+          },
+        ],
+      };
+
+      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+
+      expect(result).toEqual(testResult);
     });
   });
 
@@ -110,10 +169,7 @@ describe('record.helper', () => {
   });
 
   test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
-    const testInstanceUri = 'testInstanceUri';
-    const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
-    mockImportedConstant({ INSTANCE: testInstanceUri });
-    const record = { resource: { [testInstanceUri]: {} } };
+    const record = { [testInstanceUri]: {} };
     const testRecord = {
       resource: { [testInstanceUri]: { id: 'testId' } },
     };
