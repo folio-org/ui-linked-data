@@ -27,12 +27,12 @@ export const formatRecord = (parsedRecord: ParsedRecord) => {
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: updateInstanciatesWithInstanceFields(instanceComponent),
+      [TYPE_URIS.INSTANCE]: updateInstantiatesWithInstanceFields(instanceComponent),
     },
   };
 };
 
-export const updateInstanciatesWithInstanceFields = (
+export const updateInstantiatesWithInstanceFields = (
   instanceComponent: Record<string, RecursiveRecordSchema[] | RecursiveRecordSchema>,
 ) => {
   const clonedInstance = cloneDeep(instanceComponent);

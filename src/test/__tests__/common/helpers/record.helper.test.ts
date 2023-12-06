@@ -21,7 +21,7 @@ describe('record.helper', () => {
     data: record,
   };
   const testInstanceUri = 'testInstanceUri';
-  const testInstanciatesUri = 'testInstanciatesUri';
+  const testInstantiatesUri = 'testInstantiatesUri';
   const testInstantiatesToInstanceUri = 'testInstantiatesToInstanceUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockInstantiatesToInstanceConstant = getMockedImportedConstant(
@@ -31,7 +31,7 @@ describe('record.helper', () => {
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockInstantiatesToInstanceConstant([]);
-  mockBFLiteUriConstant({ INSTANTIATES: testInstanciatesUri });
+  mockBFLiteUriConstant({ INSTANTIATES: testInstantiatesUri });
 
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
@@ -63,12 +63,12 @@ describe('record.helper', () => {
       };
       const initialRecord = {
         [testInstanceUri]: {},
-        [testInstanciatesUri]: workComponent,
+        [testInstantiatesUri]: workComponent,
       };
       const testResult = {
         resource: {
           [testInstanceUri]: {
-            [testInstanciatesUri]: [workComponent],
+            [testInstantiatesUri]: [workComponent],
           },
         },
       };
@@ -80,7 +80,7 @@ describe('record.helper', () => {
       const workComponent = {};
       const initialRecord = {
         [testInstanceUri]: {},
-        [testInstanciatesUri]: workComponent,
+        [testInstantiatesUri]: workComponent,
       };
       const testResult = {
         resource: {
@@ -92,25 +92,25 @@ describe('record.helper', () => {
     });
   });
 
-  describe('updateInstanciatesWithInstanceFields', () => {
+  describe('updateInstantiatesWithInstanceFields', () => {
     test('returns initial Instance object', () => {
       const instance = {
-        [testInstanciatesUri]: [{}],
+        [testInstantiatesUri]: [{}],
       } as unknown as Record<string, RecursiveRecordSchema>;
 
-      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+      const result = RecordHelper.updateInstantiatesWithInstanceFields(instance);
 
       expect(result).toEqual(instance);
     });
 
-    test('returns updated Instance object that contained Instanciates', () => {
+    test('returns updated Instance object that contained Instantiates', () => {
       mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
       const instance = {
-        [testInstanciatesUri]: [{ existingKey_1: ['existingUri_1'] }],
+        [testInstantiatesUri]: [{ existingKey_1: ['existingUri_1'] }],
         [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
       } as unknown as Record<string, RecursiveRecordSchema[]>;
       const testResult = {
-        [testInstanciatesUri]: [
+        [testInstantiatesUri]: [
           {
             existingKey_1: ['existingUri_1'],
             [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
@@ -118,25 +118,25 @@ describe('record.helper', () => {
         ],
       };
 
-      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+      const result = RecordHelper.updateInstantiatesWithInstanceFields(instance);
 
       expect(result).toEqual(testResult);
     });
 
-    test('returns initial Instance object that did not contain Instanciates', () => {
+    test('returns initial Instance object that did not contain Instantiates', () => {
       mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
       const instance = {
         [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
       } as unknown as Record<string, RecursiveRecordSchema[]>;
       const testResult = {
-        [testInstanciatesUri]: [
+        [testInstantiatesUri]: [
           {
             [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
           },
         ],
       };
 
-      const result = RecordHelper.updateInstanciatesWithInstanceFields(instance);
+      const result = RecordHelper.updateInstantiatesWithInstanceFields(instance);
 
       expect(result).toEqual(testResult);
     });
