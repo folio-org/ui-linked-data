@@ -85,3 +85,5 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
     value: 'ddc',
   },
 };
+
+export const INSTANTIATES_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];

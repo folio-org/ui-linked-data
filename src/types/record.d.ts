@@ -1,10 +1,10 @@
 type RecordID = string | number | undefined;
 
-type SavedRecordData = Record<string, object> | RecordEntry;
+type ParsedRecord = Record<string, Record<string, RecursiveRecordSchema[]>> | RecordEntry | RecursiveRecordSchema;
 
 type LocallySavedRecord = {
   createdAt: number;
-  data: SavedRecordData;
+  data: ParsedRecord;
 };
 
 type PreviewContent = {

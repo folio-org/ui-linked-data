@@ -10,10 +10,12 @@ import {
   GROUP_BY_LEVEL,
   HIDDEN_WRAPPERS,
   IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
+  INSTANTIATES_TO_INSTANCE_FIELDS,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getUris } from '@common/helpers/bibframe.helper';
 import {
@@ -121,8 +123,11 @@ export const useConfig = () => {
         schema: base,
         path,
       });
-      const selectedRecord =
-        typeof withContentsSelected === 'string' ? [withContentsSelected] : withContentsSelected?.[uriWithSelector];
+      const isWorkToInstanceField = INSTANTIATES_TO_INSTANCE_FIELDS.includes(uriWithSelector);
+      const workToInstanceRecord = withContentsSelected?.[BFLITE_URIS.INSTANTIATES];
+      const recordData =
+        isWorkToInstanceField && workToInstanceRecord ? workToInstanceRecord?.[0] : withContentsSelected;
+      const selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
 
       if (selectedRecord?.length > 1 && parentEntryType === AdvancedFieldType.block) {
         const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
