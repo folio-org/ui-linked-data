@@ -274,12 +274,6 @@ export const useConfig = () => {
             path,
           });
 
-          if (propertyURI === 'http://id.loc.gov/ontologies/bibframe/extent') {
-            console.log('====================================');
-            console.log('EXTENT entry', entry);
-            console.log('====================================');
-          }
-
           const hasNoRootWrapper =
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
@@ -318,7 +312,7 @@ export const useConfig = () => {
                 hasNoRootWrapper,
               });
             });
-          } else if (hasNoRootWrapper && (filteredRecordData?.length || isTemporaryComplexGroup)) {
+          } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
             processGroupsWithoutWrapper({
               valueTemplateRefs,
               base,
