@@ -142,6 +142,7 @@ export const generateCopiedGroupUuids = ({
 
     if (!uriBFLite) return;
 
+    // TODO: remove or refactor it when the API contract for Extent and similar fields is updated
     const isTempUri = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
     const recordData = isTempUri ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]] : selectedRecord?.[uriBFLite];
 

@@ -58,12 +58,13 @@ export const FORCE_EXCLUDE_WHEN_DEPARSING = [
 
 export const COMPLEX_GROUPS_WITHOUT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/note',
-  'http://id.loc.gov/ontologies/bibframe/extent', // TODO: remove when the API contract for Extent field will be extended
+  'http://id.loc.gov/ontologies/bibframe/extent', // TODO: refactor when the API contract for the Extent field is updated
 ];
 
-// TODO: remove when the API contract for Extent field will be extended
+// TODO: remove when the API contract for Extent and similar fields is updated
 export const TEMPORARY_URIS_WITHOUT_MAPPING = [BFLITE_URIS.EXTENT_TEMP];
 
+// TODO: remove when the API contract for Extent and similar fields is updated
 export const TEMPORARY_COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/extent'];
 
 export const IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION = ['http://id.loc.gov/ontologies/bibframe/agent'];

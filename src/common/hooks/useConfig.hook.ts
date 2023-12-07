@@ -278,6 +278,7 @@ export const useConfig = () => {
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
             (hasHiddenParent && !IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(propertyURI));
+          // TODO: remove when the API contract for Extent and similar fields is updated
           const isTemporaryComplexGroup = TEMPORARY_COMPLEX_GROUPS.includes(propertyURI);
 
           const selectedRecord = generateRecordForDropdown({
@@ -591,6 +592,7 @@ export const useConfig = () => {
 
       if (!uriBFLite) return;
 
+      // TODO: remove when the API contract for Extent and similar fields is updated
       const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
       const recordData = isTempMappedURI
         ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
