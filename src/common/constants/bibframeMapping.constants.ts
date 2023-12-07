@@ -10,6 +10,18 @@ export const BFLITE_URIS = {
   TABLE_OF_CONTENTS: 'http://bibfra.me/vocab/marc/tableOfContents',
   SUMMARY: 'http://bibfra.me/vocab/marc/summary',
   INSTANTIATES: 'http://bibfra.me/vocab/lite/instantiates',
+  EXTENT_TEMP: 'BFLITE_URI_TEMP_EXTENT', // TODO: set the value when the API contract for Extent field will be extended
+  EXTENT: 'http://bibfra.me/vocab/lite/extent',
+};
+
+// TODO: should be refactored.
+// This is a temporary solution until the API contract for such fields is unstable.
+export const TEMP_URIS = {
+  'http://id.loc.gov/ontologies/bibframe/Extent': BFLITE_URIS.EXTENT_TEMP,
+};
+
+export const TEMP_BF2_TO_BFLITE_MAP = {
+  [BFLITE_URIS.EXTENT_TEMP]: BFLITE_URIS.EXTENT,
 };
 
 export const BF2_TO_BFLITE_MAP: BFLiteMap = {
@@ -68,13 +80,15 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/language': 'http://bibfra.me/vocab/lite/language',
   'http://id.loc.gov/ontologies/bibframe/Contribution': 'http://bibfra.me/vocab/lite/contributor',
   'http://id.loc.gov/ontologies/bflc/PrimaryContribution': 'http://bibfra.me/vocab/lite/creator',
-  'http://id.loc.gov/ontologies/bibframe/extent': 'http://bibfra.me/vocab/lite/extent',
+  'http://id.loc.gov/ontologies/bibframe/extent': '', // TODO: set the value when the API contract for Extent field will be extended
+  'http://id.loc.gov/ontologies/bibframe/Extent': TEMP_URIS['http://id.loc.gov/ontologies/bibframe/Extent'],
   'http://www.w3.org/2000/01/rdf-schema#label': {
     'http://id.loc.gov/ontologies/bibframe/note': 'http://bibfra.me/vocab/lite/note',
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/note',
     'http://id.loc.gov/ontologies/bibframe/summary': BFLITE_URIS.SUMMARY,
     'http://id.loc.gov/ontologies/bibframe/TableOfContents': BFLITE_URIS.TABLE_OF_CONTENTS,
-    'http://id.loc.gov/ontologies/bibframe/extent': 'http://bibfra.me/vocab/lite/extent',
+    'http://id.loc.gov/ontologies/bibframe/extent': BFLITE_URIS.EXTENT,
+    'http://id.loc.gov/ontologies/bflc/AppliesTo': '', // TODO: set the value when the API contract for Extent field will be extended
   },
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#value': {
     'http://id.loc.gov/ontologies/bibframe/Lccn': 'http://bibfra.me/vocab/lite/name',
