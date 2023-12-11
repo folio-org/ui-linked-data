@@ -28,6 +28,7 @@ export const BASE_LOCALE = {
   'marva.author': 'Author',
   'marva.pub-date': 'Publication Date',
   'marva.edition': 'Edition',
+  'marva.select': 'Select',
   'marva.select-for-editing': 'Select a resource description for editing',
   'marva.start-from-scratch': 'Start from scratch',
   'marva.select-or-start-from-scratch': '{select} or {startFromScratch}',
