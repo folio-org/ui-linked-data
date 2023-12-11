@@ -1,8 +1,17 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_LABELS_MAP, BFLITE_URIS, ADVANCED_FIELDS } from '@common/constants/bibframeMapping.constants';
+import {
+  BFLITE_LABELS_MAP,
+  BFLITE_URIS,
+  ADVANCED_FIELDS,
+  TEMP_BF2_TO_BFLITE_MAP,
+} from '@common/constants/bibframeMapping.constants';
 import { getUris } from './bibframe.helper';
-import { IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION, TYPE_URIS } from '@common/constants/bibframe.constants';
+import {
+  IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
+  TEMPORARY_URIS_WITHOUT_MAPPING,
+  TYPE_URIS,
+} from '@common/constants/bibframe.constants';
 import { checkIdentifierAsValue } from '@common/helpers/record.helper';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
@@ -133,9 +142,11 @@ export const generateCopiedGroupUuids = ({
 
     if (!uriBFLite) return;
 
-    const recordData = selectedRecord?.[uriBFLite];
+    // TODO: remove or refactor it when the API contract for Extent and similar fields is updated
+    const isTempUri = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
+    const recordData = isTempUri ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]] : selectedRecord?.[uriBFLite];
 
-    if (!recordData?.length) {
+    if (!recordData?.length && !isTempUri) {
       copiedGroupUuids.push([]);
 
       return;

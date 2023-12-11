@@ -13,9 +13,11 @@ import {
   INSTANTIATES_TO_INSTANCE_FIELDS,
   PROFILE_NAMES,
   RESOURCE_TEMPLATE_IDS,
+  TEMPORARY_COMPLEX_GROUPS,
+  TEMPORARY_URIS_WITHOUT_MAPPING,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getUris } from '@common/helpers/bibframe.helper';
 import {
@@ -68,6 +70,7 @@ export const useConfig = () => {
     firstOfSameType?: boolean;
     selectedEntries?: Array<string>;
     record?: Record<string, any> | Array<any>;
+    recordItemIndex?: number;
     hasSelectedRecord?: boolean;
     dropdownOptionSelection?: DropdownOptionSelection;
     hasHiddenParent?: boolean;
@@ -85,6 +88,7 @@ export const useConfig = () => {
     firstOfSameType = false,
     selectedEntries = [],
     record,
+    recordItemIndex,
     hasSelectedRecord,
     dropdownOptionSelection,
     hasHiddenParent = false,
@@ -116,7 +120,8 @@ export const useConfig = () => {
       // TODO: Potentially dangerous HACK ([0])
       // Might be removed with the API schema change
       // If not, refactor to include all indices
-      const withContentsSelected = Array.isArray(record) ? record[0] : record;
+      const recordIndex = recordItemIndex || 0;
+      const withContentsSelected = Array.isArray(record) ? record[recordIndex] : record;
       const { uriBFLite, uriWithSelector } = getUris({
         uri: propertyURI,
         dataTypeURI: valueDataType?.dataTypeURI,
@@ -161,6 +166,7 @@ export const useConfig = () => {
           propertyLabel,
           propertyURI,
           constraints,
+          index: recordIndex,
         });
       }
     } else {
@@ -244,6 +250,7 @@ export const useConfig = () => {
               base,
               selectedEntries,
               record: selectedRecord,
+              recordItemIndex,
               hasHiddenParent: isHiddenType,
               userValues,
               parentEntryType: type,
@@ -271,6 +278,8 @@ export const useConfig = () => {
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
             (hasHiddenParent && !IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(propertyURI));
+          // TODO: remove when the API contract for Extent and similar fields is updated
+          const isTemporaryComplexGroup = TEMPORARY_COMPLEX_GROUPS.includes(propertyURI);
 
           const selectedRecord = generateRecordForDropdown({
             record,
@@ -304,7 +313,7 @@ export const useConfig = () => {
                 hasNoRootWrapper,
               });
             });
-          } else if (hasNoRootWrapper && filteredRecordData?.length) {
+          } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
             processGroupsWithoutWrapper({
               valueTemplateRefs,
               base,
@@ -439,6 +448,7 @@ export const useConfig = () => {
     templates,
     selectedEntries,
     record,
+    recordItemIndex,
     userValues,
     hasNoRootWrapper,
     hasSelectedRecord,
@@ -452,6 +462,7 @@ export const useConfig = () => {
     templates: ResourceTemplates;
     selectedEntries?: Array<string>;
     record: Record<string, any> | Array<any>;
+    recordItemIndex?: number;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
     hasSelectedRecord?: boolean;
@@ -521,6 +532,7 @@ export const useConfig = () => {
         firstOfSameType: index === 0,
         selectedEntries,
         record: recordData,
+        recordItemIndex,
         hasSelectedRecord,
         userValues,
         dropdownOptionSelection: {
@@ -579,7 +591,12 @@ export const useConfig = () => {
       const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
       if (!uriBFLite) return;
-      const recordData = selectedRecord?.[uriBFLite];
+
+      // TODO: remove when the API contract for Extent and similar fields is updated
+      const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
+      const recordData = isTempMappedURI
+        ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
+        : selectedRecord?.[uriBFLite];
 
       if (recordData?.length) {
         const copiedGroupsUuid = copiedUuids[templateRefIndex];
@@ -593,7 +610,8 @@ export const useConfig = () => {
             path,
             templates,
             selectedEntries,
-            record: recordItem,
+            record: isTempMappedURI ? selectedRecord : recordItem,
+            recordItemIndex,
             userValues,
             hasNoRootWrapper,
             hasSelectedRecord: true,
