@@ -32,7 +32,7 @@
     "react-dom": "^18.2.0",
     "react-intl": "^6.4.4",
     "react-router-dom": "^6.20.0",
-    "react-select": "^5.7.3",
+    "react-select": "^5.8.0",
     "recoil": "^0.7.7",
     "uuid": "^9.0.0"
   },
