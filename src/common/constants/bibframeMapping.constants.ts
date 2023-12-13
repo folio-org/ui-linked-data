@@ -85,6 +85,9 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bflc/PrimaryContribution': 'http://bibfra.me/vocab/lite/creator',
   'http://id.loc.gov/ontologies/bibframe/extent': '', // TODO: set the value when the API contract for the Extent field is updated
   'http://id.loc.gov/ontologies/bibframe/Extent': BFLITE_URIS.EXTENT_TEMP,
+  'http://id.loc.gov/ontologies/bibframe/supplementaryContent': {
+    'http://id.loc.gov/ontologies/bibframe/Instance': 'http://bibfra.me/vocab/marc/supplementaryContent',
+  },
   'http://www.w3.org/2000/01/rdf-schema#label': {
     'http://id.loc.gov/ontologies/bibframe/note': 'http://bibfra.me/vocab/lite/note',
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/note',
@@ -92,6 +95,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/TableOfContents': BFLITE_URIS.TABLE_OF_CONTENTS,
     'http://id.loc.gov/ontologies/bibframe/extent': BFLITE_URIS.EXTENT,
     'http://id.loc.gov/ontologies/bflc/AppliesTo': BFLITE_URIS.APPLIES_TO_TEMP, // TODO: set the value when the API contract for the Extent field is updated
+    'http://id.loc.gov/ontologies/bibframe/supplementaryContent': 'http://bibfra.me/vocab/lite/name',
   },
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#value': {
     'http://id.loc.gov/ontologies/bibframe/Lccn': 'http://bibfra.me/vocab/lite/name',
@@ -99,7 +103,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/Identifier': 'http://bibfra.me/vocab/lite/name',
     'http://id.loc.gov/ontologies/bibframe/Local': 'http://bibfra.me/vocab/marc/localId',
     'http://id.loc.gov/ontologies/bibframe/Ean': 'http://bibfra.me/vocab/marc/ean',
-    'http://id.loc.gov/ontologies/bibframe/supplementaryContent': 'http://bibfra.me/vocab/marc/supplementaryContent',
+    'http://id.loc.gov/ontologies/bibframe/supplementaryContent': 'http://bibfra.me/vocab/lite/link',
     'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/lite/link',
   },
   'http://id.loc.gov/ontologies/bibframe/date': {

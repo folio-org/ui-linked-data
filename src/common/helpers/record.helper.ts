@@ -111,10 +111,9 @@ export const checkIdentifierAsValue = (record: Record<string, string[]>, uri: st
 
   if (identifierAsValueSelection) {
     const { field, value } = identifierAsValueSelection;
-    const typedRecord = record as Record<string, string[]>;
 
-    if (typedRecord?.[field]?.includes(value)) {
-      return typedRecord;
+    if (record?.[field]?.includes(value)) {
+      return record;
     }
   }
 

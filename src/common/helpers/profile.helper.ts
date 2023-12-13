@@ -89,7 +89,7 @@ const traverseSchema = ({
       container[selector] = withFormat;
     }
   } else if (selector && (shouldProceed || index < GROUP_BY_LEVEL)) {
-    let containerSelector: Record<string, any>;
+    let containerSelector: RecursiveRecordSchema | RecursiveRecordSchema[] | string[];
     let hasRootWrapper = shouldHaveRootWrapper;
 
     const { profile: profileType, block, dropdownOption, groupComplex, hidden } = AdvancedFieldType;
@@ -100,7 +100,7 @@ const traverseSchema = ({
       containerSelector = container;
     } else if (
       (type === block ||
-        hasElement(COMPLEX_GROUPS, uri) ||
+        (type === groupComplex && hasElement(COMPLEX_GROUPS, uri)) ||
         shouldHaveRootWrapper ||
         (FORCE_INCLUDE_WHEN_DEPARSING.includes(selector) && type !== hidden)) &&
       !FORCE_EXCLUDE_WHEN_DEPARSING.includes(selector)
@@ -208,7 +208,7 @@ export const applyUserValues = (
   }
 
   const filteredValues = filterUserValues(userValues);
-  const result: Record<string, any> = {};
+  const result: Record<string, RecordEntry> = {};
 
   traverseSchema({ schema, userValues: filteredValues, selectedEntries, container: result, key: initKey });
 

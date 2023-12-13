@@ -44,7 +44,10 @@ export const LOOKUPS_WITH_SIMPLE_STRUCTURE = [
   'http://bibfra.me/vocab/lite/language',
 ];
 
-export const COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/electronicLocator'];
+export const COMPLEX_GROUPS = [
+  'http://id.loc.gov/ontologies/bibframe/electronicLocator',
+  'http://id.loc.gov/ontologies/bibframe/supplementaryContent',
+];
 
 export const HIDDEN_WRAPPERS = ['http://www.w3.org/2000/01/rdf-schema#label'];
 
