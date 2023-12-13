@@ -100,7 +100,7 @@ const traverseSchema = ({
       containerSelector = container;
     } else if (
       (type === block ||
-        hasElement(COMPLEX_GROUPS, uri) ||
+        (type === groupComplex && hasElement(COMPLEX_GROUPS, uri)) ||
         shouldHaveRootWrapper ||
         (FORCE_INCLUDE_WHEN_DEPARSING.includes(selector) && type !== hidden)) &&
       !FORCE_EXCLUDE_WHEN_DEPARSING.includes(selector)
