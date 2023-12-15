@@ -89,7 +89,7 @@ export const generateRecordForDropdown = ({
 };
 
 export const generateUserValueContent = (
-  entry: string | Record<string, any> | Array<Record<string, any>>,
+  entry: string | Record<string, unknown> | Array<Record<string, unknown>>,
   type: AdvancedFieldType,
   uriBFLite?: string,
 ) =>

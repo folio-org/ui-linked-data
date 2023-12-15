@@ -27,6 +27,7 @@ import {
   getFilteredRecordData,
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
+import { useSimpleLookupData } from './useSimpleLookupData.hook';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -37,6 +38,7 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
+  const { getLookupData, loadLookupData } = useSimpleLookupData();
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -78,7 +80,7 @@ export const useConfig = () => {
     parentEntryType?: AdvancedFieldType;
   };
 
-  const traverseProfile = ({
+  const traverseProfile = async ({
     entry,
     templates,
     uuid = uuidv4(),
@@ -139,23 +141,25 @@ export const useConfig = () => {
 
         updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
-        selectedRecord.forEach((_: Record<string, any>, index: number) => {
-          processSimpleUIConrol({
-            base,
-            recordData: selectedRecord,
-            userValues,
-            uuid: copiedGroupsUuid[index],
-            type,
-            uriBFLite,
-            path,
-            propertyLabel,
-            propertyURI,
-            constraints,
-            index,
-          });
-        });
+        await Promise.all(
+          selectedRecord.map(async (_: Record<string, any>, index: number) => {
+            await processSimpleUIConrol({
+              base,
+              recordData: selectedRecord,
+              userValues,
+              uuid: copiedGroupsUuid[index],
+              type,
+              uriBFLite,
+              path,
+              propertyLabel,
+              propertyURI,
+              constraints,
+              index,
+            });
+          }),
+        );
       } else {
-        processSimpleUIConrol({
+        await processSimpleUIConrol({
           base,
           recordData: selectedRecord,
           userValues,
@@ -185,18 +189,20 @@ export const useConfig = () => {
             children: uuidArray,
           });
 
-          resourceTemplates.map((entry, i) => {
-            traverseProfile({
-              entry,
-              templates,
-              uuid: uuidArray[i],
-              path: updatedPath,
-              base,
-              selectedEntries,
-              record,
-              userValues,
-            });
-          });
+          await Promise.all(
+            resourceTemplates.map(async (entry, index) => {
+              await traverseProfile({
+                entry,
+                templates,
+                uuid: uuidArray[index],
+                path: updatedPath,
+                base,
+                selectedEntries,
+                record,
+                userValues,
+              });
+            }),
+          );
 
           return;
         }
@@ -241,21 +247,23 @@ export const useConfig = () => {
                 hasRootWrapper: !isHiddenType,
               });
 
-          propertyTemplates.map((entry, i) => {
-            traverseProfile({
-              entry,
-              templates,
-              uuid: uuidArray[i],
-              path: updatedPath,
-              base,
-              selectedEntries,
-              record: selectedRecord,
-              recordItemIndex,
-              hasHiddenParent: isHiddenType,
-              userValues,
-              parentEntryType: type,
-            });
-          });
+          await Promise.all(
+            propertyTemplates.map(async (entry, i) => {
+              await traverseProfile({
+                entry,
+                templates,
+                uuid: uuidArray[i],
+                path: updatedPath,
+                base,
+                selectedEntries,
+                record: selectedRecord,
+                recordItemIndex,
+                hasHiddenParent: isHiddenType,
+                userValues,
+                parentEntryType: type,
+              });
+            }),
+          );
 
           return;
         }
@@ -299,22 +307,24 @@ export const useConfig = () => {
 
             updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
-            selectedRecord.forEach((recordData: Record<string, any> | Array<any>, index: string) => {
-              processGroup({
-                uuid: copiedGroupsUuid[index],
-                entry,
-                base,
-                type,
-                path,
-                templates,
-                selectedEntries,
-                record: recordData,
-                userValues,
-                hasNoRootWrapper,
-              });
-            });
+            await Promise.all(
+              selectedRecord.map(async (recordData: Record<string, any> | Array<any>, index: string) => {
+                await processGroup({
+                  uuid: copiedGroupsUuid[index],
+                  entry,
+                  base,
+                  type,
+                  path,
+                  templates,
+                  selectedEntries,
+                  record: recordData,
+                  userValues,
+                  hasNoRootWrapper,
+                });
+              }),
+            );
           } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
-            processGroupsWithoutWrapper({
+            await processGroupsWithoutWrapper({
               valueTemplateRefs,
               base,
               path,
@@ -328,7 +338,7 @@ export const useConfig = () => {
               hasNoRootWrapper,
             });
           } else {
-            processGroup({
+            await processGroup({
               uuid,
               entry,
               base,
@@ -353,7 +363,7 @@ export const useConfig = () => {
     }
   };
 
-  const buildSchema = (
+  const buildSchema = async (
     profile: ProfileEntry,
     templates: ResourceTemplates,
     record: Record<string, any> | Array<any>,
@@ -363,7 +373,7 @@ export const useConfig = () => {
     const selectedEntries: Array<string> = [];
     const userValues: UserValues = {};
 
-    traverseProfile({
+    await traverseProfile({
       entry: profile,
       uuid: initKey,
       templates,
@@ -398,7 +408,7 @@ export const useConfig = () => {
     setUserValues({});
 
     const recordData = record?.resource || {};
-    const { base, userValues, initKey } = buildSchema(monograph, templates, recordData);
+    const { base, userValues, initKey } = await buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {
       setPreviewContent(prev => [
@@ -439,7 +449,7 @@ export const useConfig = () => {
     }
   };
 
-  const processGroup = ({
+  const processGroup = async ({
     uuid,
     entry,
     base,
@@ -505,44 +515,46 @@ export const useConfig = () => {
 
     const { getValue: getIsSelectedOption, setValue } = defineMemoizedValue(false);
 
-    valueTemplateRefs.forEach((item, index) => {
-      const entry = templates[item];
+    await Promise.all(
+      valueTemplateRefs.map(async (item, index) => {
+        const entry = templates[item];
 
-      const { uriBFLite } = getUris({ uri: entry.resourceURI, schema: base, path });
+        const { uriBFLite } = getUris({ uri: entry.resourceURI, schema: base, path });
 
-      if (uriBFLite === selectedRecordUriBFLite) {
-        setValue(true);
-      }
+        if (uriBFLite === selectedRecordUriBFLite) {
+          setValue(true);
+        }
 
-      let recordData;
+        let recordData;
 
-      if (hasSelectedRecord) {
-        recordData = uriBFLite === selectedRecordUriBFLite ? record : undefined;
-      } else {
-        recordData = record;
-      }
+        if (hasSelectedRecord) {
+          recordData = uriBFLite === selectedRecordUriBFLite ? record : undefined;
+        } else {
+          recordData = record;
+        }
 
-      traverseProfile({
-        entry,
-        auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
-        templates,
-        uuid: uuidArray[index],
-        path: [...path, newUuid],
-        base,
-        firstOfSameType: index === 0,
-        selectedEntries,
-        record: recordData,
-        recordItemIndex,
-        hasSelectedRecord,
-        userValues,
-        dropdownOptionSelection: {
-          hasNoRootWrapper,
-          isSelectedOption: getIsSelectedOption(),
-          setIsSelectedOption: setValue,
-          selectedRecordUriBFLite,
-        },
-      });
-    });
+        await traverseProfile({
+          entry,
+          auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+          templates,
+          uuid: uuidArray[index],
+          path: [...path, newUuid],
+          base,
+          firstOfSameType: index === 0,
+          selectedEntries,
+          record: recordData,
+          recordItemIndex,
+          hasSelectedRecord,
+          userValues,
+          dropdownOptionSelection: {
+            hasNoRootWrapper,
+            isSelectedOption: getIsSelectedOption(),
+            setIsSelectedOption: setValue,
+            selectedRecordUriBFLite,
+          },
+        });
+      }),
+    );
 
     // Select the first dropdown option if nothing was selected
     if (hasNoRootWrapper && !getIsSelectedOption()) {
@@ -550,7 +562,7 @@ export const useConfig = () => {
     }
   };
 
-  const processGroupsWithoutWrapper = ({
+  const processGroupsWithoutWrapper = async ({
     valueTemplateRefs,
     base,
     path,
@@ -586,43 +598,47 @@ export const useConfig = () => {
 
     updateParentEntryChildren({ base, copiedGroupsUuid: uuidList, path, uuid });
 
-    valueTemplateRefs.forEach((templateRef, templateRefIndex: number) => {
-      const entryData = templates[templateRef];
-      const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
+    await Promise.all(
+      valueTemplateRefs.map(async (templateRef, templateRefIndex: number) => {
+        const entryData = templates[templateRef];
+        const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
-      if (!uriBFLite) return;
+        if (!uriBFLite) return;
 
-      // TODO: remove when the API contract for Extent and similar fields is updated
-      const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
-      const recordData = isTempMappedURI
-        ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
-        : selectedRecord?.[uriBFLite];
+        // TODO: remove when the API contract for Extent and similar fields is updated
+        const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
+        const recordData = isTempMappedURI
+          ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
+          : selectedRecord?.[uriBFLite];
 
-      if (recordData?.length) {
-        const copiedGroupsUuid = copiedUuids[templateRefIndex];
+        if (recordData?.length) {
+          const copiedGroupsUuid = copiedUuids[templateRefIndex];
 
-        recordData?.forEach((recordItem: Record<string, any>, recordItemIndex: number) => {
-          processGroup({
-            uuid: copiedGroupsUuid?.[recordItemIndex],
-            entry,
-            base,
-            type,
-            path,
-            templates,
-            selectedEntries,
-            record: isTempMappedURI ? selectedRecord : recordItem,
-            recordItemIndex,
-            userValues,
-            hasNoRootWrapper,
-            hasSelectedRecord: true,
-            selectedRecordUriBFLite: uriBFLite,
-          });
-        });
-      }
-    });
+          await Promise.all(
+            recordData?.map(async (recordItem: Record<string, any>, recordItemIndex: number) => {
+              await processGroup({
+                uuid: copiedGroupsUuid?.[recordItemIndex],
+                entry,
+                base,
+                type,
+                path,
+                templates,
+                selectedEntries,
+                record: isTempMappedURI ? selectedRecord : recordItem,
+                recordItemIndex,
+                userValues,
+                hasNoRootWrapper,
+                hasSelectedRecord: true,
+                selectedRecordUriBFLite: uriBFLite,
+              });
+            }),
+          );
+        }
+      }),
+    );
   };
 
-  const processSimpleUIConrol = ({
+  const processSimpleUIConrol = async ({
     base,
     recordData,
     userValues,
@@ -648,7 +664,20 @@ export const useConfig = () => {
     index?: number;
   }) => {
     if (recordData && userValues) {
-      let contents = recordData.map((entry: any) => generateUserValueContent(entry, type, uriBFLite));
+      if (type === AdvancedFieldType.simple) {
+        const uri = constraints?.useValuesFrom?.[0];
+        const lookupData = getLookupData()?.[uri];
+
+        if (!lookupData) {
+          const loadedLookupData = await loadLookupData(uri);
+
+          console.log('loadedLookupData', loadedLookupData);
+        }
+      }
+
+      let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
+        generateUserValueContent(entry, type, uriBFLite),
+      );
 
       if (index !== undefined) {
         const selectedRecordData = recordData?.[index];

@@ -84,6 +84,8 @@ export const SimpleLookupField: FC<Props> = ({
       },
     }));
 
+    console.log('handleOnChange - newValue', newValue);
+
     onChange(uuid, newValue);
     setLocalValue([...options]);
   };
