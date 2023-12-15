@@ -1,10 +1,12 @@
 import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
-import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
-import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { FormattedMessage } from 'react-intl';
 import { MultiValue } from 'react-select';
+import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData.hook';
+import state from '@state';
+import { useSetRecoilState } from 'recoil';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 
 interface Props {
   uri: string;
@@ -26,7 +28,10 @@ export const SimpleLookupField: FC<Props> = ({
   parentUri,
   isDisabled = false,
 }) => {
-  const [options, setOptions] = useState<MultiselectOption[]>([]);
+  const { getLookupData, loadLookupData } = useSimpleLookupData();
+  const options = getLookupData()?.[uri] || [];
+  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri } = {} }) => ({
       value: { label, uri },
@@ -36,39 +41,23 @@ export const SimpleLookupField: FC<Props> = ({
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const getOptions = (data: LoadSimpleLookupResponseItem[], parentURI?: string): MultiselectOption[] => {
-    const options = data
-      .filter(dataItem => {
-        const id = dataItem[ID_KEY];
-        return id != parentURI && !id?.includes(BLANK_NODE_TRAIT);
-      })
-      .map<MultiselectOption>(option => {
-        const optionUri = option[ID_KEY];
-        const label = option[AUTHORITATIVE_LABEL_URI]?.[0]?.[VALUE_KEY] ?? '';
-
-        return {
-          value: { label, uri: optionUri },
-          label,
-          __isNew__: false,
-        };
-      });
-
-    return options;
-  };
-
   const loadOptions = async (): Promise<void> => {
     if (options.length) return;
 
     setIsLoading(true);
 
-    const response = await loadSimpleLookup(uri);
+    try {
+      await loadLookupData(uri);
+    } catch (error) {
+      console.error('Cannot load data for the Lookup:', error);
 
-    if (!response) return;
-
-    const optionsForDisplay = getOptions(response, uri).sort(alphabeticSortLabel);
-
-    setOptions(optionsForDisplay);
-    setIsLoading(false);
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-load-simple-lookup-data'),
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // TODO: uncomment once uncontrolled options are required/supported
