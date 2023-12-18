@@ -664,25 +664,26 @@ export const useConfig = () => {
     index?: number;
   }) => {
     if (recordData && userValues) {
-      if (type === AdvancedFieldType.simple) {
+      let lookupData: MultiselectOption[] | null = null;
+      const isSimpleLookypType = type === AdvancedFieldType.simple;
+
+      if (isSimpleLookypType) {
         const uri = constraints?.useValuesFrom?.[0];
-        const lookupData = getLookupData()?.[uri];
+        lookupData = getLookupData()?.[uri];
 
         if (!lookupData) {
-          const loadedLookupData = await loadLookupData(uri);
-
-          console.log('loadedLookupData', loadedLookupData);
+          lookupData = await loadLookupData(uri);
         }
       }
 
       let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
-        generateUserValueContent(entry, type, uriBFLite),
+        generateUserValueContent({ entry, type, uriBFLite, lookupData }),
       );
 
-      if (index !== undefined) {
+      if (index !== undefined && !isSimpleLookypType) {
         const selectedRecordData = recordData?.[index];
 
-        contents = [generateUserValueContent(selectedRecordData, type, uriBFLite)];
+        contents = [generateUserValueContent({ entry: selectedRecordData, type, uriBFLite, lookupData })];
       }
 
       userValues[uuid] = {
