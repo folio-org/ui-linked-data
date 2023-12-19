@@ -1,7 +1,10 @@
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
 
-export const formatLookupOptions = (data: LoadSimpleLookupResponseItem[], parentURI?: string): MultiselectOption[] => {
-  const options = data
+export const formatLookupOptions = (
+  data: LoadSimpleLookupResponseItem[] = [],
+  parentURI?: string,
+): MultiselectOption[] =>
+  data
     .filter(dataItem => {
       const id = dataItem[ID_KEY];
       return id != parentURI && !id?.includes(BLANK_NODE_TRAIT);
@@ -16,6 +19,3 @@ export const formatLookupOptions = (data: LoadSimpleLookupResponseItem[], parent
         __isNew__: false,
       };
     });
-
-  return options;
-};

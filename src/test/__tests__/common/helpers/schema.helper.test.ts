@@ -93,9 +93,12 @@ describe('schema.helper', () => {
   });
 
   describe('generateUserValueObject', () => {
-    test('returns an object which was generated from the nested entry', () => {
+    beforeEach(() => {
       mockBFUrisConstant({ LINK: 'testLink' });
       jest.spyOn(SchemaHelper, 'getLookupLabelKey').mockReturnValueOnce('testKey');
+    });
+
+    test('returns an object which was generated from the nested entry', () => {
       const entry = { uri: 'testUri', label: 'testLabel', testKey: 'testLabelKey' };
       const type = 'testType' as AdvancedFieldType;
       const testResult = {
@@ -108,6 +111,72 @@ describe('schema.helper', () => {
       };
 
       const result = generateUserValueObject({ entry, type });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object which was generated for the simple lookup field based on the loaded lookup data', () => {
+      const entry = {
+        uri: 'testUri_1',
+        label: 'testLabel',
+        testKey: 'testLabelKey',
+        testLink: ['testLink_1'],
+      };
+      const type = AdvancedFieldType.simple;
+      const lookupData = [
+        {
+          label: 'testLabel_1',
+          __isNew__: true,
+          value: {
+            id: 'testId_1',
+            label: 'testLabel_1',
+            uri: 'testLink_1',
+          },
+        },
+      ];
+      const testResult = {
+        label: 'testLabel_1',
+        meta: {
+          parentURI: 'testLink_1',
+          uri: 'testLink_1',
+          type,
+        },
+      };
+
+      const result = generateUserValueObject({ entry, type, lookupData });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object which was generated for the simple lookup field if there is no corresponding element in the loaded lookup data', () => {
+      const entry = {
+        uri: 'testUri_0',
+        label: 'testLabel',
+        testKey: 'testLabelKey',
+        testLink: ['testLink_0'],
+      };
+      const type = AdvancedFieldType.simple;
+      const lookupData = [
+        {
+          label: 'testLabel_1',
+          __isNew__: true,
+          value: {
+            id: 'testId_1',
+            label: 'testLabel_1',
+            uri: 'testLink_1',
+          },
+        },
+      ];
+      const testResult = {
+        label: 'testLabelKey',
+        meta: {
+          parentURI: 'testLink_0',
+          uri: 'testLink_0',
+          type,
+        },
+      };
+
+      const result = generateUserValueObject({ entry, type, lookupData });
 
       expect(result).toEqual(testResult);
     });

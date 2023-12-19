@@ -1,8 +1,8 @@
+import { useRecoilState } from 'recoil';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
 import { formatLookupOptions } from '@common/helpers/formatLookupOptions.helper';
 import state from '@state';
-import { useRecoilState } from 'recoil';
 
 export const useSimpleLookupData = () => {
   const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
