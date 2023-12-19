@@ -21,7 +21,9 @@ export const useSimpleLookupData = () => {
 
       return formattedLookupData;
     } catch (error) {
-      throw error as typeof Error;
+      const message = error instanceof Error ? error.message : String(error);
+
+      throw new Error(message);
     }
   };
 

@@ -3,7 +3,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { MultiValue } from 'react-select';
 import { useSetRecoilState } from 'recoil';
-import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData.hook';
+import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';

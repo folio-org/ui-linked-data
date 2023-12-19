@@ -27,7 +27,7 @@ import {
   getFilteredRecordData,
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
-import { useSimpleLookupData } from './useSimpleLookupData.hook';
+import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 
