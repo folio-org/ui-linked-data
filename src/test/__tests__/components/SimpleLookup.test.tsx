@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { /* act, */ fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import * as LookupConstants from '@src/common/constants/lookup.constants';
@@ -34,7 +34,7 @@ const mockProps = {
   onChange: mockOnChange,
 };
 
-jest.mock('@common/hooks/useSimpleLookupData.hook', () => ({
+jest.mock('@common/hooks/useSimpleLookupData', () => ({
   useSimpleLookupData: () => ({
     getLookupData: mockGetLookupData,
     loadLookupData: mockLoadLookupData,
@@ -43,19 +43,19 @@ jest.mock('@common/hooks/useSimpleLookupData.hook', () => ({
 
 describe('SimpleLookup', () => {
   const renderComponent = () =>
-    act(async () =>
-      render(
-        <RecoilRoot>
-          <SimpleLookupField {...mockProps} />
-        </RecoilRoot>,
-      ),
+    render(
+      <RecoilRoot>
+        <SimpleLookupField {...mockProps} />
+      </RecoilRoot>,
     );
 
   describe('with label', () => {
     test('renders SimpleLookup component', async () => {
-      await renderComponent();
+      mockGetLookupData.mockReturnValueOnce({});
 
-      expect(screen.getByTestId('simple-lookup-container')).toBeInTheDocument();
+      renderComponent();
+
+      expect(await screen.findByTestId('simple-lookup-container')).toBeInTheDocument();
     });
 
     test('loads and displays options', async () => {
@@ -64,7 +64,7 @@ describe('SimpleLookup', () => {
       });
       mockLoadLookupData.mockResolvedValueOnce(mockLookupData);
 
-      await renderComponent();
+      renderComponent();
       const selectElement = screen.queryByText('marva.select');
 
       if (selectElement) {
@@ -82,9 +82,8 @@ describe('SimpleLookup', () => {
         'mock-uri': mockLookupData,
       });
 
-      await renderComponent();
+      renderComponent();
       const selectElement = screen.queryByText('marva.select');
-      selectElement && fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
 
       if (selectElement) {
         fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
@@ -103,8 +102,7 @@ describe('SimpleLookup', () => {
         'mock-uri': mockLookupData,
       });
 
-      await renderComponent();
-
+      renderComponent();
       const selectElement = screen.queryByText('marva.select');
 
       if (selectElement) {
@@ -113,7 +111,7 @@ describe('SimpleLookup', () => {
         fireEvent.click(await screen.findByText(mockOptionLabel));
       }
 
-      expect(mockOnChange).toHaveBeenCalled();
+      await waitFor(() => expect(mockOnChange).toHaveBeenCalled());
     });
   });
 
