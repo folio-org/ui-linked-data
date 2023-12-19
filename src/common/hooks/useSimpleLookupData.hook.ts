@@ -10,15 +10,19 @@ export const useSimpleLookupData = () => {
   const getLookupData = () => lookupData;
 
   const loadLookupData = async (uri: string) => {
-    const response = await loadSimpleLookup(uri);
+    try {
+      const response = await loadSimpleLookup(uri);
 
-    if (!response) return null;
+      if (!response) return null;
 
-    const formattedLookupData = formatLookupOptions(response, uri)?.sort(alphabeticSortLabel);
+      const formattedLookupData = formatLookupOptions(response, uri)?.sort(alphabeticSortLabel);
 
-    setLookupData(lookupData => ({ ...lookupData, [uri]: formattedLookupData }));
+      setLookupData(lookupData => ({ ...lookupData, [uri]: formattedLookupData }));
 
-    return formattedLookupData;
+      return formattedLookupData;
+    } catch (error) {
+      throw error as typeof Error;
+    }
   };
 
   return { getLookupData, loadLookupData };

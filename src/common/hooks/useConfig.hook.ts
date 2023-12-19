@@ -28,6 +28,8 @@ import {
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData.hook';
+import { StatusType } from '@common/constants/status.constants';
+import { UserNotificationFactory } from '@common/services/userNotification';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -39,6 +41,7 @@ export const useConfig = () => {
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
   const { getLookupData, loadLookupData } = useSimpleLookupData();
+  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -677,7 +680,16 @@ export const useConfig = () => {
         lookupData = getLookupData()?.[uri];
 
         if (!lookupData) {
-          lookupData = await loadLookupData(uri);
+          try {
+            lookupData = await loadLookupData(uri);
+          } catch (error) {
+            console.error(`Cannot load data for the Lookup "${propertyLabel}"`, error);
+
+            setCommonStatus(currentStatus => [
+              ...currentStatus,
+              UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-load-simple-lookup-data'),
+            ]);
+          }
         }
       }
 
