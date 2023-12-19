@@ -135,8 +135,9 @@ export const useConfig = () => {
       const recordData =
         isWorkToInstanceField && workToInstanceRecord ? workToInstanceRecord?.[0] : withContentsSelected;
       const selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+      const hasBlockParent = parentEntryType === AdvancedFieldType.block;
 
-      if (selectedRecord?.length > 1 && parentEntryType === AdvancedFieldType.block) {
+      if (selectedRecord?.length > 1 && hasBlockParent) {
         const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
 
         updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
@@ -155,6 +156,7 @@ export const useConfig = () => {
               propertyURI,
               constraints,
               index,
+              hasBlockParent,
             });
           }),
         );
@@ -171,6 +173,7 @@ export const useConfig = () => {
           propertyURI,
           constraints,
           index: recordIndex,
+          hasBlockParent,
         });
       }
     } else {
@@ -650,6 +653,7 @@ export const useConfig = () => {
     propertyURI,
     constraints,
     index,
+    hasBlockParent,
   }: {
     base: Map<string, SchemaEntry>;
     recordData: Array<Record<string, any>>;
@@ -662,12 +666,13 @@ export const useConfig = () => {
     propertyURI: string;
     constraints: Constraints;
     index?: number;
+    hasBlockParent?: boolean;
   }) => {
     if (recordData && userValues) {
       let lookupData: MultiselectOption[] | null = null;
-      const isSimpleLookypType = type === AdvancedFieldType.simple;
+      const isSimpleLookupType = type === AdvancedFieldType.simple;
 
-      if (isSimpleLookypType) {
+      if (isSimpleLookupType) {
         const uri = constraints?.useValuesFrom?.[0];
         lookupData = getLookupData()?.[uri];
 
@@ -680,7 +685,7 @@ export const useConfig = () => {
         generateUserValueContent({ entry, type, uriBFLite, lookupData }),
       );
 
-      if (index !== undefined && !isSimpleLookypType) {
+      if (index !== undefined && hasBlockParent) {
         const selectedRecordData = recordData?.[index];
 
         contents = [generateUserValueContent({ entry: selectedRecordData, type, uriBFLite, lookupData })];

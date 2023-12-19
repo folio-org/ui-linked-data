@@ -55,7 +55,7 @@ export const generateUserValueObject = ({
     const link = entry[uri]?.[0];
     uri = link;
 
-    const lookupDataElement = lookupData.find(({ value }) => value?.uri === link);
+    const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
 
     label = lookupDataElement?.label ?? entry[labelKeyName];
   } else {
