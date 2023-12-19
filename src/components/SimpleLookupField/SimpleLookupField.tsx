@@ -2,11 +2,11 @@ import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { MultiValue } from 'react-select';
-import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData.hook';
-import state from '@state';
 import { useSetRecoilState } from 'recoil';
+import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData.hook';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import state from '@state';
 
 interface Props {
   uri: string;
@@ -72,8 +72,6 @@ export const SimpleLookupField: FC<Props> = ({
         parentUri,
       },
     }));
-
-    console.log('handleOnChange - newValue', newValue);
 
     onChange(uuid, newValue);
     setLocalValue([...options]);

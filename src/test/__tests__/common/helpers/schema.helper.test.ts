@@ -107,7 +107,7 @@ describe('schema.helper', () => {
         },
       };
 
-      const result = generateUserValueObject(entry, type);
+      const result = generateUserValueObject({ entry, type });
 
       expect(result).toEqual(testResult);
     });
@@ -204,7 +204,7 @@ describe('schema.helper', () => {
       const uriBFLite = 'uriBFLite';
       const testResult = { label: 'testEntry' };
 
-      const result = generateUserValueContent(entry, type, uriBFLite);
+      const result = generateUserValueContent({ entry, type, uriBFLite });
 
       expect(result).toEqual(testResult);
     });
@@ -225,7 +225,7 @@ describe('schema.helper', () => {
       };
       jest.spyOn(SchemaHelper, 'generateUserValueObject').mockReturnValue(generatedUserValue);
 
-      const result = generateUserValueContent(entry, type, uriBFLite);
+      const result = generateUserValueContent({ entry, type, uriBFLite });
 
       expect(result).toEqual(generatedUserValue);
     });
