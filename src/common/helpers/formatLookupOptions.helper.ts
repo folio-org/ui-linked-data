@@ -7,7 +7,7 @@ export const formatLookupOptions = (
   data
     .filter(dataItem => {
       const id = dataItem[ID_KEY];
-      return id != parentURI && !id?.includes(BLANK_NODE_TRAIT);
+      return id !== parentURI && !id?.includes(BLANK_NODE_TRAIT);
     })
     .map<MultiselectOption>(option => {
       const optionUri = option[ID_KEY];
