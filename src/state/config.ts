@@ -46,7 +46,12 @@ const collectRecordDataForPreview = atom<boolean>({
 const customEvents = atom<Record<string, string> | null>({
   key: 'config.customEvents',
   default: null,
-})
+});
+
+const lookupData = atom<Record<string, MultiselectOption[]>>({
+  key: 'config.lookupData',
+  default: {},
+});
 
 export default {
   profiles,
@@ -58,4 +63,5 @@ export default {
   locale,
   collectRecordDataForPreview,
   customEvents,
+  lookupData,
 };

@@ -34,12 +34,33 @@ export const generateAdvancedFieldObject = ({
   label?: string;
 }) => (advancedValueField && label ? { [advancedValueField]: [label] } : undefined);
 
-export const generateUserValueObject = (entry: any, type: AdvancedFieldType, uriBFLite?: string) => {
+export const generateUserValueObject = ({
+  entry,
+  type,
+  uriBFLite,
+  lookupData,
+}: {
+  entry: any;
+  type: AdvancedFieldType;
+  uriBFLite?: string;
+  lookupData?: MultiselectOption[] | null;
+}) => {
   const keyName = getLookupLabelKey(uriBFLite);
   const advancedValueField = getAdvancedValuesField(uriBFLite);
   const labelKeyName = advancedValueField || keyName;
-  const uri = BFLITE_URIS.LINK;
-  const label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
+  let uri = BFLITE_URIS.LINK;
+  let label;
+
+  if (type === AdvancedFieldType.simple && lookupData) {
+    const link = entry[uri]?.[0];
+    uri = link;
+
+    const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
+
+    label = lookupDataElement?.label ?? entry[labelKeyName];
+  } else {
+    label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
+  }
 
   return {
     label,
@@ -88,16 +109,22 @@ export const generateRecordForDropdown = ({
   return record;
 };
 
-export const generateUserValueContent = (
-  entry: string | Record<string, any> | Array<Record<string, any>>,
-  type: AdvancedFieldType,
-  uriBFLite?: string,
-) =>
+export const generateUserValueContent = ({
+  entry,
+  type,
+  uriBFLite,
+  lookupData,
+}: {
+  entry: string | Record<string, unknown> | Array<Record<string, unknown>>;
+  type: AdvancedFieldType;
+  uriBFLite?: string;
+  lookupData?: MultiselectOption[] | null;
+}) =>
   typeof entry === 'string'
     ? {
         label: entry,
       }
-    : generateUserValueObject(entry, type, uriBFLite);
+    : generateUserValueObject({ entry, type, uriBFLite, lookupData });
 
 export const getFilteredRecordData = ({
   valueTemplateRefs,

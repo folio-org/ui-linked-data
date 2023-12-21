@@ -55,6 +55,7 @@ export const BASE_LOCALE = {
   'marva.pagination-count': '{startCount} - {endCount} of {totalResultsCount}',
   'marva.yes': 'Yes',
   'marva.no': 'No',
+  'marva.cant-load-simple-lookup-data': 'Cannot save data for a simple lookup',
 };
 
 export const i18nMessages = {
@@ -111,6 +112,7 @@ export const i18nMessages = {
     'marva.pagination-count': '{startCount} - {endCount} von {totalResultsCount}',
     'marva.yes': 'Ja',
     'marva.no': 'Nein',
+    'marva.cant-load-simple-lookup-data': 'Daten können nicht für eine einfache Suche gespeichert werden',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

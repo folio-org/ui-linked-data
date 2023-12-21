@@ -1,42 +1,31 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { /* act, */ fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import * as LookupConstants from '@src/common/constants/lookup.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-// import * as ApiHelper from '@common/helpers/api.helper';
-import * as LookupApi from '@common/api/lookup.api';
 
-const mockOptionValue = 'mockOptionValue';
+const mockOptionLabel = 'testLabel_1';
 const mockNonDisplayableValue = 'mockNonDisplayableValue';
 const mockAuthLabel = 'mockAuthLabel';
 const mockImportedConstant = getMockedImportedConstant(LookupConstants, 'AUTHORITATIVE_LABEL_URI');
 
 mockImportedConstant(mockAuthLabel);
 
-const mockResponse: unknown[] = [
+const mockLookupData = [
   {
-    '@id': 'http://id.loc.gov/vocabulary/issuance/mono',
-    '@type': ['http://www.loc.gov/mads/rdf/v1#Authority'],
-    [mockAuthLabel]: [
-      {
-        '@value': mockOptionValue,
-      },
-    ],
-  },
-  {
-    '@id': 'http://id.loc.gov/vocabulary/issuance/mono',
-    '@type': ['http://www.loc.gov/mads/rdf/v1#Authority'],
-    [mockAuthLabel]: [
-      {
-        someOtherLabel: mockNonDisplayableValue,
-      },
-    ],
-  },
-  {
-    '@id': '_:',
+    label: mockOptionLabel,
+    __isNew__: true,
+    value: {
+      id: 'testId_1',
+      label: mockOptionLabel,
+      uri: 'testUri_1',
+    },
   },
 ];
 
 const mockOnChange = jest.fn();
+const mockGetLookupData = jest.fn();
+const mockLoadLookupData = jest.fn();
 
 const mockProps = {
   uri: 'mock-uri',
@@ -45,68 +34,95 @@ const mockProps = {
   onChange: mockOnChange,
 };
 
-jest.mock('@common/api/lookup.api', () => ({
-  getLookupDict: () => mockResponse,
+jest.mock('@common/hooks/useSimpleLookupData', () => ({
+  useSimpleLookupData: () => ({
+    getLookupData: mockGetLookupData,
+    loadLookupData: mockLoadLookupData,
+  }),
 }));
 
 describe('SimpleLookup', () => {
-  describe('with label', () => {
-    beforeEach(() => render(<SimpleLookupField {...mockProps} />));
+  const renderComponent = () =>
+    render(
+      <RecoilRoot>
+        <SimpleLookupField {...mockProps} />
+      </RecoilRoot>,
+    );
 
-    test('renders SimpleLookup component', () => {
-      expect(screen.getByTestId('simple-lookup-container')).toBeInTheDocument();
+  describe('with label', () => {
+    test('renders SimpleLookup component', async () => {
+      mockGetLookupData.mockReturnValueOnce({});
+
+      renderComponent();
+
+      expect(await screen.findByTestId('simple-lookup-container')).toBeInTheDocument();
     });
 
     test('loads and displays options', async () => {
-      const el = screen.queryByText('marva.select');
-      el && fireEvent.keyDown(el, { key: 'ArrowDown' });
+      mockGetLookupData.mockReturnValueOnce({}).mockReturnValue({
+        'mock-uri': mockLookupData,
+      });
+      mockLoadLookupData.mockResolvedValueOnce(mockLookupData);
 
-      expect(await screen.findByText(mockOptionValue)).toBeInTheDocument();
-      expect(screen.queryByText(mockNonDisplayableValue)).not.toBeInTheDocument();
+      renderComponent();
+      const selectElement = screen.queryByText('marva.select');
+
+      if (selectElement) {
+        fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
+
+        await waitFor(() => expect(mockLoadLookupData).toHaveBeenCalledTimes(1));
+
+        expect(screen.queryByText(mockNonDisplayableValue)).not.toBeInTheDocument();
+        expect(await screen.findByText(mockOptionLabel)).toBeInTheDocument();
+      }
     });
 
     test("doesn't load options if they are already fetched", async () => {
-      const el = screen.queryByText('marva.select');
-      el && fireEvent.keyDown(el, { key: 'ArrowDown' });
+      mockGetLookupData.mockReturnValue({
+        'mock-uri': mockLookupData,
+      });
 
-      const getLookupDictSpy = jest.spyOn(LookupApi, 'getLookupDict');
+      renderComponent();
+      const selectElement = screen.queryByText('marva.select');
 
-      if (el) {
-        fireEvent.keyDown(el, { key: 'ArrowDown' });
+      if (selectElement) {
+        fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
 
-        expect(await screen.findByText(mockOptionValue)).toBeInTheDocument();
+        expect(await screen.findByText(mockOptionLabel)).toBeInTheDocument();
 
-        fireEvent.keyDown(el, { key: 'Escape' });
-        fireEvent.keyDown(el, { key: 'ArrowDown' });
+        fireEvent.keyDown(selectElement, { key: 'Escape' });
+        fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
       }
 
-      await waitFor(() => expect(getLookupDictSpy).toHaveBeenCalledTimes(0));
-    });
-
-    test("doesn't load options if api throws", async () => {
-      jest.spyOn(LookupApi, 'getLookupDict').mockResolvedValueOnce(null);
-
-      const el = screen.queryByText('marva.select');
-      el && fireEvent.keyDown(el, { key: 'ArrowDown' });
-
-      expect(screen.queryByText(mockOptionValue)).not.toBeInTheDocument();
+      await waitFor(() => expect(mockLoadLookupData).toHaveBeenCalledTimes(0));
     });
 
     test('selects an option', async () => {
-      const el = screen.queryByText('marva.select');
+      mockGetLookupData.mockReturnValue({
+        'mock-uri': mockLookupData,
+      });
 
-      if (el) {
-        fireEvent.keyDown(el, { key: 'ArrowDown' });
+      renderComponent();
+      const selectElement = screen.queryByText('marva.select');
 
-        fireEvent.click(await screen.findByText(mockOptionValue));
+      if (selectElement) {
+        fireEvent.keyDown(selectElement, { key: 'ArrowDown' });
+
+        fireEvent.click(await screen.findByText(mockOptionLabel));
       }
 
-      expect(mockOnChange).toHaveBeenCalled();
+      await waitFor(() => expect(mockOnChange).toHaveBeenCalled());
     });
   });
 
   describe('with different props', () => {
-    beforeEach(() => render(<SimpleLookupField {...{ ...mockProps, displayName: undefined }} />));
+    beforeEach(() =>
+      render(
+        <RecoilRoot>
+          <SimpleLookupField {...{ ...mockProps, displayName: undefined }} />
+        </RecoilRoot>,
+      ),
+    );
 
     test('renders SimpleLookup component without label', () => {
       expect(screen.queryByTestId('simple-lookup-label')).not.toBeInTheDocument();

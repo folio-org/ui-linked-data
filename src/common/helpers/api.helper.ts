@@ -1,4 +1,4 @@
-import { getLookupDict } from "@common/api/lookup.api";
+import { getLookupDict } from '@common/api/lookup.api';
 
 export const loadSimpleLookup = async (
   uris: string | string[],
