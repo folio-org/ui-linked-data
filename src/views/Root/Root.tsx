@@ -13,14 +13,14 @@ export const Root = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
 
   return (
-    <div data-testid="root">
+    <div data-testid="root" id='app-root'>
       <Nav />
       <CommonStatus />
       <div className="main-content">
         <Outlet />
 
         {mainRoutePattern && (
-          <div data-testid="main">
+          <div data-testid="main" className='welcome-screen'>
             <FormattedMessage id="marva.welcome" />
           </div>
         )}

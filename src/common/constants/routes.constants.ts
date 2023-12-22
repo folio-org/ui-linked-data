@@ -9,7 +9,7 @@ export const ROUTES = {
   },
   SEARCH: {
     uri: '/search',
-    name: 'marva.search',
+    name: 'marva.search-resource',
   },
   RESOURCE_CREATE: {
     uri: '/resources/add-new',

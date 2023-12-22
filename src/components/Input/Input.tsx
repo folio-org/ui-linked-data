@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ChangeEvent, FC } from 'react';
+import { ChangeEvent, FC, HTMLInputTypeAttribute } from 'react';
 import './Input.scss';
 
 type InputProps = {
@@ -10,6 +10,7 @@ type InputProps = {
   testid?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onPressEnter?: VoidFunction;
+  type?: HTMLInputTypeAttribute;
 };
 
 export const Input: FC<InputProps> = ({
@@ -20,6 +21,7 @@ export const Input: FC<InputProps> = ({
   testid,
   onChange,
   onPressEnter,
+  type,
 }) => {
   return (
     <input
@@ -36,6 +38,7 @@ export const Input: FC<InputProps> = ({
           (target as HTMLElement).blur();
         }
       }}
+      type={type}
     />
   );
 };

@@ -5,7 +5,9 @@ export const BASE_LOCALE = {
   'marva.welcome': 'Welcome to the new Marva Editor.',
   'marva.start-editing': 'Start editing.',
   'marva.dashboard': 'My dashboard',
-  'marva.search': 'Search resources',
+  'marva.search': 'Search',
+  'marva.reset': 'Reset',
+  'marva.search-resource': 'Search resources',
   'marva.create': 'Create resource',
   'marva.edit': 'Edit resource',
   'marva.main': 'Main',
@@ -15,6 +17,8 @@ export const BASE_LOCALE = {
   'marva.no-available-rds': 'No available resource descriptions.',
   'marva.resources': 'Resources:',
   'marva.search-by': 'Search By',
+  'marva.search-and-filter': 'Search & filter',
+  'marva.enter-search-criteria': 'Enter search criteria to start search',
   'marva.search-no-rds-match': 'No resource descriptions match your query',
   'marva.search-by-sth': 'Search by{by}...',
   'marva.error-fetching': 'Error fetching data',
@@ -23,8 +27,8 @@ export const BASE_LOCALE = {
   'marva.isbn-lccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
   'marva.lccn': 'LCCN',
-  'marva.title': 'TITLE', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
-  'marva.contributor': 'CONTRIBUTOR', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+  'marva.title': 'Title', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
+  'marva.contributor': 'Contributor', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.author': 'Author',
   'marva.pub-date': 'Publication Date',
   'marva.edition': 'Edition',
@@ -49,6 +53,7 @@ export const BASE_LOCALE = {
   'marva.search-select-index': 'Please select an index',
   'marva.search-invalid-lccn': 'LCCN is invalid, please correct',
   'marva.advanced-search': 'Advanced search',
+  'marva.advanced': 'Advanced',
   'marva.cancel': 'Cancel',
   'marva.resource-id': 'Resource ID',
   'marva.loading': 'Loading...',
@@ -56,6 +61,19 @@ export const BASE_LOCALE = {
   'marva.yes': 'Yes',
   'marva.no': 'No',
   'marva.cant-load-simple-lookup-data': 'Cannot save data for a simple lookup',
+  'marva.publish-date': 'Publish date',
+  'marva.format': 'Format',
+  'marva.supressed': 'Supressed',
+  'marva.not-supressed': 'Not supressed',
+  'marva.volume': 'Volume',
+  'marva.ebook': 'eBook',
+  'marva.all-time': 'All time',
+  'marva.past-12-months': 'Past 12 months',
+  'marva.past-10-yrs': 'Past 10 years',
+  'marva.past-5-yrs': 'Past 5 years',
+  'marva.custom-range': 'Custom range',
+  'marva.all': 'All',
+  'marva.online-resource': 'Online resource',
 };
 
 export const i18nMessages = {

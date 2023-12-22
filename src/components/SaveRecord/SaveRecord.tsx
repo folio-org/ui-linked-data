@@ -1,14 +1,15 @@
 import { FC, memo } from 'react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { FormattedMessage } from 'react-intl';
+import { Button } from '@components/Button';
 
 const SaveRecord: FC = () => {
   const { saveRecord } = useRecordControls();
 
   return (
-    <button data-testid="save-record-button" onClick={saveRecord}>
+    <Button data-testid="save-record-button" onClick={saveRecord}>
       <FormattedMessage id="marva.save-rd" />
-    </button>
+    </Button>
   );
 };
 

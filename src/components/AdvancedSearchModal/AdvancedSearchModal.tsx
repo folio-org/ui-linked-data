@@ -19,7 +19,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ isOpen, toggleIsOpen }) =>
     <Modal
       isOpen={isOpen}
       title={formatMessage({ id: 'marva.advanced-search' })}
-      submitButtonLabel={formatMessage({ id: 'marva.search' })}
+      submitButtonLabel={formatMessage({ id: 'marva.search-resource' })}
       cancelButtonLabel={formatMessage({ id: 'marva.cancel' })}
       onClose={closeModal}
       onSubmit={closeModal}

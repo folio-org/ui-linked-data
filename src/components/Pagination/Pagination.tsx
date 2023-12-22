@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import LeftIcon from '@src/assets/chevron-left.svg?react';
 import RightIcon from '@src/assets/chevron-right.svg?react';
 import './Pagination.scss';
+import { Button } from '@components/Button';
 
 export type Props = {
   currentPage?: number;
@@ -32,14 +33,14 @@ export const Pagination: FC<Props> = memo(
 
     return (
       <div className="pagination" data-testid="pagination">
-        <button
+        <Button
           onClick={onPrevPageClick}
           disabled={isFirstPage}
           className="pagination-button"
           data-testid="backward-button"
         >
           <LeftIcon />
-        </button>
+        </Button>
         <div>
           <FormattedMessage
             id="marva.pagination-count"
@@ -50,14 +51,14 @@ export const Pagination: FC<Props> = memo(
             }}
           />
         </div>
-        <button
+        <Button
           onClick={onNextPageClick}
           disabled={isDisabledNext}
           className="pagination-button"
           data-testid="forward-button"
         >
           <RightIcon />
-        </button>
+        </Button>
       </div>
     );
   },
