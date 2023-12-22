@@ -1,0 +1,118 @@
+@import '@common/styles/common.scss';
+
+.button {
+  @include focused-outline();
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25em;
+  border-radius: $btn-border-radius;
+  height: $btn-primary-height;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: box-shadow 0.25s;
+
+  &:disabled {
+    color: $btn-disabled-contents;
+    background-color: $btn-disabled;
+    cursor: not-allowed;
+
+    > svg *, * {
+      fill: $btn-disabled-contents;
+    }
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+  &-primary {
+    background-color: $btn-primary;
+    color: $btn-primary-contents;
+
+    &:hover:not(:disabled) {
+      background-color: $btn-primary-hover;
+      box-shadow: $btn-primary-hover-drop-shadow
+    }
+
+    &:active:not(:disabled) {
+      background-color: $btn-primary-active;
+    }
+
+    &:focus,
+    &:focus-visible {
+      border: 1px solid black;
+      border-style: inset;
+    }
+  }
+
+  &-text,
+  &-link {
+    background-color: inherit;
+    padding: 0;
+
+    &:disabled {
+      background-color: initial;
+
+      &:hover {
+        background-color: initial;
+      }
+    }
+
+    &:hover:not(:focus, :disabled) {
+      box-shadow: none;
+    }
+  }
+
+  &-text {
+    padding: 0 0.5em;
+    height: 30px;
+
+    &:hover {
+      background-color: $btn-text-focus;
+    }
+
+    &:focus {
+      background-color: $btn-text-focus;
+      text-decoration: underline;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $btn-text-active;
+      text-decoration: underline;
+      color: $btn-primary-contents;
+
+      > svg *,
+      * {
+        fill: $btn-primary-contents;
+      }
+    }
+  }
+
+  &-link {
+    color: $btn-primary;
+    height: 24px;
+
+    &:hover {
+      text-decoration: underline;
+      color: $btn-primary-hover;
+    }
+
+    &:focus,
+    &:focus-visible {
+      text-decoration: underline;
+      box-shadow: none;
+    }
+
+    &:active:not(:disabled) {
+      color: $btn-link-active;
+      text-decoration: underline;
+    }
+  }
+}

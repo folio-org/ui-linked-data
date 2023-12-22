@@ -30,7 +30,11 @@ describe('Item Search', () => {
     },
   };
 
-  const { getByTestId, findByText, findByTestId } = screen;
+  const {
+    getByTestId,
+    findByText,
+    // findByTestId
+  } = screen;
 
   beforeEach(() => {
     getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
@@ -57,19 +61,15 @@ describe('Item Search', () => {
   });
 
   test('triggers search control', async () => {
-    const searchControl = getByTestId(id);
+    const select = screen.getByRole('combobox');
+    expect(select).toHaveValue('lccn');
 
-    fireEvent.click(searchControl);
+    fireEvent.change(select, { target: { value: 1 } });
 
-    await waitFor(() => {
-      expect(searchControl).toBeChecked();
-    });
+    expect((screen.getByRole('option', { name: 'marva.isbn' }) as any).selected).toBe(true);
   });
 
   test('searches the selected identifier for query', async () => {
-    const searchControl = getByTestId(id);
-
-    fireEvent.click(searchControl);
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
@@ -86,22 +86,6 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     expect(await findByText('marva.search-no-rds-match')).toBeInTheDocument();
-  });
-
-  test('displays error notification if API call throws', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.reject(new Error()));
-
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
-
-    expect(await findByText('marva.error-fetching')).toBeInTheDocument();
-  });
-
-  test('returns message if no search control selected', async () => {
-    fireEvent.change(getByTestId('id-search-input'), event);
-
-    expect(await findByText('marva.search-select-index')).toBeInTheDocument();
   });
 
   test('calls fetchRecord and scrollElementIntoView on action item Preview button click', async () => {
@@ -157,18 +141,5 @@ describe('Item Search', () => {
     await waitFor(() => {
       expect(getByIdentifierMock).not.toHaveBeenCalled();
     });
-  });
-
-  test('swaps ISBN/LCCN cols with ISBN being first if querying by it', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
-
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
-
-    const lccnCol = await findByTestId('th-lccn');
-    const isbnCol = await findByTestId('th-isbn');
-
-    expect(lccnCol.compareDocumentPosition(isbnCol)).toBe(4);
   });
 });

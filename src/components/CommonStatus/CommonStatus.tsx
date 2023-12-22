@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import './CommonStatus.scss';
+import { Button } from '@components/Button';
 
 const DELETE_TIMEOUT = 5000;
 
@@ -29,7 +30,7 @@ export const CommonStatus: FC = () => {
       {statusMessages.map(({ id, type, message }) => (
         <div key={id} className={classNames(['status-message', type])}>
           <FormattedMessage id={message} defaultMessage={message} />{' '}
-          <button onClick={() => deleteMessage(id)}>x</button>
+          <Button onClick={() => deleteMessage(id)}>x</Button>
         </div>
       ))}
     </div>

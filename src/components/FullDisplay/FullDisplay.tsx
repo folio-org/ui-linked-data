@@ -6,6 +6,7 @@ import { ScrollToTop } from '@components/ScrollToTop';
 import { Preview } from '@components/Preview';
 import state from '@state';
 import './FullDisplay.scss';
+import { Button } from '@components/Button';
 
 export const FullDisplay = () => {
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
@@ -21,12 +22,12 @@ export const FullDisplay = () => {
               <Link data-testid="preview-fetch" to={generateEditResourceUrl(id)} className="button">
                 ✏️
               </Link>
-              <button
+              <Button
                 data-testid="preview-remove"
                 onClick={() => setPreviewContent(previewContent.filter(entry => entry.id !== id))}
               >
                 ❌
-              </button>
+              </Button>
             </div>
           </div>
           {Object.keys(userValues).length ? (

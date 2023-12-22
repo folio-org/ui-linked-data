@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { usePagination } from '@common/hooks/usePagination';
 import { StatusType } from '@common/constants/status.constants';
@@ -22,6 +22,8 @@ import { Table, Row } from '@components/Table';
 import { Pagination } from '@components/Pagination';
 import state from '@state';
 import './ItemSearch.scss';
+import GeneralSearch from '@src/assets/general-search.svg?react';
+import { Button } from '@components/Button';
 
 const initHeader: Row = {
   actionItems: {
@@ -59,14 +61,21 @@ type Props = {
   fetchRecord: (id: string, collectPreviewValues?: boolean) => Promise<void>;
 };
 
+const EmptyPlaceholder = () => (
+  <div className="empty-placeholder">
+    <GeneralSearch />
+    <FormattedMessage id="marva.enter-search-criteria" />
+  </div>
+);
+
 export const ItemSearch = ({ fetchRecord }: Props) => {
   const navElemRef = useRef<Element | null>();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const fullDisplayContainerElemRef = useRef<Element | null>();
-  const [searchBy, setSearchBy] = useState<SearchIdentifiers | null>(null);
-  const [query, setQuery] = useState('');
-  const [data, setData] = useState<null | Row[]>(null);
-  const [message, setMessage] = useState('');
+  const searchBy = useRecoilValue(state.search.index);
+  const query = useRecoilValue(state.search.query);
+  const [message, setMessage] = useRecoilState(state.search.message);
+  const [data, setData] = useRecoilState(state.search.data);
   const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
@@ -118,7 +127,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
       actionItems: {
         children: (
           <div className="action-items__container">
-            <button
+            <Button
               data-testid="preview-button"
               onClick={async event => {
                 event.stopPropagation();
@@ -145,7 +154,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
               disabled={infoButtonDisabled ?? Object.keys(previewContent).length > 1}
             >
               ℹ️
-            </button>
+            </Button>
             <Link
               data-testid="edit-button"
               to={generateEditResourceUrl((row.__meta as Record<string, any>).id)}
@@ -167,7 +176,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
       canSwapRows(SearchIdentifiers.ISBN, SearchIdentifiers.LCCN) ||
       canSwapRows(SearchIdentifiers.LCCN, SearchIdentifiers.ISBN)
     ) {
-      setHeader(swapRowPositions(header, SearchIdentifiers.LCCN, SearchIdentifiers.ISBN));
+      setHeader(header => swapRowPositions(header, SearchIdentifiers.LCCN, SearchIdentifiers.ISBN));
     }
   };
 
@@ -232,42 +241,31 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
 
   return (
     <div data-testid="id-search" className="item-search">
-      <strong>
-        <FormattedMessage id="marva.search-by" />
-      </strong>
-      <SearchControls
-        searchBy={searchBy}
-        setSearchBy={setSearchBy}
-        query={query}
-        setQuery={setQuery}
-        setMessage={setMessage}
-        clearMessage={clearMessage}
-        submitSearch={submitSearch}
-      />
-      <div>
-        {message ? (
+      <SearchControls submitSearch={submitSearch} clearPagination={clearPagination} />
+      <div className="item-search-content-container">
+        {message && (
           <div>
             <FormattedMessage id={message} />
           </div>
-        ) : (
-          data && (
-            <>
-              <Table onRowClick={onRowClick} header={header} data={data} className="table-with-pagination" />
-              {pageMetadata.totalElements > 0 && (
-                <Pagination
-                  currentPage={currentPageNumber}
-                  totalPages={pageMetadata.totalPages}
-                  pageSize={SEARCH_RESULTS_LIMIT}
-                  totalResultsCount={pageMetadata.totalElements}
-                  onPrevPageClick={onPrevPageClick}
-                  onNextPageClick={onNextPageClick}
-                />
-              )}
-            </>
-          )
         )}
+        {data && (
+          <>
+            <Table onRowClick={onRowClick} header={header} data={data} className="table-with-pagination" />
+            {pageMetadata.totalElements > 0 && (
+              <Pagination
+                currentPage={currentPageNumber}
+                totalPages={pageMetadata.totalPages}
+                pageSize={SEARCH_RESULTS_LIMIT}
+                totalResultsCount={pageMetadata.totalElements}
+                onPrevPageClick={onPrevPageClick}
+                onNextPageClick={onNextPageClick}
+              />
+            )}
+          </>
+        )}
+        {!data && !message && <EmptyPlaceholder />}
+        <FullDisplay />
       </div>
-      <FullDisplay />
       <AdvancedSearchModal
         isOpen={isAdvancedSearchOpen}
         toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}

@@ -63,7 +63,8 @@ class MarvaNextComponent extends HTMLElement {
     const mountElement = document.createElement('div');
     // TODO: used for Shadow DOM
     // mountElement.setAttribute('id', 'editor-root');
-
+    
+    mountElement.className = 'embed-container';
     this.mountElement = mountElement;
 
     return mountElement;

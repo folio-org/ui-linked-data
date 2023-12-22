@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import Times16 from '@src/assets/times-16.svg?react';
 import './Modal.scss';
+import { Button } from '@components/Button';
 // TODO: Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -57,18 +58,18 @@ const Modal: FC<Props> = ({
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className="modal-header">
               <h3>{title}</h3>
-              <button onClick={onClose} className="close-button">
+              <Button onClick={onClose} className="close-button">
                 <Times16 />
-              </button>
+              </Button>
             </div>
             {!!children && children}
             <div className="modal-controls">
-              <button onClick={onCancel} data-testid="modal-button-cancel">
+              <Button onClick={onCancel} data-testid="modal-button-cancel">
                 {cancelButtonLabel}
-              </button>
-              <button disabled={submitButtonDisabled} onClick={onSubmit} data-testid="modal-button-submit">
+              </Button>
+              <Button disabled={submitButtonDisabled} onClick={onSubmit} data-testid="modal-button-submit">
                 {submitButtonLabel}
-              </button>
+              </Button>
             </div>
           </div>
         </>,

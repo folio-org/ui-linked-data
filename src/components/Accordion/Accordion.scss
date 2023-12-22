@@ -1,0 +1,33 @@
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &-toggle {
+    padding: 0;
+    width: 100%;
+
+    &-button {
+      padding: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    &-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 4px 0;
+      width: 100%;
+
+      .icon {
+        height: 1rem;
+
+        &-collapsed {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+}

@@ -1,29 +1,21 @@
 .item-search {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  height: 100%;
 
-  .search-input {
-    width: auto;
-    margin-right: 1rem;
-  }
-
-  .search-controls {
+  .empty-placeholder {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
     gap: 1rem;
-
-    input {
-      margin-right: 0.5rem;
-    }
+    font-weight: 600;
+    margin: auto;
   }
 
-  .action-items {
-    width: 0.1rem;
-    white-space: nowrap;
-
-    &__container {
-      display: flex;
-      gap: 0.5rem;
-    }
+  &-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    width: 100%;
   }
 }
