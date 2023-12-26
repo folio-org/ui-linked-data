@@ -31,11 +31,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
   const resetControls = useResetRecoilState(state.search.limiters);
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    if (!searchBy) {
-      setMessage('marva.search-select-index');
-      return;
-    }
-
     setMessage('');
     setQuery(value);
   };
