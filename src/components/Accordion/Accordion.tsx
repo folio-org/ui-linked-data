@@ -21,6 +21,7 @@ export const Accordion: FC<Accordion> = ({ title, children }) => {
           aria-expanded={isOpen}
           onClick={handleVisibilityToggle}
           className="accordion-toggle-button"
+          data-testid="accordion-toggle-button"
         >
           <div className="accordion-toggle-container">
             <CaretDown className={classNames({ icon: true, ['icon-collapsed']: !isOpen })} />
@@ -28,7 +29,9 @@ export const Accordion: FC<Accordion> = ({ title, children }) => {
           </div>
         </Button>
       </div>
-      <div hidden={!isOpen}>{children}</div>
+      <div data-testid="accordion-contents" hidden={!isOpen}>
+        {children}
+      </div>
     </section>
   );
 };

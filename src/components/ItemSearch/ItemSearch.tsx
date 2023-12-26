@@ -233,8 +233,6 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
   }, [currentPageNumber]);
 
   const submitSearch = () => {
-    if (!searchBy) return;
-
     clearPagination();
     fetchData(searchBy, query, 0);
   };
