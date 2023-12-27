@@ -205,8 +205,12 @@ export const BFLITE_RECORD_EXAMPLE = {
       'http://bibfra.me/vocab/marc/issuance': ['single unit'],
       _notes: [
         {
-          value: 'with note 1',
-          type: 'http://bibfra.me/vocab/marc/withNote',
+          value: ['with note 1'],
+          type: ['1 http://bibfra.me/vocab/marc/withNote'],
+        },
+        {
+          value: ['with note 2'],
+          type: ['2 http://bibfra.me/vocab/marc/withNote'],
         },
       ],
     },

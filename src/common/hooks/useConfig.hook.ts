@@ -143,7 +143,7 @@ export const useConfig = () => {
       let selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
 
       if (nonBFMappedGroup) {
-        selectedRecord = recordData?.[nonBFMappedGroup.data.container.key];
+        selectedRecord = recordData?.[nonBFMappedGroup.data?.[propertyURI]?.key];
       }
 
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
@@ -322,7 +322,7 @@ export const useConfig = () => {
           const mappedGroup = NON_BF_GROUP_TYPE[propertyURI];
           const isNonBFMappedGroup =
             mappedGroup && parentEntryType === AdvancedFieldType.block && type === AdvancedFieldType.groupComplex;
-          const selectedNoteRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
+          const selectedNonBFRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
           const nonBFMappedGroup = isNonBFMappedGroup
             ? {
                 uri: propertyURI,
@@ -330,13 +330,15 @@ export const useConfig = () => {
               }
             : undefined;
 
-          if (selectedRecord?.length) {
-            const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
+          if (selectedRecord?.length || selectedNonBFRecord?.length > 1) {
+            const selectedRecordData = selectedNonBFRecord ?? selectedRecord;
+
+            const copiedGroupsUuid = selectedRecordData.map(() => uuidv4());
 
             updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
             await Promise.all(
-              selectedRecord.map(async (recordData: Record<string, any> | Array<any>, index: string) => {
+              selectedRecordData.map(async (recordData: Record<string, any> | Array<any>, index: string) => {
                 await processGroup({
                   uuid: copiedGroupsUuid[index],
                   entry,
@@ -348,15 +350,11 @@ export const useConfig = () => {
                   record: recordData,
                   userValues,
                   hasNoRootWrapper,
+                  nonBFMappedGroup,
                 });
               }),
             );
-          } else if (
-            hasNoRootWrapper &&
-            (filteredRecordData?.length ||
-              (isTemporaryComplexGroup && selectedRecord) ||
-              (isNonBFMappedGroup && selectedNoteRecord?.length > 1))
-          ) {
+          } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
             await processGroupsWithoutWrapper({
               valueTemplateRefs,
               base,
@@ -369,7 +367,6 @@ export const useConfig = () => {
               selectedEntries,
               userValues,
               hasNoRootWrapper,
-              nonBFMappedGroup,
             });
           } else {
             await processGroup({
@@ -380,7 +377,7 @@ export const useConfig = () => {
               path,
               templates,
               selectedEntries,
-              record: selectedRecord,
+              record: selectedNonBFRecord?.length ? selectedNonBFRecord[0] : selectedRecord,
               userValues,
               hasNoRootWrapper,
               nonBFMappedGroup,
@@ -613,7 +610,6 @@ export const useConfig = () => {
     selectedEntries,
     userValues,
     hasNoRootWrapper,
-    nonBFMappedGroup,
   }: {
     valueTemplateRefs: string[];
     base: Map<string, SchemaEntry>;
@@ -626,7 +622,6 @@ export const useConfig = () => {
     selectedEntries: Array<string>;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
-    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     const copiedUuids: Array<Array<string>> = generateCopiedGroupUuids({
       valueTemplateRefs,
@@ -642,9 +637,7 @@ export const useConfig = () => {
     await Promise.all(
       valueTemplateRefs.map(async (templateRef, templateRefIndex: number) => {
         const entryData = templates[templateRef];
-        let { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
-
-        uriBFLite = nonBFMappedGroup ? nonBFMappedGroup.data?.container?.key : uriBFLite;
+        const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
         if (!uriBFLite) return;
 

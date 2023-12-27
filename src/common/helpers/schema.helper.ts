@@ -55,17 +55,6 @@ export const generateUserValueObject = ({
   let uri = BFLITE_URIS.LINK;
   let label;
 
-  if (nonBFMappedGroup && type === AdvancedFieldType.literal) {
-    return {
-      label: propertyURI ? entry[nonBFMappedGroup.data[propertyURI]?.key] : '',
-      meta: {
-        parentURI: '',
-        uri: '',
-        type,
-      },
-    };
-  }
-
   if (type === AdvancedFieldType.simple && lookupData) {
     const isSimpleLookupNonBFField = nonBFMappedGroup && type === AdvancedFieldType.simple;
     const isNonBFTypeKey = nonBFMappedGroup && propertyURI ? nonBFMappedGroup.data[propertyURI]?.key : '';
