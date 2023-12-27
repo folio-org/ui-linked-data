@@ -17,7 +17,7 @@ import {
   TEMPORARY_URIS_WITHOUT_MAPPING,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, NON_BF_GROUP_TYPE, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getUris } from '@common/helpers/bibframe.helper';
 import {
@@ -30,6 +30,7 @@ import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -81,6 +82,7 @@ export const useConfig = () => {
     hasHiddenParent?: boolean;
     userValues?: UserValues;
     parentEntryType?: AdvancedFieldType;
+    nonBFMappedGroup?: NonBFMappedGroup;
   };
 
   const traverseProfile = async ({
@@ -99,6 +101,7 @@ export const useConfig = () => {
     hasHiddenParent = false,
     userValues,
     parentEntryType,
+    nonBFMappedGroup,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -137,7 +140,12 @@ export const useConfig = () => {
       const workToInstanceRecord = withContentsSelected?.[BFLITE_URIS.INSTANTIATES];
       const recordData =
         isWorkToInstanceField && workToInstanceRecord ? workToInstanceRecord?.[0] : withContentsSelected;
-      const selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+      let selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+
+      if (nonBFMappedGroup) {
+        selectedRecord = recordData?.[nonBFMappedGroup.data.container.key];
+      }
+
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
 
       if (selectedRecord?.length > 1 && hasBlockParent) {
@@ -160,6 +168,7 @@ export const useConfig = () => {
               constraints,
               index,
               hasBlockParent,
+              nonBFMappedGroup,
             });
           }),
         );
@@ -177,6 +186,7 @@ export const useConfig = () => {
           constraints,
           index: recordIndex,
           hasBlockParent,
+          nonBFMappedGroup,
         });
       }
     } else {
@@ -267,6 +277,7 @@ export const useConfig = () => {
                 hasHiddenParent: isHiddenType,
                 userValues,
                 parentEntryType: type,
+                nonBFMappedGroup,
               });
             }),
           );
@@ -308,6 +319,17 @@ export const useConfig = () => {
             selectedRecord,
           });
 
+          const mappedGroup = NON_BF_GROUP_TYPE[propertyURI];
+          const isNonBFMappedGroup =
+            mappedGroup && parentEntryType === AdvancedFieldType.block && type === AdvancedFieldType.groupComplex;
+          const selectedNoteRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
+          const nonBFMappedGroup = isNonBFMappedGroup
+            ? {
+                uri: propertyURI,
+                data: mappedGroup,
+              }
+            : undefined;
+
           if (selectedRecord?.length) {
             const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
 
@@ -329,7 +351,12 @@ export const useConfig = () => {
                 });
               }),
             );
-          } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
+          } else if (
+            hasNoRootWrapper &&
+            (filteredRecordData?.length ||
+              (isTemporaryComplexGroup && selectedRecord) ||
+              (isNonBFMappedGroup && selectedNoteRecord?.length > 1))
+          ) {
             await processGroupsWithoutWrapper({
               valueTemplateRefs,
               base,
@@ -342,6 +369,7 @@ export const useConfig = () => {
               selectedEntries,
               userValues,
               hasNoRootWrapper,
+              nonBFMappedGroup,
             });
           } else {
             await processGroup({
@@ -355,6 +383,7 @@ export const useConfig = () => {
               record: selectedRecord,
               userValues,
               hasNoRootWrapper,
+              nonBFMappedGroup,
             });
           }
 
@@ -413,7 +442,8 @@ export const useConfig = () => {
     setSelectedProfile(monograph);
     setUserValues({});
 
-    const recordData = record?.resource || {};
+    // const recordData = record?.resource || {};
+    const recordData = BFLITE_RECORD_EXAMPLE.resource;
     const { base, userValues, initKey } = await buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {
@@ -469,6 +499,7 @@ export const useConfig = () => {
     hasNoRootWrapper,
     hasSelectedRecord,
     selectedRecordUriBFLite,
+    nonBFMappedGroup,
   }: {
     uuid: string;
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
@@ -483,6 +514,7 @@ export const useConfig = () => {
     hasNoRootWrapper: boolean;
     hasSelectedRecord?: boolean;
     selectedRecordUriBFLite?: string;
+    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     const {
       propertyURI,
@@ -558,6 +590,7 @@ export const useConfig = () => {
             setIsSelectedOption: setValue,
             selectedRecordUriBFLite,
           },
+          nonBFMappedGroup,
         });
       }),
     );
@@ -580,6 +613,7 @@ export const useConfig = () => {
     selectedEntries,
     userValues,
     hasNoRootWrapper,
+    nonBFMappedGroup,
   }: {
     valueTemplateRefs: string[];
     base: Map<string, SchemaEntry>;
@@ -592,6 +626,7 @@ export const useConfig = () => {
     selectedEntries: Array<string>;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
+    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     const copiedUuids: Array<Array<string>> = generateCopiedGroupUuids({
       valueTemplateRefs,
@@ -607,7 +642,9 @@ export const useConfig = () => {
     await Promise.all(
       valueTemplateRefs.map(async (templateRef, templateRefIndex: number) => {
         const entryData = templates[templateRef];
-        const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
+        let { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
+
+        uriBFLite = nonBFMappedGroup ? nonBFMappedGroup.data?.container?.key : uriBFLite;
 
         if (!uriBFLite) return;
 
@@ -657,6 +694,7 @@ export const useConfig = () => {
     constraints,
     index,
     hasBlockParent,
+    nonBFMappedGroup,
   }: {
     base: Map<string, SchemaEntry>;
     recordData: Array<Record<string, any>>;
@@ -670,6 +708,7 @@ export const useConfig = () => {
     constraints: Constraints;
     index?: number;
     hasBlockParent?: boolean;
+    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     if (recordData && userValues) {
       let lookupData: MultiselectOption[] | null = null;
@@ -694,13 +733,22 @@ export const useConfig = () => {
       }
 
       let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
-        generateUserValueContent({ entry, type, uriBFLite, lookupData }),
+        generateUserValueContent({ entry, type, uriBFLite, propertyURI, lookupData, nonBFMappedGroup }),
       );
 
       if (index !== undefined && hasBlockParent) {
         const selectedRecordData = recordData?.[index];
 
-        contents = [generateUserValueContent({ entry: selectedRecordData, type, uriBFLite, lookupData })];
+        contents = [
+          generateUserValueContent({
+            entry: selectedRecordData,
+            type,
+            uriBFLite,
+            propertyURI,
+            lookupData,
+            nonBFMappedGroup,
+          }),
+        ];
       }
 
       userValues[uuid] = {

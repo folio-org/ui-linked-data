@@ -38,22 +38,43 @@ export const generateUserValueObject = ({
   entry,
   type,
   uriBFLite,
+  propertyURI,
   lookupData,
+  nonBFMappedGroup,
 }: {
   entry: any;
   type: AdvancedFieldType;
   uriBFLite?: string;
+  propertyURI?: string;
   lookupData?: MultiselectOption[] | null;
+  nonBFMappedGroup?: NonBFMappedGroup;
 }) => {
   const keyName = getLookupLabelKey(uriBFLite);
   const advancedValueField = getAdvancedValuesField(uriBFLite);
-  const labelKeyName = advancedValueField || keyName;
+  let labelKeyName = advancedValueField || keyName;
   let uri = BFLITE_URIS.LINK;
   let label;
 
+  if (nonBFMappedGroup && type === AdvancedFieldType.literal) {
+    return {
+      label: propertyURI ? entry[nonBFMappedGroup.data[propertyURI]?.key] : '',
+      meta: {
+        parentURI: '',
+        uri: '',
+        type,
+      },
+    };
+  }
+
   if (type === AdvancedFieldType.simple && lookupData) {
-    const link = entry[uri]?.[0];
+    const isSimpleLookupNonBFField = nonBFMappedGroup && type === AdvancedFieldType.simple;
+    const isNonBFTypeKey = nonBFMappedGroup && propertyURI ? nonBFMappedGroup.data[propertyURI]?.key : '';
+    const link = isSimpleLookupNonBFField && propertyURI ? entry[isNonBFTypeKey] : entry[uri]?.[0];
     uri = link;
+
+    if (isSimpleLookupNonBFField) {
+      labelKeyName = isNonBFTypeKey;
+    }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
 
@@ -113,18 +134,22 @@ export const generateUserValueContent = ({
   entry,
   type,
   uriBFLite,
+  propertyURI,
   lookupData,
+  nonBFMappedGroup,
 }: {
   entry: string | Record<string, unknown> | Array<Record<string, unknown>>;
   type: AdvancedFieldType;
   uriBFLite?: string;
+  propertyURI?: string;
   lookupData?: MultiselectOption[] | null;
+  nonBFMappedGroup?: NonBFMappedGroup;
 }) =>
   typeof entry === 'string'
     ? {
         label: entry,
       }
-    : generateUserValueObject({ entry, type, uriBFLite, lookupData });
+    : generateUserValueObject({ entry, type, uriBFLite, propertyURI, lookupData, nonBFMappedGroup });
 
 export const getFilteredRecordData = ({
   valueTemplateRefs,
