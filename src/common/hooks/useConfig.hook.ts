@@ -30,7 +30,6 @@ import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -439,8 +438,7 @@ export const useConfig = () => {
     setSelectedProfile(monograph);
     setUserValues({});
 
-    // const recordData = record?.resource || {};
-    const recordData = BFLITE_RECORD_EXAMPLE.resource;
+    const recordData = record?.resource || {};
     const { base, userValues, initKey } = await buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {

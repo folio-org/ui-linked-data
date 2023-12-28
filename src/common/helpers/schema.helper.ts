@@ -5,14 +5,15 @@ import {
   BFLITE_URIS,
   ADVANCED_FIELDS,
   TEMP_BF2_TO_BFLITE_MAP,
+  NOTE_TYPE_MAP,
 } from '@common/constants/bibframeMapping.constants';
-import { getUris } from './bibframe.helper';
 import {
   IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
   TEMPORARY_URIS_WITHOUT_MAPPING,
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
 import { checkIdentifierAsValue } from '@common/helpers/record.helper';
+import { getUris } from './bibframe.helper';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -56,18 +57,26 @@ export const generateUserValueObject = ({
   let label;
 
   if (type === AdvancedFieldType.simple && lookupData) {
-    const isSimpleLookupNonBFField = nonBFMappedGroup && type === AdvancedFieldType.simple;
     const isNonBFTypeKey = nonBFMappedGroup && propertyURI ? nonBFMappedGroup.data[propertyURI]?.key : '';
-    const link = isSimpleLookupNonBFField && propertyURI ? entry[isNonBFTypeKey] : entry[uri]?.[0];
+    let link = nonBFMappedGroup ? entry : entry[uri]?.[0];
     uri = link;
 
-    if (isSimpleLookupNonBFField) {
+    // This is used for the simple lookups which have a speciall data structure in the record,
+    // e.g. "Notes about the Instance", "Notes about the Work"
+    if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;
+      link = NOTE_TYPE_MAP[entry as keyof typeof NOTE_TYPE_MAP] || entry;
     }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
 
-    label = lookupDataElement?.label ?? entry[labelKeyName];
+    if (lookupDataElement) {
+      label = lookupDataElement.label;
+    } else if (nonBFMappedGroup) {
+      label = entry;
+    } else {
+      label = entry?.[labelKeyName];
+    }
   } else {
     label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
   }
@@ -134,7 +143,7 @@ export const generateUserValueContent = ({
   lookupData?: MultiselectOption[] | null;
   nonBFMappedGroup?: NonBFMappedGroup;
 }) =>
-  typeof entry === 'string'
+  typeof entry === 'string' && type !== AdvancedFieldType.simple
     ? {
         label: entry,
       }
