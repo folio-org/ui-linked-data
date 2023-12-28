@@ -222,6 +222,23 @@ export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: strin
   }, false);
 };
 
+export const getMappedNonBFGroupType = (propertyURI: string) => NON_BF_GROUP_TYPE[propertyURI];
+
+export const checkGroupIsNonBFMapped = ({
+  propertyURI,
+  parentEntryType,
+  type,
+}: {
+  propertyURI?: string;
+  parentEntryType?: AdvancedFieldType;
+  type: AdvancedFieldType;
+}) => {
+  const { block, groupComplex } = AdvancedFieldType;
+  const mappedGroup = !!propertyURI && getMappedNonBFGroupType(propertyURI);
+
+  return mappedGroup && parentEntryType === block && type === groupComplex;
+};
+
 export const selectNonBFMappedGroupData = ({
   propertyURI,
   type,
@@ -233,10 +250,9 @@ export const selectNonBFMappedGroupData = ({
   parentEntryType?: AdvancedFieldType;
   selectedRecord?: Record<string, Record<string, string[]>[]>;
 }) => {
-  const mappedGroup = NON_BF_GROUP_TYPE[propertyURI];
-  const isNonBFMappedGroup =
-    mappedGroup && parentEntryType === AdvancedFieldType.block && type === AdvancedFieldType.groupComplex;
-  const selectedNonBFRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
+  const mappedGroup = getMappedNonBFGroupType(propertyURI);
+  const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+  const selectedNonBFRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup?.container.key] : undefined;
   const nonBFMappedGroup = isNonBFMappedGroup
     ? {
         uri: propertyURI,

@@ -13,7 +13,13 @@ import {
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { generateAdvancedFieldObject, getAdvancedValuesField, getLookupLabelKey } from './schema.helper';
+import {
+  checkGroupIsNonBFMapped,
+  generateAdvancedFieldObject,
+  getAdvancedValuesField,
+  getLookupLabelKey,
+  selectNonBFMappedGroupData,
+} from './schema.helper';
 import { checkIdentifierAsValue } from '@common/helpers/record.helper';
 
 type TraverseSchema = {
@@ -24,6 +30,8 @@ type TraverseSchema = {
   key: string;
   index?: number;
   shouldHaveRootWrapper?: boolean;
+  parentEntryType?: string;
+  nonBFMappedGroup: NonBFMappedGroup;
 };
 
 const getNonArrayTypes = () => [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
@@ -56,6 +64,8 @@ const traverseSchema = ({
   key,
   index = 0,
   shouldHaveRootWrapper = false,
+  parentEntryType,
+  nonBFMappedGroup,
 }: TraverseSchema) => {
   const { children, uri, uriBFLite, bfid, type } = schema.get(key) || {};
   const uriSelector = uriBFLite || uri;
@@ -68,6 +78,25 @@ const traverseSchema = ({
 
   const isArray = !getNonArrayTypes().includes(type as AdvancedFieldType);
   const isArrayContainer = !!selector && Array.isArray(container[selector]);
+  let updatedNonBFMappedGroup = nonBFMappedGroup;
+
+  if (
+    checkGroupIsNonBFMapped({
+      propertyURI: uri as string,
+      parentEntryType: parentEntryType as AdvancedFieldType,
+      type: type as AdvancedFieldType,
+    })
+  ) {
+    const { nonBFMappedGroup: generatedNonBFMappedGroup } = selectNonBFMappedGroupData({
+      propertyURI: uri as string,
+      type: type as AdvancedFieldType,
+      parentEntryType: parentEntryType as AdvancedFieldType,
+    });
+
+    if (generatedNonBFMappedGroup) {
+      updatedNonBFMappedGroup = generatedNonBFMappedGroup;
+    }
+  }
 
   if (userValueMatch && uri && selector) {
     const advancedValueField = getAdvancedValuesField(uriBFLite);
@@ -101,6 +130,7 @@ const traverseSchema = ({
     } else if (
       (type === block ||
         (type === groupComplex && hasElement(COMPLEX_GROUPS, uri)) ||
+        (type === groupComplex && updatedNonBFMappedGroup) ||
         shouldHaveRootWrapper ||
         (FORCE_INCLUDE_WHEN_DEPARSING.includes(selector) && type !== hidden)) &&
       !FORCE_EXCLUDE_WHEN_DEPARSING.includes(selector)
@@ -173,6 +203,8 @@ const traverseSchema = ({
         key: uuid,
         index: index + 1,
         shouldHaveRootWrapper: hasRootWrapper,
+        parentEntryType: type,
+        nonBFMappedGroup: updatedNonBFMappedGroup,
       }),
     );
   }

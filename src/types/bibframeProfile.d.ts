@@ -101,10 +101,12 @@ type DropdownOptionSelection = {
 
 type LookupValue = string | Record<string, (string | undefined)[] | string | Nullish> | Nullish;
 
+type NonBFMappedGroupData = {
+  container: { key: string };
+  [key: string]: { key: string };
+};
+
 type NonBFMappedGroup = {
   uri: string;
-  data: {
-    container: { key: string };
-    [key: string]: { key: string };
-  };
+  data: NonBFMappedGroupData;
 };

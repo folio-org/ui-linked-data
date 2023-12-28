@@ -31,6 +31,7 @@ import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -433,7 +434,8 @@ export const useConfig = () => {
     setSelectedProfile(monograph);
     setUserValues({});
 
-    const recordData = record?.resource || {};
+    // const recordData = record?.resource || {};
+    const recordData = BFLITE_RECORD_EXAMPLE?.resource || {};
     const { base, userValues, initKey } = await buildSchema(monograph, templates, recordData);
 
     if (asPreview && recordId) {
@@ -533,7 +535,7 @@ export const useConfig = () => {
       path: [...path, newUuid],
       displayName: propertyLabel,
       uri: propertyURI,
-      uriBFLite,
+      uriBFLite: nonBFMappedGroup ? nonBFMappedGroup.data.container.key : uriBFLite,
       constraints,
       children: uuidArray,
     });
@@ -749,7 +751,7 @@ export const useConfig = () => {
       path: [...path, uuid],
       displayName: propertyLabel,
       uri: propertyURI,
-      uriBFLite,
+      uriBFLite: nonBFMappedGroup ? nonBFMappedGroup.data[propertyURI]?.key : uriBFLite,
       constraints,
     });
   };
