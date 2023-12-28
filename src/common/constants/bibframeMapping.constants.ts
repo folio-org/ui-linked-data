@@ -128,6 +128,7 @@ export const NON_BF_GROUP_TYPE = {
     container: { key: '_notes' },
     'http://www.w3.org/2000/01/rdf-schema#label': { key: 'value' },
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': { key: 'type' },
+    'http://id.loc.gov/ontologies/bibframe/noteType': { key: 'type' },
   },
 };
 

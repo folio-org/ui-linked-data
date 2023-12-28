@@ -17,7 +17,7 @@ import {
   TEMPORARY_URIS_WITHOUT_MAPPING,
 } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS, NON_BF_GROUP_TYPE, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
 import { getUris } from '@common/helpers/bibframe.helper';
 import {
@@ -25,6 +25,7 @@ import {
   generateRecordForDropdown,
   generateUserValueContent,
   getFilteredRecordData,
+  selectNonBFMappedGroupData,
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
@@ -153,7 +154,7 @@ export const useConfig = () => {
         updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
         await Promise.all(
-          selectedRecord.map(async (_: Record<string, any>, index: number) => {
+          selectedRecord.map(async (_: Record<string, unknown>, index: number) => {
             await processSimpleUIConrol({
               base,
               recordData: selectedRecord,
@@ -317,27 +318,21 @@ export const useConfig = () => {
             path,
             selectedRecord,
           });
+          const { selectedNonBFRecord, nonBFMappedGroup } = selectNonBFMappedGroupData({
+            propertyURI,
+            type,
+            parentEntryType,
+            selectedRecord,
+          });
 
-          const mappedGroup = NON_BF_GROUP_TYPE[propertyURI];
-          const isNonBFMappedGroup =
-            mappedGroup && parentEntryType === AdvancedFieldType.block && type === AdvancedFieldType.groupComplex;
-          const selectedNonBFRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
-          const nonBFMappedGroup = isNonBFMappedGroup
-            ? {
-                uri: propertyURI,
-                data: mappedGroup,
-              }
-            : undefined;
-
-          if (selectedRecord?.length || selectedNonBFRecord?.length > 1) {
+          if (selectedRecord?.length || (selectedNonBFRecord && selectedNonBFRecord.length > 1)) {
             const selectedRecordData = selectedNonBFRecord ?? selectedRecord;
-
             const copiedGroupsUuid = selectedRecordData.map(() => uuidv4());
 
             updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
             await Promise.all(
-              selectedRecordData.map(async (recordData: Record<string, any> | Array<any>, index: string) => {
+              selectedRecordData.map(async (recordData: Record<string, unknown> | Array<unknown>, index: string) => {
                 await processGroup({
                   uuid: copiedGroupsUuid[index],
                   entry,
@@ -397,7 +392,7 @@ export const useConfig = () => {
   const buildSchema = async (
     profile: ProfileEntry,
     templates: ResourceTemplates,
-    record: Record<string, any> | Array<any>,
+    record: Record<string, unknown> | Array<unknown>,
   ) => {
     const base = new Map();
     const initKey = uuidv4();
@@ -503,7 +498,7 @@ export const useConfig = () => {
     path: string[];
     templates: ResourceTemplates;
     selectedEntries?: Array<string>;
-    record: Record<string, any> | Array<any>;
+    record: Record<string, unknown> | Array<unknown>;
     recordItemIndex?: number;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
@@ -688,7 +683,7 @@ export const useConfig = () => {
     nonBFMappedGroup,
   }: {
     base: Map<string, SchemaEntry>;
-    recordData: Array<Record<string, any>>;
+    recordData: Array<Record<string, string | Record<string, unknown> | Record<string, unknown>[]>>;
     userValues?: UserValues;
     uuid: string;
     type: AdvancedFieldType;

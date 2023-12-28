@@ -6,6 +6,7 @@ import {
   ADVANCED_FIELDS,
   TEMP_BF2_TO_BFLITE_MAP,
   NOTE_TYPE_MAP,
+  NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
 import {
   IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
@@ -219,4 +220,29 @@ export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: strin
 
     return accum;
   }, false);
+};
+
+export const selectNonBFMappedGroupData = ({
+  propertyURI,
+  type,
+  parentEntryType,
+  selectedRecord,
+}: {
+  propertyURI: string;
+  type: AdvancedFieldType;
+  parentEntryType?: AdvancedFieldType;
+  selectedRecord?: Record<string, Record<string, string[]>[]>;
+}) => {
+  const mappedGroup = NON_BF_GROUP_TYPE[propertyURI];
+  const isNonBFMappedGroup =
+    mappedGroup && parentEntryType === AdvancedFieldType.block && type === AdvancedFieldType.groupComplex;
+  const selectedNonBFRecord = isNonBFMappedGroup ? selectedRecord?.[mappedGroup.container.key] : undefined;
+  const nonBFMappedGroup = isNonBFMappedGroup
+    ? {
+        uri: propertyURI,
+        data: mappedGroup,
+      }
+    : undefined;
+
+  return { selectedNonBFRecord, nonBFMappedGroup };
 };
