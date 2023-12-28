@@ -31,7 +31,7 @@ type TraverseSchema = {
   index?: number;
   shouldHaveRootWrapper?: boolean;
   parentEntryType?: string;
-  nonBFMappedGroup: NonBFMappedGroup;
+  nonBFMappedGroup?: NonBFMappedGroup;
 };
 
 const getNonArrayTypes = () => [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
@@ -43,18 +43,29 @@ export const generateLookupValue = ({
   label,
   uri,
   type,
+  hasNonBFMappedGroup,
 }: {
   uriBFLite?: string;
   label?: string;
   uri?: string;
   type?: AdvancedFieldType;
-}) =>
-  LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex
-    ? label
-    : {
-        [getLookupLabelKey(uriBFLite)]: [label],
-        [BFLITE_URIS.LINK]: [uri],
-      };
+  hasNonBFMappedGroup?: boolean;
+}) => {
+  let lookupValue;
+
+  if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex) {
+    lookupValue = label;
+  } else if (hasNonBFMappedGroup) {
+    lookupValue = uri;
+  } else {
+    lookupValue = {
+      [getLookupLabelKey(uriBFLite)]: [label],
+      [BFLITE_URIS.LINK]: [uri],
+    };
+  }
+
+  return lookupValue;
+};
 
 const traverseSchema = ({
   schema,
@@ -102,8 +113,14 @@ const traverseSchema = ({
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
     const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
-      if ((parentUri || uri) && !advancedValueField) {
-        return generateLookupValue({ uriBFLite, label, uri: uri || parentUri, type: type as AdvancedFieldType });
+      if ((parentUri || uri) && (!advancedValueField || updatedNonBFMappedGroup)) {
+        return generateLookupValue({
+          uriBFLite,
+          label,
+          uri: uri || parentUri,
+          type: type as AdvancedFieldType,
+          hasNonBFMappedGroup: !!updatedNonBFMappedGroup,
+        });
       } else if (advancedValueField) {
         return generateAdvancedFieldObject({ advancedValueField, label });
       } else {
