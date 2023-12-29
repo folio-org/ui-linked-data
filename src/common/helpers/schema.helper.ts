@@ -62,7 +62,7 @@ export const generateUserValueObject = ({
     let link = nonBFMappedGroup ? entry : entry[uri]?.[0];
     uri = link;
 
-    // This is used for the simple lookups which have a speciall data structure in the record,
+    // This is used for the simple lookups which have a special data structure in the record,
     // e.g. "Notes about the Instance", "Notes about the Work"
     if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;

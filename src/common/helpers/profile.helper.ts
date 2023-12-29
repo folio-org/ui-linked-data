@@ -57,12 +57,8 @@ export const generateLookupValue = ({
   if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex) {
     lookupValue = label;
   } else if (nonBFMappedGroup) {
-    // Get mapped lookup value for BFLite format;
-    if (uri?.includes(LOC_GOV_URI)) {
-      lookupValue = getMappedLookupValue({ uri, nonBFMappedGroup });
-    } else {
-      lookupValue = uri;
-    }
+    // Get mapped lookup value for BFLite format
+    lookupValue = uri?.includes(LOC_GOV_URI) ? getMappedLookupValue({ uri, nonBFMappedGroup }) : uri;
   } else {
     lookupValue = {
       [getLookupLabelKey(uriBFLite)]: [label],
