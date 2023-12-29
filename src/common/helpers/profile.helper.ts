@@ -10,8 +10,9 @@ import {
   NONARRAY_DROPDOWN_OPTIONS,
   FORCE_EXCLUDE_WHEN_DEPARSING,
   IDENTIFIER_AS_VALUE,
+  LOC_GOV_URI,
 } from '@common/constants/bibframe.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, TYPE_MAP } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import {
   checkGroupIsNonBFMapped,
@@ -43,20 +44,25 @@ export const generateLookupValue = ({
   label,
   uri,
   type,
-  hasNonBFMappedGroup,
+  nonBFMappedGroup,
 }: {
   uriBFLite?: string;
   label?: string;
   uri?: string;
   type?: AdvancedFieldType;
-  hasNonBFMappedGroup?: boolean;
+  nonBFMappedGroup?: NonBFMappedGroup;
 }) => {
   let lookupValue;
 
   if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex) {
     lookupValue = label;
-  } else if (hasNonBFMappedGroup) {
-    lookupValue = uri;
+  } else if (nonBFMappedGroup) {
+    // Get mapped lookup value for BFLite format;
+    if (uri?.includes(LOC_GOV_URI)) {
+      lookupValue = getMappedLookupValue({ uri, nonBFMappedGroup });
+    } else {
+      lookupValue = uri;
+    }
   } else {
     lookupValue = {
       [getLookupLabelKey(uriBFLite)]: [label],
@@ -65,6 +71,22 @@ export const generateLookupValue = ({
   }
 
   return lookupValue;
+};
+
+const getMappedLookupValue = ({ uri = '', nonBFMappedGroup }: { uri: string; nonBFMappedGroup?: NonBFMappedGroup }) => {
+  if (!nonBFMappedGroup) return uri;
+
+  const groupTypeMap = TYPE_MAP[nonBFMappedGroup.uri];
+  let mappedUri = uri;
+
+  if (nonBFMappedGroup && groupTypeMap) {
+    // Find lookup value in the map
+    const selectedMappedUri = Object.entries(groupTypeMap)?.find(([_, value]) => value === uri)?.[0];
+
+    mappedUri = selectedMappedUri || uri;
+  }
+
+  return mappedUri;
 };
 
 const traverseSchema = ({
@@ -119,7 +141,7 @@ const traverseSchema = ({
           label,
           uri: uri || parentUri,
           type: type as AdvancedFieldType,
-          hasNonBFMappedGroup: !!updatedNonBFMappedGroup,
+          nonBFMappedGroup: updatedNonBFMappedGroup,
         });
       } else if (advancedValueField) {
         return generateAdvancedFieldObject({ advancedValueField, label });

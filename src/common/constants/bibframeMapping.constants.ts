@@ -155,45 +155,47 @@ export const BF_URIS = {
   LABEL: 'http://www.w3.org/2000/01/rdf-schema#label',
 };
 
-export const NOTE_TYPE_MAP = {
-  'http://bibfra.me/vocab/lite/note': BF2_URIS.NOTE,
-  'http://bibfra.me/vocab/marc/withNote': 'http://id.loc.gov/vocabulary/mnotetype/with',
-  'http://bibfra.me/vocab/marc/governingAccessNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/creditsNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/participantNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/typeOfReport': 'http://id.loc.gov/vocabulary/mnotetype/report',
-  'http://bibfra.me/vocab/marc/issuanceNote': 'http://id.loc.gov/vocabulary/mnotetype/issuance',
-  'http://bibfra.me/vocab/marc/computerDataNote': 'http://id.loc.gov/vocabulary/mnotetype/computer',
-  'http://bibfra.me/vocab/marc/citationCoverage': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/additionalPhysicalForm': 'http://id.loc.gov/vocabulary/mnotetype/addphys',
-  'http://bibfra.me/vocab/marc/accessibilityNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/reproductionNote': 'http://id.loc.gov/vocabulary/mnotetype/repro',
-  'http://bibfra.me/vocab/marc/originalVersionNote': 'http://id.loc.gov/vocabulary/mnotetype/orig',
-  'http://bibfra.me/vocab/marc/locationOfOriginalsDuplicates': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/fundingInformation': 'http://id.loc.gov/vocabulary/mnotetype/fundinfo',
-  'http://bibfra.me/vocab/marc/informationRelatingToCopyrightStatus': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/relatedParts': 'http://id.loc.gov/vocabulary/mnotetype/related',
-  'http://bibfra.me/vocab/marc/formerTitleNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/issuingBody': 'http://id.loc.gov/vocabulary/mnotetype/issuing',
-  'http://bibfra.me/vocab/marc/entityAndAttributeInformation': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial': 'http://id.loc.gov/vocabulary/mnotetype/finding',
-  'http://bibfra.me/vocab/marc/informationAboutDocumentation': BF2_URIS.NOTE, // temporary type
-  // 'http://bibfra.me/vocab/marc/additionalPhysicalForm': 'http://id.loc.gov/vocabulary/mnotetype/related',
-  'http://bibfra.me/vocab/marc/exhibitionsNote': 'http://id.loc.gov/vocabulary/mnotetype/exhibit',
-  'http://bibfra.me/vocab/marc/descriptionSourceNote': 'https://id.loc.gov/vocabulary/mnotetype/descsource',
-  'http://bibfra.me/vocab/marc/systemDetails': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/systemDetailsAccessNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/physicalDescription': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/publicationFrequency': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/datesOfPublicationNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/bibliographyNote': 'http://id.loc.gov/vocabulary/mnotetype/biblio',
-  'http://bibfra.me/vocab/marc/scaleNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/references': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/dataQuality': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/otherEventInformation': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/geographicCoverage': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/supplement': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/studyProgramName': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/languageNote': BF2_URIS.NOTE, // temporary type
-  'http://bibfra.me/vocab/marc/formerTitleComplexityNote': BF2_URIS.NOTE, // temporary type
+export const TYPE_MAP = {
+  [BF2_URIS.NOTE]: {
+    'http://bibfra.me/vocab/lite/note': BF2_URIS.NOTE,
+    'http://bibfra.me/vocab/marc/withNote': 'http://id.loc.gov/vocabulary/mnotetype/with',
+    'http://bibfra.me/vocab/marc/governingAccessNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/creditsNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/participantNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/typeOfReport': 'http://id.loc.gov/vocabulary/mnotetype/report',
+    'http://bibfra.me/vocab/marc/issuanceNote': 'http://id.loc.gov/vocabulary/mnotetype/issuance',
+    'http://bibfra.me/vocab/marc/computerDataNote': 'http://id.loc.gov/vocabulary/mnotetype/computer',
+    'http://bibfra.me/vocab/marc/citationCoverage': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/additionalPhysicalForm': 'http://id.loc.gov/vocabulary/mnotetype/addphys',
+    'http://bibfra.me/vocab/marc/accessibilityNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/reproductionNote': 'http://id.loc.gov/vocabulary/mnotetype/repro',
+    'http://bibfra.me/vocab/marc/originalVersionNote': 'http://id.loc.gov/vocabulary/mnotetype/orig',
+    'http://bibfra.me/vocab/marc/locationOfOriginalsDuplicates': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/fundingInformation': 'http://id.loc.gov/vocabulary/mnotetype/fundinfo',
+    'http://bibfra.me/vocab/marc/informationRelatingToCopyrightStatus': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/relatedParts': 'http://id.loc.gov/vocabulary/mnotetype/related',
+    'http://bibfra.me/vocab/marc/formerTitleNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/issuingBody': 'http://id.loc.gov/vocabulary/mnotetype/issuing',
+    'http://bibfra.me/vocab/marc/entityAndAttributeInformation': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial': 'http://id.loc.gov/vocabulary/mnotetype/finding',
+    'http://bibfra.me/vocab/marc/informationAboutDocumentation': BF2_URIS.NOTE, // temporary type
+    // 'http://bibfra.me/vocab/marc/additionalPhysicalForm': 'http://id.loc.gov/vocabulary/mnotetype/related',
+    'http://bibfra.me/vocab/marc/exhibitionsNote': 'http://id.loc.gov/vocabulary/mnotetype/exhibit',
+    'http://bibfra.me/vocab/marc/descriptionSourceNote': 'https://id.loc.gov/vocabulary/mnotetype/descsource',
+    'http://bibfra.me/vocab/marc/systemDetails': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/systemDetailsAccessNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/physicalDescription': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/publicationFrequency': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/datesOfPublicationNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/bibliographyNote': 'http://id.loc.gov/vocabulary/mnotetype/biblio',
+    'http://bibfra.me/vocab/marc/scaleNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/references': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/dataQuality': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/otherEventInformation': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/geographicCoverage': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/supplement': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/studyProgramName': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/languageNote': BF2_URIS.NOTE, // temporary type
+    'http://bibfra.me/vocab/marc/formerTitleComplexityNote': BF2_URIS.NOTE, // temporary type
+  },
 };

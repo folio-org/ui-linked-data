@@ -5,7 +5,7 @@ import {
   BFLITE_URIS,
   ADVANCED_FIELDS,
   TEMP_BF2_TO_BFLITE_MAP,
-  NOTE_TYPE_MAP,
+  TYPE_MAP,
   NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
 import {
@@ -66,7 +66,7 @@ export const generateUserValueObject = ({
     // e.g. "Notes about the Instance", "Notes about the Work"
     if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;
-      link = NOTE_TYPE_MAP[entry as keyof typeof NOTE_TYPE_MAP] || entry;
+      link = (TYPE_MAP[nonBFMappedGroup.uri] as Record<string, string>)?.[entry] || entry;
     }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
@@ -74,6 +74,7 @@ export const generateUserValueObject = ({
     if (lookupDataElement) {
       label = lookupDataElement.label;
     } else if (nonBFMappedGroup) {
+      // Lookups and literal fields contain just a simple string as a value for some groups, such as "Notes about the Instance"
       label = entry;
     } else {
       label = entry?.[labelKeyName];
