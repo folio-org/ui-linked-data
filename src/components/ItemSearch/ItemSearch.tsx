@@ -20,10 +20,10 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
 import { Pagination } from '@components/Pagination';
-import state from '@state';
-import './ItemSearch.scss';
-import GeneralSearch from '@src/assets/general-search.svg?react';
 import { Button } from '@components/Button';
+import state from '@state';
+import GeneralSearch from '@src/assets/general-search.svg?react';
+import './ItemSearch.scss';
 
 const initHeader: Row = {
   actionItems: {

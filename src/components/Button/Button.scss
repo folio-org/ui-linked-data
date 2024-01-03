@@ -12,7 +12,7 @@
   height: $btn-primary-height;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: 0.85714rem; // TODO: Basic root font-size was overrided, it should be default if we're using 'rem' values
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -23,7 +23,8 @@
     background-color: $btn-disabled;
     cursor: not-allowed;
 
-    > svg *, * {
+    > svg *,
+    * {
       fill: $btn-disabled-contents;
     }
 
@@ -38,7 +39,7 @@
 
     &:hover:not(:disabled) {
       background-color: $btn-primary-hover;
-      box-shadow: $btn-primary-hover-drop-shadow
+      box-shadow: $btn-primary-hover-drop-shadow;
     }
 
     &:active:not(:disabled) {

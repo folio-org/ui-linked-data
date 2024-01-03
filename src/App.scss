@@ -65,6 +65,10 @@ body > #editor-root,
   input {
     cursor: pointer;
 
+    &[type='text'] {
+      cursor: text;
+    }
+
     &:disabled {
       margin: 0;
       opacity: 0.5;
@@ -89,12 +93,12 @@ body > #editor-root,
       display: grid;
       place-content: center;
       cursor: pointer;
-  
+
       &:disabled {
         color: lightgray;
         cursor: not-allowed;
       }
-  
+
       &::before {
         content: '';
         width: 0.65em;
@@ -105,11 +109,11 @@ body > #editor-root,
         clip-path: polygon(19% 39%, 37% 58%, 84% 13%, 96% 26%, 37% 83%, 7% 52%);
         background-color: CanvasText;
       }
-  
+
       &:checked {
         border-color: black;
         background-color: black;
-  
+
         &::before {
           transform: scale(1);
         }
@@ -131,7 +135,7 @@ body > #editor-root,
       transform: translateY(0.2em);
       display: grid;
       place-content: center;
-  
+
       &::before {
         content: '';
         width: 0.45em;
@@ -141,7 +145,7 @@ body > #editor-root,
         transition: 120ms transform ease-in-out;
         box-shadow: inset 10em 10em black;
       }
-  
+
       &:checked::before {
         transform: scale(1);
       }
