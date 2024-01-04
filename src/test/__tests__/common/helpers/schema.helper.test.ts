@@ -19,10 +19,15 @@ describe('schema.helper', () => {
     getFilteredRecordData,
     generateCopiedGroupUuids,
     hasChildEntry,
+    checkGroupIsNonBFMapped,
+    selectNonBFMappedGroupData,
   } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
   const mockAdvancedFieldsConstant = getMockedImportedConstant(BibframeMappingConstants, 'ADVANCED_FIELDS');
+  const mockBF2UrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BF2_URIS');
+  const mockTypeMapConstant = getMockedImportedConstant(BibframeMappingConstants, 'TYPE_MAP');
+  const mockNonBFGroupTypeConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_GROUP_TYPE');
 
   describe('getLookupLabelKey', () => {
     test('returns mapped value', () => {
@@ -177,6 +182,44 @@ describe('schema.helper', () => {
       };
 
       const result = generateUserValueObject({ entry, type, lookupData });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object which was generated for the simple lookup field for non-BibFrameLite mapped data', () => {
+      mockBF2UrisConstant({ NOTE: 'testNoteUri' });
+      mockTypeMapConstant({ testNoteUri: { testBFLiteUri: 'testBF20Uri' } });
+      const entry = 'testBFLiteUri';
+      const type = AdvancedFieldType.simple;
+      const lookupData = [
+        {
+          label: 'testLabel_1',
+          __isNew__: true,
+          value: {
+            id: 'testId_1',
+            label: 'testLabel_1',
+            uri: 'testBF20Uri',
+          },
+        },
+      ];
+      const propertyURI = 'testPropertyURI';
+      const nonBFMappedGroup = {
+        uri: 'testNoteUri',
+        data: {
+          container: { key: 'testContainer' },
+          testBF20Uri: { key: 'testKey_1' },
+        },
+      };
+      const testResult = {
+        label: 'testLabel_1',
+        meta: {
+          parentURI: 'testBFLiteUri',
+          uri: 'testBFLiteUri',
+          type,
+        },
+      };
+
+      const result = generateUserValueObject({ entry, type, lookupData, propertyURI, nonBFMappedGroup });
 
       expect(result).toEqual(testResult);
     });
@@ -386,6 +429,135 @@ describe('schema.helper', () => {
       const result = hasChildEntry(schema, ['testId_1']);
 
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('checkGroupIsNonBFMapped', () => {
+    const propertyURI = 'testUri';
+    const nonBFGroupType = {
+      testUri: {
+        container: { key: 'testContainer' },
+        testKey_1: { key: 'testValue_1' },
+      },
+    };
+    const mappedNonBFGroupType = {
+      container: { key: 'testContainer' },
+      testKey_1: { key: 'testValue_1' },
+    };
+
+    test('returns false if "propertyURI" is not passed', () => {
+      const parentEntryType = AdvancedFieldType.block;
+      const type = AdvancedFieldType.groupComplex;
+
+      const result = checkGroupIsNonBFMapped({ parentEntryType, type });
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false if there is no non-BibFrame Lite mapped group type', () => {
+      const parentEntryType = AdvancedFieldType.block;
+      const type = AdvancedFieldType.groupComplex;
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce(undefined);
+
+      const result = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false if the parent entry type is not "block"', () => {
+      const parentEntryType = AdvancedFieldType.group;
+      const type = AdvancedFieldType.groupComplex;
+      mockNonBFGroupTypeConstant(nonBFGroupType);
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce(mappedNonBFGroupType);
+
+      const result = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false if the entry type is not "groupComplex"', () => {
+      const parentEntryType = AdvancedFieldType.block;
+      const type = AdvancedFieldType.group;
+      mockNonBFGroupTypeConstant(nonBFGroupType);
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce(mappedNonBFGroupType);
+
+      const result = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns true', () => {
+      const parentEntryType = AdvancedFieldType.block;
+      const type = AdvancedFieldType.groupComplex;
+      mockNonBFGroupTypeConstant(nonBFGroupType);
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce(mappedNonBFGroupType);
+
+      const result = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+
+      expect(result).toBeTruthy();
+    });
+  });
+
+  describe('selectNonBFMappedGroupData', () => {
+    test('returns an object with both undefined values', () => {
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce(undefined);
+      jest.spyOn(SchemaHelper, 'checkGroupIsNonBFMapped').mockReturnValueOnce(false);
+      const propertyURI = 'testPropertyURI';
+      const type = AdvancedFieldType.groupComplex;
+      const parentEntryType = AdvancedFieldType.block;
+      const testResult = {
+        selectedNonBFRecord: undefined,
+        nonBFMappedGroup: undefined,
+      };
+
+      const result = selectNonBFMappedGroupData({
+        propertyURI,
+        type,
+        parentEntryType,
+      });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object with "selectedNonBFRecord" and "nonBFMappedGroup" keys which have values', () => {
+      jest.spyOn(SchemaHelper, 'getMappedNonBFGroupType').mockReturnValueOnce({
+        container: { key: 'testContainer' },
+        testKey_1: { key: 'testValue_1' },
+      });
+      jest.spyOn(SchemaHelper, 'checkGroupIsNonBFMapped').mockReturnValueOnce(true);
+      const propertyURI = 'testPropertyURI';
+      const type = AdvancedFieldType.groupComplex;
+      const parentEntryType = AdvancedFieldType.block;
+      const selectedRecord = {
+        testContainer: [
+          {
+            recordKey_1: ['recordValue_1'],
+          },
+        ],
+      };
+      const testResult = {
+        selectedNonBFRecord: [
+          {
+            recordKey_1: ['recordValue_1'],
+          },
+        ],
+        nonBFMappedGroup: {
+          uri: 'testPropertyURI',
+          data: {
+            container: { key: 'testContainer' },
+            testKey_1: { key: 'testValue_1' },
+          },
+        },
+      };
+
+      const result = selectNonBFMappedGroupData({
+        propertyURI,
+        type,
+        parentEntryType,
+        selectedRecord,
+      });
+
+      expect(result).toEqual(testResult);
     });
   });
 });
