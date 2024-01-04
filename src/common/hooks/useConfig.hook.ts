@@ -337,7 +337,7 @@ export const useConfig = () => {
                 record: recordData,
                 userValues,
                 hasNoRootWrapper,
-                nonBFMappedGroup,
+                nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
               });
             }
           } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
@@ -366,7 +366,7 @@ export const useConfig = () => {
               record: selectedNonBFRecord?.length ? selectedNonBFRecord[0] : selectedRecord,
               userValues,
               hasNoRootWrapper,
-              nonBFMappedGroup,
+              nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
             });
           }
 

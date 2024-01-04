@@ -69,13 +69,19 @@ export const generateLookupValue = ({
   return lookupValue;
 };
 
-const getMappedLookupValue = ({ uri = '', nonBFMappedGroup }: { uri: string; nonBFMappedGroup?: NonBFMappedGroup }) => {
+export const getMappedLookupValue = ({
+  uri = '',
+  nonBFMappedGroup,
+}: {
+  uri: string;
+  nonBFMappedGroup?: NonBFMappedGroup;
+}) => {
   if (!nonBFMappedGroup) return uri;
 
   const groupTypeMap = TYPE_MAP[nonBFMappedGroup.uri];
   let mappedUri = uri;
 
-  if (nonBFMappedGroup && groupTypeMap) {
+  if (groupTypeMap) {
     // Find lookup value in the map
     const selectedMappedUri = Object.entries(groupTypeMap)?.find(([_, value]) => value === uri)?.[0];
 
@@ -123,7 +129,7 @@ const traverseSchema = ({
     });
 
     if (generatedNonBFMappedGroup) {
-      updatedNonBFMappedGroup = generatedNonBFMappedGroup;
+      updatedNonBFMappedGroup = generatedNonBFMappedGroup as NonBFMappedGroup;
     }
   }
 
