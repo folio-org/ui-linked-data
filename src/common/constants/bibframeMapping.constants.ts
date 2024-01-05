@@ -176,6 +176,7 @@ export const TYPE_MAP = {
       'http://bibfra.me/vocab/marc/exhibitionsNote': 'http://id.loc.gov/vocabulary/mnotetype/exhibit',
       'http://bibfra.me/vocab/marc/descriptionSourceNote': 'https://id.loc.gov/vocabulary/mnotetype/descsource',
       'http://bibfra.me/vocab/marc/bibliographyNote': 'http://id.loc.gov/vocabulary/mnotetype/biblio',
+      'http://bibfra.me/vocab/marc/languageNote': 'http://id.loc.gov/vocabulary/mnotetype/lang',
     },
   },
 };
