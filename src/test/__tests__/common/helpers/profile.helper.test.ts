@@ -114,7 +114,16 @@ describe('profile.helper', () => {
     });
 
     test('returns the mapped URI', () => {
-      mockTypeMapConstant({ testPropertyURI: { testBFLiteUri: 'test_uri' } });
+      mockTypeMapConstant({
+        testPropertyURI: {
+          field: {
+            uri: '',
+          },
+          data: {
+            testBFLiteUri: 'test_uri',
+          },
+        },
+      });
 
       const result = getMappedLookupValue({ uri, nonBFMappedGroup });
 
@@ -122,7 +131,16 @@ describe('profile.helper', () => {
     });
 
     test('returns the entire URI if the map does not contain a required value', () => {
-      mockTypeMapConstant({ testPropertyURI: { testBFLiteUri: 'test_uri_1' } });
+      mockTypeMapConstant({
+        testPropertyURI: {
+          field: {
+            uri: '',
+          },
+          data: {
+            testBFLiteUri: 'non_mapped_test_uri',
+          },
+        },
+      });
 
       const result = getMappedLookupValue({ uri, nonBFMappedGroup });
 

@@ -694,7 +694,7 @@ export const useConfig = () => {
 
         if (!lookupData) {
           try {
-            lookupData = await loadLookupData(uri);
+            lookupData = await loadLookupData(uri, propertyURI);
           } catch (error) {
             console.error(`Cannot load data for the Lookup "${propertyLabel}"`, error);
 

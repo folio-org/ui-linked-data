@@ -188,7 +188,16 @@ describe('schema.helper', () => {
 
     test('returns an object which was generated for the simple lookup field for non-BibFrameLite mapped data', () => {
       mockBF2UrisConstant({ NOTE: 'testNoteUri' });
-      mockTypeMapConstant({ testNoteUri: { testBFLiteUri: 'testBF20Uri' } });
+      mockTypeMapConstant({
+        testNoteUri: {
+          field: {
+            uri: '',
+          },
+          data: {
+            testBFLiteUri: 'testBF20Uri',
+          },
+        },
+      });
       const entry = 'testBFLiteUri';
       const type = AdvancedFieldType.simple;
       const lookupData = [

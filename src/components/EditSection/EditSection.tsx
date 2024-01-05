@@ -92,7 +92,9 @@ export const EditSection = memo(() => {
     if (!isEdited) {
       setIsEdited(true);
 
-      IS_EMBEDDED_MODE && customEvents?.BLOCK_NAVIGATION && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(customEvents.BLOCK_NAVIGATION))
+      IS_EMBEDDED_MODE &&
+        customEvents?.BLOCK_NAVIGATION &&
+        getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(customEvents.BLOCK_NAVIGATION));
     }
 
     setUserValues(oldValue => ({
@@ -213,6 +215,7 @@ export const EditSection = memo(() => {
               parentUri={constraints?.valueDataType?.dataTypeURI}
               value={userValues[uuid]?.contents}
               isDisabled={isDisabled}
+              propertyUri={entry.uri}
             />
           </div>
         );

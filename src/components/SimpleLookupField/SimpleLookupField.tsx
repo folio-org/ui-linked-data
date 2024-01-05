@@ -16,6 +16,7 @@ interface Props {
   parentUri?: string;
   isDisabled?: boolean;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
+  propertyUri?: string;
 }
 
 // TODO: add value subscription, add uncontrolled opts handling
@@ -27,6 +28,7 @@ export const SimpleLookupField: FC<Props> = ({
   onChange,
   parentUri,
   isDisabled = false,
+  propertyUri,
 }) => {
   const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
   const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
@@ -49,7 +51,7 @@ export const SimpleLookupField: FC<Props> = ({
     setIsLoading(true);
 
     try {
-      await loadLookupData(uri);
+      await loadLookupData(uri, propertyUri);
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 

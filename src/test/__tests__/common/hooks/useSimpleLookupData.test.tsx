@@ -3,7 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { act, renderHook } from '@testing-library/react';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import * as ApiHelper from '@common/helpers/api.helper';
-import * as LookupOptionsHelper from '@common/helpers/formatLookupOptions.helper';
+import * as LookupOptionsHelper from '@common/helpers/lookupOptions.helper';
 import state from '@state';
 
 const lookupData: Record<string, MultiselectOption[]> = {

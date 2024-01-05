@@ -1,3 +1,4 @@
+import { TYPE_MAP } from '@common/constants/bibframeMapping.constants';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
 
 export const formatLookupOptions = (
@@ -19,3 +20,19 @@ export const formatLookupOptions = (
         __isNew__: false,
       };
     });
+
+export const filterLookupOptions = (lookupData: MultiselectOption[], propertyURI?: string) => {
+  let filteredLookupData = lookupData;
+
+  if (!propertyURI) return filteredLookupData;
+
+  const BFGroup = Object.values(TYPE_MAP).find(({ field }) => field.uri === propertyURI);
+
+  if (BFGroup) {
+    const BF20Uris = Object.values(BFGroup.data);
+
+    filteredLookupData = lookupData.filter(({ value }) => BF20Uris.includes(value.uri));
+  }
+
+  return filteredLookupData;
+};

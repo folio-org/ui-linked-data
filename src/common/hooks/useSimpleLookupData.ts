@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { formatLookupOptions } from '@common/helpers/formatLookupOptions.helper';
+import { filterLookupOptions, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
 
 export const useSimpleLookupData = (
   basicLookupData?: Record<string, MultiselectOption[]>,
@@ -12,19 +12,21 @@ export const useSimpleLookupData = (
 
   const getLookupData = () => lookupDataRef.current;
 
-  const loadLookupData = async (uri: string) => {
+  const loadLookupData = async (uri: string, propertyURI?: string) => {
     try {
       const response = await loadSimpleLookup(uri);
 
       if (!response) return null;
 
-      const formattedLookupData = formatLookupOptions(response, uri)?.sort(alphabeticSortLabel);
-      const updatedLookupData = { ...lookupDataRef.current, [uri]: formattedLookupData };
+      const formattedLookupData = formatLookupOptions(response, uri);
+      const filteredLookupData = filterLookupOptions(formattedLookupData, propertyURI);
+      const sortedLookupData = filteredLookupData?.sort(alphabeticSortLabel);
+      const updatedLookupData = { ...lookupDataRef.current, [uri]: sortedLookupData };
 
       lookupDataRef.current = updatedLookupData;
       saveLookupData?.(updatedLookupData);
 
-      return formattedLookupData;
+      return sortedLookupData;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
 

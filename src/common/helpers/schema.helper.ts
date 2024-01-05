@@ -66,7 +66,7 @@ export const generateUserValueObject = ({
     // e.g. "Notes about the Instance", "Notes about the Work"
     if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;
-      link = (TYPE_MAP[nonBFMappedGroup.uri] as Record<string, string>)?.[entry] || entry;
+      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as Record<string, string>)?.[entry] || entry;
     }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
