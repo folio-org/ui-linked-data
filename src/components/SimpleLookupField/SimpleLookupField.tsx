@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { MultiValue } from 'react-select';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
@@ -28,7 +28,9 @@ export const SimpleLookupField: FC<Props> = ({
   parentUri,
   isDisabled = false,
 }) => {
-  const { getLookupData, loadLookupData } = useSimpleLookupData();
+  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
+
   const options = getLookupData()?.[uri] || [];
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 

@@ -1,4 +1,4 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
@@ -31,6 +31,7 @@ import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+// import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -41,7 +42,8 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
-  const { getLookupData, loadLookupData } = useSimpleLookupData();
+  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
@@ -683,7 +685,7 @@ export const useConfig = () => {
     nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     if (recordData && userValues) {
-      let lookupData: MultiselectOption[] | null = null;
+      let lookupData: MultiselectOption[] | Nullish = null;
       const isSimpleLookupType = type === AdvancedFieldType.simple;
 
       if (isSimpleLookupType) {
