@@ -13,6 +13,7 @@ export const BFLITE_URIS = {
   EXTENT_TEMP: 'BFLITE_URI_TEMP_EXTENT', // TODO: set the value when the API contract for Extent field is updated
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
   APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
+  NOTE: 'http://bibfra.me/vocab/lite/note',
 };
 
 export const BF2_URIS = {
@@ -123,9 +124,13 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   },
 };
 
+export const NON_BF_RECORD_ELEMENTS = {
+  [BFLITE_URIS.NOTE]: { container: '_notes' },
+};
+
 export const NON_BF_GROUP_TYPE = {
   [BF2_URIS.NOTE]: {
-    container: { key: '_notes' },
+    container: { key: NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container },
     'http://www.w3.org/2000/01/rdf-schema#label': { key: 'value' },
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': { key: 'type' },
     'http://id.loc.gov/ontologies/bibframe/noteType': { key: 'type' },
@@ -166,7 +171,7 @@ export const TYPE_MAP = {
       uri: 'http://id.loc.gov/ontologies/bibframe/noteType',
     },
     data: {
-      'http://bibfra.me/vocab/lite/note': {
+      [BFLITE_URIS.NOTE]: {
         uri: BF2_URIS.NOTE,
       },
       'http://bibfra.me/vocab/marc/withNote': {

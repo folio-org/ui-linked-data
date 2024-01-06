@@ -3,7 +3,7 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { IDENTIFIER_AS_VALUE, INSTANTIATES_TO_INSTANCE_FIELDS, TYPE_URIS } from '@common/constants/bibframe.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
 
@@ -24,10 +24,13 @@ export const formatRecord = (parsedRecord: ParsedRecord) => {
 
   delete parsedRecord[BFLITE_URIS.INSTANTIATES];
 
+  const instanceField = updateInstantiatesWithInstanceFields(instanceComponent);
+  const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(instanceField);
+
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: updateInstantiatesWithInstanceFields(instanceComponent),
+      [TYPE_URIS.INSTANCE]: instanceWithUpdatedNotes,
     },
   };
 };
@@ -54,6 +57,23 @@ export const updateInstantiatesWithInstanceFields = (
   });
 
   return clonedInstance;
+};
+
+export const updateRecordWithDefaultNoteType = (
+  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
+) => {
+  const clonedRecord = cloneDeep(record);
+  const typedNotes = clonedRecord[
+    NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container
+  ] as unknown as RecursiveRecordSchema[];
+
+  typedNotes?.forEach(noteRecord => {
+    if (!noteRecord.type) {
+      noteRecord.type = [BFLITE_URIS.NOTE];
+    }
+  });
+
+  return clonedRecord;
 };
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
