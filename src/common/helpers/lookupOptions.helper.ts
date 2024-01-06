@@ -21,17 +21,44 @@ export const formatLookupOptions = (
       };
     });
 
-export const filterLookupOptions = (lookupData: MultiselectOption[], propertyURI?: string) => {
+export const getBFGroup = (propertyURI: string) =>
+  Object.values(TYPE_MAP).find(({ field }) => field.uri === propertyURI);
+
+export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[], propertyURI?: string) => {
+  if (!propertyURI) return lookupData;
+
   let filteredLookupData = lookupData;
+  const bfGroup = getBFGroup(propertyURI);
 
-  if (!propertyURI) return filteredLookupData;
+  if (bfGroup) {
+    const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
 
-  const BFGroup = Object.values(TYPE_MAP).find(({ field }) => field.uri === propertyURI);
+    filteredLookupData = lookupData.filter(({ value }) => bf20Uris.includes(value.uri));
+  }
 
-  if (BFGroup) {
-    const BF20Uris = Object.values(BFGroup.data);
+  return filteredLookupData;
+};
 
-    filteredLookupData = lookupData.filter(({ value }) => BF20Uris.includes(value.uri));
+export const filterLookupOptionsByParentBlock = (
+  lookupData?: MultiselectOption[] | Nullish,
+  propertyURI?: string,
+  parentBlockUri?: string,
+) => {
+  if (!lookupData) return;
+
+  if (!parentBlockUri || !propertyURI) return lookupData;
+
+  let filteredLookupData = lookupData;
+  const bfGroup = getBFGroup(propertyURI);
+
+  if (bfGroup) {
+    const bf20MappedData = Object.values(bfGroup.data);
+
+    filteredLookupData = lookupData.filter(({ value }) =>
+      bf20MappedData.find(
+        (data: FieldTypeMapDataValue) => data.uri === value.uri && data.parentBlock?.bfLiteUri === parentBlockUri,
+      ),
+    );
   }
 
   return filteredLookupData;

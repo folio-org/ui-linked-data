@@ -120,7 +120,7 @@ describe('profile.helper', () => {
             uri: '',
           },
           data: {
-            testBFLiteUri: 'test_uri',
+            testBFLiteUri: { uri: 'test_uri' },
           },
         },
       });
@@ -137,7 +137,7 @@ describe('profile.helper', () => {
             uri: '',
           },
           data: {
-            testBFLiteUri: 'non_mapped_test_uri',
+            testBFLiteUri: { uri: 'non_mapped_test_uri' },
           },
         },
       });

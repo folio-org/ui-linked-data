@@ -110,3 +110,21 @@ type NonBFMappedGroup = {
   uri: string;
   data: NonBFMappedGroupData;
 };
+
+type FieldTypeMapDataValue = {
+  uri: string;
+  parentBlock?: {
+    bfLiteUri?: string;
+  };
+};
+
+type FieldTypeMapDataEntry = {
+  [key: string]: FieldTypeMapDataValue;
+};
+
+type FieldTypeMapEntry = {
+  field: { uri: string };
+  data: FieldTypeMapDataEntry;
+};
+
+type FieldTypeMap = Record<string, FieldTypeMapEntry>;

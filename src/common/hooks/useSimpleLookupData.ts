@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { filterLookupOptions, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
+import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
 
 export const useSimpleLookupData = (
   basicLookupData?: Record<string, MultiselectOption[]>,
@@ -19,7 +19,7 @@ export const useSimpleLookupData = (
       if (!response) return null;
 
       const formattedLookupData = formatLookupOptions(response, uri);
-      const filteredLookupData = filterLookupOptions(formattedLookupData, propertyURI);
+      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI);
       const sortedLookupData = filteredLookupData?.sort(alphabeticSortLabel);
       const updatedLookupData = { ...lookupDataRef.current, [uri]: sortedLookupData };
 

@@ -7,6 +7,7 @@ import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
+import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
 
 interface Props {
   uri: string;
@@ -17,6 +18,7 @@ interface Props {
   isDisabled?: boolean;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   propertyUri?: string;
+  parentBlockUri?: string;
 }
 
 // TODO: add value subscription, add uncontrolled opts handling
@@ -29,11 +31,13 @@ export const SimpleLookupField: FC<Props> = ({
   parentUri,
   isDisabled = false,
   propertyUri,
+  parentBlockUri,
 }) => {
   const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
   const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
 
-  const options = getLookupData()?.[uri] || [];
+  const loadedOptions = getLookupData()?.[uri] || [];
+  const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
@@ -46,7 +50,7 @@ export const SimpleLookupField: FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const loadOptions = async (): Promise<void> => {
-    if (options.length) return;
+    if (options?.length) return;
 
     setIsLoading(true);
 

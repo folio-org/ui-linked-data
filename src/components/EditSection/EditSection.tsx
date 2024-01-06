@@ -22,6 +22,7 @@ import { Prompt } from '@components/Prompt';
 import './EditSection.scss';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
+import { findParentEntryByType } from '@common/helpers/schema.helper';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
@@ -204,6 +205,8 @@ export const EditSection = memo(() => {
       }
 
       if (type === AdvancedFieldType.simple) {
+        const blockEntry = findParentEntryByType(schema, entry.path, AdvancedFieldType.block);
+
         return (
           <div>
             {drawTitle()}
@@ -216,6 +219,7 @@ export const EditSection = memo(() => {
               value={userValues[uuid]?.contents}
               isDisabled={isDisabled}
               propertyUri={entry.uri}
+              parentBlockUri={blockEntry?.uriBFLite}
             />
           </div>
         );

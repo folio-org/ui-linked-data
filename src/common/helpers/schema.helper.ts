@@ -66,7 +66,7 @@ export const generateUserValueObject = ({
     // e.g. "Notes about the Instance", "Notes about the Work"
     if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;
-      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as Record<string, string>)?.[entry] || entry;
+      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as FieldTypeMapDataEntry)?.[entry].uri || entry;
     }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
@@ -268,3 +268,18 @@ export const selectNonBFMappedGroupData = ({
 
   return { selectedNonBFRecord, nonBFMappedGroup };
 };
+
+export const findParentEntryByType = (schema: Schema, path: string[], type: AdvancedFieldType) =>
+  path.reduce(
+    (accum, pathItem) => {
+      const schemaElem = schema.get(pathItem);
+      const blockElem = schemaElem?.type === type;
+
+      if (blockElem) {
+        accum = schemaElem;
+      }
+
+      return accum;
+    },
+    null as SchemaEntry | null,
+  );

@@ -83,7 +83,7 @@ export const getMappedLookupValue = ({
 
   if (groupTypeMap) {
     // Find lookup value in the map
-    const selectedMappedUri = Object.entries(groupTypeMap.data)?.find(([_, value]) => value === uri)?.[0];
+    const selectedMappedUri = Object.entries(groupTypeMap.data)?.find(([_, value]) => value.uri === uri)?.[0];
 
     mappedUri = selectedMappedUri || uri;
   }

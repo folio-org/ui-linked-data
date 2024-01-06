@@ -25,12 +25,14 @@ import {
   generateRecordForDropdown,
   generateUserValueContent,
   getFilteredRecordData,
+  findParentEntryByType,
   selectNonBFMappedGroupData,
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
 // import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
@@ -687,6 +689,7 @@ export const useConfig = () => {
     if (recordData && userValues) {
       let lookupData: MultiselectOption[] | Nullish = null;
       const isSimpleLookupType = type === AdvancedFieldType.simple;
+      const blockEntry = findParentEntryByType(base, path, AdvancedFieldType.block);
 
       if (isSimpleLookupType) {
         const uri = constraints?.useValuesFrom?.[0];
@@ -706,8 +709,17 @@ export const useConfig = () => {
         }
       }
 
+      const filteredLookupData = filterLookupOptionsByParentBlock(lookupData, propertyURI, blockEntry?.uriBFLite);
+
       let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
-        generateUserValueContent({ entry, type, uriBFLite, propertyURI, lookupData, nonBFMappedGroup }),
+        generateUserValueContent({
+          entry,
+          type,
+          uriBFLite,
+          propertyURI,
+          lookupData: filteredLookupData,
+          nonBFMappedGroup,
+        }),
       );
 
       if (index !== undefined && hasBlockParent) {
@@ -719,7 +731,7 @@ export const useConfig = () => {
             type,
             uriBFLite,
             propertyURI,
-            lookupData,
+            lookupData: filteredLookupData,
             nonBFMappedGroup,
           }),
         ];

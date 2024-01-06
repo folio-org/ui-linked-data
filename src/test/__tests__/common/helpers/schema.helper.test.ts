@@ -194,7 +194,7 @@ describe('schema.helper', () => {
             uri: '',
           },
           data: {
-            testBFLiteUri: 'testBF20Uri',
+            testBFLiteUri: { uri: 'testBF20Uri' },
           },
         },
       });
