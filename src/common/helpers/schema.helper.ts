@@ -273,9 +273,9 @@ export const findParentEntryByType = (schema: Schema, path: string[], type: Adva
   path.reduce(
     (accum, pathItem) => {
       const schemaElem = schema.get(pathItem);
-      const blockElem = schemaElem?.type === type;
+      const hasCorrectType = schemaElem?.type === type;
 
-      if (blockElem) {
+      if (hasCorrectType) {
         accum = schemaElem;
       }
 

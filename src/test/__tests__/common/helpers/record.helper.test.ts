@@ -29,9 +29,11 @@ describe('record.helper', () => {
     'INSTANTIATES_TO_INSTANCE_FIELDS',
   );
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+  const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockInstantiatesToInstanceConstant([]);
-  mockBFLiteUriConstant({ INSTANTIATES: testInstantiatesUri });
+  mockBFLiteUriConstant({ INSTANTIATES: testInstantiatesUri, NOTE: 'testNoteUri' });
+  mockNonBFRecordElementsConstant({ testNoteUri: { container: '_notes' } });
 
   beforeEach(() => {
     jest.spyOn(ProgressBackupHelper, 'generateRecordBackupKey').mockReturnValue(key);
@@ -137,6 +139,57 @@ describe('record.helper', () => {
       };
 
       const result = RecordHelper.updateInstantiatesWithInstanceFields(instance);
+
+      expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('updateRecordWithDefaultNoteType', () => {
+    test('returns initial record', () => {
+      const record = {
+        _notes: [
+          {
+            value: ['note description 1'],
+            type: ['testType_1'],
+          },
+          {
+            value: ['note description 2'],
+            type: ['testType_2'],
+          },
+        ],
+      };
+
+      const result = RecordHelper.updateRecordWithDefaultNoteType(record);
+
+      expect(result).toEqual(record);
+    });
+
+    test('returns a record with a default Note type', () => {
+      const record = {
+        _notes: [
+          {
+            value: ['note description 1'],
+            type: ['testType_1'],
+          },
+          {
+            value: ['note description 2'],
+          },
+        ],
+      } as Record<string, RecursiveRecordSchema[]>;
+      const testResult = {
+        _notes: [
+          {
+            value: ['note description 1'],
+            type: ['testType_1'],
+          },
+          {
+            value: ['note description 2'],
+            type: ['testNoteUri'],
+          },
+        ],
+      };
+
+      const result = RecordHelper.updateRecordWithDefaultNoteType(record);
 
       expect(result).toEqual(testResult);
     });

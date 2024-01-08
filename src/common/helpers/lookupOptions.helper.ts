@@ -21,14 +21,14 @@ export const formatLookupOptions = (
       };
     });
 
-export const getBFGroup = (propertyURI: string) =>
-  Object.values(TYPE_MAP).find(({ field }) => field.uri === propertyURI);
+export const getBFGroup = (typeMap: FieldTypeMap, propertyURI: string) =>
+  Object.values(typeMap).find(({ field }) => field.uri === propertyURI);
 
 export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[], propertyURI?: string) => {
   if (!propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(propertyURI);
+  const bfGroup = getBFGroup(TYPE_MAP, propertyURI);
 
   if (bfGroup) {
     const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
@@ -49,7 +49,7 @@ export const filterLookupOptionsByParentBlock = (
   if (!parentBlockUri || !propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(propertyURI);
+  const bfGroup = getBFGroup(TYPE_MAP, propertyURI);
 
   if (bfGroup) {
     const bf20MappedData = Object.values(bfGroup.data);

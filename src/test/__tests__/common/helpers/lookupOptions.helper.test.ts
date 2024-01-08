@@ -1,6 +1,29 @@
-import { formatLookupOptions } from '@common/helpers/lookupOptions.helper';
+import * as LookupOptionsHelper from '@common/helpers/lookupOptions.helper';
 import * as LookupConstants from '@common/constants/lookup.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+
+const { formatLookupOptions, filterLookupOptionsByMappedValue, filterLookupOptionsByParentBlock } = LookupOptionsHelper;
+const lookupData = [
+  {
+    label: 'testLabel_1',
+    __isNew__: false,
+    value: {
+      id: 'testId_1',
+      label: 'testLabel_1',
+      uri: 'testUri_1',
+    },
+  },
+  {
+    label: 'testLabel_2',
+    __isNew__: false,
+    value: {
+      id: 'testId_2',
+      label: 'testLabel_2',
+      uri: 'testUri_2',
+    },
+  },
+];
+const propertyURI = 'testPropertyUri';
 
 describe('lookupOptions.helper', () => {
   const mockImportedLabelUriConstant = getMockedImportedConstant(LookupConstants, 'AUTHORITATIVE_LABEL_URI');
@@ -54,6 +77,90 @@ describe('lookupOptions.helper', () => {
       ] as unknown as LoadSimpleLookupResponseItem[];
 
       const result = formatLookupOptions(data, parentUri);
+
+      expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('filterLookupOptionsByMappedValue', () => {
+    test('returns an array with the entire lookup options if "propertyURI" is not provided', () => {
+      const result = filterLookupOptionsByMappedValue(lookupData);
+
+      expect(result).toEqual(lookupData);
+    });
+
+    test('returns an array with the filtered lookup options', () => {
+      jest.spyOn(LookupOptionsHelper, 'getBFGroup').mockReturnValue({
+        field: {
+          uri: 'testNotesUri',
+        },
+        data: {
+          blLiteUri_1: { uri: 'testUri_1' },
+        },
+      });
+      const testResult = [
+        {
+          label: 'testLabel_1',
+          __isNew__: false,
+          value: {
+            id: 'testId_1',
+            label: 'testLabel_1',
+            uri: 'testUri_1',
+          },
+        },
+      ];
+
+      const result = filterLookupOptionsByMappedValue(lookupData, propertyURI);
+
+      expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('filterLookupOptionsByParentBlock', () => {
+    const parentBlockUri = 'testParentBlockUri_1';
+
+    test('returns undefined if "lookupData" is not provided', () => {
+      const result = filterLookupOptionsByParentBlock();
+
+      expect(result).toBeUndefined();
+    });
+
+    test('returns an array with the entire lookup options if "propertyURI" is not provided', () => {
+      const result = filterLookupOptionsByParentBlock(lookupData);
+
+      expect(result).toEqual(lookupData);
+    });
+
+    test('returns an array with the entire lookup options if "parentBlockUri" is not provided', () => {
+      const result = filterLookupOptionsByParentBlock(lookupData, propertyURI);
+
+      expect(result).toEqual(lookupData);
+    });
+
+    test('returns an array with the filtered lookup options', () => {
+      jest.spyOn(LookupOptionsHelper, 'getBFGroup').mockReturnValue({
+        field: {
+          uri: 'testNotesUri',
+        },
+        data: {
+          blLiteUri_1: { uri: 'testUri_1', parentBlock: { bfLiteUri: 'testParentBlockUri_1' } },
+          blLiteUri_2: { uri: 'testUri_2', parentBlock: { bfLiteUri: 'testParentBlockUri_2' } },
+        },
+      });
+
+      const testResult = [
+        {
+          label: 'testLabel_1',
+          __isNew__: false,
+          value: {
+            id: 'testId_1',
+            label: 'testLabel_1',
+            uri: 'testUri_1',
+          },
+        },
+      ];
+
+      const result = filterLookupOptionsByParentBlock(lookupData, propertyURI, parentBlockUri);
 
       expect(result).toEqual(testResult);
     });
