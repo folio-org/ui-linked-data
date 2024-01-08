@@ -13,6 +13,11 @@ export const BFLITE_URIS = {
   EXTENT_TEMP: 'BFLITE_URI_TEMP_EXTENT', // TODO: set the value when the API contract for Extent field is updated
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
   APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
+  NOTE: 'http://bibfra.me/vocab/lite/note',
+};
+
+export const BF2_URIS = {
+  NOTE: 'http://id.loc.gov/ontologies/bibframe/note',
 };
 
 // TODO: should be refactored.
@@ -119,6 +124,19 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   },
 };
 
+export const NON_BF_RECORD_ELEMENTS = {
+  [BFLITE_URIS.NOTE]: { container: '_notes' },
+};
+
+export const NON_BF_GROUP_TYPE = {
+  [BF2_URIS.NOTE]: {
+    container: { key: NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container },
+    'http://www.w3.org/2000/01/rdf-schema#label': { key: 'value' },
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': { key: 'type' },
+    'http://id.loc.gov/ontologies/bibframe/noteType': { key: 'type' },
+  },
+};
+
 export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/lite/providerPlace': BFLITE_URIS.LABEL,
   'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
@@ -140,4 +158,82 @@ export const ADVANCED_FIELDS = {
 
 export const BF_URIS = {
   LABEL: 'http://www.w3.org/2000/01/rdf-schema#label',
+};
+
+export const BLOCK_URIS_BFLITE = {
+  INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
+  WORK: 'http://bibfra.me/vocab/lite/instantiates',
+};
+
+export const TYPE_MAP = {
+  [BF2_URIS.NOTE]: {
+    field: {
+      uri: 'http://id.loc.gov/ontologies/bibframe/noteType',
+    },
+    data: {
+      [BFLITE_URIS.NOTE]: {
+        uri: BF2_URIS.NOTE,
+      },
+      'http://bibfra.me/vocab/marc/withNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/with',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/typeOfReport': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/report',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/issuanceNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/issuance',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/computerDataNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/computer',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/additionalPhysicalForm': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/addphys',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/reproductionNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/repro',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/originalVersionNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/orig',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/fundingInformation': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/fundinfo',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/relatedParts': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/related',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/issuingBody': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/issuing',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/finding',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/exhibitionsNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/exhibit',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/descriptionSourceNote': {
+        uri: 'https://id.loc.gov/vocabulary/mnotetype/descsource',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.INSTANCE },
+      },
+      'http://bibfra.me/vocab/marc/bibliographyNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/biblio',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.WORK },
+      },
+      'http://bibfra.me/vocab/marc/languageNote': {
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/lang',
+        parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.WORK },
+      },
+    },
+  },
 };

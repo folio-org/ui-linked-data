@@ -203,6 +203,20 @@ export const BFLITE_RECORD_EXAMPLE = {
       'http://bibfra.me/vocab/marc/edition': ['edition statement'],
       'http://bibfra.me/vocab/bflc/projectedProvisionDate': ['projected provision date'],
       'http://bibfra.me/vocab/marc/issuance': ['single unit'],
+      _notes: [
+        {
+          value: ['Bibliography note'],
+          type: ['http://bibfra.me/vocab/marc/bibliographyNote'],
+        },
+        {
+          value: ['Type of Report note'],
+          type: ['http://bibfra.me/vocab/marc/typeOfReport'],
+        },
+        {
+          value: ['Governing Access Note'],
+          type: ['http://bibfra.me/vocab/marc/governingAccessNote'],
+        },
+      ],
     },
   },
 };

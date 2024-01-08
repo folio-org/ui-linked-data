@@ -2,11 +2,12 @@ import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { MultiValue } from 'react-select';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
+import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
 
 interface Props {
   uri: string;
@@ -16,6 +17,8 @@ interface Props {
   parentUri?: string;
   isDisabled?: boolean;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
+  propertyUri?: string;
+  parentBlockUri?: string;
 }
 
 // TODO: add value subscription, add uncontrolled opts handling
@@ -27,9 +30,14 @@ export const SimpleLookupField: FC<Props> = ({
   onChange,
   parentUri,
   isDisabled = false,
+  propertyUri,
+  parentBlockUri,
 }) => {
-  const { getLookupData, loadLookupData } = useSimpleLookupData();
-  const options = getLookupData()?.[uri] || [];
+  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
+
+  const loadedOptions = getLookupData()?.[uri] || [];
+  const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
@@ -42,12 +50,12 @@ export const SimpleLookupField: FC<Props> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const loadOptions = async (): Promise<void> => {
-    if (options.length) return;
+    if (options?.length) return;
 
     setIsLoading(true);
 
     try {
-      await loadLookupData(uri);
+      await loadLookupData(uri, propertyUri);
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 

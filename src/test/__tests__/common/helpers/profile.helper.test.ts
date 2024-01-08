@@ -1,15 +1,24 @@
-import {
-  hasElement,
-  generateLookupValue,
-  filterUserValues,
-  shouldSelectDropdownOption,
-} from '@common/helpers/profile.helper';
+import * as ProfileHelper from '@common/helpers/profile.helper';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import * as BibframeConstants from '@common/constants/bibframe.constants';
 import * as SchemaHelper from '@common/helpers/schema.helper';
 
+const { hasElement, generateLookupValue, getMappedLookupValue, filterUserValues, shouldSelectDropdownOption } =
+  ProfileHelper;
+
+const uri = 'test_uri';
+const nonBFMappedGroup = {
+  uri: 'testPropertyURI',
+  data: {
+    container: { key: 'testContainer' },
+    testKey_1: { key: 'testValue_1' },
+  },
+};
+
 describe('profile.helper', () => {
+  const mockTypeMapConstant = getMockedImportedConstant(BibframeMappingConstants, 'TYPE_MAP');
+
   describe('hasElement', () => {
     test('returns false when entire collection is empty', () => {
       const collection: string[] = [];
@@ -45,7 +54,6 @@ describe('profile.helper', () => {
     describe('generateLookupValue for BibframeLite', () => {
       const label = 'test_label';
       const uriBFLite = 'test_uriBFLite';
-      const uri = 'test_uri';
 
       test('returns passed label for lookups with non-hierarchical structure', () => {
         mockLookupConstant([uriBFLite]);
@@ -68,6 +76,75 @@ describe('profile.helper', () => {
 
         expect(result).toEqual(testResult);
       });
+
+      test('returns generated data for non-BibFrame Lite mapped group if it has a value with LoC URI', () => {
+        mockLookupConstant([]);
+        mockBFUrisConstant({ LINK: 'test_label_uri' });
+        const spyGetMappedLookupValue = jest
+          .spyOn(ProfileHelper, 'getMappedLookupValue')
+          .mockReturnValue('testMappedLookupValue');
+        const uri = 'http://id.loc.gov/test';
+        const testResult = 'testMappedLookupValue';
+
+        const result = generateLookupValue({ uriBFLite, label, uri, nonBFMappedGroup });
+
+        expect(result).toEqual(testResult);
+        expect(spyGetMappedLookupValue).toHaveBeenCalledWith({ uri, nonBFMappedGroup });
+      });
+
+      test('returns generated data for non-BibFrame Lite mapped group if it does not have a value with LoC URI', () => {
+        mockLookupConstant([]);
+        mockBFUrisConstant({ LINK: 'test_label_uri' });
+        const spyGetMappedLookupValue = jest.spyOn(ProfileHelper, 'getMappedLookupValue');
+        const testResult = uri;
+
+        const result = generateLookupValue({ uriBFLite, label, uri, nonBFMappedGroup });
+
+        expect(result).toEqual(testResult);
+        expect(spyGetMappedLookupValue).not.toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('getMappedLookupValue', () => {
+    test('returns the entire URI', () => {
+      const result = getMappedLookupValue({ uri });
+
+      expect(result).toEqual(uri);
+    });
+
+    test('returns the mapped URI', () => {
+      mockTypeMapConstant({
+        testPropertyURI: {
+          field: {
+            uri: '',
+          },
+          data: {
+            testBFLiteUri: { uri: 'test_uri' },
+          },
+        },
+      });
+
+      const result = getMappedLookupValue({ uri, nonBFMappedGroup });
+
+      expect(result).toEqual('testBFLiteUri');
+    });
+
+    test('returns the entire URI if the map does not contain a required value', () => {
+      mockTypeMapConstant({
+        testPropertyURI: {
+          field: {
+            uri: '',
+          },
+          data: {
+            testBFLiteUri: { uri: 'non_mapped_test_uri' },
+          },
+        },
+      });
+
+      const result = getMappedLookupValue({ uri, nonBFMappedGroup });
+
+      expect(result).toEqual(uri);
     });
   });
 

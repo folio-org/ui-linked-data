@@ -5,14 +5,16 @@ import {
   BFLITE_URIS,
   ADVANCED_FIELDS,
   TEMP_BF2_TO_BFLITE_MAP,
+  TYPE_MAP,
+  NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
-import { getUris } from './bibframe.helper';
 import {
   IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION,
   TEMPORARY_URIS_WITHOUT_MAPPING,
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
 import { checkIdentifierAsValue } from '@common/helpers/record.helper';
+import { getUris } from './bibframe.helper';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -38,26 +40,45 @@ export const generateUserValueObject = ({
   entry,
   type,
   uriBFLite,
+  propertyURI,
   lookupData,
+  nonBFMappedGroup,
 }: {
   entry: any;
   type: AdvancedFieldType;
   uriBFLite?: string;
+  propertyURI?: string;
   lookupData?: MultiselectOption[] | null;
+  nonBFMappedGroup?: NonBFMappedGroup;
 }) => {
   const keyName = getLookupLabelKey(uriBFLite);
   const advancedValueField = getAdvancedValuesField(uriBFLite);
-  const labelKeyName = advancedValueField || keyName;
+  let labelKeyName = advancedValueField || keyName;
   let uri = BFLITE_URIS.LINK;
   let label;
 
   if (type === AdvancedFieldType.simple && lookupData) {
-    const link = entry[uri]?.[0];
+    const isNonBFTypeKey = nonBFMappedGroup && propertyURI ? nonBFMappedGroup.data[propertyURI]?.key : '';
+    let link = nonBFMappedGroup ? entry : entry[uri]?.[0];
     uri = link;
+
+    // This is used for the simple lookups which have a special data structure in the record,
+    // e.g. "Notes about the Instance", "Notes about the Work"
+    if (nonBFMappedGroup) {
+      labelKeyName = isNonBFTypeKey;
+      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as FieldTypeMapDataEntry)?.[entry].uri || entry;
+    }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
 
-    label = lookupDataElement?.label ?? entry[labelKeyName];
+    if (lookupDataElement) {
+      label = lookupDataElement.label;
+    } else if (nonBFMappedGroup) {
+      // Lookups and literal fields contain just a simple string as a value for some groups, such as "Notes about the Instance"
+      label = entry;
+    } else {
+      label = entry?.[labelKeyName];
+    }
   } else {
     label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
   }
@@ -113,18 +134,22 @@ export const generateUserValueContent = ({
   entry,
   type,
   uriBFLite,
+  propertyURI,
   lookupData,
+  nonBFMappedGroup,
 }: {
   entry: string | Record<string, unknown> | Array<Record<string, unknown>>;
   type: AdvancedFieldType;
   uriBFLite?: string;
+  propertyURI?: string;
   lookupData?: MultiselectOption[] | null;
+  nonBFMappedGroup?: NonBFMappedGroup;
 }) =>
-  typeof entry === 'string'
+  typeof entry === 'string' && type !== AdvancedFieldType.simple
     ? {
         label: entry,
       }
-    : generateUserValueObject({ entry, type, uriBFLite, lookupData });
+    : generateUserValueObject({ entry, type, uriBFLite, propertyURI, lookupData, nonBFMappedGroup });
 
 export const getFilteredRecordData = ({
   valueTemplateRefs,
@@ -197,3 +222,64 @@ export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: strin
     return accum;
   }, false);
 };
+
+export const getMappedNonBFGroupType = (propertyURI?: string) => {
+  if (!propertyURI || !NON_BF_GROUP_TYPE[propertyURI]) return undefined;
+
+  return NON_BF_GROUP_TYPE[propertyURI] as NonBFMappedGroupData;
+};
+
+export const checkGroupIsNonBFMapped = ({
+  propertyURI,
+  parentEntryType,
+  type,
+}: {
+  propertyURI?: string;
+  parentEntryType?: AdvancedFieldType;
+  type: AdvancedFieldType;
+}) => {
+  const { block, groupComplex } = AdvancedFieldType;
+  const mappedGroup = getMappedNonBFGroupType(propertyURI);
+
+  return !!mappedGroup && parentEntryType === block && type === groupComplex;
+};
+
+export const selectNonBFMappedGroupData = ({
+  propertyURI,
+  type,
+  parentEntryType,
+  selectedRecord,
+}: {
+  propertyURI: string;
+  type: AdvancedFieldType;
+  parentEntryType?: AdvancedFieldType;
+  selectedRecord?: Record<string, Record<string, string[]>[]>;
+}) => {
+  const mappedGroup = getMappedNonBFGroupType(propertyURI);
+  const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+  const selectedNonBFRecord =
+    isNonBFMappedGroup && mappedGroup ? selectedRecord?.[mappedGroup?.container.key] : undefined;
+  const nonBFMappedGroup = isNonBFMappedGroup
+    ? {
+        uri: propertyURI,
+        data: mappedGroup,
+      }
+    : undefined;
+
+  return { selectedNonBFRecord, nonBFMappedGroup };
+};
+
+export const findParentEntryByType = (schema: Schema, path: string[], type: AdvancedFieldType) =>
+  path.reduce(
+    (accum, pathItem) => {
+      const schemaElem = schema.get(pathItem);
+      const hasCorrectType = schemaElem?.type === type;
+
+      if (hasCorrectType) {
+        accum = schemaElem;
+      }
+
+      return accum;
+    },
+    null as SchemaEntry | null,
+  );

@@ -3,7 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { act, renderHook } from '@testing-library/react';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import * as ApiHelper from '@common/helpers/api.helper';
-import * as LookupOptionsHelper from '@common/helpers/formatLookupOptions.helper';
+import * as LookupOptionsHelper from '@common/helpers/lookupOptions.helper';
 import state from '@state';
 
 const lookupData: Record<string, MultiselectOption[]> = {
@@ -30,13 +30,15 @@ describe('useSimpleLookupData', () => {
     );
 
   test('getLookupData - returns an array with lookup options', () => {
-    const { result } = renderHook(useSimpleLookupData, {
+    const saveLookupData = jest.fn();
+    const { result } = renderHook(() => useSimpleLookupData(lookupData, saveLookupData), {
       wrapper: getWrapper(lookupData),
     });
 
     result.current.getLookupData();
 
     expect(result.current.getLookupData()).toEqual(lookupData);
+    expect(saveLookupData).not.toHaveBeenCalled();
   });
 
   describe('loadLookupData', () => {
@@ -109,14 +111,16 @@ describe('useSimpleLookupData', () => {
       const spyFormatLookupOptions = jest
         .spyOn(LookupOptionsHelper, 'formatLookupOptions')
         .mockReturnValue(formattedData);
+      const saveLookupData = jest.fn();
 
-      const { result } = renderHook(useSimpleLookupData, {
+      const { result } = renderHook(() => useSimpleLookupData({}, saveLookupData), {
         wrapper: getWrapper({}),
       });
 
       const resultData = await act(async () => result.current.loadLookupData(uri));
 
       expect(spyFormatLookupOptions).toHaveBeenCalledWith(loadedData, uri);
+      expect(saveLookupData).toHaveBeenCalled();
       expect(resultData).toEqual(testData);
     });
 

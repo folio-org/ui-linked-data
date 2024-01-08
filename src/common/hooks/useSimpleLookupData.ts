@@ -1,25 +1,32 @@
-import { useRecoilState } from 'recoil';
+import { useRef } from 'react';
+import { SetterOrUpdater } from 'recoil';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { formatLookupOptions } from '@common/helpers/formatLookupOptions.helper';
-import state from '@state';
+import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
 
-export const useSimpleLookupData = () => {
-  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+export const useSimpleLookupData = (
+  basicLookupData?: Record<string, MultiselectOption[]>,
+  saveLookupData?: SetterOrUpdater<Record<string, MultiselectOption[]>>,
+) => {
+  const lookupDataRef = useRef(basicLookupData || {});
 
-  const getLookupData = () => lookupData;
+  const getLookupData = () => lookupDataRef.current;
 
-  const loadLookupData = async (uri: string) => {
+  const loadLookupData = async (uri: string, propertyURI?: string) => {
     try {
       const response = await loadSimpleLookup(uri);
 
       if (!response) return null;
 
-      const formattedLookupData = formatLookupOptions(response, uri)?.sort(alphabeticSortLabel);
+      const formattedLookupData = formatLookupOptions(response, uri);
+      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI);
+      const sortedLookupData = filteredLookupData?.sort(alphabeticSortLabel);
+      const updatedLookupData = { ...lookupDataRef.current, [uri]: sortedLookupData };
 
-      setLookupData(lookupData => ({ ...lookupData, [uri]: formattedLookupData }));
+      lookupDataRef.current = updatedLookupData;
+      saveLookupData?.(updatedLookupData);
 
-      return formattedLookupData;
+      return sortedLookupData;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
 

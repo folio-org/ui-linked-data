@@ -1,4 +1,4 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
@@ -25,11 +25,15 @@ import {
   generateRecordForDropdown,
   generateUserValueContent,
   getFilteredRecordData,
+  findParentEntryByType,
+  selectNonBFMappedGroupData,
 } from '@common/helpers/schema.helper';
 import { defineMemoizedValue } from '@common/helpers/memoizedValue.helper';
 import { useSimpleLookupData } from './useSimpleLookupData';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
+// import { BFLITE_RECORD_EXAMPLE } from '@common/data/bfLiteRecord.example';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -40,7 +44,8 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
-  const { getLookupData, loadLookupData } = useSimpleLookupData();
+  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
@@ -81,6 +86,7 @@ export const useConfig = () => {
     hasHiddenParent?: boolean;
     userValues?: UserValues;
     parentEntryType?: AdvancedFieldType;
+    nonBFMappedGroup?: NonBFMappedGroup;
   };
 
   const traverseProfile = async ({
@@ -99,6 +105,7 @@ export const useConfig = () => {
     hasHiddenParent = false,
     userValues,
     parentEntryType,
+    nonBFMappedGroup,
   }: TraverseProfile) => {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
@@ -137,7 +144,12 @@ export const useConfig = () => {
       const workToInstanceRecord = withContentsSelected?.[BFLITE_URIS.INSTANTIATES];
       const recordData =
         isWorkToInstanceField && workToInstanceRecord ? workToInstanceRecord?.[0] : withContentsSelected;
-      const selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+      let selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+
+      if (nonBFMappedGroup) {
+        selectedRecord = recordData?.[nonBFMappedGroup.data?.[propertyURI]?.key];
+      }
+
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
 
       if (selectedRecord?.length > 1 && hasBlockParent) {
@@ -145,24 +157,23 @@ export const useConfig = () => {
 
         updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
-        await Promise.all(
-          selectedRecord.map(async (_: Record<string, any>, index: number) => {
-            await processSimpleUIConrol({
-              base,
-              recordData: selectedRecord,
-              userValues,
-              uuid: copiedGroupsUuid[index],
-              type,
-              uriBFLite,
-              path,
-              propertyLabel,
-              propertyURI,
-              constraints,
-              index,
-              hasBlockParent,
-            });
-          }),
-        );
+        for await (const [index] of selectedRecord.entries()) {
+          await processSimpleUIConrol({
+            base,
+            recordData: selectedRecord,
+            userValues,
+            uuid: copiedGroupsUuid[index],
+            type,
+            uriBFLite,
+            path,
+            propertyLabel,
+            propertyURI,
+            constraints,
+            index,
+            hasBlockParent,
+            nonBFMappedGroup,
+          });
+        }
       } else {
         await processSimpleUIConrol({
           base,
@@ -177,6 +188,7 @@ export const useConfig = () => {
           constraints,
           index: recordIndex,
           hasBlockParent,
+          nonBFMappedGroup,
         });
       }
     } else {
@@ -195,20 +207,18 @@ export const useConfig = () => {
             children: uuidArray,
           });
 
-          await Promise.all(
-            resourceTemplates.map(async (entry, index) => {
-              await traverseProfile({
-                entry,
-                templates,
-                uuid: uuidArray[index],
-                path: updatedPath,
-                base,
-                selectedEntries,
-                record,
-                userValues,
-              });
-            }),
-          );
+          for await (const [index, entry] of resourceTemplates.entries()) {
+            await traverseProfile({
+              entry,
+              templates,
+              uuid: uuidArray[index],
+              path: updatedPath,
+              base,
+              selectedEntries,
+              record,
+              userValues,
+            });
+          }
 
           return;
         }
@@ -253,23 +263,22 @@ export const useConfig = () => {
                 hasRootWrapper: !isHiddenType,
               });
 
-          await Promise.all(
-            propertyTemplates.map(async (entry, i) => {
-              await traverseProfile({
-                entry,
-                templates,
-                uuid: uuidArray[i],
-                path: updatedPath,
-                base,
-                selectedEntries,
-                record: selectedRecord,
-                recordItemIndex,
-                hasHiddenParent: isHiddenType,
-                userValues,
-                parentEntryType: type,
-              });
-            }),
-          );
+          for await (const [index, entry] of propertyTemplates.entries()) {
+            await traverseProfile({
+              entry,
+              templates,
+              uuid: uuidArray[index],
+              path: updatedPath,
+              base,
+              selectedEntries,
+              record: selectedRecord,
+              recordItemIndex,
+              hasHiddenParent: isHiddenType,
+              userValues,
+              parentEntryType: type,
+              nonBFMappedGroup,
+            });
+          }
 
           return;
         }
@@ -307,28 +316,34 @@ export const useConfig = () => {
             path,
             selectedRecord,
           });
+          const { selectedNonBFRecord, nonBFMappedGroup } = selectNonBFMappedGroupData({
+            propertyURI,
+            type,
+            parentEntryType,
+            selectedRecord,
+          });
 
-          if (selectedRecord?.length) {
-            const copiedGroupsUuid = selectedRecord.map(() => uuidv4());
+          if (selectedRecord?.length || (selectedNonBFRecord && selectedNonBFRecord.length > 1)) {
+            const selectedRecordData = selectedNonBFRecord ?? selectedRecord;
+            const copiedGroupsUuid = selectedRecordData.map(() => uuidv4());
 
             updateParentEntryChildren({ base, copiedGroupsUuid, path, uuid });
 
-            await Promise.all(
-              selectedRecord.map(async (recordData: Record<string, any> | Array<any>, index: string) => {
-                await processGroup({
-                  uuid: copiedGroupsUuid[index],
-                  entry,
-                  base,
-                  type,
-                  path,
-                  templates,
-                  selectedEntries,
-                  record: recordData,
-                  userValues,
-                  hasNoRootWrapper,
-                });
-              }),
-            );
+            for await (const [index, recordData] of selectedRecordData.entries()) {
+              await processGroup({
+                uuid: copiedGroupsUuid[index],
+                entry,
+                base,
+                type,
+                path,
+                templates,
+                selectedEntries,
+                record: recordData,
+                userValues,
+                hasNoRootWrapper,
+                nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
+              });
+            }
           } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
             await processGroupsWithoutWrapper({
               valueTemplateRefs,
@@ -352,9 +367,10 @@ export const useConfig = () => {
               path,
               templates,
               selectedEntries,
-              record: selectedRecord,
+              record: selectedNonBFRecord?.length ? selectedNonBFRecord[0] : selectedRecord,
               userValues,
               hasNoRootWrapper,
+              nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
             });
           }
 
@@ -372,7 +388,7 @@ export const useConfig = () => {
   const buildSchema = async (
     profile: ProfileEntry,
     templates: ResourceTemplates,
-    record: Record<string, any> | Array<any>,
+    record: Record<string, unknown> | Array<unknown>,
   ) => {
     const base = new Map();
     const initKey = uuidv4();
@@ -469,6 +485,7 @@ export const useConfig = () => {
     hasNoRootWrapper,
     hasSelectedRecord,
     selectedRecordUriBFLite,
+    nonBFMappedGroup,
   }: {
     uuid: string;
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
@@ -477,12 +494,13 @@ export const useConfig = () => {
     path: string[];
     templates: ResourceTemplates;
     selectedEntries?: Array<string>;
-    record: Record<string, any> | Array<any>;
+    record: Record<string, unknown> | Array<unknown>;
     recordItemIndex?: number;
     userValues?: UserValues;
     hasNoRootWrapper: boolean;
     hasSelectedRecord?: boolean;
     selectedRecordUriBFLite?: string;
+    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     const {
       propertyURI,
@@ -511,7 +529,7 @@ export const useConfig = () => {
       path: [...path, newUuid],
       displayName: propertyLabel,
       uri: propertyURI,
-      uriBFLite,
+      uriBFLite: nonBFMappedGroup ? nonBFMappedGroup.data.container.key : uriBFLite,
       constraints,
       children: uuidArray,
     });
@@ -521,46 +539,45 @@ export const useConfig = () => {
 
     const { getValue: getIsSelectedOption, setValue } = defineMemoizedValue(false);
 
-    await Promise.all(
-      valueTemplateRefs.map(async (item, index) => {
-        const entry = templates[item];
+    for await (const [index, item] of valueTemplateRefs.entries()) {
+      const entry = templates[item];
 
-        const { uriBFLite } = getUris({ uri: entry.resourceURI, schema: base, path });
+      const { uriBFLite } = getUris({ uri: entry.resourceURI, schema: base, path });
 
-        if (uriBFLite === selectedRecordUriBFLite) {
-          setValue(true);
-        }
+      if (uriBFLite === selectedRecordUriBFLite) {
+        setValue(true);
+      }
 
-        let recordData;
+      let recordData;
 
-        if (hasSelectedRecord) {
-          recordData = uriBFLite === selectedRecordUriBFLite ? record : undefined;
-        } else {
-          recordData = record;
-        }
+      if (hasSelectedRecord) {
+        recordData = uriBFLite === selectedRecordUriBFLite ? record : undefined;
+      } else {
+        recordData = record;
+      }
 
-        await traverseProfile({
-          entry,
-          auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
-          templates,
-          uuid: uuidArray[index],
-          path: [...path, newUuid],
-          base,
-          firstOfSameType: index === 0,
-          selectedEntries,
-          record: recordData,
-          recordItemIndex,
-          hasSelectedRecord,
-          userValues,
-          dropdownOptionSelection: {
-            hasNoRootWrapper,
-            isSelectedOption: getIsSelectedOption(),
-            setIsSelectedOption: setValue,
-            selectedRecordUriBFLite,
-          },
-        });
-      }),
-    );
+      await traverseProfile({
+        entry,
+        auxType: type === AdvancedFieldType.dropdown ? AdvancedFieldType.dropdownOption : AdvancedFieldType.hidden,
+        templates,
+        uuid: uuidArray[index],
+        path: [...path, newUuid],
+        base,
+        firstOfSameType: index === 0,
+        selectedEntries,
+        record: recordData,
+        recordItemIndex,
+        hasSelectedRecord,
+        userValues,
+        dropdownOptionSelection: {
+          hasNoRootWrapper,
+          isSelectedOption: getIsSelectedOption(),
+          setIsSelectedOption: setValue,
+          selectedRecordUriBFLite,
+        },
+        nonBFMappedGroup,
+      });
+    }
 
     // Select the first dropdown option if nothing was selected
     if (hasNoRootWrapper && !getIsSelectedOption()) {
@@ -604,44 +621,40 @@ export const useConfig = () => {
 
     updateParentEntryChildren({ base, copiedGroupsUuid: uuidList, path, uuid });
 
-    await Promise.all(
-      valueTemplateRefs.map(async (templateRef, templateRefIndex: number) => {
-        const entryData = templates[templateRef];
-        const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
+    for await (const [templateRefIndex, templateRef] of valueTemplateRefs.entries()) {
+      const entryData = templates[templateRef];
+      const { uriBFLite } = getUris({ uri: entryData.resourceURI, schema: base, path });
 
-        if (!uriBFLite) return;
+      if (!uriBFLite) return;
 
-        // TODO: remove when the API contract for Extent and similar fields is updated
-        const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
-        const recordData = isTempMappedURI
-          ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
-          : selectedRecord?.[uriBFLite];
+      // TODO: remove when the API contract for Extent and similar fields is updated
+      const isTempMappedURI = TEMPORARY_URIS_WITHOUT_MAPPING.includes(uriBFLite);
+      const recordData = isTempMappedURI
+        ? selectedRecord?.[TEMP_BF2_TO_BFLITE_MAP[uriBFLite]]
+        : selectedRecord?.[uriBFLite];
 
-        if (recordData?.length) {
-          const copiedGroupsUuid = copiedUuids[templateRefIndex];
+      if (recordData?.length) {
+        const copiedGroupsUuid = copiedUuids[templateRefIndex];
 
-          await Promise.all(
-            recordData?.map(async (recordItem: Record<string, any>, recordItemIndex: number) => {
-              await processGroup({
-                uuid: copiedGroupsUuid?.[recordItemIndex],
-                entry,
-                base,
-                type,
-                path,
-                templates,
-                selectedEntries,
-                record: isTempMappedURI ? selectedRecord : recordItem,
-                recordItemIndex,
-                userValues,
-                hasNoRootWrapper,
-                hasSelectedRecord: true,
-                selectedRecordUriBFLite: uriBFLite,
-              });
-            }),
-          );
+        for await (const [recordItemIndex, recordItem] of recordData.entries()) {
+          await processGroup({
+            uuid: copiedGroupsUuid?.[recordItemIndex],
+            entry,
+            base,
+            type,
+            path,
+            templates,
+            selectedEntries,
+            record: isTempMappedURI ? selectedRecord : recordItem,
+            recordItemIndex,
+            userValues,
+            hasNoRootWrapper,
+            hasSelectedRecord: true,
+            selectedRecordUriBFLite: uriBFLite,
+          });
         }
-      }),
-    );
+      }
+    }
   };
 
   const processSimpleUIConrol = async ({
@@ -657,9 +670,10 @@ export const useConfig = () => {
     constraints,
     index,
     hasBlockParent,
+    nonBFMappedGroup,
   }: {
     base: Map<string, SchemaEntry>;
-    recordData: Array<Record<string, any>>;
+    recordData: Array<Record<string, string | Record<string, unknown> | Record<string, unknown>[]>>;
     userValues?: UserValues;
     uuid: string;
     type: AdvancedFieldType;
@@ -670,10 +684,12 @@ export const useConfig = () => {
     constraints: Constraints;
     index?: number;
     hasBlockParent?: boolean;
+    nonBFMappedGroup?: NonBFMappedGroup;
   }) => {
     if (recordData && userValues) {
-      let lookupData: MultiselectOption[] | null = null;
+      let lookupData: MultiselectOption[] | Nullish = null;
       const isSimpleLookupType = type === AdvancedFieldType.simple;
+      const blockEntry = findParentEntryByType(base, path, AdvancedFieldType.block);
 
       if (isSimpleLookupType) {
         const uri = constraints?.useValuesFrom?.[0];
@@ -681,7 +697,7 @@ export const useConfig = () => {
 
         if (!lookupData) {
           try {
-            lookupData = await loadLookupData(uri);
+            lookupData = await loadLookupData(uri, propertyURI);
           } catch (error) {
             console.error(`Cannot load data for the Lookup "${propertyLabel}"`, error);
 
@@ -693,14 +709,32 @@ export const useConfig = () => {
         }
       }
 
+      const filteredLookupData = filterLookupOptionsByParentBlock(lookupData, propertyURI, blockEntry?.uriBFLite);
+
       let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
-        generateUserValueContent({ entry, type, uriBFLite, lookupData }),
+        generateUserValueContent({
+          entry,
+          type,
+          uriBFLite,
+          propertyURI,
+          lookupData: filteredLookupData,
+          nonBFMappedGroup,
+        }),
       );
 
       if (index !== undefined && hasBlockParent) {
         const selectedRecordData = recordData?.[index];
 
-        contents = [generateUserValueContent({ entry: selectedRecordData, type, uriBFLite, lookupData })];
+        contents = [
+          generateUserValueContent({
+            entry: selectedRecordData,
+            type,
+            uriBFLite,
+            propertyURI,
+            lookupData: filteredLookupData,
+            nonBFMappedGroup,
+          }),
+        ];
       }
 
       userValues[uuid] = {
@@ -715,7 +749,7 @@ export const useConfig = () => {
       path: [...path, uuid],
       displayName: propertyLabel,
       uri: propertyURI,
-      uriBFLite,
+      uriBFLite: nonBFMappedGroup ? nonBFMappedGroup.data[propertyURI]?.key : uriBFLite,
       constraints,
     });
   };
