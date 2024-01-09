@@ -99,8 +99,21 @@ describe('schema.helper', () => {
   });
 
   describe('generateUserValueObject', () => {
+    const type = AdvancedFieldType.simple;
+    const lookupData = [
+      {
+        label: 'testLabel_1',
+        __isNew__: true,
+        value: {
+          id: 'testId_1',
+          label: 'testLabel_1',
+          uri: 'testLink_1',
+        },
+      },
+    ];
+
     beforeEach(() => {
-      mockBFUrisConstant({ LINK: 'testLink' });
+      mockBFUrisConstant({ LINK: 'testLink', NOTE: 'testBFLiteNote' });
       jest.spyOn(SchemaHelper, 'getLookupLabelKey').mockReturnValueOnce('testKey');
     });
 
@@ -128,18 +141,6 @@ describe('schema.helper', () => {
         testKey: 'testLabelKey',
         testLink: ['testLink_1'],
       };
-      const type = AdvancedFieldType.simple;
-      const lookupData = [
-        {
-          label: 'testLabel_1',
-          __isNew__: true,
-          value: {
-            id: 'testId_1',
-            label: 'testLabel_1',
-            uri: 'testLink_1',
-          },
-        },
-      ];
       const testResult = {
         label: 'testLabel_1',
         meta: {
@@ -161,18 +162,6 @@ describe('schema.helper', () => {
         testKey: 'testLabelKey',
         testLink: ['testLink_0'],
       };
-      const type = AdvancedFieldType.simple;
-      const lookupData = [
-        {
-          label: 'testLabel_1',
-          __isNew__: true,
-          value: {
-            id: 'testId_1',
-            label: 'testLabel_1',
-            uri: 'testLink_1',
-          },
-        },
-      ];
       const testResult = {
         label: 'testLabelKey',
         meta: {
@@ -200,7 +189,6 @@ describe('schema.helper', () => {
         },
       });
       const entry = 'testBFLiteUri';
-      const type = AdvancedFieldType.simple;
       const lookupData = [
         {
           label: 'testLabel_1',
@@ -230,6 +218,22 @@ describe('schema.helper', () => {
       };
 
       const result = generateUserValueObject({ entry, type, lookupData, propertyURI, nonBFMappedGroup });
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object which was generated for the simple lookup field if the record contains only a string', () => {
+      const entry = 'test lookup value';
+      const testResult = {
+        label: 'test lookup value',
+        meta: {
+          parentURI: '',
+          uri: '',
+          type,
+        },
+      };
+
+      const result = generateUserValueObject({ entry, type, lookupData });
 
       expect(result).toEqual(testResult);
     });
