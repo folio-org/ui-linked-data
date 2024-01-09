@@ -53,13 +53,14 @@ export const generateUserValueObject = ({
 }) => {
   const keyName = getLookupLabelKey(uriBFLite);
   const advancedValueField = getAdvancedValuesField(uriBFLite);
+  const isStringEntry = typeof entry === 'string';
   let labelKeyName = advancedValueField || keyName;
   let uri = BFLITE_URIS.LINK;
   let label;
 
   if (type === AdvancedFieldType.simple && lookupData) {
     const isNonBFTypeKey = nonBFMappedGroup && propertyURI ? nonBFMappedGroup.data[propertyURI]?.key : '';
-    let link = nonBFMappedGroup ? entry : entry[uri]?.[0];
+    let link = nonBFMappedGroup || isStringEntry ? entry : entry[uri]?.[0];
     uri = link;
 
     // This is used for the simple lookups which have a special data structure in the record,
@@ -77,7 +78,8 @@ export const generateUserValueObject = ({
       // Lookups and literal fields contain just a simple string as a value for some groups, such as "Notes about the Instance"
       label = entry;
     } else {
-      label = entry?.[labelKeyName];
+      label = isStringEntry ? entry : entry?.[labelKeyName];
+      uri = isStringEntry ? '' : uri;
     }
   } else {
     label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
