@@ -10,7 +10,7 @@ import { getRecordId } from '@common/helpers/record.helper';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { RESOURCE_URLS } from '@common/constants/routes.constants';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
-import { Button } from '@components/Button';
+import { Button, ButtonType } from '@components/Button';
 
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
@@ -25,7 +25,7 @@ const DeleteRecord: FC = () => {
 
   return (
     <>
-      <Button data-testid="delete-record-button" onClick={openModal} disabled={isDisabled}>
+      <Button data-testid="delete-record-button" type={ButtonType.Text} onClick={openModal} disabled={isDisabled}>
         <FormattedMessage id="marva.delete-rd" />
       </Button>
       <ModalDeleteRecord isOpen={isModalOpen} toggleIsOpen={setIsModalOpen} deleteRecord={deleteRecord} />

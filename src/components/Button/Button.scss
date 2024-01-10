@@ -1,8 +1,6 @@
 @import '@common/styles/common.scss';
 
 .button {
-  @include focused-outline();
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -34,6 +32,8 @@
   }
 
   &-primary {
+    @include focused-outline-primary();
+
     background-color: $btn-primary;
     color: $btn-primary-contents;
 
@@ -46,7 +46,6 @@
       background-color: $btn-primary-active;
     }
 
-    &:focus,
     &:focus-visible {
       border: 1px solid black;
       border-style: inset;
@@ -72,6 +71,8 @@
   }
 
   &-text {
+    @include focused-outline-secondary();
+
     padding: 0 0.5em;
     height: 30px;
 
@@ -79,36 +80,25 @@
       background-color: $btn-text-focus;
     }
 
-    &:focus {
-      background-color: $btn-text-focus;
+    &:focus-visible {
       text-decoration: underline;
     }
 
     &:active:not(:disabled) {
-      background-color: $btn-text-active;
       text-decoration: underline;
-      color: $btn-primary-contents;
-
-      > svg *,
-      * {
-        fill: $btn-primary-contents;
-      }
     }
   }
 
   &-link {
-    color: $btn-primary;
+    color: $btn-link;
     height: 24px;
 
-    &:hover {
-      text-decoration: underline;
-      color: $btn-primary-hover;
-    }
-
-    &:focus,
+    &:hover,
     &:focus-visible {
       text-decoration: underline;
+      color: $btn-text-active;
       box-shadow: none;
+      outline: none;
     }
 
     &:active:not(:disabled) {

@@ -3,7 +3,7 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { FormattedMessage } from 'react-intl';
-import { Button } from '@components/Button';
+import { Button, ButtonType } from '@components/Button';
 
 const CloseRecord: FC = () => {
   const { saveRecord, discardRecord } = useRecordControls();
@@ -11,7 +11,7 @@ const CloseRecord: FC = () => {
 
   return (
     <>
-      <Button data-testid="close-record-button" onClick={openModal}>
+      <Button data-testid="close-record-button"type={ButtonType.Text} onClick={openModal}>
         <FormattedMessage id="marva.close-rd" />
       </Button>
       <ModalCloseRecord

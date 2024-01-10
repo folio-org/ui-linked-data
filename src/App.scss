@@ -59,13 +59,19 @@ body > #editor-root,
   }
 
   select {
+    @include focused-outline-secondary();
+
     cursor: pointer;
+
+    &:focus-visible {
+      position: relative;
+    }
   }
 
   input {
-    cursor: pointer;
-
     &[type='text'] {
+      @include focused-outline-secondary();
+
       cursor: text;
     }
 
@@ -77,7 +83,7 @@ body > #editor-root,
     }
 
     &[type='checkbox'] {
-      @include focused-outline();
+      @include focused-outline-primary();
 
       -webkit-appearance: none;
       appearance: none;
@@ -121,7 +127,7 @@ body > #editor-root,
     }
 
     &[type='radio'] {
-      @include focused-outline();
+      @include focused-outline-primary();
 
       appearance: none;
       background-color: #fff;
@@ -135,6 +141,7 @@ body > #editor-root,
       transform: translateY(0.2em);
       display: grid;
       place-content: center;
+      cursor: pointer;
 
       &::before {
         content: '';
