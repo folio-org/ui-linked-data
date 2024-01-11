@@ -12,6 +12,7 @@ describe('schema.helper', () => {
     getLookupLabelKey,
     getAdvancedValuesField,
     generateAdvancedFieldObject,
+    getSelectedLabel,
     generateUserValueObject,
     getSelectedRecord,
     generateRecordForDropdown,
@@ -95,6 +96,33 @@ describe('schema.helper', () => {
       const result = generateAdvancedFieldObject({});
 
       expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getSelectedLabel', () => {
+    const entry = {
+      testKey_1: 'testLabelValue_1',
+      testKey_2: ['testLabelValue_2'],
+    };
+
+    test('returns an empty string', () => {
+      const result = getSelectedLabel();
+
+      expect(result).toBe('');
+    });
+
+    test('returns a string if the entry contains an array', () => {
+      const labelKeyName = 'testKey_1';
+      const result = getSelectedLabel(entry, labelKeyName);
+
+      expect(result).toBe('testLabelValue_1');
+    });
+
+    test('returns a string', () => {
+      const labelKeyName = 'testKey_2';
+      const result = getSelectedLabel(entry, labelKeyName);
+
+      expect(result).toBe('testLabelValue_2');
     });
   });
 

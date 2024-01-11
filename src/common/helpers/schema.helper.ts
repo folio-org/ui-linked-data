@@ -36,6 +36,14 @@ export const generateAdvancedFieldObject = ({
   label?: string;
 }) => (advancedValueField && label ? { [advancedValueField]: [label] } : undefined);
 
+export const getSelectedLabel = (entry?: Record<string, string | string[]>, labelKeyName?: string) => {
+  if (!entry || !labelKeyName) return '';
+
+  const selectedLabel = entry[labelKeyName];
+
+  return Array.isArray(selectedLabel) ? selectedLabel[0] : selectedLabel;
+};
+
 export const generateUserValueObject = ({
   entry,
   type,
@@ -78,11 +86,11 @@ export const generateUserValueObject = ({
       // Lookups and literal fields contain just a simple string as a value for some groups, such as "Notes about the Instance"
       label = entry;
     } else {
-      label = isStringEntry ? entry : entry?.[labelKeyName];
+      label = isStringEntry ? entry : getSelectedLabel(entry, labelKeyName);
       uri = isStringEntry ? '' : uri;
     }
   } else {
-    label = Array.isArray(entry[labelKeyName]) ? entry[labelKeyName][0] : entry[labelKeyName];
+    label = getSelectedLabel(entry, labelKeyName);
   }
 
   return {
