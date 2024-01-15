@@ -147,7 +147,7 @@ export const useConfig = () => {
 
       if (nonBFMappedGroup) {
         const selectedOptionUriBFLite = dropdownOptionSelection?.selectedOptionUriBFLite;
-        const recordDataKey = nonBFMappedGroup.data?.[propertyURI]?.key;
+        const recordDataKey = nonBFMappedGroup?.data?.[propertyURI]?.key;
 
         selectedRecord =
           nonBFMappedGroup?.data.options && selectedOptionUriBFLite
