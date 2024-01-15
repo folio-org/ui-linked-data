@@ -146,7 +146,13 @@ export const useConfig = () => {
       let selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
 
       if (nonBFMappedGroup) {
-        selectedRecord = recordData?.[nonBFMappedGroup.data?.[propertyURI]?.key];
+        const selectedOptionUriBFLite = dropdownOptionSelection?.selectedOptionUriBFLite;
+        const recordDataKey = nonBFMappedGroup.data?.[propertyURI]?.key;
+
+        selectedRecord =
+          nonBFMappedGroup?.data.options && selectedOptionUriBFLite
+            ? recordData?.[selectedOptionUriBFLite]?.[recordDataKey]
+            : recordData?.[recordDataKey];
       }
 
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
@@ -240,6 +246,10 @@ export const useConfig = () => {
             shouldSelectDropdownOption({ uri: uriWithSelector, record, firstOfSameType, dropdownOptionSelection })
           ) {
             selectedEntries.push(uuid);
+
+            if (dropdownOptionSelection) {
+              dropdownOptionSelection.selectedOptionUriBFLite = uriBFLite;
+            }
           }
 
           base.set(uuid, {
@@ -276,6 +286,7 @@ export const useConfig = () => {
               userValues,
               parentEntryType: type,
               nonBFMappedGroup,
+              dropdownOptionSelection,
             });
           }
 
@@ -341,6 +352,7 @@ export const useConfig = () => {
                 userValues,
                 hasNoRootWrapper,
                 nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
+                dropdownOptionSelection,
               });
             }
           } else if (hasNoRootWrapper && (filteredRecordData?.length || (isTemporaryComplexGroup && selectedRecord))) {
@@ -370,6 +382,7 @@ export const useConfig = () => {
               userValues,
               hasNoRootWrapper,
               nonBFMappedGroup: nonBFMappedGroup as NonBFMappedGroup,
+              dropdownOptionSelection,
             });
           }
 
@@ -485,6 +498,7 @@ export const useConfig = () => {
     hasSelectedRecord,
     selectedRecordUriBFLite,
     nonBFMappedGroup,
+    dropdownOptionSelection,
   }: {
     uuid: string;
     entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
@@ -500,6 +514,7 @@ export const useConfig = () => {
     hasSelectedRecord?: boolean;
     selectedRecordUriBFLite?: string;
     nonBFMappedGroup?: NonBFMappedGroup;
+    dropdownOptionSelection?: DropdownOptionSelection;
   }) => {
     const {
       propertyURI,
@@ -568,7 +583,7 @@ export const useConfig = () => {
         recordItemIndex,
         hasSelectedRecord,
         userValues,
-        dropdownOptionSelection: {
+        dropdownOptionSelection: dropdownOptionSelection || {
           hasNoRootWrapper,
           isSelectedOption: getIsSelectedOption(),
           setIsSelectedOption: setValue,

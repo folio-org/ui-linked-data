@@ -14,6 +14,8 @@ export const BFLITE_URIS = {
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
   APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
   NOTE: 'http://bibfra.me/vocab/lite/note',
+  CREATOR: 'http://bibfra.me/vocab/lite/creator',
+  CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
 };
 
 export const BF2_URIS = {
@@ -126,6 +128,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
 
 export const NON_BF_RECORD_ELEMENTS = {
   [BFLITE_URIS.NOTE]: { container: '_notes' },
+  // [BFLITE_URIS.CONTRIBUTOR]: { container: '_roles' },
 };
 
 export const NON_BF_GROUP_TYPE = {
@@ -134,6 +137,16 @@ export const NON_BF_GROUP_TYPE = {
     'http://www.w3.org/2000/01/rdf-schema#label': { key: 'value' },
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': { key: 'type' },
     'http://id.loc.gov/ontologies/bibframe/noteType': { key: 'type' },
+  },
+  'http://id.loc.gov/ontologies/bibframe/contribution': {
+    container: { key: 'http://bibfra.me/vocab/lite/contributor' },
+    options: {
+      'http://id.loc.gov/ontologies/bibframe/Person': { key: 'http://bibfra.me/vocab/lite/Person' },
+      'http://id.loc.gov/ontologies/bibframe/Family': { key: 'http://bibfra.me/vocab/lite/Family' },
+      'http://id.loc.gov/ontologies/bibframe/Organization': { key: 'http://bibfra.me/vocab/lite/Organization' },
+      'http://id.loc.gov/ontologies/bibframe/Meeting': { key: 'http://bibfra.me/vocab/lite/Meeting' },
+    },
+    'http://id.loc.gov/ontologies/bibframe/role': { key: '_roles' },
   },
 };
 
@@ -233,6 +246,34 @@ export const TYPE_MAP = {
       'http://bibfra.me/vocab/marc/languageNote': {
         uri: 'http://id.loc.gov/vocabulary/mnotetype/lang',
         parentBlock: { bfLiteUri: BLOCK_URIS_BFLITE.WORK },
+      },
+    },
+  },
+  'http://id.loc.gov/ontologies/bibframe/contribution': {
+    field: {
+      uri: 'http://id.loc.gov/ontologies/bibframe/role',
+    },
+    data: {
+      'http://bibfra.me/vocab/relation/abridger': {
+        uri: 'http://id.loc.gov/vocabulary/relators/abr',
+      },
+      'http://bibfra.me/vocab/relation/acp': {
+        uri: 'http://id.loc.gov/vocabulary/relators/acp',
+      },
+      'http://bibfra.me/vocab/relation/actor': {
+        uri: 'http://id.loc.gov/vocabulary/relators/act',
+      },
+      'http://bibfra.me/vocab/relation/adapter': {
+        uri: 'http://id.loc.gov/vocabulary/relators/adp',
+      },
+      'http://bibfra.me/vocab/relation/addressee': {
+        uri: 'http://id.loc.gov/vocabulary/relators/rcp',
+      },
+      'http://bibfra.me/vocab/relation/analyst': {
+        uri: 'http://id.loc.gov/vocabulary/relators/anl',
+      },
+      'http://bibfra.me/vocab/relation/animator': {
+        uri: 'http://id.loc.gov/vocabulary/relators/anm',
       },
     },
   },

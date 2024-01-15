@@ -28,7 +28,7 @@ export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[]
   if (!propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(TYPE_MAP, propertyURI);
+  const bfGroup = getBFGroup(TYPE_MAP as FieldTypeMap, propertyURI);
 
   if (bfGroup) {
     const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
@@ -49,15 +49,18 @@ export const filterLookupOptionsByParentBlock = (
   if (!parentBlockUri || !propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(TYPE_MAP, propertyURI);
+  const bfGroup = getBFGroup(TYPE_MAP as FieldTypeMap, propertyURI);
 
   if (bfGroup) {
     const bf20MappedData = Object.values(bfGroup.data);
 
     filteredLookupData = lookupData.filter(({ value }) =>
-      bf20MappedData.find(
-        (data: FieldTypeMapDataValue) => data.uri === value.uri && data.parentBlock?.bfLiteUri === parentBlockUri,
-      ),
+      bf20MappedData.find((data: FieldTypeMapDataValue) => {
+        const definedParentBlock = data.parentBlock;
+        const hasTheSameUri = data.uri === value.uri;
+
+        return definedParentBlock ? definedParentBlock.bfLiteUri === parentBlockUri && hasTheSameUri : hasTheSameUri;
+      }),
     );
   }
 

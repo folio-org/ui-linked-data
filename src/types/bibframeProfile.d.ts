@@ -97,12 +97,16 @@ type DropdownOptionSelection = {
   isSelectedOption: boolean;
   setIsSelectedOption: (value: boolean) => boolean;
   selectedRecordUriBFLite?: string;
+  selectedOptionUriBFLite?: string;
 };
 
 type LookupValue = string | Record<string, (string | undefined)[] | string | Nullish> | Nullish;
 
 type NonBFMappedGroupData = {
   container: { key: string };
+  options?: {
+    [key: string]: { key?: string };
+  };
   [key: string]: { key: string };
 };
 
