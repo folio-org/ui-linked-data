@@ -3,10 +3,12 @@ import './Button.scss';
 import classNames from 'classnames';
 
 export enum ButtonType {
-  Primary,
-  Secondary,
-  Text,
-  Link,
+  Highlighted = 'highlighted',
+  Secondary = 'secondary',
+  Text = 'text',
+  Link = 'link',
+  Primary = 'primary',
+  Passive = 'passive'
 }
 
 type Button = {
@@ -35,10 +37,7 @@ export const Button: FC<Button> = ({
     disabled={disabled}
     onClick={onClick}
     className={classNames('button', {
-      'button-secondary': type === ButtonType.Secondary,
-      'button-primary': type === ButtonType.Primary,
-      'button-text': type === ButtonType.Text,
-      'button-link': type === ButtonType.Link,
+      [`button-${type}`]: type,
       [className]: className,
     })}
   >

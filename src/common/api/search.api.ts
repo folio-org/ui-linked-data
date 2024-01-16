@@ -25,14 +25,25 @@ export type ItemSearchResponse = {
   }[];
 };
 
+export type GetByIdentifier = {
+  searchBy?: string;
+  query: string;
+  offset?: string;
+  limit?: string;
+};
+
 const getByIdentifierUrl = '/search/bibframe';
-export const getByIdentifier = async (
-  id: string,
-  query: string,
+export const getByIdentifier = async ({
+  searchBy,
+  query,
   offset = '0',
-  limit: string = SEARCH_RESULTS_LIMIT.toString(),
-) => {
-  const urlParams: Record<string, string> | undefined = { query: `(${id} all "${query}") sortby title`, offset, limit };
+  limit = SEARCH_RESULTS_LIMIT.toString(),
+}: GetByIdentifier) => {
+  const urlParams: Record<string, string> | undefined = {
+    query: searchBy ? `(${searchBy} all "${query}") sortby title` : `${query} sortby title`,
+    offset,
+    limit,
+  };
 
   return await baseApi.getJson({ url: getByIdentifierUrl, urlParams });
 };

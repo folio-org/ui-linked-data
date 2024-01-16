@@ -5,6 +5,7 @@
   width: 290px;
   border-right: 1px solid #d7d8da;
   padding: 12px 1rem;
+  overflow-x: scroll;
 
   .header, .meta-controls {
     display: flex;
@@ -33,7 +34,7 @@
 
     .text-input {
       margin-top: -1px;
-      padding: 4px 8px;
+      padding: 4px 8px 4px 8px;
       height: 26px;
     }
   }

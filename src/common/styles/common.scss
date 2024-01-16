@@ -1,32 +1,35 @@
-$btn-primary: #3e75cf;
-$btn-primary-contents: #fff;
-$btn-primary-hover: #3465a8;
-$btn-primary-active: #255096;
-$btn-text-focus: #e9effa;
-$btn-text-active: #255096;
-$btn-link: #2d62b7;
-$btn-link-active: #1d3f75;
-$btn-disabled: #d7d8da;
-$btn-disabled-contents: #8d9095;
-$outline-outer-focus: #d8e3f5;
+$blue-500: #3e75cf;
+$base: #fff;
+// TODO: naming
+$blue-500-hover: #3465a8;
+$blue-700: #255096;
+$blue-50: #e9effa;
+$blue-700: #255096;
+$blue-600: #2d62b7;
+$blue-800: #1d3f75;
+$gray-200: #d7d8da;
+$gray-400: #8d9095;
+$blue-100: #d8e3f5;
+$blue-400: #6591d9;
 
-$btn-primary-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37);
-$primary-focusable-outline-box-shadow:
-  0 0 0 1px $btn-primary-contents,
-  0 0 0 3px $btn-primary,
-  0 0 0 6px $outline-outer-focus;
+$btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37);
+$highlighted-focusable-outline-box-shadow:
+  0 0 0 1px $base,
+  0 0 0 3px $blue-500,
+  0 0 0 6px $blue-100;
 
 $secondary-focusable-outline-box-shadow:
-  0 0 0 1px $btn-primary,
-  0 0 0 4px $outline-outer-focus;
+  0 0 0 1px $blue-500,
+  0 0 0 4px $blue-100;
 
 $btn-border-radius: 4px;
-$btn-primary-height: 32px;
+$btn-height: 32px;
 
 @mixin focused-outline-primary {
+  &:focus,
   &:focus-visible {
     outline: none;
-    box-shadow: $primary-focusable-outline-box-shadow;
+    box-shadow: $highlighted-focusable-outline-box-shadow;
 
     &:active {
       box-shadow: none;
@@ -35,13 +38,37 @@ $btn-primary-height: 32px;
 }
 
 @mixin focused-outline-secondary {
-  &:focus-visible {
+  &:focus:not(:active),
+  &:focus-visible:not(:active) {
     outline: none;
-    border: 1px solid $btn-primary;
-    box-shadow: $secondary-focusable-outline-box-shadow;
+    box-shadow:
+      0 0 0 1px inset $blue-500,
+      $secondary-focusable-outline-box-shadow;
 
-    &:active {
-      box-shadow: none;
+    &:hover {
+      outline: none;
+      box-shadow:
+        0 0 0 1px inset $blue-500,
+        $secondary-focusable-outline-box-shadow;
+    }
+  }
+}
+
+@mixin focused-outline-secondary-with-border {
+  outline: none;
+
+  &:focus,
+  &:focus-visible {
+    border: 1px solid $blue-500;
+    box-shadow:
+      0 0 0 1px $blue-500,
+      $secondary-focusable-outline-box-shadow;
+
+    &:hover {
+      border: 1px solid $blue-500;
+      box-shadow:
+        0 0 0 1px $blue-500,
+        $secondary-focusable-outline-box-shadow;
     }
   }
 }

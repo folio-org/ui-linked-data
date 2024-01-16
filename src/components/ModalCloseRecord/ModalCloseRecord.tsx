@@ -25,15 +25,15 @@ export const ModalCloseRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, saveRec
   return (
     <Modal
       isOpen={isOpen}
-      title={formatMessage({ id: 'marva.close-rd' })}
-      submitButtonLabel={formatMessage({ id: 'marva.save-close' })}
+      title={formatMessage({ id: 'marva.closeRd' })}
+      submitButtonLabel={formatMessage({ id: 'marva.saveClose' })}
       cancelButtonLabel={formatMessage({ id: 'marva.close' })}
       onClose={closeModal}
       onSubmit={onClickSaveAndCloseButton}
       onCancel={discardRecord}
     >
       <div data-testid="modal-close-record-content">
-        <FormattedMessage id="marva.confirm-close-rd" />
+        <FormattedMessage id="marva.confirmCloseRd" />
       </div>
     </Modal>
   );

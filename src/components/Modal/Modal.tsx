@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import Times16 from '@src/assets/times-16.svg?react';
 import './Modal.scss';
-import { Button } from '@components/Button';
+import { Button, ButtonType } from '@components/Button';
 // TODO: Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -20,6 +20,7 @@ interface Props {
   onCancel: () => void;
   onClose: () => void;
   children?: ReactNode;
+  showCloseIconButton?: boolean;
 }
 
 const Modal: FC<Props> = ({
@@ -34,6 +35,7 @@ const Modal: FC<Props> = ({
   onClose,
   children,
   submitButtonDisabled,
+  showCloseIconButton = true,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: uncomment for using with Shadow DOM
@@ -57,17 +59,24 @@ const Modal: FC<Props> = ({
           <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className="modal-header">
-              <h3>{title}</h3>
-              <Button onClick={onClose} className="close-button">
-                <Times16 />
-              </Button>
+              <h3 className="title">{title}</h3>
+              {showCloseIconButton && (
+                <button onClick={onClose} className="close-button">
+                  <Times16 />
+                </button>
+              )}
             </div>
             {!!children && children}
             <div className="modal-controls">
-              <Button onClick={onCancel} data-testid="modal-button-cancel">
+              <Button onClick={onCancel} type={ButtonType.Passive} data-testid="modal-button-cancel">
                 {cancelButtonLabel}
               </Button>
-              <Button disabled={submitButtonDisabled} onClick={onSubmit} data-testid="modal-button-submit">
+              <Button
+                disabled={submitButtonDisabled}
+                type={ButtonType.Primary}
+                onClick={onSubmit}
+                data-testid="modal-button-submit"
+              >
                 {submitButtonLabel}
               </Button>
             </div>

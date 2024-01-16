@@ -10,6 +10,6 @@ type Props = {
 
 export const ScrollToTop: FC<Props> = ({ className }) => (
   <Button onClick={scrollToTop} className={className ? classNames(className) : undefined}>
-    <FormattedMessage id="marva.back-to-top" />
+    <FormattedMessage id="marva.backToTop" />
   </Button>
 );

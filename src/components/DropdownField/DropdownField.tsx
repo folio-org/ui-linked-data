@@ -27,6 +27,7 @@ export const DropdownField: FC<Props> = ({ options, name = '', uuid, onChange, v
         onChange={handleOnChange}
         value={localValue}
         isDisabled={isDisabled}
+        inputId='creatable-select-input'
       />
     </div>
   );

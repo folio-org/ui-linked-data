@@ -702,7 +702,7 @@ export const useConfig = () => {
 
             setCommonStatus(currentStatus => [
               ...currentStatus,
-              UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-load-simple-lookup-data'),
+              UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadSimpleLookupData'),
             ]);
           }
         }

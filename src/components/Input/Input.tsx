@@ -21,7 +21,7 @@ export const Input: FC<InputProps> = ({
   testid,
   onChange,
   onPressEnter,
-  type,
+  type = 'text',
 }) => {
   return (
     <input

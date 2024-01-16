@@ -45,7 +45,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
       ]);
     }
   };
@@ -76,14 +76,14 @@ export const useRecordControls = () => {
       setRecord(parsedResponse);
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-save-success'),
+        UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
       ]);
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-save-rd'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
       ]);
     } finally {
       setIsLoading(false);
@@ -110,7 +110,7 @@ export const useRecordControls = () => {
       discardRecord();
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.rd-deleted'),
+        UserNotificationFactory.createMessage(StatusType.success, 'marva.rdDeleted'),
       ]);
 
       navigate(ROUTES.DASHBOARD.uri);
@@ -119,7 +119,7 @@ export const useRecordControls = () => {
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-delete-rd'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantDeleteRd'),
       ]);
     }
   };

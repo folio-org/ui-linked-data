@@ -5,13 +5,6 @@ export enum SearchIdentifiers {
   CONTRIBUTOR = 'contributor',
 }
 
-export enum SearchDisplayIdentifiers {
-  isbn = 'marva.isbn',
-  lccn = 'marva.lccn',
-  title = 'marva.title',
-  contributor = 'marva.contributor',
-}
-
 export enum SearchLimiterNames {
   PublishDate = 'publishDate',
   Format = 'format',
@@ -36,12 +29,51 @@ export enum Suppressed {
   NotSuppressed = 'notSuppressed',
 }
 
+// TODO: here and below: uncomment once taken into development
+export enum AdvancedSearchOperators {
+  AND = 'and',
+  // OR = 'or',
+  NOT = 'not',
+}
+
+export enum AdvancedSearchQualifiers {
+  startsWith = 'startsWith',
+  containsAll = 'containsAll',
+  // exactPhrase = 'exactPhrase',
+}
+
+export type AdvancedSearchSchemaRow = {
+  rowIndex?: number;
+  operator?: AdvancedSearchOperators;
+  query?: string;
+  qualifier?: AdvancedSearchQualifiers;
+  index?: SearchIdentifiers;
+};
+
 export const DEFAULT_SEARCH_LIMITERS = {
   [SearchLimiterNames.PublishDate]: PublishDate.AllTime,
   [SearchLimiterNames.Format]: [],
   [SearchLimiterNames.Suppressed]: Suppressed.All,
-}
+};
+
+export type AdvancedSearchSchema = AdvancedSearchSchemaRow[];
+
+export const SEARCH_RESULTS_LIMIT = 10;
+
+export const SELECT_IDENTIFIERS = Object.values(SearchIdentifiers);
+
+export const SELECT_OPERATORS = Object.values(AdvancedSearchOperators);
+
+export const SELECT_QUALIFIERS = Object.values(AdvancedSearchQualifiers);
 
 export const DEFAULT_SEARCH_BY = SearchIdentifiers.LCCN;
 
-export const SEARCH_RESULTS_LIMIT = 10;
+export const DEFAULT_ADVANCED_SEARCH_ROW_VALUE: AdvancedSearchSchemaRow = {
+  operator: AdvancedSearchOperators.AND,
+  qualifier: AdvancedSearchQualifiers.containsAll,
+  index: SearchIdentifiers.LCCN,
+};
+
+export const DEFAULT_ADVANCED_SEARCH_QUERY: AdvancedSearchSchema = new Array(6)
+  .fill(DEFAULT_ADVANCED_SEARCH_ROW_VALUE)
+  .map((item, rowIndex) => ({ ...item, rowIndex, operator: rowIndex === 0 ? undefined : item.operator }));

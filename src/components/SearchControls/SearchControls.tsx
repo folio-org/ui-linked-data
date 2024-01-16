@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
-  DEFAULT_SEARCH_BY,
   Format,
   PublishDate,
   SearchIdentifiers,
@@ -19,28 +18,24 @@ import { Input } from '@components/Input';
 
 type Props = {
   submitSearch: VoidFunction;
-  clearPagination: VoidFunction;
+  clearValues: VoidFunction;
 };
 
-export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => {
+export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const [limiters, setLimiters] = useRecoilState(state.search.limiters);
   const setMessage = useSetRecoilState(state.search.message);
-  const setData = useSetRecoilState(state.search.data);
   const resetControls = useResetRecoilState(state.search.limiters);
+  const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setMessage('');
     setQuery(value);
   };
 
-  const clearValues = () => {
-    clearPagination();
-    setData(null);
-    setSearchBy(DEFAULT_SEARCH_BY);
-    setQuery('');
-    setMessage('');
+  const clearValuesAndResetControls = () => {
+    clearValues();
     resetControls();
   };
 
@@ -64,13 +59,13 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
 
   const fallbackOnChange = (_e: ChangeEvent<HTMLInputElement>) => {};
 
-  useEffect(() => clearValues, []);
+  useEffect(() => clearValuesAndResetControls, []);
 
   return (
     <div className="search-pane">
       <div className="header">
         <strong>
-          <FormattedMessage id="marva.search-and-filter" />
+          <FormattedMessage id="marva.searchAndFilter" />
         </strong>
         <CaretDown className="header-caret" />
       </div>
@@ -97,7 +92,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
       </div>
       <Button
         data-testid="id-search-button"
-        type={ButtonType.Primary}
+        type={ButtonType.Highlighted}
         className="search-button"
         onClick={submitSearch}
         disabled={!query}
@@ -108,19 +103,23 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
         <Button
           type={ButtonType.Text}
           className="search-button"
-          onClick={clearValues}
+          onClick={clearValuesAndResetControls}
           prefix={<XInCircle />}
           disabled={!query}
         >
           <FormattedMessage id="marva.reset" />
         </Button>
-        <Button type={ButtonType.Link} className="search-button">
+        <Button
+          type={ButtonType.Link}
+          className="search-button"
+          onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+        >
           <FormattedMessage id="marva.advanced" />
         </Button>
       </div>
       <div className="controls">
         <Accordion
-          title={<FormattedMessage id="marva.publish-date" />}
+          title={<FormattedMessage id="marva.publishDate" />}
           children={
             <div onChange={onChangeLimiters}>
               <label htmlFor={PublishDate.AllTime}>
@@ -131,7 +130,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.all-time" />
+                <FormattedMessage id="marva.allTime" />
               </label>
               <label htmlFor={PublishDate.TwelveMonths}>
                 <input
@@ -141,7 +140,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.past-12-months" />
+                <FormattedMessage id="marva.past12Months" />
               </label>
               <label htmlFor={PublishDate.FiveYears}>
                 <input
@@ -151,7 +150,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.past-5-yrs" />
+                <FormattedMessage id="marva.past5Yrs" />
               </label>
               <label htmlFor={PublishDate.TenYears}>
                 <input
@@ -161,7 +160,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.past-10-yrs" />
+                <FormattedMessage id="marva.past10Yrs" />
               </label>
             </div>
           }
@@ -189,7 +188,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="checkbox"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.online-resource" />
+                <FormattedMessage id="marva.onlineResource" />
               </label>
             </div>
           }
@@ -227,7 +226,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearPagination }) => 
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.not-supressed" />
+                <FormattedMessage id="marva.notSupressed" />
               </label>
             </div>
           }
