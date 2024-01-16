@@ -37,7 +37,9 @@ describe('Item Search', () => {
   } = screen;
 
   beforeEach(() => {
-    getByIdentifierMock = jest.spyOn(searchApi, 'getByIdentifier').mockImplementation(() => Promise.resolve(null));
+    getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as any).mockImplementation(() =>
+      Promise.resolve(null),
+    );
     getPageMetadata.mockReturnValue({ totalElements: 2, totalPages: 1 });
     getCurrentPageNumber.mockReturnValue(1);
 
@@ -85,7 +87,7 @@ describe('Item Search', () => {
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    expect(await findByText('marva.search-no-rds-match')).toBeInTheDocument();
+    expect(await findByText('marva.searchNoRdsMatch')).toBeInTheDocument();
   });
 
   test('calls fetchRecord and scrollElementIntoView on action item Preview button click', async () => {

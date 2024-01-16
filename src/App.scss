@@ -12,7 +12,6 @@ body > #editor-root,
 .main-content,
 .embed-container {
   height: 100%;
-  font-size: 14px;
 }
 
 #app-root {
@@ -59,7 +58,7 @@ body > #editor-root,
   }
 
   select {
-    @include focused-outline-secondary();
+    @include focused-outline-secondary-with-border();
 
     cursor: pointer;
 
@@ -69,8 +68,8 @@ body > #editor-root,
   }
 
   input {
-    &[type='text'] {
-      @include focused-outline-secondary();
+    &[type='text']:not(#creatable-select-input) {
+      @include focused-outline-secondary-with-border();
 
       cursor: text;
     }

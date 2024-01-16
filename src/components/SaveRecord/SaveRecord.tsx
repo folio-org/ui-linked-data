@@ -8,7 +8,7 @@ const SaveRecord: FC = () => {
 
   return (
     <Button data-testid="save-record-button" type={ButtonType.Text} onClick={saveRecord}>
-      <FormattedMessage id="marva.save-rd" />
+      <FormattedMessage id="marva.saveRd" />
     </Button>
   );
 };

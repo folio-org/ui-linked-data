@@ -61,7 +61,7 @@ export const SimpleLookupField: FC<Props> = ({
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cant-load-simple-lookup-data'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadSimpleLookupData'),
       ]);
     } finally {
       setIsLoading(false);
@@ -106,6 +106,7 @@ export const SimpleLookupField: FC<Props> = ({
         value={localValue}
         placeholder={<FormattedMessage id="marva.select" />}
         loadingMessage={() => <FormattedMessage id="marva.loading" />}
+        inputId='creatable-select-input'
       />
     </div>
   );
