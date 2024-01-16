@@ -37,6 +37,8 @@ export class SchemaWithDuplicatesService {
       this.schema.set(parentEntryUuid, updatedParentEntry);
       this.schema.set(updatedEntryUuid, updatedEntry);
     }
+
+    return updatedEntryUuid;
   }
 
   private getCopiedEntry(entry: SchemaEntry, uuid: string, parentElemPath?: string[]) {
