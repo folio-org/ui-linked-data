@@ -45,7 +45,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   return (
     <Modal
       isOpen={isModalOpen}
-      title={formatMessage({ id: 'marva.close-rd' })}
+      title={formatMessage({ id: 'marva.closeRd' })}
       cancelButtonLabel={formatMessage({ id: 'marva.yes' })}
       submitButtonLabel={formatMessage({ id: 'marva.no' })}
       onClose={stopNavigation}
@@ -53,7 +53,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
       onCancel={proceedNavigation}
     >
       <div data-testid="modal-close-record-content">
-        <FormattedMessage id="marva.confirm-close-rd" />
+        <FormattedMessage id="marva.confirmCloseRd" />
       </div>
     </Modal>
   );

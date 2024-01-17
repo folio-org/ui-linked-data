@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { usePagination } from '@common/hooks/usePagination';
-import { StatusType } from '@common/constants/status.constants';
-import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { StatusType } from '@common/constants/status.constants';
+import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
 import { scrollElementIntoView } from '@common/helpers/pageScrolling.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { SCROLL_DELAY_MS } from '@common/constants/pageScrolling.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
+import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Table, Row } from '@components/Table';
@@ -48,7 +48,7 @@ const initHeader: Row = {
     position: 4,
   },
   date: {
-    label: <FormattedMessage id="marva.pub-date" />,
+    label: <FormattedMessage id="marva.pubDate" />,
     position: 5,
   },
   edition: {
@@ -64,7 +64,7 @@ type Props = {
 const EmptyPlaceholder = () => (
   <div className="empty-placeholder">
     <GeneralSearch />
-    <FormattedMessage id="marva.enter-search-criteria" />
+    <FormattedMessage id="marva.enterSearchCriteria" />
   </div>
 );
 
@@ -72,14 +72,13 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
   const navElemRef = useRef<Element | null>();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const fullDisplayContainerElemRef = useRef<Element | null>();
-  const searchBy = useRecoilValue(state.search.index);
-  const query = useRecoilValue(state.search.query);
+  const [searchBy, setSearchBy] = useRecoilState(state.search.index);
+  const [query, setQuery] = useRecoilState(state.search.query);
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const [header, setHeader] = useState(initHeader);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
-  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
   const navigate = useNavigate();
   const {
     getPageMetadata,
@@ -145,7 +144,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
                 } catch {
                   setStatusMessages(currentStatus => [
                     ...currentStatus,
-                    UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+                    UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
                   ]);
                 } finally {
                   setIsLoading(false);
@@ -186,7 +185,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
     if (type === SearchIdentifiers.LCCN) {
       const normalized = normalizeLccn(query);
 
-      !normalized && setMessage('marva.search-invalid-lccn');
+      !normalized && setMessage('marva.searchInvalidLccn');
 
       return normalized;
     }
@@ -194,24 +193,24 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
     return query;
   };
 
-  const fetchData = async (searchBy: SearchIdentifiers, query: string, offset?: number) => {
+  const fetchData = async (query: string, searchBy?: SearchIdentifiers, offset?: number) => {
     if (!query) return;
 
     clearMessage();
     setPreviewContent([]);
     data && setData(null);
 
-    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+    const updatedQuery = searchBy ? validateAndNormalizeQuery(searchBy, query) : query;
 
     if (!updatedQuery) return;
 
     setIsLoading(true);
 
     try {
-      const result = await getByIdentifier(searchBy, updatedQuery as string, offset?.toString());
+      const result = await getByIdentifier({ searchBy, query: updatedQuery as string, offset: offset?.toString() });
       const { content, totalPages, totalRecords } = result;
 
-      if (!content.length) return setMessage('marva.search-no-rds-match');
+      if (!content.length) return setMessage('marva.searchNoRdsMatch');
 
       swapIdentifiers();
       setData(applyRowActionItems(formatKnownItemSearchData(result), false));
@@ -219,7 +218,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
     } catch {
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
       ]);
     } finally {
       setIsLoading(false);
@@ -229,17 +228,25 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
   useEffect(() => {
     if (!searchBy || !query) return;
 
-    fetchData(searchBy, query, currentPageNumber * SEARCH_RESULTS_LIMIT);
+    fetchData(query, searchBy, currentPageNumber * SEARCH_RESULTS_LIMIT);
   }, [currentPageNumber]);
 
   const submitSearch = () => {
     clearPagination();
-    fetchData(searchBy, query, 0);
+    fetchData(query, searchBy, 0);
+  };
+
+  const clearValues = () => {
+    clearPagination();
+    setData(null);
+    setSearchBy(DEFAULT_SEARCH_BY);
+    setQuery('');
+    setMessage('');
   };
 
   return (
     <div data-testid="id-search" className="item-search">
-      <SearchControls submitSearch={submitSearch} clearPagination={clearPagination} />
+      <SearchControls submitSearch={submitSearch} clearValues={clearValues} />
       <div className="item-search-content-container">
         {message && (
           <div>
@@ -264,10 +271,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
         {!data && !message && <EmptyPlaceholder />}
         <FullDisplay />
       </div>
-      <AdvancedSearchModal
-        isOpen={isAdvancedSearchOpen}
-        toggleIsOpen={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
-      />
+      <AdvancedSearchModal submitSearch={fetchData} clearValues={clearValues} />
     </div>
   );
 };

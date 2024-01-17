@@ -28,7 +28,7 @@ const initHeader: Row = {
     position: 1,
   },
   id: {
-    label: <FormattedMessage id="marva.resource-id" />,
+    label: <FormattedMessage id="marva.resourceId" />,
     position: 2,
   },
 };
@@ -82,7 +82,7 @@ export const Load = () => {
 
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.error-fetching'),
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
         ]);
       } finally {
         setIsLoading(false);
@@ -118,7 +118,7 @@ export const Load = () => {
           </>
         ) || (
           <div>
-            <FormattedMessage id="marva.no-available-rds" />
+            <FormattedMessage id="marva.noAvailableRds" />
           </div>
         )}
       </div>
