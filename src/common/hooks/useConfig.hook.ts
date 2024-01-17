@@ -710,16 +710,24 @@ export const useConfig = () => {
 
       const filteredLookupData = filterLookupOptionsByParentBlock(lookupData, propertyURI, blockEntry?.uriBFLite);
 
-      let contents = recordData.map((entry: string | Record<string, unknown> | Record<string, unknown>[]) =>
-        generateUserValueContent({
+      let contents = recordData.reduce((accum, entry: string | Record<string, unknown> | Record<string, unknown>[]) => {
+        const generatedContent = generateUserValueContent({
           entry,
           type,
           uriBFLite,
           propertyURI,
           lookupData: filteredLookupData,
           nonBFMappedGroup,
-        }),
-      );
+        }) as UserValueContents;
+        const { meta } = generatedContent;
+
+        // Hide default note type for Note fields.
+        if (!meta || (meta.type === AdvancedFieldType.simple && meta.uri !== BFLITE_URIS.NOTE)) {
+          accum.push(generatedContent);
+        }
+
+        return accum;
+      }, [] as UserValueContents[]);
 
       if (index !== undefined && hasBlockParent) {
         const selectedRecordData = recordData?.[index];
