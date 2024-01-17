@@ -271,7 +271,10 @@ export const selectNonBFMappedGroupData = ({
   const mappedGroup = getMappedNonBFGroupType(propertyURI);
   const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
   const recordEntry = getRecordEntry(selectedRecord);
-  const selectedNonBFRecord = isNonBFMappedGroup && mappedGroup ? recordEntry?.[mappedGroup?.container.key] : undefined;
+  const selectedNonBFRecord =
+    isNonBFMappedGroup && mappedGroup && mappedGroup?.container?.key
+      ? recordEntry?.[mappedGroup.container.key]
+      : undefined;
   const nonBFMappedGroup = isNonBFMappedGroup
     ? {
         uri: propertyURI,

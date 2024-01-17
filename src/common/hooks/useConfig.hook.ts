@@ -19,7 +19,7 @@ import {
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, TEMP_BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
 import { shouldSelectDropdownOption } from '@common/helpers/profile.helper';
-import { getUris } from '@common/helpers/bibframe.helper';
+import { getSelectedBFLiteUri, getUris } from '@common/helpers/bibframe.helper';
 import {
   generateCopiedGroupUuids,
   generateRecordForDropdown,
@@ -543,7 +543,7 @@ export const useConfig = () => {
       path: [...path, newUuid],
       displayName: propertyLabel,
       uri: propertyURI,
-      uriBFLite: nonBFMappedGroup ? nonBFMappedGroup.data.container.key : uriBFLite,
+      uriBFLite: getSelectedBFLiteUri(entry as PropertyTemplate, uriBFLite, nonBFMappedGroup),
       constraints,
       children: uuidArray,
     });

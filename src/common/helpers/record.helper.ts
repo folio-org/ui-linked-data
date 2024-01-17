@@ -2,7 +2,12 @@ import { cloneDeep } from 'lodash';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { IDENTIFIER_AS_VALUE, INSTANTIATES_TO_INSTANCE_FIELDS, TYPE_URIS } from '@common/constants/bibframe.constants';
+import {
+  FORCE_INCLUDE_WHEN_DEPARSING,
+  IDENTIFIER_AS_VALUE,
+  INSTANTIATES_TO_INSTANCE_FIELDS,
+  TYPE_URIS,
+} from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
@@ -24,15 +29,19 @@ export const formatRecord = (parsedRecord: ParsedRecord) => {
 
   delete parsedRecord[BFLITE_URIS.INSTANTIATES];
 
-  const instanceField = updateInstantiatesWithInstanceFields(instanceComponent);
-  const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(instanceField);
-
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: instanceWithUpdatedNotes,
+      [TYPE_URIS.INSTANCE]: getUpdatedInstance(instanceComponent),
     },
   };
+};
+
+const getUpdatedInstance = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
+  const instanceField = updateInstantiatesWithInstanceFields(instanceComponent);
+  const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(instanceField);
+
+  return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes);
 };
 
 export const updateInstantiatesWithInstanceFields = (
@@ -74,6 +83,40 @@ export const updateRecordWithDefaultNoteType = (
   });
 
   return clonedRecord;
+};
+
+export const updateRecordWithRelationshipDesignator = (
+  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
+) => {
+  const clonedInstance = cloneDeep(record);
+  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<
+    string,
+    unknown
+  >[];
+
+  FORCE_INCLUDE_WHEN_DEPARSING.forEach(fieldName => {
+    const recordFields = instantiatesComponent?.[0]?.[fieldName] as Record<string, string[]>[] | undefined;
+
+    if (!recordFields) return;
+
+    const nonBFMappedContainer = NON_BF_RECORD_ELEMENTS[fieldName]?.container;
+
+    recordFields.forEach(field => {
+      const fieldKeys = Object.keys(field);
+      const hasRoles = nonBFMappedContainer && fieldKeys.includes(nonBFMappedContainer);
+
+      if (!hasRoles) return;
+
+      const roles = field[nonBFMappedContainer];
+      delete field[nonBFMappedContainer];
+
+      for (const key in field) {
+        field[key] = { ...field[key], [nonBFMappedContainer]: roles };
+      }
+    });
+  });
+
+  return clonedInstance;
 };
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {

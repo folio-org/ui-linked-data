@@ -130,6 +130,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
 export const NON_BF_RECORD_ELEMENTS = {
   [BFLITE_URIS.NOTE]: { container: '_notes' },
   [BFLITE_URIS.CONTRIBUTOR]: { container: '_roles' },
+  [BFLITE_URIS.CREATOR]: { container: '_roles' },
 };
 
 export const NON_BF_GROUP_TYPE = {
@@ -140,7 +141,12 @@ export const NON_BF_GROUP_TYPE = {
     'http://id.loc.gov/ontologies/bibframe/noteType': { key: 'type' },
   },
   [BF2_URIS.CONTRIBUTION]: {
-    container: { key: BFLITE_URIS.CONTRIBUTOR },
+    container: {
+      altKeys: {
+        'http://id.loc.gov/ontologies/bflc/PrimaryContribution': BFLITE_URIS.CREATOR,
+        'http://id.loc.gov/ontologies/bibframe/Contribution': BFLITE_URIS.CONTRIBUTOR,
+      },
+    },
     options: {
       'http://id.loc.gov/ontologies/bibframe/Person': { key: 'http://bibfra.me/vocab/lite/Person' },
       'http://id.loc.gov/ontologies/bibframe/Family': { key: 'http://bibfra.me/vocab/lite/Family' },
