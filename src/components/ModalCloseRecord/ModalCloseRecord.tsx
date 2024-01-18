@@ -1,6 +1,7 @@
 import { FC, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '../Modal';
+import { Modal } from '@components/Modal';
+import './ModalCloseRecord.scss';
 
 interface Props {
   isOpen: boolean;
@@ -32,7 +33,7 @@ export const ModalCloseRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, saveRec
       onSubmit={onClickSaveAndCloseButton}
       onCancel={discardRecord}
     >
-      <div data-testid="modal-close-record-content">
+      <div className='close-record-contents' data-testid="modal-close-record-content">
         <FormattedMessage id="marva.confirmCloseRd" />
       </div>
     </Modal>

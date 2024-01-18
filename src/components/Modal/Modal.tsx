@@ -59,12 +59,12 @@ const Modal: FC<Props> = ({
           <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className="modal-header">
-              <h3 className="title">{title}</h3>
               {showCloseIconButton && (
                 <button onClick={onClose} className="close-button">
                   <Times16 />
                 </button>
               )}
+              <h3 className="title">{title}</h3>
             </div>
             {!!children && children}
             <div className="modal-controls">

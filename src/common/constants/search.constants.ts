@@ -1,6 +1,6 @@
 export enum SearchIdentifiers {
-  ISBN = 'isbn',
   LCCN = 'lccn',
+  ISBN = 'isbn',
   TITLE = 'title',
   CONTRIBUTOR = 'contributor',
 }
@@ -37,8 +37,8 @@ export enum AdvancedSearchOperators {
 }
 
 export enum AdvancedSearchQualifiers {
-  startsWith = 'startsWith',
   containsAll = 'containsAll',
+  startsWith = 'startsWith',
   // exactPhrase = 'exactPhrase',
 }
 

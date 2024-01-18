@@ -1,6 +1,7 @@
 import { FC, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '../Modal';
+import { Modal } from '@components/Modal';
+import './ModalDeleteRecord.scss';
 
 interface Props {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, delete
       onSubmit={deleteRecord}
       onCancel={closeModal}
     >
-      <div data-testid="modal-delete-record-content">
+      <div className="delete-record-contents" data-testid="modal-delete-record-content">
         <FormattedMessage id="marva.confirmDeleteRd" />
       </div>
     </Modal>
