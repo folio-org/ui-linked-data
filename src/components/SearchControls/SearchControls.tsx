@@ -15,6 +15,7 @@ import './SearchControls.scss';
 import state from '@state';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { Input } from '@components/Input';
+import { Select } from '@components/Select';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -70,24 +71,21 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <CaretDown className="header-caret" />
       </div>
       <div className="inputs">
-        <select
+        <Select
+          id="id-search-select"
           className="select-input"
           value={searchBy}
-          onChange={({ target: { value } }) => setSearchBy(value as SearchIdentifiers)}
-        >
-          {Object.values(SearchIdentifiers).map(id => (
-            <option key={id} value={id} data-testid={id}>
-              <FormattedMessage id={`marva.${id}`} />
-            </option>
-          ))}
-        </select>
+          options={Object.values(SearchIdentifiers)}
+          onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
+        />
         <Input
+          id="id-search-input"
           type="text"
           value={query}
           onChange={onChangeSearchInput}
           className="text-input"
           onPressEnter={submitSearch}
-          testid="id-search-input"
+          data-testid="id-search-input"
         />
       </div>
       <Button

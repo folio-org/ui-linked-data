@@ -3,29 +3,31 @@ import { ChangeEvent, FC, HTMLInputTypeAttribute } from 'react';
 import './Input.scss';
 
 type InputProps = {
+  id?: string;
   placeholder?: string;
   value?: string;
   disabled?: boolean;
   className?: string;
-  testid?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onPressEnter?: VoidFunction;
   type?: HTMLInputTypeAttribute;
+  [x: string]: any;
 };
 
 export const Input: FC<InputProps> = ({
+  id,
   placeholder,
   value = '',
   disabled = false,
   className,
-  testid,
   onChange,
   onPressEnter,
   type = 'text',
+  ...restProps
 }) => {
   return (
     <input
-      data-testid={testid}
+      id={id}
       className={classNames('input', className)}
       value={value}
       placeholder={placeholder}
@@ -39,6 +41,7 @@ export const Input: FC<InputProps> = ({
         }
       }}
       type={type}
+      {...restProps}
     />
   );
 };

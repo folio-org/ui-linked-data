@@ -54,8 +54,9 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
     if (!canReduce) return total;
 
     const queryWithQualifier = applyQualifierSyntaxToQuery(query, qualifier);
+    const shouldApplyOperator = total.length;
 
-    return (total += `${operator ? ` ${operator}` : ''}${rowIndex === 0 ? '' : ' '}${index}${queryWithQualifier}`);
+    return (total += `${operator && shouldApplyOperator ? ` ${operator} ` : ''}${index}${queryWithQualifier}`);
   }, '');
 
   return `(${queryWithFormatting})`;

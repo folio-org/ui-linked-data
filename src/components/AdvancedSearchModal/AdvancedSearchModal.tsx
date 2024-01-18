@@ -60,46 +60,45 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
     <Modal
       isOpen={isOpen}
       title={formatMessage({ id: 'marva.advancedSearch' })}
-      submitButtonLabel={formatMessage({ id: 'marva.searchResource' })}
+      submitButtonLabel={formatMessage({ id: 'marva.search' })}
       cancelButtonLabel={formatMessage({ id: 'marva.cancel' })}
       onClose={closeModal}
       onSubmit={onDoSearch}
       onCancel={closeModal}
       shouldCloseOnEsc
       submitButtonDisabled={submitButtonDisabled}
-      showCloseIconButton={false}
     >
       <div className="advanced-search-container">
         {rawQuery.map(({ query, rowIndex, operator, qualifier, index }) => (
           <div key={rowIndex} className="search-row">
             {rowIndex === 0 ? (
-              <div className="search-cell bold">
+              <div className="cell-bold">
                 <FormattedMessage id="marva.searchFor" />
               </div>
             ) : (
               <Select
                 value={operator}
                 options={SELECT_OPERATORS}
-                className="search-cell"
+                className="cell-operator"
                 onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Operator, rowIndex)}
               />
             )}
             <Input
-              className="text-input"
+              className="text-input cell-query"
               value={query || ''}
               onChange={({ target: { value } }) => onChangeInput(value, AdvancedSearchInputs.Query, rowIndex)}
             />
             <Select
               value={qualifier}
               options={SELECT_QUALIFIERS}
-              className="search-cell-long"
+              className="cell-qualifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Qualifier, rowIndex)}
             />
             in
             <Select
               value={index}
               options={SELECT_IDENTIFIERS}
-              className="search-cell-long"
+              className="cell-identifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Index, rowIndex)}
             />
           </div>

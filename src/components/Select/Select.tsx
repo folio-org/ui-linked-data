@@ -4,15 +4,17 @@ import './Select.scss';
 import classNames from 'classnames';
 
 type Select = {
+  id?: string;
   value?: string;
   onChange: ({ value }: { value: string }) => void;
   options: string[];
   className?: string;
 };
 
-export const Select: FC<Select> = ({ value, onChange, options, className }) => {
+export const Select: FC<Select> = ({ id, value, onChange, options, className }) => {
   return (
     <select
+      id={id}
       className={classNames('select-input', className)}
       value={value}
       onChange={({ target: { value } }) => onChange({ value })}

@@ -34,7 +34,7 @@ export const ComplexLookupField: FC<Props> = ({ label = '', value = undefined, u
         onChange={handleOnChange}
         value={localValue?.label ?? ''}
         disabled={true}
-        testid="complex-lookup-input"
+        data-testid="complex-lookup-input"
       />
     </div>
   );

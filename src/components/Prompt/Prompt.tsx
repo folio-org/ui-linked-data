@@ -7,6 +7,7 @@ import state from '@state';
 import { useRecoilValue } from 'recoil';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import './Prompt.scss';
 
 interface Props {
   when: boolean;
@@ -52,7 +53,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
       onSubmit={stopNavigation}
       onCancel={proceedNavigation}
     >
-      <div data-testid="modal-close-record-content">
+      <div className="prompt-content" data-testid="modal-close-record-content">
         <FormattedMessage id="marva.confirmCloseRd" />
       </div>
     </Modal>
