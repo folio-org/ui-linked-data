@@ -66,7 +66,7 @@ describe('Item Search', () => {
     const select = screen.getByRole('combobox');
     expect(select).toHaveValue('lccn');
 
-    fireEvent.change(select, { target: { value: 1 } });
+    fireEvent.change(select, { target: { value: 'isbn' } });
 
     expect((screen.getByRole('option', { name: 'marva.isbn' }) as any).selected).toBe(true);
   });
@@ -76,7 +76,7 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith(id, '1234000001', '0');
+      expect(getByIdentifierMock).toHaveBeenCalledWith({ offset: '0', query: '1234000001', searchBy: id });
     });
   });
 
