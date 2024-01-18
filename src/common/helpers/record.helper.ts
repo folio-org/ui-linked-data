@@ -1,14 +1,8 @@
-import { cloneDeep } from 'lodash';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import {
-  FORCE_INCLUDE_WHEN_DEPARSING,
-  IDENTIFIER_AS_VALUE,
-  INSTANTIATES_TO_INSTANCE_FIELDS,
-  TYPE_URIS,
-} from '@common/constants/bibframe.constants';
-import { BFLITE_URIS, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
+import { IDENTIFIER_AS_VALUE, TYPE_URIS } from '@common/constants/bibframe.constants';
+import { formatRecord } from './recordFormatting.helper';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
 
@@ -18,106 +12,6 @@ export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
     [TYPE_URIS.INSTANCE]: { ...record.resource[TYPE_URIS.INSTANCE], id },
   },
 });
-
-export const formatRecord = (parsedRecord: ParsedRecord) => {
-  const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES] as unknown as RecursiveRecordSchema[];
-  const instanceComponent = parsedRecord[TYPE_URIS.INSTANCE] as unknown as Record<string, RecursiveRecordSchema[]>;
-
-  if (workComponent && Object.keys(workComponent).length && instanceComponent) {
-    instanceComponent[BFLITE_URIS.INSTANTIATES as string] = [workComponent] as unknown as RecursiveRecordSchema[];
-  }
-
-  delete parsedRecord[BFLITE_URIS.INSTANTIATES];
-
-  return {
-    resource: {
-      ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: getUpdatedInstance(instanceComponent),
-    },
-  };
-};
-
-const getUpdatedInstance = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
-  const instanceField = updateInstantiatesWithInstanceFields(instanceComponent);
-  const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(instanceField);
-
-  return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes);
-};
-
-export const updateInstantiatesWithInstanceFields = (
-  instanceComponent: Record<string, RecursiveRecordSchema[] | RecursiveRecordSchema>,
-) => {
-  const clonedInstance = cloneDeep(instanceComponent);
-  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string];
-  const instantiatesComponentTyped = instantiatesComponent as unknown as Record<string, unknown>[];
-
-  INSTANTIATES_TO_INSTANCE_FIELDS.forEach(fieldName => {
-    const componentToMove = clonedInstance[fieldName];
-
-    if (!componentToMove) return;
-
-    if (instantiatesComponent) {
-      instantiatesComponentTyped[0] = { ...instantiatesComponentTyped[0], [fieldName]: componentToMove };
-    } else {
-      clonedInstance[BFLITE_URIS.INSTANTIATES as string] = [{ [fieldName]: componentToMove } as RecursiveRecordSchema];
-    }
-
-    delete clonedInstance[fieldName];
-  });
-
-  return clonedInstance;
-};
-
-export const updateRecordWithDefaultNoteType = (
-  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
-) => {
-  const clonedRecord = cloneDeep(record);
-  const typedNotes = clonedRecord[
-    NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container
-  ] as unknown as RecursiveRecordSchema[];
-
-  typedNotes?.forEach(noteRecord => {
-    if (!noteRecord.type) {
-      noteRecord.type = [BFLITE_URIS.NOTE];
-    }
-  });
-
-  return clonedRecord;
-};
-
-export const updateRecordWithRelationshipDesignator = (
-  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
-) => {
-  const clonedInstance = cloneDeep(record);
-  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<
-    string,
-    unknown
-  >[];
-
-  FORCE_INCLUDE_WHEN_DEPARSING.forEach(fieldName => {
-    const recordFields = instantiatesComponent?.[0]?.[fieldName] as Record<string, string[]>[] | undefined;
-
-    if (!recordFields) return;
-
-    const nonBFMappedContainer = NON_BF_RECORD_ELEMENTS[fieldName]?.container;
-
-    recordFields.forEach(field => {
-      const fieldKeys = Object.keys(field);
-      const hasRoles = nonBFMappedContainer && fieldKeys.includes(nonBFMappedContainer);
-
-      if (!hasRoles) return;
-
-      const roles = field[nonBFMappedContainer];
-      delete field[nonBFMappedContainer];
-
-      for (const key in field) {
-        field[key] = { ...field[key], [nonBFMappedContainer]: roles };
-      }
-    });
-  });
-
-  return clonedInstance;
-};
 
 export const deleteRecordLocally = (profile: string, recordId?: RecordID) => {
   const storageKey = generateRecordBackupKey(profile, recordId);
