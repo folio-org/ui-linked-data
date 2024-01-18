@@ -81,10 +81,12 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
                 options={SELECT_OPERATORS}
                 className="cell-operator"
                 onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Operator, rowIndex)}
+                data-testid={`select-operators-${rowIndex}`}
               />
             )}
             <Input
               className="text-input cell-query"
+              testid={`text-input-${rowIndex}`}
               value={query || ''}
               onChange={({ target: { value } }) => onChangeInput(value, AdvancedSearchInputs.Query, rowIndex)}
             />
@@ -93,6 +95,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
               options={SELECT_QUALIFIERS}
               className="cell-qualifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Qualifier, rowIndex)}
+              data-testid={`select-qualifiers-${rowIndex}`}
             />
             in
             <Select
@@ -100,6 +103,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
               options={SELECT_IDENTIFIERS}
               className="cell-identifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Index, rowIndex)}
+              data-testid={`select-identifiers-${rowIndex}`}
             />
           </div>
         ))}
