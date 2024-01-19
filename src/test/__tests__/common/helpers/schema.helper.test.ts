@@ -577,6 +577,7 @@ describe('schema.helper', () => {
           },
         ],
       };
+      jest.spyOn(SchemaHelper, 'getRecordEntry').mockReturnValueOnce(selectedRecord);
       const testResult = {
         selectedNonBFRecord: [
           {

@@ -64,7 +64,7 @@ export const BASE_LOCALE = {
   'marva.paginationCount': '{startCount} - {endCount} of {totalResultsCount}',
   'marva.yes': 'Yes',
   'marva.no': 'No',
-  'marva.cantLoadSimpleLookupData': 'Cannot save data for a simple lookup',
+  'marva.cantLoadSimpleLookupData': 'Cannot load data for a simple lookup',
   'marva.publishDate': 'Publish date',
   'marva.format': 'Format',
   'marva.supressed': 'Supressed',

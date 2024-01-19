@@ -75,7 +75,7 @@ export const generateUserValueObject = ({
     // e.g. "Notes about the Instance", "Notes about the Work"
     if (nonBFMappedGroup) {
       labelKeyName = isNonBFTypeKey;
-      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as FieldTypeMapDataEntry)?.[entry].uri || entry;
+      link = (TYPE_MAP[nonBFMappedGroup.uri]?.data as FieldTypeMapDataEntry)?.[entry]?.uri || entry;
     }
 
     const lookupDataElement = lookupData.find(({ value }) => value.uri === link);
@@ -236,7 +236,7 @@ export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: strin
 export const getMappedNonBFGroupType = (propertyURI?: string) => {
   if (!propertyURI || !NON_BF_GROUP_TYPE[propertyURI]) return undefined;
 
-  return NON_BF_GROUP_TYPE[propertyURI] as NonBFMappedGroupData;
+  return NON_BF_GROUP_TYPE[propertyURI] as unknown as NonBFMappedGroupData;
 };
 
 export const checkGroupIsNonBFMapped = ({
@@ -254,6 +254,9 @@ export const checkGroupIsNonBFMapped = ({
   return !!mappedGroup && parentEntryType === block && type === groupComplex;
 };
 
+export const getRecordEntry = (recordEntry?: Record<string, Record<string, string[]>[]>) =>
+  Array.isArray(recordEntry) ? recordEntry[0] : recordEntry;
+
 export const selectNonBFMappedGroupData = ({
   propertyURI,
   type,
@@ -263,12 +266,15 @@ export const selectNonBFMappedGroupData = ({
   propertyURI: string;
   type: AdvancedFieldType;
   parentEntryType?: AdvancedFieldType;
-  selectedRecord?: Record<string, Record<string, string[]>[]>;
+  selectedRecord?: Record<string, Record<string, string[]>[]> | Record<string, Record<string, string[]>[]>;
 }) => {
   const mappedGroup = getMappedNonBFGroupType(propertyURI);
   const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
+  const recordEntry = getRecordEntry(selectedRecord);
   const selectedNonBFRecord =
-    isNonBFMappedGroup && mappedGroup ? selectedRecord?.[mappedGroup?.container.key] : undefined;
+    isNonBFMappedGroup && mappedGroup && mappedGroup?.container?.key
+      ? recordEntry?.[mappedGroup.container.key]
+      : undefined;
   const nonBFMappedGroup = isNonBFMappedGroup
     ? {
         uri: propertyURI,

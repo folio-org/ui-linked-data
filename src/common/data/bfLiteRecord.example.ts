@@ -16,9 +16,10 @@ export const BFLITE_RECORD_EXAMPLE = {
           ],
           'http://bibfra.me/vocab/lite/creator': [
             {
-              'http://bibfra.me/vocab/lite/Person': {
+              'http://bibfra.me/vocab/lite/Family': {
                 id: 'sampleId',
                 'http://bibfra.me/vocab/lite/name': ['sampleName'],
+                _roles: ['http://bibfra.me/vocab/relation/actor'],
               },
             },
           ],
@@ -27,6 +28,7 @@ export const BFLITE_RECORD_EXAMPLE = {
               'http://bibfra.me/vocab/lite/Organization': {
                 id: 'sampleId',
                 'http://bibfra.me/vocab/lite/name': ['sampleName'],
+                _roles: ['http://bibfra.me/vocab/relation/actor'],
               },
             },
           ],

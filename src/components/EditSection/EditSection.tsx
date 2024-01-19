@@ -1,10 +1,9 @@
-import { useEffect, memo, useCallback, useState, useMemo } from 'react';
+import { useEffect, memo, useCallback, useState } from 'react';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
-import { getAllDisabledFields } from '@common/helpers/disabledEditorGroups.helper';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -244,7 +243,8 @@ export const EditSection = memo(() => {
     [selectedEntries],
   );
 
-  const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
+  // TODO: uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
+  // const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
   return resourceTemplates ? (
     <div className="edit-section">
@@ -255,7 +255,6 @@ export const EditSection = memo(() => {
       <Fields
         drawComponent={drawComponent}
         schema={schema}
-        disabledFields={disabledFields}
         uuid={initialSchemaKey}
         groupClassName="edit-section-group"
         scrollToEnabled={true}
