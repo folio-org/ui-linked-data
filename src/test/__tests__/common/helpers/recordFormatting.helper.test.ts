@@ -183,4 +183,115 @@ describe('recordFormatting', () => {
       expect(result).toEqual(testResult);
     });
   });
+
+  describe('updateRecordWithRelationshipDesignator', () => {
+    const fieldUris = ['testCreatorUri', 'testContributorUri'];
+    type RecordValue = Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>;
+
+    test('returns an updated records list with "_roles" subfield', () => {
+      const record = {
+        testInstantiatesUri: [
+          {
+            testCreatorUri: [
+              {
+                dropdownOptionUri_1: {
+                  testSubFieldUri_1: ['subfield value 1'],
+                },
+                _roles: ['testRoleUri_1'],
+              },
+            ],
+            testFieldUri_1: ['field value'],
+          },
+        ],
+      } as unknown as RecordValue;
+      const testResult = {
+        testInstantiatesUri: [
+          {
+            testCreatorUri: [
+              {
+                dropdownOptionUri_1: {
+                  testSubFieldUri_1: ['subfield value 1'],
+                  _roles: ['testRoleUri_1'],
+                },
+              },
+            ],
+            testFieldUri_1: ['field value'],
+          },
+        ],
+      };
+
+      const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an entire records list', () => {
+      const record = {
+        testFieldUri_1: ['testValue'],
+      } as unknown as RecordValue;
+
+      const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
+
+      expect(result).toEqual(record);
+    });
+  });
+
+  describe('getNonBFMapElemByContainerKey', () => {
+    const containerKey = 'testContainerAltKey_1';
+
+    test('returns an object with all undefined values', () => {
+      const nonMappedGroup = {
+        testGroup_1: {
+          container: {
+            key: 'testContainerKey_1',
+          },
+        },
+        testGroup_2: {
+          container: {
+            key: 'testContainerKey_2',
+          },
+        },
+      };
+      const testResult = { key: undefined, value: undefined };
+
+      const result = RecordFormattingHelper.getNonBFMapElemByContainerKey(nonMappedGroup, containerKey);
+
+      expect(result).toEqual(testResult);
+    });
+
+    test('returns an object with selected "key" and "value" properties', () => {
+      const nonMappedGroup = {
+        testGroup_1: {
+          container: {
+            key: 'testContainerKey_1',
+            altKeys: {
+              bf2Key_1: 'testContainerAltKey_1',
+              bf2Key_2: 'testContainerAltKey_2',
+            },
+          },
+        },
+        testGroup_2: {
+          container: {
+            key: 'testContainerKey_2',
+          },
+        },
+      };
+      const testResult = {
+        key: 'testGroup_1',
+        value: {
+          container: {
+            key: 'testContainerKey_1',
+            altKeys: {
+              bf2Key_1: 'testContainerAltKey_1',
+              bf2Key_2: 'testContainerAltKey_2',
+            },
+          },
+        },
+      };
+
+      const result = RecordFormattingHelper.getNonBFMapElemByContainerKey(nonMappedGroup, containerKey);
+
+      expect(result).toEqual(testResult);
+    });
+  });
 });
