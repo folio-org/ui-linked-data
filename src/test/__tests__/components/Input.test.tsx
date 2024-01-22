@@ -11,7 +11,7 @@ describe('Input', () => {
 
   beforeEach(() => {
     render(
-      <Input placeholder={placeholder} value={value} testid={testId} onChange={onChange} onPressEnter={onPressEnter} />,
+      <Input placeholder={placeholder} value={value} data-testid={testId} onChange={onChange} onPressEnter={onPressEnter} />,
     );
 
     inputElement = screen.getByTestId(testId);
