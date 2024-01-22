@@ -86,7 +86,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
             )}
             <Input
               className="text-input cell-query"
-              testid={`text-input-${rowIndex}`}
+              data-testid={`text-input-${rowIndex}`}
               value={query || ''}
               onChange={({ target: { value } }) => onChangeInput(value, AdvancedSearchInputs.Query, rowIndex)}
             />
