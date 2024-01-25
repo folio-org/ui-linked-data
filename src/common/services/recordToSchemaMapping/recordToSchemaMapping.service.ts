@@ -157,6 +157,7 @@ export class RecordToSchemaMappingService {
         const parentElem = this.updatedSchema?.get(parentElemKey) as SchemaEntry;
 
         // TODO: select a correct block
+        // TODO: use the mapped values instead of 'uriBFLite'
         if (parentElem.uriBFLite === this.currentBlockUri) {
           hasProperBlock = true;
         }
@@ -183,6 +184,7 @@ export class RecordToSchemaMappingService {
         if (entry?.type === AdvancedFieldType.dropdownOption) {
           this.selectedEntriesService.remove(entry.uuid);
 
+          // TODO: use the mapped values instead of 'uriBFLite'
           if (entry.uriBFLite === recordKey) {
             selectedSchemaEntryUUID = entry.uuid;
             this.selectedEntriesService.addNew(undefined, entry.uuid);
@@ -222,10 +224,11 @@ export class RecordToSchemaMappingService {
           return;
         }
 
+        // TODO: DRY
         if (
           childEntry.type &&
           uiControlsList.includes(childEntry.type as AdvancedFieldType) &&
-          childEntry.uriBFLite === recordKey
+          childEntry.uriBFLite === recordKey // TODO: use the mapped values instead of 'uriBFLite'
         ) {
           selectedSchemaEntryUUID = childEntry.uuid;
         } else if (childEntry?.children?.length) {
@@ -240,7 +243,7 @@ export class RecordToSchemaMappingService {
       if (
         schemaEntry.type &&
         uiControlsList.includes(schemaEntry.type as AdvancedFieldType) &&
-        schemaEntry.uriBFLite === recordKey
+        schemaEntry.uriBFLite === recordKey // TODO: use the mapped values instead of 'uriBFLite'
       ) {
         selectedSchemaEntryUUID = schemaEntry.uuid;
       }
