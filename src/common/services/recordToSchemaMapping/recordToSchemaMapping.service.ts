@@ -102,6 +102,7 @@ export class RecordToSchemaMappingService {
             const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
 
             // iterate within the elements inside the selectedDropdown option
+            // TODO: DRY
             for await (const [key, value] of Object.entries(groupElem)) {
               await this.mapRecordValueToSchemaEntry({
                 schemaEntry: dropdownOptionEntry,
