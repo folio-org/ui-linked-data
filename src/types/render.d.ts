@@ -1,4 +1,5 @@
 type UserValueContents = {
+  id?: string;
   label?: string;
   meta?: {
     uri?: string;

@@ -57,7 +57,14 @@ export const FORCE_EXCLUDE_WHEN_DEPARSING = [
   'http://id.loc.gov/ontologies/bibframe/Language',
   'http://id.loc.gov/ontologies/bibframe/TableOfContents',
   'http://id.loc.gov/ontologies/bibframe/agent',
+  'http://www.loc.gov/mads/rdf/v1#Topic',
 ];
+
+export const KEEP_VALUE_AS_IS = ['http://bibfra.me/vocab/lite/subject'];
+
+export const OUTGOING_RECORD_IDENTIFIERS_TO_SWAP: Record<string, string> = {
+  'http://www.loc.gov/mads/rdf/v1#Topic': 'http://bibfra.me/vocab/lite/subject',
+};
 
 export const COMPLEX_GROUPS_WITHOUT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/note',
@@ -101,3 +108,7 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
 export const INSTANTIATES_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];
 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
+
+// TODO: refine level of bypass and qualifications for bypassing
+// (same identifier may be used for both bypassable and non-bypassable entries)
+export const BYPASS_FORMATTING_AND_SELECTION = ['http://www.loc.gov/mads/rdf/v1#Topic'];
