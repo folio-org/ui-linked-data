@@ -4,6 +4,7 @@ import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import {
+  BYPASS_FORMATTING_AND_SELECTION,
   COMPLEX_GROUPS_WITHOUT_WRAPPER,
   CONSTRAINTS,
   GROUPS_WITHOUT_ROOT_WRAPPER,
@@ -144,6 +145,7 @@ export const useConfig = () => {
       const recordData =
         isWorkToInstanceField && workToInstanceRecord ? workToInstanceRecord?.[0] : withContentsSelected;
       let selectedRecord = typeof recordData === 'string' ? [recordData] : recordData?.[uriWithSelector];
+      let shouldBypass = false;
 
       if (nonBFMappedGroup) {
         const selectedOptionUriBFLite = dropdownOptionSelection?.selectedOptionUriBFLite;
@@ -153,6 +155,11 @@ export const useConfig = () => {
           nonBFMappedGroup?.data.options && selectedOptionUriBFLite
             ? recordData?.[selectedOptionUriBFLite]?.[recordDataKey]
             : recordData?.[recordDataKey];
+      }
+
+      if (BYPASS_FORMATTING_AND_SELECTION.includes(uriWithSelector)) {
+        selectedRecord = [recordData];
+        shouldBypass = true;
       }
 
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
@@ -194,8 +201,11 @@ export const useConfig = () => {
           index: recordIndex,
           hasBlockParent,
           nonBFMappedGroup,
+          bypass: shouldBypass,
         });
       }
+
+      return;
     } else {
       switch (type) {
         // parent types (i.e Monograph)
@@ -311,6 +321,7 @@ export const useConfig = () => {
             GROUPS_WITHOUT_ROOT_WRAPPER.includes(propertyURI) ||
             COMPLEX_GROUPS_WITHOUT_WRAPPER.includes(propertyURI) ||
             (hasHiddenParent && !IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION.includes(propertyURI));
+
           // TODO: remove when the API contract for Extent and similar fields is updated
           const isTemporaryComplexGroup = TEMPORARY_COMPLEX_GROUPS.includes(propertyURI);
 
@@ -319,6 +330,7 @@ export const useConfig = () => {
             uriWithSelector,
             hasRootWrapper: !hasNoRootWrapper,
           });
+
           const filteredRecordData = getFilteredRecordData({
             valueTemplateRefs,
             templates,
@@ -326,6 +338,7 @@ export const useConfig = () => {
             path,
             selectedRecord,
           });
+
           const { selectedNonBFRecord, nonBFMappedGroup } = selectNonBFMappedGroupData({
             propertyURI,
             type,
@@ -685,6 +698,7 @@ export const useConfig = () => {
     index,
     hasBlockParent,
     nonBFMappedGroup,
+    bypass = false,
   }: {
     base: Map<string, SchemaEntry>;
     recordData: Array<Record<string, string | Record<string, unknown> | Record<string, unknown>[]>>;
@@ -699,70 +713,81 @@ export const useConfig = () => {
     index?: number;
     hasBlockParent?: boolean;
     nonBFMappedGroup?: NonBFMappedGroup;
+    bypass?: boolean;
   }) => {
     if (recordData && userValues) {
-      let lookupData: MultiselectOption[] | Nullish = null;
-      const isSimpleLookupType = type === AdvancedFieldType.simple;
-      const blockEntry = findParentEntryByType(base, path, AdvancedFieldType.block);
+      if (bypass) {
+        userValues[uuid] = {
+          uuid,
+          contents: recordData,
+        };
+      } else {
+        let lookupData: MultiselectOption[] | Nullish = null;
+        const isSimpleLookupType = type === AdvancedFieldType.simple;
+        const blockEntry = findParentEntryByType(base, path, AdvancedFieldType.block);
 
-      if (isSimpleLookupType) {
-        const uri = constraints?.useValuesFrom?.[0];
-        lookupData = getLookupData()?.[uri];
+        if (isSimpleLookupType) {
+          const uri = constraints?.useValuesFrom?.[0];
+          lookupData = getLookupData()?.[uri];
 
-        if (!lookupData) {
-          try {
-            lookupData = await loadLookupData(uri, propertyURI);
-          } catch (error) {
-            console.error(`Cannot load data for the Lookup "${propertyLabel}"`, error);
+          if (!lookupData) {
+            try {
+              lookupData = await loadLookupData(uri, propertyURI);
+            } catch (error) {
+              console.error(`Cannot load data for the Lookup "${propertyLabel}"`, error);
 
-            setCommonStatus(currentStatus => [
-              ...currentStatus,
-              UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadSimpleLookupData'),
-            ]);
+              setCommonStatus(currentStatus => [
+                ...currentStatus,
+                UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadSimpleLookupData'),
+              ]);
+            }
           }
         }
-      }
 
-      const filteredLookupData = filterLookupOptionsByParentBlock(lookupData, propertyURI, blockEntry?.uriBFLite);
+        const filteredLookupData = filterLookupOptionsByParentBlock(lookupData, propertyURI, blockEntry?.uriBFLite);
 
-      let contents = recordData.reduce((accum, entry: string | Record<string, unknown> | Record<string, unknown>[]) => {
-        const generatedContent = generateUserValueContent({
-          entry,
-          type,
-          uriBFLite,
-          propertyURI,
-          lookupData: filteredLookupData,
-          nonBFMappedGroup,
-        }) as UserValueContents;
-        const { meta } = generatedContent;
+        let contents = recordData.reduce(
+          (accum, entry: string | Record<string, unknown> | Record<string, unknown>[]) => {
+            const generatedContent = generateUserValueContent({
+              entry,
+              type,
+              uriBFLite,
+              propertyURI,
+              lookupData: filteredLookupData,
+              nonBFMappedGroup,
+            }) as UserValueContents;
+            const { meta } = generatedContent;
 
-        // Hide default note type for Note fields.
-        if (!meta || (meta.type === AdvancedFieldType.simple && meta.uri !== BFLITE_URIS.NOTE)) {
-          accum.push(generatedContent);
+            // Hide default note type for Note fields.
+            if (!meta || (meta.type === AdvancedFieldType.simple && meta.uri !== BFLITE_URIS.NOTE)) {
+              accum.push(generatedContent);
+            }
+
+            return accum;
+          },
+          [] as UserValueContents[],
+        );
+
+        if (index !== undefined && hasBlockParent) {
+          const selectedRecordData = recordData?.[index];
+
+          contents = [
+            generateUserValueContent({
+              entry: selectedRecordData,
+              type,
+              uriBFLite,
+              propertyURI,
+              lookupData: filteredLookupData,
+              nonBFMappedGroup,
+            }),
+          ];
         }
 
-        return accum;
-      }, [] as UserValueContents[]);
-
-      if (index !== undefined && hasBlockParent) {
-        const selectedRecordData = recordData?.[index];
-
-        contents = [
-          generateUserValueContent({
-            entry: selectedRecordData,
-            type,
-            uriBFLite,
-            propertyURI,
-            lookupData: filteredLookupData,
-            nonBFMappedGroup,
-          }),
-        ];
+        userValues[uuid] = {
+          uuid,
+          contents,
+        };
       }
-
-      userValues[uuid] = {
-        uuid,
-        contents,
-      };
     }
 
     base.set(uuid, {

@@ -82,6 +82,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/classificationPortion': BFLITE_URIS.CODE,
   'http://id.loc.gov/ontologies/bibframe/itemPortion': 'http://bibfra.me/vocab/marc/itemNumber',
   'http://id.loc.gov/ontologies/bibframe/source': BFLITE_URIS.EDITION,
+  'http://id.loc.gov/ontologies/bibframe/subject': 'http://bibfra.me/vocab/lite/subject',
   'http://id.loc.gov/ontologies/bibframe/edition': BFLITE_URIS.EDITION_TYPE,
   'http://id.loc.gov/ontologies/bibframe/Person': 'http://bibfra.me/vocab/lite/Person',
   'http://id.loc.gov/ontologies/bibframe/Family': 'http://bibfra.me/vocab/lite/Family',

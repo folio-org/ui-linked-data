@@ -11,6 +11,8 @@ import {
   FORCE_EXCLUDE_WHEN_DEPARSING,
   IDENTIFIER_AS_VALUE,
   LOC_GOV_URI,
+  KEEP_VALUE_AS_IS,
+  OUTGOING_RECORD_IDENTIFIERS_TO_SWAP,
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, TYPE_MAP } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -104,7 +106,7 @@ const traverseSchema = ({
 }: TraverseSchema) => {
   const { children, uri, uriBFLite, bfid, type } = schema.get(key) || {};
   const uriSelector = uriBFLite || uri;
-  const selector = uriSelector || bfid;
+  const selector = (uriSelector && OUTGOING_RECORD_IDENTIFIERS_TO_SWAP[uriSelector]) || uriSelector || bfid;
   const userValueMatch = userValues[key];
   const shouldProceed = Object.keys(userValues)
     .map(uuid => schema.get(uuid)?.path)
@@ -136,8 +138,10 @@ const traverseSchema = ({
   if (userValueMatch && uri && selector) {
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
-    const withFormat = userValueMatch.contents.map(({ label, meta: { uri, parentUri, type } = {} }) => {
-      if (
+    const withFormat = userValueMatch.contents.map(({ id, label, meta: { uri, parentUri, type } = {} }) => {
+      if (KEEP_VALUE_AS_IS.includes(selector)) {
+        return { id, label };
+      } else if (
         ((parentUri || uri) && (!advancedValueField || updatedNonBFMappedGroup)) ||
         type === AdvancedFieldType.simple
       ) {
