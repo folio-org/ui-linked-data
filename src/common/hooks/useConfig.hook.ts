@@ -158,8 +158,11 @@ export const useConfig = () => {
       }
 
       if (BYPASS_FORMATTING_AND_SELECTION.includes(uriWithSelector)) {
-        selectedRecord = [recordData];
-        shouldBypass = true;
+        if (recordData) {
+          selectedRecord = [recordData];
+        
+          shouldBypass = true;
+        }
       }
 
       const hasBlockParent = parentEntryType === AdvancedFieldType.block;
