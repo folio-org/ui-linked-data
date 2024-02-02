@@ -7,20 +7,23 @@ import { CommonStatus } from '@components/CommonStatus';
 import { Nav } from '@components/Nav';
 import { Loading } from '@components/Loading';
 import state from '@state';
+import { FIXED_HEIGHT_VIEWS } from '@common/constants/routes.constants';
+import classNames from 'classnames';
 
 export const Root = () => {
   const mainRoutePattern = useRoutePathPattern(['/']);
+  const fixedHeightContainerView = useRoutePathPattern(FIXED_HEIGHT_VIEWS);
   const isLoading = useRecoilValue(state.loadingState.isLoading);
 
   return (
-    <div data-testid="root" id='app-root'>
+    <div data-testid="root" id="app-root">
       <Nav />
       <CommonStatus />
-      <div className="main-content">
+      <div className={classNames('main-content', { 'no-overflow': fixedHeightContainerView })}>
         <Outlet />
 
         {mainRoutePattern && (
-          <div data-testid="main" className='welcome-screen'>
+          <div data-testid="main" className="welcome-screen">
             <FormattedMessage id="marva.welcome" />
           </div>
         )}

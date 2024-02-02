@@ -22,3 +22,5 @@ export const ROUTES = {
 };
 
 export const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];
+
+export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];

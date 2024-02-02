@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { getByIdentifier } from '@common/api/search.api';
@@ -9,7 +9,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { StatusType } from '@common/constants/status.constants';
 import { formatKnownItemSearchData } from '@common/helpers/search.helper';
 import { swapRowPositions } from '@common/helpers/table.helper';
-import { scrollElementIntoView } from '@common/helpers/pageScrolling.helper';
+import { getByClassNameAndScrollIntoView } from '@common/helpers/pageScrolling.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
@@ -61,6 +61,8 @@ type Props = {
   fetchRecord: (id: string, collectPreviewValues?: boolean) => Promise<void>;
 };
 
+const scrollFullDisplayIntoView = () => getByClassNameAndScrollIntoView(DOM_ELEMENTS.classNames.fullDisplayContainer);
+
 const EmptyPlaceholder = () => (
   <div className="empty-placeholder">
     <GeneralSearch />
@@ -69,9 +71,7 @@ const EmptyPlaceholder = () => (
 );
 
 export const ItemSearch = ({ fetchRecord }: Props) => {
-  const navElemRef = useRef<Element | null>();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const fullDisplayContainerElemRef = useRef<Element | null>();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const [message, setMessage] = useRecoilState(state.search.message);
@@ -90,11 +90,6 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
   } = usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
-
-  useEffect(() => {
-    navElemRef.current = document.querySelector(`.${DOM_ELEMENTS.classNames.nav}`);
-    fullDisplayContainerElemRef.current = document.querySelector(`.${DOM_ELEMENTS.classNames.fullDisplayContainer}`);
-  }, []);
 
   const clearPagination = () => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -139,7 +134,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
 
                   setTimeout(() => {
                     setIsLoading(false);
-                    scrollElementIntoView(fullDisplayContainerElemRef.current, navElemRef.current);
+                    scrollFullDisplayIntoView();
                   }, SCROLL_DELAY_MS);
                 } catch {
                   setStatusMessages(currentStatus => [
@@ -242,6 +237,7 @@ export const ItemSearch = ({ fetchRecord }: Props) => {
     setSearchBy(DEFAULT_SEARCH_BY);
     setQuery('');
     setMessage('');
+    setPreviewContent([]);
   };
 
   return (
