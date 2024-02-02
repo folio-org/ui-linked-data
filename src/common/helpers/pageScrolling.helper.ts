@@ -20,3 +20,11 @@ export const scrollElementIntoView = (elem?: Element | null, navElem?: Element |
 };
 
 export const scrollToTop = () => scrollEntity({ top: 0, behavior: SCROLL_BEHAVIOR_SMOOTH });
+
+export const getByClassNameAndScrollToTop = (className: string) => {
+  document.querySelector(`.${className}`)?.scroll({ top: 0, behavior: SCROLL_BEHAVIOR_SMOOTH });
+};
+
+export const getByClassNameAndScrollIntoView = (className: string) => {
+  document.querySelector(`.${className}`)?.scrollIntoView({ behavior: SCROLL_BEHAVIOR_SMOOTH });
+};

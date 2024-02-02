@@ -28,7 +28,7 @@ export const Button: FC<Button> = ({
   children,
   onClick,
   className = '',
-  type = ButtonType.Secondary,
+  type = ButtonType.Passive,
   disabled,
   'data-testid': dataTestId,
 }) => (
