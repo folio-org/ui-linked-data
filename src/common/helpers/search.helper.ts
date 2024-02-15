@@ -1,38 +1,52 @@
-import { ItemSearchResponse } from '@common/api/search.api';
-import { SearchIdentifiers, AdvancedSearchQualifiers, AdvancedSearchSchema } from '@common/constants/search.constants';
+import {
+  SearchIdentifiers,
+  AdvancedSearchQualifiers,
+  AdvancedSearchSchema,
+  TitleTypes,
+} from '@common/constants/search.constants';
 import { Row } from '@components/Table';
+import { v4 as uuidv4 } from 'uuid';
 
-const __TEMP_RESULT_MAX_AMOUNT = 10;
+// const __TEMP_RESULT_MAX_AMOUNT = 10;
 
 const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
-export const formatKnownItemSearchData = (result: ItemSearchResponse): Row[] => {
-  return result.content
-    .map(({ id, titles, contributors, publications, editionStatement, identifiers }) => ({
+export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchResultDTO[]): Row[] => {
+  return instanceList.map(({ id, titles, identifiers, publications }) => {
+    // TODO: at the moment, picking the first match/first item in list for display
+    // this might change depending on requirements
+
+    const selectedPublisher = publications?.find(({ name, date }) => name && date);
+
+    return {
+      __meta: {
+        id,
+        key: uuidv4(),
+      },
+      title: {
+        label: titles?.find(({ type }) => type === TitleTypes.Main)?.value,
+        className: 'title',
+      },
       isbn: {
         label: findIdentifier(SearchIdentifiers.ISBN, identifiers),
+        className: 'identifier',
       },
       lccn: {
         label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
+        className: 'identifier',
       },
-      title: {
-        label: titles?.map(({ value }) => value).join('; '),
+      publisher: {
+        label: selectedPublisher?.name,
+        className: 'publisher',
       },
-      author: {
-        label: contributors?.map(({ name }) => name).join('; '),
+      pubDate: {
+        label: selectedPublisher?.date,
+        className: 'publication-date',
       },
-      date: {
-        label: publications?.map(({ dateOfPublication }) => dateOfPublication).join('; '),
-      },
-      edition: {
-        label: editionStatement,
-      },
-      __meta: {
-        id,
-      },
-    }))
-    .slice(0, __TEMP_RESULT_MAX_AMOUNT);
+    };
+  });
+  // .slice(0, __TEMP_RESULT_MAX_AMOUNT);
 };
 
 export const applyQualifierSyntaxToQuery = (query: string, qualifier: AdvancedSearchQualifiers) => {

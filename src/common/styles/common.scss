@@ -9,8 +9,10 @@ $blue-600: #2d62b7;
 $blue-800: #1d3f75;
 $gray-200: #d7d8da;
 $gray-400: #8d9095;
+$gray-600: #3d3f42;
 $blue-100: #d8e3f5;
 $blue-400: #6591d9;
+$blue-2f: #2f609f;
 
 $btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37);
 $highlighted-focusable-outline-box-shadow:
@@ -22,8 +24,8 @@ $secondary-focusable-outline-box-shadow:
   0 0 0 1px $blue-500,
   0 0 0 4px $blue-100;
 
-$btn-border-radius: 4px;
-$btn-height: 32px;
+$btn-border-radius: 12px;
+$btn-height: 24px;
 
 @mixin focused-outline-primary {
   &:focus,

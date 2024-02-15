@@ -9,7 +9,8 @@ export const BASE_LOCALE = {
   'marva.reset': 'Reset',
   'marva.searchResource': 'Search resources',
   'marva.create': 'Create resource',
-  'marva.edit': 'Edit resource',
+  'marva.edit': 'Edit',
+  'marva.editResource': 'Edit resource',
   'marva.main': 'Main',
   'marva.and': 'AND',
   'marva.or': 'OR',
@@ -35,6 +36,7 @@ export const BASE_LOCALE = {
   'marva.contributor': 'Contributor', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.author': 'Author',
   'marva.pubDate': 'Publication Date',
+  'marva.pubDateShort': 'Pub Date',
   'marva.edition': 'Edition',
   'marva.select': 'Select',
   'marva.selectForEditing': 'Select a resource description for editing',
@@ -67,8 +69,8 @@ export const BASE_LOCALE = {
   'marva.cantLoadSimpleLookupData': 'Cannot load data for a simple lookup',
   'marva.publishDate': 'Publish date',
   'marva.format': 'Format',
-  'marva.supressed': 'Supressed',
-  'marva.notSupressed': 'Not supressed',
+  'marva.suppressed': 'Suppressed',
+  'marva.notSuppressed': 'Not suppressed',
   'marva.volume': 'Volume',
   'marva.ebook': 'eBook',
   'marva.allTime': 'All time',
@@ -81,6 +83,14 @@ export const BASE_LOCALE = {
   'marva.startsWith': 'Starts with',
   'marva.containsAll': 'Contains all',
   'marva.exactPhrase': 'Exact phrase',
+  'marva.publisher': 'Publisher',
+  'marva.creator': 'Creator',
+  'marva.language': 'Language',
+  'marva.classificationNumber': 'Classification number',
+  'marva.work': 'Work',
+  'marva.instances': 'Instances',
+  'marva.noInstancesAvailable': 'No instances available.',
+  'marva.addAnInstance': 'Add an instance',
 };
 
 export const i18nMessages = {

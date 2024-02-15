@@ -167,7 +167,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <Accordion
           title={<FormattedMessage id="marva.format" />}
           children={
-            <div onChange={onChangeLimitersMulti}>
+            <div onChange={onChangeLimitersMulti} className="input-group">
               <label htmlFor={Format.Volume}>
                 <input
                   checked={limiters.format?.includes(Format.Volume)}
@@ -193,7 +193,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         />
         <hr />
         <Accordion
-          title={<FormattedMessage id="marva.supressed" />}
+          title={<FormattedMessage id="marva.suppressed" />}
           children={
             <div onChange={onChangeLimiters}>
               <label htmlFor={Suppressed.All}>
@@ -214,7 +214,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.supressed" />
+                <FormattedMessage id="marva.suppressed" />
               </label>
               <label htmlFor={Suppressed.NotSuppressed}>
                 <input
@@ -224,7 +224,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
                   type="radio"
                   onChange={fallbackOnChange}
                 />
-                <FormattedMessage id="marva.notSupressed" />
+                <FormattedMessage id="marva.notSuppressed" />
               </label>
             </div>
           }

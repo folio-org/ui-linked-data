@@ -250,7 +250,7 @@ export const EditSection = memo(() => {
     <div className="edit-section">
       <Prompt when={isEdited} />
       <h3>
-        <FormattedMessage id="marva.edit" />
+        <FormattedMessage id="marva.editResource" />
       </h3>
       <Fields
         drawComponent={drawComponent}

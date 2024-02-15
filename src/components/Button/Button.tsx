@@ -8,7 +8,8 @@ export enum ButtonType {
   Text = 'text',
   Link = 'link',
   Primary = 'primary',
-  Passive = 'passive'
+  Passive = 'passive',
+  Ghost = 'ghost',
 }
 
 type Button = {

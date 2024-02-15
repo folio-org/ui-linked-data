@@ -6,7 +6,6 @@ import {
   SearchLimiterNames,
   Suppressed,
 } from '@common/constants/search.constants';
-import { Row } from '@components/Table';
 import { atom } from 'recoil';
 
 const query = atom<string>({
@@ -24,7 +23,7 @@ const index = atom<SearchIdentifiers>({
   default: DEFAULT_SEARCH_BY,
 });
 
-const data = atom<null | Row[]>({
+const data = atom<null | WorkAsSearchResultDTO[]>({
   key: 'search.data',
   default: null,
 });

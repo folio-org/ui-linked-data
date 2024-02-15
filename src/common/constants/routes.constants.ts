@@ -17,7 +17,7 @@ export const ROUTES = {
   },
   RESOURCE_EDIT: {
     uri: '/resources/:resourceId/edit',
-    name: 'marva.edit',
+    name: 'marva.editResource',
   },
 };
 

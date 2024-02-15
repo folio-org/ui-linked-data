@@ -115,7 +115,7 @@
 
     color: $blue-600;
     box-shadow: 0 0 0 1px $blue-400;
-    background-color: transparent;
+    background-color: white;
 
     &:hover {
       color: $blue-700;
@@ -151,5 +151,12 @@
       color: $blue-800;
       background-color: $blue-100;
     }
+  }
+
+  &-ghost {
+    @include focused-outline-secondary;
+
+    padding: 0;
+    height: initial;
   }
 }
