@@ -40,7 +40,7 @@ export const Nav = () => {
         </nav>
         {resourceRoutePattern && (
           <div className="nav-title">
-            <FormattedMessage id={'marva.edit'} />
+            <FormattedMessage id="marva.editResource" />
           </div>
         )}
       </div>

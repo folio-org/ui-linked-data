@@ -29,6 +29,14 @@ export enum Suppressed {
   NotSuppressed = 'notSuppressed',
 }
 
+export enum TitleTypes {
+  Main = 'Main',
+}
+
+export enum Classifications {
+  DDC = 'ddc',
+}
+
 // TODO: here and below: uncomment once taken into development
 export enum AdvancedSearchOperators {
   AND = 'and',

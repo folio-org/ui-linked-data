@@ -1,0 +1,74 @@
+@import '@common/styles/common.scss';
+
+.work-details-card {
+  padding: 1rem 0.5rem 1rem 1rem;
+  background-color: rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.125rem;
+
+  .heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 1rem;
+
+    .button-ghost {
+      background-color: transparent;
+
+      &:active,
+      &:focus,
+      &:focus-visible {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .toggle-icon {
+      cursor: pointer;
+      height: 1.2rem;
+      width: 1.2rem;
+    }
+
+    .icon-collapsed {
+      transform: rotate(180deg);
+    }
+
+    .title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: $gray-600;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .edit-button {
+      margin-left: auto;
+    }
+  }
+
+  .details {
+    margin-left: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $blue-2f;
+    }
+
+    &-item {
+      font-size: 0.813rem;
+
+      span:first-child {
+        font-weight: 600;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}

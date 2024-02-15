@@ -33,7 +33,6 @@ describe('Item Search', () => {
   const {
     getByTestId,
     findByText,
-    // findByTestId
   } = screen;
 
   beforeEach(() => {
@@ -49,7 +48,7 @@ describe('Item Search', () => {
       <RecoilRoot>
         <BrowserRouter basename="/">
           <Routes>
-            <Route path="/" element={<ItemSearch fetchRecord={fetchRecord} />} />
+            <Route path="/" element={<ItemSearch />} />
             <Route path="/resources/:resourceId/edit" element={<Edit />} />
           </Routes>
           <CommonStatus />

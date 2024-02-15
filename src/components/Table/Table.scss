@@ -1,24 +1,78 @@
+@import '@common/styles/common.scss';
+
+$table-cell-border: 1px solid rgba(0, 0, 0, 0.1);
+$row-even-bg-color: rgba(0, 0, 0, 0.03);
+$row-odd-bg-color: rgba(0, 0, 0, 0.08);
+
 .table {
   width: 100%;
+  border-spacing: 0;
 
   &.table-with-pagination {
     margin-bottom: 2rem;
   }
 
+  tbody {
+    tr {
+      &:nth-child(odd) {
+        background-color: $row-odd-bg-color;
+      }
+
+      &:nth-child(even) {
+        background-color: $row-even-bg-color;
+      }
+    }
+  }
+
   th {
     vertical-align: bottom;
     text-align: left;
-    text-transform: uppercase;
+    background-color: $row-even-bg-color;
+    padding: 0 1px 0 0;
+
+    &:last-child {
+      padding: 0;
+    }
+
+    .table-header-contents-wrapper {
+      padding: 0 0.625rem 0.2rem 0.625rem;
+      border-bottom: 5px solid $blue-600;
+    }
   }
 
-  th,
   td {
-    padding: 0 0.5rem;
+    padding: 0 0.625rem;
   }
 
   tr,
   td {
-    border: 1px solid black;
+    border: $table-cell-border;
+    word-wrap: break-word;
+
+    &:first-child {
+      border-top: 0;
+      border-left: 0;
+    }
+
+    &:last-child {
+      border-right: 0;
+
+      & td {
+        border-bottom: 0;
+      }
+    }
+
+    &:not(:first-child) {
+      & td:first-child {
+        border-top: 0;
+      }
+    }
+
+    & + td,
+    & + tr {
+      border-top: 0;
+      border-left: 0;
+    }
   }
 
   td {

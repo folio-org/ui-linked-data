@@ -3,26 +3,7 @@ import baseApi from './base.api';
 
 export type ItemSearchResponse = {
   searchQuery: string;
-  content: {
-    id: string;
-    titles?: {
-      value?: string;
-      type?: string;
-    }[];
-    identifiers?: {
-      value?: string;
-      type?: string;
-    }[];
-    contributors?: {
-      name?: string;
-      primary?: boolean;
-    }[];
-    publications?: {
-      publisher?: string;
-      dateOfPublication?: string;
-    }[];
-    editionStatement?: string;
-  }[];
+  content: WorkAsSearchResultDTO[];
 };
 
 export type GetByIdentifier = {

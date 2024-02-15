@@ -1,0 +1,64 @@
+.search-result-entry-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  .instance-list {
+    font-size: 0.875rem;
+
+    tr {
+      height: 2.5rem;
+    }
+
+    .row-select-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .title {
+      width: 100%;
+      min-width: 15.625rem;
+    }
+
+    .identifier {
+      min-width: 10rem;
+      max-width: 10rem;
+    }
+
+    .publisher {
+      min-width: 12.5rem;
+      max-width: 12.5rem;
+    }
+
+    .publication-date {
+      min-width: 7.75rem;
+      max-width: 7.75rem;
+    }
+  }
+
+  .empty-or-closed {
+    padding: 1rem 1rem 1rem 3.75rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.875rem;
+    height: 100%;
+
+    > svg {
+      margin-bottom: 0.2rem;
+    }
+
+    > span {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    a {
+      font-size: 0.813rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  }
+}

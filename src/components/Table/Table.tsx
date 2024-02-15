@@ -1,15 +1,15 @@
 import classNames from 'classnames';
-import { v4 as uuidv4 } from 'uuid';
 import './Table.scss';
 
 export type Cell = {
-  label?: string;
+  label?: string | JSX.Element;
   children?: JSX.Element;
   className?: string;
   position?: number;
+  [x: string]: any;
 };
 
-export type Row = Record<string, Cell | Record<string, any>>;
+export type Row = Record<string, Cell>;
 
 export type Table = {
   header: Row;
@@ -21,44 +21,49 @@ export type Table = {
 
 export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }: Table) => {
   const sortedHeaderEntries = Object.entries(header).sort(
-    ([_key1, value1], [_key2, value2]) => value1.position - value2.position,
+    ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
   );
 
   return (
     <table data-testid="table" className={classNames('table', className)}>
       <thead>
         <tr>
-          {sortedHeaderEntries.map(([key, { label, className }]) => (
+          {sortedHeaderEntries.map(([key, { label, className, ...rest }]) => (
             <th
               key={key}
               data-testid={`th-${key}`}
-              className={classNames({ clickable: onHeaderCellClick, [className]: className })}
+              className={classNames({ clickable: onHeaderCellClick }, className)}
               onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
+              {...rest}
             >
-              {label}
+              <div className="table-header-contents-wrapper">{label ?? ''}</div>
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {data.map((row: Row) => (
-          <tr
-            data-testid="table-row"
-            key={(row.__meta as Record<string, any>)?.id || uuidv4()}
-            className={classNames({ clickable: onRowClick })}
-            onClick={() => onRowClick?.(row)}
-          >
-            {sortedHeaderEntries.map(([key]) => {
-              const { label, children, className } = row?.[key] || {};
+        {data.map((row: Row) => {
+          const rowMeta = row.__meta as Record<string, any>;
 
-              return (
-                <td className={classNames({ [className]: className })} data-testid={key} key={key}>
-                  {(label || children) ?? ''}
-                </td>
-              );
-            })}
-          </tr>
-        ))}
+          return (
+            <tr
+              data-testid="table-row"
+              key={rowMeta?.key || rowMeta?.id}
+              className={classNames({ clickable: onRowClick })}
+              onClick={() => onRowClick?.(row)}
+            >
+              {sortedHeaderEntries.map(([key]) => {
+                const { label, children, className, ...rest } = row?.[key] || {};
+
+                return (
+                  <td className={classNames(className)} data-testid={key} key={key} {...rest}>
+                    {(children || label) ?? ''}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
