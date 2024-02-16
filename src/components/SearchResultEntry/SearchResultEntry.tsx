@@ -55,12 +55,6 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => ({
       ...row,
-      __meta: {
-        ...row.__meta,
-
-        // for now, both instances and works should redirect to edit section via work ID
-        id: restOfWork.id,
-      },
       title: {
         ...row.title,
         children: <Link to="#">{row.title.label}</Link>,
