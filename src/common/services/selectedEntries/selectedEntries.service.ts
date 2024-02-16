@@ -22,4 +22,10 @@ export class SelectedEntriesService implements ISelectedEntries {
 
     this.selectedEntries.push(updatedEntryUuid);
   }
+
+  remove(selectedEntryUuid?: string) {
+    if (!selectedEntryUuid) return;
+
+    this.selectedEntries = this.selectedEntries.filter(uuid => uuid !== selectedEntryUuid);
+  }
 }
