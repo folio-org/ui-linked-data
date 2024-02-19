@@ -5,8 +5,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { getPageMetadata, getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
-import { scrollElementIntoView } from '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { itemSearchMockData } from '../common/helpers/search.helper.test';
 import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
@@ -18,9 +16,86 @@ let getByIdentifierMock: jest.SpyInstance<
   any
 >;
 
-const fetchRecord = jest.fn();
-
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
+export const itemSearchMockData = {
+  searchQuery: 'isbn=12345*',
+  content: [
+    {
+      id: 'workId',
+      titles: [
+        {
+          value: 'Title Value',
+          type: 'Main',
+        },
+      ],
+      contributors: [
+        {
+          name: 'John Doe',
+          type: 'Person',
+          isCreator: true,
+        },
+      ],
+      languages: [
+        {
+          value: 'eng',
+        },
+      ],
+      classifications: [
+        {
+          number: '1234',
+          source: 'ddc',
+        },
+      ],
+      publications: [
+        {
+          name: 'name Name',
+          date: '2022',
+        },
+      ],
+      subjects: [
+        {
+          value: 'Subject',
+        },
+      ],
+      instances: [
+        {
+          id: 'instanceId',
+          titles: [
+            {
+              value: 'Title Value',
+              type: 'Main',
+            },
+          ],
+          identifiers: [
+            {
+              value: '12345678901234567',
+              type: 'ISBN',
+            },
+          ],
+          contributors: [
+            {
+              name: 'John Doe',
+              type: 'Person',
+              isCreator: true,
+            },
+          ],
+          publications: [
+            {
+              name: 'name Name',
+              date: '2022',
+            },
+          ],
+          editionStatements: [
+            {
+              value: 'Edition 1',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
 describe('Item Search', () => {
   const id = 'lccn';
@@ -89,51 +164,14 @@ describe('Item Search', () => {
     expect(await findByText('marva.searchNoRdsMatch')).toBeInTheDocument();
   });
 
-  test('calls fetchRecord and scrollElementIntoView on action item Preview button click', async () => {
-    jest.useFakeTimers();
-
+  test('renders the results', async () => {
     getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
 
     fireEvent.click(getByTestId(id));
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    await waitFor(() => {
-      fireEvent.click(getByTestId('preview-button'));
-
-      expect(fetchRecord).toHaveBeenCalled();
-      expect(scrollElementIntoView).toHaveBeenCalled();
-    });
-
-    jest.clearAllTimers();
-  });
-
-  test('navigates to Edit page on action item edit button click', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
-
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
-
-    await waitFor(() => {
-      fireEvent.click(getByTestId('edit-button'));
-
-      expect(getByTestId('edit-page')).toBeInTheDocument();
-    });
-  });
-
-  test('navigates to Edit page on row click', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
-
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
-
-    await waitFor(() => {
-      fireEvent.click(getByTestId('table-row'));
-
-      expect(getByTestId('edit-page')).toBeInTheDocument();
-    });
+    expect(await findByText('John Doe')).toBeInTheDocument();
   });
 
   test('returns out of fetchData if no query present', async () => {

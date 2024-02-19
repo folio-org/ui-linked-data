@@ -15,6 +15,9 @@ describe('Table', () => {
   };
   const mockData = [
     {
+      __meta: {
+        key: '123',
+      },
       id: {
         label: 'id-cell',
       },
