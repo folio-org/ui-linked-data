@@ -21,9 +21,11 @@ type GenericStructDTO<T> = {
   type?: T;
 };
 
+type ContributorType = 'Family' | 'Jurisdiction' | 'Meeting' | 'Organization' | 'Person';
+
 type ContributorDTO = {
   name?: string;
-  type?: 'Family' | 'Jurisdiction' | 'Meeting' | 'Organization' | 'Person';
+  type?: ContributorType;
   isCreator?: boolean;
 };
 

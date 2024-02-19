@@ -64,7 +64,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           <Button
             type={ButtonType.Primary}
             onClick={() => navigate(generateEditResourceUrl(row.__meta?.id))}
-            data-testid="edit-button"
+            data-testid={`edit-button-${row.__meta.id}`}
           >
             <FormattedMessage id="marva.edit" />
           </Button>

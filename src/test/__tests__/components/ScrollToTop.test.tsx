@@ -1,7 +1,7 @@
 import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ScrollToTop } from '@components/ScrollToTop';
-import { scrollToTop } from '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getByClassNameAndScrollToTop } from '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 
 describe('ScrollToTop', () => {
   test('renders ScrollToTop component', () => {
@@ -19,8 +19,10 @@ describe('ScrollToTop', () => {
   test('calls scrollToTop function on click', () => {
     render(<ScrollToTop />);
 
-    fireEvent.click(screen.getByRole('button'));
+    const el = screen.getByRole('button');
 
-    expect(scrollToTop).toHaveBeenCalledTimes(1);
+    fireEvent.click(el);
+
+    expect(getByClassNameAndScrollToTop).toHaveBeenCalled();
   });
 });

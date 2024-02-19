@@ -28,7 +28,7 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     vertical-align: bottom;
     text-align: left;
     background-color: $row-even-bg-color;
-    padding: 0 1px 0 0;
+    padding: 0 0.65px 0 0;
 
     &:last-child {
       padding: 0;
