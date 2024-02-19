@@ -12,7 +12,9 @@ body > #editor-root,
 .main-content,
 .embed-container {
   height: 100%;
-  font-size: 16px;
+  
+  // TODO: revise with designer on what the base font size should be
+  // font-size: 16px;
 }
 
 #app-root {
