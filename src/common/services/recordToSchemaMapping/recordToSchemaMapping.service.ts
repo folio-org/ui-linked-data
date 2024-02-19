@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { SchemaWithDuplicatesService } from '../schema';
 
@@ -16,6 +16,8 @@ export class RecordToSchemaMappingService {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
   private currentBlockUri: string | undefined;
+  private currentRecordGroupKey?: string;
+  private recordMap?: BF2BFLiteMapEntry;
 
   constructor(
     schema: Schema,
@@ -45,27 +47,31 @@ export class RecordToSchemaMappingService {
   private async traverseBlocks() {
     for await (const blockUri of recordBlocks.values()) {
       this.currentBlockUri = blockUri;
-      await this.traverseBlock(blockUri);
+      await this.traverseBlock();
     }
   }
 
-  private async traverseBlock(blockUri: string) {
-    try {
-      for await (const [recordKey, recordEntry] of Object.entries(this.record[blockUri])) {
-        const recordMap = NEW_BF2_TO_BFLITE_MAPPING[recordKey];
+  private async traverseBlock() {
+    if (!this.currentBlockUri) return;
 
-        if (recordMap) {
-          const containerBf2Uri = recordMap.container.bf2Uri;
+    try {
+      for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
+        this.recordMap = NEW_BF2_TO_BFLITE_MAPPING[recordKey] as BF2BFLiteMapEntry;
+
+        this.currentRecordGroupKey = recordKey;
+
+        if (this.recordMap) {
+          const containerBf2Uri = this.recordMap.container.bf2Uri;
           const schemaEntry = this.getSchemaEntry(containerBf2Uri);
 
           // Traverce throug the record elements within the group (potentially for the Repeatable fields)
           for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
             if (schemaEntry) {
-              const dropdownOptionsMap = recordMap.options;
+              const dropdownOptionsMap = this.recordMap.options;
 
               // generate repeatable fields
               if (recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-                const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry);
+                const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry) || '';
                 this.updatedSchema = this.repeatableFieldsService?.get();
                 this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
@@ -126,19 +132,31 @@ export class RecordToSchemaMappingService {
         // TODO: check if simple lookup values should be mapped.
         // And make requests for the lookup options list, then map the values.
 
-        console.log('============SIMPLE in TRAVERSE===============');
-        console.log('schemaEntry', schemaEntry, 'recordGroup', recordGroup);
-        console.log('============END SIMPLE in TRAVERSE=============');
+        // "http://bibfra.me/vocab/marc/issuance" has a simple structure and should not map it's value;
+        // it should load the data and find an option by its label, not by code or link
+
+        this.userValues[schemaEntry.uuid] = {
+          uuid: schemaEntry.uuid,
+          contents: [
+            this.generateValueForSimpleLookup(
+              recordGroup[this.recordMap?.fields?.[this.currentRecordGroupKey as string]?.label as string]?.[0],
+              recordGroup[BFLITE_URIS.LINK]?.[0],
+              schemaEntry?.type,
+            ),
+          ],
+        };
       } else if (schemaEntry?.type === AdvancedFieldType.literal) {
         this.userValues[schemaEntry.uuid] = this.generateValueForLiteral(schemaEntry.uuid, recordGroup);
+      } else if (schemaEntry?.type === AdvancedFieldType.complex) {
+        // TODO: process Complex Lookups
       } else {
         // Used for complex groups, which contains a number of subfields
         if (recordGroup && typeof recordGroup === 'object') {
           // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-          for await (const [idx, groupElem] of Object.entries(recordGroup)) {
+          for await (const [key, groupElem] of Object.entries(recordGroup)) {
             await this.mapRecordValueToSchemaEntry({
               schemaEntry,
-              recordKey: idx,
+              recordKey: key,
               recordEntryValue: groupElem,
             });
           }
@@ -259,7 +277,7 @@ export class RecordToSchemaMappingService {
   }: {
     schemaEntry: SchemaEntry;
     recordKey: string;
-    recordEntryValue: string | string[];
+    recordEntryValue: string | string[] | Record<string, string[]>[];
   }) {
     const schemaElemUUID = this.findSchemaUIControl({
       schemaEntry,
@@ -272,20 +290,26 @@ export class RecordToSchemaMappingService {
 
     if (schemaUiElem?.type === AdvancedFieldType.simple) {
       const contents = [];
-      for await (const simpleLookupRecordValue of recordEntryValue) {
+
+      for await (const simpleLookupRecordValue of recordEntryValue as Record<string, string[]>[]) {
         // TODO: make a request for a lookup data and select a correct value
         // TODO: use normalized record instead of BFLite URIs
         const contentEntry = this.generateValueForSimpleLookup(
-          simpleLookupRecordValue['http://bibfra.me/vocab/lite/label'],
-          simpleLookupRecordValue['http://bibfra.me/vocab/lite/link'],
+          simpleLookupRecordValue[this.recordMap?.fields?.[recordKey]?.label as string]?.[0],
+          simpleLookupRecordValue[BFLITE_URIS.LINK]?.[0],
           schemaUiElem?.type,
         );
 
         contents.push(contentEntry);
       }
       this.userValues[schemaUiElem.uuid] = { uuid: schemaUiElem.uuid, contents };
+    } else if (schemaUiElem?.type === AdvancedFieldType.complex) {
+      // TODO: implement this
     } else if (schemaUiElem?.type === AdvancedFieldType.literal) {
-      this.userValues[schemaUiElem.uuid] = this.generateValueForLiteral(schemaUiElem.uuid, recordEntryValue[0]);
+      this.userValues[schemaUiElem.uuid] = this.generateValueForLiteral(
+        schemaUiElem.uuid,
+        recordEntryValue[0] as string,
+      );
     }
   }
 

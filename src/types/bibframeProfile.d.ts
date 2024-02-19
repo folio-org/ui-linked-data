@@ -132,3 +132,11 @@ type FieldTypeMapEntry = {
 };
 
 type FieldTypeMap = Record<string, FieldTypeMapEntry>;
+
+type BF2BFLiteMapEntry = {
+  container: { bf2Uri: string };
+  options?: Record<string, { bf2Uri: string }>;
+  fields?: Record<string, { bf2Uri: string; label?: string }>;
+};
+
+type BF2BFLiteMap = Record<string, BF2BFLiteMapEntry>;

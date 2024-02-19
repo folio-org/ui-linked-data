@@ -566,7 +566,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
   'http://bibfra.me/vocab/marc/edition': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/editionStatement' },
   },
-  'http://bibfra.me/vocab/marc/production': {
+  /* 'http://bibfra.me/vocab/marc/production': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/provisionActivity' },
     options: {
       'http://bibfra.me/vocab/marc/production': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Production' },
@@ -577,7 +577,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleAgent' },
       'http://bibfra.me/vocab/lite/date': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleDate' },
     },
-  },
+  }, */
   'https://bibfra.me/vocab/marc/provisionActivity': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/provisionActivity' },
     options: {
@@ -588,7 +588,10 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     },
     fields: {
       'http://bibfra.me/vocab/lite/providerDate': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/date' },
-      'http://bibfra.me/vocab/lite/providerPlace': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/place' },
+      'http://bibfra.me/vocab/lite/providerPlace': {
+        bf2Uri: 'http://id.loc.gov/ontologies/bibframe/place',
+        label: BFLITE_URIS.LABEL,
+      },
       'http://bibfra.me/vocab/lite/place': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simplePlace' },
       'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleAgent' },
       'http://bibfra.me/vocab/lite/date': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleDate' },
@@ -605,7 +608,10 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     },
     fields: {
       'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value' },
-      'http://bibfra.me/vocab/marc/status': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status' },
+      'http://bibfra.me/vocab/marc/status': {
+        bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status',
+        label: BFLITE_URIS.LABEL,
+      },
       'http://bibfra.me/vocab/marc/qualifier': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/qualifier' },
       'http://bibfra.me/vocab/marc/localId': { bf2Uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value' },
       'http://bibfra.me/vocab/marc/localIdAssigningSource': {
@@ -636,6 +642,12 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
   },
   'http://bibfra.me/vocab/marc/media': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/media' },
+    fields: {
+      'http://bibfra.me/vocab/marc/media': {
+        bf2Uri: 'http://id.loc.gov/ontologies/bibframe/dimensions',
+        label: BFLITE_URIS.TERM,
+      },
+    },
   },
   'http://bibfra.me/vocab/lite/extent': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/extent' },
