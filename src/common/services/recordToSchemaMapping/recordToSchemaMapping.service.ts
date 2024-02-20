@@ -2,6 +2,7 @@ import { cloneDeep } from 'lodash';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
+import { IUserValues } from '../userValues/userValues.interface';
 import { SchemaWithDuplicatesService } from '../schema';
 
 // TODO: move to constants
@@ -24,12 +25,13 @@ export class RecordToSchemaMappingService {
     private record: any,
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: SchemaWithDuplicatesService,
+    private userValuesService: IUserValues,
   ) {
     this.updatedSchema = cloneDeep(schema);
     this.record = record;
 
     this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
-    this.userValues = {};
+    this.userValues = this.userValuesService.getAllValues();
   }
 
   async init() {
@@ -128,27 +130,18 @@ export class RecordToSchemaMappingService {
         }
       }
     } else {
-      if (schemaEntry?.type === AdvancedFieldType.simple) {
-        // TODO: check if simple lookup values should be mapped.
-        // And make requests for the lookup options list, then map the values.
+      if (uiControlsList.includes(schemaEntry?.type)) {
+        const labelSelector = this.recordMap?.fields?.[this.currentRecordGroupKey as string]?.label as string;
 
-        // "http://bibfra.me/vocab/marc/issuance" has a simple structure and should not map it's value;
-        // it should load the data and find an option by its label, not by code or link
-
-        this.userValues[schemaEntry.uuid] = {
-          uuid: schemaEntry.uuid,
-          contents: [
-            this.generateValueForSimpleLookup(
-              recordGroup[this.recordMap?.fields?.[this.currentRecordGroupKey as string]?.label as string]?.[0],
-              recordGroup[BFLITE_URIS.LINK]?.[0],
-              schemaEntry?.type,
-            ),
-          ],
-        };
-      } else if (schemaEntry?.type === AdvancedFieldType.literal) {
-        this.userValues[schemaEntry.uuid] = this.generateValueForLiteral(schemaEntry.uuid, recordGroup);
-      } else if (schemaEntry?.type === AdvancedFieldType.complex) {
-        // TODO: process Complex Lookups
+        this.userValuesService.setValue({
+          type: schemaEntry?.type,
+          key: schemaEntry.uuid,
+          value: {
+            data: recordGroup,
+            labelSelector,
+            uriSelector: BFLITE_URIS.LINK,
+          },
+        });
       } else {
         // Used for complex groups, which contains a number of subfields
         if (recordGroup && typeof recordGroup === 'object') {
@@ -287,44 +280,16 @@ export class RecordToSchemaMappingService {
     if (!schemaElemUUID) return;
 
     const schemaUiElem = this.updatedSchema?.get(schemaElemUUID);
+    const labelSelector = this.recordMap?.fields?.[recordKey]?.label as string;
 
-    if (schemaUiElem?.type === AdvancedFieldType.simple) {
-      const contents = [];
-
-      for await (const simpleLookupRecordValue of recordEntryValue as Record<string, string[]>[]) {
-        // TODO: make a request for a lookup data and select a correct value
-        // TODO: use normalized record instead of BFLite URIs
-        const contentEntry = this.generateValueForSimpleLookup(
-          simpleLookupRecordValue[this.recordMap?.fields?.[recordKey]?.label as string]?.[0],
-          simpleLookupRecordValue[BFLITE_URIS.LINK]?.[0],
-          schemaUiElem?.type,
-        );
-
-        contents.push(contentEntry);
-      }
-      this.userValues[schemaUiElem.uuid] = { uuid: schemaUiElem.uuid, contents };
-    } else if (schemaUiElem?.type === AdvancedFieldType.complex) {
-      // TODO: implement this
-    } else if (schemaUiElem?.type === AdvancedFieldType.literal) {
-      this.userValues[schemaUiElem.uuid] = this.generateValueForLiteral(
-        schemaUiElem.uuid,
-        recordEntryValue[0] as string,
-      );
-    }
-  }
-
-  private generateValueForLiteral(uuid: string, label: string) {
-    return { uuid, contents: [{ label }] };
-  }
-
-  private generateValueForSimpleLookup(label: string, uri: string, type: AdvancedFieldType) {
-    return {
-      label,
-      meta: {
-        parentURI: uri,
-        uri,
-        type,
+    this.userValuesService.setValue({
+      type: schemaUiElem?.type as AdvancedFieldType,
+      key: schemaElemUUID,
+      value: {
+        data: recordEntryValue,
+        labelSelector,
+        uriSelector: BFLITE_URIS.LINK,
       },
-    };
+    });
   }
 }

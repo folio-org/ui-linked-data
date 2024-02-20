@@ -15,6 +15,7 @@ import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
+import { UserValuesService } from '@common/services/userValues';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -235,17 +236,23 @@ export const useConfig = () => {
 
       const selectedEntriesService = new SelectedEntriesService(selectedEntries);
       const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
+      const userValuesService = new UserValuesService(userValues);
       const recordToSchemaMappingService = new RecordToSchemaMappingService(
         base,
         updatedRecord,
         selectedEntriesService,
         repeatableFieldsService,
+        userValuesService,
       );
 
       await recordToSchemaMappingService.init();
       updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
       updatedUserValues = recordToSchemaMappingService.getUserValues();
       updatedSelectedEntries = selectedEntriesService.get();
+
+      console.log('====================================');
+      console.log('updatedUserValues', updatedUserValues);
+      console.log('====================================');
     }
 
     setUserValues(updatedUserValues || userValues);
