@@ -233,7 +233,7 @@ export const useConfig = () => {
 
     // TODO: move this to a separate method or function
     if (record) {
-      const recordNormalizingService = new RecordNormalizingService(record);
+      const recordNormalizingService = new RecordNormalizingService(record as RecordEntry);
       updatedRecord = recordNormalizingService.get();
 
       const selectedEntriesService = new SelectedEntriesService(selectedEntries);

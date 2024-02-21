@@ -566,18 +566,6 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
   'http://bibfra.me/vocab/marc/edition': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/editionStatement' },
   },
-  /* 'http://bibfra.me/vocab/marc/production': {
-    container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/provisionActivity' },
-    options: {
-      'http://bibfra.me/vocab/marc/production': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Production' },
-    },
-    fields: {
-      'http://bibfra.me/vocab/lite/providerDate': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/date' },
-      'http://bibfra.me/vocab/lite/place': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simplePlace' },
-      'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleAgent' },
-      'http://bibfra.me/vocab/lite/date': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/simpleDate' },
-    },
-  }, */
   'https://bibfra.me/vocab/marc/provisionActivity': {
     container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/provisionActivity' },
     options: {

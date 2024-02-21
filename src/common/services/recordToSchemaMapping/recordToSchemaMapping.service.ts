@@ -59,7 +59,7 @@ export class RecordToSchemaMappingService {
           const containerBf2Uri = this.recordMap.container.bf2Uri;
           const schemaEntry = this.getSchemaEntry(containerBf2Uri);
 
-          // Traverce throug the record elements within the group (potentially for the Repeatable fields)
+          // Traverse throug the record elements within the group (potentially for the Repeatable fields)
           for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
             if (schemaEntry) {
               const dropdownOptionsMap = this.recordMap.options;
@@ -114,7 +114,7 @@ export class RecordToSchemaMappingService {
             // TODO: DRY
             for await (const [key, value] of Object.entries(groupElem)) {
               await this.mapRecordValueToSchemaEntry({
-                schemaEntry: dropdownOptionEntry,
+                schemaEntry: dropdownOptionEntry as SchemaEntry,
                 recordKey: key,
                 recordEntryValue: value,
               });
@@ -131,19 +131,11 @@ export class RecordToSchemaMappingService {
         }
       }
     } else {
-      if (uiControlsList.includes(schemaEntry?.type)) {
-        const labelSelector = this.recordMap?.fields?.[this.currentRecordGroupKey as string]?.label as string;
-
-        await this.userValuesService.setValue({
-          type: schemaEntry?.type,
-          key: schemaEntry.uuid,
-          value: {
-            data: recordGroup,
-            uri: schemaEntry.constraints?.useValuesFrom?.[0],
-            labelSelector,
-            uriSelector: BFLITE_URIS.LINK,
-            propertyURI: schemaEntry.uri,
-          },
+      if (uiControlsList.includes(schemaEntry?.type as AdvancedFieldType)) {
+        await this.mapRecordValueToSchemaEntry({
+          schemaEntry,
+          recordKey: this.currentRecordGroupKey as string,
+          recordEntryValue: recordGroup,
         });
       } else {
         // Used for complex groups, which contains a number of subfields

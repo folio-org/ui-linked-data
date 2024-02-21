@@ -1,6 +1,6 @@
 export const RECORD_NORMALIZING_CASES = {
   'http://bibfra.me/vocab/marc/production': {
-    processor: record =>
+    processor: (record: RecordEntry) =>
       wrapWithContainer(
         record,
         'http://bibfra.me/vocab/marc/production',
@@ -8,7 +8,7 @@ export const RECORD_NORMALIZING_CASES = {
       ),
   },
   'http://bibfra.me/vocab/marc/publication': {
-    processor: record =>
+    processor: (record: RecordEntry) =>
       wrapWithContainer(
         record,
         'http://bibfra.me/vocab/marc/publication',
@@ -16,7 +16,7 @@ export const RECORD_NORMALIZING_CASES = {
       ),
   },
   'http://bibfra.me/vocab/marc/distribution': {
-    processor: record =>
+    processor: (record: RecordEntry) =>
       wrapWithContainer(
         record,
         'http://bibfra.me/vocab/marc/distribution',
@@ -24,7 +24,7 @@ export const RECORD_NORMALIZING_CASES = {
       ),
   },
   'http://bibfra.me/vocab/marc/manufacture': {
-    processor: record =>
+    processor: (record: RecordEntry) =>
       wrapWithContainer(
         record,
         'http://bibfra.me/vocab/marc/manufacture',
@@ -33,7 +33,7 @@ export const RECORD_NORMALIZING_CASES = {
   },
 };
 
-const wrapWithContainer = (record, key, container) => {
+const wrapWithContainer = (record: any, key: string, container: string) => {
   if (!record[key]) return;
 
   record[key].forEach(recordEntry => {

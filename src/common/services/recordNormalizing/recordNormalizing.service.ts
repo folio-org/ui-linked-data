@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import { RECORD_NORMALIZING_CASES } from './recordProcessingCases';
 
 export class RecordNormalizingService {
-  constructor(private record: any) {
+  constructor(private record: RecordEntry) {
     this.record = cloneDeep(record);
 
     this.decoupleBlocks();
