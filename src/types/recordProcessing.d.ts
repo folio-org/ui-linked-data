@@ -5,4 +5,5 @@ type UserValueDTO = {
   labelSelector?: string;
   uriSelector?: string;
   type?: AdvancedFieldType;
+  propertyURI?: string;
 };

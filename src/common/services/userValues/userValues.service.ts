@@ -4,8 +4,7 @@ import { IUserValueType } from './userValueTypes/userValueType.interface';
 import { IUserValues } from './userValues.interface';
 
 export class UserValuesService implements IUserValues {
-  private userValues: any;
-  private generatedValue: any;
+  private generatedValue?: UserValue;
   private type?: AdvancedFieldType;
   private key?: string;
   private value?: any;
@@ -14,9 +13,11 @@ export class UserValuesService implements IUserValues {
   private simpleLookupUserValueService?: IUserValueType;
   private complexLookupUserValueService?: IUserValueType;
 
-  constructor(userValues: any) {
-    this.type = undefined;
-    this.value = undefined;
+  constructor(
+    private userValues: UserValues,
+    private apiClient: any,
+    private cacheService: ILookupCacheService,
+  ) {
     this.userValues = userValues;
 
     this.initialize();
@@ -30,7 +31,9 @@ export class UserValuesService implements IUserValues {
     this.selectFactoryByType();
     await this.generateValue();
 
-    this.userValues[key] = this.generatedValue;
+    if (this.generatedValue) {
+      this.userValues[key] = this.generatedValue;
+    }
   }
 
   getAllValues() {
@@ -43,7 +46,7 @@ export class UserValuesService implements IUserValues {
 
   private initialize() {
     this.literalUserValueService = new LiteralUserValueService();
-    this.simpleLookupUserValueService = new SimpleLookupUserValueService();
+    this.simpleLookupUserValueService = new SimpleLookupUserValueService(this.apiClient, this.cacheService);
     this.complexLookupUserValueService = new ComplexLookupUserValueService();
   }
 

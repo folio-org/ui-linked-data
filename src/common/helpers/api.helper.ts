@@ -8,7 +8,7 @@ export const loadSimpleLookup = async (
     uris = [uris];
   }
 
-  for (const uri of uris) {
+  for await (const uri of uris) {
     // TODO more checks here
     const formattedUri = !uri.includes('.json') ? `${uri}.json` : uri;
     const data = await fetchSimpleLookup(formattedUri);

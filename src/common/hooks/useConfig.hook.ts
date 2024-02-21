@@ -1,4 +1,4 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
@@ -16,6 +16,7 @@ import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMap
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { UserValuesService } from '@common/services/userValues';
+import { loadSimpleLookup } from '@common/helpers/api.helper';
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -26,6 +27,7 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
+  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -236,7 +238,23 @@ export const useConfig = () => {
 
       const selectedEntriesService = new SelectedEntriesService(selectedEntries);
       const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
-      const userValuesService = new UserValuesService(userValues);
+
+      // TODO: create a service for this
+      const lookupApiClient = {
+        load: loadSimpleLookup,
+      };
+
+      const lookupCacheService = {
+        save: (key: string, data: MultiselectOption[]) => {
+          const updatedData = { ...lookupData, [key]: data };
+
+          setLookupData(updatedData);
+        },
+        getAll: () => lookupData,
+        getById: (id: string) => lookupData[id],
+      };
+
+      const userValuesService = new UserValuesService(userValues, lookupApiClient, lookupCacheService);
       const recordToSchemaMappingService = new RecordToSchemaMappingService(
         base,
         updatedRecord,
@@ -247,7 +265,8 @@ export const useConfig = () => {
 
       await recordToSchemaMappingService.init();
       updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
-      updatedUserValues = recordToSchemaMappingService.getUserValues();
+      // updatedUserValues = recordToSchemaMappingService.getUserValues();
+      updatedUserValues = userValuesService.getAllValues();
       updatedSelectedEntries = selectedEntriesService.get();
 
       console.log('====================================');

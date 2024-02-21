@@ -12,8 +12,6 @@ const recordBlocks = ['http://bibfra.me/vocab/lite/Instance', 'http://bibfra.me/
 
 // TODO: take into account a selected Profile
 export class RecordToSchemaMappingService {
-  // TODO: create a service for user values
-  private userValues: UserValues;
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
   private currentBlockUri: string | undefined;
@@ -31,7 +29,6 @@ export class RecordToSchemaMappingService {
     this.record = record;
 
     this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
-    this.userValues = this.userValuesService.getAllValues();
   }
 
   async init() {
@@ -40,10 +37,6 @@ export class RecordToSchemaMappingService {
 
   getUpdatedSchema() {
     return this.updatedSchema;
-  }
-
-  getUserValues() {
-    return this.userValues;
   }
 
   private async traverseBlocks() {
@@ -99,7 +92,15 @@ export class RecordToSchemaMappingService {
     }
   }
 
-  private async traverseEntries({ dropdownOptionsMap, recordGroup, schemaEntry }) {
+  private async traverseEntries({
+    dropdownOptionsMap,
+    recordGroup,
+    schemaEntry,
+  }: {
+    dropdownOptionsMap: any;
+    recordGroup: any;
+    schemaEntry: SchemaEntry;
+  }) {
     if (dropdownOptionsMap) {
       if (recordGroup && typeof recordGroup === 'object') {
         // traverse within the selected record element (find dropdown options and elements ouside dropdown)
@@ -133,13 +134,15 @@ export class RecordToSchemaMappingService {
       if (uiControlsList.includes(schemaEntry?.type)) {
         const labelSelector = this.recordMap?.fields?.[this.currentRecordGroupKey as string]?.label as string;
 
-        this.userValuesService.setValue({
+        await this.userValuesService.setValue({
           type: schemaEntry?.type,
           key: schemaEntry.uuid,
           value: {
             data: recordGroup,
+            uri: schemaEntry.constraints?.useValuesFrom?.[0],
             labelSelector,
             uriSelector: BFLITE_URIS.LINK,
+            propertyURI: schemaEntry.uri,
           },
         });
       } else {
@@ -282,13 +285,15 @@ export class RecordToSchemaMappingService {
     const schemaUiElem = this.updatedSchema?.get(schemaElemUUID);
     const labelSelector = this.recordMap?.fields?.[recordKey]?.label as string;
 
-    this.userValuesService.setValue({
+    await this.userValuesService.setValue({
       type: schemaUiElem?.type as AdvancedFieldType,
       key: schemaElemUUID,
       value: {
         data: recordEntryValue,
+        uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
+        propertyURI: schemaUiElem?.uri,
       },
     });
   }
