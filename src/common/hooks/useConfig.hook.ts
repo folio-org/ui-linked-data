@@ -265,13 +265,8 @@ export const useConfig = () => {
 
       await recordToSchemaMappingService.init();
       updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
-      // updatedUserValues = recordToSchemaMappingService.getUserValues();
       updatedUserValues = userValuesService.getAllValues();
       updatedSelectedEntries = selectedEntriesService.get();
-
-      console.log('====================================');
-      console.log('updatedUserValues', updatedUserValues);
-      console.log('====================================');
     }
 
     setUserValues(updatedUserValues || userValues);

@@ -46,3 +46,7 @@ const wrapWithContainer = (record: any, key: string, container: string) => {
 
   delete record[key];
 };
+
+// TODO: add edge cases for:
+// Instance: "Statement of Responsibility", "Mode of Issuance", "Extent", "Notes about the Instance"
+// Work: "Primary Contributor", "Other contributors"

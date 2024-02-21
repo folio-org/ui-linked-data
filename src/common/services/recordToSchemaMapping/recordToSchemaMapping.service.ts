@@ -51,7 +51,7 @@ export class RecordToSchemaMappingService {
 
     try {
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
-        this.recordMap = NEW_BF2_TO_BFLITE_MAPPING[recordKey] as BF2BFLiteMapEntry;
+        this.recordMap = NEW_BF2_TO_BFLITE_MAPPING[this.currentBlockUri]?.[recordKey] as BF2BFLiteMapEntry;
 
         this.currentRecordGroupKey = recordKey;
 
