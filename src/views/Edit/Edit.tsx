@@ -5,9 +5,11 @@ import { EditSection } from '@components/EditSection';
 import { Properties } from '@components/Properties';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
+import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
+import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
@@ -16,7 +18,8 @@ import './Edit.scss';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
-  const { getProfiles } = useConfig();
+  const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
+  const { getProfiles } = useConfigHook();
   const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);

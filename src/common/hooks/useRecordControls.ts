@@ -7,12 +7,14 @@ import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { deleteRecordLocally, getRecordId } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
+import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 
 export const useRecordControls = () => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -28,8 +30,8 @@ export const useRecordControls = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
-
-  const { getProfiles } = useConfig();
+  const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
+  const { getProfiles } = useConfigHook();
   const navigate = useNavigate();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
