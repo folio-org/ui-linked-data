@@ -1,4 +1,5 @@
-import { TYPE_MAP } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_TYPES_MAP, TYPE_MAP } from '@common/constants/bibframeMapping.constants';
+import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
 
 export const formatLookupOptions = (
@@ -28,7 +29,8 @@ export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[]
   if (!propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(TYPE_MAP as FieldTypeMap, propertyURI);
+  const typesMap = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? BFLITE_TYPES_MAP : TYPE_MAP;
+  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI);
 
   if (bfGroup) {
     const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
@@ -49,7 +51,8 @@ export const filterLookupOptionsByParentBlock = (
   if (!parentBlockUri || !propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
-  const bfGroup = getBFGroup(TYPE_MAP as FieldTypeMap, propertyURI);
+  const typesMap = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? BFLITE_TYPES_MAP : TYPE_MAP;
+  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI);
 
   if (bfGroup) {
     const bf20MappedData = Object.values(bfGroup.data);

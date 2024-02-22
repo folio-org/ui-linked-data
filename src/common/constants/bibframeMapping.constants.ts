@@ -600,9 +600,6 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     },
     'http://bibfra.me/vocab/marc/copyright': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/copyrightDate' },
-      fields: {
-        'http://bibfra.me/vocab/lite/date': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/copyrightDate' },
-      },
     },
     'http://library.link/vocab/map': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/identifiedBy' },
@@ -638,7 +635,10 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       container: { bf2Uri: BF2_URIS.NOTE },
       fields: {
         value: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
-        type: { bf2Uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type' },
+        type: {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/noteType',
+          label: BFLITE_URIS.LABEL,
+        },
       },
     },
     'http://bibfra.me/vocab/marc/media': {
@@ -678,5 +678,16 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/lite/extent': { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
       },
     },
+  },
+};
+
+export const BFLITE_TYPES_MAP = {
+  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: {
+    field: TYPE_MAP[BF2_URIS.NOTE].field,
+    data: TYPE_MAP[BF2_URIS.NOTE].data,
+  },
+  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CONTRIBUTOR].container]: {
+    field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
+    data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
   },
 };

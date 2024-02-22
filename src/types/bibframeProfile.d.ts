@@ -139,4 +139,4 @@ type BF2BFLiteMapEntry = {
   fields?: Record<string, { bf2Uri: string; label?: string }>;
 };
 
-type BF2BFLiteMap = Record<string, BF2BFLiteMapEntry>;
+type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;

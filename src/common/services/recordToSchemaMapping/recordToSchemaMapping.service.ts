@@ -51,7 +51,9 @@ export class RecordToSchemaMappingService {
 
     try {
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
-        this.recordMap = NEW_BF2_TO_BFLITE_MAPPING[this.currentBlockUri]?.[recordKey] as BF2BFLiteMapEntry;
+        this.recordMap = (NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap)?.[this.currentBlockUri]?.[
+          recordKey
+        ] as BF2BFLiteMapEntry;
 
         this.currentRecordGroupKey = recordKey;
 
@@ -218,10 +220,10 @@ export class RecordToSchemaMappingService {
     if (selectedSchemaEntryUUID) return selectedSchemaEntryUUID;
 
     if (schemaEntry.children) {
-      schemaEntry.children?.forEach(choldEntryKey => {
+      schemaEntry.children?.forEach(childEntryKey => {
         if (selectedSchemaEntryUUID) return;
 
-        const childEntry = this.updatedSchema?.get(choldEntryKey);
+        const childEntry = this.updatedSchema?.get(childEntryKey);
 
         if (!childEntry) return;
 
@@ -234,7 +236,11 @@ export class RecordToSchemaMappingService {
         if (
           childEntry.type &&
           uiControlsList.includes(childEntry.type as AdvancedFieldType) &&
-          childEntry.uriBFLite === recordKey // TODO: use the mapped values instead of 'uriBFLite'
+          (childEntry.uriBFLite === recordKey ||
+            childEntry.uri ===
+              NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
+                recordKey as string
+              ]?.bf2Uri) // TODO: use the mapped values instead of 'uriBFLite'
         ) {
           selectedSchemaEntryUUID = childEntry.uuid;
         } else if (childEntry?.children?.length) {
@@ -249,7 +255,11 @@ export class RecordToSchemaMappingService {
       if (
         schemaEntry.type &&
         uiControlsList.includes(schemaEntry.type as AdvancedFieldType) &&
-        schemaEntry.uriBFLite === recordKey // TODO: use the mapped values instead of 'uriBFLite'
+        (schemaEntry.uriBFLite === recordKey ||
+          schemaEntry.uri ===
+            NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
+              recordKey as string
+            ]?.bf2Uri) // TODO: use the mapped values instead of 'uriBFLite'
       ) {
         selectedSchemaEntryUUID = schemaEntry.uuid;
       }
@@ -285,7 +295,9 @@ export class RecordToSchemaMappingService {
         uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
-        propertyURI: schemaUiElem?.uri,
+        propertyUri: schemaUiElem?.uri,
+        blockUri: this.currentBlockUri,
+        groupUri: this.currentRecordGroupKey,
       },
     });
   }

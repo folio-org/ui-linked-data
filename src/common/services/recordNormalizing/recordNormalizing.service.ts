@@ -28,7 +28,7 @@ export class RecordNormalizingService {
   private normalize() {
     for (const recordBlockKey in this.record) {
       for (const recordGroup in this.record[recordBlockKey]) {
-        RECORD_NORMALIZING_CASES?.[recordGroup]?.processor?.(this.record[recordBlockKey]);
+        RECORD_NORMALIZING_CASES?.[recordGroup]?.processor?.(this.record, recordBlockKey);
       }
     }
   }
