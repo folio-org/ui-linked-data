@@ -679,6 +679,18 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       },
     },
   },
+  [BFLITE_URIS.INSTANTIATES]: {
+    [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: {
+      container: { bf2Uri: BF2_URIS.NOTE },
+      fields: {
+        value: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
+        type: {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/noteType',
+          label: BFLITE_URIS.LABEL,
+        },
+      },
+    },
+  },
 };
 
 export const BFLITE_TYPES_MAP = {
