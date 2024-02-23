@@ -690,6 +690,12 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         },
       },
     },
+    'http://bibfra.me/vocab/lite/language': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/language' },
+      fields: {
+        'http://bibfra.me/vocab/lite/language': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+      },
+    },
   },
 };
 

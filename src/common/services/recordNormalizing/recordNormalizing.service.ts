@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { RECORD_NORMALIZING_CASES } from './recordProcessingCases';
+import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
 
 export class RecordNormalizingService {
   constructor(private record: RecordEntry) {

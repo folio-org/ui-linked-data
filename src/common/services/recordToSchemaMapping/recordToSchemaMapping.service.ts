@@ -1,14 +1,10 @@
 import { cloneDeep } from 'lodash';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType, UI_CONTROLS_LIST, UI_DROPDOWNS_LIST } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IUserValues } from '../userValues/userValues.interface';
+import { RECORD_BLOCKS } from '@common/constants/record.constants';
 import { SchemaWithDuplicatesService } from '../schema';
-
-// TODO: move to constants
-const uiControlsList = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
-const uiDropdowns = [AdvancedFieldType.dropdown, AdvancedFieldType.dropdownOption];
-const recordBlocks = ['http://bibfra.me/vocab/lite/Instance', 'http://bibfra.me/vocab/lite/instantiates'];
 
 // TODO: take into account a selected Profile
 export class RecordToSchemaMappingService {
@@ -20,7 +16,7 @@ export class RecordToSchemaMappingService {
 
   constructor(
     schema: Schema,
-    private record: any,
+    private record: RecordEntry,
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: SchemaWithDuplicatesService,
     private userValuesService: IUserValues,
@@ -40,7 +36,7 @@ export class RecordToSchemaMappingService {
   }
 
   private async traverseBlocks() {
-    for await (const blockUri of recordBlocks.values()) {
+    for await (const blockUri of RECORD_BLOCKS.values()) {
       this.currentBlockUri = blockUri;
       await this.traverseBlock();
     }
@@ -61,13 +57,17 @@ export class RecordToSchemaMappingService {
           const containerBf2Uri = this.recordMap.container.bf2Uri;
           const schemaEntry = this.getSchemaEntry(containerBf2Uri);
 
-          // Traverse throug the record elements within the group (potentially for the Repeatable fields)
+          // Traverse throug the record elements within the group (for the Repeatable fields)
           for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
+            /* if (recordKey === 'http://bibfra.me/vocab/lite/extent') {
+              debugger;
+            } */
+
             if (schemaEntry) {
               const dropdownOptionsMap = this.recordMap.options;
 
               // generate repeatable fields
-              if (recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
+              if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
                 const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry) || '';
                 this.updatedSchema = this.repeatableFieldsService?.get();
                 this.schemaArray = Array.from(this.updatedSchema?.values() || []);
@@ -101,8 +101,10 @@ export class RecordToSchemaMappingService {
   }: {
     dropdownOptionsMap: any;
     recordGroup: any;
-    schemaEntry: SchemaEntry;
+    schemaEntry?: SchemaEntry;
   }) {
+    if (!schemaEntry) return;
+
     if (dropdownOptionsMap) {
       if (recordGroup && typeof recordGroup === 'object') {
         // traverse within the selected record element (find dropdown options and elements ouside dropdown)
@@ -133,7 +135,7 @@ export class RecordToSchemaMappingService {
         }
       }
     } else {
-      if (uiControlsList.includes(schemaEntry?.type as AdvancedFieldType)) {
+      if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldType)) {
         await this.mapRecordValueToSchemaEntry({
           schemaEntry,
           recordKey: this.currentRecordGroupKey as string,
@@ -228,14 +230,14 @@ export class RecordToSchemaMappingService {
         if (!childEntry) return;
 
         // Ignore dropdown and options
-        if (childEntry.type && uiDropdowns.includes(childEntry.type as AdvancedFieldType)) {
+        if (childEntry.type && UI_DROPDOWNS_LIST.includes(childEntry.type as AdvancedFieldType)) {
           return;
         }
 
         // TODO: DRY
         if (
           childEntry.type &&
-          uiControlsList.includes(childEntry.type as AdvancedFieldType) &&
+          UI_CONTROLS_LIST.includes(childEntry.type as AdvancedFieldType) &&
           (childEntry.uriBFLite === recordKey ||
             childEntry.uri ===
               NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
@@ -254,7 +256,7 @@ export class RecordToSchemaMappingService {
     } else {
       if (
         schemaEntry.type &&
-        uiControlsList.includes(schemaEntry.type as AdvancedFieldType) &&
+        UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldType) &&
         (schemaEntry.uriBFLite === recordKey ||
           schemaEntry.uri ===
             NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[

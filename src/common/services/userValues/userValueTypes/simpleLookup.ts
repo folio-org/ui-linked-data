@@ -73,7 +73,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     type?: AdvancedFieldType;
   }) {
     const typesMap = (BFLITE_TYPES_MAP as FieldTypeMap)[groupUri as string];
-    const mappedUri = typesMap && itemUri ? typesMap?.data?.[itemUri]?.uri : uri;
+    const mappedUri = typesMap && itemUri ? typesMap?.data?.[itemUri]?.uri : itemUri;
 
     // Check if the loaded options contain a value from the record
     const loadedOption = this.cachedData[uri as string]?.find(
@@ -84,8 +84,8 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     const contentItem = {
       label: selectedLabel,
       meta: {
-        parentUri: itemUri,
-        uri,
+        parentUri: uri,
+        uri: itemUri,
         type,
       },
     };

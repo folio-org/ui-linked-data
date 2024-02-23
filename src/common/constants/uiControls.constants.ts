@@ -21,3 +21,7 @@ export enum AdvancedFieldType {
   dropdownOption = 'dropdownOption',
   __fallback = '__fallback',
 }
+
+export const UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
+
+export const UI_DROPDOWNS_LIST = [AdvancedFieldType.dropdown, AdvancedFieldType.dropdownOption];
