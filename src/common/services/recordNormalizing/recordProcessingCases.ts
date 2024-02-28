@@ -31,7 +31,7 @@ export const wrapWithContainer = (record: any, blockKey: string, key: string, co
 export const wrapSimpleLookupData = (record: any, blockKey: string, key: string) => {
   const label = getLabelUri(blockKey, key, key);
 
-  record[blockKey][key] = record[blockKey][key].map(recordEntry => ({ [label]: [recordEntry] }));
+  record[blockKey][key] = record[blockKey][key].map((recordEntry: string) => ({ [label]: [recordEntry] }));
 };
 
 export const notesMapping = (record: any, blockKey: string) => {
@@ -58,19 +58,20 @@ export const extractValue = (record: any, blockKey: string, key: string, source:
 };
 
 export const processComplexGroupValues = (record: any, blockKey: string, key: string) => {
-  record[blockKey][key] = record[blockKey][key].map(recordEntry => ({
+  record[blockKey][key] = record[blockKey][key].map((recordEntry: string[]) => ({
     _extent: recordEntry,
   }));
 };
 
 export const processCreator = (record: any, blockKey: string, key: string) => {
-  const label = getLabelUri(blockKey, key, '_roles');
+  const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container;
+  const label = getLabelUri(blockKey, key, selector);
 
   record[blockKey][key] = record[blockKey][key].map(recordEntry => {
     for (const entryKey in recordEntry) {
       recordEntry[entryKey] = {
         ...recordEntry[entryKey],
-        _roles: recordEntry[entryKey]._roles.map(role => ({
+        [selector]: recordEntry[entryKey][selector].map((role: string) => ({
           [BFLITE_URIS.LINK]: [role],
           [label]: [''],
         })),

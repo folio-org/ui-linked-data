@@ -129,7 +129,7 @@ type FieldTypeMapDataEntry = {
 type FieldTypeMapEntry = {
   field: { uri: string };
   data: FieldTypeMapDataEntry;
-  fields?: FieldTypeMapEntry;
+  fields?: FieldTypeMap;
 };
 
 type FieldTypeMap = Record<string, FieldTypeMapEntry>;
