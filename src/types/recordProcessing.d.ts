@@ -8,4 +8,5 @@ type UserValueDTO = {
   propertyUri?: string;
   blockUri?: string;
   groupUri?: string;
+  fieldUri?: string;
 };

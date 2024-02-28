@@ -675,11 +675,49 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     'http://bibfra.me/vocab/lite/extent': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/extent' },
       fields: {
-        'http://bibfra.me/vocab/lite/extent': { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
+        _extent: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
       },
     },
   },
   [BFLITE_URIS.INSTANTIATES]: {
+    'http://bibfra.me/vocab/lite/creator': {
+      container: {
+        bf2Uri: 'http://id.loc.gov/ontologies/bibframe/contribution',
+        dataTypeUri: 'http://id.loc.gov/ontologies/bflc/PrimaryContribution',
+      },
+      options: {
+        'http://bibfra.me/vocab/lite/Person': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Person' },
+        'http://bibfra.me/vocab/lite/Family': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family' },
+        'http://bibfra.me/vocab/lite/Organization': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization' },
+        'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
+      },
+      fields: {
+        'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+        _roles: {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/role',
+          label: BFLITE_URIS.LABEL,
+        },
+      },
+    },
+    'http://bibfra.me/vocab/lite/contributor': {
+      container: {
+        bf2Uri: 'http://id.loc.gov/ontologies/bibframe/contribution',
+        dataTypeUri: 'http://id.loc.gov/ontologies/bibframe/Contribution',
+      },
+      options: {
+        'http://bibfra.me/vocab/lite/Person': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Person' },
+        'http://bibfra.me/vocab/lite/Family': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family' },
+        'http://bibfra.me/vocab/lite/Organization': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization' },
+        'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
+      },
+      fields: {
+        'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+        _roles: {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/role',
+          label: BFLITE_URIS.LABEL,
+        },
+      },
+    },
     [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: {
       container: { bf2Uri: BF2_URIS.NOTE },
       fields: {
@@ -704,8 +742,24 @@ export const BFLITE_TYPES_MAP = {
     field: TYPE_MAP[BF2_URIS.NOTE].field,
     data: TYPE_MAP[BF2_URIS.NOTE].data,
   },
-  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CONTRIBUTOR].container]: {
-    field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
-    data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
+  'http://bibfra.me/vocab/lite/creator': {
+    field: '',
+    data: {},
+    fields: {
+      [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container]: {
+        field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
+        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
+      },
+    },
+  },
+  'http://bibfra.me/vocab/lite/contributor': {
+    field: '',
+    data: {},
+    fields: {
+      [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CONTRIBUTOR].container]: {
+        field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
+        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
+      },
+    },
   },
 };

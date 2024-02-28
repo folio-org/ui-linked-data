@@ -55,14 +55,11 @@ export class RecordToSchemaMappingService {
 
         if (this.recordMap) {
           const containerBf2Uri = this.recordMap.container.bf2Uri;
-          const schemaEntry = this.getSchemaEntry(containerBf2Uri);
+          const containerDataTypeUri = this.recordMap.container.dataTypeUri;
+          const schemaEntry = this.getSchemaEntry(containerBf2Uri, containerDataTypeUri);
 
           // Traverse throug the record elements within the group (for the Repeatable fields)
           for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
-            /* if (recordKey === 'http://bibfra.me/vocab/lite/extent') {
-              debugger;
-            } */
-
             if (schemaEntry) {
               const dropdownOptionsMap = this.recordMap.options;
 
@@ -157,9 +154,12 @@ export class RecordToSchemaMappingService {
     }
   }
 
-  private getSchemaEntry = (containerBf2Uri?: string) => {
+  private getSchemaEntry = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
     return this.schemaArray.find((entry: SchemaEntry) => {
       const hasTheSameUri = entry.uri === containerBf2Uri;
+      const hasTheSameDataTypeUri = containerDataTypeUri
+        ? entry.constraints?.valueDataType.dataTypeURI === containerDataTypeUri
+        : true;
       let hasBlockParent = false;
       let hasProperBlock = false;
 
@@ -178,12 +178,14 @@ export class RecordToSchemaMappingService {
         hasBlockParent = true;
       }
 
-      return hasTheSameUri && hasProperBlock && hasBlockParent;
+      return hasTheSameUri && hasTheSameDataTypeUri && hasProperBlock && hasBlockParent;
     });
   };
 
-  private findSchemaDropdownOption(schemaEntry: SchemaEntry, recordKey: string) {
-    let selectedSchemaEntryUUID: string | null = null;
+  private findSchemaDropdownOption(schemaEntry: SchemaEntry, recordKey: string, selectedEntryId?: string) {
+    let selectedSchemaEntryUUID = selectedEntryId || undefined;
+
+    if (selectedSchemaEntryUUID) return selectedSchemaEntryUUID;
 
     if (schemaEntry.children) {
       schemaEntry.children?.forEach(entryKey => {
@@ -200,7 +202,7 @@ export class RecordToSchemaMappingService {
             this.selectedEntriesService.addNew(undefined, entry.uuid);
           }
         } else {
-          this.findSchemaDropdownOption(entry, recordKey);
+          selectedSchemaEntryUUID = this.findSchemaDropdownOption(entry, recordKey, selectedSchemaEntryUUID);
         }
       });
     }
@@ -279,19 +281,26 @@ export class RecordToSchemaMappingService {
     recordKey: string;
     recordEntryValue: string | string[] | Record<string, string[]>[];
   }) {
-    const schemaElemUUID = this.findSchemaUIControl({
+    let schemaElemUuid = this.findSchemaUIControl({
       schemaEntry,
       recordKey,
     });
 
-    if (!schemaElemUUID) return;
+    if (!schemaElemUuid) {
+      schemaElemUuid = this.findSchemaUIControl({
+        schemaEntry: this.updatedSchema?.get(schemaEntry.path[schemaEntry.path.length - 3]) as SchemaEntry,
+        recordKey,
+      });
+    }
 
-    const schemaUiElem = this.updatedSchema?.get(schemaElemUUID);
+    if (!schemaElemUuid) return;
+
+    const schemaUiElem = this.updatedSchema?.get(schemaElemUuid);
     const labelSelector = this.recordMap?.fields?.[recordKey]?.label as string;
 
     await this.userValuesService.setValue({
       type: schemaUiElem?.type as AdvancedFieldType,
-      key: schemaElemUUID,
+      key: schemaElemUuid,
       value: {
         data: recordEntryValue,
         uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
@@ -300,6 +309,7 @@ export class RecordToSchemaMappingService {
         propertyUri: schemaUiElem?.uri,
         blockUri: this.currentBlockUri,
         groupUri: this.currentRecordGroupKey,
+        fieldUri: recordKey,
       },
     });
   }

@@ -13,7 +13,7 @@ type TraverseProfile = {
   firstOfSameType?: boolean;
 };
 
-export class SchemaCreatorService {
+export class SchemaService {
   private schema: Map<string, SchemaEntry>;
   private supportedEntries: string[];
 
@@ -26,7 +26,7 @@ export class SchemaCreatorService {
     this.supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
   }
 
-  buildSchema(initKey: string) {
+  generate(initKey: string) {
     try {
       this.traverseProfile({ entry: this.entry, uuid: initKey });
     } catch (error) {

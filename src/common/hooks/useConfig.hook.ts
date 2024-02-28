@@ -6,9 +6,15 @@ import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
-import { SchemaCreatorService, SchemaWithDuplicatesService } from '@common/services/schema';
+import { SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
 import { UserValuesService } from '@common/services/userValues';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
+
+type GetProfiles = {
+  record?: RecordEntry;
+  recordId?: string;
+  asPreview?: boolean;
+};
 
 export const useConfig = () => {
   const setProfiles = useSetRecoilState(state.config.profiles);
@@ -43,6 +49,7 @@ export const useConfig = () => {
     return preparedFields;
   };
 
+  // TODO: create a service for initializing all the schema, record and other services
   const buildSchema = async (
     profile: ProfileEntry,
     templates: ResourceTemplates,
@@ -53,8 +60,8 @@ export const useConfig = () => {
     const userValues: UserValues = {};
 
     const selectedEntriesService = new SelectedEntriesService(selectedEntries);
-    const schemaCreatorService = new SchemaCreatorService(templates, profile, selectedEntriesService);
-    schemaCreatorService.buildSchema(initKey);
+    const schemaCreatorService = new SchemaService(templates, profile, selectedEntriesService);
+    schemaCreatorService.generate(initKey);
 
     const base = schemaCreatorService.getSchema();
 
@@ -105,12 +112,6 @@ export const useConfig = () => {
     setSchema(updatedSchema);
 
     return { updatedSchema: updatedSchema, userValues, initKey };
-  };
-
-  type GetProfiles = {
-    record?: RecordEntry;
-    recordId?: string;
-    asPreview?: boolean;
   };
 
   const getProfiles = async ({ record, recordId, asPreview }: GetProfiles): Promise<any> => {

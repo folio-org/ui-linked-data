@@ -4,63 +4,47 @@ import {
   extractValue,
   wrapSimpleLookupData,
   notesMapping,
+  processComplexGroupValues,
+  processCreator,
 } from './recordProcessingCases';
+
+const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
+  wrapWithContainer(record, blockKey, groupKey, 'https://bibfra.me/vocab/marc/provisionActivity');
 
 export const RECORD_NORMALIZING_CASES = {
   'http://bibfra.me/vocab/marc/responsibilityStatement': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      moveFromBlock(
-        record,
-        blockKey,
-        'http://bibfra.me/vocab/lite/Instance',
-        'http://bibfra.me/vocab/marc/responsibilityStatement',
-      ),
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      moveFromBlock(record, blockKey, groupKey, 'http://bibfra.me/vocab/lite/Instance'),
   },
   'http://bibfra.me/vocab/marc/production': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      wrapWithContainer(
-        record,
-        blockKey,
-        'http://bibfra.me/vocab/marc/production',
-        'https://bibfra.me/vocab/marc/provisionActivity',
-      ),
+    processor: processProvisionActivity,
   },
   'http://bibfra.me/vocab/marc/publication': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      wrapWithContainer(
-        record,
-        blockKey,
-        'http://bibfra.me/vocab/marc/publication',
-        'https://bibfra.me/vocab/marc/provisionActivity',
-      ),
+    processor: processProvisionActivity,
   },
   'http://bibfra.me/vocab/marc/distribution': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      wrapWithContainer(
-        record,
-        blockKey,
-        'http://bibfra.me/vocab/marc/distribution',
-        'https://bibfra.me/vocab/marc/provisionActivity',
-      ),
+    processor: processProvisionActivity,
   },
   'http://bibfra.me/vocab/marc/manufacture': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      wrapWithContainer(
-        record,
-        blockKey,
-        'http://bibfra.me/vocab/marc/manufacture',
-        'https://bibfra.me/vocab/marc/provisionActivity',
-      ),
+    processor: processProvisionActivity,
   },
   'http://bibfra.me/vocab/marc/copyright': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      extractValue(record, blockKey, 'http://bibfra.me/vocab/marc/copyright', 'http://bibfra.me/vocab/lite/date'),
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      extractValue(record, blockKey, groupKey, 'http://bibfra.me/vocab/lite/date'),
   },
   'http://bibfra.me/vocab/marc/issuance': {
-    processor: (record: RecordEntry, blockKey: string) =>
-      wrapSimpleLookupData(record, blockKey, 'http://bibfra.me/vocab/marc/issuance'),
+    processor: wrapSimpleLookupData,
   },
   _notes: {
     processor: notesMapping,
+  },
+  'http://bibfra.me/vocab/lite/extent': {
+    processor: processComplexGroupValues,
+  },
+  'http://bibfra.me/vocab/lite/creator': {
+    processor: processCreator,
+  },
+  'http://bibfra.me/vocab/lite/contributor': {
+    processor: processCreator,
   },
 };

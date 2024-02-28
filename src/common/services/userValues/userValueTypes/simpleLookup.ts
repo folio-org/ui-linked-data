@@ -20,7 +20,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     this.cachedData = { ...this.cacheService.getAll() };
   }
 
-  async generate({ data, uri, uuid, labelSelector, uriSelector, type, propertyUri, groupUri }: UserValueDTO) {
+  async generate({ data, uri, uuid, labelSelector, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
     this.uri = uri;
     this.propertyUri = propertyUri;
     const cachedData = this.getCachedData();
@@ -39,6 +39,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
           uri,
           groupUri,
           type,
+          fieldUri,
         });
       }
     } else {
@@ -50,6 +51,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
         uri,
         groupUri,
         type,
+        fieldUri,
       });
     }
 
@@ -65,15 +67,20 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     uri,
     groupUri,
     type,
+    fieldUri,
   }: {
     label: string;
     itemUri?: string;
     uri?: string;
     groupUri?: string;
     type?: AdvancedFieldType;
+    fieldUri?: string;
   }) {
     const typesMap = (BFLITE_TYPES_MAP as FieldTypeMap)[groupUri as string];
-    const mappedUri = typesMap && itemUri ? typesMap?.data?.[itemUri]?.uri : itemUri;
+    const mappedUri =
+      typesMap && itemUri
+        ? typesMap?.data?.[itemUri]?.uri || typesMap?.fields?.[fieldUri]?.data?.[itemUri]?.uri
+        : itemUri;
 
     // Check if the loaded options contain a value from the record
     const loadedOption = this.cachedData[uri as string]?.find(

@@ -129,12 +129,13 @@ type FieldTypeMapDataEntry = {
 type FieldTypeMapEntry = {
   field: { uri: string };
   data: FieldTypeMapDataEntry;
+  fields?: FieldTypeMapEntry;
 };
 
 type FieldTypeMap = Record<string, FieldTypeMapEntry>;
 
 type BF2BFLiteMapEntry = {
-  container: { bf2Uri: string };
+  container: { bf2Uri: string; dataTypeUri?: string };
   options?: Record<string, { bf2Uri: string }>;
   fields?: Record<string, { bf2Uri: string; label?: string }>;
 };

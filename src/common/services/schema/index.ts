@@ -1,2 +1,2 @@
 export { SchemaWithDuplicatesService } from './schemaWithDuplicates.service';
-export { SchemaCreatorService } from './schemaCreator.service';
+export { SchemaService } from './schema.service';

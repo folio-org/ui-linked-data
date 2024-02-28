@@ -160,7 +160,7 @@ export const useConfig = () => {
       if (BYPASS_FORMATTING_AND_SELECTION.includes(uriWithSelector)) {
         if (recordData) {
           selectedRecord = [recordData];
-        
+
           shouldBypass = true;
         }
       }
