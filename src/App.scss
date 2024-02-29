@@ -9,7 +9,6 @@ html,
 body,
 body > #editor-root,
 #app-root,
-.main-content,
 .embed-container {
   height: 100%;
   
@@ -23,7 +22,8 @@ body > #editor-root,
 }
 
 .main-content {
-  flex-grow: 1;
+  flex: 1;
+  overflow: auto;
 }
 
 .welcome-screen {
@@ -59,6 +59,13 @@ body > #editor-root,
     margin: 0;
   }
 
+  select, input {
+    &:disabled {
+      background-color: $disabled-input-bg-color;
+      color: $disabled-input-color;
+    }
+  }
+
   select {
     @include focused-outline-secondary-with-border();
 
@@ -79,7 +86,6 @@ body > #editor-root,
     &:disabled {
       margin: 0;
       opacity: 0.5;
-      background-color: #e6e6e6;
       cursor: not-allowed;
     }
 

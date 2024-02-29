@@ -2,5 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-left: 0.75rem;
+
+  :first-child {
+    margin-right: auto;
+  }
 }

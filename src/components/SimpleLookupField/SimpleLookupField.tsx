@@ -8,10 +8,10 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
+import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
 
 interface Props {
   uri: string;
-  displayName?: string;
   uuid: string;
   value?: UserValueContents[];
   parentUri?: string;
@@ -24,7 +24,6 @@ interface Props {
 // TODO: add value subscription, add uncontrolled opts handling
 export const SimpleLookupField: FC<Props> = ({
   uri,
-  displayName = '',
   uuid,
   value,
   onChange,
@@ -86,28 +85,37 @@ export const SimpleLookupField: FC<Props> = ({
   };
 
   return (
-    <div id={uuid} data-testid="simple-lookup-container">
-      {displayName.trim() ? <div data-testid="simple-lookup-label">{displayName}</div> : null}
-      <CreatableSelect
-        data-testid="simple-lookup"
-        isSearchable
-        isClearable
-        openMenuOnFocus
-        isLoading={isLoading}
-        isMulti
-        isDisabled={isDisabled}
-        options={options}
-        onMenuOpen={loadOptions}
-        // TODO: uncomment once uncontrolled options are required/supported
-        // getOptionLabel={getOptionLabel}
-        // TODO: remove the line below once uncontrolled options are required/supported
-        isValidNewOption={() => false}
-        onChange={handleOnChange}
-        value={localValue}
-        placeholder={<FormattedMessage id="marva.select" />}
-        loadingMessage={() => <FormattedMessage id="marva.loading" />}
-        inputId='creatable-select-input'
-      />
-    </div>
+    <CreatableSelect
+      className="edit-section-field-input simple-lookup"
+      data-testid="simple-lookup"
+      isSearchable
+      isClearable
+      openMenuOnFocus
+      isLoading={isLoading}
+      isMulti
+      isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
+      options={options}
+      onMenuOpen={loadOptions}
+      // TODO: uncomment once uncontrolled options are required/supported
+      // getOptionLabel={getOptionLabel}
+      // TODO: remove the line below once uncontrolled options are required/supported
+      isValidNewOption={() => false}
+      onChange={handleOnChange}
+      value={localValue}
+      placeholder={<FormattedMessage id="marva.select" />}
+      loadingMessage={() => <FormattedMessage id="marva.loading" />}
+      inputId="creatable-select-input"
+      unstyled
+      styles={{
+        control: base => ({
+          ...base,
+          minHeight: '1.5rem',
+        }),
+        container: (base, currState) => ({
+          ...base,
+          backgroundColor: currState.isDisabled ? '#ebebe4' : 'transparent',
+        }),
+      }}
+    />
   );
 };

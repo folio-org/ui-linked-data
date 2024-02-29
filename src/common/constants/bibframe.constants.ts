@@ -13,6 +13,7 @@ export const PROFILE_NAMES = {
 export const PROFILE_BFIDS = {
   MONOGRAPH: 'lc:profile:bf2:Monograph',
   WORK: 'lc:RT:bf2:Monograph:Work',
+  INSTANCE: 'lc:RT:bf2:Monograph:Instance',
 };
 
 export const TYPE_URIS = {
@@ -31,6 +32,11 @@ export const CONSTRAINTS: Constraints = {
 };
 
 export const GROUP_BY_LEVEL = 2;
+export const GROUP_CONTENTS_LEVEL = GROUP_BY_LEVEL + 1;
+export const GROUP_COMPLEX_CUTOFF_LEVEL = 4;
+
+// Work, Instance, Item
+export const ENTITY_LEVEL = 1;
 
 export const GROUPS_WITHOUT_ROOT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/provisionActivity',

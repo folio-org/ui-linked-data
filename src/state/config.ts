@@ -53,6 +53,11 @@ const lookupData = atom<Record<string, MultiselectOption[]>>({
   default: {},
 });
 
+const clonePrototypes = atom<string[]>({
+  key: 'config.clonePrototypes',
+  default: [],
+})
+
 export default {
   profiles,
   selectedProfile,
@@ -64,4 +69,5 @@ export default {
   collectRecordDataForPreview,
   customEvents,
   lookupData,
+  clonePrototypes,
 };

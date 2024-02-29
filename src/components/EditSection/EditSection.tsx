@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { GROUP_COMPLEX_CUTOFF_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { Fields } from '@components/Fields';
@@ -12,22 +12,30 @@ import { LiteralField } from '@components/LiteralField';
 import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
-import { DuplicateGroup } from '@components/DuplicateGroup';
 import { ScrollToTop } from '@components/ScrollToTop';
-import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
-import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
 import { Prompt } from '@components/Prompt';
 import './EditSection.scss';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { findParentEntryByType } from '@common/helpers/schema.helper';
+import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
+import { Button, ButtonType } from '@components/Button';
+import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 
 const WINDOW_SCROLL_OFFSET_TRIG = 100;
 
+export type IDrawComponent = {
+  schema: Map<string, SchemaEntry>;
+  entry: SchemaEntry;
+  disabledFields?: Schema;
+  level?: number;
+  isCompact?: boolean;
+};
+
 export const EditSection = memo(() => {
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const [schema, setSchema] = useRecoilState(state.config.schema);
+  const schema = useRecoilValue(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -35,10 +43,11 @@ export const EditSection = memo(() => {
   const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
-  const { getSchemaWithCopiedEntries } = useProfileSchema();
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
   const customEvents = useRecoilValue(state.config.customEvents);
+  const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
+  const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
 
   const onWindowScroll = () => {
     const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
@@ -106,67 +115,57 @@ export const EditSection = memo(() => {
     }));
   };
 
-  const drawTitleWithDuplicateButton = (hasButton = false, name?: string, onClickButton?: VoidFunction) =>
-    hasButton && (
-      <div className="group-name-container">
-        {name && <span>{name}</span>}
-        <DuplicateGroup onClick={onClickButton} />
-      </div>
-    );
+  const handleGroupsCollapseExpand = () => setCollapsedGroups(collapsedGroups.length ? [] : clonePrototypes);
 
   const drawComponent = useCallback(
-    ({
-      schema,
-      entry,
-      disabledFields,
-      level,
-    }: {
-      schema: Map<string, SchemaEntry>;
-      entry: SchemaEntry;
-      disabledFields?: Schema;
-      level?: number;
-    }) => {
+    ({ schema, entry, disabledFields, level = 0, isCompact = false }: IDrawComponent) => {
       const { uuid, displayName = '', type, children, constraints } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
-      const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled });
-      const componentTitle = hasDuplicateGroupButton ? '' : displayName;
-      const onClickDuplicateGroup = () => {
-        const updatedSchema = getSchemaWithCopiedEntries(schema, entry, selectedEntries);
+      const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
 
-        setSchema(updatedSchema);
-      };
-      const drawTitle = () => drawTitleWithDuplicateButton(hasDuplicateGroupButton, displayName, onClickDuplicateGroup);
-
+      // Work, Instance
       if (type === AdvancedFieldType.block) {
         return (
-          <div id={uuid}>
-            {drawTitle()}
-            {!hasDuplicateGroupButton && <strong>{displayName}</strong>}
-          </div>
+          <FieldWithMetadataAndControls
+            entry={entry}
+            level={level}
+            isCompact={isCompact}
+            showLabel={false}
+            className="entity-heading"
+          >
+            <strong className="heading">{displayNameWithAltValue}</strong>
+            {!!clonePrototypes.length && (
+              <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
+                <FormattedMessage id={collapsedGroups.length ? 'marva.expandAll' : 'marva.collapseAll'} />
+              </Button>
+            )}
+          </FieldWithMetadataAndControls>
         );
       }
 
-      if (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) {
+      if (
+        (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) &&
+        level < GROUP_COMPLEX_CUTOFF_LEVEL
+      ) {
+        const isComplexGroup = type === AdvancedFieldType.groupComplex;
+
         return (
-          <div id={uuid}>
-            {drawTitle()}
-            {!hasDuplicateGroupButton && <span>{displayName}</span>}
-          </div>
+          <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact} showLabel={isComplexGroup}>
+            {!isComplexGroup && <span className="group-label">{displayNameWithAltValue}</span>}
+          </FieldWithMetadataAndControls>
         );
       }
 
       if (type === AdvancedFieldType.literal) {
         return (
-          <div>
-            {drawTitle()}
+          <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <LiteralField
-              displayName={componentTitle}
               uuid={uuid}
               value={userValues[uuid]?.contents[0].label}
               onChange={onChange}
               isDisabled={isDisabled}
             />
-          </div>
+          </FieldWithMetadataAndControls>
         );
       }
 
@@ -189,17 +188,15 @@ export const EditSection = memo(() => {
         };
 
         return (
-          <div>
-            {drawTitle()}
+          <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <DropdownField
               options={options}
-              name={componentTitle}
               uuid={uuid}
               onChange={handleChange}
               value={selectedOption}
               isDisabled={isDisabled}
             />
-          </div>
+          </FieldWithMetadataAndControls>
         );
       }
 
@@ -207,11 +204,9 @@ export const EditSection = memo(() => {
         const blockEntry = findParentEntryByType(schema, entry.path, AdvancedFieldType.block);
 
         return (
-          <div>
-            {drawTitle()}
+          <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <SimpleLookupField
               uri={constraints?.useValuesFrom[0] || ''}
-              displayName={componentTitle}
               uuid={uuid}
               onChange={onChange}
               parentUri={constraints?.valueDataType?.dataTypeURI}
@@ -220,27 +215,21 @@ export const EditSection = memo(() => {
               propertyUri={entry.uri}
               parentBlockUri={blockEntry?.uriBFLite}
             />
-          </div>
+          </FieldWithMetadataAndControls>
         );
       }
 
       if (type === AdvancedFieldType.complex) {
         return (
-          <div>
-            {drawTitle()}
-            <ComplexLookupField
-              label={componentTitle}
-              uuid={uuid}
-              onChange={onChange}
-              value={userValues[uuid]?.contents?.[0]}
-            />
-          </div>
+          <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
+            <ComplexLookupField uuid={uuid} onChange={onChange} value={userValues[uuid]?.contents?.[0]} />
+          </FieldWithMetadataAndControls>
         );
       }
 
       return null;
     },
-    [selectedEntries],
+    [selectedEntries, collapsedGroups],
   );
 
   // TODO: uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
@@ -249,12 +238,8 @@ export const EditSection = memo(() => {
   return resourceTemplates ? (
     <div className="edit-section">
       <Prompt when={isEdited} />
-      <h3>
-        <FormattedMessage id="marva.editResource" />
-      </h3>
       <Fields
         drawComponent={drawComponent}
-        schema={schema}
         uuid={initialSchemaKey}
         groupClassName="edit-section-group"
         scrollToEnabled={true}

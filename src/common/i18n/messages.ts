@@ -91,6 +91,16 @@ export const BASE_LOCALE = {
   'marva.instances': 'Instances',
   'marva.noInstancesAvailable': 'No instances available.',
   'marva.addAnInstance': 'Add an instance',
+  'marva.type': 'Type',
+  'marva.expandAll': 'Expand all',
+  'marva.collapseAll': 'Collapse all',
+  'marva.showAdditionalComponents': 'Show additional components ({amt})',
+  'marva.hideAdditionalComponents': 'Hide additional components',
+  'marva.hide': 'Hide',
+  'marva.saveAndClose': 'Save & close',
+  'marva.editInstance': 'Edit instance',
+  'marva.editWork': 'Edit work',
+  'marva.saveAndKeepEditing': 'Save & keep editing',
 };
 
 export const i18nMessages = {

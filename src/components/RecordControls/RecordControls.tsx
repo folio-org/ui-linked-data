@@ -2,7 +2,6 @@ import { memo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SaveRecord } from '@components/SaveRecord';
 import { CloseRecord } from '@components/CloseRecord';
-import { DeleteRecord } from '@components/DeleteRecord';
 import state from '@state';
 import './RecordControls.scss';
 
@@ -11,9 +10,9 @@ export const RecordControls = memo(() => {
 
   return isEditSectionOpen ? (
     <div className="record-controls">
-      <SaveRecord />
       <CloseRecord />
-      <DeleteRecord />
+      <SaveRecord locally />
+      <SaveRecord />
     </div>
   ) : null;
 });

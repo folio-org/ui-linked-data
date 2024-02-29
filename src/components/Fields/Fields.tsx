@@ -3,16 +3,12 @@ import { FC, memo, ReactElement } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import state from '@state';
+import { IDrawComponent } from '@components/EditSection';
+import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
+import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
+import { ConditionalWrapper } from '@components/ConditionalWrapper';
 
-export type IDrawComponent = {
-  schema: Map<string, SchemaEntry>;
-  entry: SchemaEntry;
-  level?: number;
-  disabledFields?: any;
-};
-
-type Fields = {
-  schema: Map<string, SchemaEntry>;
+export type IFields = {
   uuid: string | null;
   level?: number;
   groupByLevel?: number;
@@ -20,11 +16,11 @@ type Fields = {
   disabledFields?: any;
   scrollToEnabled?: boolean;
   drawComponent?: ({ schema, entry, level, disabledFields }: IDrawComponent) => ReactElement | null;
+  groupingDisabled?: boolean;
 };
 
-export const Fields: FC<Fields> = memo(
+export const Fields: FC<IFields> = memo(
   ({
-    schema,
     uuid,
     drawComponent,
     groupByLevel = 2,
@@ -32,43 +28,85 @@ export const Fields: FC<Fields> = memo(
     groupClassName = '',
     disabledFields,
     scrollToEnabled = false,
+    groupingDisabled = false,
   }) => {
+    const schema = useRecoilValue(state.config.schema);
     const selectedEntries = useRecoilValue(state.config.selectedEntries);
+    const collapsedGroups = useRecoilValue(state.ui.collapsedGroups);
+    const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+
     const entry = uuid && schema.get(uuid);
 
     if (!entry) return null;
 
-    const { type, children } = entry;
+    const { type, bfid = '', children, cloneOf = '' } = entry;
 
     const isDropdownAndSelected = type === AdvancedFieldType.dropdownOption && selectedEntries.includes(uuid);
+    const shouldRender =
+      !collapsedGroups.includes(cloneOf) && (level === ENTITY_LEVEL ? currentlyEditedEntityBfid?.has(bfid) : true);
     const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption;
+    const isCompact = !children?.length && level <= groupByLevel;
+    const shouldGroup = !groupingDisabled && level === groupByLevel;
+
+    if (!shouldRender) return null;
+
+    const generateFieldsComponent = ({ ...fieldsProps }: Partial<IFields>) => (
+      <Fields
+        drawComponent={drawComponent}
+        uuid={uuid}
+        key={uuid}
+        level={level + 1}
+        disabledFields={disabledFields}
+        scrollToEnabled={scrollToEnabled}
+        {...fieldsProps}
+      />
+    );
 
     return (
-      <div
-        data-scroll-id={scrollToEnabled ? uuid : null}
-        className={classNames({ [groupClassName]: level === groupByLevel, 'profile-entity': level === 0 })}
+      <ConditionalWrapper
+        condition={shouldGroup}
+        wrapper={children => (
+          <div className={classNames(groupClassName, { [`${groupClassName}-compact`]: isCompact })}>{children}</div>
+        )}
       >
-        {drawComponent &&
-          drawComponent({
-            schema,
-            entry,
-            level,
-            disabledFields,
-          })}
+        {drawComponent?.({
+          schema,
+          entry,
+          level,
+          disabledFields,
+          isCompact,
+        })}
         {shouldRenderChildren &&
-          children?.map(uuid => (
-            <Fields
-              schema={schema}
-              drawComponent={drawComponent}
-              uuid={uuid}
-              key={uuid}
-              level={level + 1}
-              groupClassName={groupClassName}
-              disabledFields={disabledFields}
-              scrollToEnabled={scrollToEnabled}
-            />
-          ))}
-      </div>
+          children?.map(uuid => {
+            const entry = schema.get(uuid);
+
+            // render cloned / grouped items starting from the main item (prototype) separately
+            if (entry?.clonedBy)
+              return (
+                <DuplicateGroupContainer
+                  key={uuid}
+                  groupClassName={groupClassName}
+                  entry={entry}
+                  generateComponent={generateFieldsComponent}
+                />
+              );
+
+            // cloned / grouped items already rendered in the prototype
+            if (entry?.cloneOf) return null;
+
+            return (
+              <Fields
+                drawComponent={drawComponent}
+                uuid={uuid}
+                key={uuid}
+                level={level + 1}
+                groupClassName={groupClassName}
+                disabledFields={disabledFields}
+                scrollToEnabled={scrollToEnabled}
+              />
+            );
+          })}
+      </ConditionalWrapper>
     );
   },
 );
