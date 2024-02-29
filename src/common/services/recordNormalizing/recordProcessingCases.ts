@@ -69,9 +69,13 @@ export const processCreator = (record: any, blockKey: string, key: string) => {
 
   record[blockKey][key] = record[blockKey][key].map(recordEntry => {
     for (const entryKey in recordEntry) {
+      const additionalField = recordEntry[entryKey]?.[selector];
+
+      if (!selector || !additionalField) continue;
+
       recordEntry[entryKey] = {
         ...recordEntry[entryKey],
-        [selector]: recordEntry[entryKey][selector].map((role: string) => ({
+        [selector]: additionalField?.map((role: string) => ({
           [BFLITE_URIS.LINK]: [role],
           [label]: [''],
         })),
