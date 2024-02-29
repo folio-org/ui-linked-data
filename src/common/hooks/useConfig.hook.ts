@@ -69,41 +69,46 @@ export const useConfig = () => {
     let updatedSchema = base;
     let updatedUserValues = userValues;
 
-    // TODO: move this to a separate method or function
-    if (record && Object.keys(record).length) {
-      const recordNormalizingService = new RecordNormalizingService(record as RecordEntry);
-      updatedRecord = recordNormalizingService.get();
+    try {
+      // TODO: move this to a separate method or function
+      if (record && Object.keys(record).length) {
+        const recordNormalizingService = new RecordNormalizingService(record as RecordEntry);
+        updatedRecord = recordNormalizingService.get();
 
-      const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
+        const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
 
-      // TODO: create a service for this
-      const lookupApiClient = {
-        load: loadSimpleLookup,
-      };
+        // TODO: create a service for this
+        const lookupApiClient = {
+          load: loadSimpleLookup,
+        };
 
-      // TODO: create a service for this
-      const lookupCacheService = {
-        save: (key: string, data: MultiselectOption[]) => {
-          const updatedData = { ...lookupData, [key]: data };
+        // TODO: create a service for this
+        const lookupCacheService = {
+          save: (key: string, data: MultiselectOption[]) => {
+            const updatedData = { ...lookupData, [key]: data };
 
-          setLookupData(updatedData);
-        },
-        getAll: () => lookupData,
-        getById: (id: string) => lookupData[id],
-      };
+            setLookupData(updatedData);
+          },
+          getAll: () => lookupData,
+          getById: (id: string) => lookupData[id],
+        };
 
-      const userValuesService = new UserValuesService(userValues, lookupApiClient, lookupCacheService);
-      const recordToSchemaMappingService = new RecordToSchemaMappingService(
-        base,
-        updatedRecord as RecordEntry,
-        selectedEntriesService,
-        repeatableFieldsService,
-        userValuesService,
-      );
+        const userValuesService = new UserValuesService(userValues, lookupApiClient, lookupCacheService);
+        const recordToSchemaMappingService = new RecordToSchemaMappingService(
+          base,
+          updatedRecord as RecordEntry,
+          selectedEntriesService,
+          repeatableFieldsService,
+          userValuesService,
+        );
 
-      await recordToSchemaMappingService.init();
-      updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
-      updatedUserValues = userValuesService.getAllValues();
+        await recordToSchemaMappingService.init();
+        updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
+        updatedUserValues = userValuesService.getAllValues();
+      }
+    } catch (error) {
+      // TODO: display an user error
+      console.error(error);
     }
 
     setUserValues(updatedUserValues || userValues);

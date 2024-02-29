@@ -68,8 +68,14 @@ export class UserValuesService implements IUserValues {
   }
 
   private async generateValue() {
-    await this.userValueFactory?.generate({ ...this.value, uuid: this.key, type: this.type });
+    try {
+      await this.userValueFactory?.generate({ ...this.value, uuid: this.key, type: this.type });
 
-    this.generatedValue = this.userValueFactory?.getValue();
+      this.generatedValue = this.userValueFactory?.getValue();
+    } catch (error) {
+      const { fieldUri, groupUri } = this.value;
+
+      console.error(`Error occurred generating value for ${fieldUri} field of the ${groupUri} record entry`, error);
+    }
   }
 }

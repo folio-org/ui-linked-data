@@ -86,7 +86,7 @@ export class RecordToSchemaMappingService {
         }
       }
     } catch (error) {
-      // TODO: pass an error handler as a property of the constructor and use it here
+      // TODO: use DI for the error handler and use it here
       console.error('Cannot apply a record to the schema:', error);
     }
   }
