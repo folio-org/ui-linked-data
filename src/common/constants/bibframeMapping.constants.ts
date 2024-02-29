@@ -699,6 +699,40 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         },
       },
     },
+    'http://bibfra.me/vocab/marc/title': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/title' },
+      options: {
+        'http://bibfra.me/vocab/marc/VariantTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/VariantTitle' },
+        'http://bibfra.me/vocab/marc/ParallelTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/ParallelTitle' },
+      },
+      fields: {
+        'http://bibfra.me/vocab/bflc/nonSortNum': { bf2Uri: 'http://id.loc.gov/ontologies/bflc/nonSortNum' },
+        'http://bibfra.me/vocab/marc/mainTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/mainTitle' },
+        'http://bibfra.me/vocab/marc/partNumber': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/partNumber' },
+        'http://bibfra.me/vocab/marc/partName': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/partName' },
+        'http://bibfra.me/vocab/marc/subTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/subtitle' },
+        'http://bibfra.me/vocab/lite/date': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/date' },
+        'http://bibfra.me/vocab/marc/variantType': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/variantType' },
+        'http://bibfra.me/vocab/lite/note': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/note' },
+      },
+    },
+    'http://bibfra.me/vocab/marc/geographicCoverage': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage' },
+      fields: {
+        'http://bibfra.me/vocab/marc/geographicCoverage': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage',
+        },
+      },
+    },
+    'http://bibfra.me/vocab/marc/targetAudience': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/intendedAudience' },
+      fields: {
+        'http://bibfra.me/vocab/marc/targetAudience': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/intendedAudience',
+          label: BFLITE_URIS.LABEL,
+        },
+      },
+    },
     'http://bibfra.me/vocab/lite/contributor': {
       container: {
         bf2Uri: 'http://id.loc.gov/ontologies/bibframe/contribution',
@@ -731,7 +765,28 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     'http://bibfra.me/vocab/lite/language': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/language' },
       fields: {
-        'http://bibfra.me/vocab/lite/language': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+        _language: {
+          bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs',
+          label: BFLITE_URIS.LABEL,
+        },
+      },
+    },
+    'http://bibfra.me/vocab/marc/content': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/content' },
+      fields: {
+        'http://bibfra.me/vocab/marc/content': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/content' },
+      },
+    },
+    'http://bibfra.me/vocab/marc/summary': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/summary' },
+      fields: {
+        _notes: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
+      },
+    },
+    'http://bibfra.me/vocab/marc/tableOfContents': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/tableOfContents' },
+      fields: {
+        _notes: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
       },
     },
   },

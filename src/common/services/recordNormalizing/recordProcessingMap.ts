@@ -6,6 +6,7 @@ import {
   notesMapping,
   processComplexGroupValues,
   processCreator,
+  processComplexGroupWithLookup,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -39,12 +40,28 @@ export const RECORD_NORMALIZING_CASES = {
     processor: notesMapping,
   },
   'http://bibfra.me/vocab/lite/extent': {
-    processor: processComplexGroupValues,
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processComplexGroupValues(record, blockKey, groupKey, '_extent'),
   },
   'http://bibfra.me/vocab/lite/creator': {
     processor: processCreator,
   },
   'http://bibfra.me/vocab/lite/contributor': {
     processor: processCreator,
+  },
+  'http://bibfra.me/vocab/marc/targetAudience': {
+    processor: wrapSimpleLookupData,
+  },
+  'http://bibfra.me/vocab/marc/summary': {
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processComplexGroupValues(record, blockKey, groupKey, '_notes'),
+  },
+  'http://bibfra.me/vocab/marc/tableOfContents': {
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processComplexGroupValues(record, blockKey, groupKey, '_notes'),
+  },
+  'http://bibfra.me/vocab/lite/language': {
+    processor: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processComplexGroupWithLookup(record, blockKey, groupKey, '_language'),
   },
 };

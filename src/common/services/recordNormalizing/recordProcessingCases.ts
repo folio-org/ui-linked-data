@@ -57,9 +57,9 @@ export const extractValue = (record: any, blockKey: string, key: string, source:
   record[blockKey][key] = record[blockKey][key].map(recordEntry => recordEntry[source]);
 };
 
-export const processComplexGroupValues = (record: any, blockKey: string, key: string) => {
+export const processComplexGroupValues = (record: any, blockKey: string, key: string, fieldName: string) => {
   record[blockKey][key] = record[blockKey][key].map((recordEntry: string[]) => ({
-    _extent: recordEntry,
+    [fieldName]: recordEntry,
   }));
 };
 
@@ -80,4 +80,12 @@ export const processCreator = (record: any, blockKey: string, key: string) => {
 
     return recordEntry;
   });
+};
+
+export const processComplexGroupWithLookup = (record: any, blockKey: string, key: string, fieldName: string) => {
+  const label = getLabelUri(blockKey, key, fieldName);
+
+  record[blockKey][key] = record[blockKey][key].map((recordEntry: string[]) => ({
+    [fieldName]: { [label]: [recordEntry] },
+  }));
 };
