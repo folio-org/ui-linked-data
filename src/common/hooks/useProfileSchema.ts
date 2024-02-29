@@ -5,6 +5,7 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 
 export const useProfileSchema = () => {
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
+  const setClonePrototypes = useSetRecoilState(state.config.clonePrototypes);
 
   const getSchemaWithCopiedEntries = (
     schema: Map<string, SchemaEntry>,
@@ -16,6 +17,7 @@ export const useProfileSchema = () => {
     schemaWithDuplicatesService.duplicateEntry(entry);
 
     setSelectedEntries(selectedEntriesService.get());
+    setClonePrototypes(prev => [...prev, entry.uuid]);
 
     return schemaWithDuplicatesService.get();
   };

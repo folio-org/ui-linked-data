@@ -1,9 +1,57 @@
 .preview-panel {
-  min-width: 15em;
-}
+  width: 27.875rem;
+  border-right: 1px solid #00000019;
+  padding-right: 0.938rem;
 
-.preview-block {
-  border: 1px solid black;
-  padding: 0.5em;
-  margin: 0.5em 0;
+  .block {
+    border: 1px solid red;
+    min-height: 0.5rem;
+  }
+
+  .preview-block {
+    border-bottom: 1px solid #00000019;
+    margin-top: 0.75rem;
+    padding-bottom: 0.75rem;
+
+    &-contents {
+      display: grid;
+      align-items: start;
+      grid-template-columns: repeat(auto-fit, minmax(6.25rem, 1fr));
+      gap: 1rem;
+    }
+
+    .value-group-wrapper {
+      font-size: 0.875rem;
+
+      > * {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .entity-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.313rem;
+    font-size: 1.138rem;
+    padding-bottom: 0.5rem;
+
+    > svg {
+      height: 1.25rem;
+      width: 1.25rem;
+
+      & * {
+        fill: #00000099;
+      }
+    }
+  }
+
+  .value-heading {
+    padding-bottom: 0.219rem;
+  }
+
+  .sub-heading {
+    padding-bottom: 0.313rem;
+    font-size: 0.919rem;
+  }
 }

@@ -1,15 +1,66 @@
+@import '@common/styles/common.scss';
+
 .edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.313rem;
+
   .input-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .edit-section-group {
+  &-field-input {
+    width: 100%;
+  }
+
+  &-group {
     position: relative;
-    border: 1px solid black;
-    margin: 0.5rem 0;
-    padding: 0.5rem;
+    border: 1px solid #3986c5;
+    background-color: #c5daf420;
+    border-radius: 4px;
+    padding: 0.938rem;
+    padding-top: 0.313rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.313rem;
+
+    &-compact {
+      padding-top: 0.938rem;
+    }
+
+    &:focus-within {
+      box-shadow: inset 0 0 0 1px #3986c5;
+    }
+
+    select, input {
+      height: 1.5rem;
+      font-size: 1rem;
+    }
+
+    select {
+      padding: 0;
+      padding-left: 0.313rem;
+    }
+
+    .simple-lookup {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      padding-left: 0.5rem;
+      color: $disabled-input-color;
+      height: 1.5rem;
+    }
+
+    .group-label {
+      font-size: 0.919rem;
+      font-weight: bold;
+    }
+  }
+
+  .toggle-expansion-button {
+    color: $blue-2f;
+    font-size: 0.875rem;
+    text-decoration: underline;
   }
 
   .group-name-container {
@@ -25,15 +76,11 @@
     right: 1rem;
   }
 
-  .profile-entity {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    gap: 1rem;
+  .entity-heading {
+    margin-bottom: 0.188rem;
 
-    > * {
-      flex-grow: 1;
-      width: 100%;
+    .heading {
+      font-size: 1.138rem;
     }
   }
 }

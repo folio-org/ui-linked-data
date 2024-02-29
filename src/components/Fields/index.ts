@@ -1,3 +1,3 @@
 export { Fields } from './Fields';
 
-export type { IDrawComponent } from './Fields';
+export type { IFields } from './Fields';

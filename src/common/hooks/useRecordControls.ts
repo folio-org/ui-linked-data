@@ -5,7 +5,12 @@ import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@com
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { deleteRecordLocally, getRecordId } from '@common/helpers/record.helper';
+import {
+  deleteRecordLocally,
+  getPrimaryEntitiesFromRecord,
+  getRecordId,
+  saveRecordLocally,
+} from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
@@ -26,6 +31,8 @@ export const useRecordControls = () => {
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const [isInitiallyLoaded, setIsInititallyLoaded] = useRecoilState(state.status.recordIsInititallyLoaded);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
+  const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
 
@@ -38,6 +45,9 @@ export const useRecordControls = () => {
       const locallySavedData = getSavedRecord(profile, recordId);
       const recordData: RecordEntry =
         locallySavedData && !asPreview ? locallySavedData.data : await getRecord({ recordId });
+
+      setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData)));
+      setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, false)));
 
       setRecord(recordData);
       await getProfiles({ record: recordData, recordId, asPreview });
@@ -91,6 +101,14 @@ export const useRecordControls = () => {
     }
   };
 
+  const saveLocalRecord = () => {
+    const parsed = applyUserValues(schema, initialSchemaKey, { userValues, selectedEntries });
+
+    if (!parsed) return;
+
+    return saveRecordLocally(profile, parsed, getRecordId(record) as string);
+  };
+
   const clearRecordState = () => {
     setUserValues({});
     setRecord(null);
@@ -125,5 +143,5 @@ export const useRecordControls = () => {
     }
   };
 
-  return { fetchRecord, saveRecord, deleteRecord, discardRecord, clearRecordState };
+  return { fetchRecord, saveRecord, saveLocalRecord, deleteRecord, discardRecord, clearRecordState };
 };

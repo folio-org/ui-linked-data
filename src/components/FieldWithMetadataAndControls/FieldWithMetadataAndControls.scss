@@ -1,0 +1,40 @@
+.field-with-meta-controls-container {
+  display: flex;
+  align-items: center;
+
+  &-extended {
+    flex-direction: column;
+    gap: 0.313rem;
+  }
+
+  .extended-layout-meta {
+    display: flex;
+    align-self: flex-start;
+    align-items: center;
+    width: 100%;
+
+    .label {
+      width: 100%;
+    }
+  }
+
+  .children-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .label {
+    width: 11.25rem;
+    min-width: 11.25rem;
+    margin-right: 0.5rem;
+    justify-self: flex-start;
+    font-weight: bold;
+    font-size: 0.919rem;
+  }
+
+  .duplicate-group {
+    margin-left: 0.5rem;
+  }
+}

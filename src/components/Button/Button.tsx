@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler } from 'react';
+import { FC, MouseEventHandler, ReactNode } from 'react';
 import './Button.scss';
 import classNames from 'classnames';
 
@@ -10,15 +10,16 @@ export enum ButtonType {
   Primary = 'primary',
   Passive = 'passive',
   Ghost = 'ghost',
+  Icon = 'icon',
 }
 
 type Button = {
   type?: ButtonType;
-  label?: string | JSX.Element;
-  children?: string | JSX.Element;
+  label?: string | ReactNode;
+  children?: string | ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement> | VoidFunction;
   className?: string;
-  prefix?: string | JSX.Element;
+  prefix?: string | ReactNode;
   disabled?: boolean;
   'data-testid'?: string;
 };

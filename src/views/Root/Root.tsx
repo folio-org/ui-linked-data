@@ -9,6 +9,7 @@ import { Loading } from '@components/Loading';
 import state from '@state';
 import { FIXED_HEIGHT_VIEWS } from '@common/constants/routes.constants';
 import classNames from 'classnames';
+import { Footer } from '@components/Footer';
 
 export const Root = () => {
   const mainRoutePattern = useRoutePathPattern(['/']);
@@ -28,6 +29,7 @@ export const Root = () => {
           </div>
         )}
       </div>
+      <Footer />
       <div id={MODAL_CONTAINER_ID} />
 
       {isLoading && <Loading />}
