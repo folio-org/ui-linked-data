@@ -10,3 +10,20 @@ type UserValueDTO = {
   groupUri?: string;
   fieldUri?: string;
 };
+
+type RecordNormalizingCasesMap = Record<
+  string,
+  {
+    process: (record: RecordEntry, blockKey: string, groupKey: string) => void;
+  }
+>;
+
+type RecordBasic = Record<string, string[]>;
+
+type RecordProcessingCreatorDTO = {
+  [key: string]: Record<string, Record<string, string[] | RecordBasic[]>>;
+}[];
+
+type RecordWithNestedFieldsDTO = { [key: string]: string }[];
+
+type RecordForComplexGroupsDTO = { [key: string]: string[] }[];

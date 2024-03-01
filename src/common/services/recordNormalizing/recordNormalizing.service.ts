@@ -13,6 +13,7 @@ export class RecordNormalizingService {
     return this.record;
   }
 
+  // TODO: use a new API contract
   private decoupleBlocks() {
     // Pass the block URIs for the required profile?
     const instantiates =
@@ -20,7 +21,10 @@ export class RecordNormalizingService {
 
     if (!instantiates) return;
 
-    this.record['http://bibfra.me/vocab/lite/instantiates'] = instantiates[0];
+    this.record['http://bibfra.me/vocab/lite/instantiates'] = instantiates[0] as unknown as Record<
+      string,
+      RecursiveRecordSchema
+    >;
 
     delete this.record['http://bibfra.me/vocab/lite/Instance']?.['http://bibfra.me/vocab/lite/instantiates'];
   }
@@ -28,7 +32,11 @@ export class RecordNormalizingService {
   private normalize() {
     for (const recordBlockKey in this.record) {
       for (const recordGroup in this.record[recordBlockKey]) {
-        RECORD_NORMALIZING_CASES?.[recordGroup]?.processor?.(this.record, recordBlockKey, recordGroup);
+        (RECORD_NORMALIZING_CASES as RecordNormalizingCasesMap)?.[recordGroup]?.process?.(
+          this.record,
+          recordBlockKey,
+          recordGroup,
+        );
       }
     }
   }

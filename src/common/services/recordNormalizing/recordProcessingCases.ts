@@ -10,86 +10,98 @@ const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string) => {
   return typedMap?.[blockKey]?.[groupKey]?.fields?.[fieldKey]?.label || '';
 };
 
-export const moveFromBlock = (record: any, blockKey: string, groupKey: string, toBlockKey: string) => {
+export const moveFromBlock = (record: RecordEntry, blockKey: string, groupKey: string, toBlockKey: string) => {
   record[toBlockKey][groupKey] = record[blockKey][groupKey];
 
   delete record[blockKey][groupKey];
 };
 
-export const wrapWithContainer = (record: any, blockKey: string, key: string, container: string) => {
-  record[blockKey][key].forEach(recordEntry => {
-    if (record[blockKey][container]) {
-      record[blockKey][container] = [...record[blockKey][container], { [key]: recordEntry }];
-    } else {
-      record[blockKey][container] = [{ [key]: recordEntry }];
-    }
+export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
+  const containerData = record[blockKey][container] as unknown as Record<string, unknown>[];
+
+  (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {
+    const wrappedRecordEntry = { [key]: recordEntry };
+
+    record[blockKey][container] = (containerData
+      ? [...containerData, wrappedRecordEntry]
+      : [wrappedRecordEntry]) as unknown as RecursiveRecordSchema;
   });
 
   delete record[blockKey][key];
 };
 
-export const wrapSimpleLookupData = (record: any, blockKey: string, key: string) => {
+export const wrapSimpleLookupData = (record: RecordEntry, blockKey: string, key: string) => {
   const label = getLabelUri(blockKey, key, key);
 
-  record[blockKey][key] = record[blockKey][key].map((recordEntry: string) => ({ [label]: [recordEntry] }));
+  record[blockKey][key] = (record[blockKey][key] as unknown as string[]).map(recordEntry => ({
+    [label]: [recordEntry],
+  })) as unknown as RecursiveRecordSchema;
 };
 
-export const notesMapping = (record: any, blockKey: string) => {
+export const notesMapping = (record: RecordEntry, blockKey: string) => {
   const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container;
 
   if (!record[blockKey][selector]) return;
 
   const label = getLabelUri(blockKey, selector, 'type');
 
-  record[blockKey][selector] = record[blockKey][selector].map(recordEntry => {
-    recordEntry.type = [
+  record[blockKey][selector] = (record[blockKey][selector] as unknown as RecordBasic[]).map(recordEntry => ({
+    ...recordEntry,
+    type: [
       {
         [BFLITE_URIS.LINK]: recordEntry.type,
         [label]: [''],
       },
-    ];
-
-    return recordEntry;
-  });
+    ],
+  })) as unknown as RecursiveRecordSchema;
 };
 
-export const extractValue = (record: any, blockKey: string, key: string, source: string) => {
-  record[blockKey][key] = record[blockKey][key].map(recordEntry => recordEntry[source]);
+export const extractValue = (record: RecordEntry, blockKey: string, key: string, source: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordWithNestedFieldsDTO).map(
+    recordEntry => recordEntry[source],
+  ) as unknown as RecursiveRecordSchema;
 };
 
-export const processComplexGroupValues = (record: any, blockKey: string, key: string, fieldName: string) => {
-  record[blockKey][key] = record[blockKey][key].map((recordEntry: string[]) => ({
+export const processComplexGroupValues = (record: RecordEntry, blockKey: string, key: string, fieldName: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordForComplexGroupsDTO).map(recordEntry => ({
     [fieldName]: recordEntry,
-  }));
+  })) as unknown as RecursiveRecordSchema;
 };
 
-export const processCreator = (record: any, blockKey: string, key: string) => {
+export const processCreator = (record: RecordEntry, blockKey: string, key: string) => {
   const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container;
   const label = getLabelUri(blockKey, key, selector);
 
-  record[blockKey][key] = record[blockKey][key].map(recordEntry => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingCreatorDTO).map(recordEntry => {
+    const updatedRecordEntry = { ...recordEntry };
+
     for (const entryKey in recordEntry) {
       const additionalField = recordEntry[entryKey]?.[selector];
 
       if (!selector || !additionalField) continue;
 
-      recordEntry[entryKey] = {
+      updatedRecordEntry[entryKey] = {
         ...recordEntry[entryKey],
-        [selector]: additionalField?.map((role: string) => ({
+        [selector]: (additionalField as unknown as string[])?.map((role: string) => ({
           [BFLITE_URIS.LINK]: [role],
           [label]: [''],
         })),
-      };
+      } as Record<string, RecordBasic>;
     }
 
-    return recordEntry;
-  });
+    return updatedRecordEntry;
+  }) as unknown as RecursiveRecordSchema;
 };
 
-export const processComplexGroupWithLookup = (record: any, blockKey: string, key: string, fieldName: string) => {
+export const processComplexGroupWithLookup = (
+  record: RecordEntry,
+  blockKey: string,
+  key: string,
+  fieldName: string,
+) => {
   const label = getLabelUri(blockKey, key, fieldName);
 
-  record[blockKey][key] = record[blockKey][key].map((recordEntry: string[]) => ({
+  record[blockKey][key] = (record[blockKey][key] as unknown as string[]).map(recordEntry => ({
     [fieldName]: { [label]: [recordEntry] },
-  }));
+  })) as unknown as RecursiveRecordSchema;
 };
