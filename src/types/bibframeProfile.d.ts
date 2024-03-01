@@ -134,10 +134,14 @@ type FieldTypeMapEntry = {
 
 type FieldTypeMap = Record<string, FieldTypeMapEntry>;
 
+type BF2BFLiteMapOptions = Record<string, { bf2Uri: string }>;
+
+type BF2BFLiteMapFields = Record<string, { bf2Uri: string; label?: string }>;
+
 type BF2BFLiteMapEntry = {
   container: { bf2Uri: string; dataTypeUri?: string };
-  options?: Record<string, { bf2Uri: string }>;
-  fields?: Record<string, { bf2Uri: string; label?: string }>;
+  options?: BF2BFLiteMapOptions;
+  fields?: BF2BFLiteMapFields;
 };
 
 type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;

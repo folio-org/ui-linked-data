@@ -14,7 +14,7 @@ import { SchemaWithDuplicatesService } from '../schema';
 export class RecordToSchemaMappingService {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
-  private currentBlockUri: string | undefined;
+  private currentBlockUri?: string;
   private currentRecordGroupKey?: string;
   private recordMap?: BF2BFLiteMapEntry;
 
@@ -100,7 +100,7 @@ export class RecordToSchemaMappingService {
     recordGroup,
     schemaEntry,
   }: {
-    dropdownOptionsMap: any;
+    dropdownOptionsMap?: BF2BFLiteMapOptions;
     recordGroup: any;
     schemaEntry?: SchemaEntry;
   }) {
@@ -116,22 +116,9 @@ export class RecordToSchemaMappingService {
             const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
 
             // iterate within the elements inside the selectedDropdown option
-            // TODO: DRY
-            for await (const [key, value] of Object.entries(groupElem)) {
-              await this.mapRecordValueToSchemaEntry({
-                schemaEntry: dropdownOptionEntry as SchemaEntry,
-                recordKey: key,
-                recordEntryValue: value,
-              });
-            }
+            await this.mapRecordListToSchemaEntry(groupElem, dropdownOptionEntry as SchemaEntry);
           } else {
-            for await (const [key, value] of Object.entries(groupElem)) {
-              await this.mapRecordValueToSchemaEntry({
-                schemaEntry,
-                recordKey: key,
-                recordEntryValue: value,
-              });
-            }
+            await this.mapRecordListToSchemaEntry(groupElem, schemaEntry);
           }
         }
       }
@@ -146,13 +133,7 @@ export class RecordToSchemaMappingService {
         // Used for complex groups, which contains a number of subfields
         if (recordGroup && typeof recordGroup === 'object') {
           // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-          for await (const [key, groupElem] of Object.entries(recordGroup)) {
-            await this.mapRecordValueToSchemaEntry({
-              schemaEntry,
-              recordKey: key,
-              recordEntryValue: groupElem,
-            });
-          }
+          await this.mapRecordListToSchemaEntry(recordGroup, schemaEntry);
         }
       }
     }
@@ -187,9 +168,9 @@ export class RecordToSchemaMappingService {
   };
 
   private findSchemaDropdownOption(schemaEntry: SchemaEntry, recordKey: string, selectedEntryId?: string) {
-    let selectedSchemaEntryUUID = selectedEntryId || undefined;
+    let selectedSchemaEntryUuid = selectedEntryId || undefined;
 
-    if (selectedSchemaEntryUUID) return selectedSchemaEntryUUID;
+    if (selectedSchemaEntryUuid) return selectedSchemaEntryUuid;
 
     if (schemaEntry.children) {
       schemaEntry.children?.forEach(entryKey => {
@@ -202,16 +183,16 @@ export class RecordToSchemaMappingService {
 
           // TODO: use the mapped values instead of 'uriBFLite'
           if (entry.uriBFLite === recordKey) {
-            selectedSchemaEntryUUID = entry.uuid;
+            selectedSchemaEntryUuid = entry.uuid;
             this.selectedEntriesService.addNew(undefined, entry.uuid);
           }
         } else {
-          selectedSchemaEntryUUID = this.findSchemaDropdownOption(entry, recordKey, selectedSchemaEntryUUID);
+          selectedSchemaEntryUuid = this.findSchemaDropdownOption(entry, recordKey, selectedSchemaEntryUuid);
         }
       });
     }
 
-    return selectedSchemaEntryUUID;
+    return selectedSchemaEntryUuid;
   }
 
   private findSchemaUIControl({
@@ -223,13 +204,13 @@ export class RecordToSchemaMappingService {
     recordKey: string;
     selectedEntryId?: string;
   }) {
-    let selectedSchemaEntryUUID = selectedEntryId || undefined;
+    let selectedSchemaEntryUuid = selectedEntryId || undefined;
 
-    if (selectedSchemaEntryUUID) return selectedSchemaEntryUUID;
+    if (selectedSchemaEntryUuid) return selectedSchemaEntryUuid;
 
     if (schemaEntry.children) {
       schemaEntry.children?.forEach(childEntryKey => {
-        if (selectedSchemaEntryUUID) return;
+        if (selectedSchemaEntryUuid) return;
 
         const childEntry = this.updatedSchema?.get(childEntryKey);
 
@@ -240,40 +221,47 @@ export class RecordToSchemaMappingService {
           return;
         }
 
-        // TODO: DRY
-        if (
-          childEntry.type &&
-          UI_CONTROLS_LIST.includes(childEntry.type as AdvancedFieldTypeEnum) &&
-          (childEntry.uriBFLite === recordKey ||
-            childEntry.uri ===
-              NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
-                recordKey as string
-              ]?.bf2Uri) // TODO: use the mapped values instead of 'uriBFLite'
-        ) {
-          selectedSchemaEntryUUID = childEntry.uuid;
+        if (this.hasCorrectUuid(childEntry, recordKey)) {
+          selectedSchemaEntryUuid = childEntry.uuid;
         } else if (childEntry?.children?.length) {
-          selectedSchemaEntryUUID = this.findSchemaUIControl({
+          selectedSchemaEntryUuid = this.findSchemaUIControl({
             schemaEntry: childEntry,
             recordKey,
-            selectedEntryId: selectedSchemaEntryUUID,
+            selectedEntryId: selectedSchemaEntryUuid,
           });
         }
       });
     } else {
-      if (
-        schemaEntry.type &&
-        UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldTypeEnum) &&
-        (schemaEntry.uriBFLite === recordKey ||
-          schemaEntry.uri ===
-            NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
-              recordKey as string
-            ]?.bf2Uri) // TODO: use the mapped values instead of 'uriBFLite'
-      ) {
-        selectedSchemaEntryUUID = schemaEntry.uuid;
+      if (this.hasCorrectUuid(schemaEntry, recordKey)) {
+        selectedSchemaEntryUuid = schemaEntry.uuid;
       }
     }
 
-    return selectedSchemaEntryUUID;
+    return selectedSchemaEntryUuid;
+  }
+
+  private hasCorrectUuid(entry: SchemaEntry, recordKey: string) {
+    const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldTypeEnum);
+    const hasTheRecordUri = entry.uriBFLite === recordKey;
+    const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
+    const mappedFieldUri =
+      !hasTheRecordUri && this.currentBlockUri
+        ? this.currentBlockUri &&
+          typedMap?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[recordKey as string]?.bf2Uri
+        : undefined;
+    const hasTheMappedFieldUri = entry.uri === mappedFieldUri;
+
+    return isUIControl && (hasTheRecordUri || hasTheMappedFieldUri);
+  }
+
+  private async mapRecordListToSchemaEntry(recordGroupEntry: any, schemaEntry: SchemaEntry) {
+    for await (const [key, value] of Object.entries(recordGroupEntry)) {
+      await this.mapRecordValueToSchemaEntry({
+        schemaEntry,
+        recordKey: key,
+        recordEntryValue: value,
+      });
+    }
   }
 
   private async mapRecordValueToSchemaEntry({
