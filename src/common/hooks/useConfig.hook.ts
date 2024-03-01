@@ -78,9 +78,9 @@ export const useConfig = () => {
         const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
 
         // TODO: create a service for this
-        const lookupApiClient = {
-          load: loadSimpleLookup,
-        };
+        const apiClient = {
+          loadSimpleLookupData: loadSimpleLookup,
+        } as IApiClient;
 
         // TODO: create a service for this
         const lookupCacheService = {
@@ -91,9 +91,9 @@ export const useConfig = () => {
           },
           getAll: () => lookupData,
           getById: (id: string) => lookupData[id],
-        };
+        } as ILookupCacheService;
 
-        const userValuesService = new UserValuesService(userValues, lookupApiClient, lookupCacheService);
+        const userValuesService = new UserValuesService(userValues, apiClient, lookupCacheService);
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
           updatedRecord as RecordEntry,

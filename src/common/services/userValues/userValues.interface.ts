@@ -1,9 +1,9 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+// import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 export interface IUserValues {
   setValue: ({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) => void;
 
-  getAllValues: () => any;
+  getAllValues: () => UserValues;
 
-  getValue: (key: string) => any;
+  getValue: (key: string) => UserValue;
 }

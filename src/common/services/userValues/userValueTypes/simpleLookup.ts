@@ -12,7 +12,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   private contents?: UserValueContents[];
 
   constructor(
-    private apiClient: any,
+    private apiClient: IApiClient,
     private cacheService: ILookupCacheService,
   ) {
     super();
@@ -112,7 +112,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   }
 
   private async loadData() {
-    const response = await this.apiClient.load(this.uri);
+    const response = await this.apiClient.loadSimpleLookupData(this.uri as string);
 
     if (!response) return;
 

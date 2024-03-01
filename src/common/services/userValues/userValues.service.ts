@@ -1,4 +1,4 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
 import { ComplexLookupUserValueService, LiteralUserValueService, SimpleLookupUserValueService } from './userValueTypes';
 import { IUserValueType } from './userValueTypes/userValueType.interface';
 import { IUserValues } from './userValues.interface';
@@ -7,7 +7,7 @@ export class UserValuesService implements IUserValues {
   private generatedValue?: UserValue;
   private type?: AdvancedFieldType;
   private key?: string;
-  private value?: any;
+  private value?: UserValueDTO;
   private userValueFactory?: IUserValueType;
   private literalUserValueService?: IUserValueType;
   private simpleLookupUserValueService?: IUserValueType;
@@ -15,7 +15,7 @@ export class UserValuesService implements IUserValues {
 
   constructor(
     private userValues: UserValues,
-    private apiClient: any,
+    private apiClient: IApiClient,
     private cacheService: ILookupCacheService,
   ) {
     this.userValues = userValues;
@@ -23,8 +23,8 @@ export class UserValuesService implements IUserValues {
     this.initialize();
   }
 
-  async setValue({ type, key, value }: { type: AdvancedFieldType; key: string; value: any }) {
-    this.type = type;
+  async setValue({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) {
+    this.type = type as AdvancedFieldType;
     this.key = key;
     this.value = value;
 
@@ -51,14 +51,14 @@ export class UserValuesService implements IUserValues {
   }
 
   private selectFactoryByType() {
-    switch (this.type) {
-      case AdvancedFieldType.literal:
+    switch (this.type as AdvancedFieldTypeEnum) {
+      case AdvancedFieldTypeEnum.literal:
         this.userValueFactory = this.literalUserValueService;
         break;
-      case AdvancedFieldType.simple:
+      case AdvancedFieldTypeEnum.simple:
         this.userValueFactory = this.simpleLookupUserValueService;
         break;
-      case AdvancedFieldType.complex:
+      case AdvancedFieldTypeEnum.complex:
         this.userValueFactory = this.complexLookupUserValueService;
         break;
       default:
@@ -69,13 +69,15 @@ export class UserValuesService implements IUserValues {
 
   private async generateValue() {
     try {
-      await this.userValueFactory?.generate({ ...this.value, uuid: this.key, type: this.type });
+      const typedValue = { ...this.value } as UserValueDTO;
+      await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });
 
       this.generatedValue = this.userValueFactory?.getValue();
     } catch (error) {
-      const { fieldUri, groupUri } = this.value;
-
-      console.error(`Error occurred generating value for ${fieldUri} field of the ${groupUri} record entry`, error);
+      console.error(
+        `Error occurred generating value for ${this.value?.fieldUri} field of the ${this.value?.groupUri} record entry`,
+        error,
+      );
     }
   }
 }

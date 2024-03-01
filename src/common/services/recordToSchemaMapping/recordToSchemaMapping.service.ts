@@ -1,5 +1,9 @@
 import { cloneDeep } from 'lodash';
-import { AdvancedFieldType, UI_CONTROLS_LIST, UI_DROPDOWNS_LIST } from '@common/constants/uiControls.constants';
+import {
+  AdvancedFieldType as AdvancedFieldTypeEnum,
+  UI_CONTROLS_LIST,
+  UI_DROPDOWNS_LIST,
+} from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IUserValues } from '../userValues/userValues.interface';
@@ -132,7 +136,7 @@ export class RecordToSchemaMappingService {
         }
       }
     } else {
-      if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldType)) {
+      if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldTypeEnum)) {
         await this.mapRecordValueToSchemaEntry({
           schemaEntry,
           recordKey: this.currentRecordGroupKey as string,
@@ -174,7 +178,7 @@ export class RecordToSchemaMappingService {
       });
 
       // Parent schema entry has "block" type
-      if (this.updatedSchema?.get(entry.path[entry.path.length - 2])?.type === AdvancedFieldType.block) {
+      if (this.updatedSchema?.get(entry.path[entry.path.length - 2])?.type === AdvancedFieldTypeEnum.block) {
         hasBlockParent = true;
       }
 
@@ -193,7 +197,7 @@ export class RecordToSchemaMappingService {
 
         if (!entry) return;
 
-        if (entry?.type === AdvancedFieldType.dropdownOption) {
+        if (entry?.type === AdvancedFieldTypeEnum.dropdownOption) {
           this.selectedEntriesService.remove(entry.uuid);
 
           // TODO: use the mapped values instead of 'uriBFLite'
@@ -232,14 +236,14 @@ export class RecordToSchemaMappingService {
         if (!childEntry) return;
 
         // Ignore dropdown and options
-        if (childEntry.type && UI_DROPDOWNS_LIST.includes(childEntry.type as AdvancedFieldType)) {
+        if (childEntry.type && UI_DROPDOWNS_LIST.includes(childEntry.type as AdvancedFieldTypeEnum)) {
           return;
         }
 
         // TODO: DRY
         if (
           childEntry.type &&
-          UI_CONTROLS_LIST.includes(childEntry.type as AdvancedFieldType) &&
+          UI_CONTROLS_LIST.includes(childEntry.type as AdvancedFieldTypeEnum) &&
           (childEntry.uriBFLite === recordKey ||
             childEntry.uri ===
               NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
@@ -258,7 +262,7 @@ export class RecordToSchemaMappingService {
     } else {
       if (
         schemaEntry.type &&
-        UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldType) &&
+        UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldTypeEnum) &&
         (schemaEntry.uriBFLite === recordKey ||
           schemaEntry.uri ===
             NEW_BF2_TO_BFLITE_MAPPING?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields[
