@@ -15,12 +15,12 @@ export class SchemaWithDuplicatesService {
   }
 
   duplicateEntry(entry: SchemaEntry) {
-    const { uuid, path, children, constraints } = entry;
+    const { uuid, path, children, constraints, clonedBy, cloneOf } = entry;
 
     if (!constraints?.repeatable) return;
 
     const updatedEntryUuid = uuidv4();
-    const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
+    const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, undefined, true);
     updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
 
     // the path contains the UUID of the parent element and the UUID of the current entry,
@@ -36,17 +36,40 @@ export class SchemaWithDuplicatesService {
     if (updatedParentEntry) {
       this.schema.set(parentEntryUuid, updatedParentEntry);
       this.schema.set(updatedEntryUuid, updatedEntry);
+
+      if (cloneOf) {
+        // dupicating the field that's a clone
+        // got to set the initial prototype's properties
+        const initialPrototype = this.schema.get(cloneOf)!;
+
+        this.schema.set(initialPrototype.uuid, {
+          ...initialPrototype,
+          clonedBy: [...(initialPrototype.clonedBy ?? []), updatedEntryUuid],
+        });
+      } else {
+        this.schema.set(uuid, { ...entry, clonedBy: [...(clonedBy ?? []), updatedEntryUuid] });
+      }
+
+      return updatedEntryUuid;
     }
 
     return updatedEntryUuid;
   }
 
-  private getCopiedEntry(entry: SchemaEntry, uuid: string, parentElemPath?: string[]) {
-    const { path } = entry;
+  private getCopiedEntry(entry: SchemaEntry, updatedUuid: string, parentElemPath?: string[], includeCloneInfo = false) {
+    const { path, uuid } = entry;
     const copiedEntry = cloneDeep(entry);
 
-    copiedEntry.uuid = uuid;
-    copiedEntry.path = this.getUpdatedPath(path, uuid, parentElemPath);
+    copiedEntry.uuid = updatedUuid;
+    copiedEntry.path = this.getUpdatedPath(path, updatedUuid, parentElemPath);
+
+    if (includeCloneInfo) {
+      if (!copiedEntry.cloneOf) {
+        copiedEntry.cloneOf = uuid;
+      }
+
+      copiedEntry.clonedBy = undefined;
+    }
 
     return copiedEntry;
   }

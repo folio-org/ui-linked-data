@@ -9,8 +9,8 @@ const onChangeFn = jest.fn();
 const { getByTestId, getByPlaceholderText, queryByTestId } = screen;
 
 describe('Literal Field', () => {
-  function renderComponent(labelText: string = displayName) {
-    render(<LiteralField displayName={labelText} uuid={uuid} onChange={onChangeFn} />);
+  function renderComponent() {
+    render(<LiteralField uuid={uuid} onChange={onChangeFn} />);
   }
 
   test('renders Literal Field component with label', () => {
@@ -21,7 +21,7 @@ describe('Literal Field', () => {
   });
 
   test('renders Literal Field component without label', () => {
-    renderComponent('');
+    renderComponent();
 
     expect(getByTestId('literal-field')).toBeInTheDocument();
     expect(queryByTestId('literal-field-label')).not.toBeInTheDocument();

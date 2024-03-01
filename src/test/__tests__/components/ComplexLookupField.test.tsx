@@ -3,13 +3,12 @@ import { ComplexLookupField } from '@components/ComplexLookupField';
 
 describe('Complex Lookup Field', () => {
   const onChange = jest.fn();
-  const label = 'test-label';
   const uuid = 'test-uuid';
 
   const { getByTestId, queryByTestId } = screen;
 
-  function renderComponent(labelText: string = label) {
-    render(<ComplexLookupField label={labelText} uuid={uuid} onChange={onChange} />);
+  function renderComponent() {
+    render(<ComplexLookupField uuid={uuid} onChange={onChange} />);
   }
 
   test('renders Complex Lookup Field component with label', () => {
@@ -20,7 +19,7 @@ describe('Complex Lookup Field', () => {
   });
 
   test('renders Complex Lookup Field component without label', () => {
-    renderComponent('');
+    renderComponent();
 
     expect(getByTestId('complex-lookup')).toBeInTheDocument();
     expect(queryByTestId('complex-lookup-label')).not.toBeInTheDocument();

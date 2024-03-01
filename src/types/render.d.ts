@@ -82,6 +82,8 @@ type SchemaEntry = {
   type?: string;
   children?: Array<string>;
   constraints?: Constraints;
+  cloneOf?: string;
+  clonedBy?: string[];
 };
 
 type SelectableUserValue = {

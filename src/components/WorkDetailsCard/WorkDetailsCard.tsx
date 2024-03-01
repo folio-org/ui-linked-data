@@ -33,8 +33,8 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   return (
     <div className="work-details-card">
       <div className="heading">
-        <Button type={ButtonType.Ghost}>
-          <CaretDown className={classNames({ ['icon-collapsed']: !isOpen }, 'toggle-icon')} onClick={toggleIsOpen} />
+        <Button type={ButtonType.Ghost} onClick={toggleIsOpen} data-testid="work-details-card-toggle">
+          <CaretDown className={classNames({ ['icon-collapsed']: !isOpen }, 'toggle-icon')} />
         </Button>
         <div className="title">
           <Lightbulb />
@@ -43,6 +43,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           </span>
         </div>
         <Button
+          disabled
           type={ButtonType.Primary}
           onClick={() => navigate(generateEditResourceUrl(id))}
           data-testid="edit-button"

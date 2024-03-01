@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
-import { Properties } from '@components/Properties';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
@@ -15,6 +14,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import './Edit.scss';
+import { Preview } from '@components/Preview';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
@@ -24,6 +24,8 @@ export const Edit = () => {
   const { resourceId } = useParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
+  const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
 
   useEffect(() => {
     scrollEntity({ top: 0, behavior: 'instant' });
@@ -38,6 +40,9 @@ export const Edit = () => {
           await fetchRecord(resourceId);
           return;
         }
+
+        setCurrentlyEditedEntityBfid(new Set([PROFILE_BFIDS.INSTANCE]));
+        setCurrentlyPreviewedEntityBfid(new Set([PROFILE_BFIDS.WORK]));  
 
         clearRecordState();
 
@@ -64,7 +69,7 @@ export const Edit = () => {
 
   return (
     <div data-testid="edit-page" className="edit-page">
-      <Properties />
+      <Preview headless />
       <EditSection />
     </div>
   );

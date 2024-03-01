@@ -1,7 +1,7 @@
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { IDENTIFIER_AS_VALUE, TYPE_URIS } from '@common/constants/bibframe.constants';
+import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
@@ -75,4 +75,12 @@ export const checkIdentifierAsValue = (record: Record<string, string[]>, uri: st
   }
 
   return false;
+};
+
+export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = true) => {
+  const isInstance = record?.resource[TYPE_URIS.INSTANCE];
+  const workAsPrimary = editable ? [PROFILE_BFIDS.WORK] : [PROFILE_BFIDS.INSTANCE];
+  const instanceAsPrimary = editable ? [PROFILE_BFIDS.INSTANCE] : [PROFILE_BFIDS.WORK];
+
+  return isInstance ? instanceAsPrimary : workAsPrimary;
 };

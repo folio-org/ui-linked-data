@@ -77,6 +77,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
               </div>
             ) : (
               <Select
+                withIntl
                 value={operator}
                 options={SELECT_OPERATORS}
                 className="cell-operator"
@@ -91,6 +92,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
               onChange={({ target: { value } }) => onChangeInput(value, AdvancedSearchInputs.Query, rowIndex)}
             />
             <Select
+              withIntl
               value={qualifier}
               options={SELECT_QUALIFIERS}
               className="cell-qualifier"
@@ -99,6 +101,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
             />
             in
             <Select
+              withIntl
               value={index}
               options={SELECT_IDENTIFIERS}
               className="cell-identifier"

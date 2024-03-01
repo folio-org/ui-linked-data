@@ -154,9 +154,40 @@
   }
 
   &-ghost {
-    @include focused-outline-secondary;
-
     padding: 0;
     height: initial;
+    background-color: transparent;
+  }
+
+  &-icon {
+    border-radius: 8px;
+    padding: 0.188rem;
+    height: fit-content;
+    background-color: transparent;
+    border: 1px solid transparent;
+
+    &:hover {
+      background-color: rgba(37, 118, 195, 0.2);
+    }
+
+    &:focus,
+    &:focus-visible,
+    &:active {
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 0 3px rgba(37, 118, 195, 0.3);
+    }
+
+    &:active {
+      background-color: #1960a4;
+      color: #fff;
+
+      > svg,
+      path,
+      * {
+        fill: #fff;
+        opacity: 1;
+        fill-opacity: 1;
+      }
+    }
   }
 }

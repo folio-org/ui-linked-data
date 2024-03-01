@@ -6,12 +6,11 @@ describe('Dropdown Field', () => {
   const options = [{ label: 'test label', value: 'testValue', uri: 'testUri' }];
   const uuid = 'testUuid';
   const onChangeFn = jest.fn();
-  const label = 'test name';
 
   const { getByTestId, queryByTestId } = screen;
 
-  function renderComponent(labelText: string = label) {
-    render(<DropdownField options={options} name={labelText} uuid={uuid} onChange={onChangeFn} value={options[0]} />);
+  function renderComponent() {
+    render(<DropdownField options={options} uuid={uuid} onChange={onChangeFn} value={options[0]} />);
   }
 
   test('renders Dropdown Field component with label', () => {
@@ -23,7 +22,7 @@ describe('Dropdown Field', () => {
   });
 
   test('renders Dropdown Field component without label', () => {
-    renderComponent('');
+    renderComponent();
 
     expect(getByTestId('dropdown-field')).toBeInTheDocument();
     expect(queryByTestId('dropdown-field-label')).not.toBeInTheDocument();

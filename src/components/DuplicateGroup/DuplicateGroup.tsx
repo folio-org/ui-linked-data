@@ -1,13 +1,20 @@
 import { FC, memo } from 'react';
 import './DuplicateGroup.scss';
 import { Button, ButtonType } from '@components/Button';
+import Plus16 from '@src/assets/plus-16.svg?react';
+import Trash16 from '@src/assets/trash-16.svg?react';
 
 interface Props {
   onClick?: VoidFunction;
 }
 
 export const DuplicateGroup: FC<Props> = memo(({ onClick }) => (
-  <Button data-testid="id-duplicate-group" type={ButtonType.Text} className="duplicate-group" onClick={onClick}>
-    <span>+</span>
-  </Button>
+  <div className='duplicate-group'>
+    <Button data-testid="id-duplicate-group" type={ButtonType.Icon} onClick={onClick}>
+      <Plus16 />
+    </Button>
+    <Button data-testid="id-delete-duplicate-group" type={ButtonType.Icon}>
+      <Trash16 />
+    </Button>
+  </div>
 ));

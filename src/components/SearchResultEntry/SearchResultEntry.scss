@@ -3,6 +3,10 @@
   flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.1);
 
+  a {
+    text-decoration: underline;
+  }
+
   .instance-list {
     font-size: 0.875rem;
 
@@ -44,10 +48,6 @@
     align-items: center;
     font-size: 0.875rem;
     height: 100%;
-
-    > svg {
-      margin-bottom: 0.2rem;
-    }
 
     > span {
       display: flex;
