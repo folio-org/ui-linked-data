@@ -7,6 +7,7 @@ import {
   processComplexGroupValues,
   processCreator,
   processComplexGroupWithLookup,
+  extractDropdownOption,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -63,5 +64,9 @@ export const RECORD_NORMALIZING_CASES = {
   'http://bibfra.me/vocab/lite/language': {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupWithLookup(record, blockKey, groupKey, '_language'),
+  },
+  'http://bibfra.me/vocab/lite/classification': {
+    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      extractDropdownOption(record, blockKey, groupKey, 'http://bibfra.me/vocab/marc/source'),
   },
 };

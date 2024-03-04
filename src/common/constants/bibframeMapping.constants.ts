@@ -79,6 +79,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/issuance': 'http://bibfra.me/vocab/marc/issuance',
   'http://id.loc.gov/ontologies/bibframe/status': 'http://bibfra.me/vocab/marc/status',
   'http://id.loc.gov/ontologies/bibframe/classification': 'http://bibfra.me/vocab/lite/classification',
+  'http://id.loc.gov/ontologies/bibframe/ClassificationDdc': 'ddc',
   'http://id.loc.gov/ontologies/bibframe/classificationPortion': BFLITE_URIS.CODE,
   'http://id.loc.gov/ontologies/bibframe/itemPortion': 'http://bibfra.me/vocab/marc/itemNumber',
   'http://id.loc.gov/ontologies/bibframe/source': BFLITE_URIS.EDITION,
@@ -787,6 +788,23 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/tableOfContents' },
       fields: {
         _notes: { bf2Uri: 'http://www.w3.org/2000/01/rdf-schema#label' },
+      },
+    },
+    'http://bibfra.me/vocab/lite/subject': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/subject' },
+      fields: {
+        label: { bf2Uri: 'http://www.loc.gov/mads/rdf/v1#Topic' },
+      },
+    },
+    'http://bibfra.me/vocab/lite/classification': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classification' },
+      options: {
+        ddc: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/ClassificationDdc' },
+      },
+      fields: {
+        'http://bibfra.me/vocab/marc/code': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classificationPortion',
+        },
       },
     },
   },

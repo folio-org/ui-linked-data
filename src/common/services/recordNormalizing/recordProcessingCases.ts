@@ -105,3 +105,17 @@ export const processComplexGroupWithLookup = (
     [fieldName]: { [label]: [recordEntry] },
   })) as unknown as RecursiveRecordSchema;
 };
+
+export const extractDropdownOption = (record: RecordEntry, blockKey: string, key: string, fieldName: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordBasic[]).map(recordEntry => {
+    const updatedValues = {} as RecordBasic;
+
+    for (const entryKey in recordEntry) {
+      if (entryKey === fieldName) continue;
+
+      updatedValues[entryKey] = recordEntry[entryKey];
+    }
+
+    return { [recordEntry[fieldName][0]]: updatedValues };
+  }) as unknown as RecursiveRecordSchema;
+};
