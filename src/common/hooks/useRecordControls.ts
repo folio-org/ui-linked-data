@@ -18,6 +18,7 @@ import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
+import { flushSync } from 'react-dom';
 
 export const useRecordControls = () => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -80,7 +81,7 @@ export const useRecordControls = () => {
       const parsedResponse = await response.json();
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
-      setIsEdited(false);
+      
       if (isInitiallyLoaded) {
         setIsInititallyLoaded(false);
       }
@@ -89,6 +90,15 @@ export const useRecordControls = () => {
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
       ]);
+
+      // TODO: isEdited state update is not immediately reflected in the <Prompt />
+      // blocker component, forcing <Prompt /> to block the navigation call below
+      // right before isEdited is set to false, disabling <Prompt />
+      //
+      // flushSync is not the best way to make this work, research alternatives
+      flushSync(() => setIsEdited(false));
+
+      navigate(ROUTES.MAIN.uri);
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
@@ -115,9 +125,10 @@ export const useRecordControls = () => {
     setSelectedProfile(null);
   };
 
-  const discardRecord = () => {
-    clearRecordState();
-    navigate(ROUTES.DASHBOARD.uri);
+  const discardRecord = (clearState = true) => {
+    if (clearState) clearRecordState();
+
+    navigate(ROUTES.MAIN.uri);
   };
 
   const deleteRecord = async () => {

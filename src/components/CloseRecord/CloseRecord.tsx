@@ -1,26 +1,15 @@
 import { FC, memo } from 'react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useModalControls } from '@common/hooks/useModalControls';
-import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonType } from '@components/Button';
 
 const CloseRecord: FC = () => {
-  const { saveRecord, discardRecord } = useRecordControls();
-  const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
+  const { discardRecord } = useRecordControls();
 
   return (
-    <>
-      <Button data-testid="close-record-button" type={ButtonType.Primary} onClick={openModal}>
-        <FormattedMessage id="marva.cancel" />
-      </Button>
-      <ModalCloseRecord
-        isOpen={isModalOpen}
-        toggleIsOpen={setIsModalOpen}
-        saveRecord={saveRecord}
-        discardRecord={discardRecord}
-      />
-    </>
+    <Button data-testid="close-record-button" type={ButtonType.Primary} onClick={() => discardRecord(false)}>
+      <FormattedMessage id="marva.cancel" />
+    </Button>
   );
 };
 
