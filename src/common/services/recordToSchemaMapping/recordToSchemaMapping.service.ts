@@ -9,6 +9,7 @@ import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IUserValues } from '../userValues/userValues.interface';
 import { RECORD_BLOCKS } from '@common/constants/record.constants';
 import { SchemaWithDuplicatesService } from '../schema';
+import { StatusType } from '@common/constants/status.constants';
 
 // TODO: take into account a selected Profile
 export class RecordToSchemaMappingService {
@@ -24,6 +25,7 @@ export class RecordToSchemaMappingService {
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: SchemaWithDuplicatesService,
     private userValuesService: IUserValues,
+    private commonStatusService: ICommonStatus,
   ) {
     this.updatedSchema = cloneDeep(schema);
     this.record = record;
@@ -90,8 +92,8 @@ export class RecordToSchemaMappingService {
         }
       }
     } catch (error) {
-      // TODO: use DI for the error handler and use it here
       console.error('Cannot apply a record to the schema:', error);
+      this.commonStatusService.set('marva.recordMappingToSchema', StatusType.error);
     }
   }
 

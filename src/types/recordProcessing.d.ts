@@ -27,3 +27,7 @@ type RecordProcessingCreatorDTO = {
 type RecordWithNestedFieldsDTO = { [key: string]: string }[];
 
 type RecordForComplexGroupsDTO = { [key: string]: string[] }[];
+
+type ICommonStatus = {
+  set: (l10nId: string, type: StatusType) => void;
+};

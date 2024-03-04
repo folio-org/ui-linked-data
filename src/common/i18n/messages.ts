@@ -101,6 +101,7 @@ export const BASE_LOCALE = {
   'marva.editInstance': 'Edit instance',
   'marva.editWork': 'Edit work',
   'marva.saveAndKeepEditing': 'Save & keep editing',
+  'marva.recordMappingToSchema': 'Cannot apply a record to the schema',
 };
 
 export const i18nMessages = {
@@ -158,6 +159,7 @@ export const i18nMessages = {
     'marva.yes': 'Ja',
     'marva.no': 'Nein',
     'marva.cantLoadSimpleLookupData': 'Daten können nicht für eine einfache Suche gespeichert werden',
+    'marva.recordMappingToSchema': 'Ein Datensatz kann nicht auf das Schema angewendet werden',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

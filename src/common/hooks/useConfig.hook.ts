@@ -1,4 +1,4 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
@@ -8,7 +8,9 @@ import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMap
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
 import { UserValuesService } from '@common/services/userValues';
-import { loadSimpleLookup } from '@common/helpers/api.helper';
+import { useLookupCacheService } from './useLookupCache.hook';
+import { useCommonStatus } from './useCommonStatus';
+import { apiClient } from '@common/api/client';
 
 type GetProfiles = {
   record?: RecordEntry;
@@ -25,7 +27,8 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
-  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const lookupCacheService = useLookupCacheService();
+  const commonStatusService = useCommonStatus();
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -74,25 +77,7 @@ export const useConfig = () => {
       if (record && Object.keys(record).length) {
         const recordNormalizingService = new RecordNormalizingService(record as RecordEntry);
         updatedRecord = recordNormalizingService.get();
-
         const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
-
-        // TODO: create a service for this
-        const apiClient = {
-          loadSimpleLookupData: loadSimpleLookup,
-        } as IApiClient;
-
-        // TODO: create a service for this
-        const lookupCacheService = {
-          save: (key: string, data: MultiselectOption[]) => {
-            const updatedData = { ...lookupData, [key]: data };
-
-            setLookupData(updatedData);
-          },
-          getAll: () => lookupData,
-          getById: (id: string) => lookupData[id],
-        } as ILookupCacheService;
-
         const userValuesService = new UserValuesService(userValues, apiClient, lookupCacheService);
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
@@ -100,9 +85,11 @@ export const useConfig = () => {
           selectedEntriesService,
           repeatableFieldsService,
           userValuesService,
+          commonStatusService,
         );
 
         await recordToSchemaMappingService.init();
+
         updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
         updatedUserValues = userValuesService.getAllValues();
       }
