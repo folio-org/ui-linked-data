@@ -28,6 +28,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     if (shouldPrompt) {
       openModal();
     }
+
     return shouldPrompt;
   });
 

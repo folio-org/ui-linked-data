@@ -31,7 +31,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({ entry, g
       >
         <ArrowChevronUp className={classNames({ 'arrow-closed': isCollapsed })} />
         <FormattedMessage
-          id={isCollapsed ? 'marva.showAdditionalComponents' : 'marva.hide'}
+          id={isCollapsed ? 'marva.showAllWithCount' : 'marva.hide'}
           values={{ amt: clonesAmount ? clonesAmount + 1 : undefined }}
         />
       </Button>
