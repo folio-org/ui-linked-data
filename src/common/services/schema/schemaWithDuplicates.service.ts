@@ -3,18 +3,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 
 export class SchemaWithDuplicatesService {
+  private isManualDuplication: boolean;
+
   constructor(
     private schema: Map<string, SchemaEntry>,
     private selectedEntriesService: ISelectedEntries,
   ) {
     this.schema = cloneDeep(schema);
+    this.isManualDuplication = true;
   }
 
   get() {
     return this.schema;
   }
 
-  duplicateEntry(entry: SchemaEntry) {
+  duplicateEntry(entry: SchemaEntry, isManualDuplication = true) {
+    this.isManualDuplication = isManualDuplication;
     const { uuid, path, children, constraints, clonedBy, cloneOf } = entry;
 
     if (!constraints?.repeatable) return;
@@ -37,7 +41,7 @@ export class SchemaWithDuplicatesService {
       this.schema.set(parentEntryUuid, updatedParentEntry);
       this.schema.set(updatedEntryUuid, updatedEntry);
 
-      if (cloneOf) {
+      if (this.isManualDuplication && cloneOf) {
         // dupicating the field that's a clone
         // got to set the initial prototype's properties
         const initialPrototype = this.schema.get(cloneOf)!;
@@ -47,12 +51,14 @@ export class SchemaWithDuplicatesService {
           clonedBy: [...(initialPrototype.clonedBy ?? []), updatedEntryUuid],
         });
       } else {
-        this.schema.set(uuid, { ...entry, clonedBy: [...(clonedBy ?? []), updatedEntryUuid] });
+        this.schema.set(uuid, {
+          ...entry,
+          clonedBy: this.isManualDuplication ? [...(clonedBy ?? []), updatedEntryUuid] : undefined,
+        });
       }
-
-      return updatedEntryUuid;
     }
 
+    this.isManualDuplication = true;
     return updatedEntryUuid;
   }
 
@@ -63,7 +69,7 @@ export class SchemaWithDuplicatesService {
     copiedEntry.uuid = updatedUuid;
     copiedEntry.path = this.getUpdatedPath(path, updatedUuid, parentElemPath);
 
-    if (includeCloneInfo) {
+    if (this.isManualDuplication && includeCloneInfo) {
       if (!copiedEntry.cloneOf) {
         copiedEntry.cloneOf = uuid;
       }

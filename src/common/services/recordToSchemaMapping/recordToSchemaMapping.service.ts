@@ -69,7 +69,7 @@ export class RecordToSchemaMappingService {
 
               // generate repeatable fields
               if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-                const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry) || '';
+                const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) || '';
                 this.updatedSchema = this.repeatableFieldsService?.get();
                 this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
