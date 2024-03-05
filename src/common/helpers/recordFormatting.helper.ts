@@ -35,11 +35,11 @@ export const updateInstantiatesWithInstanceFields = (
   instanceComponent: Record<string, RecursiveRecordSchema[] | RecursiveRecordSchema>,
 ) => {
   const clonedInstance = cloneDeep(instanceComponent);
-  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string];
+  const instantiatesComponent = clonedInstance?.[BFLITE_URIS.INSTANTIATES as string];
   const instantiatesComponentTyped = instantiatesComponent as unknown as Record<string, unknown>[];
 
   INSTANTIATES_TO_INSTANCE_FIELDS.forEach(fieldName => {
-    const componentToMove = clonedInstance[fieldName];
+    const componentToMove = clonedInstance?.[fieldName];
 
     if (!componentToMove) return;
 
@@ -59,7 +59,7 @@ export const updateRecordWithDefaultNoteType = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
   const clonedRecord = cloneDeep(record);
-  const typedNotes = clonedRecord[
+  const typedNotes = clonedRecord?.[
     NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container
   ] as unknown as RecursiveRecordSchema[];
 
@@ -77,7 +77,7 @@ export const updateRecordWithRelationshipDesignator = (
   fieldUirs: string[],
 ) => {
   const clonedInstance = cloneDeep(record);
-  const instantiatesComponent = clonedInstance[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<
+  const instantiatesComponent = clonedInstance?.[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<
     string,
     unknown
   >[];

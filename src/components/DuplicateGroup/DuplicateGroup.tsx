@@ -1,8 +1,8 @@
 import { FC, memo } from 'react';
-import './DuplicateGroup.scss';
 import { Button, ButtonType } from '@components/Button';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Trash16 from '@src/assets/trash-16.svg?react';
+import './DuplicateGroup.scss';
 
 interface Props {
   onClick?: VoidFunction;

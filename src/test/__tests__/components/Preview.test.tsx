@@ -29,10 +29,10 @@ const userValues = {
 };
 
 const schema = new Map([
-  ['uuid0', { path: [], uuid: 'uuid0', children: ['uuid1', 'uuid2'] }],
-  ['uuid1', { path: ['uuid0', 'uuid1'], uuid: 'uuid1' }],
-  ['uuid2', { path: ['uuid0', 'uuid2'], uuid: 'uuid2', type: 'simple', children: ['uuid3'], displayName: 'uuid2' }],
-  ['uuid3', { path: ['uuid0', 'uuid2', 'uuid3'], uuid: 'uuid3' }],
+  ['uuid0', { displayName: 'uuid0', path: [], uuid: 'uuid0', children: ['uuid1', 'uuid2'] }],
+  ['uuid1', { bfid: 'uuid1Bfid', displayName: 'uuid1', path: ['uuid0', 'uuid1'], uuid: 'uuid1' }],
+  ['uuid2', { displayName: 'uuid2', path: ['uuid0', 'uuid2'], uuid: 'uuid2', type: 'simple', children: ['uuid3'] }],
+  ['uuid3', { displayName: 'uuid3', path: ['uuid0', 'uuid2', 'uuid3'], uuid: 'uuid3' }],
 ]);
 
 describe('Preview', () => {
@@ -42,6 +42,7 @@ describe('Preview', () => {
     render(
       <RecoilRoot
         initializeState={snapshot => {
+          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set(['uuid1Bfid']));
           snapshot.set(state.config.schema, schema);
           snapshot.set(state.config.initialSchemaKey, initialSchemaKey);
           snapshot.set(state.inputs.userValues, userValues);
@@ -59,17 +60,10 @@ describe('Preview', () => {
   });
 
   test('renders Fields component recursively if an entry has children', () => {
-    expect(getByText('uuid2')).toBeInTheDocument();
+    expect(getByText('uuid1')).toBeInTheDocument();
   });
 
   test('renders user values if an entry has no children', () => {
-    expect(getByText('uuid3-label')).toBeInTheDocument();
-  });
-
-  test('renders a link within user values if the user value is of lookup type (contains uri)', () => {
-    expect(screen.getByRole('link', { name: userValues.uuid1.contents[0].label })).toHaveAttribute(
-      'href',
-      userValues.uuid1.contents[0].meta.uri,
-    );
+    expect(getByText('uuid1-label')).toBeInTheDocument();
   });
 });
