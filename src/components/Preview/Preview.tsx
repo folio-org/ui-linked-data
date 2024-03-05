@@ -31,12 +31,10 @@ const NOT_PREVIEWABLE_TYPES = [
   AdvancedFieldType.complex,
 ];
 
-const checkShouldGroupWrap = (entry = {} as SchemaEntry, paths: string[], level: number) => {
-  const { children, type, uuid } = entry;
+const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
+  const { children, type } = entry;
 
-  return (
-    (!children?.length || (type === AdvancedFieldType.dropdown && !paths.includes(uuid))) && level !== GROUP_BY_LEVEL
-  );
+  return (!children?.length || type === AdvancedFieldType.dropdown) && level !== GROUP_BY_LEVEL;
 };
 
 export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false }) => {
@@ -72,10 +70,9 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const isBranchEnd = !hasChildren;
     const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
     const isBranchEndWithValues = !!selectedUserValues;
-    const isDropdownWithNoUserValues = type === AdvancedFieldType.dropdown && !isOnBranchWithUserValue;
     const shouldRenderLabelOrPlaceholders =
       (isPreviewable && isGroupable) ||
-      isDropdownWithNoUserValues ||
+      type === AdvancedFieldType.dropdown ||
       (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
       isBranchEndWithoutValues;
     const hasOnlyDropdownChildren =
@@ -130,7 +127,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
         {children?.map((uuid: string) => (
           <ConditionalWrapper
             key={uuid}
-            condition={!isGroupable && checkShouldGroupWrap(schema.get(uuid), paths, level)}
+            condition={!isGroupable && checkShouldGroupWrap(schema.get(uuid), level)}
             wrapper={children => <div className="value-group-wrapper">{children}</div>}
           >
             <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />

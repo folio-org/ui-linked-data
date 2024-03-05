@@ -24,15 +24,13 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
     hasDuplicateGroupButton,
     onClickDuplicateGroup,
   }) => {
-    const { clonedBy, type } = entry;
+    const { type } = entry;
 
     return (
       <>
         <div className={classNames({ 'extended-layout-meta': hasDuplicateGroupButton })}>
           {displayName && showLabel && (
-            <div className={classNames('label', labelContainerClassName)}>
-              {displayName} {clonedBy?.length && `(${clonedBy.length + 1})`}
-            </div>
+            <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
           {hasDuplicateGroupButton && <DuplicateGroup onClick={onClickDuplicateGroup} />}
         </div>

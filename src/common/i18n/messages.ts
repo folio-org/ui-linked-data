@@ -94,6 +94,7 @@ export const BASE_LOCALE = {
   'marva.type': 'Type',
   'marva.expandAll': 'Expand all',
   'marva.collapseAll': 'Collapse all',
+  'marva.showAllWithCount': 'Show all ({amt})',
   'marva.showAdditionalComponents': 'Show additional components ({amt})',
   'marva.hideAdditionalComponents': 'Hide additional components',
   'marva.hide': 'Hide',
