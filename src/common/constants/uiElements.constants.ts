@@ -12,3 +12,5 @@ export const PREVIEW_ALT_DISPLAY_LABELS: Record<string, string> = {
   'BIBFRAME Work': 'Work',
   'BIBFRAME Instance': 'Instance',
 };
+
+export const WINDOW_SCROLL_OFFSET_TRIG = 100;

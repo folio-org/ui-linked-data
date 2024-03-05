@@ -81,7 +81,6 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const shouldRenderValuesOrPlaceholders = !hasChildren || hasOnlyDropdownChildren;
     const shouldRenderPlaceholders =
       (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
-
     const displayNameWithAltValue = PREVIEW_ALT_DISPLAY_LABELS[displayName] || displayName;
     const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
     const isBlockContents = level === GROUP_CONTENTS_LEVEL;
@@ -138,7 +137,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   });
 
   return (
-    <div className="preview-panel">
+    <div className="preview-panel" data-testid="preview-fields">
       {!headless && (
         <h3>
           <FormattedMessage id="marva.preview" />

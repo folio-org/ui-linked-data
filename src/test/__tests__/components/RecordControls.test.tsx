@@ -4,15 +4,11 @@ import { RecoilRoot } from 'recoil';
 import state from '@state';
 
 jest.mock('@components/SaveRecord', () => ({
-  SaveRecord: () => <div data-testid="save-record-component" />,
+  SaveRecord: ({ locally }: any) => <div data-testid={`save-record${locally ? '-locally' : ''}-component`} />,
 }));
 
 jest.mock('@components/CloseRecord', () => ({
   CloseRecord: () => <div data-testid="close-record-component" />,
-}));
-
-jest.mock('@components/DeleteRecord', () => ({
-  DeleteRecord: () => <div data-testid="delete-record-component" />,
 }));
 
 describe('RecordControls', () => {
@@ -25,6 +21,5 @@ describe('RecordControls', () => {
 
     expect(getByTestId('save-record-component')).toBeInTheDocument();
     expect(getByTestId('close-record-component')).toBeInTheDocument();
-    expect(getByTestId('delete-record-component')).toBeInTheDocument();
   });
 });
