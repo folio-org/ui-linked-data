@@ -25,6 +25,7 @@ export const formatRecord = (parsedRecord: ParsedRecord) => {
   };
 };
 
+// TODO: refactor this to make the processing consistent
 const getUpdatedInstance = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
   const clonedInstance = cloneDeep(instanceComponent);
   const instanceField = updateInstantiatesWithInstanceFields(clonedInstance);
