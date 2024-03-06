@@ -1,4 +1,5 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { routes } from '@src/App';
@@ -176,11 +177,6 @@ const monograph = {
 
 window.scrollTo = jest.fn();
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-jest.mock('@common/hooks/useConfig.hook', () => ({
-  useConfig: () => ({
-    getProfiles: jest.fn(),
-  }),
-}));
 
 describe('EditSection', () => {
   const renderScreen = () =>
