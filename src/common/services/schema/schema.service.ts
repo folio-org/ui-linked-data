@@ -38,7 +38,7 @@ export class SchemaService {
     return this.schema;
   }
 
-  traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfile) {
+  private traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfile) {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
@@ -161,7 +161,7 @@ export class SchemaService {
     }
   }
 
-  processGroup({
+  private processGroup({
     entry,
     path,
     uuid,
