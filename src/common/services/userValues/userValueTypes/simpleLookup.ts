@@ -32,7 +32,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     this.contents = [];
 
     if (Array.isArray(data)) {
-      for (const dataEntry of data as Record<string, string[]>[]) {
+      for (const dataEntry of data as RecordBasic[]) {
         this.generateContentItem({
           label: dataEntry[labelSelector as string]?.[0],
           itemUri: dataEntry[uriSelector as string]?.[0],
@@ -43,7 +43,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
         });
       }
     } else {
-      const typedData = data as Record<string, string[]>;
+      const typedData = data as RecordBasic;
 
       this.generateContentItem({
         label: typedData[labelSelector as string]?.[0],

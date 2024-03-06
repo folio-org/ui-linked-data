@@ -11,7 +11,7 @@ jest.mock('@common/services/userValues/userValueTypes/simpleLookup.ts', () => ({
     }
 
     generate({ data, uuid, uri, labelSelector, type, fieldUri }: UserValueDTO) {
-      const typedData = data as Record<string, string[]>;
+      const typedData = data as RecordBasic;
 
       this.generatedValue = {
         uuid: uuid || '',

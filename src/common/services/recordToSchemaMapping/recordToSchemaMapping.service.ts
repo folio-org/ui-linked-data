@@ -277,7 +277,7 @@ export class RecordToSchemaMappingService {
   }: {
     schemaEntry: SchemaEntry;
     recordKey: string;
-    recordEntryValue: string | string[] | Record<string, string[]>[];
+    recordEntryValue: string | string[] | RecordBasic[];
   }) {
     let schemaElemUuid = this.findSchemaUIControl({
       schemaEntry,
