@@ -118,3 +118,6 @@ export const LOC_GOV_URI = 'http://id.loc.gov/';
 // TODO: refine level of bypass and qualifications for bypassing
 // (same identifier may be used for both bypassable and non-bypassable entries)
 export const BYPASS_FORMATTING_AND_SELECTION = ['http://www.loc.gov/mads/rdf/v1#Topic'];
+
+export const PREV_ENTRY_PATH_INDEX = 2;
+export const GRANDPARENT_ENTRY_PATH_INDEX = PREV_ENTRY_PATH_INDEX - 1;

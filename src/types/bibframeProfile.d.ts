@@ -129,6 +129,27 @@ type FieldTypeMapDataEntry = {
 type FieldTypeMapEntry = {
   field: { uri: string };
   data: FieldTypeMapDataEntry;
+  fields?: FieldTypeMap;
 };
 
 type FieldTypeMap = Record<string, FieldTypeMapEntry>;
+
+type BF2BFLiteMapOptions = Record<string, { bf2Uri: string }>;
+
+type BF2BFLiteMapFields = Record<string, { bf2Uri: string; label?: string }>;
+
+type BF2BFLiteMapEntry = {
+  container: { bf2Uri: string; dataTypeUri?: string };
+  options?: BF2BFLiteMapOptions;
+  fields?: BF2BFLiteMapFields;
+};
+
+type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;
+
+type TraverseProfileDTO = {
+  entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+  uuid?: string;
+  path?: Array<string>;
+  auxType?: AdvancedFieldType;
+  firstOfSameType?: boolean;
+};

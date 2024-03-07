@@ -12,12 +12,14 @@ import {
   saveRecordLocally,
 } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
+import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 import { flushSync } from 'react-dom';
 
 export const useRecordControls = () => {
@@ -36,8 +38,8 @@ export const useRecordControls = () => {
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
-
-  const { getProfiles } = useConfig();
+  const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
+  const { getProfiles } = useConfigHook();
   const navigate = useNavigate();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
@@ -81,7 +83,7 @@ export const useRecordControls = () => {
       const parsedResponse = await response.json();
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
-      
+
       if (isInitiallyLoaded) {
         setIsInititallyLoaded(false);
       }

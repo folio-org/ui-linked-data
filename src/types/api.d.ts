@@ -46,3 +46,7 @@ type WorkAsSearchResultDTO = {
   classifications?: { number?: string; source?: string }[];
   instances?: InstanceAsSearchResultDTO[];
 };
+
+interface IApiClient {
+  loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
+}
