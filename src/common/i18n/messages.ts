@@ -100,7 +100,7 @@ export const BASE_LOCALE = {
   'marva.hide': 'Hide',
   'marva.saveAndClose': 'Save & close',
   'marva.editInstance': 'Edit instance',
-  'marva.editWork': 'Edit work',
+  'marva.editWork': 'Edit work (This page is a work in progress)',
   'marva.saveAndKeepEditing': 'Save & keep editing',
   'marva.recordMappingToSchema': 'Cannot apply a record to the schema',
 };

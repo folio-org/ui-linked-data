@@ -4,7 +4,12 @@ import state from '@state';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { FormattedMessage } from 'react-intl';
 import { FC, memo } from 'react';
-import { ENTITY_LEVEL, GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL } from '@common/constants/bibframe.constants';
+import {
+  ENTITY_LEVEL,
+  GROUP_BY_LEVEL,
+  GROUP_CONTENTS_LEVEL,
+  PROFILE_BFIDS,
+} from '@common/constants/bibframe.constants';
 import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import Lightbulb16 from '@src/assets/lightbulb-shining-16.svg?react';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
@@ -45,6 +50,8 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
   const initialSchemaKey = altInitKey || initialSchemaKeyFromState;
+  const isPositionedSecond =
+    currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
 
   // TODO: potentially reuse <Fields /> from EditSection ?
   const Fields = memo(({ base, uuid, paths, level = 0 }: Fields) => {
@@ -137,7 +144,12 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   });
 
   return (
-    <div className="preview-panel" data-testid="preview-fields">
+    <div
+      className={classNames('preview-panel', {
+        'positioned-second': isPositionedSecond,
+      })}
+      data-testid="preview-fields"
+    >
       {!headless && (
         <h3>
           <FormattedMessage id="marva.preview" />

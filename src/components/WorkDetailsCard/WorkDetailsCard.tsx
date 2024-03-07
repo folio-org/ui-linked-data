@@ -43,7 +43,6 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           </span>
         </div>
         <Button
-          disabled
           type={ButtonType.Primary}
           onClick={() => navigate(generateEditResourceUrl(id))}
           data-testid="edit-button"

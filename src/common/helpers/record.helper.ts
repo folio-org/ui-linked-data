@@ -4,7 +4,7 @@ import { generateRecordBackupKey } from './progressBackup.helper';
 import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
 
-export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE].id;
+export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE]?.id;
 
 export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
   resource: {
