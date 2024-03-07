@@ -4,10 +4,13 @@ import { IUserValueType } from './userValueType.interface';
 export class ComplexLookupUserValueService extends UserValueType implements IUserValueType {
   generate(value: UserValueDTO) {
     const { data, uuid } = value;
+    const typedData = data as string;
 
     this.value = {
-      uuid,
-      contents: [{ label: data }],
+      uuid: uuid || '',
+      contents: [{ label: typedData }],
     };
+
+    return this.value;
   }
 }

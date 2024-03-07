@@ -18,11 +18,10 @@ describe('LiteralUserValueService', () => {
       ],
     };
 
-    literalUserValueService.generate({
+    const result = literalUserValueService.generate({
       data,
       uuid: 'testUuid_1',
     });
-    const result = literalUserValueService.getValue();
 
     expect(result).toEqual(testResult);
   }

@@ -70,9 +70,7 @@ export class UserValuesService implements IUserValues {
   private async generateValue() {
     try {
       const typedValue = { ...this.value } as UserValueDTO;
-      await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });
-
-      this.generatedValue = this.userValueFactory?.getValue();
+      this.generatedValue = await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });
     } catch (error) {
       console.error(
         `Error occurred generating value for ${this.value?.fieldUri} field of the ${this.value?.groupUri} record entry`,

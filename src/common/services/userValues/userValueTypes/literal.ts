@@ -4,10 +4,13 @@ import { IUserValueType } from './userValueType.interface';
 export class LiteralUserValueService extends UserValueType implements IUserValueType {
   generate(value: UserValueDTO) {
     const { data, uuid } = value;
+    const typedData = data as string | string[];
 
     this.value = {
-      uuid,
-      contents: [{ label: Array.isArray(data) ? data[0] : data }],
+      uuid: uuid || '',
+      contents: [{ label: Array.isArray(typedData) ? typedData[0] : typedData }],
     };
+
+    return this.value;
   }
 }

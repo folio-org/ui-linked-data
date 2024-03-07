@@ -56,9 +56,11 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     }
 
     this.value = {
-      uuid,
+      uuid: uuid || '',
       contents: this.contents,
     };
+
+    return this.value;
   }
 
   private generateContentItem({

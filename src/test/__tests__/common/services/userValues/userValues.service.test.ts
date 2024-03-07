@@ -26,9 +26,7 @@ jest.mock('@common/services/userValues/userValueTypes/simpleLookup.ts', () => ({
           },
         ],
       };
-    }
 
-    getValue() {
       return this.generatedValue;
     }
   },

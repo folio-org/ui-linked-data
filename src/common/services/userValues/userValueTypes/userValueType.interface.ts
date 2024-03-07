@@ -1,5 +1,3 @@
 export interface IUserValueType {
-  getValue: () => UserValue;
-
-  generate: ({ data, uri, uuid, labelSelector, uriSelector, type }: UserValueDTO) => void | Promise<void>;
+  generate: ({ data, uri, uuid, labelSelector, uriSelector, type }: UserValueDTO) => UserValue | Promise<UserValue>;
 }

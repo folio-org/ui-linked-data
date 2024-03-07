@@ -12,11 +12,10 @@ describe('ComplexLookupUserValueService', () => {
       ],
     };
 
-    complexLookupUserValueService.generate({
+    const result = complexLookupUserValueService.generate({
       data: 'test complex value 1',
       uuid: 'testUuid_1',
     });
-    const result = complexLookupUserValueService.getValue();
 
     expect(result).toEqual(testResult);
   });

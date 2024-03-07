@@ -25,8 +25,7 @@ describe('SimpleLookupUserValueService', () => {
       fieldUri: 'testFieldUri_1',
     } as UserValueDTO;
 
-    await simpleLookupUserValueService.generate(value);
-    const result = simpleLookupUserValueService.getValue();
+    const result = await simpleLookupUserValueService.generate(value);
 
     expect(result).toEqual(testResult);
   }

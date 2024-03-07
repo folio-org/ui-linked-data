@@ -1,11 +1,7 @@
 export class UserValueType {
-  protected value: any;
+  protected value: UserValue;
 
   constructor() {
-    this.value = {};
-  }
-
-  getValue() {
-    return this.value;
+    this.value = {} as UserValue;
   }
 }
