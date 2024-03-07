@@ -7,9 +7,10 @@ import {
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { RECORD_BLOCKS } from '@common/constants/record.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
-import { IUserValues } from '../userValues/userValues.interface';
-import { SchemaWithDuplicatesService } from '../schema';
+import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
+import { IUserValues } from '@common/services/userValues/userValues.interface';
+import { SchemaWithDuplicatesService } from '@common/services/schema';
 
 // TODO: take into account a selected Profile
 export class RecordToSchemaMappingService {
@@ -109,21 +110,19 @@ export class RecordToSchemaMappingService {
     if (!schemaEntry) return;
 
     if (dropdownOptionsMap) {
-      if (recordGroup && typeof recordGroup === 'object') {
-        // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-        for await (const [idx, groupElem] of Object.entries(recordGroup)) {
-          const dropdownOptionUUID = this.findSchemaDropdownOption(schemaEntry, idx);
+      // traverse within the selected record element (find dropdown options and elements ouside dropdown)
+      for await (const [idx, groupElem] of Object.entries(recordGroup)) {
+        const dropdownOptionUUID = this.findSchemaDropdownOption(schemaEntry, idx);
 
-          const typedGroupElem = groupElem as Record<string, string[] | RecordBasic[]>;
+        const typedGroupElem = groupElem as Record<string, string[] | RecordBasic[]>;
 
-          if (dropdownOptionUUID) {
-            const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
+        if (dropdownOptionUUID) {
+          const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
 
-            // iterate within the elements inside the selectedDropdown option
-            await this.mapRecordListToSchemaEntry(typedGroupElem, dropdownOptionEntry as SchemaEntry);
-          } else {
-            await this.mapRecordListToSchemaEntry(typedGroupElem, schemaEntry);
-          }
+          // iterate within the elements inside the selectedDropdown option
+          await this.mapRecordListToSchemaEntry(typedGroupElem, dropdownOptionEntry as SchemaEntry);
+        } else {
+          await this.mapRecordListToSchemaEntry(typedGroupElem, schemaEntry);
         }
       }
     } else {
@@ -172,7 +171,7 @@ export class RecordToSchemaMappingService {
   };
 
   private findSchemaDropdownOption(schemaEntry: SchemaEntry, recordKey: string, selectedEntryId?: string) {
-    let selectedSchemaEntryUuid = selectedEntryId || undefined;
+    let selectedSchemaEntryUuid = selectedEntryId;
 
     if (selectedSchemaEntryUuid) return selectedSchemaEntryUuid;
 
@@ -208,7 +207,7 @@ export class RecordToSchemaMappingService {
     recordKey: string;
     selectedEntryId?: string;
   }) {
-    let selectedSchemaEntryUuid = selectedEntryId || undefined;
+    let selectedSchemaEntryUuid = selectedEntryId;
 
     if (selectedSchemaEntryUuid) return selectedSchemaEntryUuid;
 
@@ -286,7 +285,9 @@ export class RecordToSchemaMappingService {
 
     if (!schemaElemUuid) {
       schemaElemUuid = this.findSchemaUIControl({
-        schemaEntry: this.updatedSchema?.get(schemaEntry.path[schemaEntry.path.length - 3]) as SchemaEntry,
+        schemaEntry: this.updatedSchema?.get(
+          schemaEntry.path[schemaEntry.path.length - GRANDPARENT_ENTRY_PATH_INDEX],
+        ) as SchemaEntry,
         recordKey,
       });
     }
