@@ -16,7 +16,7 @@ type IContainer = {
   config?: Record<string, string | Record<string, string>>;
 };
 
-const routes: RouteObject[] = [
+export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Root />,

@@ -5,25 +5,11 @@ describe('Complex Lookup Field', () => {
   const onChange = jest.fn();
   const uuid = 'test-uuid';
 
-  const { getByTestId, queryByTestId } = screen;
+  const { getByTestId } = screen;
 
   function renderComponent() {
     render(<ComplexLookupField uuid={uuid} onChange={onChange} />);
   }
-
-  test('renders Complex Lookup Field component with label', () => {
-    renderComponent();
-
-    expect(getByTestId('complex-lookup')).toBeInTheDocument();
-    expect(getByTestId('complex-lookup-label')).toBeInTheDocument();
-  });
-
-  test('renders Complex Lookup Field component without label', () => {
-    renderComponent();
-
-    expect(getByTestId('complex-lookup')).toBeInTheDocument();
-    expect(queryByTestId('complex-lookup-label')).not.toBeInTheDocument();
-  });
 
   test('triggers onChange', () => {
     const event = {

@@ -45,11 +45,11 @@ const getUpdatedInstance = (instanceComponent: Record<string, RecursiveRecordSch
 export const updateInstantiatesWithInstanceFields = (
   instanceComponent: Record<string, RecursiveRecordSchema[] | RecursiveRecordSchema>,
 ) => {
-  const instantiatesComponent = instanceComponent[BFLITE_URIS.INSTANTIATES as string];
+  const instantiatesComponent = instanceComponent?.[BFLITE_URIS.INSTANTIATES as string];
   const instantiatesComponentTyped = instantiatesComponent as unknown as Record<string, unknown>[];
 
   INSTANTIATES_TO_INSTANCE_FIELDS.forEach(fieldName => {
-    const componentToMove = instanceComponent[fieldName];
+    const componentToMove = instanceComponent?.[fieldName];
 
     if (!componentToMove) return;
 
@@ -93,7 +93,7 @@ export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSche
 export const updateRecordWithDefaultNoteType = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
-  const typedNotes = record[NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container] as unknown as RecursiveRecordSchema[];
+  const typedNotes = record?.[NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container] as unknown as RecursiveRecordSchema[];
 
   typedNotes?.forEach(noteRecord => {
     if (!noteRecord.type) {
@@ -108,7 +108,7 @@ export const updateRecordWithRelationshipDesignator = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
   fieldUirs: string[],
 ) => {
-  const instantiatesComponent = record[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<string, unknown>[];
+  const instantiatesComponent = record?.[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<string, unknown>[];
   const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
 
   fieldUirs.forEach(fieldName => {

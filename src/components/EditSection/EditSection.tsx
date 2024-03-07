@@ -1,4 +1,4 @@
-import { useEffect, memo, useCallback, useState } from 'react';
+import { useEffect, memo, useCallback } from 'react';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
@@ -12,18 +12,15 @@ import { LiteralField } from '@components/LiteralField';
 import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
-import { ScrollToTop } from '@components/ScrollToTop';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { Prompt } from '@components/Prompt';
-import './EditSection.scss';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { findParentEntryByType } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
-
-const WINDOW_SCROLL_OFFSET_TRIG = 100;
+import './EditSection.scss';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -41,23 +38,12 @@ export const EditSection = memo(() => {
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
-  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const record = useRecoilValue(state.inputs.record);
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
   const customEvents = useRecoilValue(state.config.customEvents);
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
-
-  const onWindowScroll = () => {
-    const updatedValue = window.scrollY > WINDOW_SCROLL_OFFSET_TRIG;
-
-    if (showScrollToTop === updatedValue) {
-      return;
-    }
-
-    setShowScrollToTop(updatedValue);
-  };
 
   useEffect(() => {
     if (!isEdited) return;
@@ -81,10 +67,8 @@ export const EditSection = memo(() => {
 
   useEffect(() => {
     setIsInititallyLoaded(true);
-    window.addEventListener('scroll', onWindowScroll);
 
     return () => {
-      window.removeEventListener('scroll', onWindowScroll);
 
       setIsInititallyLoaded(false);
       setIsEdited(false);
@@ -244,7 +228,6 @@ export const EditSection = memo(() => {
         groupClassName="edit-section-group"
         scrollToEnabled={true}
       />
-      {showScrollToTop && <ScrollToTop className="back-to-top" />}
     </div>
   ) : null;
 });

@@ -51,7 +51,16 @@ describe('SchemaWithDuplicatesService', () => {
         ['testKey-1', { path: ['testKey-0', 'testKey-1'], uuid: 'testKey-1', children: ['testKey-3'] }],
         ['testKey-2', { path: ['testKey-0', 'testKey-2'], uuid: 'testKey-2', children: ['testKey-4', 'testKey-7'] }],
         ['testKey-3', { path: ['testKey-0', 'testKey-1', 'testKey-3'], uuid: 'testKey-3', children: [] }],
-        ['testKey-4', { path: ['testKey-0', 'testKey-2', 'testKey-4'], uuid: 'testKey-4', children: ['testKey-5'] }],
+        [
+          'testKey-4',
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-4'],
+            uuid: 'testKey-4',
+            children: ['testKey-5'],
+            clonedBy: ['testKey-7'],
+            constraints,
+          },
+        ],
         [
           'testKey-5',
           { path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'], uuid: 'testKey-5', children: ['testKey-6'] },
@@ -62,7 +71,14 @@ describe('SchemaWithDuplicatesService', () => {
         ],
         [
           'testKey-7',
-          { path: ['testKey-0', 'testKey-2', 'testKey-7'], uuid: 'testKey-7', children: ['testKey-8'], constraints },
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-7'],
+            uuid: 'testKey-7',
+            children: ['testKey-8'],
+            constraints,
+            cloneOf: 'testKey-4',
+            clonedBy: undefined,
+          },
         ],
         [
           'testKey-8',

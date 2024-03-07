@@ -60,6 +60,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
         className,
       )}
       id={uuid}
+      data-testid={`field-with-meta-controls-${uuid}`}
       {...restProps}
     >
       {isCompact ? (
