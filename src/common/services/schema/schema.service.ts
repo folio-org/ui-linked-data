@@ -5,14 +5,6 @@ import { getUris } from '@common/helpers/bibframe.helper';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 
-type TraverseProfile = {
-  entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
-  uuid?: string;
-  path?: Array<string>;
-  auxType?: AdvancedFieldType;
-  firstOfSameType?: boolean;
-};
-
 export class SchemaService {
   private schema: Map<string, SchemaEntry>;
   private supportedEntries: string[];
@@ -30,20 +22,18 @@ export class SchemaService {
     try {
       this.traverseProfile({ entry: this.entry, uuid: initKey });
     } catch (error) {
-      console.error(error);
+      console.error('Cannot generate a schema', error);
     }
-  }
 
-  getSchema() {
     return this.schema;
   }
 
-  private traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfile) {
+  private traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfileDTO) {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
 
-    if (branchEnds.includes(type)) {
+    if (branchEnds.includes(type as AdvancedFieldType)) {
       const {
         propertyURI,
         propertyLabel,
@@ -146,7 +136,7 @@ export class SchemaService {
           this.processGroup({
             uuid,
             entry,
-            type,
+            type: type as AdvancedFieldType,
             path,
           });
 

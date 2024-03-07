@@ -64,9 +64,7 @@ export const useConfig = () => {
 
     const selectedEntriesService = new SelectedEntriesService(selectedEntries);
     const schemaCreatorService = new SchemaService(templates, profile, selectedEntriesService);
-    schemaCreatorService.generate(initKey);
-
-    const base = schemaCreatorService.getSchema();
+    const base = schemaCreatorService.generate(initKey);
 
     let updatedRecord = record;
     let updatedSchema = base;

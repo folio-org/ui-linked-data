@@ -1,6 +1,6 @@
+import { useSetRecoilState } from 'recoil';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
-import { useSetRecoilState } from 'recoil';
 
 export const useCommonStatus = () => {
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);

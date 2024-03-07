@@ -145,3 +145,11 @@ type BF2BFLiteMapEntry = {
 };
 
 type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;
+
+type TraverseProfileDTO = {
+  entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+  uuid?: string;
+  path?: Array<string>;
+  auxType?: AdvancedFieldType;
+  firstOfSameType?: boolean;
+};
