@@ -20,6 +20,7 @@ import { findParentEntryByType } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
+import classNames from 'classnames';
 import './EditSection.scss';
 
 export type IDrawComponent = {
@@ -44,6 +45,7 @@ export const EditSection = memo(() => {
   const customEvents = useRecoilValue(state.config.customEvents);
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
+  const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
 
   useEffect(() => {
     if (!isEdited) return;
@@ -220,7 +222,9 @@ export const EditSection = memo(() => {
   // const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
   return resourceTemplates ? (
-    <div className="edit-section">
+    <div className={classNames("edit-section", {
+      "edit-section-passive": currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK)
+    })}>
       <Prompt when={isEdited} />
       <Fields
         drawComponent={drawComponent}
