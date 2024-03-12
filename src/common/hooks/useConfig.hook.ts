@@ -80,6 +80,7 @@ export const useConfig = () => {
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
           updatedRecord as RecordEntry,
+          recordNormalizingService.getRecordBlocks(),
           selectedEntriesService,
           repeatableFieldsService,
           userValuesService,

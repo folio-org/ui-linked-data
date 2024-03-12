@@ -13,3 +13,14 @@ type PreviewContent = {
   userValues: UserValues;
   initKey: string;
 };
+
+type RecordBlocks = Record<
+  string,
+  {
+    uri: string;
+    reference: {
+      key: string;
+      uri: string;
+    };
+  }
+>;
