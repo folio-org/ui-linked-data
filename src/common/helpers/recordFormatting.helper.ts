@@ -6,8 +6,9 @@ import {
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, NON_BF_GROUP_TYPE, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
+import { getEditingRecordBlocks } from './record.helper';
 
-export const formatRecord = (parsedRecord: ParsedRecord) => {
+export const formatRecordLegacy = (parsedRecord: ParsedRecord) => {
   const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES] as unknown as RecursiveRecordSchema[];
   const instanceComponent = parsedRecord[TYPE_URIS.INSTANCE] as unknown as Record<string, RecursiveRecordSchema[]>;
 
@@ -20,15 +21,41 @@ export const formatRecord = (parsedRecord: ParsedRecord) => {
   return {
     resource: {
       ...parsedRecord,
-      [TYPE_URIS.INSTANCE]: getUpdatedInstance(instanceComponent),
+      [TYPE_URIS.INSTANCE]: getUpdatedRecordBlocks(instanceComponent),
     },
   };
 };
 
+export const formatRecord = (parsedRecord: ParsedRecord, record: RecordEntry | null) => {
+  const defaultFormattedRecord = { resource: {} };
+
+  if (!record) return defaultFormattedRecord;
+
+  const { block, reference } = getEditingRecordBlocks(record.resource as RecordEntry);
+
+  if (!block || !reference) return defaultFormattedRecord;
+
+  const updatedBlocks = getUpdatedRecordBlocks(parsedRecord as unknown as Record<string, RecursiveRecordSchema[]>);
+
+  return {
+    resource: {
+      [block]: { ...updatedBlocks?.[block], [reference.key]: getReferenceIds(record, block, reference.key) },
+    },
+  };
+};
+
+const getReferenceIds = (record: RecordEntry, block: string, referenceKey: string) => {
+  const typedReferenceBlock = record.resource?.[block]?.[referenceKey] as unknown as Record<string, RecordEntry>[];
+
+  return typedReferenceBlock?.map(({ id }) => ({ id }));
+};
+
 // TODO: refactor this to make the processing consistent
-const getUpdatedInstance = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
+const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
   const clonedInstance = cloneDeep(instanceComponent);
-  const instanceField = updateInstantiatesWithInstanceFields(clonedInstance);
+  const instanceField = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+    ? clonedInstance
+    : updateInstantiatesWithInstanceFields(clonedInstance);
 
   let updatedRecord = instanceField;
 
@@ -69,12 +96,22 @@ export const updateInstantiatesWithInstanceFields = (
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
   const instantiatesComponent = record[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<string, unknown>[];
-  const instanceNote = record[BFLITE_URIS.NOTE];
-  const workNote = instantiatesComponent?.[0]?.[BFLITE_URIS.NOTE];
+  const instanceComponent = record[BFLITE_URIS.INSTANCE as string] as unknown as Record<string, unknown>;
+  const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
+  const instanceNote = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+    ? instanceComponent[BFLITE_URIS.NOTE]
+    : record[BFLITE_URIS.NOTE];
+  const workNote = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+    ? workComponent[BFLITE_URIS.NOTE]
+    : instantiatesComponent?.[0]?.[BFLITE_URIS.NOTE];
 
   if (!instanceNote && !workNote) return record;
 
-  [record, instantiatesComponent[0]].forEach(recordEntry => {
+  const blocksList = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+    ? [instanceComponent, workComponent]
+    : [record, instantiatesComponent[0]];
+
+  blocksList.forEach(recordEntry => {
     const noteEntry = recordEntry[BFLITE_URIS.NOTE] as RecordBasic[];
 
     if (!noteEntry) return;
@@ -108,11 +145,14 @@ export const updateRecordWithRelationshipDesignator = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
   fieldUirs: string[],
 ) => {
+  const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
   const instantiatesComponent = record?.[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<string, unknown>[];
   const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
 
   fieldUirs.forEach(fieldName => {
-    const recordFields = instantiatesComponent?.[0]?.[fieldName] as RecordEntry[] | undefined;
+    const recordFields = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+      ? (workComponent?.[fieldName] as RecordEntry[] | undefined)
+      : (instantiatesComponent?.[0]?.[fieldName] as RecordEntry[] | undefined);
 
     if (!recordFields) return;
 
@@ -164,11 +204,16 @@ export const updateRecordForTargetAudience = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
   // TODO: add suport for this field
+  const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
   const instantiatesComponent = record[BFLITE_URIS.INSTANTIATES as string] as unknown as Record<string, unknown>[];
   const audienceBF2Uri = 'http://id.loc.gov/ontologies/bibframe/intendedAudience';
 
-  if (instantiatesComponent[0]?.[audienceBF2Uri]) {
+  if (!IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED && instantiatesComponent[0]?.[audienceBF2Uri]) {
     delete instantiatesComponent[0][audienceBF2Uri];
+  }
+
+  if (IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED && workComponent?.[audienceBF2Uri]) {
+    delete workComponent[audienceBF2Uri];
   }
 
   return record;

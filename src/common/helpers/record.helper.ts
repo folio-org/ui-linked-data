@@ -2,7 +2,9 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
-import { formatRecord } from './recordFormatting.helper';
+import { formatRecord, formatRecordLegacy } from './recordFormatting.helper';
+import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 
 export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE]?.id;
 
@@ -34,9 +36,14 @@ export const generateAndSaveRecord = (storageKey: string, record: ParsedRecord) 
   return newRecord;
 };
 
-export const saveRecordLocally = (profile: string, record: ParsedRecord, recordId: RecordID) => {
+export const saveRecordLocally = (profile: string, parsedRecord: ParsedRecord, record: RecordEntry | null) => {
+  if (!record) return;
+
+  const recordId = getRecordId(record) as string;
   const storageKey = generateRecordBackupKey(profile, recordId);
-  const formattedRecord = formatRecord(record);
+  const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+    ? formatRecord(parsedRecord, record)
+    : formatRecordLegacy(parsedRecord);
   const updatedRecord = getRecordWithUpdatedID(formattedRecord as RecordEntry, recordId);
 
   return generateAndSaveRecord(storageKey, updatedRecord as ParsedRecord);
@@ -83,4 +90,22 @@ export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = tru
   const instanceAsPrimary = editable ? [PROFILE_BFIDS.INSTANCE] : [PROFILE_BFIDS.WORK];
 
   return isInstance ? instanceAsPrimary : workAsPrimary;
+};
+
+export const getEditingRecordBlocks = (record: RecordEntry) => {
+  const typedBlocksList = BLOCKS_BFLITE as RecordBlocks;
+
+  let block;
+  let reference;
+
+  for (const key in typedBlocksList) {
+    const blockItem = typedBlocksList[key];
+
+    if (!record[blockItem.uri]) continue;
+
+    block = blockItem.uri;
+    reference = blockItem.reference;
+  }
+
+  return { block, reference };
 };

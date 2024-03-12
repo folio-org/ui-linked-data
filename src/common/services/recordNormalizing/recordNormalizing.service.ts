@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
-import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { getEditingRecordBlocks } from '@common/helpers/record.helper';
 
 export class RecordNormalizingService {
   private recordBlocks: string[];
@@ -25,19 +25,13 @@ export class RecordNormalizingService {
   }
 
   private generateBlocksStructure() {
-    const typedBlocksList = BLOCKS_BFLITE as RecordBlocks;
+    const { block, reference } = getEditingRecordBlocks(this.record);
 
-    for (const block in typedBlocksList) {
-      const blockItem = typedBlocksList[block];
+    if (!block || !reference) return;
 
-      if (!this.record[blockItem.uri]) continue;
-
-      this.block = blockItem.uri;
-      this.reference = blockItem.reference;
-
-      this.recordBlocks.push(blockItem.uri);
-      this.recordBlocks.push(blockItem.reference.uri);
-    }
+    this.block = block;
+    this.reference = reference;
+    this.recordBlocks = [block, reference?.uri];
   }
 
   // Pass the block URIs for the required profile?
