@@ -3,7 +3,7 @@ import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
-import { getRecordId, saveRecordLocally } from '@common/helpers/record.helper';
+import { saveRecordLocally } from '@common/helpers/record.helper';
 import { GROUP_COMPLEX_CUTOFF_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -40,6 +40,7 @@ export const EditSection = memo(() => {
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const record = useRecoilValue(state.inputs.record);
+  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
   const customEvents = useRecoilValue(state.config.customEvents);
@@ -58,7 +59,7 @@ export const EditSection = memo(() => {
 
         const profile = PROFILE_BFIDS.MONOGRAPH;
 
-        saveRecordLocally(profile, parsed, getRecordId(record) as string);
+        saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
       } catch (error) {
         console.error('Unable to automatically save changes:', error);
       }
@@ -71,7 +72,6 @@ export const EditSection = memo(() => {
     setIsInititallyLoaded(true);
 
     return () => {
-
       setIsInititallyLoaded(false);
       setIsEdited(false);
     };
@@ -222,9 +222,11 @@ export const EditSection = memo(() => {
   // const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
   return resourceTemplates ? (
-    <div className={classNames("edit-section", {
-      "edit-section-passive": currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK)
-    })}>
+    <div
+      className={classNames('edit-section', {
+        'edit-section-passive': currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
+      })}
+    >
       <Prompt when={isEdited} />
       <Fields
         drawComponent={drawComponent}

@@ -15,8 +15,14 @@ const record = atom<RecordEntry | null>({
   default: null,
 });
 
+const selectedRecordBlocks = atom<SelectedRecordBlocks | undefined>({
+  key: 'inputs.selectedRecordBlocks',
+  default: undefined,
+});
+
 export default {
   userValues,
   record,
   previewContent,
+  selectedRecordBlocks,
 };

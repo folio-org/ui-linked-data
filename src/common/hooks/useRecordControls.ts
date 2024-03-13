@@ -15,7 +15,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
-import { formatRecord } from '@common/helpers/recordFormatting.helper';
+import { formatRecord, formatRecordLegacy } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
@@ -36,6 +36,7 @@ export const useRecordControls = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
+  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
@@ -73,7 +74,10 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
-      const formattedRecord = formatRecord(parsed) as RecordEntry;
+      const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
+        ? (formatRecord({ parsedRecord: parsed, record, selectedRecordBlocks }) as RecordEntry)
+        : (formatRecordLegacy(parsed) as RecordEntry);
+
       // TODO: define a type
       const recordId = getRecordId(record);
       const response =
@@ -118,7 +122,7 @@ export const useRecordControls = () => {
 
     if (!parsed) return;
 
-    return saveRecordLocally(profile, parsed, getRecordId(record) as string);
+    return saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
   };
 
   const clearRecordState = () => {

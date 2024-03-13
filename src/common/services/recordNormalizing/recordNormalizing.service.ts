@@ -1,9 +1,12 @@
 import { cloneDeep } from 'lodash';
 import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
-import { BLOCK_URIS_BFLITE } from '@common/constants/bibframeMapping.constants';
 
 export class RecordNormalizingService {
-  constructor(private record: RecordEntry) {
+  constructor(
+    private record: RecordEntry,
+    private block?: string,
+    private reference?: { key: string; uri: string },
+  ) {
     this.record = cloneDeep(record);
 
     this.decoupleBlocks();
@@ -14,16 +17,17 @@ export class RecordNormalizingService {
     return this.record;
   }
 
-  // TODO: use a new API contract
+  // Pass the block URIs for the required profile?
   private decoupleBlocks() {
-    // Pass the block URIs for the required profile?
-    const instantiates = this.record[BLOCK_URIS_BFLITE.INSTANCE]?.[BLOCK_URIS_BFLITE.WORK];
+    if (!this.block || !this.reference) return;
 
-    if (!instantiates) return;
+    const reference = this.record[this.block]?.[this.reference?.key];
 
-    this.record[BLOCK_URIS_BFLITE.WORK] = instantiates[0] as unknown as Record<string, RecursiveRecordSchema>;
+    if (!reference) return;
 
-    delete this.record[BLOCK_URIS_BFLITE.INSTANCE]?.[BLOCK_URIS_BFLITE.WORK];
+    this.record[this.reference?.uri] = reference[0] as unknown as Record<string, RecursiveRecordSchema>;
+
+    delete this.record[this.block]?.[this.reference?.key];
   }
 
   private normalize() {

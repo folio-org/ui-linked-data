@@ -54,7 +54,8 @@ describe('record.helper', () => {
   });
 
   test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
-    const record = { [testInstanceUri]: {} };
+    const parsedRecord = { [testInstanceUri]: {} };
+    const record = { resource: { [testInstanceUri]: {} } };
     const testRecord = {
       resource: { [testInstanceUri]: { id: 'testId' } },
     };
@@ -66,7 +67,7 @@ describe('record.helper', () => {
     jest.spyOn(RecordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
     jest.spyOn(RecordHelper, 'generateAndSaveRecord').mockReturnValue(storedRecord);
 
-    const result = RecordHelper.saveRecordLocally(profile, record, recordId);
+    const result = RecordHelper.saveRecordLocally({ profile, parsedRecord, record });
 
     expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, testRecord);
     expect(result).toEqual(storedRecord);

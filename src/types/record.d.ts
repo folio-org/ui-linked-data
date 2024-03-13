@@ -13,3 +13,23 @@ type PreviewContent = {
   userValues: UserValues;
   initKey: string;
 };
+
+type RecordReference = {
+  key: string;
+  uri: string;
+};
+
+type RecordBlocksBFLite = Record<
+  string,
+  {
+    uri: string;
+    reference: RecordReference;
+  }
+>;
+
+type SelectedRecordBlocks = {
+  block?: string;
+  reference?: RecordReference;
+};
+
+type RecordBlocksList = string[];

@@ -5,7 +5,6 @@ import {
   UI_DROPDOWNS_LIST,
 } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
-import { RECORD_BLOCKS } from '@common/constants/record.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
@@ -23,6 +22,7 @@ export class RecordToSchemaMappingService {
   constructor(
     schema: Schema,
     private record: RecordEntry,
+    private recordBlocks: RecordBlocksList,
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: SchemaWithDuplicatesService,
     private userValuesService: IUserValues,
@@ -43,7 +43,7 @@ export class RecordToSchemaMappingService {
   }
 
   private async traverseBlocks() {
-    for await (const blockUri of RECORD_BLOCKS.values()) {
+    for await (const blockUri of this.recordBlocks.values()) {
       this.currentBlockUri = blockUri;
       await this.traverseBlock();
     }
@@ -53,6 +53,8 @@ export class RecordToSchemaMappingService {
     if (!this.currentBlockUri) return;
 
     try {
+      if (!this.record[this.currentBlockUri]) return;
+
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
         this.recordMap = (NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap)?.[this.currentBlockUri]?.[
           recordKey
@@ -146,7 +148,7 @@ export class RecordToSchemaMappingService {
     return this.schemaArray.find((entry: SchemaEntry) => {
       const hasTheSameUri = entry.uri === containerBf2Uri;
       const hasTheSameDataTypeUri = containerDataTypeUri
-        ? entry.constraints?.valueDataType.dataTypeURI === containerDataTypeUri
+        ? entry.constraints?.valueDataType?.dataTypeURI === containerDataTypeUri
         : true;
       let hasBlockParent = false;
       let hasProperBlock = false;

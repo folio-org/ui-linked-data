@@ -6,6 +6,7 @@ import * as RecordProcessingMap from '@common/services/recordNormalizing/recordP
 describe('RecordNormalizingService', () => {
   const testInstanceBlock = 'testInstanceBlock';
   const testWorkBlock = 'testWorkBlock';
+  const reference = { key: 'testWorkBlock', uri: 'testReferenceUri' };
   const mockedBlockUrisBfLiteConstants = getMockedImportedConstant(BfMappingConstants, 'BLOCK_URIS_BFLITE');
   const mockedRecordNormalizingCases = getMockedImportedConstant(RecordProcessingMap, 'RECORD_NORMALIZING_CASES');
   mockedBlockUrisBfLiteConstants({ INSTANCE: testInstanceBlock, WORK: testWorkBlock });
@@ -43,13 +44,13 @@ describe('RecordNormalizingService', () => {
           },
         ],
       },
-      testWorkBlock: {
+      testReferenceUri: {
         testWorkField_1: ['testWorkFieldValue_1'],
         testWorkField_2: ['testWorkFieldValue_2'],
       },
     };
 
-    const recordNormalizingService = new RecordNormalizingService(record);
+    const recordNormalizingService = new RecordNormalizingService(record, testInstanceBlock, reference);
     const result = recordNormalizingService.get();
 
     expect(result).toEqual(testResult);
