@@ -22,7 +22,7 @@ export class RecordToSchemaMappingService {
   constructor(
     schema: Schema,
     private record: RecordEntry,
-    private recordBlocks: string[],
+    private recordBlocks: RecordBlocksList,
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: SchemaWithDuplicatesService,
     private userValuesService: IUserValues,
@@ -53,6 +53,8 @@ export class RecordToSchemaMappingService {
     if (!this.currentBlockUri) return;
 
     try {
+      if (!this.record[this.currentBlockUri]) return;
+
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
         this.recordMap = (NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap)?.[this.currentBlockUri]?.[
           recordKey

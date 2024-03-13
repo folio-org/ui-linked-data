@@ -36,6 +36,7 @@ export const useRecordControls = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
+  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
@@ -74,7 +75,7 @@ export const useRecordControls = () => {
 
     try {
       const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
-        ? (formatRecord(parsed, record) as RecordEntry)
+        ? (formatRecord({ parsedRecord: parsed, record, selectedRecordBlocks }) as RecordEntry)
         : (formatRecordLegacy(parsed) as RecordEntry);
 
       // TODO: define a type
@@ -121,7 +122,7 @@ export const useRecordControls = () => {
 
     if (!parsed) return;
 
-    return saveRecordLocally(profile, parsed, record);
+    return saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
   };
 
   const clearRecordState = () => {

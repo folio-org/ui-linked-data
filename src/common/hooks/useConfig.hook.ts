@@ -11,6 +11,7 @@ import { UserValuesService } from '@common/services/userValues';
 import { useLookupCacheService } from './useLookupCache.hook';
 import { useCommonStatus } from './useCommonStatus';
 import { apiClient } from '@common/api/client';
+import { getEditingRecordBlocks } from '@common/helpers/record.helper';
 
 type GetProfiles = {
   record?: RecordEntry;
@@ -27,6 +28,7 @@ export const useConfig = () => {
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
+  const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
   const lookupCacheService = useLookupCacheService();
   const commonStatusService = useCommonStatus();
 
@@ -69,18 +71,24 @@ export const useConfig = () => {
     let updatedRecord = record;
     let updatedSchema = base;
     let updatedUserValues = userValues;
+    let selectedRecordBlocks = undefined;
 
     try {
       // TODO: move this to a separate method or function
       if (record && Object.keys(record).length) {
-        const recordNormalizingService = new RecordNormalizingService(record as RecordEntry);
+        const typedRecord = record as RecordEntry;
+        const { block, reference } = getEditingRecordBlocks(typedRecord);
+        const recordBlocks = [block, reference?.uri] as RecordBlocksList;
+        selectedRecordBlocks = { block, reference };
+
+        const recordNormalizingService = new RecordNormalizingService(typedRecord, block, reference);
         updatedRecord = recordNormalizingService.get();
         const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
         const userValuesService = new UserValuesService(userValues, apiClient, lookupCacheService);
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
           updatedRecord as RecordEntry,
-          recordNormalizingService.getRecordBlocks(),
+          recordBlocks as RecordBlocksList,
           selectedEntriesService,
           repeatableFieldsService,
           userValuesService,
@@ -101,6 +109,7 @@ export const useConfig = () => {
     setInitialSchemaKey(initKey);
     setSelectedEntries(selectedEntriesService.get());
     setSchema(updatedSchema);
+    setSelectedRecordBlocks(selectedRecordBlocks);
 
     return { updatedSchema: updatedSchema, userValues, initKey };
   };

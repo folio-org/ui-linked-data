@@ -40,6 +40,7 @@ export const EditSection = memo(() => {
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const record = useRecoilValue(state.inputs.record);
+  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
   const customEvents = useRecoilValue(state.config.customEvents);
@@ -58,7 +59,7 @@ export const EditSection = memo(() => {
 
         const profile = PROFILE_BFIDS.MONOGRAPH;
 
-        saveRecordLocally(profile, parsed, record);
+        saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
       } catch (error) {
         console.error('Unable to automatically save changes:', error);
       }

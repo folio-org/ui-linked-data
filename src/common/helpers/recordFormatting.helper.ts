@@ -6,7 +6,6 @@ import {
 } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, NON_BF_GROUP_TYPE, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
-import { getEditingRecordBlocks } from './record.helper';
 
 export const formatRecordLegacy = (parsedRecord: ParsedRecord) => {
   const workComponent = parsedRecord[BFLITE_URIS.INSTANTIATES] as unknown as RecursiveRecordSchema[];
@@ -26,20 +25,34 @@ export const formatRecordLegacy = (parsedRecord: ParsedRecord) => {
   };
 };
 
-export const formatRecord = (parsedRecord: ParsedRecord, record: RecordEntry | null) => {
+export const formatRecord = ({
+  parsedRecord,
+  record,
+  selectedRecordBlocks,
+}: {
+  parsedRecord: ParsedRecord;
+  record: RecordEntry | null;
+  selectedRecordBlocks?: SelectedRecordBlocks;
+}) => {
   const defaultFormattedRecord = { resource: {} };
 
-  if (!record) return defaultFormattedRecord;
+  if (!record || !selectedRecordBlocks) return defaultFormattedRecord;
 
-  const { block, reference } = getEditingRecordBlocks(record.resource as RecordEntry);
+  const { block, reference } = selectedRecordBlocks;
 
   if (!block || !reference) return defaultFormattedRecord;
 
   const updatedBlocks = getUpdatedRecordBlocks(parsedRecord as unknown as Record<string, RecursiveRecordSchema[]>);
+  const referenceIds = getReferenceIds(record, block, reference.key);
+  const blockValues = { ...updatedBlocks?.[block] } as unknown as Record<string, RecordEntry[]>;
+
+  if (referenceIds) {
+    blockValues[reference.key] = referenceIds;
+  }
 
   return {
     resource: {
-      [block]: { ...updatedBlocks?.[block], [reference.key]: getReferenceIds(record, block, reference.key) },
+      [block]: blockValues,
     },
   };
 };

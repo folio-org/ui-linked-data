@@ -14,13 +14,22 @@ type PreviewContent = {
   initKey: string;
 };
 
-type RecordBlocks = Record<
+type RecordReference = {
+  key: string;
+  uri: string;
+};
+
+type RecordBlocksBFLite = Record<
   string,
   {
     uri: string;
-    reference: {
-      key: string;
-      uri: string;
-    };
+    reference: RecordReference;
   }
 >;
+
+type SelectedRecordBlocks = {
+  block?: string;
+  reference?: RecordReference;
+};
+
+type RecordBlocksList = string[];

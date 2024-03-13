@@ -36,13 +36,23 @@ export const generateAndSaveRecord = (storageKey: string, record: ParsedRecord) 
   return newRecord;
 };
 
-export const saveRecordLocally = (profile: string, parsedRecord: ParsedRecord, record: RecordEntry | null) => {
+export const saveRecordLocally = ({
+  profile,
+  parsedRecord,
+  record,
+  selectedRecordBlocks,
+}: {
+  profile: string;
+  parsedRecord: ParsedRecord;
+  record: RecordEntry | null;
+  selectedRecordBlocks?: SelectedRecordBlocks;
+}) => {
   if (!record) return;
 
   const recordId = getRecordId(record) as string;
   const storageKey = generateRecordBackupKey(profile, recordId);
   const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
-    ? formatRecord(parsedRecord, record)
+    ? formatRecord({ parsedRecord, record, selectedRecordBlocks })
     : formatRecordLegacy(parsedRecord);
   const updatedRecord = getRecordWithUpdatedID(formattedRecord as RecordEntry, recordId);
 
@@ -93,7 +103,7 @@ export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = tru
 };
 
 export const getEditingRecordBlocks = (record: RecordEntry) => {
-  const typedBlocksList = BLOCKS_BFLITE as RecordBlocks;
+  const typedBlocksList = BLOCKS_BFLITE as RecordBlocksBFLite;
 
   let block;
   let reference;
