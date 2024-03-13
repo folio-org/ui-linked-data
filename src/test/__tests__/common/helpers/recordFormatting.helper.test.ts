@@ -30,7 +30,7 @@ describe('recordFormatting', () => {
 
   describe('formatRecord', () => {
     function testFormatRecord(initialRecord: ParsedRecord, testResult: Record<string, object | string>) {
-      const result = RecordFormattingHelper.formatRecord(initialRecord);
+      const result = RecordFormattingHelper.formatRecordLegacy(initialRecord);
 
       expect(result).toEqual(testResult);
     }
