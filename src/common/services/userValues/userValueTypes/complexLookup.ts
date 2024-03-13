@@ -7,7 +7,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
     return {
       uuid: uuid || '',
-      contents: [{ label: typedData }],
+      contents: [{ label: Array.isArray(typedData) ? typedData[0] : typedData }],
     };
   }
 }
