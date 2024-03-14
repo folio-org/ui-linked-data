@@ -740,7 +740,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       },
     },
     'http://bibfra.me/vocab/marc/targetAudience': {
-      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/intendedAudience', label: BFLITE_URIS.TERM },
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/intendedAudience' },
       fields: {
         'http://bibfra.me/vocab/marc/targetAudience': {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/intendedAudience',
