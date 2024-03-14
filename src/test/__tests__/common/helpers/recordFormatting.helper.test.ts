@@ -1,11 +1,13 @@
 import * as RecordFormattingHelper from '@common/helpers/recordFormatting.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
+import * as FeatureConstants from '@common/constants/feature.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
   const testInstantiatesUri = 'testInstantiatesUri';
+  const testWorkUri = 'testWorkUri';
   const testInstantiatesToInstanceUri = 'testInstantiatesToInstanceUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockInstantiatesToInstanceConstant = getMockedImportedConstant(
@@ -14,10 +16,16 @@ describe('recordFormatting', () => {
   );
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
+  const mockNewSchemaBuildingEnabledConstant = getMockedImportedConstant(
+    FeatureConstants,
+    'IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED',
+  );
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockInstantiatesToInstanceConstant([]);
   mockBFLiteUriConstant({
     INSTANTIATES: testInstantiatesUri,
+    INSTANCE: testInstanceUri,
+    WORK: testWorkUri,
     NOTE: 'testNoteUri',
     CREATOR: 'testCreatorUri',
     CONTRIBUTOR: 'testContributorUri',
@@ -28,8 +36,8 @@ describe('recordFormatting', () => {
     testContributorUri: { container: '_roles' },
   });
 
-  describe('formatRecord', () => {
-    function testFormatRecord(initialRecord: ParsedRecord, testResult: Record<string, object | string>) {
+  describe('formatRecordLegacy', () => {
+    function testFormatRecordLegacy(initialRecord: ParsedRecord, testResult: Record<string, object | string>) {
       const result = RecordFormattingHelper.formatRecordLegacy(initialRecord);
 
       expect(result).toEqual(testResult);
@@ -45,7 +53,7 @@ describe('recordFormatting', () => {
         },
       };
 
-      testFormatRecord(initialRecord, testResult);
+      testFormatRecordLegacy(initialRecord, testResult);
     });
 
     test('embeds work entity into instance if there is data for work entity', () => {
@@ -64,7 +72,7 @@ describe('recordFormatting', () => {
         },
       };
 
-      testFormatRecord(initialRecord, testResult);
+      testFormatRecordLegacy(initialRecord, testResult);
     });
 
     test("doesn't embed work entity into instance if it's empty", () => {
@@ -79,7 +87,100 @@ describe('recordFormatting', () => {
         },
       };
 
-      testFormatRecord(initialRecord, testResult);
+      testFormatRecordLegacy(initialRecord, testResult);
+    });
+  });
+
+  describe('formatRecord', () => {
+    function testFormatRecord({
+      parsedRecord,
+      record,
+      selectedRecordBlocks,
+      testResult,
+    }: {
+      parsedRecord: ParsedRecord;
+      testResult: Record<string, object | string>;
+      record: RecordEntry | null;
+      selectedRecordBlocks?: SelectedRecordBlocks | undefined;
+    }) {
+      mockNewSchemaBuildingEnabledConstant(true);
+      const result = RecordFormattingHelper.formatRecord({ parsedRecord, record, selectedRecordBlocks });
+
+      expect(result).toEqual(testResult);
+    }
+
+    test('returns formatted record data', () => {
+      const parsedRecord = {
+        [testInstanceUri]: {},
+        [testWorkUri]: {},
+      };
+      const record = {
+        resource: {
+          [testInstanceUri]: {
+            testWorkReferenceKey: [
+              {
+                id: ['testWorkReferenceId'],
+                fieldUri_1: [],
+                fieldUri_2: [],
+              },
+            ],
+          },
+        },
+      } as unknown as RecordEntry;
+      const selectedRecordBlocks = {
+        block: testInstanceUri,
+        reference: {
+          key: 'testWorkReferenceKey',
+          uri: 'testWorkReferenceUri',
+        },
+      };
+      const testResult = {
+        resource: {
+          [testInstanceUri]: {
+            testWorkReferenceKey: [{ id: ['testWorkReferenceId'] }],
+          },
+        },
+      };
+
+      testFormatRecord({ parsedRecord, record, selectedRecordBlocks, testResult });
+    });
+
+    test('returns formatted record data without references', () => {
+      const parsedRecord = {
+        [testInstanceUri]: {
+          testFieldUri_1: [],
+          testFieldUri_2: [],
+        },
+        [testWorkUri]: {},
+      };
+      const record = {
+        resource: {
+          [testInstanceUri]: {
+            testFieldUri_1: [],
+            testFieldUri_2: [],
+          },
+        },
+      } as unknown as RecordEntry;
+      const selectedRecordBlocks = {
+        block: testInstanceUri,
+        reference: {
+          key: 'testWorkReferenceKey',
+          uri: 'testWorkReferenceUri',
+        },
+      };
+
+      testFormatRecord({ parsedRecord, record, selectedRecordBlocks, testResult: record });
+    });
+
+    test('returns default formatted record', () => {
+      const parsedRecord = {
+        [testInstanceUri]: {},
+      };
+      const testResult = {
+        resource: {},
+      };
+
+      testFormatRecord({ parsedRecord, record: null, testResult });
     });
   });
 
@@ -189,35 +290,33 @@ describe('recordFormatting', () => {
     type RecordValue = Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>;
 
     test('returns an updated records list with "_roles" subfield', () => {
+      mockNewSchemaBuildingEnabledConstant(true);
+
       const record = {
-        testInstantiatesUri: [
-          {
-            testCreatorUri: [
-              {
-                dropdownOptionUri_1: {
-                  testSubFieldUri_1: ['subfield value 1'],
-                },
-                _roles: ['testRoleUri_1'],
+        testWorkUri: {
+          testCreatorUri: [
+            {
+              dropdownOptionUri_1: {
+                testSubFieldUri_1: ['subfield value 1'],
               },
-            ],
-            testFieldUri_1: ['field value'],
-          },
-        ],
+              _roles: ['testRoleUri_1'],
+            },
+          ],
+          testFieldUri_1: ['field value'],
+        },
       } as unknown as RecordValue;
       const testResult = {
-        testInstantiatesUri: [
-          {
-            testCreatorUri: [
-              {
-                dropdownOptionUri_1: {
-                  testSubFieldUri_1: ['subfield value 1'],
-                  _roles: ['testRoleUri_1'],
-                },
+        testWorkUri: {
+          testCreatorUri: [
+            {
+              dropdownOptionUri_1: {
+                testSubFieldUri_1: ['subfield value 1'],
+                _roles: ['testRoleUri_1'],
               },
-            ],
-            testFieldUri_1: ['field value'],
-          },
-        ],
+            },
+          ],
+          testFieldUri_1: ['field value'],
+        },
       };
 
       const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
