@@ -51,9 +51,6 @@ export const RECORD_NORMALIZING_CASES = {
   'http://bibfra.me/vocab/lite/contributor': {
     process: processCreator,
   },
-  'http://bibfra.me/vocab/marc/targetAudience': {
-    process: wrapSimpleLookupData,
-  },
   'http://bibfra.me/vocab/marc/summary': {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_notes'),
