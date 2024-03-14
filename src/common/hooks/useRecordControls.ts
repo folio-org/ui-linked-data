@@ -79,7 +79,8 @@ export const useRecordControls = () => {
         : (formatRecordLegacy(parsed) as RecordEntry);
 
       // TODO: define a type
-      const recordId = getRecordId(record);
+      const recordId = getRecordId(record, selectedRecordBlocks?.block);
+
       const response =
         !recordId || getRecordId(record) === DEFAULT_RECORD_ID
           ? await postRecord(formattedRecord)

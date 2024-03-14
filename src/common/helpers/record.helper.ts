@@ -6,7 +6,11 @@ import { formatRecord, formatRecordLegacy } from './recordFormatting.helper';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 
-export const getRecordId = (record: RecordEntry | null) => record?.resource?.[TYPE_URIS.INSTANCE]?.id;
+export const getRecordId = (record: RecordEntry | null, selectedBlock?: string) => {
+  const block = selectedBlock || TYPE_URIS.INSTANCE;
+
+  return record?.resource?.[block]?.id;
+};
 
 export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
   resource: {
