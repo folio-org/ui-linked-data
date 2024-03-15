@@ -36,7 +36,7 @@ export const useRecordControls = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
+  const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
@@ -129,6 +129,7 @@ export const useRecordControls = () => {
   const clearRecordState = () => {
     setUserValues({});
     setRecord(null);
+    setSelectedRecordBlocks(undefined);
     setSelectedProfile(null);
   };
 
