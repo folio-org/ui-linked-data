@@ -4,7 +4,7 @@ import {
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
 
-const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string) => {
+export const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string) => {
   const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
 
   return typedMap?.[blockKey]?.[groupKey]?.fields?.[fieldKey]?.label || '';
