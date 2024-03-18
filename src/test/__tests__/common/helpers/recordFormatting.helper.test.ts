@@ -7,7 +7,6 @@ describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
   const testInstantiatesUri = 'testInstantiatesUri';
   const testWorkUri = 'testWorkUri';
-  const testInstantiatesToInstanceUri = 'testInstantiatesToInstanceUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockInstantiatesToInstanceConstant = getMockedImportedConstant(
     BibframeConstants,
@@ -120,56 +119,6 @@ describe('recordFormatting', () => {
       };
 
       testFormatRecord({ parsedRecord, record: null, testResult });
-    });
-  });
-
-  describe('updateInstantiatesWithInstanceFields', () => {
-    test('returns initial Instance object', () => {
-      const instance = {
-        [testInstantiatesUri]: [{}],
-      } as unknown as Record<string, RecursiveRecordSchema>;
-
-      const result = RecordFormattingHelper.updateInstantiatesWithInstanceFields(instance);
-
-      expect(result).toEqual(instance);
-    });
-
-    test('returns updated Instance object that contained Instantiates', () => {
-      mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
-      const instance = {
-        [testInstantiatesUri]: [{ existingKey_1: ['existingUri_1'] }],
-        [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
-      } as unknown as Record<string, RecursiveRecordSchema[]>;
-      const testResult = {
-        [testInstantiatesUri]: [
-          {
-            existingKey_1: ['existingUri_1'],
-            [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
-          },
-        ],
-      };
-
-      const result = RecordFormattingHelper.updateInstantiatesWithInstanceFields(instance);
-
-      expect(result).toEqual(testResult);
-    });
-
-    test('returns initial Instance object that did not contain Instantiates', () => {
-      mockInstantiatesToInstanceConstant([testInstantiatesToInstanceUri]);
-      const instance = {
-        [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
-      } as unknown as Record<string, RecursiveRecordSchema[]>;
-      const testResult = {
-        [testInstantiatesUri]: [
-          {
-            [testInstantiatesToInstanceUri]: ['testUri_1', 'testUri_2'],
-          },
-        ],
-      };
-
-      const result = RecordFormattingHelper.updateInstantiatesWithInstanceFields(instance);
-
-      expect(result).toEqual(testResult);
     });
   });
 

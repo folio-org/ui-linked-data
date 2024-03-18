@@ -1,5 +1,5 @@
 import { cloneDeep, isEmpty } from 'lodash';
-import { FORCE_INCLUDE_WHEN_DEPARSING, INSTANTIATES_TO_INSTANCE_FIELDS } from '@common/constants/bibframe.constants';
+import { FORCE_INCLUDE_WHEN_DEPARSING } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, NON_BF_GROUP_TYPE, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 
 export const formatRecord = ({
@@ -50,31 +50,6 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(updatedRecord);
 
   return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes, FORCE_INCLUDE_WHEN_DEPARSING);
-};
-
-export const updateInstantiatesWithInstanceFields = (
-  instanceComponent: Record<string, RecursiveRecordSchema[] | RecursiveRecordSchema>,
-) => {
-  const instantiatesComponent = instanceComponent?.[BFLITE_URIS.INSTANTIATES as string];
-  const instantiatesComponentTyped = instantiatesComponent as unknown as Record<string, unknown>[];
-
-  INSTANTIATES_TO_INSTANCE_FIELDS.forEach(fieldName => {
-    const componentToMove = instanceComponent?.[fieldName];
-
-    if (!componentToMove) return;
-
-    if (instantiatesComponent) {
-      instantiatesComponentTyped[0] = { ...instantiatesComponentTyped[0], [fieldName]: componentToMove };
-    } else {
-      instanceComponent[BFLITE_URIS.INSTANTIATES as string] = [
-        { [fieldName]: componentToMove } as RecursiveRecordSchema,
-      ];
-    }
-
-    delete instanceComponent[fieldName];
-  });
-
-  return instanceComponent;
 };
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
