@@ -5,13 +5,8 @@ import { localStorageService } from '@common/services/storage';
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@src/common/constants/bibframeMapping.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
 
 describe('record.helper', () => {
-  const mockNewSchemaBuildingEnabledConstant = getMockedImportedConstant(
-    FeatureConstants,
-    'IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED',
-  );
   const mockBlocksBFLiteConstant = getMockedImportedConstant(BibframeMappingConstants, 'BLOCKS_BFLITE');
 
   const profile = 'test:profile:id';
@@ -62,7 +57,6 @@ describe('record.helper', () => {
   });
 
   test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
-    mockNewSchemaBuildingEnabledConstant(true);
     const parsedRecord = { [testInstanceUri]: {} };
     const record = { resource: { [testInstanceUri]: {} } };
     const testRecord = {

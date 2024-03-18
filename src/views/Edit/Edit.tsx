@@ -2,24 +2,21 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
+import { Preview } from '@components/Preview';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
-import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import './Edit.scss';
-import { Preview } from '@components/Preview';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
-  const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
-  const { getProfiles } = useConfigHook();
+  const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -42,7 +39,7 @@ export const Edit = () => {
         }
 
         setCurrentlyEditedEntityBfid(new Set([PROFILE_BFIDS.INSTANCE]));
-        setCurrentlyPreviewedEntityBfid(new Set([PROFILE_BFIDS.WORK]));  
+        setCurrentlyPreviewedEntityBfid(new Set([PROFILE_BFIDS.WORK]));
 
         clearRecordState();
 

@@ -55,8 +55,6 @@ export const COMPLEX_GROUPS = [
   'http://id.loc.gov/ontologies/bibframe/supplementaryContent',
 ];
 
-export const HIDDEN_WRAPPERS = ['http://www.w3.org/2000/01/rdf-schema#label'];
-
 // potentially can be merged with the above ? not sure
 export const FORCE_EXCLUDE_WHEN_DEPARSING = [
   'http://id.loc.gov/ontologies/bibframe/Summary',
@@ -71,17 +69,6 @@ export const KEEP_VALUE_AS_IS = ['http://bibfra.me/vocab/lite/subject'];
 export const OUTGOING_RECORD_IDENTIFIERS_TO_SWAP: Record<string, string> = {
   'http://www.loc.gov/mads/rdf/v1#Topic': 'http://bibfra.me/vocab/lite/subject',
 };
-
-export const COMPLEX_GROUPS_WITHOUT_WRAPPER = [
-  'http://id.loc.gov/ontologies/bibframe/note',
-  'http://id.loc.gov/ontologies/bibframe/extent', // TODO: refactor when the API contract for the Extent field is updated
-];
-
-// TODO: remove when the API contract for Extent and similar fields is updated
-export const TEMPORARY_URIS_WITHOUT_MAPPING = [BFLITE_URIS.EXTENT_TEMP];
-
-// TODO: remove when the API contract for Extent and similar fields is updated
-export const TEMPORARY_COMPLEX_GROUPS = ['http://id.loc.gov/ontologies/bibframe/extent'];
 
 export const IGNORE_HIDDEN_PARENT_OR_RECORD_SELECTION = ['http://id.loc.gov/ontologies/bibframe/agent'];
 
@@ -114,10 +101,6 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
 export const INSTANTIATES_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];
 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
-
-// TODO: refine level of bypass and qualifications for bypassing
-// (same identifier may be used for both bypassable and non-bypassable entries)
-export const BYPASS_FORMATTING_AND_SELECTION = ['http://www.loc.gov/mads/rdf/v1#Topic'];
 
 export const PREV_ENTRY_PATH_INDEX = 2;
 export const GRANDPARENT_ENTRY_PATH_INDEX = PREV_ENTRY_PATH_INDEX - 1;

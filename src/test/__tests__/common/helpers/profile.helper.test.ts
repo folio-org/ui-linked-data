@@ -4,8 +4,7 @@ import * as BibframeMappingConstants from '@common/constants/bibframeMapping.con
 import * as BibframeConstants from '@common/constants/bibframe.constants';
 import * as SchemaHelper from '@common/helpers/schema.helper';
 
-const { hasElement, generateLookupValue, getMappedLookupValue, filterUserValues, shouldSelectDropdownOption } =
-  ProfileHelper;
+const { hasElement, generateLookupValue, getMappedLookupValue, filterUserValues } = ProfileHelper;
 
 const uri = 'test_uri';
 const nonBFMappedGroup = {
@@ -172,33 +171,6 @@ describe('profile.helper', () => {
       const result = filterUserValues(userValues);
 
       expect(result).toEqual(testResult);
-    });
-  });
-
-  describe('shouldSelectDropdownOption', () => {
-    const uri = 'testUri';
-
-    test('returns true for the first dropdown option', () => {
-      const firstOfSameType = true;
-
-      const result = shouldSelectDropdownOption({ uri, firstOfSameType });
-
-      expect(result).toBeTruthy();
-    });
-
-    test('returns true for the option that was saved in the record', () => {
-      const firstOfSameType = false;
-      const record = [{ testUri: {} }];
-
-      const result = shouldSelectDropdownOption({ uri, record, firstOfSameType });
-
-      expect(result).toBeTruthy();
-    });
-
-    test('returns false', () => {
-      const result = shouldSelectDropdownOption({ uri });
-
-      expect(result).toBeFalsy();
     });
   });
 });

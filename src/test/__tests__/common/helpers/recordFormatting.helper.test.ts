@@ -1,7 +1,6 @@
 import * as RecordFormattingHelper from '@common/helpers/recordFormatting.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as FeatureConstants from '@common/constants/feature.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 describe('recordFormatting', () => {
@@ -16,10 +15,6 @@ describe('recordFormatting', () => {
   );
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
-  const mockNewSchemaBuildingEnabledConstant = getMockedImportedConstant(
-    FeatureConstants,
-    'IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED',
-  );
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockInstantiatesToInstanceConstant([]);
   mockBFLiteUriConstant({
@@ -36,61 +31,6 @@ describe('recordFormatting', () => {
     testContributorUri: { container: '_roles' },
   });
 
-  describe('formatRecordLegacy', () => {
-    function testFormatRecordLegacy(initialRecord: ParsedRecord, testResult: Record<string, object | string>) {
-      const result = RecordFormattingHelper.formatRecordLegacy(initialRecord);
-
-      expect(result).toEqual(testResult);
-    }
-
-    test('returns formatted record data', () => {
-      const initialRecord = {
-        [testInstanceUri]: {},
-      };
-      const testResult = {
-        resource: {
-          [testInstanceUri]: {},
-        },
-      };
-
-      testFormatRecordLegacy(initialRecord, testResult);
-    });
-
-    test('embeds work entity into instance if there is data for work entity', () => {
-      const workComponent = {
-        testUri: 'testValue',
-      };
-      const initialRecord = {
-        [testInstanceUri]: {},
-        [testInstantiatesUri]: workComponent,
-      };
-      const testResult = {
-        resource: {
-          [testInstanceUri]: {
-            [testInstantiatesUri]: [workComponent],
-          },
-        },
-      };
-
-      testFormatRecordLegacy(initialRecord, testResult);
-    });
-
-    test("doesn't embed work entity into instance if it's empty", () => {
-      const workComponent = {};
-      const initialRecord = {
-        [testInstanceUri]: {},
-        [testInstantiatesUri]: workComponent,
-      };
-      const testResult = {
-        resource: {
-          [testInstanceUri]: workComponent,
-        },
-      };
-
-      testFormatRecordLegacy(initialRecord, testResult);
-    });
-  });
-
   describe('formatRecord', () => {
     function testFormatRecord({
       parsedRecord,
@@ -103,7 +43,6 @@ describe('recordFormatting', () => {
       record: RecordEntry | null;
       selectedRecordBlocks?: SelectedRecordBlocks | undefined;
     }) {
-      mockNewSchemaBuildingEnabledConstant(true);
       const result = RecordFormattingHelper.formatRecord({ parsedRecord, record, selectedRecordBlocks });
 
       expect(result).toEqual(testResult);
@@ -290,8 +229,6 @@ describe('recordFormatting', () => {
     type RecordValue = Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>;
 
     test('returns an updated records list with "_roles" subfield', () => {
-      mockNewSchemaBuildingEnabledConstant(true);
-
       const record = {
         testWorkUri: {
           testCreatorUri: [
