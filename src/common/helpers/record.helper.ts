@@ -2,9 +2,8 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
-import { formatRecord, formatRecordLegacy } from './recordFormatting.helper';
+import { formatRecord } from './recordFormatting.helper';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
-import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
 
 export const getRecordId = (record: RecordEntry | null, selectedBlock?: string) => {
   const block = selectedBlock || TYPE_URIS.INSTANCE;
@@ -55,9 +54,7 @@ export const saveRecordLocally = ({
 
   const recordId = getRecordId(record) as string;
   const storageKey = generateRecordBackupKey(profile, recordId);
-  const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
-    ? formatRecord({ parsedRecord, record, selectedRecordBlocks })
-    : formatRecordLegacy(parsedRecord);
+  const formattedRecord = formatRecord({ parsedRecord, record, selectedRecordBlocks });
   const updatedRecord = getRecordWithUpdatedID(formattedRecord as RecordEntry, recordId);
 
   return generateAndSaveRecord(storageKey, updatedRecord as ParsedRecord);

@@ -52,22 +52,3 @@ export const getUris = ({ uri, dataTypeURI, schema, path }: GetUris) => {
 
   return { uriBFLite, uriWithSelector };
 };
-
-export const getSelectedBFLiteUri = (
-  schemaEntry: PropertyTemplate,
-  uriBFLite?: string,
-  nonBFMappedGroup?: NonBFMappedGroup,
-) => {
-  let selectedUri = uriBFLite;
-
-  if (!nonBFMappedGroup) return selectedUri;
-
-  const nonBFMappedGroupContainer = nonBFMappedGroup.data.container;
-
-  selectedUri =
-    nonBFMappedGroupContainer?.altKeys?.[schemaEntry.valueConstraint.valueDataType?.dataTypeURI] ||
-    nonBFMappedGroupContainer.key ||
-    uriBFLite;
-
-  return selectedUri;
-};

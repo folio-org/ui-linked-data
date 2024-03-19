@@ -23,7 +23,6 @@ import {
   getLookupLabelKey,
   selectNonBFMappedGroupData,
 } from './schema.helper';
-import { checkIdentifierAsValue } from '@common/helpers/record.helper';
 
 type TraverseSchema = {
   schema: Map<string, SchemaEntry>;
@@ -293,42 +292,4 @@ export const applyUserValues = (
   traverseSchema({ schema, userValues: filteredValues, selectedEntries, container: result, key: initKey });
 
   return result;
-};
-
-export const shouldSelectDropdownOption = ({
-  uri,
-  record,
-  firstOfSameType,
-  dropdownOptionSelection,
-}: {
-  uri: string;
-  record?: Record<string, any> | Array<any>;
-  firstOfSameType?: boolean;
-  dropdownOptionSelection?: DropdownOptionSelection;
-}) => {
-  // Copied from useConfig.hook.ts:
-  // TODO: Potentially dangerous HACK ([0])
-  // Might be removed with the API schema change
-  // If not, refactor to include all indices
-  const isSelectedOptionInRecord = Array.isArray(record) ? record?.[0]?.[uri] : record?.[uri];
-  const identifierAsValueSelection = record && checkIdentifierAsValue(record as Record<string, string[]>, uri);
-  let shouldSelectOption = false;
-
-  if (dropdownOptionSelection?.hasNoRootWrapper) {
-    const { isSelectedOption, setIsSelectedOption } = dropdownOptionSelection;
-
-    shouldSelectOption = !isSelectedOption && isSelectedOptionInRecord;
-
-    if (shouldSelectOption) {
-      setIsSelectedOption?.(true);
-    }
-  } else if (identifierAsValueSelection) {
-    shouldSelectOption = true;
-  } else {
-    const shouldSelectFirstOption = (!record || dropdownOptionSelection?.hasNoRootWrapper) && firstOfSameType;
-
-    shouldSelectOption = isSelectedOptionInRecord || shouldSelectFirstOption;
-  }
-
-  return shouldSelectOption;
 };

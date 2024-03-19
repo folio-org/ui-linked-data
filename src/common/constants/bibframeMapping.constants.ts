@@ -31,12 +31,6 @@ export const TEMP_URIS = {
   'http://id.loc.gov/ontologies/bibframe/Extent': BFLITE_URIS.EXTENT_TEMP,
 };
 
-// TODO: should be refactored.
-// This is a temporary solution until the API contract for such fields becomes stable.
-export const TEMP_BF2_TO_BFLITE_MAP = {
-  [BFLITE_URIS.EXTENT_TEMP]: BFLITE_URIS.EXTENT,
-};
-
 export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Instance': BFLITE_URIS.INSTANCE,
   'http://id.loc.gov/ontologies/bibframe/Work': BFLITE_URIS.WORK,

@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
@@ -12,15 +13,12 @@ import {
   saveRecordLocally,
 } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useConfig as useConfigLegacy } from '@common/hooks/useConfig_OLD.hook';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
-import { formatRecord, formatRecordLegacy } from '@common/helpers/recordFormatting.helper';
+import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
-import { IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED } from '@common/constants/feature.constants';
-import { flushSync } from 'react-dom';
 
 export const useRecordControls = () => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -39,8 +37,7 @@ export const useRecordControls = () => {
   const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
-  const useConfigHook = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED ? useConfig : useConfigLegacy;
-  const { getProfiles } = useConfigHook();
+  const { getProfiles } = useConfig();
   const navigate = useNavigate();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
@@ -74,9 +71,7 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
-      const formattedRecord = IS_NEW_SCHEMA_BUILDING_ALGORITHM_ENABLED
-        ? (formatRecord({ parsedRecord: parsed, record, selectedRecordBlocks }) as RecordEntry)
-        : (formatRecordLegacy(parsed) as RecordEntry);
+      const formattedRecord = formatRecord({ parsedRecord: parsed, record, selectedRecordBlocks }) as RecordEntry;
 
       // TODO: define a type
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
