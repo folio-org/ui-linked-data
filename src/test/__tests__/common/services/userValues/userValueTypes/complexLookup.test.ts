@@ -7,12 +7,14 @@ describe('ComplexLookupUserValueService', () => {
       uuid: 'testUuid_1',
       contents: [
         {
+          id: 'testId_1',
           label: 'test complex value 1',
         },
       ],
     };
 
     const result = complexLookupUserValueService.generate({
+      id: 'testId_1',
       data: 'test complex value 1',
       uuid: 'testUuid_1',
     });
