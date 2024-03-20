@@ -5,19 +5,15 @@ import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
-  const testInstantiatesUri = 'testInstantiatesUri';
+  const testWorkToInstanceUri = 'testWorkToInstanceUri';
   const testWorkUri = 'testWorkUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
-  const mockInstantiatesToInstanceConstant = getMockedImportedConstant(
-    BibframeConstants,
-    'INSTANTIATES_TO_INSTANCE_FIELDS',
-  );
+  const mockWorkToInstanceConstant = getMockedImportedConstant(BibframeConstants, 'WORK_TO_INSTANCE_FIELDS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
-  mockInstantiatesToInstanceConstant([]);
+  mockWorkToInstanceConstant([]);
   mockBFLiteUriConstant({
-    INSTANTIATES: testInstantiatesUri,
     INSTANCE: testInstanceUri,
     WORK: testWorkUri,
     NOTE: 'testNoteUri',
@@ -218,6 +214,40 @@ describe('recordFormatting', () => {
       const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
 
       expect(result).toEqual(record);
+    });
+  });
+
+  describe('updateInstantiatesWithInstanceFields', () => {
+    test('returns initial record', () => {
+      const record = {
+        testWorkUri: {},
+        testInstanceUri: {},
+      } as unknown as Record<string, RecursiveRecordSchema>;
+
+      const result = RecordFormattingHelper.updateWorkWithInstanceFields(record);
+
+      expect(result).toEqual(record);
+    });
+
+    test('returns updated record with Work object which contains a moved field', () => {
+      mockWorkToInstanceConstant([testWorkToInstanceUri]);
+      const instance = {
+        [testInstanceUri]: {
+          existingKey_1: ['existingUri_1'],
+          [testWorkToInstanceUri]: ['testUri_1', 'testUri_2'],
+        },
+        [testWorkUri]: {},
+      } as unknown as Record<string, RecursiveRecordSchema[]>;
+      const testResult = {
+        [testInstanceUri]: {
+          existingKey_1: ['existingUri_1'],
+        },
+        [testWorkUri]: { [testWorkToInstanceUri]: ['testUri_1', 'testUri_2'] },
+      };
+
+      const result = RecordFormattingHelper.updateWorkWithInstanceFields(instance);
+
+      expect(result).toEqual(testResult);
     });
   });
 

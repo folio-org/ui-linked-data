@@ -98,7 +98,7 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
   },
 };
 
-export const INSTANTIATES_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];
+export const WORK_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];
 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
 
