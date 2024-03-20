@@ -1,5 +1,6 @@
 type UserValueDTO = {
   data: string | string[] | RecordBasic | RecordBasic[];
+  id?: string;
   uri?: string;
   uuid?: string;
   labelSelector?: string;
