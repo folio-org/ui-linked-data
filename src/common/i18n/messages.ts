@@ -103,6 +103,8 @@ export const BASE_LOCALE = {
   'marva.editWork': 'Edit work (This page is a work in progress)',
   'marva.saveAndKeepEditing': 'Save & keep editing',
   'marva.recordMappingToSchema': 'Cannot apply a record to the schema',
+  'marva.newResource': 'New resource',
+  'marva.compareSelected': 'Compare selected',
 };
 
 export const i18nMessages = {
@@ -161,6 +163,8 @@ export const i18nMessages = {
     'marva.no': 'Nein',
     'marva.cantLoadSimpleLookupData': 'Daten können nicht für eine einfache Suche gespeichert werden',
     'marva.recordMappingToSchema': 'Ein Datensatz kann nicht auf das Schema angewendet werden',
+    'marva.newResource': 'Neue Ressource',
+    'marva.compareSelected': 'Ausgewählte vergleichen',
   },
   [LOCALES.JAPANESE]: {
     ...BASE_LOCALE,

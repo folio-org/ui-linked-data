@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import state from '@state';
 import { getByIdentifier } from '@common/api/search.api';
 import { usePagination } from '@common/hooks/usePagination';
 import { normalizeLccn } from '@common/helpers/validations.helper';
@@ -9,13 +10,14 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
-import state from '@state';
+import { SearchResultList } from '@components/SearchResultList';
 import GeneralSearch from '@src/assets/general-search.svg?react';
 import './ItemSearch.scss';
-import { SearchResultList } from '@components/SearchResultList';
+import { SearchControlPane } from '@components/SearchControlPane';
 
 const EmptyPlaceholder = () => (
   <div className="empty-placeholder">
@@ -125,29 +127,32 @@ export const ItemSearch = () => {
   return (
     <div data-testid="id-search" className="item-search">
       <SearchControls submitSearch={submitSearch} clearValues={clearValues} />
-      <div className="item-search-content-container">
-        {message && (
-          <div>
-            <FormattedMessage id={message} />
-          </div>
-        )}
-        {data && (
-          <>
-            <SearchResultList />
-            {pageMetadata.totalElements > 0 && (
-              <Pagination
-                currentPage={currentPageNumber}
-                totalPages={pageMetadata.totalPages}
-                pageSize={SEARCH_RESULTS_LIMIT}
-                totalResultsCount={pageMetadata.totalElements}
-                onPrevPageClick={onPrevPageClick}
-                onNextPageClick={onNextPageClick}
-              />
-            )}
-          </>
-        )}
-        {!data && !message && <EmptyPlaceholder />}
-        <FullDisplay />
+      <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
+        <SearchControlPane />
+        <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
+          {message && (
+            <div>
+              <FormattedMessage id={message} />
+            </div>
+          )}
+          {data && (
+            <>
+              <SearchResultList />
+              {pageMetadata.totalElements > 0 && (
+                <Pagination
+                  currentPage={currentPageNumber}
+                  totalPages={pageMetadata.totalPages}
+                  pageSize={SEARCH_RESULTS_LIMIT}
+                  totalResultsCount={pageMetadata.totalElements}
+                  onPrevPageClick={onPrevPageClick}
+                  onNextPageClick={onNextPageClick}
+                />
+              )}
+            </>
+          )}
+          {!data && !message && <EmptyPlaceholder />}
+          <FullDisplay />
+        </div>
       </div>
       <AdvancedSearchModal submitSearch={fetchData} clearValues={clearValues} />
     </div>
