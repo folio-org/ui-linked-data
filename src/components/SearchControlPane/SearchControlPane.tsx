@@ -3,6 +3,7 @@ import { DropdownItemType } from '@common/constants/uiElements.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import './SearchControlPane.scss';
+import { FormattedMessage } from 'react-intl';
 
 export const SearchControlPane = () => {
   const data = [
@@ -43,6 +44,12 @@ export const SearchControlPane = () => {
 
   return (
     <div className="search-control-pane">
+      <div className="search-control-pane-title">
+        <div className="search-control-pane-mainLabel">
+          <FormattedMessage id={'marva.resources'} />
+        </div>
+        {/* <div className="search-control-pane-subLabel"></div> */}
+      </div>
       <Dropdown labelId="marva.actions" data={data} />
     </div>
   );

@@ -119,7 +119,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
     <div ref={ref} className="dropdown">
       <button
         type="button"
-        className={classNames(['dropdown-button', isExpanded ? 'expanded' : 'collapsed'])}
+        className={classNames(['dropdown-button', isExpanded ? 'expanded' : 'collapsed', 'button-highlighted'])}
         ref={buttonRef}
         onClick={toggle}
         onKeyDown={handleButtonKeyDown}
@@ -162,7 +162,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
                               toggle();
                             }}
                             onKeyDown={event => handleOptionKeyDown(event, index)}
-                            className="dropdown-options-button"
+                            className="dropdown-options-button button-text"
                           >
                             {icon && <span className="dropdown-options-button-icon">{icon}</span>}
                             <span className="dropdown-options-button-label">
