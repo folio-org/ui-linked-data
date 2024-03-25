@@ -1,3 +1,5 @@
+@import '@common/styles/common.scss';
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -6,12 +8,12 @@
     display: flex;
     align-items: center;
     padding: 3px 1rem;
-    border: 1px solid #1960a4;
+    border: 1px solid $buttonHighlighted;
     border-radius: 12px;
     font-size: 0.875rem;
     font-weight: 700;
-    background-color: #1960a4;
-    color: #fff;
+    background-color: $buttonHighlighted;
+    color: $base;
     cursor: pointer;
 
     &-label {
@@ -31,9 +33,9 @@
     right: 0;
     width: max-content;
     padding: 15px 10px;
-    border: 1px solid #d7d8da;
+    border: 1px solid $gray-200;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: $base;
 
     &.expanded {
       display: block;
@@ -61,6 +63,7 @@
       border-radius: 12px;
       background-color: transparent;
       font-size: 0.875rem;
+      font-weight: 700;
       color: #000;
       cursor: pointer;
 
