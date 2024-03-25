@@ -1,11 +1,15 @@
+import { FormattedMessage } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
 import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
+import { ROUTES } from '@common/constants/routes.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import './SearchControlPane.scss';
-import { FormattedMessage } from 'react-intl';
 
 export const SearchControlPane = () => {
+  const navigate = useNavigate();
+
   const data = [
     {
       id: 'actions',
@@ -16,7 +20,9 @@ export const SearchControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'marva.newResource',
           icon: <Plus16 />,
-          action: () => {},
+          action: () => {
+            navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=work`);
+          },
         },
         {
           id: 'compare',
