@@ -1,5 +1,5 @@
 import { cloneDeep, isEmpty } from 'lodash';
-import { FORCE_INCLUDE_WHEN_DEPARSING } from '@common/constants/bibframe.constants';
+import { FORCE_INCLUDE_WHEN_DEPARSING, WORK_TO_INSTANCE_FIELDS } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, NON_BF_GROUP_TYPE, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
 
 export const formatRecord = ({
@@ -46,6 +46,7 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
 
   updatedRecord = updateRecordWithNotes(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateRecordForTargetAudience(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
+  updatedRecord = updateWorkWithInstanceFields(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
 
   const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(updatedRecord);
 
@@ -158,6 +159,30 @@ export const updateRecordForTargetAudience = (
   if (workComponent?.[audienceBF2Uri]) {
     delete workComponent[audienceBF2Uri];
   }
+
+  return record;
+};
+
+export const updateWorkWithInstanceFields = (
+  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
+) => {
+  const typedRecord = record as Record<string, RecursiveRecordSchema>;
+  const workComponent = typedRecord?.[BFLITE_URIS.WORK as string];
+  const workComponentTyped = workComponent as unknown as Record<string, unknown>;
+
+  WORK_TO_INSTANCE_FIELDS.forEach(fieldName => {
+    const componentToMove = typedRecord?.[BFLITE_URIS.INSTANCE]?.[fieldName];
+
+    if (!componentToMove) return;
+
+    const updatedWorkData = workComponent
+      ? ({ ...workComponentTyped, [fieldName]: componentToMove } as RecursiveRecordSchema)
+      : ({ [fieldName]: componentToMove } as RecursiveRecordSchema);
+
+    record[BFLITE_URIS.WORK as string] = updatedWorkData;
+
+    delete typedRecord?.[BFLITE_URIS.INSTANCE]?.[fieldName];
+  });
 
   return record;
 };

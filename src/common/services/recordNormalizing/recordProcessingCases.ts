@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import {
   BFLITE_URIS,
   NEW_BF2_TO_BFLITE_MAPPING,
@@ -11,9 +12,10 @@ export const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string
 };
 
 export const moveFromBlock = (record: RecordEntry, blockKey: string, groupKey: string, toBlockKey: string) => {
-  record[toBlockKey][groupKey] = record[blockKey][groupKey];
-
+  const groupToMove = cloneDeep(record[blockKey][groupKey]);
   delete record[blockKey][groupKey];
+
+  record[toBlockKey][groupKey] = groupToMove;
 };
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {

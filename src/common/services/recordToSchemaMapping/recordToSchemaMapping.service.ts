@@ -267,6 +267,7 @@ export class RecordToSchemaMappingService {
         schemaEntry,
         recordKey: key,
         recordEntryValue: value,
+        id: recordGroupEntry?.id as unknown as string,
       });
     }
   }
@@ -275,10 +276,12 @@ export class RecordToSchemaMappingService {
     schemaEntry,
     recordKey,
     recordEntryValue,
+    id,
   }: {
     schemaEntry: SchemaEntry;
     recordKey: string;
     recordEntryValue: string | string[] | RecordBasic[];
+    id?: string;
   }) {
     let schemaElemUuid = this.findSchemaUIControl({
       schemaEntry,
@@ -303,6 +306,7 @@ export class RecordToSchemaMappingService {
       type: schemaUiElem?.type as AdvancedFieldType,
       key: schemaElemUuid,
       value: {
+        id,
         data: recordEntryValue,
         uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
         labelSelector,
