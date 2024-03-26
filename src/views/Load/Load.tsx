@@ -95,7 +95,7 @@ export const Load = () => {
   return (
     <div data-testid="load" className="load">
       <strong>
-        <FormattedMessage id="marva.resources" />
+        <FormattedMessage id="marva.resources" />:
       </strong>
       <div className="button-group">
         {(

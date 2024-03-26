@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { Preview } from '@components/Preview';
@@ -11,6 +11,8 @@ import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { ResourceType } from '@common/constants/record.constants';
+import { SEARCH_QUERY_PARAMS } from '@common/constants/api.constants';
 import state from '@state';
 import './Edit.scss';
 
@@ -19,6 +21,7 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState } = useRecordControls();
   const { resourceId } = useParams();
+  const [searchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
@@ -38,8 +41,12 @@ export const Edit = () => {
           return;
         }
 
-        setCurrentlyEditedEntityBfid(new Set([PROFILE_BFIDS.INSTANCE]));
-        setCurrentlyPreviewedEntityBfid(new Set([PROFILE_BFIDS.WORK]));
+        const isInstancePageType = searchParams?.get(SEARCH_QUERY_PARAMS.TYPE) === ResourceType.instance;
+        const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
+        const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
+
+        setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
+        setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
 
         clearRecordState();
 

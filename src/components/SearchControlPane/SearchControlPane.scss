@@ -1,0 +1,19 @@
+@import '@common/styles/common.scss';
+
+.search-control-pane {
+  display: flex;
+  padding: 12px 1rem;
+  border-bottom: 1px solid $gray-200;
+  background-color: rgba(0, 0, 0, 0.03);
+
+  &-title {
+    flex: 1;
+    text-align: center;
+  }
+
+  &-mainLabel {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #000;
+  }
+}

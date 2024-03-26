@@ -4,6 +4,8 @@ import { generateRecordBackupKey } from './progressBackup.helper';
 import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { ResourceType } from '@common/constants/record.constants';
+import { SEARCH_QUERY_PARAMS } from '@common/constants/api.constants';
 
 export const getRecordId = (record: RecordEntry | null, selectedBlock?: string) => {
   const block = selectedBlock || TYPE_URIS.INSTANCE;
@@ -119,4 +121,15 @@ export const getEditingRecordBlocks = (record: RecordEntry) => {
   }
 
   return { block, reference };
+};
+
+export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
+  const isInstancePageType = searchParams?.get(SEARCH_QUERY_PARAMS.TYPE) === ResourceType.instance;
+  const block = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.uri : BLOCKS_BFLITE.WORK.uri;
+  const reference = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.reference : BLOCKS_BFLITE.WORK.reference;
+
+  return {
+    block,
+    reference,
+  };
 };

@@ -13,14 +13,14 @@ export const formatRecord = ({
 }) => {
   const defaultFormattedRecord = { resource: {} };
 
-  if (!record || !selectedRecordBlocks) return defaultFormattedRecord;
+  if (!parsedRecord || !selectedRecordBlocks) return defaultFormattedRecord;
 
   const { block, reference } = selectedRecordBlocks;
 
   if (!block || !reference) return defaultFormattedRecord;
 
   const updatedBlocks = getUpdatedRecordBlocks(parsedRecord as unknown as Record<string, RecursiveRecordSchema[]>);
-  const referenceIds = getReferenceIds(record, block, reference.key);
+  const referenceIds = record ? getReferenceIds(record, block, reference.key) : undefined;
   const blockValues = { ...updatedBlocks?.[block] } as unknown as Record<string, RecordEntry[]>;
 
   if (referenceIds) {
