@@ -123,9 +123,9 @@ export const getEditingRecordBlocks = (record: RecordEntry) => {
 };
 
 export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
-  const isWorkPageType = searchParams?.get('type') === ResourceType.work;
-  const block = isWorkPageType ? BLOCKS_BFLITE.WORK.uri : BLOCKS_BFLITE.INSTANCE.uri;
-  const reference = isWorkPageType ? BLOCKS_BFLITE.WORK.reference : BLOCKS_BFLITE.INSTANCE.reference;
+  const isInstancePageType = searchParams?.get('type') === ResourceType.instance;
+  const block = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.uri : BLOCKS_BFLITE.WORK.uri;
+  const reference = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.reference : BLOCKS_BFLITE.WORK.reference;
 
   return {
     block,

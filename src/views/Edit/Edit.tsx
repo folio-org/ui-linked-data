@@ -40,9 +40,9 @@ export const Edit = () => {
           return;
         }
 
-        const isWorkPageType = searchParams?.get('type') === ResourceType.work;
-        const editedEntityBfId = isWorkPageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
-        const previewedEntityBfId = isWorkPageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
+        const isInstancePageType = searchParams?.get('type') === ResourceType.instance;
+        const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
+        const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
 
         setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
         setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
