@@ -44,10 +44,10 @@ export const RECORD_NORMALIZING_CASES = {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_extent'),
   },
-  'http://bibfra.me/vocab/lite/creator': {
+  _creatorReference: {
     process: processCreator,
   },
-  'http://bibfra.me/vocab/lite/contributor': {
+  _contributorReference: {
     process: processCreator,
   },
   'http://bibfra.me/vocab/marc/summary': {

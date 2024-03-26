@@ -103,4 +103,4 @@ export const WORK_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibil
 export const LOC_GOV_URI = 'http://id.loc.gov/';
 
 export const PREV_ENTRY_PATH_INDEX = 2;
-export const GRANDPARENT_ENTRY_PATH_INDEX = PREV_ENTRY_PATH_INDEX - 1;
+export const GRANDPARENT_ENTRY_PATH_INDEX = PREV_ENTRY_PATH_INDEX + 1;

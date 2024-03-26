@@ -16,8 +16,8 @@ export const BFLITE_URIS = {
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
   APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
   NOTE: 'http://bibfra.me/vocab/lite/note',
-  CREATOR: 'http://bibfra.me/vocab/lite/creator',
-  CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
+  CREATOR: '_creatorReference',
+  CONTRIBUTOR: '_contributorReference',
 };
 
 export const BF2_URIS = {
@@ -127,8 +127,8 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
 
 export const NON_BF_RECORD_ELEMENTS = {
   [BFLITE_URIS.NOTE]: { container: '_notes' },
-  [BFLITE_URIS.CONTRIBUTOR]: { container: '_roles' },
-  [BFLITE_URIS.CREATOR]: { container: '_roles' },
+  [BFLITE_URIS.CONTRIBUTOR]: { container: 'roles' },
+  [BFLITE_URIS.CREATOR]: { container: 'roles' },
 };
 
 export const NON_BF_GROUP_TYPE = {
@@ -689,7 +689,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     },
   },
   [BFLITE_URIS.WORK]: {
-    'http://bibfra.me/vocab/lite/creator': {
+    _creatorReference: {
       container: {
         bf2Uri: 'http://id.loc.gov/ontologies/bibframe/contribution',
         dataTypeUri: 'http://id.loc.gov/ontologies/bflc/PrimaryContribution',
@@ -701,8 +701,8 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
       },
       fields: {
-        'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
-        _roles: {
+        label: { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+        roles: {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/role',
           label: BFLITE_URIS.LABEL,
         },
@@ -742,7 +742,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         },
       },
     },
-    'http://bibfra.me/vocab/lite/contributor': {
+    _contributorReference: {
       container: {
         bf2Uri: 'http://id.loc.gov/ontologies/bibframe/contribution',
         dataTypeUri: 'http://id.loc.gov/ontologies/bibframe/Contribution',
@@ -754,8 +754,8 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
       },
       fields: {
-        'http://bibfra.me/vocab/lite/name': { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
-        _roles: {
+        label: { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
+        roles: {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/role',
           label: BFLITE_URIS.LABEL,
         },
@@ -823,7 +823,7 @@ export const BFLITE_TYPES_MAP = {
     field: TYPE_MAP[BF2_URIS.NOTE].field,
     data: TYPE_MAP[BF2_URIS.NOTE].data,
   },
-  'http://bibfra.me/vocab/lite/creator': {
+  _creatorReference: {
     field: '',
     data: {},
     fields: {
@@ -833,7 +833,7 @@ export const BFLITE_TYPES_MAP = {
       },
     },
   },
-  'http://bibfra.me/vocab/lite/contributor': {
+  _contributorReference: {
     field: '',
     data: {},
     fields: {

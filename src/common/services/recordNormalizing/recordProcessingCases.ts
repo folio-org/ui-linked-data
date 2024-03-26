@@ -74,25 +74,16 @@ export const processCreator = (record: RecordEntry, blockKey: string, key: strin
   const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container;
   const label = getLabelUri(blockKey, key, selector);
 
-  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingCreatorDTO).map(recordEntry => {
-    const updatedRecordEntry = { ...recordEntry };
-
-    for (const entryKey in recordEntry) {
-      const additionalField = recordEntry[entryKey]?.[selector];
-
-      if (!selector || !additionalField) continue;
-
-      updatedRecordEntry[entryKey] = {
-        ...recordEntry[entryKey],
-        [selector]: (additionalField as unknown as string[])?.map((role: string) => ({
-          [BFLITE_URIS.LINK]: [role],
-          [label]: [''],
-        })),
-      } as Record<string, RecordBasic>;
-    }
-
-    return updatedRecordEntry;
-  }) as unknown as RecursiveRecordSchema;
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingCreatorDTO).map(recordEntry => ({
+    [recordEntry.type as unknown as string]: {
+      id: [recordEntry.id],
+      label: [recordEntry.label],
+      [selector]: (recordEntry[selector] as unknown as string[])?.map((role: string) => ({
+        [BFLITE_URIS.LINK]: [role],
+        [label]: [''],
+      })),
+    },
+  })) as unknown as RecursiveRecordSchema;
 };
 
 export const processComplexGroupWithLookup = (
