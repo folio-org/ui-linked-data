@@ -1,11 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { DropdownItemType } from '@common/constants/uiElements.constants';
 import Caret from '@src/assets/dropdown-caret.svg?react';
 import './Dropdown.scss';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
 
-type DropdownProps = { labelId: string; data: DropdownItems };
+type DropdownProps = {
+  labelId: string;
+  data: DropdownItems;
+};
 
 export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -132,56 +135,54 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
       </button>
 
       <div className={classNames(['dropdown-options', isExpanded ? 'expanded' : 'collapsed'])}>
-        {data?.map(group => {
-          return (
-            <div key={group.id} className="dropdown-options-group">
-              {group.labelId && (
-                <div className="dropdown-options-group-label">
-                  <span>
-                    <FormattedMessage id={group.labelId} />
-                  </span>
-                </div>
-              )}
+        {data?.map(group => (
+          <div key={group.id} className="dropdown-options-group">
+            {group.labelId && (
+              <div className="dropdown-options-group-label">
+                <span>
+                  <FormattedMessage id={group.labelId} />
+                </span>
+              </div>
+            )}
 
-              {group.data.length > 0 && (
-                <div ref={optionsListRef} role="menu" className="dropdown-options-group-container">
-                  {group.data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, action }, index) => {
-                    switch (type) {
-                      case DropdownItemType.basic:
-                        return (
-                          <button
-                            type="button"
-                            key={id}
-                            ref={elem => (optionsRef.current[index] = elem)}
-                            role="menuitem"
-                            disabled={isDisabled}
-                            aria-disabled={isDisabled}
-                            tabIndex={isExpanded ? 0 : -1}
-                            onClick={() => {
-                              action?.();
-                              toggle();
-                            }}
-                            onKeyDown={event => handleOptionKeyDown(event, index)}
-                            className="dropdown-options-button button-text"
-                          >
-                            {icon && <span className="dropdown-options-button-icon">{icon}</span>}
-                            <span className="dropdown-options-button-label">
-                              <FormattedMessage id={labelId} />
-                            </span>
-                          </button>
-                        );
-                      case DropdownItemType.customComponent:
-                        return renderComponent?.(id);
+            {group.data.length > 0 && (
+              <div ref={optionsListRef} role="menu" className="dropdown-options-group-container">
+                {group.data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, action }, index) => {
+                  switch (type) {
+                    case DropdownItemType.basic:
+                      return (
+                        <button
+                          type="button"
+                          key={id}
+                          ref={elem => (optionsRef.current[index] = elem)}
+                          role="menuitem"
+                          disabled={isDisabled}
+                          aria-disabled={isDisabled}
+                          tabIndex={isExpanded ? 0 : -1}
+                          onClick={() => {
+                            action?.();
+                            toggle();
+                          }}
+                          onKeyDown={event => handleOptionKeyDown(event, index)}
+                          className="dropdown-options-button button-text"
+                        >
+                          {icon && <span className="dropdown-options-button-icon">{icon}</span>}
+                          <span className="dropdown-options-button-label">
+                            <FormattedMessage id={labelId} />
+                          </span>
+                        </button>
+                      );
+                    case DropdownItemType.customComponent:
+                      return renderComponent?.(id);
 
-                      default:
-                        return null;
-                    }
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+                    default:
+                      return null;
+                  }
+                })}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
