@@ -7,10 +7,10 @@ import './Dropdown.scss';
 
 type DropdownProps = {
   labelId: string;
-  data: DropdownItems;
+  items: DropdownItems;
 };
 
-export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
+export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const optionsListRef = useRef<HTMLDivElement>(null);
@@ -138,7 +138,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
       </button>
 
       <div className={classNames(['dropdown-options', isExpanded ? 'expanded' : 'collapsed'])}>
-        {data?.map(({ id, labelId, data }) => (
+        {items?.map(({ id, labelId, data }) => (
           <div key={id} className="dropdown-options-group">
             {labelId && (
               <div className="dropdown-options-group-label">

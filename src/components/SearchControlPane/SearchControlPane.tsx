@@ -10,7 +10,7 @@ import './SearchControlPane.scss';
 export const SearchControlPane = () => {
   const navigate = useNavigate();
 
-  const data = [
+  const items = [
     {
       id: 'actions',
       labelId: 'marva.actions',
@@ -55,7 +55,7 @@ export const SearchControlPane = () => {
         </div>
         {/* <div className="search-control-pane-subLabel"></div> */}
       </div>
-      <Dropdown labelId="marva.actions" data={data} />
+      <Dropdown labelId="marva.actions" items={items} />
     </div>
   );
 };
