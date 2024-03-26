@@ -29,8 +29,10 @@ export const CommonStatus: FC = () => {
     <div className="common-status" data-testid="common-status">
       {statusMessages.map(({ id, type, message }) => (
         <div key={id} className={classNames(['status-message', type])}>
-          <FormattedMessage id={message} defaultMessage={message} />{' '}
-          <Button type={ButtonType.Text} onClick={() => deleteMessage(id)}>x</Button>
+          <FormattedMessage id={message as string} defaultMessage={message as string} />{' '}
+          <Button type={ButtonType.Text} onClick={() => deleteMessage(id)}>
+            x
+          </Button>
         </div>
       ))}
     </div>
