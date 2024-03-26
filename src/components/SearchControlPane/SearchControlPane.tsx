@@ -30,7 +30,6 @@ export const SearchControlPane = () => {
           labelId: 'marva.compareSelected',
           icon: <Compare />,
           isDisabled: true,
-          action: () => {},
         },
       ],
     },

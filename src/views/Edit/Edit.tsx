@@ -11,9 +11,10 @@ import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { ResourceType } from '@common/constants/record.constants';
+import { SEARCH_QUERY_PARAMS } from '@common/constants/api.constants';
 import state from '@state';
 import './Edit.scss';
-import { ResourceType } from '@common/constants/record.constants';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
@@ -40,7 +41,7 @@ export const Edit = () => {
           return;
         }
 
-        const isInstancePageType = searchParams?.get('type') === ResourceType.instance;
+        const isInstancePageType = searchParams?.get(SEARCH_QUERY_PARAMS.TYPE) === ResourceType.instance;
         const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
         const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
 

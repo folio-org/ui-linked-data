@@ -62,27 +62,30 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
   const handleOptionKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
 
-    switch (event.key) {
+    const { key, currentTarget } = event;
+    const { nextSibling, previousSibling, parentNode } = currentTarget;
+
+    switch (key) {
       case 'ArrowDown':
-        if (event.currentTarget.nextSibling) {
-          (event.currentTarget.nextSibling as HTMLLIElement).focus();
+        if (nextSibling) {
+          (nextSibling as HTMLLIElement).focus();
           break;
         }
 
-        if (!event.currentTarget.nextSibling) {
-          (event.currentTarget.parentNode?.childNodes[0] as HTMLLIElement).focus();
+        if (!nextSibling) {
+          (parentNode?.childNodes[0] as HTMLLIElement).focus();
         }
         break;
 
       case 'ArrowUp':
-        if (event.currentTarget.previousSibling) {
-          (event.currentTarget.previousSibling as HTMLLIElement).focus();
+        if (previousSibling) {
+          (previousSibling as HTMLLIElement).focus();
           break;
         }
 
-        if (!event.currentTarget.previousSibling && event.currentTarget.parentNode) {
-          const indexOfLastElement = event.currentTarget?.parentNode?.childNodes?.length - 1;
-          (event.currentTarget.parentNode?.childNodes[indexOfLastElement] as HTMLLIElement).focus();
+        if (!previousSibling && parentNode) {
+          const indexOfLastElement = parentNode.childNodes?.length - 1;
+          (parentNode.childNodes[indexOfLastElement] as HTMLLIElement).focus();
         }
         break;
 
@@ -135,19 +138,19 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, data }) => {
       </button>
 
       <div className={classNames(['dropdown-options', isExpanded ? 'expanded' : 'collapsed'])}>
-        {data?.map(group => (
-          <div key={group.id} className="dropdown-options-group">
-            {group.labelId && (
+        {data?.map(({ id, labelId, data }) => (
+          <div key={id} className="dropdown-options-group">
+            {labelId && (
               <div className="dropdown-options-group-label">
                 <span>
-                  <FormattedMessage id={group.labelId} />
+                  <FormattedMessage id={labelId} />
                 </span>
               </div>
             )}
 
-            {group.data.length > 0 && (
+            {data.length > 0 && (
               <div ref={optionsListRef} role="menu" className="dropdown-options-group-container">
-                {group.data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, action }, index) => {
+                {data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, action }, index) => {
                   switch (type) {
                     case DropdownItemType.basic:
                       return (
