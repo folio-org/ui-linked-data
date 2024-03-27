@@ -3,6 +3,10 @@
   flex-direction: row;
   height: 100%;
 
+  * {
+    box-sizing: border-box;
+  }
+
   .empty-placeholder {
     display: flex;
     flex-direction: column;

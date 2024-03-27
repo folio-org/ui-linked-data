@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { BibframeEntities, ENTITY_PAIRS, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import {
@@ -167,7 +167,7 @@ export const useRecordControls = () => {
   const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
     try {
       const record = await getRecord({ recordId });
-      const uriSelector = BLOCKS_BFLITE[ENTITY_PAIRS[entityId]]?.uri;
+      const uriSelector = BLOCKS_BFLITE[entityId]?.reference?.uri;
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
@@ -181,7 +181,7 @@ export const useRecordControls = () => {
 
       const selectedContents = {
         ...contents,
-        [BLOCKS_BFLITE[ENTITY_PAIRS[entityId]]?.reference?.key]: undefined,
+        [BLOCKS_BFLITE[entityId]?.reference?.key]: undefined,
       };
 
       return {
