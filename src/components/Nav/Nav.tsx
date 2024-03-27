@@ -19,6 +19,7 @@ const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
 export const Nav = () => {
   const setLocale = useSetRecoilState(state.config.locale);
   const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const notCreatedFromScratch = useRecoilValue(state.inputs.record);
   const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
@@ -79,7 +80,10 @@ export const Nav = () => {
             {!isLoading &&
               Array.from(currentlyEditedEntityBfid).map(bfid => (
                 // TODO: include resource title once record processing refactoring is completed
-                <FormattedMessage key={bfid} id={`marva.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
+                <FormattedMessage
+                  key={bfid}
+                  id={`marva.${notCreatedFromScratch ? 'edit' : 'create'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
+                />
               ))}
           </div>
           <span className="empty-block"></span>

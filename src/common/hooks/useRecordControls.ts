@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, ENTITY_PAIRS, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import {
@@ -20,6 +20,7 @@ import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
+import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 
 export const useRecordControls = () => {
   const [searchParams] = useSearchParams();
@@ -163,5 +164,51 @@ export const useRecordControls = () => {
     }
   };
 
-  return { fetchRecord, saveRecord, saveLocalRecord, deleteRecord, discardRecord, clearRecordState };
+  const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
+    try {
+      const record = await getRecord({ recordId });
+      const typedEntityId = entityId as keyof typeof ENTITY_PAIRS;
+      const uriSelector = TYPE_URIS[ENTITY_PAIRS[typedEntityId] as keyof typeof TYPE_URIS];
+      const contents = record?.resource?.[uriSelector];
+
+      if (!contents) {
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSelectReferenceContents'),
+        ]);
+
+        return navigate(ROUTES.RESOURCE_CREATE.uri);
+      }
+
+      const selectedContents = {
+        ...contents,
+        [BLOCKS_BFLITE[ENTITY_PAIRS[typedEntityId] as keyof typeof BLOCKS_BFLITE]?.reference?.key]: undefined,
+      };
+
+      return {
+        resource: {
+          [TYPE_URIS[entityId]]: {
+            [BLOCKS_BFLITE[entityId]?.reference?.key]: [selectedContents],
+          },
+        },
+      };
+    } catch (e) {
+      console.error('Error fetching record and selecting entity values: ', e);
+
+      setStatusMessages(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+      ]);
+    }
+  };
+
+  return {
+    fetchRecord,
+    saveRecord,
+    saveLocalRecord,
+    deleteRecord,
+    discardRecord,
+    clearRecordState,
+    fetchRecordAndSelectEntityValues,
+  };
 };

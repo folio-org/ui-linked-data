@@ -2,8 +2,7 @@ import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
-import { Preview } from '@components/Preview';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
@@ -12,20 +11,22 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { ResourceType } from '@common/constants/record.constants';
-import { SEARCH_QUERY_PARAMS } from '@common/constants/api.constants';
 import state from '@state';
+import { EditPreview } from '@components/EditPreview';
 import './Edit.scss';
+import { QueryParams } from '@common/constants/routes.constants';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
-  const { fetchRecord, clearRecordState } = useRecordControls();
+  const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const [searchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
+
+  const [queryParams] = useSearchParams();
 
   useEffect(() => {
     scrollEntity({ top: 0, behavior: 'instant' });
@@ -38,10 +39,14 @@ export const Edit = () => {
       try {
         if (resourceId) {
           await fetchRecord(resourceId);
+
           return;
         }
 
-        const isInstancePageType = searchParams?.get(SEARCH_QUERY_PARAMS.TYPE) === ResourceType.instance;
+        const resourceDecriptionType =
+          (queryParams.get(QueryParams.Type) as ResourceType) || ResourceType.instance;
+        const resourceReference = queryParams.get(QueryParams.Ref);
+        const isInstancePageType = resourceDecriptionType === ResourceType.instance;
         const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
         const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
 
@@ -53,11 +58,21 @@ export const Edit = () => {
         const profile = PROFILE_BFIDS.MONOGRAPH;
         const savedRecordData = getSavedRecord(profile);
         const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
-        const record = typedSavedRecord ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID) : null;
+        let record = typedSavedRecord
+          ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID)
+          : (null as unknown as RecordEntry);
+
+        if (resourceReference) {
+          record = await fetchRecordAndSelectEntityValues(resourceReference, resourceDecriptionType.toUpperCase() as BibframeEntities) as RecordEntry;
+        }
+
         const typedRecord = record as unknown as RecordEntry;
 
         typedRecord && setRecord(typedRecord);
-        await getProfiles({ record: typedRecord });
+
+        await getProfiles({
+          record: typedRecord,
+        });
       } catch {
         setStatusMessages(currentStatus => [
           ...currentStatus,
@@ -73,7 +88,7 @@ export const Edit = () => {
 
   return (
     <div data-testid="edit-page" className="edit-page">
-      <Preview headless />
+      <EditPreview />
       <EditSection />
     </div>
   );
