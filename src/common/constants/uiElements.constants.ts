@@ -14,3 +14,8 @@ export const PREVIEW_ALT_DISPLAY_LABELS: Record<string, string> = {
 };
 
 export const WINDOW_SCROLL_OFFSET_TRIG = 100;
+
+export enum DropdownItemType {
+  basic = 'basic',
+  customComponent = 'customComponent',
+}

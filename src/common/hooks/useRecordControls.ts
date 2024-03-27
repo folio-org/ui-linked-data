@@ -1,5 +1,5 @@
 import { flushSync } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
@@ -10,6 +10,7 @@ import {
   deleteRecordLocally,
   getPrimaryEntitiesFromRecord,
   getRecordId,
+  getSelectedRecordBlocks,
   saveRecordLocally,
 } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -21,6 +22,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 
 export const useRecordControls = () => {
+  const [searchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
@@ -71,7 +73,11 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
-      const formattedRecord = formatRecord({ parsedRecord: parsed, record, selectedRecordBlocks }) as RecordEntry;
+      const formattedRecord = formatRecord({
+        parsedRecord: parsed,
+        record,
+        selectedRecordBlocks: selectedRecordBlocks || getSelectedRecordBlocks(searchParams),
+      }) as RecordEntry;
 
       // TODO: define a type
       const recordId = getRecordId(record, selectedRecordBlocks?.block);

@@ -1,0 +1,89 @@
+@import '@common/styles/common.scss';
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  &-button {
+    display: flex;
+    align-items: center;
+    padding: 3px 1rem;
+    border: 1px solid $buttonHighlighted;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    background-color: $buttonHighlighted;
+    color: $base;
+    cursor: pointer;
+
+    &-label {
+      margin-right: 10px;
+    }
+
+    &.expanded {
+      .dropdown-icon {
+        transform: rotateX(180deg);
+      }
+    }
+  }
+
+  &-options {
+    position: absolute;
+    top: 27px;
+    right: 0;
+    width: max-content;
+    padding: 15px 10px;
+    border: 1px solid $gray-200;
+    border-radius: 4px;
+    background-color: $base;
+
+    &.expanded {
+      display: block;
+    }
+
+    &.collapsed {
+      display: none;
+    }
+
+    &-group {
+      &-label {
+        margin-bottom: 0.5rem;
+        font-size: 0.75rem;
+        color: #656565;
+      }
+    }
+
+    &-button {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      padding: 0 5px;
+      border: none;
+      border-radius: 12px;
+      background-color: transparent;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #000;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      &-icon {
+        margin-right: 0.75rem;
+        fill: #000;
+
+        path {
+          fill-opacity: 1;
+        }
+      }
+    }
+  }
+}

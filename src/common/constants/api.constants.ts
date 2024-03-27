@@ -11,3 +11,7 @@ export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,
   totalPages: 0,
 };
+
+export const SEARCH_QUERY_PARAMS = {
+  TYPE: 'type',
+};

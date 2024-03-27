@@ -153,3 +153,5 @@ type TraverseProfileDTO = {
   auxType?: AdvancedFieldType;
   firstOfSameType?: boolean;
 };
+
+type ResourceType = keyof typeof import('@common/constants/record.constants').ResourceType;
