@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { BibframeEntities, ENTITY_PAIRS, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, ENTITY_PAIRS, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import {
@@ -167,8 +167,7 @@ export const useRecordControls = () => {
   const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
     try {
       const record = await getRecord({ recordId });
-      const typedEntityId = entityId as keyof typeof ENTITY_PAIRS;
-      const uriSelector = TYPE_URIS[ENTITY_PAIRS[typedEntityId] as keyof typeof TYPE_URIS];
+      const uriSelector = BLOCKS_BFLITE[ENTITY_PAIRS[entityId]]?.uri;
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
@@ -182,12 +181,12 @@ export const useRecordControls = () => {
 
       const selectedContents = {
         ...contents,
-        [BLOCKS_BFLITE[ENTITY_PAIRS[typedEntityId] as keyof typeof BLOCKS_BFLITE]?.reference?.key]: undefined,
+        [BLOCKS_BFLITE[ENTITY_PAIRS[entityId]]?.reference?.key]: undefined,
       };
 
       return {
         resource: {
-          [TYPE_URIS[entityId]]: {
+          [BLOCKS_BFLITE[entityId]?.uri]: {
             [BLOCKS_BFLITE[entityId]?.reference?.key]: [selectedContents],
           },
         },
