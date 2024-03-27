@@ -49,7 +49,8 @@
       &-label {
         margin-bottom: 0.5rem;
         font-size: 0.75rem;
-        color: #656565;
+        font-weight: 700;
+        color: rgba(0, 0, 0, 0.62);
       }
     }
 
@@ -58,8 +59,8 @@
       width: 100%;
       align-items: center;
       margin-bottom: 0.5rem;
-      padding: 0 5px;
-      border: none;
+      padding: 2px 5px;
+      border: 1px solid transparent;
       border-radius: 12px;
       background-color: transparent;
       font-size: 0.875rem;
@@ -71,17 +72,52 @@
         margin-bottom: 0;
       }
 
+      &-icon {
+        margin: 1px 0.75rem 0 0;
+        fill: #000;
+
+        path {
+          fill-opacity: 1;
+        }
+      }
+
       &:disabled {
         opacity: 0.5;
         cursor: default;
       }
 
-      &-icon {
-        margin-right: 0.75rem;
-        fill: #000;
+      &:hover {
+        background-color: $buttonActive;
 
-        path {
-          fill-opacity: 1;
+        &:disabled {
+          background-color: transparent;
+        }
+      }
+
+      &:focus {
+        border-color: rgba(0, 0, 0, 0.2);
+        background-color: $buttonActive;
+        box-shadow: 0 0 0 3px $buttonActive;
+      }
+
+      &:active {
+        border-color: rgba(0, 0, 0, 0.2);
+        background-color: $buttonHighlighted;
+        color: $base;
+        text-decoration: none;
+
+        .dropdown-options-button-icon path {
+          fill: $base;
+        }
+
+        &:disabled {
+          border: none;
+          background-color: transparent;
+          color: #000;
+
+          .dropdown-options-button-icon path {
+            fill: #000;
+          }
         }
       }
     }
