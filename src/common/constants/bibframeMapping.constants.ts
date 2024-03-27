@@ -16,8 +16,8 @@ export const BFLITE_URIS = {
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
   APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
   NOTE: 'http://bibfra.me/vocab/lite/note',
-  CREATOR: '_creatorReference',
-  CONTRIBUTOR: '_contributorReference',
+  CREATOR: 'http://bibfra.me/vocab/lite/creator',
+  CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
 };
 
 export const BF2_URIS = {
@@ -129,6 +129,11 @@ export const NON_BF_RECORD_ELEMENTS = {
   [BFLITE_URIS.NOTE]: { container: '_notes' },
   [BFLITE_URIS.CONTRIBUTOR]: { container: 'roles' },
   [BFLITE_URIS.CREATOR]: { container: 'roles' },
+};
+
+export const NON_BF_RECORD_CONTAINERS = {
+  [BFLITE_URIS.CREATOR]: { container: '_creatorReference' },
+  [BFLITE_URIS.CONTRIBUTOR]: { container: '_contributorReference' },
 };
 
 export const NON_BF_GROUP_TYPE = {

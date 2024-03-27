@@ -138,7 +138,7 @@ const traverseSchema = ({
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
     const withFormat = userValueMatch.contents.map(({ id, label, meta: { uri, parentUri, type } = {} }) => {
-      if (KEEP_VALUE_AS_IS.includes(selector)) {
+      if (KEEP_VALUE_AS_IS.includes(selector) || type === AdvancedFieldType.complex) {
         return { id, label };
       } else if (
         ((parentUri || uri) && (!advancedValueField || updatedNonBFMappedGroup)) ||

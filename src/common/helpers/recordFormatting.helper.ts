@@ -1,6 +1,10 @@
-import { cloneDeep, isEmpty } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { FORCE_INCLUDE_WHEN_DEPARSING, WORK_TO_INSTANCE_FIELDS } from '@common/constants/bibframe.constants';
-import { BFLITE_URIS, NON_BF_GROUP_TYPE, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
+import {
+  BFLITE_URIS,
+  NON_BF_RECORD_CONTAINERS,
+  NON_BF_RECORD_ELEMENTS,
+} from '@common/constants/bibframeMapping.constants';
 
 export const formatRecord = ({
   parsedRecord,
@@ -51,6 +55,8 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(updatedRecord);
 
   return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes, FORCE_INCLUDE_WHEN_DEPARSING);
+
+  // return instanceWithUpdatedNotes;
 };
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
@@ -99,6 +105,7 @@ export const updateRecordWithRelationshipDesignator = (
 ) => {
   const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
   const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
+  const nameBF2Uri = 'http://bibfra.me/vocab/lite/name';
 
   fieldUirs.forEach(fieldName => {
     const recordFields = workComponent?.[fieldName] as RecordEntry[] | undefined;
@@ -118,31 +125,19 @@ export const updateRecordWithRelationshipDesignator = (
       delete field[nonBFMappedContainer];
       delete field[roleBF2Uri];
 
-      if (isEmpty(field)) {
-        // Find the mapped field with the mapped dropdown options.
-        const nonBFMapElem = getNonBFMapElemByContainerKey(
-          NON_BF_GROUP_TYPE as unknown as Record<string, NonBFMappedGroupData>,
-          fieldName,
-        );
+      for (const key in field) {
+        const id = (field[key]?.[nameBF2Uri]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
+        const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
+          string,
+          string | string[]
+        >[];
 
-        // Add "_roles" to a default dropdown option.
-        if (!nonBFMapElem.key || !nonBFMapElem.value || !nonBFMapElem.value?.options) return;
-
-        const optionURIsList = Object.values(nonBFMapElem.value.options);
-
-        if (!optionURIsList || !optionURIsList.length) return;
-
-        const optionUri = optionURIsList[0].key;
-
-        if (!optionUri) return;
-
-        field[optionUri] = { [nonBFMappedContainer]: roles };
-      } else {
-        // Add "_roles" to the selected dropdown option
-        for (const key in field) {
-          field[key] = { ...field[key], [nonBFMappedContainer]: roles };
-        }
+        workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] = existingData
+          ? [...existingData, { id, roles }]
+          : [{ id, roles }];
       }
+
+      delete workComponent[fieldName];
     });
   });
 
