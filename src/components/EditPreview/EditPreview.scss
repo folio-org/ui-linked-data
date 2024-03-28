@@ -1,0 +1,19 @@
+.preview-container {
+  min-width: 475px;
+  border-right: 1px solid #00000019;
+
+  .preview-container-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+
+    .header {
+      font-size: 1.138rem;
+    }
+  }
+
+  &.positioned-second {
+    border-right: none;
+  }
+}

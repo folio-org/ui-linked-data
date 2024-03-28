@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import {
@@ -20,6 +20,8 @@ import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
+import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { ResourceType } from '@common/constants/record.constants';
 
 export const useRecordControls = () => {
   const [searchParams] = useSearchParams();
@@ -64,7 +66,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async () => {
+  const saveRecord = async (asRefToNewRecord = false) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
@@ -93,7 +95,9 @@ export const useRecordControls = () => {
       if (isInitiallyLoaded) {
         setIsInititallyLoaded(false);
       }
-      setRecord(parsedResponse);
+
+      !asRefToNewRecord && setRecord(parsedResponse);
+
       setCommonStatus(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
@@ -106,7 +110,11 @@ export const useRecordControls = () => {
       // flushSync is not the best way to make this work, research alternatives
       flushSync(() => setIsEdited(false));
 
-      navigate(ROUTES.MAIN.uri);
+      navigate(
+        asRefToNewRecord
+          ? `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${getRecordId(parsedResponse)}`
+          : ROUTES.MAIN.uri,
+      );
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
@@ -163,5 +171,50 @@ export const useRecordControls = () => {
     }
   };
 
-  return { fetchRecord, saveRecord, saveLocalRecord, deleteRecord, discardRecord, clearRecordState };
+  const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
+    try {
+      const record = await getRecord({ recordId });
+      const uriSelector = BLOCKS_BFLITE[entityId]?.reference?.uri;
+      const contents = record?.resource?.[uriSelector];
+
+      if (!contents) {
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSelectReferenceContents'),
+        ]);
+
+        return navigate(ROUTES.RESOURCE_CREATE.uri);
+      }
+
+      const selectedContents = {
+        ...contents,
+        [BLOCKS_BFLITE[entityId]?.reference?.key]: undefined,
+      };
+
+      return {
+        resource: {
+          [BLOCKS_BFLITE[entityId]?.uri]: {
+            [BLOCKS_BFLITE[entityId]?.reference?.key]: [selectedContents],
+          },
+        },
+      };
+    } catch (e) {
+      console.error('Error fetching record and selecting entity values: ', e);
+
+      setStatusMessages(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+      ]);
+    }
+  };
+
+  return {
+    fetchRecord,
+    saveRecord,
+    saveLocalRecord,
+    deleteRecord,
+    discardRecord,
+    clearRecordState,
+    fetchRecordAndSelectEntityValues,
+  };
 };

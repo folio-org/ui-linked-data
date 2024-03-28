@@ -101,10 +101,20 @@ export const BASE_LOCALE = {
   'marva.saveAndClose': 'Save & close',
   'marva.editInstance': 'Edit instance',
   'marva.editWork': 'Edit work (This page is a work in progress)',
+  'marva.createInstance': 'Create instance',
+  'marva.createWork': 'Create work',
   'marva.saveAndKeepEditing': 'Save & keep editing',
   'marva.recordMappingToSchema': 'Cannot apply a record to the schema',
   'marva.newResource': 'New resource',
   'marva.compareSelected': 'Compare selected',
+  'marva.newInstance': 'New instance',
+  'marva.newWork': 'New work',
+  'marva.new': 'New',
+  'marva.cantSelectReferenceContents': "Can't select reference contents while fetching a reference",
+  'marva.addNewInstance': 'Add new instance',
+  'marva.askSaveChangesBeforeProceeding': 'Would you like to save your changes before proceeding?',
+  'marva.unsavedChanges': 'Unsaved changes',
+  'marva.continueWithoutSaving': 'Continue without saving',
 };
 
 export const i18nMessages = {

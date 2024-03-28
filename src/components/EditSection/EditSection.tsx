@@ -42,7 +42,6 @@ export const EditSection = memo(() => {
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const selectedEntriesService = new SelectedEntriesService(selectedEntries);
-  const setIsEditSectionOpen = useSetRecoilState(state.ui.isEditSectionOpen);
   const customEvents = useRecoilValue(state.config.customEvents);
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
@@ -75,12 +74,6 @@ export const EditSection = memo(() => {
       setIsInititallyLoaded(false);
       setIsEdited(false);
     };
-  }, []);
-
-  useEffect(() => {
-    setIsEditSectionOpen(true);
-
-    return () => setIsEditSectionOpen(false);
   }, []);
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {

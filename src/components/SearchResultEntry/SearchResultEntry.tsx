@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { ROUTES } from '@common/constants/routes.constants';
 import './SearchResultEntry.scss';
+import { ResourceType } from '@common/constants/record.constants';
 
 type SearchResultEntry = {
   id: string;
@@ -102,7 +103,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
             <span>
               <FormattedMessage id="marva.noInstancesAvailable" />
             </span>
-            <Link to={ROUTES.RESOURCE_CREATE.uri}>
+            <Link to={`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${restOfWork.id}`}>
               <FormattedMessage id="marva.addAnInstance" />
             </Link>
           </span>

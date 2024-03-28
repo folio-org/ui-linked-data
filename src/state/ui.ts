@@ -5,11 +5,6 @@ const isAdvancedSearchOpen = atom<boolean>({
   default: false,
 });
 
-const isEditSectionOpen = atom<boolean>({
-  key: 'ui.isEditSectionOpen',
-  default: false,
-});
-
 const collapsedGroups = atom<string[]>({
   key: 'ui.collapsedGroups',
   default: [],
@@ -27,7 +22,6 @@ const currentlyPreviewedEntityBfid = atom<Set<string>>({
 
 export default {
   isAdvancedSearchOpen,
-  isEditSectionOpen,
   collapsedGroups,
   currentlyEditedEntityBfid,
   currentlyPreviewedEntityBfid,

@@ -1,22 +1,25 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { useModalControls } from '@common/hooks/useModalControls';
-import { Modal } from '@components/Modal';
 import state from '@state';
 import { useRecoilValue } from 'recoil';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import './Prompt.scss';
+import { ModalCloseRecord } from '@components/ModalCloseRecord';
+import { ROUTES } from '@common/constants/routes.constants';
+import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
+import { useRecordControls } from '@common/hooks/useRecordControls';
 
 interface Props {
   when: boolean;
 }
 
 export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
-  const { formatMessage } = useIntl();
+  const { saveRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const customEvents = useRecoilValue(state.config.customEvents);
+  const [isNextLocationNewRecordWithReference, setIsNextLocationNewRecordWithReference] = useState(false);
 
   const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
 
@@ -24,7 +27,13 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.addEventListener(triggerModalEvent, () => setIsModalOpen(true));
   }, []);
 
-  const blocker = useBlocker(() => {
+  const blocker = useBlocker(({ nextLocation: { pathname, search } }) => {
+    if (pathname === ROUTES.RESOURCE_CREATE.uri && search) {
+      setIsNextLocationNewRecordWithReference(true);
+    } else {
+      setIsNextLocationNewRecordWithReference(false);
+    }
+
     if (shouldPrompt) {
       openModal();
     }
@@ -44,19 +53,27 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     blocker.proceed?.();
   };
 
-  return (
-    <Modal
+  const saveAndContinue = () => {
+    saveRecord(true);
+
+    proceedNavigation();
+  };
+
+  const continueWithoutSaving = () => proceedNavigation();
+
+  return isNextLocationNewRecordWithReference ? (
+    <ModalSwitchToNewRecord
       isOpen={isModalOpen}
-      title={formatMessage({ id: 'marva.closeRd' })}
-      cancelButtonLabel={formatMessage({ id: 'marva.yes' })}
-      submitButtonLabel={formatMessage({ id: 'marva.no' })}
+      onSubmit={saveAndContinue}
+      onCancel={continueWithoutSaving}
       onClose={stopNavigation}
-      onSubmit={stopNavigation}
+    />
+  ) : (
+    <ModalCloseRecord
+      isOpen={isModalOpen}
       onCancel={proceedNavigation}
-    >
-      <div className="prompt-content" data-testid="modal-close-record-content">
-        <FormattedMessage id="marva.confirmCloseRd" />
-      </div>
-    </Modal>
+      onSubmit={stopNavigation}
+      onClose={stopNavigation}
+    />
   );
 };

@@ -16,8 +16,14 @@ export const PROFILE_BFIDS = {
   INSTANCE: 'lc:RT:bf2:Monograph:Instance',
 };
 
+export enum BibframeEntities {
+  INSTANCE = 'INSTANCE',
+  WORK = 'WORK',
+}
+
 export const TYPE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
+  WORK: 'http://bibfra.me/vocab/lite/Work',
 };
 
 export const CONSTRAINTS: Constraints = {

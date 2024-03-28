@@ -1,0 +1,1 @@
+export { ModalSwitchToNewRecord } from './ModalSwitchToNewRecord';
