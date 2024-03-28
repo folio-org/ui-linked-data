@@ -29,7 +29,11 @@ const userValues = {
     uuid: 'uuid5',
     contents: [
       {
+        id: '',
         label: 'uuid5-uservalue-label',
+        meta: {
+          type: AdvancedFieldType.complex,
+        },
       },
     ],
   },
@@ -191,7 +195,7 @@ describe('EditSection', () => {
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >
-        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/add-new'] })} />
+        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create'] })} />
       </RecoilRoot>,
     );
 
@@ -200,7 +204,7 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid3-uservalue-label')).toBeInTheDocument();
     expect(await findByText('uuid4')).toBeInTheDocument();
-    expect(await findByText('uuid5')).toBeInTheDocument();
+    expect(await findByText('uuid5-uservalue-label')).toBeInTheDocument();
   });
 
   test('renders dropdown field', async () => {
