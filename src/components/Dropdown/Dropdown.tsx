@@ -167,7 +167,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
                             toggle();
                           }}
                           onKeyDown={event => handleOptionKeyDown(event, index)}
-                          className="dropdown-options-button button-text"
+                          className="dropdown-options-button"
                         >
                           {icon && <span className="dropdown-options-button-icon">{icon}</span>}
                           <span className="dropdown-options-button-label">
