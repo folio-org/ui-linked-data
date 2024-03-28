@@ -195,7 +195,7 @@ describe('EditSection', () => {
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >
-        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create'] })} />
+        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
       </RecoilRoot>,
     );
 
@@ -204,7 +204,7 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid3-uservalue-label')).toBeInTheDocument();
     expect(await findByText('uuid4')).toBeInTheDocument();
-    expect(await findByText('uuid5-uservalue-label')).toBeInTheDocument();
+    expect(await findByText('uuid5')).toBeInTheDocument();
   });
 
   test('renders dropdown field', async () => {
