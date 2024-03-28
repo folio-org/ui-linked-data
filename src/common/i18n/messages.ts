@@ -90,6 +90,7 @@ export const BASE_LOCALE = {
   'marva.work': 'Work',
   'marva.instances': 'Instances',
   'marva.noInstancesAvailable': 'No instances available.',
+  'marva.noInstancesAdded': 'No instances added',
   'marva.addAnInstance': 'Add an instance',
   'marva.type': 'Type',
   'marva.expandAll': 'Expand all',
