@@ -9,6 +9,9 @@ describe('ComplexLookupUserValueService', () => {
         {
           id: 'testId_1',
           label: 'test complex value 1',
+          meta: {
+            type: 'COMPLEX',
+          },
         },
       ],
     };
@@ -17,6 +20,7 @@ describe('ComplexLookupUserValueService', () => {
       id: 'testId_1',
       data: 'test complex value 1',
       uuid: 'testUuid_1',
+      type: 'COMPLEX',
     });
 
     expect(result).toEqual(testResult);

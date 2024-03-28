@@ -103,7 +103,15 @@ describe('UserValuesService', () => {
   test('sets a user value for Complex lookup field', async () => {
     const testResult = {
       testKey_1: {
-        contents: [{ label: 'test complex value 1' }],
+        contents: [
+          {
+            id: 'testId_1',
+            label: 'test complex value 1',
+            meta: {
+              type: AdvancedFieldTypeEnum.complex,
+            },
+          },
+        ],
         uuid: 'testKey_1',
       },
     };
@@ -112,8 +120,10 @@ describe('UserValuesService', () => {
       type: AdvancedFieldTypeEnum.complex as AdvancedFieldType,
       key: 'testKey_1',
       value: {
+        id: 'testId_1',
         data: 'test complex value 1',
         uuid: 'testUuid_1',
+        type: AdvancedFieldTypeEnum.complex as AdvancedFieldType,
       },
     });
     const result = userValuesService.getAllValues();
