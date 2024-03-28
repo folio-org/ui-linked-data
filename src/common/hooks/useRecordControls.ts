@@ -21,6 +21,7 @@ import { getRecord } from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { ResourceType } from '@common/constants/record.constants';
 
 export const useRecordControls = () => {
   const [searchParams] = useSearchParams();
@@ -65,7 +66,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async () => {
+  const saveRecord = async (asRefToNewRecord = false) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
@@ -94,7 +95,9 @@ export const useRecordControls = () => {
       if (isInitiallyLoaded) {
         setIsInititallyLoaded(false);
       }
-      setRecord(parsedResponse);
+
+      !asRefToNewRecord && setRecord(parsedResponse);
+
       setCommonStatus(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
@@ -107,7 +110,11 @@ export const useRecordControls = () => {
       // flushSync is not the best way to make this work, research alternatives
       flushSync(() => setIsEdited(false));
 
-      navigate(ROUTES.MAIN.uri);
+      navigate(
+        asRefToNewRecord
+          ? `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${getRecordId(parsedResponse)}`
+          : ROUTES.MAIN.uri,
+      );
     } catch (error) {
       console.error('Cannot save the resource description', error);
 

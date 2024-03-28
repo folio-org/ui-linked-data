@@ -68,12 +68,12 @@ const Modal: FC<Props> = ({
             </div>
             {!!children && children}
             <div className="modal-controls">
-              <Button onClick={onCancel} type={ButtonType.Passive} data-testid="modal-button-cancel">
+              <Button onClick={onCancel} type={ButtonType.Primary} data-testid="modal-button-cancel">
                 {cancelButtonLabel}
               </Button>
               <Button
                 disabled={submitButtonDisabled}
-                type={ButtonType.Primary}
+                type={ButtonType.Highlighted}
                 onClick={onSubmit}
                 data-testid="modal-button-submit"
               >

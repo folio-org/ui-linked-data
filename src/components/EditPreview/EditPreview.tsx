@@ -29,10 +29,11 @@ export const EditPreview = () => {
             <FormattedMessage id="marva.instances" />
           </strong>
           <Button
-            type={ButtonType.Primary}
+            disabled={!resourceId}
+            type={ButtonType.Highlighted}
             onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId}`)}
           >
-            <FormattedMessage id="marva.addNewInstance" />
+            <FormattedMessage id="marva.new" />
           </Button>
         </div>
       )}

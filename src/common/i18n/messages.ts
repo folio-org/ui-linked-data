@@ -109,8 +109,12 @@ export const BASE_LOCALE = {
   'marva.compareSelected': 'Compare selected',
   'marva.newInstance': 'New instance',
   'marva.newWork': 'New work',
+  'marva.new': 'New',
   'marva.cantSelectReferenceContents': "Can't select reference contents while fetching a reference",
   'marva.addNewInstance': 'Add new instance',
+  'marva.askSaveChangesBeforeProceeding': 'Would you like to save your changes before proceeding?',
+  'marva.unsavedChanges': 'Unsaved changes',
+  'marva.continueWithoutSaving': 'Continue without saving',
 };
 
 export const i18nMessages = {
