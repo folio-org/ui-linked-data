@@ -29,7 +29,11 @@ const userValues = {
     uuid: 'uuid5',
     contents: [
       {
+        id: '',
         label: 'uuid5-uservalue-label',
+        meta: {
+          type: AdvancedFieldType.complex,
+        },
       },
     ],
   },
@@ -191,7 +195,7 @@ describe('EditSection', () => {
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >
-        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/add-new'] })} />
+        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
       </RecoilRoot>,
     );
 

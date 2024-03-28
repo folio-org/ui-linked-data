@@ -218,22 +218,21 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              dropdownOption_1: {
-                field_1: ['testValue_1'],
-                field_2: ['testValue_2'],
-                [creatorNonBFUri]: ['creatorValue_1', 'creatorValue_2'],
-              },
+              id: 'id_1',
+              type: 'dropdownOption_1',
+              label: 'testValue_1',
+              [creatorNonBFUri]: ['creatorValue_1', 'creatorValue_2'],
             },
             {
-              dropdownOption_2: {
-                field_1: ['testValue_3'],
-              },
+              id: 'id_2',
+              type: 'dropdownOption_2',
+              label: 'testValue_2',
             },
             {
-              dropdownOption_3: {
-                field_1: ['testValue_4'],
-                [creatorNonBFUri]: ['creatorValue_3'],
-              },
+              id: 'id_3',
+              type: 'dropdownOption_3',
+              label: 'testValue_3',
+              [creatorNonBFUri]: ['creatorValue_3'],
             },
           ],
         },
@@ -243,8 +242,8 @@ describe('recordProcessingCases', () => {
           [groupKey]: [
             {
               dropdownOption_1: {
-                field_1: ['testValue_1'],
-                field_2: ['testValue_2'],
+                id: ['id_1'],
+                label: ['testValue_1'],
                 [creatorNonBFUri]: [
                   {
                     [testLabel]: [''],
@@ -259,12 +258,14 @@ describe('recordProcessingCases', () => {
             },
             {
               dropdownOption_2: {
-                field_1: ['testValue_3'],
+                id: ['id_2'],
+                label: ['testValue_2'],
               },
             },
             {
               dropdownOption_3: {
-                field_1: ['testValue_4'],
+                id: ['id_3'],
+                label: ['testValue_3'],
                 [creatorNonBFUri]: [
                   {
                     [testLabel]: [''],

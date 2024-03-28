@@ -55,8 +55,6 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(updatedRecord);
 
   return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes, FORCE_INCLUDE_WHEN_DEPARSING);
-
-  // return instanceWithUpdatedNotes;
 };
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
@@ -105,7 +103,6 @@ export const updateRecordWithRelationshipDesignator = (
 ) => {
   const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
   const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
-  const nameBF2Uri = 'http://bibfra.me/vocab/lite/name';
 
   fieldUirs.forEach(fieldName => {
     const recordFields = workComponent?.[fieldName] as RecordEntry[] | undefined;
@@ -126,7 +123,7 @@ export const updateRecordWithRelationshipDesignator = (
       delete field[roleBF2Uri];
 
       for (const key in field) {
-        const id = (field[key]?.[nameBF2Uri]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
+        const id = (field[key]?.[BFLITE_URIS.NAME]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
         const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
           string,
           string | string[]

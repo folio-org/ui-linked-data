@@ -11,19 +11,28 @@ describe('recordFormatting', () => {
   const mockWorkToInstanceConstant = getMockedImportedConstant(BibframeConstants, 'WORK_TO_INSTANCE_FIELDS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
+  const mockNonBFRecordContainersConstant = getMockedImportedConstant(
+    BibframeMappingConstants,
+    'NON_BF_RECORD_CONTAINERS',
+  );
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockWorkToInstanceConstant([]);
   mockBFLiteUriConstant({
     INSTANCE: testInstanceUri,
     WORK: testWorkUri,
     NOTE: 'testNoteUri',
+    NAME: 'testNameUri',
     CREATOR: 'testCreatorUri',
     CONTRIBUTOR: 'testContributorUri',
   });
   mockNonBFRecordElementsConstant({
     testNoteUri: { container: '_notes' },
-    testCreatorUri: { container: '_roles' },
-    testContributorUri: { container: '_roles' },
+    testCreatorUri: { container: 'roles' },
+    testContributorUri: { container: 'roles' },
+  });
+  mockNonBFRecordContainersConstant({
+    testCreatorUri: { container: '_creatorReference' },
+    testContributorUri: { container: '_contributorReference' },
   });
 
   describe('formatRecord', () => {
@@ -173,15 +182,20 @@ describe('recordFormatting', () => {
     const fieldUris = ['testCreatorUri', 'testContributorUri'];
     type RecordValue = Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>;
 
-    test('returns an updated records list with "_roles" subfield', () => {
+    test('returns an updated records list with "roles" subfield', () => {
       const record = {
         testWorkUri: {
           testCreatorUri: [
             {
               dropdownOptionUri_1: {
-                testSubFieldUri_1: ['subfield value 1'],
+                testNameUri: [
+                  {
+                    id: ['testId_1'],
+                    label: 'subfield value 1',
+                  },
+                ],
               },
-              _roles: ['testRoleUri_1'],
+              roles: ['testRoleUri_1'],
             },
           ],
           testFieldUri_1: ['field value'],
@@ -189,12 +203,10 @@ describe('recordFormatting', () => {
       } as unknown as RecordValue;
       const testResult = {
         testWorkUri: {
-          testCreatorUri: [
+          _creatorReference: [
             {
-              dropdownOptionUri_1: {
-                testSubFieldUri_1: ['subfield value 1'],
-                _roles: ['testRoleUri_1'],
-              },
+              id: 'testId_1',
+              roles: ['testRoleUri_1'],
             },
           ],
           testFieldUri_1: ['field value'],
