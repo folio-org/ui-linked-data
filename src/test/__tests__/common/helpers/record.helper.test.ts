@@ -56,7 +56,7 @@ describe('record.helper', () => {
     expect(result).toEqual(storedRecord);
   });
 
-  test('saveRecordLocally - invokes "generateAndSaveRecord" and returns its result', () => {
+  describe('saveRecordLocally', () => {
     const parsedRecord = { [testInstanceUri]: {} };
     const record = { resource: { [testInstanceUri]: {} } };
     const testRecord = {
@@ -67,13 +67,24 @@ describe('record.helper', () => {
       data: testRecord,
     };
 
-    jest.spyOn(RecordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
-    jest.spyOn(RecordHelper, 'generateAndSaveRecord').mockReturnValue(storedRecord);
+    beforeEach(() => {
+      jest.spyOn(RecordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
+      jest.spyOn(RecordHelper, 'generateAndSaveRecord').mockReturnValue(storedRecord);
+    });
 
-    const result = RecordHelper.saveRecordLocally({ profile, parsedRecord, record });
+    test('invokes "generateAndSaveRecord" and returns its result', () => {
+      const result = RecordHelper.saveRecordLocally({ profile, parsedRecord, record });
 
-    expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, testRecord);
-    expect(result).toEqual(storedRecord);
+      expect(RecordHelper.generateAndSaveRecord).toHaveBeenCalledWith(key, testRecord);
+      expect(result).toEqual(storedRecord);
+    });
+
+    test('does not invoke "generateAndSaveRecord"', () => {
+      const result = RecordHelper.saveRecordLocally({ profile, record });
+
+      expect(RecordHelper.generateAndSaveRecord).not.toHaveBeenCalled();
+      expect(result).toBeUndefined();
+    });
   });
 
   describe('getSavedRecord', () => {
