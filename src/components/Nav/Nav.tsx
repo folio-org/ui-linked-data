@@ -1,7 +1,12 @@
 import { FormattedMessage } from 'react-intl';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { RESOURCE_EDIT_CREATE_URLS, RESOURCE_URLS, ROUTES } from '@common/constants/routes.constants';
+import {
+  RESOURCE_CREATE_URLS,
+  RESOURCE_EDIT_CREATE_URLS,
+  RESOURCE_URLS,
+  ROUTES,
+} from '@common/constants/routes.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { LOCALES, LOCALE_DISPLAY_NAMES } from '@common/i18n/locales';
@@ -19,10 +24,10 @@ const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
 export const Nav = () => {
   const setLocale = useSetRecoilState(state.config.locale);
   const isEdited = useRecoilValue(state.status.recordIsEdited);
-  const notCreatedFromScratch = useRecoilValue(state.inputs.record);
   const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
+  const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const isLoading = useRecoilValue(state.loadingState.isLoading);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
   const navigate = useNavigate();
@@ -82,7 +87,7 @@ export const Nav = () => {
                 // TODO: include resource title once record processing refactoring is completed
                 <FormattedMessage
                   key={bfid}
-                  id={`marva.${notCreatedFromScratch ? 'edit' : 'create'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
+                  id={`marva.${isInCreateMode ? 'create' : 'edit'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
                 />
               ))}
           </div>

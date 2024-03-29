@@ -6,8 +6,8 @@ import state from '@state';
 import classNames from 'classnames';
 import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { QueryParams, RESOURCE_CREATE_URLS, ROUTES } from '@common/constants/routes.constants';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { QueryParams, RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
@@ -16,10 +16,9 @@ export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
   const isPositionedSecond =
     currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
-  const navigate = useNavigate();
   const { resourceId } = useParams();
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
-  const [queryParams] = useSearchParams();
+  const [queryParams, setQueryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
 
@@ -35,9 +34,8 @@ export const EditPreview = () => {
             <FormattedMessage id="marva.instances" />
           </strong>
           <Button
-            disabled={!resourceId}
             type={ButtonType.Highlighted}
-            onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId}`)}
+            onClick={() => setQueryParams({ type: ResourceType.instance, ref: resourceId ?? '' })}
           >
             <FormattedMessage id="marva.new" />
           </Button>

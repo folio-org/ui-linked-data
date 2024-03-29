@@ -1,3 +1,5 @@
+import { ResourceType } from "./record.constants";
+
 export const BFLITE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
   WORK: 'http://bibfra.me/vocab/lite/Work',
@@ -189,6 +191,7 @@ export const BLOCKS_BFLITE = {
     reference: {
       key: '_workReference',
       uri: BFLITE_URIS.WORK,
+      name: ResourceType.work,
     },
   },
   WORK: {
@@ -196,6 +199,7 @@ export const BLOCKS_BFLITE = {
     reference: {
       key: '_instanceReference',
       uri: BFLITE_URIS.INSTANCE,
+      name: ResourceType.instance,
     },
   },
 };
