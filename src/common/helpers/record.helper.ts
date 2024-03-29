@@ -48,11 +48,11 @@ export const saveRecordLocally = ({
   selectedRecordBlocks,
 }: {
   profile: string;
-  parsedRecord: ParsedRecord;
+  parsedRecord?: ParsedRecord;
   record: RecordEntry | null;
   selectedRecordBlocks?: SelectedRecordBlocks;
 }) => {
-  if (!record) return;
+  if (!parsedRecord) return;
 
   const recordId = getRecordId(record) as string;
   const storageKey = generateRecordBackupKey(profile, recordId);
