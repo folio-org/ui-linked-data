@@ -23,6 +23,10 @@ import state from '@state';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 
+type SaveRecordProps = {
+  asRefToNewRecord?: boolean;
+};
+
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -66,7 +70,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async (asRefToNewRecord = false) => {
+  const saveRecord = async ({ asRefToNewRecord = false }: SaveRecordProps = {}) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
