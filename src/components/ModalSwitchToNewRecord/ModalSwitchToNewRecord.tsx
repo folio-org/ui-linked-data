@@ -2,6 +2,7 @@ import { FC, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '@components/Modal';
 import './ModalSwitchToNewRecord.scss';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface Props {
 
 export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSubmit, onClose }) => {
   const { formatMessage } = useIntl();
+  const { resourceId } = useParams();
 
   return (
     <Modal
@@ -19,6 +21,7 @@ export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSub
       title={formatMessage({ id: 'marva.unsavedChanges' })}
       submitButtonLabel={formatMessage({ id: 'marva.saveAndClose' })}
       cancelButtonLabel={formatMessage({ id: 'marva.continueWithoutSaving' })}
+      cancelButtonDisabled={!resourceId}
       onClose={onClose}
       onSubmit={onSubmit}
       onCancel={onCancel}

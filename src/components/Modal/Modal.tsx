@@ -13,6 +13,7 @@ interface Props {
   title: string;
   className?: string;
   submitButtonDisabled?: boolean;
+  cancelButtonDisabled?: boolean;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
@@ -35,6 +36,7 @@ const Modal: FC<Props> = ({
   onClose,
   children,
   submitButtonDisabled,
+  cancelButtonDisabled,
   showCloseIconButton = true,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
@@ -68,7 +70,12 @@ const Modal: FC<Props> = ({
             </div>
             {!!children && children}
             <div className="modal-controls">
-              <Button onClick={onCancel} type={ButtonType.Primary} data-testid="modal-button-cancel">
+              <Button
+                disabled={cancelButtonDisabled}
+                onClick={onCancel}
+                type={ButtonType.Primary}
+                data-testid="modal-button-cancel"
+              >
                 {cancelButtonLabel}
               </Button>
               <Button

@@ -16,10 +16,10 @@ export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
   const isPositionedSecond =
     currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
-  const navigate = useNavigate();
   const { resourceId } = useParams();
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const [queryParams] = useSearchParams();
+  const navigate = useNavigate();
   const typeParam = queryParams.get(QueryParams.Type);
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
 
@@ -35,9 +35,8 @@ export const EditPreview = () => {
             <FormattedMessage id="marva.instances" />
           </strong>
           <Button
-            disabled={!resourceId}
             type={ButtonType.Highlighted}
-            onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId}`)}
+            onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)}
           >
             <FormattedMessage id="marva.new" />
           </Button>

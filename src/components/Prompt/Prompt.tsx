@@ -54,9 +54,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   };
 
   const saveAndContinue = () => {
-    saveRecord(true);
-
     proceedNavigation();
+
+    saveRecord({ asRefToNewRecord: true });
   };
 
   const continueWithoutSaving = () => proceedNavigation();

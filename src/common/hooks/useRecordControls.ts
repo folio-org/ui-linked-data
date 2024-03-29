@@ -18,13 +18,17 @@ import { useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
-import { ROUTES } from '@common/constants/routes.constants';
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 
+type SaveRecordProps = {
+  asRefToNewRecord?: boolean;
+};
+
 export const useRecordControls = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const schema = useRecoilValue(state.config.schema);
@@ -66,7 +70,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async (asRefToNewRecord = false) => {
+  const saveRecord = async ({ asRefToNewRecord = false }: SaveRecordProps = {}) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
@@ -110,11 +114,20 @@ export const useRecordControls = () => {
       // flushSync is not the best way to make this work, research alternatives
       flushSync(() => setIsEdited(false));
 
-      navigate(
-        asRefToNewRecord
-          ? `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${getRecordId(parsedResponse)}`
-          : ROUTES.MAIN.uri,
-      );
+      if (asRefToNewRecord) {
+        const blocksBfliteKey = (
+          searchParams.get(QueryParams.Type) || ResourceType.instance
+        )?.toUpperCase() as BibframeEntities;
+
+        const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
+
+        setSearchParams({
+          type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
+          ref: String(getRecordId(parsedResponse, selectedBlock)),
+        });
+      } else {
+        navigate(ROUTES.MAIN.uri);
+      }
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
