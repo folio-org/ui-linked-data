@@ -35,6 +35,7 @@ export const EditPreview = () => {
             <FormattedMessage id="marva.instances" />
           </strong>
           <Button
+            data-testid='create-instance-button'
             type={ButtonType.Highlighted}
             onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)}
           >
@@ -42,7 +43,6 @@ export const EditPreview = () => {
           </Button>
         </div>
       )}
-
       {!isCreateWorkPageOpened && <Preview headless />}
       {isCreateWorkPageOpened && <InstancesList />}
     </div>
