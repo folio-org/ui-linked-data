@@ -87,7 +87,7 @@ export const Nav = () => {
                 // TODO: include resource title once record processing refactoring is completed
                 <FormattedMessage
                   key={bfid}
-                  id={`marva.${isInCreateMode ? 'create' : 'edit'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
+                  id={`marva.${isInCreateMode ? 'new' : 'edit'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
                 />
               ))}
           </div>
