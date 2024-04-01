@@ -211,6 +211,13 @@ export class RecordToSchemaMappingService {
   }) {
     let selectedSchemaEntryUuid = selectedEntryId;
 
+    if (
+      UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldTypeEnum) &&
+      this.hasCorrectUuid(schemaEntry, recordKey)
+    ) {
+      return schemaEntry.uuid;
+    }
+
     if (selectedSchemaEntryUuid) return selectedSchemaEntryUuid;
 
     if (schemaEntry.children) {
