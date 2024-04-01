@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect } from 'react';
 import { useBlocker } from 'react-router-dom';
 import { useModalControls } from '@common/hooks/useModalControls';
 import state from '@state';
@@ -17,39 +17,51 @@ interface Props {
 
 export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   const { saveRecord } = useRecordControls();
-  const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
+  const {
+    isModalOpen: isCloseRecordModalOpen,
+    setIsModalOpen: setIsCloseRecordModalOpen,
+    openModal: openCloseRecordModal,
+  } = useModalControls();
+  const {
+    isModalOpen: isSwitchToNewRecordModalOpen,
+    setIsModalOpen: setIsSwitchToNewRecordModalOpen,
+    openModal: openSwitchToNewRecordModal,
+  } = useModalControls();
   const customEvents = useRecoilValue(state.config.customEvents);
-  const [isNextLocationNewRecordWithReference, setIsNextLocationNewRecordWithReference] = useState(false);
 
   const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
 
+  const closeAllModals = () => {
+    setIsCloseRecordModalOpen(false);
+    setIsSwitchToNewRecordModalOpen(false);
+  };
+
   useEffect(() => {
-    IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.addEventListener(triggerModalEvent, () => setIsModalOpen(true));
+    IS_EMBEDDED_MODE &&
+      getWrapperAsWebComponent()?.addEventListener(triggerModalEvent, () => setIsCloseRecordModalOpen(true));
   }, []);
 
   const blocker = useBlocker(({ nextLocation: { pathname, search } }) => {
-    if (pathname === ROUTES.RESOURCE_CREATE.uri && search) {
-      setIsNextLocationNewRecordWithReference(true);
-    } else {
-      setIsNextLocationNewRecordWithReference(false);
-    }
-
     if (shouldPrompt) {
-      openModal();
+      if (pathname === ROUTES.RESOURCE_CREATE.uri && search) {
+        openSwitchToNewRecordModal();
+      } else {
+        openCloseRecordModal();
+      }
     }
 
     return shouldPrompt;
   });
 
   const stopNavigation = () => {
-    setIsModalOpen(false);
+    closeAllModals();
     blocker.reset?.();
   };
 
   const proceedNavigation = () => {
     IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(proceedNavigationEvent));
 
-    setIsModalOpen(false);
+    closeAllModals();
     blocker.proceed?.();
   };
 
@@ -61,19 +73,20 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
 
   const continueWithoutSaving = () => proceedNavigation();
 
-  return isNextLocationNewRecordWithReference ? (
-    <ModalSwitchToNewRecord
-      isOpen={isModalOpen}
-      onSubmit={saveAndContinue}
-      onCancel={continueWithoutSaving}
-      onClose={stopNavigation}
-    />
-  ) : (
-    <ModalCloseRecord
-      isOpen={isModalOpen}
-      onCancel={proceedNavigation}
-      onSubmit={stopNavigation}
-      onClose={stopNavigation}
-    />
+  return (
+    <>
+      <ModalSwitchToNewRecord
+        isOpen={isSwitchToNewRecordModalOpen}
+        onSubmit={saveAndContinue}
+        onCancel={continueWithoutSaving}
+        onClose={stopNavigation}
+      />
+      <ModalCloseRecord
+        isOpen={isCloseRecordModalOpen}
+        onCancel={proceedNavigation}
+        onSubmit={stopNavigation}
+        onClose={stopNavigation}
+      />
+    </>
   );
 };

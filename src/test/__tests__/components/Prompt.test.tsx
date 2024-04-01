@@ -28,7 +28,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
 
   useBlocker: (cb: any) => {
-    cb();
+    cb({ nextLocation: { pathname: '/next/location', search: '' }, })
 
     return mockedUseBlocker;
   },
@@ -43,11 +43,13 @@ jest.mock('@common/helpers/dom.helper', () => ({
   }),
 }));
 
+const mockPath = '/resources/:resourceId/edit';
+
 const renderPrompt = (isBlocking = true) =>
   render(
     <RecoilRoot>
       <RouterProvider
-        router={createMemoryRouter([{ path: '/', element: <Prompt when={isBlocking} /> }], { initialEntries: ['/'] })}
+        router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], { initialEntries: [mockPath] })}
       />
     </RecoilRoot>,
   );
@@ -63,17 +65,17 @@ describe('Prompt', () => {
 
   test('prompt is open if "when" arg is true', () => {
     expect(openModal).toHaveBeenCalled();
-    expect(screen.getByTestId('modal-close-record-content')).toBeInTheDocument();
+    expect(screen.getAllByTestId('modal-close-record-content')[0]).toBeInTheDocument();
   });
 
   test('stops navigation', () => {
-    fireEvent.click(screen.getByTestId('modal-button-cancel'));
+    fireEvent.click(screen.getAllByTestId('modal-button-cancel')[0]);
 
     expect(setIsModalOpen).toHaveBeenCalled();
   });
 
   test('proceeds navigation', () => {
-    fireEvent.click(screen.getByTestId('modal-button-submit'));
+    fireEvent.click(screen.getAllByTestId('modal-button-submit')[0]);
 
     expect(setIsModalOpen).toHaveBeenCalled();
   });
