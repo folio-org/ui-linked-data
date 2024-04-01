@@ -38,7 +38,7 @@ export const EditPreview = () => {
             type={ButtonType.Highlighted}
             onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)}
           >
-            <FormattedMessage id="marva.new" />
+            <FormattedMessage id="marva.addInstance" />
           </Button>
         </div>
       )}

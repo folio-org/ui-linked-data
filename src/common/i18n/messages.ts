@@ -107,6 +107,7 @@ export const BASE_LOCALE = {
   'marva.saveAndKeepEditing': 'Save & keep editing',
   'marva.recordMappingToSchema': 'Cannot apply a record to the schema',
   'marva.newResource': 'New resource',
+  'marva.addInstance': 'Add instance',
   'marva.compareSelected': 'Compare selected',
   'marva.newInstance': 'New instance',
   'marva.newWork': 'New work',
