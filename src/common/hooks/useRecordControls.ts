@@ -145,12 +145,7 @@ export const useRecordControls = () => {
 
     if (!parsed) return;
 
-    return saveRecordLocally({
-      profile,
-      parsedRecord: parsed,
-      record,
-      selectedRecordBlocks: selectedRecordBlocks || getSelectedRecordBlocks(searchParams),
-    });
+    return saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
   };
 
   const clearRecordState = () => {
