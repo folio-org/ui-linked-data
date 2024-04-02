@@ -190,4 +190,12 @@
       }
     }
   }
+
+  &-capitalize {
+    text-transform: capitalize;
+  }
+
+  &-nowrap {
+    text-wrap: nowrap;
+  }
 }

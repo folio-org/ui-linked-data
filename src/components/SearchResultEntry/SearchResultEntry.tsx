@@ -10,6 +10,7 @@ import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { ROUTES } from '@common/constants/routes.constants';
 import './SearchResultEntry.scss';
 import { ResourceType } from '@common/constants/record.constants';
+import classNames from 'classnames';
 
 type SearchResultEntry = {
   id: string;
@@ -65,9 +66,10 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           <Button
             type={ButtonType.Primary}
             onClick={() => navigate(generateEditResourceUrl(row.__meta?.id))}
-            data-testid={`edit-button-${row.__meta.id}`}
+            data-testid={`edit-button-${row.__meta.id} `}
+            className={classNames(['button-nowrap', 'button-capitalize'])}
           >
-            <FormattedMessage id="marva.edit" />
+            <FormattedMessage id="marva.editInstance" />
           </Button>
         ),
       },

@@ -46,9 +46,9 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           type={ButtonType.Primary}
           onClick={() => navigate(generateEditResourceUrl(id))}
           data-testid="edit-button"
-          className="edit-button"
+          className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >
-          <FormattedMessage id="marva.edit" />
+          <FormattedMessage id="marva.editWork" />
         </Button>
       </div>
       <div className="details">
