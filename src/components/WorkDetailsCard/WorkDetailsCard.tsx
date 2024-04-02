@@ -1,13 +1,13 @@
 import { FC } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
-import { FormattedMessage } from 'react-intl';
-import { Link, useNavigate } from 'react-router-dom';
+import { Classifications } from '@common/constants/search.constants';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
-import classNames from 'classnames';
 import './WorkDetailsCard.scss';
-import { Classifications } from '@common/constants/search.constants';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {
   isOpen?: boolean;
@@ -46,9 +46,9 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           type={ButtonType.Primary}
           onClick={() => navigate(generateEditResourceUrl(id))}
           data-testid="edit-button"
-          className="edit-button"
+          className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >
-          <FormattedMessage id="marva.edit" />
+          <FormattedMessage id="marva.editWork" />
         </Button>
       </div>
       <div className="details">
