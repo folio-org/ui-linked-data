@@ -1,16 +1,16 @@
 import { FC, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
 import { Row, Table } from '@components/Table';
-import { FormattedMessage } from 'react-intl';
-import { formatItemSearchInstanceListData } from '@common/helpers/search.helper';
 import { Button, ButtonType } from '@components/Button';
+import { formatItemSearchInstanceListData } from '@common/helpers/search.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { Link, useNavigate } from 'react-router-dom';
-import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { ROUTES } from '@common/constants/routes.constants';
-import './SearchResultEntry.scss';
 import { ResourceType } from '@common/constants/record.constants';
-import classNames from 'classnames';
+import CommentIcon from '@src/assets/comment-lines-12.svg?react';
+import './SearchResultEntry.scss';
 
 type SearchResultEntry = {
   id: string;
@@ -66,7 +66,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           <Button
             type={ButtonType.Primary}
             onClick={() => navigate(generateEditResourceUrl(row.__meta?.id))}
-            data-testid={`edit-button-${row.__meta.id} `}
+            data-testid={`edit-button-${row.__meta.id}`}
             className={classNames(['button-nowrap', 'button-capitalize'])}
           >
             <FormattedMessage id="marva.editInstance" />
