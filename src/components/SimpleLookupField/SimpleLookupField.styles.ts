@@ -6,15 +6,19 @@ export const SimpleLookupFieldStyles = {
     width: '100%',
     backgroundColor: state.isDisabled ? '#ebebe4' : 'transparent',
   }),
-  control: (base: CSSObjectWithLabel) => ({
+  control: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({
     ...base,
     minHeight: '1.5rem',
-    border: '1px solid rgba(0, 0, 0, 0.42)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: state.isFocused ? '#3e75cf' : 'rgba(0, 0, 0, 0.42)',
     borderRadius: 0,
+    boxShadow: state.isFocused ? '0 0 0 1px #3e75cf, 0 0 0 1px #3e75cf, 0 0 0 4px #d8e3f5' : 'none',
   }),
   placeholder: (base: CSSObjectWithLabel) => ({
     ...base,
     paddingLeft: '7px',
+    color: '#6E7277',
   }),
   valueContainer: (base: CSSObjectWithLabel) => ({
     ...base,
@@ -60,7 +64,7 @@ export const SimpleLookupFieldStyles = {
     gridArea: 'auto',
     width: 0,
     margin: 0,
-    padding: 0,
+    padding: '0 0 0 3px',
   }),
   indicatorsContainer: (base: CSSObjectWithLabel) => ({
     ...base,
@@ -68,6 +72,7 @@ export const SimpleLookupFieldStyles = {
   }),
   menu: (base: CSSObjectWithLabel) => ({
     ...base,
+    marginTop: '7px',
     border: '1px solid #ccc',
     borderRadius: 0,
     boxShadow: '0 4px 32px rgba(0, 0, 0, 0.3)',
