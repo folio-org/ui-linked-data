@@ -40,6 +40,7 @@ export const SimpleLookupFieldStyles = {
     paddingTop: 0,
     paddingBottom: 0,
     lineHeight: '1.125rem',
+    fontSize: '0.875rem',
   }),
   multiValueRemove: (base: CSSObjectWithLabel) => ({
     ...base,
@@ -76,6 +77,10 @@ export const SimpleLookupFieldStyles = {
     border: '1px solid #ccc',
     borderRadius: 0,
     boxShadow: '0 4px 32px rgba(0, 0, 0, 0.3)',
+  }),
+  menuList: (base: CSSObjectWithLabel) => ({
+    ...base,
+    padding: '7px',
   }),
   option: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({
     ...base,
