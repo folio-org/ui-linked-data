@@ -28,7 +28,14 @@ yarn install
 
 #### a) For an external API:
 
-In a browser's localstorage create a record with a key `okapi_config` and a stringified value:
+Create a JSON object with required data, then use it in such cases:
+
+- For development or using MARVA as a standalone application, in a browser's localstorage create a record with a key `okapi_config` and stringified JSON value (see "JSON config example");
+
+- For an embedded application:
+  Use JSON in the `config` attribute, see [Usage](#usage) section.
+
+###### JSON config example:
 
 ```json
 {
@@ -82,11 +89,13 @@ The following scripts are available:
 <script src="[PATH_TO_SCRIPT]/marva-next.es.js"></script>
 ```
 
-3. Add a web component in the requred HTML container on the page:
+3. Add a web component in the requred HTML container on the page.
+
+   Use a config with a required API config for passing it in the MARVA application through the web component (see JSON config example in [Installation](#installation) section):
 
 ```html
 <div id="marva-container">
-  <marva-next></marva-next>
+  <marva-next config="{'basePath': 'YOUR_API_URI', 'tenant': 'YOUR_TENANT', ...}"></marva-next>
 </div>
 ```
 
