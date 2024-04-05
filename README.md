@@ -45,8 +45,8 @@ Create a JSON object with required data, then use it in such cases:
   // For embedded application only. Events also should be dispatched or listened in the root application.
   "customEvents": {
     "TRIGGER_MODAL": "triggermodal", // Root application can dispatch this event to open a prompt in MARVA which will inform a user about unsaved changes before leaving an Edit or Create page.
-    "PROCEED_NAVIGATION": "proceednavigation", // MARVA dispatches this event when a user clicks in the prompt "Save and contimue" button or closes the prompt.
-    "BLOCK_NAVIGATION": "blocknavigation" // MARVA dispatches this event when user makes changes in a workform ("Create" or "Edit" page).
+    "PROCEED_NAVIGATION": "proceednavigation", // MARVA dispatches this event when a user clicks in the prompt "Save and continue" button or closes the prompt.
+    "BLOCK_NAVIGATION": "blocknavigation" // MARVA dispatches this event when user makes changes in a work form ("Create" or "Edit" page).
   }
 }
 ```
@@ -82,14 +82,14 @@ The following scripts are available:
 
 ### As an embedded application:
 
-1. Build the code as an ebeddable application using `npm run build:lib` command. The built code will be placed in `./dist` folder.
+1. Build the code as an embedded application using `npm run build:lib` command. The built code will be placed in `./dist` folder.
 2. Add the script on a page:
 
 ```html
 <script src="[PATH_TO_SCRIPT]/marva-next.es.js"></script>
 ```
 
-3. Add a web component in the requred HTML container on the page.
+3. Add a web component in the required HTML container on the page.
 
    Use a config with a required API config for passing it in the MARVA application through the web component (see JSON config example in [Installation](#installation) section):
 
@@ -101,5 +101,5 @@ The following scripts are available:
 
 ### As a standalone application:
 
-1. Build the code as a sandalone application using `npm run build` command. The built code will be placed in `./dist` folder.
+1. Build the code as a standalone application using `npm run build` command. The built code will be placed in `./dist` folder.
 2. Deploy the built code or run it using a web server.
