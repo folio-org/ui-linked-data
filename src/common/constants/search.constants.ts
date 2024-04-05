@@ -31,6 +31,7 @@ export enum Suppressed {
 
 export enum TitleTypes {
   Main = 'Main',
+  Sub = 'Sub',
 }
 
 export enum Classifications {
