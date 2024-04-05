@@ -1,12 +1,12 @@
 import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
-import { Classifications } from '@common/constants/search.constants';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
+import { Classifications, TitleTypes } from '@common/constants/search.constants';
 import './WorkDetailsCard.scss';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {
@@ -21,14 +21,21 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   classifications,
   isOpen,
   toggleIsOpen,
+  titles,
 }) => {
   const navigate = useNavigate();
+  const { formatMessage } = useIntl();
 
+  const title =
+    !!titles?.length &&
+    titles
+      ?.filter(({ type }) => type === TitleTypes.Main || type === TitleTypes.Sub)
+      ?.map(({ value }) => value)
+      ?.join(formatMessage({ id: 'marva.spaceInBrackets' }));
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
   const langCode = languages?.find(({ value }) => value)?.value;
-  const classificationNumber = classifications?.find(
-    ({ number, source }) => number && source && source === Classifications.DDC,
-  )?.number;
+  const classificationNumber = classifications?.find(({ number, source }) => number && source === Classifications.DDC)
+    ?.number;
 
   return (
     <div className="work-details-card">
@@ -52,11 +59,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         </Button>
       </div>
       <div className="details">
-        <div className="title">
-          &lt;
-          <FormattedMessage id="marva.title" />
-          &gt;
-        </div>
+        <div className="title">{title || <FormattedMessage id="marva.noTitleInBrackets" />}</div>
         {creatorName && (
           <div className="details-item">
             <span>

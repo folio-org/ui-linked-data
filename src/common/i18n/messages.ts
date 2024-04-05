@@ -117,6 +117,8 @@ export const BASE_LOCALE = {
   'marva.askSaveChangesBeforeProceeding': 'Would you like to save your changes before proceeding?',
   'marva.unsavedChanges': 'Unsaved changes',
   'marva.continueWithoutSaving': 'Continue without saving',
+  'marva.noTitleInBrackets': '<No title>',
+  'marva.spaceInBrackets': '<space>',
 };
 
 export const i18nMessages = {
