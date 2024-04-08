@@ -22,6 +22,7 @@ import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import state from '@state';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
+import { useBackToSearchUri } from './useBackToSearchUri';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -47,6 +48,7 @@ export const useRecordControls = () => {
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
+  const searchResultsUri = useBackToSearchUri();
 
   const fetchRecord = async (recordId: string, asPreview = false) => {
     try {
@@ -126,7 +128,7 @@ export const useRecordControls = () => {
           ref: String(getRecordId(parsedResponse, selectedBlock)),
         });
       } else {
-        navigate(ROUTES.MAIN.uri);
+        navigate(searchResultsUri);
       }
     } catch (error) {
       console.error('Cannot save the resource description', error);
@@ -158,7 +160,7 @@ export const useRecordControls = () => {
   const discardRecord = (clearState = true) => {
     if (clearState) clearRecordState();
 
-    navigate(ROUTES.MAIN.uri);
+    navigate(searchResultsUri);
   };
 
   const deleteRecord = async () => {

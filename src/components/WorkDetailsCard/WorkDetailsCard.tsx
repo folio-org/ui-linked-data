@@ -1,13 +1,15 @@
 import { FC } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
-import { Classifications, TitleTypes } from '@common/constants/search.constants';
+import { Classifications, SearchIdentifiers, TitleTypes } from '@common/constants/search.constants';
 import './WorkDetailsCard.scss';
+import { QueryParams } from '@common/constants/routes.constants';
+import { generateSearchParamsState } from '@common/helpers/search.helper';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {
   isOpen?: boolean;
@@ -25,6 +27,9 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
 }) => {
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
+  const [searchParams] = useSearchParams();
+  const querySearchParam = searchParams.get(QueryParams.Query);
+  const searchBySearchParam = searchParams.get(QueryParams.SearchBy);
 
   const title =
     !!titles?.length &&
@@ -51,7 +56,11 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         </div>
         <Button
           type={ButtonType.Primary}
-          onClick={() => navigate(generateEditResourceUrl(id))}
+          onClick={() =>
+            navigate(generateEditResourceUrl(id), {
+              state: generateSearchParamsState(searchBySearchParam as SearchIdentifiers, querySearchParam),
+            })
+          }
           data-testid="edit-button"
           className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >

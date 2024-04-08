@@ -1,3 +1,4 @@
+import { QueryParams } from '@common/constants/routes.constants';
 import {
   SearchIdentifiers,
   AdvancedSearchQualifiers,
@@ -75,3 +76,8 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
 
   return `(${queryWithFormatting})`;
 };
+
+export const generateSearchParamsState = (searchBy: SearchIdentifiers | null, query: string | null) => ({
+  [QueryParams.SearchBy]: searchBy,
+  [QueryParams.Query]: query,
+});

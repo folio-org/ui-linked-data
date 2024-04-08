@@ -1,16 +1,17 @@
 import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
 import { Row, Table } from '@components/Table';
 import { Button, ButtonType } from '@components/Button';
-import { formatItemSearchInstanceListData } from '@common/helpers/search.helper';
+import { formatItemSearchInstanceListData, generateSearchParamsState } from '@common/helpers/search.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ROUTES } from '@common/constants/routes.constants';
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import './SearchResultEntry.scss';
+import { SearchIdentifiers } from '@common/constants/search.constants';
 
 type SearchResultEntry = {
   id: string;
@@ -50,6 +51,9 @@ const instancesListHeader: Row = {
 };
 
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
+  const [searchParams] = useSearchParams();
+  const querySearchParam = searchParams.get(QueryParams.Query);
+  const searchBySearchParam = searchParams.get(QueryParams.SearchBy);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = () => setIsOpen(!isOpen);
@@ -65,7 +69,11 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
         children: (
           <Button
             type={ButtonType.Primary}
-            onClick={() => navigate(generateEditResourceUrl(row.__meta?.id))}
+            onClick={() =>
+              navigate(generateEditResourceUrl(row.__meta?.id), {
+                state: generateSearchParamsState(searchBySearchParam as SearchIdentifiers, querySearchParam),
+              })
+            }
             data-testid={`edit-button-${row.__meta.id}`}
             className={classNames(['button-nowrap', 'button-capitalize'])}
           >
