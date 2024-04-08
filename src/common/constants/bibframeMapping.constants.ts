@@ -1,4 +1,4 @@
-import { ResourceType } from "./record.constants";
+import { ResourceType } from './record.constants';
 
 export const BFLITE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
@@ -720,6 +720,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     'http://bibfra.me/vocab/marc/title': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/title' },
       options: {
+        'http://bibfra.me/vocab/marc/Title': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Title' },
         'http://bibfra.me/vocab/marc/VariantTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/VariantTitle' },
         'http://bibfra.me/vocab/marc/ParallelTitle': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/ParallelTitle' },
       },
