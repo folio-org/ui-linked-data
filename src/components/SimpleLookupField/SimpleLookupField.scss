@@ -1,0 +1,33 @@
+.simple-lookup {
+  &__dropdown-indicator {
+    &:hover {
+      cursor: pointer;
+    }
+
+    &__icon path {
+      fill: #55585d;
+    }
+  }
+
+  &__multi-value__remove,
+  &__clear-indicator {
+    &:hover {
+      cursor: pointer;
+    }
+
+    &__icon {
+      fill: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  &__clear-indicator {
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.edit-section-field-input.simple-lookup input {
+  height: 1.375rem;
+  border: none;
+}
