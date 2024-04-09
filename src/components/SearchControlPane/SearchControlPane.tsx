@@ -1,14 +1,15 @@
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
 import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
 import { ROUTES } from '@common/constants/routes.constants';
+import { ResourceType } from '@common/constants/record.constants';
+import { useNavigateEditPage } from '@common/hooks/useNavigateEditPage';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import './SearchControlPane.scss';
 
 export const SearchControlPane = () => {
-  const navigate = useNavigate();
+  const { navigateToEditPage } = useNavigateEditPage();
 
   const items = [
     {
@@ -21,7 +22,7 @@ export const SearchControlPane = () => {
           labelId: 'marva.newResource',
           icon: <Plus16 />,
           action: () => {
-            navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=work`);
+            navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
           },
         },
         {

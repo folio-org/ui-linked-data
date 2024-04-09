@@ -20,12 +20,13 @@ export const useLoadSearchResults = (
       setSearchBy(searchBySearchParam as SearchIdentifiers);
     }
 
-    if (querySearchParam) {
+    if (!querySearchParam) return;
+
+    // Sets query's value for Basic search
+    if (searchBySearchParam) {
       setQuery(querySearchParam);
     }
 
-    if (querySearchParam && searchBySearchParam) {
-      fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, 0);
-    }
+    fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, 0);
   }, [searchParams]);
 };

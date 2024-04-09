@@ -1,6 +1,8 @@
+import { FC, memo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '@components/Modal';
-import './AdvancedSearchModal.scss';
 import { Input } from '@components/Input';
 import {
   DEFAULT_ADVANCED_SEARCH_QUERY,
@@ -8,11 +10,10 @@ import {
   SELECT_OPERATORS,
   SELECT_QUALIFIERS,
 } from '@common/constants/search.constants';
-import state from '@state';
-import { useRecoilState } from 'recoil';
-import { FC, memo, useState } from 'react';
-import { formatRawQuery } from '@common/helpers/search.helper';
+import { formatRawQuery, generateSearchParamsState } from '@common/helpers/search.helper';
 import { Select } from '@components/Select';
+import state from '@state';
+import './AdvancedSearchModal.scss';
 
 enum AdvancedSearchInputs {
   Operator = 'operator',
@@ -22,11 +23,11 @@ enum AdvancedSearchInputs {
 }
 
 type Props = {
-  submitSearch: (q: string) => void;
   clearValues: VoidFunction;
 };
 
-export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues }) => {
+export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
+  const setSearchParams = useSearchParams()?.[1];
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
   const [rawQuery, setRawQuery] = useState(DEFAULT_ADVANCED_SEARCH_QUERY);
@@ -52,7 +53,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ submitSearch, clearValues 
 
   const onDoSearch = () => {
     clearValues();
-    submitSearch(formatRawQuery(rawQuery));
+    setSearchParams(generateSearchParamsState(formatRawQuery(rawQuery)) as unknown as URLSearchParams);
     closeModal();
   };
 

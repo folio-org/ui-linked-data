@@ -12,13 +12,16 @@ export const useBackToSearchUri = () => {
     const searchByState = state?.[SearchBy];
     const queryState = state?.[Query];
 
-    if (!state || !(searchByState && queryState)) return;
+    if (!state || !queryState) return;
 
     const updatedUri = ROUTES.SEARCH.uri;
-    const params = {} as Record<string, string>;
+    const params = {
+      [Query]: queryState,
+    } as Record<string, string>;
 
-    params[SearchBy] = searchByState;
-    params[Query] = queryState;
+    if (searchByState) {
+      params[SearchBy] = searchByState;
+    }
 
     setSearchResultsUrl(`${updatedUri}?${new URLSearchParams(params)}`);
   }, [location]);

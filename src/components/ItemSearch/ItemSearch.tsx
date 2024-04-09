@@ -120,7 +120,7 @@ export const ItemSearch = () => {
 
   const submitSearch = () => {
     clearPagination();
-    setSearchParams(generateSearchParamsState(searchBy, query) as unknown as URLSearchParams);
+    setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
   };
 
   const clearValues = () => {
@@ -162,7 +162,7 @@ export const ItemSearch = () => {
           <FullDisplay />
         </div>
       </div>
-      <AdvancedSearchModal submitSearch={fetchData} clearValues={clearValues} />
+      <AdvancedSearchModal clearValues={clearValues} />
     </div>
   );
 };
