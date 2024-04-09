@@ -16,6 +16,7 @@ import state from '@state';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
+import { useSearchParams } from 'react-router-dom';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -29,6 +30,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const setMessage = useSetRecoilState(state.search.message);
   const resetControls = useResetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
+  const setSearchParams = useSearchParams()?.[1];
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setMessage('');
@@ -38,6 +40,11 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const clearValuesAndResetControls = () => {
     clearValues();
     resetControls();
+  };
+
+  const onResetButtonClick = () => {
+    clearValuesAndResetControls();
+    setSearchParams({});
   };
 
   const onChangeLimiters = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +109,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <Button
           type={ButtonType.Text}
           className="search-button"
-          onClick={clearValuesAndResetControls}
+          onClick={onResetButtonClick}
           prefix={<XInCircle />}
           disabled={!query}
         >
