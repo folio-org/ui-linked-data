@@ -12,15 +12,15 @@ import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { QueryParams } from '@common/constants/routes.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { SearchResultList } from '@components/SearchResultList';
 import { SearchControlPane } from '@components/SearchControlPane';
+import { generateSearchParamsState } from '@common/helpers/search.helper';
+import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import GeneralSearch from '@src/assets/general-search.svg?react';
 import './ItemSearch.scss';
-import { generateSearchParamsState } from '@common/helpers/search.helper';
 
 const EmptyPlaceholder = () => (
   <div className="empty-placeholder">
@@ -47,7 +47,7 @@ export const ItemSearch = () => {
   } = usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const setSearchParams = useSearchParams()?.[1];
 
   const clearPagination = () => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -116,22 +116,7 @@ export const ItemSearch = () => {
     fetchData(query, searchBy, currentPageNumber * SEARCH_RESULTS_LIMIT);
   }, [currentPageNumber]);
 
-  useEffect(() => {
-    const querySearchParam = searchParams.get(QueryParams.Query);
-    const searchBySearchParam = searchParams.get(QueryParams.SearchBy);
-
-    if (!searchBy && searchBySearchParam) {
-      setSearchBy(searchBySearchParam as SearchIdentifiers);
-    }
-
-    if (!query && querySearchParam) {
-      setQuery(querySearchParam);
-    }
-
-    if (querySearchParam && searchBySearchParam) {
-      fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, 0);
-    }
-  }, [searchParams]);
+  useLoadSearchResults(fetchData);
 
   const submitSearch = () => {
     clearPagination();

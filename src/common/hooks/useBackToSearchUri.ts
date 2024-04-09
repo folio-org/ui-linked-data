@@ -1,24 +1,24 @@
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 
 export const useBackToSearchUri = () => {
   const location = useLocation();
   const [searchResultsUrl, setSearchResultsUrl] = useState(ROUTES.SEARCH.uri);
+  const { SearchBy, Query } = QueryParams;
 
   useEffect(() => {
-    if (!location.state || !(location.state[QueryParams.SearchBy] && location.state[QueryParams.Query])) return;
+    const { state } = location;
+    const searchByState = state?.[SearchBy];
+    const queryState = state?.[Query];
+
+    if (!state || !(searchByState && queryState)) return;
 
     const updatedUri = ROUTES.SEARCH.uri;
     const params = {} as Record<string, string>;
 
-    if (location.state[QueryParams.SearchBy]) {
-      params[QueryParams.SearchBy] = location.state[QueryParams.SearchBy];
-    }
-
-    if (location.state[QueryParams.Query]) {
-      params[QueryParams.Query] = location.state[QueryParams.Query];
-    }
+    params[SearchBy] = searchByState;
+    params[Query] = queryState;
 
     setSearchResultsUrl(`${updatedUri}?${new URLSearchParams(params)}`);
   }, [location]);
