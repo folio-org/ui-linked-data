@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
-import { Classifications, TitleTypes } from '@common/constants/search.constants';
+import { Classifications } from '@common/constants/search.constants';
+import { getTitle } from '@common/helpers/search.helper';
 import './WorkDetailsCard.scss';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {
@@ -24,14 +25,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   titles,
 }) => {
   const navigate = useNavigate();
-  const { formatMessage } = useIntl();
-
-  const title =
-    !!titles?.length &&
-    titles
-      ?.filter(({ type }) => type === TitleTypes.Main || type === TitleTypes.Sub)
-      ?.map(({ value }) => value)
-      ?.join(formatMessage({ id: 'marva.spaceInBrackets' }));
+  const title = getTitle(titles);
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
   const langCode = languages?.find(({ value }) => value)?.value;
   const classificationNumber = classifications?.find(({ number, source }) => number && source === Classifications.DDC)
