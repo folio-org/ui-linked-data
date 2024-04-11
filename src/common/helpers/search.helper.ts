@@ -12,6 +12,12 @@ import { v4 as uuidv4 } from 'uuid';
 const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
+export const getTitle = (titles: GenericStructDTO<TitleType>[] | undefined) => {
+    const mainTitle = titles?.find(({ type }) => type === TitleTypes.Main)?.value;
+    const subTitle = titles?.find(({ type }) => type === TitleTypes.Sub)?.value;
+    return [mainTitle, subTitle].filter(t => !!t).join(' ');
+};
+
 export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchResultDTO[]): Row[] => {
   return instanceList.map(({ id, titles, identifiers, publications }) => {
     // TODO: at the moment, picking the first match/first item in list for display
@@ -25,7 +31,7 @@ export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchR
         key: uuidv4(),
       },
       title: {
-        label: titles?.find(({ type }) => type === TitleTypes.Main)?.value,
+        label: getTitle(titles),
         className: 'title',
       },
       isbn: {

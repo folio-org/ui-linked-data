@@ -25,7 +25,17 @@ describe('SearchResultEntry', () => {
     const { getByText, getByTestId, findByText } = screen;
 
     test('renders instances as a table', () => {
-      expect(getByText(mockProps.instances[0].titles[0].value)).toBeInTheDocument();
+      const expectedTitle = [
+        mockProps.instances[0].titles[0].value, 
+        mockProps.instances[0].titles[1].value].join(' ');
+      expect(getByText(expectedTitle)).toBeInTheDocument();
+    });
+
+    test('renders works as a table', () => {
+      const expectedTitle = [
+        mockProps.titles[0].value, 
+        mockProps.titles[1].value].join(' ');
+      expect(getByText(expectedTitle)).toBeInTheDocument();
     });
 
     test('closes and renders closed card placeholder', async () => {

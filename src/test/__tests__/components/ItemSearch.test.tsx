@@ -25,8 +25,16 @@ export const itemSearchMockData = {
       id: 'workId',
       titles: [
         {
-          value: 'Title Value',
+          value: 'Work Title Value',
           type: 'Main',
+        },
+        {
+          value: 'Work Sub Title Value',
+          type: 'Sub',
+        },
+        {
+          value: 'Work Parallel Title Value',
+          type: 'Main Parallel',
         },
       ],
       contributors: [
@@ -63,8 +71,16 @@ export const itemSearchMockData = {
           id: 'instanceId',
           titles: [
             {
-              value: 'Title Value',
+              value: 'Instance Title Value',
               type: 'Main',
+            },
+            {
+              value: 'Instance Sub Title Value',
+              type: 'Sub',
+            },
+            {
+              value: 'Instance Parallel Title Value',
+              type: 'Sub Parallel',
             },
           ],
           identifiers: [
