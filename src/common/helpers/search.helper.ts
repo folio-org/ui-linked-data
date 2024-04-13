@@ -1,4 +1,4 @@
-import { QueryParams } from '@common/constants/routes.constants';
+import { SearchQueryParams } from '@common/constants/routes.constants';
 import {
   SearchIdentifiers,
   AdvancedSearchQualifiers,
@@ -14,9 +14,9 @@ const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; t
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
 export const getTitle = (titles: GenericStructDTO<TitleType>[] | undefined) => {
-    const mainTitle = titles?.find(({ type }) => type === TitleTypes.Main)?.value;
-    const subTitle = titles?.find(({ type }) => type === TitleTypes.Sub)?.value;
-    return [mainTitle, subTitle].filter(t => !!t).join(' ');
+  const mainTitle = titles?.find(({ type }) => type === TitleTypes.Main)?.value;
+  const subTitle = titles?.find(({ type }) => type === TitleTypes.Sub)?.value;
+  return [mainTitle, subTitle].filter(t => !!t).join(' ');
 };
 
 export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchResultDTO[]): Row[] => {
@@ -85,11 +85,11 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
 
 export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null) => {
   const searchParamsState = {
-    [QueryParams.Query]: query,
-  } as Record<QueryParams, string>;
+    [SearchQueryParams.Query]: query,
+  } as SearchParamsState;
 
   if (searchBy) {
-    searchParamsState[QueryParams.SearchBy] = searchBy;
+    searchParamsState[SearchQueryParams.SearchBy] = searchBy;
   }
 
   return searchParamsState;

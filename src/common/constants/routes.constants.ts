@@ -32,6 +32,9 @@ export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
 export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
+}
+
+export enum SearchQueryParams {
   Query = 'query',
   SearchBy = 'searchBy',
 }
