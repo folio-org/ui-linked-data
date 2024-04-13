@@ -33,10 +33,16 @@ const limiters = atom<Record<SearchLimiterNames, any[] | Suppressed | PublishDat
   default: DEFAULT_SEARCH_LIMITERS,
 });
 
+const navigationState = atom<SearchParamsState>({
+  key: 'search.navigationState',
+  default: {},
+});
+
 export default {
   query,
   message,
   index,
   data,
   limiters,
+  navigationState,
 };

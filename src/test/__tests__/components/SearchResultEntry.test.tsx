@@ -1,6 +1,7 @@
-import { SearchResultEntry } from '@components/SearchResultEntry';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
+import { SearchResultEntry } from '@components/SearchResultEntry';
 import { itemSearchMockData } from './ItemSearch.test';
 
 const mockedUsedNavigate = jest.fn();
@@ -16,9 +17,12 @@ describe('SearchResultEntry', () => {
   describe('with instances', () => {
     beforeEach(() =>
       render(
-        <BrowserRouter>
-          <SearchResultEntry {...(mockProps as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
+        <RecoilRoot>
+          <BrowserRouter>
+            <SearchResultEntry {...(mockProps as WorkAsSearchResultDTO)} />
+          </BrowserRouter>
+          ,
+        </RecoilRoot>,
       ),
     );
 
@@ -43,16 +47,18 @@ describe('SearchResultEntry', () => {
     test('navigates to edit section for the relevant ID', () => {
       fireEvent.click(getByTestId('edit-button-instanceId'));
 
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('/resources/instanceId/edit', { state: { query: null } });
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/resources/instanceId/edit', { state: {} });
     });
   });
 
   describe('without instances', () => {
     beforeEach(() =>
       render(
-        <BrowserRouter>
-          <SearchResultEntry {...({ ...mockProps, instances: [] } as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
+        <RecoilRoot>
+          <BrowserRouter>
+            <SearchResultEntry {...({ ...mockProps, instances: [] } as WorkAsSearchResultDTO)} />
+          </BrowserRouter>
+        </RecoilRoot>,
       ),
     );
 

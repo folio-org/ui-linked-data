@@ -28,6 +28,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const [query, setQuery] = useRecoilState(state.search.query);
   const [limiters, setLimiters] = useRecoilState(state.search.limiters);
   const setMessage = useSetRecoilState(state.search.message);
+  const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
   const setSearchParams = useSearchParams()?.[1];
@@ -45,6 +46,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const onResetButtonClick = () => {
     clearValuesAndResetControls();
     setSearchParams({});
+    setNavigationState({});
   };
 
   const onChangeLimiters = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
