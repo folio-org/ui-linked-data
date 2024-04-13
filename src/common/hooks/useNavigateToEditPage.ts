@@ -3,7 +3,7 @@ import { SearchIdentifiers } from '@common/constants/search.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-export const useNavigateEditPage = () => {
+export const useNavigateToEditPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const querySearchParam = searchParams.get(QueryParams.Query);

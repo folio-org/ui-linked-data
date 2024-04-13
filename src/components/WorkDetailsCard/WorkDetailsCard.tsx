@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Classifications, TitleTypes } from '@common/constants/search.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useNavigateEditPage } from '@common/hooks/useNavigateEditPage';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@components/Button';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
@@ -25,7 +25,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   titles,
 }) => {
   const { formatMessage } = useIntl();
-  const { navigateToEditPage } = useNavigateEditPage();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const title =
     !!titles?.length &&

@@ -3,13 +3,13 @@ import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
 import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
-import { useNavigateEditPage } from '@common/hooks/useNavigateEditPage';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import './SearchControlPane.scss';
 
 export const SearchControlPane = () => {
-  const { navigateToEditPage } = useNavigateEditPage();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const items = [
     {

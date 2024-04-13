@@ -9,7 +9,7 @@ import { formatItemSearchInstanceListData } from '@common/helpers/search.helper'
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
-import { useNavigateEditPage } from '@common/hooks/useNavigateEditPage';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import './SearchResultEntry.scss';
 
@@ -51,7 +51,7 @@ const instancesListHeader: Row = {
 };
 
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
-  const { navigateToEditPage } = useNavigateEditPage();
+  const { navigateToEditPage } = useNavigateToEditPage();
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = () => setIsOpen(!isOpen);
 
