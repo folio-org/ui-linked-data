@@ -1,14 +1,19 @@
 import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
-import { MultiValue } from 'react-select';
+import { ActionMeta, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
-import state from '@state';
 import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
 import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
+import { DropdownIndicator } from './DropdownIndicator';
+import { MultiValueRemove } from './MultiValueRemove';
+import { ClearIndicator } from './ClearIndicator';
+import state from '@state';
+import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
+import './SimpleLookupField.scss';
 
 interface Props {
   uri: string;
@@ -87,12 +92,14 @@ export const SimpleLookupField: FC<Props> = ({
   return (
     <CreatableSelect
       className="edit-section-field-input simple-lookup"
+      classNamePrefix="simple-lookup"
       data-testid="simple-lookup"
       isSearchable
       isClearable
       openMenuOnFocus
       isLoading={isLoading}
       isMulti
+      components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
       onMenuOpen={loadOptions}
@@ -100,22 +107,12 @@ export const SimpleLookupField: FC<Props> = ({
       // getOptionLabel={getOptionLabel}
       // TODO: remove the line below once uncontrolled options are required/supported
       isValidNewOption={() => false}
-      onChange={handleOnChange}
+      onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
       value={localValue}
       placeholder={<FormattedMessage id="marva.select" />}
       loadingMessage={() => <FormattedMessage id="marva.loading" />}
       inputId="creatable-select-input"
-      unstyled
-      styles={{
-        control: base => ({
-          ...base,
-          minHeight: '1.5rem',
-        }),
-        container: (base, currState) => ({
-          ...base,
-          backgroundColor: currState.isDisabled ? '#ebebe4' : 'transparent',
-        }),
-      }}
+      styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
     />
   );
 };
