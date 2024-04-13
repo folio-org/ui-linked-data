@@ -1,11 +1,19 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
-import { RecoilRoot } from 'recoil';
+import * as SearchHelper from '@common/helpers/search.helper';
+import { SearchQueryParams } from '@common/constants/routes.constants';
 import state from '@state';
 
+const setSearchParams = jest.fn();
 const clearValues = jest.fn();
-const submitSearch = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useSearchParams: () => [{}, setSearchParams],
+}));
 
 describe('AdvancedSearchModal', () => {
   beforeAll(() => {
@@ -15,7 +23,14 @@ describe('AdvancedSearchModal', () => {
   beforeEach(() =>
     render(
       <RecoilRoot initializeState={snapshot => snapshot.set(state.ui.isAdvancedSearchOpen, true)}>
-        <AdvancedSearchModal clearValues={clearValues} submitSearch={submitSearch} />
+        <RouterProvider
+          router={createMemoryRouter([
+            {
+              path: '/',
+              element: <AdvancedSearchModal clearValues={clearValues} />,
+            },
+          ])}
+        />
       </RecoilRoot>,
     ),
   );
@@ -32,15 +47,22 @@ describe('AdvancedSearchModal', () => {
         value: 'testValue',
       },
     };
+    const searchParams = {
+      [SearchQueryParams.Query]: '(lccn all "testValue" not title all "testValue*")',
+    };
+    const spyGenerateSearchParamsState = jest
+      .spyOn(SearchHelper, 'generateSearchParamsState')
+      .mockReturnValue(searchParams);
 
     fireEvent.change(screen.getByTestId('text-input-0'), inputEvent);
     fireEvent.change(screen.getByTestId('text-input-1'), inputEvent);
-    fireEvent.change(screen.getByTestId('select-operators-1'), { target: { value: 'not' }})
-    fireEvent.change(screen.getByTestId('select-qualifiers-1'), { target: { value: 'startsWith' }})
-    fireEvent.change(screen.getByTestId('select-identifiers-1'), { target: { value: 'title' }})
+    fireEvent.change(screen.getByTestId('select-operators-1'), { target: { value: 'not' } });
+    fireEvent.change(screen.getByTestId('select-qualifiers-1'), { target: { value: 'startsWith' } });
+    fireEvent.change(screen.getByTestId('select-identifiers-1'), { target: { value: 'title' } });
 
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
-    expect(submitSearch).toHaveBeenCalledWith('(lccn all "testValue" not title all "testValue*")');
+    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('(lccn all "testValue" not title all "testValue*")');
+    expect(setSearchParams).toHaveBeenCalledWith(searchParams);
   });
 });

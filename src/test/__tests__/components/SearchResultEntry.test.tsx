@@ -25,16 +25,12 @@ describe('SearchResultEntry', () => {
     const { getByText, getByTestId, findByText } = screen;
 
     test('renders instances as a table', () => {
-      const expectedTitle = [
-        mockProps.instances[0].titles[0].value, 
-        mockProps.instances[0].titles[1].value].join(' ');
+      const expectedTitle = [mockProps.instances[0].titles[0].value, mockProps.instances[0].titles[1].value].join(' ');
       expect(getByText(expectedTitle)).toBeInTheDocument();
     });
 
     test('renders works as a table', () => {
-      const expectedTitle = [
-        mockProps.titles[0].value, 
-        mockProps.titles[1].value].join(' ');
+      const expectedTitle = [mockProps.titles[0].value, mockProps.titles[1].value].join(' ');
       expect(getByText(expectedTitle)).toBeInTheDocument();
     });
 
@@ -47,7 +43,7 @@ describe('SearchResultEntry', () => {
     test('navigates to edit section for the relevant ID', () => {
       fireEvent.click(getByTestId('edit-button-instanceId'));
 
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('/resources/instanceId/edit');
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/resources/instanceId/edit', { state: { query: null } });
     });
   });
 
