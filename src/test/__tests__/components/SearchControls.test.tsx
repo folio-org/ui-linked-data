@@ -2,6 +2,13 @@ import { SearchControls } from '@components/SearchControls';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 
+const setSearchParams = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useSearchParams: () => [{}, setSearchParams],
+}));
+
 describe('SearchControls', () => {
   beforeEach(() =>
     render(

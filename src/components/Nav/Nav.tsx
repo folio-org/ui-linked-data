@@ -15,6 +15,7 @@ import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
 import { RESOURCE_TEMPLATE_IDS } from '@common/constants/bibframe.constants';
 import './Nav.scss';
+import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
 
 const NOT_SHOWN = [ROUTES.MAIN.name, ROUTES.RESOURCE_EDIT.name];
 
@@ -27,6 +28,7 @@ export const Nav = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
   const navigate = useNavigate();
+  const searchResultsUri = useBackToSearchUri();
 
   return (
     <div data-testid="nav" className={DOM_ELEMENTS.classNames.nav}>
@@ -54,7 +56,12 @@ export const Nav = () => {
       ) : (
         <div className="nav-block nav-block-fixed-height">
           <nav>
-            <Button data-testid='nav-close-button' type={ButtonType.Icon} onClick={() => navigate(ROUTES.MAIN.uri)} className="nav-close">
+            <Button
+              data-testid="nav-close-button"
+              type={ButtonType.Icon}
+              onClick={() => navigate(searchResultsUri)}
+              className="nav-close"
+            >
               <Times16 />
             </Button>
           </nav>

@@ -1,8 +1,9 @@
 import { FC } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@components/Button';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
@@ -24,7 +25,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   toggleIsOpen,
   titles,
 }) => {
-  const navigate = useNavigate();
+  const { navigateToEditPage } = useNavigateToEditPage();
   const title = getTitle(titles);
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
   const langCode = languages?.find(({ value }) => value)?.value;
@@ -45,7 +46,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         </div>
         <Button
           type={ButtonType.Primary}
-          onClick={() => navigate(generateEditResourceUrl(id))}
+          onClick={() => navigateToEditPage(generateEditResourceUrl(id))}
           data-testid="edit-button"
           className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >

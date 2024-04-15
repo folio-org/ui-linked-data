@@ -33,3 +33,8 @@ export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
 }
+
+export enum SearchQueryParams {
+  Query = 'query',
+  SearchBy = 'searchBy',
+}

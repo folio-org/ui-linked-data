@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import state from '@state';
 import { getByIdentifier } from '@common/api/search.api';
 import { usePagination } from '@common/hooks/usePagination';
 import { normalizeLccn } from '@common/helpers/validations.helper';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
@@ -15,9 +16,11 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { SearchResultList } from '@components/SearchResultList';
+import { SearchControlPane } from '@components/SearchControlPane';
+import { generateSearchParamsState } from '@common/helpers/search.helper';
+import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import GeneralSearch from '@src/assets/general-search.svg?react';
 import './ItemSearch.scss';
-import { SearchControlPane } from '@components/SearchControlPane';
 
 const EmptyPlaceholder = () => (
   <div className="empty-placeholder">
@@ -44,6 +47,7 @@ export const ItemSearch = () => {
   } = usePagination(DEFAULT_PAGES_METADATA);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
+  const setSearchParams = useSearchParams()?.[1];
 
   const clearPagination = () => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -112,9 +116,11 @@ export const ItemSearch = () => {
     fetchData(query, searchBy, currentPageNumber * SEARCH_RESULTS_LIMIT);
   }, [currentPageNumber]);
 
+  useLoadSearchResults(fetchData);
+
   const submitSearch = () => {
     clearPagination();
-    fetchData(query, searchBy, 0);
+    setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
   };
 
   const clearValues = () => {
@@ -156,7 +162,7 @@ export const ItemSearch = () => {
           <FullDisplay />
         </div>
       </div>
-      <AdvancedSearchModal submitSearch={fetchData} clearValues={clearValues} />
+      <AdvancedSearchModal clearValues={clearValues} />
     </div>
   );
 };

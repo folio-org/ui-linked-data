@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -9,6 +9,7 @@ import { formatItemSearchInstanceListData } from '@common/helpers/search.helper'
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import './SearchResultEntry.scss';
 
@@ -50,7 +51,7 @@ const instancesListHeader: Row = {
 };
 
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
-  const navigate = useNavigate();
+  const { navigateToEditPage } = useNavigateToEditPage();
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = () => setIsOpen(!isOpen);
 
@@ -65,7 +66,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
         children: (
           <Button
             type={ButtonType.Primary}
-            onClick={() => navigate(generateEditResourceUrl(row.__meta?.id))}
+            onClick={() => navigateToEditPage(generateEditResourceUrl(row.__meta?.id))}
             data-testid={`edit-button-${row.__meta.id}`}
             className={classNames(['button-nowrap', 'button-capitalize'])}
           >
