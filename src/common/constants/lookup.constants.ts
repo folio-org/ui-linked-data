@@ -29,6 +29,11 @@ export const lookupConfig: Record<string, any> = {
     ],
   },
 
+  'http://id.loc.gov/authorities/geographics': {
+    name: 'geographics',
+    type: 'complex',
+    modes: [],
+  },
   'http://id.loc.gov/authorities/names': {
     name: 'names',
     type: 'complex',
