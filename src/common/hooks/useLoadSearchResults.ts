@@ -2,11 +2,12 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
-import { SearchIdentifiers } from '@common/constants/search.constants';
+import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import state from '@state';
 
 export const useLoadSearchResults = (
   fetchData: (query: string, searchBy?: SearchIdentifiers, offset?: number) => Promise<void>,
+  pageNumber = 0,
 ) => {
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
@@ -30,6 +31,6 @@ export const useLoadSearchResults = (
       setQuery(querySearchParam);
     }
 
-    fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, 0);
-  }, [querySearchParam, searchBySearchParam]);
+    fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, pageNumber * SEARCH_RESULTS_LIMIT);
+  }, [querySearchParam, searchBySearchParam, pageNumber]);
 };
