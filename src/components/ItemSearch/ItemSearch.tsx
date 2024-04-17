@@ -110,13 +110,7 @@ export const ItemSearch = () => {
     }
   };
 
-  useEffect(() => {
-    if (!searchBy || !query) return;
-
-    fetchData(query, searchBy, currentPageNumber * SEARCH_RESULTS_LIMIT);
-  }, [currentPageNumber]);
-
-  useLoadSearchResults(fetchData);
+  useLoadSearchResults(fetchData, currentPageNumber);
 
   const submitSearch = () => {
     clearPagination();
