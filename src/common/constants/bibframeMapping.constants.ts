@@ -124,6 +124,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
     'http://id.loc.gov/ontologies/bibframe/Family': BFLITE_URIS.NAME,
     'http://id.loc.gov/ontologies/bibframe/Organization': BFLITE_URIS.NAME,
     'http://id.loc.gov/ontologies/bibframe/Meeting': BFLITE_URIS.NAME,
+    'http://id.loc.gov/ontologies/bibframe/geographicCoverage': '_geographicCoverageReference',
   },
   'http://id.loc.gov/ontologies/bflc/governmentPubType': 'http://bibfra.me/vocab/marc/governmentPublication',
   'http://id.loc.gov/ontologies/bibframe/originDate': 'http://bibfra.me/vocab/lite/dateStart',
@@ -755,11 +756,11 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         },
       },
     },
-    'http://bibfra.me/vocab/marc/geographicCoverage': {
+    _geographicCoverageReference: {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage' },
       fields: {
-        'http://bibfra.me/vocab/marc/geographicCoverage': {
-          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage',
+        label: {
+          bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs',
         },
       },
     },
