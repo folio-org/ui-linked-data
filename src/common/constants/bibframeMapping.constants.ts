@@ -128,6 +128,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   },
   'http://id.loc.gov/ontologies/bflc/governmentPubType': 'http://bibfra.me/vocab/marc/governmentPublication',
   'http://id.loc.gov/ontologies/bibframe/originDate': 'http://bibfra.me/vocab/lite/dateStart',
+  'http://id.loc.gov/ontologies/bibframe/intendedAudience': 'http://bibfra.me/vocab/marc/targetAudience',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
@@ -177,6 +178,7 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/lite/Organization': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Meeting': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/marc/governmentPublication': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/marc/targetAudience': BFLITE_URIS.TERM,
 };
 
 export const ADVANCED_FIELDS = {
