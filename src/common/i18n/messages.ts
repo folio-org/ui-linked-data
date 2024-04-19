@@ -2,7 +2,6 @@
 import { LOCALES } from './locales';
 
 export const BASE_LOCALE = {
-  'marva.welcome': 'Welcome to the new Marva Editor.',
   'marva.startEditing': 'Start editing.',
   'marva.dashboard': 'My dashboard',
   'marva.search': 'Search',
@@ -124,7 +123,6 @@ export const i18nMessages = {
   [LOCALES.ENGLISH]: BASE_LOCALE,
   [LOCALES.GERMAN]: {
     ...BASE_LOCALE,
-    'marva.welcome': 'Willkommen beim neuen Marva-Editor.',
     'marva.startEditing': 'Bearbeitung starten.',
     'marva.dashboard': 'Mein Armaturenbrett',
     'marva.search': 'Ressourcen durchsuchen',

@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { RecoilRoot, useRecoilValue, useSetRecoilState } from 'recoil';
 import { IntlProvider } from 'react-intl';
 import { ErrorBoundary } from '@components/ErrorBoundary';
@@ -22,6 +22,10 @@ export const routes: RouteObject[] = [
     element: <Root />,
     children: [
       {
+        index: true,
+        element: <Navigate to={ROUTES.SEARCH.uri} replace />,
+      },
+      {
         path: ROUTES.SEARCH.uri,
         element: <Search />,
       },
@@ -39,7 +43,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: '*',
-        element: <Load />, // TODO: create a component for 404 page
+        element: <Navigate to={ROUTES.SEARCH.uri} replace />, // TODO: create a component for 404 page
       },
     ],
   },

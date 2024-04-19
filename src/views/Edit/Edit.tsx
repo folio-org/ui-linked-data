@@ -11,10 +11,10 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { ResourceType } from '@common/constants/record.constants';
-import state from '@state';
-import { EditPreview } from '@components/EditPreview';
-import './Edit.scss';
 import { QueryParams } from '@common/constants/routes.constants';
+import { EditPreview } from '@components/EditPreview';
+import state from '@state';
+import './Edit.scss';
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
@@ -43,8 +43,7 @@ export const Edit = () => {
           return;
         }
 
-        const resourceDecriptionType =
-          (queryParams.get(QueryParams.Type) as ResourceType) || ResourceType.instance;
+        const resourceDecriptionType = (queryParams.get(QueryParams.Type) as ResourceType) || ResourceType.instance;
         const resourceReference = queryParams.get(QueryParams.Ref);
         const isInstancePageType = resourceDecriptionType === ResourceType.instance;
         const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
@@ -63,7 +62,10 @@ export const Edit = () => {
           : (null as unknown as RecordEntry);
 
         if (resourceReference) {
-          record = await fetchRecordAndSelectEntityValues(resourceReference, resourceDecriptionType.toUpperCase() as BibframeEntities) as RecordEntry;
+          record = (await fetchRecordAndSelectEntityValues(
+            resourceReference,
+            resourceDecriptionType.toUpperCase() as BibframeEntities,
+          )) as RecordEntry;
         }
 
         const typedRecord = record as unknown as RecordEntry;
