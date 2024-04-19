@@ -128,6 +128,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   },
   'http://id.loc.gov/ontologies/bflc/governmentPubType': 'http://bibfra.me/vocab/marc/governmentPublication',
   'http://id.loc.gov/ontologies/bibframe/originDate': 'http://bibfra.me/vocab/lite/dateStart',
+  'http://id.loc.gov/ontologies/bibframe/originPlace': 'http://bibfra.me/vocab/marc/originPlace',
   'http://id.loc.gov/ontologies/bibframe/intendedAudience': 'http://bibfra.me/vocab/marc/targetAudience',
 };
 
@@ -179,6 +180,7 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/lite/Meeting': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/marc/governmentPublication': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/targetAudience': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/marc/originPlace': BFLITE_URIS.NAME,
 };
 
 export const ADVANCED_FIELDS = {
@@ -755,6 +757,15 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       fields: {
         'http://bibfra.me/vocab/lite/dateStart': {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/originDate',
+        },
+      },
+    },
+    'http://bibfra.me/vocab/marc/originPlace': {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/originPlace' },
+      fields: {
+        'http://bibfra.me/vocab/marc/originPlace': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/originPlace',
+          label: BFLITE_URIS.NAME,
         },
       },
     },
