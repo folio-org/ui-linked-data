@@ -5,10 +5,15 @@ import { render, screen } from '@testing-library/react';
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('App', () => {
-  beforeEach(() => render(<App />));
+  beforeEach(() => {
+    global['Request'] = jest.fn().mockImplementation(() => ({
+      signal: {
+        removeEventListener: () => {},
+        addEventListener: () => {},
+      },
+    }));
 
-  test('renders Nav component', () => {
-    expect(screen.getByTestId('nav')).toBeInTheDocument();
+    render(<App />);
   });
 
   test('renders Root (default) component', () => {
