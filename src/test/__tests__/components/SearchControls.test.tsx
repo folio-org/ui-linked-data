@@ -1,6 +1,8 @@
-import { SearchControls } from '@components/SearchControls';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import * as FeatureConstants from '@common/constants/feature.constants';
+import { SearchControls } from '@components/SearchControls';
 
 const setSearchParams = jest.fn();
 
@@ -10,6 +12,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('SearchControls', () => {
+  const mockedSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');
+  mockedSearchFiltersEnabled(true);
+
   beforeEach(() =>
     render(
       <RecoilRoot>

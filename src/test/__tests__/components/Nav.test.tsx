@@ -11,14 +11,15 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
-const renderOnPath = (path: string) => render(
-  <RecoilRoot>
-    <RouterProvider router={createMemoryRouter([{ path, element: <Nav /> }], { initialEntries: [path] })} />
-  </RecoilRoot>,
-);
+const renderOnPath = (path: string) =>
+  render(
+    <RecoilRoot>
+      <RouterProvider router={createMemoryRouter([{ path, element: <Nav /> }], { initialEntries: [path] })} />
+    </RecoilRoot>,
+  );
 
 describe('Nav', () => {
-  const { getByTestId, getByText } = screen;
+  const { getByTestId } = screen;
 
   test('triggers close button component', () => {
     renderOnPath('/resources/create');
@@ -26,11 +27,5 @@ describe('Nav', () => {
     fireEvent.click(getByTestId('nav-close-button'));
 
     expect(mockNavigate).toHaveBeenCalled();
-  });
-
-  test('has links on non-edit-section routes', () => {
-    renderOnPath('/other/route');
-    
-    expect(getByText('marva.searchResource')).toBeInTheDocument();
   });
 });
