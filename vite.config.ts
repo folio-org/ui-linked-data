@@ -32,13 +32,6 @@ export default defineConfig(() => {
         define: {
           __IS_EMBEDDED_MODE__: true,
         },
-        optimizeDeps: {
-          esbuildOptions: {
-            define: {
-              global: 'globalThis',
-            },
-          },
-        },
       }
     : {
         plugins: [react(), svgr()],
