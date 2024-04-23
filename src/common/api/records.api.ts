@@ -22,6 +22,16 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
   });
 };
 
+const singleRecordMarcUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/marc`;
+
+export const getMarcRecord = async ({ recordId }: SingleRecord) => {
+  const url = baseApi.generateUrl(singleRecordMarcUrl, { name: ':recordId', value: recordId });
+
+  return baseApi.getJson({
+    url,
+  });
+};
+
 export const getAllRecords = async ({
   pageSize = MAX_LIMIT,
   pageNumber = MAX_LIMIT,

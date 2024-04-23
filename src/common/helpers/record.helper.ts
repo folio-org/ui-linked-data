@@ -133,3 +133,12 @@ export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
     reference,
   };
 };
+
+export const getRecordTitle = (record: RecordEntry) => {
+  const { block } = getEditingRecordBlocks(record);
+
+  // TODO: optimize to look for any title if the mainTitle is not present
+  return (record[block!]?.['http://bibfra.me/vocab/marc/title']?.[0] as Record<string, any>)?.[
+    'http://bibfra.me/vocab/marc/Title'
+  ]?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
+};

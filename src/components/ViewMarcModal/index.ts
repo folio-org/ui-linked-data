@@ -1,0 +1,1 @@
+export { ViewMarcModal } from "./ViewMarcModal";
