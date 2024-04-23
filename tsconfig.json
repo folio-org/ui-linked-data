@@ -18,5 +18,6 @@
     "types": ["vite-plugin-svgr/client"]
   },
   "include": ["src"],
+  "exclude": ["src/test/**/*.test.ts(x)", "src/test/**/*.mock.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
