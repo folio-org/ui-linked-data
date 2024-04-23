@@ -38,6 +38,11 @@ const navigationState = atom<SearchParamsState>({
   default: {},
 });
 
+const forceRefresh = atom<boolean>({
+  key: 'search.forceRefresh',
+  default: false,
+});
+
 export default {
   query,
   message,
@@ -45,4 +50,5 @@ export default {
   data,
   limiters,
   navigationState,
+  forceRefresh,
 };

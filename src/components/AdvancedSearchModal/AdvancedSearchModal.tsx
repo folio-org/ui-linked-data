@@ -1,6 +1,6 @@
 import { FC, memo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '@components/Modal';
 import { Input } from '@components/Input';
@@ -30,6 +30,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   const setSearchParams = useSearchParams()?.[1];
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
+  const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const [rawQuery, setRawQuery] = useState(DEFAULT_ADVANCED_SEARCH_QUERY);
 
   const closeModal = () => {
@@ -54,6 +55,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   const onDoSearch = () => {
     clearValues();
     setSearchParams(generateSearchParamsState(formatRawQuery(rawQuery)) as unknown as URLSearchParams);
+    setForceRefreshSearch(true);
     closeModal();
   };
 

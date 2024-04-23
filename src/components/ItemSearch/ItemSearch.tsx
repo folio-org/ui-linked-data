@@ -36,6 +36,7 @@ export const ItemSearch = () => {
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   // const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
   const {
     getPageMetadata,
@@ -115,6 +116,7 @@ export const ItemSearch = () => {
   const submitSearch = () => {
     clearPagination();
     setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
+    setForceRefreshSearch(true);
   };
 
   const clearValues = () => {
