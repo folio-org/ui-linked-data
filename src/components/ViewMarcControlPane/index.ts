@@ -1,0 +1,1 @@
+export { ViewMarcControlPane } from './ViewMarcControlPane';

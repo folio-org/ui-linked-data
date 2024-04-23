@@ -8,6 +8,7 @@ type DropdownItem = {
   labelId?: string;
   icon?: ReactElement;
   action?: VoidFunction;
+  hidden?: boolean;
   renderComponent?: (key: string | number) => ReactElement;
 };
 

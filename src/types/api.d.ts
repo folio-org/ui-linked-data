@@ -50,3 +50,23 @@ type WorkAsSearchResultDTO = {
 interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }
+
+type MarcDTOParsedRecordContentSubfield = {
+  subfields: Record<string, string>[];
+  isHighlighted?: boolean;
+  ind1?: string;
+  ind2?: string;
+};
+
+type MarcDTOParsedRecordContentField = Record<string, string | MarcDTOParsedRecordContentSubfield>;
+
+type MarcDTO = {
+  id: string;
+  recordType: string;
+  parsedRecord: {
+    content: {
+      leader?: string;
+      fields: Record<string, string | any>[];
+    };
+  };
+};

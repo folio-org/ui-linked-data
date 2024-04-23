@@ -1,0 +1,1 @@
+export { MarcContent } from "./MarcContent";
