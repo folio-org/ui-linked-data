@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { SetterOrUpdater, useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 
@@ -9,6 +9,7 @@ jest.mock('react-router-dom', () => ({
 }));
 jest.mock('recoil', () => ({
   useSetRecoilState: jest.fn(),
+  useRecoilState: jest.fn(),
 }));
 jest.mock('@state', () => ({
   default: {
@@ -38,6 +39,10 @@ describe('useLoadSearchResults', () => {
       .mockReturnValueOnce(setData)
       .mockReturnValueOnce(setSearchBy)
       .mockReturnValueOnce(setQuery);
+    (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
+      boolean,
+      SetterOrUpdater<boolean>,
+    ]);
 
     renderHook(() => useLoadSearchResults(fetchData));
 
@@ -51,10 +56,14 @@ describe('useLoadSearchResults', () => {
 
     (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
     (useSetRecoilState as jest.Mock).mockReturnValue(setData);
+    (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
+      boolean,
+      SetterOrUpdater<boolean>,
+    ]);
 
     renderHook(() => useLoadSearchResults(fetchData));
 
-    expect(setData).toHaveBeenCalledWith(null);
+    expect(setData).not.toHaveBeenCalled();
     expect(fetchData).not.toHaveBeenCalled();
   });
 });
