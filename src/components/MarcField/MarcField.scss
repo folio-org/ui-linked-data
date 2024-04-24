@@ -1,7 +1,11 @@
 .marc-field {
   vertical-align: top;
-  
+
   .field-code {
     font-weight: bold;
+  }
+
+  .field-contents {
+    white-space: pre-wrap;
   }
 }
