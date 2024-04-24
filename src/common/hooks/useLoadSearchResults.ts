@@ -14,36 +14,44 @@ export const useLoadSearchResults = (
   const setQuery = useSetRecoilState(state.search.query);
   const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
   const [searchParams] = useSearchParams();
-  const querySearchParam = searchParams.get(SearchQueryParams.Query);
-  const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy);
+  const queryParam = searchParams.get(SearchQueryParams.Query);
+  const searchByParam = searchParams.get(SearchQueryParams.SearchBy);
   const prevSearchParams = useRef<{ query: string | null; searchBy: string | null }>({ query: null, searchBy: null });
+  const prevPageNumber = useRef(pageNumber);
 
   useEffect(() => {
     async function makeSearch() {
-      if (searchBySearchParam) {
-        setSearchBy(searchBySearchParam as SearchIdentifiers);
+      const { query: prevQuery, searchBy: prevSearchBy } = prevSearchParams.current;
+
+      if (
+        prevQuery === queryParam &&
+        prevSearchBy === searchByParam &&
+        prevPageNumber.current === pageNumber &&
+        !forceRefresh
+      )
+        return;
+
+      if (searchByParam && prevSearchBy !== searchByParam) {
+        setSearchBy(searchByParam as SearchIdentifiers);
       }
 
-      if (!querySearchParam) {
+      if (!queryParam) {
         setData(null);
         return;
       }
 
       // Sets query's value for Basic search
-      if (searchBySearchParam) {
-        setQuery(querySearchParam);
+      if (searchByParam && prevQuery !== queryParam) {
+        setQuery(queryParam);
       }
 
-      const { query, searchBy } = prevSearchParams.current;
+      await fetchData(queryParam, searchByParam as SearchIdentifiers, pageNumber * SEARCH_RESULTS_LIMIT);
 
-      if (query !== querySearchParam || searchBy !== searchBySearchParam || forceRefresh) {
-        await fetchData(querySearchParam, searchBySearchParam as SearchIdentifiers, pageNumber * SEARCH_RESULTS_LIMIT);
-
-        setForceRefresh(false);
-        prevSearchParams.current = { query: querySearchParam, searchBy: searchBySearchParam };
-      }
+      setForceRefresh(false);
+      prevSearchParams.current = { query: queryParam, searchBy: searchByParam };
+      prevPageNumber.current = pageNumber;
     }
 
     makeSearch();
-  }, [querySearchParam, searchBySearchParam, pageNumber, forceRefresh]);
+  }, [queryParam, searchByParam, pageNumber, forceRefresh]);
 };
