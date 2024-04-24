@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -27,10 +27,13 @@ export const Edit = () => {
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const marcPreviewData = useRecoilValue(state.data.marcPreview);
+  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
 
   const [queryParams] = useSearchParams();
 
   useEffect(() => {
+    resetMarcPreviewData();
+
     scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
 
