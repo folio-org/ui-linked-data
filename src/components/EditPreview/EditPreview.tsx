@@ -6,11 +6,12 @@ import state from '@state';
 import classNames from 'classnames';
 import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryParams, RESOURCE_CREATE_URLS, ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 
 export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
@@ -19,9 +20,9 @@ export const EditPreview = () => {
   const { resourceId } = useParams();
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const [queryParams] = useSearchParams();
-  const navigate = useNavigate();
   const typeParam = queryParams.get(QueryParams.Type);
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   return (
     <div
@@ -35,9 +36,11 @@ export const EditPreview = () => {
             <FormattedMessage id="marva.instances" />
           </strong>
           <Button
-            data-testid='create-instance-button'
+            data-testid="create-instance-button"
             type={ButtonType.Highlighted}
-            onClick={() => navigate(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)}
+            onClick={() =>
+              navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)
+            }
           >
             <FormattedMessage id="marva.addInstance" />
           </Button>
