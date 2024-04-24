@@ -38,7 +38,9 @@ export const MarcField: FC<MarcField> = ({ field }) => {
           typedSelectedFieldTag?.ind2,
         )}`}</td>
       )}
-      <td colSpan={hasIndicators ? 2 : 3}>{subFields}</td>
+      <td className="field-contents" colSpan={hasIndicators ? 2 : 3}>
+        {subFields}
+      </td>
     </tr>
   );
 };
