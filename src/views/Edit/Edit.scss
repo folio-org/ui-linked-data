@@ -5,7 +5,7 @@
   overflow: hidden;
   height: 100%;
   
-  > * {
+  > *:not(.view-marc-modal) {
     overflow: auto;
     padding: 0.75rem 0.938rem;
   }

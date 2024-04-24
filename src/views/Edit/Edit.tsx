@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -11,9 +11,10 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { ResourceType } from '@common/constants/record.constants';
-import { QueryParams } from '@common/constants/routes.constants';
-import { EditPreview } from '@components/EditPreview';
 import state from '@state';
+import { EditPreview } from '@components/EditPreview';
+import { QueryParams } from '@common/constants/routes.constants';
+import { ViewMarcModal } from '@components/ViewMarcModal';
 import './Edit.scss';
 
 export const Edit = () => {
@@ -25,6 +26,7 @@ export const Edit = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
+  const marcPreviewData = useRecoilValue(state.data.marcPreview);
 
   const [queryParams] = useSearchParams();
 
@@ -90,8 +92,13 @@ export const Edit = () => {
 
   return (
     <div data-testid="edit-page" className="edit-page">
-      <EditPreview />
-      <EditSection />
+      {!marcPreviewData && (
+        <>
+          <EditPreview />
+          <EditSection />
+        </>
+      )}
+      <ViewMarcModal />
     </div>
   );
 };

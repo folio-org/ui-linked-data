@@ -36,7 +36,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
         expand();
 
         if (optionsListRef.current) {
-          (optionsListRef.current.childNodes[0] as HTMLLIElement).focus();
+          (optionsListRef.current.childNodes[0] as HTMLLIElement)?.focus();
         }
         break;
 
@@ -45,7 +45,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
 
         if (optionsListRef.current) {
           const lastIndex = optionsListRef.current.childNodes.length - 1;
-          (optionsListRef.current.childNodes[lastIndex] as HTMLLIElement).focus();
+          (optionsListRef.current.childNodes[lastIndex] as HTMLLIElement)?.focus();
         }
         break;
 
@@ -68,24 +68,24 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
     switch (key) {
       case 'ArrowDown':
         if (nextSibling) {
-          (nextSibling as HTMLLIElement).focus();
+          (nextSibling as HTMLLIElement)?.focus();
           break;
         }
 
         if (!nextSibling) {
-          (parentNode?.childNodes[0] as HTMLLIElement).focus();
+          (parentNode?.childNodes[0] as HTMLLIElement)?.focus();
         }
         break;
 
       case 'ArrowUp':
         if (previousSibling) {
-          (previousSibling as HTMLLIElement).focus();
+          (previousSibling as HTMLLIElement)?.focus();
           break;
         }
 
         if (!previousSibling && parentNode) {
           const indexOfLastElement = parentNode.childNodes?.length - 1;
-          (parentNode.childNodes[indexOfLastElement] as HTMLLIElement).focus();
+          (parentNode.childNodes[indexOfLastElement] as HTMLLIElement)?.focus();
         }
         break;
 
@@ -105,7 +105,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
 
   useEffect(() => {
     if (isExpanded && optionsListRef.current) {
-      (optionsListRef.current.childNodes[0] as HTMLLIElement).focus();
+      (optionsListRef.current.childNodes[0] as HTMLLIElement)?.focus();
     }
   }, [isExpanded]);
 
@@ -150,7 +150,9 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
 
             {data.length > 0 && (
               <div ref={optionsListRef} role="menu" className="dropdown-options-group-container">
-                {data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, action }, index) => {
+                {data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, hidden, action }, index) => {
+                  if (hidden) return;
+                  
                   switch (type) {
                     case DropdownItemType.basic:
                       return (

@@ -117,6 +117,12 @@ export const BASE_LOCALE = {
   'marva.unsavedChanges': 'Unsaved changes',
   'marva.continueWithoutSaving': 'Continue without saving',
   'marva.noTitleInBrackets': '<No title>',
+  'marva.viewMarc': 'View MARC',
+  'marva.marcWithTitle': 'MARC - {title}',
+  'marva.cantLoadMarc': "Can't load MARC for this resource description",
+  'marva.duplicate': 'Duplicate',
+  'marva.viewLinkedData': 'View linked data',
+  'marva.viewInInventory': 'View in Inventory app',
 };
 
 export const i18nMessages = {

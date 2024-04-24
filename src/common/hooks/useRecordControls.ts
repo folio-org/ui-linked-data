@@ -36,7 +36,6 @@ export const useRecordControls = () => {
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const [isInitiallyLoaded, setIsInititallyLoaded] = useRecoilState(state.status.recordIsInititallyLoaded);
@@ -104,7 +103,7 @@ export const useRecordControls = () => {
 
       !asRefToNewRecord && setRecord(parsedResponse);
 
-      setCommonStatus(currentStatus => [
+      setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
       ]);
@@ -133,7 +132,7 @@ export const useRecordControls = () => {
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
-      setCommonStatus(currentStatus => [
+      setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
       ]);
@@ -170,16 +169,16 @@ export const useRecordControls = () => {
       await deleteRecordRequest(currentRecordId as unknown as string);
       deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
-      setCommonStatus(currentStatus => [
+      setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.success, 'marva.rdDeleted'),
       ]);
 
-      navigate(ROUTES.DASHBOARD.uri);
+      navigate(ROUTES.SEARCH.uri);
     } catch (error) {
       console.error('Cannot delete the resource description', error);
 
-      setCommonStatus(currentStatus => [
+      setStatusMessages(currentStatus => [
         ...currentStatus,
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cantDeleteRd'),
       ]);
