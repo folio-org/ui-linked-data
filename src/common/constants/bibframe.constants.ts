@@ -44,6 +44,12 @@ export const GROUP_COMPLEX_CUTOFF_LEVEL = 4;
 // Work, Instance, Item
 export const ENTITY_LEVEL = 1;
 
+export const TITLE_CONTAINER_URIS = [
+  'http://bibfra.me/vocab/marc/Title',
+  'http://bibfra.me/vocab/marc/ParralelTitle',
+  'http://bibfra.me/vocab/marc/VariantTitle',
+];
+
 export const GROUPS_WITHOUT_ROOT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/summary',

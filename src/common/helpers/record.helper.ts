@@ -1,7 +1,12 @@
 import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
-import { IDENTIFIER_AS_VALUE, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
+import {
+  IDENTIFIER_AS_VALUE,
+  PROFILE_BFIDS,
+  TITLE_CONTAINER_URIS,
+  TYPE_URIS,
+} from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
@@ -137,8 +142,19 @@ export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
 export const getRecordTitle = (record: RecordEntry) => {
   const { block } = getEditingRecordBlocks(record);
 
-  // TODO: optimize to look for any title if the mainTitle is not present
-  return (record[block!]?.['http://bibfra.me/vocab/marc/title']?.[0] as Record<string, any>)?.[
-    'http://bibfra.me/vocab/marc/Title'
-  ]?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
+  let selectedTitle;
+
+  TITLE_CONTAINER_URIS.every(uri => {
+    const selectedTitleContainer = (
+      record[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, any>[]
+    )?.find(obj => Object.hasOwn(obj, uri));
+
+    if (selectedTitleContainer) {
+      selectedTitle = selectedTitleContainer[uri];
+    }
+
+    return !selectedTitleContainer;
+  });
+
+  return selectedTitle?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
 };
