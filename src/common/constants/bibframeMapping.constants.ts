@@ -24,6 +24,7 @@ export const BFLITE_URIS = {
 
 export const BF2_URIS = {
   NOTE: 'http://id.loc.gov/ontologies/bibframe/note',
+  NOTE_TYPE: 'http://id.loc.gov/ontologies/bibframe/noteType',
   CONTRIBUTION: 'http://id.loc.gov/ontologies/bibframe/contribution',
 };
 
@@ -887,4 +888,8 @@ export const BFLITE_TYPES_MAP = {
       },
     },
   },
+};
+
+export const DEFAULT_GROUP_VALUES = {
+  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: { value: BFLITE_URIS.NOTE },
 };

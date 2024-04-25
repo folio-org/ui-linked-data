@@ -2,7 +2,7 @@ import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/h
 import { UserValueType } from './userValueType';
 import { IUserValueType } from './userValueType.interface';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { BFLITE_TYPES_MAP } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES } from '@common/constants/bibframeMapping.constants';
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
   private uri?: string;
@@ -33,26 +33,33 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
 
     if (Array.isArray(data)) {
       for (const dataEntry of data as RecordBasic[]) {
+        const itemUri = dataEntry[uriSelector as string]?.[0];
+
+        if (!this.checkDefaultGroupValues(groupUri, itemUri)) {
+          this.generateContentItem({
+            label: dataEntry[labelSelector as string]?.[0],
+            itemUri,
+            uri,
+            groupUri,
+            type,
+            fieldUri,
+          });
+        }
+      }
+    } else {
+      const typedData = data as RecordBasic;
+      const itemUri = typedData[uriSelector as string]?.[0];
+
+      if (!this.checkDefaultGroupValues(groupUri, itemUri)) {
         this.generateContentItem({
-          label: dataEntry[labelSelector as string]?.[0],
-          itemUri: dataEntry[uriSelector as string]?.[0],
+          label: typedData[labelSelector as string]?.[0],
+          itemUri,
           uri,
           groupUri,
           type,
           fieldUri,
         });
       }
-    } else {
-      const typedData = data as RecordBasic;
-
-      this.generateContentItem({
-        label: typedData[labelSelector as string]?.[0],
-        itemUri: typedData[uriSelector as string]?.[0],
-        uri,
-        groupUri,
-        type,
-        fieldUri,
-      });
     }
 
     this.value = {
@@ -61,6 +68,12 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     };
 
     return this.value;
+  }
+
+  private checkDefaultGroupValues(groupUri?: string, itemUri?: string) {
+    if (!groupUri && !itemUri) return;
+
+    return (DEFAULT_GROUP_VALUES as DefaultGroupValues)[groupUri as string]?.value === itemUri;
   }
 
   private generateContentItem({
