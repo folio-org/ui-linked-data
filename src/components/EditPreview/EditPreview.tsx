@@ -15,6 +15,8 @@ import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 
 export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const record = useRecoilValue(state.inputs.record);
   const isPositionedSecond =
     currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
   const { resourceId } = useParams();
@@ -41,6 +43,7 @@ export const EditPreview = () => {
             onClick={() =>
               navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)
             }
+            disabled={!record || isEdited}
           >
             <FormattedMessage id="marva.addInstance" />
           </Button>
