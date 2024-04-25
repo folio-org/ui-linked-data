@@ -104,7 +104,7 @@ export const EditControlPane = () => {
             />
           ))}
       </div>
-      {!isInCreateMode ? <Dropdown labelId="marva.actions" items={items} /> : <span className="empty-block" />}
+      {!isInCreateMode ? <Dropdown labelId="marva.actions" items={items} buttonTestId='edit-control-actions-toggle' /> : <span className="empty-block" />}
     </div>
   );
 };
