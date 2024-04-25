@@ -32,3 +32,9 @@ type RecordForComplexGroupsDTO = { [key: string]: string[] }[];
 type ICommonStatus = {
   set: (l10nId: string, type: StatusType) => void;
 };
+
+type DefaultGroupValues = {
+  [x: string]: {
+    value: string;
+  };
+};

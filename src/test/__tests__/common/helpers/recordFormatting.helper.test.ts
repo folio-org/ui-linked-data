@@ -127,57 +127,6 @@ describe('recordFormatting', () => {
     });
   });
 
-  describe('updateRecordWithDefaultNoteType', () => {
-    test('returns initial record', () => {
-      const record = {
-        _notes: [
-          {
-            value: ['note description 1'],
-            type: ['testType_1'],
-          },
-          {
-            value: ['note description 2'],
-            type: ['testType_2'],
-          },
-        ],
-      };
-
-      const result = RecordFormattingHelper.updateRecordWithDefaultNoteType(record);
-
-      expect(result).toEqual(record);
-    });
-
-    test('returns a record with a default Note type', () => {
-      const record = {
-        _notes: [
-          {
-            value: ['note description 1'],
-            type: ['testType_1'],
-          },
-          {
-            value: ['note description 2'],
-          },
-        ],
-      } as Record<string, RecursiveRecordSchema[]>;
-      const testResult = {
-        _notes: [
-          {
-            value: ['note description 1'],
-            type: ['testType_1'],
-          },
-          {
-            value: ['note description 2'],
-            type: ['testNoteUri'],
-          },
-        ],
-      };
-
-      const result = RecordFormattingHelper.updateRecordWithDefaultNoteType(record);
-
-      expect(result).toEqual(testResult);
-    });
-  });
-
   describe('updateRecordWithRelationshipDesignator', () => {
     const fieldUris = ['testCreatorUri', 'testContributorUri'];
     type RecordValue = Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>;

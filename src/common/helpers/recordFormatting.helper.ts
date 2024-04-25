@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { FORCE_INCLUDE_WHEN_DEPARSING, WORK_TO_INSTANCE_FIELDS } from '@common/constants/bibframe.constants';
 import {
+  BF2_URIS,
   BFLITE_URIS,
   NON_BF_RECORD_CONTAINERS,
   NON_BF_RECORD_ELEMENTS,
@@ -52,9 +53,7 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   updatedRecord = updateRecordForTargetAudience(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateWorkWithInstanceFields(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
 
-  const instanceWithUpdatedNotes = updateRecordWithDefaultNoteType(updatedRecord);
-
-  return updateRecordWithRelationshipDesignator(instanceWithUpdatedNotes, FORCE_INCLUDE_WHEN_DEPARSING);
+  return updateRecordWithRelationshipDesignator(updatedRecord, FORCE_INCLUDE_WHEN_DEPARSING);
 };
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
@@ -73,25 +72,11 @@ export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSche
     if (!noteEntry) return;
 
     recordEntry[NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container] = noteEntry?.map(note => ({
-      type: note['http://id.loc.gov/ontologies/bibframe/noteType'],
-      value: note['http://bibfra.me/vocab/lite/note'],
+      type: note[BF2_URIS.NOTE_TYPE] ?? [BFLITE_URIS.NOTE],
+      value: note[BFLITE_URIS.NOTE],
     }));
 
     delete recordEntry[BFLITE_URIS.NOTE];
-  });
-
-  return record;
-};
-
-export const updateRecordWithDefaultNoteType = (
-  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
-) => {
-  const typedNotes = record?.[NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container] as unknown as RecursiveRecordSchema[];
-
-  typedNotes?.forEach(noteRecord => {
-    if (!noteRecord.type) {
-      noteRecord.type = [BFLITE_URIS.NOTE];
-    }
   });
 
   return record;
