@@ -197,4 +197,23 @@ describe('record.helper', () => {
       expect(result).toEqual(testResult);
     });
   });
+
+  describe('getRecordTitle', () => {
+    const mockMainTitle = '80085'
+    const mockRecord = {
+      'testInstanceUri': {
+        'http://bibfra.me/vocab/marc/title': [
+          {
+            'http://bibfra.me/vocab/marc/Title': {
+              'http://bibfra.me/vocab/marc/mainTitle': [mockMainTitle],
+            },
+          },
+        ],
+      },
+    };
+
+    test('returns title', () => {
+      expect(RecordHelper.getRecordTitle(mockRecord as unknown as RecordEntry)).toBe(mockMainTitle);
+    });
+  });
 });

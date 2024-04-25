@@ -8,9 +8,10 @@ import './Dropdown.scss';
 type DropdownProps = {
   labelId: string;
   items: DropdownItems;
+  buttonTestId?: string;
 };
 
-export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
+export const Dropdown: FC<DropdownProps> = ({ labelId, items, buttonTestId }) => {
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const optionsListRef = useRef<HTMLDivElement>(null);
@@ -130,6 +131,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items }) => {
         onClick={toggle}
         onKeyDown={handleButtonKeyDown}
         aria-expanded={isExpanded}
+        data-testid={buttonTestId}
       >
         <span className="dropdown-button-label">
           <FormattedMessage id={labelId} />

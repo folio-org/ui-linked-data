@@ -12,7 +12,7 @@ export const ViewMarcControlPane = () => {
   const { formatMessage } = useIntl();
 
   return (
-    <div className="nav-block nav-block-fixed-height">
+    <div className="nav-block nav-block-fixed-height" data-testid="view-marc-control-pane">
       <nav>
         <Button
           data-testid="nav-close-button"
