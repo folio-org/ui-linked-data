@@ -16,6 +16,7 @@ import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {
@@ -57,12 +58,14 @@ export const EditControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'marva.duplicate',
           icon: <Duplicate16 />,
+          isDisabled: IS_DISABLED_FOR_ALPHA,
         },
         {
           id: 'viewLinkedData',
           type: DropdownItemType.basic,
           labelId: 'marva.viewLinkedData',
           icon: <EyeOpen16 />,
+          isDisabled: IS_DISABLED_FOR_ALPHA,
         },
         {
           id: 'viewMarc',
@@ -77,6 +80,7 @@ export const EditControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'marva.viewInInventory',
           icon: <ExternalLink16 />,
+          isDisabled: IS_DISABLED_FOR_ALPHA,
         },
       ],
     },

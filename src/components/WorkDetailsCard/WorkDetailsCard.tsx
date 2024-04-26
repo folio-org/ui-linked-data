@@ -8,6 +8,7 @@ import { Button, ButtonType } from '@components/Button';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
 import { Classifications } from '@common/constants/search.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { getTitle } from '@common/helpers/search.helper';
 import './WorkDetailsCard.scss';
 
@@ -60,9 +61,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
             <span>
               <FormattedMessage id="marva.creator" />
             </span>
-            <span>
-              <Link to="#">{creatorName}</Link>
-            </span>
+            <span>{IS_DISABLED_FOR_ALPHA ? creatorName : <Link to="#">{creatorName}</Link>}</span>
           </div>
         )}
         {langCode && (

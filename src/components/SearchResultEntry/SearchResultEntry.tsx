@@ -9,6 +9,7 @@ import { formatItemSearchInstanceListData } from '@common/helpers/search.helper'
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import './SearchResultEntry.scss';
@@ -60,7 +61,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
       ...row,
       title: {
         ...row.title,
-        children: <Link to="#">{row.title.label}</Link>,
+        children: IS_DISABLED_FOR_ALPHA ? <>{row.title.label}</> : <Link to="#">{row.title.label}</Link>,
       },
       editCtl: {
         children: (
@@ -77,7 +78,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
       selectCtl: {
         children: (
           <div className="row-select-container">
-            <input id={`row-select-ctl-${row.__meta?.key}`} type="checkbox" />
+            <input id={`row-select-ctl-${row.__meta?.key}`} type="checkbox" disabled={IS_DISABLED_FOR_ALPHA} />
           </div>
         ),
       },
