@@ -24,6 +24,7 @@ export const DropdownField: FC<IDropdownField> = ({ options, uuid, onChange, val
       value={localValue}
       disabled={isDisabled}
       className="edit-section-field-input dropdown-field"
+      data-testid="dropdown-field"
     />
   );
 };

@@ -4,7 +4,7 @@ import { DropdownField } from '@components/DropdownField';
 
 // TODO: enable/update unit tests once the edit section
 // field components are stable
-xdescribe('Dropdown Field', () => {
+describe('Dropdown Field', () => {
   const options = [{ label: 'test label', value: 'testValue', uri: 'testUri' }];
   const uuid = 'testUuid';
   const onChangeFn = jest.fn();
@@ -23,7 +23,7 @@ xdescribe('Dropdown Field', () => {
     };
 
     renderComponent();
-    fireEvent.change(getByTestId('mock-select'), event);
+    fireEvent.change(getByTestId('dropdown-field'), event);
 
     expect(onChangeFn).toHaveBeenCalledWith(options[0], uuid, true);
   });

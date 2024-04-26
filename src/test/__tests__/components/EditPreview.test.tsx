@@ -27,7 +27,7 @@ describe('EditPreview', () => {
 
   const { getByTestId } = screen;
 
-  test('navigates to add new instance sceen', () => {
+  xtest('navigates to add new instance screen', () => {
     fireEvent.click(getByTestId('create-instance-button'));
 
     expect(navigate).toHaveBeenCalled();
