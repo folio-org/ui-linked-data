@@ -173,7 +173,7 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
   'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/content': BFLITE_URIS.CODE, // code/link? NAME?
+  'http://bibfra.me/vocab/marc/content': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/lite/classification': BFLITE_URIS.SOURCE,
   'http://bibfra.me/vocab/lite/Person': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Family': BFLITE_URIS.NAME,
@@ -828,7 +828,10 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
     'http://bibfra.me/vocab/marc/content': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/content' },
       fields: {
-        'http://bibfra.me/vocab/marc/content': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/content' },
+        'http://bibfra.me/vocab/marc/content': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/content',
+          label: BFLITE_URIS.TERM,
+        },
       },
     },
     'http://bibfra.me/vocab/marc/summary': {
