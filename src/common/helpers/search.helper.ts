@@ -24,7 +24,7 @@ export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchR
     // TODO: at the moment, picking the first match/first item in list for display
     // this might change depending on requirements
 
-    const selectedPublisher = publications?.find(({ name, date }) => name && date);
+    const selectedPublisher = publications?.find(({ name, date }) => name || date);
 
     return {
       __meta: {
