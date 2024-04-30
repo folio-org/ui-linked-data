@@ -1,5 +1,6 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -11,6 +12,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import state from '@state';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import './SearchResultEntry.scss';
 
@@ -53,6 +55,7 @@ const instancesListHeader: Row = {
 
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
   const { navigateToEditPage } = useNavigateToEditPage();
+  const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = () => setIsOpen(!isOpen);
 
@@ -107,7 +110,10 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
             <span>
               <FormattedMessage id="marva.noInstancesAvailable" />
             </span>
-            <Link to={`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${restOfWork.id}`}>
+            <Link
+              to={`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${restOfWork.id}`}
+              state={navigationState}
+            >
               <FormattedMessage id="marva.addAnInstance" />
             </Link>
           </span>
