@@ -1,5 +1,9 @@
 import { cloneDeep } from 'lodash';
-import { FORCE_INCLUDE_WHEN_DEPARSING, WORK_TO_INSTANCE_FIELDS } from '@common/constants/bibframe.constants';
+import {
+  FORCE_INCLUDE_WHEN_DEPARSING,
+  PROVISION_ACTIVITY_OPTIONS,
+  WORK_TO_INSTANCE_FIELDS,
+} from '@common/constants/bibframe.constants';
 import {
   BF2_URIS,
   BFLITE_URIS,
@@ -52,6 +56,7 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   updatedRecord = updateRecordWithNotes(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateRecordForTargetAudience(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateWorkWithInstanceFields(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
+  updatedRecord = updateRecordForProviderPlace(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
 
   return updateRecordWithRelationshipDesignator(updatedRecord, FORCE_INCLUDE_WHEN_DEPARSING);
 };
@@ -159,6 +164,35 @@ export const updateWorkWithInstanceFields = (
     record[BFLITE_URIS.WORK as string] = updatedWorkData;
 
     delete typedRecord?.[BFLITE_URIS.INSTANCE]?.[fieldName];
+  });
+
+  return record;
+};
+
+export const updateRecordForProviderPlace = (
+  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
+) => {
+  const instanceComponent = record?.[BFLITE_URIS.INSTANCE as string] as unknown as Record<
+    string,
+    Array<{
+      [key: string]: string[] | Record<string, string[]>[];
+    }>
+  >;
+  const providerPlaceUri = BFLITE_URIS.PROVIDER_PLACE;
+
+  PROVISION_ACTIVITY_OPTIONS.forEach(option => {
+    if (!instanceComponent[option]) return;
+
+    instanceComponent[option].forEach(recordProvisionActivity => {
+      if (!recordProvisionActivity?.[providerPlaceUri]) return;
+
+      recordProvisionActivity[providerPlaceUri] = (
+        recordProvisionActivity?.[providerPlaceUri] as Record<string, string[]>[]
+      )?.map(data => ({
+        ...data,
+        [BFLITE_URIS.NAME]: data[BFLITE_URIS.LABEL],
+      }));
+    });
   });
 
   return record;

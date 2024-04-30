@@ -20,6 +20,7 @@ export const BFLITE_URIS = {
   NOTE: 'http://bibfra.me/vocab/lite/note',
   CREATOR: 'http://bibfra.me/vocab/lite/creator',
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
+  PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
 };
 
 export const BF2_URIS = {

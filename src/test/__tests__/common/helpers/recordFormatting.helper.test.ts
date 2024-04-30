@@ -2,6 +2,7 @@ import * as RecordFormattingHelper from '@common/helpers/recordFormatting.helper
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { updateRecordForProviderPlace } from '@common/helpers/recordFormatting.helper';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
@@ -9,6 +10,7 @@ describe('recordFormatting', () => {
   const testWorkUri = 'testWorkUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockWorkToInstanceConstant = getMockedImportedConstant(BibframeConstants, 'WORK_TO_INSTANCE_FIELDS');
+  const mockProvisionActivityConstant = getMockedImportedConstant(BibframeConstants, 'PROVISION_ACTIVITY_OPTIONS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
   const mockNonBFRecordContainersConstant = getMockedImportedConstant(
@@ -17,13 +19,16 @@ describe('recordFormatting', () => {
   );
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockWorkToInstanceConstant([]);
+  mockProvisionActivityConstant(['testOption_1', 'testOption_2']);
   mockBFLiteUriConstant({
     INSTANCE: testInstanceUri,
     WORK: testWorkUri,
     NOTE: 'testNoteUri',
     NAME: 'testNameUri',
+    LABEL: 'testLabelUri',
     CREATOR: 'testCreatorUri',
     CONTRIBUTOR: 'testContributorUri',
+    PROVIDER_PLACE: 'testProviderPlaceUri',
   });
   mockNonBFRecordElementsConstant({
     testNoteUri: { container: '_notes' },
@@ -207,6 +212,51 @@ describe('recordFormatting', () => {
       };
 
       const result = RecordFormattingHelper.updateWorkWithInstanceFields(instance);
+
+      expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('updateRecordForProviderPlace', () => {
+    it('does not modify the record if no Provider place data exists', () => {
+      const record = {
+        testInstanceUri: {
+          testItem_1: [],
+          testItem_2: [],
+        },
+      };
+
+      const result = updateRecordForProviderPlace(record);
+
+      expect(result).toEqual(record);
+    });
+
+    it('updates Provider place data with name from Label', () => {
+      const record = {
+        testInstanceUri: {
+          testOption_1: [
+            {
+              testProviderPlaceUri: [{ testLabelUri: 'Test Label' }],
+            },
+          ],
+        },
+      } as unknown as Record<string, RecursiveRecordSchema>;
+      const testResult = {
+        testInstanceUri: {
+          testOption_1: [
+            {
+              testProviderPlaceUri: [
+                {
+                  testLabelUri: 'Test Label',
+                  testNameUri: 'Test Label',
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      const result = updateRecordForProviderPlace(record);
 
       expect(result).toEqual(testResult);
     });
