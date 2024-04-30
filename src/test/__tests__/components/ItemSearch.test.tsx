@@ -121,10 +121,7 @@ describe('Item Search', () => {
     },
   };
 
-  const {
-    getByTestId,
-    findByText,
-  } = screen;
+  const { getByTestId, findByText } = screen;
 
   beforeEach(() => {
     getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as any).mockImplementation(() =>
@@ -190,7 +187,8 @@ describe('Item Search', () => {
     expect(await findByText('John Doe')).toBeInTheDocument();
   });
 
-  test('returns out of fetchData if no query present', async () => {
+  test("returns out of fetchData if query is subject to validation and doesn't pass validations", async () => {
+    fireEvent.change(getByTestId('id-search-input'), { target: { value: 'sm1f4a123' } });
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {

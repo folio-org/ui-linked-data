@@ -37,7 +37,7 @@ export const ItemSearch = () => {
   const [data, setData] = useRecoilState(state.search.data);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
-  // const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
+
   const {
     getPageMetadata,
     setPageMetadata,
@@ -60,7 +60,6 @@ export const ItemSearch = () => {
 
     if (data) return;
 
-    // setPreviewContent([]);
     clearPagination();
   }, []);
 
@@ -80,14 +79,12 @@ export const ItemSearch = () => {
     return updatedQuery?.replaceAll('"', '\\"');
   };
 
-  const fetchData = async (query: string, searchBy?: SearchIdentifiers, offset?: number) => {
-    if (!query) return;
-
+  const fetchData = async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
     clearMessage();
-    // setPreviewContent([]);
+
     data && setData(null);
 
-    const updatedQuery = searchBy ? validateAndNormalizeQuery(searchBy, query) : query;
+    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
 
     if (!updatedQuery) return;
 
@@ -125,7 +122,6 @@ export const ItemSearch = () => {
     setSearchBy(DEFAULT_SEARCH_BY);
     setQuery('');
     setMessage('');
-    // setPreviewContent([]);
   };
 
   return (
