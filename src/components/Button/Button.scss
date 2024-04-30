@@ -20,7 +20,9 @@
   }
 
   &:disabled,
-  &:disabled:hover {
+  &:disabled:hover,
+  &:disabled:active {
+    border-color: transparent;
     color: $gray-400;
     background-color: $gray-200;
     cursor: not-allowed;
@@ -187,6 +189,13 @@
         fill: #fff;
         opacity: 1;
         fill-opacity: 1;
+      }
+    }
+
+    &:disabled:active {
+      > svg {
+        fill-opacity: 0.6;
+        opacity: 0.6;
       }
     }
   }
