@@ -6,7 +6,7 @@ import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/searc
 import state from '@state';
 
 export const useLoadSearchResults = (
-  fetchData: (query: string, searchBy?: SearchIdentifiers, offset?: number) => Promise<void>,
+  fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
   pageNumber = 0,
 ) => {
   const setData = useSetRecoilState(state.search.data);
