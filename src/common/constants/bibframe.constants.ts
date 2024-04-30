@@ -123,3 +123,7 @@ export const PROVISION_ACTIVITY_OPTIONS = [
   'http://bibfra.me/vocab/marc/distribution',
   'http://bibfra.me/vocab/marc/manufacture',
 ];
+
+export const EXTERNAL_DATA_SOURCE_URIS = {
+  LANGUAGE: 'http://id.loc.gov/vocabulary/languages',
+};
