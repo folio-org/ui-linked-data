@@ -71,7 +71,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   }
 
   private checkDefaultGroupValues(groupUri?: string, itemUri?: string) {
-    if (!groupUri && !itemUri) return;
+    if (!groupUri || !itemUri) return false;
 
     return (DEFAULT_GROUP_VALUES as DefaultGroupValues)[groupUri as string]?.value === itemUri;
   }
