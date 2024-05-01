@@ -108,6 +108,10 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
     field: BFLITE_URIS.SOURCE,
     value: 'ddc',
   },
+  'http://id.loc.gov/ontologies/bibframe/ClassificationLcc': {
+    field: BFLITE_URIS.SOURCE,
+    value: 'lc',
+  },
 };
 
 export const WORK_TO_INSTANCE_FIELDS = ['http://bibfra.me/vocab/marc/responsibilityStatement'];

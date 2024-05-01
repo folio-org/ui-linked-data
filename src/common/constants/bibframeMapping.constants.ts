@@ -21,6 +21,7 @@ export const BFLITE_URIS = {
   CREATOR: 'http://bibfra.me/vocab/lite/creator',
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
   PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
+  CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
 };
 
 export const BF2_URIS = {
@@ -80,6 +81,7 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/status': 'http://bibfra.me/vocab/marc/status',
   'http://id.loc.gov/ontologies/bibframe/classification': 'http://bibfra.me/vocab/lite/classification',
   'http://id.loc.gov/ontologies/bibframe/ClassificationDdc': 'ddc',
+  'http://id.loc.gov/ontologies/bibframe/ClassificationLcc': 'lc',
   'http://id.loc.gov/ontologies/bibframe/classificationPortion': BFLITE_URIS.CODE,
   'http://id.loc.gov/ontologies/bibframe/itemPortion': 'http://bibfra.me/vocab/marc/itemNumber',
   'http://id.loc.gov/ontologies/bibframe/source': BFLITE_URIS.EDITION,
@@ -857,6 +859,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classification' },
       options: {
         ddc: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/ClassificationDdc' },
+        lc: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/ClassificationLcc' },
       },
       fields: {
         'http://bibfra.me/vocab/marc/code': {
