@@ -57,6 +57,7 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
   updatedRecord = updateRecordForTargetAudience(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateWorkWithInstanceFields(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
   updatedRecord = updateRecordForProviderPlace(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
+  updatedRecord = updateRecordForClassification(updatedRecord) as unknown as Record<string, RecursiveRecordSchema[]>;
 
   return updateRecordWithRelationshipDesignator(updatedRecord, FORCE_INCLUDE_WHEN_DEPARSING);
 };
@@ -193,6 +194,30 @@ export const updateRecordForProviderPlace = (
         [BFLITE_URIS.NAME]: data[BFLITE_URIS.LABEL],
       }));
     });
+  });
+
+  return record;
+};
+
+export const updateRecordForClassification = (
+  record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
+) => {
+  const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<
+    string,
+    Record<string, RecordBasic>[]
+  >;
+  const classificationData = workComponent?.[BFLITE_URIS.CLASSIFICATION];
+
+  if (!classificationData) return record;
+
+  workComponent[BFLITE_URIS.CLASSIFICATION] = classificationData?.map(data => {
+    let updatedElem = {};
+
+    for (const key in data) {
+      updatedElem = { ...data[key], [BFLITE_URIS.SOURCE]: [key] };
+    }
+
+    return updatedElem;
   });
 
   return record;

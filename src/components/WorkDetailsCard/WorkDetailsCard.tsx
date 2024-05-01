@@ -30,8 +30,9 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   const title = getTitle(titles);
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
   const langCode = languages?.find(({ value }) => value)?.value;
-  const classificationNumber = classifications?.find(({ number, source }) => number && source === Classifications.DDC)
-    ?.number;
+  const classificationNumber = classifications?.find(
+    ({ number, source }) => number && (source === Classifications.DDC || source === Classifications.LC),
+  )?.number;
 
   return (
     <div className="work-details-card">
