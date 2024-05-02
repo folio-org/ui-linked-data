@@ -16,20 +16,29 @@ describe('EditPreview', () => {
   beforeEach(() => {
     render(
       <RecoilRoot
-        initializeState={snapshot =>
-          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set([PROFILE_BFIDS.INSTANCE]))
-        }
+        initializeState={snapshot => {
+          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set([PROFILE_BFIDS.INSTANCE]));
+          snapshot.set(state.inputs.record, {});
+        }}
       >
-        <RouterProvider router={createMemoryRouter([{ path: '/', element: <EditPreview /> }])} />
+        <RouterProvider
+          router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
+            initialEntries: ['/resources/create?type=work'],
+          })}
+        />
       </RecoilRoot>,
     );
   });
 
   const { getByTestId } = screen;
 
-  xtest('navigates to add new instance screen', () => {
+  test('navigates to add new instance screen', () => {
     fireEvent.click(getByTestId('create-instance-button'));
 
     expect(navigate).toHaveBeenCalled();
+  });
+
+  test('contains instances list when create work page is opened', () => {
+    expect(getByTestId('instances-list')).toBeInTheDocument();
   });
 });
