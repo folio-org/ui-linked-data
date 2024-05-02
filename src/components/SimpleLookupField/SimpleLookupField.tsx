@@ -52,7 +52,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   const observer = new IntersectionObserver(
     ([entry]) => {
-      setForceDisplayOptionsAtTheTop(!entry.isIntersecting);
+      setForceDisplayOptionsAtTheTop(!entry.isIntersecting && entry?.boundingClientRect?.bottom > window.innerHeight);
     },
     { root: document.getElementById(EDIT_SECTION_CONTAINER_ID), rootMargin: CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG },
   );
