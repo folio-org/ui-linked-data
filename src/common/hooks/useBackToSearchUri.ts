@@ -5,12 +5,13 @@ import { SearchQueryParams, ROUTES } from '@common/constants/routes.constants';
 export const useBackToSearchUri = () => {
   const location = useLocation();
   const [searchResultsUrl, setSearchResultsUrl] = useState(ROUTES.SEARCH.uri);
-  const { SearchBy, Query } = SearchQueryParams;
+  const { SearchBy, Query, Offset } = SearchQueryParams;
 
   useEffect(() => {
     const { state } = location;
     const searchByState = state?.[SearchBy];
     const queryState = state?.[Query];
+    const offsetState = state?.[Offset];
     const updatedUri = ROUTES.SEARCH.uri;
 
     if (!state || !queryState) {
@@ -24,6 +25,10 @@ export const useBackToSearchUri = () => {
 
     if (searchByState) {
       params[SearchBy] = searchByState;
+    }
+
+    if (offsetState) {
+      params[Offset] = offsetState;
     }
 
     setSearchResultsUrl(`${updatedUri}?${new URLSearchParams(params)}`);

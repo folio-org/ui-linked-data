@@ -83,9 +83,10 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
   return `(${queryWithFormatting})`;
 };
 
-export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null) => {
+export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null, offset = 0) => {
   const searchParamsState = {
     [SearchQueryParams.Query]: query,
+    [SearchQueryParams.Offset]: offset,
   } as SearchParamsState;
 
   if (searchBy) {

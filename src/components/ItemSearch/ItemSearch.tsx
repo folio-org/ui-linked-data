@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
@@ -55,14 +55,6 @@ export const ItemSearch = () => {
     setCurrentPageNumber(0);
   };
 
-  useEffect(() => {
-    // clear out preview content on page load
-
-    if (data) return;
-
-    clearPagination();
-  }, []);
-
   const clearMessage = useCallback(() => message && setMessage(''), [message]);
 
   const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
@@ -108,7 +100,7 @@ export const ItemSearch = () => {
     }
   };
 
-  useLoadSearchResults(fetchData, currentPageNumber);
+  useLoadSearchResults(fetchData);
 
   const submitSearch = () => {
     clearPagination();

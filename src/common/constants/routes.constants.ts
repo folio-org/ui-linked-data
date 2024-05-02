@@ -37,4 +37,5 @@ export enum QueryParams {
 export enum SearchQueryParams {
   Query = 'query',
   SearchBy = 'searchBy',
+  Offset = 'offset',
 }
