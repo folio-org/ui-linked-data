@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { ActionMeta, GroupBase, MultiValue, StylesConfig } from 'react-select';
@@ -14,6 +14,11 @@ import { ClearIndicator } from './ClearIndicator';
 import state from '@state';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 import './SimpleLookupField.scss';
+import Select from 'react-select/dist/declarations/src/Select';
+import {
+  CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG,
+  EDIT_SECTION_CONTAINER_ID,
+} from '@common/constants/uiElements.constants';
 
 interface Props {
   uri: string;
@@ -39,10 +44,28 @@ export const SimpleLookupField: FC<Props> = ({
 }) => {
   const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
   const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
-
+  const simpleLookupRef = useRef<Select<unknown, boolean, GroupBase<unknown>>>(null);
+  const [forceDisplayOptionsAtTheTop, setForceDisplayOptionsAtTheTop] = useState(false);
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      setForceDisplayOptionsAtTheTop(!entry.isIntersecting);
+    },
+    { root: document.getElementById(EDIT_SECTION_CONTAINER_ID), rootMargin: CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG },
+  );
+
+  useEffect(() => {
+    const elem = simpleLookupRef?.current?.inputRef;
+
+    elem && observer.observe(elem);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [simpleLookupRef]);
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri } = {} }) => ({
@@ -91,6 +114,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   return (
     <CreatableSelect
+      ref={simpleLookupRef}
       className="edit-section-field-input simple-lookup"
       classNamePrefix="simple-lookup"
       data-testid="simple-lookup"
@@ -99,6 +123,7 @@ export const SimpleLookupField: FC<Props> = ({
       openMenuOnFocus
       isLoading={isLoading}
       isMulti
+      menuPlacement={forceDisplayOptionsAtTheTop ? 'top' : 'auto'}
       components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
