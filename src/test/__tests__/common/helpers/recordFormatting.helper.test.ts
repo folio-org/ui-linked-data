@@ -2,7 +2,7 @@ import * as RecordFormattingHelper from '@common/helpers/recordFormatting.helper
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { updateRecordForProviderPlace } from '@common/helpers/recordFormatting.helper';
+import { updateRecordForClassification, updateRecordForProviderPlace } from '@common/helpers/recordFormatting.helper';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
@@ -26,9 +26,11 @@ describe('recordFormatting', () => {
     NOTE: 'testNoteUri',
     NAME: 'testNameUri',
     LABEL: 'testLabelUri',
+    SOURCE: 'testSourceUri',
     CREATOR: 'testCreatorUri',
     CONTRIBUTOR: 'testContributorUri',
     PROVIDER_PLACE: 'testProviderPlaceUri',
+    CLASSIFICATION: 'testClassificationUri',
   });
   mockNonBFRecordElementsConstant({
     testNoteUri: { container: '_notes' },
@@ -259,6 +261,72 @@ describe('recordFormatting', () => {
       const result = updateRecordForProviderPlace(record);
 
       expect(result).toEqual(testResult);
+    });
+  });
+
+  describe('updateRecordForClassification', () => {
+    it('updates the classification data with source information', () => {
+      const record = {
+        testWorkUri: {
+          testClassificationUri: [
+            {
+              option_1: {
+                prop_1: ['value 1'],
+              },
+            },
+            {
+              option_2: {
+                prop_2: ['value 2'],
+              },
+            },
+          ],
+        },
+      } as unknown as Record<string, RecursiveRecordSchema>;
+      const testResult = {
+        testWorkUri: {
+          testClassificationUri: [
+            {
+              prop_1: ['value 1'],
+              testSourceUri: ['option_1'],
+            },
+            {
+              prop_2: ['value 2'],
+              testSourceUri: ['option_2'],
+            },
+          ],
+        },
+      };
+
+      const result = updateRecordForClassification(record);
+
+      expect(result).toEqual(testResult);
+    });
+
+    it('handles empty classification data', () => {
+      const record = {
+        testWorkUri: {
+          testClassificationUri: [],
+        },
+      };
+
+      const result = updateRecordForClassification(record);
+
+      expect(result).toEqual(record);
+    });
+
+    it('handles missing Classification component', () => {
+      const mockRecord = {
+        testWorkUri: [
+          {
+            testProp_1: [],
+            testProp_2: [],
+          },
+        ],
+      };
+
+      const result = updateRecordForClassification(mockRecord);
+
+      expect(result).toEqual(mockRecord);
     });
   });
 

@@ -19,7 +19,7 @@ import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { findParentEntryByType } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
-import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
+import { EDIT_ALT_DISPLAY_LABELS, EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import classNames from 'classnames';
 import './EditSection.scss';
 
@@ -216,6 +216,7 @@ export const EditSection = memo(() => {
 
   return resourceTemplates ? (
     <div
+      id={EDIT_SECTION_CONTAINER_ID}
       className={classNames('edit-section', {
         'edit-section-passive': currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
       })}

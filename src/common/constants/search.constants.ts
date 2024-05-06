@@ -36,6 +36,7 @@ export enum TitleTypes {
 
 export enum Classifications {
   DDC = 'ddc',
+  LC = 'lc',
 }
 
 // TODO: here and below: uncomment once taken into development
