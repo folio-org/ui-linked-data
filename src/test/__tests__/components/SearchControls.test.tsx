@@ -6,10 +6,11 @@ import { SearchControls } from '@components/SearchControls';
 
 const setSearchParams = jest.fn();
 const mockSearchFiltersComponent = <div data-testid="search-filters" />;
+const mockUseSearchParams = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useSearchParams: () => [{}, setSearchParams],
+  useSearchParams: mockUseSearchParams,
 }));
 jest.mock('@components/SearchFilters', () => ({
   SearchFilters: () => mockSearchFiltersComponent,
@@ -18,27 +19,39 @@ jest.mock('@components/SearchFilters', () => ({
 describe('SearchControls', () => {
   const mockedSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');
 
-  test('renders SearchFilters component', () => {
-    mockedSearchFiltersEnabled(true);
+  describe('', () => {
+    beforeEach(() => {
+      mockUseSearchParams.mockResolvedValue([{}, setSearchParams]);
+    });
 
-    const { getByTestId } = render(
-      <RecoilRoot>
-        <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
-      </RecoilRoot>,
-    );
+    test('renders SearchFilters component', () => {
+      mockedSearchFiltersEnabled(true);
 
-    expect(getByTestId('search-filters')).toBeInTheDocument();
+      const { getByTestId } = render(
+        <RecoilRoot>
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
+        </RecoilRoot>,
+      );
+
+      expect(getByTestId('search-filters')).toBeInTheDocument();
+    });
+
+    test('does not render SearchFilters component', () => {
+      mockedSearchFiltersEnabled(false);
+
+      const { queryByTestId } = render(
+        <RecoilRoot>
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
+        </RecoilRoot>,
+      );
+
+      expect(queryByTestId('search-filters')).not.toBeInTheDocument();
+    });
   });
 
-  test('does not render SearchFilters component', () => {
-    mockedSearchFiltersEnabled(false);
+  /* describe('Reset button', () => {
+    test('renders button enabled', () => {});
 
-    const { queryByTestId } = render(
-      <RecoilRoot>
-        <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
-      </RecoilRoot>,
-    );
-
-    expect(queryByTestId('search-filters')).not.toBeInTheDocument();
-  });
+    test('renders button disabled', () => {});
+  }); */
 });
