@@ -1,6 +1,13 @@
 import { renderHook, act } from '@testing-library/react';
 import { usePagination } from '@common/hooks/usePagination';
 
+const setSearchParams = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useSearchParams: () => [new URLSearchParams({ offset: '0' }), setSearchParams],
+}));
+
 describe('usePagination', () => {
   function testOnPageClick({
     functionName,
