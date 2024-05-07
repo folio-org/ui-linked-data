@@ -91,6 +91,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
           onClick={onResetButtonClick}
           prefix={<XInCircle />}
           disabled={isDisabledResetButton}
+          data-testid="id-search-reset-button"
         >
           <FormattedMessage id="marva.reset" />
         </Button>
