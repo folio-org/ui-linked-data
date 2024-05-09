@@ -1,27 +1,95 @@
 .common-status {
   position: fixed;
-  top: 3rem;
-  left: 0.75rem;
+  bottom: 1.75rem;
+  right: 2rem;
   z-index: 100;
 }
 
 .status-message {
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
+  position: relative;
+  width: 42.375rem;
+  padding: 0.5rem 0.65625rem;
   border: 1px solid #d7d8da;
-  border-radius: 8px;
+  border-radius: 6px;
   background: white;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  font-size: 0.875rem;
+  transform: translateX(1500px);
+  opacity: 0;
+  animation: slideInOut 5500ms ease-in-out;
+
+  &:not(:first-child) {
+    margin-top: 0.5rem;
+  }
+
+  &-icon {
+    margin-right: 1rem;
+  }
+
+  &-text {
+    flex: 1;
+  }
+
+  &-close {
+    padding: 0;
+    background-color: transparent;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: transparent;
+      opacity: 0.5;
+    }
+  }
 
   &.success {
-    color: green;
+    border-color: #007700;
+    background-color: #d7e3d2;
+  }
+
+  &.warning {
+    border-color: #943e00;
+    color: #943e00;
+    background-color: #f7e7de;
+
+    .status-message-icon path,
+    .status-message-close path {
+      fill: #943e00;
+    }
   }
 
   &.error {
-    color: red;
+    border-color: #990000;
+    color: #990000;
+    background-color: #ead2d0;
+
+    .status-message-icon path,
+    .status-message-close path {
+      fill: #990000;
+    }
+  }
+}
+
+@keyframes slideInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+
+  5% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  95% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
   }
 }
