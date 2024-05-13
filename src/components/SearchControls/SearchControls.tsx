@@ -4,6 +4,7 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { SearchIdentifiers } from '@common/constants/search.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
+import { SearchQueryParams } from '@common/constants/routes.constants';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
@@ -25,7 +26,9 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
-  const setSearchParams = useSearchParams()?.[1];
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQueryParam = searchParams.get(SearchQueryParams.Query);
+  const isDisabledResetButton = !query && !searchQueryParam;
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     setMessage('');
@@ -87,7 +90,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
           className="search-button"
           onClick={onResetButtonClick}
           prefix={<XInCircle />}
-          disabled={!query}
+          disabled={isDisabledResetButton}
+          data-testid="id-search-reset-button"
         >
           <FormattedMessage id="marva.reset" />
         </Button>
