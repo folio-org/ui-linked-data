@@ -1,3 +1,20 @@
+export const labelEntry = {
+  constraints: {
+    defaults: [],
+    editable: false,
+    mandatory: true,
+    repeatable: true,
+    useValuesFrom: [],
+    valueDataType: {},
+  },
+  displayName: 'Literal label 1',
+  path: ['testKey-1', 'testKey-2', 'testKey-3'],
+  type: 'literal',
+  uri: 'propertyURI_1',
+  uriBFLite: 'uriBFLite_literal_1',
+  uuid: 'testKey-3',
+};
+
 export const schema = new Map([
   [
     'testKey-1',
@@ -185,25 +202,7 @@ export const schema = new Map([
       uuid: 'testKey-2',
     },
   ],
-  [
-    'testKey-3',
-    {
-      constraints: {
-        defaults: [],
-        editable: false,
-        mandatory: true,
-        repeatable: true,
-        useValuesFrom: [],
-        valueDataType: {},
-      },
-      displayName: 'Literal label 1',
-      path: ['testKey-1', 'testKey-2', 'testKey-3'],
-      type: 'literal',
-      uri: 'propertyURI_1',
-      uriBFLite: 'uriBFLite_literal_1',
-      uuid: 'testKey-3',
-    },
-  ],
+  ['testKey-3', labelEntry as unknown],
   [
     'testKey-4',
     {

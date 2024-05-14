@@ -1,3 +1,5 @@
+import { labelEntry } from './schema.data';
+
 export const updatedSchema = new Map([
   [
     'testKey-1',
@@ -185,25 +187,7 @@ export const updatedSchema = new Map([
       uuid: 'testKey-2',
     },
   ],
-  [
-    'testKey-3',
-    {
-      constraints: {
-        defaults: [],
-        editable: false,
-        mandatory: true,
-        repeatable: true,
-        useValuesFrom: [],
-        valueDataType: {},
-      },
-      displayName: 'Literal label 1',
-      path: ['testKey-1', 'testKey-2', 'testKey-3'],
-      type: 'literal',
-      uri: 'propertyURI_1',
-      uriBFLite: 'uriBFLite_literal_1',
-      uuid: 'testKey-3',
-    },
-  ],
+  ['testKey-3', labelEntry as unknown],
   [
     'testKey-4',
     {
@@ -310,23 +294,5 @@ export const updatedSchema = new Map([
       uuid: 'testKey-9',
     },
   ],
-  [
-    'testKey-19',
-    {
-      constraints: {
-        defaults: [],
-        editable: false,
-        mandatory: true,
-        repeatable: true,
-        useValuesFrom: [],
-        valueDataType: {},
-      },
-      displayName: 'Literal label 1',
-      path: ['testKey-1', 'testKey-2', 'testKey-19'],
-      type: 'literal',
-      uri: 'propertyURI_1',
-      uriBFLite: 'uriBFLite_literal_1',
-      uuid: 'testKey-19',
-    },
-  ],
+  ['testKey-19', labelEntry as unknown],
 ]);

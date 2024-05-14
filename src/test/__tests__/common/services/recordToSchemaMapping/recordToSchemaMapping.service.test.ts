@@ -5,7 +5,7 @@ import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMap
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { schema } from './data/schema.data';
+import { labelEntry, schema } from './data/schema.data';
 import { updatedSchema } from './data/updatedSchema.data';
 import { record } from './data/record.data';
 
@@ -76,25 +76,7 @@ describe('RecordToSchemaMappingService', () => {
 
     await service.init();
 
-    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
-      {
-        constraints: {
-          defaults: [],
-          editable: false,
-          mandatory: true,
-          repeatable: true,
-          useValuesFrom: [],
-          valueDataType: {},
-        },
-        displayName: 'Literal label 1',
-        path: ['testKey-1', 'testKey-2', 'testKey-3'],
-        type: 'literal',
-        uri: 'propertyURI_1',
-        uriBFLite: 'uriBFLite_literal_1',
-        uuid: 'testKey-3',
-      },
-      false,
-    );
+    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(labelEntry, false);
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(3);
