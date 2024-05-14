@@ -4,6 +4,7 @@ import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
+import { StatusType } from '@common/constants/status.constants';
 import { schema } from './data/schema.data';
 import { updatedSchema } from './data/updatedSchema.data';
 import { record } from './data/record.data';
@@ -98,5 +99,19 @@ describe('RecordToSchemaMappingService', () => {
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(3);
     expect(service.getUpdatedSchema()).toEqual(updatedSchema);
+  });
+
+  test('calls "commonStatusService.set" method', async () => {
+    const error = new Error();
+    jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
+    jest.spyOn(RecordToSchemaMappingService.prototype as any, 'traverseEntries').mockRejectedValue(error);
+    const spyLogError = jest
+      .spyOn(console, 'error')
+      .mockImplementation((message: any, error: Error) => ({ message, error }));
+
+    await service.init();
+
+    expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
+    expect(commonStatusService.set).toHaveBeenCalledWith('marva.recordMappingToSchema', StatusType.error);
   });
 });
