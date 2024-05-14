@@ -4,6 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import state from '@state';
+import { normalizeQuery } from '@common/helpers/search.helper';
 
 export const useLoadSearchResults = (
   fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
@@ -22,6 +23,8 @@ export const useLoadSearchResults = (
     offset: null,
   });
 
+  const normalizedQueryParam = searchByParam ? normalizeQuery(queryParam) : queryParam;
+
   useEffect(() => {
     async function makeSearch() {
       const { query: prevQuery, searchBy: prevSearchBy, offset: prevOffset } = prevSearchParams.current;
@@ -33,7 +36,7 @@ export const useLoadSearchResults = (
         setSearchBy(searchByParam as SearchIdentifiers);
       }
 
-      if (!queryParam) {
+      if (!queryParam || !normalizedQueryParam) {
         setData(null);
         return;
       }
@@ -44,7 +47,7 @@ export const useLoadSearchResults = (
       }
 
       await fetchData(
-        queryParam,
+        normalizedQueryParam,
         searchByParam as SearchIdentifiers,
         offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
       );
