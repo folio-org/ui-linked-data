@@ -58,17 +58,15 @@ export const ItemSearch = () => {
   const clearMessage = useCallback(() => message && setMessage(''), [message]);
 
   const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
-    let updatedQuery: string | null = query;
-
     if (type === SearchIdentifiers.LCCN) {
       const normalized = normalizeLccn(query);
 
       !normalized && setMessage('marva.searchInvalidLccn');
 
-      updatedQuery = normalized;
+      return normalized;
     }
 
-    return updatedQuery?.replaceAll('"', '\\"');
+    return query;
   };
 
   const fetchData = async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
