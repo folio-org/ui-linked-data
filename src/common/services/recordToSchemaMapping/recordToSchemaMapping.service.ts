@@ -66,16 +66,19 @@ export class RecordToSchemaMappingService {
 
         const containerBf2Uri = this.recordMap.container.bf2Uri;
         const containerDataTypeUri = this.recordMap.container.dataTypeUri;
-        const schemaEntry = this.getSchemaEntry(containerBf2Uri, containerDataTypeUri);
+        const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri);
 
         // Traverse throug the record elements within the group (for the Repeatable fields)
         for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
-          if (!schemaEntry) continue;
+          if (!schemaEntries?.length) continue;
 
           const dropdownOptionsMap = this.recordMap.options;
 
           // generate repeatable fields
           if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
+            const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[
+              parseInt(recordGroupIndex) - 1
+            ];
             const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) || '';
             this.updatedSchema = this.repeatableFieldsService?.get();
             this.schemaArray = Array.from(this.updatedSchema?.values() || []);
@@ -89,7 +92,7 @@ export class RecordToSchemaMappingService {
             await this.traverseEntries({
               dropdownOptionsMap,
               recordGroup,
-              schemaEntry,
+              schemaEntry: schemaEntries[0],
             });
           }
         }
@@ -144,8 +147,8 @@ export class RecordToSchemaMappingService {
     }
   }
 
-  private getSchemaEntry = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
-    return this.schemaArray.find((entry: SchemaEntry) => {
+  private getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
+    return this.schemaArray.filter((entry: SchemaEntry) => {
       const hasTheSameUri = entry.uri === containerBf2Uri;
       const hasTheSameDataTypeUri = containerDataTypeUri
         ? entry.constraints?.valueDataType?.dataTypeURI === containerDataTypeUri
