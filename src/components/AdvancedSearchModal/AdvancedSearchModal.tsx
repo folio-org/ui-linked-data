@@ -27,7 +27,7 @@ type Props = {
 };
 
 export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
-  const setSearchParams = useSearchParams()?.[1];
+  const [, setSearchParams] = useSearchParams();
   const { formatMessage } = useIntl();
   const [isOpen, setIsOpen] = useRecoilState(state.ui.isAdvancedSearchOpen);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);

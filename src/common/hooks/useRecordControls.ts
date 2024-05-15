@@ -105,7 +105,10 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.rdSaveSuccess'),
+        UserNotificationFactory.createMessage(
+          StatusType.success,
+          recordId ? 'marva.rdUpdateSuccess' : 'marva.rdSaveSuccess',
+        ),
       ]);
 
       // TODO: isEdited state update is not immediately reflected in the <Prompt />

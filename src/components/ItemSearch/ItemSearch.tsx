@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
@@ -55,28 +55,18 @@ export const ItemSearch = () => {
     setCurrentPageNumber(0);
   };
 
-  useEffect(() => {
-    // clear out preview content on page load
-
-    if (data) return;
-
-    clearPagination();
-  }, []);
-
   const clearMessage = useCallback(() => message && setMessage(''), [message]);
 
   const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
-    let updatedQuery: string | null = query;
-
     if (type === SearchIdentifiers.LCCN) {
       const normalized = normalizeLccn(query);
 
       !normalized && setMessage('marva.searchInvalidLccn');
 
-      updatedQuery = normalized;
+      return normalized;
     }
 
-    return updatedQuery?.replaceAll('"', '\\"');
+    return query;
   };
 
   const fetchData = async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
@@ -108,7 +98,7 @@ export const ItemSearch = () => {
     }
   };
 
-  useLoadSearchResults(fetchData, currentPageNumber);
+  useLoadSearchResults(fetchData);
 
   const submitSearch = () => {
     clearPagination();

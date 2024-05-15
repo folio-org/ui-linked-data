@@ -2,5 +2,5 @@ type SearchQueryParams = import('@common/constants/routes.constants').SearchQuer
 type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers;
 
 type SearchParamsState = {
-  [key in SearchQueryParams]?: string | SearchIdentifiers;
+  [key in SearchQueryParams]?: string | number | SearchIdentifiers;
 };

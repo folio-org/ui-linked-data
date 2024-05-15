@@ -4,10 +4,10 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import state from '@state';
+import { normalizeQuery } from '@common/helpers/search.helper';
 
 export const useLoadSearchResults = (
   fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
-  pageNumber = 0,
 ) => {
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
@@ -16,26 +16,27 @@ export const useLoadSearchResults = (
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get(SearchQueryParams.Query);
   const searchByParam = searchParams.get(SearchQueryParams.SearchBy);
-  const prevSearchParams = useRef<{ query: string | null; searchBy: string | null }>({ query: null, searchBy: null });
-  const prevPageNumber = useRef(pageNumber);
+  const offsetParam = searchParams.get(SearchQueryParams.Offset);
+  const prevSearchParams = useRef<{ query: string | null; searchBy: string | null; offset: string | null }>({
+    query: null,
+    searchBy: null,
+    offset: null,
+  });
+
+  const normalizedQueryParam = searchByParam ? normalizeQuery(queryParam) : queryParam;
 
   useEffect(() => {
     async function makeSearch() {
-      const { query: prevQuery, searchBy: prevSearchBy } = prevSearchParams.current;
+      const { query: prevQuery, searchBy: prevSearchBy, offset: prevOffset } = prevSearchParams.current;
 
-      if (
-        prevQuery === queryParam &&
-        prevSearchBy === searchByParam &&
-        prevPageNumber.current === pageNumber &&
-        !forceRefresh
-      )
+      if (prevQuery === queryParam && prevSearchBy === searchByParam && prevOffset === offsetParam && !forceRefresh)
         return;
 
       if (searchByParam && prevSearchBy !== searchByParam) {
         setSearchBy(searchByParam as SearchIdentifiers);
       }
 
-      if (!queryParam) {
+      if (!queryParam || !normalizedQueryParam) {
         setData(null);
         return;
       }
@@ -45,13 +46,16 @@ export const useLoadSearchResults = (
         setQuery(queryParam);
       }
 
-      await fetchData(queryParam, searchByParam as SearchIdentifiers, pageNumber * SEARCH_RESULTS_LIMIT);
+      await fetchData(
+        normalizedQueryParam,
+        searchByParam as SearchIdentifiers,
+        offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
+      );
 
       setForceRefresh(false);
-      prevSearchParams.current = { query: queryParam, searchBy: searchByParam };
-      prevPageNumber.current = pageNumber;
+      prevSearchParams.current = { query: queryParam, searchBy: searchByParam, offset: offsetParam };
     }
 
     makeSearch();
-  }, [queryParam, searchByParam, pageNumber, forceRefresh]);
+  }, [queryParam, searchByParam, offsetParam, forceRefresh]);
 };

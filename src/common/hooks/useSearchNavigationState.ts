@@ -9,11 +9,16 @@ export const useSearchNavigationState = () => {
   const [searchParams] = useSearchParams();
   const querySearchParam = searchParams.get(SearchQueryParams.Query);
   const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy);
+  const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
 
   const setNavigationState = useSetRecoilState(state.search.navigationState);
 
   useEffect(() => {
-    const generatedState = generateSearchParamsState(querySearchParam, searchBySearchParam as SearchIdentifiers);
+    const generatedState = generateSearchParamsState(
+      querySearchParam,
+      searchBySearchParam as SearchIdentifiers,
+      offsetSearchParam as unknown as number,
+    );
 
     setNavigationState(generatedState);
   }, [searchParams]);
