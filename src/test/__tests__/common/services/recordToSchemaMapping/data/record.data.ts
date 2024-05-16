@@ -1,0 +1,18 @@
+export const record = {
+  block_1: {
+    uriBFLite_literal_1: ['literal value 1', 'literal value 2'],
+    uriBFLite_simple_1: [
+      {
+        label: 'test simple lookup value 1',
+        link: 'test_link',
+      },
+    ],
+    uriBFLite_group_1: [
+      {
+        uriBFLite_option_1: {
+          uriBFLite_option_literal_1: ['literal value 3'],
+        },
+      },
+    ],
+  },
+};
