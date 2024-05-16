@@ -3,11 +3,10 @@ import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { RecoilRoot } from 'recoil';
 import { Fragment, ReactNode } from 'react';
 
-const mockEntryUuid = 'c787b94b-faba-47fe-8221-f43e5b7d266e';
-const mockClonedByUuid = '401d21e4-1ec8-4c3b-8d92-473290a7798f';
+const mockClonedByUuid = '0xf';
 
 const mockEntry = {
-  uuid: mockEntryUuid,
+  uuid: '0xb',
   clonedBy: [mockClonedByUuid],
 };
 
