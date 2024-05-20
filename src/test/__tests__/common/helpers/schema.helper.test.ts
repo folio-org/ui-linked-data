@@ -11,7 +11,7 @@ describe('schema.helper', () => {
     hasChildEntry,
     checkGroupIsNonBFMapped,
     selectNonBFMappedGroupData,
-    findParentEntryByType,
+    findParentEntryByProperty,
   } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
@@ -247,7 +247,7 @@ describe('schema.helper', () => {
     });
   });
 
-  describe('findParentEntryByType', () => {
+  describe('findParentEntryByProperty', () => {
     const schema = new Map([
       ['blockUuid', { uuid: 'blockUuid', path: ['blockUuid'], type: AdvancedFieldType.block } as SchemaEntry],
       [
@@ -268,7 +268,7 @@ describe('schema.helper', () => {
     test('returns a schema entry', () => {
       const type = AdvancedFieldType.block;
 
-      const result = findParentEntryByType(schema, path, type);
+      const result = findParentEntryByProperty({ schema, path, key: 'type', value: type });
 
       expect(result).toEqual({ uuid: 'blockUuid', path: ['blockUuid'], type: AdvancedFieldType.block });
     });
@@ -276,7 +276,7 @@ describe('schema.helper', () => {
     test('returns null', () => {
       const type = AdvancedFieldType.groupComplex;
 
-      const result = findParentEntryByType(schema, path, type);
+      const result = findParentEntryByProperty({ schema, path, key: 'type', value: type });
 
       expect(result).toBeNull();
     });

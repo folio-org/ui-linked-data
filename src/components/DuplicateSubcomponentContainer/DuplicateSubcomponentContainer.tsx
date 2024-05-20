@@ -13,7 +13,7 @@ export const DuplicateSubcomponentContainer: FC<IDuplicateSubcomponentContainer>
     <Fragment key={uuid}>
       {generateComponent({ uuid, groupingDisabled: true })}
 
-      {clonedBy?.map(uuid => generateComponent({ uuid, groupingDisabled: true }))}
+      {clonedBy?.map(clonedByUuid => generateComponent({ uuid: clonedByUuid, groupingDisabled: true }))}
     </Fragment>
   );
 };
