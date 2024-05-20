@@ -273,6 +273,8 @@ export class RecordToSchemaMappingService {
     schemaEntry: SchemaEntry,
   ) {
     for await (const [key, value] of Object.entries(recordGroupEntry)) {
+      if (key === 'id') continue;
+
       await this.mapRecordValueToSchemaEntry({
         schemaEntry,
         recordKey: key,
@@ -312,16 +314,53 @@ export class RecordToSchemaMappingService {
     const schemaUiElem = this.updatedSchema?.get(schemaElemUuid);
     const labelSelector = this.recordMap?.fields?.[recordKey]?.label as string;
 
+    if (!schemaUiElem) return;
+
+    const { type, constraints, uri } = schemaUiElem as SchemaEntry;
+    let newValueKey = schemaElemUuid;
+    let data = recordEntryValue;
+
+    if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
+      // Repeatable subcomponents
+      for await (const [key, value] of Object.entries(recordEntryValue)) {
+        // Generate repeatable subcomponents
+        if (Array.isArray(recordEntryValue) && recordEntryValue.length > 1 && parseInt(key) !== 0) {
+          const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
+          this.updatedSchema = this.repeatableFieldsService?.get();
+          this.schemaArray = Array.from(this.updatedSchema?.values() || []);
+
+          newValueKey = newEntryUuid;
+          data = value;
+        }
+
+        await this.userValuesService.setValue({
+          type: type as AdvancedFieldType,
+          key: newValueKey,
+          value: {
+            id,
+            data,
+            uri: constraints?.useValuesFrom?.[0],
+            labelSelector,
+            uriSelector: BFLITE_URIS.LINK,
+            propertyUri: uri,
+            blockUri: this.currentBlockUri,
+            groupUri: this.currentRecordGroupKey,
+            fieldUri: recordKey,
+          },
+        });
+      }
+    }
+
     await this.userValuesService.setValue({
-      type: schemaUiElem?.type as AdvancedFieldType,
-      key: schemaElemUuid,
+      type: type as AdvancedFieldType,
+      key: newValueKey,
       value: {
         id,
-        data: recordEntryValue,
-        uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
+        data,
+        uri: constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
-        propertyUri: schemaUiElem?.uri,
+        propertyUri: uri,
         blockUri: this.currentBlockUri,
         groupUri: this.currentRecordGroupKey,
         fieldUri: recordKey,
