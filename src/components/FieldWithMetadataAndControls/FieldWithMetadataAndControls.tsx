@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import state from '@state';
-import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
+import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
 import './FieldWithMetadataAndControls.scss';
@@ -37,6 +37,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   const { uuid, displayName } = entry;
 
   const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled: disabled });
+  const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ schema, entry, isDisabled: disabled });
 
   const onClickDuplicateGroup = () => {
     const updatedSchema = getSchemaWithCopiedEntries(schema, entry, selectedEntries);
@@ -49,6 +50,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
     showLabel,
     labelContainerClassName,
     hasDuplicateGroupButton,
+    hasDuplicateSubcomponentButton,
     onClickDuplicateGroup,
   };
 

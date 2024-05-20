@@ -104,3 +104,18 @@ export const findParentEntryByType = (schema: Schema, path: string[], type: Adva
     },
     null as SchemaEntry | null,
   );
+
+export const findParentEntryByUriBFLite = (schema: Schema, path: string[], uriBFLite: string) =>
+  path.reduce(
+    (accum, pathItem) => {
+      const schemaElem = schema.get(pathItem);
+      const hasCorrectUri = schemaElem?.uriBFLite === uriBFLite;
+
+      if (hasCorrectUri) {
+        accum = schemaElem;
+      }
+
+      return accum;
+    },
+    null as SchemaEntry | null,
+  );

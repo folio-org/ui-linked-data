@@ -1,6 +1,6 @@
 import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
-import { hasChildEntry } from './schema.helper';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { findParentEntryByUriBFLite, hasChildEntry } from './schema.helper';
+import { AdvancedFieldType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
 
 export const checkRepeatableGroup = ({
   schema,
@@ -27,4 +27,25 @@ export const checkRepeatableGroup = ({
   }
 
   return isRepeatableGroup;
+};
+
+export const checkRepeatableSubcomponent = ({
+  schema,
+  entry,
+  isDisabled,
+}: {
+  schema: Map<string, SchemaEntry>;
+  entry: SchemaEntry;
+  isDisabled: boolean;
+}) => {
+  const { type, path } = entry;
+
+  if (isDisabled || !findParentEntryByUriBFLite(schema, path, 'https://bibfra.me/vocab/marc/provisionActivity'))
+    return false;
+
+  if (UI_CONTROLS_LIST.includes(type as AdvancedFieldType)) {
+    return true;
+  }
+
+  return false;
 };
