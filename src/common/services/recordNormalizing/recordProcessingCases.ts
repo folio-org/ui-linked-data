@@ -20,10 +20,9 @@ export const moveFromBlock = (record: RecordEntry, blockKey: string, groupKey: s
 };
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
-  const containerData = record[blockKey][container] as unknown as Record<string, unknown>[];
-
   (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {
     const wrappedRecordEntry = { [key]: recordEntry };
+    const containerData = record[blockKey][container] as unknown as Record<string, unknown>[];
 
     record[blockKey][container] = (containerData
       ? [...containerData, wrappedRecordEntry]

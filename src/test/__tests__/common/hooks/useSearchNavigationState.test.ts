@@ -24,6 +24,7 @@ describe('useSearchNavigationState', () => {
     const searchParams = new URLSearchParams({
       [SearchQueryParams.Query]: 'test query',
       [SearchQueryParams.SearchBy]: 'title',
+      [SearchQueryParams.Offset]: '1',
     });
     const setNavigationState = jest.fn();
     const generatedState = { some: 'state' };
@@ -36,7 +37,7 @@ describe('useSearchNavigationState', () => {
 
     renderHook(() => useSearchNavigationState());
 
-    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('test query', 'title');
+    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('test query', 'title', '1');
     expect(setNavigationState).toHaveBeenCalledWith(generatedState);
   });
 });

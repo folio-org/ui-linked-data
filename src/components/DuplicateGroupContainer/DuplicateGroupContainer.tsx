@@ -24,6 +24,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({ entry, g
     <div className={classNames('duplicate-group-container', groupClassName)}>
       {generateComponent({ uuid, groupingDisabled: true })}
       <Button
+        data-testid="expand-collapse-button"
         className="expand-collapse-button"
         onClick={() =>
           setCollapsedGroups(prev => (prev.includes(uuid) ? prev.filter(i => i !== uuid) : [...prev, uuid]))
