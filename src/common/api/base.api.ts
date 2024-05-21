@@ -13,7 +13,7 @@ type ReqParams = {
 
 type Headers = {
   'x-okapi-tenant': string;
-  'x-okapi-token': string;
+  'x-okapi-token'?: string;
 };
 
 type DoRequest = {
@@ -56,7 +56,7 @@ const request = async ({ url, urlParams, requestParams = {}, sameOrigin = true }
     tenant && sameOrigin
       ? {
           'x-okapi-tenant': tenant,
-          'x-okapi-token': token,
+          ...(token && { 'x-okapi-token': token })
         }
       : undefined;
 
