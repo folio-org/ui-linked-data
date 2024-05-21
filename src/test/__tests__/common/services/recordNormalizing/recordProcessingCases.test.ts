@@ -58,14 +58,21 @@ describe('recordProcessingCases', () => {
     test('wrap a group with a new container', () => {
       const record = {
         [blockKey]: {
-          [groupKey]: [{}],
+          [groupKey]: [{ key_1: 'value 1' }, { key_1: 'value 2' }],
           group_2: {},
         },
         block_2: {},
       } as unknown as RecordEntry;
       const testResult = {
         [blockKey]: {
-          [container]: [{ [groupKey]: {} }],
+          [container]: [
+            {
+              [groupKey]: { key_1: 'value 1' },
+            },
+            {
+              [groupKey]: { key_1: 'value 2' },
+            },
+          ],
           group_2: {},
         },
         block_2: {},

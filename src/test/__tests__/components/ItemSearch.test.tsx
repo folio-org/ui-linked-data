@@ -163,7 +163,7 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith({ offset: '10', query: '1234000001', searchBy: id });
+      expect(getByIdentifierMock).toHaveBeenCalledWith({ offset: '0', query: '1234000001', searchBy: id });
     });
   });
 

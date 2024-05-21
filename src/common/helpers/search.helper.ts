@@ -8,8 +8,6 @@ import {
 import { Row } from '@components/Table';
 import { v4 as uuidv4 } from 'uuid';
 
-// const __TEMP_RESULT_MAX_AMOUNT = 10;
-
 const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
@@ -57,12 +55,14 @@ export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchR
 };
 
 export const applyQualifierSyntaxToQuery = (query: string, qualifier: AdvancedSearchQualifiers) => {
+  const normalizedQuery = normalizeQuery(query);
+
   if (qualifier === AdvancedSearchQualifiers.containsAll) {
-    return ` all "${query}"`;
+    return ` all "${normalizedQuery}"`;
   } else if (qualifier === AdvancedSearchQualifiers.startsWith) {
-    return ` all "${query}*"`;
+    return ` all "${normalizedQuery}*"`;
   } else {
-    return `=="${query}"`;
+    return `=="${normalizedQuery}"`;
   }
 };
 
@@ -83,9 +83,10 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
   return `(${queryWithFormatting})`;
 };
 
-export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null) => {
+export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null, offset = 0) => {
   const searchParamsState = {
     [SearchQueryParams.Query]: query,
+    [SearchQueryParams.Offset]: offset,
   } as SearchParamsState;
 
   if (searchBy) {
@@ -93,4 +94,8 @@ export const generateSearchParamsState = (query: string | null, searchBy?: Searc
   }
 
   return searchParamsState;
+};
+
+export const normalizeQuery = (query?: string | null) => {
+  return query?.replaceAll(/['"/\\]/g, '\\$&');
 };

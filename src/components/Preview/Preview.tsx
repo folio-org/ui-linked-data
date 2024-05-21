@@ -4,11 +4,7 @@ import state from '@state';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { FormattedMessage } from 'react-intl';
 import { FC, memo } from 'react';
-import {
-  ENTITY_LEVEL,
-  GROUP_BY_LEVEL,
-  GROUP_CONTENTS_LEVEL,
-} from '@common/constants/bibframe.constants';
+import { ENTITY_LEVEL, GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL } from '@common/constants/bibframe.constants';
 import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import Lightbulb16 from '@src/assets/lightbulb-shining-16.svg?react';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
@@ -122,7 +118,15 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
                 ({ label, meta: { uri, parentUri } = {} } = {}) =>
                   label && (
                     <div key={`${label}${uri}`}>
-                      <div>{uri || parentUri ? <a href={uri || parentUri}>{label}</a> : label}</div>
+                      <div>
+                        {uri || parentUri ? (
+                          <a className="preview-value-link" href={uri || parentUri}>
+                            {label}
+                          </a>
+                        ) : (
+                          label
+                        )}
+                      </div>
                     </div>
                   ),
               )
@@ -141,10 +145,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   });
 
   return (
-    <div
-      className='preview-panel'
-      data-testid="preview-fields"
-    >
+    <div className="preview-panel" data-testid="preview-fields">
       {!headless && (
         <h3>
           <FormattedMessage id="marva.preview" />
