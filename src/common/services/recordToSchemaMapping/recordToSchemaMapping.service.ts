@@ -362,17 +362,28 @@ export class RecordToSchemaMappingService {
     let newValueKey = valueKey;
     let updatedData = data;
 
-    for await (const [key, value] of Object.entries(recordEntryValue)) {
-      // Generate repeatable subcomponents
-      if (Array.isArray(recordEntryValue) && recordEntryValue.length > 1 && parseInt(key) !== 0) {
-        const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
-        this.updatedSchema = this.repeatableFieldsService?.get();
-        this.schemaArray = Array.from(this.updatedSchema?.values() || []);
+    if (Array.isArray(recordEntryValue)) {
+      for await (const [key, value] of Object.entries(recordEntryValue)) {
+        // Generate repeatable subcomponents
+        if (recordEntryValue.length > 1 && parseInt(key) !== 0) {
+          const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
+          this.updatedSchema = this.repeatableFieldsService?.get();
+          this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
-        newValueKey = newEntryUuid;
-        updatedData = value;
+          newValueKey = newEntryUuid;
+          updatedData = value;
+        }
+
+        await this.setUserValue({
+          valueKey: newValueKey,
+          data: updatedData,
+          fieldUri: recordKey,
+          schemaUiElem,
+          id,
+          labelSelector,
+        });
       }
-
+    } else {
       await this.setUserValue({
         valueKey: newValueKey,
         data: updatedData,

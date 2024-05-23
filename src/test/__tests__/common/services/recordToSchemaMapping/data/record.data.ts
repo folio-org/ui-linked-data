@@ -3,8 +3,8 @@ export const record = {
     uriBFLite_literal_1: ['literal value 1', 'literal value 2'],
     uriBFLite_simple_1: [
       {
-        label: 'test simple lookup value 1',
-        link: 'test_link',
+        label: ['test simple lookup value 1'],
+        link: ['test_link'],
       },
     ],
     uriBFLite_group_1: [
