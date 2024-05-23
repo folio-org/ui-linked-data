@@ -52,5 +52,5 @@ export const checkRepeatableSubcomponent = ({
       value: BFLITE_URIS.PROVISION_ACTIVITY,
     });
 
-  return isRepeatable && UI_CONTROLS_LIST.includes(type as AdvancedFieldType);
+  return !!isRepeatable && UI_CONTROLS_LIST.includes(type as AdvancedFieldType);
 };
