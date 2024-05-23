@@ -7,11 +7,23 @@ class MarvaNextComponent extends HTMLElement {
   // TODO: uncomment for using with Shadow DOM
   // private template: any | undefined;
   private mountElement: HTMLElement | undefined;
+  private rootElement: ReactDOM.Root | undefined;
 
   connectedCallback() {
     // TODO: uncomment for using with Shadow DOM
     // this.createTemplate();
     this.setupRoot();
+    this.render();
+  }
+
+  // A workaround for 'forcing' the navigation to homepage
+  // triggered from outside the web component.
+  //
+  // The routers in parent application and inside the web component
+  // don't share the same history (are not aware of each other),
+  // so, app<->web-component navigation doesn't seem to work in some cases.
+  remount() {
+    this.rootElement?.unmount();
     this.render();
   }
 
@@ -77,8 +89,9 @@ class MarvaNextComponent extends HTMLElement {
 
     if (!this.mountElement) return;
 
-    const root = ReactDOM.createRoot(this.mountElement);
-    root.render(
+    this.rootElement = ReactDOM.createRoot(this.mountElement);
+
+    this.rootElement?.render(
       <React.StrictMode>
         <App routePrefix={routePrefix} config={deserializedConfig} />
       </React.StrictMode>,
