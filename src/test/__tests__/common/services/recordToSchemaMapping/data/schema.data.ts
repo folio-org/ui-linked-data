@@ -1,4 +1,16 @@
-export const labelEntry = {
+export const getLabelEntry = ({
+  uuid,
+  uri,
+  uriBFLite,
+  displayName,
+  path,
+}: {
+  uuid: string;
+  uri: string;
+  uriBFLite: string;
+  displayName: string;
+  path: string[];
+}) => ({
   constraints: {
     defaults: [],
     editable: false,
@@ -7,13 +19,13 @@ export const labelEntry = {
     useValuesFrom: [],
     valueDataType: {},
   },
-  displayName: 'Literal label 1',
-  path: ['testKey-1', 'testKey-2', 'testKey-3'],
+  displayName,
+  path,
   type: 'literal',
-  uri: 'propertyURI_1',
-  uriBFLite: 'uriBFLite_literal_1',
-  uuid: 'testKey-3',
-};
+  uri,
+  uriBFLite,
+  uuid,
+});
 
 export const schema = new Map([
   [
@@ -202,7 +214,16 @@ export const schema = new Map([
       uuid: 'testKey-2',
     },
   ],
-  ['testKey-3', labelEntry as unknown],
+  [
+    'testKey-3',
+    getLabelEntry({
+      uuid: 'testKey-3',
+      uri: 'propertyURI_1',
+      uriBFLite: 'uriBFLite_literal_1',
+      displayName: 'Literal label 1',
+      path: ['testKey-1', 'testKey-2', 'testKey-3'],
+    }) as unknown,
+  ],
   [
     'testKey-4',
     {
