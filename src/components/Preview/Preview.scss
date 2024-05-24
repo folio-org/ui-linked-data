@@ -1,4 +1,4 @@
-.preview-panel {  
+.preview-panel {
   .block {
     border: 1px solid red;
     min-height: 0.5rem;
@@ -16,13 +16,12 @@
       gap: 1rem;
     }
 
-    .value-group-wrapper {
+    > * :not(strong) {
       font-size: 0.875rem;
-      word-wrap: break-word;
+    }
 
-      > * {
-        font-size: 0.875rem;
-      }
+    .value-group-wrapper {
+      word-wrap: break-word;
     }
 
     .preview-value-link {
