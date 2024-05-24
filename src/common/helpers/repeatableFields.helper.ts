@@ -50,7 +50,9 @@ export const checkRepeatableSubcomponent = ({
       path,
       key: 'uriBFLite',
       value: BFLITE_URIS.PROVISION_ACTIVITY,
-    });
+    }) &&
+    // TODO: remove this condition after updating the profile
+    type === AdvancedFieldType.literal;
 
   return !!isRepeatable && UI_CONTROLS_LIST.includes(type as AdvancedFieldType);
 };
