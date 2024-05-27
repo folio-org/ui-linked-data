@@ -1,4 +1,8 @@
 #editor-root .duplicate-group {
   display: flex;
   gap: 0.313rem;
+
+  &.duplicate-subcomponent {
+    margin-left: 0.25rem;
+  }
 }

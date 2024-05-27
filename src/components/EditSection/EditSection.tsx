@@ -1,6 +1,7 @@
 import { useEffect, memo, useCallback } from 'react';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
 import state from '@state';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { saveRecordLocally } from '@common/helpers/record.helper';
@@ -16,11 +17,10 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { Prompt } from '@components/Prompt';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
-import { findParentEntryByType } from '@common/helpers/schema.helper';
+import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
 import { EDIT_ALT_DISPLAY_LABELS, EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
-import classNames from 'classnames';
 import './EditSection.scss';
 
 export type IDrawComponent = {
@@ -180,7 +180,12 @@ export const EditSection = memo(() => {
       }
 
       if (type === AdvancedFieldType.simple) {
-        const blockEntry = findParentEntryByType(schema, entry.path, AdvancedFieldType.block);
+        const blockEntry = findParentEntryByProperty({
+          schema,
+          path: entry.path,
+          key: 'type',
+          value: AdvancedFieldType.block,
+        });
 
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>

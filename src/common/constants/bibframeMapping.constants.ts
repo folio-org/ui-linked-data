@@ -22,6 +22,7 @@ export const BFLITE_URIS = {
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
   PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
   CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
+  PROVISION_ACTIVITY: 'https://bibfra.me/vocab/marc/provisionActivity',
 };
 
 export const BF2_URIS = {

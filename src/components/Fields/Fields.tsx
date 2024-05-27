@@ -7,6 +7,7 @@ import { IDrawComponent } from '@components/EditSection';
 import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { DuplicateSubcomponentContainer } from '@components/DuplicateSubcomponentContainer';
 
 export type IFields = {
   uuid: string | null;
@@ -54,7 +55,6 @@ export const Fields: FC<IFields> = memo(
       <Fields
         drawComponent={drawComponent}
         uuid={uuid}
-        key={uuid}
         level={level + 1}
         disabledFields={disabledFields}
         scrollToEnabled={scrollToEnabled}
@@ -81,15 +81,18 @@ export const Fields: FC<IFields> = memo(
             const entry = schema.get(uuid);
 
             // render cloned / grouped items starting from the main item (prototype) separately
-            if (entry?.clonedBy)
-              return (
+            if (entry?.clonedBy) {
+              return level === 1 ? (
                 <DuplicateGroupContainer
                   key={uuid}
                   groupClassName={groupClassName}
                   entry={entry}
                   generateComponent={generateFieldsComponent}
                 />
+              ) : (
+                <DuplicateSubcomponentContainer key={uuid} entry={entry} generateComponent={generateFieldsComponent} />
               );
+            }
 
             // cloned / grouped items already rendered in the prototype
             if (entry?.cloneOf) return null;

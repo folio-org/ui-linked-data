@@ -5,9 +5,9 @@ import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMap
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { labelEntry, schema } from './data/schema.data';
-import { updatedSchema } from './data/updatedSchema.data';
-import { record } from './data/record.data';
+import { getLabelEntry, schema } from './data/schema.data';
+import { updatedSchema, updatedSchemaWithRepeatableSubcomponents } from './data/updatedSchema.data';
+import { record, recordWithRepeatableSubcomponents } from './data/record.data';
 
 const mockedNewBf2ToBFLiteMapping = getMockedImportedConstant(BibframeMappingConstants, 'NEW_BF2_TO_BFLITE_MAPPING');
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
@@ -76,7 +76,16 @@ describe('RecordToSchemaMappingService', () => {
 
     await service.init();
 
-    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(labelEntry, false);
+    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
+      getLabelEntry({
+        uuid: 'testKey-3',
+        uri: 'propertyURI_1',
+        uriBFLite: 'uriBFLite_literal_1',
+        displayName: 'Literal label 1',
+        path: ['testKey-1', 'testKey-2', 'testKey-3'],
+      }),
+      false,
+    );
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(3);
@@ -95,5 +104,38 @@ describe('RecordToSchemaMappingService', () => {
 
     expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
     expect(commonStatusService.set).toHaveBeenCalledWith('marva.recordMappingToSchema', StatusType.error);
+  });
+
+  test('returns updated schema with repeatable subcomponents', async () => {
+    jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchemaWithRepeatableSubcomponents as Schema);
+
+    service = new RecordToSchemaMappingService(
+      schema as Schema,
+      recordWithRepeatableSubcomponents as unknown as RecordEntry,
+      recordBlocks,
+      selectedEntriesService,
+      repeatableFieldsService,
+      userValuesService,
+      commonStatusService,
+    );
+
+    await service.init();
+
+    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledTimes(2);
+    expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
+      getLabelEntry({
+        uuid: 'testKey-9',
+        uri: 'dropdownOption_1_PropertyURI_1',
+        uriBFLite: 'uriBFLite_option_literal_1',
+        displayName: 'Dropdown Option 1 Item 1',
+        path: ['testKey-1', 'testKey-2', 'testKey-5', 'testKey-7', 'testKey-9'],
+      }),
+      false,
+    );
+
+    expect(repeatableFieldsService.get).toHaveBeenCalled();
+    expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
+    expect(userValuesService.setValue).toHaveBeenCalledTimes(5);
+    expect(service.getUpdatedSchema()).toEqual(updatedSchemaWithRepeatableSubcomponents);
   });
 });

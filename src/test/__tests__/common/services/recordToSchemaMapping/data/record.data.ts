@@ -3,14 +3,33 @@ export const record = {
     uriBFLite_literal_1: ['literal value 1', 'literal value 2'],
     uriBFLite_simple_1: [
       {
-        label: 'test simple lookup value 1',
-        link: 'test_link',
+        label: ['test simple lookup value 1'],
+        link: ['test_link'],
       },
     ],
     uriBFLite_group_1: [
       {
         uriBFLite_option_1: {
           uriBFLite_option_literal_1: ['literal value 3'],
+        },
+      },
+    ],
+  },
+};
+
+export const recordWithRepeatableSubcomponents = {
+  block_1: {
+    uriBFLite_literal_1: ['literal value 1'],
+    uriBFLite_simple_1: [
+      {
+        label: ['test simple lookup value 1'],
+        link: ['test_link'],
+      },
+    ],
+    uriBFLite_group_1: [
+      {
+        uriBFLite_option_1: {
+          uriBFLite_option_literal_1: ['literal value 2', 'literal value 3', 'literal value 4'],
         },
       },
     ],

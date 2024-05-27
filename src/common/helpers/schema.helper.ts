@@ -90,13 +90,23 @@ export const selectNonBFMappedGroupData = ({
   return { selectedNonBFRecord, nonBFMappedGroup };
 };
 
-export const findParentEntryByType = (schema: Schema, path: string[], type: AdvancedFieldType) =>
+export const findParentEntryByProperty = <T>({
+  schema,
+  path,
+  key,
+  value,
+}: {
+  schema: Schema;
+  path: string[];
+  key: keyof SchemaEntry;
+  value: T;
+}) =>
   path.reduce(
     (accum, pathItem) => {
       const schemaElem = schema.get(pathItem);
-      const hasCorrectType = schemaElem?.type === type;
+      const hasCorrectValue = schemaElem?.[key] === value;
 
-      if (hasCorrectType) {
+      if (hasCorrectValue) {
         accum = schemaElem;
       }
 

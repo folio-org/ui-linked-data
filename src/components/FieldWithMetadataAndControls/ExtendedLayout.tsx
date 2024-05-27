@@ -11,6 +11,7 @@ type IExtendedLayout = {
   showLabel?: boolean;
   labelContainerClassName?: string;
   hasDuplicateGroupButton?: boolean;
+  hasDuplicateSubcomponentButton?: boolean;
   onClickDuplicateGroup?: VoidFunction;
 };
 
@@ -22,6 +23,7 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
     showLabel,
     labelContainerClassName,
     hasDuplicateGroupButton,
+    hasDuplicateSubcomponentButton,
     onClickDuplicateGroup,
   }) => {
     const { type } = entry;
@@ -43,6 +45,9 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
             )}
             {children}
           </div>
+        )}
+        {hasDuplicateSubcomponentButton && (
+          <DuplicateGroup onClick={onClickDuplicateGroup} hasDeleteButton={false} className="duplicate-subcomponent" />
         )}
       </>
     );

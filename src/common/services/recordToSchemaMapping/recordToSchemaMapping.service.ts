@@ -273,6 +273,8 @@ export class RecordToSchemaMappingService {
     schemaEntry: SchemaEntry,
   ) {
     for await (const [key, value] of Object.entries(recordGroupEntry)) {
+      if (key === 'id') continue;
+
       await this.mapRecordValueToSchemaEntry({
         schemaEntry,
         recordKey: key,
@@ -312,19 +314,117 @@ export class RecordToSchemaMappingService {
     const schemaUiElem = this.updatedSchema?.get(schemaElemUuid);
     const labelSelector = this.recordMap?.fields?.[recordKey]?.label as string;
 
+    if (!schemaUiElem) return;
+
+    const { type, constraints } = schemaUiElem as SchemaEntry;
+    const newValueKey = schemaElemUuid;
+    const data = recordEntryValue;
+
+    if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
+      await this.handleRepeatableSubcomponents({
+        schemaUiElem,
+        recordEntryValue,
+        id,
+        recordKey,
+        labelSelector,
+        valueKey: newValueKey,
+        data,
+      });
+    } else {
+      await this.setUserValue({
+        valueKey: newValueKey,
+        data,
+        fieldUri: recordKey,
+        schemaUiElem,
+        id,
+        labelSelector,
+      });
+    }
+  }
+
+  private async handleRepeatableSubcomponents({
+    schemaUiElem,
+    recordEntryValue,
+    id,
+    recordKey,
+    labelSelector,
+    valueKey,
+    data,
+  }: {
+    schemaUiElem: SchemaEntry;
+    recordEntryValue: string | string[] | RecordBasic[];
+    id: string | undefined;
+    recordKey: string;
+    labelSelector: string;
+    valueKey: string;
+    data: string | string[] | RecordBasic[];
+  }) {
+    let newValueKey = valueKey;
+    let updatedData = data;
+
+    if (Array.isArray(recordEntryValue)) {
+      for await (const [key, value] of Object.entries(recordEntryValue)) {
+        // Generate repeatable subcomponents
+        if (recordEntryValue.length > 1 && parseInt(key) !== 0) {
+          const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
+          this.updatedSchema = this.repeatableFieldsService?.get();
+          this.schemaArray = Array.from(this.updatedSchema?.values() || []);
+
+          newValueKey = newEntryUuid;
+          updatedData = value;
+        }
+
+        await this.setUserValue({
+          valueKey: newValueKey,
+          data: updatedData,
+          fieldUri: recordKey,
+          schemaUiElem,
+          id,
+          labelSelector,
+        });
+      }
+    } else {
+      await this.setUserValue({
+        valueKey: newValueKey,
+        data: updatedData,
+        fieldUri: recordKey,
+        schemaUiElem,
+        id,
+        labelSelector,
+      });
+    }
+  }
+
+  private async setUserValue({
+    valueKey,
+    data,
+    fieldUri,
+    schemaUiElem,
+    id,
+    labelSelector,
+  }: {
+    valueKey: string;
+    data: string | string[] | RecordBasic[];
+    fieldUri: string;
+    schemaUiElem: SchemaEntry;
+    id?: string;
+    labelSelector?: string;
+  }) {
+    const { type, constraints, uri } = schemaUiElem;
+
     await this.userValuesService.setValue({
-      type: schemaUiElem?.type as AdvancedFieldType,
-      key: schemaElemUuid,
+      type: type as AdvancedFieldType,
+      key: valueKey,
       value: {
         id,
-        data: recordEntryValue,
-        uri: schemaUiElem?.constraints?.useValuesFrom?.[0],
+        data,
+        uri: constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
-        propertyUri: schemaUiElem?.uri,
+        propertyUri: uri,
         blockUri: this.currentBlockUri,
         groupUri: this.currentRecordGroupKey,
-        fieldUri: recordKey,
+        fieldUri,
       },
     });
   }
