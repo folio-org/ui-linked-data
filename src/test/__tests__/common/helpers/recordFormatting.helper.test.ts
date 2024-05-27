@@ -6,7 +6,6 @@ import { updateRecordForClassification, updateRecordForProviderPlace } from '@co
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
-  const testWorkToInstanceUri = 'testWorkToInstanceUri';
   const testWorkUri = 'testWorkUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockWorkToInstanceConstant = getMockedImportedConstant(BibframeConstants, 'WORK_TO_INSTANCE_FIELDS');
@@ -182,40 +181,6 @@ describe('recordFormatting', () => {
       const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
 
       expect(result).toEqual(record);
-    });
-  });
-
-  describe('updateInstantiatesWithInstanceFields', () => {
-    test('returns initial record', () => {
-      const record = {
-        testWorkUri: {},
-        testInstanceUri: {},
-      } as unknown as Record<string, RecursiveRecordSchema>;
-
-      const result = RecordFormattingHelper.updateWorkWithInstanceFields(record);
-
-      expect(result).toEqual(record);
-    });
-
-    test('returns updated record with Work object which contains a moved field', () => {
-      mockWorkToInstanceConstant([testWorkToInstanceUri]);
-      const instance = {
-        [testInstanceUri]: {
-          existingKey_1: ['existingUri_1'],
-          [testWorkToInstanceUri]: ['testUri_1', 'testUri_2'],
-        },
-        [testWorkUri]: {},
-      } as unknown as Record<string, RecursiveRecordSchema[]>;
-      const testResult = {
-        [testInstanceUri]: {
-          existingKey_1: ['existingUri_1'],
-        },
-        [testWorkUri]: { [testWorkToInstanceUri]: ['testUri_1', 'testUri_2'] },
-      };
-
-      const result = RecordFormattingHelper.updateWorkWithInstanceFields(instance);
-
-      expect(result).toEqual(testResult);
     });
   });
 

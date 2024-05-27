@@ -27,31 +27,6 @@ describe('recordProcessingCases', () => {
     LANGUAGE: 'testLanguageUri',
   });
 
-  describe('moveFromBlock', () => {
-    test('moves a group from one block to another', () => {
-      const record = {
-        [blockKey]: {
-          [groupKey]: {},
-          group_2: {},
-        },
-        block_2: {},
-      };
-      const toBlockKey = 'block_2';
-      const testResult = {
-        [blockKey]: {
-          group_2: {},
-        },
-        block_2: {
-          [groupKey]: {},
-        },
-      };
-
-      RecordProcessingCases.moveFromBlock(record, blockKey, groupKey, toBlockKey);
-
-      expect(record).toEqual(testResult);
-    });
-  });
-
   describe('wrapWithContainer', () => {
     const container = 'groupContainer_1';
 
