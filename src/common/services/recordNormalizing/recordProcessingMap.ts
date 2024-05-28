@@ -1,5 +1,4 @@
 import {
-  moveFromBlock,
   wrapWithContainer,
   extractValue,
   wrapSimpleLookupData,
@@ -14,10 +13,6 @@ const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKe
   wrapWithContainer(record, blockKey, groupKey, 'https://bibfra.me/vocab/marc/provisionActivity');
 
 export const RECORD_NORMALIZING_CASES = {
-  'http://bibfra.me/vocab/marc/responsibilityStatement': {
-    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
-      moveFromBlock(record, blockKey, groupKey, 'http://bibfra.me/vocab/lite/Instance'),
-  },
   'http://bibfra.me/vocab/marc/production': {
     process: processProvisionActivity,
   },
