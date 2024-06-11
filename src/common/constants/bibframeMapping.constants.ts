@@ -866,6 +866,11 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/marc/code': {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classificationPortion',
         },
+        'http://bibfra.me/vocab/marc/itemNumber': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/itemPortion' },
+        'http://bibfra.me/vocab/marc/source': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status' },
+        _assigningSourceReference: {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/assigner',
+        },
       },
     },
   },

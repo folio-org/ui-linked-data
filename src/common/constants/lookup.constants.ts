@@ -641,7 +641,7 @@ export const lookupConfig: Record<string, any> = {
   },
   'http://id.loc.gov/vocabulary/organizations': {
     name: 'organizations',
-    type: 'simple',
+    type: 'complex',
     modes: [],
   },
   'http://id.loc.gov/vocabulary/relators': {

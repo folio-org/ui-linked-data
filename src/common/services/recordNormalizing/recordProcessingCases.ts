@@ -66,7 +66,7 @@ export const processCreator = (record: RecordEntry, blockKey: string, key: strin
   const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container;
   const label = getLabelUri(blockKey, key, selector);
 
-  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingCreatorDTO).map(recordEntry => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordRecursiveDTO).map(recordEntry => {
     const generatedValue = {
       id: [recordEntry.id],
       label: [recordEntry.label],
@@ -101,14 +101,26 @@ export const processComplexGroupWithLookup = (
   })) as unknown as RecursiveRecordSchema;
 };
 
-export const extractDropdownOption = (record: RecordEntry, blockKey: string, key: string, fieldName: string) => {
+export const extractDropdownOption = (
+  record: RecordEntry,
+  blockKey: string,
+  key: string,
+  fieldName: string,
+  lookupFieldName: string,
+) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordBasic[]).map(recordEntry => {
-    const updatedValues = {} as RecordBasic;
+    const updatedValues: Record<string, unknown> = {};
 
     for (const entryKey in recordEntry) {
       if (entryKey === fieldName) continue;
 
-      updatedValues[entryKey] = recordEntry[entryKey];
+      updatedValues[entryKey] =
+        entryKey === lookupFieldName
+          ? (recordEntry[entryKey] as unknown as RecordRecursiveDTO).map(({ id, label }) => ({
+              id,
+              label: [label],
+            }))
+          : recordEntry[entryKey];
     }
 
     return { [recordEntry[fieldName][0]]: updatedValues };
