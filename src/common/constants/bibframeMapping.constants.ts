@@ -69,7 +69,6 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Isbn': 'http://library.link/identifier/ISBN',
   'http://id.loc.gov/ontologies/bibframe/Identifier': 'http://library.link/identifier/UNKNOWN', // TODO: update when defined
   'http://id.loc.gov/ontologies/bibframe/Local': 'http://bibfra.me/vocab/lite/LocalId',
-  'http://id.loc.gov/ontologies/bibframe/assigner': 'http://bibfra.me/vocab/marc/localIdAssigningSource',
   'http://id.loc.gov/ontologies/bibframe/Ean': 'http://bibfra.me/vocab/identifier/Ean',
   'http://id.loc.gov/ontologies/bibframe/qualifier': 'http://bibfra.me/vocab/marc/qualifier',
   'http://id.loc.gov/ontologies/bibframe/electronicLocator': 'http://bibfra.me/vocab/marc/accessLocation',
@@ -100,6 +99,9 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/Extent': BFLITE_URIS.EXTENT_TEMP,
   'http://id.loc.gov/ontologies/bibframe/supplementaryContent': {
     'http://id.loc.gov/ontologies/bibframe/Instance': 'http://bibfra.me/vocab/marc/supplementaryContent',
+  },
+  'http://id.loc.gov/ontologies/bibframe/assigner': {
+    'http://id.loc.gov/ontologies/bibframe/classification': '_assigningSourceReference',
   },
   'http://www.w3.org/2000/01/rdf-schema#label': {
     'http://id.loc.gov/ontologies/bibframe/note': 'http://bibfra.me/vocab/lite/note',
@@ -867,7 +869,13 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classificationPortion',
         },
         'http://bibfra.me/vocab/marc/itemNumber': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/itemPortion' },
-        'http://bibfra.me/vocab/marc/source': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status' },
+        'http://bibfra.me/vocab/marc/source': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classification',
+        },
+        'http://bibfra.me/vocab/marc/status': {
+          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status',
+          label: BFLITE_URIS.LABEL,
+        },
         _assigningSourceReference: {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/assigner',
         },
