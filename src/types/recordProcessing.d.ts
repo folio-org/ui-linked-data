@@ -21,7 +21,7 @@ type RecordNormalizingCasesMap = Record<
 
 type RecordBasic = Record<string, string[]>;
 
-type RecordRecursiveDTO = Record<string, Record<string, string[] | RecordBasic[]>>[];
+type RecordProcessingDTO = Record<string, Record<string, string[] | RecordBasic[]>>[];
 
 type RecordWithNestedFieldsDTO = { [key: string]: string }[];
 

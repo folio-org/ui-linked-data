@@ -306,16 +306,19 @@ describe('recordProcessingCases', () => {
 
   describe('extractDropdownOption', () => {
     test('updates a record with extracted dropdown options', () => {
+      const lookupKey = 'lookupKey';
       const record = {
         [blockKey]: {
           [groupKey]: [
             {
               field_1: ['testValue_1'],
               [fieldName]: ['testFieldValue_2'],
+              [lookupKey]: [{ id: 'id_1', label: 'label_1' }],
             },
             {
               field_2: ['testValue_3'],
               [fieldName]: ['testFieldValue_4'],
+              [lookupKey]: [{ id: 'id_2', label: 'label_2' }],
             },
           ],
         },
@@ -326,18 +329,20 @@ describe('recordProcessingCases', () => {
             {
               testFieldValue_2: {
                 field_1: ['testValue_1'],
+                [lookupKey]: [{ id: 'id_1', label: ['label_1'] }],
               },
             },
             {
               testFieldValue_4: {
                 field_2: ['testValue_3'],
+                [lookupKey]: [{ id: 'id_2', label: ['label_2'] }],
               },
             },
           ],
         },
       };
 
-      RecordProcessingCases.extractDropdownOption(record, blockKey, groupKey, fieldName);
+      RecordProcessingCases.extractDropdownOption(record, blockKey, groupKey, fieldName, lookupKey);
 
       expect(record).toEqual(testResult);
     });
