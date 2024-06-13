@@ -12,6 +12,8 @@ type PreviewContent = {
   base: Map<string, any>;
   userValues: UserValues;
   initKey: string;
+  title?: string;
+  entities?: string[];
 };
 
 type RecordReference = {

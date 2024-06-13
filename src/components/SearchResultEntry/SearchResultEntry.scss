@@ -23,6 +23,12 @@
     .title {
       width: 100%;
       min-width: 15.625rem;
+      
+      > * {
+        font-size: 0.875rem;
+        font-weight: normal;
+        text-decoration: underline;
+      }
     }
 
     .identifier {

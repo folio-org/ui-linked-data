@@ -141,9 +141,9 @@ export const ItemSearch = () => {
             </>
           )}
           {!data && !message && <EmptyPlaceholder />}
-          <FullDisplay />
         </div>
       </div>
+      <FullDisplay />
       <AdvancedSearchModal clearValues={clearValues} />
     </div>
   );

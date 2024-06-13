@@ -14,7 +14,7 @@ import {
   saveRecordLocally,
 } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useConfig } from '@common/hooks/useConfig.hook';
+import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
@@ -49,18 +49,21 @@ export const useRecordControls = () => {
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
 
-  const fetchRecord = async (recordId: string, asPreview = false) => {
+  const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     try {
       const profile = PROFILE_BFIDS.MONOGRAPH;
       const locallySavedData = getSavedRecord(profile, recordId);
       const recordData: RecordEntry =
-        locallySavedData && !asPreview ? locallySavedData.data : await getRecord({ recordId });
+        locallySavedData && !previewParams ? locallySavedData.data : await getRecord({ recordId });
 
-      setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData)));
-      setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, false)));
+      if (!previewParams) {
+        setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData)));
+        setRecord(recordData);
+      }
 
-      setRecord(recordData);
-      await getProfiles({ record: recordData, recordId, asPreview });
+      setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
+
+      await getProfiles({ record: recordData, recordId, previewParams });
     } catch (_err) {
       console.error('Error fetching record.');
 

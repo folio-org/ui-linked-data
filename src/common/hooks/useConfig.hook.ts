@@ -11,12 +11,16 @@ import { UserValuesService } from '@common/services/userValues';
 import { useLookupCacheService } from './useLookupCache.hook';
 import { useCommonStatus } from './useCommonStatus';
 import { apiClient } from '@common/api/client';
-import { getEditingRecordBlocks } from '@common/helpers/record.helper';
+import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+
+export type PreviewParams = {
+  singular?: boolean;
+};
 
 type GetProfiles = {
   record?: RecordEntry;
   recordId?: string;
-  asPreview?: boolean;
+  previewParams?: PreviewParams;
 };
 
 export const useConfig = () => {
@@ -114,7 +118,7 @@ export const useConfig = () => {
     return { updatedSchema: updatedSchema, userValues, initKey };
   };
 
-  const getProfiles = async ({ record, recordId, asPreview }: GetProfiles): Promise<any> => {
+  const getProfiles = async ({ record, recordId, previewParams }: GetProfiles): Promise<any> => {
     const response = await fetchProfiles();
     // TODO: check a list of supported profiles
     const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
@@ -125,16 +129,20 @@ export const useConfig = () => {
     setUserValues({});
 
     const recordData = record?.resource || {};
+    const recordTitle = getRecordTitle(recordData as RecordEntry);
+    const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
     const { updatedSchema, userValues, initKey } = await buildSchema(monograph, templates, recordData);
 
-    if (asPreview && recordId) {
+    if (previewParams && recordId) {
       setPreviewContent(prev => [
-        ...prev.filter(({ id }) => id !== recordId),
+        ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
         {
           id: recordId,
           base: updatedSchema,
           userValues,
           initKey,
+          title: recordTitle,
+          entities,
         },
       ]);
     }
