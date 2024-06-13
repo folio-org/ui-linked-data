@@ -7,15 +7,27 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
     return {
       uuid: uuid || '',
-      contents: [
-        {
-          id,
-          label: Array.isArray(typedData) ? typedData[0] : typedData,
-          meta: {
-            type,
-          },
-        },
-      ],
+      contents: Array.isArray(typedData)
+        ? typedData.map(dataElem => {
+            const isObject = typeof dataElem === 'object';
+
+            return {
+              id: isObject ? dataElem.id : id,
+              label: isObject ? dataElem.label[0] : dataElem,
+              meta: {
+                type,
+              },
+            };
+          })
+        : [
+            {
+              id,
+              label: typedData,
+              meta: {
+                type,
+              },
+            },
+          ],
     };
   }
 }
