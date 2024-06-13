@@ -86,7 +86,8 @@ export const BF2_TO_BFLITE_MAP: BFLiteMap = {
   'http://id.loc.gov/ontologies/bibframe/itemPortion': 'http://bibfra.me/vocab/marc/itemNumber',
   'http://id.loc.gov/ontologies/bibframe/source': BFLITE_URIS.EDITION,
   'http://id.loc.gov/ontologies/bibframe/subject': 'http://bibfra.me/vocab/lite/subject',
-  'http://id.loc.gov/ontologies/bibframe/edition': BFLITE_URIS.EDITION_TYPE,
+  'http://id.loc.gov/ontologies/bibframe/edition': BFLITE_URIS.EDITION,
+  'http://id.loc.gov/ontologies/bibframe/code': 'http://bibfra.me/vocab/marc/editionNumber',
   'http://id.loc.gov/ontologies/bibframe/Person': 'http://bibfra.me/vocab/lite/Person',
   'http://id.loc.gov/ontologies/bibframe/Family': 'http://bibfra.me/vocab/lite/Family',
   'http://id.loc.gov/ontologies/bibframe/Organization': 'http://bibfra.me/vocab/lite/Organization',
@@ -869,9 +870,9 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classificationPortion',
         },
         'http://bibfra.me/vocab/marc/itemNumber': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/itemPortion' },
-        'http://bibfra.me/vocab/marc/source': {
-          bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classification',
-        },
+        'http://bibfra.me/vocab/marc/source': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/classification' },
+        'http://bibfra.me/vocab/marc/edition': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/edition' },
+        'http://bibfra.me/vocab/marc/editionNumber': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/code' },
         'http://bibfra.me/vocab/marc/status': {
           bf2Uri: 'http://id.loc.gov/ontologies/bibframe/status',
           label: BFLITE_URIS.LABEL,
