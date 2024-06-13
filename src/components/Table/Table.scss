@@ -14,12 +14,25 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
 
   tbody {
     tr {
-      &:nth-child(odd) {
+      &:nth-child(odd):not(.row-selected) {
         background-color: $row-odd-bg-color;
       }
 
-      &:nth-child(even) {
+      &:nth-child(even):not(.row-selected) {
         background-color: $row-even-bg-color;
+      }
+    }
+
+    .row-selected {
+      background-color: #616161;
+      color: white;
+
+      > * > *:not(.button-primary) {
+        color: white;
+      }
+
+      > * {
+        border-color: white;
       }
     }
   }

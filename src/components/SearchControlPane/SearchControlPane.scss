@@ -2,9 +2,11 @@
 
 .search-control-pane {
   display: flex;
-  padding: 12px 1rem;
+  padding: 0 1rem;
   border-bottom: 1px solid $gray-200;
   background-color: rgba(0, 0, 0, 0.03);
+  height: 2.75rem;
+  align-items: center;
 
   &-title {
     flex: 1;

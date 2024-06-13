@@ -17,9 +17,10 @@ export type Table = {
   className?: string;
   onRowClick?: (r: Row) => void;
   onHeaderCellClick?: (c: Record<string, Cell>) => void;
+  selectedRows?: string[];
 };
 
-export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }: Table) => {
+export const Table = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: Table) => {
   const sortedHeaderEntries = Object.entries(header).sort(
     ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
   );
@@ -49,7 +50,10 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick }
             <tr
               data-testid="table-row"
               key={rowMeta?.key || rowMeta?.id}
-              className={classNames({ clickable: onRowClick })}
+              className={classNames(
+                { clickable: onRowClick, 'row-selected': selectedRows?.includes(rowMeta?.id) },
+                rowMeta?.className,
+              )}
               onClick={() => onRowClick?.(row)}
             >
               {sortedHeaderEntries.map(([key]) => {

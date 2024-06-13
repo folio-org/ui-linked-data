@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -14,6 +14,9 @@ import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import state from '@state';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
+import { useRecordControls } from '@common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 import './SearchResultEntry.scss';
 
 type SearchResultEntry = {
@@ -57,14 +60,38 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const { navigateToEditPage } = useNavigateToEditPage();
   const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+  const previewContent = useRecoilValue(state.inputs.previewContent);
   const toggleIsOpen = () => setIsOpen(!isOpen);
+  const { fetchRecord } = useRecordControls();
+
+  const handleOpenPreview = async (id: string) => {
+    try {
+      setIsLoading(true);
+      await fetchRecord(id, { singular: true });
+    } catch (error) {
+      console.error(error);
+
+      setCommonStatus(prev => [
+        ...prev,
+        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => ({
       ...row,
       title: {
         ...row.title,
-        children: IS_DISABLED_FOR_ALPHA ? <>{row.title.label}</> : <Link to="#">{row.title.label}</Link>,
+        children: (
+          <Button type={ButtonType.Link} onClick={() => handleOpenPreview(row?.__meta?.id)}>
+            {row.title.label}
+          </Button>
+        ),
       },
       editCtl: {
         children: (
@@ -93,7 +120,12 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     <div className="search-result-entry-container">
       <WorkDetailsCard isOpen={isOpen} toggleIsOpen={toggleIsOpen} {...restOfWork} />
       {!!instances?.length && isOpen && (
-        <Table header={instancesListHeader} data={formattedInstances} className="instance-list" />
+        <Table
+          header={instancesListHeader}
+          data={formattedInstances}
+          selectedRows={previewContent?.map(({ id }) => id)}
+          className="instance-list"
+        />
       )}
       {!isOpen && (
         <div className="empty-or-closed">
