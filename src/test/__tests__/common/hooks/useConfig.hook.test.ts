@@ -115,7 +115,7 @@ describe('useConfig', () => {
     (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
     const { result } = renderHook(useConfig);
-    const resultProfiles = await result.current.getProfiles({ record, recordId: '', asPreview: false });
+    const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
 
     expect(setProfiles).toHaveBeenCalledWith(profiles);
     expect(resultProfiles).toEqual(profiles);
