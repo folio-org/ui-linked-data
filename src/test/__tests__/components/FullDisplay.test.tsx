@@ -11,8 +11,11 @@ const mockPreviewContent = [
   {
     id: 'k1',
     base: new Map(),
-    userValues: {},
+    userValues: {
+      mockUserValueKey: null,
+    },
     initKey: 'key1',
+    entities: ['lc:RT:bf2:Monograph:Work'],
   },
   {
     id: 'k2',
@@ -27,7 +30,9 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 describe('FullDisplay', () => {
   beforeEach(() =>
     render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.previewContent, mockPreviewContent)}>
+      <RecoilRoot
+        initializeState={snapshot => snapshot.set(state.inputs.previewContent, mockPreviewContent as PreviewContent[])}
+      >
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<FullDisplay />} />
@@ -38,7 +43,12 @@ describe('FullDisplay', () => {
     ),
   );
 
-  const { getAllByTestId } = screen;
+  const { getByTestId, getAllByTestId, getByText } = screen;
+
+  test('contains preview container and header', () => {
+    expect(getByTestId('preview-contents-container')).toBeInTheDocument();
+    expect(getByText('Work')).toBeInTheDocument();
+  });
 
   test('removes a preview content entry on close button click', () => {
     fireEvent.click(getAllByTestId('preview-remove')[0]);
