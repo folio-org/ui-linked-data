@@ -277,7 +277,7 @@ export const TYPE_MAP = {
         parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
       },
       'http://bibfra.me/vocab/marc/descriptionSourceNote': {
-        uri: 'https://id.loc.gov/vocabulary/mnotetype/descsource',
+        uri: 'http://id.loc.gov/vocabulary/mnotetype/descsource',
         parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
       },
       'http://bibfra.me/vocab/marc/bibliographyNote': {
