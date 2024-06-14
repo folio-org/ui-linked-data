@@ -64,6 +64,8 @@ jest.mock('@common/services/userValues', () => ({
 }));
 jest.mock('@common/helpers/record.helper', () => ({
   getEditingRecordBlocks: jest.fn(),
+  getRecordTitle: jest.fn(),
+  getPrimaryEntitiesFromRecord: jest.fn(),
 }));
 
 describe('useConfig', () => {

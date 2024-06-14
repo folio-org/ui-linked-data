@@ -31,12 +31,16 @@ export const FullDisplay = () => {
                 <span className="title">{title}</span>
                 <span className="type">{entities?.map(e => RESOURCE_TEMPLATE_IDS[e] ?? e)?.join(', ') ?? '-'}</span>
               </div>
-              <Button onClick={() => navigateToEditPage(generateEditResourceUrl(id))} type={ButtonType.Highlighted}>
+              <Button
+                data-testid="preview-fetch"
+                onClick={() => navigateToEditPage(generateEditResourceUrl(id))}
+                type={ButtonType.Highlighted}
+              >
                 <FormattedMessage id="marva.edit" />
               </Button>
             </div>
             {Object.keys(userValues).length ? (
-              <div className="preview-contents-container">
+              <div data-testid="preview-contents-container" className="preview-contents-container">
                 <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless />
               </div>
             ) : (
