@@ -49,7 +49,7 @@ export enum AdvancedSearchOperators {
 export enum AdvancedSearchQualifiers {
   containsAll = 'containsAll',
   startsWith = 'startsWith',
-  // exactPhrase = 'exactPhrase',
+  exactPhrase = 'exactPhrase',
 }
 
 export type AdvancedSearchSchemaRow = {
