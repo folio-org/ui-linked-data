@@ -16,6 +16,7 @@ import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { RecordStatus } from '@common/constants/record.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import './EditControlPane.scss';
 
@@ -25,6 +26,7 @@ export const EditControlPane = () => {
   const setMarcPreviewData = useSetRecoilState(state.data.marcPreview);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
   const setStatus = useSetRecoilState(state.status.commonMessages);
+  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
@@ -92,7 +94,10 @@ export const EditControlPane = () => {
         <Button
           data-testid="nav-close-button"
           type={ButtonType.Icon}
-          onClick={() => navigate(searchResultsUri)}
+          onClick={() => {
+            setRecordStatus({ type: RecordStatus.saveAndClose });
+            navigate(searchResultsUri);
+          }}
           className="nav-close"
         >
           <Times16 />
@@ -108,7 +113,11 @@ export const EditControlPane = () => {
             />
           ))}
       </div>
-      {!isInCreateMode ? <Dropdown labelId="marva.actions" items={items} buttonTestId='edit-control-actions-toggle' /> : <span className="empty-block" />}
+      {!isInCreateMode ? (
+        <Dropdown labelId="marva.actions" items={items} buttonTestId="edit-control-actions-toggle" />
+      ) : (
+        <span className="empty-block" />
+      )}
     </div>
   );
 };

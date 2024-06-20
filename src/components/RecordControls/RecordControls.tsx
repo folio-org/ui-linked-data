@@ -11,8 +11,8 @@ export const RecordControls = memo(() => {
   return isEditSectionOpen ? (
     <div className="record-controls">
       <CloseRecord />
-      <SaveRecord locally />
       <SaveRecord />
+      <SaveRecord primary />
     </div>
   ) : null;
 });

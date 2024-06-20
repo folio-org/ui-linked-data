@@ -1,5 +1,5 @@
 import { flushSync } from 'react-dom';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
 import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
@@ -19,13 +19,15 @@ import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { getRecord } from '@common/api/records.api';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
-import state from '@state';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
-import { ResourceType } from '@common/constants/record.constants';
+import { RecordStatus, ResourceType } from '@common/constants/record.constants';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useBackToSearchUri } from './useBackToSearchUri';
+import state from '@state';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
+  isNavigatingBack?: boolean;
 };
 
 export const useRecordControls = () => {
@@ -38,6 +40,7 @@ export const useRecordControls = () => {
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
+  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const [isInitiallyLoaded, setIsInititallyLoaded] = useRecoilState(state.status.recordIsInititallyLoaded);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
@@ -47,6 +50,7 @@ export const useRecordControls = () => {
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
+  const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
@@ -74,7 +78,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async ({ asRefToNewRecord = false }: SaveRecordProps = {}) => {
+  const saveRecord = async ({ asRefToNewRecord = false, isNavigatingBack = true }: SaveRecordProps = {}) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
@@ -83,10 +87,11 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
+      const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
       const formattedRecord = formatRecord({
         parsedRecord: parsed,
         record,
-        selectedRecordBlocks: selectedRecordBlocks || getSelectedRecordBlocks(searchParams),
+        selectedRecordBlocks: updatedSelectedRecordBlocks,
       }) as RecordEntry;
 
       // TODO: define a type
@@ -120,6 +125,21 @@ export const useRecordControls = () => {
       //
       // flushSync is not the best way to make this work, research alternatives
       flushSync(() => setIsEdited(false));
+
+      if (!isNavigatingBack) {
+        const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
+
+        navigate(generateEditResourceUrl(updatedRecordId as string), {
+          replace: true,
+          state: location.state,
+        });
+
+        setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
+
+        return;
+      }
+
+      setRecordStatus({ type: RecordStatus.saveAndClose });
 
       if (asRefToNewRecord) {
         const blocksBfliteKey = (
@@ -160,6 +180,7 @@ export const useRecordControls = () => {
     setRecord(null);
     setSelectedRecordBlocks(undefined);
     setSelectedProfile(null);
+    setRecordStatus({ type: RecordStatus.close });
   };
 
   const discardRecord = (clearState = true) => {

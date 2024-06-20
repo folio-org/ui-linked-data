@@ -1,3 +1,5 @@
+type RecordStatusType = keyof typeof import('@common/constants/record.constants').RecordStatus;
+
 type RecordID = string | number | undefined;
 
 type ParsedRecord = Record<string, Record<string, RecursiveRecordSchema[]>> | RecordEntry | RecursiveRecordSchema;
@@ -35,3 +37,7 @@ type SelectedRecordBlocks = {
 };
 
 type RecordBlocksList = string[];
+
+type RecordStatus = {
+  type?: SavingStatusType;
+};
