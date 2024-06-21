@@ -1,18 +1,23 @@
 import { memo } from 'react';
-import { useRecordControls } from '@common/hooks/useRecordControls';
+import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
+import { useRecordControls } from '@common/hooks/useRecordControls';
 import { Button, ButtonType } from '@components/Button';
+import state from '@state';
 
-const SaveRecord = ({ locally = false }) => {
-  const { saveRecord, saveLocalRecord } = useRecordControls();
+const SaveRecord = ({ primary = false }) => {
+  const { saveRecord } = useRecordControls();
+  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
+  const recordIsEdited = useRecoilValue(state.status.recordIsEdited);
 
   return (
     <Button
-      data-testid={`save-record${locally ? '-locally' : ''}-button`}
-      type={locally ? ButtonType.Primary : ButtonType.Highlighted}
-      onClick={locally ? saveLocalRecord : saveRecord}
+      data-testid={`save-record${primary ? '-and-close' : '-and-keep-editing'}`}
+      type={primary ? ButtonType.Primary : ButtonType.Highlighted}
+      onClick={() => saveRecord({ isNavigatingBack: primary })}
+      disabled={isInitiallyLoaded && !recordIsEdited}
     >
-      <FormattedMessage id={locally ? 'marva.saveAndKeepEditing' : 'marva.saveAndClose'} />
+      <FormattedMessage id={!primary ? 'marva.saveAndKeepEditing' : 'marva.saveAndClose'} />
     </Button>
   );
 };

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -10,18 +10,22 @@ import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
-import { ResourceType } from '@common/constants/record.constants';
-import state from '@state';
+import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
+import state from '@state';
 import './Edit.scss';
+
+const savingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
 
 export const Edit = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
+  const [recordStatus, setRecordStatus] = useRecoilState(state.status.recordStatus);
+  const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
@@ -33,12 +37,15 @@ export const Edit = () => {
 
   useEffect(() => {
     resetMarcPreviewData();
+    setRecordStatus({ type: RecordStatus.open });
 
     scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
 
   useEffect(() => {
     async function loadRecord() {
+      if (savingStatuses.includes(recordStatusType)) return;
+
       setIsLoading(true);
 
       try {
@@ -91,7 +98,7 @@ export const Edit = () => {
     }
 
     loadRecord();
-  }, [resourceId]);
+  }, [resourceId, recordStatusType]);
 
   return (
     <div data-testid="edit-page" className="edit-page">
