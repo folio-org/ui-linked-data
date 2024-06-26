@@ -12,10 +12,10 @@ import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
 
-export const getRecordId = (record: RecordEntry | null, selectedBlock?: string) => {
+export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, previewBlock?: string) => {
   const block = selectedBlock || TYPE_URIS.INSTANCE;
 
-  return record?.resource?.[block]?.id;
+  return previewBlock ? (record?.resource?.[block]?.[previewBlock] as any[])?.[0]?.id : record?.resource?.[block]?.id;
 };
 
 export const getRecordWithUpdatedID = (record: RecordEntry, id: RecordID) => ({
