@@ -109,6 +109,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
         parentUri: uri,
         uri: itemUri,
         type,
+        basicLabel: loadedOption?.value.label,
       },
     };
 

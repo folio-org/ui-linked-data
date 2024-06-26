@@ -114,22 +114,27 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
         )}
         {shouldRenderValuesOrPlaceholders &&
           (userValues[uuid]
-            ? userValues[uuid]?.contents?.map(
-                ({ label, meta: { uri, parentUri } = {} } = {}) =>
-                  label && (
-                    <div key={`${label}${uri}`}>
-                      <div>
-                        {uri || parentUri ? (
-                          <a className="preview-value-link" href={uri || parentUri}>
-                            {label}
-                          </a>
-                        ) : (
-                          label
-                        )}
-                      </div>
+            ? userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri, basicLabel } = {} } = {}) => {
+              if (!label && !basicLabel) return;
+
+              const selectedLabel = basicLabel ?? label;
+
+              return (
+                label && (
+                  <div key={`${selectedLabel}${uri}`}>
+                    <div>
+                      {uri || parentUri ? (
+                        <a className="preview-value-link" href={uri || parentUri}>
+                          {selectedLabel}
+                        </a>
+                      ) : (
+                        <>{selectedLabel}</>
+                      )}
                     </div>
-                  ),
-              )
+                  </div>
+                )
+              );
+            })
             : shouldRenderPlaceholders && <div className="value-group-wrapper">-</div>)}
         {children?.map((uuid: string) => (
           <ConditionalWrapper
