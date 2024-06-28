@@ -2,14 +2,14 @@ import { FC, useEffect } from 'react';
 import { useBlocker } from 'react-router-dom';
 import { useModalControls } from '@common/hooks/useModalControls';
 import state from '@state';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import './Prompt.scss';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { ROUTES } from '@common/constants/routes.constants';
 import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
 import { useRecordControls } from '@common/hooks/useRecordControls';
+import './Prompt.scss';
 
 interface Props {
   when: boolean;
@@ -28,6 +28,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     openModal: openSwitchToNewRecordModal,
   } = useModalControls();
   const customEvents = useRecoilValue(state.config.customEvents);
+  const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
 
   const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
 
@@ -62,6 +63,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(proceedNavigationEvent));
 
     closeAllModals();
+    setIsEdited(false);
     blocker.proceed?.();
   };
 

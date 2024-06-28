@@ -4,10 +4,21 @@ import state from '@state';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { FormattedMessage } from 'react-intl';
 import { FC, memo } from 'react';
-import { ENTITY_LEVEL, GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL } from '@common/constants/bibframe.constants';
+import {
+  ENTITY_LEVEL,
+  GROUP_BY_LEVEL,
+  GROUP_CONTENTS_LEVEL,
+  PROFILE_BFIDS,
+  RESOURCE_TEMPLATE_IDS,
+} from '@common/constants/bibframe.constants';
 import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import Lightbulb16 from '@src/assets/lightbulb-shining-16.svg?react';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { Button, ButtonType } from '@components/Button';
+import { getRecordId } from '@common/helpers/record.helper';
+import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constants';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import './Preview.scss';
 
 type IPreview = {
@@ -39,6 +50,7 @@ const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
 
 export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false }) => {
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
+  const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
   const schemaFromState = useRecoilValue(state.config.schema);
   const initialSchemaKeyFromState = useRecoilValue(state.config.initialSchemaKey);
@@ -48,6 +60,16 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
 
   // TODO: potentially reuse <Fields /> from EditSection ?
   const Fields = memo(({ base, uuid, paths, level = 0 }: Fields) => {
+    const { navigateToEditPage } = useNavigateToEditPage();
+
+    const handleNavigateToEditPage = () => {
+      const typedSelectedBlock = BFLITE_BFID_TO_BLOCK[bfid as keyof typeof BFLITE_BFID_TO_BLOCK];
+
+      const id = getRecordId(record, typedSelectedBlock.reference.uri, typedSelectedBlock.referenceKey);
+
+      navigateToEditPage(generateEditResourceUrl(id));
+    };
+
     const entry = base.get(uuid);
     const isOnBranchWithUserValue = paths.includes(uuid);
     const isEntity = level === ENTITY_LEVEL;
@@ -110,6 +132,11 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
           >
             {isEntity && <Lightbulb16 />}
             {displayNameWithAltValue}
+            {isEntity && bfid !== PROFILE_BFIDS.INSTANCE && (
+              <Button type={ButtonType.Primary} className='toggle-entity-edit' onClick={handleNavigateToEditPage}>
+                <FormattedMessage id={`marva.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
+              </Button>
+            )}
           </strong>
         )}
         {shouldRenderValuesOrPlaceholders &&
