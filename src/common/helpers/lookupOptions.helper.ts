@@ -1,6 +1,19 @@
 import { BFLITE_TYPES_MAP } from '@common/constants/bibframeMapping.constants';
-import { AUTHORITATIVE_LABEL_URI, BLANK_NODE_TRAIT, ID_KEY, VALUE_KEY } from '@common/constants/lookup.constants';
+import {
+  AUTHORITATIVE_LABEL_URI,
+  BLANK_NODE_TRAIT,
+  CODE_SEPARATOR,
+  ID_KEY,
+  VALUE_KEY,
+} from '@common/constants/lookup.constants';
 
+export const generateLabelWithCode = (label: string, optionUri: string) => {
+  const processedOptionUri = optionUri.split(CODE_SEPARATOR);
+  const code = processedOptionUri.length > 1 ? processedOptionUri.pop() : undefined;
+  const codeString = code ? ` (${code})` : '';
+
+  return `${label}${codeString}`;
+};
 export const formatLookupOptions = (
   data: LoadSimpleLookupResponseItem[] = [],
   parentURI?: string,
@@ -13,10 +26,14 @@ export const formatLookupOptions = (
     .map<MultiselectOption>(option => {
       const optionUri = option[ID_KEY];
       const label = option[AUTHORITATIVE_LABEL_URI]?.[0]?.[VALUE_KEY] ?? '';
+      const formattedLabel = generateLabelWithCode(label, optionUri);
 
       return {
-        value: { label, uri: optionUri },
-        label,
+        value: {
+          label, // used as a basic unformatted label in Preview and similar components
+          uri: optionUri,
+        },
+        label: formattedLabel, // used for displaying a label with a code in Simple Lookups
         __isNew__: false,
       };
     });

@@ -6,6 +6,7 @@ type UserValueContents = {
     parentUri?: string;
     type?: string;
     bfLabel?: string;
+    basicLabel?: string;
   };
 };
 
