@@ -120,7 +120,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
               const selectedLabel = basicLabel ?? label;
 
               return (
-                label && (
+                selectedLabel && (
                   <div key={`${selectedLabel}${uri}`}>
                     <div>
                       {uri || parentUri ? (
