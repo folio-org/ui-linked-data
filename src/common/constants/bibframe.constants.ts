@@ -53,14 +53,10 @@ export const TITLE_CONTAINER_URIS = [
 export const GROUPS_WITHOUT_ROOT_WRAPPER = [
   'http://id.loc.gov/ontologies/bibframe/provisionActivity',
   'http://id.loc.gov/ontologies/bibframe/summary',
-  'http://id.loc.gov/ontologies/bibframe/language',
   'http://id.loc.gov/ontologies/bibframe/tableOfContents',
 ];
 
-export const LOOKUPS_WITH_SIMPLE_STRUCTURE = [
-  'http://bibfra.me/vocab/marc/issuance',
-  'http://bibfra.me/vocab/lite/language',
-];
+export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/marc/issuance'];
 
 export const COMPLEX_GROUPS = [
   'http://id.loc.gov/ontologies/bibframe/electronicLocator',
@@ -125,7 +121,3 @@ export const PROVISION_ACTIVITY_OPTIONS = [
   'http://bibfra.me/vocab/marc/distribution',
   'http://bibfra.me/vocab/marc/manufacture',
 ];
-
-export const EXTERNAL_DATA_SOURCE_URIS = {
-  LANGUAGE: 'http://id.loc.gov/vocabulary/languages',
-};

@@ -189,6 +189,7 @@ export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/marc/governmentPublication': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/targetAudience': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/marc/originPlace': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/lite/language': BFLITE_URIS.TERM,
 };
 
 export const ADVANCED_FIELDS = {
@@ -835,7 +836,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
       fields: {
         _language: {
           bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs',
-          label: BFLITE_URIS.LABEL,
+          label: BFLITE_URIS.TERM,
         },
       },
     },
