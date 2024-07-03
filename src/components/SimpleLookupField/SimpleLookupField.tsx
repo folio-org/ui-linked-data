@@ -68,8 +68,8 @@ export const SimpleLookupField: FC<Props> = ({
   }, [simpleLookupRef]);
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
-    value?.map(({ label = '', meta: { uri } = {} }) => ({
-      value: { label, uri },
+    value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
+      value: { label: basicLabel || label, uri },
       label,
       __isNew__: false,
     })) || [],
