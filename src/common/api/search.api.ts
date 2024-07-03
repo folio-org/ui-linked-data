@@ -13,7 +13,7 @@ export type GetByIdentifier = {
   limit?: string;
 };
 
-const getByIdentifierUrl = '/search/bibframe';
+const getByIdentifierUrl = '/search/linked-data/works';
 export const getByIdentifier = async ({
   searchBy,
   query,
