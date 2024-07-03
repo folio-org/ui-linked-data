@@ -1,4 +1,4 @@
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import state from '@state';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -20,6 +20,7 @@ import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constant
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import './Preview.scss';
+import { RecordStatus } from '@common/constants/record.constants';
 
 type IPreview = {
   altSchema?: Map<string, SchemaEntry>;
@@ -50,6 +51,7 @@ const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
 
 export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false }) => {
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
+  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
   const schemaFromState = useRecoilValue(state.config.schema);
@@ -63,8 +65,9 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const { navigateToEditPage } = useNavigateToEditPage();
 
     const handleNavigateToEditPage = () => {
-      const typedSelectedBlock = BFLITE_BFID_TO_BLOCK[bfid as keyof typeof BFLITE_BFID_TO_BLOCK];
+      setRecordStatus({ type: RecordStatus.close });
 
+      const typedSelectedBlock = BFLITE_BFID_TO_BLOCK[bfid as keyof typeof BFLITE_BFID_TO_BLOCK];
       const id = getRecordId(record, typedSelectedBlock.reference.uri, typedSelectedBlock.referenceKey);
 
       navigateToEditPage(generateEditResourceUrl(id));
@@ -133,7 +136,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
             {isEntity && <Lightbulb16 />}
             {displayNameWithAltValue}
             {isEntity && bfid !== PROFILE_BFIDS.INSTANCE && (
-              <Button type={ButtonType.Primary} className='toggle-entity-edit' onClick={handleNavigateToEditPage}>
+              <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={handleNavigateToEditPage}>
                 <FormattedMessage id={`marva.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
               </Button>
             )}
