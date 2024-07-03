@@ -1,11 +1,9 @@
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as RecordProcessingCases from '@common/services/recordNormalizing/recordProcessingCases';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as BibframeConstants from '@common/constants/bibframe.constants';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
 const mockedNonBFRecordElements = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
-const mockedExternalDataSourceUris = getMockedImportedConstant(BibframeConstants, 'EXTERNAL_DATA_SOURCE_URIS');
 
 describe('recordProcessingCases', () => {
   const blockKey = 'block_1';
@@ -22,9 +20,6 @@ describe('recordProcessingCases', () => {
   mockedNonBFRecordElements({
     [noteBFLiteUri]: { container: noteNonBFUri },
     [creatorBFLiteUri]: { container: creatorNonBFUri },
-  });
-  mockedExternalDataSourceUris({
-    LANGUAGE: 'testLanguageUri',
   });
 
   describe('wrapWithContainer', () => {
@@ -276,7 +271,16 @@ describe('recordProcessingCases', () => {
       jest.spyOn(RecordProcessingCases, 'getLabelUri').mockReturnValueOnce(testLabel);
       const record = {
         [blockKey]: {
-          [groupKey]: ['testValue_1', 'testValue_2'],
+          [groupKey]: [
+            {
+              [testLabel]: ['testValue_1'],
+              [linkBFLiteUri]: ['testLanguageUri_1'],
+            },
+            {
+              [testLabel]: ['testValue_2'],
+              [linkBFLiteUri]: ['testLanguageUri_2'],
+            },
+          ],
         },
       } as unknown as RecordEntry;
       const testResult = {
@@ -285,13 +289,13 @@ describe('recordProcessingCases', () => {
             {
               [fieldName]: {
                 [testLabel]: ['testValue_1'],
-                [linkBFLiteUri]: ['testLanguageUri/testValue_1'],
+                [linkBFLiteUri]: ['testLanguageUri_1'],
               },
             },
             {
               [fieldName]: {
                 [testLabel]: ['testValue_2'],
-                [linkBFLiteUri]: ['testLanguageUri/testValue_2'],
+                [linkBFLiteUri]: ['testLanguageUri_2'],
               },
             },
           ],

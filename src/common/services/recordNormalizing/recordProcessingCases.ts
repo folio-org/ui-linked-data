@@ -3,7 +3,6 @@ import {
   NEW_BF2_TO_BFLITE_MAPPING,
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
-import { EXTERNAL_DATA_SOURCE_URIS } from '@common/constants/bibframe.constants';
 
 export const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string) => {
   const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
@@ -91,13 +90,8 @@ export const processComplexGroupWithLookup = (
   key: string,
   fieldName: string,
 ) => {
-  const label = getLabelUri(blockKey, key, fieldName);
-
   record[blockKey][key] = (record[blockKey][key] as unknown as string[]).map(recordEntry => ({
-    [fieldName]: {
-      [label]: [recordEntry],
-      [BFLITE_URIS.LINK]: [`${EXTERNAL_DATA_SOURCE_URIS.LANGUAGE}/${recordEntry}`],
-    },
+    [fieldName]: recordEntry,
   })) as unknown as RecursiveRecordSchema;
 };
 
