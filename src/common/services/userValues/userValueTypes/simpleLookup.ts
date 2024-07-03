@@ -99,7 +99,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
 
     // Check if the loaded options contain a value from the record
     const loadedOption = this.cachedData[uri as string]?.find(
-      ({ value }) => value.uri === mappedUri || value.label === label,
+      ({ label: optionLabel, value }) => value.uri === mappedUri || value.label === label || optionLabel === label,
     );
     const selectedLabel = typesMap && itemUri ? loadedOption?.label || itemUri : loadedOption?.label || label;
 

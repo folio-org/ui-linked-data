@@ -68,8 +68,8 @@ export const SimpleLookupField: FC<Props> = ({
   }, [simpleLookupRef]);
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
-    value?.map(({ label = '', meta: { uri } = {} }) => ({
-      value: { label, uri },
+    value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
+      value: { label: basicLabel || label, uri },
       label,
       __isNew__: false,
     })) || [],
@@ -100,11 +100,12 @@ export const SimpleLookupField: FC<Props> = ({
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChange = (options: MultiValue<MultiselectOption>) => {
-    const newValue = options.map<UserValueContents>(({ value }) => ({
-      label: value.label,
+    const newValue = options.map<UserValueContents>(({ label, value }) => ({
+      label,
       meta: {
         uri: value?.uri,
         parentUri,
+        basicLabel: value.label,
       },
     }));
 
