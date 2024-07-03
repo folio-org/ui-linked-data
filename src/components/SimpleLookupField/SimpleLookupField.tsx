@@ -100,11 +100,12 @@ export const SimpleLookupField: FC<Props> = ({
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChange = (options: MultiValue<MultiselectOption>) => {
-    const newValue = options.map<UserValueContents>(({ value }) => ({
-      label: value.label,
+    const newValue = options.map<UserValueContents>(({ label, value }) => ({
+      label,
       meta: {
         uri: value?.uri,
         parentUri,
+        basicLabel: value.label,
       },
     }));
 

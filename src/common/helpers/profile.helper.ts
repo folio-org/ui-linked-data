@@ -43,26 +43,29 @@ export const hasElement = (collection: string[], uri?: string) => !!uri && colle
 export const generateLookupValue = ({
   uriBFLite,
   label,
+  basicLabel,
   uri,
   type,
   nonBFMappedGroup,
 }: {
   uriBFLite?: string;
   label?: string;
+  basicLabel?: string;
   uri?: string;
   type?: AdvancedFieldType;
   nonBFMappedGroup?: NonBFMappedGroup;
 }) => {
   let lookupValue;
+  const selectedLabel = basicLabel ?? label;
 
   if (LOOKUPS_WITH_SIMPLE_STRUCTURE.includes(uriBFLite as string) || type === AdvancedFieldType.complex) {
-    lookupValue = label;
+    lookupValue = selectedLabel;
   } else if (nonBFMappedGroup) {
     // Get mapped lookup value for BFLite format
     lookupValue = uri?.includes(LOC_GOV_URI) ? getMappedLookupValue({ uri, nonBFMappedGroup }) : uri;
   } else {
     lookupValue = {
-      [getLookupLabelKey(uriBFLite)]: [label],
+      [getLookupLabelKey(uriBFLite)]: [selectedLabel],
       [BFLITE_URIS.LINK]: [uri],
     };
   }
@@ -137,7 +140,7 @@ const traverseSchema = ({
   if (userValueMatch && uri && selector) {
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
-    const withFormat = userValueMatch.contents.map(({ id, label, meta: { uri, parentUri, type } = {} }) => {
+    const withFormat = userValueMatch.contents.map(({ id, label, meta: { uri, parentUri, type, basicLabel } = {} }) => {
       if (KEEP_VALUE_AS_IS.includes(selector) || type === AdvancedFieldType.complex) {
         return { id, label };
       } else if (
@@ -147,6 +150,7 @@ const traverseSchema = ({
         return generateLookupValue({
           uriBFLite,
           label,
+          basicLabel,
           uri: uri || parentUri,
           type: type as AdvancedFieldType,
           nonBFMappedGroup: updatedNonBFMappedGroup,
