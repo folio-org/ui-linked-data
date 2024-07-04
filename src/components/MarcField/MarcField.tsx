@@ -12,7 +12,7 @@ export const MarcField: FC<MarcField> = ({ field }) => {
   const hasIndicators = typeof field[fieldTag] !== 'string';
   const typedSelectedFieldTag = field[fieldTag] as MarcDTOParsedRecordContentSubfield;
   const subFields = hasIndicators
-    ? typedSelectedFieldTag.subfields.map((subFieldTag, index) => {
+    ? typedSelectedFieldTag.subfields?.map((subFieldTag, index) => {
         const subKey = Object.keys(subFieldTag)[0];
 
         const subfieldValue = typedSelectedFieldTag.isHighlighted ? (
