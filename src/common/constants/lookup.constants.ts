@@ -1,5 +1,6 @@
 export const BLANK_NODE_TRAIT = '_:';
 export const AUTHORITATIVE_LABEL_URI = 'http://www.loc.gov/mads/rdf/v1#authoritativeLabel';
+export const SCHEMA_LABEL_URI = 'http://www.w3.org/2000/01/rdf-schema#label';
 export const ID_KEY = '@id';
 export const VALUE_KEY = '@value';
 export const CODE_SEPARATOR = '/';
@@ -712,6 +713,11 @@ export const lookupConfig: Record<string, any> = {
   },
   'https://lookup.ld4l.org/authorities/search/linked_data/getty_aat_ld4l_cache': {
     name: 'getty_aat_ld4l_cache',
+    type: 'simple',
+    modes: [],
+  },
+  'http://id.loc.gov/ontologies/bibframe': {
+    name: 'bibframe',
     type: 'simple',
     modes: [],
   },
