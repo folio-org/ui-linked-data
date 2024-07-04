@@ -4,6 +4,7 @@ import {
   BLANK_NODE_TRAIT,
   CODE_SEPARATOR,
   ID_KEY,
+  SCHEMA_LABEL_URI,
   VALUE_KEY,
 } from '@common/constants/lookup.constants';
 
@@ -25,7 +26,8 @@ export const formatLookupOptions = (
     })
     .map<MultiselectOption>(option => {
       const optionUri = option[ID_KEY];
-      const label = option[AUTHORITATIVE_LABEL_URI]?.[0]?.[VALUE_KEY] ?? '';
+      const optionLabelElem = option[AUTHORITATIVE_LABEL_URI] ?? option[SCHEMA_LABEL_URI];
+      const label = optionLabelElem?.[0]?.[VALUE_KEY] ?? '';
       const formattedLabel = generateLabelWithCode(label, optionUri);
 
       return {
