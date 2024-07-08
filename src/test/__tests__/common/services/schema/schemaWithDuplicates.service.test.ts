@@ -82,11 +82,21 @@ describe('SchemaWithDuplicatesService', () => {
         ],
         [
           'testKey-8',
-          { path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8'], uuid: 'testKey-8', children: ['testKey-9'] },
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8'],
+            uuid: 'testKey-8',
+            children: ['testKey-9'],
+            clonedBy: [],
+          },
         ],
         [
           'testKey-9',
-          { path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8', 'testKey-9'], uuid: 'testKey-9', children: [] },
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8', 'testKey-9'],
+            uuid: 'testKey-9',
+            children: [],
+            clonedBy: [],
+          },
         ],
       ]);
 
