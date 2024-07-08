@@ -206,6 +206,7 @@ export const BLOCKS_BFLITE = {
   INSTANCE: {
     uri: BFLITE_URIS.INSTANCE,
     referenceKey: '_instanceReference',
+    resourceType: ResourceType.instance,
     reference: {
       key: '_workReference',
       uri: BFLITE_URIS.WORK,
@@ -215,6 +216,7 @@ export const BLOCKS_BFLITE = {
   WORK: {
     uri: BFLITE_URIS.WORK,
     referenceKey: '_workReference',
+    resourceType: ResourceType.work,
     reference: {
       key: '_instanceReference',
       uri: BFLITE_URIS.INSTANCE,
@@ -226,6 +228,11 @@ export const BLOCKS_BFLITE = {
 export const BFLITE_BFID_TO_BLOCK = {
   'lc:RT:bf2:Monograph:Instance': BLOCKS_BFLITE.INSTANCE,
   'lc:RT:bf2:Monograph:Work': BLOCKS_BFLITE.WORK,
+};
+
+export const BFLITE_URI_TO_BLOCK = {
+  'http://bibfra.me/vocab/lite/Instance': BLOCKS_BFLITE.INSTANCE,
+  'http://bibfra.me/vocab/lite/Work': BLOCKS_BFLITE.WORK,
 };
 
 export const TYPE_MAP = {

@@ -1,6 +1,5 @@
 import { Preview } from '@components/Preview';
 import { Button, ButtonType } from '@components/Button';
-import './EditPreview.scss';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import state from '@state';
 import classNames from 'classnames';
@@ -12,6 +11,8 @@ import { ResourceType } from '@common/constants/record.constants';
 import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { checkIfRecordHasDependencies } from '@common/helpers/record.helper';
+import './EditPreview.scss';
 
 export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
@@ -24,6 +25,8 @@ export const EditPreview = () => {
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
+  const recordHasDependencies = checkIfRecordHasDependencies(record as RecordEntry);
+  const showPreview = recordHasDependencies && !isCreateWorkPageOpened;
   const { navigateToEditPage } = useNavigateToEditPage();
 
   return (
@@ -37,20 +40,23 @@ export const EditPreview = () => {
           <strong className="header">
             <FormattedMessage id="marva.instances" />
           </strong>
-          <Button
-            data-testid="create-instance-button"
-            type={ButtonType.Highlighted}
-            onClick={() =>
-              navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`)
-            }
-            disabled={!record || isEdited}
-          >
-            <FormattedMessage id="marva.addInstance" />
-          </Button>
+          {!recordHasDependencies && (
+            <Button
+              data-testid="create-instance-button"
+              type={ButtonType.Highlighted}
+              onClick={() =>
+                navigateToEditPage(
+                  `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`,
+                )
+              }
+              disabled={!record || isEdited}
+            >
+              <FormattedMessage id="marva.addInstance" />
+            </Button>
+          )}
         </div>
       )}
-      {!isCreateWorkPageOpened && <Preview headless />}
-      {isCreateWorkPageOpened && <InstancesList />}
+      {showPreview ? <Preview headless /> : <InstancesList />}
     </div>
   );
 };

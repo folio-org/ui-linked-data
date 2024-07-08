@@ -41,7 +41,7 @@ export const FullDisplay = () => {
             </div>
             {Object.keys(userValues).length ? (
               <div data-testid="preview-contents-container" className="preview-contents-container">
-                <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless />
+                <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless hideActions />
               </div>
             ) : (
               <div>Resource description {id} is empty</div>
