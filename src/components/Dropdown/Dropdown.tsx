@@ -9,9 +9,17 @@ type DropdownProps = {
   labelId: string;
   items: DropdownItems;
   buttonTestId?: string;
+  className?: string;
+  hideLabelIdWithinDropdownList?: boolean;
 };
 
-export const Dropdown: FC<DropdownProps> = ({ labelId, items, buttonTestId }) => {
+export const Dropdown: FC<DropdownProps> = ({
+  labelId,
+  items,
+  buttonTestId,
+  className,
+  hideLabelIdWithinDropdownList,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const optionsListRef = useRef<HTMLDivElement>(null);
@@ -123,7 +131,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items, buttonTestId }) =>
   }, []);
 
   return (
-    <div ref={ref} className="dropdown">
+    <div ref={ref} className={classNames('dropdown', className)}>
       <button
         type="button"
         className={classNames(['dropdown-button', isExpanded ? 'expanded' : 'collapsed', 'button-highlighted'])}
@@ -142,7 +150,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items, buttonTestId }) =>
       <div className={classNames(['dropdown-options', isExpanded ? 'expanded' : 'collapsed'])}>
         {items?.map(({ id, labelId, data }) => (
           <div key={id} className="dropdown-options-group">
-            {labelId && (
+            {labelId && !hideLabelIdWithinDropdownList && (
               <div className="dropdown-options-group-label">
                 <span>
                   <FormattedMessage id={labelId} />
@@ -154,7 +162,7 @@ export const Dropdown: FC<DropdownProps> = ({ labelId, items, buttonTestId }) =>
               <div ref={optionsListRef} role="menu" className="dropdown-options-group-container">
                 {data?.map(({ id, type, icon, labelId, renderComponent, isDisabled, hidden, action }, index) => {
                   if (hidden) return;
-                  
+
                   switch (type) {
                     case DropdownItemType.basic:
                       return (

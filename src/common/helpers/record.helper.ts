@@ -8,7 +8,7 @@ import {
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
-import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URI_TO_BLOCK, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
 
@@ -157,4 +157,14 @@ export const getRecordTitle = (record: RecordEntry) => {
   });
 
   return selectedTitle?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
+};
+
+export const checkIfRecordHasDependencies = (record: RecordEntry) => {
+  if (!record?.resource) return false;
+
+  for (const [key, val] of Object.entries(record.resource)) {
+    if (val[BFLITE_URI_TO_BLOCK[key as keyof typeof BFLITE_URI_TO_BLOCK]?.reference?.key]) return true;
+  }
+
+  return false;
 };

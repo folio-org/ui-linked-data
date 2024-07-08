@@ -16,17 +16,19 @@ import Lightbulb16 from '@src/assets/lightbulb-shining-16.svg?react';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { Button, ButtonType } from '@components/Button';
 import { getRecordId } from '@common/helpers/record.helper';
-import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_BFID_TO_BLOCK, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import './Preview.scss';
 import { RecordStatus } from '@common/constants/record.constants';
+import { PreviewActionsDropdown } from '@components/PreviewActionsDropdown';
+import './Preview.scss';
 
 type IPreview = {
   altSchema?: Map<string, SchemaEntry>;
   altUserValues?: UserValues;
   altInitKey?: string;
   headless?: boolean;
+  hideActions?: boolean;
 };
 
 type Fields = {
@@ -49,7 +51,7 @@ const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
   return (!children?.length || type === AdvancedFieldType.dropdown) && level !== GROUP_BY_LEVEL;
 };
 
-export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false }) => {
+export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false, hideActions }) => {
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const record = useRecoilValue(state.inputs.record);
@@ -109,6 +111,8 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const displayNameWithAltValue = PREVIEW_ALT_DISPLAY_LABELS[displayName] || displayName;
     const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
     const isBlockContents = level === GROUP_CONTENTS_LEVEL;
+    const isInstance = bfid === PROFILE_BFIDS.INSTANCE;
+    const showEntityActions = !hideActions && isEntity;
 
     return (
       <ConditionalWrapper
@@ -135,36 +139,42 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
           >
             {isEntity && <Lightbulb16 />}
             {displayNameWithAltValue}
-            {isEntity && bfid !== PROFILE_BFIDS.INSTANCE && (
+            {showEntityActions && !isInstance && (
               <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={handleNavigateToEditPage}>
                 <FormattedMessage id={`marva.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
               </Button>
+            )}
+            {showEntityActions && isInstance && (
+              <PreviewActionsDropdown
+                referenceId={getRecordId(record, BLOCKS_BFLITE.WORK.uri)}
+                entityType={BLOCKS_BFLITE.INSTANCE.resourceType}
+              />
             )}
           </strong>
         )}
         {shouldRenderValuesOrPlaceholders &&
           (userValues[uuid]
             ? userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri, basicLabel } = {} } = {}) => {
-              if (!label && !basicLabel) return;
+                if (!label && !basicLabel) return;
 
-              const selectedLabel = basicLabel ?? label;
+                const selectedLabel = basicLabel ?? label;
 
-              return (
-                selectedLabel && (
-                  <div key={`${selectedLabel}${uri}`}>
-                    <div>
-                      {uri || parentUri ? (
-                        <a className="preview-value-link" href={uri || parentUri}>
-                          {selectedLabel}
-                        </a>
-                      ) : (
-                        <>{selectedLabel}</>
-                      )}
+                return (
+                  selectedLabel && (
+                    <div key={`${selectedLabel}${uri}`}>
+                      <div>
+                        {uri || parentUri ? (
+                          <a className="preview-value-link" href={uri || parentUri}>
+                            {selectedLabel}
+                          </a>
+                        ) : (
+                          <>{selectedLabel}</>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              );
-            })
+                  )
+                );
+              })
             : shouldRenderPlaceholders && <div className="value-group-wrapper">-</div>)}
         {children?.map((uuid: string) => (
           <ConditionalWrapper
