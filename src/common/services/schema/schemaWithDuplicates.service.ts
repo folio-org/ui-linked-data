@@ -86,12 +86,13 @@ export class SchemaWithDuplicatesService {
     children?.forEach((entryUuid: string) => {
       const entry = this.schema.get(entryUuid);
 
-      if (!entry) return;
+      if (!entry || entry.cloneOf) return;
 
       const { children } = entry;
       const updatedEntryUuid = uuidv4();
       const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
       updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
+      updatedEntry.clonedBy = [];
 
       this.schema.set(updatedEntryUuid, updatedEntry);
       this.selectedEntriesService.addDuplicated(entry.uuid, updatedEntryUuid);
