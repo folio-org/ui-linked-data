@@ -27,6 +27,7 @@ import state from '@state';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
+  shouldSetSearchParams?: boolean;
   isNavigatingBack?: boolean;
 };
 
@@ -78,7 +79,11 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveRecord = async ({ asRefToNewRecord = false, isNavigatingBack = true }: SaveRecordProps = {}) => {
+  const saveRecord = async ({
+    asRefToNewRecord = false,
+    isNavigatingBack = true,
+    shouldSetSearchParams = true,
+  }: SaveRecordProps = {}) => {
     const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
     const currentRecordId = record?.id;
 
@@ -126,9 +131,9 @@ export const useRecordControls = () => {
       // flushSync is not the best way to make this work, research alternatives
       flushSync(() => setIsEdited(false));
 
-      if (!isNavigatingBack) {
-        const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
+      const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
 
+      if (!isNavigatingBack) {
         navigate(generateEditResourceUrl(updatedRecordId as string), {
           replace: true,
           state: location.state,
@@ -147,11 +152,14 @@ export const useRecordControls = () => {
         )?.toUpperCase() as BibframeEntities;
 
         const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
-
-        setSearchParams({
-          type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
-          ref: String(getRecordId(parsedResponse, selectedBlock)),
-        });
+                
+        shouldSetSearchParams &&
+          setSearchParams({
+            type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
+            ref: String(getRecordId(parsedResponse, selectedBlock)),
+          });
+        
+        return updatedRecordId;
       } else {
         navigate(searchResultsUri);
       }
