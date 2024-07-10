@@ -5,7 +5,9 @@ import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { FC } from 'react';
-import { ROUTES } from '@common/constants/routes.constants';
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { useRecoilValue } from 'recoil';
+import state from '@state';
 
 type Props = {
   referenceId?: string;
@@ -14,6 +16,8 @@ type Props = {
 
 export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType }) => {
   const { navigateToEditPage } = useNavigateToEditPage();
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const isEditedQueryParam = isEdited ? `&${QueryParams.PerformIdUpdate}=true` : '';
 
   const actionDropdownItems = [
     {
@@ -40,7 +44,9 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType }) =
           action: () =>
             entityType &&
             referenceId &&
-            navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${entityType}&ref=${referenceId}`),
+            navigateToEditPage(
+              `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${entityType}&${QueryParams.Ref}=${referenceId}${isEditedQueryParam}`,
+            ),
         },
       ],
     },
