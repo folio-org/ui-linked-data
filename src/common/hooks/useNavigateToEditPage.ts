@@ -7,6 +7,6 @@ export const useNavigateToEditPage = () => {
   const navigationState = useRecoilValue(state.search.navigationState);
 
   return {
-    navigateToEditPage: (uri: string) => navigate(uri, { state: navigationState }),
+    navigateToEditPage: (uri: string, { ...options } = {}) => navigate(uri, { state: navigationState, ...options }),
   };
 };
