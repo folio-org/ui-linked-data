@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { useBlocker, useNavigate } from 'react-router-dom';
+import { useBlocker } from 'react-router-dom';
 import { useModalControls } from '@common/hooks/useModalControls';
 import state from '@state';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -9,6 +9,7 @@ import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
 import { useRecordControls } from '@common/hooks/useRecordControls';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import './Prompt.scss';
 
 interface Props {
@@ -30,7 +31,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   const customEvents = useRecoilValue(state.config.customEvents);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const [forceNavigateTo, setForceNavigateTo] = useState<{ pathname: string; search: string } | null>(null);
-  const navigate = useNavigate();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
 
@@ -80,11 +81,11 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     if (!forceNavigateTo) {
       proceedNavigation();
     } else {
-      blocker?.reset?.();
+      stopNavigation();
       const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
       newSearchParams.set(QueryParams.Ref, recordId);
       newSearchParams.delete(QueryParams.PerformIdUpdate);
-      navigate(`${forceNavigateTo.pathname}?${newSearchParams.toString()}`, { replace: true });
+      navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
     }
   };
 

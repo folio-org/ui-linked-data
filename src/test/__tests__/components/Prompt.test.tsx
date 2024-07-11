@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
@@ -74,10 +74,10 @@ describe('Prompt', () => {
     expect(setIsModalOpen).toHaveBeenCalled();
   });
 
-  test('proceeds navigation', () => {
+  test('proceeds navigation', async () => {
     fireEvent.click(screen.getAllByTestId('modal-button-submit')[0]);
 
-    expect(setIsModalOpen).toHaveBeenCalled();
+    await waitFor(() => expect(setIsModalOpen).toHaveBeenCalled());
   });
 
   test('manages event listeners', () => {
