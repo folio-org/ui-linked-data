@@ -368,6 +368,19 @@ export class RecordToSchemaMappingService {
         if (recordEntryValue.length > 1 && parseInt(key) !== 0) {
           const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
           this.updatedSchema = this.repeatableFieldsService?.get();
+
+          // Parameters are defined for further proper duplication of repeatable subcomponents
+          const duplicatedElem = this.updatedSchema.get(newEntryUuid);
+
+          if (duplicatedElem) {
+            duplicatedElem.cloneOf = schemaUiElem.uuid;
+            duplicatedElem.clonedBy = [];
+            schemaUiElem.clonedBy = Array.isArray(schemaUiElem.clonedBy)
+              ? [...schemaUiElem.clonedBy, newEntryUuid]
+              : [newEntryUuid];
+          }
+
+          this.updatedSchema.get(newEntryUuid);
           this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
           newValueKey = newEntryUuid;
