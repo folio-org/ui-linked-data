@@ -44,7 +44,7 @@ export const Edit = () => {
 
   useEffect(() => {
     async function loadRecord() {
-      if (savingStatuses.includes(recordStatusType)) return;
+      if (!recordStatusType || savingStatuses.includes(recordStatusType)) return;
 
       setIsLoading(true);
 
