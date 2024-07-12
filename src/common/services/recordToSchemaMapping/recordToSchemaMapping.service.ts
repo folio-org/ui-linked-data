@@ -380,7 +380,6 @@ export class RecordToSchemaMappingService {
               : [newEntryUuid];
           }
 
-          this.updatedSchema.get(newEntryUuid);
           this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
           newValueKey = newEntryUuid;
