@@ -12,11 +12,11 @@ export const useResetRecordStatus = () => {
   // TODO: temporary, might have to revise considering all edge cases
   useEffect(() => {
     if (resourceId) {
-      if (!prevResourceId) {
-        setPrevResourceId(resourceId);
-      } else if (prevResourceId !== resourceId) {
+      if (prevResourceId && prevResourceId !== resourceId) {
         setRecordStatus({ type: RecordStatus.open });
       }
+
+      setPrevResourceId(resourceId);
     } else {
       setRecordStatus({ type: RecordStatus.open });
     }
