@@ -24,6 +24,8 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import state from '@state';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -47,6 +49,8 @@ export const useRecordControls = () => {
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
+  const { UNBLOCK_NAVIGATION: unblockNavigationEvent } =
+    useRecoilValue(state.config.customEvents) ?? {};
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
@@ -110,6 +114,8 @@ export const useRecordControls = () => {
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
 
+      IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(unblockNavigationEvent));
+
       if (isInitiallyLoaded) {
         setIsInititallyLoaded(false);
       }
@@ -152,13 +158,13 @@ export const useRecordControls = () => {
         )?.toUpperCase() as BibframeEntities;
 
         const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
-                
+
         shouldSetSearchParams &&
           setSearchParams({
             type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
             ref: String(getRecordId(parsedResponse, selectedBlock)),
           });
-        
+
         return updatedRecordId;
       } else {
         navigate(searchResultsUri);

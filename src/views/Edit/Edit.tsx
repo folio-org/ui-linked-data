@@ -15,6 +15,7 @@ import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
 import state from '@state';
+import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
 import './Edit.scss';
 
 const savingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -32,8 +33,9 @@ export const Edit = () => {
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const marcPreviewData = useRecoilValue(state.data.marcPreview);
   const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
-
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
   const [queryParams] = useSearchParams();
+  useResetRecordStatus();
 
   useEffect(() => {
     resetMarcPreviewData();
@@ -44,7 +46,7 @@ export const Edit = () => {
 
   useEffect(() => {
     async function loadRecord() {
-      if (!recordStatusType || savingStatuses.includes(recordStatusType)) return;
+      if (!recordStatusType || savingStatuses.includes(recordStatusType) || isEdited) return;
 
       setIsLoading(true);
 
