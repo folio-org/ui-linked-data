@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -15,6 +15,7 @@ import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
 import state from '@state';
+import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
 import './Edit.scss';
 
 const savingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -24,7 +25,7 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const [recordStatus, setRecordStatus] = useRecoilState(state.status.recordStatus);
+  const recordStatus = useRecoilValue(state.status.recordStatus);
   const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
@@ -32,19 +33,19 @@ export const Edit = () => {
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const marcPreviewData = useRecoilValue(state.data.marcPreview);
   const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
-
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
   const [queryParams] = useSearchParams();
+  useResetRecordStatus();
 
   useEffect(() => {
     resetMarcPreviewData();
-    setRecordStatus({ type: RecordStatus.open });
 
     scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
 
   useEffect(() => {
     async function loadRecord() {
-      if (!recordStatusType || savingStatuses.includes(recordStatusType)) return;
+      if (!recordStatusType || savingStatuses.includes(recordStatusType) || isEdited) return;
 
       setIsLoading(true);
 

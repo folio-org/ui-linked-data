@@ -28,12 +28,14 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     setIsModalOpen: setIsSwitchToNewRecordModalOpen,
     openModal: openSwitchToNewRecordModal,
   } = useModalControls();
-  const customEvents = useRecoilValue(state.config.customEvents);
+  const {
+    TRIGGER_MODAL: triggerModalEvent,
+    PROCEED_NAVIGATION: proceedNavigationEvent,
+    UNBLOCK_NAVIGATION: unblockNavigationEvent,
+  } = useRecoilValue(state.config.customEvents) ?? {};
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const [forceNavigateTo, setForceNavigateTo] = useState<{ pathname: string; search: string } | null>(null);
   const { navigateToEditPage } = useNavigateToEditPage();
-
-  const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
 
   const closeAllModals = () => {
     setIsCloseRecordModalOpen(false);
@@ -42,7 +44,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
 
   useEffect(() => {
     IS_EMBEDDED_MODE &&
-      getWrapperAsWebComponent()?.addEventListener(triggerModalEvent, () => setIsCloseRecordModalOpen(true));
+      getWrapperAsWebComponent()?.addEventListener(triggerModalEvent, () => {
+        !isCloseRecordModalOpen && openCloseRecordModal();
+      });
   }, []);
 
   const blocker = useBlocker(({ nextLocation: { pathname, search } }) => {
@@ -53,9 +57,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
         // update the current record and force navigate to the updated
         // ID we receive from the update operation
         setForceNavigateTo({ pathname, search });
-        openSwitchToNewRecordModal();
+        !isSwitchToNewRecordModalOpen && openSwitchToNewRecordModal();
       } else {
-        openCloseRecordModal();
+        !isCloseRecordModalOpen && openCloseRecordModal();
       }
     }
 
@@ -68,10 +72,14 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   };
 
   const proceedNavigation = () => {
-    IS_EMBEDDED_MODE && getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(proceedNavigationEvent));
-
     closeAllModals();
     setIsEdited(false);
+
+    if (IS_EMBEDDED_MODE) {
+      getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(proceedNavigationEvent));
+      getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(unblockNavigationEvent));
+    }
+
     blocker.proceed?.();
   };
 
@@ -82,6 +90,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
       proceedNavigation();
     } else {
       stopNavigation();
+      setIsEdited(false);
       const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
       newSearchParams.set(QueryParams.Ref, recordId);
       newSearchParams.delete(QueryParams.PerformIdUpdate);
