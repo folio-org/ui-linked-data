@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -25,7 +25,7 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const [recordStatus, setRecordStatus] = useRecoilState(state.status.recordStatus);
+  const recordStatus = useRecoilValue(state.status.recordStatus);
   const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
@@ -39,7 +39,6 @@ export const Edit = () => {
 
   useEffect(() => {
     resetMarcPreviewData();
-    setRecordStatus({ type: RecordStatus.open });
 
     scrollEntity({ top: 0, behavior: 'instant' });
   }, []);
