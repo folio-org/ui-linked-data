@@ -40,6 +40,8 @@ export class SchemaService {
         mandatory,
         repeatable,
         valueConstraint: { useValuesFrom, editable, valueDataType },
+        layout,
+        dependsOn,
       } = entry as PropertyTemplate;
 
       const constraints = {
@@ -66,6 +68,8 @@ export class SchemaService {
         uri: propertyURI,
         uriBFLite,
         constraints,
+        layout,
+        dependsOn,
       });
     } else {
       switch (type) {

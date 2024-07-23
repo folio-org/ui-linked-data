@@ -206,7 +206,7 @@ export const EditSection = memo(() => {
       if (type === AdvancedFieldType.complex) {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
-            <ComplexLookupField uuid={uuid} onChange={onChange} value={userValues[uuid]?.contents} />
+            <ComplexLookupField uuid={uuid} entry={entry} onChange={onChange} value={userValues[uuid]?.contents} />
           </FieldWithMetadataAndControls>
         );
       }
