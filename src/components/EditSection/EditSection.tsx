@@ -173,7 +173,7 @@ export const EditSection = memo(() => {
               uuid={uuid}
               onChange={handleChange}
               value={selectedOption}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || entry?.layout?.readOnly}
             />
           </FieldWithMetadataAndControls>
         );

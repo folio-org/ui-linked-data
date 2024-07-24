@@ -22,6 +22,7 @@ type PropertyLayout = {
   selectTitle?: {
     base: string;
     change: string;
+    modal: string;
   };
   readOnly?: boolean;
 };

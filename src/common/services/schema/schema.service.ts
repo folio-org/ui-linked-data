@@ -172,6 +172,7 @@ export class SchemaService {
       mandatory,
       repeatable,
       valueConstraint: { valueTemplateRefs, useValuesFrom, editable, valueDataType },
+      layout,
     } = entry as PropertyTemplate;
     const { uriBFLite } = getUris({
       uri: propertyURI,
@@ -201,6 +202,7 @@ export class SchemaService {
       uriBFLite,
       constraints,
       children: uuidArray,
+      layout: { ...layout, readOnly: Boolean(layout?.readOnly) },
     });
 
     // TODO: how to avoid circular references when handling META | HIDE

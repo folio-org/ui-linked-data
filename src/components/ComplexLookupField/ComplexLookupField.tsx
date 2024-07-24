@@ -1,6 +1,9 @@
 import { ChangeEvent, FC, useState } from 'react';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import { Input } from '../Input';
+import { ModalComplexLookup } from './ModalComplexLookup';
+import { useModalControls } from '@common/hooks/useModalControls';
+import './ComplexLookupField.scss';
 
 interface Props {
   uuid: string;
@@ -14,6 +17,7 @@ const VALUE_DIVIDER = ', ';
 
 export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, onChange }) => {
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
+  const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { layout } = entry;
 
   // TODO: should open a modal with current input value and search data using it
@@ -34,6 +38,10 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setLocalValue(prevValue => prevValue.filter(({ id: prevId }) => prevId !== id));
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       {layout ? (
@@ -41,7 +49,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           {!!localValue.length && (
             <div className="complex-lookup-value">
               {localValue?.map(({ id, label }) => (
-                <div key={id} className="complex-lookup-selected">
+                <div key={id} className="complex-lookup-selected pill">
                   <span className="complex-lookup-selected-label">{label}</span>
                   <button onClick={() => handleDelete(id)} className="complex-lookup-selected-delete">
                     <CloseIcon />
@@ -51,11 +59,11 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             </div>
           )}
 
-          <div className="complex-lookup-select">
-            <button className="complex-lookup-select-button">
-              {localValue?.length > 0 ? layout?.selectTitle?.change : layout?.selectTitle?.base}
-            </button>
-          </div>
+          <button className="complex-lookup-select-button button-passive" onClick={openModal}>
+            {localValue?.length > 0 ? layout?.selectTitle?.change : layout?.selectTitle?.base}
+          </button>
+
+          <ModalComplexLookup isOpen={isModalOpen} onClose={closeModal} title={layout?.selectTitle?.modal} />
         </div>
       ) : (
         <Input

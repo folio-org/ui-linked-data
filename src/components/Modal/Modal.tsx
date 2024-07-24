@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import Times16 from '@src/assets/times-16.svg?react';
-import './Modal.scss';
 import { Button, ButtonType } from '@components/Button';
+import './Modal.scss';
 // TODO: Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -17,11 +17,13 @@ interface Props {
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
-  onSubmit: () => void;
-  onCancel: () => void;
+  onSubmit?: () => void;
+  onCancel?: () => void;
   onClose: () => void;
   children?: ReactNode;
   showCloseIconButton?: boolean;
+  showModalControls?: boolean;
+  titleClassName?: string;
 }
 
 const Modal: FC<Props> = ({
@@ -38,6 +40,8 @@ const Modal: FC<Props> = ({
   submitButtonDisabled,
   cancelButtonDisabled,
   showCloseIconButton = true,
+  showModalControls = true,
+  titleClassName,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: uncomment for using with Shadow DOM
@@ -66,27 +70,29 @@ const Modal: FC<Props> = ({
                   <Times16 />
                 </button>
               )}
-              <h3 className="title">{title}</h3>
+              <h3 className={classNames(['title', titleClassName])}>{title}</h3>
             </div>
             {!!children && children}
-            <div className="modal-controls">
-              <Button
-                disabled={cancelButtonDisabled}
-                onClick={onCancel}
-                type={ButtonType.Primary}
-                data-testid="modal-button-cancel"
-              >
-                {cancelButtonLabel}
-              </Button>
-              <Button
-                disabled={submitButtonDisabled}
-                type={ButtonType.Highlighted}
-                onClick={onSubmit}
-                data-testid="modal-button-submit"
-              >
-                {submitButtonLabel}
-              </Button>
-            </div>
+            {showModalControls && (
+              <div className="modal-controls">
+                <Button
+                  disabled={cancelButtonDisabled}
+                  onClick={onCancel}
+                  type={ButtonType.Primary}
+                  data-testid="modal-button-cancel"
+                >
+                  {cancelButtonLabel}
+                </Button>
+                <Button
+                  disabled={submitButtonDisabled}
+                  type={ButtonType.Highlighted}
+                  onClick={onSubmit}
+                  data-testid="modal-button-submit"
+                >
+                  {submitButtonLabel}
+                </Button>
+              </div>
+            )}
           </div>
         </>,
         portalElement,
