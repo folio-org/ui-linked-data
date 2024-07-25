@@ -7,10 +7,6 @@ import {
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
 
-const creatorNameBF2Uri = 'http://www.w3.org/2002/07/owl#sameAs';
-const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
-const audienceBF2Uri = 'http://id.loc.gov/ontologies/bibframe/intendedAudience';
-
 export const formatRecord = ({
   parsedRecord,
   record,
@@ -103,13 +99,12 @@ export const updateRecordWithRelationshipDesignator = (
     recordFields.forEach(field => {
       const fieldKeys = Object.keys(field);
       const hasRoles =
-        (nonBFMappedContainer && fieldKeys.includes(nonBFMappedContainer)) || fieldKeys.includes(roleBF2Uri);
+        (nonBFMappedContainer && fieldKeys.includes(nonBFMappedContainer)) || fieldKeys.includes(BF2_URIS.ROLE);
 
       if (!hasRoles) return;
 
-      const roles = field[nonBFMappedContainer] || field[roleBF2Uri];
-
-      const id = (field[creatorNameBF2Uri]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
+      const roles = field[nonBFMappedContainer] || field[BF2_URIS.ROLE];
+      const id = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
 
       if (!id) return;
 
@@ -135,8 +130,8 @@ export const updateRecordForTargetAudience = (
   // TODO: add suport for this field
   const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
 
-  if (workComponent?.[audienceBF2Uri]) {
-    delete workComponent[audienceBF2Uri];
+  if (workComponent?.[BF2_URIS.INTENDED_AUDIENCE]) {
+    delete workComponent[BF2_URIS.INTENDED_AUDIENCE];
   }
 
   return record;

@@ -3,6 +3,7 @@ import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import { updateRecordForClassification, updateRecordForProviderPlace } from '@common/helpers/recordFormatting.helper';
+import { BF2_URIS } from '@common/constants/bibframeMapping.constants';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
@@ -11,6 +12,7 @@ describe('recordFormatting', () => {
   const mockWorkToInstanceConstant = getMockedImportedConstant(BibframeConstants, 'WORK_TO_INSTANCE_FIELDS');
   const mockProvisionActivityConstant = getMockedImportedConstant(BibframeConstants, 'PROVISION_ACTIVITY_OPTIONS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+  const mockBF2Constant = getMockedImportedConstant(BibframeMappingConstants, 'BF2_URIS');
   const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
   const mockNonBFRecordContainersConstant = getMockedImportedConstant(
     BibframeMappingConstants,
@@ -31,6 +33,7 @@ describe('recordFormatting', () => {
     PROVIDER_PLACE: 'testProviderPlaceUri',
     CLASSIFICATION: 'testClassificationUri',
   });
+  mockBF2Constant({ ...BF2_URIS, CREATOR_NAME: 'creatorNameBF2Uri', ROLE: 'roleBF2Uri' });
   mockNonBFRecordElementsConstant({
     testNoteUri: { container: '_notes' },
     testCreatorUri: { container: 'roles' },
@@ -142,15 +145,13 @@ describe('recordFormatting', () => {
         testWorkUri: {
           testCreatorUri: [
             {
-              dropdownOptionUri_1: {
-                testNameUri: [
-                  {
-                    id: ['testId_1'],
-                    label: 'subfield value 1',
-                  },
-                ],
-              },
-              roles: ['testRoleUri_1'],
+              creatorNameBF2Uri: [
+                {
+                  id: ['testId_1'],
+                  label: 'subfield value 1',
+                },
+              ],
+              roleBF2Uri: ['testRoleUri_1'],
             },
           ],
           testFieldUri_1: ['field value'],

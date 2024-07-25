@@ -60,17 +60,22 @@ export class SchemaService {
         path,
       });
 
-      this.schema.set(uuid, {
+      this.schema.set(
         uuid,
-        type,
-        path: [...path, uuid],
-        displayName: propertyLabel,
-        uri: propertyURI,
-        uriBFLite,
-        constraints,
-        layout,
-        dependsOn,
-      });
+        this.generateSchemaEntry(
+          {
+            uuid,
+            type,
+            path: [...path, uuid],
+            displayName: propertyLabel,
+            uri: propertyURI,
+            uriBFLite,
+            constraints,
+          },
+          layout,
+          dependsOn,
+        ),
+      );
     } else {
       switch (type) {
         // parent types (i.e Monograph)
@@ -194,18 +199,23 @@ export class SchemaService {
     const newUuid = uuid;
     const uuidArray = valueTemplateRefs.map(() => uuidv4());
 
-    this.schema.set(newUuid, {
-      uuid: newUuid,
-      type,
-      path: [...path, newUuid],
-      displayName: propertyLabel,
-      uri: propertyURI,
-      uriBFLite,
-      constraints,
-      children: uuidArray,
-      layout: { ...layout, readOnly: Boolean(layout?.readOnly) },
-      dependsOn,
-    });
+    this.schema.set(
+      newUuid,
+      this.generateSchemaEntry(
+        {
+          uuid: newUuid,
+          type,
+          path: [...path, newUuid],
+          displayName: propertyLabel,
+          uri: propertyURI,
+          uriBFLite,
+          constraints,
+          children: uuidArray,
+        },
+        layout,
+        dependsOn,
+      ),
+    );
 
     // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
@@ -221,5 +231,21 @@ export class SchemaService {
         firstOfSameType: index === 0,
       });
     }
+  }
+
+  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayout, dependsOn?: string) {
+    if (!layout && !dependsOn) return schemaEntry;
+
+    const updatedSchemaEntry = { ...schemaEntry } as SchemaEntry;
+
+    if (layout) {
+      updatedSchemaEntry.layout = { ...layout, readOnly: Boolean(layout?.readOnly) };
+    }
+
+    if (dependsOn) {
+      updatedSchemaEntry.dependsOn = dependsOn;
+    }
+
+    return updatedSchemaEntry;
   }
 }
