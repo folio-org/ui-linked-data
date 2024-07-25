@@ -36,6 +36,11 @@
       background-color: transparent;
       cursor: pointer;
 
+      &:hover {
+        background-color: #ffbdad;
+        color: #de350b;
+      }
+
       svg path {
         color: rgba(0, 0, 0, 0.62);
       }

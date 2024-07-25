@@ -7,6 +7,10 @@ import {
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
 
+const creatorNameBF2Uri = 'http://www.w3.org/2002/07/owl#sameAs';
+const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
+const audienceBF2Uri = 'http://id.loc.gov/ontologies/bibframe/intendedAudience';
+
 export const formatRecord = ({
   parsedRecord,
   record,
@@ -88,7 +92,6 @@ export const updateRecordWithRelationshipDesignator = (
   fieldUirs: string[],
 ) => {
   const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
-  const roleBF2Uri = 'http://id.loc.gov/ontologies/bibframe/role';
 
   fieldUirs.forEach(fieldName => {
     const recordFields = workComponent?.[fieldName] as RecordEntry[] | undefined;
@@ -105,20 +108,19 @@ export const updateRecordWithRelationshipDesignator = (
       if (!hasRoles) return;
 
       const roles = field[nonBFMappedContainer] || field[roleBF2Uri];
-      delete field[nonBFMappedContainer];
-      delete field[roleBF2Uri];
 
-      for (const key in field) {
-        const id = (field[key]?.[BFLITE_URIS.NAME]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
-        const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
-          string,
-          string | string[]
-        >[];
+      const id = (field[creatorNameBF2Uri]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
 
-        workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] = existingData
-          ? [...existingData, { id, roles }]
-          : [{ id, roles }];
-      }
+      if (!id) return;
+
+      const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
+        string,
+        string | string[]
+      >[];
+
+      workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] = existingData
+        ? [...existingData, { id, roles }]
+        : [{ id, roles }];
 
       delete workComponent[fieldName];
     });
@@ -132,7 +134,6 @@ export const updateRecordForTargetAudience = (
 ) => {
   // TODO: add suport for this field
   const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
-  const audienceBF2Uri = 'http://id.loc.gov/ontologies/bibframe/intendedAudience';
 
   if (workComponent?.[audienceBF2Uri]) {
     delete workComponent[audienceBF2Uri];
