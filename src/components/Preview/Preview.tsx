@@ -148,6 +148,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
               <PreviewActionsDropdown
                 referenceId={getRecordId(record, BLOCKS_BFLITE.WORK.uri)}
                 entityType={BLOCKS_BFLITE.INSTANCE.resourceType}
+                handleNavigateToEditPage={handleNavigateToEditPage}
               />
             )}
           </strong>
