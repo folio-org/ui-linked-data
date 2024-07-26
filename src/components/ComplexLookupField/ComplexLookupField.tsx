@@ -60,7 +60,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           )}
 
           <button className="complex-lookup-select-button button-passive" onClick={openModal}>
-            {localValue?.length > 0 ? layout?.selectTitle?.change : layout?.selectTitle?.base}
+            {localValue?.length ? layout?.selectTitle?.change : layout?.selectTitle?.base}
           </button>
 
           <ModalComplexLookup isOpen={isModalOpen} onClose={closeModal} title={layout?.selectTitle?.modal} />
