@@ -12,9 +12,10 @@ import state from '@state';
 type Props = {
   referenceId?: string;
   entityType?: string;
+  handleNavigateToEditPage?: VoidFunction;
 };
 
-export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType }) => {
+export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType, handleNavigateToEditPage }) => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const isEdited = useRecoilValue(state.status.recordIsEdited);
   const isEditedQueryParam = isEdited ? `&${QueryParams.PerformIdUpdate}=true` : '';
@@ -29,6 +30,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType }) =
           type: DropdownItemType.basic,
           labelId: 'marva.edit',
           icon: <Edit16 />,
+          action: handleNavigateToEditPage,
         },
         {
           id: 'duplicate',
