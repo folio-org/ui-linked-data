@@ -1,0 +1,49 @@
+.complex-lookup {
+  display: flex;
+  align-items: center;
+
+  &-select-button {
+    padding: 0.25rem 1rem;
+    border: none;
+    font-weight: 700;
+    color: #1960a4;
+    cursor: pointer;
+  }
+
+  &-selected {
+    display: flex;
+    align-items: center;
+    margin-right: 0.25rem;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    line-height: 1rem;
+    background-color: #efefef;
+
+    &-label {
+      padding: 0 0.1875rem;
+      font-size: 0.875rem;
+      color: #000;
+    }
+
+    &-delete {
+      display: flex;
+      align-items: center;
+      height: 1.125rem;
+      width: 1.125rem;
+      padding: 1px 0.1875rem;
+      border: none;
+      border-left: 1px solid #d7d8da;
+      background-color: transparent;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #ffbdad;
+        color: #de350b;
+      }
+
+      svg path {
+        color: rgba(0, 0, 0, 0.62);
+      }
+    }
+  }
+}

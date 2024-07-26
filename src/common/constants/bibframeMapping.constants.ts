@@ -29,6 +29,9 @@ export const BF2_URIS = {
   NOTE: 'http://id.loc.gov/ontologies/bibframe/note',
   NOTE_TYPE: 'http://id.loc.gov/ontologies/bibframe/noteType',
   CONTRIBUTION: 'http://id.loc.gov/ontologies/bibframe/contribution',
+  CREATOR_NAME: 'http://www.w3.org/2002/07/owl#sameAs',
+  ROLE: 'http://id.loc.gov/ontologies/bibframe/role',
+  INTENDED_AUDIENCE: 'http://id.loc.gov/ontologies/bibframe/intendedAudience',
 };
 
 // TODO: should be refactored.

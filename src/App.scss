@@ -74,6 +74,10 @@ body > #editor-root,
     &:focus-visible {
       position: relative;
     }
+
+    &:disabled {
+      cursor: default;
+    }
   }
 
   input {

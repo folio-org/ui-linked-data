@@ -8,7 +8,7 @@ describe('Complex Lookup Field', () => {
   const { getByTestId } = screen;
 
   function renderComponent() {
-    render(<ComplexLookupField uuid={uuid} onChange={onChange} />);
+    render(<ComplexLookupField uuid={uuid} onChange={onChange} entry={{} as SchemaEntry} />);
   }
 
   test('triggers onChange', () => {

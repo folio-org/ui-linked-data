@@ -1,8 +1,13 @@
 import { ChangeEvent, FC, useState } from 'react';
+import CloseIcon from '@src/assets/times-16.svg?react';
 import { Input } from '../Input';
+import { ModalComplexLookup } from './ModalComplexLookup';
+import { useModalControls } from '@common/hooks/useModalControls';
+import './ComplexLookupField.scss';
 
 interface Props {
   uuid: string;
+  entry: SchemaEntry;
   value?: UserValueContents[];
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
@@ -10,8 +15,10 @@ interface Props {
 const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING';
 const VALUE_DIVIDER = ', ';
 
-export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, onChange }) => {
-  const [localValue, setLocalValue] = useState<UserValueContents[]>(value || [{}]);
+export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, onChange }) => {
+  const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
+  const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
+  const { layout } = entry;
 
   // TODO: should open a modal with current input value and search data using it
   const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -26,12 +33,46 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, onChang
     setLocalValue(prevValue => [...prevValue, newValue]);
   };
 
+  const handleDelete = (id?: string) => {
+    onChange(uuid, []);
+    setLocalValue(prevValue => prevValue.filter(({ id: prevId }) => prevId !== id));
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <Input
-      onChange={handleOnChange}
-      value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
-      disabled={true}
-      data-testid="complex-lookup-input"
-    />
+    <>
+      {layout ? (
+        <div className="complex-lookup">
+          {!!localValue.length && (
+            <div className="complex-lookup-value">
+              {localValue?.map(({ id, label }) => (
+                <div key={id} className="complex-lookup-selected pill">
+                  <span className="complex-lookup-selected-label">{label}</span>
+                  <button onClick={() => handleDelete(id)} className="complex-lookup-selected-delete">
+                    <CloseIcon />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <button className="complex-lookup-select-button button-passive" onClick={openModal}>
+            {localValue?.length ? layout?.selectTitle?.change : layout?.selectTitle?.base}
+          </button>
+
+          <ModalComplexLookup isOpen={isModalOpen} onClose={closeModal} title={layout?.selectTitle?.modal} />
+        </div>
+      ) : (
+        <Input
+          onChange={handleOnChange}
+          value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
+          disabled={true}
+          data-testid="complex-lookup-input"
+        />
+      )}
+    </>
   );
 };
