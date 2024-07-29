@@ -8,15 +8,16 @@ import { normalizeQuery } from '@common/helpers/search.helper';
 
 export const useLoadSearchResults = (
   fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
+  { query, searchBy, offset }: { query?: string; searchBy?: SearchIdentifiers; offset?: string },
 ) => {
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
   const setQuery = useSetRecoilState(state.search.query);
   const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
   const [searchParams] = useSearchParams();
-  const queryParam = searchParams.get(SearchQueryParams.Query);
-  const searchByParam = searchParams.get(SearchQueryParams.SearchBy);
-  const offsetParam = searchParams.get(SearchQueryParams.Offset);
+  const queryParam = query ?? searchParams.get(SearchQueryParams.Query);
+  const searchByParam = searchBy ?? searchParams.get(SearchQueryParams.SearchBy);
+  const offsetParam = offset ?? searchParams.get(SearchQueryParams.Offset);
   const prevSearchParams = useRef<{ query: string | null; searchBy: string | null; offset: string | null }>({
     query: null,
     searchBy: null,
