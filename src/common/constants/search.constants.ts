@@ -87,3 +87,13 @@ export const DEFAULT_ADVANCED_SEARCH_ROW_VALUE: AdvancedSearchSchemaRow = {
 export const DEFAULT_ADVANCED_SEARCH_QUERY: AdvancedSearchSchema = new Array(6)
   .fill(DEFAULT_ADVANCED_SEARCH_ROW_VALUE)
   .map((item, rowIndex) => ({ ...item, rowIndex, operator: rowIndex === 0 ? undefined : item.operator }));
+
+export enum FiltersGroupCheckType {
+  Single = 'single',
+  Multi = 'multi',
+}
+
+export enum FiltersType {
+  Checkbox = 'checkbox',
+  Radio = 'radio',
+}
