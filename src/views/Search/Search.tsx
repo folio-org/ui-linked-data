@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { ItemSearch } from '@components/ItemSearch';
+import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
 import {
   FiltersGroupCheckType,
@@ -17,6 +17,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { Dropdown } from '@components/Dropdown';
 import { ResourceType } from '@common/constants/record.constants';
 import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
+import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import './Search.scss';
@@ -90,7 +91,7 @@ const filters = [
   },
 ];
 
-export const Search = () => {
+export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
 
   const items = [
@@ -132,7 +133,7 @@ export const Search = () => {
 
   return (
     <div className="search" data-testid="search" id="ld-search-container">
-      <ItemSearch
+      <Search
         endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
         filters={filters}
         hasSearchParams={true}
@@ -144,6 +145,10 @@ export const Search = () => {
           </SearchControlPane>
         }
         resultsListComponent={<SearchResultList />}
+        isVisibleFilters={SEARCH_FILTERS_ENABLED}
+        isVisibleFullDisplay={true}
+        isVisibleAdvancedSearch={true}
+        isVisibleSearchByControl={true}
       />
     </div>
   );

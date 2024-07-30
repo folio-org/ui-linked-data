@@ -8,7 +8,7 @@ import {
   SourceType,
 } from '@common/constants/search.constants';
 import { Modal } from '@components/Modal';
-import { ItemSearch } from '@components/ItemSearch';
+import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
 import './ModalComplexLookup.scss';
 
@@ -99,7 +99,7 @@ export const ModalComplexLookup: FC<Props> = memo(({ isOpen, onClose, title = ''
       classNameHeader="modal-complex-lookup-header"
     >
       <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
-        <ItemSearch
+        <Search
           // TODO: Extend the profile with the endpoint and use it here
           endpointUrl={`${SEARCH_API_ENDPOINT}/authorities`}
           isSortedResults={false}

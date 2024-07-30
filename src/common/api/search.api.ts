@@ -8,7 +8,7 @@ export type ItemSearchResponse = {
 
 export type GetByIdentifier = {
   endpointUrl: string;
-  isSortedResults: boolean;
+  isSortedResults?: boolean;
   searchBy?: string;
   query: string;
   offset?: string;
@@ -17,7 +17,7 @@ export type GetByIdentifier = {
 
 export const getByIdentifier = async ({
   endpointUrl,
-  isSortedResults,
+  isSortedResults = true,
   searchBy,
   query,
   offset = '0',

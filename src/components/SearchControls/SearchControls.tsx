@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect } from 'react';
+import { ChangeEvent, FC, useContext, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
@@ -9,6 +9,7 @@ import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
+import { SearchContext } from '@common/contexts';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
@@ -18,21 +19,11 @@ type Props = {
   submitSearch: VoidFunction;
   clearValues: VoidFunction;
   filters: SearchFilters;
-  isVisibleSearchBy?: boolean;
-  isVisibleAdvancedSearch?: boolean;
-  isVisibleFilters?: boolean;
-  hasSearchParams?: boolean;
 };
 
-export const SearchControls: FC<Props> = ({
-  submitSearch,
-  clearValues,
-  filters,
-  isVisibleSearchBy = true,
-  isVisibleAdvancedSearch = true,
-  isVisibleFilters = true,
-  hasSearchParams = true,
-}) => {
+export const SearchControls: FC<Props> = ({ submitSearch, clearValues, filters }) => {
+  const { isVisibleSearchByControl, isVisibleAdvancedSearch, isVisibleFilters, hasSearchParams } =
+    useContext(SearchContext);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const setMessage = useSetRecoilState(state.search.message);
@@ -71,7 +62,7 @@ export const SearchControls: FC<Props> = ({
       </div>
       <div className="search-pane-content">
         <div className="inputs">
-          {isVisibleSearchBy && (
+          {isVisibleSearchByControl && (
             <Select
               withIntl
               id="id-search-select"

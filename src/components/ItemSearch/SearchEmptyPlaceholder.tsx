@@ -5,11 +5,11 @@ import './SearchEmptyPlaceholder.scss';
 import classNames from 'classnames';
 
 type EmptyPlaceholderProps = {
-  labelId: string;
+  labelId?: string;
   className?: string;
 };
 
-export const EmptyPlaceholder: FC<EmptyPlaceholderProps> = ({ labelId, className }) => (
+export const EmptyPlaceholder: FC<EmptyPlaceholderProps> = ({ labelId = '', className }) => (
   <div className={classNames(['empty-placeholder', className])}>
     <GeneralSearch />
     <FormattedMessage id={labelId} />

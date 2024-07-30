@@ -1,48 +1,22 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { useSearch } from '@common/hooks/useSearch';
+import { SearchContext } from '@common/contexts';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 
-type ItemSearchProps = {
-  endpointUrl: string;
-  filters: SearchFilters;
-  hasSearchParams: boolean;
-  defaultSearchBy: SearchIdentifiers;
-  controlPaneComponent: ReactElement;
-  resultsListComponent: ReactElement;
-  isSortedResults?: boolean;
-  isVisibleFilters?: boolean;
-  isVisibleFullDisplay?: boolean;
-  isVisibleAdvancedSearch?: boolean;
-  isVisibleSearchByControl?: boolean;
-  labelEmptySearch?: string;
-  classNameEmptyPlaceholder?: string;
-};
+type ItemSearchProps = Pick<SearchParams, 'filters' | 'controlPaneComponent' | 'resultsListComponent'>;
 
-export const ItemSearch: FC<ItemSearchProps> = ({
-  endpointUrl,
-  filters,
-  hasSearchParams,
-  defaultSearchBy,
-  controlPaneComponent,
-  resultsListComponent,
-  isSortedResults = true,
-  isVisibleFilters = SEARCH_FILTERS_ENABLED,
-  isVisibleFullDisplay = true,
-  isVisibleAdvancedSearch = true,
-  isVisibleSearchByControl = true,
-  labelEmptySearch = 'marva.enterSearchCriteria',
-  classNameEmptyPlaceholder,
-}) => {
+export const ItemSearch: FC<ItemSearchProps> = ({ filters, controlPaneComponent, resultsListComponent }) => {
+  const { labelEmptySearch, classNameEmptyPlaceholder, isVisibleFullDisplay, isVisibleAdvancedSearch } =
+    useContext(SearchContext);
   const {
     submitSearch,
     clearValues,
@@ -53,9 +27,9 @@ export const ItemSearch: FC<ItemSearchProps> = ({
     message,
     data,
     fetchData,
-  } = useSearch({ endpointUrl, isSortedResults, hasSearchParams, defaultSearchBy });
+  } = useSearch();
 
-  useLoadSearchResults(fetchData, hasSearchParams);
+  useLoadSearchResults(fetchData);
 
   return (
     <div data-testid="id-search" className="item-search">
@@ -63,10 +37,6 @@ export const ItemSearch: FC<ItemSearchProps> = ({
         submitSearch={submitSearch}
         clearValues={clearValues}
         filters={filters}
-        isVisibleSearchBy={isVisibleSearchByControl}
-        isVisibleAdvancedSearch={isVisibleAdvancedSearch}
-        isVisibleFilters={isVisibleFilters}
-        hasSearchParams={hasSearchParams}
       />
       <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
         {controlPaneComponent}

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
@@ -8,20 +8,12 @@ import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { SearchContext } from '@common/contexts';
 import state from '@state';
 import { usePagination } from './usePagination';
 
-export const useSearch = ({
-  endpointUrl,
-  isSortedResults = true,
-  hasSearchParams,
-  defaultSearchBy,
-}: {
-  endpointUrl: string;
-  isSortedResults: boolean;
-  hasSearchParams: boolean;
-  defaultSearchBy: SearchIdentifiers;
-}) => {
+export const useSearch = () => {
+  const { endpointUrl, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
