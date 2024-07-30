@@ -9,13 +9,16 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
-import { useLoadSearchResults } from './useLoadSearchResults';
 import { usePagination } from './usePagination';
 
 export const useSearch = ({
+  endpointUrl,
+  isSortedResults = true,
   hasSearchParams,
   defaultSearchBy,
 }: {
+  endpointUrl: string;
+  isSortedResults: boolean;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
 }) => {
@@ -34,29 +37,32 @@ export const useSearch = ({
     setCurrentPageNumber,
     onPrevPageClick,
     onNextPageClick,
-  } = usePagination(DEFAULT_PAGES_METADATA);
+  } = usePagination(DEFAULT_PAGES_METADATA, hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
   const pageMetadata = getPageMetadata();
   const setSearchParams = useSearchParams()?.[1];
 
-  const clearPagination = () => {
+  const clearPagination = useCallback(() => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
     setCurrentPageNumber(0);
-  };
+  }, []);
 
-  const clearMessage = useCallback(() => message && setMessage(''), [message]);
+  const clearMessage = useCallback(() => message && setMessage(''), [message, setMessage]);
 
-  const validateAndNormalizeQuery = (type: SearchIdentifiers, query: string) => {
-    if (type === SearchIdentifiers.LCCN) {
-      const normalized = normalizeLccn(query);
+  const validateAndNormalizeQuery = useCallback(
+    (type: SearchIdentifiers, query: string) => {
+      if (type === SearchIdentifiers.LCCN) {
+        const normalized = normalizeLccn(query);
 
-      !normalized && setMessage('marva.searchInvalidLccn');
+        !normalized && setMessage('marva.searchInvalidLccn');
 
-      return normalized;
-    }
+        return normalized;
+      }
 
-    return query;
-  };
+      return query;
+    },
+    [setMessage],
+  );
 
   const fetchData = async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
     clearMessage();
@@ -70,7 +76,13 @@ export const useSearch = ({
     setIsLoading(true);
 
     try {
-      const result = await getByIdentifier({ searchBy, query: updatedQuery as string, offset: offset?.toString() });
+      const result = await getByIdentifier({
+        endpointUrl,
+        isSortedResults,
+        searchBy,
+        query: updatedQuery as string,
+        offset: offset?.toString(),
+      });
       const { content, totalPages, totalRecords } = result;
 
       if (!content.length) return setMessage('marva.searchNoRdsMatch');
@@ -87,21 +99,25 @@ export const useSearch = ({
     }
   };
 
-  useLoadSearchResults(fetchData, hasSearchParams ? {} : { query, searchBy, offset: pageMetadata.number?.toString() });
-
-  const submitSearch = () => {
+  const submitSearch = useCallback(() => {
     clearPagination();
-    hasSearchParams && setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
-    setForceRefreshSearch(true);
-  };
 
-  const clearValues = () => {
+    if (hasSearchParams) {
+      setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
+    } else {
+      fetchData(query, searchBy);
+    }
+
+    setForceRefreshSearch(true);
+  }, [hasSearchParams, query, searchBy]);
+
+  const clearValues = useCallback(() => {
     clearPagination();
     setData(null);
     setSearchBy(defaultSearchBy);
     setQuery('');
     setMessage('');
-  };
+  }, [defaultSearchBy]);
 
   return {
     submitSearch,
@@ -112,5 +128,6 @@ export const useSearch = ({
     pageMetadata,
     message,
     data,
+    fetchData,
   };
 };

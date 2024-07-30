@@ -7,24 +7,28 @@ export type ItemSearchResponse = {
 };
 
 export type GetByIdentifier = {
+  endpointUrl: string;
+  isSortedResults: boolean;
   searchBy?: string;
   query: string;
   offset?: string;
   limit?: string;
 };
 
-const getByIdentifierUrl = '/search/linked-data/works';
 export const getByIdentifier = async ({
+  endpointUrl,
+  isSortedResults,
   searchBy,
   query,
   offset = '0',
   limit = SEARCH_RESULTS_LIMIT.toString(),
 }: GetByIdentifier) => {
+  const sortQuery = isSortedResults ? ' sortby title' : '';
   const urlParams: Record<string, string> | undefined = {
-    query: searchBy ? `(${searchBy} all "${query}") sortby title` : `${query} sortby title`,
+    query: searchBy ? `(${searchBy} all "${query}")${sortQuery}` : `${query}${sortQuery}`,
     offset,
     limit,
   };
 
-  return await baseApi.getJson({ url: getByIdentifierUrl, urlParams });
+  return await baseApi.getJson({ url: endpointUrl, urlParams });
 };

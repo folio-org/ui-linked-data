@@ -6,36 +6,39 @@ import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
-import { SearchControlPane } from '@components/SearchControlPane';
 import { useSearch } from '@common/hooks/useSearch';
-import GeneralSearch from '@src/assets/general-search.svg?react';
+import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
+import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 
-const EmptyPlaceholder = () => (
-  <div className="empty-placeholder">
-    <GeneralSearch />
-    <FormattedMessage id="marva.enterSearchCriteria" />
-  </div>
-);
-
 type ItemSearchProps = {
+  endpointUrl: string;
   filters: SearchFilters;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
-  searchResultsListComponent: ReactElement;
+  controlPaneComponent: ReactElement;
+  resultsListComponent: ReactElement;
+  isSortedResults?: boolean;
   isVisibleFullDisplay?: boolean;
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
+  labelEmptySearch?: string;
+  classNameEmptyPlaceholder?: string;
 };
 
 export const ItemSearch: FC<ItemSearchProps> = ({
+  endpointUrl,
   filters,
   hasSearchParams,
   defaultSearchBy,
-  searchResultsListComponent,
+  controlPaneComponent,
+  resultsListComponent,
+  isSortedResults = true,
   isVisibleFullDisplay = true,
   isVisibleAdvancedSearch = true,
   isVisibleSearchByControl = true,
+  labelEmptySearch = 'marva.enterSearchCriteria',
+  classNameEmptyPlaceholder,
 }) => {
   const {
     submitSearch,
@@ -46,7 +49,10 @@ export const ItemSearch: FC<ItemSearchProps> = ({
     pageMetadata,
     message,
     data,
-  } = useSearch({ hasSearchParams, defaultSearchBy });
+    fetchData,
+  } = useSearch({ endpointUrl, isSortedResults, hasSearchParams, defaultSearchBy });
+
+  useLoadSearchResults(fetchData, hasSearchParams);
 
   return (
     <div data-testid="id-search" className="item-search">
@@ -56,9 +62,10 @@ export const ItemSearch: FC<ItemSearchProps> = ({
         filters={filters}
         isVisibleSearchBy={isVisibleSearchByControl}
         isVisibleAdvancedSearch={isVisibleAdvancedSearch}
+        hasSearchParams={hasSearchParams}
       />
       <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
-        <SearchControlPane />
+        {controlPaneComponent}
         <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
           {message && (
             <div>
@@ -67,7 +74,7 @@ export const ItemSearch: FC<ItemSearchProps> = ({
           )}
           {data && (
             <>
-              {searchResultsListComponent}
+              {resultsListComponent}
               {pageMetadata.totalElements > 0 && (
                 <Pagination
                   currentPage={currentPageNumber}
@@ -80,7 +87,7 @@ export const ItemSearch: FC<ItemSearchProps> = ({
               )}
             </>
           )}
-          {!data && !message && <EmptyPlaceholder />}
+          {!data && !message && <EmptyPlaceholder labelId={labelEmptySearch} className={classNameEmptyPlaceholder} />}
         </div>
       </div>
       {isVisibleFullDisplay && <FullDisplay />}

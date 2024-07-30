@@ -2,6 +2,7 @@ import { ChangeEvent, FC, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
 import { SearchIdentifiers } from '@common/constants/search.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
@@ -54,72 +55,74 @@ export const SearchControls: FC<Props> = ({
   const onResetButtonClick = () => {
     clearValuesAndResetControls();
     hasSearchParams && setSearchParams({});
-    setNavigationState({});
+    hasSearchParams && setNavigationState({});
   };
 
   useEffect(() => clearValuesAndResetControls, []);
 
   return (
     <div className="search-pane">
-      <div className="header">
-        <strong>
+      <div className="search-pane-header">
+        <strong className="search-pane-header-title">
           <FormattedMessage id="marva.searchAndFilter" />
         </strong>
         <CaretDown className="header-caret" />
       </div>
-      <div className="inputs">
-        {isVisibleSearchBy && (
-          <Select
-            withIntl
-            id="id-search-select"
-            className="select-input"
-            value={searchBy}
-            options={Object.values(SearchIdentifiers)}
-            onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
+      <div className="search-pane-content">
+        <div className="inputs">
+          {isVisibleSearchBy && (
+            <Select
+              withIntl
+              id="id-search-select"
+              className="select-input"
+              value={searchBy}
+              options={Object.values(SearchIdentifiers)}
+              onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
+            />
+          )}
+          <Input
+            id="id-search-input"
+            type="text"
+            value={query}
+            onChange={onChangeSearchInput}
+            className="text-input"
+            onPressEnter={submitSearch}
+            data-testid="id-search-input"
           />
-        )}
-        <Input
-          id="id-search-input"
-          type="text"
-          value={query}
-          onChange={onChangeSearchInput}
-          className="text-input"
-          onPressEnter={submitSearch}
-          data-testid="id-search-input"
-        />
-      </div>
-      <Button
-        data-testid="id-search-button"
-        type={ButtonType.Highlighted}
-        className="search-button"
-        onClick={submitSearch}
-        disabled={!query}
-      >
-        <FormattedMessage id="marva.search" />
-      </Button>
-      <div className="meta-controls">
+        </div>
         <Button
-          type={ButtonType.Text}
-          className="search-button"
-          onClick={onResetButtonClick}
-          prefix={<XInCircle />}
-          disabled={isDisabledResetButton}
-          data-testid="id-search-reset-button"
+          data-testid="id-search-button"
+          type={ButtonType.Highlighted}
+          className="search-button primary-search"
+          onClick={submitSearch}
+          disabled={!query}
         >
-          <FormattedMessage id="marva.reset" />
+          <FormattedMessage id="marva.search" />
         </Button>
-        {isVisibleAdvancedSearch && (
+        <div className={classNames(["meta-controls", !isVisibleAdvancedSearch && 'meta-controls-centered' ])}>
           <Button
-            type={ButtonType.Link}
+            type={ButtonType.Text}
             className="search-button"
-            onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+            onClick={onResetButtonClick}
+            prefix={<XInCircle />}
+            disabled={isDisabledResetButton}
+            data-testid="id-search-reset-button"
           >
-            <FormattedMessage id="marva.advanced" />
+            <FormattedMessage id="marva.reset" />
           </Button>
-        )}
-      </div>
+          {isVisibleAdvancedSearch && (
+            <Button
+              type={ButtonType.Link}
+              className="search-button"
+              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+            >
+              <FormattedMessage id="marva.advanced" />
+            </Button>
+          )}
+        </div>
 
-      {SEARCH_FILTERS_ENABLED && <SearchFilters filters={filters} />}
+        {SEARCH_FILTERS_ENABLED && <SearchFilters filters={filters} />}
+      </div>
     </div>
   );
 };

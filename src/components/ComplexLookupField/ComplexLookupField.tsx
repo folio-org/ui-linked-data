@@ -63,7 +63,13 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             {localValue?.length ? layout?.selectTitle?.change : layout?.selectTitle?.base}
           </button>
 
-          <ModalComplexLookup isOpen={isModalOpen} onClose={closeModal} title={layout?.selectTitle?.modal} />
+          <ModalComplexLookup
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            title={layout?.selectTitle?.modal}
+            // TODO: update the profile for taking the title from there
+            searchPaneTitle={layout?.selectTitle?.modalControlPane || 'Authorities'} 
+          />
         </div>
       ) : (
         <Input

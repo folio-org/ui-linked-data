@@ -24,6 +24,7 @@ export const BASE_LOCALE = {
   'marva.searchAndFilter': 'Search & filter',
   'marva.enterSearchCriteria': 'Enter search criteria to start search',
   'marva.searchNoRdsMatch': 'No resource descriptions match your query',
+  'marva.searchNoComplexLookupsMatch': 'Choose a filter or enter a search query to show results.',
   'marva.searchBySth': 'Search by{by}...',
   'marva.errorFetching': 'Error fetching data',
   'marva.errorLoadingResource': 'Error loading resource',

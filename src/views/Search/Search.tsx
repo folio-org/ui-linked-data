@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import { ItemSearch } from '@components/ItemSearch';
 import { SearchResultList } from '@components/SearchResultList';
 import {
@@ -9,6 +10,15 @@ import {
   Suppressed,
   DEFAULT_SEARCH_BY,
 } from '@common/constants/search.constants';
+import { SearchControlPane } from '@components/SearchControlPane';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { DropdownItemType } from '@common/constants/uiElements.constants';
+import { ROUTES } from '@common/constants/routes.constants';
+import { Dropdown } from '@components/Dropdown';
+import { ResourceType } from '@common/constants/record.constants';
+import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
+import Plus16 from '@src/assets/plus-16.svg?react';
+import Compare from '@src/assets/compare.svg?react';
 import './Search.scss';
 
 const filters = [
@@ -81,13 +91,59 @@ const filters = [
 ];
 
 export const Search = () => {
+  const { navigateToEditPage } = useNavigateToEditPage();
+
+  const items = [
+    {
+      id: 'actions',
+      labelId: 'marva.actions',
+      data: [
+        {
+          id: 'newResource',
+          type: DropdownItemType.basic,
+          labelId: 'marva.newResource',
+          icon: <Plus16 />,
+          action: () => {
+            navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
+          },
+        },
+        {
+          id: 'compare',
+          type: DropdownItemType.basic,
+          labelId: 'marva.compareSelected',
+          icon: <Compare />,
+          isDisabled: true,
+        },
+      ],
+    },
+    // Example of the dropdown option with a custom component instead of the standart button
+    /* {
+      id: 'sortBy',
+      labelId: 'marva.newResource',
+      data: [
+        {
+          id: 'sortBy',
+          type: DropdownItemType.customComponent,
+          renderComponent: (key: string | number) => <div key={key}>Custom</div>,
+        },
+      ],
+    }, */
+  ];
+
   return (
     <div className="search" data-testid="search" id="ld-search-container">
       <ItemSearch
+        endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
         filters={filters}
         hasSearchParams={true}
         defaultSearchBy={DEFAULT_SEARCH_BY}
-        searchResultsListComponent={<SearchResultList />}
+        labelEmptySearch="marva.enterSearchCriteria"
+        controlPaneComponent={
+          <SearchControlPane label={<FormattedMessage id="marva.resources" />}>
+            <Dropdown labelId="marva.actions" items={items} />
+          </SearchControlPane>
+        }
+        resultsListComponent={<SearchResultList />}
       />
     </div>
   );
