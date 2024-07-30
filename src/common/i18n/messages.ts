@@ -125,6 +125,15 @@ export const BASE_LOCALE = {
   'marva.duplicate': 'Duplicate',
   'marva.viewLinkedData': 'View linked data',
   'marva.viewInInventory': 'View in Inventory app',
+  'marva.authorityType': 'Authority Type',
+  'marva.person': 'Authority Type',
+  'marva.source': 'Source',
+  'marva.family': 'Family',
+  'marva.corporateBody': 'Authority Type',
+  'marva.jurisdiction': 'Jurisdiction',
+  'marva.conference': 'Conference',
+  'marva.authorized': 'Authorized',
+  'marva.unauthorized': 'Unauthorized',
 };
 
 export const i18nMessages = {

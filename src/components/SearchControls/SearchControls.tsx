@@ -4,7 +4,6 @@ import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { SearchIdentifiers } from '@common/constants/search.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
@@ -21,6 +20,7 @@ type Props = {
   filters: SearchFilters;
   isVisibleSearchBy?: boolean;
   isVisibleAdvancedSearch?: boolean;
+  isVisibleFilters?: boolean;
   hasSearchParams?: boolean;
 };
 
@@ -30,6 +30,7 @@ export const SearchControls: FC<Props> = ({
   filters,
   isVisibleSearchBy = true,
   isVisibleAdvancedSearch = true,
+  isVisibleFilters = true,
   hasSearchParams = true,
 }) => {
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -99,7 +100,7 @@ export const SearchControls: FC<Props> = ({
         >
           <FormattedMessage id="marva.search" />
         </Button>
-        <div className={classNames(["meta-controls", !isVisibleAdvancedSearch && 'meta-controls-centered' ])}>
+        <div className={classNames(['meta-controls', !isVisibleAdvancedSearch && 'meta-controls-centered'])}>
           <Button
             type={ButtonType.Text}
             className="search-button"
@@ -121,7 +122,7 @@ export const SearchControls: FC<Props> = ({
           )}
         </div>
 
-        {SEARCH_FILTERS_ENABLED && <SearchFilters filters={filters} />}
+        {isVisibleFilters && <SearchFilters filters={filters} />}
       </div>
     </div>
   );

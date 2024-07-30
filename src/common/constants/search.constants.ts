@@ -11,11 +11,31 @@ export enum SearchLimiterNames {
   Suppressed = 'suppressed',
 }
 
+export enum SearchLimiterNamesAuthority {
+  AuthorityType = 'authorityType',
+  Source = 'source',
+}
+
 export enum PublishDate {
   AllTime = 'allTime',
   TwelveMonths = '12mos',
   FiveYears = '5yrs',
   TenYears = '10yrs',
+}
+
+export enum AuthorityType {
+  All = 'allAuthorities',
+  Pesron = 'person',
+  Family = 'family',
+  CorporateBody = 'corporateBody',
+  Jurisdiction = 'jurisdiction',
+  Conference = 'conference',
+}
+
+export enum SourceType {
+  All = 'allSource',
+  Authorized = 'authorized',
+  Unauthorized = 'unauthorized',
 }
 
 export enum Format {

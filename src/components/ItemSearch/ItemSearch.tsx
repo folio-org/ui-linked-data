@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
@@ -19,6 +20,7 @@ type ItemSearchProps = {
   controlPaneComponent: ReactElement;
   resultsListComponent: ReactElement;
   isSortedResults?: boolean;
+  isVisibleFilters?: boolean;
   isVisibleFullDisplay?: boolean;
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
@@ -34,6 +36,7 @@ export const ItemSearch: FC<ItemSearchProps> = ({
   controlPaneComponent,
   resultsListComponent,
   isSortedResults = true,
+  isVisibleFilters = SEARCH_FILTERS_ENABLED,
   isVisibleFullDisplay = true,
   isVisibleAdvancedSearch = true,
   isVisibleSearchByControl = true,
@@ -62,6 +65,7 @@ export const ItemSearch: FC<ItemSearchProps> = ({
         filters={filters}
         isVisibleSearchBy={isVisibleSearchByControl}
         isVisibleAdvancedSearch={isVisibleAdvancedSearch}
+        isVisibleFilters={isVisibleFilters}
         hasSearchParams={hasSearchParams}
       />
       <div className={DOM_ELEMENTS.classNames.itemSearchContent}>

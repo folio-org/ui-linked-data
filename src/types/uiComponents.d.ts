@@ -1,5 +1,6 @@
 type DropdownItemType = keyof typeof import('@common/constants/uiElements.constants').DropdownItemType;
 type SearchLimiterNames = `${import('@common/constants/search.constants').SearchLimiterNames}`;
+type SearchLimiterNamesAuthority = `${import('@common/constants/search.constants').SearchLimiterNamesAuthority}`;
 type FiltersGroupCheckType = `${import('@common/constants/search.constants').FiltersGroupCheckType}`;
 type FiltersType = `${import('@common/constants/search.constants').FiltersType}`;
 type ReactElement = import('react').ReactElement;
@@ -26,7 +27,7 @@ type DropdownItems = DropdownGroup[];
 type SearchItem = {
   id: string;
   type: FiltersType;
-  name: SearchLimiterNames;
+  name: SearchLimiterNames | SearchLimiterNamesAuthority;
   labelId: string;
 };
 
