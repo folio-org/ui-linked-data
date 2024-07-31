@@ -56,40 +56,44 @@ export const useSearch = () => {
     [setMessage],
   );
 
-  const fetchData = async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
-    clearMessage();
+  const fetchData = useCallback(
+    async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
+      clearMessage();
 
-    data && setData(null);
+      data && setData(null);
 
-    const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+      const updatedQuery = validateAndNormalizeQuery(searchBy, query);
 
-    if (!updatedQuery) return;
+      if (!updatedQuery) return;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    try {
-      const result = await getByIdentifier({
-        endpointUrl,
-        isSortedResults,
-        searchBy,
-        query: updatedQuery as string,
-        offset: offset?.toString(),
-      });
-      const { content, totalPages, totalRecords } = result;
+      try {
+        const result = await getByIdentifier({
+          endpointUrl,
+          isSortedResults,
+          searchBy,
+          query: updatedQuery as string,
+          offset: offset?.toString(),
+        });
+        const { content, totalPages, totalRecords } = result;
 
-      if (!content.length) return setMessage('marva.searchNoRdsMatch');
+        // TODO: pass the message though the context
+        if (!content.length) return setMessage('marva.searchNoRdsMatch');
 
-      setData(content);
-      setPageMetadata({ totalPages, totalElements: totalRecords });
-    } catch {
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        setData(content);
+        setPageMetadata({ totalPages, totalElements: totalRecords });
+      } catch {
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [data, endpointUrl, isSortedResults],
+  );
 
   const submitSearch = useCallback(() => {
     clearPagination();
@@ -101,7 +105,7 @@ export const useSearch = () => {
     }
 
     setForceRefreshSearch(true);
-  }, [hasSearchParams, query, searchBy]);
+  }, [fetchData, hasSearchParams, query, searchBy]);
 
   const clearValues = useCallback(() => {
     clearPagination();
