@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useCallback } from 'react';
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import {
   AuthorityType,
@@ -88,6 +88,10 @@ interface Props {
 }
 
 export const ModalComplexLookup: FC<Props> = memo(({ isOpen, onClose, title = '', searchPaneTitle = '' }) => {
+  const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, []);
+  // TODO: create a component
+  const renderResultsList = useCallback(() => <div />, []);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -106,9 +110,8 @@ export const ModalComplexLookup: FC<Props> = memo(({ isOpen, onClose, title = ''
           filters={filters}
           hasSearchParams={false}
           defaultSearchBy={'label' as SearchIdentifiers}
-          controlPaneComponent={<SearchControlPane label={searchPaneTitle} />}
-          // TODO: create a component
-          resultsListComponent={<div />}
+          renderSearchControlPane={renderSearchControlPane}
+          renderResultsList={renderResultsList}
           isVisibleFilters={true}
           isVisibleFullDisplay={false}
           isVisibleAdvancedSearch={false}

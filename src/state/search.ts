@@ -32,8 +32,10 @@ const data = atom<null | WorkAsSearchResultDTO[]>({
 });
 
 const limiters = atom<
-  | Record<SearchLimiterNames, any[] | Suppressed | PublishDate>
-  | Record<SearchLimiterNamesAuthority, any[] | AuthorityType | SourceType>
+  Record<
+    SearchLimiterNames | SearchLimiterNamesAuthority,
+    any[] | Suppressed | PublishDate | AuthorityType | SourceType
+  >
 >({
   key: 'search.limiters',
   default: DEFAULT_SEARCH_LIMITERS,

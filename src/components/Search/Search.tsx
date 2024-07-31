@@ -14,12 +14,13 @@ export const Search: FC<SearchParams> = ({
   labelEmptySearch,
   classNameEmptyPlaceholder,
   filters,
-  controlPaneComponent,
-  resultsListComponent,
+  renderSearchControlPane,
+  renderResultsList,
 }) => {
   return (
     <SearchProvider
       value={{
+        filters,
         endpointUrl,
         hasSearchParams,
         defaultSearchBy,
@@ -30,13 +31,11 @@ export const Search: FC<SearchParams> = ({
         isVisibleSearchByControl,
         labelEmptySearch,
         classNameEmptyPlaceholder,
+        renderSearchControlPane,
+        renderResultsList,
       }}
     >
-      <ItemSearch
-        filters={filters}
-        controlPaneComponent={controlPaneComponent}
-        resultsListComponent={resultsListComponent}
-      />
+      <ItemSearch />
     </SearchProvider>
   );
 };

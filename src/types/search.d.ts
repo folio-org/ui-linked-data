@@ -7,11 +7,11 @@ type SearchParamsState = {
 
 type SearchParams = {
   endpointUrl: string;
-  filters: SearchFilters;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
-  controlPaneComponent: ReactElement;
-  resultsListComponent: ReactElement;
+  filters: SearchFilters;
+  renderSearchControlPane: () => JSX.Element | null;
+  renderResultsList: () => JSX.Element | null;
   isSortedResults?: boolean;
   isVisibleFilters?: boolean;
   isVisibleFullDisplay?: boolean;
@@ -20,5 +20,3 @@ type SearchParams = {
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
 };
-
-type SearchContextValue = Omit<SearchParams, 'filters' | 'controlPaneComponent' | 'resultsListComponent'>;

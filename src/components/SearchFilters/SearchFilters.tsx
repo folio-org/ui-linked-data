@@ -1,14 +1,12 @@
-import { FC } from 'react';
+import { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FiltersGroupCheckType } from '@common/constants/search.constants';
 import { Accordion } from '@components/Accordion';
 import { useSearchFilters } from '@common/hooks/useSearchFilters';
+import { SearchContext } from '@common/contexts';
 
-type SearchFiltersProps = {
-  filters: SearchFilters;
-};
-
-export const SearchFilters: FC<SearchFiltersProps> = ({ filters }) => {
+export const SearchFilters = () => {
+  const { filters } = useContext(SearchContext);
   const { limiters, onChangeLimiters, onChangeLimitersMulti, onChange } = useSearchFilters();
   const filtersLastGroupIndex = filters.length - 1;
 

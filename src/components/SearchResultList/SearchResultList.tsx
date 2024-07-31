@@ -1,8 +1,8 @@
 import state from '@state';
 import { useRecoilValue } from 'recoil';
 import { SearchResultEntry } from '@components/SearchResultEntry';
-import './SearchResultList.scss';
 import { useSearchNavigationState } from '@common/hooks/useSearchNavigationState';
+import './SearchResultList.scss';
 
 export const SearchResultList = () => {
   const data = useRecoilValue(state.search.data);

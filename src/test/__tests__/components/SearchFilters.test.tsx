@@ -1,6 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { SearchFilters } from '@components/SearchFilters';
+import { SearchContext } from '@common/contexts';
+import {
+  FiltersGroupCheckType,
+  FiltersType,
+  Format,
+  PublishDate,
+  SearchLimiterNames,
+} from '@common/constants/search.constants';
 
 const setSearchParams = jest.fn();
 
@@ -10,10 +18,45 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('SearchFilters', () => {
+  const filters = [
+    {
+      labelId: 'groupLabelId',
+      type: FiltersGroupCheckType.Single,
+      children: [
+        {
+          id: PublishDate.AllTime,
+          type: FiltersType.Radio,
+          name: SearchLimiterNames.PublishDate,
+          labelId: 'marva.allTime',
+        },
+        {
+          id: PublishDate.TwelveMonths,
+          type: FiltersType.Radio,
+          name: SearchLimiterNames.PublishDate,
+          labelId: 'marva.past12Months',
+        },
+      ],
+    },
+    {
+      labelId: 'marva.format',
+      type: FiltersGroupCheckType.Multi,
+      children: [
+        {
+          id: Format.Volume,
+          type: FiltersType.Checkbox,
+          name: SearchLimiterNames.Format,
+          labelId: 'marva.volume',
+        },
+      ],
+    },
+  ] as SearchFilters;
+
   beforeEach(() =>
     render(
       <RecoilRoot>
-        <SearchFilters />
+        <SearchContext.Provider value={{ filters } as unknown as SearchParams}>
+          <SearchFilters />
+        </SearchContext.Provider>
       </RecoilRoot>,
     ),
   );

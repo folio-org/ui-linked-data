@@ -9,18 +9,22 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('usePagination', () => {
+  const hasSearchParams = true;
+
   function testOnPageClick({
     functionName,
     pageMetadata,
+    hasSearchParams,
     defaultPageNumber,
     testResult,
   }: {
     functionName: string;
     pageMetadata: PageMetadata;
+    hasSearchParams: boolean;
     defaultPageNumber: number;
     testResult: number;
   }) {
-    const { result }: any = renderHook(() => usePagination(pageMetadata, defaultPageNumber));
+    const { result }: any = renderHook(() => usePagination(pageMetadata, hasSearchParams, defaultPageNumber));
 
     act(() => {
       result.current[functionName]?.();
@@ -41,6 +45,7 @@ describe('usePagination', () => {
       testOnPageClick({
         functionName: 'onPrevPageClick',
         pageMetadata,
+        hasSearchParams,
         defaultPageNumber,
         testResult: defaultPageNumber,
       });
@@ -54,7 +59,13 @@ describe('usePagination', () => {
       };
       const defaultPageNumber = 1;
 
-      testOnPageClick({ functionName: 'onPrevPageClick', pageMetadata, defaultPageNumber, testResult: 0 });
+      testOnPageClick({
+        functionName: 'onPrevPageClick',
+        pageMetadata,
+        hasSearchParams,
+        defaultPageNumber,
+        testResult: 0,
+      });
     });
   });
 
@@ -70,6 +81,7 @@ describe('usePagination', () => {
       testOnPageClick({
         functionName: 'onNextPageClick',
         pageMetadata,
+        hasSearchParams,
         defaultPageNumber,
         testResult: defaultPageNumber,
       });
@@ -83,7 +95,13 @@ describe('usePagination', () => {
       };
       const defaultPageNumber = 0;
 
-      testOnPageClick({ functionName: 'onNextPageClick', pageMetadata, defaultPageNumber, testResult: 1 });
+      testOnPageClick({
+        functionName: 'onNextPageClick',
+        pageMetadata,
+        hasSearchParams,
+        defaultPageNumber,
+        testResult: 1,
+      });
     });
   });
 });

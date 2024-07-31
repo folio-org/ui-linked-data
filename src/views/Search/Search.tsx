@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
@@ -94,31 +95,32 @@ const filters = [
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
 
-  const items = [
-    {
-      id: 'actions',
-      labelId: 'marva.actions',
-      data: [
-        {
-          id: 'newResource',
-          type: DropdownItemType.basic,
-          labelId: 'marva.newResource',
-          icon: <Plus16 />,
-          action: () => {
-            navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
+  const items = useMemo(
+    () => [
+      {
+        id: 'actions',
+        labelId: 'marva.actions',
+        data: [
+          {
+            id: 'newResource',
+            type: DropdownItemType.basic,
+            labelId: 'marva.newResource',
+            icon: <Plus16 />,
+            action: () => {
+              navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
+            },
           },
-        },
-        {
-          id: 'compare',
-          type: DropdownItemType.basic,
-          labelId: 'marva.compareSelected',
-          icon: <Compare />,
-          isDisabled: true,
-        },
-      ],
-    },
-    // Example of the dropdown option with a custom component instead of the standart button
-    /* {
+          {
+            id: 'compare',
+            type: DropdownItemType.basic,
+            labelId: 'marva.compareSelected',
+            icon: <Compare />,
+            isDisabled: true,
+          },
+        ],
+      },
+      // Example of the dropdown option with a custom component instead of the standart button
+      /* {
       id: 'sortBy',
       labelId: 'marva.newResource',
       data: [
@@ -129,7 +131,19 @@ export const SearchView = () => {
         },
       ],
     }, */
-  ];
+    ],
+    [navigateToEditPage],
+  );
+
+  const renderSearchControlPane = useCallback(
+    () => (
+      <SearchControlPane label={<FormattedMessage id="marva.resources" />}>
+        <Dropdown labelId="marva.actions" items={items} />
+      </SearchControlPane>
+    ),
+    [items],
+  );
+  const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return (
     <div className="search" data-testid="search" id="ld-search-container">
@@ -139,16 +153,12 @@ export const SearchView = () => {
         hasSearchParams={true}
         defaultSearchBy={DEFAULT_SEARCH_BY}
         labelEmptySearch="marva.enterSearchCriteria"
-        controlPaneComponent={
-          <SearchControlPane label={<FormattedMessage id="marva.resources" />}>
-            <Dropdown labelId="marva.actions" items={items} />
-          </SearchControlPane>
-        }
-        resultsListComponent={<SearchResultList />}
         isVisibleFilters={SEARCH_FILTERS_ENABLED}
         isVisibleFullDisplay={true}
         isVisibleAdvancedSearch={true}
         isVisibleSearchByControl={true}
+        renderSearchControlPane={renderSearchControlPane}
+        renderResultsList={renderResultsList}
       />
     </div>
   );

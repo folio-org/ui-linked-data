@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react';
+import { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
@@ -12,11 +12,15 @@ import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 
-type ItemSearchProps = Pick<SearchParams, 'filters' | 'controlPaneComponent' | 'resultsListComponent'>;
-
-export const ItemSearch: FC<ItemSearchProps> = ({ filters, controlPaneComponent, resultsListComponent }) => {
-  const { labelEmptySearch, classNameEmptyPlaceholder, isVisibleFullDisplay, isVisibleAdvancedSearch } =
-    useContext(SearchContext);
+export const ItemSearch = () => {
+  const {
+    labelEmptySearch,
+    classNameEmptyPlaceholder,
+    isVisibleFullDisplay,
+    isVisibleAdvancedSearch,
+    renderResultsList,
+    renderSearchControlPane,
+  } = useContext(SearchContext);
   const {
     submitSearch,
     clearValues,
@@ -33,13 +37,9 @@ export const ItemSearch: FC<ItemSearchProps> = ({ filters, controlPaneComponent,
 
   return (
     <div data-testid="id-search" className="item-search">
-      <SearchControls
-        submitSearch={submitSearch}
-        clearValues={clearValues}
-        filters={filters}
-      />
+      <SearchControls submitSearch={submitSearch} clearValues={clearValues} />
       <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
-        {controlPaneComponent}
+        {renderSearchControlPane()}
         <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
           {message && (
             <div>
@@ -48,7 +48,7 @@ export const ItemSearch: FC<ItemSearchProps> = ({ filters, controlPaneComponent,
           )}
           {data && (
             <>
-              {resultsListComponent}
+              {renderResultsList()}
               {pageMetadata.totalElements > 0 && (
                 <Pagination
                   currentPage={currentPageNumber}

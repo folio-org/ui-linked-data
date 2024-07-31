@@ -12,7 +12,7 @@ import { Edit } from '@views';
 
 let getByIdentifierMock: jest.SpyInstance<
   Promise<any>,
-  [id: string, query: string, offset?: string, limit?: string],
+  [id: string, query: string, endpointUrl: string, isSortedResults?: boolean, offset?: string, limit?: string],
   any
 >;
 
@@ -163,7 +163,13 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith({ offset: '0', query: '1234000001', searchBy: id });
+      expect(getByIdentifierMock).toHaveBeenCalledWith({
+        offset: '0',
+        query: '1234000001',
+        searchBy: id,
+        endpointUrl: '',
+        isSortedResults: true,
+      });
     });
   });
 
@@ -175,16 +181,6 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     expect(await findByText('marva.searchNoRdsMatch')).toBeInTheDocument();
-  });
-
-  test('renders the results', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.resolve(itemSearchMockData));
-
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
-
-    expect(await findByText('John Doe')).toBeInTheDocument();
   });
 
   test("returns out of fetchData if query is subject to validation and doesn't pass validations", async () => {

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { SearchContext } from '@common/contexts';
 
 type SearchProviderProps = {
-  value: SearchContextValue;
+  value: SearchParams;
   children: ReactElement;
 };
 

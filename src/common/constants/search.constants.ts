@@ -84,6 +84,8 @@ export const DEFAULT_SEARCH_LIMITERS = {
   [SearchLimiterNames.PublishDate]: PublishDate.AllTime,
   [SearchLimiterNames.Format]: [],
   [SearchLimiterNames.Suppressed]: Suppressed.All,
+  [SearchLimiterNamesAuthority.AuthorityType]: AuthorityType.All,
+  [SearchLimiterNamesAuthority.Source]: SourceType.All,
 };
 
 export type AdvancedSearchSchema = AdvancedSearchSchemaRow[];

@@ -18,10 +18,9 @@ import './SearchControls.scss';
 type Props = {
   submitSearch: VoidFunction;
   clearValues: VoidFunction;
-  filters: SearchFilters;
 };
 
-export const SearchControls: FC<Props> = ({ submitSearch, clearValues, filters }) => {
+export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const { isVisibleSearchByControl, isVisibleAdvancedSearch, isVisibleFilters, hasSearchParams } =
     useContext(SearchContext);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -113,7 +112,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues, filters }
           )}
         </div>
 
-        {isVisibleFilters && <SearchFilters filters={filters} />}
+        {isVisibleFilters && <SearchFilters />}
       </div>
     </div>
   );
