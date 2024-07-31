@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { Fragment, useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FiltersGroupCheckType } from '@common/constants/search.constants';
 import { Accordion } from '@components/Accordion';
@@ -12,33 +12,29 @@ export const SearchFilters = () => {
 
   return (
     <div className="controls">
-      {filters.map((group, index) => {
-        const isSingleGroupCheckType = group.type === FiltersGroupCheckType.Single;
+      {filters.map(({ type, labelId, children }, index) => {
+        const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
 
         return (
-          <>
-            <Accordion title={<FormattedMessage id={group.labelId} />}>
+          <Fragment key={labelId}>
+            <Accordion title={<FormattedMessage id={labelId} />}>
               <div onChange={isSingleGroupCheckType ? onChangeLimiters : onChangeLimitersMulti}>
-                {group.children?.map(groupElem => (
-                  <label htmlFor={groupElem.id}>
+                {children?.map(({ id, name, type, labelId }) => (
+                  <label htmlFor={id} key={id}>
                     <input
-                      checked={
-                        isSingleGroupCheckType
-                          ? limiters[groupElem.name] === groupElem.id
-                          : limiters[groupElem.name]?.includes(groupElem.id)
-                      }
-                      name={groupElem.name}
-                      id={groupElem.id}
-                      type={groupElem.type}
+                      checked={isSingleGroupCheckType ? limiters[name] === id : limiters[name]?.includes(id)}
+                      name={name}
+                      id={id}
+                      type={type}
                       onChange={onChange}
                     />
-                    <FormattedMessage id={groupElem.labelId} />
+                    <FormattedMessage id={labelId} />
                   </label>
                 ))}
               </div>
             </Accordion>
             {index !== filtersLastGroupIndex && <hr />}
-          </>
+          </Fragment>
         );
       })}
     </div>
