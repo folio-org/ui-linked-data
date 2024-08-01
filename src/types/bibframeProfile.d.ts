@@ -23,6 +23,7 @@ type PropertyLayout = {
     base: string;
     change: string;
     modal: string;
+    modalControlPane?: string;
   };
   readOnly?: boolean;
 };

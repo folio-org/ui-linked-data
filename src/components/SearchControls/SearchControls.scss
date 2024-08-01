@@ -1,20 +1,46 @@
+@import '@common/styles/common.scss';
+
 .search-pane {
   display: flex;
   flex-direction: column;
   min-width: 290px;
   width: 290px;
   border-right: 1px solid #d7d8da;
-  padding: 12px 1rem;
   overflow-y: auto;
 
-  .header,
+  &-header,
   .meta-controls {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #d7d8da;
-    padding-bottom: 12px;
+    border-bottom: 1px solid $gray-200;
+
+    &-centered {
+      justify-content: center;
+    }
+  }
+
+  &-header {
+    height: 2.75rem;
+    padding: 0 1rem;
+    background-color: rgba(0, 0, 0, 0.03);
+
+    &-title {
+      font-size: 0.875rem;
+    }
+  }
+
+  &-content {
+    padding: 0 1rem 0.75rem 1rem;
+
+    .primary-search {
+      width: 100%;
+    }
+  }
+
+  .meta-controls {
+    padding-bottom: 0.75rem;
   }
 
   .header-caret {

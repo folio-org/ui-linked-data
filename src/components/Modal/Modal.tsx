@@ -12,6 +12,7 @@ interface Props {
   isOpen: boolean;
   title: string;
   className?: string;
+  classNameHeader?: string;
   submitButtonDisabled?: boolean;
   cancelButtonDisabled?: boolean;
   submitButtonLabel?: string;
@@ -29,6 +30,7 @@ interface Props {
 const Modal: FC<Props> = ({
   isOpen,
   className,
+  classNameHeader,
   title,
   submitButtonLabel,
   cancelButtonLabel,
@@ -64,7 +66,7 @@ const Modal: FC<Props> = ({
         <>
           <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
-            <div className="modal-header">
+            <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
                 <button onClick={onClose} className="close-button">
                   <Times16 />

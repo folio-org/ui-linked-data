@@ -11,11 +11,31 @@ export enum SearchLimiterNames {
   Suppressed = 'suppressed',
 }
 
+export enum SearchLimiterNamesAuthority {
+  AuthorityType = 'authorityType',
+  Source = 'source',
+}
+
 export enum PublishDate {
   AllTime = 'allTime',
   TwelveMonths = '12mos',
   FiveYears = '5yrs',
   TenYears = '10yrs',
+}
+
+export enum AuthorityType {
+  All = 'allAuthorities',
+  Pesron = 'person',
+  Family = 'family',
+  CorporateBody = 'corporateBody',
+  Jurisdiction = 'jurisdiction',
+  Conference = 'conference',
+}
+
+export enum SourceType {
+  All = 'allSource',
+  Authorized = 'authorized',
+  Unauthorized = 'unauthorized',
 }
 
 export enum Format {
@@ -64,6 +84,8 @@ export const DEFAULT_SEARCH_LIMITERS = {
   [SearchLimiterNames.PublishDate]: PublishDate.AllTime,
   [SearchLimiterNames.Format]: [],
   [SearchLimiterNames.Suppressed]: Suppressed.All,
+  [SearchLimiterNamesAuthority.AuthorityType]: AuthorityType.All,
+  [SearchLimiterNamesAuthority.Source]: SourceType.All,
 };
 
 export type AdvancedSearchSchema = AdvancedSearchSchemaRow[];
@@ -87,3 +109,13 @@ export const DEFAULT_ADVANCED_SEARCH_ROW_VALUE: AdvancedSearchSchemaRow = {
 export const DEFAULT_ADVANCED_SEARCH_QUERY: AdvancedSearchSchema = new Array(6)
   .fill(DEFAULT_ADVANCED_SEARCH_ROW_VALUE)
   .map((item, rowIndex) => ({ ...item, rowIndex, operator: rowIndex === 0 ? undefined : item.operator }));
+
+export enum FiltersGroupCheckType {
+  Single = 'single',
+  Multi = 'multi',
+}
+
+export enum FiltersType {
+  Checkbox = 'checkbox',
+  Radio = 'radio',
+}

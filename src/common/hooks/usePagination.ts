@@ -2,7 +2,11 @@ import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export const usePagination = ({ totalElements = 0, totalPages = 0 }: PageMetadata, defaultPageNumber = 0) => {
+export const usePagination = (
+  { totalElements = 0, totalPages = 0 }: PageMetadata,
+  hasSearchParams = true,
+  defaultPageNumber = 0,
+) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
   const [pageMetadata, setPageMetadata] = useState<PageMetadata>({ totalElements, totalPages });
@@ -26,11 +30,14 @@ export const usePagination = ({ totalElements = 0, totalPages = 0 }: PageMetadat
     if (prevPageNumber < 0) return;
 
     setCurrentPageNumber(prevPageNumber);
-    setSearchParams(searchParams => {
-      searchParams.set(SearchQueryParams.Offset, prevPageNumber.toString());
 
-      return searchParams;
-    });
+    if (hasSearchParams) {
+      setSearchParams(searchParams => {
+        searchParams.set(SearchQueryParams.Offset, prevPageNumber.toString());
+
+        return searchParams;
+      });
+    }
   };
 
   const onNextPageClick = () => {
@@ -39,11 +46,14 @@ export const usePagination = ({ totalElements = 0, totalPages = 0 }: PageMetadat
     if (nextPageNumber > pageMetadata.totalPages - 1) return;
 
     setCurrentPageNumber(nextPageNumber);
-    setSearchParams(searchParams => {
-      searchParams.set(SearchQueryParams.Offset, nextPageNumber.toString());
 
-      return searchParams;
-    });
+    if (hasSearchParams) {
+      setSearchParams(searchParams => {
+        searchParams.set(SearchQueryParams.Offset, nextPageNumber.toString());
+
+        return searchParams;
+      });
+    }
   };
 
   return {

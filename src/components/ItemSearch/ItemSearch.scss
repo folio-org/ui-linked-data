@@ -7,15 +7,6 @@
     box-sizing: border-box;
   }
 
-  .empty-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    font-weight: 600;
-    margin: auto;
-  }
-
   &-content {
     width: 100%;
     flex: 1;

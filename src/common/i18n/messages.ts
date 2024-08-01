@@ -24,6 +24,7 @@ export const BASE_LOCALE = {
   'marva.searchAndFilter': 'Search & filter',
   'marva.enterSearchCriteria': 'Enter search criteria to start search',
   'marva.searchNoRdsMatch': 'No resource descriptions match your query',
+  'marva.searchNoComplexLookupsMatch': 'Choose a filter or enter a search query to show results.',
   'marva.searchBySth': 'Search by{by}...',
   'marva.errorFetching': 'Error fetching data',
   'marva.errorLoadingResource': 'Error loading resource',
@@ -124,6 +125,15 @@ export const BASE_LOCALE = {
   'marva.duplicate': 'Duplicate',
   'marva.viewLinkedData': 'View linked data',
   'marva.viewInInventory': 'View in Inventory app',
+  'marva.authorityType': 'Authority Type',
+  'marva.person': 'Authority Type',
+  'marva.source': 'Source',
+  'marva.family': 'Family',
+  'marva.corporateBody': 'Authority Type',
+  'marva.jurisdiction': 'Jurisdiction',
+  'marva.conference': 'Conference',
+  'marva.authorized': 'Authorized',
+  'marva.unauthorized': 'Unauthorized',
 };
 
 export const i18nMessages = {
