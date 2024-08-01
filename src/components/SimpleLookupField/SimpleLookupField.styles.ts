@@ -1,4 +1,5 @@
 import { CSSObjectWithLabel, GroupBase, OptionProps } from 'react-select';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 
 export const SimpleLookupFieldStyles = {
   container: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({
@@ -40,7 +41,7 @@ export const SimpleLookupFieldStyles = {
     paddingTop: 0,
     paddingBottom: 0,
     lineHeight: '1.125rem',
-    fontSize: '0.875rem',
+    fontSize: IS_EMBEDDED_MODE ? '1rem' : '0.875rem',
   }),
   multiValueRemove: (base: CSSObjectWithLabel) => ({
     ...base,

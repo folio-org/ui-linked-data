@@ -15,12 +15,35 @@
         border-bottom: 1px solid #dedede;
         font-size: 0.875rem;
         text-align: center;
+
+        &-embedded {
+          &.modal-complex-lookup-header,
+          .modal-complex-lookup-title {
+            font-size: 1rem;
+          }
+        }
       }
 
       .modal-complex-lookup-title {
         width: 100%;
         font-size: 0.875rem;
+        font-weight: 700;
         text-align: center;
+      }
+    }
+
+    .search-pane-header-title {
+      flex: 1;
+      text-align: center;
+    }
+
+    &-embedded {
+      // TODO: dynmically calculate header and footer heights
+      max-height: calc(100vh - 110px);
+
+      .search-pane-header-title,
+      .search-control-pane-mainLabel {
+        font-size: 1rem;
       }
     }
   }

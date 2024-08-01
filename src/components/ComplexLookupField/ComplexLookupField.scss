@@ -1,6 +1,11 @@
 .complex-lookup {
   display: flex;
   align-items: center;
+  max-width: 100%;
+
+  &-value {
+    flex: 1;
+  }
 
   &-select-button {
     padding: 0.25rem 1rem;
@@ -13,14 +18,14 @@
   &-selected {
     display: flex;
     align-items: center;
-    margin-right: 0.25rem;
-    padding: 0;
+    margin: 4px 4px 4px 0;
     border: 1px solid rgba(0, 0, 0, 0.2);
     line-height: 1rem;
     background-color: #efefef;
 
     &-label {
-      padding: 0 0.1875rem;
+      display: block;
+      padding: 1px 12px 2px 4px;
       font-size: 0.875rem;
       color: #000;
     }
@@ -28,22 +33,37 @@
     &-delete {
       display: flex;
       align-items: center;
-      height: 1.125rem;
+      align-self: stretch;
+      min-height: 1.125rem;
       width: 1.125rem;
-      padding: 1px 0.1875rem;
+      padding: 1px 3px;
       border: none;
       border-left: 1px solid #d7d8da;
       background-color: transparent;
       cursor: pointer;
 
       &:hover {
-        background-color: #ffbdad;
-        color: #de350b;
+        background-color: rgba(37, 118, 195, 0.2);
       }
 
       svg path {
         color: rgba(0, 0, 0, 0.62);
       }
+    }
+
+    &-embedded {
+      .complex-lookup-selected-label {
+        font-size: 1rem;
+      }
+
+      .complex-lookup-selected-delete {
+        min-height: 1.4rem;
+        width: 1.4rem;
+      }
+    }
+
+    &-select-button {
+      text-wrap: nowrap;
     }
   }
 }

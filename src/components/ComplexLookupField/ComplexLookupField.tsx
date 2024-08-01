@@ -1,8 +1,10 @@
 import { ChangeEvent, FC, useState } from 'react';
+import classNames from 'classnames';
+import { useModalControls } from '@common/hooks/useModalControls';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import { Input } from '../Input';
 import { ModalComplexLookup } from './ModalComplexLookup';
-import { useModalControls } from '@common/hooks/useModalControls';
 import './ComplexLookupField.scss';
 
 interface Props {
@@ -49,7 +51,13 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           {!!localValue.length && (
             <div className="complex-lookup-value">
               {localValue?.map(({ id, label }) => (
-                <div key={id} className="complex-lookup-selected pill">
+                <div
+                  key={id}
+                  className={classNames([
+                    'complex-lookup-selected',
+                    IS_EMBEDDED_MODE && 'complex-lookup-selected-embedded',
+                  ])}
+                >
                   <span className="complex-lookup-selected-label">{label}</span>
                   <button onClick={() => handleDelete(id)} className="complex-lookup-selected-delete">
                     <CloseIcon />
@@ -68,7 +76,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             onClose={closeModal}
             title={layout?.selectTitle?.modal}
             // TODO: update the profile for taking the title from there
-            searchPaneTitle={layout?.selectTitle?.modalControlPane || 'Authorities'} 
+            searchPaneTitle={layout?.selectTitle?.modalControlPane || 'Authorities'}
           />
         </div>
       ) : (
