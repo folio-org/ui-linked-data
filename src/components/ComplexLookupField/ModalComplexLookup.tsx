@@ -2,6 +2,7 @@ import { FC, memo, useCallback } from 'react';
 import classNames from 'classnames';
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
@@ -44,11 +45,11 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             defaultSearchBy={'label' as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
-            isVisibleFilters={true}
+            isVisibleFilters={SEARCH_FILTERS_ENABLED}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={false}
-            labelEmptySearch="marva.searchNoComplexLookupsMatch"
+            labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
           />
         </div>
