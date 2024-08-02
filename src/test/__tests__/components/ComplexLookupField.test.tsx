@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('Complex Lookup Field', () => {
   const onChange = jest.fn();
   const uuid = 'test-uuid';

@@ -1,5 +1,7 @@
 import { FC, memo, useCallback } from 'react';
+import classNames from 'classnames';
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
@@ -26,8 +28,11 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         onClose={onClose}
         titleClassName="modal-complex-lookup-title"
         showModalControls={false}
-        className="modal-complex-lookup"
-        classNameHeader="modal-complex-lookup-header"
+        className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
+        classNameHeader={classNames([
+          'modal-complex-lookup-header',
+          IS_EMBEDDED_MODE && 'modal-complex-lookup-header-embedded',
+        ])}
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search

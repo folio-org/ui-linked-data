@@ -31,3 +31,9 @@
   height: 1.375rem;
   border: none;
 }
+
+#app-root {
+  .simple-lookup__multi-value__remove:hover {
+    background-color: rgba(37, 118, 195, 0.2);
+  }
+}
