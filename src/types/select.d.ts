@@ -19,3 +19,8 @@ interface MultiselectOption {
     uri?: Nullable<string>;
   };
 }
+
+type Limiters = Record<
+  SearchLimiterNames | SearchLimiterNamesAuthority,
+  any[] | Suppressed | PublishDate | AuthorityType | SourceType
+>;

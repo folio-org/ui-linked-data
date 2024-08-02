@@ -49,7 +49,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
       {layout ? (
         <div className="complex-lookup">
           {!!localValue.length && (
-            <div className="complex-lookup-value">
+            <div className="complex-lookup-value" data-testid="complex-lookup-value">
               {localValue?.map(({ id, label }) => (
                 <div
                   key={id}
@@ -57,9 +57,17 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
                     'complex-lookup-selected',
                     IS_EMBEDDED_MODE && 'complex-lookup-selected-embedded',
                   ])}
+                  data-testid="complex-lookup-selected"
                 >
-                  <span className="complex-lookup-selected-label">{label}</span>
-                  <button onClick={() => handleDelete(id)} className="complex-lookup-selected-delete">
+                  <span className="complex-lookup-selected-label" data-testid="complex-lookup-selected-label">
+                    {label}
+                  </span>
+                  <button
+                    role="button"
+                    onClick={() => handleDelete(id)}
+                    className="complex-lookup-selected-delete"
+                    data-testid="complex-lookup-selected-delete"
+                  >
                     <CloseIcon />
                   </button>
                 </div>
@@ -67,7 +75,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             </div>
           )}
 
-          <button className="complex-lookup-select-button button-passive" onClick={openModal}>
+          <button role="button" className="complex-lookup-select-button button-passive" onClick={openModal}>
             {localValue?.length ? layout?.selectTitle?.change : layout?.selectTitle?.base}
           </button>
 

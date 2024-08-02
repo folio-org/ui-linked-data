@@ -15,11 +15,13 @@ export const useSearchFilters = () => {
 
   const onChangeLimitersMulti = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
     setLimiters(prev => {
-      const init = prev[name as SearchLimiterNames] as any[];
+      const initialLimiters = prev[name as SearchLimiterNames] as any[];
 
       return {
         ...prev,
-        [name]: init.includes(id) ? init.filter(i => i !== id) : [...init, id],
+        [name]: initialLimiters.includes(id)
+          ? initialLimiters.filter(limiterId => limiterId !== id)
+          : [...initialLimiters, id],
       };
     });
   };

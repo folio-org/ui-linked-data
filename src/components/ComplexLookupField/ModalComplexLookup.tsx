@@ -17,7 +17,7 @@ interface ModalComplexLookupProps {
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onClose, title = '', searchPaneTitle = '' }) => {
-    const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, []);
+    const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, [searchPaneTitle]);
     // TODO: create a component
     const renderResultsList = useCallback(() => <div />, []);
 

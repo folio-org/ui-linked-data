@@ -1,14 +1,4 @@
-import {
-  AuthorityType,
-  DEFAULT_SEARCH_BY,
-  DEFAULT_SEARCH_LIMITERS,
-  PublishDate,
-  SearchIdentifiers,
-  SearchLimiterNames,
-  SearchLimiterNamesAuthority,
-  SourceType,
-  Suppressed,
-} from '@common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, DEFAULT_SEARCH_LIMITERS, SearchIdentifiers } from '@common/constants/search.constants';
 import { atom } from 'recoil';
 
 const query = atom<string>({
@@ -31,12 +21,7 @@ const data = atom<null | WorkAsSearchResultDTO[]>({
   default: null,
 });
 
-const limiters = atom<
-  Record<
-    SearchLimiterNames | SearchLimiterNamesAuthority,
-    any[] | Suppressed | PublishDate | AuthorityType | SourceType
-  >
->({
+const limiters = atom<Limiters>({
   key: 'search.limiters',
   default: DEFAULT_SEARCH_LIMITERS,
 });
