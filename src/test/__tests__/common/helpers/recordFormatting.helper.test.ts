@@ -174,6 +174,38 @@ describe('recordFormatting', () => {
       expect(result).toEqual(testResult);
     });
 
+    test('returns an updated records list withhout "roles" subfield', () => {
+      const record = {
+        testWorkUri: {
+          testCreatorUri: [
+            {
+              creatorNameBF2Uri: [
+                {
+                  id: ['testId_1'],
+                  label: 'subfield value 1',
+                },
+              ],
+            },
+          ],
+          testFieldUri_1: ['field value'],
+        },
+      } as unknown as RecordValue;
+      const testResult = {
+        testWorkUri: {
+          _creatorReference: [
+            {
+              id: 'testId_1',
+            },
+          ],
+          testFieldUri_1: ['field value'],
+        },
+      };
+
+      const result = RecordFormattingHelper.updateRecordWithRelationshipDesignator(record, fieldUris);
+
+      expect(result).toEqual(testResult);
+    });
+
     test('returns an entire records list', () => {
       const record = {
         testFieldUri_1: ['testValue'],

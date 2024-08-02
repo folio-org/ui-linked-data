@@ -97,12 +97,6 @@ export const updateRecordWithRelationshipDesignator = (
     const nonBFMappedContainer = NON_BF_RECORD_ELEMENTS[fieldName]?.container;
 
     recordFields.forEach(field => {
-      const fieldKeys = Object.keys(field);
-      const hasRoles =
-        (nonBFMappedContainer && fieldKeys.includes(nonBFMappedContainer)) || fieldKeys.includes(BF2_URIS.ROLE);
-
-      if (!hasRoles) return;
-
       const roles = field[nonBFMappedContainer] || field[BF2_URIS.ROLE];
       const id = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
 
@@ -112,10 +106,15 @@ export const updateRecordWithRelationshipDesignator = (
         string,
         string | string[]
       >[];
+      const updatedElem: { id: string; roles?: unknown } = { id };
+
+      if (roles) {
+        updatedElem.roles = roles;
+      }
 
       workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] = existingData
-        ? [...existingData, { id, roles }]
-        : [{ id, roles }];
+        ? [...existingData, updatedElem]
+        : [updatedElem];
 
       delete workComponent[fieldName];
     });
