@@ -55,7 +55,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     <div className="search-pane">
       <div className="search-pane-header">
         <strong className="search-pane-header-title">
-          <FormattedMessage id="marva.searchAndFilter" />
+          <FormattedMessage id="marva.search" />
         </strong>
         <CaretDown className="header-caret" />
       </div>
