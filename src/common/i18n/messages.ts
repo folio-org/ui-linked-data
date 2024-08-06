@@ -38,6 +38,7 @@ export const BASE_LOCALE = {
   'marva.pubDateShort': 'Pub Date',
   'marva.edition': 'Edition',
   'marva.select': 'Select',
+  'marva.subclass': 'Subclass',
   'marva.selectForEditing': 'Select a resource description for editing',
   'marva.startFromScratch': 'Start from scratch',
   'marva.selectOrStartFromScratch': '{select} or {startFromScratch}',

@@ -5,9 +5,11 @@
     height: 100%;
     max-height: 90vh;
     min-width: 75vw;
+    max-width: 75vw;
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     .modal-header {
       &.modal-complex-lookup-header {
@@ -46,12 +48,60 @@
         font-size: 1rem;
       }
     }
+
+    .search-control-pane {
+      min-height: 2.75rem;
+    }
+
+    .item-search-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: auto;
+
+      &-container {
+        padding: 0;
+      }
+
+      .search-result {
+        &-list {
+          min-width: 100%;
+          overflow-x: auto;
+        }
+
+        &-cell-content {
+          * {
+            height: auto;
+            text-align: left;
+          }
+        }
+
+        .button-link {
+          height: 100%;
+        }
+      }
+
+      .table-header-contents-wrapper,
+      td {
+        padding: 5px 10px;
+      }
+    }
   }
 
   .complex-lookup-search {
     &-contents {
       height: 100%;
       flex: 1;
+      overflow: hidden;
+
+      .item-search {
+        overflow: hidden;
+
+        &-content {
+          max-width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     &-empty {

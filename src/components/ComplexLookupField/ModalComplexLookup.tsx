@@ -7,6 +7,7 @@ import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { filters } from './data/filters';
+import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
 
 interface ModalComplexLookupProps {
@@ -19,8 +20,7 @@ interface ModalComplexLookupProps {
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onClose, title = '', searchPaneTitle = '' }) => {
     const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, [searchPaneTitle]);
-    // TODO: create a component
-    const renderResultsList = useCallback(() => <div />, []);
+    const renderResultsList = useCallback(() => <ComplexLookupSearchResults />, []);
 
     return (
       <Modal
