@@ -43,8 +43,10 @@
       // TODO: dynmically calculate header and footer heights
       max-height: calc(100vh - 118px);
 
+      .search-result-list,
       .search-pane-header-title,
-      .search-control-pane-mainLabel {
+      .search-control-pane-mainLabel,
+      .button {
         font-size: 1rem;
       }
     }
@@ -67,9 +69,15 @@
         &-list {
           min-width: 100%;
           overflow-x: auto;
+          font-size: 0.875rem;
 
-          th {
-            background-color: transparent;
+          .button {
+            font-size: 0.875rem;
+
+            &-link {
+              font-weight: 400;
+              text-decoration: underline;
+            }
           }
         }
 
@@ -82,6 +90,32 @@
 
         .button-link {
           height: 100%;
+        }
+      }
+
+      .results-list {
+        table-layout: fixed;
+
+        th {
+          background-color: transparent;
+        }
+
+        .cell {
+          &-relative {
+            &-20 {
+              width: 20%;
+            }
+
+            &-45 {
+              width: 45%;
+            }
+          }
+
+          &-fixed {
+            &-105 {
+              width: 105px;
+            }
+          }
         }
       }
 

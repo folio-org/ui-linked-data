@@ -135,6 +135,7 @@ export const BASE_LOCALE = {
   'marva.conference': 'Conference',
   'marva.authorized': 'Authorized',
   'marva.unauthorized': 'Unauthorized',
+  'marva.assign': 'Assign'
 };
 
 export const i18nMessages = {

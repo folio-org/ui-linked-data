@@ -4,11 +4,13 @@ import { Row, Table } from '@components/Table';
 import state from '@state';
 import { Button, ButtonType } from '@components/Button';
 import { FormattedMessage } from 'react-intl';
+import { FC } from 'react';
 
 const listHeader: Row = {
   heading: {
     label: <FormattedMessage id="marva.heading" />,
     position: 0,
+    className: 'cell-relative-45'
   },
   subclass: {
     label: <FormattedMessage id="marva.subclass" />,
@@ -21,14 +23,20 @@ const listHeader: Row = {
   lccn: {
     label: <FormattedMessage id="marva.lccn" />,
     position: 3,
+    className: 'cell-relative-20'
   },
   assign: {
     label: '',
     position: 4,
+    className: 'cell-fixed-105'
   },
 };
 
-export const ComplexLookupSearchResults = () => {
+type ComplexLookupSearchResultsProps = {
+  onAssign: VoidFunction;
+};
+
+export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
   const data = useRecoilValue(state.search.data);
 
   const applyActionItems = (rows: Row[]): Row[] =>
@@ -46,8 +54,13 @@ export const ComplexLookupSearchResults = () => {
       },
       assign: {
         children: (
-          <Button type={ButtonType.Primary} onClick={() => null}>
-            Assign
+          <Button
+            type={ButtonType.Primary}
+            onClick={() => {
+              onAssign();
+            }}
+          >
+            <FormattedMessage id="marva.assign" />
           </Button>
         ),
       },
