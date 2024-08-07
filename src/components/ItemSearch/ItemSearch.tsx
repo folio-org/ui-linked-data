@@ -33,7 +33,7 @@ export const ItemSearch = () => {
     fetchData,
   } = useSearch();
 
-  useLoadSearchResults(fetchData);
+  useLoadSearchResults(fetchData, currentPageNumber);
 
   return (
     <div data-testid="id-search" className="item-search">
