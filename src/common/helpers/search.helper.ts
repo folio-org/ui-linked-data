@@ -61,16 +61,16 @@ export const formatItemSearchComplexLookupAuthority = (authoritiesList: Authorit
         id,
         key: uuidv4(),
       },
-      title: {
+      heading: {
         label,
-        className: 'title',
+        className: 'heading',
       },
       subclass: {
         label: type,
         className: 'subclass',
       },
       source: {
-        label: 'LCNAF',
+        label: 'LCNAF', // TODO: get a label from the data
         className: 'source',
       },
       lccn: {

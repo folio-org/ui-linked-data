@@ -67,6 +67,10 @@
         &-list {
           min-width: 100%;
           overflow-x: auto;
+
+          th {
+            background-color: transparent;
+          }
         }
 
         &-cell-content {

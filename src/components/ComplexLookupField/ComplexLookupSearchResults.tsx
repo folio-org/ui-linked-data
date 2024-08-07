@@ -6,8 +6,8 @@ import { Button, ButtonType } from '@components/Button';
 import { FormattedMessage } from 'react-intl';
 
 const listHeader: Row = {
-  title: {
-    label: <FormattedMessage id="marva.title" />,
+  heading: {
+    label: <FormattedMessage id="marva.heading" />,
     position: 0,
   },
   subclass: {
@@ -34,12 +34,12 @@ export const ComplexLookupSearchResults = () => {
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => ({
       ...row,
-      title: {
-        ...row.title,
+      heading: {
+        ...row.heading,
         children: (
           <div className="search-result-cell-content">
             <Button type={ButtonType.Link} onClick={() => null}>
-              {row.title.label}
+              {row.heading.label}
             </Button>
           </div>
         ),

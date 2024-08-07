@@ -39,6 +39,7 @@ export const BASE_LOCALE = {
   'marva.edition': 'Edition',
   'marva.select': 'Select',
   'marva.subclass': 'Subclass',
+  'marva.heading': 'Heading',
   'marva.selectForEditing': 'Select a resource description for editing',
   'marva.startFromScratch': 'Start from scratch',
   'marva.selectOrStartFromScratch': '{select} or {startFromScratch}',
