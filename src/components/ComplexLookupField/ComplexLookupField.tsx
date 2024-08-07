@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import CloseIcon from '@src/assets/times-16.svg?react';
+import { Row } from '@components/Table';
 import { Input } from '../Input';
 import { ModalComplexLookup } from './ModalComplexLookup';
 import './ComplexLookupField.scss';
@@ -44,6 +45,10 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setIsModalOpen(false);
   };
 
+  const onAssign = (row: Row) => {
+    return row;
+  };
+
   return (
     <>
       {layout ? (
@@ -82,6 +87,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           <ModalComplexLookup
             isOpen={isModalOpen}
             onClose={closeModal}
+            onAssign={onAssign}
             title={layout?.selectTitle?.modal}
             // TODO: update the profile for taking the title from there
             searchPaneTitle={layout?.selectTitle?.modalControlPane || 'Authorities'}

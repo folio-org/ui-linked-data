@@ -6,21 +6,23 @@ import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
+import { Row } from '@components/Table';
 import { filters } from './data/filters';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
+  onAssign: (row: Row) => void;
   onClose: VoidFunction;
   title?: string;
   searchPaneTitle?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onClose, title = '', searchPaneTitle = '' }) => {
+  ({ isOpen, onAssign, onClose, title = '', searchPaneTitle = '' }) => {
     const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, [searchPaneTitle]);
-    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onClose} />, []);
+    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, []);
 
     return (
       <Modal
@@ -48,7 +50,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleFilters={SEARCH_FILTERS_ENABLED}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
-            isVisibleSearchByControl={false}
+            isVisibleSearchByControl={true}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
           />

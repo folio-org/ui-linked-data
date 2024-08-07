@@ -7,10 +7,10 @@ import { FormattedMessage } from 'react-intl';
 import { FC } from 'react';
 
 const listHeader: Row = {
-  heading: {
+  title: {
     label: <FormattedMessage id="marva.heading" />,
     position: 0,
-    className: 'cell-relative-45'
+    className: 'cell-relative-45',
   },
   subclass: {
     label: <FormattedMessage id="marva.subclass" />,
@@ -23,17 +23,17 @@ const listHeader: Row = {
   lccn: {
     label: <FormattedMessage id="marva.lccn" />,
     position: 3,
-    className: 'cell-relative-20'
+    className: 'cell-relative-20',
   },
   assign: {
     label: '',
     position: 4,
-    className: 'cell-fixed-105'
+    className: 'cell-fixed-100',
   },
 };
 
 type ComplexLookupSearchResultsProps = {
-  onAssign: VoidFunction;
+  onAssign: (row: Row) => void;
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
@@ -42,12 +42,12 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => ({
       ...row,
-      heading: {
-        ...row.heading,
+      title: {
+        ...row.title,
         children: (
           <div className="search-result-cell-content">
             <Button type={ButtonType.Link} onClick={() => null}>
-              {row.heading.label}
+              {row.title.label}
             </Button>
           </div>
         ),
@@ -57,7 +57,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
           <Button
             type={ButtonType.Primary}
             onClick={() => {
-              onAssign();
+              onAssign(row);
             }}
           >
             <FormattedMessage id="marva.assign" />
