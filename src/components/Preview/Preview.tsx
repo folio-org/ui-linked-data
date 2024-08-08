@@ -57,6 +57,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
   const schemaFromState = useRecoilValue(state.config.schema);
+  const isEdited = useRecoilValue(state.status.recordIsEdited);
   const initialSchemaKeyFromState = useRecoilValue(state.config.initialSchemaKey);
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
@@ -67,7 +68,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const { navigateToEditPage } = useNavigateToEditPage();
 
     const handleNavigateToEditPage = () => {
-      setRecordStatus({ type: RecordStatus.close });
+      setRecordStatus({ type: isEdited ? RecordStatus.saveAndClose : RecordStatus.close });
 
       const typedSelectedBlock = BFLITE_BFID_TO_BLOCK[bfid as keyof typeof BFLITE_BFID_TO_BLOCK];
       const id = getRecordId(record, typedSelectedBlock.reference.uri, typedSelectedBlock.referenceKey);
