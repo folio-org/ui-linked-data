@@ -49,6 +49,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setIsModalOpen(false);
   }, []);
 
+  // TODO: Implement the function to assign the value for Complex lookup subfield and for the linked subfield
   const onAssign = useCallback((row: Row) => {
     return row;
   }, []);

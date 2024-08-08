@@ -65,7 +65,7 @@ export const formatItemSearchComplexLookupAuthority = (authoritiesList: Authorit
       className: 'title',
     },
     subclass: {
-      label: type,
+      label: type, // TODO: add a mapping and use the mapped value
       className: 'subclass',
     },
     lccn: {
