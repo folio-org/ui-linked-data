@@ -61,6 +61,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
+            searchByControlOptions={searchBy}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
           />

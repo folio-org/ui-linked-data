@@ -18,6 +18,7 @@ type SearchParams = {
   isVisibleFullDisplay?: boolean;
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
+  searchByControlOptions?: (string | ComplexLookupSearchBy)[];
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
 };

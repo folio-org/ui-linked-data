@@ -11,6 +11,7 @@ export const SearchContext = createContext<SearchParams>({
   isVisibleFullDisplay: true,
   isVisibleAdvancedSearch: true,
   isVisibleSearchByControl: true,
+  searchByControlOptions: undefined,
   labelEmptySearch: '',
   classNameEmptyPlaceholder: '',
   filters: [],

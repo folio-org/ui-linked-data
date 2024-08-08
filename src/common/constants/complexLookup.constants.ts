@@ -16,7 +16,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
     // For displaying "Search by" control
     searchBy: [
       {
-        label: 'marva.keyword',
+        label: 'keyword',
         value: 'label',
       },
     ],
