@@ -39,18 +39,6 @@
       text-align: center;
     }
 
-    &-embedded {
-      // TODO: dynmically calculate header and footer heights
-      max-height: calc(100vh - 118px);
-
-      .search-result-list,
-      .search-pane-header-title,
-      .search-control-pane-mainLabel,
-      .button {
-        font-size: 1rem;
-      }
-    }
-
     .search-control-pane {
       min-height: 2.75rem;
     }
@@ -104,6 +92,27 @@
       .table-header-contents-wrapper,
       td {
         padding: 5px 10px;
+      }
+    }
+
+    &-embedded {
+      // TODO: dynmically calculate header and footer heights
+      max-height: calc(100vh - 118px);
+
+      .complex-lookup-search-contents {
+        .search-result-list,
+        .search-pane-header-title,
+        .search-control-pane-mainLabel,
+        .search-result-list .button,
+        .select-input {
+          font-size: 1rem;
+        }
+
+        .select-input {
+          padding-top: 0;
+          padding-bottom: 0;
+          line-height: 1.5rem;
+        }
       }
     }
   }
