@@ -1,8 +1,10 @@
 import { FC, memo, useCallback } from 'react';
 import classNames from 'classnames';
+import { FormattedMessage } from 'react-intl';
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
+import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
@@ -15,19 +17,27 @@ interface ModalComplexLookupProps {
   isOpen: boolean;
   onAssign: (row: Row) => void;
   onClose: VoidFunction;
-  title?: string;
-  searchPaneTitle?: string;
+  apiEndpoint?: string;
+  group?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, title = '', searchPaneTitle = '' }) => {
-    const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, [searchPaneTitle]);
-    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, []);
+  ({ isOpen, onAssign, onClose, apiEndpoint = 'authorities', group = 'creator' }) => {
+    const { labels, customFields, searchBy, searchQuery } = COMPLEX_LOOKUPS_CONFIG[apiEndpoint];
+
+    const renderSearchControlPane = useCallback(
+      () => <SearchControlPane label={<FormattedMessage id={labels.modal.searchResults} />} />,
+      [labels.modal.searchResults],
+    );
+    const renderResultsList = useCallback(
+      () => <ComplexLookupSearchResults sourceLabel={customFields.source.label} onAssign={onAssign} />,
+      [customFields.source.label, onAssign],
+    );
 
     return (
       <Modal
         isOpen={isOpen}
-        title={title}
+        title={<FormattedMessage id={labels.modal.title[group]} />}
         onClose={onClose}
         titleClassName="modal-complex-lookup-title"
         showModalControls={false}
@@ -39,12 +49,12 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
-            // TODO: Extend the profile with the endpoint and use it here
-            endpointUrl={`${SEARCH_API_ENDPOINT}/authorities`}
+            endpointUrl={`${SEARCH_API_ENDPOINT}/${apiEndpoint}`}
+            searchFilter={searchQuery.filter}
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultSearchBy={'label' as SearchIdentifiers}
+            defaultSearchBy={searchBy[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
             isVisibleFilters={SEARCH_FILTERS_ENABLED}

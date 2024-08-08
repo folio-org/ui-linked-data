@@ -1,10 +1,10 @@
+import { FC, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+import { FormattedMessage } from 'react-intl';
 import { formatItemSearchComplexLookupAuthority } from '@common/helpers/search.helper';
 import { Row, Table } from '@components/Table';
-import state from '@state';
 import { Button, ButtonType } from '@components/Button';
-import { FormattedMessage } from 'react-intl';
-import { FC } from 'react';
+import state from '@state';
 
 const listHeader: Row = {
   title: {
@@ -33,40 +33,50 @@ const listHeader: Row = {
 };
 
 type ComplexLookupSearchResultsProps = {
+  sourceLabel: string;
   onAssign: (row: Row) => void;
 };
 
-export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
+export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ sourceLabel, onAssign }) => {
   const data = useRecoilValue(state.search.data);
 
-  const applyActionItems = (rows: Row[]): Row[] =>
-    rows.map(row => ({
-      ...row,
-      title: {
-        ...row.title,
-        children: (
-          <div className="search-result-cell-content">
-            <Button type={ButtonType.Link} onClick={() => null}>
-              {row.title.label}
+  const applyActionItems = useCallback(
+    (rows: Row[]): Row[] =>
+      rows.map(row => ({
+        ...row,
+        title: {
+          ...row.title,
+          children: (
+            <div className="search-result-cell-content">
+              <Button type={ButtonType.Link} onClick={() => null}>
+                {row.title.label}
+              </Button>
+            </div>
+          ),
+        },
+        source: {
+          children: <FormattedMessage id={sourceLabel} />,
+        },
+        assign: {
+          children: (
+            <Button
+              type={ButtonType.Primary}
+              onClick={() => {
+                onAssign(row);
+              }}
+            >
+              <FormattedMessage id="marva.assign" />
             </Button>
-          </div>
-        ),
-      },
-      assign: {
-        children: (
-          <Button
-            type={ButtonType.Primary}
-            onClick={() => {
-              onAssign(row);
-            }}
-          >
-            <FormattedMessage id="marva.assign" />
-          </Button>
-        ),
-      },
-    }));
+          ),
+        },
+      })),
+    [onAssign, sourceLabel],
+  );
 
-  const formattedData = applyActionItems(formatItemSearchComplexLookupAuthority(data || []));
+  const formattedData = useMemo(
+    () => applyActionItems(formatItemSearchComplexLookupAuthority(data || [])),
+    [applyActionItems, data],
+  );
 
   return (
     <div className="search-result-list">

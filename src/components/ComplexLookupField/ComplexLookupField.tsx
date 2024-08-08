@@ -1,10 +1,12 @@
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import { Row } from '@components/Table';
-import { Input } from '../Input';
+import { Input } from '@components/Input';
 import { ModalComplexLookup } from './ModalComplexLookup';
 import './ComplexLookupField.scss';
 
@@ -22,9 +24,11 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { layout } = entry;
+  // TODO: change the profile and entry and take the API endpoint from there
+  const lookupConfig = COMPLEX_LOOKUPS_CONFIG['authorities'];
+  const buttonLabelIds = lookupConfig.labels.button;
 
-  // TODO: should open a modal with current input value and search data using it
-  const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
       label: value,
       meta: {
@@ -41,13 +45,15 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setLocalValue(prevValue => prevValue.filter(({ id: prevId }) => prevId !== id));
   };
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
-  };
+  }, []);
 
-  const onAssign = (row: Row) => {
+  const onAssign = useCallback((row: Row) => {
     return row;
-  };
+  }, []);
+
+  const selectButtonLabel = <FormattedMessage id={localValue?.length ? buttonLabelIds.change : buttonLabelIds.base} />;
 
   return (
     <>
@@ -81,21 +87,20 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           )}
 
           <button role="button" className="complex-lookup-select-button button-passive" onClick={openModal}>
-            {localValue?.length ? layout?.selectTitle?.change : layout?.selectTitle?.base}
+            {selectButtonLabel}
           </button>
 
           <ModalComplexLookup
             isOpen={isModalOpen}
             onClose={closeModal}
             onAssign={onAssign}
-            title={layout?.selectTitle?.modal}
-            // TODO: update the profile for taking the title from there
-            searchPaneTitle={layout?.selectTitle?.modalControlPane || 'Authorities'}
+            apiEndpoint="authorities" // TODO: define value in the profile and pass it through the entry
+            group="creator" // TODO: define value in the profile and pass it through the entry
           />
         </div>
       ) : (
         <Input
-          onChange={handleOnChange}
+          onChange={handleOnChangeBase}
           value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
           disabled={true}
           data-testid="complex-lookup-input"

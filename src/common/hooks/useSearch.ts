@@ -13,7 +13,7 @@ import state from '@state';
 import { usePagination } from './usePagination';
 
 export const useSearch = () => {
-  const { endpointUrl, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
+  const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
@@ -71,6 +71,7 @@ export const useSearch = () => {
       try {
         const result = await getByIdentifier({
           endpointUrl,
+          searchFilter,
           isSortedResults,
           searchBy,
           query: updatedQuery as string,
@@ -92,7 +93,7 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, isSortedResults],
+    [data, endpointUrl, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {

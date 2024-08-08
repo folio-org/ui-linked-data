@@ -68,10 +68,6 @@ export const formatItemSearchComplexLookupAuthority = (authoritiesList: Authorit
       label: type,
       className: 'subclass',
     },
-    source: {
-      label: 'LCNAF', // TODO: get a label from the data
-      className: 'source',
-    },
     lccn: {
       label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
       className: 'identifier',

@@ -3,6 +3,7 @@ import { createContext } from 'react';
 
 export const SearchContext = createContext<SearchParams>({
   endpointUrl: '',
+  searchFilter: '',
   hasSearchParams: true,
   defaultSearchBy: SearchIdentifiers.LCCN,
   isSortedResults: true,
