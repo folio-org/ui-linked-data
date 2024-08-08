@@ -99,25 +99,6 @@
         th {
           background-color: transparent;
         }
-
-        .cell {
-          &-relative {
-            &-20 {
-              width: 20%;
-            }
-
-            &-45 {
-              width: 45%;
-            }
-          }
-
-          &-fixed {
-            &-100 {
-              width: 100px;
-              justify-content: center;
-            }
-          }
-        }
       }
 
       .table-header-contents-wrapper,
