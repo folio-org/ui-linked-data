@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import classNames from 'classnames';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import './SearchControlPane.scss';
 
 type SearchControlPaneProps = {
@@ -9,7 +11,7 @@ type SearchControlPaneProps = {
 
 export const SearchControlPane: FC<SearchControlPaneProps> = ({ children, label, subLabel }) => {
   return (
-    <div className="search-control-pane">
+    <div className={classNames(['search-control-pane', IS_EMBEDDED_MODE && 'search-control-pane-embedded'])}>
       <div className="search-control-pane-title">
         <div className="search-control-pane-mainLabel">{label}</div>
         {subLabel && <div className="search-control-pane-subLabel">{subLabel}</div>}

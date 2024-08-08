@@ -19,19 +19,13 @@ export const useSearch = () => {
   const [query, setQuery] = useRecoilState(state.search.query);
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
+  const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
 
-  const {
-    getPageMetadata,
-    setPageMetadata,
-    getCurrentPageNumber,
-    setCurrentPageNumber,
-    onPrevPageClick,
-    onNextPageClick,
-  } = usePagination(DEFAULT_PAGES_METADATA, hasSearchParams);
+  const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
+    usePagination(hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
-  const pageMetadata = getPageMetadata();
   const setSearchParams = useSearchParams()?.[1];
 
   const clearPagination = useCallback(() => {

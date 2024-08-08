@@ -13,7 +13,6 @@ describe('usePagination', () => {
 
   function testOnPageClick({
     functionName,
-    pageMetadata,
     hasSearchParams,
     defaultPageNumber,
     testResult,
@@ -24,7 +23,7 @@ describe('usePagination', () => {
     defaultPageNumber: number;
     testResult: number;
   }) {
-    const { result }: any = renderHook(() => usePagination(pageMetadata, hasSearchParams, defaultPageNumber));
+    const { result }: any = renderHook(() => usePagination(hasSearchParams, defaultPageNumber));
 
     act(() => {
       result.current[functionName]?.();

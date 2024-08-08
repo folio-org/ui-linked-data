@@ -1,4 +1,5 @@
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
@@ -12,6 +13,7 @@ import { Row } from '@components/Table';
 import { filters } from './data/filters';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
+import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -24,10 +26,28 @@ interface ModalComplexLookupProps {
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, apiEndpoint = 'authorities', group = 'creator' }) => {
     const { labels, customFields, searchBy, searchQuery } = COMPLEX_LOOKUPS_CONFIG[apiEndpoint];
+    const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const searchControlsSubLabel = useMemo(
+      () =>
+        searchResultsMetadata?.totalElements ? (
+          <FormattedMessage
+            id={'marva.recordsFound'}
+            values={{
+              recordsCount: <span data-testid="records-found-count">{searchResultsMetadata?.totalElements}</span>,
+            }}
+          />
+        ) : undefined,
+      [searchResultsMetadata?.totalElements],
+    );
 
     const renderSearchControlPane = useCallback(
-      () => <SearchControlPane label={<FormattedMessage id={labels.modal.searchResults} />} />,
-      [labels.modal.searchResults],
+      () => (
+        <SearchControlPane
+          label={<FormattedMessage id={labels.modal.searchResults} />}
+          subLabel={searchControlsSubLabel}
+        />
+      ),
+      [labels.modal.searchResults, searchControlsSubLabel],
     );
     const renderResultsList = useCallback(
       () => <ComplexLookupSearchResults sourceLabel={customFields.source.label} onAssign={onAssign} />,

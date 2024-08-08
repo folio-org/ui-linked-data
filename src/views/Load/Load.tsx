@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { getAllRecords } from '@common/api/records.api';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { formatRecordsListData } from '@common/helpers/recordsList.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { DEFAULT_PAGES_METADATA, MAX_LIMIT } from '@common/constants/api.constants';
+import { MAX_LIMIT } from '@common/constants/api.constants';
 import { Pagination } from '@components/Pagination';
 import { Row, Table } from '@components/Table';
 import state from '@state';
@@ -56,10 +56,9 @@ export const Load = () => {
   const [availableRecords, setAvailableRecords] = useState<AvailableRecords>(null);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const { getPageMetadata, setPageMetadata, getCurrentPageNumber, onPrevPageClick, onNextPageClick } =
-    usePagination(DEFAULT_PAGES_METADATA);
+  const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
+  const { getCurrentPageNumber, onPrevPageClick, onNextPageClick } = usePagination();
   const currentPageNumber = getCurrentPageNumber();
-  const pageMetadata = getPageMetadata();
 
   useEffect(() => {
     async function loadRecords() {
