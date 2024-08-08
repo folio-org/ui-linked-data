@@ -95,7 +95,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             isOpen={isModalOpen}
             onClose={closeModal}
             onAssign={onAssign}
-            apiEndpoint="authorities" // TODO: define value in the profile and pass it through the entry
+            assignEntityName="authorities" // TODO: define value in the profile and pass it through the entry
             group="creator" // TODO: define value in the profile and pass it through the entry
           />
         </div>

@@ -2,7 +2,6 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
@@ -19,13 +18,13 @@ interface ModalComplexLookupProps {
   isOpen: boolean;
   onAssign: (row: Row) => void;
   onClose: VoidFunction;
-  apiEndpoint?: string;
+  assignEntityName?: string;
   group?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, apiEndpoint = 'authorities', group = 'creator' }) => {
-    const { labels, customFields, searchBy, searchQuery } = COMPLEX_LOOKUPS_CONFIG[apiEndpoint];
+  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', group = 'creator' }) => {
+    const { api, labels, customFields, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const searchControlsSubLabel = useMemo(
       () =>
@@ -69,8 +68,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
-            endpointUrl={`${SEARCH_API_ENDPOINT}/${apiEndpoint}`}
-            searchFilter={searchQuery.filter}
+            endpointUrl={api.endpoint}
+            searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}

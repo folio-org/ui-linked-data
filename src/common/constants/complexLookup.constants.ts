@@ -1,5 +1,13 @@
+import { SEARCH_API_ENDPOINT } from './api.constants';
+
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   authorities: {
+    api: {
+      endpoint: `${SEARCH_API_ENDPOINT}/authorities`,
+      searchQuery: {
+        filter: '(type <> "CONCEPT")',
+      },
+    },
     labels: {
       button: {
         base: 'marva.assignAuthority',
@@ -25,9 +33,6 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       source: {
         label: 'marva.lcnaf',
       },
-    },
-    searchQuery: {
-      filter: '(type <> "CONCEPT")',
     },
   },
 };
