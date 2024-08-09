@@ -138,7 +138,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
               'value-heading': !isGroupable,
             })}
           >
-            {isEntity && <Lightbulb16 />}
+            {isEntity && !isInstance && <Lightbulb16 />}
             {displayNameWithAltValue}
             {showEntityActions && !isInstance && (
               <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={handleNavigateToEditPage}>
