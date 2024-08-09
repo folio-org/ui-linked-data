@@ -24,7 +24,7 @@ interface ModalComplexLookupProps {
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', group = 'creator' }) => {
-    const { api, labels, customFields, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const { api, labels, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const searchControlsSubLabel = useMemo(
       () =>
@@ -48,10 +48,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       ),
       [labels.modal.searchResults, searchControlsSubLabel],
     );
-    const renderResultsList = useCallback(
-      () => <ComplexLookupSearchResults sourceLabel={customFields.source.label} onAssign={onAssign} />,
-      [customFields.source.label, onAssign],
-    );
+    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
 
     return (
       <Modal

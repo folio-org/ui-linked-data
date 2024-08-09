@@ -16,10 +16,11 @@ const listHeader: Row = {
     label: <FormattedMessage id="marva.subclass" />,
     position: 1,
   },
-  source: {
+  // TODO: under discussion
+  /* source: {
     label: <FormattedMessage id="marva.source" />,
     position: 2,
-  },
+  }, */
   lccn: {
     label: <FormattedMessage id="marva.lccn" />,
     position: 3,
@@ -33,11 +34,12 @@ const listHeader: Row = {
 };
 
 type ComplexLookupSearchResultsProps = {
-  sourceLabel: string;
+  // TODO: under discussion
+  // sourceLabel: string;
   onAssign: (row: Row) => void;
 };
 
-export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ sourceLabel, onAssign }) => {
+export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
   const data = useRecoilValue(state.search.data);
 
   const applyActionItems = useCallback(
@@ -54,9 +56,10 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
             </div>
           ),
         },
-        source: {
+        // TODO: discuss which value this field should have or remove it at all
+        /* source: {
           children: <FormattedMessage id={sourceLabel} />,
-        },
+        }, */
         assign: {
           children: (
             <Button
@@ -70,7 +73,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
           ),
         },
       })),
-    [onAssign, sourceLabel],
+    [onAssign],
   );
 
   const formattedData = useMemo(

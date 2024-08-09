@@ -29,10 +29,11 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
     ],
     linkedFields: ['subclass'],
-    customFields: {
-      source: {
-        label: 'marva.lcnaf',
-      },
-    },
+    // TODO: discuss if this value should be hardcoded
+    // customFields: {
+    //   source: {
+    //     label: 'marva.lcnaf',
+    //   },
+    // },
   },
 };

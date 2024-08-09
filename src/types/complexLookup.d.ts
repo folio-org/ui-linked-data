@@ -22,7 +22,8 @@ type ComplexLookupsConfigEntry = {
   labels: ComplexLookupLabels;
   linkedFields?: string[];
   searchBy: ComplexLookupSearchBy[];
-  customFields: Record<string, { label: string }>;
+  // TODO: under discussion
+  // customFields: Record<string, { label: string }>;
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
