@@ -8,30 +8,24 @@ import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 import { usePagination } from './usePagination';
 
 export const useSearch = () => {
-  const { endpointUrl, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
+  const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
+  const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
 
-  const {
-    getPageMetadata,
-    setPageMetadata,
-    getCurrentPageNumber,
-    setCurrentPageNumber,
-    onPrevPageClick,
-    onNextPageClick,
-  } = usePagination(DEFAULT_PAGES_METADATA, hasSearchParams);
+  const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
+    usePagination(hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
-  const pageMetadata = getPageMetadata();
   const setSearchParams = useSearchParams()?.[1];
 
   const clearPagination = useCallback(() => {
@@ -71,6 +65,7 @@ export const useSearch = () => {
       try {
         const result = await getByIdentifier({
           endpointUrl,
+          searchFilter,
           isSortedResults,
           searchBy,
           query: updatedQuery as string,
@@ -92,7 +87,7 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, isSortedResults],
+    [data, endpointUrl, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {

@@ -10,7 +10,7 @@ import './Modal.scss';
 
 interface Props {
   isOpen: boolean;
-  title: string;
+  title: string | ReactElement;
   className?: string;
   classNameHeader?: string;
   submitButtonDisabled?: boolean;

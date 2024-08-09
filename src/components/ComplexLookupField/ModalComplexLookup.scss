@@ -5,9 +5,11 @@
     height: 100%;
     max-height: 90vh;
     min-width: 75vw;
+    max-width: 75vw;
     padding: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     .modal-header {
       &.modal-complex-lookup-header {
@@ -37,13 +39,80 @@
       text-align: center;
     }
 
+    .search-control-pane {
+      min-height: 2.75rem;
+    }
+
+    .item-search-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-width: auto;
+
+      &-container {
+        padding: 0;
+      }
+
+      .search-result {
+        &-list {
+          min-width: 100%;
+          overflow-x: auto;
+          font-size: 0.875rem;
+
+          .button {
+            font-size: 0.875rem;
+
+            &-link {
+              font-weight: 400;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        &-cell-content {
+          * {
+            height: auto;
+            text-align: left;
+          }
+        }
+
+        .button-link {
+          height: 100%;
+        }
+      }
+
+      .results-list {
+        table-layout: fixed;
+
+        th {
+          background-color: transparent;
+        }
+      }
+
+      .table-header-contents-wrapper,
+      td {
+        padding: 5px 10px;
+      }
+    }
+
     &-embedded {
       // TODO: dynmically calculate header and footer heights
       max-height: calc(100vh - 118px);
 
-      .search-pane-header-title,
-      .search-control-pane-mainLabel {
-        font-size: 1rem;
+      .complex-lookup-search-contents {
+        .search-result-list,
+        .search-pane-header-title,
+        .search-control-pane-mainLabel,
+        .search-result-list .button,
+        .select-input {
+          font-size: 1rem;
+        }
+
+        .select-input {
+          padding-top: 0;
+          padding-bottom: 0;
+          line-height: 1.5rem;
+        }
       }
     }
   }
@@ -52,6 +121,16 @@
     &-contents {
       height: 100%;
       flex: 1;
+      overflow: hidden;
+
+      .item-search {
+        overflow: hidden;
+
+        &-content {
+          max-width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     &-empty {

@@ -4,11 +4,12 @@ import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getPageMetadata, getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
+import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
+import state from '@state'; 
 
 let getByIdentifierMock: jest.SpyInstance<
   Promise<any>,
@@ -127,13 +128,14 @@ describe('Item Search', () => {
     getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as any).mockImplementation(() =>
       Promise.resolve(null),
     );
-    getPageMetadata.mockReturnValue({ totalElements: 2, totalPages: 1 });
     getCurrentPageNumber.mockReturnValue(1);
 
     window.history.pushState({}, '', '/');
 
     render(
-      <RecoilRoot>
+      <RecoilRoot
+        initializeState={snapshot => snapshot.set(state.search.pageMetadata, { totalElements: 2, totalPages: 1 })}
+      >
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<ItemSearch />} />
@@ -169,6 +171,7 @@ describe('Item Search', () => {
         searchBy: id,
         endpointUrl: '',
         isSortedResults: true,
+        searchFilter: '',
       });
     });
   });

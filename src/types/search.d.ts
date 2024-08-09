@@ -7,6 +7,7 @@ type SearchParamsState = {
 
 type SearchParams = {
   endpointUrl: string;
+  searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
   filters: SearchFilters;
@@ -17,6 +18,7 @@ type SearchParams = {
   isVisibleFullDisplay?: boolean;
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
+  searchByControlOptions?: (string | ComplexLookupSearchBy)[];
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
 };

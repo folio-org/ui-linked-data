@@ -1,31 +1,59 @@
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
-import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
+import { FormattedMessage } from 'react-intl';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
+import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
+import { Row } from '@components/Table';
 import { filters } from './data/filters';
+import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
+import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
+  onAssign: (row: Row) => void;
   onClose: VoidFunction;
-  title?: string;
-  searchPaneTitle?: string;
+  assignEntityName?: string;
+  group?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onClose, title = '', searchPaneTitle = '' }) => {
-    const renderSearchControlPane = useCallback(() => <SearchControlPane label={searchPaneTitle} />, [searchPaneTitle]);
-    // TODO: create a component
-    const renderResultsList = useCallback(() => <div />, []);
+  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', group = 'creator' }) => {
+    const { api, labels, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const searchControlsSubLabel = useMemo(
+      () =>
+        searchResultsMetadata?.totalElements ? (
+          <FormattedMessage
+            id={'marva.recordsFound'}
+            values={{
+              recordsCount: <span data-testid="records-found-count">{searchResultsMetadata?.totalElements}</span>,
+            }}
+          />
+        ) : undefined,
+      [searchResultsMetadata?.totalElements],
+    );
+
+    const renderSearchControlPane = useCallback(
+      () => (
+        <SearchControlPane
+          label={<FormattedMessage id={labels.modal.searchResults} />}
+          subLabel={searchControlsSubLabel}
+        />
+      ),
+      [labels.modal.searchResults, searchControlsSubLabel],
+    );
+    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
 
     return (
       <Modal
         isOpen={isOpen}
-        title={title}
+        title={<FormattedMessage id={labels.modal.title[group]} />}
         onClose={onClose}
         titleClassName="modal-complex-lookup-title"
         showModalControls={false}
@@ -37,18 +65,19 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
-            // TODO: Extend the profile with the endpoint and use it here
-            endpointUrl={`${SEARCH_API_ENDPOINT}/authorities`}
+            endpointUrl={api.endpoint}
+            searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultSearchBy={'label' as SearchIdentifiers}
+            defaultSearchBy={searchBy[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
             isVisibleFilters={SEARCH_FILTERS_ENABLED}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
-            isVisibleSearchByControl={false}
+            isVisibleSearchByControl={true}
+            searchByControlOptions={searchBy}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
           />

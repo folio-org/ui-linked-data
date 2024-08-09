@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { SearchFilters } from '@components/SearchFilters';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import {
   FiltersGroupCheckType,
   FiltersType,

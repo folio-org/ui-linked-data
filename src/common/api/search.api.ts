@@ -8,6 +8,7 @@ export type ItemSearchResponse = {
 
 export type GetByIdentifier = {
   endpointUrl: string;
+  searchFilter?: string;
   isSortedResults?: boolean;
   searchBy?: string;
   query: string;
@@ -17,6 +18,7 @@ export type GetByIdentifier = {
 
 export const getByIdentifier = async ({
   endpointUrl,
+  searchFilter,
   isSortedResults = true,
   searchBy,
   query,
@@ -24,8 +26,9 @@ export const getByIdentifier = async ({
   limit = SEARCH_RESULTS_LIMIT.toString(),
 }: GetByIdentifier) => {
   const sortQuery = isSortedResults ? ' sortby title' : '';
+  const filterQuery = searchFilter ? `and ${searchFilter}` : '';
   const urlParams: Record<string, string> | undefined = {
-    query: searchBy ? `(${searchBy} all "${query}")${sortQuery}` : `${query}${sortQuery}`,
+    query: searchBy ? `(${searchBy} all "${query}")${sortQuery}${filterQuery}` : `${query}${sortQuery}${filterQuery}`,
     offset,
     limit,
   };

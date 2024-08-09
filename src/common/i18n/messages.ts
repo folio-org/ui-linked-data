@@ -31,6 +31,7 @@ export const BASE_LOCALE = {
   'marva.isbnLccn': 'ISBN/LCCN',
   'marva.isbn': 'ISBN',
   'marva.lccn': 'LCCN',
+  'marva.lcnaf': 'LCNAF',
   'marva.title': 'Title', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.contributor': 'Contributor', // TODO: it can be "uppercased" programmatically in SearchTypeSelect.tsx, need to be checked
   'marva.author': 'Author',
@@ -38,6 +39,8 @@ export const BASE_LOCALE = {
   'marva.pubDateShort': 'Pub Date',
   'marva.edition': 'Edition',
   'marva.select': 'Select',
+  'marva.subclass': 'Subclass',
+  'marva.heading': 'Heading',
   'marva.selectForEditing': 'Select a resource description for editing',
   'marva.startFromScratch': 'Start from scratch',
   'marva.selectOrStartFromScratch': '{select} or {startFromScratch}',
@@ -133,6 +136,13 @@ export const BASE_LOCALE = {
   'marva.conference': 'Conference',
   'marva.authorized': 'Authorized',
   'marva.unauthorized': 'Unauthorized',
+  'marva.assign': 'Assign',
+  'marva.assignAuthority': 'Assign authority',
+  'marva.change': 'Change',
+  'marva.searchCreatorAuthority': 'Search creator authority',
+  'marva.authorities': 'Authorities',
+  'marva.keyword': 'Keyword',
+  'marva.recordsFound': '{recordsCount} records found'
 };
 
 export const i18nMessages = {

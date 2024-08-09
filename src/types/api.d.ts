@@ -47,6 +47,13 @@ type WorkAsSearchResultDTO = {
   instances?: InstanceAsSearchResultDTO[];
 };
 
+type AuthorityAsSearchResultDTO = {
+  id: string;
+  label?: string;
+  identifiers?: GenericStructDTO<'ISBN' | 'LCCN'>[];
+  type?: string;
+};
+
 interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }

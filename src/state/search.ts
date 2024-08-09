@@ -36,6 +36,11 @@ const forceRefresh = atom<boolean>({
   default: false,
 });
 
+const pageMetadata = atom<PageMetadata>({
+  key: 'search.pageMetadata',
+  default: { totalElements: 0, totalPages: 0 },
+});
+
 export default {
   query,
   message,
@@ -44,4 +49,5 @@ export default {
   limiters,
   navigationState,
   forceRefresh,
+  pageMetadata,
 };

@@ -15,7 +15,26 @@
 
   &-mainLabel {
     font-size: 0.875rem;
+    line-height: 1.3125rem;
     font-weight: 700;
     color: #000;
+  }
+
+  &-subLabel {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    color: rgba(108, 108, 108, 1);
+  }
+
+  &-embedded {
+    .search-control-pane-mainLabel {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    .search-control-pane-subLabel {
+      font-size: 0.86rem;
+      line-height: 1.43rem;
+    }
   }
 }

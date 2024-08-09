@@ -9,7 +9,7 @@ import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
@@ -21,7 +21,7 @@ type Props = {
 };
 
 export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
-  const { isVisibleSearchByControl, isVisibleAdvancedSearch, isVisibleFilters, hasSearchParams } =
+  const { isVisibleSearchByControl, isVisibleAdvancedSearch, isVisibleFilters, searchByControlOptions, hasSearchParams } =
     useContext(SearchContext);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
@@ -67,7 +67,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
               id="id-search-select"
               className="select-input"
               value={searchBy}
-              options={Object.values(SearchIdentifiers)}
+              options={searchByControlOptions || Object.values(SearchIdentifiers)}
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
             />
           )}

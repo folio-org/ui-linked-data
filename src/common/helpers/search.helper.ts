@@ -54,6 +54,26 @@ export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchR
   // .slice(0, __TEMP_RESULT_MAX_AMOUNT);
 };
 
+export const formatItemSearchComplexLookupAuthority = (authoritiesList: AuthorityAsSearchResultDTO[]): Row[] =>
+  authoritiesList.map(({ id, label, identifiers, type }) => ({
+    __meta: {
+      id,
+      key: uuidv4(),
+    },
+    title: {
+      label,
+      className: 'title',
+    },
+    subclass: {
+      label: type, // TODO: add a mapping and use the mapped value
+      className: 'subclass',
+    },
+    lccn: {
+      label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
+      className: 'identifier',
+    },
+  }));
+
 export const applyQualifierSyntaxToQuery = (query: string, qualifier: AdvancedSearchQualifiers) => {
   const normalizedQuery = normalizeQuery(query);
 

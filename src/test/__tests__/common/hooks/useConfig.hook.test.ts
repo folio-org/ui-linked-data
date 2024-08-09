@@ -1,8 +1,9 @@
+import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { renderHook } from '@testing-library/react';
 import { useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
-import * as SelectedEntriesModule from '@common/services/selectedEntries';
+// import * as SelectedEntriesModule from '@common/services/selectedEntries';
 import * as SchemaService from '@common/services/schema';
 
 const profiles = [
@@ -29,7 +30,6 @@ jest.mock('recoil', () => ({
   useRecoilState: jest.fn(),
   useSetRecoilState: jest.fn(),
 }));
-jest.mock('@common/services/selectedEntries');
 jest.mock('@common/services/schema');
 jest.mock('@common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
@@ -91,7 +91,7 @@ describe('useConfig', () => {
       .mockReturnValueOnce(setPreviewContent)
       .mockReturnValueOnce(setSelectedRecordBlocks);
 
-    (SelectedEntriesModule.SelectedEntriesService as jest.Mock).mockImplementation(() => ({ get: jest.fn() }));
+    // (SelectedEntriesModule.SelectedEntriesService as jest.Mock).mockImplementation(() => ({ get: jest.fn() }));
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 
@@ -103,7 +103,7 @@ describe('useConfig', () => {
       },
     };
 
-    const { result } = renderHook(useConfig);
+    const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
     const preparedFields = result.current.prepareFields(profiles);
 
     expect(setPreparedFields).toHaveBeenCalledWith(testResult);
@@ -116,7 +116,7 @@ describe('useConfig', () => {
     } as RecordEntry;
     (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
-    const { result } = renderHook(useConfig);
+    const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
     const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
 
     expect(setProfiles).toHaveBeenCalledWith(profiles);

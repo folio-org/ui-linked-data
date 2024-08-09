@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 
 type SearchProviderProps = {
   value: SearchParams;

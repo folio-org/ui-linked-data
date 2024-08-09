@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as FeatureConstants from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 
 const setSearchParams = jest.fn();

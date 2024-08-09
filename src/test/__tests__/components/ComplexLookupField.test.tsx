@@ -1,7 +1,12 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 
+const mockModalComponent = <div data-testid="complex-lookup-modal" />;
+
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@components/ComplexLookupField/ModalComplexLookup', () => ({
+  ModalComplexLookup: () => mockModalComponent,
+}));
 
 describe('Complex Lookup Field', () => {
   const onChange = jest.fn();
@@ -32,7 +37,6 @@ describe('Complex Lookup Field', () => {
 
     expect(getByTestId('complex-lookup-value')).toBeInTheDocument();
     expect(getAllByTestId('complex-lookup-selected')).toHaveLength(value.length);
-    
     const complexLookupSelectedLabels = getAllByTestId('complex-lookup-selected-label');
     expect(complexLookupSelectedLabels).toHaveLength(value.length);
     expect(complexLookupSelectedLabels[0]).toHaveTextContent('Value 1');
@@ -43,7 +47,7 @@ describe('Complex Lookup Field', () => {
     renderComponent(entry);
 
     expect(queryByTestId('complex-lookup-value')).not.toBeInTheDocument();
-    expect(getByRole('button', { name: 'Select' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'marva.assignAuthority' })).toBeInTheDocument();
   });
 
   test('triggers onChange and adds new value', async () => {
