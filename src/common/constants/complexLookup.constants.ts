@@ -28,12 +28,31 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         value: 'label',
       },
     ],
-    linkedFields: ['subclass'],
-    // TODO: discuss if this value should be hardcoded
-    // customFields: {
-    //   source: {
-    //     label: 'marva.lcnaf',
-    //   },
-    // },
+    linkedField: 'subclass',
+  },
+};
+
+export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
+  subclass: {
+    PERSON: {
+      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Person',
+      labelId: 'marva.person',
+    },
+    FAMILY: {
+      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family',
+      labelId: 'marva.family',
+    },
+    ORGANIZATION: {
+      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization',
+      labelId: 'marva.organization',
+    },
+    MEETING: {
+      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting',
+      labelId: 'marva.meeting',
+    },
+    JURISDICTION: {
+      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction',
+      labelId: 'marva.jurisdiction',
+    },
   },
 };

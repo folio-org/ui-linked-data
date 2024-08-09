@@ -5,7 +5,6 @@ import { useModalControls } from '@common/hooks/useModalControls';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import CloseIcon from '@src/assets/times-16.svg?react';
-import { Row } from '@components/Table';
 import { Input } from '@components/Input';
 import { ModalComplexLookup } from './ModalComplexLookup';
 import './ComplexLookupField.scss';
@@ -24,9 +23,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { layout } = entry;
-  // TODO: change the profile and entry and take the API endpoint from there
-  const lookupConfig = COMPLEX_LOOKUPS_CONFIG['authorities'];
-  const buttonLabelIds = lookupConfig.labels.button;
+  const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
@@ -49,12 +46,24 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setIsModalOpen(false);
   }, []);
 
-  // TODO: Implement the function to assign the value for Complex lookup subfield and for the linked subfield
-  const onAssign = useCallback((row: Row) => {
-    return row;
-  }, []);
+  const onAssign = useCallback(({ id, title, subclass }: ComplexLookupAssignRecordDTO) => {
+    // TODO: refactor this
+    const newValue = {
+      label: title,
+      meta: {
+        id,
+        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+      },
+    };
 
-  const selectButtonLabel = <FormattedMessage id={localValue?.length ? buttonLabelIds.change : buttonLabelIds.base} />;
+    onChange(uuid, [newValue]);
+    setLocalValue([newValue]);
+
+    // TODO: apply the passed value to the linked field
+    console.log('ComplexLookupField - onAssign - subclass', subclass);
+
+    closeModal();
+  }, []);
 
   return (
     <>
@@ -88,7 +97,9 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
           )}
 
           <button role="button" className="complex-lookup-select-button button-passive" onClick={openModal}>
-            {selectButtonLabel}
+            <FormattedMessage
+              id={localValue?.length ? lookupConfig?.labels?.button.change : lookupConfig?.labels?.button.base}
+            />
           </button>
 
           <ModalComplexLookup

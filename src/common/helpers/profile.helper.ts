@@ -305,7 +305,7 @@ export const normalizeLayoutProperty = (layout: PropertyLayoutDTO) => {
     normalizedLayout.readOnly = Boolean(layout?.readOnly);
   }
 
-  if (layout.isNew) {
+  if (layout?.isNew) {
     normalizedLayout.isNew = Boolean(layout.isNew);
   }
 

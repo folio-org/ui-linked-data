@@ -131,6 +131,8 @@ export const BASE_LOCALE = {
   'marva.person': 'Person',
   'marva.source': 'Source',
   'marva.family': 'Family',
+  'marva.organization': 'Organization',
+  'marva.meeting': 'Meeting',
   'marva.corporateBody': 'Corporate body',
   'marva.jurisdiction': 'Jurisdiction',
   'marva.conference': 'Conference',

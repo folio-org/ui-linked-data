@@ -20,10 +20,14 @@ type ComplexLookupsConfigEntry = {
     searchQuery: Record<string, string>;
   };
   labels: ComplexLookupLabels;
-  linkedFields?: string[];
+  linkedField?: string;
   searchBy: ComplexLookupSearchBy[];
-  // TODO: under discussion
-  // customFields: Record<string, { label: string }>;
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
+
+type ComplexLookupAssignRecordDTO = {
+  id: string;
+  title: string;
+  subclass?: string;
+}

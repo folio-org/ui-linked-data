@@ -8,7 +8,6 @@ import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constant
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
-import { Row } from '@components/Table';
 import { filters } from './data/filters';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
@@ -16,7 +15,7 @@ import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
-  onAssign: (row: Row) => void;
+  onAssign: ({ id, title, subclass }: ComplexLookupAssignRecordDTO) => void;
   onClose: VoidFunction;
   assignEntityName?: string;
   baseLabelType?: string;

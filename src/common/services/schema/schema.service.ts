@@ -213,7 +213,8 @@ export class SchemaService {
           constraints,
           children: uuidArray,
         },
-        layout as PropertyLayoutDTO,
+        // TODO: define a correct type
+        normalizeLayoutProperty(layout as PropertyLayoutDTO) as PropertyLayoutDTO,
         dependsOn,
       ),
     );
