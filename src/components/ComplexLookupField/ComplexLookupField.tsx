@@ -58,7 +58,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
 
   return (
     <>
-      {layout ? (
+      {layout?.isNew ? (
         <div className="complex-lookup">
           {!!localValue.length && (
             <div className="complex-lookup-value" data-testid="complex-lookup-value">
@@ -95,8 +95,8 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
             isOpen={isModalOpen}
             onClose={closeModal}
             onAssign={onAssign}
-            assignEntityName="authorities" // TODO: define value in the profile and pass it through the entry
-            group="creator" // TODO: define value in the profile and pass it through the entry
+            assignEntityName={layout.api}
+            baseLabelType={layout.baseLabelType}
           />
         </div>
       ) : (

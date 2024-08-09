@@ -297,3 +297,17 @@ export const applyUserValues = (
 
   return result;
 };
+
+export const normalizeLayoutProperty = (layout: PropertyLayoutDTO) => {
+  const normalizedLayout = { ...layout } as unknown as PropertyLayout;
+
+  if (layout?.readOnly) {
+    normalizedLayout.readOnly = Boolean(layout?.readOnly);
+  }
+
+  if (layout.isNew) {
+    normalizedLayout.isNew = Boolean(layout.isNew);
+  }
+
+  return normalizedLayout;
+};

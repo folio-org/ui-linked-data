@@ -13,12 +13,7 @@ describe('Complex Lookup Field', () => {
   const uuid = 'test-uuid';
   const entry = {
     layout: {
-      selectTitle: {
-        base: 'Select',
-        change: 'Change',
-        modal: 'Search',
-        modalControlPane: 'Search Control Pane',
-      },
+      isNew: true,
     },
   } as SchemaEntry;
   const value = [

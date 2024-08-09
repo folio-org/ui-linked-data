@@ -18,14 +18,18 @@ type ResourceTemplate = CommonParams & {
   propertyTemplates: PropertyTemplate[];
 };
 
+type PropertyLayoutDTO = {
+  isNew?: string;
+  readOnly?: string;
+  api?: string;
+  baseLabelType?: string;
+};
+
 type PropertyLayout = {
-  selectTitle?: {
-    base: string;
-    change: string;
-    modal: string;
-    modalControlPane?: string;
-  };
+  isNew?: boolean;
   readOnly?: boolean;
+  api?: string;
+  baseLabelType?: string;
 };
 
 type PropertyTemplate = Omit<CommonParams, 'contact'> & {
@@ -35,7 +39,7 @@ type PropertyTemplate = Omit<CommonParams, 'contact'> & {
   repeatable: boolean;
   type: string | URL; // "literal" | "resource"
   valueConstraint: ValueConstraint;
-  layout?: PropertyLayout;
+  layout?: PropertyLayoutDTO | PropertyLayout;
   dependsOn?: string;
 };
 

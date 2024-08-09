@@ -3,7 +3,8 @@ import { CONSTRAINTS, RESOURCE_TEMPLATE_IDS, GROUP_BY_LEVEL } from '@common/cons
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getUris } from '@common/helpers/bibframe.helper';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
-import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
+import { normalizeLayoutProperty } from '@common/helpers/profile.helper';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 
 export class SchemaService {
   private schema: Map<string, SchemaEntry>;
@@ -72,7 +73,7 @@ export class SchemaService {
             uriBFLite,
             constraints,
           },
-          layout,
+          layout as PropertyLayoutDTO,
           dependsOn,
         ),
       );
@@ -212,7 +213,7 @@ export class SchemaService {
           constraints,
           children: uuidArray,
         },
-        layout,
+        layout as PropertyLayoutDTO,
         dependsOn,
       ),
     );
@@ -233,13 +234,13 @@ export class SchemaService {
     }
   }
 
-  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayout, dependsOn?: string) {
+  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayoutDTO, dependsOn?: string) {
     if (!layout && !dependsOn) return schemaEntry;
 
     const updatedSchemaEntry = { ...schemaEntry } as SchemaEntry;
 
     if (layout) {
-      updatedSchemaEntry.layout = { ...layout, readOnly: Boolean(layout?.readOnly) };
+      updatedSchemaEntry.layout = normalizeLayoutProperty(layout);
     }
 
     if (dependsOn) {
