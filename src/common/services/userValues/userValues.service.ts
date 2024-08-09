@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
 import { ComplexLookupUserValueService, LiteralUserValueService, SimpleLookupUserValueService } from './userValueTypes';
 import { IUserValueType } from './userValueTypes/userValueType.interface';
@@ -18,9 +19,13 @@ export class UserValuesService implements IUserValues {
     private apiClient: IApiClient,
     private cacheService: ILookupCacheService,
   ) {
-    this.userValues = userValues;
+    this.userValues = cloneDeep(userValues);
 
     this.initialize();
+  }
+
+  set(userValues: UserValues) {
+    this.userValues = userValues;
   }
 
   async setValue({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) {

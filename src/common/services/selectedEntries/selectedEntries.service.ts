@@ -9,6 +9,10 @@ export class SelectedEntriesService implements ISelectedEntries {
     return this.selectedEntries;
   }
 
+  set(selectedEntries: string[]) {
+    this.selectedEntries = selectedEntries;
+  }
+
   addNew(selectedEntryUuid?: string, newEntryUuid?: string) {
     if (!newEntryUuid) return;
 

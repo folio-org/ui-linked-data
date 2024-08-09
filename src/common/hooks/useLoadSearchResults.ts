@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { normalizeQuery } from '@common/helpers/search.helper';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 
 export const useLoadSearchResults = (

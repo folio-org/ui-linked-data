@@ -9,7 +9,7 @@ import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';

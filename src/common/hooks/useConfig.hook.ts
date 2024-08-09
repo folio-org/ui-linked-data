@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
@@ -5,13 +6,10 @@ import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
-import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
-import { UserValuesService } from '@common/services/userValues';
-import { useLookupCacheService } from './useLookupCache.hook';
-import { useCommonStatus } from './useCommonStatus';
-import { apiClient } from '@common/api/client';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+import { ServicesContext } from '@src/contexts';
+import { useCommonStatus } from './useCommonStatus';
 
 export type PreviewParams = {
   singular?: boolean;
@@ -24,6 +22,10 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
+  const { userValuesService: baseUserValuesService, selectedEntriesService: baseSelectedEntriesService } =
+    useContext(ServicesContext);
+  const userValuesService = baseUserValuesService as IUserValues;
+  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
   const setProfiles = useSetRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
@@ -33,7 +35,6 @@ export const useConfig = () => {
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
   const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
-  const lookupCacheService = useLookupCacheService();
   const commonStatusService = useCommonStatus();
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
@@ -65,10 +66,10 @@ export const useConfig = () => {
     record: Record<string, unknown> | Array<unknown>,
   ) => {
     const initKey = uuidv4();
-    const selectedEntries: Array<string> = [];
     const userValues: UserValues = {};
+    userValuesService.set(userValues);
+    selectedEntriesService.set([]);
 
-    const selectedEntriesService = new SelectedEntriesService(selectedEntries);
     const schemaCreatorService = new SchemaService(templates, profile, selectedEntriesService);
     const base = schemaCreatorService.generate(initKey);
 
@@ -88,7 +89,6 @@ export const useConfig = () => {
         const recordNormalizingService = new RecordNormalizingService(typedRecord, block, reference);
         updatedRecord = recordNormalizingService.get();
         const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
-        const userValuesService = new UserValuesService(userValues, apiClient, lookupCacheService);
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
           updatedRecord as RecordEntry,

@@ -9,6 +9,7 @@ import { BASE_LOCALE, i18nMessages } from '@common/i18n/messages';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, Load, EditWrapper } from '@views';
 import state from '@state';
+import { ServicesProvider } from './providers';
 import './App.scss';
 
 type IContainer = {
@@ -62,7 +63,9 @@ const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   return (
     <IntlProvider messages={i18nMessages[locale] || BASE_LOCALE} locale={locale} defaultLocale="en-US">
       <ErrorBoundary>
-        <RouterProvider router={createRouter(routePrefix)} />
+        <ServicesProvider>
+          <RouterProvider router={createRouter(routePrefix)} />
+        </ServicesProvider>
       </ErrorBoundary>
     </IntlProvider>
   );

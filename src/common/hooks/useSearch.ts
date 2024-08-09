@@ -8,7 +8,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import state from '@state';
 import { usePagination } from './usePagination';
 

@@ -38,6 +38,7 @@ mockedBFLiteUris({ LINK: 'testLinkUri' });
 
 const recordBlocks: RecordBlocksList = ['block_1'];
 const selectedEntriesService: ISelectedEntries = {
+  set: jest.fn(),
   get: jest.fn(),
   addNew: jest.fn(),
   addDuplicated: jest.fn(),
@@ -49,6 +50,7 @@ const repeatableFieldsService: SchemaWithDuplicatesService = {
 } as unknown as SchemaWithDuplicatesService;
 const userValuesService: IUserValues = {
   setValue: jest.fn(),
+  set: jest.fn(),
   getAllValues: jest.fn(),
   getValue: jest.fn(),
 };

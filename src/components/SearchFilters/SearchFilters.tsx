@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { FiltersGroupCheckType } from '@common/constants/search.constants';
 import { Accordion } from '@components/Accordion';
 import { useSearchFilters } from '@common/hooks/useSearchFilters';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 
 export const SearchFilters = () => {
   const { filters } = useContext(SearchContext);

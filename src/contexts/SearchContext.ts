@@ -1,5 +1,5 @@
-import { SearchIdentifiers } from '@common/constants/search.constants';
 import { createContext } from 'react';
+import { SearchIdentifiers } from '@common/constants/search.constants';
 
 export const SearchContext = createContext<SearchParams>({
   endpointUrl: '',

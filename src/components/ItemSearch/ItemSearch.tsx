@@ -7,7 +7,7 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { useSearch } from '@common/hooks/useSearch';
-import { SearchContext } from '@common/contexts';
+import { SearchContext } from '@src/contexts';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
