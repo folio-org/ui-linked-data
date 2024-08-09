@@ -37,9 +37,6 @@ export const EditPreview = () => {
     >
       {currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && (
         <div className="preview-container-header">
-          <strong className="header">
-            <FormattedMessage id="marva.instances" />
-          </strong>
           {!recordHasDependencies && (
             <Button
               data-testid="create-instance-button"
