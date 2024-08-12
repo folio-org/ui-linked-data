@@ -34,6 +34,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { layout, linkedEntry } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
+  const linkedField = linkedEntry?.secondary ? schema.get(linkedEntry.secondary) : undefined;
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
@@ -50,6 +51,13 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   const handleDelete = (id?: string) => {
     onChange(uuid, []);
     setLocalValue(prevValue => prevValue.filter(({ id: prevId }) => prevId !== id));
+
+    if (linkedField && selectedEntriesService) {
+      selectedEntriesService.set(selectedEntries);
+      selectedEntriesService.removeMultiple(linkedField.children);
+      selectedEntriesService.addNew(undefined, `${linkedField.uuid}_empty`);
+      setSelectedEntries(selectedEntriesService.get());
+    }
   };
 
   const closeModal = useCallback(() => {
@@ -69,7 +77,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     setLocalValue([newValue]);
 
     if (linkedEntry?.secondary) {
-      const linkedField = schema.get(linkedEntry?.secondary);
       let updatedValue: SchemaEntry | undefined;
 
       linkedField?.children?.forEach(uuid => {
@@ -79,10 +86,11 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
 
         if (
           childEntry?.type === AdvancedFieldType.dropdownOption &&
+          lookupConfig?.linkedField &&
           subclass &&
           childEntry.uri ===
             COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[
-              lookupConfig.linkedField as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING
+              lookupConfig.linkedField as unknown as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING
             ]?.[subclass]?.bf2Uri
         ) {
           updatedValue = childEntry;

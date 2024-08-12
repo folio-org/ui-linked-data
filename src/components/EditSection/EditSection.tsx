@@ -169,6 +169,7 @@ export const EditSection = memo(() => {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <DropdownField
+              entry={entry}
               options={options}
               uuid={uuid}
               onChange={handleChange}

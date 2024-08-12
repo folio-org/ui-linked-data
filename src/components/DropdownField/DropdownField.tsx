@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { Select } from '@components/Select';
 
 interface IDropdownField {
+  entry: SchemaEntry;
   options: ReactSelectOption[];
   uuid: string;
   onChange: (value: ReactSelectOption, fieldId: string, isDynamicField?: boolean) => void;
@@ -9,7 +10,7 @@ interface IDropdownField {
   isDisabled?: boolean;
 }
 
-export const DropdownField: FC<IDropdownField> = ({ options, uuid, onChange, value, isDisabled = false }) => {
+export const DropdownField: FC<IDropdownField> = ({ entry, options, uuid, onChange, value, isDisabled = false }) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
 
   useEffect(() => {

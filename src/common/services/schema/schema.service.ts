@@ -202,23 +202,40 @@ export class SchemaService {
     const newUuid = uuid;
     const uuidArray = valueTemplateRefs.map(() => uuidv4());
 
-    this.schema.set(
-      newUuid,
-      this.generateSchemaEntry(
-        {
-          uuid: newUuid,
-          type,
-          path: [...path, newUuid],
-          displayName: propertyLabel,
-          uri: propertyURI,
-          uriBFLite,
-          constraints,
-          children: uuidArray,
-        },
-        layout,
-        dependsOn,
-      ),
+    const schemaEntry = this.generateSchemaEntry(
+      {
+        uuid: newUuid,
+        type,
+        path: [...path, newUuid],
+        displayName: propertyLabel,
+        uri: propertyURI,
+        uriBFLite,
+        constraints,
+        children: uuidArray,
+      },
+      layout,
+      dependsOn,
     );
+
+    if (schemaEntry.linkedEntry?.primary) {
+      const emptyOptionUuid = `${newUuid}_empty`;
+      schemaEntry.children = schemaEntry.children ? [emptyOptionUuid, ...schemaEntry.children] : [];
+
+      this.schema.set(emptyOptionUuid, {
+        uuid: emptyOptionUuid,
+        type: AdvancedFieldType.dropdownOption,
+        path: [...path, newUuid, emptyOptionUuid],
+        displayName: '',
+        bfid: '',
+        uri: '',
+        uriBFLite: '',
+        children: [],
+      });
+
+      this.selectedEntriesService.addNew(undefined, emptyOptionUuid)
+    }
+
+    this.schema.set(newUuid, schemaEntry);
 
     // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
