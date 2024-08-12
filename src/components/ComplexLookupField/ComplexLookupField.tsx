@@ -1,11 +1,18 @@
-import { ChangeEvent, FC, useCallback, useState } from 'react';
+import { ChangeEvent, FC, useCallback, useContext, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
-import CloseIcon from '@src/assets/times-16.svg?react';
+import {
+  COMPLEX_LOOKUPS_CONFIG,
+  COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
+} from '@common/constants/complexLookup.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { Input } from '@components/Input';
+import { ServicesContext } from '@src/contexts';
+import state from '@state';
+import CloseIcon from '@src/assets/times-16.svg?react';
 import { ModalComplexLookup } from './ModalComplexLookup';
 import './ComplexLookupField.scss';
 
@@ -20,9 +27,12 @@ const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING
 const VALUE_DIVIDER = ', ';
 
 export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, onChange }) => {
+  const { selectedEntriesService } = useContext(ServicesContext);
+  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
+  const schema = useRecoilValue(state.config.schema);
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const { layout } = entry;
+  const { layout, linkedEntry } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -47,20 +57,45 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   }, []);
 
   const onAssign = useCallback(({ id, title, subclass }: ComplexLookupAssignRecordDTO) => {
-    // TODO: refactor this
     const newValue = {
       label: title,
       meta: {
         id,
-        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+        uri: '',
       },
     };
 
     onChange(uuid, [newValue]);
     setLocalValue([newValue]);
 
-    // TODO: apply the passed value to the linked field
-    console.log('ComplexLookupField - onAssign - subclass', subclass);
+    if (linkedEntry?.secondary) {
+      const linkedField = schema.get(linkedEntry?.secondary);
+      let updatedValue: SchemaEntry | undefined;
+
+      linkedField?.children?.forEach(uuid => {
+        if (updatedValue) return;
+
+        const childEntry = schema.get(uuid);
+
+        if (
+          childEntry?.type === AdvancedFieldType.dropdownOption &&
+          subclass &&
+          childEntry.uri ===
+            COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[
+              lookupConfig.linkedField as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING
+            ]?.[subclass]?.bf2Uri
+        ) {
+          updatedValue = childEntry;
+        }
+      });
+
+      if (linkedField && updatedValue && selectedEntriesService) {
+        selectedEntriesService.set(selectedEntries);
+        selectedEntriesService.removeMultiple(linkedField.children);
+        selectedEntriesService.addNew(undefined, updatedValue.uuid);
+        setSelectedEntries(selectedEntriesService.get());
+      }
+    }
 
     closeModal();
   }, []);

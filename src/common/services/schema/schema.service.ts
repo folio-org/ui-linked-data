@@ -36,6 +36,7 @@ export class SchemaService {
 
     if (branchEnds.includes(type as AdvancedFieldType)) {
       const {
+        id,
         propertyURI,
         propertyLabel,
         mandatory,
@@ -65,6 +66,7 @@ export class SchemaService {
         uuid,
         this.generateSchemaEntry(
           {
+            bfid: id,
             uuid,
             type,
             path: [...path, uuid],
@@ -73,7 +75,7 @@ export class SchemaService {
             uriBFLite,
             constraints,
           },
-          layout as PropertyLayoutDTO,
+          layout,
           dependsOn,
         ),
       );
@@ -213,8 +215,7 @@ export class SchemaService {
           constraints,
           children: uuidArray,
         },
-        // TODO: define a correct type
-        normalizeLayoutProperty(layout as PropertyLayoutDTO) as PropertyLayoutDTO,
+        layout,
         dependsOn,
       ),
     );
@@ -235,7 +236,7 @@ export class SchemaService {
     }
   }
 
-  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayoutDTO, dependsOn?: string) {
+  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayout<string>, dependsOn?: string) {
     if (!layout && !dependsOn) return schemaEntry;
 
     const updatedSchemaEntry = { ...schemaEntry } as SchemaEntry;
@@ -246,8 +247,35 @@ export class SchemaService {
 
     if (dependsOn) {
       updatedSchemaEntry.dependsOn = dependsOn;
+
+      const parentEntry = this.schema.get(schemaEntry.path[schemaEntry.path.length - 2]);
+      const primaryEntry = this.getPrimaryEntry(parentEntry as SchemaEntry, updatedSchemaEntry.dependsOn) as
+        | SchemaEntry
+        | undefined;
+
+      if (primaryEntry) {
+        this.schema.set(primaryEntry.uuid, { ...primaryEntry, linkedEntry: { secondary: updatedSchemaEntry.uuid } });
+
+        updatedSchemaEntry.linkedEntry = { primary: primaryEntry.uuid };
+      }
     }
 
     return updatedSchemaEntry;
+  }
+
+  private getPrimaryEntry(parentEntry: SchemaEntry, dependsOnId: string) {
+    let primaryEntry: SchemaEntry | undefined;
+
+    parentEntry.children?.forEach(entry => {
+      if (primaryEntry) return;
+
+      const childEntry = this.schema.get(entry);
+
+      if (childEntry?.bfid === dependsOnId) {
+        primaryEntry = childEntry;
+      }
+    });
+
+    return primaryEntry;
   }
 }

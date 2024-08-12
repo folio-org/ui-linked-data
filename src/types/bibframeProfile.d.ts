@@ -18,16 +18,9 @@ type ResourceTemplate = CommonParams & {
   propertyTemplates: PropertyTemplate[];
 };
 
-type PropertyLayoutDTO = {
-  isNew?: string;
-  readOnly?: string;
-  api?: string;
-  baseLabelType?: string;
-};
-
-type PropertyLayout = {
-  isNew?: boolean;
-  readOnly?: boolean;
+type PropertyLayout<T> = {
+  isNew?: T;
+  readOnly?: T;
   api?: string;
   baseLabelType?: string;
 };
@@ -39,7 +32,7 @@ type PropertyTemplate = Omit<CommonParams, 'contact'> & {
   repeatable: boolean;
   type: string | URL; // "literal" | "resource"
   valueConstraint: ValueConstraint;
-  layout?: PropertyLayoutDTO | PropertyLayout;
+  layout?: PropertyLayout<string>;
   dependsOn?: string;
 };
 

@@ -32,4 +32,10 @@ export class SelectedEntriesService implements ISelectedEntries {
 
     this.selectedEntries = this.selectedEntries.filter(uuid => uuid !== selectedEntryUuid);
   }
+
+  removeMultiple(selectedEntryUuids?: string[]) {
+    if (!selectedEntryUuids) return;
+
+    this.selectedEntries = this.selectedEntries.filter(uuid => !selectedEntryUuids.includes(uuid) )
+  }
 }
