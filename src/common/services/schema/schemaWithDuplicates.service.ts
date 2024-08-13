@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
-import { getParentEntryUuid } from '@common/helpers/schema.helper';
+import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
 
 export class SchemaWithDuplicatesService {
   private isManualDuplication: boolean;
@@ -26,10 +26,8 @@ export class SchemaWithDuplicatesService {
 
     const updatedEntryUuid = uuidv4();
     const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, undefined, true);
-    updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
+    updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
 
-    // the path contains the UUID of the parent element and the UUID of the current entry,
-    // so the UUID of the parent element is second from the end
     const parentEntryUuid = getParentEntryUuid(path);
     const parentEntry = this.schema.get(parentEntryUuid);
     const updatedParentEntry = this.getUpdatedParentEntry({
@@ -81,21 +79,42 @@ export class SchemaWithDuplicatesService {
     return copiedEntry;
   }
 
-  private getUpdatedChildren(children: string[] | undefined, parentElemPath?: string[]) {
+  private getUpdatedChildren(children: string[] | undefined, parentEntry?: SchemaEntry) {
     const updatedChildren = [] as string[];
+    const parentElemPath = parentEntry?.path;
+    const newUuids = children?.map(() => uuidv4());
 
-    children?.forEach((entryUuid: string) => {
+    children?.forEach((entryUuid: string, index: number) => {
       const entry = this.schema.get(entryUuid);
 
       if (!entry || entry.cloneOf) return;
 
       const { children } = entry;
-      const updatedEntryUuid = uuidv4();
+      const updatedEntryUuid = newUuids?.[index] || uuidv4();
       const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
-      updatedEntry.children = this.getUpdatedChildren(children, updatedEntry.path);
+      updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
       updatedEntry.clonedBy = [];
 
-      this.schema.set(updatedEntryUuid, updatedEntry);
+      let primaryEntry;
+      let secondaryEntry = updatedEntry;
+
+      if (updatedEntry.dependsOn) {
+        const associatedEntries = getUdpatedAssociatedEntries({
+          schema: this.schema,
+          secondaryEntry: updatedEntry,
+          parentEntryChildren: newUuids,
+          dependsOnId: updatedEntry.dependsOn,
+        });
+
+        primaryEntry = associatedEntries.primaryEntry as SchemaEntry;
+        secondaryEntry = associatedEntries.secondaryEntry;
+      }
+
+      if (primaryEntry && primaryEntry?.uuid) {
+        this.schema.set(primaryEntry.uuid, primaryEntry);
+      }
+
+      this.schema.set(updatedEntryUuid, secondaryEntry);
       this.selectedEntriesService.addDuplicated(entry.uuid, updatedEntryUuid);
 
       updatedChildren.push(updatedEntryUuid);

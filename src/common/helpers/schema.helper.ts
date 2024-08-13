@@ -137,3 +137,42 @@ export const getParentEntryUuid = (path: string[]) => {
 
   return path[parentEntryIndex];
 };
+
+export const getAssociatedPrimaryEntry = (schema: Schema, parentEntryChildren?: string[], dependsOnId?: string) => {
+  let primaryEntry: SchemaEntry | undefined;
+
+  parentEntryChildren?.forEach(entry => {
+    if (primaryEntry) return;
+
+    const childEntry = schema.get(entry);
+
+    if (childEntry?.bfid === dependsOnId) {
+      primaryEntry = childEntry;
+    }
+  });
+
+  return primaryEntry;
+};
+
+export const getUdpatedAssociatedEntries = ({
+  schema,
+  secondaryEntry,
+  parentEntryChildren,
+  dependsOnId,
+}: {
+  schema: Schema;
+  secondaryEntry: SchemaEntry;
+  parentEntryChildren?: string[];
+  dependsOnId?: string;
+}) => {
+  const primaryEntry = getAssociatedPrimaryEntry(schema, parentEntryChildren, dependsOnId) as SchemaEntry | undefined;
+  const updatedPrimaryEntry = { ...primaryEntry };
+  const updatedSecondaryEntry = { ...secondaryEntry };
+
+  if (primaryEntry) {
+    updatedPrimaryEntry.linkedEntry = { secondary: updatedSecondaryEntry.uuid };
+    updatedSecondaryEntry.linkedEntry = { primary: updatedPrimaryEntry.uuid };
+  }
+
+  return { primaryEntry: updatedPrimaryEntry, secondaryEntry: updatedSecondaryEntry };
+};
