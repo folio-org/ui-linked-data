@@ -2,6 +2,7 @@ import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
+import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 
 export class SchemaWithDuplicatesService {
   private isManualDuplication: boolean;
@@ -90,13 +91,24 @@ export class SchemaWithDuplicatesService {
       if (!entry || entry.cloneOf) return;
 
       const { children } = entry;
-      const updatedEntryUuid = newUuids?.[index] || uuidv4();
-      const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
+
+      // TODO: refactor this
+      let updatedEntryUuid = newUuids?.[index] || uuidv4();
+      const isFirstAssociatedEntryElem = parentEntry?.dependsOn && newUuids && index === 0;
+
+      if (isFirstAssociatedEntryElem) {
+        updatedEntryUuid = generateEmptyValueUuid(parentEntry.uuid);
+        newUuids[index] = updatedEntryUuid;
+      }
+
+      let updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
+      // Temporary adding the entry to find it in the "getUdpatedAssociatedEntries"
+      this.schema.set(updatedEntryUuid, updatedEntry);
+
       updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
       updatedEntry.clonedBy = [];
 
       let primaryEntry;
-      let secondaryEntry = updatedEntry;
 
       if (updatedEntry.dependsOn) {
         const associatedEntries = getUdpatedAssociatedEntries({
@@ -107,15 +119,20 @@ export class SchemaWithDuplicatesService {
         });
 
         primaryEntry = associatedEntries.primaryEntry as SchemaEntry;
-        secondaryEntry = associatedEntries.secondaryEntry;
+        updatedEntry = associatedEntries.secondaryEntry;
       }
 
       if (primaryEntry && primaryEntry?.uuid) {
         this.schema.set(primaryEntry.uuid, primaryEntry);
       }
 
-      this.schema.set(updatedEntryUuid, secondaryEntry);
-      this.selectedEntriesService.addDuplicated(entry.uuid, updatedEntryUuid);
+      this.schema.set(updatedEntryUuid, updatedEntry);
+
+      if (isFirstAssociatedEntryElem) {
+        this.selectedEntriesService.addNew(undefined, updatedEntryUuid);
+      } else if (!parentEntry?.dependsOn) {
+        this.selectedEntriesService.addDuplicated(entry.uuid, updatedEntryUuid);
+      }
 
       updatedChildren.push(updatedEntryUuid);
     });

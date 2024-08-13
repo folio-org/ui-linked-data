@@ -60,7 +60,6 @@ export const getUpdatedSelectedEntries = ({
 }) => {
   if (!selectedEntriesService || !linkedFieldChildren || !newValue) return selectedEntries;
 
-  selectedEntriesService.set(selectedEntries);
   selectedEntriesService.removeMultiple(linkedFieldChildren);
   selectedEntriesService.addNew(undefined, newValue);
 
