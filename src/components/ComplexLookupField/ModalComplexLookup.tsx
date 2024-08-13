@@ -15,7 +15,7 @@ import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
-  onAssign: ({ id, title, subclass }: ComplexLookupAssignRecordDTO) => void;
+  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
   onClose: VoidFunction;
   assignEntityName?: string;
   baseLabelType?: string;

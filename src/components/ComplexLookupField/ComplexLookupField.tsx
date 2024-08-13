@@ -4,11 +4,13 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import {
-  COMPLEX_LOOKUPS_CONFIG,
-  COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
-} from '@common/constants/complexLookup.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+  generateEmptyValueUuid,
+  getLinkedField,
+  getUpdatedSelectedEntries,
+  updateLinkedFieldValue,
+} from '@common/helpers/complexLookup.helper';
 import { Input } from '@components/Input';
 import { ServicesContext } from '@src/contexts';
 import state from '@state';
@@ -34,7 +36,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { layout, linkedEntry } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
-  const linkedField = linkedEntry?.secondary ? schema.get(linkedEntry.secondary) : undefined;
+  const linkedField = getLinkedField({ schema, linkedEntry });
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
@@ -52,19 +54,23 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     onChange(uuid, []);
     setLocalValue(prevValue => prevValue.filter(({ id: prevId }) => prevId !== id));
 
-    if (linkedField && selectedEntriesService) {
-      selectedEntriesService.set(selectedEntries);
-      selectedEntriesService.removeMultiple(linkedField.children);
-      selectedEntriesService.addNew(undefined, `${linkedField.uuid}_empty`);
-      setSelectedEntries(selectedEntriesService.get());
-    }
+    if (!(linkedField && selectedEntriesService)) return;
+
+    const updatedSelectedEntries = getUpdatedSelectedEntries({
+      selectedEntriesService,
+      selectedEntries,
+      linkedFieldChildren: linkedField.children,
+      newValue: generateEmptyValueUuid(linkedField.uuid),
+    });
+
+    setSelectedEntries(updatedSelectedEntries);
   };
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
 
-  const onAssign = useCallback(({ id, title, subclass }: ComplexLookupAssignRecordDTO) => {
+  const onAssign = useCallback(({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
     const newValue = {
       label: title,
       meta: {
@@ -76,33 +82,18 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, uuid, entry, 
     onChange(uuid, [newValue]);
     setLocalValue([newValue]);
 
+    // Has an associated dependent subfield.
+    // For now we assume that the associated field's type is Dropdown only
     if (linkedEntry?.secondary) {
-      let updatedValue: SchemaEntry | undefined;
-
-      linkedField?.children?.forEach(uuid => {
-        if (updatedValue) return;
-
-        const childEntry = schema.get(uuid);
-
-        if (
-          childEntry?.type === AdvancedFieldType.dropdownOption &&
-          lookupConfig?.linkedField &&
-          subclass &&
-          childEntry.uri ===
-            COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[
-              lookupConfig.linkedField as unknown as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING
-            ]?.[subclass]?.bf2Uri
-        ) {
-          updatedValue = childEntry;
-        }
+      const updatedValue = updateLinkedFieldValue({ schema, linkedField, linkedFieldValue, lookupConfig });
+      const updatedSelectedEntries = getUpdatedSelectedEntries({
+        selectedEntriesService,
+        selectedEntries,
+        linkedFieldChildren: linkedField?.children,
+        newValue: updatedValue?.uuid,
       });
 
-      if (linkedField && updatedValue && selectedEntriesService) {
-        selectedEntriesService.set(selectedEntries);
-        selectedEntriesService.removeMultiple(linkedField.children);
-        selectedEntriesService.addNew(undefined, updatedValue.uuid);
-        setSelectedEntries(selectedEntriesService.get());
-      }
+      setSelectedEntries(updatedSelectedEntries);
     }
 
     closeModal();

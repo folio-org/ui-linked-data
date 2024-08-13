@@ -29,5 +29,5 @@ type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
 type ComplexLookupAssignRecordDTO = {
   id: string;
   title: string;
-  subclass?: string;
+  linkedFieldValue?: string;
 }

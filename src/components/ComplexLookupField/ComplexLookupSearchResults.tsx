@@ -30,7 +30,7 @@ const listHeader: Row = {
 };
 
 type ComplexLookupSearchResultsProps = {
-  onAssign: ({ id, title, subclass }: ComplexLookupAssignRecordDTO) => void;
+  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
@@ -66,7 +66,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
                 onAssign({
                   id: row.__meta.id,
                   title: row.title?.label as string,
-                  subclass: row.subclass?.label as string,
+                  linkedFieldValue: row.subclass?.label as string,
                 });
               }}
             >

@@ -5,6 +5,7 @@ import { getUris } from '@common/helpers/bibframe.helper';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
 import { normalizeLayoutProperty } from '@common/helpers/profile.helper';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
+import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 
 export class SchemaService {
   private schema: Map<string, SchemaEntry>;
@@ -218,7 +219,7 @@ export class SchemaService {
     );
 
     if (schemaEntry.linkedEntry?.primary) {
-      const emptyOptionUuid = `${newUuid}_empty`;
+      const emptyOptionUuid = generateEmptyValueUuid(newUuid);
       schemaEntry.children = schemaEntry.children ? [emptyOptionUuid, ...schemaEntry.children] : [];
 
       this.schema.set(emptyOptionUuid, {
@@ -232,7 +233,7 @@ export class SchemaService {
         children: [],
       });
 
-      this.selectedEntriesService.addNew(undefined, emptyOptionUuid)
+      this.selectedEntriesService.addNew(undefined, emptyOptionUuid);
     }
 
     this.schema.set(newUuid, schemaEntry);

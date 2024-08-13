@@ -56,3 +56,5 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
     },
   },
 };
+
+export const EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX = 'empty'
