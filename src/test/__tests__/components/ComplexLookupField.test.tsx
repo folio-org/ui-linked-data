@@ -12,6 +12,7 @@ describe('Complex Lookup Field', () => {
   const onChange = jest.fn();
   const uuid = 'test-uuid';
   const entry = {
+    uuid,
     layout: {
       isNew: true,
     },
@@ -24,7 +25,7 @@ describe('Complex Lookup Field', () => {
   const { getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, getByRole } = screen;
 
   function renderComponent(entry: SchemaEntry = {} as SchemaEntry, value: UserValueContents[] = []) {
-    render(<ComplexLookupField uuid={uuid} onChange={onChange} entry={entry} value={value} />);
+    render(<ComplexLookupField onChange={onChange} entry={entry} value={value} />);
   }
 
   test('renders complex lookup field with value', () => {
