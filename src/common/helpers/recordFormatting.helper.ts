@@ -98,7 +98,8 @@ export const updateRecordWithRelationshipDesignator = (
 
     recordFields.forEach(field => {
       const roles = field[nonBFMappedContainer] || field[BF2_URIS.ROLE];
-      const id = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id?.[0];
+      const valueId = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id;
+      const id = Array.isArray(valueId) ? valueId[0] : valueId;
 
       if (!id) return;
 

@@ -6,10 +6,11 @@ import {
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
 } from '@common/helpers/complexLookup.helper';
+import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import { ServicesContext } from '@src/contexts';
 import state from '@state';
 import { useModalControls } from './useModalControls';
-import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 export const useComplexLookup = ({
   entry,
@@ -52,10 +53,10 @@ export const useComplexLookup = ({
 
   const handleAssign = useCallback(({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
     const newValue = {
+      id,
       label: title,
       meta: {
-        id,
-        uri: '',
+        type: AdvancedFieldType.complex,
       },
     };
 
