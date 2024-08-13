@@ -3,9 +3,9 @@ import { CONSTRAINTS, RESOURCE_TEMPLATE_IDS, GROUP_BY_LEVEL } from '@common/cons
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getUris } from '@common/helpers/bibframe.helper';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
-import { normalizeLayoutProperty } from '@common/helpers/profile.helper';
-import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
+import { getParentEntryUuid, normalizeLayoutProperty } from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 
 export class SchemaService {
   private schema: Map<string, SchemaEntry>;
@@ -266,7 +266,7 @@ export class SchemaService {
     if (dependsOn) {
       updatedSchemaEntry.dependsOn = dependsOn;
 
-      const parentEntry = this.schema.get(schemaEntry.path[schemaEntry.path.length - 2]);
+      const parentEntry = this.schema.get(getParentEntryUuid(schemaEntry.path));
       const primaryEntry = this.getPrimaryEntry(parentEntry as SchemaEntry, updatedSchemaEntry.dependsOn) as
         | SchemaEntry
         | undefined;

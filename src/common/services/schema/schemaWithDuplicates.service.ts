@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
+import { getParentEntryUuid } from '@common/helpers/schema.helper';
 
 export class SchemaWithDuplicatesService {
   private isManualDuplication: boolean;
@@ -29,7 +30,7 @@ export class SchemaWithDuplicatesService {
 
     // the path contains the UUID of the parent element and the UUID of the current entry,
     // so the UUID of the parent element is second from the end
-    const parentEntryUuid = path[path.length - 2];
+    const parentEntryUuid = getParentEntryUuid(path);
     const parentEntry = this.schema.get(parentEntryUuid);
     const updatedParentEntry = this.getUpdatedParentEntry({
       parentEntry,

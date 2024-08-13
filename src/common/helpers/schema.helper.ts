@@ -114,3 +114,26 @@ export const findParentEntryByProperty = <T>({
     },
     null as SchemaEntry | null,
   );
+
+export const normalizeLayoutProperty = (layout?: PropertyLayout<string>) => {
+  if (!layout) return;
+
+  const normalizedLayout = { ...layout } as unknown as PropertyLayout<boolean>;
+
+  if (layout?.readOnly) {
+    normalizedLayout.readOnly = Boolean(layout?.readOnly);
+  }
+
+  if (layout?.isNew) {
+    normalizedLayout.isNew = Boolean(layout.isNew);
+  }
+
+  return normalizedLayout;
+};
+
+export const getParentEntryUuid = (path: string[]) => {
+  const index = path.length - 2;
+  const parentEntryIndex = index >= 0 ? index : 0;
+
+  return path[parentEntryIndex];
+};
