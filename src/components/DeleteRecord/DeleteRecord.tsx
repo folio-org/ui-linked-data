@@ -15,7 +15,7 @@ import { Button, ButtonType } from '@components/Button';
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
   const isEdited = useRecoilValue(state.status.recordIsEdited);
-  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
+  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInitiallyLoaded);
   const { deleteRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);

@@ -40,7 +40,7 @@ export const EditSection = memo(() => {
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
-  const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
+  const setIsInitiallyLoaded = useSetRecoilState(state.status.recordIsInitiallyLoaded);
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const customEvents = useRecoilValue(state.config.customEvents);
@@ -69,10 +69,10 @@ export const EditSection = memo(() => {
   }, [isEdited, userValues]);
 
   useEffect(() => {
-    setIsInititallyLoaded(true);
+    setIsInitiallyLoaded(true);
 
     return () => {
-      setIsInititallyLoaded(false);
+      setIsInitiallyLoaded(false);
       setIsEdited(false);
     };
   }, []);
