@@ -1,9 +1,15 @@
+import { useContext } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { ServicesContext } from '@src/contexts';
 import state from '@state';
-import { SchemaWithDuplicatesService } from '@common/services/schema';
-import { SelectedEntriesService } from '@common/services/selectedEntries';
 
 export const useProfileSchema = () => {
+  const {
+    selectedEntriesService: baseSelectedEntriesService,
+    schemaWithDuplicatesService: baseSchemaWithDuplicatesService,
+  } = useContext(ServicesContext);
+  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
+  const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setClonePrototypes = useSetRecoilState(state.config.clonePrototypes);
 
@@ -12,8 +18,8 @@ export const useProfileSchema = () => {
     entry: SchemaEntry,
     selectedEntries: string[],
   ) => {
-    const selectedEntriesService = new SelectedEntriesService(selectedEntries);
-    const schemaWithDuplicatesService = new SchemaWithDuplicatesService(schema, selectedEntriesService);
+    selectedEntriesService.set(selectedEntries);
+    schemaWithDuplicatesService.set(schema);
     schemaWithDuplicatesService.duplicateEntry(entry);
 
     setSelectedEntries(selectedEntriesService.get());

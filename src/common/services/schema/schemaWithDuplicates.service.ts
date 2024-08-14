@@ -4,19 +4,23 @@ import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 
-export class SchemaWithDuplicatesService {
+export class SchemaWithDuplicatesService implements ISchemaWithDuplicates {
   private isManualDuplication: boolean;
 
   constructor(
     private schema: Map<string, SchemaEntry>,
     private selectedEntriesService: ISelectedEntries,
   ) {
-    this.schema = cloneDeep(schema);
+    this.set(schema);
     this.isManualDuplication = true;
   }
 
   get() {
     return this.schema;
+  }
+
+  set(schema: Schema) {
+    this.schema = cloneDeep(schema);
   }
 
   duplicateEntry(entry: SchemaEntry, isManualDuplication = true) {

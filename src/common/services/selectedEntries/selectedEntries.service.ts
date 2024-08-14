@@ -2,7 +2,7 @@ import { ISelectedEntries } from './selectedEntries.interface';
 
 export class SelectedEntriesService implements ISelectedEntries {
   constructor(private selectedEntries: string[] = []) {
-    this.selectedEntries = [...selectedEntries];
+    this.set(selectedEntries);
   }
 
   get() {
@@ -10,7 +10,7 @@ export class SelectedEntriesService implements ISelectedEntries {
   }
 
   set(selectedEntries: string[]) {
-    this.selectedEntries = selectedEntries;
+    this.selectedEntries = [...selectedEntries];
   }
 
   addNew(selectedEntryUuid?: string, newEntryUuid?: string) {
@@ -36,6 +36,6 @@ export class SelectedEntriesService implements ISelectedEntries {
   removeMultiple(selectedEntryUuids?: string[]) {
     if (!selectedEntryUuids) return;
 
-    this.selectedEntries = this.selectedEntries.filter(uuid => !selectedEntryUuids.includes(uuid) )
+    this.selectedEntries = this.selectedEntries.filter(uuid => !selectedEntryUuids.includes(uuid));
   }
 }

@@ -9,7 +9,6 @@ import { StatusType } from '@common/constants/status.constants';
 import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 import { IUserValues } from '@common/services/userValues/userValues.interface';
-import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 
 // TODO: take into account a selected Profile
@@ -25,7 +24,7 @@ export class RecordToSchemaMappingService {
     private record: RecordEntry,
     private recordBlocks: RecordBlocksList,
     private selectedEntriesService: ISelectedEntries,
-    private repeatableFieldsService: SchemaWithDuplicatesService,
+    private repeatableFieldsService: ISchemaWithDuplicates,
     private userValuesService: IUserValues,
     private commonStatusService: ICommonStatus,
   ) {
