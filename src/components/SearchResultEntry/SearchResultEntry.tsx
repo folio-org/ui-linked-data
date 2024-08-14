@@ -118,7 +118,12 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   return (
     <div className="search-result-entry-container">
-      <WorkDetailsCard isOpen={isOpen} toggleIsOpen={toggleIsOpen} {...restOfWork} />
+      <WorkDetailsCard
+        isOpen={isOpen}
+        toggleIsOpen={toggleIsOpen}
+        handleOpenPreview={handleOpenPreview}
+        {...restOfWork}
+      />
       {!!instances?.length && isOpen && (
         <Table
           header={instancesListHeader}
