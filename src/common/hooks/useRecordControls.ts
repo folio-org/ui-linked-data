@@ -69,6 +69,9 @@ export const useRecordControls = () => {
       setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
 
       await getProfiles({ record: recordData, recordId, previewParams });
+
+      setIsInitiallyLoaded(true);
+      setIsEdited(false);
     } catch (_err) {
       console.error('Error fetching record.');
 
@@ -171,6 +174,7 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
       ]);
     } finally {
+      setIsInitiallyLoaded(true);
       setIsLoading(false);
     }
   };
