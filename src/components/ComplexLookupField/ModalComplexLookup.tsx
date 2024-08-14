@@ -8,7 +8,6 @@ import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constant
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
-import { Row } from '@components/Table';
 import { filters } from './data/filters';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
@@ -16,14 +15,14 @@ import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
-  onAssign: (row: Row) => void;
+  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
   onClose: VoidFunction;
   assignEntityName?: string;
-  group?: string;
+  baseLabelType?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', group = 'creator' }) => {
+  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
     const { api, labels, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const searchControlsSubLabel = useMemo(
@@ -53,7 +52,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     return (
       <Modal
         isOpen={isOpen}
-        title={<FormattedMessage id={labels.modal.title[group]} />}
+        title={<FormattedMessage id={labels.modal.title[baseLabelType]} />}
         onClose={onClose}
         titleClassName="modal-complex-lookup-title"
         showModalControls={false}

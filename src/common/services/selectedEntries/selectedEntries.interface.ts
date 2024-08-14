@@ -8,4 +8,6 @@ export interface ISelectedEntries {
   addDuplicated: (originalEntryUuid: string, updatedEntryUuid: string) => void;
 
   remove: (selectedEntryUuid?: string) => void;
+
+  removeMultiple: (selectedEntryUuids?: string[]) => void;
 }

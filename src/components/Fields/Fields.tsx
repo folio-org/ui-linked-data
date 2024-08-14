@@ -36,7 +36,7 @@ export const Fields: FC<IFields> = memo(
     const collapsedGroups = useRecoilValue(state.ui.collapsedGroups);
     const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
 
-    const entry = uuid && schema.get(uuid);
+    const entry = uuid && schema?.get(uuid);
 
     if (!entry) return null;
 

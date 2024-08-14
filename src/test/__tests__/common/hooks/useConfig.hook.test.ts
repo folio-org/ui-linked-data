@@ -3,7 +3,6 @@ import { renderHook } from '@testing-library/react';
 import { useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
-// import * as SelectedEntriesModule from '@common/services/selectedEntries';
 import * as SchemaService from '@common/services/schema';
 
 const profiles = [
@@ -91,7 +90,6 @@ describe('useConfig', () => {
       .mockReturnValueOnce(setPreviewContent)
       .mockReturnValueOnce(setSelectedRecordBlocks);
 
-    // (SelectedEntriesModule.SelectedEntriesService as jest.Mock).mockImplementation(() => ({ get: jest.fn() }));
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 

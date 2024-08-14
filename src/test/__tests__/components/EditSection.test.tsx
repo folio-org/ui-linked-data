@@ -1,12 +1,13 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import * as RecordHelper from '@common/helpers/record.helper';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { routes } from '@src/App';
-import state from '@state';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import * as RecordHelper from '@common/helpers/record.helper';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { ServicesProvider } from '@src/providers';
+import { routes } from '@src/App';
+import state from '@state';
 
 const userValues = {
   uuid3: {
@@ -183,8 +184,8 @@ window.scrollTo = jest.fn();
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('EditSection', () => {
-  const renderScreen = () =>
-    render(
+  const renderScreen = () => {
+    return render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
@@ -195,9 +196,14 @@ describe('EditSection', () => {
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >
-        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
+        <ServicesProvider>
+          <RouterProvider
+            router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })}
+          />
+        </ServicesProvider>
       </RecoilRoot>,
     );
+  };
 
   test('renders literal; simple and complex lookup labels and values', async () => {
     const { findByText } = renderScreen();

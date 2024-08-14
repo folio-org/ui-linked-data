@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Select } from '@components/Select';
 
 interface IDropdownField {
@@ -11,6 +11,10 @@ interface IDropdownField {
 
 export const DropdownField: FC<IDropdownField> = ({ options, uuid, onChange, value, isDisabled = false }) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
+
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   const handleOnChange = (option: any) => {
     onChange(option, uuid, true);

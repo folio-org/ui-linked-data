@@ -1,6 +1,7 @@
 import { FC, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
+import { COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING } from '@common/constants/complexLookup.constants';
 import { formatItemSearchComplexLookupAuthority } from '@common/helpers/search.helper';
 import { Row, Table } from '@components/Table';
 import { Button, ButtonType } from '@components/Button';
@@ -16,31 +17,25 @@ const listHeader: Row = {
     label: <FormattedMessage id="marva.subclass" />,
     position: 1,
   },
-  // TODO: under discussion
-  /* source: {
-    label: <FormattedMessage id="marva.source" />,
-    position: 2,
-  }, */
   lccn: {
     label: <FormattedMessage id="marva.lccn" />,
-    position: 3,
+    position: 2,
     className: 'cell-relative-20',
   },
   assign: {
     label: '',
-    position: 4,
+    position: 3,
     className: 'cell-fixed-100',
   },
 };
 
 type ComplexLookupSearchResultsProps = {
-  // TODO: under discussion
-  // sourceLabel: string;
-  onAssign: (row: Row) => void;
+  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({ onAssign }) => {
   const data = useRecoilValue(state.search.data);
+  const { subclass: subclassMapping } = COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
 
   const applyActionItems = useCallback(
     (rows: Row[]): Row[] =>
@@ -56,16 +51,23 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
             </div>
           ),
         },
-        // TODO: discuss which value this field should have or remove it at all
-        /* source: {
-          children: <FormattedMessage id={sourceLabel} />,
-        }, */
+        subclass: {
+          children: (
+            <FormattedMessage
+              id={subclassMapping[row.subclass?.label as unknown as keyof typeof subclassMapping]?.labelId}
+            />
+          ),
+        },
         assign: {
           children: (
             <Button
               type={ButtonType.Primary}
               onClick={() => {
-                onAssign(row);
+                onAssign({
+                  id: row.__meta.id,
+                  title: row.title?.label as string,
+                  linkedFieldValue: row.subclass?.label as string,
+                });
               }}
             >
               <FormattedMessage id="marva.assign" />
@@ -73,7 +75,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
           ),
         },
       })),
-    [onAssign],
+    [onAssign, subclassMapping],
   );
 
   const formattedData = useMemo(

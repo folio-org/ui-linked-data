@@ -5,6 +5,7 @@ import {
   ADVANCED_FIELDS,
   NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
+import { PREV_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -114,3 +115,71 @@ export const findParentEntryByProperty = <T>({
     },
     null as SchemaEntry | null,
   );
+
+export const normalizeLayoutProperty = (layout?: PropertyLayout<string>) => {
+  if (!layout) return;
+
+  const normalizedLayout = { ...layout } as unknown as PropertyLayout<boolean>;
+
+  if (layout?.readOnly) {
+    normalizedLayout.readOnly = Boolean(layout?.readOnly);
+  }
+
+  if (layout?.isNew) {
+    normalizedLayout.isNew = Boolean(layout.isNew);
+  }
+
+  return normalizedLayout;
+};
+
+export const getParentEntryUuid = (path: string[]) => {
+  const index = path.length - PREV_ENTRY_PATH_INDEX;
+  const parentEntryIndex = index >= 0 ? index : 0;
+
+  return path[parentEntryIndex];
+};
+
+export const getAssociatedControlledByEntry = (
+  schema: Schema,
+  parentEntryChildren?: string[],
+  dependsOnId?: string,
+) => {
+  let controlledByEntry: SchemaEntry | undefined;
+
+  parentEntryChildren?.forEach(entry => {
+    if (controlledByEntry) return;
+
+    const childEntry = schema.get(entry);
+
+    if (childEntry?.bfid === dependsOnId) {
+      controlledByEntry = childEntry;
+    }
+  });
+
+  return controlledByEntry;
+};
+
+export const getUdpatedAssociatedEntries = ({
+  schema,
+  dependentEntry,
+  parentEntryChildren,
+  dependsOnId,
+}: {
+  schema: Schema;
+  dependentEntry: SchemaEntry;
+  parentEntryChildren?: string[];
+  dependsOnId?: string;
+}) => {
+  const constolledByEntry = getAssociatedControlledByEntry(schema, parentEntryChildren, dependsOnId) as
+    | SchemaEntry
+    | undefined;
+  const updatedConstolledByEntry = { ...constolledByEntry };
+  const updatedDependentEntry = { ...dependentEntry };
+
+  if (constolledByEntry) {
+    updatedConstolledByEntry.linkedEntry = { dependent: updatedDependentEntry.uuid };
+    updatedDependentEntry.linkedEntry = { controlledBy: updatedConstolledByEntry.uuid };
+  }
+
+  return { controlledByEntry: updatedConstolledByEntry, dependentEntry: updatedDependentEntry };
+};

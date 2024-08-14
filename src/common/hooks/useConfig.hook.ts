@@ -6,7 +6,7 @@ import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
-import { SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
+import { SchemaService } from '@common/services/schema';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { ServicesContext } from '@src/contexts';
 import { useCommonStatus } from './useCommonStatus';
@@ -22,10 +22,14 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
-  const { userValuesService: baseUserValuesService, selectedEntriesService: baseSelectedEntriesService } =
-    useContext(ServicesContext);
+  const {
+    userValuesService: baseUserValuesService,
+    selectedEntriesService: baseSelectedEntriesService,
+    schemaWithDuplicatesService: baseSchemaWithDuplicatesService,
+  } = useContext(ServicesContext);
   const userValuesService = baseUserValuesService as IUserValues;
   const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
+  const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
   const setProfiles = useSetRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
@@ -88,13 +92,13 @@ export const useConfig = () => {
 
         const recordNormalizingService = new RecordNormalizingService(typedRecord, block, reference);
         updatedRecord = recordNormalizingService.get();
-        const repeatableFieldsService = new SchemaWithDuplicatesService(base, selectedEntriesService);
+        schemaWithDuplicatesService.set(base);
         const recordToSchemaMappingService = new RecordToSchemaMappingService(
           base,
           updatedRecord as RecordEntry,
           recordBlocks as RecordBlocksList,
           selectedEntriesService,
-          repeatableFieldsService,
+          schemaWithDuplicatesService,
           userValuesService,
           commonStatusService,
         );

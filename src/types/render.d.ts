@@ -85,8 +85,14 @@ type SchemaEntry = {
   constraints?: Constraints;
   cloneOf?: string;
   clonedBy?: string[];
-  layout?: PropertyLayout;
+  layout?: PropertyLayout<boolean>;
   dependsOn?: string;
+  linkedEntry?: LinkedEntry;
+};
+
+type LinkedEntry = {
+  controlledBy?: string;
+  dependent?: string;
 };
 
 type SelectableUserValue = {

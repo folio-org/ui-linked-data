@@ -3,7 +3,13 @@ import { CONSTRAINTS, RESOURCE_TEMPLATE_IDS, GROUP_BY_LEVEL } from '@common/cons
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getUris } from '@common/helpers/bibframe.helper';
 import { getAdvancedFieldType } from '@common/helpers/common.helper';
-import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
+import {
+  getParentEntryUuid,
+  getUdpatedAssociatedEntries,
+  normalizeLayoutProperty,
+} from '@common/helpers/schema.helper';
+import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 
 export class SchemaService {
   private schema: Map<string, SchemaEntry>;
@@ -35,6 +41,7 @@ export class SchemaService {
 
     if (branchEnds.includes(type as AdvancedFieldType)) {
       const {
+        id,
         propertyURI,
         propertyLabel,
         mandatory,
@@ -64,6 +71,7 @@ export class SchemaService {
         uuid,
         this.generateSchemaEntry(
           {
+            bfid: id,
             uuid,
             type,
             path: [...path, uuid],
@@ -199,23 +207,40 @@ export class SchemaService {
     const newUuid = uuid;
     const uuidArray = valueTemplateRefs.map(() => uuidv4());
 
-    this.schema.set(
-      newUuid,
-      this.generateSchemaEntry(
-        {
-          uuid: newUuid,
-          type,
-          path: [...path, newUuid],
-          displayName: propertyLabel,
-          uri: propertyURI,
-          uriBFLite,
-          constraints,
-          children: uuidArray,
-        },
-        layout,
-        dependsOn,
-      ),
+    const schemaEntry = this.generateSchemaEntry(
+      {
+        uuid: newUuid,
+        type,
+        path: [...path, newUuid],
+        displayName: propertyLabel,
+        uri: propertyURI,
+        uriBFLite,
+        constraints,
+        children: uuidArray,
+      },
+      layout,
+      dependsOn,
     );
+
+    if (schemaEntry.linkedEntry?.controlledBy) {
+      const emptyOptionUuid = generateEmptyValueUuid(newUuid);
+      schemaEntry.children = schemaEntry.children ? [emptyOptionUuid, ...schemaEntry.children] : [];
+
+      this.schema.set(emptyOptionUuid, {
+        uuid: emptyOptionUuid,
+        type: AdvancedFieldType.dropdownOption,
+        path: [...path, newUuid, emptyOptionUuid],
+        displayName: '',
+        bfid: '',
+        uri: '',
+        uriBFLite: '',
+        children: [],
+      });
+
+      this.selectedEntriesService.addNew(undefined, emptyOptionUuid);
+    }
+
+    this.schema.set(newUuid, schemaEntry);
 
     // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
@@ -233,17 +258,31 @@ export class SchemaService {
     }
   }
 
-  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayout, dependsOn?: string) {
+  private generateSchemaEntry(schemaEntry: SchemaEntry, layout?: PropertyLayout<string>, dependsOn?: string) {
     if (!layout && !dependsOn) return schemaEntry;
 
-    const updatedSchemaEntry = { ...schemaEntry } as SchemaEntry;
+    let updatedSchemaEntry = { ...schemaEntry } as SchemaEntry;
 
     if (layout) {
-      updatedSchemaEntry.layout = { ...layout, readOnly: Boolean(layout?.readOnly) };
+      updatedSchemaEntry.layout = normalizeLayoutProperty(layout);
     }
 
     if (dependsOn) {
       updatedSchemaEntry.dependsOn = dependsOn;
+
+      const parentEntry = this.schema.get(getParentEntryUuid(schemaEntry.path));
+      const { controlledByEntry, dependentEntry } = getUdpatedAssociatedEntries({
+        schema: this.schema,
+        dependentEntry: updatedSchemaEntry,
+        parentEntryChildren: parentEntry?.children,
+        dependsOnId: dependsOn,
+      });
+
+      if (controlledByEntry) {
+        this.schema.set(controlledByEntry.uuid as string, controlledByEntry as SchemaEntry);
+
+        updatedSchemaEntry = dependentEntry;
+      }
     }
 
     return updatedSchemaEntry;

@@ -1,4 +1,4 @@
-import { useEffect, memo, useCallback } from 'react';
+import { useEffect, memo, useCallback, useContext } from 'react';
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
@@ -8,19 +8,19 @@ import { saveRecordLocally } from '@common/helpers/record.helper';
 import { GROUP_COMPLEX_CUTOFF_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { EDIT_ALT_DISPLAY_LABELS, EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import { Fields } from '@components/Fields';
 import { LiteralField } from '@components/LiteralField';
 import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
-import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { Prompt } from '@components/Prompt';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
-import { EDIT_ALT_DISPLAY_LABELS, EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { ServicesContext } from '@src/contexts';
 import './EditSection.scss';
 
 export type IDrawComponent = {
@@ -32,6 +32,8 @@ export type IDrawComponent = {
 };
 
 export const EditSection = memo(() => {
+  const { selectedEntriesService: baseSelectedEntriesService } = useContext(ServicesContext);
+  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
   const schema = useRecoilValue(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
@@ -41,7 +43,6 @@ export const EditSection = memo(() => {
   const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
-  const selectedEntriesService = new SelectedEntriesService(selectedEntries);
   const customEvents = useRecoilValue(state.config.customEvents);
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
@@ -206,7 +207,7 @@ export const EditSection = memo(() => {
       if (type === AdvancedFieldType.complex) {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
-            <ComplexLookupField uuid={uuid} entry={entry} onChange={onChange} value={userValues[uuid]?.contents} />
+            <ComplexLookupField entry={entry} onChange={onChange} value={userValues[uuid]?.contents} />
           </FieldWithMetadataAndControls>
         );
       }

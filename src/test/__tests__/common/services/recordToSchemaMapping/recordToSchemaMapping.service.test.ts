@@ -43,6 +43,7 @@ const selectedEntriesService: ISelectedEntries = {
   addNew: jest.fn(),
   addDuplicated: jest.fn(),
   remove: jest.fn(),
+  removeMultiple: jest.fn(),
 };
 const repeatableFieldsService: SchemaWithDuplicatesService = {
   duplicateEntry: jest.fn(),
