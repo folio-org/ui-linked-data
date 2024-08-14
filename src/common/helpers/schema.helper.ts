@@ -5,6 +5,7 @@ import {
   ADVANCED_FIELDS,
   NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
+import { PREV_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -132,7 +133,7 @@ export const normalizeLayoutProperty = (layout?: PropertyLayout<string>) => {
 };
 
 export const getParentEntryUuid = (path: string[]) => {
-  const index = path.length - 2;
+  const index = path.length - PREV_ENTRY_PATH_INDEX;
   const parentEntryIndex = index >= 0 ? index : 0;
 
   return path[parentEntryIndex];
