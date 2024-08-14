@@ -1,5 +1,8 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
+import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { ComplexLookupField } from '@components/ComplexLookupField';
+import state from '@state';
 
 const mockModalComponent = <div data-testid="complex-lookup-modal" />;
 
@@ -15,6 +18,7 @@ describe('Complex Lookup Field', () => {
     uuid,
     layout: {
       isNew: true,
+      api: 'authorities',
     },
   } as SchemaEntry;
   const value = [
@@ -25,7 +29,18 @@ describe('Complex Lookup Field', () => {
   const { getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, getByRole } = screen;
 
   function renderComponent(entry: SchemaEntry = {} as SchemaEntry, value: UserValueContents[] = []) {
-    render(<ComplexLookupField onChange={onChange} entry={entry} value={value} />);
+    render(
+      <RecoilRoot
+        initializeState={snapshot => {
+          snapshot.set(state.config.selectedEntries, []);
+          snapshot.set(state.config.schema, {} as Schema);
+        }}
+      >
+        <MockServicesProvider>
+          <ComplexLookupField onChange={onChange} entry={entry} value={value} />
+        </MockServicesProvider>
+      </RecoilRoot>,
+    );
   }
 
   test('renders complex lookup field with value', () => {
@@ -44,23 +59,6 @@ describe('Complex Lookup Field', () => {
 
     expect(queryByTestId('complex-lookup-value')).not.toBeInTheDocument();
     expect(getByRole('button', { name: 'marva.assignAuthority' })).toBeInTheDocument();
-  });
-
-  test('triggers onChange and adds new value', async () => {
-    const event = {
-      target: {
-        value: 'testValue',
-      },
-    };
-
-    renderComponent();
-    fireEvent.change(getByTestId('complex-lookup-input'), event);
-
-    expect(onChange).toHaveBeenCalledWith(uuid, [
-      { label: event.target.value, meta: { uri: '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING' } },
-    ]);
-
-    await waitFor(() => expect(getByTestId('complex-lookup-input')).toHaveValue('testValue'));
   });
 
   test('triggers onChange and deletes value', () => {

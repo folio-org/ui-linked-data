@@ -1,9 +1,9 @@
 import { FC, ReactNode } from 'react';
 import classNames from 'classnames';
-import { useProfileSchema } from '@common/hooks/useProfileSchema';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import state from '@state';
+import { useRecoilValue } from 'recoil';
 import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
+import { useProfileSchema } from '@common/hooks/useProfileSchema';
+import state from '@state';
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
 import './FieldWithMetadataAndControls.scss';
@@ -31,7 +31,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   disabled = false,
   ...restProps
 }) => {
-  const [schema, setSchema] = useRecoilState(state.config.schema);
+  const schema = useRecoilValue(state.config.schema);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const { getSchemaWithCopiedEntries } = useProfileSchema();
   const { uuid, displayName } = entry;
@@ -40,9 +40,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ schema, entry, isDisabled: disabled });
 
   const onClickDuplicateGroup = () => {
-    const updatedSchema = getSchemaWithCopiedEntries(schema, entry, selectedEntries);
-
-    setSchema(updatedSchema);
+    getSchemaWithCopiedEntries(entry, selectedEntries);
   };
 
   const commonLayoutProps = {
