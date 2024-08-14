@@ -144,7 +144,8 @@ export const BASE_LOCALE = {
   'marva.searchCreatorAuthority': 'Search creator authority',
   'marva.authorities': 'Authorities',
   'marva.keyword': 'Keyword',
-  'marva.recordsFound': '{recordsCount} records found'
+  'marva.recordsFound': '{recordsCount} records found',
+  'marva.resourceWithIdIsEmpty': 'Resource description {id} is empty',
 };
 
 export const i18nMessages = {

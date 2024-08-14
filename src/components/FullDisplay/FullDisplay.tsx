@@ -8,16 +8,20 @@ import { RESOURCE_TEMPLATE_IDS } from '@common/constants/bibframe.constants';
 import { FormattedMessage } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { useCallback } from 'react';
 import './FullDisplay.scss';
 
 export const FullDisplay = () => {
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
   const { navigateToEditPage } = useNavigateToEditPage();
 
-  return (
-    !!previewContent.length && (
-      <div className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
-        {previewContent.map(({ id, base, userValues, initKey, title, entities }) => (
+  const renderPreviewContent = useCallback(
+    () =>
+      previewContent.map(({ id, base, userValues, initKey, title, entities }) => {
+        const resourceType = entities?.map(e => RESOURCE_TEMPLATE_IDS[e])?.[0];
+        const resourceTypeWithFallback = resourceType ?? '-';
+
+        return (
           <div key={id}>
             <div className="full-display-control-panel">
               <Button
@@ -29,14 +33,14 @@ export const FullDisplay = () => {
               </Button>
               <div className="info">
                 <span className="title">{title}</span>
-                <span className="type">{entities?.map(e => RESOURCE_TEMPLATE_IDS[e] ?? e)?.join(', ') ?? '-'}</span>
+                <span className="type">{resourceTypeWithFallback}</span>
               </div>
               <Button
                 data-testid="preview-fetch"
                 onClick={() => navigateToEditPage(generateEditResourceUrl(id))}
                 type={ButtonType.Highlighted}
               >
-                <FormattedMessage id="marva.edit" />
+                <FormattedMessage id={`marva.edit${resourceType}`} defaultMessage="Edit" />
               </Button>
             </div>
             {Object.keys(userValues).length ? (
@@ -44,11 +48,19 @@ export const FullDisplay = () => {
                 <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless hideActions />
               </div>
             ) : (
-              <div>Resource description {id} is empty</div>
+              <div>
+                <FormattedMessage id="marva.resourceWithIdIsEmpty" values={{ id }} />
+              </div>
             )}
           </div>
-        ))}
-      </div>
+        );
+      }),
+    [navigateToEditPage, previewContent],
+  );
+
+  return (
+    !!previewContent.length && (
+      <div className={DOM_ELEMENTS.classNames.fullDisplayContainer}>{renderPreviewContent()}</div>
     )
   );
 };

@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import { FullDisplay } from '@components/FullDisplay';
 import { Edit } from '@views';
 import state from '@state';
+import { Fragment, ReactNode } from 'react';
 
 const mockPreviewContent = [
   {
@@ -26,6 +27,18 @@ const mockPreviewContent = [
 ];
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
+jest.mock('react-intl', () => ({
+  FormattedMessage: ({ id, values }: any) => {
+    return (
+      <div id={id}>
+        {Object.entries(values ?? {})?.map(([k, v]) => (
+          <Fragment key={k}>{v as ReactNode}</Fragment>
+        ))}
+      </div>
+    );
+  },
+}));
 
 describe('FullDisplay', () => {
   beforeEach(() =>

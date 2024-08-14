@@ -15,6 +15,7 @@ import './WorkDetailsCard.scss';
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {
   isOpen?: boolean;
   toggleIsOpen?: VoidFunction;
+  handleOpenPreview?: (id: string) => void;
 };
 
 export const WorkDetailsCard: FC<WorkDetailsCard> = ({
@@ -24,6 +25,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   classifications,
   isOpen,
   toggleIsOpen,
+  handleOpenPreview,
   titles,
 }) => {
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -56,7 +58,9 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         </Button>
       </div>
       <div className="details">
-        <div className="title">{title || <FormattedMessage id="marva.noTitleInBrackets" />}</div>
+        <Button type={ButtonType.Ghost} onClick={() => handleOpenPreview?.(id)} className="title">
+          {title || <FormattedMessage id="marva.noTitleInBrackets" />}
+        </Button>
         {creatorName && (
           <div className="details-item">
             <span>
