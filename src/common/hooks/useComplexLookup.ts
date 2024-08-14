@@ -65,7 +65,7 @@ export const useComplexLookup = ({
 
     // Has an associated dependent subfield.
     // For now we assume that the associated field's type is Dropdown only
-    if (linkedEntry?.secondary && linkedFieldValue) {
+    if (linkedEntry?.dependent && linkedFieldValue) {
       const updatedValue = updateLinkedFieldValue({ schema, linkedField, linkedFieldValue, lookupConfig });
       const updatedSelectedEntries = getUpdatedSelectedEntries({
         selectedEntriesService,

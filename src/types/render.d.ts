@@ -91,8 +91,8 @@ type SchemaEntry = {
 };
 
 type LinkedEntry = {
-  primary?: string;
-  secondary?: string;
+  controlledBy?: string;
+  dependent?: string;
 };
 
 type SelectableUserValue = {

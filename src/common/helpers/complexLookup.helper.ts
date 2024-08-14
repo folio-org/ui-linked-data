@@ -12,7 +12,7 @@ export const getLinkedField = ({
 }: {
   schema: Map<string, SchemaEntry>;
   linkedEntry?: LinkedEntry;
-}) => (linkedEntry?.secondary ? schema.get(linkedEntry.secondary) : undefined);
+}) => (linkedEntry?.dependent ? schema.get(linkedEntry.dependent) : undefined);
 
 export const updateLinkedFieldValue = ({
   schema,

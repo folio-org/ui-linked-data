@@ -95,8 +95,6 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicates {
       if (!entry || entry.cloneOf) return;
 
       const { children } = entry;
-
-      // TODO: refactor this
       let updatedEntryUuid = newUuids?.[index] || uuidv4();
       const isFirstAssociatedEntryElem = parentEntry?.dependsOn && newUuids && index === 0;
 
@@ -105,29 +103,19 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicates {
         newUuids[index] = updatedEntryUuid;
       }
 
-      let updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
-      // Temporary adding the entry to find it in the "getUdpatedAssociatedEntries"
-      this.schema.set(updatedEntryUuid, updatedEntry);
+      const copiedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
+      this.schema.set(updatedEntryUuid, copiedEntry);
 
-      updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
-      updatedEntry.clonedBy = [];
+      copiedEntry.children = this.getUpdatedChildren(children, copiedEntry);
+      copiedEntry.clonedBy = [];
 
-      let primaryEntry;
+      const { updatedEntry, controlledByEntry } = this.getUpdatedAssociatedEntries({
+        initialEntry: copiedEntry,
+        newUuids,
+      });
 
-      if (updatedEntry.dependsOn) {
-        const associatedEntries = getUdpatedAssociatedEntries({
-          schema: this.schema,
-          secondaryEntry: updatedEntry,
-          parentEntryChildren: newUuids,
-          dependsOnId: updatedEntry.dependsOn,
-        });
-
-        primaryEntry = associatedEntries.primaryEntry as SchemaEntry;
-        updatedEntry = associatedEntries.secondaryEntry;
-      }
-
-      if (primaryEntry && primaryEntry?.uuid) {
-        this.schema.set(primaryEntry.uuid, primaryEntry);
+      if (controlledByEntry && controlledByEntry?.uuid) {
+        this.schema.set(controlledByEntry.uuid, controlledByEntry);
       }
 
       this.schema.set(updatedEntryUuid, updatedEntry);
@@ -173,5 +161,24 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicates {
     updatedPath[path.length - 1] = uuid;
 
     return updatedPath;
+  }
+
+  private getUpdatedAssociatedEntries({ initialEntry, newUuids }: { initialEntry: SchemaEntry; newUuids?: string[] }) {
+    let updatedEntry = initialEntry;
+    let controlledByEntry;
+
+    if (updatedEntry.dependsOn) {
+      const associatedEntries = getUdpatedAssociatedEntries({
+        schema: this.schema,
+        dependentEntry: updatedEntry,
+        parentEntryChildren: newUuids,
+        dependsOnId: updatedEntry.dependsOn,
+      });
+
+      controlledByEntry = associatedEntries.controlledByEntry as SchemaEntry;
+      updatedEntry = associatedEntries.dependentEntry;
+    }
+
+    return { updatedEntry, controlledByEntry };
   }
 }

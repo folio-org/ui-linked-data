@@ -138,41 +138,47 @@ export const getParentEntryUuid = (path: string[]) => {
   return path[parentEntryIndex];
 };
 
-export const getAssociatedPrimaryEntry = (schema: Schema, parentEntryChildren?: string[], dependsOnId?: string) => {
-  let primaryEntry: SchemaEntry | undefined;
+export const getAssociatedControlledByEntry = (
+  schema: Schema,
+  parentEntryChildren?: string[],
+  dependsOnId?: string,
+) => {
+  let controlledByEntry: SchemaEntry | undefined;
 
   parentEntryChildren?.forEach(entry => {
-    if (primaryEntry) return;
+    if (controlledByEntry) return;
 
     const childEntry = schema.get(entry);
 
     if (childEntry?.bfid === dependsOnId) {
-      primaryEntry = childEntry;
+      controlledByEntry = childEntry;
     }
   });
 
-  return primaryEntry;
+  return controlledByEntry;
 };
 
 export const getUdpatedAssociatedEntries = ({
   schema,
-  secondaryEntry,
+  dependentEntry,
   parentEntryChildren,
   dependsOnId,
 }: {
   schema: Schema;
-  secondaryEntry: SchemaEntry;
+  dependentEntry: SchemaEntry;
   parentEntryChildren?: string[];
   dependsOnId?: string;
 }) => {
-  const primaryEntry = getAssociatedPrimaryEntry(schema, parentEntryChildren, dependsOnId) as SchemaEntry | undefined;
-  const updatedPrimaryEntry = { ...primaryEntry };
-  const updatedSecondaryEntry = { ...secondaryEntry };
+  const constolledByEntry = getAssociatedControlledByEntry(schema, parentEntryChildren, dependsOnId) as
+    | SchemaEntry
+    | undefined;
+  const updatedConstolledByEntry = { ...constolledByEntry };
+  const updatedDependentEntry = { ...dependentEntry };
 
-  if (primaryEntry) {
-    updatedPrimaryEntry.linkedEntry = { secondary: updatedSecondaryEntry.uuid };
-    updatedSecondaryEntry.linkedEntry = { primary: updatedPrimaryEntry.uuid };
+  if (constolledByEntry) {
+    updatedConstolledByEntry.linkedEntry = { dependent: updatedDependentEntry.uuid };
+    updatedDependentEntry.linkedEntry = { controlledBy: updatedConstolledByEntry.uuid };
   }
 
-  return { primaryEntry: updatedPrimaryEntry, secondaryEntry: updatedSecondaryEntry };
+  return { controlledByEntry: updatedConstolledByEntry, dependentEntry: updatedDependentEntry };
 };

@@ -222,7 +222,7 @@ export class SchemaService {
       dependsOn,
     );
 
-    if (schemaEntry.linkedEntry?.primary) {
+    if (schemaEntry.linkedEntry?.controlledBy) {
       const emptyOptionUuid = generateEmptyValueUuid(newUuid);
       schemaEntry.children = schemaEntry.children ? [emptyOptionUuid, ...schemaEntry.children] : [];
 
@@ -271,17 +271,17 @@ export class SchemaService {
       updatedSchemaEntry.dependsOn = dependsOn;
 
       const parentEntry = this.schema.get(getParentEntryUuid(schemaEntry.path));
-      const { primaryEntry, secondaryEntry } = getUdpatedAssociatedEntries({
+      const { controlledByEntry, dependentEntry } = getUdpatedAssociatedEntries({
         schema: this.schema,
-        secondaryEntry: updatedSchemaEntry,
+        dependentEntry: updatedSchemaEntry,
         parentEntryChildren: parentEntry?.children,
         dependsOnId: dependsOn,
       });
 
-      if (primaryEntry) {
-        this.schema.set(primaryEntry.uuid as string, primaryEntry as SchemaEntry);
+      if (controlledByEntry) {
+        this.schema.set(controlledByEntry.uuid as string, controlledByEntry as SchemaEntry);
 
-        updatedSchemaEntry = secondaryEntry;
+        updatedSchemaEntry = dependentEntry;
       }
     }
 
