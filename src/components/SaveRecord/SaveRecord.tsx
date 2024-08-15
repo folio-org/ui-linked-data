@@ -7,7 +7,7 @@ import state from '@state';
 
 const SaveRecord = ({ primary = false }) => {
   const { saveRecord } = useRecordControls();
-  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInititallyLoaded);
+  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInitiallyLoaded);
   const recordIsEdited = useRecoilValue(state.status.recordIsEdited);
 
   return (

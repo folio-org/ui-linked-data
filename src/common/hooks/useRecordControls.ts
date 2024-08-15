@@ -42,7 +42,7 @@ export const useRecordControls = () => {
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
-  const [isInitiallyLoaded, setIsInititallyLoaded] = useRecoilState(state.status.recordIsInititallyLoaded);
+  const [isInitiallyLoaded, setIsInitiallyLoaded] = useRecoilState(state.status.recordIsInitiallyLoaded);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
@@ -69,6 +69,9 @@ export const useRecordControls = () => {
       setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
 
       await getProfiles({ record: recordData, recordId, previewParams });
+
+      setIsInitiallyLoaded(true);
+      setIsEdited(false);
     } catch (_err) {
       console.error('Error fetching record.');
 
@@ -111,7 +114,7 @@ export const useRecordControls = () => {
       deleteRecordLocally(profile, currentRecordId as RecordID);
 
       if (isInitiallyLoaded) {
-        setIsInititallyLoaded(false);
+        setIsInitiallyLoaded(false);
       }
 
       !asRefToNewRecord && setRecord(parsedResponse);
@@ -152,13 +155,13 @@ export const useRecordControls = () => {
         )?.toUpperCase() as BibframeEntities;
 
         const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
-                
+
         shouldSetSearchParams &&
           setSearchParams({
             type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
             ref: String(getRecordId(parsedResponse, selectedBlock)),
           });
-        
+
         return updatedRecordId;
       } else {
         navigate(searchResultsUri);
@@ -171,6 +174,7 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
       ]);
     } finally {
+      setIsInitiallyLoaded(true);
       setIsLoading(false);
     }
   };
