@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
@@ -27,6 +27,10 @@ export const useSearch = () => {
     usePagination(hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
   const setSearchParams = useSearchParams()?.[1];
+
+  useEffect(() => {
+    setSearchBy(defaultSearchBy);
+  }, [setSearchBy, defaultSearchBy]);
 
   const clearPagination = useCallback(() => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
