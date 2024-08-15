@@ -51,7 +51,7 @@ export const useComplexLookup = ({
     setIsModalOpen(false);
   }, []);
 
-  const handleAssign = useCallback(({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
+  const handleAssign = ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
     const newValue = {
       id,
       label: title,
@@ -78,7 +78,7 @@ export const useComplexLookup = ({
     }
 
     closeModal();
-  }, []);
+  };
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {
