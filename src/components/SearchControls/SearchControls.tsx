@@ -21,8 +21,14 @@ type Props = {
 };
 
 export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
-  const { isVisibleSearchByControl, isVisibleAdvancedSearch, isVisibleFilters, searchByControlOptions, hasSearchParams } =
-    useContext(SearchContext);
+  const {
+    isVisibleSearchByControl,
+    isVisibleAdvancedSearch,
+    isVisibleFilters,
+    searchByControlOptions,
+    hasSearchParams,
+    defaultSearchBy,
+  } = useContext(SearchContext);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const setMessage = useSetRecoilState(state.search.message);
@@ -41,6 +47,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const clearValuesAndResetControls = () => {
     clearValues();
     resetControls();
+    setSearchBy(defaultSearchBy);
   };
 
   const onResetButtonClick = () => {
