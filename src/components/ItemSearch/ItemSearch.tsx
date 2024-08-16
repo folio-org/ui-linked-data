@@ -42,7 +42,7 @@ export const ItemSearch = () => {
         {renderSearchControlPane()}
         <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
           {message && (
-            <div>
+            <div className={DOM_ELEMENTS.classNames.itemSearchMessage}>
               <FormattedMessage id={message} />
             </div>
           )}

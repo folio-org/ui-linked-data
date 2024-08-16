@@ -134,6 +134,10 @@
         &-content {
           max-width: 100%;
           overflow: hidden;
+
+          &-message {
+            padding: 1rem;
+          }
         }
       }
     }
