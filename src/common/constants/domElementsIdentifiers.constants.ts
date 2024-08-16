@@ -4,5 +4,6 @@ export const DOM_ELEMENTS = {
     fullDisplayContainer: 'full-display-container',
     itemSearchContent: 'item-search-content',
     itemSearchContentContainer: 'item-search-content-container',
+    itemSearchMessage: 'item-search-content-message'
   },
 };
