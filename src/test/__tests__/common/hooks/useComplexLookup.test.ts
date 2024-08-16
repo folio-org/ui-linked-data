@@ -32,6 +32,7 @@ describe('useComplexLookup', () => {
       dependent: true,
     },
   } as unknown as SchemaEntry;
+  const mockLinkedField = { uuid: 'testLinkedFieldUuid', children: [] } as unknown as SchemaEntry;
 
   const mockValue = [{ id: 'testId', label: 'testLabel', meta: { type: AdvancedFieldType.complex } }];
   const mockLookupConfig = {} as ComplexLookupsConfigEntry;
@@ -70,8 +71,9 @@ describe('useComplexLookup', () => {
     });
 
     test('updates state correctly and calls getUpdatedSelectedEntries and setSelectedEntries', () => {
-      (getLinkedField as jest.Mock).mockReturnValue({ children: [] });
-      (generateEmptyValueUuid as jest.Mock).mockReturnValue('newId');
+      (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
+      (generateEmptyValueUuid as jest.Mock).mockReturnValue('newId_empty');
+      (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId_empty']);
 
       result = getRenderedHook()?.result;
 
@@ -86,9 +88,9 @@ describe('useComplexLookup', () => {
         selectedEntriesService: mockSelectedEntriesService,
         selectedEntries: mockSelectedEntries,
         linkedFieldChildren: [],
-        newValue: 'newId',
+        newValue: 'newId_empty',
       });
-      expect(mockSetSelectedEntries).toHaveBeenCalled();
+      expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId_empty']);
     });
   });
 
@@ -109,6 +111,12 @@ describe('useComplexLookup', () => {
     const testEntries = [{ id: 'newId', label: 'newTitle', meta: { type: AdvancedFieldType.complex } }];
 
     test('updates state correctly', () => {
+      (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
+      (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'newLinkedFieldId' });
+      (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId']);
+
+      result = getRenderedHook()?.result;
+
       act(() => {
         result.current.handleAssign(mockAssignRecord);
       });
@@ -117,8 +125,13 @@ describe('useComplexLookup', () => {
       expect(result.current.localValue).toEqual(testEntries);
 
       expect(updateLinkedFieldValue).toHaveBeenCalled();
-      expect(getUpdatedSelectedEntries).toHaveBeenCalled();
-      expect(mockSetSelectedEntries).toHaveBeenCalled();
+      expect(getUpdatedSelectedEntries).toHaveBeenCalledWith({
+        selectedEntriesService: mockSelectedEntriesService,
+        selectedEntries: mockSelectedEntries,
+        linkedFieldChildren: [],
+        newValue: 'newLinkedFieldId',
+      });
+      expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId']);
     });
 
     test('updates state correctly and does not call "setSelectedEntries"', () => {
