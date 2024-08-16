@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -10,21 +10,18 @@ import {
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
 } from '@common/helpers/complexLookup.helper';
+import {
+  MockServicesProvider,
+  selectedEntriesService as mockSelectedEntriesService,
+} from '@src/test/__mocks__/providers/ServicesProvider.mock';
 
 jest.mock('recoil');
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useContext: jest.fn(),
-}));
 jest.mock('@common/helpers/complexLookup.helper');
 
 describe('useComplexLookup', () => {
   const mockSchema = new Map();
   const mockSelectedEntries = [] as string[];
   const mockSetSelectedEntries = jest.fn();
-  const mockSelectedEntriesService = {
-    someServiceMethod: jest.fn(),
-  } as unknown as ISelectedEntries;
 
   const mockEntry = {
     uuid: 'testUuid',
@@ -34,20 +31,34 @@ describe('useComplexLookup', () => {
   } as unknown as SchemaEntry;
   const mockLinkedField = { uuid: 'testLinkedFieldUuid', children: [] } as unknown as SchemaEntry;
 
-  const mockValue = [{ id: 'testId', label: 'testLabel', meta: { type: AdvancedFieldType.complex } }];
+  const mockValue = [
+    {
+      id: 'testId',
+      label: 'testLabel',
+      meta: {
+        type: AdvancedFieldType.complex,
+      },
+    },
+  ];
   const mockLookupConfig = {} as ComplexLookupsConfigEntry;
   const mockOnChange = jest.fn();
   let result: any;
 
   const getRenderedHook = (entry: SchemaEntry = mockEntry) =>
-    renderHook(() =>
-      useComplexLookup({ entry, value: mockValue, lookupConfig: mockLookupConfig, onChange: mockOnChange }),
+    renderHook(
+      () =>
+        useComplexLookup({
+          entry,
+          value: mockValue,
+          lookupConfig: mockLookupConfig,
+          onChange: mockOnChange,
+        }),
+      { wrapper: MockServicesProvider },
     );
 
   beforeEach(() => {
     (useRecoilValue as jest.Mock).mockReturnValue(mockSchema);
     (useRecoilState as jest.Mock).mockReturnValue([mockSelectedEntries, mockSetSelectedEntries]);
-    (useContext as jest.Mock).mockReturnValue({ selectedEntriesService: mockSelectedEntriesService });
 
     result = getRenderedHook()?.result;
   });
@@ -108,7 +119,15 @@ describe('useComplexLookup', () => {
       title: 'newTitle',
       linkedFieldValue: 'new-linked-field-value',
     };
-    const testEntries = [{ id: 'newId', label: 'newTitle', meta: { type: AdvancedFieldType.complex } }];
+    const testEntries = [
+      {
+        id: 'newId',
+        label: 'newTitle',
+        meta: {
+          type: AdvancedFieldType.complex,
+        },
+      },
+    ];
 
     test('updates state correctly', () => {
       (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
@@ -135,7 +154,12 @@ describe('useComplexLookup', () => {
     });
 
     test('updates state correctly and does not call "setSelectedEntries"', () => {
-      result = getRenderedHook({ ...mockEntry, linkedEntry: { dependent: false } } as unknown as SchemaEntry)?.result;
+      result = getRenderedHook({
+        ...mockEntry,
+        linkedEntry: {
+          dependent: false,
+        },
+      } as unknown as SchemaEntry)?.result;
 
       act(() => {
         result.current.handleAssign(mockAssignRecord);
@@ -151,8 +175,17 @@ describe('useComplexLookup', () => {
   });
 
   test('handleOnChangeBase - updates state correctly', () => {
-    const mockEvent = { target: { value: 'newValue' } };
-    const testEntry = { label: 'newValue', meta: { uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } };
+    const mockEvent = {
+      target: {
+        value: 'newValue',
+      },
+    };
+    const testEntry = {
+      label: 'newValue',
+      meta: {
+        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+      },
+    };
 
     act(() => {
       result.current.handleOnChangeBase(mockEvent as ChangeEvent<HTMLInputElement>);

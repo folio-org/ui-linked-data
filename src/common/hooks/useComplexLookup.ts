@@ -7,10 +7,10 @@ import {
   updateLinkedFieldValue,
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesContext } from '@src/contexts';
 import state from '@state';
 import { useModalControls } from './useModalControls';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 
 export const useComplexLookup = ({
   entry,
