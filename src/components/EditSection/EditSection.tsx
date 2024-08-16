@@ -1,5 +1,5 @@
 import { useEffect, memo, useCallback, useContext } from 'react';
-import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import state from '@state';
@@ -40,7 +40,6 @@ export const EditSection = memo(() => {
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
-  const setIsInititallyLoaded = useSetRecoilState(state.status.recordIsInititallyLoaded);
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const customEvents = useRecoilValue(state.config.customEvents);
@@ -67,15 +66,6 @@ export const EditSection = memo(() => {
 
     return () => clearInterval(autoSaveRecord);
   }, [isEdited, userValues]);
-
-  useEffect(() => {
-    setIsInititallyLoaded(true);
-
-    return () => {
-      setIsInititallyLoaded(false);
-      setIsEdited(false);
-    };
-  }, []);
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) {

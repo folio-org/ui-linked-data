@@ -5,11 +5,11 @@ import { SaveRecord } from '@components/SaveRecord';
 import state from '@state';
 
 describe('SaveRecord', () => {
-  function renderSaveRecordComponent(recordIsEdited = true, recordIsInititallyLoaded = true) {
+  function renderSaveRecordComponent(recordIsEdited = true, recordIsInitiallyLoaded = true) {
     render(
       <RecoilRoot
         initializeState={snapshot => {
-          snapshot.set(state.status.recordIsInititallyLoaded, recordIsInititallyLoaded);
+          snapshot.set(state.status.recordIsInitiallyLoaded, recordIsInitiallyLoaded);
           snapshot.set(state.status.recordIsEdited, recordIsEdited);
         }}
       >
