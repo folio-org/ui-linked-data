@@ -32,7 +32,7 @@ export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
 export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
-  PerformIdUpdate = 'performIdUpdate',
+  CloneOf = 'cloneOf',
 }
 
 export enum SearchQueryParams {

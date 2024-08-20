@@ -60,7 +60,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     // update the current record and force navigate to the updated
     // ID we receive from the update operation
     const navigatingToCreatePage =
-      matchPath(ROUTES.RESOURCE_CREATE.uri, pathname) && search && search.includes(QueryParams.PerformIdUpdate);
+      matchPath(ROUTES.RESOURCE_CREATE.uri, pathname) && search;
     const navigatingToEditPage = matchPath(ROUTES.RESOURCE_EDIT.uri, pathname);
 
     if (shouldPrompt) {
@@ -107,7 +107,6 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
         const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
         
         newSearchParams.set(QueryParams.Ref, recordId);
-        newSearchParams.delete(QueryParams.PerformIdUpdate);
         
         navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
       }

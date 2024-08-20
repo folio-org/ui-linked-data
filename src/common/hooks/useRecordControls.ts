@@ -53,6 +53,9 @@ export const useRecordControls = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
+  const [queryParams] = useSearchParams();
+
+  const isClone = queryParams.get(QueryParams.CloneOf);
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     try {
@@ -106,7 +109,7 @@ export const useRecordControls = () => {
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
 
       const response =
-        !recordId || getRecordId(record) === DEFAULT_RECORD_ID
+        !recordId || getRecordId(record) === DEFAULT_RECORD_ID || isClone
           ? await postRecord(formattedRecord)
           : await putRecord(recordId as string, formattedRecord);
       const parsedResponse = await response.json();
