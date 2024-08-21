@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { ActionMeta, GroupBase, MultiValue, StylesConfig } from 'react-select';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
@@ -42,8 +42,7 @@ export const SimpleLookupField: FC<Props> = ({
   propertyUri,
   parentBlockUri,
 }) => {
-  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
-  const { getLookupData, loadLookupData } = useSimpleLookupData(lookupData, setLookupData);
+  const { getLookupData, loadLookupData } = useSimpleLookupData();
   const simpleLookupRef = useRef<Select<unknown, boolean, GroupBase<unknown>>>(null);
   const [forceDisplayOptionsAtTheTop, setForceDisplayOptionsAtTheTop] = useState(false);
   const loadedOptions = getLookupData()?.[uri] || [];

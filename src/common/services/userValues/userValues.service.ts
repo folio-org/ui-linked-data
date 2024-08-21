@@ -19,13 +19,12 @@ export class UserValuesService implements IUserValues {
     private apiClient: IApiClient,
     private cacheService: ILookupCacheService,
   ) {
-    this.userValues = cloneDeep(userValues);
-
+    this.set(userValues);
     this.initialize();
   }
 
   set(userValues: UserValues) {
-    this.userValues = userValues;
+    this.userValues = cloneDeep(userValues);
   }
 
   async setValue({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) {

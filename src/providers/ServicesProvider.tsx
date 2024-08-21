@@ -18,7 +18,9 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const schemaWithDuplicatesService = new SchemaWithDuplicatesService({} as Schema, selectedEntriesService);
 
   return (
-    <ServicesContext.Provider value={{ selectedEntriesService, userValuesService, schemaWithDuplicatesService }}>
+    <ServicesContext.Provider
+      value={{ selectedEntriesService, userValuesService, schemaWithDuplicatesService, lookupCacheService }}
+    >
       {children}
     </ServicesContext.Provider>
   );

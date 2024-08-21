@@ -1,16 +1,14 @@
-import { useRef } from 'react';
-import { SetterOrUpdater } from 'recoil';
+import { useContext } from 'react';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
 import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
+import { ServicesContext } from '@src/contexts';
 
-export const useSimpleLookupData = (
-  basicLookupData?: Record<string, MultiselectOption[]>,
-  saveLookupData?: SetterOrUpdater<Record<string, MultiselectOption[]>>,
-) => {
-  const lookupDataRef = useRef(basicLookupData || {});
+export const useSimpleLookupData = () => {
+  const { lookupCacheService: baseLookupCacheService } = useContext(ServicesContext);
+  const lookupCacheService = baseLookupCacheService as ILookupCacheService;
 
-  const getLookupData = () => lookupDataRef.current;
+  const getLookupData = lookupCacheService.getAll;
 
   const loadLookupData = async (uri: string, propertyURI?: string) => {
     try {
@@ -21,10 +19,8 @@ export const useSimpleLookupData = (
       const formattedLookupData = formatLookupOptions(response, uri);
       const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI);
       const sortedLookupData = filteredLookupData?.sort(alphabeticSortLabel);
-      const updatedLookupData = { ...lookupDataRef.current, [uri]: sortedLookupData };
 
-      lookupDataRef.current = updatedLookupData;
-      saveLookupData?.(updatedLookupData);
+      lookupCacheService.save?.(uri, sortedLookupData);
 
       return sortedLookupData;
     } catch (error) {
