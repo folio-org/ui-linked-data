@@ -1,16 +1,13 @@
-import state from '@state';
-import { useRecoilState } from 'recoil';
+import { useRef } from 'react';
 
 export const useLookupCacheService = () => {
-  const [lookupData, setLookupData] = useRecoilState(state.config.lookupData);
+  const lookupDataRef = useRef({} as Record<string, MultiselectOption[]>);
 
   return {
     save: (key: string, data: MultiselectOption[]) => {
-      const updatedData = { ...lookupData, [key]: data };
-
-      setLookupData(updatedData);
+      lookupDataRef.current = { ...lookupDataRef.current, [key]: data };
     },
-    getAll: () => lookupData,
-    getById: (id: string) => lookupData[id],
+    getAll: () => lookupDataRef.current,
+    getById: (id: string) => lookupDataRef.current[id],
   } as ILookupCacheService;
 };

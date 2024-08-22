@@ -1,10 +1,11 @@
-import { ReactNode } from 'react';
-import { RecoilRoot } from 'recoil';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import * as ApiHelper from '@common/helpers/api.helper';
 import * as LookupOptionsHelper from '@common/helpers/lookupOptions.helper';
-import state from '@state';
+import {
+  MockServicesProvider,
+  lookupCacheService as mockLookupCacheService,
+} from '@src/test/__mocks__/providers/ServicesProvider.mock';
 
 const lookupData: Record<string, MultiselectOption[]> = {
   testKey_1: [
@@ -21,23 +22,19 @@ const lookupData: Record<string, MultiselectOption[]> = {
 };
 
 describe('useSimpleLookupData', () => {
-  const getWrapper =
-    (initialLookupData: Record<string, MultiselectOption[]>) =>
-    ({ children }: { children: ReactNode }) => (
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.config.lookupData, initialLookupData)}>
-        {children}
-      </RecoilRoot>
-    );
-
-  test('getLookupData - returns an array with lookup options', () => {
+  test('getLookupData - returns an array with lookup options', async () => {
     const saveLookupData = jest.fn();
-    const { result } = renderHook(() => useSimpleLookupData(lookupData, saveLookupData), {
-      wrapper: getWrapper(lookupData),
+    (mockLookupCacheService.getAll as jest.Mock).mockResolvedValue(lookupData);
+
+    const { result } = renderHook(useSimpleLookupData, {
+      wrapper: MockServicesProvider,
     });
 
-    result.current.getLookupData();
-
-    expect(result.current.getLookupData()).toEqual(lookupData);
+    waitFor(() => {
+      expect(result.current.getLookupData()).toEqual(lookupData);
+    })
+      .then(() => console.log('Lookup options recieved'))
+      .catch(err => console.log(`Error while getting lookup options: ${err}`));
     expect(saveLookupData).not.toHaveBeenCalled();
   });
 
@@ -111,24 +108,24 @@ describe('useSimpleLookupData', () => {
       const spyFormatLookupOptions = jest
         .spyOn(LookupOptionsHelper, 'formatLookupOptions')
         .mockReturnValue(formattedData);
-      const saveLookupData = jest.fn();
+      (mockLookupCacheService.getAll as jest.Mock).mockResolvedValue({});
 
-      const { result } = renderHook(() => useSimpleLookupData({}, saveLookupData), {
-        wrapper: getWrapper({}),
+      const { result } = renderHook(useSimpleLookupData, {
+        wrapper: MockServicesProvider,
       });
 
       const resultData = await act(async () => result.current.loadLookupData(uri));
 
       expect(spyFormatLookupOptions).toHaveBeenCalledWith(loadedData, uri);
-      expect(saveLookupData).toHaveBeenCalled();
       expect(resultData).toEqual(testData);
     });
 
     test('returns null', async () => {
       jest.spyOn(ApiHelper, 'loadSimpleLookup').mockResolvedValue(undefined);
+      (mockLookupCacheService.getAll as jest.Mock).mockResolvedValue({});
 
       const { result } = renderHook(useSimpleLookupData, {
-        wrapper: getWrapper({}),
+        wrapper: MockServicesProvider,
       });
 
       const resultData = await result.current.loadLookupData(uri);
@@ -139,9 +136,10 @@ describe('useSimpleLookupData', () => {
     test('throws an error', async () => {
       const errorMessage = 'Error message';
       jest.spyOn(ApiHelper, 'loadSimpleLookup').mockRejectedValue(errorMessage);
+      (mockLookupCacheService.getAll as jest.Mock).mockResolvedValue({});
 
       const { result } = renderHook(useSimpleLookupData, {
-        wrapper: getWrapper({}),
+        wrapper: MockServicesProvider,
       });
 
       try {

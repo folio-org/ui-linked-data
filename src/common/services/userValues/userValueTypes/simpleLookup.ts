@@ -7,7 +7,6 @@ import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES } from '@common/constants/bibfra
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
   private uri?: string;
   private propertyUri?: string;
-  private cachedData: Record<string, MultiselectOption[]>;
   private loadedData?: MultiselectOption[];
   private contents?: UserValueContents[];
 
@@ -16,8 +15,6 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     private cacheService: ILookupCacheService,
   ) {
     super();
-
-    this.cachedData = { ...this.cacheService.getAll() };
   }
 
   async generate({ data, uri, uuid, labelSelector, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
@@ -98,9 +95,11 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
         : itemUri;
 
     // Check if the loaded options contain a value from the record
-    const loadedOption = this.cachedData[uri as string]?.find(
-      ({ label: optionLabel, value }) => value.uri === mappedUri || value.label === label || optionLabel === label,
-    );
+    const loadedOption = this.cacheService
+      .getById(uri as string)
+      ?.find(
+        ({ label: optionLabel, value }) => value.uri === mappedUri || value.label === label || optionLabel === label,
+      );
     const selectedLabel = typesMap && itemUri ? loadedOption?.label || itemUri : loadedOption?.label || label;
 
     const contentItem = {
@@ -117,13 +116,12 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   }
 
   private getCachedData() {
-    return this.uri ? this.cacheService.getById(this.uri) || this.cachedData?.[this.uri] : undefined;
+    return this.uri ? this.cacheService.getById(this.uri) : undefined;
   }
 
   private saveLoadedData() {
     if (!this.uri || !this.loadedData) return;
 
-    this.cachedData[this.uri] = this.loadedData;
     this.cacheService.save(this.uri, this.loadedData);
   }
 

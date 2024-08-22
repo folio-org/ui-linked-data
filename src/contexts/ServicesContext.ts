@@ -4,4 +4,5 @@ export const ServicesContext = createContext<ServicesParams>({
   selectedEntriesService: undefined,
   userValuesService: undefined,
   schemaWithDuplicatesService: undefined,
+  lookupCacheService: undefined
 });

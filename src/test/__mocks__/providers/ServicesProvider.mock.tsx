@@ -22,6 +22,12 @@ export const schemaWithDuplicatesService = {
   duplicateEntry: jest.fn(),
 } as unknown as ISchemaWithDuplicates;
 
+export const lookupCacheService = {
+  save: jest.fn(),
+  getAll: jest.fn(),
+  getById: jest.fn(),
+} as unknown as ILookupCacheService;
+
 export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ServicesContext.Provider
@@ -29,6 +35,7 @@ export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
         userValuesService,
         selectedEntriesService,
         schemaWithDuplicatesService,
+        lookupCacheService,
       }}
     >
       {children}
