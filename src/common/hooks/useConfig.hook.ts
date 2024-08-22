@@ -119,7 +119,7 @@ export const useConfig = () => {
     setSchema(updatedSchema);
     setSelectedRecordBlocks(selectedRecordBlocks);
 
-    return { updatedSchema: updatedSchema, userValues, initKey };
+    return { updatedSchema: updatedSchema, initKey };
   };
 
   const getProfiles = async ({ record, recordId, previewParams }: GetProfiles): Promise<any> => {
@@ -135,7 +135,7 @@ export const useConfig = () => {
     const recordData = record?.resource || {};
     const recordTitle = getRecordTitle(recordData as RecordEntry);
     const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
-    const { updatedSchema, userValues, initKey } = await buildSchema(monograph, templates, recordData);
+    const { updatedSchema, initKey } = await buildSchema(monograph, templates, recordData);
 
     if (previewParams && recordId) {
       setPreviewContent(prev => [
@@ -143,7 +143,7 @@ export const useConfig = () => {
         {
           id: recordId,
           base: updatedSchema,
-          userValues,
+          userValues: userValuesService.getAllValues(),
           initKey,
           title: recordTitle,
           entities,
