@@ -119,7 +119,7 @@ export const useConfig = () => {
     setSchema(updatedSchema);
     setSelectedRecordBlocks(selectedRecordBlocks);
 
-    return { updatedSchema: updatedSchema, initKey };
+    return { updatedSchema, initKey };
   };
 
   const getProfiles = async ({ record, recordId, previewParams }: GetProfiles): Promise<any> => {
