@@ -22,6 +22,8 @@ type IGetSchemaAndUserValuesFromRecord = {
   template?: ResourceTemplateMetadata[];
 };
 
+// TODO: this code should be refactored
+// As per https://github.com/FOLIO-EIS/ui-linked-data/pull/307/files#r1732589599
 export const getSchemaAndUserValuesFromRecord = async ({
   base,
   record,
