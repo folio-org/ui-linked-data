@@ -13,6 +13,7 @@ type UserValueContents = {
 type UserValue = {
   uuid: string;
   contents: Array<UserValueContents>;
+  template?: UserValueTemplate;
 };
 
 type UserValues = Record<string, UserValue>;
@@ -117,3 +118,5 @@ type BFLiteMap = Record<string, string | BFMapEntry>;
 type IconType = {
   className?: string;
 };
+
+type AbstractIntlFormatter = ({ id: string }) => string;

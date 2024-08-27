@@ -40,3 +40,9 @@ export enum SearchQueryParams {
   SearchBy = 'searchBy',
   Offset = 'offset',
 }
+
+export enum ForceNavigateToDest {
+  EditPage = 'editPage',
+  CreatePage = 'createPage',
+  CreatePageAsClone = 'createPageAsClone',
+}

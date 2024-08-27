@@ -27,6 +27,7 @@ export class RecordToSchemaMappingService {
     private repeatableFieldsService: ISchemaWithDuplicates,
     private userValuesService: IUserValues,
     private commonStatusService: ICommonStatus,
+    private templateMetadata?: ResourceTemplateMetadata[],
   ) {
     this.updatedSchema = cloneDeep(schema);
     this.record = record;
@@ -423,13 +424,23 @@ export class RecordToSchemaMappingService {
     labelSelector?: string;
   }) {
     const { type, constraints, uri } = schemaUiElem;
+    const partialTemplateMatch = this.templateMetadata?.filter(({ path }) => path.at(-1) === fieldUri);
+    let updatedData = data;
+
+    if (partialTemplateMatch?.length) {
+      updatedData = this.checkAndApplyTemplateToValue({
+        schemaEntry: schemaUiElem,
+        templates: partialTemplateMatch,
+        value: data,
+      });
+    }
 
     await this.userValuesService.setValue({
       type: type as AdvancedFieldType,
       key: valueKey,
       value: {
         id,
-        data,
+        data: updatedData,
         uri: constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
@@ -439,5 +450,31 @@ export class RecordToSchemaMappingService {
         fieldUri,
       },
     });
+  }
+
+  private checkAndApplyTemplateToValue({
+    schemaEntry,
+    templates,
+    value,
+  }: {
+    schemaEntry: SchemaEntry;
+    templates: ResourceTemplateMetadata[];
+    value: string | string[] | RecordBasic[];
+  }) {
+    const isValueArray = Array.isArray(value);
+
+    // TODO: add support for RecordBasic[] value type if needed
+    if (typeof value === 'object' && !isValueArray) return value;
+
+    const entryPathAsUris = schemaEntry.path.map(id => this.updatedSchema.get(id)?.uriBFLite).filter(uri => uri);
+    const matchedTemplates = templates.filter(
+      ({ path }) => path.length === entryPathAsUris.length && String(path) === String(entryPathAsUris),
+    );
+
+    if (!matchedTemplates.length) return value;
+
+    const prefixValueList = matchedTemplates.map(({ template }) => template.prefix);
+
+    return [...prefixValueList, ...(isValueArray ? value : [value])].join(' ');
   }
 }

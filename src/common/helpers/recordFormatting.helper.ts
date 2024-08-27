@@ -209,3 +209,15 @@ export const getNonBFMapElemByContainerKey = (
 
   return { key: groupElemKey, value: groupElemValue };
 };
+
+export const applyIntlToTemplates = ({
+  templates,
+  fmt,
+}: {
+  templates: ResourceTemplateMetadata[];
+  fmt: AbstractIntlFormatter;
+}): ResourceTemplateMetadata[] =>
+  templates.map(({ template, ...rest }) => ({
+    ...rest,
+    template: Object.fromEntries(Object.entries(template).map(([k, v]) => [k, fmt({ id: v })])),
+  }));

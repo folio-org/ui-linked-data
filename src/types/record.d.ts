@@ -41,3 +41,12 @@ type RecordBlocksList = string[];
 type RecordStatus = {
   type?: SavingStatusType;
 };
+
+type UserValueTemplate = {
+  prefix?: string;
+};
+
+type ResourceTemplateMetadata = {
+  path: string[];
+  template: UserValueTemplate;
+};

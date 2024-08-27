@@ -50,7 +50,7 @@ export const Edit = () => {
       setIsLoading(true);
 
       const cloneId = queryParams.get(QueryParams.CloneOf);
-      const fetchableId = resourceId || cloneId;
+      const fetchableId = resourceId ?? cloneId;
 
       try {
         if (fetchableId) {

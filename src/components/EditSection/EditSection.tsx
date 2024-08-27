@@ -92,8 +92,8 @@ export const EditSection = memo(() => {
       const { uuid, displayName = '', type, children, constraints } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
       const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
+      const selectedUserValue = userValues[uuid];
 
-      // Work, Instance
       if (type === AdvancedFieldType.block) {
         return (
           <FieldWithMetadataAndControls
@@ -131,7 +131,7 @@ export const EditSection = memo(() => {
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <LiteralField
               uuid={uuid}
-              value={userValues[uuid]?.contents[0].label}
+              value={selectedUserValue?.contents[0].label}
               onChange={onChange}
               isDisabled={isDisabled}
             />
@@ -185,7 +185,7 @@ export const EditSection = memo(() => {
               uuid={uuid}
               onChange={onChange}
               parentUri={constraints?.valueDataType?.dataTypeURI}
-              value={userValues[uuid]?.contents}
+              value={selectedUserValue?.contents}
               isDisabled={isDisabled}
               propertyUri={entry.uri}
               parentBlockUri={blockEntry?.uriBFLite}
@@ -197,7 +197,7 @@ export const EditSection = memo(() => {
       if (type === AdvancedFieldType.complex) {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
-            <ComplexLookupField entry={entry} onChange={onChange} value={userValues[uuid]?.contents} />
+            <ComplexLookupField entry={entry} onChange={onChange} value={selectedUserValue?.contents} />
           </FieldWithMetadataAndControls>
         );
       }

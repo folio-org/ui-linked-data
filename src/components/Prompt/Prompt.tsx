@@ -1,24 +1,21 @@
 import { FC, useEffect, useState } from 'react';
-import { matchPath, useBlocker } from 'react-router-dom';
+import { useBlocker } from 'react-router-dom';
 import { useModalControls } from '@common/hooks/useModalControls';
 import state from '@state';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { ForceNavigateToDest, QueryParams } from '@common/constants/routes.constants';
 import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { RecordStatus } from '@common/constants/record.constants';
+import { getForceNavigateToDest } from '@common/helpers/navigation.helper';
 import './Prompt.scss';
 
 interface Props {
   when: boolean;
-}
-
-enum ForceNavigateToDest {
-  EditPage = 'editPage',
 }
 
 export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
@@ -36,7 +33,11 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   const customEvents = useRecoilValue(state.config.customEvents);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
-  const [forceNavigateTo, setForceNavigateTo] = useState<{ pathname: string; search: string, to?: ForceNavigateToDest | null } | null>(null);
+  const [forceNavigateTo, setForceNavigateTo] = useState<{
+    pathname: string;
+    search: string;
+    to?: ForceNavigateToDest | null;
+  } | null>(null);
   const { navigateToEditPage } = useNavigateToEditPage();
 
   const { TRIGGER_MODAL: triggerModalEvent, PROCEED_NAVIGATION: proceedNavigationEvent } = customEvents || {};
@@ -59,13 +60,12 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     // use the current one as a reference. Meaning, we'll have to
     // update the current record and force navigate to the updated
     // ID we receive from the update operation
-    const navigatingToCreatePage =
-      matchPath(ROUTES.RESOURCE_CREATE.uri, pathname) && search;
-    const navigatingToEditPage = matchPath(ROUTES.RESOURCE_EDIT.uri, pathname);
 
     if (shouldPrompt) {
-      if (navigatingToEditPage || navigatingToCreatePage) {
-        setForceNavigateTo({ pathname, search, to: navigatingToEditPage && ForceNavigateToDest.EditPage });
+      const forceNavigateToDest = getForceNavigateToDest(pathname, search);
+
+      if (forceNavigateToDest) {
+        setForceNavigateTo({ pathname, search, to: forceNavigateToDest });
 
         openSwitchToNewRecordModal();
       } else {
@@ -92,7 +92,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
 
   const saveAndContinue = async () => {
     const recordId = await saveRecord({ asRefToNewRecord: true, shouldSetSearchParams: !forceNavigateTo });
-    setRecordStatus({ type: RecordStatus.saveAndClose })
+    setRecordStatus({ type: RecordStatus.saveAndClose });
 
     if (!forceNavigateTo) {
       proceedNavigation();
@@ -100,14 +100,14 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
       stopNavigation();
 
       if (forceNavigateTo.to === ForceNavigateToDest.EditPage) {
-        setRecordStatus({ type: RecordStatus.saveAndClose })
-
-        navigateToEditPage(forceNavigateTo.pathname, { replace: true })
+        navigateToEditPage(forceNavigateTo.pathname, { replace: true });
       } else {
         const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
-        
-        newSearchParams.set(QueryParams.Ref, recordId);
-        
+
+        forceNavigateTo.to === ForceNavigateToDest.CreatePage
+          ? newSearchParams.set(QueryParams.Ref, recordId)
+          : newSearchParams.set(QueryParams.CloneOf, recordId);
+
         navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
       }
     }
