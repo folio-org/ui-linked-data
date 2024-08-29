@@ -49,9 +49,12 @@ export const Edit = () => {
 
       setIsLoading(true);
 
+      const cloneId = queryParams.get(QueryParams.CloneOf);
+      const fetchableId = resourceId ?? cloneId;
+
       try {
-        if (resourceId) {
-          await fetchRecord(resourceId);
+        if (fetchableId) {
+          await fetchRecord(fetchableId);
 
           return;
         }
@@ -99,7 +102,7 @@ export const Edit = () => {
     }
 
     loadRecord();
-  }, [resourceId, recordStatusType]);
+  }, [resourceId, recordStatusType, queryParams]);
 
   return (
     <div data-testid="edit-page" className="edit-page">
