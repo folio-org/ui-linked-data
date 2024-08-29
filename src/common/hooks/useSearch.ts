@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers } from '@common/constants/search.constants';
@@ -22,6 +22,7 @@ export const useSearch = () => {
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
+  const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
 
   const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(hasSearchParams);
@@ -96,6 +97,7 @@ export const useSearch = () => {
 
   const submitSearch = useCallback(() => {
     clearPagination();
+    resetPreviewContent();
 
     if (hasSearchParams) {
       setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
@@ -112,6 +114,7 @@ export const useSearch = () => {
     setSearchBy(defaultSearchBy);
     setQuery('');
     setMessage('');
+    resetPreviewContent();
   }, [defaultSearchBy]);
 
   return {
