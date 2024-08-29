@@ -1,6 +1,6 @@
 import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { renderHook } from '@testing-library/react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
 import * as SchemaService from '@common/services/schema';
@@ -78,6 +78,12 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
 
+  const mockUseRecoilState = (profiles: ProfileEntry[] = []) => {
+    (useRecoilState as jest.Mock)
+      .mockReturnValueOnce([profiles, setProfiles])
+      .mockReturnValueOnce([null, setPreparedFields]);
+  };
+
   beforeEach(() => {
     (useSetRecoilState as jest.Mock)
       .mockReturnValueOnce(setProfiles)
@@ -94,6 +100,7 @@ describe('useConfig', () => {
   });
 
   test('prepareFields - calls "setPreparedFields" and returns an object with required fields', async () => {
+    mockUseRecoilState();
     const testResult = {
       templateId_1: {
         id: 'templateId_1',
@@ -108,16 +115,33 @@ describe('useConfig', () => {
     expect(preparedFields).toEqual(testResult);
   });
 
-  test('getProfiles - calls "setProfiles" and returns an array of profiles', async () => {
+  describe('getProfiles', () => {
     const record = {
       resource: {},
     } as RecordEntry;
-    (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
-    const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
-    const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
+    test('calls "fetchProfiles" and "setProfiles" and returns an array of profiles', async () => {
+      mockUseRecoilState();
+      (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
-    expect(setProfiles).toHaveBeenCalledWith(profiles);
-    expect(resultProfiles).toEqual(profiles);
+      const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
+      const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
+
+      expect(fetchProfiles).toHaveBeenCalled();
+      expect(setProfiles).toHaveBeenCalledWith(profiles);
+      expect(resultProfiles).toEqual(profiles);
+    });
+
+    test('does not call "fetchProfiles" and "setProfiles" and returns a stored array of profiles', async () => {
+      mockUseRecoilState(profiles);
+
+      const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
+
+      const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
+
+      expect(fetchProfiles).not.toHaveBeenCalled();
+      expect(setProfiles).not.toHaveBeenCalled();
+      expect(resultProfiles).toEqual(profiles);
+    });
   });
 });
