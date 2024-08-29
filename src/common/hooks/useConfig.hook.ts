@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
@@ -10,7 +11,6 @@ import { ServicesContext } from '@src/contexts';
 import { useCommonStatus } from '@common/hooks/useCommonStatus';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
 import { getSchemaAndUserValuesFromRecord } from '@common/helpers/schema.helper';
-import { useIntl } from 'react-intl';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 
 export type PreviewParams = {
@@ -33,10 +33,10 @@ export const useConfig = () => {
   const userValuesService = baseUserValuesService as IUserValues;
   const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
   const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
-  const setProfiles = useSetRecoilState(state.config.profiles);
+  const [profiles, setProfiles] = useRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const setPreparedFields = useSetRecoilState(state.config.preparedFields);
+  const [preparedFields, setPreparedFields] = useRecoilState(state.config.preparedFields);
   const setSchema = useSetRecoilState(state.config.schema);
   const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
@@ -135,32 +135,40 @@ export const useConfig = () => {
   };
 
   const getProfiles = async ({ record, recordId, previewParams, asClone }: GetProfiles): Promise<any> => {
-    const response = await fetchProfiles();
-    // TODO: check a list of supported profiles
-    const monograph = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
-    const templates = prepareFields(response);
+    const hasStoredProfiles = profiles?.length;
+    const response = hasStoredProfiles ? profiles : await fetchProfiles();
+    // TODO: check a list of supported profiles and implement the profile selection
+    const selectedProfile = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
+    const templates = preparedFields || prepareFields(response);
 
-    setProfiles(response);
-    setSelectedProfile(monograph);
+    if (!hasStoredProfiles) {
+      setProfiles(response);
+    }
+
     setUserValues({});
 
     const recordData = record?.resource || {};
     const recordTitle = getRecordTitle(recordData as RecordEntry);
     const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
-    const { updatedSchema, initKey } = await buildSchema(monograph, templates, recordData, asClone);
 
-    if (previewParams && recordId) {
-      setPreviewContent(prev => [
-        ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
-        {
-          id: recordId,
-          base: updatedSchema,
-          userValues: userValuesService.getAllValues(),
-          initKey,
-          title: recordTitle,
-          entities,
-        },
-      ]);
+    if (selectedProfile) {
+      setSelectedProfile(selectedProfile);
+
+      const { updatedSchema, initKey } = await buildSchema(selectedProfile, templates, recordData, asClone);
+
+      if (previewParams && recordId) {
+        setPreviewContent(prev => [
+          ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
+          {
+            id: recordId,
+            base: updatedSchema,
+            userValues: userValuesService.getAllValues(),
+            initKey,
+            title: recordTitle,
+            entities,
+          },
+        ]);
+      }
     }
 
     return response;
