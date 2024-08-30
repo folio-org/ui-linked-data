@@ -1,11 +1,11 @@
+export type IInit = {
+  schema: Schema;
+  record: RecordEntry;
+  recordBlocks: RecordBlocksList;
+  templateMetadata?: ResourceTemplateMetadata[];
+};
 export interface IRecordToSchemaMapping {
-  init(): void;
-
-  setSchema(schema: Schema): void;
-
-  setRecord(record: RecordEntry, recordBlocks: RecordBlocksList): void;
-
-  setTemplateMetadata(templateMetadata?: ResourceTemplateMetadata[]): void;
+  init({ schema, record, recordBlocks, templateMetadata }: IInit): Promise<void>;
 
   getUpdatedSchema: () => Schema;
 }

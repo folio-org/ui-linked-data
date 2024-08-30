@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
-import { SchemaService } from '@common/services/schema';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { ServicesContext } from '@src/contexts';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
@@ -21,8 +20,12 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
-  const { userValuesService: baseUserValuesService, selectedEntriesService: baseSelectedEntriesService } =
-    useContext(ServicesContext);
+  const {
+    schemaCreatorService: baseSchemaCreatorService,
+    userValuesService: baseUserValuesService,
+    selectedEntriesService: baseSelectedEntriesService,
+  } = useContext(ServicesContext);
+  const schemaCreatorService = baseSchemaCreatorService as ISchema;
   const userValuesService = baseUserValuesService as IUserValues;
   const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
   const [profiles, setProfiles] = useRecoilState(state.config.profiles);
@@ -66,13 +69,14 @@ export const useConfig = () => {
   ) => {
     const initKey = uuidv4();
     const userValues: UserValues = {};
+
     userValuesService.set(userValues);
     selectedEntriesService.set([]);
-
-    const schemaCreatorService = new SchemaService(templates, profile, selectedEntriesService);
+    schemaCreatorService.init(templates, profile);
+    schemaCreatorService.generate(initKey);
 
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
-      baseSchema: schemaCreatorService.generate(initKey),
+      baseSchema: schemaCreatorService.get(),
       record,
       userValues,
       asClone,

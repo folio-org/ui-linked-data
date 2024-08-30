@@ -4,7 +4,7 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { UserValuesService } from '@common/services/userValues';
 import { apiClient } from '@common/api/client';
 import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
-import { SchemaWithDuplicatesService } from '@common/services/schema';
+import { SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { useCommonStatus } from '@common/hooks/useCommonStatus';
@@ -27,6 +27,7 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
     userValuesService,
     commonStatusService,
   );
+  const schemaCreatorService = new SchemaService(selectedEntriesService);
 
   return (
     <ServicesContext.Provider
@@ -37,6 +38,7 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
         lookupCacheService,
         recordNormalizingService,
         recordToSchemaMappingService,
+        schemaCreatorService,
       }}
     >
       {children}

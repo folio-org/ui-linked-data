@@ -5,6 +5,7 @@ type IRecordNormalizingService =
   import('@common/services/recordNormalizing/recordNormalizing.interface').IRecordNormalizing;
 type IRecordToSchemaMapping =
   import('@common/services/recordToSchemaMapping/recordToSchemaMapping.interface').IRecordToSchemaMapping;
+type ISchema = import('@common/services/schema/schema.interface').ISchema;
 
 type ServicesParams = {
   selectedEntriesService?: ISelectedEntries;
@@ -13,4 +14,5 @@ type ServicesParams = {
   lookupCacheService?: ILookupCacheService;
   recordNormalizingService?: IRecordNormalizingService;
   recordToSchemaMappingService?: IRecordToSchemaMapping;
+  schemaCreatorService?: ISchema;
 };

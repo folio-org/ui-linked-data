@@ -10,18 +10,29 @@ import {
 } from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
+import { ISchema } from './schema.interface';
 
-export class SchemaService {
+export class SchemaService implements ISchema {
+  private templates: ResourceTemplates;
+  private entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
   private schema: Map<string, SchemaEntry>;
   private supportedEntries: string[];
 
-  constructor(
-    private templates: ResourceTemplates,
-    private entry: ProfileEntry | ResourceTemplate | PropertyTemplate,
-    private selectedEntriesService: ISelectedEntries,
-  ) {
+  constructor(private selectedEntriesService: ISelectedEntries) {
     this.schema = new Map();
     this.supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
+    this.templates = {};
+    this.entry = {} as ProfileEntry;
+  }
+
+  init(templates: ResourceTemplates, entry: ProfileEntry | ResourceTemplate | PropertyTemplate) {
+    this.schema = new Map();
+    this.templates = templates;
+    this.entry = entry;
+  }
+
+  get() {
+    return this.schema;
   }
 
   generate(initKey: string) {
@@ -30,8 +41,6 @@ export class SchemaService {
     } catch (error) {
       console.error('Cannot generate a schema', error);
     }
-
-    return this.schema;
   }
 
   private traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfileDTO) {

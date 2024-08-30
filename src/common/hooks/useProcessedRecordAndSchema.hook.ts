@@ -5,7 +5,7 @@ import { getEditingRecordBlocks } from '@common/helpers/record.helper';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 import { ServicesContext } from '@src/contexts';
 
-type IArgs = {
+type IGetProcessedRecordAndSchema = {
   baseSchema: Map<string, SchemaEntry>;
   record: Record<string, unknown> | Array<unknown>;
   userValues: UserValues;
@@ -26,7 +26,7 @@ export const useProcessedRecordAndSchema = () => {
   const recordToSchemaMappingService = baseRecordToSchemaMappingService as IRecordToSchemaMapping;
 
   const getProcessedRecordAndSchema = useCallback(
-    async ({ baseSchema, record, userValues, asClone = false }: IArgs) => {
+    async ({ baseSchema, record, userValues, asClone = false }: IGetProcessedRecordAndSchema) => {
       let updatedSchema = baseSchema;
       let updatedUserValues = userValues;
       let selectedRecordBlocks = undefined;
@@ -50,11 +50,12 @@ export const useProcessedRecordAndSchema = () => {
           recordNormalizingService.init(typedRecord, block, reference);
           const normalizedRecord = recordNormalizingService.get();
 
-          recordToSchemaMappingService.setRecord(normalizedRecord, recordBlocks);
-          recordToSchemaMappingService.setSchema(baseSchema);
-          recordToSchemaMappingService.setTemplateMetadata(template);
-
-          await recordToSchemaMappingService.init();
+          await recordToSchemaMappingService.init({
+            schema: baseSchema,
+            record: normalizedRecord,
+            recordBlocks,
+            templateMetadata: template,
+          });
 
           updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
           updatedUserValues = userValuesService.getAllValues();
