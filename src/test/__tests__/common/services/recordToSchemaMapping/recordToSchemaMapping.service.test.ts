@@ -64,9 +64,6 @@ describe('RecordToSchemaMappingService', () => {
 
   beforeEach(() => {
     service = new RecordToSchemaMappingService(
-      schema as Schema,
-      record as unknown as RecordEntry,
-      recordBlocks,
       selectedEntriesService,
       repeatableFieldsService,
       userValuesService,
@@ -77,7 +74,11 @@ describe('RecordToSchemaMappingService', () => {
   test('returns updated schema', async () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: record as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
       getLabelEntry({
@@ -103,7 +104,11 @@ describe('RecordToSchemaMappingService', () => {
       .spyOn(console, 'error')
       .mockImplementation((message: any, error: Error) => ({ message, error }));
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: record as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
     expect(commonStatusService.set).toHaveBeenCalledWith('marva.recordMappingToSchema', StatusType.error);
@@ -113,16 +118,17 @@ describe('RecordToSchemaMappingService', () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchemaWithRepeatableSubcomponents as Schema);
 
     service = new RecordToSchemaMappingService(
-      schema as Schema,
-      recordWithRepeatableSubcomponents as unknown as RecordEntry,
-      recordBlocks,
       selectedEntriesService,
       repeatableFieldsService,
       userValuesService,
       commonStatusService,
     );
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: recordWithRepeatableSubcomponents as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledTimes(2);
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(

@@ -28,6 +28,22 @@ export const lookupCacheService = {
   getById: jest.fn(),
 } as unknown as ILookupCacheService;
 
+export const recordNormalizingService = {
+  init: jest.fn(),
+  get: jest.fn(),
+} as IRecordNormalizingService;
+
+export const recordToSchemaMappingService = {
+  init: jest.fn(),
+  getUpdatedSchema: jest.fn(),
+} as IRecordToSchemaMapping;
+
+export const schemaCreatorService = {
+  init: jest.fn(),
+  get: jest.fn(),
+  generate: jest.fn(),
+} as ISchema;
+
 export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ServicesContext.Provider
@@ -36,6 +52,9 @@ export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
         selectedEntriesService,
         schemaWithDuplicatesService,
         lookupCacheService,
+        recordNormalizingService,
+        recordToSchemaMappingService,
+        schemaCreatorService,
       }}
     >
       {children}
