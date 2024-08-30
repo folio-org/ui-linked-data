@@ -7,5 +7,5 @@ export type IInit = {
 export interface IRecordToSchemaMapping {
   init({ schema, record, recordBlocks, templateMetadata }: IInit): Promise<void>;
 
-  getUpdatedSchema: () => Schema;
+  get: () => Schema;
 }

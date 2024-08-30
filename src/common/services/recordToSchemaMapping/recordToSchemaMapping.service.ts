@@ -45,7 +45,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     await this.traverseBlocks();
   }
 
-  getUpdatedSchema() {
+  get() {
     return this.updatedSchema;
   }
 

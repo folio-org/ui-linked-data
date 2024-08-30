@@ -35,7 +35,7 @@ export const recordNormalizingService = {
 
 export const recordToSchemaMappingService = {
   init: jest.fn(),
-  getUpdatedSchema: jest.fn(),
+  get: jest.fn(),
 } as IRecordToSchemaMapping;
 
 export const schemaCreatorService = {

@@ -57,7 +57,7 @@ export const useProcessedRecordAndSchema = () => {
             templateMetadata: template,
           });
 
-          updatedSchema = recordToSchemaMappingService.getUpdatedSchema();
+          updatedSchema = recordToSchemaMappingService.get();
           updatedUserValues = userValuesService.getAllValues();
         }
       } catch (error) {

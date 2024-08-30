@@ -93,7 +93,7 @@ describe('RecordToSchemaMappingService', () => {
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(3);
-    expect(service.getUpdatedSchema()).toEqual(updatedSchema);
+    expect(service.get()).toEqual(updatedSchema);
   });
 
   test('calls "commonStatusService.set" method', async () => {
@@ -145,6 +145,6 @@ describe('RecordToSchemaMappingService', () => {
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(5);
-    expect(service.getUpdatedSchema()).toEqual(updatedSchemaWithRepeatableSubcomponents);
+    expect(service.get()).toEqual(updatedSchemaWithRepeatableSubcomponents);
   });
 });
