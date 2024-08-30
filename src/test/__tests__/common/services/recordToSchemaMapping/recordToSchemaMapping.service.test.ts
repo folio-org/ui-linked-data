@@ -7,7 +7,7 @@ import * as BibframeMappingConstants from '@common/constants/bibframeMapping.con
 import { StatusType } from '@common/constants/status.constants';
 import { getLabelEntry, schema } from './data/schema.data';
 import { updatedSchema, updatedSchemaWithRepeatableSubcomponents } from './data/updatedSchema.data';
-import { record, recordWithRepeatableSubcomponents } from './data/record.data';
+import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents } from './data/record.data';
 
 const mockedNewBf2ToBFLiteMapping = getMockedImportedConstant(BibframeMappingConstants, 'NEW_BF2_TO_BFLITE_MAPPING');
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
@@ -140,5 +140,29 @@ describe('RecordToSchemaMappingService', () => {
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(5);
     expect(service.getUpdatedSchema()).toEqual(updatedSchemaWithRepeatableSubcomponents);
+  });
+
+  test('applies template to resource', async () => {
+    jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
+
+    service = new RecordToSchemaMappingService(
+      schema as Schema,
+      record as unknown as RecordEntry,
+      recordBlocks,
+      selectedEntriesService,
+      repeatableFieldsService,
+      userValuesService,
+      commonStatusService,
+      mockInstanceTemplateMetadata,
+    );
+
+    await service.init();
+
+    expect(userValuesService.setValue).toHaveBeenCalledWith(
+      expect.objectContaining({ value: expect.objectContaining({ data: 'mockPrefix literal value 1' }) }),
+    );
+    expect(userValuesService.setValue).not.toHaveBeenCalledWith(
+      expect.objectContaining({ value: expect.objectContaining({ data: 'unreachableMockPrefix' }) }),
+    );
   });
 });
