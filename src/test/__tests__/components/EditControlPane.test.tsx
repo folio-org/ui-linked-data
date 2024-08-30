@@ -1,3 +1,5 @@
+import '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { navigateAsDuplicate } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { EditControlPane } from '@components/EditControlPane';
 import { fireEvent, render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
@@ -41,6 +43,15 @@ describe('EditControlPane', () => {
     fireEvent.click(await findByText('marva.viewMarc'));
 
     expect(getMarcRecordMock).toHaveBeenCalled();
+  });
+
+  test('handles duplicate resource navigation', async () => {    
+    const { findByText, findByTestId } = renderWrapper();
+
+    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
+    fireEvent.click(await findByText('marva.duplicate'));
+
+    expect(navigateAsDuplicate).toHaveBeenCalled();
   });
 
   test("doesn't render actions dropdown in create mode", () => {
