@@ -6,56 +6,6 @@ import {
   NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
 import { PREV_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
-import { RecordNormalizingService } from '@common/services/recordNormalizing';
-import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
-
-type IGetSchemaAndUserValuesFromRecord = {
-  base: Map<string, SchemaEntry>;
-  record: RecordEntry;
-  block?: string;
-  reference?: RecordReference;
-  recordBlocks: RecordBlocksList;
-  selectedEntriesService: ISelectedEntries;
-  schemaWithDuplicatesService: ISchemaWithDuplicates;
-  userValuesService: IUserValues;
-  commonStatusService: ICommonStatus;
-  template?: ResourceTemplateMetadata[];
-};
-
-// TODO: this code should be refactored
-// As per https://github.com/FOLIO-EIS/ui-linked-data/pull/307/files#r1732589599
-export const getSchemaAndUserValuesFromRecord = async ({
-  base,
-  record,
-  block,
-  reference,
-  recordBlocks,
-  selectedEntriesService,
-  schemaWithDuplicatesService,
-  userValuesService,
-  commonStatusService,
-  template,
-}: IGetSchemaAndUserValuesFromRecord) => {
-  const recordNormalizingService = new RecordNormalizingService(record, block, reference);
-  const normalizedRecord = recordNormalizingService.get();
-  const recordToSchemaMappingService = new RecordToSchemaMappingService(
-    base,
-    normalizedRecord as RecordEntry,
-    recordBlocks as RecordBlocksList,
-    selectedEntriesService,
-    schemaWithDuplicatesService,
-    userValuesService,
-    commonStatusService,
-    template,
-  );
-
-  await recordToSchemaMappingService.init();
-
-  return {
-    updatedSchema: recordToSchemaMappingService.getUpdatedSchema(),
-    updatedUserValues: userValuesService.getAllValues(),
-  };
-};
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;

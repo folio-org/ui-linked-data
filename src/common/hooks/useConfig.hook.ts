@@ -1,17 +1,13 @@
 import { useContext } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { useIntl } from 'react-intl';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { SchemaService } from '@common/services/schema';
-import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { ServicesContext } from '@src/contexts';
-import { useCommonStatus } from '@common/hooks/useCommonStatus';
-import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
-import { getSchemaAndUserValuesFromRecord } from '@common/helpers/schema.helper';
-import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
+import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 
 export type PreviewParams = {
   singular?: boolean;
@@ -25,14 +21,10 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
-  const {
-    userValuesService: baseUserValuesService,
-    selectedEntriesService: baseSelectedEntriesService,
-    schemaWithDuplicatesService: baseSchemaWithDuplicatesService,
-  } = useContext(ServicesContext);
+  const { userValuesService: baseUserValuesService, selectedEntriesService: baseSelectedEntriesService } =
+    useContext(ServicesContext);
   const userValuesService = baseUserValuesService as IUserValues;
   const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
-  const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
   const [profiles, setProfiles] = useRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
@@ -42,8 +34,7 @@ export const useConfig = () => {
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
   const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
-  const commonStatusService = useCommonStatus();
-  const { formatMessage } = useIntl();
+  const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
 
   const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
     const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
@@ -67,7 +58,6 @@ export const useConfig = () => {
     return preparedFields;
   };
 
-  // TODO: create a service for initializing all the schema, record and other services
   const buildSchema = async (
     profile: ProfileEntry,
     templates: ResourceTemplates,
@@ -80,50 +70,13 @@ export const useConfig = () => {
     selectedEntriesService.set([]);
 
     const schemaCreatorService = new SchemaService(templates, profile, selectedEntriesService);
-    const base = schemaCreatorService.generate(initKey);
 
-    let updatedSchema = base;
-    let updatedUserValues = userValues;
-    let selectedRecordBlocks = undefined;
-
-    try {
-      // TODO: move this to a separate method or function
-      if (record && Object.keys(record).length) {
-        const typedRecord = record as RecordEntry;
-        const { block, reference } = getEditingRecordBlocks(typedRecord);
-        const recordBlocks = [block, reference?.uri] as RecordBlocksList;
-        const addDuplicateTemplate = asClone && block;
-        const template = addDuplicateTemplate
-          ? applyIntlToTemplates({
-              templates: DUPLICATE_RESOURCE_TEMPLATE[block],
-              fmt: formatMessage,
-            })
-          : undefined;
-
-        selectedRecordBlocks = { block, reference };
-        schemaWithDuplicatesService.set(base);
-
-        const getSchemaAndUserValuesFromRecordBaseProps = {
-          base,
-          record: typedRecord,
-          block,
-          reference,
-          recordBlocks,
-          selectedEntriesService,
-          schemaWithDuplicatesService,
-          userValuesService,
-          commonStatusService,
-          template,
-        };
-
-        ({ updatedSchema, updatedUserValues } = await getSchemaAndUserValuesFromRecord(
-          getSchemaAndUserValuesFromRecordBaseProps,
-        ));
-      }
-    } catch (error) {
-      // TODO: display an user error
-      console.error(error);
-    }
+    const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
+      baseSchema: schemaCreatorService.generate(initKey),
+      record,
+      userValues,
+      asClone,
+    });
 
     setUserValues(updatedUserValues || userValues);
     setInitialSchemaKey(initKey);

@@ -10,29 +10,43 @@ import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constan
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 import { IUserValues } from '@common/services/userValues/userValues.interface';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
+import { IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
 
 // TODO: take into account a selected Profile
-export class RecordToSchemaMappingService {
+export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
+  private record: RecordEntry;
+  private recordBlocks: RecordBlocksList;
   private currentBlockUri?: string;
   private currentRecordGroupKey?: string;
   private recordMap?: BF2BFLiteMapEntry;
+  private templateMetadata?: ResourceTemplateMetadata[];
 
   constructor(
-    schema: Schema,
-    private record: RecordEntry,
-    private recordBlocks: RecordBlocksList,
     private selectedEntriesService: ISelectedEntries,
     private repeatableFieldsService: ISchemaWithDuplicates,
     private userValuesService: IUserValues,
     private commonStatusService: ICommonStatus,
-    private templateMetadata?: ResourceTemplateMetadata[],
   ) {
-    this.updatedSchema = cloneDeep(schema);
-    this.record = record;
+    this.updatedSchema = new Map();
+    this.schemaArray = [];
+    this.record = {};
+    this.recordBlocks = [];
+  }
 
+  setSchema(schema: Schema) {
+    this.updatedSchema = cloneDeep(schema);
     this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
+  }
+
+  setRecord(record: RecordEntry, recordBlocks: RecordBlocksList) {
+    this.record = record;
+    this.recordBlocks = recordBlocks;
+  }
+
+  setTemplateMetadata(templateMetadata?: ResourceTemplateMetadata[]) {
+    this.templateMetadata = templateMetadata;
   }
 
   async init() {
