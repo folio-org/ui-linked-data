@@ -54,7 +54,7 @@ export const getUpdatedSelectedEntries = ({
   newValue,
 }: {
   selectedEntries: string[];
-  selectedEntriesService?: ISelectedEntries;
+  selectedEntriesService?: ISelectedEntriesService;
   linkedFieldChildren?: string[];
   newValue?: string;
 }) => {

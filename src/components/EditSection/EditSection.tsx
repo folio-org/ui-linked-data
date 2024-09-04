@@ -32,8 +32,7 @@ export type IDrawComponent = {
 };
 
 export const EditSection = memo(() => {
-  const { selectedEntriesService: baseSelectedEntriesService } = useContext(ServicesContext);
-  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
+  const { selectedEntriesService } = useContext(ServicesContext) as Required<ServicesParams>;
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
   const schema = useRecoilValue(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);

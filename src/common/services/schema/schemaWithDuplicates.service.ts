@@ -4,7 +4,7 @@ import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 
-export class SchemaWithDuplicatesService implements ISchemaWithDuplicates {
+export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService {
   private isManualDuplication: boolean;
 
   constructor(

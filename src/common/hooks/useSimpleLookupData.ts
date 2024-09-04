@@ -5,8 +5,7 @@ import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/h
 import { ServicesContext } from '@src/contexts';
 
 export const useSimpleLookupData = () => {
-  const { lookupCacheService: baseLookupCacheService } = useContext(ServicesContext);
-  const lookupCacheService = baseLookupCacheService as ILookupCacheService;
+  const { lookupCacheService } = useContext(ServicesContext) as Required<ServicesParams>;
 
   const getLookupData = lookupCacheService.getAll;
 
