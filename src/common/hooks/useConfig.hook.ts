@@ -20,14 +20,9 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
-  const {
-    schemaCreatorService: baseSchemaCreatorService,
-    userValuesService: baseUserValuesService,
-    selectedEntriesService: baseSelectedEntriesService,
-  } = useContext(ServicesContext);
-  const schemaCreatorService = baseSchemaCreatorService as ISchema;
-  const userValuesService = baseUserValuesService as IUserValues;
-  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
+  const { schemaCreatorService, userValuesService, selectedEntriesService } = useContext(
+    ServicesContext,
+  ) as Required<ServicesParams>;
   const [profiles, setProfiles] = useRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);

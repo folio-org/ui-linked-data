@@ -10,7 +10,7 @@ import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constan
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 import { IUserValues } from '@common/services/userValues/userValues.interface';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
-import { IInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
+import { IRecordToSchemaMappingInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
 
 // TODO: take into account a selected Profile
 export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
@@ -25,7 +25,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
   constructor(
     private selectedEntriesService: ISelectedEntries,
-    private repeatableFieldsService: ISchemaWithDuplicates,
+    private repeatableFieldsService: ISchemaWithDuplicatesService,
     private userValuesService: IUserValues,
     private commonStatusService: ICommonStatus,
   ) {
@@ -35,7 +35,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     this.recordBlocks = [];
   }
 
-  async init({ schema, record, recordBlocks, templateMetadata }: IInit) {
+  async init({ schema, record, recordBlocks, templateMetadata }: IRecordToSchemaMappingInit) {
     this.updatedSchema = cloneDeep(schema);
     this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
     this.record = record;

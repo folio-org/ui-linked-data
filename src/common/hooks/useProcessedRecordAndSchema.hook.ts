@@ -6,7 +6,7 @@ import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 import { ServicesContext } from '@src/contexts';
 
 type IGetProcessedRecordAndSchema = {
-  baseSchema: Map<string, SchemaEntry>;
+  baseSchema: Schema;
   record: Record<string, unknown> | Array<unknown>;
   userValues: UserValues;
   asClone?: boolean;
@@ -14,16 +14,8 @@ type IGetProcessedRecordAndSchema = {
 
 export const useProcessedRecordAndSchema = () => {
   const { formatMessage } = useIntl();
-  const {
-    userValuesService: baseUserValuesService,
-    schemaWithDuplicatesService: baseSchemaWithDuplicatesService,
-    recordNormalizingService: baseRecordNormalizingService,
-    recordToSchemaMappingService: baseRecordToSchemaMappingService,
-  } = useContext(ServicesContext);
-  const userValuesService = baseUserValuesService as IUserValues;
-  const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
-  const recordNormalizingService = baseRecordNormalizingService as IRecordNormalizingService;
-  const recordToSchemaMappingService = baseRecordToSchemaMappingService as IRecordToSchemaMapping;
+  const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
+    useContext(ServicesContext) as Required<ServicesParams>;
 
   const getProcessedRecordAndSchema = useCallback(
     async ({ baseSchema, record, userValues, asClone = false }: IGetProcessedRecordAndSchema) => {
