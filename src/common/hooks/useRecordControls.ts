@@ -24,6 +24,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import state from '@state';
+import { useContainerEvents } from './useContainerEvents';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -53,8 +54,8 @@ export const useRecordControls = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
+  const { dispatchUnblockEvent } = useContainerEvents();
   const [queryParams] = useSearchParams();
-
   const isClone = queryParams.get(QueryParams.CloneOf);
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
@@ -115,6 +116,7 @@ export const useRecordControls = () => {
       const parsedResponse = await response.json();
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
+      dispatchUnblockEvent();
 
       if (isInitiallyLoaded) {
         setIsInitiallyLoaded(false);
@@ -196,6 +198,7 @@ export const useRecordControls = () => {
     setSelectedRecordBlocks(undefined);
     setSelectedProfile(null);
     setRecordStatus({ type: RecordStatus.close });
+    dispatchUnblockEvent();
   };
 
   const discardRecord = (clearState = true) => {

@@ -5,6 +5,8 @@ import { RecoilRoot } from 'recoil';
 import state from '@state';
 import { itemSearchMockData } from './ItemSearch.test';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('SearchResultList', () => {
   beforeEach(() =>
     render(
