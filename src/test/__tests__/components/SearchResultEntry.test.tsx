@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { SearchResultEntry } from '@components/SearchResultEntry';
 import { itemSearchMockData } from './ItemSearch.test';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 const mockedUsedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({

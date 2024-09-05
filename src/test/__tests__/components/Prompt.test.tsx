@@ -3,6 +3,7 @@ import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import { RecoilRoot } from 'recoil';
+import state from '@state';
 
 const mockedUseBlocker = {
   reset: jest.fn(),
@@ -13,6 +14,7 @@ const setIsModalOpen = jest.fn();
 const openModal = jest.fn();
 const dispatchEvent = jest.fn();
 const addEventListener = jest.fn();
+const removeEventListener = jest.fn();
 
 const mockedContainer = document.createElement('div');
 
@@ -28,7 +30,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
 
   useBlocker: (cb: any) => {
-    cb({ nextLocation: { pathname: '/next/location', search: '' }, })
+    cb({ nextLocation: { pathname: '/next/location', search: '' } });
 
     return mockedUseBlocker;
   },
@@ -37,9 +39,11 @@ jest.mock('react-router-dom', () => ({
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 jest.mock('@common/helpers/dom.helper', () => ({
+  ...jest.requireActual('@common/helpers/dom.helper'),
   getWrapperAsWebComponent: () => ({
     dispatchEvent,
     addEventListener,
+    removeEventListener,
   }),
 }));
 
@@ -47,9 +51,13 @@ const mockPath = '/resources/:resourceId/edit';
 
 const renderPrompt = (isBlocking = true) =>
   render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={snapshot => snapshot.set(state.config.customEvents, { TRIGGER_MODAL: 'triggermodal' })}
+    >
       <RouterProvider
-        router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], { initialEntries: [mockPath] })}
+        router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], {
+          initialEntries: [mockPath],
+        })}
       />
     </RecoilRoot>,
   );

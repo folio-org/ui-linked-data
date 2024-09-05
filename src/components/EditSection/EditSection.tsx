@@ -15,13 +15,12 @@ import { DropdownField } from '@components/DropdownField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { Prompt } from '@components/Prompt';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { Button, ButtonType } from '@components/Button';
 import { ServicesContext } from '@src/contexts';
 import './EditSection.scss';
+import { useContainerEvents } from '@common/hooks/useContainerEvents';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -41,10 +40,11 @@ export const EditSection = memo(() => {
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
-  const customEvents = useRecoilValue(state.config.customEvents);
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+  
+  useContainerEvents({ watchEditedState: true })
 
   useEffect(() => {
     if (!isEdited) return;
@@ -67,13 +67,7 @@ export const EditSection = memo(() => {
   }, [isEdited, userValues]);
 
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
-    if (!isEdited) {
-      setIsEdited(true);
-
-      IS_EMBEDDED_MODE &&
-        customEvents?.BLOCK_NAVIGATION &&
-        getWrapperAsWebComponent()?.dispatchEvent(new CustomEvent(customEvents.BLOCK_NAVIGATION));
-    }
+    if (!isEdited) setIsEdited(true);
 
     setUserValues(oldValue => ({
       ...oldValue,
