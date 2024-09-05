@@ -18,13 +18,14 @@ import { Button, ButtonType } from '@components/Button';
 import { getRecordId } from '@common/helpers/record.helper';
 import { BFLITE_BFID_TO_BLOCK, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { RecordStatus } from '@common/constants/record.constants';
 import { PreviewActionsDropdown } from '@components/PreviewActionsDropdown';
 import './Preview.scss';
 
 type IPreview = {
-  altSchema?: Map<string, SchemaEntry>;
+  altSchema?: Schema;
   altUserValues?: UserValues;
   altInitKey?: string;
   headless?: boolean;
@@ -32,7 +33,7 @@ type IPreview = {
 };
 
 type Fields = {
-  base: Map<string, SchemaEntry>;
+  base: Schema;
   uuid: string;
   level?: number;
   paths: Array<string>;
@@ -53,6 +54,7 @@ const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
 
 export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false, hideActions }) => {
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
+  const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
@@ -82,7 +84,13 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
 
     if (!entry) return null;
 
-    const { displayName = '', children, type, bfid = '' } = entry;
+    const { displayName = '', children, type, bfid = '', path, linkedEntry } = entry;
+    const isDependentDropdownOption =
+      type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(path))?.linkedEntry?.controlledBy;
+    const visibleDropdownOption =
+      isDependentDropdownOption && selectedEntries.includes(uuid) ? <div>{displayName}</div> : null;
+
+    if (visibleDropdownOption) return visibleDropdownOption;
 
     // don't render empty dropdown options and their descendants
     if (type === AdvancedFieldType.dropdownOption && !isOnBranchWithUserValue) return null;
@@ -109,6 +117,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const shouldRenderValuesOrPlaceholders = !hasChildren || hasOnlyDropdownChildren;
     const shouldRenderPlaceholders =
       (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
+    const isDependentDropdown = type === AdvancedFieldType.dropdown && !!linkedEntry?.controlledBy;
     const displayNameWithAltValue = PREVIEW_ALT_DISPLAY_LABELS[displayName] || displayName;
     const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
     const isBlockContents = level === GROUP_CONTENTS_LEVEL;
@@ -177,12 +186,12 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
                   )
                 );
               })
-            : shouldRenderPlaceholders && <div className="value-group-wrapper">-</div>)}
+            : shouldRenderPlaceholders && !isDependentDropdown && <div className="value-group-wrapper">-</div>)}
         {children?.map((uuid: string) => (
           <ConditionalWrapper
             key={uuid}
             condition={!isGroupable && checkShouldGroupWrap(schema.get(uuid), level)}
-            wrapper={children => <div className="value-group-wrapper">{children}</div>}
+            wrapper={children => (children ? <div className="value-group-wrapper">{children}</div> : null)}
           >
             <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />
           </ConditionalWrapper>
