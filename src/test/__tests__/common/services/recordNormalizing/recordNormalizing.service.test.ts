@@ -50,7 +50,8 @@ describe('RecordNormalizingService', () => {
       },
     };
 
-    const recordNormalizingService = new RecordNormalizingService(record, testInstanceBlock, reference);
+    const recordNormalizingService = new RecordNormalizingService();
+    recordNormalizingService.init(record, testInstanceBlock, reference);
     const result = recordNormalizingService.get();
 
     expect(result).toEqual(testResult);

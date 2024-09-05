@@ -9,3 +9,9 @@ export enum RecordStatus {
   open = 'open',
   close = 'close',
 }
+
+export enum RecordEditActions {
+  Edit = 'edit',
+  New = 'new',
+  Duplicate = 'duplicate',
+}

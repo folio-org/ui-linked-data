@@ -6,19 +6,18 @@ import Plus16 from '@src/assets/plus-16.svg?react';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { FC } from 'react';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
-import { useRecoilValue } from 'recoil';
-import state from '@state';
 
 type Props = {
   referenceId?: string;
   entityType?: string;
+  ownId?: string;
   handleNavigateToEditPage?: VoidFunction;
 };
 
-export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType, handleNavigateToEditPage }) => {
-  const { navigateToEditPage } = useNavigateToEditPage();
-  const isEdited = useRecoilValue(state.status.recordIsEdited);
-  const isEditedQueryParam = isEdited ? `&${QueryParams.PerformIdUpdate}=true` : '';
+export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityType, handleNavigateToEditPage }) => {
+  const { navigateToEditPage, navigateAsDuplicate } = useNavigateToEditPage();
+
+  const handleDuplicate = () => ownId && navigateAsDuplicate(ownId);
 
   const actionDropdownItems = [
     {
@@ -37,6 +36,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType, han
           type: DropdownItemType.basic,
           labelId: 'marva.duplicate',
           icon: <Duplicate16 />,
+          action: handleDuplicate,
         },
         {
           id: 'newInstance',
@@ -47,7 +47,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, entityType, han
             entityType &&
             referenceId &&
             navigateToEditPage(
-              `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${entityType}&${QueryParams.Ref}=${referenceId}${isEditedQueryParam}`,
+              `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${entityType}&${QueryParams.Ref}=${referenceId}`,
             ),
         },
       ],

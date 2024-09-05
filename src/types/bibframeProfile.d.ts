@@ -85,9 +85,9 @@ type RecursiveRecordSchema = {
   [key: string]: string[] | number[] | number | string | RecursiveRecordSchema;
 };
 
-type RecordEntry = {
+type RecordEntry<T = RecursiveRecordSchema> = {
   [key: string]: {
-    [key: string]: RecursiveRecordSchema;
+    [key: string]: T;
   };
 };
 

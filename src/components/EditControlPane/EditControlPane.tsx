@@ -7,7 +7,7 @@ import { Button, ButtonType } from '@components/Button';
 import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import state from '@state';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { getMarcRecord } from '@common/api/records.api';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
@@ -18,6 +18,8 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { RecordStatus } from '@common/constants/record.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {
@@ -30,6 +32,8 @@ export const EditControlPane = () => {
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
+  const { navigateAsDuplicate } = useNavigateToEditPage();
+  const [queryParams] = useSearchParams();
 
   const handleFetchMarcData = async () => {
     if (!resourceId) return;
@@ -50,6 +54,8 @@ export const EditControlPane = () => {
     }
   };
 
+  const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
+
   const items = [
     {
       id: 'actions',
@@ -60,7 +66,8 @@ export const EditControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'marva.duplicate',
           icon: <Duplicate16 />,
-          isDisabled: IS_DISABLED_FOR_ALPHA,
+          isDisabled: currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
+          action: handleDuplicate,
         },
         {
           id: 'viewLinkedData',
@@ -109,7 +116,7 @@ export const EditControlPane = () => {
             // TODO: include resource title once record processing refactoring is completed
             <FormattedMessage
               key={bfid}
-              id={`marva.${isInCreateMode ? 'new' : 'edit'}${RESOURCE_TEMPLATE_IDS[bfid]}`}
+              id={`marva.${getEditActionPrefix(isInCreateMode, queryParams)}${RESOURCE_TEMPLATE_IDS[bfid]}`}
             />
           ))}
       </div>

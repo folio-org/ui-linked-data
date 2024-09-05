@@ -1,5 +1,13 @@
 export interface IUserValues {
-  setValue: ({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) => void;
+  setValue: ({
+    type,
+    key,
+    value,
+  }: {
+    type: AdvancedFieldType;
+    key: string;
+    value: UserValueDTO;
+  }) => void;
 
   set: (userValues: UserValues) => void;
 
