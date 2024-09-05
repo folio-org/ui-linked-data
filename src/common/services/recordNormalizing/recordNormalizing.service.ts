@@ -1,13 +1,22 @@
 import { cloneDeep } from 'lodash';
 import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
+import { IRecordNormalizing } from './recordNormalizing.interface';
 
-export class RecordNormalizingService {
-  constructor(
-    private record: RecordEntry,
-    private block?: string,
-    private reference?: { key: string; uri: string },
-  ) {
+export class RecordNormalizingService implements IRecordNormalizing {
+  private record: RecordEntry;
+  private block?: string;
+  private reference?: RecordReference;
+
+  constructor() {
+    this.record = {};
+    this.block = undefined;
+    this.reference = undefined;
+  }
+
+  init(record: RecordEntry, block?: string, reference?: RecordReference) {
     this.record = cloneDeep(record);
+    this.block = block;
+    this.reference = reference;
 
     this.decoupleBlocks();
     this.normalize();

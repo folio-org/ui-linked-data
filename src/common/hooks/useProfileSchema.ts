@@ -4,13 +4,10 @@ import { ServicesContext } from '@src/contexts';
 import state from '@state';
 
 export const useProfileSchema = () => {
-  const {
-    selectedEntriesService: baseSelectedEntriesService,
-    schemaWithDuplicatesService: baseSchemaWithDuplicatesService,
-  } = useContext(ServicesContext);
+  const { selectedEntriesService, schemaWithDuplicatesService } = useContext(
+    ServicesContext,
+  ) as Required<ServicesParams>;
   const [schema, setSchema] = useRecoilState(state.config.schema);
-  const selectedEntriesService = baseSelectedEntriesService as ISelectedEntries;
-  const schemaWithDuplicatesService = baseSchemaWithDuplicatesService as ISchemaWithDuplicates;
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setClonePrototypes = useSetRecoilState(state.config.clonePrototypes);
 

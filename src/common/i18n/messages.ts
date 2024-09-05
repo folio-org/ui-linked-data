@@ -148,6 +148,10 @@ export const BASE_LOCALE = {
   'marva.keyword': 'Keyword',
   'marva.recordsFound': '{recordsCount} records found',
   'marva.resourceWithIdIsEmpty': 'Resource description {id} is empty',
+  'marva.duplicateInstance': 'Duplicate instance',
+  'marva.duplicateWork': 'Duplicate work',
+  'marva.duplicateInstanceInBrackets': '(DUPLICATE INSTANCE)',
+  'marva.duplicateWorkInBrackets': '(DUPLICATE WORK)',
 };
 
 export const i18nMessages = {

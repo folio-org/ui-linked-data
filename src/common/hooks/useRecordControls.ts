@@ -53,6 +53,9 @@ export const useRecordControls = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
+  const [queryParams] = useSearchParams();
+
+  const isClone = queryParams.get(QueryParams.CloneOf);
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     try {
@@ -68,7 +71,7 @@ export const useRecordControls = () => {
 
       setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
 
-      await getProfiles({ record: recordData, recordId, previewParams });
+      await getProfiles({ record: recordData, recordId, previewParams, asClone: Boolean(isClone) });
 
       setIsInitiallyLoaded(true);
       setIsEdited(false);
@@ -104,11 +107,11 @@ export const useRecordControls = () => {
 
       // TODO: define a type
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
+      const shouldPostRecord = !recordId || getRecordId(record) === DEFAULT_RECORD_ID || isClone;
 
-      const response =
-        !recordId || getRecordId(record) === DEFAULT_RECORD_ID
-          ? await postRecord(formattedRecord)
-          : await putRecord(recordId as string, formattedRecord);
+      const response = shouldPostRecord
+        ? await postRecord(formattedRecord)
+        : await putRecord(recordId as string, formattedRecord);
       const parsedResponse = await response.json();
 
       deleteRecordLocally(profile, currentRecordId as RecordID);

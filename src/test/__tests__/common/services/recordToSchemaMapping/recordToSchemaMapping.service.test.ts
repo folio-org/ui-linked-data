@@ -7,7 +7,7 @@ import * as BibframeMappingConstants from '@common/constants/bibframeMapping.con
 import { StatusType } from '@common/constants/status.constants';
 import { getLabelEntry, schema } from './data/schema.data';
 import { updatedSchema, updatedSchemaWithRepeatableSubcomponents } from './data/updatedSchema.data';
-import { record, recordWithRepeatableSubcomponents } from './data/record.data';
+import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents } from './data/record.data';
 
 const mockedNewBf2ToBFLiteMapping = getMockedImportedConstant(BibframeMappingConstants, 'NEW_BF2_TO_BFLITE_MAPPING');
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
@@ -64,9 +64,6 @@ describe('RecordToSchemaMappingService', () => {
 
   beforeEach(() => {
     service = new RecordToSchemaMappingService(
-      schema as Schema,
-      record as unknown as RecordEntry,
-      recordBlocks,
       selectedEntriesService,
       repeatableFieldsService,
       userValuesService,
@@ -77,7 +74,11 @@ describe('RecordToSchemaMappingService', () => {
   test('returns updated schema', async () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: record as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
       getLabelEntry({
@@ -92,7 +93,7 @@ describe('RecordToSchemaMappingService', () => {
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(3);
-    expect(service.getUpdatedSchema()).toEqual(updatedSchema);
+    expect(service.get()).toEqual(updatedSchema);
   });
 
   test('calls "commonStatusService.set" method', async () => {
@@ -103,7 +104,11 @@ describe('RecordToSchemaMappingService', () => {
       .spyOn(console, 'error')
       .mockImplementation((message: any, error: Error) => ({ message, error }));
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: record as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
     expect(commonStatusService.set).toHaveBeenCalledWith('marva.recordMappingToSchema', StatusType.error);
@@ -113,16 +118,17 @@ describe('RecordToSchemaMappingService', () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchemaWithRepeatableSubcomponents as Schema);
 
     service = new RecordToSchemaMappingService(
-      schema as Schema,
-      recordWithRepeatableSubcomponents as unknown as RecordEntry,
-      recordBlocks,
       selectedEntriesService,
       repeatableFieldsService,
       userValuesService,
       commonStatusService,
     );
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: recordWithRepeatableSubcomponents as unknown as RecordEntry,
+      recordBlocks,
+    });
 
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledTimes(2);
     expect(repeatableFieldsService.duplicateEntry).toHaveBeenCalledWith(
@@ -139,6 +145,30 @@ describe('RecordToSchemaMappingService', () => {
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
     expect(userValuesService.setValue).toHaveBeenCalledTimes(5);
-    expect(service.getUpdatedSchema()).toEqual(updatedSchemaWithRepeatableSubcomponents);
+    expect(service.get()).toEqual(updatedSchemaWithRepeatableSubcomponents);
+  });
+
+  test('applies template to resource', async () => {
+    jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
+
+    service = new RecordToSchemaMappingService(
+      schema as Schema,
+      record as unknown as RecordEntry,
+      recordBlocks,
+      selectedEntriesService,
+      repeatableFieldsService,
+      userValuesService,
+      commonStatusService,
+      mockInstanceTemplateMetadata,
+    );
+
+    await service.init();
+
+    expect(userValuesService.setValue).toHaveBeenCalledWith(
+      expect.objectContaining({ value: expect.objectContaining({ data: 'mockPrefix literal value 1' }) }),
+    );
+    expect(userValuesService.setValue).not.toHaveBeenCalledWith(
+      expect.objectContaining({ value: expect.objectContaining({ data: 'unreachableMockPrefix' }) }),
+    );
   });
 });

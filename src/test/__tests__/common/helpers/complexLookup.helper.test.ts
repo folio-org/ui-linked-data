@@ -108,7 +108,7 @@ describe('complexLookup.helper', () => {
 
       const result = getUpdatedSelectedEntries({
         selectedEntries,
-        selectedEntriesService: selectedEntriesService as unknown as ISelectedEntries,
+        selectedEntriesService: selectedEntriesService as unknown as ISelectedEntriesService,
         linkedFieldChildren,
         newValue,
       });

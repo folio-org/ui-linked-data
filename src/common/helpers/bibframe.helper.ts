@@ -1,5 +1,7 @@
 import { DUPLICATE_URI_REPLACEMENTS } from '@common/constants/bibframe.constants';
 import { BF2_TO_BFLITE_MAP } from '@common/constants/bibframeMapping.constants';
+import { RecordEditActions } from '@common/constants/record.constants';
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 
 export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, path?: string[]) => {
   if (!uri || !BF2_TO_BFLITE_MAP[uri]) return undefined;
@@ -51,4 +53,12 @@ export const getUris = ({ uri, dataTypeURI, schema, path }: GetUris) => {
   const uriWithSelector = uriBFLite || uri;
 
   return { uriBFLite, uriWithSelector };
+};
+
+export const getEditActionPrefix = (route?: string, search?: URLSearchParams) => {
+  if (route === ROUTES.RESOURCE_CREATE.uri) {
+    return search?.get(QueryParams.CloneOf) ? RecordEditActions.Duplicate : RecordEditActions.New;
+  } else {
+    return RecordEditActions.Edit;
+  }
 };

@@ -10,35 +10,42 @@ import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constan
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 import { IUserValues } from '@common/services/userValues/userValues.interface';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
+import { IRecordToSchemaMappingInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
 
 // TODO: take into account a selected Profile
-export class RecordToSchemaMappingService {
+export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
+  private record: RecordEntry;
+  private recordBlocks: RecordBlocksList;
   private currentBlockUri?: string;
   private currentRecordGroupKey?: string;
   private recordMap?: BF2BFLiteMapEntry;
+  private templateMetadata?: ResourceTemplateMetadata[];
 
   constructor(
-    schema: Schema,
-    private record: RecordEntry,
-    private recordBlocks: RecordBlocksList,
     private selectedEntriesService: ISelectedEntries,
-    private repeatableFieldsService: ISchemaWithDuplicates,
+    private repeatableFieldsService: ISchemaWithDuplicatesService,
     private userValuesService: IUserValues,
     private commonStatusService: ICommonStatus,
   ) {
-    this.updatedSchema = cloneDeep(schema);
-    this.record = record;
-
-    this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
+    this.updatedSchema = new Map();
+    this.schemaArray = [];
+    this.record = {};
+    this.recordBlocks = [];
   }
 
-  async init() {
+  async init({ schema, record, recordBlocks, templateMetadata }: IRecordToSchemaMappingInit) {
+    this.updatedSchema = cloneDeep(schema);
+    this.schemaArray = schema ? Array.from(this.updatedSchema?.values()) : [];
+    this.record = record;
+    this.recordBlocks = recordBlocks;
+    this.templateMetadata = templateMetadata;
+
     await this.traverseBlocks();
   }
 
-  getUpdatedSchema() {
+  get() {
     return this.updatedSchema;
   }
 
@@ -423,13 +430,23 @@ export class RecordToSchemaMappingService {
     labelSelector?: string;
   }) {
     const { type, constraints, uri } = schemaUiElem;
+    const partialTemplateMatch = this.templateMetadata?.filter(({ path }) => path.at(-1) === fieldUri);
+    let updatedData = data;
+
+    if (partialTemplateMatch?.length) {
+      updatedData = this.checkAndApplyTemplateToValue({
+        schemaEntry: schemaUiElem,
+        templates: partialTemplateMatch,
+        value: data,
+      });
+    }
 
     await this.userValuesService.setValue({
       type: type as AdvancedFieldType,
       key: valueKey,
       value: {
         id,
-        data,
+        data: updatedData,
         uri: constraints?.useValuesFrom?.[0],
         labelSelector,
         uriSelector: BFLITE_URIS.LINK,
@@ -439,5 +456,31 @@ export class RecordToSchemaMappingService {
         fieldUri,
       },
     });
+  }
+
+  private checkAndApplyTemplateToValue({
+    schemaEntry,
+    templates,
+    value,
+  }: {
+    schemaEntry: SchemaEntry;
+    templates: ResourceTemplateMetadata[];
+    value: string | string[] | RecordBasic[];
+  }) {
+    const isValueArray = Array.isArray(value);
+
+    // TODO: add support for RecordBasic[] value type if needed
+    if (typeof value === 'object' && !isValueArray) return value;
+
+    const entryPathAsUris = schemaEntry.path.map(id => this.updatedSchema.get(id)?.uriBFLite).filter(uri => uri);
+    const matchedTemplates = templates.filter(
+      ({ path }) => path.length === entryPathAsUris.length && String(path) === String(entryPathAsUris),
+    );
+
+    if (!matchedTemplates.length) return value;
+
+    const prefixValueList = matchedTemplates.map(({ template }) => template.prefix);
+
+    return [...prefixValueList, ...(isValueArray ? value : [value])].join(' ');
   }
 }

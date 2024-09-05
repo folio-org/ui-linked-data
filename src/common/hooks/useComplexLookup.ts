@@ -23,7 +23,7 @@ export const useComplexLookup = ({
   lookupConfig: ComplexLookupsConfigEntry;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }) => {
-  const { selectedEntriesService } = useContext(ServicesContext);
+  const { selectedEntriesService } = useContext(ServicesContext) as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const schema = useRecoilValue(state.config.schema);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);

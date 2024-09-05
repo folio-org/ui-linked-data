@@ -13,9 +13,9 @@ const selectedProfile = atom<ProfileEntry | null>({
   default: null,
 });
 
-const preparedFields = atom<ResourceTemplates>({
+const preparedFields = atom<ResourceTemplates | null>({
   key: 'config.preparedFields',
-  default: {},
+  default: null,
 });
 
 const initialSchemaKey = atom<string | null>({

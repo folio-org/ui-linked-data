@@ -45,13 +45,12 @@ describe('SchemaService', () => {
 
     const initKey = 'testKey-1';
 
-    const schemaService = new SchemaService(
-      templatesData as unknown as ResourceTemplates,
-      profileData as unknown as ProfileEntry,
-      new SelectedEntriesService() as unknown as ISelectedEntries,
-    );
+    const schemaService = new SchemaService(new SelectedEntriesService() as unknown as ISelectedEntries);
 
-    const schema = schemaService.generate(initKey);
+    schemaService.init(templatesData as unknown as ResourceTemplates, profileData as unknown as ProfileEntry);
+    schemaService.generate(initKey);
+
+    const schema = schemaService.get();
 
     expect(schema).toEqual(generatedSchema);
   });

@@ -31,13 +31,12 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {
     return (
-      <div id={id}>
-        {Object.entries(values ?? {})?.map(([k, v]) => (
-          <Fragment key={k}>{v as ReactNode}</Fragment>
-        ))}
-      </div>
+      <div id={id}>{Object.entries(values ?? {})?.map(([k, v]) => <Fragment key={k}>{v as ReactNode}</Fragment>)}</div>
     );
   },
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => id,
+  }),
 }));
 
 describe('FullDisplay', () => {

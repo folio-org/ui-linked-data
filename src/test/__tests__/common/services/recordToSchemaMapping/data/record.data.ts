@@ -35,3 +35,18 @@ export const recordWithRepeatableSubcomponents = {
     ],
   },
 };
+
+export const mockInstanceTemplateMetadata = [
+  {
+    path: ['block_1', 'uriBFLite_literal_1'],
+    template: {
+      prefix: 'mockPrefix',
+    },
+  },
+  {
+    path: ['uriBFLite_option_literal_1'],
+    template: {
+      prefix: 'unreachableMockPrefix',
+    },
+  }
+];
