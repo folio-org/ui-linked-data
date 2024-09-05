@@ -152,17 +152,18 @@ describe('RecordToSchemaMappingService', () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
 
     service = new RecordToSchemaMappingService(
-      schema as Schema,
-      record as unknown as RecordEntry,
-      recordBlocks,
       selectedEntriesService,
       repeatableFieldsService,
       userValuesService,
       commonStatusService,
-      mockInstanceTemplateMetadata,
     );
 
-    await service.init();
+    await service.init({
+      schema: schema as Schema,
+      record: record as unknown as RecordEntry,
+      recordBlocks,
+      templateMetadata: mockInstanceTemplateMetadata,
+    });
 
     expect(userValuesService.setValue).toHaveBeenCalledWith(
       expect.objectContaining({ value: expect.objectContaining({ data: 'mockPrefix literal value 1' }) }),
