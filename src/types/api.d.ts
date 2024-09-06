@@ -36,13 +36,15 @@ type InstanceAsSearchResultDTO = {
   titles?: GenericStructDTO<TitleType>[];
   identifiers?: GenericStructDTO<'Ean' | 'ISBN' | 'LCCN' | 'LocalId' | 'UNKNOWN'>[];
   publications?: { name?: string; date?: string }[];
+  editionStatements?: string[];
 };
 
 type WorkAsSearchResultDTO = {
   id: string;
   titles?: GenericStructDTO<TitleType>[];
   contributors?: ContributorDTO[];
-  languages?: { value?: string }[];
+  languages?: string[];
+  subjects?: string[];
   classifications?: { number?: string; source?: string }[];
   instances?: InstanceAsSearchResultDTO[];
 };

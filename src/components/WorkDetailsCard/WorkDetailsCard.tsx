@@ -31,7 +31,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   const { navigateToEditPage } = useNavigateToEditPage();
   const title = getTitle(titles);
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
-  const langCode = languages?.find(({ value }) => value)?.value;
+  const langCode = languages?.find(value => value);
   const classificationNumber = classifications?.find(
     ({ number, source }) => number && (source === Classifications.DDC || source === Classifications.LC),
   )?.number;

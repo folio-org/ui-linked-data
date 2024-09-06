@@ -19,7 +19,7 @@ describe('SearchResultEntry', () => {
       render(
         <RecoilRoot>
           <BrowserRouter>
-            <SearchResultEntry {...(mockProps as WorkAsSearchResultDTO)} />
+            <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
           </BrowserRouter>
           ,
         </RecoilRoot>,
@@ -56,7 +56,7 @@ describe('SearchResultEntry', () => {
       render(
         <RecoilRoot>
           <BrowserRouter>
-            <SearchResultEntry {...({ ...mockProps, instances: [] } as WorkAsSearchResultDTO)} />
+            <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
           </BrowserRouter>
         </RecoilRoot>,
       ),

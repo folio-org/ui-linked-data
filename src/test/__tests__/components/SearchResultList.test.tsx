@@ -11,7 +11,7 @@ describe('SearchResultList', () => {
       <BrowserRouter>
         <RecoilRoot
           initializeState={snapshot =>
-            snapshot.set(state.search.data, itemSearchMockData.content as WorkAsSearchResultDTO[])
+            snapshot.set(state.search.data, itemSearchMockData.content as unknown as WorkAsSearchResultDTO[])
           }
         >
           <SearchResultList />
