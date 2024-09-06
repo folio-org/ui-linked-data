@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, GroupBase, MultiValue, StylesConfig } from 'react-select';
+import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import { useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -138,6 +138,13 @@ export const SimpleLookupField: FC<Props> = ({
       loadingMessage={() => <FormattedMessage id="marva.loading" />}
       inputId="creatable-select-input"
       styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
+      filterOption={createFilter({
+        ignoreCase: true,
+        ignoreAccents: true,
+        matchFrom: 'any',
+        trim: true,
+        stringify: ({ label }) => label,
+      })}
     />
   );
 };
