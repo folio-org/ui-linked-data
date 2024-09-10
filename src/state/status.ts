@@ -1,12 +1,12 @@
 import { atom } from 'recoil';
 
-const recordIsEdited = atom<boolean>({
-  key: 'status.record.isEdited',
-  default: false,
+const lastSavedRecordId = atom<string | null>({
+  key: 'status.record.lastSavedRecordId',
+  default: null,
 });
 
-const recordIsInitiallyLoaded = atom<boolean>({
-  key: 'status.record.isInitiallyLoaded',
+const recordIsEdited = atom<boolean>({
+  key: 'status.record.isEdited',
   default: false,
 });
 
@@ -22,7 +22,7 @@ const commonMessages = atom<StatusEntry[]>({
 
 export default {
   recordIsEdited,
-  recordIsInitiallyLoaded,
   recordStatus,
   commonMessages,
+  lastSavedRecordId,
 };

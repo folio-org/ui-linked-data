@@ -43,7 +43,7 @@ export const useRecordControls = () => {
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
-  const [isInitiallyLoaded, setIsInitiallyLoaded] = useRecoilState(state.status.recordIsInitiallyLoaded);
+  const setLastSavedRecordId = useSetRecoilState(state.status.lastSavedRecordId);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
@@ -74,7 +74,6 @@ export const useRecordControls = () => {
 
       await getProfiles({ record: recordData, recordId, previewParams, asClone: Boolean(isClone) });
 
-      setIsInitiallyLoaded(true);
       setIsEdited(false);
     } catch (_err) {
       console.error('Error fetching record.');
@@ -117,11 +116,6 @@ export const useRecordControls = () => {
 
       deleteRecordLocally(profile, currentRecordId as RecordID);
       dispatchUnblockEvent();
-
-      if (isInitiallyLoaded) {
-        setIsInitiallyLoaded(false);
-      }
-
       !asRefToNewRecord && setRecord(parsedResponse);
 
       setStatusMessages(currentStatus => [
@@ -140,6 +134,7 @@ export const useRecordControls = () => {
       flushSync(() => setIsEdited(false));
 
       const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
+      setLastSavedRecordId(updatedRecordId);
 
       if (!isNavigatingBack) {
         navigate(generateEditResourceUrl(updatedRecordId as string), {
@@ -179,7 +174,6 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
       ]);
     } finally {
-      setIsInitiallyLoaded(true);
       setIsLoading(false);
     }
   };
