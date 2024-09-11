@@ -13,7 +13,7 @@ export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => 
   );
 
   useEffect(() => {
-    if (offsetSearchParam === (undefined || null)) return;
+    if (offsetSearchParam === undefined || offsetSearchParam === null) return;
 
     setCurrentPageNumber(parseInt(offsetSearchParam));
   }, [offsetSearchParam]);
