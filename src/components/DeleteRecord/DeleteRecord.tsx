@@ -11,16 +11,17 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { RESOURCE_URLS } from '@common/constants/routes.constants';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import { Button, ButtonType } from '@components/Button';
+import { useRecordStatus } from '@common/hooks/useRecordStatus';
 
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
   const isEdited = useRecoilValue(state.status.recordIsEdited);
-  const isInitiallyLoaded = useRecoilValue(state.status.recordIsInitiallyLoaded);
+  const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const { deleteRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
+  const { hasBeenSaved } = useRecordStatus();
   const isDisabledForEditPage =
-    checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded, isEdited }) || false;
+    checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded: !hasBeenSaved, isEdited }) || false;
   const isDisabled = !record || getRecordId(record) === DEFAULT_RECORD_ID || isDisabledForEditPage;
 
   return (
