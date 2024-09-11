@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { SaveRecord } from '@components/SaveRecord';
 import state from '@state';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('SaveRecord', () => {
   function renderSaveRecordComponent(recordIsEdited = true) {
@@ -12,7 +13,9 @@ describe('SaveRecord', () => {
           snapshot.set(state.status.recordIsEdited, recordIsEdited);
         }}
       >
-        <SaveRecord primary />
+        <BrowserRouter>
+          <SaveRecord primary />
+        </BrowserRouter>
       </RecoilRoot>,
     );
   }
