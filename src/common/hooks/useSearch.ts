@@ -5,12 +5,12 @@ import { getByIdentifier } from '@common/api/search.api';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers } from '@common/constants/search.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { generateSearchParamsState } from '@common/helpers/search.helper';
+import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { SearchContext } from '@src/contexts';
 import state from '@state';
-import { usePagination } from './usePagination';
+import { usePagination } from '@common/hooks/usePagination';
 
 export const useSearch = () => {
   const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy } = useContext(SearchContext);
@@ -50,7 +50,7 @@ export const useSearch = () => {
         return normalized;
       }
 
-      return query;
+      return normalizeQuery(query);
     },
     [setMessage],
   );

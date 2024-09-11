@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
-import { normalizeQuery } from '@common/helpers/search.helper';
 import { SearchContext } from '@src/contexts';
 import state from '@state';
 
@@ -27,8 +26,6 @@ export const useLoadSearchResults = (
     offset: null,
   });
 
-  const normalizedQueryParam = searchByParam ? normalizeQuery(queryParam) : queryParam;
-
   useEffect(() => {
     if (!hasSearchParams) return;
 
@@ -42,7 +39,7 @@ export const useLoadSearchResults = (
         setSearchBy(searchByParam as SearchIdentifiers);
       }
 
-      if (!queryParam || !normalizedQueryParam) {
+      if (!queryParam) {
         setData(null);
         return;
       }
@@ -53,7 +50,7 @@ export const useLoadSearchResults = (
       }
 
       await fetchData(
-        normalizedQueryParam,
+        queryParam,
         searchByParam as SearchIdentifiers,
         offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
       );
