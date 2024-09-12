@@ -22,7 +22,7 @@ import './SearchResultEntry.scss';
 type SearchResultEntry = {
   id: string;
   contributors?: ContributorDTO[];
-  languages?: { value?: string }[];
+  languages?: string[];
   classifications?: { number?: string; source?: string }[];
   instances?: InstanceAsSearchResultDTO[];
 };

@@ -9,7 +9,7 @@ import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
-import state from '@state'; 
+import state from '@state';
 
 let getByIdentifierMock: jest.SpyInstance<
   Promise<any>,
@@ -45,11 +45,7 @@ export const itemSearchMockData = {
           isCreator: true,
         },
       ],
-      languages: [
-        {
-          value: 'eng',
-        },
-      ],
+      languages: ['eng'],
       classifications: [
         {
           number: '1234',
@@ -62,11 +58,7 @@ export const itemSearchMockData = {
           date: '2022',
         },
       ],
-      subjects: [
-        {
-          value: 'Subject',
-        },
-      ],
+      subjects: ['Subject'],
       instances: [
         {
           id: 'instanceId',
@@ -103,11 +95,7 @@ export const itemSearchMockData = {
               date: '2022',
             },
           ],
-          editionStatements: [
-            {
-              value: 'Edition 1',
-            },
-          ],
+          editionStatements: ['Edition 1'],
         },
       ],
     },
