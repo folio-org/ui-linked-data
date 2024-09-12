@@ -67,9 +67,8 @@ body > #editor-root,
   }
 
   select {
-    @include focused-outline-secondary-with-border();
-
     cursor: pointer;
+    @include focused-outline-secondary-with-border();
 
     &:focus-visible {
       position: relative;
@@ -82,9 +81,8 @@ body > #editor-root,
 
   input {
     &[type='text']:not(#creatable-select-input) {
-      @include focused-outline-secondary-with-border();
-
       cursor: text;
+      @include focused-outline-secondary-with-border();
     }
 
     &:disabled {
@@ -94,8 +92,6 @@ body > #editor-root,
     }
 
     &[type='checkbox'] {
-      @include focused-outline-primary();
-
       -webkit-appearance: none;
       appearance: none;
       background-color: #fff;
@@ -109,6 +105,7 @@ body > #editor-root,
       display: grid;
       place-content: center;
       cursor: pointer;
+      @include focused-outline-primary();
 
       &:disabled {
         color: lightgray;
@@ -137,8 +134,6 @@ body > #editor-root,
     }
 
     &[type='radio'] {
-      @include focused-outline-primary();
-
       appearance: none;
       background-color: #fff;
       margin: 0;
@@ -152,6 +147,7 @@ body > #editor-root,
       display: grid;
       place-content: center;
       cursor: pointer;
+      @include focused-outline-primary();
 
       &::before {
         content: '';
