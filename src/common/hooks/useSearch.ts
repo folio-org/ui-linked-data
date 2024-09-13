@@ -38,8 +38,6 @@ export const useSearch = () => {
     setCurrentPageNumber(0);
   }, []);
 
-  const clearMessage = useCallback(() => message && setMessage(''), [message, setMessage]);
-
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {
       if (type === SearchIdentifiers.LCCN) {
@@ -57,7 +55,7 @@ export const useSearch = () => {
 
   const fetchData = useCallback(
     async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
-      clearMessage();
+      setMessage('');
 
       data && setData(null);
 
