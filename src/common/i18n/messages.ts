@@ -144,6 +144,7 @@ export const BASE_LOCALE = {
   'marva.assignAuthority': 'Assign authority',
   'marva.change': 'Change',
   'marva.searchCreatorAuthority': 'Search creator authority',
+  'marva.selectMARCAuthority': 'Select MARC authority',
   'marva.authorities': 'Authorities',
   'marva.keyword': 'Keyword',
   'marva.recordsFound': '{recordsCount} records found',

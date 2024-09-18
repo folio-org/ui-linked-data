@@ -22,6 +22,7 @@ type Button = {
   prefix?: string | ReactNode;
   disabled?: boolean;
   'data-testid'?: string;
+  role?: string;
 };
 
 export const Button: FC<Button> = ({
@@ -33,11 +34,13 @@ export const Button: FC<Button> = ({
   type = ButtonType.Passive,
   disabled,
   'data-testid': dataTestId,
+  role,
 }) => (
   <button
     data-testid={dataTestId}
     disabled={disabled}
     onClick={onClick}
+    role={role}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,

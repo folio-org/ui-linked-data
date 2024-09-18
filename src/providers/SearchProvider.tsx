@@ -1,11 +1,19 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { SearchContext } from '@src/contexts';
 
 type SearchProviderProps = {
-  value: SearchParams;
+  value: SearchParams & { defaultNavigationSegment: string };
   children: ReactElement;
 };
 
 export const SearchProvider: FC<SearchProviderProps> = ({ value, children }) => {
-  return <SearchContext.Provider value={value}>{children}</SearchContext.Provider>;
+  const [navigationSegment, setNavigationSegment] = useState(value.defaultNavigationSegment);
+
+  return (
+    <SearchContext.Provider
+      value={{ ...value, navigationSegment: { value: navigationSegment, set: setNavigationSegment } }}
+    >
+      {children}
+    </SearchContext.Provider>
+  );
 };

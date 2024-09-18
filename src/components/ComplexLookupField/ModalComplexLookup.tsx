@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
+// import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
@@ -72,13 +72,14 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             defaultSearchBy={searchBy[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
-            isVisibleFilters={SEARCH_FILTERS_ENABLED}
+            isVisibleFilters={true}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
             searchByControlOptions={searchBy}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
+            defaultNavigationSegment={''}
           />
         </div>
       </Modal>

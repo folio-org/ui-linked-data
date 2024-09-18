@@ -5,6 +5,11 @@ type SearchParamsState = {
   [key in SearchQueryParams]?: string | number | SearchIdentifiers;
 };
 
+type NavigationSegment = {
+  value?: string;
+  set: Dispatch<SetStateAction<boolean>> | VoidFunction;
+};
+
 type SearchParams = {
   endpointUrl: string;
   searchFilter?: string;
@@ -21,4 +26,5 @@ type SearchParams = {
   searchByControlOptions?: (string | ComplexLookupSearchBy)[];
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
+  navigationSegment?: NavigationSegment;
 };

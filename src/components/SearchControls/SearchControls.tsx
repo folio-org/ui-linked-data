@@ -10,6 +10,7 @@ import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
 import { SearchContext } from '@src/contexts';
+import SearchSegments from './SearchSegments';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
@@ -67,6 +68,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <CaretDown className="header-caret" />
       </div>
       <div className="search-pane-content">
+        <SearchSegments />
+
         <div className="inputs">
           {isVisibleSearchByControl && (
             <Select

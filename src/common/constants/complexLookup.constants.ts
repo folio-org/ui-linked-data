@@ -15,8 +15,8 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
       modal: {
         title: {
-          creator: 'marva.searchCreatorAuthority',
-          contributor: 'marva.searchCreatorAuthority',
+          creator: 'marva.selectMARCAuthority',
+          contributor: 'marva.selectMARCAuthority',
         },
         searchResults: 'marva.authorities',
       },
