@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
@@ -7,8 +6,8 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { useSearch } from '@common/hooks/useSearch';
-import { SearchContext } from '@src/contexts';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 
@@ -20,7 +19,7 @@ export const ItemSearch = () => {
     isVisibleAdvancedSearch,
     renderResultsList,
     renderSearchControlPane,
-  } = useContext(SearchContext);
+  } = useSearchContext();
   const {
     submitSearch,
     clearValues,

@@ -1,36 +1,46 @@
+import { FC } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { ButtonGroup } from '@components/ButtonGroup';
 import { Button, ButtonType } from '@components/Button';
-import { SearchContext } from '@src/contexts';
-import { FC, useContext } from 'react';
+import { SearchSegment } from '@common/constants/search.constants';
+import './SearchSegments.scss'
 
-interface SearchSegmentsProps {}
+type SearchSegmentsProps = {
+  onChangeSegment?: (value: SearchSegmentValue) => void;
+};
 
-const SearchSegments: FC<SearchSegmentsProps> = () => {
-  const { navigationSegment } = useContext(SearchContext);
+const SearchSegments: FC<SearchSegmentsProps> = ({ onChangeSegment }) => {
+  const { navigationSegment } = useSearchContext();
   const { value: selectedNavigationSegment, set: setSelectedNavigationSegment } =
     navigationSegment as NavigationSegment;
 
+  const onSegmentClick = (value: SearchSegmentValue) => {
+    setSelectedNavigationSegment(value);
+    onChangeSegment?.(value);
+  };
+
   return (
-    <ButtonGroup fullWidth>
+    <ButtonGroup className='search-segments' fullWidth >
       <Button
-        type={selectedNavigationSegment === 'id-search-segment-button' ? ButtonType.Highlighted : ButtonType.Primary}
-        aria-selected={true}
+        type={selectedNavigationSegment === SearchSegment.Search ? ButtonType.Highlighted : ButtonType.Primary}
+        aria-selected={selectedNavigationSegment === SearchSegment.Search}
         role="tab"
-        className="search-button"
-        onClick={() => setSelectedNavigationSegment('id-search-segment-button')}
+        className="search-segment-button"
+        onClick={() => onSegmentClick(SearchSegment.Search)}
         data-testid="id-search-segment-button"
       >
-        Search
+        <FormattedMessage id={'marva.search'} />
       </Button>
       <Button
-        type={selectedNavigationSegment === 'id-search-browse-button' ? ButtonType.Highlighted : ButtonType.Primary}
-        aria-selected={false}
+        type={selectedNavigationSegment === SearchSegment.Browse ? ButtonType.Highlighted : ButtonType.Primary}
+        aria-selected={selectedNavigationSegment === SearchSegment.Browse}
         role="tab"
-        className="search-button"
-        onClick={() => setSelectedNavigationSegment('id-search-browse-button')}
+        className="search-segment-button"
+        onClick={() => onSegmentClick(SearchSegment.Browse)}
         data-testid="id-search-browse-button"
       >
-        Browse
+        <FormattedMessage id={'marva.browse'} />
       </Button>
     </ButtonGroup>
   );

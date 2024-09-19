@@ -1,0 +1,16 @@
+@import '@common/styles/common.scss';
+
+.search-segments {
+  margin: 15px 0 0;
+}
+
+.search-segment-button {
+  &.button-highlighted {
+    border: 1px solid $blue-500;
+  }
+
+  &.button-primary {
+    border: 1px solid $blue-400;
+    box-shadow: none;
+  }
+}

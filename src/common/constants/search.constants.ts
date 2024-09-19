@@ -119,3 +119,8 @@ export enum FiltersType {
   Checkbox = 'checkbox',
   Radio = 'radio',
 }
+
+export enum SearchSegment {
+  Search = 'search',
+  Browse = 'browse',
+}

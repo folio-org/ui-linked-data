@@ -1,0 +1,23 @@
+.textarea {
+  box-sizing: border-box;
+  height: 2.3rem;
+  padding: 0 0.5rem;
+  border: 1px solid gray;
+  font-size: 1rem;
+  font-family: inherit;
+
+  &-full-width {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  &:focus {
+    border: 1px solid #3e75cf;
+    outline: 0;
+    box-shadow:
+      0 0 0 1px #3e75cf,
+      0 0 0 1px #3e75cf,
+      0 0 0 4px #d8e3f5;
+  }
+}

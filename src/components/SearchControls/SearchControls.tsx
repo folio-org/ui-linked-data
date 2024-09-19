@@ -1,20 +1,21 @@
-import { ChangeEvent, FC, useContext, useEffect } from 'react';
+import { ChangeEvent, FC, FormEventHandler, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
-import { SearchContext } from '@src/contexts';
 import SearchSegments from './SearchSegments';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
 import './SearchControls.scss';
+import { Textarea } from '@components/Textarea';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -26,10 +27,12 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     isVisibleSearchByControl,
     isVisibleAdvancedSearch,
     isVisibleFilters,
+    isVisibleSegments,
+    hasMiltilineSearchInput,
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
-  } = useContext(SearchContext);
+  } = useSearchContext();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const setMessage = useSetRecoilState(state.search.message);
@@ -40,7 +43,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
 
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
     setQuery(value);
   };
@@ -68,7 +71,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <CaretDown className="header-caret" />
       </div>
       <div className="search-pane-content">
-        <SearchSegments />
+        {isVisibleSegments && <SearchSegments />}
 
         <div className="inputs">
           {isVisibleSearchByControl && (
@@ -81,15 +84,25 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
             />
           )}
-          <Input
-            id="id-search-input"
-            type="text"
-            value={query}
-            onChange={onChangeSearchInput}
-            className="text-input"
-            onPressEnter={submitSearch}
-            data-testid="id-search-input"
-          />
+          {hasMiltilineSearchInput ? (
+            <Textarea
+              id="id-search-textarea"
+              value={query}
+              onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
+              data-testid="id-search-textarea"
+              fullWidth
+            />
+          ) : (
+            <Input
+              id="id-search-input"
+              type="text"
+              value={query}
+              onChange={onChangeSearchInput}
+              className="text-input"
+              onPressEnter={submitSearch}
+              data-testid="id-search-input"
+            />
+          )}
         </div>
         <Button
           data-testid="id-search-button"

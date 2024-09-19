@@ -18,6 +18,17 @@
 
     &-centered {
       justify-content: center;
+
+      > .search-button {
+        width: 100%;
+        height: $btn-height;
+        border-radius: $btn-height / 2;
+        line-height: $btn-height;
+
+        &:disabled {
+          background-color: $gray-200;
+        }
+      }
     }
   }
 

@@ -18,7 +18,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           creator: 'marva.selectMARCAuthority',
           contributor: 'marva.selectMARCAuthority',
         },
-        searchResults: 'marva.authorities',
+        searchResults: 'marva.marcAuthority',
       },
     },
     // For displaying "Search by" control
