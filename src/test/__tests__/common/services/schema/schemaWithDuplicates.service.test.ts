@@ -74,6 +74,7 @@ describe('SchemaWithDuplicatesService', () => {
           {
             path: ['testKey-0', 'testKey-2', 'testKey-7'],
             uuid: 'testKey-7',
+            cloneIndex: 1,
             children: ['testKey-8'],
             constraints,
             cloneOf: 'testKey-4',

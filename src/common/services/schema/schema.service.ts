@@ -11,6 +11,7 @@ import {
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 import { ISchema } from './schema.interface';
+import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 
 export class SchemaService implements ISchema {
   private templates: ResourceTemplates;
@@ -18,7 +19,10 @@ export class SchemaService implements ISchema {
   private schema: Map<string, SchemaEntry>;
   private supportedEntries: string[];
 
-  constructor(private selectedEntriesService: ISelectedEntries) {
+  constructor(
+    private selectedEntriesService: ISelectedEntries,
+    private entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
+  ) {
     this.schema = new Map();
     this.supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
     this.templates = {};
@@ -38,6 +42,7 @@ export class SchemaService implements ISchema {
   generate(initKey: string) {
     try {
       this.traverseProfile({ entry: this.entry, uuid: initKey });
+      this.entryPropertiesGeneratorService?.applyHtmlIdToEntries(this.schema);
     } catch (error) {
       console.error('Cannot generate a schema', error);
     }
@@ -47,6 +52,11 @@ export class SchemaService implements ISchema {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
+    const entryTypesWithHtmlIds = [...branchEnds, AdvancedFieldType.dropdown];
+
+    if (entryTypesWithHtmlIds.includes(type as AdvancedFieldType)) {
+      this.entryPropertiesGeneratorService?.addEntryWithHtmlId(uuid);
+    }
 
     if (branchEnds.includes(type as AdvancedFieldType)) {
       const {

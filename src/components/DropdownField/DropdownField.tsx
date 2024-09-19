@@ -7,9 +7,10 @@ interface IDropdownField {
   onChange: (value: ReactSelectOption, fieldId: string, isDynamicField?: boolean) => void;
   value?: ReactSelectOption;
   isDisabled?: boolean;
+  id?: string;
 }
 
-export const DropdownField: FC<IDropdownField> = ({ options, uuid, onChange, value, isDisabled = false }) => {
+export const DropdownField: FC<IDropdownField> = ({ options, uuid, id, onChange, value, isDisabled = false }) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export const DropdownField: FC<IDropdownField> = ({ options, uuid, onChange, val
 
   return (
     <Select
+      id={id}
       options={options}
       onChange={handleOnChange}
       value={localValue}

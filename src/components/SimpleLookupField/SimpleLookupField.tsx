@@ -26,6 +26,7 @@ interface Props {
   value?: UserValueContents[];
   parentUri?: string;
   isDisabled?: boolean;
+  id?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   propertyUri?: string;
   parentBlockUri?: string;
@@ -35,6 +36,7 @@ interface Props {
 export const SimpleLookupField: FC<Props> = ({
   uri,
   uuid,
+  id,
   value,
   onChange,
   parentUri,
@@ -114,6 +116,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   return (
     <CreatableSelect
+      id={id}
       ref={simpleLookupRef}
       className="edit-section-field-input simple-lookup"
       classNamePrefix="simple-lookup"

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 
 export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService {
   private isManualDuplication: boolean;
@@ -10,6 +11,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
   constructor(
     private schema: Map<string, SchemaEntry>,
     private selectedEntriesService: ISelectedEntries,
+    private entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
   ) {
     this.set(schema);
     this.isManualDuplication = true;
@@ -60,6 +62,8 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
           clonedBy: this.isManualDuplication ? [...(clonedBy ?? []), updatedEntryUuid] : undefined,
         });
       }
+
+      this.entryPropertiesGeneratorService?.applyHtmlIdToEntries(this.schema);
     }
 
     this.isManualDuplication = true;
@@ -67,11 +71,19 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
   }
 
   private getCopiedEntry(entry: SchemaEntry, updatedUuid: string, parentElemPath?: string[], includeCloneInfo = false) {
-    const { path, uuid } = entry;
+    const { path, uuid, cloneIndex = 0, htmlId } = entry;
     const copiedEntry = cloneDeep(entry);
 
     copiedEntry.uuid = updatedUuid;
     copiedEntry.path = this.getUpdatedPath(path, updatedUuid, parentElemPath);
+
+    if (includeCloneInfo) {
+      copiedEntry.cloneIndex = cloneIndex + 1;
+    }
+
+    if (htmlId) {
+      this.entryPropertiesGeneratorService?.addEntryWithHtmlId(updatedUuid);
+    }
 
     if (this.isManualDuplication && includeCloneInfo) {
       if (!copiedEntry.cloneOf) {
