@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import './Select.scss';
 import classNames from 'classnames';
+import './Select.scss';
 
 type SelectValue = {
   value: string;

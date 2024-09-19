@@ -121,3 +121,8 @@ export const PROVISION_ACTIVITY_OPTIONS = [
   'http://bibfra.me/vocab/marc/distribution',
   'http://bibfra.me/vocab/marc/manufacture',
 ];
+
+export const BFID_DELIMITER = ':';
+export const BF_URI_DELIMITER = '/';
+export const ENTRY_DELIMITER = '__';
+export const ENTRY_COUNT_DELIMITER = '::';

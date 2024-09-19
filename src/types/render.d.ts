@@ -89,6 +89,8 @@ type SchemaEntry = {
   layout?: PropertyLayout<boolean>;
   dependsOn?: string;
   linkedEntry?: LinkedEntry;
+  htmlId?: string;
+  cloneIndex?: number;
 };
 
 type LinkedEntry = {

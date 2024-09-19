@@ -11,11 +11,12 @@ import './ComplexLookupField.scss';
 
 interface Props {
   entry: SchemaEntry;
+  id?: string;
   value?: UserValueContents[];
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
-export const ComplexLookupField: FC<Props> = ({ value = undefined, entry, onChange }) => {
+export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
   const { layout } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
   const buttonConfigLabel = lookupConfig?.labels?.button;
@@ -31,7 +32,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, entry, onChan
   return (
     <>
       {layout?.isNew ? (
-        <div className="complex-lookup">
+        <div id={id} className="complex-lookup">
           {!!localValue.length && (
             <div className="complex-lookup-value" data-testid="complex-lookup-value">
               {localValue?.map(({ id, label }) => (
@@ -73,6 +74,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, entry, onChan
         </div>
       ) : (
         <Input
+          id={id}
           onChange={handleOnChangeBase}
           value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
           disabled={true}
