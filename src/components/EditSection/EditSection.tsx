@@ -43,8 +43,8 @@ export const EditSection = memo(() => {
   const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
   const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
-  
-  useContainerEvents({ watchEditedState: true })
+
+  useContainerEvents({ watchEditedState: true });
 
   useEffect(() => {
     if (!isEdited) return;
@@ -82,7 +82,7 @@ export const EditSection = memo(() => {
 
   const drawComponent = useCallback(
     ({ schema, entry, disabledFields, level = 0, isCompact = false }: IDrawComponent) => {
-      const { uuid, displayName = '', type, children, constraints } = entry;
+      const { uuid, displayName = '', type, children, constraints, htmlId } = entry;
       const isDisabled = !!disabledFields?.get(uuid);
       const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
       const selectedUserValue = userValues[uuid];
@@ -123,6 +123,7 @@ export const EditSection = memo(() => {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <LiteralField
+              id={htmlId}
               uuid={uuid}
               value={selectedUserValue?.contents[0].label}
               onChange={onChange}
@@ -153,6 +154,7 @@ export const EditSection = memo(() => {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <DropdownField
+              id={htmlId}
               options={options}
               uuid={uuid}
               onChange={handleChange}
@@ -176,6 +178,7 @@ export const EditSection = memo(() => {
             <SimpleLookupField
               uri={constraints?.useValuesFrom[0] || ''}
               uuid={uuid}
+              id={htmlId}
               onChange={onChange}
               parentUri={constraints?.valueDataType?.dataTypeURI}
               value={selectedUserValue?.contents}
@@ -190,7 +193,7 @@ export const EditSection = memo(() => {
       if (type === AdvancedFieldType.complex) {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
-            <ComplexLookupField entry={entry} onChange={onChange} value={selectedUserValue?.contents} />
+            <ComplexLookupField entry={entry} id={htmlId} onChange={onChange} value={selectedUserValue?.contents} />
           </FieldWithMetadataAndControls>
         );
       }

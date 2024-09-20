@@ -5,7 +5,13 @@ import {
   ADVANCED_FIELDS,
   NON_BF_GROUP_TYPE,
 } from '@common/constants/bibframeMapping.constants';
-import { PREV_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
+import {
+  BF_URI_DELIMITER,
+  BFID_DELIMITER,
+  ENTRY_COUNT_DELIMITER,
+  ENTRY_DELIMITER,
+  PREV_ENTRY_PATH_INDEX,
+} from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
@@ -182,4 +188,20 @@ export const getUdpatedAssociatedEntries = ({
   }
 
   return { controlledByEntry: updatedConstolledByEntry, dependentEntry: updatedDependentEntry };
+};
+
+export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: Schema) => {
+  return path
+    .reduce((acc, uuid) => {
+      const pathEntry = schema.get(uuid);
+
+      if (!pathEntry) return acc;
+
+      const { uriBFLite, uri, bfid, cloneIndex } = pathEntry;
+      const uriSelector = uriBFLite ?? uri;
+      const id = uriSelector ? uriSelector.split(BF_URI_DELIMITER).at(-1) : bfid?.split(BFID_DELIMITER).at(-1);
+
+      return [...acc, `${id}${ENTRY_COUNT_DELIMITER}${cloneIndex || 0}`];
+    }, [] as string[])
+    .join(ENTRY_DELIMITER);
 };

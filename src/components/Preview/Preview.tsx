@@ -84,7 +84,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
 
     if (!entry) return null;
 
-    const { displayName = '', children, type, bfid = '', path, linkedEntry } = entry;
+    const { displayName = '', children, type, bfid = '', path, linkedEntry, htmlId } = entry;
     const isDependentDropdownOption =
       type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(path))?.linkedEntry?.controlledBy;
     const visibleDropdownOption =
@@ -174,29 +174,42 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
                 return (
                   selectedLabel && (
                     <div key={`${selectedLabel}${uri}`}>
-                      <div>
-                        {uri || parentUri ? (
-                          <a className="preview-value-link" href={uri || parentUri}>
-                            {selectedLabel}
-                          </a>
-                        ) : (
-                          <>{selectedLabel}</>
-                        )}
-                      </div>
+                      {uri || parentUri ? (
+                        <a className="preview-value-link" href={uri || parentUri}>
+                          {selectedLabel}
+                        </a>
+                      ) : (
+                        <>{selectedLabel}</>
+                      )}
                     </div>
                   )
                 );
               })
-            : shouldRenderPlaceholders && !isDependentDropdown && <div className="value-group-wrapper">-</div>)}
-        {children?.map((uuid: string) => (
-          <ConditionalWrapper
-            key={uuid}
-            condition={!isGroupable && checkShouldGroupWrap(schema.get(uuid), level)}
-            wrapper={children => (children ? <div className="value-group-wrapper">{children}</div> : null)}
-          >
-            <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />
-          </ConditionalWrapper>
-        ))}
+            : shouldRenderPlaceholders &&
+              !isDependentDropdown && (
+                <div id={htmlId} className="value-group-wrapper">
+                  -
+                </div>
+              ))}
+        {children?.map(uuid => {
+          const schemaEntry = schema.get(uuid);
+
+          return (
+            <ConditionalWrapper
+              key={uuid}
+              condition={!isGroupable && checkShouldGroupWrap(schemaEntry, level)}
+              wrapper={children =>
+                children ? (
+                  <div id={schemaEntry?.htmlId} className="value-group-wrapper">
+                    {children}
+                  </div>
+                ) : null
+              }
+            >
+              <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />
+            </ConditionalWrapper>
+          );
+        })}
       </ConditionalWrapper>
     );
   });
