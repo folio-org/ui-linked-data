@@ -26,7 +26,7 @@ type SearchParams = {
   isVisibleSearchByControl?: boolean;
   isVisibleSegments?: boolean;
   hasMiltilineSearchInput?: boolean;
-  searchByControlOptions?: (string | ComplexLookupSearchBy)[];
+  searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;

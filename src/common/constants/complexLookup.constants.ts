@@ -1,4 +1,5 @@
 import { SEARCH_API_ENDPOINT } from './api.constants';
+import { SearchSegment } from './search.constants';
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   authorities: {
@@ -22,12 +23,84 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
     },
     // For displaying "Search by" control
-    searchBy: [
-      {
-        label: 'keyword',
-        value: 'label',
-      },
-    ],
+    searchBy: {
+      [SearchSegment.Search]: [
+        {
+          label: 'keyword',
+          value: 'label',
+        },
+        {
+          label: 'identifierAll',
+          value: 'identifierAll',
+        },
+        {
+          label: 'lccn',
+          value: 'lccn',
+        },
+        {
+          label: 'personalName',
+          value: 'personalName',
+        },
+        {
+          label: 'corporateName',
+          value: 'corporateName',
+        },
+        {
+          label: 'geographicName',
+          value: 'geographicName',
+        },
+        {
+          label: 'nameTitle',
+          value: 'nameTitle',
+        },
+        {
+          label: 'uniformTitle',
+          value: 'uniformTitle',
+        },
+        {
+          label: 'subject',
+          value: 'subject',
+        },
+        {
+          label: 'childrensSubjectHeading',
+          value: 'childrensSubjectHeading',
+        },
+        {
+          label: 'genre',
+          value: 'genre',
+        },
+      ],
+      [SearchSegment.Browse]: [
+        {
+          label: 'personalName',
+          value: 'personalName',
+        },
+        {
+          label: 'corporateName',
+          value: 'corporateName',
+        },
+        {
+          label: 'geographicName',
+          value: 'geographicName',
+        },
+        {
+          label: 'nameTitle',
+          value: 'nameTitle',
+        },
+        {
+          label: 'uniformTitle',
+          value: 'uniformTitle',
+        },
+        {
+          label: 'subject',
+          value: 'subject',
+        },
+        {
+          label: 'genre',
+          value: 'genre',
+        },
+      ],
+    },
     linkedField: 'subclass',
   },
 };
@@ -60,4 +133,3 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
 export const EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX = 'empty';
 export const VALUE_DIVIDER = ' ,';
 export const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING';
-

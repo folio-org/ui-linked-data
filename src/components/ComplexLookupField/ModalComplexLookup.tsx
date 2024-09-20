@@ -69,7 +69,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultSearchBy={searchBy[0].value as unknown as SearchIdentifiers}
+            defaultNavigationSegment={SearchSegment.Search}
+            defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
             isVisibleFilters={true}
@@ -81,7 +82,6 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             searchByControlOptions={searchBy}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
-            defaultNavigationSegment={SearchSegment.Search}
           />
         </div>
       </Modal>

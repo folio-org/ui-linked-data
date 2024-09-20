@@ -10,12 +10,12 @@ import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
+import { Textarea } from '@components/Textarea';
 import SearchSegments from './SearchSegments';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
 import './SearchControls.scss';
-import { Textarea } from '@components/Textarea';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -32,6 +32,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
+    navigationSegment,
   } = useSearchContext();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
@@ -42,6 +43,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
+  const selectOptions =
+    searchByControlOptions && navigationSegment?.value
+      ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
+      : Object.values(SearchIdentifiers);
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
@@ -80,13 +85,14 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
               id="id-search-select"
               className="select-input"
               value={searchBy}
-              options={searchByControlOptions || Object.values(SearchIdentifiers)}
+              options={selectOptions}
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
             />
           )}
           {hasMiltilineSearchInput ? (
             <Textarea
               id="id-search-textarea"
+              className="select-textarea"
               value={query}
               onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
               data-testid="id-search-textarea"

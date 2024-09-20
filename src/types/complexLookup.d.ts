@@ -10,8 +10,10 @@ type ComplexLookupLabels = {
 };
 
 type ComplexLookupSearchBy = {
-  label: string;
-  value: string;
+  [key in SearchSegment]: {
+    label: string;
+    value: string;
+  }[];
 };
 
 type ComplexLookupsConfigEntry = {
@@ -21,7 +23,7 @@ type ComplexLookupsConfigEntry = {
   };
   labels: ComplexLookupLabels;
   linkedField?: string;
-  searchBy: ComplexLookupSearchBy[];
+  searchBy: ComplexLookupSearchBy;
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
@@ -30,4 +32,4 @@ type ComplexLookupAssignRecordDTO = {
   id: string;
   title: string;
   linkedFieldValue?: string;
-}
+};

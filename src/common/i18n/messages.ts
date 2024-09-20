@@ -154,6 +154,15 @@ export const BASE_LOCALE = {
   'marva.duplicateWork': 'Duplicate work',
   'marva.duplicateInstanceInBrackets': '(DUPLICATE INSTANCE)',
   'marva.duplicateWorkInBrackets': '(DUPLICATE WORK)',
+  'marva.identifierAll': 'Identifier (all)',
+  'marva.personalName': 'Personal name',
+  'marva.corporateName': 'Corporate/Conference name',
+  'marva.geographicName': 'Geographic name',
+  'marva.nameTitle': 'Name-title',
+  'marva.uniformTitle': 'Uniform title',
+  'marva.subject': 'Subject',
+  'marva.childrensSubjectHeading': "Children's subject heading",
+  'marva.genre': 'Genre',
 };
 
 export const i18nMessages = {

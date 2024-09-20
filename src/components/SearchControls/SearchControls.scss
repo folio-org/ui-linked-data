@@ -22,7 +22,7 @@
       > .search-button {
         width: 100%;
         height: $btn-height;
-        border-radius: $btn-height / 2;
+        border-radius: calc($btn-height / 2);
         line-height: $btn-height;
 
         &:disabled {
@@ -74,6 +74,13 @@
     .text-input {
       margin-top: -1px;
       padding: 4px 5px;
+      height: 26px;
+    }
+
+    .select-textarea {
+      margin-top: -1px;
+      padding: 4px 5px;
+      box-sizing: border-box;
       height: 26px;
     }
   }

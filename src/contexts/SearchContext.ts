@@ -13,7 +13,7 @@ export const SearchContext = createContext<SearchParams>({
   isVisibleSearchByControl: true,
   isVisibleSegments: false,
   hasMiltilineSearchInput: false,
-  searchByControlOptions: undefined,
+  searchByControlOptions: {},
   labelEmptySearch: '',
   classNameEmptyPlaceholder: '',
   filters: [],
