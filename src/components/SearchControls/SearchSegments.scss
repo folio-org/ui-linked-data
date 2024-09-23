@@ -6,6 +6,7 @@
 
 .search-segment-button {
   &.button-highlighted {
+    z-index: 100;
     border: 1px solid $blue-500;
   }
 

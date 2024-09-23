@@ -39,6 +39,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
   const setMessage = useSetRecoilState(state.search.message);
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
+  const setFacets = useSetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -83,6 +84,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
 
     setSearchBy(updatedSearchBy as SearchIdentifiers);
     setQuery(savedFacetsData.query || '');
+    setFacets(savedFacetsData.facets || {});
   };
 
   useEffect(() => clearValuesAndResetControls, []);

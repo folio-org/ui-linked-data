@@ -163,6 +163,14 @@ export const BASE_LOCALE = {
   'marva.subject': 'Subject',
   'marva.childrensSubjectHeading': "Children's subject heading",
   'marva.genre': 'Genre',
+  'marva.authoritySource': 'Authority source',
+  'marva.references': 'References',
+  'marva.thesaurus': 'Thesaurus',
+  'marva.typeOfHeading': 'Type of heading',
+  'marva.dateCreated': 'Date created',
+  'marva.dateUpdated': 'Date updated',
+  'marva.excludeSeeFrom': 'Exclude see from',
+  'marva.excludeSeeFromAlso': 'Exclude see from also',
 };
 
 export const i18nMessages = {

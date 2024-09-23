@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers } from '@common/constants/search.constants';
@@ -18,6 +18,7 @@ export const useSearch = () => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
+  const facets = useRecoilValue(state.search.limiters);
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
@@ -105,7 +106,7 @@ export const useSearch = () => {
         [navigationSegment.value as string]: {
           query,
           searchBy,
-          facets: {} as Limiters,
+          facets,
         },
       }));
     }
@@ -117,7 +118,7 @@ export const useSearch = () => {
     }
 
     setForceRefreshSearch(true);
-  }, [fetchData, hasSearchParams, query, searchBy]);
+  }, [fetchData, hasSearchParams, query, searchBy, facets]);
 
   const clearValues = useCallback(() => {
     clearPagination();
