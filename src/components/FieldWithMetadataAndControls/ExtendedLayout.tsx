@@ -9,6 +9,7 @@ type IExtendedLayout = {
   children: ReactNode;
   displayName?: string;
   showLabel?: boolean;
+  htmlId?: string;
   labelContainerClassName?: string;
   hasDuplicateGroupButton?: boolean;
   hasDuplicateSubcomponentButton?: boolean;
@@ -19,6 +20,7 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
   ({
     children,
     entry,
+    htmlId,
     displayName,
     showLabel,
     labelContainerClassName,
@@ -34,7 +36,7 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
           {displayName && showLabel && (
             <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
-          {hasDuplicateGroupButton && <DuplicateGroup onClick={onClickDuplicateGroup} />}
+          {hasDuplicateGroupButton && <DuplicateGroup htmlId={htmlId} onClick={onClickDuplicateGroup} />}
         </div>
         {children && (
           <div className="children-container">
@@ -47,7 +49,12 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
           </div>
         )}
         {hasDuplicateSubcomponentButton && (
-          <DuplicateGroup onClick={onClickDuplicateGroup} hasDeleteButton={false} className="duplicate-subcomponent" />
+          <DuplicateGroup
+            htmlId={htmlId}
+            onClick={onClickDuplicateGroup}
+            hasDeleteButton={false}
+            className="duplicate-subcomponent"
+          />
         )}
       </>
     );

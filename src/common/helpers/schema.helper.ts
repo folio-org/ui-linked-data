@@ -1,4 +1,4 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType, SchemaControlType } from '@common/constants/uiControls.constants';
 import {
   BFLITE_LABELS_MAP,
   BFLITE_URIS,
@@ -8,6 +8,7 @@ import {
 import {
   BF_URI_DELIMITER,
   BFID_DELIMITER,
+  ENTRY_CONTROL_DELIMITER,
   ENTRY_COUNT_DELIMITER,
   ENTRY_DELIMITER,
   PREV_ENTRY_PATH_INDEX,
@@ -205,3 +206,6 @@ export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: S
     }, [] as string[])
     .join(ENTRY_DELIMITER);
 };
+
+export const getHtmlIdForSchemaControl = (htmlId = '', controlType: SchemaControlType) =>
+  `${htmlId}${ENTRY_CONTROL_DELIMITER}${controlType}`;

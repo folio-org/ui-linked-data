@@ -22,6 +22,12 @@ export enum AdvancedFieldType {
   __fallback = '__fallback',
 }
 
+export enum SchemaControlType {
+  Duplicate = 'addDuplicate',
+  RemoveDuplicate = 'removeDuplicate',
+  ChangeComplexFieldValue = 'changeComplexFieldValue',
+}
+
 export const UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
 
 export const UI_DROPDOWNS_LIST = [AdvancedFieldType.dropdown, AdvancedFieldType.dropdownOption];
