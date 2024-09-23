@@ -1,4 +1,9 @@
-import { DEFAULT_SEARCH_BY, DEFAULT_SEARCH_LIMITERS, SearchIdentifiers } from '@common/constants/search.constants';
+import {
+  DEFAULT_FACET_BY_SEGMENT,
+  DEFAULT_SEARCH_BY,
+  DEFAULT_SEARCH_LIMITERS,
+  SearchIdentifiers,
+} from '@common/constants/search.constants';
 import { atom } from 'recoil';
 
 const query = atom<string>({
@@ -41,6 +46,11 @@ const pageMetadata = atom<PageMetadata>({
   default: { totalElements: 0, totalPages: 0 },
 });
 
+const facetsBySegments = atom<FacetsBySegments>({
+  key: 'search.facetsBySegments',
+  default: DEFAULT_FACET_BY_SEGMENT,
+});
+
 export default {
   query,
   message,
@@ -50,4 +60,5 @@ export default {
   navigationState,
   forceRefresh,
   pageMetadata,
+  facetsBySegments,
 };

@@ -31,3 +31,11 @@ type SearchParams = {
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;
 };
+
+type FacetsBySegments = {
+  [key in SearchSegmentValue]: {
+    query?: string;
+    searchBy?: string;
+    facets: Limiters;
+  };
+};

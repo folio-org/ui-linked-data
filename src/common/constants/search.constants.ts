@@ -124,3 +124,14 @@ export enum SearchSegment {
   Search = 'search',
   Browse = 'browse',
 }
+
+export const DEFAULT_FACET_BY_SEGMENT_DATA = {
+  query: '',
+  searchBy: '',
+  facets: {} as Limiters,
+};
+
+export const DEFAULT_FACET_BY_SEGMENT = {
+  [SearchSegment.Search]: DEFAULT_FACET_BY_SEGMENT_DATA,
+  [SearchSegment.Browse]: DEFAULT_FACET_BY_SEGMENT_DATA,
+};

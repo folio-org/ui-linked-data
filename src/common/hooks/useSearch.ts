@@ -13,7 +13,8 @@ import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from './useSearchContext';
 
 export const useSearch = () => {
-  const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy } = useSearchContext();
+  const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy, navigationSegment } =
+    useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
@@ -23,6 +24,7 @@ export const useSearch = () => {
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
+  const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
 
   const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(hasSearchParams);
@@ -96,6 +98,17 @@ export const useSearch = () => {
   const submitSearch = useCallback(() => {
     clearPagination();
     resetPreviewContent();
+
+    if (navigationSegment?.value) {
+      setFacetsBySegments(prevValue => ({
+        ...prevValue,
+        [navigationSegment.value as string]: {
+          query,
+          searchBy,
+          facets: {} as Limiters,
+        },
+      }));
+    }
 
     if (hasSearchParams) {
       setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
