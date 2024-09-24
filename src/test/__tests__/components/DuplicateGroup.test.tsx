@@ -6,26 +6,26 @@ describe('DuplicateGroup', () => {
   const onClick = jest.fn();
 
   function renderComponent(hasDeleteButton = true) {
-    render(<DuplicateGroup onClick={onClick} hasDeleteButton={hasDeleteButton} />);
+    render(<DuplicateGroup onClick={onClick} hasDeleteButton={hasDeleteButton} htmlId="mockHtmlId" />);
   }
 
   test('renders DuplicateGroup component', () => {
     renderComponent();
 
-    expect(getByTestId('id-duplicate-group')).toBeInTheDocument();
-    expect(getByTestId('id-delete-duplicate-group')).toBeInTheDocument();
+    expect(getByTestId('mockHtmlId--addDuplicate')).toBeInTheDocument();
+    expect(getByTestId('mockHtmlId--removeDuplicate')).toBeInTheDocument();
   });
 
   test('renders DuplicateGroup component without "Delete" button', () => {
     renderComponent(false);
 
-    expect(queryByTestId('id-delete-duplicate-group')).not.toBeInTheDocument();
+    expect(queryByTestId('mockHtmlId--removeDuplicate')).not.toBeInTheDocument();
   });
 
   test('invokes passed "onClick" function', () => {
     renderComponent();
 
-    fireEvent.click(screen.getByTestId('id-duplicate-group'));
+    fireEvent.click(screen.getByTestId('mockHtmlId--addDuplicate'));
 
     expect(onClick).toHaveBeenCalledTimes(1);
   });

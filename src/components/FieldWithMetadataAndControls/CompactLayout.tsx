@@ -25,7 +25,9 @@ export const CompactLayout: FC<ICompactLayout> = memo(
     return (
       <>
         {displayName && showLabel && <div className={classNames('label', labelContainerClassName)}>{displayName}</div>}
-        {children}
+        <div className="children-container" data-testid={htmlId}>
+          {children}
+        </div>
         {hasDuplicateGroupButton && <DuplicateGroup htmlId={htmlId} onClick={onClickDuplicateGroup} />}
       </>
     );

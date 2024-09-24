@@ -18,8 +18,7 @@ interface Props {
 export const DuplicateGroup: FC<Props> = memo(({ onClick, hasDeleteButton = true, className, htmlId }) => (
   <div className={classNames(['duplicate-group', className])}>
     <Button
-      id={getHtmlIdForSchemaControl(htmlId, SchemaControlType.Duplicate)}
-      data-testid="id-duplicate-group"
+      data-testid={getHtmlIdForSchemaControl(htmlId, SchemaControlType.Duplicate)}
       type={ButtonType.Icon}
       onClick={onClick}
     >
@@ -27,8 +26,7 @@ export const DuplicateGroup: FC<Props> = memo(({ onClick, hasDeleteButton = true
     </Button>
     {hasDeleteButton && (
       <Button
-        id={getHtmlIdForSchemaControl(htmlId, SchemaControlType.RemoveDuplicate)}
-        data-testid="id-delete-duplicate-group"
+        data-testid={getHtmlIdForSchemaControl(htmlId, SchemaControlType.RemoveDuplicate)}
         type={ButtonType.Icon}
         disabled={IS_DISABLED_FOR_ALPHA}
       >

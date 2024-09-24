@@ -13,12 +13,12 @@ import { MultiValueRemove } from './MultiValueRemove';
 import { ClearIndicator } from './ClearIndicator';
 import state from '@state';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
-import './SimpleLookupField.scss';
 import Select from 'react-select/dist/declarations/src/Select';
 import {
   CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG,
   EDIT_SECTION_CONTAINER_ID,
 } from '@common/constants/uiElements.constants';
+import './SimpleLookupField.scss';
 
 interface Props {
   uri: string;

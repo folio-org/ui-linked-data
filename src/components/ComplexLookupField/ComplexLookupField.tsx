@@ -63,7 +63,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
           )}
 
           <button
-            id={getHtmlIdForSchemaControl(id, SchemaControlType.ChangeComplexFieldValue)}
+            data-testid={getHtmlIdForSchemaControl(id, SchemaControlType.ChangeComplexFieldValue)}
             role="button"
             className="complex-lookup-select-button button-passive"
             onClick={openModal}
