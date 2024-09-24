@@ -42,9 +42,8 @@ export const getSearchSourceData = (url?: string, limit = '50') => {
   return baseApi.getJson({ url, urlParams: { limit } });
 };
 
-export const getFacets = (url: string, urlParams?: Record<string, string>) => {
-  // TODO: generate query params depending on the passed values instead of hardcoded
-  const queryParams = urlParams || { facet: 'sourceFileId', query: 'id=*' };
+export const getFacets = (url?: string, urlParams?: Record<string, string>) => {
+  if (!url) return;
 
-  return baseApi.getJson({ url, urlParams: queryParams });
+  return baseApi.getJson({ url, urlParams });
 };

@@ -51,6 +51,23 @@ const facetsBySegments = atom<FacetsBySegments>({
   default: DEFAULT_FACET_BY_SEGMENT,
 });
 
+// TODO: create a DTO
+const sourceData = atom<any>({
+  key: 'search.sourceData',
+  default: null,
+});
+
+const selectedFacetsGroups = atom<string[]>({
+  key: 'search.selectedFacetsGroups',
+  default: [],
+});
+
+// TODO: create a DTO
+const facetsData = atom<any>({
+  key: 'search.facetsData',
+  default: {},
+});
+
 export default {
   query,
   message,
@@ -61,4 +78,7 @@ export default {
   forceRefresh,
   pageMetadata,
   facetsBySegments,
+  sourceData,
+  selectedFacetsGroups,
+  facetsData,
 };

@@ -56,7 +56,9 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
 
     const getSourceData = async () => {
       await getSearchSourceData(api.endpoints.source);
-      await getFacetsData();
+
+      const openedFilter = filters.find(({ isOpen }) => isOpen);
+      await getFacetsData(openedFilter?.facet);
     };
 
     useEffect(() => {
