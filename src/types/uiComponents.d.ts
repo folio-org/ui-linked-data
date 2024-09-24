@@ -35,7 +35,8 @@ type SearchGroup = {
   labelId: string;
   type: FiltersGroupCheckType;
   children?: SearchItem[];
-  source?: { uri: string };
+  facet?: string;
+  isOpen?: boolean;
 };
 
 type SearchFilters = SearchGroup[];

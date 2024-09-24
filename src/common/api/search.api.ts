@@ -35,3 +35,16 @@ export const getByIdentifier = async ({
 
   return await baseApi.getJson({ url: endpointUrl, urlParams });
 };
+
+export const getSearchSourceData = (url?: string, limit = '50') => {
+  if (!url) return;
+
+  return baseApi.getJson({ url, urlParams: { limit } });
+};
+
+export const getFacets = (url: string, urlParams?: Record<string, string>) => {
+  // TODO: generate query params depending on the passed values instead of hardcoded
+  const queryParams = urlParams || { facet: 'sourceFileId', query: 'id=*' };
+
+  return baseApi.getJson({ url, urlParams: queryParams });
+};

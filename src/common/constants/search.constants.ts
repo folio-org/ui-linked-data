@@ -13,7 +13,7 @@ export enum SearchLimiterNames {
 
 export enum SearchLimiterNamesAuthority {
   AuthoritySource = 'sourceFileId',
-  References = 'source',
+  References = 'authRefType',
   Thesaurus = 'subjectHeadings',
   TypeOfHeading = 'headingType',
   DateCreated = 'metadata.createdDate',

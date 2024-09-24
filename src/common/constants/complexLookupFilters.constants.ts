@@ -5,11 +5,12 @@ import {
   References,
 } from '@common/constants/search.constants';
 
-export const filters = [
+export const AuthoritiesFilters = [
   {
     labelId: 'marva.authoritySource',
     type: FiltersGroupCheckType.Lookup,
-    source: { uri: '' },
+    facet: SearchLimiterNamesAuthority.AuthoritySource,
+    isOpen: true,
   },
   {
     labelId: 'marva.references',
@@ -18,13 +19,13 @@ export const filters = [
       {
         id: References.ExcludeSeeFrom,
         type: FiltersType.Checkbox,
-        name: SearchLimiterNamesAuthority.AuthoritySource,
+        name: SearchLimiterNamesAuthority.References,
         labelId: 'marva.excludeSeeFrom',
       },
       {
         id: References.ExcludeSeeFromAlso,
         type: FiltersType.Checkbox,
-        name: SearchLimiterNamesAuthority.AuthoritySource,
+        name: SearchLimiterNamesAuthority.References,
         labelId: 'marva.excludeSeeFromAlso',
       },
     ],
@@ -32,19 +33,21 @@ export const filters = [
   {
     labelId: 'marva.thesaurus',
     type: FiltersGroupCheckType.Lookup,
-    source: { uri: '' },
+    facet: SearchLimiterNamesAuthority.Thesaurus,
   },
   {
     labelId: 'marva.typeOfHeading',
     type: FiltersGroupCheckType.Lookup,
-    source: { uri: '' },
+    facet: SearchLimiterNamesAuthority.TypeOfHeading,
   },
   {
     labelId: 'marva.dateCreated',
     type: FiltersGroupCheckType.DateRange,
+    facet: SearchLimiterNamesAuthority.DateCreated,
   },
   {
     labelId: 'marva.dateUpdated',
     type: FiltersGroupCheckType.DateRange,
+    facet: SearchLimiterNamesAuthority.DateUpdated,
   },
 ];

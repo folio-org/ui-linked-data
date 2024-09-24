@@ -1,14 +1,14 @@
-import { FC, memo, useCallback, useMemo } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
-import { filters } from './data/filters';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import './ModalComplexLookup.scss';
 import state from '@state';
@@ -23,8 +23,9 @@ interface ModalComplexLookupProps {
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
-    const { api, labels, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const { api, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
     const searchControlsSubLabel = useMemo(
       () =>
         searchResultsMetadata?.totalElements ? (
@@ -49,6 +50,21 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     );
     const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
 
+    const getFacetsData = async (facet?: string) => {
+      await getSearchFacetsData(api.endpoints.facets, facet);
+    };
+
+    const getSourceData = async () => {
+      await getSearchSourceData(api.endpoints.source);
+      await getFacetsData();
+    };
+
+    useEffect(() => {
+      if (!isOpen || !api.endpoints.source) return;
+
+      getSourceData();
+    }, [isOpen]);
+
     return (
       <Modal
         isOpen={isOpen}
@@ -64,7 +80,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
-            endpointUrl={api.endpoint}
+            endpointUrl={api.endpoints.base}
             searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
@@ -82,6 +98,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             searchByControlOptions={searchBy}
             labelEmptySearch="marva.enterSearchCriteria"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
+            getSearchSourceData={getSourceData}
+            getSearchFacetsData={getFacetsData}
           />
         </div>
       </Modal>

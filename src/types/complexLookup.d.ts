@@ -18,12 +18,17 @@ type ComplexLookupSearchBy = {
 
 type ComplexLookupsConfigEntry = {
   api: {
-    endpoint: string;
+    endpoints: {
+      base: string;
+      source?: string;
+      facets?: string;
+    };
     searchQuery: Record<string, string>;
   };
   labels: ComplexLookupLabels;
   linkedField?: string;
   searchBy: ComplexLookupSearchBy;
+  filters?: SearchFilters;
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;

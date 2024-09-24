@@ -30,6 +30,8 @@ type SearchParams = {
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;
+  getSearchSourceData?: (url?: string) => Promise<void>;
+  getSearchFacetsData?: (facet?: string) => Promise<void>;
 };
 
 type FacetsBySegments = {

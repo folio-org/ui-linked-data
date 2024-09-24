@@ -1,10 +1,15 @@
 import { SEARCH_API_ENDPOINT } from './api.constants';
+import { AuthoritiesFilters } from './complexLookupFilters.constants';
 import { SearchSegment } from './search.constants';
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   authorities: {
     api: {
-      endpoint: `${SEARCH_API_ENDPOINT}/authorities`,
+      endpoints: {
+        base: `${SEARCH_API_ENDPOINT}/authorities`,
+        source: '/authority-source-files',
+        facets: '/search/authorities/facets',
+      },
       searchQuery: {
         filter: '(type <> "CONCEPT")',
       },
@@ -102,6 +107,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       ],
     },
     linkedField: 'subclass',
+    filters: AuthoritiesFilters,
   },
 };
 

@@ -28,7 +28,7 @@ const data = atom<null | WorkAsSearchResultDTO[]>({
 
 const limiters = atom<Limiters>({
   key: 'search.limiters',
-  default: DEFAULT_SEARCH_LIMITERS,
+  default: DEFAULT_SEARCH_LIMITERS as Limiters,
 });
 
 const navigationState = atom<SearchParamsState>({
