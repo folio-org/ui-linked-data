@@ -8,9 +8,18 @@ interface IDropdownField {
   value?: ReactSelectOption;
   isDisabled?: boolean;
   id?: string;
+  'data-testid'?: string;
 }
 
-export const DropdownField: FC<IDropdownField> = ({ options, uuid, id, onChange, value, isDisabled = false }) => {
+export const DropdownField: FC<IDropdownField> = ({
+  options,
+  uuid,
+  id,
+  onChange,
+  value,
+  isDisabled = false,
+  'data-testid': testId = 'dropdown-field',
+}) => {
   const [localValue, setLocalValue] = useState<ReactSelectOption | undefined>(value);
 
   useEffect(() => {
@@ -30,7 +39,7 @@ export const DropdownField: FC<IDropdownField> = ({ options, uuid, id, onChange,
       value={localValue}
       disabled={isDisabled}
       className="edit-section-field-input dropdown-field"
-      data-testid="dropdown-field"
+      data-testid={testId}
     />
   );
 };

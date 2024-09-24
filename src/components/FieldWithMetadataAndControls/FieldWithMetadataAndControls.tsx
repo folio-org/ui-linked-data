@@ -34,7 +34,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   const schema = useRecoilValue(state.config.schema);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const { getSchemaWithCopiedEntries } = useProfileSchema();
-  const { uuid, displayName } = entry;
+  const { uuid, displayName, htmlId } = entry;
 
   const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled: disabled });
   const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ schema, entry, isDisabled: disabled });
@@ -46,6 +46,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   const commonLayoutProps = {
     displayName,
     showLabel,
+    htmlId,
     labelContainerClassName,
     hasDuplicateGroupButton,
     hasDuplicateSubcomponentButton,

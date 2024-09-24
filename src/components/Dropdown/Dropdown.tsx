@@ -180,6 +180,7 @@ export const Dropdown: FC<DropdownProps> = ({
                           }}
                           onKeyDown={event => handleOptionKeyDown(event, index)}
                           className="dropdown-options-button"
+                          data-testid={`${buttonTestId}__option-${labelId}`}
                         >
                           {icon && <span className="dropdown-options-button-icon">{icon}</span>}
                           <span className="dropdown-options-button-label">

@@ -126,3 +126,4 @@ export const BFID_DELIMITER = ':';
 export const BF_URI_DELIMITER = '/';
 export const ENTRY_DELIMITER = '__';
 export const ENTRY_COUNT_DELIMITER = '::';
+export const ENTRY_CONTROL_DELIMITER = '--';

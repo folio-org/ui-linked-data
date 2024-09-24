@@ -255,7 +255,7 @@ describe('EditSection', () => {
       const { getByTestId } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
-      fireEvent.click(within(parentElement).getByTestId('id-duplicate-group'));
+      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
       expect(getByTestId('duplicate-group-clone-amount')).toBeInTheDocument();
     });
@@ -264,7 +264,7 @@ describe('EditSection', () => {
       const { getByTestId, findAllByText } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
-      fireEvent.click(within(parentElement).getByTestId('id-duplicate-group'));
+      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
       fireEvent.click(getByTestId('duplicate-group-clone-amount'));
 
@@ -275,7 +275,7 @@ describe('EditSection', () => {
       const { getByTestId, findAllByText } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
-      fireEvent.click(within(parentElement).getByTestId('id-duplicate-group'));
+      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
       fireEvent.click((await findAllByText('marva.collapseAll'))[0]);
 

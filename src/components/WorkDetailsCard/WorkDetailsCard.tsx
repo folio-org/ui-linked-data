@@ -51,14 +51,19 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         <Button
           type={ButtonType.Primary}
           onClick={() => navigateToEditPage(generateEditResourceUrl(id))}
-          data-testid="edit-button"
+          data-testid={`edit-button__${id}`}
           className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >
           <FormattedMessage id="marva.editWork" />
         </Button>
       </div>
       <div className="details">
-        <Button type={ButtonType.Ghost} onClick={() => handleOpenPreview?.(id)} className="title">
+        <Button
+          type={ButtonType.Ghost}
+          onClick={() => handleOpenPreview?.(id)}
+          className="title"
+          data-testid={`preview-button__${id}`}
+        >
           {title || <FormattedMessage id="marva.noTitleInBrackets" />}
         </Button>
         {creatorName && (
