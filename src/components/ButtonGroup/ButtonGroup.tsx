@@ -1,10 +1,11 @@
 import classNames from 'classnames';
 import './ButtonGroup.scss';
+import { ReactNode } from 'react';
 
 type ButtonGroupProps = {
   className?: string;
   fullWidth?: boolean;
-  children: ReactElement[];
+  children: ReactNode;
 };
 
 export const ButtonGroup = ({ className, fullWidth, children }: ButtonGroupProps) => {

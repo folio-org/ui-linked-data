@@ -3,6 +3,7 @@ import { SearchIdentifiers } from '@common/constants/search.constants';
 
 export const SearchContext = createContext<SearchParams>({
   endpointUrl: '',
+  primarySegments: [],
   searchFilter: '',
   hasSearchParams: true,
   defaultSearchBy: SearchIdentifiers.LCCN,

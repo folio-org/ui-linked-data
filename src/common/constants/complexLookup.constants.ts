@@ -9,10 +9,26 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         base: `${SEARCH_API_ENDPOINT}/authorities`,
         source: '/authority-source-files',
         facets: '/search/authorities/facets',
+        bySearchSegment: {
+          [SearchSegment.Search]: `${SEARCH_API_ENDPOINT}/authorities`,
+          [SearchSegment.Browse]: '/browse/authorities',
+        },
       },
       searchQuery: {
         filter: '(type <> "CONCEPT")',
       },
+    },
+    segments: {
+      primary: [
+        {
+          type: SearchSegment.Search,
+          labelId: 'marva.search',
+        },
+        {
+          type: SearchSegment.Browse,
+          labelId: 'marva.browse',
+        },
+      ],
     },
     labels: {
       button: {
@@ -36,7 +52,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         },
         {
           label: 'identifierAll',
-          value: 'identifierAll',
+          value: 'identifiers.value',
         },
         {
           label: 'lccn',

@@ -13,6 +13,10 @@ type NavigationSegment = {
 
 type SearchParams = {
   endpointUrl: string;
+  endpointUrlsBySegments?: {
+    [key in SearchSegment]: string;
+  };
+  primarySegments?: SearchSegmentConfig[];
   searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;

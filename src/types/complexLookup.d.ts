@@ -16,14 +16,25 @@ type ComplexLookupSearchBy = {
   }[];
 };
 
+type SearchSegmentConfig = {
+  type: SearchSegment;
+  labelId: string;
+};
+
 type ComplexLookupsConfigEntry = {
   api: {
     endpoints: {
       base: string;
       source?: string;
       facets?: string;
+      bySearchSegment?: {
+        [key in SearchSegment]: string;
+      };
     };
     searchQuery: Record<string, string>;
+  };
+  segments: {
+    primary: SearchSegmentConfig[];
   };
   labels: ComplexLookupLabels;
   linkedField?: string;

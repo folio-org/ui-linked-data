@@ -23,7 +23,7 @@ interface ModalComplexLookupProps {
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
-    const { api, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
     const searchControlsSubLabel = useMemo(
@@ -83,6 +83,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
             endpointUrl={api.endpoints.base}
+            endpointUrlsBySegments={api.endpoints.bySearchSegment}
+            primarySegments={segments?.primary}
             searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
