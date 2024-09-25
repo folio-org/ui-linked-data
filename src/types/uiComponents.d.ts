@@ -37,6 +37,7 @@ type SearchGroup = {
   children?: SearchItem[];
   facet?: string;
   isOpen?: boolean;
+  hasExternalDataSource?: boolean;
 };
 
 type SearchFilters = SearchGroup[];

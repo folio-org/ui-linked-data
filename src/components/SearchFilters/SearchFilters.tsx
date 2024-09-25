@@ -1,10 +1,11 @@
 import { Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { FiltersGroupCheckType } from '@common/constants/search.constants';
-import { Accordion } from '@components/Accordion';
 import { useSearchFilters } from '@common/hooks/useSearchFilters';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { SimpleLookupFilter } from '@components/SimpleLookupField';
+import { Accordion } from '@components/Accordion';
+import { DateRange } from '@components/DateRange';
 
 export const SearchFilters = () => {
   const { filters, getSearchFacetsData } = useSearchContext();
@@ -13,7 +14,7 @@ export const SearchFilters = () => {
 
   return (
     <div className="controls">
-      {filters.map(({ type, labelId, children, facet, isOpen }, index) => {
+      {filters.map(({ type, labelId, children, facet, isOpen, hasExternalDataSource }, index) => {
         const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
         const isGroupCheckType = type === FiltersGroupCheckType.Single || type === FiltersGroupCheckType.Multi;
 
@@ -22,7 +23,7 @@ export const SearchFilters = () => {
             <Accordion
               title={<FormattedMessage id={labelId} />}
               defaultState={isOpen}
-              onToggle={getSearchFacetsData}
+              onOpen={hasExternalDataSource ? getSearchFacetsData : undefined}
               groupId={facet}
             >
               {isGroupCheckType && (
@@ -42,7 +43,13 @@ export const SearchFilters = () => {
                 </div>
               )}
 
-              {type === FiltersGroupCheckType.Lookup && <SimpleLookupFilter facet={facet} onChange={() => {}} />}
+              {/* TODO: handle value change */}
+              {type === FiltersGroupCheckType.Lookup && (
+                <div>
+                  <SimpleLookupFilter facet={facet} onChange={() => {}} />
+                </div>
+              )}
+              {type === FiltersGroupCheckType.DateRange && <DateRange facet={facet} onSubmit={() => {}} />}
             </Accordion>
             {index !== filtersLastGroupIndex && <hr />}
           </Fragment>

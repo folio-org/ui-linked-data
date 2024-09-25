@@ -11,6 +11,7 @@ export const AuthoritiesFilters = [
     type: FiltersGroupCheckType.Lookup,
     facet: SearchLimiterNamesAuthority.AuthoritySource,
     isOpen: true,
+    hasExternalDataSource: true,
   },
   {
     labelId: 'marva.references',
@@ -34,11 +35,13 @@ export const AuthoritiesFilters = [
     labelId: 'marva.thesaurus',
     type: FiltersGroupCheckType.Lookup,
     facet: SearchLimiterNamesAuthority.Thesaurus,
+    hasExternalDataSource: true,
   },
   {
     labelId: 'marva.typeOfHeading',
     type: FiltersGroupCheckType.Lookup,
     facet: SearchLimiterNamesAuthority.TypeOfHeading,
+    hasExternalDataSource: true,
   },
   {
     labelId: 'marva.dateCreated',

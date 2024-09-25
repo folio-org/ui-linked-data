@@ -29,6 +29,7 @@ const SearchSegments: FC<SearchSegmentsProps> = ({ onChangeSegment }) => {
 
           return (
             <Button
+              key={`${type}-${labelId}`}
               type={isSelected ? ButtonType.Highlighted : ButtonType.Primary}
               aria-selected={isSelected}
               role="tab"

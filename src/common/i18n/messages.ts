@@ -173,7 +173,10 @@ export const BASE_LOCALE = {
   'marva.excludeSeeFrom': 'Exclude see from',
   'marva.excludeSeeFromAlso': 'Exclude see from also',
   'marva.previous': 'Previous',
-  'marva.next': 'Next'
+  'marva.next': 'Next',
+  'marva.from': 'From',
+  'marva.to': 'To',
+  'marva.apply': 'Apply',
 };
 
 export const i18nMessages = {
