@@ -14,7 +14,7 @@ export const SearchFilters = () => {
 
   return (
     <div className="controls">
-      {filters.map(({ type, labelId, children, facet, isOpen, hasExternalDataSource }, index) => {
+      {filters.map(({ type, labelId, children, facet, isOpen, hasExternalDataSource, hasMappedSourceData }, index) => {
         const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
         const isGroupCheckType = type === FiltersGroupCheckType.Single || type === FiltersGroupCheckType.Multi;
 
@@ -46,7 +46,7 @@ export const SearchFilters = () => {
               {/* TODO: handle value change */}
               {type === FiltersGroupCheckType.Lookup && (
                 <div>
-                  <SimpleLookupFilter facet={facet} onChange={() => {}} />
+                  <SimpleLookupFilter facet={facet} onChange={() => {}} hasMappedSourceData={hasMappedSourceData} />
                 </div>
               )}
               {type === FiltersGroupCheckType.DateRange && <DateRange facet={facet} onSubmit={() => {}} />}

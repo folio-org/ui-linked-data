@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
-import { useEffect } from 'react';
 
 export const useSearchFiltersData = () => {
   const [selectedFacetsGroups, setSelectedFacetsGroups] = useRecoilState(state.search.selectedFacetsGroups);
@@ -22,13 +22,14 @@ export const useSearchFiltersData = () => {
     return selectedFacetsGroups ? [...selectedFacetsGroups, facet] : [facet];
   };
 
-  const getSearchSourceData = async (url?: string) => {
+  const getSearchSourceData = async (url?: string, sourceDataKey?: string) => {
     if (!url) return;
 
     try {
       const response = await SearchApi.getSearchSourceData(url);
+      const sourceData = sourceDataKey ? response[sourceDataKey] : response;
 
-      setSourceData(response);
+      setSourceData(sourceData);
     } catch (error) {
       console.error(error);
     }

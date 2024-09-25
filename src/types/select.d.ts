@@ -24,3 +24,5 @@ type Limiters = Record<
   SearchLimiterNames | SearchLimiterNamesAuthority,
   any[] | Suppressed | PublishDate | AuthorityType | SourceType
 >;
+
+type SimpleLookupFilterOption = Omit<ReactSelectOption, 'uri'>;

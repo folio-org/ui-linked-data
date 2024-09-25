@@ -51,8 +51,7 @@ const facetsBySegments = atom<FacetsBySegments>({
   default: DEFAULT_FACET_BY_SEGMENT,
 });
 
-// TODO: create a DTO
-const sourceData = atom<any>({
+const sourceData = atom<SourceDataDTO | null>({
   key: 'search.sourceData',
   default: null,
 });
@@ -62,8 +61,7 @@ const selectedFacetsGroups = atom<string[]>({
   default: [],
 });
 
-// TODO: create a DTO
-const facetsData = atom<any>({
+const facetsData = atom<FacetsDTO>({
   key: 'search.facetsData',
   default: {},
 });

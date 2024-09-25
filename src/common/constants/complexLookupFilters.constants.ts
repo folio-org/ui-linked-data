@@ -12,6 +12,7 @@ export const AuthoritiesFilters = [
     facet: SearchLimiterNamesAuthority.AuthoritySource,
     isOpen: true,
     hasExternalDataSource: true,
+    hasMappedSourceData: true,
   },
   {
     labelId: 'marva.references',

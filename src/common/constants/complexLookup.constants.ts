@@ -14,6 +14,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           [SearchSegment.Browse]: '/browse/authorities',
         },
       },
+      sourceKey: 'authoritySourceFiles',
       searchQuery: {
         filter: '(type <> "CONCEPT")',
       },

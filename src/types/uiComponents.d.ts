@@ -38,6 +38,7 @@ type SearchGroup = {
   facet?: string;
   isOpen?: boolean;
   hasExternalDataSource?: boolean;
+  hasMappedSourceData?: boolean;
 };
 
 type SearchFilters = SearchGroup[];

@@ -177,6 +177,7 @@ export const BASE_LOCALE = {
   'marva.from': 'From',
   'marva.to': 'To',
   'marva.apply': 'Apply',
+  'marva.notSpecified': 'Not specified'
 };
 
 export const i18nMessages = {

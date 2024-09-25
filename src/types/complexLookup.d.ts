@@ -34,6 +34,7 @@ type ComplexLookupsConfigEntry = {
         [key in SearchSegment]: string;
       };
     };
+    sourceKey?: string;
     searchQuery: Record<string, string>;
   };
   segments: {

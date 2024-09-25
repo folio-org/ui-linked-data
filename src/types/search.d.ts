@@ -45,3 +45,32 @@ type FacetsBySegments = {
     facets: Limiters;
   };
 };
+
+type FacetDTO = {
+  totalRecords: number;
+  values: {
+    id: string;
+    totalRecords: number;
+  }[];
+};
+
+type FacetsDTO = Record<string, FacetDTO>;
+
+type SourceEntry = {
+  codes: string[];
+  hridManagement: Record<string, any>;
+  id: string;
+  metadata: {
+    createdByUserId: string;
+    updatedByUserId: string;
+    createdDate: string;
+    updatedDate: string;
+  };
+  name: string;
+  selectable: boolean;
+  source: string;
+  type: string;
+  _version: number;
+};
+
+type SourceDataDTO = SourceEntry[];

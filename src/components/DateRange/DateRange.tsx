@@ -25,9 +25,9 @@ export const DateRange: FC<DateRangeProps> = ({ facet, onSubmit }) => {
   return (
     <div className="date-range">
       <div className="date-range-group">
-        <label className="date-range-label" htmlFor={idStart}>
+        <p className="date-range-label">
           <FormattedMessage id="marva.from" />
-        </label>
+        </p>
         <DatePicker
           id={idStart}
           data-testid={idStart}
@@ -39,9 +39,9 @@ export const DateRange: FC<DateRangeProps> = ({ facet, onSubmit }) => {
       </div>
 
       <div className="date-range-group">
-        <label className="date-range-label" htmlFor={idEnd}>
+        <p className="date-range-label">
           <FormattedMessage id="marva.to" />
-        </label>
+        </p>
         <DatePicker
           id={idEnd}
           data-testid={idEnd}

@@ -1,5 +1,5 @@
 import { FC, memo, useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
@@ -25,6 +25,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
     const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const setFacetsData = useSetRecoilState(state.search.facetsData);
     const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
     const searchControlsSubLabel = useMemo(
       () =>
@@ -55,7 +56,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     };
 
     const getSourceData = async () => {
-      await getSearchSourceData(api.endpoints.source);
+      await getSearchSourceData(api.endpoints.source, api.sourceKey);
 
       const openedFilter = filters.find(({ isOpen }) => isOpen);
       await getFacetsData(openedFilter?.facet);
@@ -65,6 +66,10 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       if (!isOpen || !api.endpoints.source) return;
 
       getSourceData();
+
+      return () => {
+        setFacetsData({});
+      };
     }, [isOpen]);
 
     return (
