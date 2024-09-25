@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import './Accordion.scss';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import classNames from 'classnames';
@@ -8,23 +8,19 @@ type Accordion = {
   title?: string | JSX.Element;
   groupId?: string;
   defaultState?: boolean;
-  onToggle?: (facet?: string) => void;
-  onOpen?: (facet?: string) => void;
+  onToggle?: (facet?: string, isOpen?: boolean) => void;
   children?: string | ReactNode;
 };
 
-export const Accordion: FC<Accordion> = ({ title, groupId, defaultState = false, onToggle, onOpen, children }) => {
+export const Accordion: FC<Accordion> = ({ title, groupId, defaultState = false, onToggle, children }) => {
   const [isOpen, setIsOpen] = useState(defaultState);
-  const handleVisibilityToggle = () => {
-    setIsOpen(!isOpen);
-    onToggle?.(groupId);
-  };
 
-  useEffect(() => {
-    if (isOpen) {
-      onOpen?.(groupId);
-    }
-  }, [isOpen, groupId]);
+  const handleVisibilityToggle = () => {
+    const updatedIsOpenState = !isOpen;
+
+    setIsOpen(updatedIsOpenState);
+    onToggle?.(groupId, updatedIsOpenState);
+  };
 
   return (
     <section className="accordion">

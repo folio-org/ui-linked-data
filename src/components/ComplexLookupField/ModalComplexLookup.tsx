@@ -50,8 +50,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     );
     const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
 
-    const getFacetsData = async (facet?: string) => {
-      await getSearchFacetsData(api.endpoints.facets, facet);
+    const getFacetsData = async (facet?: string, isOpen?: boolean) => {
+      await getSearchFacetsData(api.endpoints.facets, facet, isOpen);
     };
 
     const getSourceData = async () => {

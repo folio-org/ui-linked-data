@@ -35,7 +35,7 @@ type SearchParams = {
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;
   getSearchSourceData?: (url?: string) => Promise<void>;
-  getSearchFacetsData?: (facet?: string) => Promise<void>;
+  getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
 };
 
 type FacetsBySegments = {

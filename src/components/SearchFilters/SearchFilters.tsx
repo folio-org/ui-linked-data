@@ -23,7 +23,7 @@ export const SearchFilters = () => {
             <Accordion
               title={<FormattedMessage id={labelId} />}
               defaultState={isOpen}
-              onOpen={hasExternalDataSource ? getSearchFacetsData : undefined}
+              onToggle={hasExternalDataSource ? getSearchFacetsData : undefined}
               groupId={facet}
             >
               {isGroupCheckType && (

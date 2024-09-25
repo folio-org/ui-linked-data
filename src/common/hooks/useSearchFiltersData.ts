@@ -1,16 +1,23 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
+import { useEffect } from 'react';
 
 export const useSearchFiltersData = () => {
   const [selectedFacetsGroups, setSelectedFacetsGroups] = useRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
 
-  const getUpdatedSelectedFacetsGroups = (facet?: string) => {
+  useEffect(() => {
+    return setSelectedFacetsGroups([]);
+  }, []);
+
+  const getUpdatedSelectedFacetsGroups = (facet?: string, isOpen = true) => {
     if (!facet) return selectedFacetsGroups;
 
-    if (selectedFacetsGroups?.includes(facet)) return selectedFacetsGroups;
+    if (isOpen && selectedFacetsGroups?.includes(facet)) return selectedFacetsGroups;
+
+    if (!isOpen) return selectedFacetsGroups.filter(group => group !== facet);
 
     return selectedFacetsGroups ? [...selectedFacetsGroups, facet] : [facet];
   };
@@ -27,12 +34,10 @@ export const useSearchFiltersData = () => {
     }
   };
 
-  const getSearchFacetsData = async (url?: string, facet?: string) => {
+  const getSearchFacetsData = async (url?: string, facet?: string, isOpen?: boolean) => {
     if (!url || !facet) return;
 
-    const updatedSelectedFacetsGroups = getUpdatedSelectedFacetsGroups(facet);
-
-    setSelectedFacetsGroups(updatedSelectedFacetsGroups);
+    const updatedSelectedFacetsGroups = onTogleFilterGroupState(facet, isOpen);
 
     try {
       const facetsQueryParam = updatedSelectedFacetsGroups.join(',');
@@ -46,5 +51,13 @@ export const useSearchFiltersData = () => {
     }
   };
 
-  return { getSearchSourceData, getSearchFacetsData };
+  const onTogleFilterGroupState = (facet: string, isOpen?: boolean) => {
+    const updatedSelectedFacetsGroups = getUpdatedSelectedFacetsGroups(facet, isOpen);
+
+    setSelectedFacetsGroups(updatedSelectedFacetsGroups);
+
+    return updatedSelectedFacetsGroups;
+  };
+
+  return { getSearchSourceData, getSearchFacetsData, onTogleFilterGroupState };
 };
