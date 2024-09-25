@@ -13,8 +13,15 @@ import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from './useSearchContext';
 
 export const useSearch = () => {
-  const { endpointUrl, searchFilter, isSortedResults, hasSearchParams, defaultSearchBy, navigationSegment } =
-    useSearchContext();
+  const {
+    endpointUrl,
+    searchFilter,
+    isSortedResults,
+    hasSearchParams,
+    defaultSearchBy,
+    navigationSegment,
+    endpointUrlsBySegments,
+  } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
@@ -69,8 +76,12 @@ export const useSearch = () => {
       setIsLoading(true);
 
       try {
+        const currentEndpointUrl = navigationSegment?.value
+          ? endpointUrlsBySegments?.[navigationSegment.value]
+          : endpointUrl;
+
         const result = await getByIdentifier({
-          endpointUrl,
+          endpointUrl: currentEndpointUrl || endpointUrl,
           searchFilter,
           isSortedResults,
           searchBy,
@@ -93,7 +104,7 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, searchFilter, isSortedResults],
+    [data, endpointUrl, navigationSegment?.value, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {

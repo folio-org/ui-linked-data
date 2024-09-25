@@ -19,6 +19,9 @@ export const ItemSearch = () => {
     isVisibleAdvancedSearch,
     renderResultsList,
     renderSearchControlPane,
+    isVisibleSegments,
+    primarySegments,
+    navigationSegment,
   } = useSearchContext();
   const {
     submitSearch,
@@ -33,6 +36,10 @@ export const ItemSearch = () => {
   } = useSearch();
 
   useLoadSearchResults(fetchData, currentPageNumber);
+
+  const isVisiblePaginationCount = isVisibleSegments
+    ? !!navigationSegment?.value && primarySegments?.[navigationSegment?.value]?.isVisiblePaginationCount
+    : true;
 
   return (
     <div data-testid="id-search" className="item-search">
@@ -54,6 +61,7 @@ export const ItemSearch = () => {
                   totalPages={pageMetadata.totalPages}
                   pageSize={SEARCH_RESULTS_LIMIT}
                   totalResultsCount={pageMetadata.totalElements}
+                  showCount={isVisiblePaginationCount}
                   onPrevPageClick={onPrevPageClick}
                   onNextPageClick={onNextPageClick}
                 />

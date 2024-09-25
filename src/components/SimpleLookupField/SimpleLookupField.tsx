@@ -1,9 +1,10 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import { useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
+import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
@@ -14,11 +15,6 @@ import { ClearIndicator } from './ClearIndicator';
 import state from '@state';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 import './SimpleLookupField.scss';
-import Select from 'react-select/dist/declarations/src/Select';
-import {
-  CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG,
-  EDIT_SECTION_CONTAINER_ID,
-} from '@common/constants/uiElements.constants';
 
 interface Props {
   uri: string;
@@ -45,28 +41,10 @@ export const SimpleLookupField: FC<Props> = ({
   parentBlockUri,
 }) => {
   const { getLookupData, loadLookupData } = useSimpleLookupData();
-  const simpleLookupRef = useRef<Select<unknown, boolean, GroupBase<unknown>>>(null);
-  const [forceDisplayOptionsAtTheTop, setForceDisplayOptionsAtTheTop] = useState(false);
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
   const setCommonStatus = useSetRecoilState(state.status.commonMessages);
-
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      setForceDisplayOptionsAtTheTop(!entry.isIntersecting && entry?.boundingClientRect?.bottom > window.innerHeight);
-    },
-    { root: document.getElementById(EDIT_SECTION_CONTAINER_ID), rootMargin: CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG },
-  );
-
-  useEffect(() => {
-    const elem = simpleLookupRef?.current?.inputRef;
-
-    elem && observer.observe(elem);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [simpleLookupRef]);
+  const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({

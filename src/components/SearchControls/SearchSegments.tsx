@@ -23,22 +23,23 @@ const SearchSegments: FC<SearchSegmentsProps> = ({ onChangeSegment }) => {
 
   return (
     <ButtonGroup className="search-segments" fullWidth>
-      {primarySegments?.map(({ type, labelId }) => {
-        const isSelected = selectedNavigationSegment === type;
+      {primarySegments &&
+        Object.entries(primarySegments)?.map(([type, { labelId }]) => {
+          const isSelected = selectedNavigationSegment === type;
 
-        return (
-          <Button
-            type={isSelected ? ButtonType.Highlighted : ButtonType.Primary}
-            aria-selected={isSelected}
-            role="tab"
-            className="search-segment-button"
-            onClick={() => onSegmentClick(type)}
-            data-testid="id-search-segment-button"
-          >
-            <FormattedMessage id={labelId} />
-          </Button>
-        );
-      })}
+          return (
+            <Button
+              type={isSelected ? ButtonType.Highlighted : ButtonType.Primary}
+              aria-selected={isSelected}
+              role="tab"
+              className="search-segment-button"
+              onClick={() => onSegmentClick(type as SearchSegmentValue)}
+              data-testid="id-search-segment-button"
+            >
+              <FormattedMessage id={labelId} />
+            </Button>
+          );
+        })}
     </ButtonGroup>
   );
 };

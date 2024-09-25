@@ -24,6 +24,7 @@ export const BASE_LOCALE = {
   'marva.searchFor': 'Search for',
   'marva.searchAndFilter': 'Search & filter',
   'marva.enterSearchCriteria': 'Enter search criteria to start search',
+  'marva.chooseFilterOrEnterSearchQuery': 'Choose a filter or enter a search query to show results.',
   'marva.searchNoRdsMatch': 'No resource descriptions match your query',
   'marva.searchBySth': 'Search by{by}...',
   'marva.errorFetching': 'Error fetching data',
@@ -171,6 +172,8 @@ export const BASE_LOCALE = {
   'marva.dateUpdated': 'Date updated',
   'marva.excludeSeeFrom': 'Exclude see from',
   'marva.excludeSeeFromAlso': 'Exclude see from also',
+  'marva.previous': 'Previous',
+  'marva.next': 'Next'
 };
 
 export const i18nMessages = {

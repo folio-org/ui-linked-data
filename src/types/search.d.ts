@@ -16,7 +16,7 @@ type SearchParams = {
   endpointUrlsBySegments?: {
     [key in SearchSegment]: string;
   };
-  primarySegments?: SearchSegmentConfig[];
+  primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;

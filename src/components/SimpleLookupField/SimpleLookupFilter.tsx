@@ -23,6 +23,7 @@ export const SimpleLookupFilter: FC<Props> = ({ facet, id, options, value, onCha
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
+    // TODO: implement the options data structure
     value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
       value: { label: basicLabel || label, uri },
       label,
@@ -38,6 +39,7 @@ export const SimpleLookupFilter: FC<Props> = ({ facet, id, options, value, onCha
     setLocalValue([...options]);
   };
 
+  // TODO: make the props reusable
   return (
     <CreatableSelect
       id={id}

@@ -19,16 +19,18 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
     },
     segments: {
-      primary: [
-        {
+      primary: {
+        [SearchSegment.Search]: {
           type: SearchSegment.Search,
           labelId: 'marva.search',
+          isVisiblePaginationCount: true,
         },
-        {
+        [SearchSegment.Browse]: {
           type: SearchSegment.Browse,
           labelId: 'marva.browse',
+          isVisiblePaginationCount: true,
         },
-      ],
+      },
     },
     labels: {
       button: {

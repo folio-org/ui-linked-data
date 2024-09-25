@@ -19,7 +19,10 @@ type ComplexLookupSearchBy = {
 type SearchSegmentConfig = {
   type: SearchSegment;
   labelId: string;
+  isVisiblePaginationCount?: boolean;
 };
+
+type PrimarySegmentsConfig = { [key in SearchSegment]: SearchSegmentConfig };
 
 type ComplexLookupsConfigEntry = {
   api: {
@@ -34,7 +37,7 @@ type ComplexLookupsConfigEntry = {
     searchQuery: Record<string, string>;
   };
   segments: {
-    primary: SearchSegmentConfig[];
+    primary: PrimarySegmentsConfig;
   };
   labels: ComplexLookupLabels;
   linkedField?: string;
