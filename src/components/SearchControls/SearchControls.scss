@@ -6,7 +6,6 @@
   min-width: 290px;
   width: 290px;
   border-right: 1px solid #d7d8da;
-  overflow-y: auto;
 
   &-header,
   .meta-controls {
@@ -34,6 +33,7 @@
 
   &-header {
     height: 2.75rem;
+    min-height: 2.75rem;
     padding: 0 1rem;
     background-color: rgba(0, 0, 0, 0.03);
 
@@ -44,6 +44,7 @@
 
   &-content {
     padding: 0 1rem 0.75rem 1rem;
+    overflow-y: auto;
 
     .primary-search {
       width: 100%;
