@@ -14,7 +14,7 @@ type SearchResultsTableColumn = {
   className?: string;
   formatter?: (
     row: SearchResultsTableRow,
-    formatMessage?: any,
+    formatMessage?: AbstractIntlFormatter,
     onAssign?: (data: ComplexLookupAssignRecordDTO) => void,
   ) => React.JSX.Element;
 };

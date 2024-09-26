@@ -15,7 +15,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     subclass: {
       label: 'marva.subclass',
       position: 1,
-      formatter: (row: SearchResultsTableRow, formatMessage: any) => {
+      formatter: (row: SearchResultsTableRow, formatMessage: AbstractIntlFormatter) => {
         const labelId = subclassMapping[row.subclass?.label as unknown as keyof typeof subclassMapping]?.labelId;
         const formattedLabel = labelId ? formatMessage({ id: labelId }) : '';
 
@@ -33,7 +33,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
       className: 'cell-fixed-100',
       formatter: (
         row: SearchResultsTableRow,
-        formatMessage: any,
+        formatMessage: AbstractIntlFormatter,
         onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void,
       ) => (
         <Button
