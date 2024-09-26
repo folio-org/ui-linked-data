@@ -8,6 +8,8 @@ import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { Input } from '@components/Input';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import { ModalComplexLookup } from './ModalComplexLookup';
+import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
+import { SchemaControlType } from '@common/constants/uiControls.constants';
 import './ComplexLookupField.scss';
 
 interface Props {
@@ -61,7 +63,12 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
             </div>
           )}
 
-          <button role="button" className="complex-lookup-select-button button-passive" onClick={openModal}>
+          <button
+            data-testid={getHtmlIdForSchemaControl(id, SchemaControlType.ChangeComplexFieldValue)}
+            role="button"
+            className="complex-lookup-select-button button-passive"
+            onClick={openModal}
+          >
             <FormattedMessage id={localValue?.length ? buttonConfigLabel?.change : buttonConfigLabel?.base} />
           </button>
 

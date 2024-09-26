@@ -52,11 +52,8 @@ export class SchemaService implements ISchema {
     const type = auxType || getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
-    const entryTypesWithHtmlIds = [...branchEnds, AdvancedFieldType.dropdown];
-
-    if (entryTypesWithHtmlIds.includes(type as AdvancedFieldType)) {
-      this.entryPropertiesGeneratorService?.addEntryWithHtmlId(uuid);
-    }
+    
+    this.entryPropertiesGeneratorService?.addEntryWithHtmlId(uuid);
 
     if (branchEnds.includes(type as AdvancedFieldType)) {
       const {

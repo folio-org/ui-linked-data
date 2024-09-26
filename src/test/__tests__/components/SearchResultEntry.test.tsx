@@ -47,7 +47,7 @@ describe('SearchResultEntry', () => {
     });
 
     test('navigates to edit section for the relevant ID', () => {
-      fireEvent.click(getByTestId('edit-button-instanceId'));
+      fireEvent.click(getByTestId('edit-button__instanceId'));
 
       expect(mockedUsedNavigate).toHaveBeenCalledWith('/resources/instanceId/edit', { state: {} });
     });

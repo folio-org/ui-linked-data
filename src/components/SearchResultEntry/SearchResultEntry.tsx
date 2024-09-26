@@ -88,7 +88,11 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
       title: {
         ...row.title,
         children: (
-          <Button type={ButtonType.Link} onClick={() => handleOpenPreview(row?.__meta?.id)}>
+          <Button
+            type={ButtonType.Link}
+            onClick={() => handleOpenPreview(row?.__meta?.id)}
+            data-testid={`preview-button__${row.__meta.id}`}
+          >
             {row.title.label}
           </Button>
         ),
@@ -98,7 +102,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           <Button
             type={ButtonType.Primary}
             onClick={() => navigateToEditPage(generateEditResourceUrl(row.__meta?.id))}
-            data-testid={`edit-button-${row.__meta.id}`}
+            data-testid={`edit-button__${row.__meta.id}`}
             className={classNames(['button-nowrap', 'button-capitalize'])}
           >
             <FormattedMessage id="marva.editInstance" />

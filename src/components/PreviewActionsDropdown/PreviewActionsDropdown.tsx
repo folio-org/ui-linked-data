@@ -60,6 +60,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityTy
       className="toggle-entity-edit"
       items={actionDropdownItems}
       hideLabelIdWithinDropdownList={true}
+      buttonTestId="preview-actions-dropdown"
     />
   );
 };

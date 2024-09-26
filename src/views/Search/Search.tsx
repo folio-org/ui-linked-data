@@ -62,7 +62,7 @@ export const SearchView = () => {
   const renderSearchControlPane = useCallback(
     () => (
       <SearchControlPane label={<FormattedMessage id="marva.resources" />}>
-        <Dropdown labelId="marva.actions" items={items} />
+        <Dropdown labelId="marva.actions" items={items} buttonTestId="search-view-actions-dropdown" />
       </SearchControlPane>
     ),
     [items],

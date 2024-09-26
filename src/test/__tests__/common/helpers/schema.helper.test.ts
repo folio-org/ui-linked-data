@@ -12,6 +12,7 @@ describe('schema.helper', () => {
     checkGroupIsNonBFMapped,
     selectNonBFMappedGroupData,
     findParentEntryByProperty,
+    getHtmlIdForEntry,
   } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
@@ -279,6 +280,28 @@ describe('schema.helper', () => {
       const result = findParentEntryByProperty({ schema, path, key: 'type', value: type });
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('getHtmlIdForEntry', () => {
+    const schema = new Map([
+      ['blockUuid', { uuid: 'blockUuid', path: ['blockUuid'], bfid: 'mockBfid' }],
+      ['groupUuid', { uuid: 'groupUuid', path: ['blockUuid', 'groupUuid'], uri: 'mockUri' }],
+      [
+        'fieldUuid',
+        {
+          uuid: 'fieldUuid',
+          path: ['blockUuid', 'groupUuid', 'fieldUuid'],
+          uriBFLite: 'mockUriBFLite',
+        },
+      ],
+    ]);
+    const path = ['blockUuid', 'groupUuid', 'fieldUuid'];
+
+    test('returns htmlId', () => {
+      const htmlId = getHtmlIdForEntry({ path }, schema);
+
+      expect(htmlId).toEqual('mockBfid::0__mockUri::0__mockUriBFLite::0');
     });
   });
 });

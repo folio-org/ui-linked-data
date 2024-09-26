@@ -8,16 +8,27 @@ type ICompactLayout = {
   showLabel?: boolean;
   labelContainerClassName?: string;
   hasDuplicateGroupButton?: boolean;
+  htmlId?: string;
   onClickDuplicateGroup?: VoidFunction;
 };
 
 export const CompactLayout: FC<ICompactLayout> = memo(
-  ({ children, displayName, showLabel, labelContainerClassName, hasDuplicateGroupButton, onClickDuplicateGroup }) => {
+  ({
+    children,
+    displayName,
+    showLabel,
+    labelContainerClassName,
+    htmlId,
+    hasDuplicateGroupButton,
+    onClickDuplicateGroup,
+  }) => {
     return (
       <>
         {displayName && showLabel && <div className={classNames('label', labelContainerClassName)}>{displayName}</div>}
-        {children}
-        {hasDuplicateGroupButton && <DuplicateGroup onClick={onClickDuplicateGroup} />}
+        <div className="children-container" data-testid={htmlId}>
+          {children}
+        </div>
+        {hasDuplicateGroupButton && <DuplicateGroup htmlId={htmlId} onClick={onClickDuplicateGroup} />}
       </>
     );
   },

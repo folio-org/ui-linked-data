@@ -7,9 +7,17 @@ interface ILiteralField {
   isDisabled?: boolean;
   id?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
+  'data-testid'?: string;
 }
 
-export const LiteralField: FC<ILiteralField> = ({ uuid, value = '', id, isDisabled = false, onChange }) => {
+export const LiteralField: FC<ILiteralField> = ({
+  uuid,
+  value = '',
+  id,
+  isDisabled = false,
+  onChange,
+  'data-testid': testId = 'literal-field',
+}) => {
   const [localValue, setLocalValue] = useState(value);
 
   const handleOnChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +30,7 @@ export const LiteralField: FC<ILiteralField> = ({ uuid, value = '', id, isDisabl
     <Input
       id={id}
       className="edit-section-field-input"
-      data-testid="literal-field"
+      data-testid={testId}
       onChange={handleOnChange}
       value={localValue}
       disabled={isDisabled}

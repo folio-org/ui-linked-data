@@ -14,6 +14,7 @@ export enum ButtonType {
 }
 
 type Button = {
+  id?: string;
   type?: ButtonType;
   label?: string | ReactNode;
   children?: string | ReactNode;
@@ -26,6 +27,7 @@ type Button = {
 };
 
 export const Button: FC<Button> = ({
+  id,
   prefix,
   label,
   children,
@@ -37,6 +39,7 @@ export const Button: FC<Button> = ({
   role,
 }) => (
   <button
+    id={id}
     data-testid={dataTestId}
     disabled={disabled}
     onClick={onClick}
