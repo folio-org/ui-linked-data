@@ -5,11 +5,13 @@ import { FormattedMessage } from 'react-intl';
 import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
+import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/formatters';
 import { SearchSegment } from '@common/constants/search.constants';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
+import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
 import state from '@state';
 
@@ -24,6 +26,8 @@ interface ModalComplexLookupProps {
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
     const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
+    const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const setFacetsData = useSetRecoilState(state.search.facetsData);
     const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
@@ -49,7 +53,17 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       ),
       [labels.modal.searchResults, searchControlsSubLabel],
     );
-    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
+
+    const renderResultsList = useCallback(
+      () => (
+        <ComplexLookupSearchResults
+          onAssign={onAssign}
+          tableConfig={tableConfig}
+          searchResultsFormatter={searchResultsFormatter}
+        />
+      ),
+      [onAssign, tableConfig, searchResultsFormatter],
+    );
 
     const getFacetsData = async (facet?: string, isOpen?: boolean) => {
       await getSearchFacetsData(api.endpoints.facets, facet, isOpen);
