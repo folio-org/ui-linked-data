@@ -33,7 +33,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
       className: 'cell-fixed-100',
       formatter: (
         row: SearchResultsTableRow,
-        formatMessage: AbstractIntlFormatter,
+        _: AbstractIntlFormatter,
         onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void,
       ) => (
         <Button
@@ -41,8 +41,8 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
           onClick={() =>
             onAssign({
               id: row.__meta.id,
-              title: formatMessage?.({ id: row.title.label }) || '',
-              linkedFieldValue: formatMessage?.({ id: row.subclass.label }) || '',
+              title: (row.title.label as string) || '',
+              linkedFieldValue: (row.subclass.label as string) || '',
             })
           }
         >

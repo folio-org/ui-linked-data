@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { VALUE_DIVIDER } from '@common/constants/complexLookup.constants';
-import { COMPLEX_LOOKUPS_CONFIG } from '@common/configs';
+import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { Input } from '@components/Input';
 import CloseIcon from '@src/assets/times-16.svg?react';

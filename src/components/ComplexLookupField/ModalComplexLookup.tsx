@@ -6,7 +6,7 @@ import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/formatters';
 import { SearchSegment } from '@common/constants/search.constants';
-import { COMPLEX_LOOKUPS_CONFIG } from '@common/configs';
+import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
