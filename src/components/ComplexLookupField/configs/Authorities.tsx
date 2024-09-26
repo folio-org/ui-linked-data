@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
 import { COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING } from '@common/constants/complexLookup.constants';
+import { Button, ButtonType } from '@components/Button';
 
 const { subclass: subclassMapping } = COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
 

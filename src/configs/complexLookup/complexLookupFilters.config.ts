@@ -1,3 +1,4 @@
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import {
   FiltersGroupCheckType,
   FiltersType,
@@ -6,7 +7,7 @@ import {
 } from '@common/constants/search.constants';
 
 export const COMPLEX_LOOKUP_FILTERS_CONFIG = {
-  authorities: [
+  [ComplexLookupType.Authorities]: [
     {
       labelId: 'marva.authoritySource',
       type: FiltersGroupCheckType.Lookup,

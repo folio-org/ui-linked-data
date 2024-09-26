@@ -1,19 +1,20 @@
-import { FC, memo, useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { FC, memo, useCallback, useMemo } from 'react';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/formatters';
+import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
+import state from '@state';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
-import state from '@state';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -24,13 +25,14 @@ interface ModalComplexLookupProps {
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
+  ({ isOpen, onAssign, onClose, assignEntityName = ComplexLookupType.Authorities, baseLabelType = 'creator' }) => {
     const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
+
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
-    const setFacetsData = useSetRecoilState(state.search.facetsData);
-    const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
+    const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters, isOpen);
+
     const searchControlsSubLabel = useMemo(
       () =>
         searchResultsMetadata?.totalElements ? (
@@ -64,27 +66,6 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       ),
       [onAssign, tableConfig, searchResultsFormatter],
     );
-
-    const getFacetsData = async (facet?: string, isOpen?: boolean) => {
-      await getSearchFacetsData(api.endpoints.facets, facet, isOpen);
-    };
-
-    const getSourceData = async () => {
-      await getSearchSourceData(api.endpoints.source, api.sourceKey);
-
-      const openedFilter = filters.find(({ isOpen }) => isOpen);
-      await getFacetsData(openedFilter?.facet);
-    };
-
-    useEffect(() => {
-      if (!isOpen || !api.endpoints.source) return;
-
-      getSourceData();
-
-      return () => {
-        setFacetsData({});
-      };
-    }, [isOpen]);
 
     return (
       <Modal

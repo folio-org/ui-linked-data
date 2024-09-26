@@ -1,3 +1,7 @@
+export enum ComplexLookupType {
+  Authorities = 'authorities',
+}
+
 export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
   subclass: {
     PERSON: {

@@ -1,7 +1,8 @@
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 
 export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
-  authorities: {
+  [ComplexLookupType.Authorities]: {
     [SearchSegment.Search]: [
       {
         label: 'keyword',

@@ -2,9 +2,10 @@ import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
-  authorities: {
+  [ComplexLookupType.Authorities]: {
     api: {
       endpoints: {
         base: `${SEARCH_API_ENDPOINT}/authorities`,

@@ -24,19 +24,21 @@ type SearchSegmentConfig = {
 
 type PrimarySegmentsConfig = { [key in SearchSegment]: SearchSegmentConfig };
 
-type ComplexLookupsConfigEntry = {
-  api: {
-    endpoints: {
-      base: string;
-      source?: string;
-      facets?: string;
-      bySearchSegment?: {
-        [key in SearchSegment]: string;
-      };
+type ComplexLookupApiEntryConfig = {
+  endpoints: {
+    base: string;
+    source?: string;
+    facets?: string;
+    bySearchSegment?: {
+      [key in SearchSegment]: string;
     };
-    sourceKey?: string;
-    searchQuery: Record<string, string>;
   };
+  sourceKey?: string;
+  searchQuery: Record<string, string>;
+};
+
+type ComplexLookupsConfigEntry = {
+  api: ComplexLookupApiEntryConfig;
   segments: {
     primary: PrimarySegmentsConfig;
   };
