@@ -53,7 +53,7 @@ export const Pagination: FC<Props> = memo(
           <FormattedMessage id="marva.previous" />
         </Button>
         {showCount && (
-          <div>
+          <div className="pagination-count">
             <FormattedMessage
               id="marva.paginationCount"
               values={{

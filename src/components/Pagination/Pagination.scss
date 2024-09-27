@@ -5,7 +5,9 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
+    min-height: 41px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.8rem;
 
     &-button {
       display: flex;
@@ -16,7 +18,7 @@
       border-radius: 2rem;
 
       svg {
-        margin-top: 3px;
+        margin-top: 1px;
       }
 
       path {
@@ -26,6 +28,10 @@
       &:disabled path {
         fill: #e0dfdf;
       }
+    }
+
+    &-count {
+      font-weight: 600;
     }
   }
 }
