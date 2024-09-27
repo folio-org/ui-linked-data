@@ -32,6 +32,7 @@ type SearchItem = {
 };
 
 type SearchGroup = {
+  id?: string;
   labelId: string;
   type: FiltersGroupCheckType;
   children?: SearchItem[];

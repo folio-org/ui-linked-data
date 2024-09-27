@@ -16,7 +16,7 @@ export const SearchFilters = () => {
     <div className="controls">
       {filters.map(
         (
-          { type, labelId, children, facet, isOpen, hasExternalDataSource, hasMappedSourceData, excludedOptions },
+          { id, type, labelId, children, facet, isOpen, hasExternalDataSource, hasMappedSourceData, excludedOptions },
           index,
         ) => {
           const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
@@ -25,10 +25,11 @@ export const SearchFilters = () => {
           return (
             <Fragment key={labelId}>
               <Accordion
+                id={id}
                 title={<FormattedMessage id={labelId} />}
                 defaultState={isOpen}
                 onToggle={hasExternalDataSource ? getSearchFacetsData : undefined}
-                groupId={facet}
+                groupId={facet || labelId}
               >
                 {isGroupCheckType && (
                   <div onChange={isSingleGroupCheckType ? onChangeLimiters : onChangeLimitersMulti}>

@@ -45,6 +45,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
               linkedFieldValue: (row.subclass.label as string) || '',
             })
           }
+          data-testid={`assign-button-${row.__meta.id}`}
         >
           <FormattedMessage id="marva.assign" />
         </Button>

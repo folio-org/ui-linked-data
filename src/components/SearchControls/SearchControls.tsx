@@ -107,6 +107,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
             <Select
               withIntl
               id="id-search-select"
+              data-testid="id-search-select"
               className="select-input"
               value={searchBy}
               options={selectOptions}

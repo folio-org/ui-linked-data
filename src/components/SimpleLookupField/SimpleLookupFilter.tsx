@@ -1,5 +1,5 @@
 import { FC, useState } from 'react';
-import { FormattedMessage, } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
@@ -23,7 +23,7 @@ type SimpleLookupFilterProps = {
 
 export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
   facet,
-  id,
+  // id,
   onChange,
   hasMappedSourceData,
   isDisabled = false,
@@ -44,11 +44,10 @@ export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
   // TODO: make the props reusable
   return (
     <CreatableSelect
-      id={id}
+      id={`fiter-simple-lookup-${facet}`}
       ref={simpleLookupRef}
-      className="edit-section-field-input simple-lookup"
+      className="filter-section-field-input simple-lookup"
       classNamePrefix="simple-lookup"
-      data-testid="simple-lookup"
       isSearchable
       isClearable
       openMenuOnFocus

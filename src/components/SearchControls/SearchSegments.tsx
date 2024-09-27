@@ -35,7 +35,7 @@ const SearchSegments: FC<SearchSegmentsProps> = ({ onChangeSegment }) => {
               role="tab"
               className="search-segment-button"
               onClick={() => onSegmentClick(type as SearchSegmentValue)}
-              data-testid="id-search-segment-button"
+              data-testid={`id-search-segment-button-${type}`}
             >
               <FormattedMessage id={labelId} />
             </Button>
