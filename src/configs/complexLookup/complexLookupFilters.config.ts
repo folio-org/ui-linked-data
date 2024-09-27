@@ -15,6 +15,7 @@ export const COMPLEX_LOOKUP_FILTERS_CONFIG = {
       isOpen: true,
       hasExternalDataSource: true,
       hasMappedSourceData: true,
+      excludedOptions: ['191874a0-707a-4634-928e-374ee9103225'],
     },
     {
       labelId: 'marva.references',

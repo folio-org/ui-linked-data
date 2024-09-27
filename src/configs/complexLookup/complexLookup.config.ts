@@ -1,8 +1,8 @@
 import { SEARCH_API_ENDPOINT } from '@common/constants/api.constants';
 import { SearchSegment } from '@common/constants/search.constants';
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   [ComplexLookupType.Authorities]: {
@@ -19,20 +19,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
         filter: '(type <> "CONCEPT")',
-      },
-    },
-    segments: {
-      primary: {
-        [SearchSegment.Search]: {
-          type: SearchSegment.Search,
-          labelId: 'marva.search',
-          isVisiblePaginationCount: true,
-        },
-        [SearchSegment.Browse]: {
-          type: SearchSegment.Browse,
-          labelId: 'marva.browse',
-          isVisiblePaginationCount: true,
-        },
+        limit: 100,
       },
     },
     labels: {
@@ -48,9 +35,24 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         searchResults: 'marva.marcAuthority',
       },
     },
-    // For displaying "Search by" control
+    // For displaying "Search" and "Browse" segments
+    segments: {
+      primary: {
+        [SearchSegment.Search]: {
+          type: SearchSegment.Search,
+          labelId: 'marva.search',
+          isVisiblePaginationCount: true,
+        },
+        [SearchSegment.Browse]: {
+          type: SearchSegment.Browse,
+          labelId: 'marva.browse',
+          isVisiblePaginationCount: false,
+        },
+      },
+    },
+    // For displaying "Search by" control and "fitlters"
     searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
-    linkedField: 'subclass',
     filters: COMPLEX_LOOKUP_FILTERS_CONFIG.authorities,
+    linkedField: 'subclass',
   },
 };

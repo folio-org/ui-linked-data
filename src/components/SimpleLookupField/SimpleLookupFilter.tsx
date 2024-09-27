@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, } from 'react-intl';
 import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
+import { useSearchFilterLookupOptions } from '@common/hooks/useSearchFilterLookupOptions';
 import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
@@ -11,40 +11,27 @@ import { ClearIndicator } from './ClearIndicator';
 import { OptionMultiline } from './OptionMultiline';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 import './SimpleLookupField.scss';
-import state from '@state';
 
-interface Props {
+type SimpleLookupFilterProps = {
   facet?: string;
   isDisabled?: boolean;
   id?: string;
   hasMappedSourceData?: boolean;
+  excludedOptions?: string[];
   onChange: (facet?: string, contents?: Array<UserValueContents>) => void;
-}
+};
 
-export const SimpleLookupFilter: FC<Props> = ({ facet, id, onChange, hasMappedSourceData, isDisabled = false }) => {
-  const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
-  const sourceData = useRecoilValue(state.search.sourceData);
-  const facetsData = useRecoilValue(state.search.facetsData);
-  const { formatMessage } = useIntl();
-
-  let options = [] as FilterLookupOption[];
-
-  if (facet && facetsData && facetsData[facet]?.values) {
-    options = facetsData[facet]?.values?.map(({ id, totalRecords }) => {
-      const sourceElem = sourceData?.find(({ id: sourceDataId }) => sourceDataId === id);
-      const label = (hasMappedSourceData ? sourceElem?.name : id) || formatMessage({ id: 'marva.notSpecified' });
-
-      return {
-        label,
-        subLabel: `(${totalRecords})`,
-        value: {
-          id: id || '',
-        },
-      };
-    });
-  }
-
+export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
+  facet,
+  id,
+  onChange,
+  hasMappedSourceData,
+  isDisabled = false,
+  excludedOptions,
+}) => {
   const [localValue, setLocalValue] = useState<any[]>();
+  const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
+  const { options } = useSearchFilterLookupOptions({ facet, hasMappedSourceData, excludedOptions });
 
   const handleOnChange = (options: MultiValue<FilterLookupOption>) => {
     // TODO: implement the options selection

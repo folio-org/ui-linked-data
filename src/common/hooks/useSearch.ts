@@ -21,6 +21,7 @@ export const useSearch = () => {
     defaultSearchBy,
     navigationSegment,
     endpointUrlsBySegments,
+    searchResultsLimit,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -38,6 +39,7 @@ export const useSearch = () => {
     usePagination(hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
   const setSearchParams = useSearchParams()?.[1];
+  const selectedNavigationSegment = navigationSegment?.value;
 
   useEffect(() => {
     setSearchBy(defaultSearchBy);
@@ -76,8 +78,8 @@ export const useSearch = () => {
       setIsLoading(true);
 
       try {
-        const currentEndpointUrl = navigationSegment?.value
-          ? endpointUrlsBySegments?.[navigationSegment.value]
+        const currentEndpointUrl = selectedNavigationSegment
+          ? endpointUrlsBySegments?.[selectedNavigationSegment]
           : endpointUrl;
 
         const result = await getByIdentifier({
@@ -87,6 +89,7 @@ export const useSearch = () => {
           searchBy,
           query: updatedQuery as string,
           offset: offset?.toString(),
+          limit: searchResultsLimit?.toString(),
         });
         const { content, totalPages, totalRecords } = result;
 
@@ -104,17 +107,17 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, navigationSegment?.value, searchFilter, isSortedResults],
+    [data, endpointUrl, selectedNavigationSegment, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {
     clearPagination();
     resetPreviewContent();
 
-    if (navigationSegment?.value) {
+    if (selectedNavigationSegment) {
       setFacetsBySegments(prevValue => ({
         ...prevValue,
-        [navigationSegment.value as string]: {
+        [selectedNavigationSegment as string]: {
           query,
           searchBy,
           facets,
@@ -129,7 +132,7 @@ export const useSearch = () => {
     }
 
     setForceRefreshSearch(true);
-  }, [fetchData, hasSearchParams, query, searchBy, facets]);
+  }, [fetchData, hasSearchParams, query, searchBy, selectedNavigationSegment, facets]);
 
   const clearValues = useCallback(() => {
     clearPagination();

@@ -2,7 +2,7 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/formatters';
+import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
@@ -104,6 +104,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}
+            searchResultsLimit={api.searchQuery.limit}
           />
         </div>
       </Modal>

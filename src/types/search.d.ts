@@ -36,6 +36,7 @@ type SearchParams = {
   navigationSegment?: NavigationSegment;
   getSearchSourceData?: (url?: string) => Promise<void>;
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
+  searchResultsLimit?: number;
 };
 
 type FacetsBySegments = {

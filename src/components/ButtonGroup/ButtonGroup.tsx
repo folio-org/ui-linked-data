@@ -1,6 +1,6 @@
+import { ReactNode } from 'react';
 import classNames from 'classnames';
 import './ButtonGroup.scss';
-import { ReactNode } from 'react';
 
 type ButtonGroupProps = {
   className?: string;

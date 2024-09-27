@@ -3,6 +3,9 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
 
+const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
+const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
+
 export const useSearchFiltersData = () => {
   const [selectedFacetsGroups, setSelectedFacetsGroups] = useRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
@@ -26,7 +29,7 @@ export const useSearchFiltersData = () => {
     if (!url) return;
 
     try {
-      const response = await SearchApi.getSearchSourceData(url);
+      const response = await SearchApi.getSearchData(url, { limit: DEFAULT_SEARCH_SOURCE_LIMIT });
       const sourceData = sourceDataKey ? response[sourceDataKey] : response;
 
       setSourceData(sourceData);
@@ -43,8 +46,8 @@ export const useSearchFiltersData = () => {
     try {
       const facetsQueryParam = updatedSelectedFacetsGroups.join(',');
       // TODO: generate query by selected values
-      const query = 'id=*';
-      const response = await SearchApi.getFacets(url, { facet: facetsQueryParam, query });
+      const query = DEFAULT_SEARCH_FACETS_QUERY;
+      const response = await SearchApi.getSearchData(url, { facet: facetsQueryParam, query });
 
       setFacetsData(response.facets);
     } catch (error) {

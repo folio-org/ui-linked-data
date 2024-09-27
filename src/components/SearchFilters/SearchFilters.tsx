@@ -14,47 +14,55 @@ export const SearchFilters = () => {
 
   return (
     <div className="controls">
-      {filters.map(({ type, labelId, children, facet, isOpen, hasExternalDataSource, hasMappedSourceData }, index) => {
-        const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
-        const isGroupCheckType = type === FiltersGroupCheckType.Single || type === FiltersGroupCheckType.Multi;
+      {filters.map(
+        (
+          { type, labelId, children, facet, isOpen, hasExternalDataSource, hasMappedSourceData, excludedOptions },
+          index,
+        ) => {
+          const isSingleGroupCheckType = type === FiltersGroupCheckType.Single;
+          const isGroupCheckType = type === FiltersGroupCheckType.Single || type === FiltersGroupCheckType.Multi;
 
-        return (
-          <Fragment key={labelId}>
-            <Accordion
-              title={<FormattedMessage id={labelId} />}
-              defaultState={isOpen}
-              onToggle={hasExternalDataSource ? getSearchFacetsData : undefined}
-              groupId={facet}
-            >
-              {isGroupCheckType && (
-                <div onChange={isSingleGroupCheckType ? onChangeLimiters : onChangeLimitersMulti}>
-                  {children?.map(({ id, name, type, labelId }) => (
-                    <label htmlFor={id} key={id}>
-                      <input
-                        checked={isSingleGroupCheckType ? limiters[name] === id : limiters[name]?.includes(id)}
-                        name={name}
-                        id={id}
-                        type={type}
-                        onChange={onChange}
-                      />
-                      <FormattedMessage id={labelId} />
-                    </label>
-                  ))}
-                </div>
-              )}
+          return (
+            <Fragment key={labelId}>
+              <Accordion
+                title={<FormattedMessage id={labelId} />}
+                defaultState={isOpen}
+                onToggle={hasExternalDataSource ? getSearchFacetsData : undefined}
+                groupId={facet}
+              >
+                {isGroupCheckType && (
+                  <div onChange={isSingleGroupCheckType ? onChangeLimiters : onChangeLimitersMulti}>
+                    {children?.map(({ id, name, type, labelId }) => (
+                      <label htmlFor={id} key={id}>
+                        <input
+                          checked={isSingleGroupCheckType ? limiters[name] === id : limiters[name]?.includes(id)}
+                          name={name}
+                          id={id}
+                          type={type}
+                          onChange={onChange}
+                        />
+                        <FormattedMessage id={labelId} />
+                      </label>
+                    ))}
+                  </div>
+                )}
 
-              {/* TODO: handle value change */}
-              {type === FiltersGroupCheckType.Lookup && (
-                <div>
-                  <SimpleLookupFilter facet={facet} onChange={() => {}} hasMappedSourceData={hasMappedSourceData} />
-                </div>
-              )}
-              {type === FiltersGroupCheckType.DateRange && <DateRange facet={facet} onSubmit={() => {}} />}
-            </Accordion>
-            {index !== filtersLastGroupIndex && <hr />}
-          </Fragment>
-        );
-      })}
+                {/* TODO: handle value change */}
+                {type === FiltersGroupCheckType.Lookup && (
+                  <SimpleLookupFilter
+                    facet={facet}
+                    onChange={() => {}}
+                    hasMappedSourceData={hasMappedSourceData}
+                    excludedOptions={excludedOptions}
+                  />
+                )}
+                {type === FiltersGroupCheckType.DateRange && <DateRange facet={facet} onSubmit={() => {}} />}
+              </Accordion>
+              {index !== filtersLastGroupIndex && <hr />}
+            </Fragment>
+          );
+        },
+      )}
     </div>
   );
 };

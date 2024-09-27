@@ -34,7 +34,10 @@ type ComplexLookupApiEntryConfig = {
     };
   };
   sourceKey?: string;
-  searchQuery: Record<string, string>;
+  searchQuery: {
+    filter?: string;
+    limit?: number;
+  };
 };
 
 type ComplexLookupsConfigEntry = {

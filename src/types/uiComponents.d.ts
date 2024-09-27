@@ -39,6 +39,7 @@ type SearchGroup = {
   isOpen?: boolean;
   hasExternalDataSource?: boolean;
   hasMappedSourceData?: boolean;
+  excludedOptions?: string[];
 };
 
 type SearchFilters = SearchGroup[];
