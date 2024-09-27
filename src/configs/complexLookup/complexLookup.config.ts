@@ -50,7 +50,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         },
       },
     },
-    // For displaying "Search by" control and "fitlters"
+    // For displaying "Search by" control and "Filters"
     searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
     filters: COMPLEX_LOOKUP_FILTERS_CONFIG.authorities,
     linkedField: 'subclass',

@@ -6,6 +6,7 @@ import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
@@ -93,11 +94,11 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
-            isVisibleFilters={true}
+            isVisibleFilters={SEARCH_FILTERS_ENABLED}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
-            isVisibleSegments={true}
+            isVisibleSegments={SEARCH_FILTERS_ENABLED}
             hasMiltilineSearchInput={true}
             searchByControlOptions={searchBy}
             labelEmptySearch="marva.chooseFilterOrEnterSearchQuery"

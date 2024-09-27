@@ -5,7 +5,6 @@ import state from '@state';
 export const useSearchFilterLookupOptions = ({
   facet,
   hasMappedSourceData,
-  excludedOptions,
 }: {
   facet?: string;
   hasMappedSourceData?: boolean;
@@ -24,7 +23,8 @@ export const useSearchFilterLookupOptions = ({
       const selectedLabel = hasMappedSourceData ? sourceElem?.name : id;
       const label = selectedLabel?.trim() || formatMessage({ id: 'marva.notSpecified' });
 
-      if (excludedOptions?.includes(id)) return accum;
+      // TODO: uncomment when the way to filter the options list is approved
+      // if (excludedOptions?.includes(id)) return accum;
 
       accum.push({
         label,

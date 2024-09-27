@@ -8,7 +8,8 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
         label: 'keyword',
         value: 'label',
       },
-      {
+      // TODO: uncomment the following lines when the corresponding fields are available in the API
+      /* {
         label: 'identifierAll',
         value: 'identifiers.value',
       },
@@ -47,10 +48,11 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
       {
         label: 'genre',
         value: 'genre',
-      },
+      }, */
     ],
     [SearchSegment.Browse]: [
-      {
+      // TODO: uncomment the following lines when the corresponding fields are available in the API
+      /* {
         label: 'personalName',
         value: 'personalName',
       },
@@ -77,7 +79,7 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
       {
         label: 'genre',
         value: 'genre',
-      },
+      }, */
     ],
   },
 };

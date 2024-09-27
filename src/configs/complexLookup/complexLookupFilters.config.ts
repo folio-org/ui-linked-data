@@ -6,7 +6,8 @@ import {
   References,
 } from '@common/constants/search.constants';
 
-const EXCLUDED_AUTHORITY_SOURCE_OPTIONS = ['191874a0-707a-4634-928e-374ee9103225'];
+// TODO: add the required identifiers when the way to filter the options list is approved
+const EXCLUDED_AUTHORITY_SOURCE_OPTIONS = [] as string[];
 
 export const COMPLEX_LOOKUP_FILTERS_CONFIG = {
   [ComplexLookupType.Authorities]: [
