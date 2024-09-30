@@ -11,7 +11,7 @@ export const Loading = () => (
         <div className="bounce3" />
       </div>
       <span className="loading-label">
-        <FormattedMessage id="marva.loading" />
+        <FormattedMessage id="ld.loading" />
       </span>
     </div>
   </>

@@ -216,7 +216,7 @@ describe('EditSection', () => {
   test('renders dropdown field', async () => {
     const { findByText } = renderScreen();
 
-    expect(await findByText('marva.type')).toBeInTheDocument();
+    expect(await findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid7')).toBeInTheDocument();
   });
 
@@ -277,7 +277,7 @@ describe('EditSection', () => {
 
       fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
-      fireEvent.click((await findAllByText('marva.collapseAll'))[0]);
+      fireEvent.click((await findAllByText('ld.collapseAll'))[0]);
 
       expect(await findAllByText('uuid6')).toHaveLength(1);
     });

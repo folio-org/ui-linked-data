@@ -47,7 +47,7 @@ export const EditControlPane = () => {
     } catch (error) {
       setStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadMarc'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'),
       ]);
     } finally {
       setIsLoading(false);
@@ -59,12 +59,12 @@ export const EditControlPane = () => {
   const items = [
     {
       id: 'actions',
-      labelId: 'marva.actions',
+      labelId: 'ld.actions',
       data: [
         {
           id: 'duplicate',
           type: DropdownItemType.basic,
-          labelId: 'marva.duplicate',
+          labelId: 'ld.duplicate',
           icon: <Duplicate16 />,
           isDisabled: currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
           action: handleDuplicate,
@@ -72,14 +72,14 @@ export const EditControlPane = () => {
         {
           id: 'viewLinkedData',
           type: DropdownItemType.basic,
-          labelId: 'marva.viewLinkedData',
+          labelId: 'ld.viewLinkedData',
           icon: <EyeOpen16 />,
           isDisabled: IS_DISABLED_FOR_ALPHA,
         },
         {
           id: 'viewMarc',
           type: DropdownItemType.basic,
-          labelId: 'marva.viewMarc',
+          labelId: 'ld.viewMarc',
           icon: <EyeOpen16 />,
           hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
           action: handleFetchMarcData,
@@ -87,7 +87,7 @@ export const EditControlPane = () => {
         {
           id: 'viewInInventory',
           type: DropdownItemType.basic,
-          labelId: 'marva.viewInInventory',
+          labelId: 'ld.viewInInventory',
           icon: <ExternalLink16 />,
           isDisabled: IS_DISABLED_FOR_ALPHA,
         },
@@ -116,12 +116,12 @@ export const EditControlPane = () => {
             // TODO: include resource title once record processing refactoring is completed
             <FormattedMessage
               key={bfid}
-              id={`marva.${getEditActionPrefix(isInCreateMode, queryParams)}${RESOURCE_TEMPLATE_IDS[bfid]}`}
+              id={`ld.${getEditActionPrefix(isInCreateMode, queryParams)}${RESOURCE_TEMPLATE_IDS[bfid]}`}
             />
           ))}
       </div>
       {!isInCreateMode ? (
-        <Dropdown labelId="marva.actions" items={items} buttonTestId="edit-control-actions-toggle" />
+        <Dropdown labelId="ld.actions" items={items} buttonTestId="edit-control-actions-toggle" />
       ) : (
         <span className="empty-block" />
       )}

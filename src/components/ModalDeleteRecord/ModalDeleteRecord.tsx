@@ -19,15 +19,15 @@ export const ModalDeleteRecord: FC<Props> = memo(({ isOpen, toggleIsOpen, delete
   return (
     <Modal
       isOpen={isOpen}
-      title={formatMessage({ id: 'marva.deleteRd' })}
-      submitButtonLabel={formatMessage({ id: 'marva.delete' })}
-      cancelButtonLabel={formatMessage({ id: 'marva.return' })}
+      title={formatMessage({ id: 'ld.deleteRd' })}
+      submitButtonLabel={formatMessage({ id: 'ld.delete' })}
+      cancelButtonLabel={formatMessage({ id: 'ld.return' })}
       onClose={closeModal}
       onSubmit={deleteRecord}
       onCancel={closeModal}
     >
       <div className="delete-record-contents" data-testid="modal-delete-record-content">
-        <FormattedMessage id="marva.confirmDeleteRd" />
+        <FormattedMessage id="ld.confirmDeleteRd" />
       </div>
     </Modal>
   );

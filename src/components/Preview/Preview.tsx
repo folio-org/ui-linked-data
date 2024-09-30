@@ -151,7 +151,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
             {displayNameWithAltValue}
             {showEntityActions && !isInstance && (
               <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={handleNavigateToEditPage}>
-                <FormattedMessage id={`marva.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
+                <FormattedMessage id={`ld.edit${RESOURCE_TEMPLATE_IDS[bfid]}`} />
               </Button>
             )}
             {showEntityActions && isInstance && (
@@ -218,7 +218,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     <div className="preview-panel" data-testid="preview-fields">
       {!headless && (
         <h3>
-          <FormattedMessage id="marva.preview" />
+          <FormattedMessage id="ld.preview" />
         </h3>
       )}
       {initialSchemaKey && (

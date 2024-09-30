@@ -62,9 +62,9 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   return (
     <Modal
       isOpen={isOpen}
-      title={formatMessage({ id: 'marva.advancedSearch' })}
-      submitButtonLabel={formatMessage({ id: 'marva.search' })}
-      cancelButtonLabel={formatMessage({ id: 'marva.cancel' })}
+      title={formatMessage({ id: 'ld.advancedSearch' })}
+      submitButtonLabel={formatMessage({ id: 'ld.search' })}
+      cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onClose={closeModal}
       onSubmit={onDoSearch}
       onCancel={closeModal}
@@ -76,7 +76,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
           <div key={rowIndex} className="search-row">
             {rowIndex === 0 ? (
               <div className="cell-bold">
-                <FormattedMessage id="marva.searchFor" />
+                <FormattedMessage id="ld.searchFor" />
               </div>
             ) : (
               <Select

@@ -21,7 +21,7 @@ const SaveRecord = ({ primary = false }) => {
       onClick={() => saveRecord({ isNavigatingBack: primary })}
       disabled={!searchParams.get(QueryParams.CloneOf) && !hasBeenSaved && !recordIsEdited}
     >
-      <FormattedMessage id={!primary ? 'marva.saveAndKeepEditing' : 'marva.saveAndClose'} />
+      <FormattedMessage id={!primary ? 'ld.saveAndKeepEditing' : 'ld.saveAndClose'} />
     </Button>
   );
 };

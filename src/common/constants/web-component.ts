@@ -1,1 +1,1 @@
-export const WEB_COMPONENT_NAME = 'marva-next';
+export const WEB_COMPONENT_NAME = 'linked-data';

@@ -111,7 +111,7 @@ describe('RecordToSchemaMappingService', () => {
     });
 
     expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
-    expect(commonStatusService.set).toHaveBeenCalledWith('marva.recordMappingToSchema', StatusType.error);
+    expect(commonStatusService.set).toHaveBeenCalledWith('ld.recordMappingToSchema', StatusType.error);
   });
 
   test('returns updated schema with repeatable subcomponents', async () => {

@@ -67,7 +67,7 @@ export const SimpleLookupField: FC<Props> = ({
 
       setCommonStatus(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantLoadSimpleLookupData'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'),
       ]);
     } finally {
       setIsLoading(false);
@@ -115,8 +115,8 @@ export const SimpleLookupField: FC<Props> = ({
       isValidNewOption={() => false}
       onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
       value={localValue}
-      placeholder={<FormattedMessage id="marva.select" />}
-      loadingMessage={() => <FormattedMessage id="marva.loading" />}
+      placeholder={<FormattedMessage id="ld.select" />}
+      loadingMessage={() => <FormattedMessage id="ld.loading" />}
       inputId="creatable-select-input"
       styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({

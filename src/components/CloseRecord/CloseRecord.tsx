@@ -8,7 +8,7 @@ const CloseRecord: FC = () => {
 
   return (
     <Button data-testid="close-record-button" type={ButtonType.Primary} onClick={() => discardRecord(false)}>
-      <FormattedMessage id="marva.cancel" />
+      <FormattedMessage id="ld.cancel" />
     </Button>
   );
 };

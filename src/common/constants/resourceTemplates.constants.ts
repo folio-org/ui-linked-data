@@ -10,7 +10,7 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
         'http://bibfra.me/vocab/marc/mainTitle',
       ],
       template: {
-        prefix: 'marva.duplicateInstanceInBrackets',
+        prefix: 'ld.duplicateInstanceInBrackets',
       },
     },
   ],

@@ -95,7 +95,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     <div className="search-pane">
       <div className="search-pane-header">
         <strong className="search-pane-header-title">
-          <FormattedMessage id={isVisibleFilters ? 'marva.searchAndFilter' : 'marva.search'} />
+          <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
         </strong>
         <CaretDown className="header-caret" />
       </div>
@@ -142,7 +142,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
           onClick={submitSearch}
           disabled={!query}
         >
-          <FormattedMessage id="marva.search" />
+          <FormattedMessage id="ld.search" />
         </Button>
         <div className={classNames(['meta-controls', !isVisibleAdvancedSearch && 'meta-controls-centered'])}>
           <Button
@@ -153,7 +153,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
             disabled={isDisabledResetButton}
             data-testid="id-search-reset-button"
           >
-            <FormattedMessage id="marva.reset" />
+            <FormattedMessage id="ld.reset" />
           </Button>
           {isVisibleAdvancedSearch && (
             <Button
@@ -161,7 +161,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
               className="search-button"
               onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
             >
-              <FormattedMessage id="marva.advanced" />
+              <FormattedMessage id="ld.advanced" />
             </Button>
           )}
         </div>

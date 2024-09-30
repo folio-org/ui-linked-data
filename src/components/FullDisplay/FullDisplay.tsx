@@ -40,7 +40,7 @@ export const FullDisplay = () => {
                 onClick={() => navigateToEditPage(generateEditResourceUrl(id))}
                 type={ButtonType.Highlighted}
               >
-                <FormattedMessage id={`marva.edit${resourceType}`} defaultMessage="Edit" />
+                <FormattedMessage id={`ld.edit${resourceType}`} defaultMessage="Edit" />
               </Button>
             </div>
             {Object.keys(userValues).length ? (
@@ -49,7 +49,7 @@ export const FullDisplay = () => {
               </div>
             ) : (
               <div>
-                <FormattedMessage id="marva.resourceWithIdIsEmpty" values={{ id }} />
+                <FormattedMessage id="ld.resourceWithIdIsEmpty" values={{ id }} />
               </div>
             )}
           </div>

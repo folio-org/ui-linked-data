@@ -38,7 +38,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       () =>
         searchResultsMetadata?.totalElements ? (
           <FormattedMessage
-            id={'marva.recordsFound'}
+            id={'ld.recordsFound'}
             values={{
               recordsCount: <span data-testid="records-found-count">{searchResultsMetadata?.totalElements}</span>,
             }}
@@ -101,7 +101,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleSegments={SEARCH_FILTERS_ENABLED}
             hasMiltilineSearchInput={true}
             searchByControlOptions={searchBy}
-            labelEmptySearch="marva.chooseFilterOrEnterSearchQuery"
+            labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}

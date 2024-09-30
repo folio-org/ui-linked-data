@@ -58,7 +58,7 @@ describe('Complex Lookup Field', () => {
     renderComponent(entry);
 
     expect(queryByTestId('complex-lookup-value')).not.toBeInTheDocument();
-    expect(getByRole('button', { name: 'marva.assignAuthority' })).toBeInTheDocument();
+    expect(getByRole('button', { name: 'ld.assignAuthority' })).toBeInTheDocument();
   });
 
   test('triggers onChange and deletes value', () => {

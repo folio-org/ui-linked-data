@@ -1,5 +1,5 @@
 {
-  "name": "@folio-eis/marva-next",
+  "name": "@folio-eis/linked-data",
   "version": "1.0.1",
   "type": "module",
   "files": [
@@ -7,12 +7,12 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/marva-next.es.js",
-      "require": "./dist/marva-next.umd.js"
+      "import": "./dist/linked-data.es.js",
+      "require": "./dist/linked-data.umd.js"
     }
   },
-  "main": "./dist/marva-next.umd.js",
-  "module": "./dist/marva-next.es.js",
+  "main": "./dist/linked-data.umd.js",
+  "module": "./dist/linked-data.es.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

@@ -6,23 +6,23 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
   subclass: {
     PERSON: {
       bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Person',
-      labelId: 'marva.person',
+      labelId: 'ld.person',
     },
     FAMILY: {
       bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family',
-      labelId: 'marva.family',
+      labelId: 'ld.family',
     },
     ORGANIZATION: {
       bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization',
-      labelId: 'marva.organization',
+      labelId: 'ld.organization',
     },
     MEETING: {
       bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting',
-      labelId: 'marva.meeting',
+      labelId: 'ld.meeting',
     },
     JURISDICTION: {
       bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction',
-      labelId: 'marva.jurisdiction',
+      labelId: 'ld.jurisdiction',
     },
   },
 };
