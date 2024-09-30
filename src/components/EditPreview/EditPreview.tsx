@@ -48,7 +48,7 @@ export const EditPreview = () => {
               }
               disabled={!record || isEdited}
             >
-              <FormattedMessage id="marva.addInstance" />
+              <FormattedMessage id="ld.addInstance" />
             </Button>
           )}
         </div>

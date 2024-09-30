@@ -44,7 +44,7 @@ export const Properties = () => {
   return (
     <div className="properties">
       <h3>
-        <FormattedMessage id="marva.properties" />
+        <FormattedMessage id="ld.properties" />
       </h3>
       <Fields uuid={initialSchemaKey} drawComponent={drawComponent} groupClassName="group" />
     </div>

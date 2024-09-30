@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div data-testid="errorBoundary">
           <h1>
-            <FormattedMessage id="marva.appFail" />
+            <FormattedMessage id="ld.appFail" />
           </h1>
         </div>
       );

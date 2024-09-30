@@ -19,16 +19,16 @@ type AvailableRecords = Record<string, any>[] | null | undefined;
 
 const initHeader: Row = {
   actionItems: {
-    label: <FormattedMessage id="marva.actions" />,
+    label: <FormattedMessage id="ld.actions" />,
     className: 'action-items',
     position: 0,
   },
   title: {
-    label: <FormattedMessage id="marva.title" />,
+    label: <FormattedMessage id="ld.title" />,
     position: 1,
   },
   id: {
-    label: <FormattedMessage id="marva.resourceId" />,
+    label: <FormattedMessage id="ld.resourceId" />,
     position: 2,
   },
 };
@@ -81,7 +81,7 @@ export const Load = () => {
 
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
         ]);
       } finally {
         setIsLoading(false);
@@ -94,7 +94,7 @@ export const Load = () => {
   return (
     <div data-testid="load" className="load">
       <strong>
-        <FormattedMessage id="marva.resources" />:
+        <FormattedMessage id="ld.resources" />:
       </strong>
       <div className="button-group">
         {(
@@ -117,7 +117,7 @@ export const Load = () => {
           </>
         ) || (
           <div>
-            <FormattedMessage id="marva.noAvailableRds" />
+            <FormattedMessage id="ld.noAvailableRds" />
           </div>
         )}
       </div>

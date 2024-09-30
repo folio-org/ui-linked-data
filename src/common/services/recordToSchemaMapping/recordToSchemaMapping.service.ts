@@ -106,7 +106,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       }
     } catch (error) {
       console.error('Cannot apply a record to the schema:', error);
-      this.commonStatusService.set('marva.recordMappingToSchema', StatusType.error);
+      this.commonStatusService.set('ld.recordMappingToSchema', StatusType.error);
     }
   }
 

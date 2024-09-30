@@ -22,26 +22,26 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityTy
   const actionDropdownItems = [
     {
       id: 'actions',
-      labelId: 'marva.actions',
+      labelId: 'ld.actions',
       data: [
         {
           id: 'edit',
           type: DropdownItemType.basic,
-          labelId: 'marva.edit',
+          labelId: 'ld.edit',
           icon: <Edit16 />,
           action: handleNavigateToEditPage,
         },
         {
           id: 'duplicate',
           type: DropdownItemType.basic,
-          labelId: 'marva.duplicate',
+          labelId: 'ld.duplicate',
           icon: <Duplicate16 />,
           action: handleDuplicate,
         },
         {
           id: 'newInstance',
           type: DropdownItemType.basic,
-          labelId: 'marva.newInstance',
+          labelId: 'ld.newInstance',
           icon: <Plus16 />,
           action: () =>
             entityType &&
@@ -56,7 +56,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityTy
 
   return (
     <Dropdown
-      labelId="marva.actions"
+      labelId="ld.actions"
       className="toggle-entity-edit"
       items={actionDropdownItems}
       hideLabelIdWithinDropdownList={true}

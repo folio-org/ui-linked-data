@@ -37,7 +37,7 @@ export const Select: FC<Select> = ({ id, value, onChange, options, withIntl = fa
 
         return (
           <option key={optionValue} value={optionValue} data-testid={optionValue}>
-            {withIntl ? <FormattedMessage id={`marva.${optionLabel}`} /> : optionLabel}
+            {withIntl ? <FormattedMessage id={`ld.${optionLabel}`} /> : optionLabel}
           </option>
         );
       })}

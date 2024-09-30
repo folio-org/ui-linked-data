@@ -94,7 +94,7 @@ export const Edit = () => {
       } catch {
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.errorLoadingResource'),
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'),
         ]);
       } finally {
         setIsLoading(false);

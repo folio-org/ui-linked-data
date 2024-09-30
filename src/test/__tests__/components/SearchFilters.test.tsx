@@ -27,25 +27,25 @@ describe('SearchFilters', () => {
           id: PublishDate.AllTime,
           type: FiltersType.Radio,
           name: SearchLimiterNames.PublishDate,
-          labelId: 'marva.allTime',
+          labelId: 'ld.allTime',
         },
         {
           id: PublishDate.TwelveMonths,
           type: FiltersType.Radio,
           name: SearchLimiterNames.PublishDate,
-          labelId: 'marva.past12Months',
+          labelId: 'ld.past12Months',
         },
       ],
     },
     {
-      labelId: 'marva.format',
+      labelId: 'ld.format',
       type: FiltersGroupCheckType.Multi,
       children: [
         {
           id: Format.Volume,
           type: FiltersType.Checkbox,
           name: SearchLimiterNames.Format,
-          labelId: 'marva.volume',
+          labelId: 'ld.volume',
         },
       ],
     },
@@ -62,17 +62,17 @@ describe('SearchFilters', () => {
   );
 
   test('changes limiters', () => {
-    const initRadio = screen.getByRole('radio', { name: 'marva.allTime' });
+    const initRadio = screen.getByRole('radio', { name: 'ld.allTime' });
 
     expect(initRadio).toBeChecked();
 
-    fireEvent.click(screen.getByRole('radio', { name: 'marva.past12Months' }));
+    fireEvent.click(screen.getByRole('radio', { name: 'ld.past12Months' }));
 
     expect(initRadio).not.toBeChecked();
   });
 
   test('adds and removes to the selection of limiters with multiselection option', () => {
-    const initCheckbox = screen.getByRole('checkbox', { name: 'marva.volume' });
+    const initCheckbox = screen.getByRole('checkbox', { name: 'ld.volume' });
     expect(initCheckbox).not.toBeChecked();
 
     fireEvent.click(initCheckbox);

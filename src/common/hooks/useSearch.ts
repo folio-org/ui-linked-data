@@ -43,7 +43,7 @@ export const useSearch = () => {
       if (type === SearchIdentifiers.LCCN) {
         const normalized = normalizeLccn(query);
 
-        !normalized && setMessage('marva.searchInvalidLccn');
+        !normalized && setMessage('ld.searchInvalidLccn');
 
         return normalized;
       }
@@ -77,14 +77,14 @@ export const useSearch = () => {
         const { content, totalPages, totalRecords } = result;
 
         // TODO: pass the message though the context
-        if (!content.length) return setMessage('marva.searchNoRdsMatch');
+        if (!content.length) return setMessage('ld.searchNoRdsMatch');
 
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords });
       } catch {
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
         ]);
       } finally {
         setIsLoading(false);

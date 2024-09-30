@@ -45,7 +45,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         <div className="title">
           <Lightbulb />
           <span>
-            <FormattedMessage id="marva.work" />
+            <FormattedMessage id="ld.work" />
           </span>
         </div>
         <Button
@@ -54,7 +54,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           data-testid={`edit-button__${id}`}
           className={classNames(['edit-button', 'button-nowrap', 'button-capitalize'])}
         >
-          <FormattedMessage id="marva.editWork" />
+          <FormattedMessage id="ld.editWork" />
         </Button>
       </div>
       <div className="details">
@@ -64,12 +64,12 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           className="title"
           data-testid={`preview-button__${id}`}
         >
-          {title || <FormattedMessage id="marva.noTitleInBrackets" />}
+          {title || <FormattedMessage id="ld.noTitleInBrackets" />}
         </Button>
         {creatorName && (
           <div className="details-item">
             <span>
-              <FormattedMessage id="marva.creator" />
+              <FormattedMessage id="ld.creator" />
             </span>
             <span>{IS_DISABLED_FOR_ALPHA ? creatorName : <Link to="#">{creatorName}</Link>}</span>
           </div>
@@ -77,7 +77,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         {langCode && (
           <div className="details-item">
             <span>
-              <FormattedMessage id="marva.language" />
+              <FormattedMessage id="ld.language" />
             </span>
             <span>{langCode}</span>
           </div>
@@ -85,7 +85,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
         {classificationNumber && (
           <div className="details-item">
             <span>
-              <FormattedMessage id="marva.classificationNumber" />
+              <FormattedMessage id="ld.classificationNumber" />
             </span>
             <span>{classificationNumber}</span>
           </div>

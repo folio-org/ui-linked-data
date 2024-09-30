@@ -9,16 +9,16 @@ import state from '@state';
 
 const listHeader: Row = {
   title: {
-    label: <FormattedMessage id="marva.heading" />,
+    label: <FormattedMessage id="ld.heading" />,
     position: 0,
     className: 'cell-relative-45',
   },
   subclass: {
-    label: <FormattedMessage id="marva.subclass" />,
+    label: <FormattedMessage id="ld.subclass" />,
     position: 1,
   },
   lccn: {
-    label: <FormattedMessage id="marva.lccn" />,
+    label: <FormattedMessage id="ld.lccn" />,
     position: 2,
     className: 'cell-relative-20',
   },
@@ -70,7 +70,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
                 });
               }}
             >
-              <FormattedMessage id="marva.assign" />
+              <FormattedMessage id="ld.assign" />
             </Button>
           ),
         },

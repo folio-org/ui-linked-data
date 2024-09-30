@@ -23,12 +23,12 @@ export const SearchView = () => {
     () => [
       {
         id: 'actions',
-        labelId: 'marva.actions',
+        labelId: 'ld.actions',
         data: [
           {
             id: 'newResource',
             type: DropdownItemType.basic,
-            labelId: 'marva.newResource',
+            labelId: 'ld.newResource',
             icon: <Plus16 />,
             action: () => {
               navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
@@ -37,7 +37,7 @@ export const SearchView = () => {
           {
             id: 'compare',
             type: DropdownItemType.basic,
-            labelId: 'marva.compareSelected',
+            labelId: 'ld.compareSelected',
             icon: <Compare />,
             isDisabled: true,
           },
@@ -46,7 +46,7 @@ export const SearchView = () => {
       // Example of the dropdown option with a custom component instead of the standart button
       /* {
       id: 'sortBy',
-      labelId: 'marva.newResource',
+      labelId: 'ld.newResource',
       data: [
         {
           id: 'sortBy',
@@ -61,8 +61,8 @@ export const SearchView = () => {
 
   const renderSearchControlPane = useCallback(
     () => (
-      <SearchControlPane label={<FormattedMessage id="marva.resources" />}>
-        <Dropdown labelId="marva.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+      <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
+        <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
       </SearchControlPane>
     ),
     [items],
@@ -76,7 +76,7 @@ export const SearchView = () => {
         filters={filters}
         hasSearchParams={true}
         defaultSearchBy={DEFAULT_SEARCH_BY}
-        labelEmptySearch="marva.enterSearchCriteria"
+        labelEmptySearch="ld.enterSearchCriteria"
         isVisibleFilters={SEARCH_FILTERS_ENABLED}
         isVisibleFullDisplay={true}
         isVisibleAdvancedSearch={true}
