@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "marva-next": ["src/main.tsx"],
+      "linked-data": ["src/main.tsx"],
       "@common/*": ["src/common/*"],
       "@components/*": ["src/components/*"],
       "@state": ["src/state"],
