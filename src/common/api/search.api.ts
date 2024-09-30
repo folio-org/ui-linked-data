@@ -36,6 +36,7 @@ export const getByIdentifier = async ({
   return await baseApi.getJson({ url: endpointUrl, urlParams });
 };
 
+// TODO: generate search params
 export const getSearchData = (url?: string, urlParams?: Record<string, string>) => {
   if (!url) return;
 
