@@ -6,7 +6,7 @@ export const InstancesList = () => {
     <div className="instances-list" data-testid="instances-list">
       {/* TODO: show this only when there is no Instances */}
       <div className="instances-list-empty">
-        <FormattedMessage id="marva.noInstancesAdded" />
+        <FormattedMessage id="ld.noInstancesAdded" />
       </div>
     </div>
   );

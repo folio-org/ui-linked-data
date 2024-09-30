@@ -22,9 +22,9 @@ export default defineConfig(() => {
         build: {
           lib: {
             entry: path.resolve(__dirname, 'src/embed.tsx'),
-            name: 'marva-next',
+            name: 'linked-data',
             formats: ['es', 'umd'],
-            fileName: format => `marva-next.${format}.js`,
+            fileName: format => `linked-data.${format}.js`,
           },
         },
         envPrefix: 'EDITOR_',

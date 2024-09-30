@@ -1,4 +1,4 @@
-# @folio-eis/marva-next
+# @folio-eis/linked-data
 
 This project is a new MARVA editor.
 
@@ -86,7 +86,7 @@ The following scripts are available:
 2. Add the script on a page:
 
 ```html
-<script src="[PATH_TO_SCRIPT]/marva-next.es.js"></script>
+<script src="[PATH_TO_SCRIPT]/linked-data.es.js"></script>
 ```
 
 3. Add a web component in the required HTML container on the page.
@@ -94,8 +94,8 @@ The following scripts are available:
    Use a config with a required API config for passing it in the MARVA application through the web component (see JSON config example in [Installation](#installation) section):
 
 ```html
-<div id="marva-container">
-  <marva-next config="{'basePath': 'YOUR_API_URI', 'tenant': 'YOUR_TENANT', ...}"></marva-next>
+<div id="linked-data-container">
+  <linked-data config="{'basePath': 'YOUR_API_URI', 'tenant': 'YOUR_TENANT', ...}"></linked-data>
 </div>
 ```
 

@@ -16,7 +16,7 @@ describe('PreviewActionsDropdown', () => {
     );
 
     fireEvent.click(getByRole('button'));
-    fireEvent.click(getByText('marva.newInstance'));
+    fireEvent.click(getByText('ld.newInstance'));
 
     expect(navigateToEditPage).toHaveBeenCalled();
   });

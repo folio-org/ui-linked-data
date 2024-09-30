@@ -32,23 +32,23 @@ const instancesListHeader: Row = {
     position: 0,
   },
   title: {
-    label: <FormattedMessage id="marva.title" />,
+    label: <FormattedMessage id="ld.title" />,
     position: 1,
   },
   isbn: {
-    label: <FormattedMessage id="marva.isbn" />,
+    label: <FormattedMessage id="ld.isbn" />,
     position: 2,
   },
   lccn: {
-    label: <FormattedMessage id="marva.lccn" />,
+    label: <FormattedMessage id="ld.lccn" />,
     position: 3,
   },
   publisher: {
-    label: <FormattedMessage id="marva.publisher" />,
+    label: <FormattedMessage id="ld.publisher" />,
     position: 4,
   },
   pubDate: {
-    label: <FormattedMessage id="marva.pubDateShort" />,
+    label: <FormattedMessage id="ld.pubDateShort" />,
     position: 5,
   },
   editCtl: {
@@ -75,7 +75,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
       setCommonStatus(prev => [
         ...prev,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
       ]);
     } finally {
       setIsLoading(false);
@@ -105,7 +105,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
             data-testid={`edit-button__${row.__meta.id}`}
             className={classNames(['button-nowrap', 'button-capitalize'])}
           >
-            <FormattedMessage id="marva.editInstance" />
+            <FormattedMessage id="ld.editInstance" />
           </Button>
         ),
       },
@@ -140,7 +140,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
         <div className="empty-or-closed">
           <CommentIcon />
           <span>
-            <FormattedMessage id="marva.instances" />
+            <FormattedMessage id="ld.instances" />
           </span>
           <span>{instances?.length ?? 0}</span>
         </div>
@@ -149,13 +149,13 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
         <div className="empty-or-closed">
           <span>
             <span>
-              <FormattedMessage id="marva.noInstancesAvailable" />
+              <FormattedMessage id="ld.noInstancesAvailable" />
             </span>
             <Link
               to={`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${restOfWork.id}`}
               state={navigationState}
             >
-              <FormattedMessage id="marva.addAnInstance" />
+              <FormattedMessage id="ld.addAnInstance" />
             </Link>
           </span>
         </div>

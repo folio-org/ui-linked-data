@@ -145,7 +145,7 @@ describe('Item Search', () => {
 
     fireEvent.change(select, { target: { value: 'isbn' } });
 
-    expect((screen.getByRole('option', { name: 'marva.isbn' }) as any).selected).toBe(true);
+    expect((screen.getByRole('option', { name: 'ld.isbn' }) as any).selected).toBe(true);
   });
 
   test('searches the selected identifier for query', async () => {
@@ -171,7 +171,7 @@ describe('Item Search', () => {
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    expect(await findByText('marva.searchNoRdsMatch')).toBeInTheDocument();
+    expect(await findByText('ld.searchNoRdsMatch')).toBeInTheDocument();
   });
 
   test("returns out of fetchData if query is subject to validation and doesn't pass validations", async () => {

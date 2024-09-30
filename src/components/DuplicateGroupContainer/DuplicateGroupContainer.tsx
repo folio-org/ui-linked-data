@@ -33,7 +33,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({ entry, g
         <ArrowChevronUp className={classNames({ 'arrow-closed': isCollapsed })} />
         <span>
           <FormattedMessage
-            id={isCollapsed ? 'marva.showAllWithCount' : 'marva.hide'}
+            id={isCollapsed ? 'ld.showAllWithCount' : 'ld.hide'}
             values={{
               amt: clonesAmount ? (
                 <span data-testid="duplicate-group-clone-amount">{clonesAmount + 1}</span>

@@ -40,7 +40,7 @@ describe('EditControlPane', () => {
     const { findByText, findByTestId } = renderWrapper();
 
     fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('marva.viewMarc'));
+    fireEvent.click(await findByText('ld.viewMarc'));
 
     expect(getMarcRecordMock).toHaveBeenCalled();
   });
@@ -49,7 +49,7 @@ describe('EditControlPane', () => {
     const { findByText, findByTestId } = renderWrapper();
 
     fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('marva.duplicate'));
+    fireEvent.click(await findByText('ld.duplicate'));
 
     expect(navigateAsDuplicate).toHaveBeenCalled();
   });
@@ -57,6 +57,6 @@ describe('EditControlPane', () => {
   test("doesn't render actions dropdown in create mode", () => {
     const { queryByText } = renderWrapper(false);
 
-    expect(queryByText('marva.actions')).not.toBeInTheDocument();
+    expect(queryByText('ld.actions')).not.toBeInTheDocument();
   });
 });

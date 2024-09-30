@@ -26,12 +26,12 @@ export const ViewMarcControlPane = () => {
       <div className="heading">
         {!isLoading && (
           <FormattedMessage
-            id="marva.marcWithTitle"
+            id="ld.marcWithTitle"
             values={{
               title: (
                 <span data-testid="marc-title">
                   {(record?.resource && getRecordTitle(record.resource as RecordEntry)) ??
-                    formatMessage({ id: 'marva.noTitleInBrackets' })}
+                    formatMessage({ id: 'ld.noTitleInBrackets' })}
                 </span>
               ),
             }}

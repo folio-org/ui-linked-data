@@ -43,7 +43,7 @@ describe('SearchResultEntry', () => {
     test('closes and renders closed card placeholder', async () => {
       fireEvent.click(getByTestId('work-details-card-toggle'));
 
-      expect(await findByText('marva.instances')).toBeInTheDocument();
+      expect(await findByText('ld.instances')).toBeInTheDocument();
     });
 
     test('navigates to edit section for the relevant ID', () => {
@@ -67,7 +67,7 @@ describe('SearchResultEntry', () => {
     const { getByText } = screen;
 
     test('shows placeholder when there are no instances', () => {
-      expect(getByText('marva.noInstancesAvailable')).toBeInTheDocument();
+      expect(getByText('ld.noInstancesAvailable')).toBeInTheDocument();
     });
   });
 });

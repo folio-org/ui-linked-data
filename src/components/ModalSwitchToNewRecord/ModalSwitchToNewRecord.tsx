@@ -18,9 +18,9 @@ export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSub
   return (
     <Modal
       isOpen={isOpen}
-      title={formatMessage({ id: 'marva.unsavedChanges' })}
-      submitButtonLabel={formatMessage({ id: 'marva.saveAndContinue' })}
-      cancelButtonLabel={formatMessage({ id: 'marva.continueWithoutSaving' })}
+      title={formatMessage({ id: 'ld.unsavedChanges' })}
+      submitButtonLabel={formatMessage({ id: 'ld.saveAndContinue' })}
+      cancelButtonLabel={formatMessage({ id: 'ld.continueWithoutSaving' })}
       cancelButtonDisabled={!resourceId}
       onClose={onClose}
       onSubmit={onSubmit}
@@ -28,7 +28,7 @@ export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSub
       className='modal-switch-to-new-record'
     >
       <div className="close-record-contents" data-testid="modal-close-record-content">
-        <FormattedMessage id="marva.unsavedRecentEdits" />
+        <FormattedMessage id="ld.unsavedRecentEdits" />
       </div>
     </Modal>
   );

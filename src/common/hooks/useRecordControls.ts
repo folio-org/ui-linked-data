@@ -80,7 +80,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
       ]);
     }
   };
@@ -122,7 +122,7 @@ export const useRecordControls = () => {
         ...currentStatus,
         UserNotificationFactory.createMessage(
           StatusType.success,
-          recordId ? 'marva.rdUpdateSuccess' : 'marva.rdSaveSuccess',
+          recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess',
         ),
       ]);
 
@@ -171,7 +171,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSaveRd'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'),
       ]);
     } finally {
       setIsLoading(false);
@@ -210,7 +210,7 @@ export const useRecordControls = () => {
       discardRecord();
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'marva.rdDeleted'),
+        UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'),
       ]);
 
       navigate(ROUTES.SEARCH.uri);
@@ -219,7 +219,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.cantDeleteRd'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'),
       ]);
     }
   };
@@ -233,7 +233,7 @@ export const useRecordControls = () => {
       if (!contents) {
         setStatusMessages(currentStatus => [
           ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'marva.cantSelectReferenceContents'),
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'),
         ]);
 
         return navigate(ROUTES.RESOURCE_CREATE.uri);
@@ -256,7 +256,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'marva.errorFetching'),
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
       ]);
     }
   };

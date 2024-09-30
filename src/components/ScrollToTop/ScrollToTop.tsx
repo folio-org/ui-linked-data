@@ -13,6 +13,6 @@ const scrollToTop = () => getByClassNameAndScrollToTop(DOM_ELEMENTS.classNames.i
 
 export const ScrollToTop: FC<Props> = ({ className }) => (
   <Button onClick={scrollToTop} className={className ? classNames(className) : undefined}>
-    <FormattedMessage id="marva.backToTop" />
+    <FormattedMessage id="ld.backToTop" />
   </Button>
 );

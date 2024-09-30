@@ -99,7 +99,7 @@ export const EditSection = memo(() => {
             <strong className="heading">{displayNameWithAltValue}</strong>
             {!!clonePrototypes.length && (
               <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
-                <FormattedMessage id={collapsedGroups.length ? 'marva.expandAll' : 'marva.collapseAll'} />
+                <FormattedMessage id={collapsedGroups.length ? 'ld.expandAll' : 'ld.collapseAll'} />
               </Button>
             )}
           </FieldWithMetadataAndControls>

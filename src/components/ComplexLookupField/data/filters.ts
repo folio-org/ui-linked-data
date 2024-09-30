@@ -8,68 +8,68 @@ import {
 
 export const filters = [
   {
-    labelId: 'marva.authorityType',
+    labelId: 'ld.authorityType',
     type: FiltersGroupCheckType.Single,
     children: [
       {
         id: AuthorityType.All,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.all',
+        labelId: 'ld.all',
       },
       {
         id: AuthorityType.Pesron,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.person',
+        labelId: 'ld.person',
       },
       {
         id: AuthorityType.Family,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.family',
+        labelId: 'ld.family',
       },
       {
         id: AuthorityType.CorporateBody,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.corporateBody',
+        labelId: 'ld.corporateBody',
       },
       {
         id: AuthorityType.Jurisdiction,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.jurisdiction',
+        labelId: 'ld.jurisdiction',
       },
       {
         id: AuthorityType.Conference,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.AuthorityType,
-        labelId: 'marva.conference',
+        labelId: 'ld.conference',
       },
     ],
   },
   {
-    labelId: 'marva.source',
+    labelId: 'ld.source',
     type: FiltersGroupCheckType.Single,
     children: [
       {
         id: SourceType.All,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.Source,
-        labelId: 'marva.all',
+        labelId: 'ld.all',
       },
       {
         id: SourceType.Authorized,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.Source,
-        labelId: 'marva.authorized',
+        labelId: 'ld.authorized',
       },
       {
         id: SourceType.Unauthorized,
         type: FiltersType.Radio,
         name: SearchLimiterNamesAuthority.Source,
-        labelId: 'marva.unauthorized',
+        labelId: 'ld.unauthorized',
       },
     ],
   },
