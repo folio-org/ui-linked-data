@@ -7,13 +7,13 @@ const { subclass: subclassMapping } = COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
 export const authoritiesTableConfig: SearchResultsTableConfig = {
   columns: {
     title: {
-      label: 'marva.title',
+      label: 'ld.title',
       position: 0,
       className: 'cell-relative-45',
       formatter: (row: SearchResultsTableRow) => <div>{row.title.label}</div>,
     },
     subclass: {
-      label: 'marva.subclass',
+      label: 'ld.subclass',
       position: 1,
       formatter: (row: SearchResultsTableRow, formatMessage: AbstractIntlFormatter) => {
         const labelId = subclassMapping[row.subclass?.label as unknown as keyof typeof subclassMapping]?.labelId;
@@ -23,7 +23,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
       },
     },
     lccn: {
-      label: 'marva.lccn',
+      label: 'ld.lccn',
       position: 2,
       className: 'cell-relative-20',
     },
@@ -47,7 +47,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
           }
           data-testid={`assign-button-${row.__meta.id}`}
         >
-          <FormattedMessage id="marva.assign" />
+          <FormattedMessage id="ld.assign" />
         </Button>
       ),
     },

@@ -24,15 +24,15 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
     },
     labels: {
       button: {
-        base: 'marva.assignAuthority',
-        change: 'marva.change',
+        base: 'ld.assignAuthority',
+        change: 'ld.change',
       },
       modal: {
         title: {
-          creator: 'marva.selectMARCAuthority',
-          contributor: 'marva.selectMARCAuthority',
+          creator: 'ld.selectMARCAuthority',
+          contributor: 'ld.selectMARCAuthority',
         },
-        searchResults: 'marva.marcAuthority',
+        searchResults: 'ld.marcAuthority',
       },
     },
     // For displaying "Search" and "Browse" segments
@@ -40,12 +40,12 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       primary: {
         [SearchSegment.Search]: {
           type: SearchSegment.Search,
-          labelId: 'marva.search',
+          labelId: 'ld.search',
           isVisiblePaginationCount: true,
         },
         [SearchSegment.Browse]: {
           type: SearchSegment.Browse,
-          labelId: 'marva.browse',
+          labelId: 'ld.browse',
           isVisiblePaginationCount: false,
         },
       },

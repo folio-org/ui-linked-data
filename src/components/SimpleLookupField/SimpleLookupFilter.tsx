@@ -58,7 +58,7 @@ export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
       options={options}
       onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
       value={localValue}
-      placeholder={<FormattedMessage id="marva.select" />}
+      placeholder={<FormattedMessage id="ld.select" />}
       inputId="creatable-select-input"
       styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({

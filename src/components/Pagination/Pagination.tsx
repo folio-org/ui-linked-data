@@ -50,7 +50,7 @@ export const Pagination: FC<Props> = memo(
           data-testid="backward-button"
         >
           <LeftIcon />
-          <FormattedMessage id="marva.previous" />
+          <FormattedMessage id="ld.previous" />
         </Button>
         {showCount && (
           <div className="pagination-count">
@@ -71,7 +71,7 @@ export const Pagination: FC<Props> = memo(
           className="pagination-button"
           data-testid="forward-button"
         >
-          <FormattedMessage id="marva.next" />
+          <FormattedMessage id="ld.next" />
           <RightIcon />
         </Button>
       </div>

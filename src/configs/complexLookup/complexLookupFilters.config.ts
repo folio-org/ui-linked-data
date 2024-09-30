@@ -13,7 +13,7 @@ export const COMPLEX_LOOKUP_FILTERS_CONFIG = {
   [ComplexLookupType.Authorities]: [
     {
       id: 'authoritySource',
-      labelId: 'marva.authoritySource',
+      labelId: 'ld.authoritySource',
       type: FiltersGroupCheckType.Lookup,
       facet: SearchLimiterNamesAuthority.AuthoritySource,
       isOpen: true,
@@ -23,46 +23,46 @@ export const COMPLEX_LOOKUP_FILTERS_CONFIG = {
     },
     {
       id: 'references',
-      labelId: 'marva.references',
+      labelId: 'ld.references',
       type: FiltersGroupCheckType.Multi,
       children: [
         {
           id: References.ExcludeSeeFrom,
           type: FiltersType.Checkbox,
           name: SearchLimiterNamesAuthority.References,
-          labelId: 'marva.excludeSeeFrom',
+          labelId: 'ld.excludeSeeFrom',
         },
         {
           id: References.ExcludeSeeFromAlso,
           type: FiltersType.Checkbox,
           name: SearchLimiterNamesAuthority.References,
-          labelId: 'marva.excludeSeeFromAlso',
+          labelId: 'ld.excludeSeeFromAlso',
         },
       ],
     },
     {
       id: 'thesaurus',
-      labelId: 'marva.thesaurus',
+      labelId: 'ld.thesaurus',
       type: FiltersGroupCheckType.Lookup,
       facet: SearchLimiterNamesAuthority.Thesaurus,
       hasExternalDataSource: true,
     },
     {
       id: 'typeOfHeading',
-      labelId: 'marva.typeOfHeading',
+      labelId: 'ld.typeOfHeading',
       type: FiltersGroupCheckType.Lookup,
       facet: SearchLimiterNamesAuthority.TypeOfHeading,
       hasExternalDataSource: true,
     },
     {
       id: 'dateCreated',
-      labelId: 'marva.dateCreated',
+      labelId: 'ld.dateCreated',
       type: FiltersGroupCheckType.DateRange,
       facet: SearchLimiterNamesAuthority.DateCreated,
     },
     {
       id: 'dateUpdated',
-      labelId: 'marva.dateUpdated',
+      labelId: 'ld.dateUpdated',
       type: FiltersGroupCheckType.DateRange,
       facet: SearchLimiterNamesAuthority.DateUpdated,
     },
