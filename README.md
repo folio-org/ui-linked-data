@@ -94,7 +94,7 @@ The following scripts are available:
    Use a config with a required API config for passing it in the MARVA application through the web component (see JSON config example in [Installation](#installation) section):
 
 ```html
-<div id="marva-container">
+<div id="linked-data-container">
   <linked-data config="{'basePath': 'YOUR_API_URI', 'tenant': 'YOUR_TENANT', ...}"></linked-data>
 </div>
 ```
