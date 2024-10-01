@@ -1,9 +1,15 @@
 import { useCallback, useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
-import { getEditingRecordBlocks } from '@common/helpers/record.helper';
+import {
+  getAdjustedRecordContents,
+  getEditingRecordBlocks,
+  wrapRecordValuesWithCommonContainer,
+} from '@common/helpers/record.helper';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 import { ServicesContext } from '@src/contexts';
+import state from '@state';
+import { useSetRecoilState } from 'recoil';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -13,6 +19,7 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
+  const setRecord = useSetRecoilState(state.inputs.record);
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useContext(ServicesContext) as Required<ServicesParams>;
@@ -27,6 +34,12 @@ export const useProcessedRecordAndSchema = () => {
         if (record && Object.keys(record).length) {
           const typedRecord = record as RecordEntry;
           const { block, reference } = getEditingRecordBlocks(typedRecord);
+          const { record: adjustedRecord } = getAdjustedRecordContents({
+            record: typedRecord,
+            block,
+            reference,
+            asClone,
+          });
           const recordBlocks = [block, reference?.uri] as RecordBlocksList;
           const addDuplicateTemplate = asClone && block;
           const template = addDuplicateTemplate
@@ -36,10 +49,11 @@ export const useProcessedRecordAndSchema = () => {
               })
             : undefined;
 
+          setRecord(wrapRecordValuesWithCommonContainer(adjustedRecord));
           selectedRecordBlocks = { block, reference };
           schemaWithDuplicatesService.set(baseSchema);
+          recordNormalizingService.init(adjustedRecord, block, reference);
 
-          recordNormalizingService.init(typedRecord, block, reference);
           const normalizedRecord = recordNormalizingService.get();
 
           await recordToSchemaMappingService.init({
@@ -68,6 +82,7 @@ export const useProcessedRecordAndSchema = () => {
       recordNormalizingService,
       recordToSchemaMappingService,
       schemaWithDuplicatesService,
+      setRecord,
       userValuesService,
     ],
   );
