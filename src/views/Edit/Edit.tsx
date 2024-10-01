@@ -21,7 +21,6 @@ import './Edit.scss';
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
 
 export const Edit = () => {
-  const setRecord = useSetRecoilState(state.inputs.record);
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
@@ -85,8 +84,6 @@ export const Edit = () => {
         }
 
         const typedRecord = record as unknown as RecordEntry;
-
-        typedRecord && setRecord(typedRecord);
 
         await getProfiles({
           record: typedRecord,

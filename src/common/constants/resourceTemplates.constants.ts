@@ -14,4 +14,17 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
       },
     },
   ],
+  [BFLITE_URIS.WORK]: [
+    {
+      path: [
+        BFLITE_URIS.WORK,
+        'http://bibfra.me/vocab/marc/title',
+        'http://bibfra.me/vocab/marc/Title',
+        'http://bibfra.me/vocab/marc/mainTitle',
+      ],
+      template: {
+        prefix: 'ld.duplicateWorkInBrackets',
+      },
+    },
+  ],
 };
