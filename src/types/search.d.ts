@@ -37,6 +37,7 @@ type SearchParams = {
   getSearchSourceData?: (url?: string) => Promise<void>;
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
+  fetchSearchResults?: (params: any) => Promise<SearchResults>;
 };
 
 type FacetsBySegments = {

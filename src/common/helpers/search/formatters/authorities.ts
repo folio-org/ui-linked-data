@@ -1,25 +1,31 @@
 import { v4 as uuidv4 } from 'uuid';
-import { SearchIdentifiers } from '@common/constants/search.constants';
-import { findIdentifier } from '@common/helpers/search.helper';
 
 export const formatAuthorityItem = (
   authoritiesList: AuthorityAsSearchResultDTO[],
+  sourceData?: SourceDataDTO,
 ): SearchResultsTableRow[] =>
-  authoritiesList.map(({ id, label, identifiers, type }) => ({
-    __meta: {
-      id,
-      key: uuidv4(),
-    },
-    title: {
-      label,
-      className: 'title',
-    },
-    subclass: {
-      label: type,
-      className: 'subclass',
-    },
-    lccn: {
-      label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
-      className: 'identifier',
-    },
-  }));
+  authoritiesList?.map(({ id, authRefType, headingRef, headingType, sourceFileId }) => {
+    const sourceLabel = sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name ?? sourceFileId;
+
+    return {
+      __meta: {
+        id,
+        key: uuidv4(),
+      },
+      authorized: {
+        label: authRefType,
+      },
+      title: {
+        label: headingRef,
+        className: 'title',
+      },
+      headingType: {
+        label: headingType,
+        className: 'heading-type',
+      },
+      authoritySource: {
+        label: sourceLabel,
+        className: 'authority-source',
+      },
+    };
+  });

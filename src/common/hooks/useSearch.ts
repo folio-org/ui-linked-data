@@ -22,6 +22,7 @@ export const useSearch = () => {
     navigationSegment,
     endpointUrlsBySegments,
     searchResultsLimit,
+    fetchSearchResults,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -81,8 +82,9 @@ export const useSearch = () => {
         const currentEndpointUrl = selectedNavigationSegment
           ? endpointUrlsBySegments?.[selectedNavigationSegment]
           : endpointUrl;
+        const getSearchResultsData = fetchSearchResults ?? getByIdentifier;
 
-        const result = await getByIdentifier({
+        const result = await getSearchResultsData({
           endpointUrl: currentEndpointUrl ?? endpointUrl,
           searchFilter,
           isSortedResults,
@@ -107,7 +109,7 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, selectedNavigationSegment, searchFilter, isSortedResults],
+    [data, endpointUrl, fetchSearchResults, selectedNavigationSegment, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {

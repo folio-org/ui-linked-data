@@ -2,11 +2,11 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { getSearchResults } from '@common/api/search.api';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
@@ -94,17 +94,18 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
-            isVisibleFilters={SEARCH_FILTERS_ENABLED}
+            isVisibleFilters={true}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
-            isVisibleSegments={SEARCH_FILTERS_ENABLED}
+            isVisibleSegments={true}
             hasMultilineSearchInput={true}
             searchByControlOptions={searchBy}
             labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}
+            fetchSearchResults={getSearchResults}
             searchResultsLimit={api.searchQuery.limit}
           />
         </div>

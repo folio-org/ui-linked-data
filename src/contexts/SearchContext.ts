@@ -20,6 +20,7 @@ export const SearchContext = createContext<SearchParams>({
   filters: [],
   renderResultsList: () => null,
   renderSearchControlPane: () => null,
+  fetchSearchResults: undefined,
   navigationSegment: {
     value: undefined,
     set: () => null,

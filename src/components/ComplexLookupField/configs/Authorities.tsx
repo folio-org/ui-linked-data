@@ -1,35 +1,11 @@
 import { FormattedMessage } from 'react-intl';
-import { COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING } from '@common/constants/complexLookup.constants';
 import { Button, ButtonType } from '@components/Button';
-
-const { subclass: subclassMapping } = COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
 
 export const authoritiesTableConfig: SearchResultsTableConfig = {
   columns: {
-    title: {
-      label: 'ld.title',
-      position: 0,
-      className: 'cell-relative-45',
-      formatter: (row: SearchResultsTableRow) => <div>{row.title.label}</div>,
-    },
-    subclass: {
-      label: 'ld.subclass',
-      position: 1,
-      formatter: (row: SearchResultsTableRow, formatMessage: AbstractIntlFormatter) => {
-        const labelId = subclassMapping[row.subclass?.label as unknown as keyof typeof subclassMapping]?.labelId;
-        const formattedLabel = labelId ? formatMessage({ id: labelId }) : '';
-
-        return <div>{formattedLabel}</div>;
-      },
-    },
-    lccn: {
-      label: 'ld.lccn',
-      position: 2,
-      className: 'cell-relative-20',
-    },
     assign: {
       label: '',
-      position: 3,
+      position: 0,
       className: 'cell-fixed-100',
       formatter: (
         row: SearchResultsTableRow,
@@ -50,6 +26,26 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
           <FormattedMessage id="ld.assign" />
         </Button>
       ),
+    },
+    authorized: {
+      label: 'ld.authorizedReference',
+      position: 1,
+      className: 'cell-relative-20',
+    },
+    title: {
+      label: 'ld.headingReference',
+      position: 1,
+      className: 'cell-relative-45',
+    },
+    headingType: {
+      label: 'ld.typeOfHeading',
+      position: 2,
+      className: 'cell-relative-20',
+    },
+    authoritySource: {
+      label: 'ld.authoritySource',
+      position: 3,
+      className: 'cell-relative-20',
     },
   },
 };

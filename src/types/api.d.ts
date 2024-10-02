@@ -51,9 +51,11 @@ type WorkAsSearchResultDTO = {
 
 type AuthorityAsSearchResultDTO = {
   id: string;
-  label?: string;
-  identifiers?: GenericStructDTO<'ISBN' | 'LCCN'>[];
-  type?: string;
+  authRefType?: string;
+  headingRef?: string;
+  headingType?: string;
+  sourceFileId?: string;
+  [key: string]: string | string[];
 };
 
 interface IApiClient {

@@ -12,7 +12,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         source: '/authority-source-files',
         facets: '/search/authorities/facets',
         bySearchSegment: {
-          [SearchSegment.Search]: `${SEARCH_API_ENDPOINT}/authorities`,
+          [SearchSegment.Search]: '/search/authorities',
           [SearchSegment.Browse]: '/browse/authorities',
         },
       },
