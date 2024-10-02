@@ -28,7 +28,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     isVisibleAdvancedSearch,
     isVisibleFilters,
     isVisibleSegments,
-    hasMiltilineSearchInput,
+    hasMultilineSearchInput,
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
@@ -114,7 +114,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
             />
           )}
-          {hasMiltilineSearchInput ? (
+          {hasMultilineSearchInput ? (
             <Textarea
               id="id-search-textarea"
               className="select-textarea"

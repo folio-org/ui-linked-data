@@ -29,7 +29,7 @@ type SearchParams = {
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
   isVisibleSegments?: boolean;
-  hasMiltilineSearchInput?: boolean;
+  hasMultilineSearchInput?: boolean;
   searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;

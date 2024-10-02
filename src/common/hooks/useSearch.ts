@@ -83,7 +83,7 @@ export const useSearch = () => {
           : endpointUrl;
 
         const result = await getByIdentifier({
-          endpointUrl: currentEndpointUrl || endpointUrl,
+          endpointUrl: currentEndpointUrl ?? endpointUrl,
           searchFilter,
           isSortedResults,
           searchBy,

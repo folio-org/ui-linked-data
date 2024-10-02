@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
 
@@ -8,11 +8,12 @@ const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
 export const useSearchFiltersData = () => {
   const [selectedFacetsGroups, setSelectedFacetsGroups] = useRecoilState(state.search.selectedFacetsGroups);
+  const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
 
   useEffect(() => {
-    return setSelectedFacetsGroups([]);
+    return resetSelectedFacetsGroups();
   }, []);
 
   const getUpdatedSelectedFacetsGroups = (facet?: string, isOpen = true) => {
@@ -34,6 +35,7 @@ export const useSearchFiltersData = () => {
 
       setSourceData(sourceData);
     } catch (error) {
+      // TODO: handle error and show notification
       console.error(error);
     }
   };
@@ -41,7 +43,7 @@ export const useSearchFiltersData = () => {
   const getSearchFacetsData = async (url?: string, facet?: string, isOpen?: boolean) => {
     if (!url || !facet) return;
 
-    const updatedSelectedFacetsGroups = onTogleFilterGroupState(facet, isOpen);
+    const updatedSelectedFacetsGroups = onToggleFilterGroupState(facet, isOpen);
 
     try {
       const facetsQueryParam = updatedSelectedFacetsGroups.join(',');
@@ -51,11 +53,12 @@ export const useSearchFiltersData = () => {
 
       setFacetsData(response.facets);
     } catch (error) {
+      // TODO: handle error and show notification
       console.error(error);
     }
   };
 
-  const onTogleFilterGroupState = (facet: string, isOpen?: boolean) => {
+  const onToggleFilterGroupState = (facet: string, isOpen?: boolean) => {
     const updatedSelectedFacetsGroups = getUpdatedSelectedFacetsGroups(facet, isOpen);
 
     setSelectedFacetsGroups(updatedSelectedFacetsGroups);
@@ -63,5 +66,5 @@ export const useSearchFiltersData = () => {
     return updatedSelectedFacetsGroups;
   };
 
-  return { getSearchSourceData, getSearchFacetsData, onTogleFilterGroupState };
+  return { getSearchSourceData, getSearchFacetsData, onToggleFilterGroupState };
 };

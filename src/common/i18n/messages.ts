@@ -146,7 +146,7 @@ export const BASE_LOCALE = {
   'ld.assignAuthority': 'Assign authority',
   'ld.change': 'Change',
   'ld.searchCreatorAuthority': 'Search creator authority',
-  'ld.selectMARCAuthority': 'Select MARC authority',
+  'ld.selectMarcAuthority': 'Select MARC authority',
   'ld.marcAuthority': 'MARC authority',
   'ld.keyword': 'Keyword',
   'ld.recordsFound': '{recordsCount} records found',

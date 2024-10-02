@@ -15,7 +15,6 @@ import './SimpleLookupField.scss';
 type SimpleLookupFilterProps = {
   facet?: string;
   isDisabled?: boolean;
-  id?: string;
   hasMappedSourceData?: boolean;
   excludedOptions?: string[];
   onChange: (facet?: string, contents?: Array<UserValueContents>) => void;
@@ -23,7 +22,6 @@ type SimpleLookupFilterProps = {
 
 export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
   facet,
-  // id,
   onChange,
   hasMappedSourceData,
   isDisabled = false,

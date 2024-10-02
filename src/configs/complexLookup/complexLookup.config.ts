@@ -29,8 +29,8 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
       modal: {
         title: {
-          creator: 'ld.selectMARCAuthority',
-          contributor: 'ld.selectMARCAuthority',
+          creator: 'ld.selectMarcAuthority',
+          contributor: 'ld.selectMarcAuthority',
         },
         searchResults: 'ld.marcAuthority',
       },

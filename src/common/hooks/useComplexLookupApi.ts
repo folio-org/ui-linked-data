@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useResetRecoilState } from 'recoil';
 import state from '@state';
 import { useSearchFiltersData } from './useSearchFiltersData';
 
 export const useComplexLookupApi = (api: ComplexLookupApiEntryConfig, filters: SearchFilters, isOpen: boolean) => {
-  const setFacetsData = useSetRecoilState(state.search.facetsData);
+  const resetFacetsData = useResetRecoilState(state.search.facetsData);
   const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();
 
   const getFacetsData = async (facet?: string, isOpen?: boolean) => {
@@ -24,7 +24,7 @@ export const useComplexLookupApi = (api: ComplexLookupApiEntryConfig, filters: S
     getSourceData();
 
     return () => {
-      setFacetsData({});
+      resetFacetsData();
     };
   }, [isOpen]);
 

@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { SearchContext } from '@src/contexts';
 
 type SearchProviderProps = {
-  value: SearchParams & { defaultNavigationSegment?: string; hasMiltilineSearchInput?: boolean };
+  value: SearchParams & { defaultNavigationSegment?: string; hasMultilineSearchInput?: boolean };
   children: ReactElement;
 };
 

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import './Textarea.scss';
 
 type TextareaProps = HTMLProps<HTMLTextAreaElement> & {
-  testid?: string;
+  'data-testid'?: string;
   ariaLabel?: string;
   fullWidth?: boolean;
 };
@@ -16,7 +16,7 @@ export const Textarea: FC<TextareaProps> = ({
   ariaLabel,
   id,
   className,
-  testid,
+  'data-testid': dataTestId,
   fullWidth,
 }) => {
   return (
@@ -28,7 +28,7 @@ export const Textarea: FC<TextareaProps> = ({
       value={value}
       onChange={onChange}
       className={classNames('textarea', { 'textarea-full-width': fullWidth }, className)}
-      data-testid={testid}
+      data-testid={dataTestId}
     />
   );
 };
