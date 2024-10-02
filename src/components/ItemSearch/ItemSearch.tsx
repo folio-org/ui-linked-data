@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
@@ -7,8 +6,8 @@ import { SearchControls } from '@components/SearchControls';
 import { FullDisplay } from '@components/FullDisplay';
 import { Pagination } from '@components/Pagination';
 import { useSearch } from '@common/hooks/useSearch';
-import { SearchContext } from '@src/contexts';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 
@@ -20,7 +19,10 @@ export const ItemSearch = () => {
     isVisibleAdvancedSearch,
     renderResultsList,
     renderSearchControlPane,
-  } = useContext(SearchContext);
+    isVisibleSegments,
+    primarySegments,
+    navigationSegment,
+  } = useSearchContext();
   const {
     submitSearch,
     clearValues,
@@ -34,6 +36,10 @@ export const ItemSearch = () => {
   } = useSearch();
 
   useLoadSearchResults(fetchData, currentPageNumber);
+
+  const isVisiblePaginationCount = isVisibleSegments
+    ? !!navigationSegment?.value && primarySegments?.[navigationSegment?.value]?.isVisiblePaginationCount
+    : true;
 
   return (
     <div data-testid="id-search" className="item-search">
@@ -55,6 +61,7 @@ export const ItemSearch = () => {
                   totalPages={pageMetadata.totalPages}
                   pageSize={SEARCH_RESULTS_LIMIT}
                   totalResultsCount={pageMetadata.totalElements}
+                  showCount={isVisiblePaginationCount}
                   onPrevPageClick={onPrevPageClick}
                   onNextPageClick={onNextPageClick}
                 />

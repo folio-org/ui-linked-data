@@ -1,16 +1,16 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
-import { SearchContext } from '@src/contexts';
+import { useSearchContext } from './useSearchContext';
 import state from '@state';
 
 export const useLoadSearchResults = (
   fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
   currentPageNumber?: number,
 ) => {
-  const { hasSearchParams } = useContext(SearchContext);
+  const { hasSearchParams } = useSearchContext();
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);

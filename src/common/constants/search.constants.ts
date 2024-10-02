@@ -12,8 +12,12 @@ export enum SearchLimiterNames {
 }
 
 export enum SearchLimiterNamesAuthority {
-  AuthorityType = 'authorityType',
-  Source = 'source',
+  AuthoritySource = 'sourceFileId',
+  References = 'authRefType',
+  Thesaurus = 'subjectHeadings',
+  TypeOfHeading = 'headingType',
+  DateCreated = 'metadata.createdDate',
+  DateUpdated = 'metadata.updatedDate',
 }
 
 export enum PublishDate {
@@ -84,8 +88,6 @@ export const DEFAULT_SEARCH_LIMITERS = {
   [SearchLimiterNames.PublishDate]: PublishDate.AllTime,
   [SearchLimiterNames.Format]: [],
   [SearchLimiterNames.Suppressed]: Suppressed.All,
-  [SearchLimiterNamesAuthority.AuthorityType]: AuthorityType.All,
-  [SearchLimiterNamesAuthority.Source]: SourceType.All,
 };
 
 export type AdvancedSearchSchema = AdvancedSearchSchemaRow[];
@@ -113,9 +115,32 @@ export const DEFAULT_ADVANCED_SEARCH_QUERY: AdvancedSearchSchema = new Array(6)
 export enum FiltersGroupCheckType {
   Single = 'single',
   Multi = 'multi',
+  Lookup = 'lookup',
+  DateRange = 'dateRange',
 }
 
 export enum FiltersType {
   Checkbox = 'checkbox',
   Radio = 'radio',
+}
+
+export enum SearchSegment {
+  Search = 'search',
+  Browse = 'browse',
+}
+
+export const DEFAULT_FACET_BY_SEGMENT_DATA = {
+  query: '',
+  searchBy: '',
+  facets: {} as Limiters,
+};
+
+export const DEFAULT_FACET_BY_SEGMENT = {
+  [SearchSegment.Search]: DEFAULT_FACET_BY_SEGMENT_DATA,
+  [SearchSegment.Browse]: DEFAULT_FACET_BY_SEGMENT_DATA,
+};
+
+export enum References {
+  ExcludeSeeFrom = 'Auth/Ref',
+  ExcludeSeeFromAlso = 'Reference',
 }

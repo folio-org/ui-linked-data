@@ -1,15 +1,17 @@
-import { ChangeEvent, FC, useContext, useEffect } from 'react';
+import { ChangeEvent, FC, FormEventHandler, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
-import { SearchIdentifiers } from '@common/constants/search.constants';
+import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
-import { SearchContext } from '@src/contexts';
+import { Textarea } from '@components/Textarea';
+import SearchSegments from './SearchSegments';
 import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
@@ -25,21 +27,31 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     isVisibleSearchByControl,
     isVisibleAdvancedSearch,
     isVisibleFilters,
+    isVisibleSegments,
+    hasMultilineSearchInput,
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
-  } = useContext(SearchContext);
+    navigationSegment,
+    getSearchSourceData,
+  } = useSearchContext();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const setMessage = useSetRecoilState(state.search.message);
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
+  const setFacets = useSetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
+  const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
+  const selectOptions =
+    searchByControlOptions && navigationSegment?.value
+      ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
+      : Object.values(SearchIdentifiers);
 
-  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
     setQuery(value);
   };
@@ -48,6 +60,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     clearValues();
     resetControls();
     setSearchBy(defaultSearchBy);
+    setFacetsBySegments(DEFAULT_FACET_BY_SEGMENT);
   };
 
   const onResetButtonClick = () => {
@@ -56,37 +69,71 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     hasSearchParams && setNavigationState({});
   };
 
+  const onChangeSegment = (value: SearchSegmentValue) => {
+    const savedFacetsData = facetsBySegments[value];
+    let updatedSearchBy;
+
+    if (savedFacetsData.searchBy) {
+      updatedSearchBy = savedFacetsData.searchBy;
+    } else {
+      const typedSearchByControlOptions = searchByControlOptions as ComplexLookupSearchBy;
+
+      if (typedSearchByControlOptions[value]?.[0]) {
+        updatedSearchBy = typedSearchByControlOptions[value][0].value;
+      }
+    }
+
+    setSearchBy(updatedSearchBy as SearchIdentifiers);
+    setQuery(savedFacetsData.query || '');
+    setFacets(savedFacetsData.facets || {});
+    getSearchSourceData?.();
+  };
+
   useEffect(() => clearValuesAndResetControls, []);
 
   return (
     <div className="search-pane">
       <div className="search-pane-header">
         <strong className="search-pane-header-title">
-          <FormattedMessage id="ld.search" />
+          <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
         </strong>
         <CaretDown className="header-caret" />
       </div>
       <div className="search-pane-content">
+        {isVisibleSegments && <SearchSegments onChangeSegment={onChangeSegment} />}
+
         <div className="inputs">
           {isVisibleSearchByControl && (
             <Select
               withIntl
               id="id-search-select"
+              data-testid="id-search-select"
               className="select-input"
               value={searchBy}
-              options={searchByControlOptions || Object.values(SearchIdentifiers)}
+              options={selectOptions}
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
             />
           )}
-          <Input
-            id="id-search-input"
-            type="text"
-            value={query}
-            onChange={onChangeSearchInput}
-            className="text-input"
-            onPressEnter={submitSearch}
-            data-testid="id-search-input"
-          />
+          {hasMultilineSearchInput ? (
+            <Textarea
+              id="id-search-textarea"
+              className="select-textarea"
+              value={query}
+              onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
+              data-testid="id-search-textarea"
+              fullWidth
+            />
+          ) : (
+            <Input
+              id="id-search-input"
+              type="text"
+              value={query}
+              onChange={onChangeSearchInput}
+              className="text-input"
+              onPressEnter={submitSearch}
+              data-testid="id-search-input"
+            />
+          )}
         </div>
         <Button
           data-testid="id-search-button"

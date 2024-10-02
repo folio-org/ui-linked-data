@@ -1,4 +1,9 @@
-import { DEFAULT_SEARCH_BY, DEFAULT_SEARCH_LIMITERS, SearchIdentifiers } from '@common/constants/search.constants';
+import {
+  DEFAULT_FACET_BY_SEGMENT,
+  DEFAULT_SEARCH_BY,
+  DEFAULT_SEARCH_LIMITERS,
+  SearchIdentifiers,
+} from '@common/constants/search.constants';
 import { atom } from 'recoil';
 
 const query = atom<string>({
@@ -23,7 +28,7 @@ const data = atom<null | WorkAsSearchResultDTO[]>({
 
 const limiters = atom<Limiters>({
   key: 'search.limiters',
-  default: DEFAULT_SEARCH_LIMITERS,
+  default: DEFAULT_SEARCH_LIMITERS as Limiters,
 });
 
 const navigationState = atom<SearchParamsState>({
@@ -41,6 +46,26 @@ const pageMetadata = atom<PageMetadata>({
   default: { totalElements: 0, totalPages: 0 },
 });
 
+const facetsBySegments = atom<FacetsBySegments>({
+  key: 'search.facetsBySegments',
+  default: DEFAULT_FACET_BY_SEGMENT,
+});
+
+const sourceData = atom<SourceDataDTO | null>({
+  key: 'search.sourceData',
+  default: null,
+});
+
+const selectedFacetsGroups = atom<string[]>({
+  key: 'search.selectedFacetsGroups',
+  default: [],
+});
+
+const facetsData = atom<FacetsDTO>({
+  key: 'search.facetsData',
+  default: {},
+});
+
 export default {
   query,
   message,
@@ -50,4 +75,8 @@ export default {
   navigationState,
   forceRefresh,
   pageMetadata,
+  facetsBySegments,
+  sourceData,
+  selectedFacetsGroups,
+  facetsData,
 };

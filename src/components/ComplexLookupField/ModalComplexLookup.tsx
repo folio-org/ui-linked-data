@@ -2,16 +2,20 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { SearchSegment } from '@common/constants/search.constants';
+import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
-import { COMPLEX_LOOKUPS_CONFIG } from '@common/constants/complexLookup.constants';
+import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
+import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
-import { filters } from './data/filters';
-import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
-import './ModalComplexLookup.scss';
 import state from '@state';
+import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
+import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
+import './ModalComplexLookup.scss';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -22,9 +26,14 @@ interface ModalComplexLookupProps {
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, assignEntityName = 'authorities', baseLabelType = 'creator' }) => {
-    const { api, labels, searchBy } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+  ({ isOpen, onAssign, onClose, assignEntityName = ComplexLookupType.Authorities, baseLabelType = 'creator' }) => {
+    const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
+    const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
+
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters, isOpen);
+
     const searchControlsSubLabel = useMemo(
       () =>
         searchResultsMetadata?.totalElements ? (
@@ -47,7 +56,17 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       ),
       [labels.modal.searchResults, searchControlsSubLabel],
     );
-    const renderResultsList = useCallback(() => <ComplexLookupSearchResults onAssign={onAssign} />, [onAssign]);
+
+    const renderResultsList = useCallback(
+      () => (
+        <ComplexLookupSearchResults
+          onAssign={onAssign}
+          tableConfig={tableConfig}
+          searchResultsFormatter={searchResultsFormatter}
+        />
+      ),
+      [onAssign, tableConfig, searchResultsFormatter],
+    );
 
     return (
       <Modal
@@ -64,21 +83,29 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
-            endpointUrl={api.endpoint}
+            endpointUrl={api.endpoints.base}
+            endpointUrlsBySegments={api.endpoints.bySearchSegment}
+            primarySegments={segments?.primary}
             searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultSearchBy={searchBy[0].value as unknown as SearchIdentifiers}
+            defaultNavigationSegment={SearchSegment.Search}
+            defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
             isVisibleFilters={SEARCH_FILTERS_ENABLED}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
+            isVisibleSegments={SEARCH_FILTERS_ENABLED}
+            hasMultilineSearchInput={true}
             searchByControlOptions={searchBy}
-            labelEmptySearch="ld.enterSearchCriteria"
+            labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
+            getSearchSourceData={getSourceData}
+            getSearchFacetsData={getFacetsData}
+            searchResultsLimit={api.searchQuery.limit}
           />
         </div>
       </Modal>

@@ -1,12 +1,22 @@
 type SearchQueryParams = import('@common/constants/routes.constants').SearchQueryParams;
 type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers;
+type SearchSegmentValue = import('@common/constants/search.constants').SearchSegment;
 
 type SearchParamsState = {
   [key in SearchQueryParams]?: string | number | SearchIdentifiers;
 };
 
+type NavigationSegment = {
+  value?: string;
+  set: Dispatch<SetStateAction<boolean>> | VoidFunction;
+};
+
 type SearchParams = {
   endpointUrl: string;
+  endpointUrlsBySegments?: {
+    [key in SearchSegment]: string;
+  };
+  primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
@@ -18,7 +28,50 @@ type SearchParams = {
   isVisibleFullDisplay?: boolean;
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
-  searchByControlOptions?: (string | ComplexLookupSearchBy)[];
+  isVisibleSegments?: boolean;
+  hasMultilineSearchInput?: boolean;
+  searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
+  navigationSegment?: NavigationSegment;
+  getSearchSourceData?: (url?: string) => Promise<void>;
+  getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
+  searchResultsLimit?: number;
 };
+
+type FacetsBySegments = {
+  [key in SearchSegmentValue]: {
+    query?: string;
+    searchBy?: string;
+    facets: Limiters;
+  };
+};
+
+type FacetDTO = {
+  totalRecords: number;
+  values: {
+    id: string;
+    totalRecords: number;
+  }[];
+};
+
+type FacetsDTO = Record<string, FacetDTO>;
+
+type SourceEntry = {
+  codes: string[];
+  hridManagement: Record<string, any>;
+  id: string;
+  metadata: {
+    createdByUserId: string;
+    updatedByUserId: string;
+    createdDate: string;
+    updatedDate: string;
+  };
+  name: string;
+  selectable: boolean;
+  source: string;
+  type: string;
+  _version: number;
+};
+
+type SourceDataDTO = SourceEntry[];

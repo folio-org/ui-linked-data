@@ -11,7 +11,7 @@ body > #editor-root,
 #app-root,
 .embed-container {
   height: 100%;
-  
+
   // TODO: revise with designer on what the base font size should be
   // font-size: 16px;
 }
@@ -59,7 +59,8 @@ body > #editor-root,
     margin: 0;
   }
 
-  select, input {
+  select,
+  input {
     &:disabled {
       background-color: $disabled-input-bg-color;
       color: $disabled-input-color;
@@ -184,5 +185,6 @@ body > #editor-root,
     display: flex;
     flex-direction: row;
     gap: 8px;
+    align-items: center;
   }
 }

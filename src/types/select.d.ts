@@ -12,13 +12,22 @@ interface ReactMultiselectOption {
 
 interface MultiselectOption {
   label: string;
+  subLabel?: string;
   __isNew__: boolean;
   value: {
     id?: string;
-    label: string;
+    label?: string;
     uri?: Nullable<string>;
   };
 }
+
+type FilterLookupOption = {
+  label: string;
+  subLabel?: string;
+  value: {
+    id: string;
+  };
+};
 
 type Limiters = Record<
   SearchLimiterNames | SearchLimiterNamesAuthority,

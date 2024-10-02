@@ -6,7 +6,6 @@
   min-width: 290px;
   width: 290px;
   border-right: 1px solid #d7d8da;
-  overflow-y: auto;
 
   &-header,
   .meta-controls {
@@ -18,11 +17,23 @@
 
     &-centered {
       justify-content: center;
+
+      > .search-button {
+        width: 100%;
+        height: $btn-height;
+        border-radius: calc($btn-height / 2);
+        line-height: $btn-height;
+
+        &:disabled {
+          background-color: $gray-200;
+        }
+      }
     }
   }
 
   &-header {
     height: 2.75rem;
+    min-height: 2.75rem;
     padding: 0 1rem;
     background-color: rgba(0, 0, 0, 0.03);
 
@@ -32,7 +43,9 @@
   }
 
   &-content {
+    height: 100%;
     padding: 0 1rem 0.75rem 1rem;
+    overflow-y: auto;
 
     .primary-search {
       width: 100%;
@@ -64,6 +77,10 @@
       margin-top: -1px;
       padding: 4px 5px;
       height: 26px;
+    }
+
+    .select-textarea {
+      margin-top: -1px;
     }
   }
 

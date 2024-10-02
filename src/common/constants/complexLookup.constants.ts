@@ -1,36 +1,6 @@
-import { SEARCH_API_ENDPOINT } from './api.constants';
-
-export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
-  authorities: {
-    api: {
-      endpoint: `${SEARCH_API_ENDPOINT}/authorities`,
-      searchQuery: {
-        filter: '(type <> "CONCEPT")',
-      },
-    },
-    labels: {
-      button: {
-        base: 'ld.assignAuthority',
-        change: 'ld.change',
-      },
-      modal: {
-        title: {
-          creator: 'ld.searchCreatorAuthority',
-          contributor: 'ld.searchCreatorAuthority',
-        },
-        searchResults: 'ld.authorities',
-      },
-    },
-    // For displaying "Search by" control
-    searchBy: [
-      {
-        label: 'keyword',
-        value: 'label',
-      },
-    ],
-    linkedField: 'subclass',
-  },
-};
+export enum ComplexLookupType {
+  Authorities = 'authorities',
+}
 
 export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
   subclass: {
@@ -60,4 +30,3 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
 export const EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX = 'empty';
 export const VALUE_DIVIDER = ' ,';
 export const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING';
-

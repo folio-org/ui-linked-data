@@ -32,9 +32,15 @@ type SearchItem = {
 };
 
 type SearchGroup = {
+  id?: string;
   labelId: string;
   type: FiltersGroupCheckType;
-  children: SearchItem[];
+  children?: SearchItem[];
+  facet?: string;
+  isOpen?: boolean;
+  hasExternalDataSource?: boolean;
+  hasMappedSourceData?: boolean;
+  excludedOptions?: string[];
 };
 
 type SearchFilters = SearchGroup[];

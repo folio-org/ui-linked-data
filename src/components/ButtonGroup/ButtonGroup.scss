@@ -1,0 +1,29 @@
+.button-group {
+  display: inline-flex;
+
+  &.full-width {
+    width: 100%;
+
+    & > * {
+        width: 100%;
+    }
+  }
+
+  & > :first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  & > :last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  & > :not(:first-child, :last-child) {
+    border-radius: 0;
+  }
+
+  & > :not(:first-child) {
+    margin-left: -1px;
+  }
+}

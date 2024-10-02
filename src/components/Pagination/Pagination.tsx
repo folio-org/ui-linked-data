@@ -1,9 +1,9 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { Button, ButtonType } from '@components/Button';
 import LeftIcon from '@src/assets/chevron-left.svg?react';
 import RightIcon from '@src/assets/chevron-right.svg?react';
 import './Pagination.scss';
-import { Button } from '@components/Button';
 
 export type Props = {
   currentPage?: number;
@@ -11,12 +11,21 @@ export type Props = {
   pageSize?: number;
   resultsCount?: number;
   totalResultsCount?: number;
+  showCount?: boolean;
   onPrevPageClick: VoidFunction;
   onNextPageClick: VoidFunction;
 };
 
 export const Pagination: FC<Props> = memo(
-  ({ currentPage = 0, totalPages = 1, pageSize = 1, totalResultsCount = 1, onPrevPageClick, onNextPageClick }) => {
+  ({
+    currentPage = 0,
+    totalPages = 1,
+    pageSize = 1,
+    totalResultsCount = 1,
+    showCount = true,
+    onPrevPageClick,
+    onNextPageClick,
+  }) => {
     const isFirstPage = currentPage === 0;
     const isDisabledNext = totalPages ? currentPage === totalPages - 1 : false;
     const startCount = isFirstPage ? 1 : currentPage * pageSize + 1;
@@ -34,29 +43,35 @@ export const Pagination: FC<Props> = memo(
     return (
       <div className="pagination" data-testid="pagination">
         <Button
+          type={ButtonType.Text}
           onClick={onPrevPageClick}
           disabled={isFirstPage}
           className="pagination-button"
           data-testid="backward-button"
         >
           <LeftIcon />
+          <FormattedMessage id="ld.previous" />
         </Button>
-        <div>
-          <FormattedMessage
-            id="ld.paginationCount"
-            values={{
-              startCount: <span data-testid="pagination-start-count">{startCount}</span>,
-              endCount: <span data-testid="pagination-end-count">{endCount}</span>,
-              totalResultsCount: <span data-testid="pagination-total-count">{totalResultsCount}</span>,
-            }}
-          />
-        </div>
+        {showCount && (
+          <div className="pagination-count">
+            <FormattedMessage
+              id="ld.paginationCount"
+              values={{
+                startCount: <span data-testid="pagination-start-count">{startCount}</span>,
+                endCount: <span data-testid="pagination-end-count">{endCount}</span>,
+                totalResultsCount: <span data-testid="pagination-total-count">{totalResultsCount}</span>,
+              }}
+            />
+          </div>
+        )}
         <Button
+          type={ButtonType.Text}
           onClick={onNextPageClick}
           disabled={isDisabledNext}
           className="pagination-button"
           data-testid="forward-button"
         >
+          <FormattedMessage id="ld.next" />
           <RightIcon />
         </Button>
       </div>

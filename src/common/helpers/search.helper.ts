@@ -8,7 +8,7 @@ import {
 import { Row } from '@components/Table';
 import { v4 as uuidv4 } from 'uuid';
 
-const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
+export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
 export const getTitle = (titles: GenericStructDTO<TitleType>[] | undefined) => {
@@ -53,26 +53,6 @@ export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchR
   });
   // .slice(0, __TEMP_RESULT_MAX_AMOUNT);
 };
-
-export const formatItemSearchComplexLookupAuthority = (authoritiesList: AuthorityAsSearchResultDTO[]): Row[] =>
-  authoritiesList.map(({ id, label, identifiers, type }) => ({
-    __meta: {
-      id,
-      key: uuidv4(),
-    },
-    title: {
-      label,
-      className: 'title',
-    },
-    subclass: {
-      label: type,
-      className: 'subclass',
-    },
-    lccn: {
-      label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
-      className: 'identifier',
-    },
-  }));
 
 export const applyQualifierSyntaxToQuery = (query: string, qualifier: AdvancedSearchQualifiers) => {
   const normalizedQuery = normalizeQuery(query);

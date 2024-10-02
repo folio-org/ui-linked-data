@@ -2,35 +2,36 @@
   .pagination {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
+    min-height: 41px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.8rem;
 
     &-button {
-      margin: 0 1.25rem;
-      height: 2rem;
-      width: 2rem;
-      padding: 0;
-      border-radius: 4px;
-      background-color: transparent;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1rem;
+      border-radius: 2rem;
 
-      &:hover {
-        border-color: #3e75cf;
-        background-color: #d8e3f5;
-
-        &:disabled {
-          background-color: transparent;
-        }
+      svg {
+        margin-top: 1px;
       }
 
       path {
-        fill: #255096;
+        fill: #000;
       }
 
       &:disabled path {
         fill: #e0dfdf;
       }
+    }
+
+    &-count {
+      font-weight: 600;
     }
   }
 }

@@ -26,7 +26,7 @@ export const getByIdentifier = async ({
   limit = SEARCH_RESULTS_LIMIT.toString(),
 }: GetByIdentifier) => {
   const sortQuery = isSortedResults ? ' sortby title' : '';
-  const filterQuery = searchFilter ? `and ${searchFilter}` : '';
+  const filterQuery = searchFilter ? ` and ${searchFilter}` : '';
   const urlParams: Record<string, string> | undefined = {
     query: searchBy ? `(${searchBy} all "${query}")${sortQuery}${filterQuery}` : `${query}${sortQuery}${filterQuery}`,
     offset,
@@ -34,4 +34,11 @@ export const getByIdentifier = async ({
   };
 
   return await baseApi.getJson({ url: endpointUrl, urlParams });
+};
+
+// TODO: generate search params
+export const getSearchData = (url?: string, urlParams?: Record<string, string>) => {
+  if (!url) return;
+
+  return baseApi.getJson({ url, urlParams });
 };
