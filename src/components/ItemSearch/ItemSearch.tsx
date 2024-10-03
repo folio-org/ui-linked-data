@@ -22,6 +22,7 @@ export const ItemSearch = () => {
     isVisibleSegments,
     primarySegments,
     navigationSegment,
+    searchResultsLimit,
   } = useSearchContext();
   const {
     submitSearch,
@@ -59,7 +60,7 @@ export const ItemSearch = () => {
                 <Pagination
                   currentPage={currentPageNumber}
                   totalPages={pageMetadata.totalPages}
-                  pageSize={SEARCH_RESULTS_LIMIT}
+                  pageSize={searchResultsLimit ?? SEARCH_RESULTS_LIMIT}
                   totalResultsCount={pageMetadata.totalElements}
                   showCount={isVisiblePaginationCount}
                   onPrevPageClick={onPrevPageClick}

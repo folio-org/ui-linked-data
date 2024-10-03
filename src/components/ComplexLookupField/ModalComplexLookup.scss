@@ -91,11 +91,18 @@
       }
 
       .results-list {
+        min-width: 960px;
         table-layout: fixed;
 
         th {
-          background-color: transparent;
+          position: sticky;
+          top: 0;
+          background-color: #fff;
         }
+      }
+
+      .table-header-contents-wrapper {
+        text-wrap: nowrap;
       }
 
       .table-header-contents-wrapper,

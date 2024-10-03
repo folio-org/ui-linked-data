@@ -23,6 +23,7 @@ export const useSearch = () => {
     endpointUrlsBySegments,
     searchResultsLimit,
     fetchSearchResults,
+    searchResultsContainer,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -82,17 +83,27 @@ export const useSearch = () => {
         const currentEndpointUrl = selectedNavigationSegment
           ? endpointUrlsBySegments?.[selectedNavigationSegment]
           : endpointUrl;
-        const getSearchResultsData = fetchSearchResults ?? getByIdentifier;
 
-        const result = await getSearchResultsData({
-          endpointUrl: currentEndpointUrl ?? endpointUrl,
-          searchFilter,
-          isSortedResults,
-          searchBy,
-          query: updatedQuery as string,
-          offset: offset?.toString(),
-          limit: searchResultsLimit?.toString(),
-        });
+        const result = fetchSearchResults
+          ? await fetchSearchResults({
+              endpointUrl: currentEndpointUrl ?? endpointUrl,
+              searchFilter,
+              isSortedResults,
+              searchBy,
+              query: updatedQuery as string,
+              offset: offset?.toString(),
+              limit: searchResultsLimit?.toString(),
+              resultsContainer: searchResultsContainer,
+            })
+          : getByIdentifier({
+              endpointUrl: currentEndpointUrl ?? endpointUrl,
+              searchFilter,
+              isSortedResults,
+              searchBy,
+              query: updatedQuery as string,
+              offset: offset?.toString(),
+              limit: searchResultsLimit?.toString(),
+            });
         const { content, totalPages, totalRecords } = result;
 
         // TODO: pass the message though the context

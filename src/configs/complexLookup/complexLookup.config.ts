@@ -21,6 +21,9 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         filter: '(type <> "CONCEPT")',
         limit: 100,
       },
+      results: {
+        container: 'authorities'
+      }
     },
     labels: {
       button: {

@@ -38,6 +38,9 @@ type ComplexLookupApiEntryConfig = {
     filter?: string;
     limit?: number;
   };
+  results: {
+    container: string;
+  };
 };
 
 type ComplexLookupsConfigEntry = {
