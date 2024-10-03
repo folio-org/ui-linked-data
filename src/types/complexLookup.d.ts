@@ -32,6 +32,7 @@ type ComplexLookupApiEntryConfig = {
     bySearchSegment?: {
       [key in SearchSegment]: string;
     };
+    marcPreview?: string;
   };
   sourceKey?: string;
   searchQuery: {

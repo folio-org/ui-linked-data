@@ -1,5 +1,5 @@
 import { FC, memo, useCallback, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
@@ -8,12 +8,14 @@ import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
+import { useMarcData } from '@common/hooks/useMarcData';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
 import state from '@state';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
+import { MarсPreviewComplexLookup } from './MarсPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
 
@@ -32,7 +34,20 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
 
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+    const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
+    const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters, isOpen);
+    const { fetchMarcData, clearMarcData } = useMarcData(state.data.marcPreviewData);
+
+    const onCloseMarcPreview = () => {
+      clearMarcData();
+      clearMarcMetadata();
+    };
+
+    const onCloseModal = () => {
+      onCloseMarcPreview();
+      onClose();
+    };
 
     const searchControlsSubLabel = useMemo(
       () =>
@@ -57,22 +72,36 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       [labels.modal.searchResults, searchControlsSubLabel],
     );
 
+    const onSearchResultTitleClick = useCallback(
+      async (id: string, title?: string, headingType?: string) => {
+        await fetchMarcData(id, api.endpoints.marcPreview);
+
+        if (title && headingType) {
+          setMarcMetadata({ title, headingType });
+        }
+      },
+      [api.endpoints.marcPreview],
+    );
+
     const renderResultsList = useCallback(
       () => (
         <ComplexLookupSearchResults
           onAssign={onAssign}
+          onTitleClick={onSearchResultTitleClick}
           tableConfig={tableConfig}
           searchResultsFormatter={searchResultsFormatter}
         />
       ),
-      [onAssign, tableConfig, searchResultsFormatter],
+      [onAssign, onSearchResultTitleClick, tableConfig, searchResultsFormatter],
     );
+
+    const renderMarcPreview = useCallback(() => <MarсPreviewComplexLookup onClose={onCloseMarcPreview} />, []);
 
     return (
       <Modal
         isOpen={isOpen}
         title={<FormattedMessage id={labels.modal.title[baseLabelType]} />}
-        onClose={onClose}
+        onClose={onCloseModal}
         titleClassName="modal-complex-lookup-title"
         showModalControls={false}
         className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
@@ -94,12 +123,14 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
+            renderMarcPreview={renderMarcPreview}
             isVisibleFilters={true}
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
             isVisibleSegments={true}
             hasMultilineSearchInput={true}
+            hasMarkPreview={true}
             searchByControlOptions={searchBy}
             labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
             classNameEmptyPlaceholder="complex-lookup-search-empty"

@@ -24,8 +24,11 @@ export const getRecord = async ({ recordId }: SingleRecord) => {
 
 const singleRecordMarcUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/marc`;
 
-export const getMarcRecord = async ({ recordId }: SingleRecord) => {
-  const url = baseApi.generateUrl(singleRecordMarcUrl, { name: ':recordId', value: recordId });
+export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { endpointUrl?: string }) => {
+  const url = baseApi.generateUrl(endpointUrl ?? singleRecordMarcUrl, {
+    name: ':recordId',
+    value: recordId,
+  });
 
   return baseApi.getJson({
     url,

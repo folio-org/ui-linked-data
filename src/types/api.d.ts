@@ -62,6 +62,13 @@ interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }
 
+type Metadata = {
+  createdDate: string;
+  createdByUserId: string;
+  updatedDate: string;
+  updatedByUserId: string;
+};
+
 type MarcDTOParsedRecordContentSubfield = {
   subfields: Record<string, string>[];
   isHighlighted?: boolean;
@@ -80,4 +87,5 @@ type MarcDTO = {
       fields: Record<string, string | any>[];
     };
   };
+  metadata: Metadata;
 };

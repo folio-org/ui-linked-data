@@ -6,12 +6,14 @@ import state from '@state';
 
 type ComplexLookupSearchResultsProps = {
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+  onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   tableConfig: SearchResultsTableConfig;
   searchResultsFormatter: (data: any[], sourceData?: SourceDataDTO) => Row[];
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({
   onAssign,
+  onTitleClick,
   tableConfig,
   searchResultsFormatter,
 }) => {
@@ -27,7 +29,9 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
         Object.entries(tableConfig.columns).forEach(([key, column]) => {
           formattedRow[key] = {
             ...row[key],
-            children: column.formatter ? column.formatter(row, formatMessage, onAssign) : row[key].label,
+            children: column.formatter
+              ? column.formatter({ row, formatMessage, onAssign, onTitleClick })
+              : row[key].label,
           };
         });
 

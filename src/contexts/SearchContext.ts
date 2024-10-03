@@ -25,4 +25,6 @@ export const SearchContext = createContext<SearchParams>({
     value: undefined,
     set: () => null,
   },
+  hasMarkPreview: false,
+  renderMarcPreview: () => null,
 });

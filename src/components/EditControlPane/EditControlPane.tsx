@@ -1,58 +1,38 @@
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
 import { RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
 import { RESOURCE_TEMPLATE_IDS, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { RecordStatus } from '@common/constants/record.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { Button, ButtonType } from '@components/Button';
 import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { useMarcData } from '@common/hooks/useMarcData';
+import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
 import state from '@state';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { getMarcRecord } from '@common/api/records.api';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
 import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { RecordStatus } from '@common/constants/record.constants';
-import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
-  const [isLoading, setIsLoading] = useRecoilState(state.loadingState.isLoading);
-  const setMarcPreviewData = useSetRecoilState(state.data.marcPreview);
+  const isLoading = useRecoilValue(state.loadingState.isLoading);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
-  const setStatus = useSetRecoilState(state.status.commonMessages);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
   const { navigateAsDuplicate } = useNavigateToEditPage();
   const [queryParams] = useSearchParams();
+  const { fetchMarcData } = useMarcData(state.data.marcPreview);
 
-  const handleFetchMarcData = async () => {
-    if (!resourceId) return;
-
-    try {
-      setIsLoading(true);
-
-      const marcData = await getMarcRecord({ recordId: resourceId });
-
-      setMarcPreviewData(marcData);
-    } catch (error) {
-      setStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'),
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
   const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
 

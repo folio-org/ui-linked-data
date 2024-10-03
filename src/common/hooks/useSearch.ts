@@ -95,7 +95,7 @@ export const useSearch = () => {
               limit: searchResultsLimit?.toString(),
               resultsContainer: searchResultsContainer,
             })
-          : getByIdentifier({
+          : await getByIdentifier({
               endpointUrl: currentEndpointUrl ?? endpointUrl,
               searchFilter,
               isSortedResults,
@@ -104,6 +104,7 @@ export const useSearch = () => {
               offset: offset?.toString(),
               limit: searchResultsLimit?.toString(),
             });
+
         const { content, totalPages, totalRecords } = result;
 
         // TODO: pass the message though the context

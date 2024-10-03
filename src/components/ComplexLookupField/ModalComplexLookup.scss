@@ -99,6 +99,15 @@
           top: 0;
           background-color: #fff;
         }
+
+        .search-results-item-title {
+          text-align: left;
+
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
       }
 
       .table-header-contents-wrapper {

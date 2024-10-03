@@ -178,7 +178,9 @@ export const BASE_LOCALE = {
   'ld.from': 'From',
   'ld.to': 'To',
   'ld.apply': 'Apply',
-  'ld.notSpecified': 'Not specified'
+  'ld.notSpecified': 'Not specified',
+  'ld.lastUpdated': 'Last updated',
+  'ld.marcAuthorityRecord': 'MARC authority record',
 };
 
 export const i18nMessages = {

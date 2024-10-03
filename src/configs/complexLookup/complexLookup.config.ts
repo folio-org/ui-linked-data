@@ -15,6 +15,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           [SearchSegment.Search]: '/search/authorities',
           [SearchSegment.Browse]: '/browse/authorities',
         },
+        marcPreview: '/source-storage/records/:recordId/formatted?idType=AUTHORITY',
       },
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
@@ -22,8 +23,8 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         limit: 100,
       },
       results: {
-        container: 'authorities'
-      }
+        container: 'authorities',
+      },
     },
     labels: {
       button: {

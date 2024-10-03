@@ -39,6 +39,8 @@ type SearchParams = {
   searchResultsLimit?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
   searchResultsContainer?: string;
+  hasMarkPreview?: boolean;
+  renderMarcPreview?: () => JSX.Element | null;
 };
 
 type FacetsBySegments = {
