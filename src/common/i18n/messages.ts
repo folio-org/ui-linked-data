@@ -177,7 +177,9 @@ export const BASE_LOCALE = {
   'ld.from': 'From',
   'ld.to': 'To',
   'ld.apply': 'Apply',
-  'ld.notSpecified': 'Not specified'
+  'ld.notSpecified': 'Not specified',
+  'ld.externalResource': 'External resource',
+  'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...'
 };
 
 export const i18nMessages = {

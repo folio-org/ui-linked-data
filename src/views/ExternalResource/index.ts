@@ -1,0 +1,1 @@
+export { ExternalResourceEdit } from './ExternalResourceEdit';
