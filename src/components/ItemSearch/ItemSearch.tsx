@@ -39,7 +39,7 @@ export const ItemSearch = () => {
     data,
     fetchData,
   } = useSearch();
-  const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
+  const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
 
   useLoadSearchResults(fetchData, currentPageNumber);
 
@@ -50,7 +50,7 @@ export const ItemSearch = () => {
   return (
     <div data-testid="id-search" className="item-search">
       <SearchControls submitSearch={submitSearch} clearValues={clearValues} />
-      {!(hasMarkPreview && marcPreviewData) && (
+      {!(hasMarkPreview && isMarcPreviewOpen) && (
         <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
           {renderSearchControlPane()}
           <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>

@@ -5,6 +5,11 @@ const isAdvancedSearchOpen = atom<boolean>({
   default: false,
 });
 
+const isMarcPreviewOpen = atom<boolean>({
+  key: 'ui.isMarcPreviewOpen',
+  default: false,
+});
+
 const collapsedGroups = atom<string[]>({
   key: 'ui.collapsedGroups',
   default: [],
@@ -22,6 +27,7 @@ const currentlyPreviewedEntityBfid = atom<Set<string>>({
 
 export default {
   isAdvancedSearchOpen,
+  isMarcPreviewOpen,
   collapsedGroups,
   currentlyEditedEntityBfid,
   currentlyPreviewedEntityBfid,

@@ -81,7 +81,8 @@ type SourceEntry = {
 type SourceDataDTO = SourceEntry[];
 
 type MarcPreviewMetadata = {
-  id: string;
+  baseId: string;
+  marcId: string;
   srsId: string;
   title: string;
   headingType: string;

@@ -33,6 +33,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
 
+    const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
     const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
@@ -40,12 +41,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const { fetchMarcData, clearMarcData } = useMarcData(state.data.marcPreviewData);
 
     const onCloseMarcPreview = () => {
-      clearMarcData();
-      clearMarcMetadata();
+      setIsMarcPreviewOpen(false);
     };
 
     const onCloseModal = () => {
       onCloseMarcPreview();
+      clearMarcData();
+      clearMarcMetadata();
       onClose();
     };
 
@@ -79,7 +81,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         const marcData = await fetchMarcData(id, api.endpoints.marcPreview);
 
         if (marcData && title && headingType) {
-          setMarcMetadata({ id: marcData.id, srsId: marcData.parsedRecord.id, title, headingType });
+          setMarcMetadata({ baseId: id, marcId: marcData.id, srsId: marcData.parsedRecord.id, title, headingType });
+          setIsMarcPreviewOpen(true);
         }
       },
       [api.endpoints.marcPreview],

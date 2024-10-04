@@ -13,6 +13,7 @@ type MarсPreviewComplexLookupProps = {
 };
 
 export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ onClose }) => {
+  const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
   const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
 
@@ -31,8 +32,8 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
 
   return (
     <>
-      {marcPreviewData ? (
-        <div className='marc-preview-container'>
+      {isMarcPreviewOpen && marcPreviewData ? (
+        <div className="marc-preview-container">
           <SearchControlPane
             label={marcPreviewMetadata?.title || ''}
             subLabel={subLabel}

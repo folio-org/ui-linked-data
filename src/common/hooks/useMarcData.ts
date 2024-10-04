@@ -10,13 +10,15 @@ export const useMarcData = <T>(markState: RecoilState<T>) => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatus = useSetRecoilState(state.status.commonMessages);
 
-  const fetchMarcData = async (recordId?: string, endpointUrl?: string) => {
+  const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return;
+
+    let marcData;
 
     try {
       setIsLoading(true);
 
-      const marcData = await getMarcRecord({ recordId, endpointUrl });
+      marcData = await getMarcRecord({ recordId, endpointUrl });
 
       setMarcPreviewData(marcData);
     } catch (error) {
@@ -27,6 +29,8 @@ export const useMarcData = <T>(markState: RecoilState<T>) => {
     } finally {
       setIsLoading(false);
     }
+
+    return marcData;
   };
 
   return { fetchMarcData, clearMarcData };
