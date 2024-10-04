@@ -19,7 +19,7 @@ export const formatAuthorityItem = (
         label: headingRef,
         className: 'title',
       },
-      headingType: {
+      subclass: {
         label: headingType,
         className: 'heading-type',
       },

@@ -1,7 +1,7 @@
 import { FC, memo, useCallback, useMemo } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
@@ -55,7 +55,9 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
           <FormattedMessage
             id={'ld.recordsFound'}
             values={{
-              recordsCount: <span data-testid="records-found-count">{searchResultsMetadata?.totalElements}</span>,
+              recordsCount: (
+                <FormattedNumber value={searchResultsMetadata?.totalElements} data-testid="records-found-count" />
+              ),
             }}
           />
         ) : undefined,
