@@ -10,10 +10,7 @@ const marcPreviewData = atom<MarcDTO | null>({
   default: null,
 });
 
-const marcPreviewMetadata = atom<{
-  title: string;
-  headingType: string;
-} | null>({
+const marcPreviewMetadata = atom<MarcPreviewMetadata | null>({
   key: 'data.marcPreviewMetadata',
   default: null,
 });

@@ -74,12 +74,12 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       [labels.modal.searchResults, searchControlsSubLabel],
     );
 
-    const onSearchResultTitleClick = useCallback(
+    const loadMarcData = useCallback(
       async (id: string, title?: string, headingType?: string) => {
-        await fetchMarcData(id, api.endpoints.marcPreview);
+        const marcData = await fetchMarcData(id, api.endpoints.marcPreview);
 
-        if (title && headingType) {
-          setMarcMetadata({ title, headingType });
+        if (marcData && title && headingType) {
+          setMarcMetadata({ id: marcData.id, srsId: marcData.parsedRecord.id, title, headingType });
         }
       },
       [api.endpoints.marcPreview],
@@ -89,12 +89,12 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       () => (
         <ComplexLookupSearchResults
           onAssign={onAssign}
-          onTitleClick={onSearchResultTitleClick}
+          onTitleClick={loadMarcData}
           tableConfig={tableConfig}
           searchResultsFormatter={searchResultsFormatter}
         />
       ),
-      [onAssign, onSearchResultTitleClick, tableConfig, searchResultsFormatter],
+      [onAssign, loadMarcData, tableConfig, searchResultsFormatter],
     );
 
     const renderMarcPreview = useCallback(() => <MarсPreviewComplexLookup onClose={onCloseMarcPreview} />, []);

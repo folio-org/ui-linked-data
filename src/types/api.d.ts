@@ -86,6 +86,7 @@ type MarcDTO = {
       leader?: string;
       fields: Record<string, string | any>[];
     };
+    id: string;
   };
   metadata: Metadata;
 };

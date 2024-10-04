@@ -1,9 +1,15 @@
-.marc-preview-content {
-  padding: 1rem 2rem;
+.marc-preview {
+  &-container {
+    width: 100%;
+  }
+  
+  &-content {
+    padding: 1rem 2rem;
 
-  &-title {
-    margin-bottom: 1rem;
-    font-size: 1.25rem;
-    font-weight: 600;
+    &-title {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
   }
 }

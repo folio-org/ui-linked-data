@@ -32,7 +32,7 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
   return (
     <>
       {marcPreviewData ? (
-        <div>
+        <div className='marc-preview-container'>
           <SearchControlPane
             label={marcPreviewMetadata?.title || ''}
             subLabel={subLabel}
