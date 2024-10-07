@@ -98,16 +98,25 @@ export const updateRecordWithRelationshipDesignator = (
 
     recordFields.forEach(field => {
       const roles = field[nonBFMappedContainer] || field[BF2_URIS.ROLE];
-      const valueId = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id;
+      const selectedFieldData = field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>;
+      const valueId = selectedFieldData?.id;
+      const valueSrsId = selectedFieldData?.srsId;
       const id = Array.isArray(valueId) ? valueId[0] : valueId;
+      const srsId = Array.isArray(valueSrsId) ? valueSrsId[0] : valueSrsId;
 
-      if (!id) return;
+      if (!id && !srsId) return;
 
       const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
         string,
         string | string[]
       >[];
-      const updatedElem: { id: string; roles?: unknown } = { id };
+      const updatedElem: { id?: string; srsId?: string; roles?: unknown } = {};
+
+      if (srsId) {
+        updatedElem.srsId = srsId;
+      } else {
+        updatedElem.id = id;
+      }
 
       if (roles) {
         updatedElem.roles = roles;

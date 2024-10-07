@@ -19,7 +19,6 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
-        filter: '(type <> "CONCEPT")',
         limit: 100,
       },
       results: {

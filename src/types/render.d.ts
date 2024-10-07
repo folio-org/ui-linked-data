@@ -7,6 +7,7 @@ type UserValueContents = {
     type?: string;
     bfLabel?: string;
     basicLabel?: string;
+    srsId?: string;
   };
 };
 
