@@ -168,3 +168,7 @@ export const checkIfRecordHasDependencies = (record: RecordEntry) => {
 
   return false;
 };
+
+export const getRecordPropertyData = (property: string[] | string) => {
+  return Array.isArray(property) ? property[0] : property;
+};
