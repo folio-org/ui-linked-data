@@ -38,6 +38,7 @@ export const ItemSearch = () => {
     message,
     data,
     fetchData,
+    onChangeSegment,
   } = useSearch();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
 
@@ -49,7 +50,7 @@ export const ItemSearch = () => {
 
   return (
     <div data-testid="id-search" className="item-search">
-      <SearchControls submitSearch={submitSearch} clearValues={clearValues} />
+      <SearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
       {!(hasMarkPreview && isMarcPreviewOpen) && (
         <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
           {renderSearchControlPane()}

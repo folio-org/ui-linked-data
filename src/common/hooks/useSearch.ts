@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState, useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers } from '@common/constants/search.constants';
@@ -24,18 +24,20 @@ export const useSearch = () => {
     searchResultsLimit,
     fetchSearchResults,
     searchResultsContainer,
+    searchByControlOptions,
+    getSearchSourceData,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
-  const facets = useRecoilValue(state.search.limiters);
+  const [facets, setFacets] = useRecoilState(state.search.limiters);
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
-  const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
+  const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
 
   const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(hasSearchParams);
@@ -157,6 +159,37 @@ export const useSearch = () => {
     resetPreviewContent();
   }, [defaultSearchBy]);
 
+  const onChangeSegment = (value: SearchSegmentValue) => {
+    const savedFacetsData = facetsBySegments[value];
+    let updatedSearchBy;
+
+    if (savedFacetsData.searchBy) {
+      updatedSearchBy = savedFacetsData.searchBy;
+    } else {
+      const typedSearchByControlOptions = searchByControlOptions as ComplexLookupSearchBy;
+
+      if (typedSearchByControlOptions[value]?.[0]) {
+        updatedSearchBy = typedSearchByControlOptions[value][0].value;
+      }
+    }
+
+    setSearchBy(updatedSearchBy as SearchIdentifiers);
+    setQuery(savedFacetsData.query || '');
+    setFacets(savedFacetsData.facets || {});
+    getSearchSourceData?.();
+  };
+
+  useEffect(() => {
+    if (!query) {
+      setData(null);
+      setMessage('');
+
+      return;
+    }
+
+    fetchData(query, searchBy);
+  }, [navigationSegment?.value]);
+
   return {
     submitSearch,
     clearValues,
@@ -167,5 +200,6 @@ export const useSearch = () => {
     message,
     data,
     fetchData,
+    onChangeSegment,
   };
 };
