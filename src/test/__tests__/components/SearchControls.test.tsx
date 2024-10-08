@@ -31,8 +31,8 @@ describe('SearchControls', () => {
 
       const { getByTestId } = render(
         <RecoilRoot>
-          <SearchContext.Provider value={{ isVisibleFilters: true }  as unknown as SearchParams}>
-            <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
+          <SearchContext.Provider value={{ isVisibleFilters: true } as unknown as SearchParams}>
+            <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
           </SearchContext.Provider>
         </RecoilRoot>,
       );
@@ -45,7 +45,7 @@ describe('SearchControls', () => {
 
       const { queryByTestId } = render(
         <RecoilRoot>
-          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
         </RecoilRoot>,
       );
 
@@ -59,7 +59,7 @@ describe('SearchControls', () => {
 
       render(
         <RecoilRoot initializeState={snapshot => snapshot.set(state.search.query, queryState)}>
-          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} />
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
         </RecoilRoot>,
       );
     }
