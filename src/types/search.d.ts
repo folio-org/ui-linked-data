@@ -41,6 +41,7 @@ type SearchParams = {
   searchResultsContainer?: string;
   hasMarcPreview?: boolean;
   renderMarcPreview?: () => JSX.Element | null;
+  onAssignRecord?: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
 };
 
 type FacetsBySegments = {

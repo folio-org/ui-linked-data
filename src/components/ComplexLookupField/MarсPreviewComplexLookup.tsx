@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
 import { FormattedDate, FormattedMessage } from 'react-intl';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { MarcContent } from '@components/MarcContent';
 import { Button, ButtonType } from '@components/Button';
@@ -13,6 +14,7 @@ type MarсPreviewComplexLookupProps = {
 };
 
 export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ onClose }) => {
+  const { onAssignRecord } = useSearchContext();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
   const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
@@ -30,6 +32,14 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
     </>
   );
 
+  const onClickAssignButton = () => {
+    onAssignRecord?.({
+      id: marcPreviewMetadata?.baseId || '',
+      title: marcPreviewMetadata?.title || '',
+      linkedFieldValue: marcPreviewMetadata?.headingType || '',
+    });
+  };
+
   return (
     <>
       {isMarcPreviewOpen && marcPreviewData ? (
@@ -38,7 +48,11 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
             label={marcPreviewMetadata?.title || ''}
             subLabel={subLabel}
             renderCloseButton={renderCloseButton}
-          />
+          >
+            <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
+              <FormattedMessage id="ld.assign" />
+            </Button>
+          </SearchControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />

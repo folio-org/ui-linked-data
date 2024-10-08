@@ -2,21 +2,21 @@ import { FC, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Row, Table } from '@components/Table';
+import { useSearchContext } from '@common/hooks/useSearchContext';
 import state from '@state';
 
 type ComplexLookupSearchResultsProps = {
-  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   tableConfig: SearchResultsTableConfig;
   searchResultsFormatter: (data: any[], sourceData?: SourceDataDTO) => Row[];
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({
-  onAssign,
   onTitleClick,
   tableConfig,
   searchResultsFormatter,
 }) => {
+  const { onAssignRecord } = useSearchContext();
   const data = useRecoilValue(state.search.data);
   const sourceData = useRecoilValue(state.search.sourceData);
   const { formatMessage } = useIntl();
@@ -30,14 +30,14 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
           formattedRow[key] = {
             ...row[key],
             children: column.formatter
-              ? column.formatter({ row, formatMessage, onAssign, onTitleClick })
+              ? column.formatter({ row, formatMessage, onAssign: onAssignRecord, onTitleClick })
               : row[key].label,
           };
         });
 
         return formattedRow;
       }),
-    [onAssign, tableConfig],
+    [onAssignRecord, tableConfig],
   );
 
   const formattedData = useMemo(

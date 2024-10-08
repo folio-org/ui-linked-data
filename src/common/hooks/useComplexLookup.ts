@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useContext, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import {
   generateEmptyValueUuid,
   getLinkedField,
@@ -29,6 +29,9 @@ export const useComplexLookup = ({
   const schema = useRecoilValue(state.config.schema);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
+  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreviewData);
+  const resetMarcPreviewMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
+  const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { fetchMarcData } = useMarcData(state.data.marcPreviewData);
   const { uuid, linkedEntry } = entry;
@@ -91,6 +94,9 @@ export const useComplexLookup = ({
       setSelectedEntries(updatedSelectedEntries);
     }
 
+    resetMarcPreviewData();
+    resetMarcPreviewMetadata();
+    resetIsMarcPreviewOpen();
     closeModal();
   };
 

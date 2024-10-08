@@ -91,13 +91,12 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const renderResultsList = useCallback(
       () => (
         <ComplexLookupSearchResults
-          onAssign={onAssign}
           onTitleClick={loadMarcData}
           tableConfig={tableConfig}
           searchResultsFormatter={searchResultsFormatter}
         />
       ),
-      [onAssign, loadMarcData, tableConfig, searchResultsFormatter],
+      [loadMarcData, tableConfig, searchResultsFormatter],
     );
 
     const renderMarcPreview = useCallback(() => <MarсPreviewComplexLookup onClose={onCloseMarcPreview} />, []);
@@ -144,6 +143,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             fetchSearchResults={getSearchResults}
             searchResultsLimit={api.searchQuery.limit}
             searchResultsContainer={api.results.container}
+            onAssignRecord={onAssign}
           />
         </div>
       </Modal>
