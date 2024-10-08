@@ -8,9 +8,17 @@ import {
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
-import { BFLITE_URI_TO_BLOCK, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URI_TO_BLOCK, BFLITE_URIS, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
+import { cloneDeep } from 'lodash';
+
+type IGetAdjustedRecordContents = {
+  record: RecordEntry;
+  block?: string;
+  reference?: RecordReference;
+  asClone?: boolean;
+};
 
 export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, previewBlock?: string) => {
   const block = selectedBlock || TYPE_URIS.INSTANCE;
@@ -158,6 +166,21 @@ export const getRecordTitle = (record: RecordEntry) => {
 
   return selectedTitle?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
 };
+
+export const getAdjustedRecordContents = ({ record, block, reference, asClone }: IGetAdjustedRecordContents) => {
+  const adjustedRecord = cloneDeep(record);
+
+  // Remove dependencies from a resource of type Work when cloning
+  if (asClone && block === BFLITE_URIS.WORK && reference?.key) {
+    delete adjustedRecord[block][reference.key];
+  }
+
+  return {
+    record: adjustedRecord,
+  };
+};
+
+export const wrapRecordValuesWithCommonContainer = (record: RecordEntry) => ({ resource: record });
 
 export const checkIfRecordHasDependencies = (record: RecordEntry) => {
   if (!record?.resource) return false;

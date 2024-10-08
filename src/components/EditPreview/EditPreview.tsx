@@ -46,7 +46,7 @@ export const EditPreview = () => {
                   `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`,
                 )
               }
-              disabled={!record || isEdited}
+              disabled={!record || isEdited || Boolean(queryParams.get(QueryParams.CloneOf))}
             >
               <FormattedMessage id="ld.addInstance" />
             </Button>

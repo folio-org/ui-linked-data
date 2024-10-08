@@ -19,6 +19,10 @@ export const ROUTES = {
     uri: '/resources/:resourceId/edit',
     name: 'ld.editResource',
   },
+  EXTERNAL_RESOURCE_EDIT: {
+    uri: '/resources/external/:resourceId/edit',
+    name: 'ld.externalResource',
+  },
 };
 
 export const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];

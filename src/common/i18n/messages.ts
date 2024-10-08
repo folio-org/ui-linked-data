@@ -179,6 +179,8 @@ export const BASE_LOCALE = {
   'ld.to': 'To',
   'ld.apply': 'Apply',
   'ld.notSpecified': 'Not specified',
+  'ld.externalResource': 'External resource',
+  'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...',
   'ld.lastUpdated': 'Last updated',
   'ld.marcAuthorityRecord': 'MARC authority record',
 };

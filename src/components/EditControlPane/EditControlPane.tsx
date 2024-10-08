@@ -46,7 +46,6 @@ export const EditControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'ld.duplicate',
           icon: <Duplicate16 />,
-          isDisabled: currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
           action: handleDuplicate,
         },
         {
