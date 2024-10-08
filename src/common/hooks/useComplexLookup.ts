@@ -62,7 +62,7 @@ export const useComplexLookup = ({
     } else {
       const marcData = await fetchMarcData(id, lookupConfig.api.endpoints.marcPreview);
 
-      srsId = marcData?.parsedRecord.id;
+      srsId = marcData?.matchedId;
     }
 
     const newValue = {

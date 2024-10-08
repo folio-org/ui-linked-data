@@ -81,6 +81,7 @@ type MarcDTOParsedRecordContentField = Record<string, string | MarcDTOParsedReco
 type MarcDTO = {
   id: string;
   recordType: string;
+  matchedId: string;
   parsedRecord: {
     content: {
       leader?: string;

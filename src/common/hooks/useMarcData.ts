@@ -11,7 +11,7 @@ export const useMarcData = <T>(markState: RecoilState<T>) => {
   const setStatus = useSetRecoilState(state.status.commonMessages);
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
-    if (!recordId) return;
+    if (!recordId) return undefined;
 
     let marcData;
 

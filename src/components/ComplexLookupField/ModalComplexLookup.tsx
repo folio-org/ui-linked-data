@@ -81,7 +81,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         const marcData = await fetchMarcData(id, api.endpoints.marcPreview);
 
         if (marcData && title && headingType) {
-          setMarcMetadata({ baseId: id, marcId: marcData.id, srsId: marcData.parsedRecord.id, title, headingType });
+          setMarcMetadata({ baseId: id, marcId: marcData.id, srsId: marcData.matchedId, title, headingType });
           setIsMarcPreviewOpen(true);
         }
       },

@@ -179,6 +179,7 @@ export const useSearch = () => {
     getSearchSourceData?.();
   };
 
+  // Fetch data when the user toggles between segments
   useEffect(() => {
     if (!query) {
       setData(null);
