@@ -11,6 +11,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesContext } from '@src/contexts';
 import state from '@state';
 import { useModalControls } from './useModalControls';
+import { useMarcData } from './useMarcData';
 
 export const useComplexLookup = ({
   entry,
@@ -26,8 +27,10 @@ export const useComplexLookup = ({
   const { selectedEntriesService } = useContext(ServicesContext) as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const schema = useRecoilValue(state.config.schema);
+  const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
+  const { fetchMarcData } = useMarcData(state.data.marcPreviewData);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
 
@@ -51,12 +54,23 @@ export const useComplexLookup = ({
     setIsModalOpen(false);
   }, []);
 
-  const handleAssign = ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
+  const handleAssign = async ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
+    let srsId;
+
+    if (marcPreviewMetadata?.baseId === id) {
+      srsId = marcPreviewMetadata.srsId;
+    } else {
+      const marcData = await fetchMarcData(id, lookupConfig.api.endpoints.marcPreview);
+
+      srsId = marcData?.matchedId;
+    }
+
     const newValue = {
       id,
       label: title,
       meta: {
         type: AdvancedFieldType.complex,
+        srsId,
       },
     };
 

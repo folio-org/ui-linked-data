@@ -5,6 +5,18 @@ const marcPreview = atom<any>({
   default: null,
 });
 
+const marcPreviewData = atom<MarcDTO | null>({
+  key: 'data.marcPreviewData',
+  default: null,
+});
+
+const marcPreviewMetadata = atom<MarcPreviewMetadata | null>({
+  key: 'data.marcPreviewMetadata',
+  default: null,
+});
+
 export default {
   marcPreview,
+  marcPreviewData,
+  marcPreviewMetadata,
 };

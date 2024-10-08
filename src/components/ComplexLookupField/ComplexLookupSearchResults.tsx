@@ -6,16 +6,19 @@ import state from '@state';
 
 type ComplexLookupSearchResultsProps = {
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+  onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   tableConfig: SearchResultsTableConfig;
-  searchResultsFormatter: (data: any[]) => Row[];
+  searchResultsFormatter: (data: any[], sourceData?: SourceDataDTO) => Row[];
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({
   onAssign,
+  onTitleClick,
   tableConfig,
   searchResultsFormatter,
 }) => {
   const data = useRecoilValue(state.search.data);
+  const sourceData = useRecoilValue(state.search.sourceData);
   const { formatMessage } = useIntl();
 
   const applyActionItems = useCallback(
@@ -26,7 +29,9 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
         Object.entries(tableConfig.columns).forEach(([key, column]) => {
           formattedRow[key] = {
             ...row[key],
-            children: column.formatter ? column.formatter(row, formatMessage, onAssign) : row[key].label,
+            children: column.formatter
+              ? column.formatter({ row, formatMessage, onAssign, onTitleClick })
+              : row[key].label,
           };
         });
 
@@ -35,7 +40,10 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
     [onAssign, tableConfig],
   );
 
-  const formattedData = useMemo(() => applyActionItems(searchResultsFormatter(data || [])), [applyActionItems, data]);
+  const formattedData = useMemo(
+    () => applyActionItems(searchResultsFormatter(data || [], sourceData || [])),
+    [applyActionItems, data],
+  );
 
   const listHeader = useMemo(
     () =>

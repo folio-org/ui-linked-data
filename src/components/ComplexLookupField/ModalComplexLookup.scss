@@ -91,11 +91,27 @@
       }
 
       .results-list {
+        min-width: 960px;
         table-layout: fixed;
 
         th {
-          background-color: transparent;
+          position: sticky;
+          top: 0;
+          background-color: #fff;
         }
+
+        .search-results-item-title {
+          text-align: left;
+
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .table-header-contents-wrapper {
+        text-wrap: nowrap;
       }
 
       .table-header-contents-wrapper,

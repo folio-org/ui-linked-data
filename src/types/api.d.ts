@@ -51,14 +51,23 @@ type WorkAsSearchResultDTO = {
 
 type AuthorityAsSearchResultDTO = {
   id: string;
-  label?: string;
-  identifiers?: GenericStructDTO<'ISBN' | 'LCCN'>[];
-  type?: string;
+  authRefType?: string;
+  headingRef?: string;
+  headingType?: string;
+  sourceFileId?: string;
+  [key: string]: string | string[];
 };
 
 interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }
+
+type Metadata = {
+  createdDate: string;
+  createdByUserId: string;
+  updatedDate: string;
+  updatedByUserId: string;
+};
 
 type MarcDTOParsedRecordContentSubfield = {
   subfields: Record<string, string>[];
@@ -72,10 +81,13 @@ type MarcDTOParsedRecordContentField = Record<string, string | MarcDTOParsedReco
 type MarcDTO = {
   id: string;
   recordType: string;
+  matchedId: string;
   parsedRecord: {
     content: {
       leader?: string;
       fields: Record<string, string | any>[];
     };
+    id: string;
   };
+  metadata: Metadata;
 };

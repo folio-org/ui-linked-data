@@ -6,6 +6,7 @@ import {
   NON_BF_RECORD_CONTAINERS,
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
+import { getRecordPropertyData } from './record.helper';
 
 export const formatRecord = ({
   parsedRecord,
@@ -98,16 +99,25 @@ export const updateRecordWithRelationshipDesignator = (
 
     recordFields.forEach(field => {
       const roles = field[nonBFMappedContainer] || field[BF2_URIS.ROLE];
-      const valueId = (field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>)?.id;
-      const id = Array.isArray(valueId) ? valueId[0] : valueId;
+      const selectedFieldData = field[BF2_URIS.CREATOR_NAME]?.[0] as unknown as Record<string, string[]>;
+      const valueId = selectedFieldData?.id;
+      const valueSrsId = selectedFieldData?.srsId;
+      const id = getRecordPropertyData(valueId);
+      const srsId = getRecordPropertyData(valueSrsId);
 
-      if (!id) return;
+      if (!id && !srsId) return;
 
       const existingData = workComponent[NON_BF_RECORD_CONTAINERS[fieldName]?.container] as Record<
         string,
         string | string[]
       >[];
-      const updatedElem: { id: string; roles?: unknown } = { id };
+      const updatedElem: { id?: string; srsId?: string; roles?: unknown } = {};
+
+      if (srsId) {
+        updatedElem.srsId = srsId;
+      } else {
+        updatedElem.id = id;
+      }
 
       if (roles) {
         updatedElem.roles = roles;

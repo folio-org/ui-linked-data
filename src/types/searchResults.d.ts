@@ -12,11 +12,17 @@ type SearchResultsTableColumn = {
   label: string;
   position: number;
   className?: string;
-  formatter?: (
-    row: SearchResultsTableRow,
-    formatMessage?: AbstractIntlFormatter,
-    onAssign?: (data: ComplexLookupAssignRecordDTO) => void,
-  ) => React.JSX.Element;
+  formatter?: ({
+    row,
+    formatMessage,
+    onAssign,
+    onTitleClick,
+  }: {
+    row: SearchResultsTableRow;
+    formatMessage?: AbstractIntlFormatter;
+    onAssign?: (data: ComplexLookupAssignRecordDTO) => void;
+    onTitleClick?: (id: string) => void;
+  }) => React.JSX.Element;
 };
 
 type SearchResultsTableConfig = {

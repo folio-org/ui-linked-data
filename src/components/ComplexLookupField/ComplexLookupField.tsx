@@ -3,13 +3,13 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { VALUE_DIVIDER } from '@common/constants/complexLookup.constants';
-import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
+import { SchemaControlType } from '@common/constants/uiControls.constants';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
+import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
+import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Input } from '@components/Input';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import { ModalComplexLookup } from './ModalComplexLookup';
-import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
-import { SchemaControlType } from '@common/constants/uiControls.constants';
 import './ComplexLookupField.scss';
 
 interface Props {

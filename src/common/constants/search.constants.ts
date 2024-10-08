@@ -144,3 +144,9 @@ export enum References {
   ExcludeSeeFrom = 'Auth/Ref',
   ExcludeSeeFromAlso = 'Reference',
 }
+
+export enum AuthRefType {
+  Authorized = 'Authorized',
+  Reference = 'Reference',
+  AuthRef = 'Auth/Ref',
+}

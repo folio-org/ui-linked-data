@@ -140,7 +140,8 @@ export const BASE_LOCALE = {
   'ld.corporateBody': 'Corporate body',
   'ld.jurisdiction': 'Jurisdiction',
   'ld.conference': 'Conference',
-  'ld.authorized': 'Authorized',
+  'ld.authorizedReference': 'Authorized/Reference',
+  'ld.headingReference': 'Heading/Reference',
   'ld.unauthorized': 'Unauthorized',
   'ld.assign': 'Assign',
   'ld.assignAuthority': 'Assign authority',
@@ -179,7 +180,9 @@ export const BASE_LOCALE = {
   'ld.apply': 'Apply',
   'ld.notSpecified': 'Not specified',
   'ld.externalResource': 'External resource',
-  'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...'
+  'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...',
+  'ld.lastUpdated': 'Last updated',
+  'ld.marcAuthorityRecord': 'MARC authority record',
 };
 
 export const i18nMessages = {

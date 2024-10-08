@@ -37,6 +37,10 @@ type SearchParams = {
   getSearchSourceData?: (url?: string) => Promise<void>;
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
+  fetchSearchResults?: (params: any) => Promise<SearchResults>;
+  searchResultsContainer?: string;
+  hasMarcPreview?: boolean;
+  renderMarcPreview?: () => JSX.Element | null;
 };
 
 type FacetsBySegments = {
@@ -75,3 +79,11 @@ type SourceEntry = {
 };
 
 type SourceDataDTO = SourceEntry[];
+
+type MarcPreviewMetadata = {
+  baseId: string;
+  marcId: string;
+  srsId: string;
+  title: string;
+  headingType: string;
+};

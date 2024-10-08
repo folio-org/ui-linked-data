@@ -42,3 +42,24 @@ export const getSearchData = (url?: string, urlParams?: Record<string, string>) 
 
   return baseApi.getJson({ url, urlParams });
 };
+
+export const getSearchResults = async (params: Record<string, string | number>) => {
+  const { endpointUrl, query, offset = '0', limit = SEARCH_RESULTS_LIMIT.toString(), resultsContainer } = params;
+
+  // TODO: generate search params
+  const queryParam = `(keyword=="${query}" or naturalId="${query}")`;
+
+  const urlParams: Record<string, string> | undefined = {
+    query: queryParam,
+    offset: offset?.toString(),
+    limit: limit?.toString(),
+  };
+
+  const result = await baseApi.getJson({ url: endpointUrl as string, urlParams });
+
+  return {
+    content: result.content ?? result[resultsContainer],
+    totalRecords: result.totalRecords,
+    totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / 100),
+  };
+};

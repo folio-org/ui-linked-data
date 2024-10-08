@@ -140,27 +140,29 @@ const traverseSchema = ({
   if (userValueMatch && uri && selector) {
     const advancedValueField = getAdvancedValuesField(uriBFLite);
 
-    const withFormat = userValueMatch.contents.map(({ id, label, meta: { uri, parentUri, type, basicLabel } = {} }) => {
-      if (KEEP_VALUE_AS_IS.includes(selector) || type === AdvancedFieldType.complex) {
-        return { id, label };
-      } else if (
-        ((parentUri || uri) && (!advancedValueField || updatedNonBFMappedGroup)) ||
-        type === AdvancedFieldType.simple
-      ) {
-        return generateLookupValue({
-          uriBFLite,
-          label,
-          basicLabel,
-          uri: uri || parentUri,
-          type: type as AdvancedFieldType,
-          nonBFMappedGroup: updatedNonBFMappedGroup,
-        });
-      } else if (advancedValueField) {
-        return generateAdvancedFieldObject({ advancedValueField, label });
-      } else {
-        return type ? { label } : label;
-      }
-    });
+    const withFormat = userValueMatch.contents.map(
+      ({ id, label, meta: { uri, parentUri, type, basicLabel, srsId } = {} }) => {
+        if (KEEP_VALUE_AS_IS.includes(selector) || type === AdvancedFieldType.complex) {
+          return { id, label, srsId };
+        } else if (
+          ((parentUri || uri) && (!advancedValueField || updatedNonBFMappedGroup)) ||
+          type === AdvancedFieldType.simple
+        ) {
+          return generateLookupValue({
+            uriBFLite,
+            label,
+            basicLabel,
+            uri: uri || parentUri,
+            type: type as AdvancedFieldType,
+            nonBFMappedGroup: updatedNonBFMappedGroup,
+          });
+        } else if (advancedValueField) {
+          return generateAdvancedFieldObject({ advancedValueField, label });
+        } else {
+          return type ? { label } : label;
+        }
+      },
+    );
 
     if (isArrayContainer && container[selector].length) {
       // Add duplicated group

@@ -20,9 +20,10 @@ import './SearchControls.scss';
 type Props = {
   submitSearch: VoidFunction;
   clearValues: VoidFunction;
+  changeSegment: (value: SearchSegmentValue) => void;
 };
 
-export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
+export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearValues }) => {
   const {
     isVisibleSearchByControl,
     isVisibleAdvancedSearch,
@@ -33,16 +34,14 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     hasSearchParams,
     defaultSearchBy,
     navigationSegment,
-    getSearchSourceData,
   } = useSearchContext();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const setMessage = useSetRecoilState(state.search.message);
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
-  const setFacets = useSetRecoilState(state.search.limiters);
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
-  const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
+  const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
@@ -69,26 +68,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
     hasSearchParams && setNavigationState({});
   };
 
-  const onChangeSegment = (value: SearchSegmentValue) => {
-    const savedFacetsData = facetsBySegments[value];
-    let updatedSearchBy;
-
-    if (savedFacetsData.searchBy) {
-      updatedSearchBy = savedFacetsData.searchBy;
-    } else {
-      const typedSearchByControlOptions = searchByControlOptions as ComplexLookupSearchBy;
-
-      if (typedSearchByControlOptions[value]?.[0]) {
-        updatedSearchBy = typedSearchByControlOptions[value][0].value;
-      }
-    }
-
-    setSearchBy(updatedSearchBy as SearchIdentifiers);
-    setQuery(savedFacetsData.query || '');
-    setFacets(savedFacetsData.facets || {});
-    getSearchSourceData?.();
-  };
-
   useEffect(() => clearValuesAndResetControls, []);
 
   return (
@@ -100,7 +79,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, clearValues }) => {
         <CaretDown className="header-caret" />
       </div>
       <div className="search-pane-content">
-        {isVisibleSegments && <SearchSegments onChangeSegment={onChangeSegment} />}
+        {isVisibleSegments && <SearchSegments onChangeSegment={changeSegment} />}
 
         <div className="inputs">
           {isVisibleSearchByControl && (

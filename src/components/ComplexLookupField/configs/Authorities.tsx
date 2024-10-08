@@ -1,55 +1,82 @@
 import { FormattedMessage } from 'react-intl';
-import { COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING } from '@common/constants/complexLookup.constants';
+import { AuthRefType } from '@common/constants/search.constants';
 import { Button, ButtonType } from '@components/Button';
-
-const { subclass: subclassMapping } = COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
 
 export const authoritiesTableConfig: SearchResultsTableConfig = {
   columns: {
-    title: {
-      label: 'ld.title',
+    assign: {
+      label: '',
       position: 0,
-      className: 'cell-relative-45',
-      formatter: (row: SearchResultsTableRow) => <div>{row.title.label}</div>,
-    },
-    subclass: {
-      label: 'ld.subclass',
-      position: 1,
-      formatter: (row: SearchResultsTableRow, formatMessage: AbstractIntlFormatter) => {
-        const labelId = subclassMapping[row.subclass?.label as unknown as keyof typeof subclassMapping]?.labelId;
-        const formattedLabel = labelId ? formatMessage({ id: labelId }) : '';
+      className: 'cell-fixed-100',
+      formatter: ({
+        row,
+        onAssign,
+      }: {
+        row: SearchResultsTableRow;
+        onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+      }) => {
+        const isAuthorized = row.authorized.label === AuthRefType.Authorized;
 
-        return <div>{formattedLabel}</div>;
+        return isAuthorized ? (
+          <Button
+            type={ButtonType.Primary}
+            onClick={() =>
+              onAssign({
+                id: row.__meta.id,
+                title: (row.title.label as string) || '',
+                linkedFieldValue: (row.subclass.label as string) || '',
+              })
+            }
+            data-testid={`assign-button-${row.__meta.id}`}
+          >
+            <FormattedMessage id="ld.assign" />
+          </Button>
+        ) : null;
       },
     },
-    lccn: {
-      label: 'ld.lccn',
+    authorized: {
+      label: 'ld.authorizedReference',
+      position: 1,
+      className: 'cell-relative-20',
+      formatter: ({ row }: { row: SearchResultsTableRow }) => {
+        const isAuthorized = row.authorized.label === AuthRefType.Authorized;
+        const { label } = row.authorized;
+
+        return isAuthorized ? <b>{label}</b> : <span>{label}</span>;
+      },
+    },
+    title: {
+      label: 'ld.headingReference',
+      position: 1,
+      className: 'cell-relative-45',
+      formatter: ({
+        row,
+        onTitleClick,
+      }: {
+        row: SearchResultsTableRow;
+        onTitleClick?: (id: string, title?: string, headingType?: string) => void;
+      }) => {
+        const { __meta, title, subclass } = row;
+        const handleClick = () => {
+          onTitleClick?.(__meta.id, title.label as string, subclass.label as string);
+        };
+
+        return (
+          <Button type={ButtonType.Link} className="search-results-item-title" onClick={handleClick}>
+            {row.title.label}
+          </Button>
+        );
+      },
+    },
+    subclass: {
+      label: 'ld.typeOfHeading',
       position: 2,
       className: 'cell-relative-20',
     },
-    assign: {
-      label: '',
+    authoritySource: {
+      label: 'ld.authoritySource',
       position: 3,
-      className: 'cell-fixed-100',
-      formatter: (
-        row: SearchResultsTableRow,
-        _: AbstractIntlFormatter,
-        onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void,
-      ) => (
-        <Button
-          type={ButtonType.Primary}
-          onClick={() =>
-            onAssign({
-              id: row.__meta.id,
-              title: (row.title.label as string) || '',
-              linkedFieldValue: (row.subclass.label as string) || '',
-            })
-          }
-          data-testid={`assign-button-${row.__meta.id}`}
-        >
-          <FormattedMessage id="ld.assign" />
-        </Button>
-      ),
+      className: 'cell-relative-20',
     },
   },
 };
