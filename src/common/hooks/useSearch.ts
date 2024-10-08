@@ -32,7 +32,9 @@ export const useSearch = () => {
   const [query, setQuery] = useRecoilState(state.search.query);
   const [facets, setFacets] = useRecoilState(state.search.limiters);
   const [message, setMessage] = useRecoilState(state.search.message);
+  const resetMessage = useResetRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
+  const resetData = useResetRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
@@ -182,8 +184,8 @@ export const useSearch = () => {
   // Fetch data when the user toggles between segments
   useEffect(() => {
     if (!query) {
-      setData(null);
-      setMessage('');
+      resetData();
+      resetMessage();
 
       return;
     }

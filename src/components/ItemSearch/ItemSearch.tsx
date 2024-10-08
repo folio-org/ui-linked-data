@@ -25,7 +25,7 @@ export const ItemSearch = () => {
     primarySegments,
     navigationSegment,
     searchResultsLimit,
-    hasMarkPreview,
+    hasMarcPreview,
     renderMarcPreview,
   } = useSearchContext();
   const {
@@ -51,7 +51,7 @@ export const ItemSearch = () => {
   return (
     <div data-testid="id-search" className="item-search">
       <SearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
-      {!(hasMarkPreview && isMarcPreviewOpen) && (
+      {!(hasMarcPreview && isMarcPreviewOpen) && (
         <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
           {renderSearchControlPane()}
           <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
@@ -80,7 +80,7 @@ export const ItemSearch = () => {
           </div>
         </div>
       )}
-      {hasMarkPreview && renderMarcPreview?.()}
+      {hasMarcPreview && renderMarcPreview?.()}
       {isVisibleFullDisplay && <FullDisplay />}
       {isVisibleAdvancedSearch && <AdvancedSearchModal clearValues={clearValues} />}
     </div>
