@@ -48,7 +48,7 @@ type ComplexLookupApiEntryConfig = {
 
 type SearchableIndicesMap = {
   [key in SearchSegmentValue]: {
-    [key in Partial<SearchableIndexType>]: {
+    [key in SearchableIndexType]?: {
       query: string;
     };
   };
