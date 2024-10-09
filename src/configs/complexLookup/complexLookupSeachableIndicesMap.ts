@@ -37,6 +37,7 @@ export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
       query: `(genreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
   },
+  // TODO: dynamically generate browse queries
   [SearchSegment.Browse]: {
     [SearchableIndex.PersonalName]: {
       query: `(headingRef>="${SEARCH_QUERY_VALUE_PARAM}" or headingRef<"${SEARCH_QUERY_VALUE_PARAM}") and isTitleHeadingRef==false and headingType==("Personal Name")`,

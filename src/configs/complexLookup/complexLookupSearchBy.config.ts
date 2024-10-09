@@ -49,8 +49,9 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
         value: SearchableIndex.Genre,
       },
     ],
+    // TODO: uncomment when browse queries are implemented
     [SearchSegment.Browse]: [
-      {
+      /* {
         label: 'personalName',
         value: SearchableIndex.PersonalName,
       },
@@ -77,7 +78,7 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
       {
         label: 'genre',
         value: SearchableIndex.Genre,
-      },
+      }, */
     ],
   },
 };
