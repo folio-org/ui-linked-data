@@ -2,6 +2,7 @@ import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   [ComplexLookupType.Authorities]: {
@@ -54,6 +55,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
     },
     // For displaying "Search by" control and "Filters"
     searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
+    searchableIndicesMap: COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP,
     filters: COMPLEX_LOOKUP_FILTERS_CONFIG.authorities,
     linkedField: 'subclass',
   },

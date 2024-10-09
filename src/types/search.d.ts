@@ -1,5 +1,7 @@
 type SearchQueryParams = import('@common/constants/routes.constants').SearchQueryParams;
-type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers;
+type ComplexLookupSearchIdentifiers = import('@common/constants/complexLookup.constants').ComplexLookupSearchableIndex;
+type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers &
+  ComplexLookupSearchIdentifiers;
 type SearchSegmentValue = import('@common/constants/search.constants').SearchSegment;
 
 type SearchParamsState = {
@@ -31,6 +33,7 @@ type SearchParams = {
   isVisibleSegments?: boolean;
   hasMultilineSearchInput?: boolean;
   searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
+  searchableIndicesMap?: SearchableIndicesMap;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;

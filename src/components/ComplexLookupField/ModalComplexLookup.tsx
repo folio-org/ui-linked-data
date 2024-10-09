@@ -29,7 +29,14 @@ interface ModalComplexLookupProps {
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
   ({ isOpen, onAssign, onClose, assignEntityName = ComplexLookupType.Authorities, baseLabelType = 'creator' }) => {
-    const { api, segments, labels, searchBy, filters = [] } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
+    const {
+      api,
+      segments,
+      labels,
+      searchBy,
+      searchableIndicesMap,
+      filters = [],
+    } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
 
@@ -132,10 +139,11 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
-            isVisibleSegments={false}
+            isVisibleSegments={true}
             hasMultilineSearchInput={true}
             hasMarcPreview={true}
             searchByControlOptions={searchBy}
+            searchableIndicesMap={searchableIndicesMap}
             labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}

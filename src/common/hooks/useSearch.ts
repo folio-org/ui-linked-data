@@ -11,6 +11,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from './useSearchContext';
+import { buildSearchQuery } from '@common/helpers/search/queryBuilder';
 
 export const useSearch = () => {
   const {
@@ -20,11 +21,13 @@ export const useSearch = () => {
     hasSearchParams,
     defaultSearchBy,
     navigationSegment,
+    isVisibleSegments,
     endpointUrlsBySegments,
     searchResultsLimit,
     fetchSearchResults,
     searchResultsContainer,
     searchByControlOptions,
+    searchableIndicesMap,
     getSearchSourceData,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -87,6 +90,13 @@ export const useSearch = () => {
         const currentEndpointUrl = selectedNavigationSegment
           ? endpointUrlsBySegments?.[selectedNavigationSegment]
           : endpointUrl;
+        const selectedSearchableIndices =
+          isVisibleSegments && selectedNavigationSegment
+            ? searchableIndicesMap?.[selectedNavigationSegment as SearchSegmentValue]
+            : searchableIndicesMap;
+        const generatedQuery = fetchSearchResults
+          ? (buildSearchQuery(selectedSearchableIndices, searchBy, updatedQuery) as string)
+          : (updatedQuery as string);
 
         const result = fetchSearchResults
           ? await fetchSearchResults({
@@ -94,7 +104,7 @@ export const useSearch = () => {
               searchFilter,
               isSortedResults,
               searchBy,
-              query: updatedQuery as string,
+              query: generatedQuery,
               offset: offset?.toString(),
               limit: searchResultsLimit?.toString(),
               resultsContainer: searchResultsContainer,

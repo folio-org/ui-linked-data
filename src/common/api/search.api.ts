@@ -46,11 +46,8 @@ export const getSearchData = (url?: string, urlParams?: Record<string, string>) 
 export const getSearchResults = async (params: Record<string, string | number>) => {
   const { endpointUrl, query, offset = '0', limit = SEARCH_RESULTS_LIMIT.toString(), resultsContainer } = params;
 
-  // TODO: generate search params
-  const queryParam = `(keyword=="${query}" or naturalId="${query}")`;
-
   const urlParams: Record<string, string> | undefined = {
-    query: queryParam,
+    query: query as string,
     offset: offset?.toString(),
     limit: limit?.toString(),
   };
@@ -60,6 +57,6 @@ export const getSearchResults = async (params: Record<string, string | number>) 
   return {
     content: result.content ?? result[resultsContainer],
     totalRecords: result.totalRecords,
-    totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / 100),
+    totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / +limit),
   };
 };
