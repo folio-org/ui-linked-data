@@ -150,3 +150,5 @@ export enum AuthRefType {
   Reference = 'Reference',
   AuthRef = 'Auth/Ref',
 }
+
+export const SEARCH_QUERY_VALUE_PARAM = ':value';

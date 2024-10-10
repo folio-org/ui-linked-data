@@ -1,4 +1,4 @@
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 
 export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
@@ -6,79 +6,78 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
     [SearchSegment.Search]: [
       {
         label: 'keyword',
-        value: 'label',
+        value: SearchableIndex.Keyword,
       },
-      // TODO: uncomment the following lines when the corresponding fields are available in the API
-      /* {
+      {
         label: 'identifierAll',
-        value: 'identifiers.value',
+        value: SearchableIndex.Identifier,
       },
       {
         label: 'lccn',
-        value: 'lccn',
+        value: SearchableIndex.LCCN,
       },
       {
         label: 'personalName',
-        value: 'personalName',
+        value: SearchableIndex.PersonalName,
       },
       {
         label: 'corporateName',
-        value: 'corporateName',
+        value: SearchableIndex.CorporateConferenceName,
       },
       {
         label: 'geographicName',
-        value: 'geographicName',
+        value: SearchableIndex.GeographicName,
       },
       {
         label: 'nameTitle',
-        value: 'nameTitle',
+        value: SearchableIndex.NameTitle,
       },
       {
         label: 'uniformTitle',
-        value: 'uniformTitle',
+        value: SearchableIndex.UniformTitle,
       },
       {
         label: 'subject',
-        value: 'subject',
+        value: SearchableIndex.Subject,
       },
       {
         label: 'childrensSubjectHeading',
-        value: 'childrensSubjectHeading',
+        value: SearchableIndex.ChildrenSubjectHeading,
       },
       {
         label: 'genre',
-        value: 'genre',
-      }, */
+        value: SearchableIndex.Genre,
+      },
     ],
+    // TODO: uncomment when browse queries are implemented
     [SearchSegment.Browse]: [
-      // TODO: uncomment the following lines when the corresponding fields are available in the API
       /* {
         label: 'personalName',
-        value: 'personalName',
+        value: SearchableIndex.PersonalName,
       },
       {
         label: 'corporateName',
-        value: 'corporateName',
+        value: SearchableIndex.CorporateConferenceName,
       },
       {
         label: 'geographicName',
-        value: 'geographicName',
+        value: SearchableIndex.GeographicName,
       },
       {
         label: 'nameTitle',
-        value: 'nameTitle',
+        value: SearchableIndex.NameTitle,
       },
       {
         label: 'uniformTitle',
-        value: 'uniformTitle',
+        value: SearchableIndex.UniformTitle,
       },
       {
         label: 'subject',
-        value: 'subject',
+        value: SearchableIndex.Subject,
       },
       {
         label: 'genre',
-        value: 'genre',
+        value: SearchableIndex.Genre,
       }, */
     ],
   },

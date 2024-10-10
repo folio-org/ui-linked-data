@@ -67,6 +67,8 @@
             font-size: 0.875rem;
 
             &-link {
+              height: auto;
+              min-height: $btn-height;
               font-weight: 400;
 
               &:hover,

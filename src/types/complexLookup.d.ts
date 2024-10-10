@@ -1,3 +1,5 @@
+type SearchableIndexType = import('@common/constants/complexLookup.constants').SearchableIndex;
+
 type ComplexLookupLabels = {
   button: {
     base: string;
@@ -44,6 +46,16 @@ type ComplexLookupApiEntryConfig = {
   };
 };
 
+type SearchableIndexEntries = {
+  [key in SearchableIndexType]?: {
+    query: string;
+  };
+};
+
+type SearchableIndicesMap = {
+  [key in SearchSegmentValue]: SearchableIndexEntries;
+};
+
 type ComplexLookupsConfigEntry = {
   api: ComplexLookupApiEntryConfig;
   segments: {
@@ -52,6 +64,7 @@ type ComplexLookupsConfigEntry = {
   labels: ComplexLookupLabels;
   linkedField?: string;
   searchBy: ComplexLookupSearchBy;
+  searchableIndicesMap: SearchableIndicesMap;
   filters?: SearchFilters;
 };
 

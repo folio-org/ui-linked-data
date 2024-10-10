@@ -7,9 +7,10 @@ import { SearchIdentifiers } from '@common/constants/search.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
+import { buildSearchQuery } from '@common/helpers/search/queryBuilder';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import state from '@state';
 import { usePagination } from '@common/hooks/usePagination';
+import state from '@state';
 import { useSearchContext } from './useSearchContext';
 
 export const useSearch = () => {
@@ -20,11 +21,13 @@ export const useSearch = () => {
     hasSearchParams,
     defaultSearchBy,
     navigationSegment,
+    isVisibleSegments,
     endpointUrlsBySegments,
     searchResultsLimit,
     fetchSearchResults,
     searchResultsContainer,
     searchByControlOptions,
+    searchableIndicesMap,
     getSearchSourceData,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
@@ -87,6 +90,17 @@ export const useSearch = () => {
         const currentEndpointUrl = selectedNavigationSegment
           ? endpointUrlsBySegments?.[selectedNavigationSegment]
           : endpointUrl;
+        const selectedSearchableIndices =
+          isVisibleSegments && selectedNavigationSegment
+            ? searchableIndicesMap?.[selectedNavigationSegment as SearchSegmentValue]
+            : searchableIndicesMap;
+        const generatedQuery = fetchSearchResults
+          ? (buildSearchQuery(
+              selectedSearchableIndices as SearchableIndexEntries,
+              searchBy as unknown as SearchableIndexType,
+              updatedQuery,
+            ) as string)
+          : (updatedQuery as string);
 
         const result = fetchSearchResults
           ? await fetchSearchResults({
@@ -94,7 +108,7 @@ export const useSearch = () => {
               searchFilter,
               isSortedResults,
               searchBy,
-              query: updatedQuery as string,
+              query: generatedQuery,
               offset: offset?.toString(),
               limit: searchResultsLimit?.toString(),
               resultsContainer: searchResultsContainer,

@@ -1,0 +1,1 @@
+export { buildSearchQuery } from './queryBuilder';
