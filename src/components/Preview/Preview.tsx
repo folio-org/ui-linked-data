@@ -175,7 +175,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
                   selectedLabel && (
                     <div key={`${selectedLabel}${uri}`}>
                       {uri || parentUri ? (
-                        <a className="preview-value-link" href={uri || parentUri}>
+                        <a className="preview-value-link" target="blank" href={uri || parentUri}>
                           {selectedLabel}
                         </a>
                       ) : (
