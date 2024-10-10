@@ -7,11 +7,11 @@ import { SearchIdentifiers } from '@common/constants/search.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import state from '@state';
-import { usePagination } from '@common/hooks/usePagination';
-import { useSearchContext } from './useSearchContext';
 import { buildSearchQuery } from '@common/helpers/search/queryBuilder';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { usePagination } from '@common/hooks/usePagination';
+import state from '@state';
+import { useSearchContext } from './useSearchContext';
 
 export const useSearch = () => {
   const {
@@ -95,7 +95,11 @@ export const useSearch = () => {
             ? searchableIndicesMap?.[selectedNavigationSegment as SearchSegmentValue]
             : searchableIndicesMap;
         const generatedQuery = fetchSearchResults
-          ? (buildSearchQuery(selectedSearchableIndices, searchBy, updatedQuery) as string)
+          ? (buildSearchQuery(
+              selectedSearchableIndices as SearchableIndexEntries,
+              searchBy as unknown as SearchableIndexType,
+              updatedQuery,
+            ) as string)
           : (updatedQuery as string);
 
         const result = fetchSearchResults

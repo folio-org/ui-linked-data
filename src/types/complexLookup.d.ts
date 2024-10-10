@@ -46,12 +46,14 @@ type ComplexLookupApiEntryConfig = {
   };
 };
 
-type SearchableIndicesMap = {
-  [key in SearchSegmentValue]: {
-    [key in SearchableIndexType]?: {
-      query: string;
-    };
+type SearchableIndexEntries = {
+  [key in SearchableIndexType]?: {
+    query: string;
   };
+};
+
+type SearchableIndicesMap = {
+  [key in SearchSegmentValue]: SearchableIndexEntries;
 };
 
 type ComplexLookupsConfigEntry = {
