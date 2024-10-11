@@ -7,7 +7,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     assign: {
       label: '',
       position: 0,
-      className: 'cell-fixed-100',
+      className: 'cell-fixed cell-fixed-100',
       formatter: ({
         row,
         onAssign,
@@ -37,7 +37,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     authorized: {
       label: 'ld.authorizedReference',
       position: 1,
-      className: 'cell-relative-20',
+      className: 'cell-fixed cell-fixed-170',
       formatter: ({ row }: { row: SearchResultsTableRow }) => {
         const isAuthorized = row.authorized.label === AuthRefType.Authorized;
         const { label } = row.authorized;
@@ -48,7 +48,7 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     title: {
       label: 'ld.headingReference',
       position: 1,
-      className: 'cell-relative-45',
+      className: 'cell-fixed cell-fixed-370',
       formatter: ({
         row,
         onTitleClick,
@@ -71,12 +71,12 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     subclass: {
       label: 'ld.typeOfHeading',
       position: 2,
-      className: 'cell-relative-20',
+      className: 'cell-fixed cell-fixed-140',
     },
     authoritySource: {
       label: 'ld.authoritySource',
       position: 3,
-      className: 'cell-relative-20',
+      className: 'cell-fixed cell-fixed-250',
     },
   },
 };
