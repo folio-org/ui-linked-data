@@ -93,13 +93,9 @@
       }
 
       .results-list {
-        min-width: 960px;
-        table-layout: fixed;
-
-        th {
-          position: sticky;
-          top: 0;
-          background-color: #fff;
+        .table-head .table-row,
+        .table-body {
+          width: 1030px;
         }
 
         .search-results-item-title {

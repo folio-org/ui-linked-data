@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Row, Table } from '@components/Table';
+import { TableFlex, type Row } from '@components/Table';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import state from '@state';
 
@@ -63,7 +63,7 @@ export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = (
 
   return (
     <div className="search-result-list">
-      <Table header={listHeader} data={formattedData} className="results-list" />
+      <TableFlex header={listHeader} data={formattedData} className="results-list" />
     </div>
   );
 };
