@@ -21,3 +21,5 @@ export enum DropdownItemType {
   basic = 'basic',
   customComponent = 'customComponent',
 }
+
+export const MAX_SEARCH_BAR_WIDTH = 30;

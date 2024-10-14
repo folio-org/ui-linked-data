@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+import { MAX_SEARCH_BAR_WIDTH } from '@common/constants/uiElements.constants';
 import { type Table as TableProps, type Row } from './Table';
 import './Table.scss';
 
@@ -17,10 +18,9 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
 
   useEffect(() => {
     const tableHeadElemWidth = tableHeadRowElemRef.current?.getBoundingClientRect()?.width;
-    const maxScrollbarWidth = 30;
 
-    if (tableHeadElemWidth && maxScrollbarWidth) {
-      tableHeadRowElemRef.current?.setAttribute('style', `width: ${tableHeadElemWidth + maxScrollbarWidth}px`);
+    if (tableHeadElemWidth) {
+      tableHeadRowElemRef.current?.setAttribute('style', `width: ${tableHeadElemWidth + MAX_SEARCH_BAR_WIDTH}px`);
     }
 
     const handleScroll = (event: Event) => {
