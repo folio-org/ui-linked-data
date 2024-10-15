@@ -28,7 +28,7 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
   const subLabel = (
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
-      <span className='mark-preview-sub-label-date'>
+      <span className='marc-preview-sub-label-date'>
         <FormattedDate value={new Date(marcPreviewData?.metadata.updatedDate ?? 'now')} />
       </span>
     </>

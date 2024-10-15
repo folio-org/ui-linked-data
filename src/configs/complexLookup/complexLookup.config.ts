@@ -1,5 +1,5 @@
 import { SearchSegment } from '@common/constants/search.constants';
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
 import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
@@ -51,6 +51,10 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           labelId: 'ld.browse',
           isVisiblePaginationCount: false,
         },
+      },
+      defaultValues: {
+        segment: SearchSegment.Search,
+        searchBy: SearchableIndex.PersonalName,
       },
     },
     // For displaying "Search by" control and "Filters"

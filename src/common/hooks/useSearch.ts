@@ -20,6 +20,7 @@ export const useSearch = () => {
     isSortedResults,
     hasSearchParams,
     defaultSearchBy,
+    defaultQuery,
     navigationSegment,
     isVisibleSegments,
     endpointUrlsBySegments,
@@ -39,6 +40,7 @@ export const useSearch = () => {
   const [data, setData] = useRecoilState(state.search.data);
   const resetData = useResetRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
+  const resetPageMetadata = useResetRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
@@ -52,7 +54,11 @@ export const useSearch = () => {
 
   useEffect(() => {
     setSearchBy(defaultSearchBy);
-  }, [setSearchBy, defaultSearchBy]);
+
+    if (defaultQuery) {
+      setQuery(defaultQuery);
+    }
+  }, [setSearchBy, setQuery, defaultSearchBy, defaultQuery]);
 
   const clearPagination = useCallback(() => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -199,6 +205,7 @@ export const useSearch = () => {
   useEffect(() => {
     if (!query) {
       resetData();
+      resetPageMetadata();
       resetMessage();
 
       return;

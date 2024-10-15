@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useMemo } from 'react';
+import { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
@@ -23,12 +23,20 @@ interface ModalComplexLookupProps {
   isOpen: boolean;
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
   onClose: VoidFunction;
+  value?: string;
   assignEntityName?: string;
   baseLabelType?: string;
 }
 
 export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
-  ({ isOpen, onAssign, onClose, assignEntityName = ComplexLookupType.Authorities, baseLabelType = 'creator' }) => {
+  ({
+    isOpen,
+    onAssign,
+    onClose,
+    value,
+    assignEntityName = ComplexLookupType.Authorities,
+    baseLabelType = 'creator',
+  }) => {
     const {
       api,
       segments,
@@ -41,11 +49,18 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
 
     const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
+    const setSearchQuery = useSetRecoilState(state.search.query);
     const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
     const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters, isOpen);
     const { fetchMarcData, clearMarcData } = useMarcData(state.data.marcPreviewData);
+
+    useEffect(() => {
+      if (!value) return;
+
+      setSearchQuery(value);
+    }, [value]);
 
     const onCloseMarcPreview = () => {
       setIsMarcPreviewOpen(false);
@@ -130,8 +145,12 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultNavigationSegment={SearchSegment.Search}
-            defaultSearchBy={searchBy[SearchSegment.Search]?.[0].value as unknown as SearchIdentifiers}
+            defaultNavigationSegment={segments.defaultValues?.segment || SearchSegment.Search}
+            defaultSearchBy={
+              segments.defaultValues?.searchBy ||
+              (searchBy[SearchSegment.Search]?.[0]?.value as unknown as SearchIdentifiers)
+            }
+            defaultQuery={value}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
             renderMarcPreview={renderMarcPreview}

@@ -15,6 +15,7 @@ type ComplexLookupSearchBy = {
   [key in SearchSegment]: {
     label: string;
     value: string;
+    isDisabled?: boolean;
   }[];
 };
 
@@ -60,6 +61,10 @@ type ComplexLookupsConfigEntry = {
   api: ComplexLookupApiEntryConfig;
   segments: {
     primary: PrimarySegmentsConfig;
+    defaultValues?: {
+      segment: SearchSegmentValue;
+      searchBy: SearchableIndexType;
+    };
   };
   labels: ComplexLookupLabels;
   linkedField?: string;

@@ -22,6 +22,7 @@ type SearchParams = {
   searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
+  defaultQuery?: string;
   filters: SearchFilters;
   renderSearchControlPane: () => JSX.Element | null;
   renderResultsList: () => JSX.Element | null;
