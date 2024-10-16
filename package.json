@@ -1,7 +1,10 @@
 {
-  "name": "@folio-eis/linked-data",
+  "name": "@folio-org/linked-data",
   "version": "1.0.1",
   "type": "module",
+  "publishConfig": {
+    "registry": "https://repository.folio.org/repository/npm-folioci/"
+  },
   "files": [
     "dist"
   ],
