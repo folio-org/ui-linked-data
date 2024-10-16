@@ -1,4 +1,4 @@
-# @folio-eis/linked-data
+# @folio-org/linked-data
 
 This project is a new MARVA editor.
 
