@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { useSearchContext } from './useSearchContext';
@@ -10,12 +10,14 @@ export const useLoadSearchResults = (
   fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
   currentPageNumber?: number,
 ) => {
-  const { hasSearchParams } = useSearchContext();
+  const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
+    useSearchContext();
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const searchBy = useRecoilValue(state.search.index);
   const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
+  const resetFacetsData = useResetRecoilState(state.search.facetsData);
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get(SearchQueryParams.Query);
   const searchByParam = searchParams.get(SearchQueryParams.SearchBy);
@@ -73,4 +75,26 @@ export const useLoadSearchResults = (
 
     prevSearchParams.current = { query, searchBy, offset: currentPageNumber || null };
   }, [hasSearchParams, currentPageNumber]);
+
+  // Load source, facets data and search results when the Search module is loaded with the default "Search By" and "Query" values.
+  // This is used for Complex Lookup field if it has the selected value.
+  useEffect(() => {
+    async function onLoad() {
+      if (getSearchSourceData) {
+        await getSearchSourceData();
+      }
+
+      if (getSearchFacetsData) {
+        await getSearchFacetsData();
+      }
+
+      if (defaultSearchBy && defaultQuery) {
+        await fetchData(defaultQuery as string, defaultSearchBy, 0);
+      }
+    }
+
+    onLoad();
+
+    return resetFacetsData;
+  }, []);
 };

@@ -53,7 +53,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         },
       },
       defaultValues: {
-        segment: SearchSegment.Search,
+        segment: SearchSegment.Browse,
         searchBy: SearchableIndex.PersonalName,
       },
     },
