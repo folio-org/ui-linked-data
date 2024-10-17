@@ -15,4 +15,5 @@ jobs:
       compile-translations: false
       jest-enabled: false
       sonar-enabled: false
+      folio-npm-registry: https://repository.folio.org/repository/npm-folioci/
       folio-npm-registry-auth: //repository.folio.org/repository/npm-folioci/
