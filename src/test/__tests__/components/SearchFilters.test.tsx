@@ -17,6 +17,8 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [{}, setSearchParams],
 }));
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('SearchFilters', () => {
   const filters = [
     {
@@ -62,17 +64,17 @@ describe('SearchFilters', () => {
   );
 
   test('changes limiters', () => {
-    const initRadio = screen.getByRole('radio', { name: 'ld.allTime' });
+    const initRadio = screen.getByLabelText('ld.allTime');
 
     expect(initRadio).toBeChecked();
 
-    fireEvent.click(screen.getByRole('radio', { name: 'ld.past12Months' }));
+    fireEvent.click(screen.getByLabelText('ld.past12Months'));
 
     expect(initRadio).not.toBeChecked();
   });
 
   test('adds and removes to the selection of limiters with multiselection option', () => {
-    const initCheckbox = screen.getByRole('checkbox', { name: 'ld.volume' });
+    const initCheckbox = screen.getByLabelText('ld.volume');
     expect(initCheckbox).not.toBeChecked();
 
     fireEvent.click(initCheckbox);
