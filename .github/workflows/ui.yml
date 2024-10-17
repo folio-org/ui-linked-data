@@ -13,5 +13,5 @@ jobs:
     secrets: inherit
     with:
       compile-translations: false
-      jest-enabled: npm run test:unit
+      jest-test-command: npm run test:unit
       sonar-enabled: false
