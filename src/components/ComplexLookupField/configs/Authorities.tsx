@@ -61,7 +61,16 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
           onTitleClick?.(__meta.id, title.label as string, subclass.label as string);
         };
 
-        return (
+        return __meta.isAnchor ? (
+          <div className='search-results-item-missing-match'>
+            <FormattedMessage
+              id="ld.searchQueryWouldBeHere"
+              values={{
+                query: <span className='search-results-item-missing-match-query'>{row.title.label}</span>,
+              }}
+            />
+          </div>
+        ) : (
           <Button type={ButtonType.Link} className="search-results-item-title" onClick={handleClick}>
             {row.title.label}
           </Button>

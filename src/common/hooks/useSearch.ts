@@ -117,7 +117,7 @@ export const useSearch = () => {
               query: generatedQuery,
               offset: offset?.toString(),
               limit: searchResultsLimit?.toString(),
-              resultsContainer: searchResultsContainer,
+              resultsContainer: searchResultsContainer?.[selectedNavigationSegment as SearchSegmentValue],
             })
           : await getByIdentifier({
               endpointUrl: currentEndpointUrl ?? endpointUrl,

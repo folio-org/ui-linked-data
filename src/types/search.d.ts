@@ -42,7 +42,9 @@ type SearchParams = {
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
-  searchResultsContainer?: string;
+  searchResultsContainer?: {
+    [key in SearchSegment]: string;
+  };
   hasMarcPreview?: boolean;
   renderMarcPreview?: () => JSX.Element | null;
   onAssignRecord?: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;

@@ -22,7 +22,10 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         limit: 100,
       },
       results: {
-        container: 'authorities',
+        containers: {
+          [SearchSegment.Search]: 'authorities',
+          [SearchSegment.Browse]: 'items',
+        },
       },
     },
     labels: {

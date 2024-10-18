@@ -108,6 +108,14 @@
             text-decoration: underline;
           }
         }
+
+        .search-results-item-missing-match {
+          font-weight: 700;
+
+          &-query {
+            color: $error;
+          }
+        }
       }
 
       .table-header-contents-wrapper {

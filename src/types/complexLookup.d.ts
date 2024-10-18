@@ -43,7 +43,9 @@ type ComplexLookupApiEntryConfig = {
     limit?: number;
   };
   results: {
-    container: string;
+    containers: {
+      [key in SearchSegment]: string;
+    };
   };
 };
 

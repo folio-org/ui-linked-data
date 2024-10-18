@@ -169,7 +169,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             getSearchFacetsData={getFacetsData}
             fetchSearchResults={getSearchResults}
             searchResultsLimit={api.searchQuery.limit}
-            searchResultsContainer={api.results.container}
+            searchResultsContainer={api.results.containers}
             onAssignRecord={onAssign}
           />
         </div>

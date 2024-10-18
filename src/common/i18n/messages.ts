@@ -183,7 +183,8 @@ export const BASE_LOCALE = {
   'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...',
   'ld.lastUpdated': 'Last updated',
   'ld.marcAuthorityRecord': 'MARC authority record',
-  'ld.selectBrowseOption': 'Select a browse option'
+  'ld.selectBrowseOption': 'Select a browse option',
+  'ld.searchQueryWouldBeHere': '{query} would be here'
 };
 
 export const i18nMessages = {

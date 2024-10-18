@@ -55,6 +55,7 @@ type AuthorityAsSearchResultDTO = {
   headingRef?: string;
   headingType?: string;
   sourceFileId?: string;
+  isAnchor?: boolean;
   [key: string]: string | string[];
 };
 
