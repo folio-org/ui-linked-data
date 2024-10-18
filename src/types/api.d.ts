@@ -59,6 +59,11 @@ type AuthorityAsSearchResultDTO = {
   [key: string]: string | string[];
 };
 
+type AuthorityAsBrowseResultDTO = {
+  headingRef?: string;
+  authority?: AuthorityAsSearchResultDTO[];
+};
+
 interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }
