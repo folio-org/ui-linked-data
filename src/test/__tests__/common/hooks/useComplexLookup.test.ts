@@ -1,7 +1,8 @@
 import { renderHook, act } from '@testing-library/react';
 import { ChangeEvent } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
+import { useMarcData } from '@common/hooks/useMarcData';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import {
@@ -17,11 +18,14 @@ import {
 
 jest.mock('recoil');
 jest.mock('@common/helpers/complexLookup.helper');
+jest.mock('@common/hooks/useMarcData');
 
 describe('useComplexLookup', () => {
   const mockSchema = new Map();
   const mockSelectedEntries = [] as string[];
   const mockSetSelectedEntries = jest.fn();
+  const mockClearhMarcData = jest.fn();
+  const mockResetRecoilState = jest.fn();
 
   const mockEntry = {
     uuid: 'testUuid',
@@ -40,7 +44,21 @@ describe('useComplexLookup', () => {
       },
     },
   ];
-  const mockLookupConfig = {} as ComplexLookupsConfigEntry;
+  const mockLookupConfig = {
+    api: {
+      endpoints: {
+        marcPreview: '/testEndpoint',
+      },
+    },
+  } as ComplexLookupsConfigEntry;
+  const mockMarcPreviewMetadata = {
+    baseId: 'newId',
+    marcId: 'newMarcId',
+    srsId: 'newSrsId',
+    title: 'newTitle',
+    headingType: 'headingType',
+  };
+
   const mockOnChange = jest.fn();
   let result: any;
 
@@ -57,8 +75,13 @@ describe('useComplexLookup', () => {
     );
 
   beforeEach(() => {
-    (useRecoilValue as jest.Mock).mockReturnValue(mockSchema);
+    (useRecoilValue as jest.Mock).mockReturnValueOnce(mockSchema).mockReturnValueOnce(mockMarcPreviewMetadata);
     (useRecoilState as jest.Mock).mockReturnValue([mockSelectedEntries, mockSetSelectedEntries]);
+    (useResetRecoilState as jest.Mock).mockReturnValue(mockResetRecoilState);
+    (useMarcData as jest.Mock).mockReturnValue({
+      fetchMarcData: jest.fn().mockResolvedValue({ matchedId: 'newSrsId' }),
+      clearMarcData: mockClearhMarcData,
+    });
 
     result = getRenderedHook()?.result;
   });
@@ -124,19 +147,20 @@ describe('useComplexLookup', () => {
         id: 'newId',
         label: 'newTitle',
         meta: {
+          srsId: 'newSrsId',
           type: AdvancedFieldType.complex,
         },
       },
     ];
 
-    test('updates state correctly', () => {
+    test('updates state correctly', async () => {
       (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
       (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'newLinkedFieldId' });
       (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId']);
 
       result = getRenderedHook()?.result;
 
-      act(() => {
+      await act(async () => {
         result.current.handleAssign(mockAssignRecord);
       });
 
@@ -153,7 +177,7 @@ describe('useComplexLookup', () => {
       expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId']);
     });
 
-    test('updates state correctly and does not call "setSelectedEntries"', () => {
+    test('updates state correctly and does not call "setSelectedEntries"', async () => {
       result = getRenderedHook({
         ...mockEntry,
         linkedEntry: {
@@ -161,7 +185,7 @@ describe('useComplexLookup', () => {
         },
       } as unknown as SchemaEntry)?.result;
 
-      act(() => {
+      await act(async () => {
         result.current.handleAssign(mockAssignRecord);
       });
 
