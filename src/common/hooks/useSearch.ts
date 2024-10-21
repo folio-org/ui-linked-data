@@ -209,6 +209,7 @@ export const useSearch = () => {
     setFacets(selectedFacets);
 
     setIsLoading(true);
+    clearPagination();
     await getSearchSourceData?.();
     await fetchData({
       query: selectedQuery,

@@ -1,5 +1,5 @@
-import { FC, memo, useCallback, useEffect, useMemo } from 'react';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { FC, memo, useCallback, useEffect } from 'react';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
@@ -51,7 +51,6 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
     const setSearchQuery = useSetRecoilState(state.search.query);
     const clearSearchQuery = useResetRecoilState(state.search.query);
-    const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
     const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
     const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
@@ -77,29 +76,24 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       onClose();
     };
 
-    const searchControlsSubLabel = useMemo(
-      () =>
-        searchResultsMetadata?.totalElements ? (
-          <FormattedMessage
-            id={'ld.recordsFound'}
-            values={{
-              recordsCount: (
-                <FormattedNumber value={searchResultsMetadata?.totalElements} data-testid="records-found-count" />
-              ),
-            }}
-          />
-        ) : undefined,
-      [searchResultsMetadata?.totalElements],
+    const renderSearchControlsSubLabel = (totalElements: number) => (
+      <FormattedMessage
+        id={'ld.recordsFound'}
+        values={{
+          recordsCount: <FormattedNumber value={totalElements} data-testid="records-found-count" />,
+        }}
+      />
     );
 
     const renderSearchControlPane = useCallback(
       () => (
         <SearchControlPane
           label={<FormattedMessage id={labels.modal.searchResults} />}
-          subLabel={searchControlsSubLabel}
+          renderSubLabel={renderSearchControlsSubLabel}
+          segmentsConfig={segments.primary}
         />
       ),
-      [labels.modal.searchResults, searchControlsSubLabel],
+      [labels.modal.searchResults],
     );
 
     const loadMarcData = useCallback(
