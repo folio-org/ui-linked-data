@@ -42,7 +42,7 @@ export const ItemSearch = () => {
   } = useSearch();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
 
-  useLoadSearchResults(fetchData, currentPageNumber);
+  useLoadSearchResults(fetchData);
 
   const isVisiblePaginationCount = isVisibleSegments
     ? !!navigationSegment?.value && primarySegments?.[navigationSegment?.value]?.isVisiblePaginationCount

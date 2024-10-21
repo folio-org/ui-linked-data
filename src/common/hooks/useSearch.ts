@@ -36,15 +36,13 @@ export const useSearch = () => {
   const [query, setQuery] = useRecoilState(state.search.query);
   const [facets, setFacets] = useRecoilState(state.search.limiters);
   const [message, setMessage] = useRecoilState(state.search.message);
-  const resetMessage = useResetRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
-  const resetData = useResetRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
-  const resetPageMetadata = useResetRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
+  const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
 
   const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
     usePagination(hasSearchParams);
@@ -52,12 +50,27 @@ export const useSearch = () => {
   const setSearchParams = useSearchParams()?.[1];
   const selectedNavigationSegment = navigationSegment?.value;
 
+  const updateFacetsBySegments = (query?: string, searchBy?: SearchIdentifiers, facets?: Limiters) => {
+    if (!selectedNavigationSegment) return;
+
+    setFacetsBySegments(prevValue => ({
+      ...prevValue,
+      [selectedNavigationSegment as string]: {
+        query,
+        searchBy,
+        facets,
+      },
+    }));
+  };
+
   useEffect(() => {
     setSearchBy(defaultSearchBy);
 
     if (defaultQuery) {
       setQuery(defaultQuery);
     }
+
+    updateFacetsBySegments(defaultQuery ?? query, defaultSearchBy, facets);
   }, [setSearchBy, setQuery, defaultSearchBy, defaultQuery]);
 
   const clearPagination = useCallback(() => {
@@ -81,8 +94,9 @@ export const useSearch = () => {
   );
 
   const fetchData = useCallback(
-    async (query: string, searchBy: SearchIdentifiers, offset?: number) => {
+    async ({ query, searchBy, offset, selectedSegment }: FetchDataParams) => {
       setMessage('');
+      const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
 
       data && setData(null);
 
@@ -145,28 +159,18 @@ export const useSearch = () => {
         setIsLoading(false);
       }
     },
-    [data, endpointUrl, fetchSearchResults, selectedNavigationSegment, searchFilter, isSortedResults],
+    [data, endpointUrl, fetchSearchResults, navigationSegment?.value, searchFilter, isSortedResults],
   );
 
   const submitSearch = useCallback(() => {
     clearPagination();
     resetPreviewContent();
-
-    if (selectedNavigationSegment) {
-      setFacetsBySegments(prevValue => ({
-        ...prevValue,
-        [selectedNavigationSegment as string]: {
-          query,
-          searchBy,
-          facets,
-        },
-      }));
-    }
+    updateFacetsBySegments(query, searchBy, facets);
 
     if (hasSearchParams) {
       setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
     } else {
-      fetchData(query, searchBy);
+      fetchData({ query, searchBy });
     }
 
     setForceRefreshSearch(true);
@@ -179,9 +183,10 @@ export const useSearch = () => {
     setQuery('');
     setMessage('');
     resetPreviewContent();
+    updateFacetsBySegments('', defaultSearchBy, {} as Limiters);
   }, [defaultSearchBy]);
 
-  const onChangeSegment = (value: SearchSegmentValue) => {
+  const onChangeSegment = async (value: SearchSegmentValue) => {
     const savedFacetsData = facetsBySegments[value];
     let updatedSearchBy;
 
@@ -195,24 +200,27 @@ export const useSearch = () => {
       }
     }
 
-    setSearchBy(updatedSearchBy as SearchIdentifiers);
-    setQuery(savedFacetsData.query || '');
-    setFacets(savedFacetsData.facets || {});
-    getSearchSourceData?.();
+    const typeSearchBy = updatedSearchBy as SearchIdentifiers;
+    const selectedQuery = savedFacetsData.query || '';
+    const selectedFacets = savedFacetsData.facets || {};
+
+    setSearchBy(typeSearchBy);
+    setQuery(selectedQuery);
+    setFacets(selectedFacets);
+
+    setIsLoading(true);
+    await getSearchSourceData?.();
+    await fetchData({
+      query: selectedQuery,
+      searchBy: typeSearchBy,
+      selectedSegment: value,
+    });
+    setIsLoading(false);
   };
 
-  // Fetch data when the user toggles between segments
   useEffect(() => {
-    if (!query) {
-      resetData();
-      resetPageMetadata();
-      resetMessage();
-
-      return;
-    }
-
-    fetchData(query, searchBy);
-  }, [navigationSegment?.value]);
+    return clearFacetsBySegments;
+  }, []);
 
   return {
     submitSearch,

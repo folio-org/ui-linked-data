@@ -46,7 +46,7 @@ describe('useLoadSearchResults', () => {
 
     expect(setSearchBy).toHaveBeenCalledWith('title');
     expect(setQuery).toHaveBeenCalledWith('test query');
-    expect(fetchData).toHaveBeenCalledWith('test query', 'title', 0);
+    expect(fetchData).toHaveBeenCalledWith({ query: 'test query', searchBy: 'title', offset: 0 });
   });
 
   it('clears data when no query param', () => {

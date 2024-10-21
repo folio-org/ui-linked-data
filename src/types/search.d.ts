@@ -94,3 +94,10 @@ type MarcPreviewMetadata = {
   title: string;
   headingType: string;
 };
+
+type FetchDataParams = {
+  query: string;
+  searchBy: SearchIdentifiers;
+  offset?: number;
+  selectedSegment?: string;
+};

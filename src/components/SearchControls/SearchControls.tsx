@@ -59,7 +59,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     clearValues();
     resetControls();
     setSearchBy(defaultSearchBy);
-    setFacetsBySegments(DEFAULT_FACET_BY_SEGMENT);
   };
 
   const onResetButtonClick = () => {
@@ -68,7 +67,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     hasSearchParams && setNavigationState({});
   };
 
-  useEffect(() => clearValuesAndResetControls, []);
+  useEffect(() => {
+    clearValuesAndResetControls();
+    setFacetsBySegments(DEFAULT_FACET_BY_SEGMENT);
+  }, []);
 
   return (
     <div className="search-pane">

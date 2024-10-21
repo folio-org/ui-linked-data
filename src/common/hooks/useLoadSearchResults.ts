@@ -1,21 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { useSearchContext } from './useSearchContext';
 import state from '@state';
 
-export const useLoadSearchResults = (
-  fetchData: (query: string, searchBy: SearchIdentifiers, offset?: number) => Promise<void>,
-  currentPageNumber?: number,
-) => {
+export const useLoadSearchResults = (fetchData: ({ query, searchBy, offset }: FetchDataParams) => Promise<void>) => {
   const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
     useSearchContext();
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
-  const [query, setQuery] = useRecoilState(state.search.query);
-  const searchBy = useRecoilValue(state.search.index);
+  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const setQuery = useSetRecoilState(state.search.query);
   const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
   const resetFacetsData = useResetRecoilState(state.search.facetsData);
   const [searchParams] = useSearchParams();
@@ -51,11 +48,11 @@ export const useLoadSearchResults = (
         setQuery(queryParam);
       }
 
-      await fetchData(
-        queryParam,
-        searchByParam as SearchIdentifiers,
-        offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
-      );
+      await fetchData({
+        query: queryParam,
+        searchBy: searchByParam as SearchIdentifiers,
+        offset: offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
+      });
 
       setForceRefresh(false);
       prevSearchParams.current = { query: queryParam, searchBy: searchByParam, offset: offsetParam };
@@ -64,22 +61,12 @@ export const useLoadSearchResults = (
     makeSearch();
   }, [hasSearchParams, queryParam, searchByParam, offsetParam, forceRefresh]);
 
-  useEffect(() => {
-    if (hasSearchParams || !query) return;
-
-    const { query: prevQuery, searchBy: prevSearchBy, offset: prevOffset } = prevSearchParams.current;
-
-    if (prevQuery === queryParam && prevSearchBy === searchByParam && prevOffset === currentPageNumber) return;
-
-    fetchData(query, searchBy as SearchIdentifiers, currentPageNumber ? currentPageNumber * SEARCH_RESULTS_LIMIT : 0);
-
-    prevSearchParams.current = { query, searchBy, offset: currentPageNumber || null };
-  }, [hasSearchParams, currentPageNumber]);
-
   // Load source, facets data and search results when the Search module is loaded with the default "Search By" and "Query" values.
   // This is used for Complex Lookup field if it has the selected value.
   useEffect(() => {
     async function onLoad() {
+      setIsLoading(true);
+
       if (getSearchSourceData) {
         await getSearchSourceData();
       }
@@ -89,8 +76,10 @@ export const useLoadSearchResults = (
       }
 
       if (defaultSearchBy && defaultQuery) {
-        await fetchData(defaultQuery as string, defaultSearchBy, 0);
+        await fetchData({ query: defaultQuery as string, searchBy: defaultSearchBy, offset: 0 });
       }
+
+      setIsLoading(false);
     }
 
     onLoad();

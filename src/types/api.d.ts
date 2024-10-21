@@ -55,13 +55,13 @@ type AuthorityAsSearchResultDTO = {
   headingRef?: string;
   headingType?: string;
   sourceFileId?: string;
-  isAnchor?: boolean;
   [key: string]: string | string[];
 };
 
 type AuthorityAsBrowseResultDTO = {
   headingRef?: string;
   authority?: AuthorityAsSearchResultDTO[];
+  isAnchor?: boolean;
 };
 
 interface IApiClient {

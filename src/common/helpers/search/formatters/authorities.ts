@@ -6,15 +6,9 @@ export const formatAuthorityItem = (
 ): SearchResultsTableRow[] =>
   authoritiesList?.map(authorityEntry => {
     const selectedEntry = (authorityEntry.authority ?? authorityEntry) as AuthorityAsSearchResultDTO;
-    const {
-      id = '',
-      authRefType = '',
-      headingRef = '',
-      headingType = '',
-      sourceFileId = '',
-      isAnchor = false,
-    } = selectedEntry;
+    const { id = '', authRefType = '', headingRef = '', headingType = '', sourceFileId = '' } = selectedEntry;
     const sourceLabel = sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name ?? sourceFileId;
+    const { isAnchor } = authorityEntry;
 
     return {
       __meta: {
