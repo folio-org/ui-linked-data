@@ -10,7 +10,7 @@ import './SearchControlPane.scss';
 type SearchControlPaneProps = {
   children?: ReactElement;
   label: string | ReactElement;
-  segmentsConfig: PrimarySegmentsConfig;
+  segmentsConfig?: PrimarySegmentsConfig;
   renderSubLabel?: (count: number) => ReactElement;
   renderCloseButton?: () => ReactElement;
 };
@@ -25,15 +25,21 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
   const { navigationSegment } = useSearchContext();
   const selectedSegment = navigationSegment?.value;
-  const isVisibleSubLabel = segmentsConfig[selectedSegment as SearchSegment]?.isVisibleSubLabel;
+  const isVisibleSubLabel = segmentsConfig
+    ? segmentsConfig[selectedSegment as SearchSegment]?.isVisibleSubLabel
+    : !!renderSubLabel;
 
   return (
     <div className={classNames(['search-control-pane', IS_EMBEDDED_MODE && 'search-control-pane-embedded'])}>
       {renderCloseButton?.()}
       <div className="search-control-pane-title">
-        <div className="search-control-pane-mainLabel">{label}</div>
+        <div className="search-control-pane-mainLabel">
+          <span>{label}</span>
+        </div>
         {isVisibleSubLabel && !!renderSubLabel && (
-          <div className="search-control-pane-subLabel">{renderSubLabel?.(searchResultsMetadata?.totalElements)}</div>
+          <div className="search-control-pane-subLabel">
+            <span>{renderSubLabel?.(searchResultsMetadata?.totalElements)}</span>
+          </div>
         )}
       </div>
       {children}

@@ -25,10 +25,10 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
     </Button>
   );
 
-  const subLabel = (
+  const renderSubLabel = () => (
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
-      <span className='marc-preview-sub-label-date'>
+      <span className="marc-preview-sub-label-date">
         <FormattedDate value={new Date(marcPreviewData?.metadata.updatedDate ?? 'now')} />
       </span>
     </>
@@ -48,12 +48,14 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
         <div className="marc-preview-container">
           <SearchControlPane
             label={marcPreviewMetadata?.title || ''}
-            subLabel={subLabel}
+            renderSubLabel={renderSubLabel}
             renderCloseButton={renderCloseButton}
           >
-            <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
-              <FormattedMessage id="ld.assign" />
-            </Button>
+            <div>
+              <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
+                <FormattedMessage id="ld.assign" />
+              </Button>
+            </div>
           </SearchControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
