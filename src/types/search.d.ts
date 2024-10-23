@@ -42,6 +42,7 @@ type SearchParams = {
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
+  buildSearchQuery?: (params: BuildSearchQueryParams) => string | undefined;
   searchResultsContainer?: {
     [key in SearchSegment]: string;
   };
@@ -100,4 +101,5 @@ type FetchDataParams = {
   searchBy: SearchIdentifiers;
   offset?: number;
   selectedSegment?: string;
+  baseQuerySelector?: SearchableIndexQuerySelectorType;
 };

@@ -1,4 +1,6 @@
 type SearchableIndexType = import('@common/constants/complexLookup.constants').SearchableIndex;
+type SearchableIndexQuerySelectorType =
+  import('@common/constants/complexLookup.constants').SearchableIndexQuerySelector;
 
 type ComplexLookupLabels = {
   button: {
@@ -50,10 +52,12 @@ type ComplexLookupApiEntryConfig = {
   };
 };
 
+type SearchableIndexEntry = {
+  [key in SearchableIndexQuerySelectorType]?: string;
+};
+
 type SearchableIndexEntries = {
-  [key in SearchableIndexType]?: {
-    query: string;
-  };
+  [key in SearchableIndexType]?: SearchableIndexEntry;
 };
 
 type SearchableIndicesMap = {
@@ -83,3 +87,10 @@ type ComplexLookupAssignRecordDTO = {
   title: string;
   linkedFieldValue?: string;
 };
+
+type BuildSearchQueryParams = {
+  map: SearchableIndexEntries;
+  selector?: SearchableIndexQuerySelectorType;
+  searchBy: SearchableIndexType;
+  value: string;
+}

@@ -18,6 +18,7 @@ import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { MarсPreviewComplexLookup } from './MarсPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
+import { SEARCH_QUERY_BUILDER } from '@common/helpers/search/queryBuilder';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -47,6 +48,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
+    const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
     const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
     const setSearchQuery = useSetRecoilState(state.search.query);
@@ -166,6 +168,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}
             fetchSearchResults={getSearchResults}
+            buildSearchQuery={buildSearchQuery}
             searchResultsLimit={api.searchQuery.limit}
             searchResultsContainer={api.results.containers}
             onAssignRecord={onAssign}

@@ -67,13 +67,8 @@ export const useLoadSearchResults = (fetchData: ({ query, searchBy, offset }: Fe
     async function onLoad() {
       setIsLoading(true);
 
-      if (getSearchSourceData) {
-        await getSearchSourceData();
-      }
-
-      if (getSearchFacetsData) {
-        await getSearchFacetsData();
-      }
+      await getSearchSourceData?.();
+      await getSearchFacetsData?.();
 
       if (defaultSearchBy && defaultQuery) {
         await fetchData({ query: defaultQuery as string, searchBy: defaultSearchBy, offset: 0 });

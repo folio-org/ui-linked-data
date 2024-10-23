@@ -16,6 +16,12 @@ export enum SearchableIndex {
   Genre = 'genre',
 }
 
+export enum SearchableIndexQuerySelector {
+  Query = 'query',
+  Prev = 'prev',
+  Next = 'next',
+}
+
 export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
   subclass: {
     PERSON: {
