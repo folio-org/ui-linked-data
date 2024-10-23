@@ -50,12 +50,14 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           labelId: 'ld.search',
           isVisiblePaginationCount: true,
           isVisibleSubLabel: true,
+          isLoopedPagination: false,
         },
         [SearchSegment.Browse]: {
           type: SearchSegment.Browse,
           labelId: 'ld.browse',
           isVisiblePaginationCount: false,
           isVisibleSubLabel: false,
+          isLoopedPagination: true,
         },
       },
       defaultValues: {

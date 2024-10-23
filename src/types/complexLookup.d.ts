@@ -26,6 +26,7 @@ type SearchSegmentConfig = {
   labelId: string;
   isVisiblePaginationCount?: boolean;
   isVisibleSubLabel?: boolean;
+  isLoopedPagination?: boolean;
 };
 
 type PrimarySegmentsConfig = { [key in SearchSegment]: SearchSegmentConfig };
