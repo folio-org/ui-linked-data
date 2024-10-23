@@ -41,6 +41,7 @@ type SearchParams = {
   getSearchSourceData?: (url?: string) => Promise<void>;
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
+  precedingRecordsCount?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
   buildSearchQuery?: (params: BuildSearchQueryParams) => string | undefined;
   searchResultsContainer?: {

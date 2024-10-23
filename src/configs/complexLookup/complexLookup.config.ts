@@ -20,6 +20,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
         limit: 100,
+        precedingRecordsCount: 5,
       },
       results: {
         containers: {

@@ -44,6 +44,7 @@ type ComplexLookupApiEntryConfig = {
   searchQuery: {
     filter?: string;
     limit?: number;
+    precedingRecordsCount?: number;
   };
   results: {
     containers: {
@@ -93,4 +94,4 @@ type BuildSearchQueryParams = {
   selector?: SearchableIndexQuerySelectorType;
   searchBy: SearchableIndexType;
   value: string;
-}
+};

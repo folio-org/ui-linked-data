@@ -2,8 +2,9 @@ import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
+import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
-import { SearchIdentifiers } from '@common/constants/search.constants';
+import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
@@ -11,7 +12,6 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { usePagination } from '@common/hooks/usePagination';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 
 export const useSearch = () => {
   const {
@@ -31,6 +31,7 @@ export const useSearch = () => {
     searchableIndicesMap,
     getSearchSourceData,
     buildSearchQuery,
+    precedingRecordsCount,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -130,6 +131,7 @@ export const useSearch = () => {
                 value: updatedQuery,
               }) as string)
             : (updatedQuery as string);
+        const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
 
         const result = fetchSearchResults
           ? await fetchSearchResults({
@@ -140,6 +142,7 @@ export const useSearch = () => {
               query: generatedQuery,
               offset: offset?.toString(),
               limit: searchResultsLimit?.toString(),
+              precedingRecordsCount: isBrowseSearch ? precedingRecordsCount : undefined,
               resultsContainer: searchResultsContainer?.[selectedNavigationSegment as SearchSegmentValue],
             })
           : await getByIdentifier({
