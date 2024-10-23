@@ -1,0 +1,340 @@
+name: FOLIO UI Workflows
+
+on:
+  workflow_call:
+    inputs:
+      # node/yarn configuration
+      node-version:
+        required: false
+        type: string
+        default: '20.x'
+      # It should be straightforward to add a customizable Yarn version via a simple `yarn set version 3.x` or similar
+      # https://yarnpkg.com/cli/set/version
+      folio-npm-registry:
+        required: false
+        type: string
+        default: null # set in set-shared-variables
+      yarn-lock-retention-days:
+        required: false
+        type: number
+        default: 1
+
+      # linting
+      allow-lint-errors:
+        required: false
+        type: boolean
+        default: true
+
+      # unit tests (Jest)
+      jest-enabled:
+        required: false
+        type: boolean
+        default: true
+      jest-test-command:
+        required: false
+        type: string
+        default: yarn test
+      jest-junit-output-dir:
+        required: false
+        type: string
+        default: artifacts/jest-junit
+      jest-coverage-report-dir:
+        required: false
+        type: string
+        default: artifacts/coverage-jest/
+
+      # unit tests (Bigtest)
+      bigtest-enabled:
+        required: false
+        type: boolean
+        default: false
+      bigtest-test-command:
+        required: false
+        type: string
+        default: yarn test
+      bigtest-junit-output-dir:
+        required: false
+        type: string
+        default: artifacts/runTest
+      bigtest-coverage-report-dir:
+        required: false
+        type: string
+        default: artifacts/coverage/
+
+      # sonar
+      sonar-enabled:
+        required: false
+        type: boolean
+        default: true
+      sonar-sources:
+        required: false
+        type: string
+        default: ./src
+      sonar-exclusions:
+        required: false
+        type: string
+        default: >
+          docs/**,
+          examples/**,
+          **/*.md,
+          **/stories/*,
+          **/.stories.*,
+          LICENSE,
+          artifacts/**,
+          ci/**,
+          node_modules/**,
+          **/tests/**,
+          **/test/**,
+          resources/bigtest/interactors/**,
+          resources/bigtest/network/**,
+          **/*-test.*,
+          **/*.test.*,
+          karma.conf.*,
+          jest.config.*,
+          **/*.css,
+          **/*.json
+
+      # translations
+      compile-translations:
+        required: false
+        type: boolean
+        default: true
+
+      # module descriptor
+      generate-module-descriptor:
+        required: false
+        type: boolean
+        default: true
+      publish-module-descriptor:
+        required: false
+        type: boolean
+        default: true
+      module-descriptor-registry:
+        required: false
+        type: string
+        default: https://folio-registry.dev.folio.org
+
+      # module publishing
+      folio-npm-registry-auth:
+        required: false
+        type: string
+        default: null # set in set-shared-variables
+      install-before-publish:
+        required: false
+        type: boolean
+        default: false
+      publish-exclusions:
+        required: false
+        type: string
+        default: |
+          artifacts
+          .github
+          .scannerwork
+    secrets:
+      # these need to be non-required to allow anything here for forks
+      # however, the sub-workflows will fail appropriately if these are not present, as applicable
+      SONAR_TOKEN:
+        required: false
+      DOCKER_USER:
+        required: false
+      DOCKER_PASSWORD:
+        required: false
+      NPM_TOKEN:
+        required: false
+      FOLIO_REGISTRY_USERNAME:
+        required: false
+      FOLIO_REGISTRY_PASSWORD:
+        required: false
+
+jobs:
+  set-shared-variables:
+    name: Set shared variables
+    runs-on: ubuntu-latest
+    outputs:
+      # unfortunately we can only output strings, so this is "True" or "False"
+      is-release: ${{ steps.logic.outputs.is-release }}
+      folio-npm-registry: ${{ steps.logic.outputs.folio-npm-registry }}
+      folio-npm-registry-auth: ${{ steps.logic.outputs.folio-npm-registry-auth }}
+    steps:
+      - id: logic
+        name: Determine default values
+        shell: python # quicker to use than node, since node would require a longer installation step
+        run: |
+          # if these strings contain " there's likely a much larger problem...
+          ref = "${{ github.ref }}"
+          current_npm_registry = "${{ inputs.folio-npm-registry }}"
+          current_npm_registry_auth = "${{ inputs.folio-npm-registry-auth }}"
+
+          import re
+          print("We are on ref:", ref)
+          if re.match(r'^refs/tags/v\d+\..+', ref):
+            print("  We are on a tag vX.Y")
+            is_release = True
+          else:
+            print("  We are not on a version tag")
+            is_release = False
+
+          print("Current npm registry:", current_npm_registry)
+          print("Current npm registry auth:", current_npm_registry_auth)
+          if current_npm_registry == "":
+            print("  No npm registry provided, using default")
+            if is_release:
+              current_npm_registry = "https://repository.folio.org/repository/npm-folio/"
+            else:
+              current_npm_registry = "https://repository.folio.org/repository/npm-folioci/"
+
+          if current_npm_registry_auth == "":
+            print("  No npm registry auth provided, using default")
+            if is_release:
+              current_npm_registry_auth = "//repository.folio.org/repository/npm-folio/"
+            else:
+              current_npm_registry_auth = "//repository.folio.org/repository/npm-folioci/"
+
+          import os
+          output = open(os.environ['GITHUB_OUTPUT'], 'a')
+          output.write("is-release=" + str(is_release) + "\n")
+          output.write("folio-npm-registry=" + current_npm_registry + "\n")
+          output.write("folio-npm-registry-auth=" + current_npm_registry_auth + "\n")
+          output.close()
+
+  # this job is responsible for printing install information and publishing yarn.lock if debug is enabled
+  install-and-lint:
+    name: Install and lint
+    needs: [set-shared-variables]
+    uses: folio-org/.github/.github/workflows/ui-install-and-lint.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+      allow-lint-errors: ${{ inputs.allow-lint-errors }}
+      yarn-lock-retention-days: ${{ inputs.yarn-lock-retention-days }}
+
+  jest-tests:
+    name: Run Jest tests
+    needs: [set-shared-variables]
+    if: ${{ inputs.jest-enabled }}
+    uses: folio-org/.github/.github/workflows/ui-tests-jest.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+      jest-test-command: ${{ inputs.jest-test-command }}
+      jest-junit-output-dir: ${{ inputs.jest-junit-output-dir }}
+      jest-coverage-report-dir: ${{ inputs.jest-coverage-report-dir }}
+
+  bigtest-tests:
+    name: Run Bigtest tests
+    needs: [set-shared-variables]
+    if: ${{ inputs.bigtest-enabled }}
+    uses: folio-org/.github/.github/workflows/ui-tests-bigtest.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+      bigtest-test-command: ${{ inputs.bigtest-test-command }}
+      bigtest-junit-output-dir: ${{ inputs.bigtest-junit-output-dir }}
+      bigtest-coverage-report-dir: ${{ inputs.bigtest-coverage-report-dir }}
+
+  translations:
+    name: Compile translations
+    needs: [set-shared-variables]
+    if: ${{ inputs.compile-translations }}
+    uses: folio-org/.github/.github/workflows/ui-translations.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+
+  sonarcloud:
+    name: SonarCloud analysis
+    needs: [jest-tests, bigtest-tests]
+    # run even if tests fail
+    if: ${{ !cancelled() && inputs.sonar-enabled }}
+    uses: folio-org/.github/.github/workflows/ui-sonarcloud.yml
+    with:
+      sonar-sources: ${{ inputs.sonar-sources }}
+      sonar-exclusions: ${{ inputs.sonar-exclusions }}
+      bigtest-enabled: ${{ inputs.bigtest-enabled }}
+      bigtest-coverage-report-dir: ${{ inputs.bigtest-coverage-report-dir }}
+      jest-enabled: ${{ inputs.jest-enabled }}
+      jest-coverage-report-dir: ${{ inputs.jest-coverage-report-dir }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  version-number:
+    # used for module descriptor and publishing to NPM
+    needs: [set-shared-variables]
+    uses: folio-org/.github/.github/workflows/ui-version-number.yml
+    with:
+      is-release: ${{ needs.set-shared-variables.outputs.is-release }}
+
+  generate-module-descriptor:
+    name: Generate module descriptor
+    needs: [set-shared-variables, version-number]
+    if: ${{ inputs.generate-module-descriptor }}
+    uses: folio-org/.github/.github/workflows/ui-module-descriptor-generate.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+      package-version: ${{ needs.version-number.outputs.version-number }}
+
+  okapi-dependency-check:
+    name: Okapi dependency check (main branch/release only)
+    needs: [set-shared-variables, generate-module-descriptor]
+    if: ${{ inputs.generate-module-descriptor && needs.set-shared-variables.outputs.is-release == 'True' }}
+    uses: folio-org/.github/.github/workflows/ui-module-descriptor-verify.yml
+    with:
+      okapi-pull-contents: '{"urls": ["https://folio-registry.dev.folio.org"]}'
+    secrets:
+      docker-username: ${{ secrets.DOCKER_USER }}
+      docker-password: ${{ secrets.DOCKER_PASSWORD }}
+
+  publish-module-descriptor:
+    name: Publish module descriptor (main branch/release only)
+    needs: [set-shared-variables, generate-module-descriptor, okapi-dependency-check]
+    # okapi-dependency-check is optional, but if it's enabled, we want to require it for tag releases
+    if: |
+      !cancelled() &&
+      inputs.generate-module-descriptor && inputs.publish-module-descriptor &&
+      (needs.okapi-dependency-check.result == 'success' || needs.okapi-dependency-check.result == 'skipped') &&
+      (github.ref_name == github.event.repository.default_branch || needs.set-shared-variables.outputs.is-release == 'True')
+    uses: folio-org/.github/.github/workflows/ui-module-descriptor-publish.yml
+    with:
+      module-descriptor-registry: ${{ inputs.module-descriptor-registry }}
+    secrets:
+      registry-username: ${{ secrets.FOLIO_REGISTRY_USERNAME }}
+      registry-password: ${{ secrets.FOLIO_REGISTRY_PASSWORD }}
+
+  publish-module:
+    name: Publish module (main branch/release only)
+    needs:
+      - set-shared-variables
+      - install-and-lint
+      - version-number
+      - generate-module-descriptor
+      - okapi-dependency-check
+      - translations
+      - jest-tests
+      - bigtest-tests
+    # we want to run this iff module descriptor/tests/etc succeed or are skipped (e.g. no bigtests are present means bigtest-tests is skipped)
+    # by default, if a needed job is skipped, this job is skipped too. So we have to say
+    # always (!cancelled), and then check specifically.
+    if: |
+      !cancelled() &&
+      needs.install-and-lint.result == 'success' &&
+      needs.version-number.result == 'success' &&
+      (needs.generate-module-descriptor.result == 'success' || needs.generate-module-descriptor.result == 'skipped') &&
+      (needs.okapi-dependency-check.result == 'success' || needs.okapi-dependency-check.result == 'skipped') &&
+      (needs.translations.result == 'success' || needs.translations.result == 'skipped') &&
+      (needs.jest-tests.result == 'success' || needs.jest-tests.result == 'skipped') &&
+      (needs.bigtest-tests.result == 'success' || needs.bigtest-tests.result == 'skipped') &&
+      (github.ref_name == github.event.repository.default_branch || needs.set-shared-variables.outputs.is-release == 'True')
+
+    uses: ./.github/workflows/ui-publish-module.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      folio-npm-registry: ${{ needs.set-shared-variables.outputs.folio-npm-registry }}
+      folio-npm-registry-auth: ${{ needs.set-shared-variables.outputs.folio-npm-registry-auth }}
+      package-version: ${{ needs.version-number.outputs.version-number }}
+      publish-exclusions: ${{ inputs.publish-exclusions }}
+      module-descriptor-available: ${{ inputs.generate-module-descriptor }}
+      compiled-translations-available: ${{ inputs.compile-translations }}
+      install-before-publish: ${{ inputs.install-before-publish }}
+    secrets:
+      npm-token: ${{ secrets.NPM_TOKEN }}
