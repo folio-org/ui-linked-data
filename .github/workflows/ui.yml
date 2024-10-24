@@ -15,3 +15,4 @@ jobs:
       compile-translations: false
       jest-test-command: npm run test:unit
       sonar-enabled: false
+      install-before-publish: true
