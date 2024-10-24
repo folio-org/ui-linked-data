@@ -44,13 +44,27 @@ export const getSearchData = (url?: string, urlParams?: Record<string, string>) 
 };
 
 export const getSearchResults = async (params: Record<string, string | number>) => {
-  const { endpointUrl, query, offset = '0', limit = SEARCH_RESULTS_LIMIT.toString(), resultsContainer } = params;
+  const {
+    endpointUrl,
+    query,
+    offset,
+    limit = SEARCH_RESULTS_LIMIT.toString(),
+    resultsContainer,
+    precedingRecordsCount,
+  } = params;
 
   const urlParams: Record<string, string> | undefined = {
     query: query as string,
-    offset: offset?.toString(),
     limit: limit?.toString(),
   };
+
+  if (offset) {
+    urlParams.offset = offset?.toString();
+  }
+
+  if (precedingRecordsCount) {
+    urlParams.precedingRecordsCount = precedingRecordsCount.toString();
+  }
 
   const result = await baseApi.getJson({ url: endpointUrl as string, urlParams });
 
@@ -58,5 +72,7 @@ export const getSearchResults = async (params: Record<string, string | number>) 
     content: result.content ?? result[resultsContainer],
     totalRecords: result.totalRecords,
     totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / +limit),
+    prev: result.prev,
+    next: result.next,
   };
 };

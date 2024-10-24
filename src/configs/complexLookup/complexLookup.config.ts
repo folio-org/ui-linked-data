@@ -1,5 +1,5 @@
 import { SearchSegment } from '@common/constants/search.constants';
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
 import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
@@ -20,9 +20,13 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
         limit: 100,
+        precedingRecordsCount: 5,
       },
       results: {
-        container: 'authorities',
+        containers: {
+          [SearchSegment.Search]: 'authorities',
+          [SearchSegment.Browse]: 'items',
+        },
       },
     },
     labels: {
@@ -45,12 +49,20 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           type: SearchSegment.Search,
           labelId: 'ld.search',
           isVisiblePaginationCount: true,
+          isVisibleSubLabel: true,
+          isLoopedPagination: false,
         },
         [SearchSegment.Browse]: {
           type: SearchSegment.Browse,
           labelId: 'ld.browse',
           isVisiblePaginationCount: false,
+          isVisibleSubLabel: false,
+          isLoopedPagination: true,
         },
+      },
+      defaultValues: {
+        segment: SearchSegment.Browse,
+        searchBy: SearchableIndex.PersonalName,
       },
     },
     // For displaying "Search by" control and "Filters"

@@ -1,6 +1,18 @@
+@import '@common/styles/common.scss';
+
 .select-input {
   border-radius: 0;
   border: 1px solid gray;
   padding: 4px;
   height: 27px;
+
+  option:disabled,
+  &.placeholder,
+  &.placeholder option:disabled {
+    color: $gray-400;
+  }
+
+  &.placeholder option {
+    color: #000;
+  }
 }

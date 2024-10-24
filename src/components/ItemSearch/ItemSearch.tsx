@@ -42,11 +42,13 @@ export const ItemSearch = () => {
   } = useSearch();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
 
-  useLoadSearchResults(fetchData, currentPageNumber);
+  useLoadSearchResults(fetchData);
 
-  const isVisiblePaginationCount = isVisibleSegments
-    ? !!navigationSegment?.value && primarySegments?.[navigationSegment?.value]?.isVisiblePaginationCount
-    : true;
+  const segmentConfig = isVisibleSegments
+    ? !!navigationSegment?.value && primarySegments?.[navigationSegment?.value]
+    : undefined;
+  const isVisiblePaginationCount = segmentConfig ? segmentConfig.isVisiblePaginationCount : true;
+  const isLoopedPagination = segmentConfig ? segmentConfig.isLoopedPagination : false;
 
   return (
     <div data-testid="id-search" className="item-search">
@@ -72,6 +74,7 @@ export const ItemSearch = () => {
                     showCount={isVisiblePaginationCount}
                     onPrevPageClick={onPrevPageClick}
                     onNextPageClick={onNextPageClick}
+                    isLooped={isLoopedPagination}
                   />
                 )}
               </>

@@ -1,3 +1,5 @@
+@import '@common/styles/common.scss';
+
 .common-status {
   position: fixed;
   bottom: 1.75rem;
@@ -61,13 +63,13 @@
   }
 
   &.error {
-    border-color: #990000;
-    color: #990000;
+    border-color: $error;
+    color: $error;
     background-color: #ead2d0;
 
     .status-message-icon path,
     .status-message-close path {
-      fill: #990000;
+      fill: $error;
     }
   }
 }

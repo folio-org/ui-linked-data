@@ -14,6 +14,7 @@ export type Props = {
   showCount?: boolean;
   onPrevPageClick: VoidFunction;
   onNextPageClick: VoidFunction;
+  isLooped?: boolean;
 };
 
 export const Pagination: FC<Props> = memo(
@@ -25,6 +26,7 @@ export const Pagination: FC<Props> = memo(
     showCount = true,
     onPrevPageClick,
     onNextPageClick,
+    isLooped = false,
   }) => {
     const isFirstPage = currentPage === 0;
     const isDisabledNext = totalPages ? currentPage === totalPages - 1 : false;
@@ -45,7 +47,7 @@ export const Pagination: FC<Props> = memo(
         <Button
           type={ButtonType.Text}
           onClick={onPrevPageClick}
-          disabled={isFirstPage}
+          disabled={!isLooped && isFirstPage}
           className="pagination-button"
           data-testid="backward-button"
         >
@@ -67,7 +69,7 @@ export const Pagination: FC<Props> = memo(
         <Button
           type={ButtonType.Text}
           onClick={onNextPageClick}
-          disabled={isDisabledNext}
+          disabled={!isLooped && isDisabledNext}
           className="pagination-button"
           data-testid="forward-button"
         >

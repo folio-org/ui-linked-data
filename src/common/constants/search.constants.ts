@@ -94,6 +94,8 @@ export type AdvancedSearchSchema = AdvancedSearchSchemaRow[];
 
 export const SEARCH_RESULTS_LIMIT = 10;
 
+export const BROWSE_PRECEDING_RECORDS_COUNT = 5;
+
 export const SELECT_IDENTIFIERS = Object.values(SearchIdentifiers);
 
 export const SELECT_OPERATORS = Object.values(AdvancedSearchOperators);

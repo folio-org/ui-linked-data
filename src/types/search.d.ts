@@ -13,15 +13,18 @@ type NavigationSegment = {
   set: Dispatch<SetStateAction<boolean>> | VoidFunction;
 };
 
+type EndpointUrlsBySegments = {
+  [key in SearchSegment]: string;
+};
+
 type SearchParams = {
   endpointUrl: string;
-  endpointUrlsBySegments?: {
-    [key in SearchSegment]: string;
-  };
+  endpointUrlsBySegments?: EndpointUrlsBySegments;
   primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;
   hasSearchParams: boolean;
   defaultSearchBy: SearchIdentifiers;
+  defaultQuery?: string;
   filters: SearchFilters;
   renderSearchControlPane: () => JSX.Element | null;
   renderResultsList: () => JSX.Element | null;
@@ -40,9 +43,14 @@ type SearchParams = {
   getSearchSourceData?: (url?: string) => Promise<void>;
   getSearchFacetsData?: (facet?: string, isOpen?: boolean) => Promise<void>;
   searchResultsLimit?: number;
+  precedingRecordsCount?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
-  searchResultsContainer?: string;
+  buildSearchQuery?: (params: BuildSearchQueryParams) => string | undefined;
+  searchResultsContainer?: {
+    [key in SearchSegment]: string;
+  };
   hasMarcPreview?: boolean;
+  hasCustomPagination?: boolean;
   renderMarcPreview?: () => JSX.Element | null;
   onAssignRecord?: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
 };
@@ -90,4 +98,12 @@ type MarcPreviewMetadata = {
   srsId: string;
   title: string;
   headingType: string;
+};
+
+type FetchDataParams = {
+  query: string;
+  searchBy: SearchIdentifiers;
+  offset?: number;
+  selectedSegment?: string;
+  baseQuerySelector?: SearchableIndexQuerySelectorType;
 };
