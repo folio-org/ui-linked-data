@@ -6,7 +6,9 @@ import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/searc
 import { useSearchContext } from './useSearchContext';
 import state from '@state';
 
-export const useLoadSearchResults = (fetchData: ({ query, searchBy, offset }: FetchDataParams) => Promise<void>) => {
+export const useLoadSearchResults = (
+  fetchData: ({ query, searchBy, offset, selectedSegment, baseQuerySelector }: FetchDataParams) => Promise<void>,
+) => {
   const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
     useSearchContext();
   const setData = useSetRecoilState(state.search.data);

@@ -1,38 +1,24 @@
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
-import { getByIdentifier } from '@common/api/search.api';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
-import { normalizeLccn } from '@common/helpers/validations.helper';
-import { UserNotificationFactory } from '@common/services/userNotification';
+import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
+import { useFetchSearhData } from './useFetchSearchData';
 
 export const useSearch = () => {
   const {
-    endpointUrl,
-    searchFilter,
-    isSortedResults,
     hasSearchParams,
     defaultSearchBy,
     defaultQuery,
     navigationSegment,
-    isVisibleSegments,
     hasCustomPagination,
-    endpointUrlsBySegments,
-    searchResultsLimit,
-    fetchSearchResults,
-    searchResultsContainer,
     searchByControlOptions,
-    searchableIndicesMap,
     getSearchSourceData,
-    buildSearchQuery,
-    precedingRecordsCount,
   } = useSearchContext();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
@@ -41,12 +27,12 @@ export const useSearch = () => {
   const [message, setMessage] = useRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
   const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
 
+  const { fetchData } = useFetchSearhData();
   const {
     getCurrentPageNumber,
     setCurrentPageNumber,
@@ -75,101 +61,6 @@ export const useSearch = () => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
     setCurrentPageNumber(0);
   }, []);
-
-  const validateAndNormalizeQuery = useCallback(
-    (type: SearchIdentifiers, query: string) => {
-      if (type === SearchIdentifiers.LCCN) {
-        const normalized = normalizeLccn(query);
-
-        !normalized && setMessage('ld.searchInvalidLccn');
-
-        return normalized;
-      }
-
-      return normalizeQuery(query);
-    },
-    [setMessage],
-  );
-
-  // TODO: refactor this function
-  const fetchData = useCallback(
-    async ({
-      query,
-      searchBy,
-      offset,
-      selectedSegment,
-      baseQuerySelector = SearchableIndexQuerySelector.Query,
-    }: FetchDataParams) => {
-      setMessage('');
-      const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
-
-      data && setData(null);
-
-      const updatedQuery = validateAndNormalizeQuery(searchBy, query);
-
-      if (!updatedQuery) return;
-
-      setIsLoading(true);
-
-      try {
-        const currentEndpointUrl = selectedNavigationSegment
-          ? endpointUrlsBySegments?.[selectedNavigationSegment]
-          : endpointUrl;
-        const selectedSearchableIndices =
-          isVisibleSegments && selectedNavigationSegment
-            ? searchableIndicesMap?.[selectedNavigationSegment as SearchSegmentValue]
-            : searchableIndicesMap;
-        const generatedQuery =
-          fetchSearchResults && buildSearchQuery
-            ? (buildSearchQuery({
-                map: selectedSearchableIndices as SearchableIndexEntries,
-                selector: baseQuerySelector,
-                searchBy: searchBy as unknown as SearchableIndexType,
-                value: updatedQuery,
-              }) as string)
-            : (updatedQuery as string);
-        const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
-
-        const result = fetchSearchResults
-          ? await fetchSearchResults({
-              endpointUrl: currentEndpointUrl ?? endpointUrl,
-              searchFilter,
-              isSortedResults,
-              searchBy,
-              query: generatedQuery,
-              offset: offset?.toString(),
-              limit: searchResultsLimit?.toString(),
-              precedingRecordsCount: isBrowseSearch ? precedingRecordsCount : undefined,
-              resultsContainer: searchResultsContainer?.[selectedNavigationSegment as SearchSegmentValue],
-            })
-          : await getByIdentifier({
-              endpointUrl: currentEndpointUrl ?? endpointUrl,
-              searchFilter,
-              isSortedResults,
-              searchBy,
-              query: updatedQuery as string,
-              offset: offset?.toString(),
-              limit: searchResultsLimit?.toString(),
-            });
-
-        const { content, totalPages, totalRecords, prev, next } = result;
-
-        // TODO: pass the message though the context
-        if (!content.length) return setMessage('ld.searchNoRdsMatch');
-
-        setData(content);
-        setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
-      } catch {
-        setStatusMessages(currentStatus => [
-          ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-        ]);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [data, endpointUrl, fetchSearchResults, navigationSegment?.value, searchFilter, isSortedResults],
-  );
 
   const submitSearch = useCallback(() => {
     clearPagination();

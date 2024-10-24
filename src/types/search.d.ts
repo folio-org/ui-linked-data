@@ -13,11 +13,13 @@ type NavigationSegment = {
   set: Dispatch<SetStateAction<boolean>> | VoidFunction;
 };
 
+type EndpointUrlsBySegments = {
+  [key in SearchSegment]: string;
+};
+
 type SearchParams = {
   endpointUrl: string;
-  endpointUrlsBySegments?: {
-    [key in SearchSegment]: string;
-  };
+  endpointUrlsBySegments?: EndpointUrlsBySegments;
   primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;
   hasSearchParams: boolean;
