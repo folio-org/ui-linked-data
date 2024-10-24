@@ -23,6 +23,7 @@ export const useSearch = () => {
     defaultQuery,
     navigationSegment,
     isVisibleSegments,
+    hasCustomPagination,
     endpointUrlsBySegments,
     searchResultsLimit,
     fetchSearchResults,
@@ -46,11 +47,16 @@ export const useSearch = () => {
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
 
-  const { getCurrentPageNumber, setCurrentPageNumber, onPrevPageClick, onNextPageClick } =
-    usePagination(hasSearchParams);
+  const {
+    getCurrentPageNumber,
+    setCurrentPageNumber,
+    onPrevPageClick: onPrevPageClickBase,
+    onNextPageClick: onNextPageClickBase,
+  } = usePagination(hasSearchParams);
   const currentPageNumber = getCurrentPageNumber();
   const setSearchParams = useSearchParams()?.[1];
   const selectedNavigationSegment = navigationSegment?.value;
+  const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
 
   const updateFacetsBySegments = (query?: string, searchBy?: SearchIdentifiers, facets?: Limiters) => {
     if (!selectedNavigationSegment) return;
@@ -155,13 +161,13 @@ export const useSearch = () => {
               limit: searchResultsLimit?.toString(),
             });
 
-        const { content, totalPages, totalRecords } = result;
+        const { content, totalPages, totalRecords, prev, next } = result;
 
         // TODO: pass the message though the context
         if (!content.length) return setMessage('ld.searchNoRdsMatch');
 
         setData(content);
-        setPageMetadata({ totalPages, totalElements: totalRecords });
+        setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
       } catch {
         setStatusMessages(currentStatus => [
           ...currentStatus,
@@ -234,6 +240,40 @@ export const useSearch = () => {
   useEffect(() => {
     return clearFacetsBySegments;
   }, []);
+
+  const onPrevPageClick = hasCustomPagination
+    ? async () => {
+        const pageNumber = onPrevPageClickBase();
+        const baseQuerySelector = isBrowseSearch
+          ? SearchableIndexQuerySelector.Prev
+          : SearchableIndexQuerySelector.Query;
+
+        await fetchData({
+          query: pageMetadata?.prev || query,
+          searchBy,
+          offset: pageNumber,
+          selectedSegment: navigationSegment?.value,
+          baseQuerySelector,
+        });
+      }
+    : onPrevPageClickBase;
+
+  const onNextPageClick = hasCustomPagination
+    ? async () => {
+        const pageNumber = onNextPageClickBase();
+        const baseQuerySelector = isBrowseSearch
+          ? SearchableIndexQuerySelector.Prev
+          : SearchableIndexQuerySelector.Query;
+
+        await fetchData({
+          query: pageMetadata?.next || query,
+          searchBy,
+          offset: pageNumber,
+          selectedSegment: navigationSegment?.value,
+          baseQuerySelector,
+        });
+      }
+    : onNextPageClickBase;
 
   return {
     submitSearch,

@@ -72,5 +72,7 @@ export const getSearchResults = async (params: Record<string, string | number>) 
     content: result.content ?? result[resultsContainer],
     totalRecords: result.totalRecords,
     totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / +limit),
+    prev: result.prev,
+    next: result.next,
   };
 };

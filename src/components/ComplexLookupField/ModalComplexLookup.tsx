@@ -161,6 +161,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleSegments={true}
             hasMultilineSearchInput={true}
             hasMarcPreview={true}
+            hasCustomPagination={true}
             searchByControlOptions={searchBy}
             searchableIndicesMap={searchableIndicesMap}
             labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"

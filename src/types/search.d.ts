@@ -48,6 +48,7 @@ type SearchParams = {
     [key in SearchSegment]: string;
   };
   hasMarcPreview?: boolean;
+  hasCustomPagination?: boolean;
   renderMarcPreview?: () => JSX.Element | null;
   onAssignRecord?: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
 };

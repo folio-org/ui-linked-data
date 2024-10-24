@@ -34,6 +34,8 @@ export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => 
         return searchParams;
       });
     }
+
+    return prevPageNumber;
   };
 
   const onNextPageClick = () => {
@@ -50,6 +52,8 @@ export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => 
         return searchParams;
       });
     }
+
+    return nextPageNumber;
   };
 
   return {
