@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import state from '@state';
 
-export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => {
+export const usePagination = (hasSearchParams = true, defaultPageNumber = 0, hasCycledPagination = false) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
   const pageMetadata = useRecoilValue<PageMetadata>(state.search.pageMetadata);
@@ -23,7 +23,7 @@ export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => 
   const onPrevPageClick = () => {
     const prevPageNumber = currentPageNumber - 1;
 
-    if (prevPageNumber < 0) return;
+    if (!hasCycledPagination && prevPageNumber < 0) return prevPageNumber;
 
     setCurrentPageNumber(prevPageNumber);
 
@@ -41,7 +41,7 @@ export const usePagination = (hasSearchParams = true, defaultPageNumber = 0) => 
   const onNextPageClick = () => {
     const nextPageNumber = currentPageNumber + 1;
 
-    if (nextPageNumber > pageMetadata.totalPages - 1) return;
+    if (!hasCycledPagination && nextPageNumber > pageMetadata.totalPages - 1) return nextPageNumber;
 
     setCurrentPageNumber(nextPageNumber);
 

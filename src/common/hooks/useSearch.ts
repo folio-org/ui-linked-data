@@ -52,7 +52,7 @@ export const useSearch = () => {
     setCurrentPageNumber,
     onPrevPageClick: onPrevPageClickBase,
     onNextPageClick: onNextPageClickBase,
-  } = usePagination(hasSearchParams);
+  } = usePagination(hasSearchParams, 0, hasCustomPagination);
   const currentPageNumber = getCurrentPageNumber();
   const setSearchParams = useSearchParams()?.[1];
   const selectedNavigationSegment = navigationSegment?.value;
@@ -70,16 +70,6 @@ export const useSearch = () => {
       },
     }));
   };
-
-  useEffect(() => {
-    setSearchBy(defaultSearchBy);
-
-    if (defaultQuery) {
-      setQuery(defaultQuery);
-    }
-
-    updateFacetsBySegments(defaultQuery ?? query, defaultSearchBy, facets);
-  }, [setSearchBy, setQuery, defaultSearchBy, defaultQuery]);
 
   const clearPagination = useCallback(() => {
     setPageMetadata(DEFAULT_PAGES_METADATA);
@@ -101,6 +91,7 @@ export const useSearch = () => {
     [setMessage],
   );
 
+  // TODO: refactor this function
   const fetchData = useCallback(
     async ({
       query,
@@ -237,19 +228,16 @@ export const useSearch = () => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    return clearFacetsBySegments;
-  }, []);
-
   const onPrevPageClick = hasCustomPagination
     ? async () => {
         const pageNumber = onPrevPageClickBase();
-        const baseQuerySelector = isBrowseSearch
-          ? SearchableIndexQuerySelector.Prev
-          : SearchableIndexQuerySelector.Query;
+        const isInitialPage = pageNumber === 0;
+        const selectedQuery = (isInitialPage ? query : pageMetadata?.prev) || query;
+        const baseQuerySelector =
+          isBrowseSearch && !isInitialPage ? SearchableIndexQuerySelector.Prev : SearchableIndexQuerySelector.Query;
 
         await fetchData({
-          query: pageMetadata?.prev || query,
+          query: selectedQuery,
           searchBy,
           offset: pageNumber,
           selectedSegment: navigationSegment?.value,
@@ -261,12 +249,13 @@ export const useSearch = () => {
   const onNextPageClick = hasCustomPagination
     ? async () => {
         const pageNumber = onNextPageClickBase();
-        const baseQuerySelector = isBrowseSearch
-          ? SearchableIndexQuerySelector.Prev
-          : SearchableIndexQuerySelector.Query;
+        const isInitialPage = pageNumber === 0;
+        const selectedQuery = (isInitialPage ? query : pageMetadata?.next) || query;
+        const baseQuerySelector =
+          isBrowseSearch && !isInitialPage ? SearchableIndexQuerySelector.Next : SearchableIndexQuerySelector.Query;
 
         await fetchData({
-          query: pageMetadata?.next || query,
+          query: selectedQuery,
           searchBy,
           offset: pageNumber,
           selectedSegment: navigationSegment?.value,
@@ -274,6 +263,21 @@ export const useSearch = () => {
         });
       }
     : onNextPageClickBase;
+
+  useEffect(() => {
+    setSearchBy(defaultSearchBy);
+
+    if (defaultQuery) {
+      setQuery(defaultQuery);
+    }
+
+    updateFacetsBySegments(defaultQuery ?? query, defaultSearchBy, facets);
+  }, [setSearchBy, setQuery, defaultSearchBy, defaultQuery]);
+
+  // Reset Segments selection on unmount
+  useEffect(() => {
+    return clearFacetsBySegments;
+  }, [clearFacetsBySegments]);
 
   return {
     submitSearch,
