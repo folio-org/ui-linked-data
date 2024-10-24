@@ -228,7 +228,7 @@ export const useSearch = () => {
     setIsLoading(false);
   };
 
-  const handlePageClick = async ({
+  const handlePaginationClick = async ({
     pageNumber,
     query,
     pageMetadata,
@@ -244,15 +244,13 @@ export const useSearch = () => {
     isBrowseSearch: boolean;
     searchBy: string;
     navigationSegment?: NavigationSegment;
-    baseQuerySelectorType: 'Prev' | 'Next';
+    baseQuerySelectorType: SearchableIndexQuerySelector;
     pageMetadataSelectorType: 'prev' | 'next';
   }) => {
     const isInitialPage = pageNumber === 0;
     const selectedQuery = (isInitialPage ? query : pageMetadata?.[pageMetadataSelectorType]) || query;
     const baseQuerySelector =
-      isBrowseSearch && !isInitialPage
-        ? SearchableIndexQuerySelector[baseQuerySelectorType]
-        : SearchableIndexQuerySelector.Query;
+      isBrowseSearch && !isInitialPage ? baseQuerySelectorType : SearchableIndexQuerySelector.Query;
 
     await fetchData({
       query: selectedQuery,
@@ -267,14 +265,14 @@ export const useSearch = () => {
     ? async () => {
         const pageNumber = onPrevPageClickBase();
 
-        await handlePageClick({
+        await handlePaginationClick({
           pageNumber,
           query,
           pageMetadata,
           isBrowseSearch,
           searchBy,
           navigationSegment,
-          baseQuerySelectorType: 'Prev',
+          baseQuerySelectorType: SearchableIndexQuerySelector.Prev,
           pageMetadataSelectorType: 'prev',
         });
       }
@@ -284,14 +282,14 @@ export const useSearch = () => {
     ? async () => {
         const pageNumber = onNextPageClickBase();
 
-        await handlePageClick({
+        await handlePaginationClick({
           pageNumber,
           query,
           pageMetadata,
           isBrowseSearch,
           searchBy,
           navigationSegment,
-          baseQuerySelectorType: 'Next',
+          baseQuerySelectorType: SearchableIndexQuerySelector.Next,
           pageMetadataSelectorType: 'next',
         });
       }

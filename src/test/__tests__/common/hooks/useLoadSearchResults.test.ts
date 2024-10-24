@@ -11,6 +11,7 @@ jest.mock('recoil', () => ({
   useSetRecoilState: jest.fn(),
   useRecoilState: jest.fn(),
   useRecoilValue: jest.fn(),
+  useResetRecoilState: jest.fn(),
 }));
 jest.mock('@state', () => ({
   default: {
@@ -19,27 +20,36 @@ jest.mock('@state', () => ({
       index: '',
       query: '',
     },
+    loadingState: {
+      isLoading: false,
+    },
   },
 }));
 
 describe('useLoadSearchResults', () => {
   const setData = jest.fn();
   const fetchData = jest.fn();
+  const setSearchBy = jest.fn();
+  const setQuery = jest.fn();
+  const setIsLoading = jest.fn();
 
   it('fetches data and updates state with query and searchBy', async () => {
     const searchParams = new URLSearchParams({
       [SearchQueryParams.Query]: 'test query',
       [SearchQueryParams.SearchBy]: 'title',
     });
-    const setSearchBy = jest.fn();
-    const setQuery = jest.fn();
 
     fetchData.mockResolvedValue([{ test: ['test value'] }]);
     (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
-    (useSetRecoilState as jest.Mock).mockReturnValueOnce(setData).mockReturnValueOnce(setSearchBy);
-    (useRecoilState as jest.Mock)
-      .mockReturnValueOnce(['', setQuery])
-      .mockReturnValueOnce([false, (value: boolean) => value] as [boolean, SetterOrUpdater<boolean>]);
+    (useSetRecoilState as jest.Mock)
+      .mockReturnValueOnce(setData)
+      .mockReturnValueOnce(setSearchBy)
+      .mockReturnValueOnce(setIsLoading)
+      .mockReturnValueOnce(setQuery);
+    (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
+      boolean,
+      SetterOrUpdater<boolean>,
+    ]);
     (useRecoilValue as jest.Mock).mockReturnValue('title');
 
     renderHook(() => useLoadSearchResults(fetchData));
@@ -53,7 +63,11 @@ describe('useLoadSearchResults', () => {
     const searchParams = new URLSearchParams({});
 
     (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
-    (useSetRecoilState as jest.Mock).mockReturnValue(setData);
+    (useSetRecoilState as jest.Mock)
+      .mockReturnValueOnce(setData)
+      .mockReturnValueOnce(setSearchBy)
+      .mockReturnValueOnce(setIsLoading)
+      .mockReturnValueOnce(setQuery);
     (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
       boolean,
       SetterOrUpdater<boolean>,
