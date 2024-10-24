@@ -20,6 +20,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:lib": "npm run build --type=library",
+    "prepublish": "npm run build:lib",
     "lint:errors-only": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet",
     "lint:full": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
