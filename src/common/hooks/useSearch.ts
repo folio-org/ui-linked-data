@@ -228,20 +228,54 @@ export const useSearch = () => {
     setIsLoading(false);
   };
 
+  const handlePageClick = async ({
+    pageNumber,
+    query,
+    pageMetadata,
+    isBrowseSearch,
+    searchBy,
+    navigationSegment,
+    baseQuerySelectorType,
+    pageMetadataSelectorType,
+  }: {
+    pageNumber: number;
+    query: string;
+    pageMetadata: PageMetadata;
+    isBrowseSearch: boolean;
+    searchBy: string;
+    navigationSegment?: NavigationSegment;
+    baseQuerySelectorType: 'Prev' | 'Next';
+    pageMetadataSelectorType: 'prev' | 'next';
+  }) => {
+    const isInitialPage = pageNumber === 0;
+    const selectedQuery = (isInitialPage ? query : pageMetadata?.[pageMetadataSelectorType]) || query;
+    const baseQuerySelector =
+      isBrowseSearch && !isInitialPage
+        ? SearchableIndexQuerySelector[baseQuerySelectorType]
+        : SearchableIndexQuerySelector.Query;
+
+    await fetchData({
+      query: selectedQuery,
+      searchBy,
+      offset: pageNumber,
+      selectedSegment: navigationSegment?.value,
+      baseQuerySelector,
+    });
+  };
+
   const onPrevPageClick = hasCustomPagination
     ? async () => {
         const pageNumber = onPrevPageClickBase();
-        const isInitialPage = pageNumber === 0;
-        const selectedQuery = (isInitialPage ? query : pageMetadata?.prev) || query;
-        const baseQuerySelector =
-          isBrowseSearch && !isInitialPage ? SearchableIndexQuerySelector.Prev : SearchableIndexQuerySelector.Query;
 
-        await fetchData({
-          query: selectedQuery,
+        await handlePageClick({
+          pageNumber,
+          query,
+          pageMetadata,
+          isBrowseSearch,
           searchBy,
-          offset: pageNumber,
-          selectedSegment: navigationSegment?.value,
-          baseQuerySelector,
+          navigationSegment,
+          baseQuerySelectorType: 'Prev',
+          pageMetadataSelectorType: 'prev',
         });
       }
     : onPrevPageClickBase;
@@ -249,17 +283,16 @@ export const useSearch = () => {
   const onNextPageClick = hasCustomPagination
     ? async () => {
         const pageNumber = onNextPageClickBase();
-        const isInitialPage = pageNumber === 0;
-        const selectedQuery = (isInitialPage ? query : pageMetadata?.next) || query;
-        const baseQuerySelector =
-          isBrowseSearch && !isInitialPage ? SearchableIndexQuerySelector.Next : SearchableIndexQuerySelector.Query;
 
-        await fetchData({
-          query: selectedQuery,
+        await handlePageClick({
+          pageNumber,
+          query,
+          pageMetadata,
+          isBrowseSearch,
           searchBy,
-          offset: pageNumber,
-          selectedSegment: navigationSegment?.value,
-          baseQuerySelector,
+          navigationSegment,
+          baseQuerySelectorType: 'Next',
+          pageMetadataSelectorType: 'next',
         });
       }
     : onNextPageClickBase;
