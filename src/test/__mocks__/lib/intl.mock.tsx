@@ -32,6 +32,13 @@ jest.mock('react-intl', () => {
 
       return value;
     },
+    FormattedDate: ({ value, day, month, year }: any) => {
+      if (day && month && year) {
+        return `${day}-${month}-${year}`;
+      }
+
+      return value;
+    },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     IntlProvider: ({ children, defaultLocale, ...rest }: any) => <div {...rest}>{children}</div>,
     useIntl: () => intl,

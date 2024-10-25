@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
+import { SEARCH_QUERY_BUILDER } from '@common/helpers/search/queryBuilder';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType } from '@common/constants/complexLookup.constants';
@@ -15,10 +16,9 @@ import { Search } from '@components/Search';
 import { SearchControlPane } from '@components/SearchControlPane';
 import state from '@state';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
-import { MarсPreviewComplexLookup } from './MarсPreviewComplexLookup';
+import { MarcPreviewComplexLookup } from './MarcPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
-import { SEARCH_QUERY_BUILDER } from '@common/helpers/search/queryBuilder';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -121,7 +121,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       [loadMarcData, tableConfig, searchResultsFormatter],
     );
 
-    const renderMarcPreview = useCallback(() => <MarсPreviewComplexLookup onClose={onCloseMarcPreview} />, []);
+    const renderMarcPreview = useCallback(() => <MarcPreviewComplexLookup onClose={onCloseMarcPreview} />, []);
 
     return (
       <Modal

@@ -7,13 +7,13 @@ import { MarcContent } from '@components/MarcContent';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
 import state from '@state';
-import './MarсPreviewComplexLookup.scss';
+import './MarcPreviewComplexLookup.scss';
 
-type MarсPreviewComplexLookupProps = {
+type MarcPreviewComplexLookupProps = {
   onClose: VoidFunction;
 };
 
-export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ onClose }) => {
+export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
   const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
@@ -29,7 +29,7 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
       <span className="marc-preview-sub-label-date">
-        <FormattedDate value={new Date(marcPreviewData?.metadata.updatedDate ?? 'now')} />
+        <FormattedDate value={marcPreviewData?.metadata.updatedDate ?? new Date('now')} />
       </span>
     </>
   );
