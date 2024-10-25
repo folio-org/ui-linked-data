@@ -1,4 +1,6 @@
 type SearchableIndexType = import('@common/constants/complexLookup.constants').SearchableIndex;
+type SearchableIndexQuerySelectorType =
+  import('@common/constants/complexLookup.constants').SearchableIndexQuerySelector;
 
 type ComplexLookupLabels = {
   button: {
@@ -15,6 +17,7 @@ type ComplexLookupSearchBy = {
   [key in SearchSegment]: {
     label: string;
     value: string;
+    isDisabled?: boolean;
   }[];
 };
 
@@ -22,6 +25,8 @@ type SearchSegmentConfig = {
   type: SearchSegment;
   labelId: string;
   isVisiblePaginationCount?: boolean;
+  isVisibleSubLabel?: boolean;
+  isLoopedPagination?: boolean;
 };
 
 type PrimarySegmentsConfig = { [key in SearchSegment]: SearchSegmentConfig };
@@ -40,16 +45,21 @@ type ComplexLookupApiEntryConfig = {
   searchQuery: {
     filter?: string;
     limit?: number;
+    precedingRecordsCount?: number;
   };
   results: {
-    container: string;
+    containers: {
+      [key in SearchSegment]: string;
+    };
   };
 };
 
+type SearchableIndexEntry = {
+  [key in SearchableIndexQuerySelectorType]?: string;
+};
+
 type SearchableIndexEntries = {
-  [key in SearchableIndexType]?: {
-    query: string;
-  };
+  [key in SearchableIndexType]?: SearchableIndexEntry;
 };
 
 type SearchableIndicesMap = {
@@ -60,6 +70,10 @@ type ComplexLookupsConfigEntry = {
   api: ComplexLookupApiEntryConfig;
   segments: {
     primary: PrimarySegmentsConfig;
+    defaultValues?: {
+      segment: SearchSegmentValue;
+      searchBy: SearchableIndexType;
+    };
   };
   labels: ComplexLookupLabels;
   linkedField?: string;
@@ -74,4 +88,11 @@ type ComplexLookupAssignRecordDTO = {
   id: string;
   title: string;
   linkedFieldValue?: string;
+};
+
+type BuildSearchQueryParams = {
+  map: SearchableIndexEntries;
+  selector?: SearchableIndexQuerySelectorType;
+  searchBy: SearchableIndexType;
+  value: string;
 };

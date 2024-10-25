@@ -7,13 +7,13 @@ import { MarcContent } from '@components/MarcContent';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
 import state from '@state';
-import './MarсPreviewComplexLookup.scss';
+import './MarcPreviewComplexLookup.scss';
 
-type MarсPreviewComplexLookupProps = {
+type MarcPreviewComplexLookupProps = {
   onClose: VoidFunction;
 };
 
-export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ onClose }) => {
+export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
   const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
@@ -25,11 +25,11 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
     </Button>
   );
 
-  const subLabel = (
+  const renderSubLabel = () => (
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
-      <span className='mark-preview-sub-label-date'>
-        <FormattedDate value={new Date(marcPreviewData?.metadata.updatedDate ?? 'now')} />
+      <span className="marc-preview-sub-label-date">
+        <FormattedDate value={marcPreviewData?.metadata.updatedDate ?? new Date('now')} />
       </span>
     </>
   );
@@ -48,12 +48,14 @@ export const MarсPreviewComplexLookup: FC<MarсPreviewComplexLookupProps> = ({ 
         <div className="marc-preview-container">
           <SearchControlPane
             label={marcPreviewMetadata?.title || ''}
-            subLabel={subLabel}
+            renderSubLabel={renderSubLabel}
             renderCloseButton={renderCloseButton}
           >
-            <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
-              <FormattedMessage id="ld.assign" />
-            </Button>
+            <div>
+              <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
+                <FormattedMessage id="ld.assign" />
+              </Button>
+            </div>
           </SearchControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
