@@ -8,7 +8,7 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
-import { useFetchSearhData } from './useFetchSearchData';
+import { useFetchSearchData } from './useFetchSearchData';
 
 export const useSearch = () => {
   const {
@@ -32,7 +32,7 @@ export const useSearch = () => {
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
 
-  const { fetchData } = useFetchSearhData();
+  const { fetchData } = useFetchSearchData();
   const {
     getCurrentPageNumber,
     setCurrentPageNumber,

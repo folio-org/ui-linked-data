@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useSetRecoilState, useRecoilState, SetterOrUpdater } from 'recoil';
+import { useSetRecoilState, useRecoilState, SetterOrUpdater, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
@@ -10,7 +10,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
 
-export const useFetchSearhData = () => {
+export const useFetchSearchData = () => {
   const {
     endpointUrl,
     searchFilter,
@@ -27,8 +27,10 @@ export const useFetchSearhData = () => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setMessage = useSetRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
+  const resetData = useResetRecoilState(state.search.data);
   const setPageMetadata = useSetRecoilState(state.search.pageMetadata);
   const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const resetStatusMessage = useResetRecoilState(state.status.commonMessages);
 
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {
@@ -143,10 +145,10 @@ export const useFetchSearhData = () => {
       selectedSegment,
       baseQuerySelector = SearchableIndexQuerySelector.Query,
     }: FetchDataParams) => {
-      setMessage('');
+      resetStatusMessage();
       const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
 
-      data && setData(null);
+      data && resetData();
 
       const updatedQuery = validateAndNormalizeQuery(searchBy, query);
       if (!updatedQuery) return;
