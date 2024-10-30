@@ -179,12 +179,14 @@ export const BASE_LOCALE = {
   'ld.to': 'To',
   'ld.apply': 'Apply',
   'ld.notSpecified': 'Not specified',
-  'ld.externalResource': 'External resource',
+  'ld.externalResourcePreview': 'External resource preview',
+  'ld.errorFetchingExternalResourceForPreview': 'Error fetching external resource for preview',
   'ld.fetchingExternalResourceById': 'Fetching external resource id {resourceId}...',
   'ld.lastUpdated': 'Last updated',
   'ld.marcAuthorityRecord': 'MARC authority record',
   'ld.selectBrowseOption': 'Select a browse option',
-  'ld.searchQueryWouldBeHere': '{query} would be here'
+  'ld.searchQueryWouldBeHere': '{query} would be here',
+  'ld.continue': 'Continue',
 };
 
 export const i18nMessages = {

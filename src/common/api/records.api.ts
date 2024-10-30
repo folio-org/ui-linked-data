@@ -1,9 +1,18 @@
-import { BIBFRAME_API_ENDPOINT, MAX_LIMIT } from '@common/constants/api.constants';
+import {
+  BIBFRAME_API_ENDPOINT,
+  ExternalResourceIdType,
+  GET_RESOURCE_BY_TYPE_URIS,
+  MAX_LIMIT,
+} from '@common/constants/api.constants';
 import baseApi from './base.api';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SingleRecord = {
   recordId: string;
+};
+
+type IGetRecord = SingleRecord & {
+  idType?: ExternalResourceIdType;
 };
 
 type GetAllRecords = {
@@ -14,8 +23,9 @@ type GetAllRecords = {
 
 const singleRecordUrl = `${BIBFRAME_API_ENDPOINT}/:recordId`;
 
-export const getRecord = async ({ recordId }: SingleRecord) => {
-  const url = baseApi.generateUrl(singleRecordUrl, { name: ':recordId', value: recordId });
+export const getRecord = async ({ recordId, idType }: IGetRecord) => {
+  const selectedUrl = (idType && GET_RESOURCE_BY_TYPE_URIS[idType]) ?? singleRecordUrl;
+  const url = baseApi.generateUrl(selectedUrl, { name: ':recordId', value: recordId });
 
   return baseApi.getJson({
     url,
