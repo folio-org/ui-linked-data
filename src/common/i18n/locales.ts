@@ -1,8 +1,6 @@
 export const LOCALES = {
+  BASE_ENGLISH: 'en',
   ENGLISH: 'en-US',
-  JAPANESE: 'ja-JA',
-  FRENCH: 'fr-FR',
-  GERMAN: 'de-DE',
 };
 
 export const LOCALE_DISPLAY_NAMES: Record<string, string> = {

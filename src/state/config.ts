@@ -38,6 +38,11 @@ const locale = atom<(typeof LOCALES)[keyof typeof LOCALES]>({
   default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH,
 });
 
+const i18nMessages = atom<I18nMessages>({
+  key: 'config.i18nMessages',
+  default: {},
+});
+
 const collectRecordDataForPreview = atom<boolean>({
   key: 'config.collectRecordDataForPreview',
   default: false,
@@ -61,6 +66,7 @@ export default {
   initialSchemaKey,
   selectedEntries,
   locale,
+  i18nMessages,
   collectRecordDataForPreview,
   customEvents,
   clonePrototypes,

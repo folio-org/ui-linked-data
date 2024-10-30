@@ -1,0 +1,1 @@
+type I18nMessages = Record<string, Record<string, string>>;
