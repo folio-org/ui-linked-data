@@ -30,8 +30,9 @@ export const ViewMarcControlPane = () => {
             values={{
               title: (
                 <span data-testid="marc-title">
-                  {(record?.resource && getRecordTitle(record.resource as RecordEntry)) ??
-                    formatMessage({ id: 'ld.noTitleInBrackets' })}
+                  {(record?.resource && getRecordTitle(record.resource as RecordEntry)) ?? (
+                    <>&lt;{formatMessage({ id: 'ld.noTitleInBrackets' })}&gt;</>
+                  )}
                 </span>
               ),
             }}

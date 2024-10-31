@@ -21,6 +21,7 @@
     "build": "tsc && vite build",
     "build:lib": "npm run build --type=library",
     "prepare": "npm run build:lib",
+    "formatjs-compile": "formatjs compile-folder --ast --format simple ./translations/ui-linked-data ./translations/ui-linked-data/compiled",
     "lint:errors-only": "eslint src --ext ts,tsx --report-unused-disable-directives --quiet",
     "lint:full": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
