@@ -13,3 +13,11 @@ export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,
   totalPages: 0,
 };
+
+export enum ExternalResourceIdType {
+  Inventory = 'inventory',
+}
+
+export const GET_RESOURCE_BY_TYPE_URIS = {
+  [ExternalResourceIdType.Inventory]: `${BIBFRAME_API_ENDPOINT}/preview/:recordId`,
+};

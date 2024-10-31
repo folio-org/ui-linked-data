@@ -1,1 +1,1 @@
-export { ExternalResourceEdit } from './ExternalResourceEdit';
+export { ExternalResourcePreview } from './ExternalResourcePreview';

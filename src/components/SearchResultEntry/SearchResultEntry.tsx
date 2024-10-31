@@ -73,10 +73,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(prev => [
-        ...prev,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      setCommonStatus(prev => [...prev, UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching')]);
     } finally {
       setIsLoading(false);
     }

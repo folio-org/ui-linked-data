@@ -25,11 +25,19 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import state from '@state';
 import { useContainerEvents } from './useContainerEvents';
+import { ExternalResourceIdType } from '@common/constants/api.constants';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
   shouldSetSearchParams?: boolean;
   isNavigatingBack?: boolean;
+};
+
+type IBaseFetchRecord = {
+  recordId?: string;
+  cachedRecord?: RecordEntry;
+  idType?: ExternalResourceIdType;
+  errorMessage?: string;
 };
 
 export const useRecordControls = () => {
@@ -59,30 +67,30 @@ export const useRecordControls = () => {
   const isClone = queryParams.get(QueryParams.CloneOf);
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
-    try {
-      const profile = PROFILE_BFIDS.MONOGRAPH;
-      const locallySavedData = getSavedRecord(profile, recordId);
-      const recordData: RecordEntry =
-        locallySavedData && !previewParams ? locallySavedData.data : await getRecord({ recordId });
+    const profile = PROFILE_BFIDS.MONOGRAPH;
+    const locallySavedData = getSavedRecord(profile, recordId);
+    const cachedRecord: RecordEntry | undefined =
+      locallySavedData && !previewParams ? (locallySavedData.data as RecordEntry) : undefined;
 
-      if (!previewParams) {
-        setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData)));
-        setRecord(recordData);
-      }
+    const recordData = await getRecordAndInitializeParsing({ recordId, cachedRecord });
 
-      setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
+    if (!recordData) return;
 
-      await getProfiles({ record: recordData, recordId, previewParams, asClone: Boolean(isClone) });
-
-      setIsEdited(false);
-    } catch (_err) {
-      console.error('Error fetching record.');
-
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+    if (!previewParams) {
+      setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData)));
+      setRecord(recordData);
     }
+
+    setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(recordData, !!previewParams)));
+
+    await getProfiles({
+      record: recordData,
+      recordId,
+      previewParams,
+      asClone: Boolean(isClone),
+    });
+
+    setIsEdited(false);
   };
 
   const saveRecord = async ({
@@ -120,10 +128,7 @@ export const useRecordControls = () => {
 
       setStatusMessages(currentStatus => [
         ...currentStatus,
-        UserNotificationFactory.createMessage(
-          StatusType.success,
-          recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess',
-        ),
+        UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
       ]);
 
       // TODO: isEdited state update is not immediately reflected in the <Prompt />
@@ -261,6 +266,36 @@ export const useRecordControls = () => {
     }
   };
 
+  const getRecordAndInitializeParsing = async ({ recordId, cachedRecord, idType, errorMessage }: IBaseFetchRecord) => {
+    if (!recordId && !cachedRecord) return;
+
+    try {
+      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType })));
+
+      await getProfiles({
+        record: recordData,
+        recordId,
+      });
+
+      return recordData;
+    } catch (_err) {
+      setStatusMessages(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
+      ]);
+    }
+  };
+
+  const fetchExternalRecordForPreview = async (recordId?: string, idType = ExternalResourceIdType.Inventory) => {
+    if (!recordId) return;
+
+    await getRecordAndInitializeParsing({
+      recordId,
+      idType,
+      errorMessage: 'ld.errorFetchingExternalResourceForPreview',
+    });
+  };
+
   return {
     fetchRecord,
     saveRecord,
@@ -269,5 +304,6 @@ export const useRecordControls = () => {
     discardRecord,
     clearRecordState,
     fetchRecordAndSelectEntityValues,
+    fetchExternalRecordForPreview,
   };
 };

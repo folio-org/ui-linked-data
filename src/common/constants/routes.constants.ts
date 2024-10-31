@@ -19,13 +19,14 @@ export const ROUTES = {
     uri: '/resources/:resourceId/edit',
     name: 'ld.editResource',
   },
-  EXTERNAL_RESOURCE_EDIT: {
-    uri: '/resources/external/:resourceId/edit',
-    name: 'ld.externalResource',
+  EXTERNAL_RESOURCE_PREVIEW: {
+    uri: '/resources/external/:externalId/preview',
+    name: 'ld.externalResourcePreview',
   },
 };
 
 export const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];
+export const EXTERNAL_RESOURCE_URLS = [ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri];
 
 export const RESOURCE_EDIT_CREATE_URLS = [ROUTES.RESOURCE_EDIT.uri, ROUTES.RESOURCE_CREATE.uri];
 
