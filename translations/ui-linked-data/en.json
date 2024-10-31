@@ -121,7 +121,7 @@
   "ld.unsavedRecentEdits": "Recent edits made to the resource have not been saved. Unsaved changes will be lost.",
   "ld.unsavedChanges": "Unsaved changes",
   "ld.continueWithoutSaving": "Continue without saving",
-  "ld.noTitleInBrackets": "<No title>",
+  "ld.noTitleInBrackets": "No title",
   "ld.viewMarc": "View MARC",
   "ld.marcWithTitle": "MARC - {title}",
   "ld.cantLoadMarc": "Can't load MARC for this resource description",

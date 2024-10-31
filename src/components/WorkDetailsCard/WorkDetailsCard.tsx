@@ -64,7 +64,13 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           className="title"
           data-testid={`preview-button__${id}`}
         >
-          {title || <FormattedMessage id="ld.noTitleInBrackets" />}
+          {title || (
+            <>
+              &lt;
+              <FormattedMessage id="ld.noTitleInBrackets" />
+              &gt;
+            </>
+          )}
         </Button>
         {creatorName && (
           <div className="details-item">
