@@ -5,8 +5,8 @@ import { IntlProvider } from 'react-intl';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { ROUTES } from '@common/constants/routes.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
-import { BASE_LOCALE, i18nMessages } from '@common/i18n/messages';
 import { localStorageService } from '@common/services/storage';
+import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
 import { Root, Search, Load, EditWrapper, ExternalResourcePreview } from '@views';
 import state from '@state';
 import { ServicesProvider } from './providers';
@@ -59,13 +59,14 @@ const createRouter = (basename: string) => createBrowserRouter(routes, { basenam
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const locale = useRecoilValue(state.config.locale);
   const setCustomEvents = useSetRecoilState(state.config.customEvents);
+  const { i18nMessages, baseLocaleMessages } = useLoadI18nMessages();
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
   }, [config]);
 
   return (
-    <IntlProvider messages={i18nMessages[locale] || BASE_LOCALE} locale={locale} defaultLocale="en-US">
+    <IntlProvider messages={i18nMessages[locale] || baseLocaleMessages} locale={locale} defaultLocale="en-US">
       <ErrorBoundary>
         <ServicesProvider>
           <RouterProvider router={createRouter(routePrefix)} />

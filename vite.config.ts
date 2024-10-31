@@ -12,6 +12,7 @@ export default defineConfig(() => {
     '@components': path.resolve(__dirname, './src/components'),
     '@state': path.resolve(__dirname, './src/state'),
     '@views': path.resolve(__dirname, './src/views'),
+    '@translations': path.resolve(__dirname, './translations'),
   };
 
   // config type "library" is used for building a web-component,
