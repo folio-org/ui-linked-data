@@ -28,8 +28,11 @@ type IPreview = {
   altSchema?: Schema;
   altUserValues?: UserValues;
   altInitKey?: string;
+  altDisplayNames?: Record<string, string>;
   headless?: boolean;
   hideActions?: boolean;
+  forceRenderAllTopLevelEntities?: boolean;
+  entityRowDisplay?: boolean;
 };
 
 type Fields = {
@@ -52,7 +55,16 @@ const checkShouldGroupWrap = (entry = {} as SchemaEntry, level: number) => {
   return (!children?.length || type === AdvancedFieldType.dropdown) && level !== GROUP_BY_LEVEL;
 };
 
-export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, headless = false, hideActions }) => {
+export const Preview: FC<IPreview> = ({
+  altSchema,
+  altUserValues,
+  altInitKey,
+  altDisplayNames,
+  headless = false,
+  hideActions,
+  forceRenderAllTopLevelEntities,
+  entityRowDisplay,
+}) => {
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
@@ -96,7 +108,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     if (type === AdvancedFieldType.dropdownOption && !isOnBranchWithUserValue) return null;
 
     // don't render top level entities not selected for preview
-    if (isEntity && !currentlyPreviewedEntityBfid.has(bfid)) return null;
+    if (isEntity && !currentlyPreviewedEntityBfid.has(bfid) && !forceRenderAllTopLevelEntities) return null;
 
     // TODO: define and organize the rules for display when there's clarity
     const isPreviewable = !NOT_PREVIEWABLE_TYPES.includes(type as AdvancedFieldType);
@@ -118,19 +130,22 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
     const shouldRenderPlaceholders =
       (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
     const isDependentDropdown = type === AdvancedFieldType.dropdown && !!linkedEntry?.controlledBy;
-    const displayNameWithAltValue = PREVIEW_ALT_DISPLAY_LABELS[displayName] || displayName;
+    const displayNameWithAltValue =
+      altDisplayNames?.[displayName] || PREVIEW_ALT_DISPLAY_LABELS[displayName] || displayName;
     const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
     const isBlockContents = level === GROUP_CONTENTS_LEVEL;
     const isInstance = bfid === PROFILE_BFIDS.INSTANCE;
     const showEntityActions = !hideActions && isEntity;
+    const wrapEntities = forceRenderAllTopLevelEntities && isEntity;
 
     return (
       <ConditionalWrapper
-        condition={isBlock || isBlockContents}
+        condition={isBlock || isBlockContents || wrapEntities}
         wrapper={children => (
           <div
             className={classNames({
               'preview-block': isBlock,
+              'preview-entity': wrapEntities,
               'preview-block-contents': isBlockContents,
             })}
             data-testid="preview-fields"
@@ -147,7 +162,7 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
               'value-heading': !isGroupable,
             })}
           >
-            {isEntity && !isInstance && <Lightbulb16 />}
+            {isEntity && !isInstance && !altDisplayNames && <Lightbulb16 />}
             {displayNameWithAltValue}
             {showEntityActions && !isInstance && (
               <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={handleNavigateToEditPage}>
@@ -215,7 +230,10 @@ export const Preview: FC<IPreview> = ({ altSchema, altUserValues, altInitKey, he
   });
 
   return (
-    <div className="preview-panel" data-testid="preview-fields">
+    <div
+      className={classNames('preview-panel', { 'preview-panel-row': entityRowDisplay })}
+      data-testid="preview-fields"
+    >
       {!headless && (
         <h3>
           <FormattedMessage id="ld.preview" />

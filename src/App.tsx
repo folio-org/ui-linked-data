@@ -7,7 +7,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
 import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
-import { Root, Search, Load, EditWrapper, ExternalResourceEdit } from '@views';
+import { Root, Search, Load, EditWrapper, ExternalResourcePreview } from '@views';
 import state from '@state';
 import { ServicesProvider } from './providers';
 import './App.scss';
@@ -43,8 +43,8 @@ export const routes: RouteObject[] = [
         element: <Load />,
       },
       {
-        path: ROUTES.EXTERNAL_RESOURCE_EDIT.uri,
-        element: <ExternalResourceEdit />,
+        path: ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri,
+        element: <ExternalResourcePreview />,
       },
       {
         path: '*',

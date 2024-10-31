@@ -148,13 +148,18 @@ export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
 };
 
 export const getRecordTitle = (record: RecordEntry) => {
-  const { block } = getEditingRecordBlocks(record);
+  // TODO: unify interactions with record and its format
+  // Some functions expect { resource: { %RECORD_CONTENTS% }}
+  // Others, like this one, expect { %RECORD_CONTENTS% }
+  const recordContents = unwrapRecordValuesFromCommonContainer(record);
+
+  const { block } = getEditingRecordBlocks(recordContents);
 
   let selectedTitle;
 
   TITLE_CONTAINER_URIS.every(uri => {
     const selectedTitleContainer = (
-      record[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, any>[]
+      recordContents[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, any>[]
     )?.find(obj => Object.hasOwn(obj, uri));
 
     if (selectedTitleContainer) {
@@ -179,6 +184,9 @@ export const getAdjustedRecordContents = ({ record, block, reference, asClone }:
     record: adjustedRecord,
   };
 };
+
+export const unwrapRecordValuesFromCommonContainer = (record: RecordEntry) =>
+  (record.resource ?? record) as RecordEntry;
 
 export const wrapRecordValuesWithCommonContainer = (record: RecordEntry) => ({ resource: record });
 
