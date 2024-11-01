@@ -6,7 +6,7 @@ export const ExternalResourceLoader = () => {
   const { externalId } = useParams();
 
   return (
-    <div className="external-resource-loader">
+    <div className="external-resource-loader" data-testid="external-resource-loader">
       <div className="contents">
         <FormattedMessage id="ld.fetchingExternalResourceById" values={{ resourceId: externalId }} />
       </div>
