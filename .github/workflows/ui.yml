@@ -12,7 +12,5 @@ jobs:
     if: github.ref_name == github.event.repository.default_branch || github.event_name != 'push' || github.ref_type == 'tag'
     secrets: inherit
     with:
-      compile-translations: true
       jest-test-command: npm run test:unit
-      sonar-enabled: false
       install-before-publish: true
