@@ -59,12 +59,13 @@ const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecor
 };
 
 export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>) => {
-  const instanceComponent = record[BFLITE_URIS.INSTANCE as string] as unknown as Record<string, unknown>;
-  const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
+  const updatedRecord = cloneDeep(record);
+  const instanceComponent = updatedRecord[BFLITE_URIS.INSTANCE as string] as unknown as Record<string, unknown>;
+  const workComponent = updatedRecord[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
   const instanceNote = instanceComponent[BFLITE_URIS.NOTE];
   const workNote = workComponent[BFLITE_URIS.NOTE];
 
-  if (!instanceNote && !workNote) return record;
+  if (!instanceNote && !workNote) return updatedRecord;
 
   const blocksList = [instanceComponent, workComponent];
 
@@ -81,14 +82,15 @@ export const updateRecordWithNotes = (record: Record<string, RecursiveRecordSche
     delete recordEntry[BFLITE_URIS.NOTE];
   });
 
-  return record;
+  return updatedRecord;
 };
 
 export const updateRecordWithRelationshipDesignator = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
   fieldUirs: string[],
 ) => {
-  const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
+  const updatedRecord = cloneDeep(record);
+  const workComponent = updatedRecord?.[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
 
   fieldUirs.forEach(fieldName => {
     const recordFields = workComponent?.[fieldName] as RecordEntry[] | undefined;
@@ -131,26 +133,28 @@ export const updateRecordWithRelationshipDesignator = (
     });
   });
 
-  return record;
+  return updatedRecord;
 };
 
 export const updateRecordForTargetAudience = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
+  const updatedRecord = cloneDeep(record);
   // TODO: add suport for this field
-  const workComponent = record[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
+  const workComponent = updatedRecord[BFLITE_URIS.WORK as string] as unknown as Record<string, unknown>;
 
   if (workComponent?.[BF2_URIS.INTENDED_AUDIENCE]) {
     delete workComponent[BF2_URIS.INTENDED_AUDIENCE];
   }
 
-  return record;
+  return updatedRecord;
 };
 
 export const updateRecordForProviderPlace = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
-  const instanceComponent = record?.[BFLITE_URIS.INSTANCE as string] as unknown as Record<
+  const updatedRecord = cloneDeep(record);
+  const instanceComponent = updatedRecord?.[BFLITE_URIS.INSTANCE as string] as unknown as Record<
     string,
     Array<{
       [key: string]: string[] | Record<string, string[]>[];
@@ -173,19 +177,20 @@ export const updateRecordForProviderPlace = (
     });
   });
 
-  return record;
+  return updatedRecord;
 };
 
 export const updateRecordForClassification = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
-  const workComponent = record?.[BFLITE_URIS.WORK as string] as unknown as Record<
+  const updatedRecord = cloneDeep(record);
+  const workComponent = updatedRecord?.[BFLITE_URIS.WORK as string] as unknown as Record<
     string,
     Record<string, RecordBasic>[]
   >;
   const classificationData = workComponent?.[BFLITE_URIS.CLASSIFICATION];
 
-  if (!classificationData) return record;
+  if (!classificationData) return updatedRecord;
 
   workComponent[BFLITE_URIS.CLASSIFICATION] = classificationData?.map(data => {
     let updatedElem = {};
@@ -197,7 +202,7 @@ export const updateRecordForClassification = (
     return updatedElem;
   });
 
-  return record;
+  return updatedRecord;
 };
 
 export const getNonBFMapElemByContainerKey = (

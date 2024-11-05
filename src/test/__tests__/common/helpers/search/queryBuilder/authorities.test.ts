@@ -16,11 +16,13 @@ describe('buildSearchQuery', () => {
         [SearchableIndexQuerySelector.Query]: 'author:MOCK_SEARCH_VALUE',
       },
     } as SearchableIndexEntries;
+
     const result = buildSearchQuery({
       map,
       searchBy,
       value,
     });
+
     expect(result).toBeUndefined();
   });
 
@@ -30,11 +32,13 @@ describe('buildSearchQuery', () => {
         [SearchableIndexQuerySelector.Prev]: 'title:MOCK_SEARCH_VALUE',
       },
     } as SearchableIndexEntries;
+
     const result = buildSearchQuery({
       map,
       searchBy,
       value,
     });
+
     expect(result).toBeUndefined();
   });
 
@@ -44,11 +48,13 @@ describe('buildSearchQuery', () => {
         [SearchableIndexQuerySelector.Query]: 'title:MOCK_SEARCH_VALUE',
       },
     } as SearchableIndexEntries;
+
     const result = buildSearchQuery({
       map,
       searchBy,
       value,
     });
+
     expect(result).toBe('title:test');
   });
 
@@ -58,12 +64,14 @@ describe('buildSearchQuery', () => {
         customSelector: 'custom:title:MOCK_SEARCH_VALUE',
       },
     } as SearchableIndexEntries;
+
     const result = buildSearchQuery({
       map,
       selector: 'customSelector' as SearchableIndexQuerySelectorType,
       searchBy,
       value: 'test',
     });
+
     expect(result).toBe('custom:title:test');
   });
 
@@ -73,11 +81,13 @@ describe('buildSearchQuery', () => {
         [SearchableIndexQuerySelector.Query]: 'title:MOCK_SEARCH_VALUE',
       },
     } as SearchableIndexEntries;
+
     const result = buildSearchQuery({
       map,
       searchBy,
       value: '',
     });
+
     expect(result).toBe('title:');
   });
 });

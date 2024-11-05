@@ -7,7 +7,7 @@ export interface IUserValues {
     type: AdvancedFieldType;
     key: string;
     value: UserValueDTO;
-  }) => void;
+  }) => Promise<void>;
 
   set: (userValues: UserValues) => void;
 
