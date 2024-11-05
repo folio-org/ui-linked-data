@@ -7,6 +7,7 @@ export default {
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
   },
+  coverageDirectory: '<rootDir>/artifacts/coverage-jest/',
   moduleNameMapper: {
     '\\.(css|sass|scss)$': 'identity-obj-proxy',
     '\\.(svg)(\\?react)$': '<rootDir>/src/test/__mocks__/svg.ts',
