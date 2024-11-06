@@ -6,6 +6,7 @@ type TextareaProps = HTMLProps<HTMLTextAreaElement> & {
   'data-testid'?: string;
   ariaLabel?: string;
   fullWidth?: boolean;
+  role?: string;
 };
 
 export const Textarea: FC<TextareaProps> = ({
@@ -18,6 +19,7 @@ export const Textarea: FC<TextareaProps> = ({
   className,
   'data-testid': dataTestId,
   fullWidth,
+  role,
 }) => {
   return (
     <textarea
@@ -25,6 +27,7 @@ export const Textarea: FC<TextareaProps> = ({
       rows={rows}
       name={name}
       aria-label={ariaLabel}
+      role={role}
       value={value}
       onChange={onChange}
       className={classNames('textarea', { 'textarea-full-width': fullWidth }, className)}

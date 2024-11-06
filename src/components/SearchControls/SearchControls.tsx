@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEventHandler, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
@@ -24,6 +24,7 @@ type Props = {
 };
 
 export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearValues }) => {
+  const { formatMessage } = useIntl();
   const {
     isVisibleSearchByControl,
     isVisibleAdvancedSearch,
@@ -93,6 +94,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               value={searchBy}
               options={selectOptions}
               onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
+              ariaLabel={formatMessage({ id: 'ld.aria.filters.select' })}
             />
           )}
           {hasMultilineSearchInput ? (
@@ -103,6 +105,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
               data-testid="id-search-textarea"
               fullWidth
+              ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
             />
           ) : (
             <Input
@@ -113,6 +116,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               className="text-input"
               onPressEnter={submitSearch}
               data-testid="id-search-input"
+              ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
             />
           )}
         </div>
