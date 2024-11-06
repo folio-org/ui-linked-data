@@ -24,6 +24,8 @@ type Button = {
   disabled?: boolean;
   'data-testid'?: string;
   role?: string;
+  ariaLabel?: string;
+  ariaLive?: string;
 };
 
 export const Button: FC<Button> = ({
@@ -37,6 +39,7 @@ export const Button: FC<Button> = ({
   disabled,
   'data-testid': dataTestId,
   role,
+  ariaLabel,
 }) => (
   <button
     id={id}
@@ -44,6 +47,7 @@ export const Button: FC<Button> = ({
     disabled={disabled}
     onClick={onClick}
     role={role}
+    aria-label={ariaLabel}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,
