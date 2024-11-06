@@ -25,7 +25,6 @@ type Button = {
   'data-testid'?: string;
   role?: string;
   ariaLabel?: string;
-  ariaLive?: string;
 };
 
 export const Button: FC<Button> = ({
