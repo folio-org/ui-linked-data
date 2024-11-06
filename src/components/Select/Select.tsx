@@ -17,22 +17,38 @@ type Select = {
   options: (string | SelectValue)[];
   withIntl?: boolean;
   className?: string;
+  ariaLabel?: string;
+  ariaLabelledby?: string;
   [x: string]: any;
 };
 
-export const Select: FC<Select> = ({ id, value, onChange, options, withIntl = false, className, ...restProps }) => {
+export const Select: FC<Select> = ({
+  id,
+  value,
+  onChange,
+  options,
+  withIntl = false,
+  className,
+  ariaLabel,
+  ariaLabelledby,
+  ...restProps
+}) => {
   const selectedValue = typeof value === 'string' ? value : value?.value;
 
   return (
     <select
       id={id}
-      className={classNames('select-input', className, {placeholder: selectedValue === ''})}
+      className={classNames('select-input', className, { placeholder: selectedValue === '' })}
       value={selectedValue}
       onChange={({ target: { value } }) => {
         const selectedValue = options.find(item => (typeof item === 'string' ? item === value : item.value === value));
 
         selectedValue && onChange(typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue);
       }}
+      role="combobox"
+      aria-expanded="false"
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
       {...restProps}
     >
       {options.map(id => {
