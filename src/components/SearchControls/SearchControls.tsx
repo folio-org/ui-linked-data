@@ -106,7 +106,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               data-testid="id-search-textarea"
               fullWidth
               ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
-              role="searchbox"
             />
           ) : (
             <Input
@@ -118,7 +117,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               onPressEnter={submitSearch}
               data-testid="id-search-input"
               ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
-              role="searchbox"
             />
           )}
         </div>
