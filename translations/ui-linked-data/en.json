@@ -185,5 +185,7 @@
   "ld.searchQueryWouldBeHere": "{query} would be here",
   "ld.continue": "Continue",
   "ld.aria.filters.select": "Select search identifiers",
-  "ld.aria.filters.textbox": "Search query textbox"
+  "ld.aria.filters.textbox": "Search query textbox",
+  "ld.aria.filters.reset": "Reset filters button",
+  "ld.aria.filters.reset.announce": "Search field and filters are reset"
 }

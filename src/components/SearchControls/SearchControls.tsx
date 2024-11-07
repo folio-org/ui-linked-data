@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FormEventHandler, useEffect } from 'react';
+import { ChangeEvent, FC, FormEventHandler, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -16,6 +16,7 @@ import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
 import './SearchControls.scss';
+import { Announcement } from '@components/Announcement/Announcement';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -44,6 +45,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
   const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
   const selectOptions =
@@ -66,6 +68,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     clearValuesAndResetControls();
     hasSearchParams && setSearchParams({});
     hasSearchParams && setNavigationState({});
+    setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
   };
 
   useEffect(() => {
@@ -137,9 +140,14 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
             prefix={<XInCircle />}
             disabled={isDisabledResetButton}
             data-testid="id-search-reset-button"
+            ariaLabel={formatMessage({ id: 'ld.aria.filters.reset' })}
           >
             <FormattedMessage id="ld.reset" />
           </Button>
+          <Announcement
+            message={announcementMessage}
+            onClear={() => setAnnouncementMessage('')}
+          />
           {isVisibleAdvancedSearch && (
             <Button
               type={ButtonType.Link}
