@@ -6,7 +6,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
     const typedData = data as string;
 
     return {
-      uuid: uuid || '',
+      uuid: uuid ?? '',
       contents: Array.isArray(typedData)
         ? typedData.map(dataElem => {
             const isObject = typeof dataElem === 'object';

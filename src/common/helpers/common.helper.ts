@@ -56,23 +56,25 @@ export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedField
   if (struct?.propertyLabel || struct?.propertyURI) {
     const baseType = getPropertyTemplateType(struct as PropertyTemplate);
 
-    if (baseType === BaseFieldType.LITERAL) return AdvancedFieldType.literal;
+    switch (baseType) {
+      case BaseFieldType.LITERAL:
+        return AdvancedFieldType.literal;
+      case BaseFieldType.SIMPLE:
+        return AdvancedFieldType.simple;
+      case BaseFieldType.COMPLEX:
+        return AdvancedFieldType.complex;
+      case BaseFieldType.HIDE:
+      case BaseFieldType.META:
+        return AdvancedFieldType.group;
+      case BaseFieldType.REF: {
+        const {
+          valueConstraint: { valueTemplateRefs },
+        } = struct as PropertyTemplate;
 
-    if (baseType === BaseFieldType.SIMPLE) return AdvancedFieldType.simple;
-
-    if (baseType === BaseFieldType.COMPLEX) return AdvancedFieldType.complex; // TODO: define required fields and values for Complex field
-
-    // TODO: clarify
-    if (baseType === BaseFieldType.HIDE || baseType === BaseFieldType.META) return AdvancedFieldType.group;
-
-    if (baseType === BaseFieldType.REF) {
-      const {
-        valueConstraint: { valueTemplateRefs },
-      } = struct as PropertyTemplate;
-
-      if (valueTemplateRefs.length > 1) return AdvancedFieldType.dropdown;
-
-      return AdvancedFieldType.groupComplex;
+        return valueTemplateRefs.length > 1 ? AdvancedFieldType.dropdown : AdvancedFieldType.groupComplex;
+      }
+      default:
+        return AdvancedFieldType.__fallback;
     }
 
     // TODO: REF -> META. HIDE
