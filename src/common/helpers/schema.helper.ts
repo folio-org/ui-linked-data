@@ -67,7 +67,7 @@ export const checkGroupIsNonBFMapped = ({
   return !!mappedGroup && parentEntryType === block && type === groupComplex;
 };
 
-export const getRecordEntry = (recordEntry?: Record<string, Record<string, string[]>[]>) =>
+export const getRecordEntry = (recordEntry?: Record<string, RecordBasic[]>) =>
   Array.isArray(recordEntry) ? recordEntry[0] : recordEntry;
 
 export const selectNonBFMappedGroupData = ({
@@ -79,7 +79,7 @@ export const selectNonBFMappedGroupData = ({
   propertyURI: string;
   type: AdvancedFieldType;
   parentEntryType?: AdvancedFieldType;
-  selectedRecord?: Record<string, Record<string, string[]>[]> | Record<string, Record<string, string[]>[]>;
+  selectedRecord?: Record<string, RecordBasic[]>;
 }) => {
   const mappedGroup = getMappedNonBFGroupType(propertyURI);
   const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });

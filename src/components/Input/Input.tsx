@@ -11,6 +11,8 @@ type InputProps = {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   onPressEnter?: VoidFunction;
   type?: HTMLInputTypeAttribute;
+  ariaLabel?: string;
+  role?: string;
   [x: string]: any;
 };
 
@@ -23,6 +25,8 @@ export const Input: FC<InputProps> = ({
   onChange,
   onPressEnter,
   type = 'text',
+  ariaLabel,
+  role = 'textbox',
   ...restProps
 }) => {
   return (
@@ -41,6 +45,8 @@ export const Input: FC<InputProps> = ({
         }
       }}
       type={type}
+      aria-label={ariaLabel}
+      role={role}
       {...restProps}
     />
   );

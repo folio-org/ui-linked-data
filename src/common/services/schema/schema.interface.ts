@@ -1,5 +1,5 @@
 export interface ISchema {
-  init: (templates: ResourceTemplates, entry: ProfileEntry | ResourceTemplate | PropertyTemplate) => void;
+  init: (templates: ResourceTemplates, entry: ProfileComponent) => void;
 
   get: () => Schema;
 

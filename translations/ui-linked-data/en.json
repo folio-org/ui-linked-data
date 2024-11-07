@@ -183,5 +183,7 @@
   "ld.marcAuthorityRecord": "MARC authority record",
   "ld.selectBrowseOption": "Select a browse option",
   "ld.searchQueryWouldBeHere": "{query} would be here",
-  "ld.continue": "Continue"
+  "ld.continue": "Continue",
+  "ld.aria.filters.select": "Select search identifiers",
+  "ld.aria.filters.textbox": "Search query textbox"
 }

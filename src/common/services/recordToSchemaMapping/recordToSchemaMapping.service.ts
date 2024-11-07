@@ -24,10 +24,10 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private templateMetadata?: ResourceTemplateMetadata[];
 
   constructor(
-    private selectedEntriesService: ISelectedEntries,
-    private repeatableFieldsService: ISchemaWithDuplicatesService,
-    private userValuesService: IUserValues,
-    private commonStatusService: ICommonStatus,
+    private readonly selectedEntriesService: ISelectedEntries,
+    private readonly repeatableFieldsService: ISchemaWithDuplicatesService,
+    private readonly userValuesService: IUserValues,
+    private readonly commonStatusService: ICommonStatus,
   ) {
     this.updatedSchema = new Map();
     this.schemaArray = [];
@@ -63,50 +63,66 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       if (!this.record[this.currentBlockUri]) return;
 
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
-        this.recordMap = (NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap)?.[this.currentBlockUri]?.[
-          recordKey
-        ] as BF2BFLiteMapEntry;
-
-        this.currentRecordGroupKey = recordKey;
-
-        if (!this.recordMap) continue;
-
-        const containerBf2Uri = this.recordMap.container.bf2Uri;
-        const containerDataTypeUri = this.recordMap.container.dataTypeUri;
-        const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri);
-
-        // Traverse throug the record elements within the group (for the Repeatable fields)
-        for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
-          if (!schemaEntries?.length) continue;
-
-          const dropdownOptionsMap = this.recordMap.options;
-
-          // generate repeatable fields
-          if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-            const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[
-              parseInt(recordGroupIndex) - 1
-            ];
-            const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) || '';
-            this.updatedSchema = this.repeatableFieldsService?.get();
-            this.schemaArray = Array.from(this.updatedSchema?.values() || []);
-
-            await this.traverseEntries({
-              dropdownOptionsMap,
-              recordGroup,
-              schemaEntry: this.updatedSchema?.get(newEntryUuid),
-            });
-          } else {
-            await this.traverseEntries({
-              dropdownOptionsMap,
-              recordGroup,
-              schemaEntry: schemaEntries[0],
-            });
-          }
-        }
+        await this.processRecordEntry(recordKey, recordEntry);
       }
     } catch (error) {
       console.error('Cannot apply a record to the schema:', error);
       this.commonStatusService.set('ld.recordMappingToSchema', StatusType.error);
+    }
+  }
+
+  private async processRecordEntry(recordKey: string, recordEntry: any) {
+    this.recordMap = (NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap)?.[this.currentBlockUri as string]?.[recordKey];
+    this.currentRecordGroupKey = recordKey;
+
+    if (!this.recordMap) return;
+
+    const containerBf2Uri = this.recordMap.container.bf2Uri;
+    const containerDataTypeUri = this.recordMap.container.dataTypeUri as string;
+    const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri);
+
+    for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
+      await this.processRecordGroup(
+        recordGroupIndex,
+        recordEntry,
+        recordGroup,
+        schemaEntries,
+        containerBf2Uri,
+        containerDataTypeUri,
+      );
+    }
+  }
+
+  private async processRecordGroup(
+    recordGroupIndex: string,
+    recordEntry: any,
+    recordGroup: any,
+    schemaEntries: SchemaEntry[],
+    containerBf2Uri: string,
+    containerDataTypeUri: string,
+  ) {
+    if (!schemaEntries?.length) return;
+
+    const dropdownOptionsMap = this.recordMap?.options;
+
+    // generate repeatable fields
+    if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
+      const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[parseInt(recordGroupIndex) - 1];
+      const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) ?? '';
+      this.updatedSchema = this.repeatableFieldsService?.get();
+      this.schemaArray = Array.from(this.updatedSchema?.values() || []);
+
+      await this.traverseEntries({
+        dropdownOptionsMap,
+        recordGroup,
+        schemaEntry: this.updatedSchema?.get(newEntryUuid),
+      });
+    } else {
+      await this.traverseEntries({
+        dropdownOptionsMap,
+        recordGroup,
+        schemaEntry: schemaEntries[0],
+      });
     }
   }
 
@@ -116,45 +132,49 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     schemaEntry,
   }: {
     dropdownOptionsMap?: BF2BFLiteMapOptions;
-    recordGroup: any;
+    recordGroup: unknown;
     schemaEntry?: SchemaEntry;
   }) {
     if (!schemaEntry) return;
 
     if (dropdownOptionsMap) {
-      // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-      for await (const [idx, groupElem] of Object.entries(recordGroup)) {
-        const dropdownOptionUUID = this.findSchemaDropdownOption(schemaEntry, idx);
-
-        const typedGroupElem = groupElem as Record<string, string[] | RecordBasic[]>;
-
-        if (dropdownOptionUUID) {
-          const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
-
-          // iterate within the elements inside the selectedDropdown option
-          await this.mapRecordListToSchemaEntry(typedGroupElem, dropdownOptionEntry as SchemaEntry);
-        } else {
-          await this.mapRecordListToSchemaEntry(typedGroupElem, schemaEntry);
-        }
-      }
+      await this.traverseDropdownOptions(recordGroup, schemaEntry);
     } else {
-      if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldTypeEnum)) {
-        await this.mapRecordValueToSchemaEntry({
-          schemaEntry,
-          recordKey: this.currentRecordGroupKey as string,
-          recordEntryValue: recordGroup,
-        });
+      await this.traverseGroupsAndUIControls(recordGroup, schemaEntry);
+    }
+  }
+
+  private async traverseDropdownOptions(recordGroup: any, schemaEntry: SchemaEntry) {
+    // traverse within the selected record element (find dropdown options and elements ouside dropdown)
+    for await (const [idx, groupElem] of Object.entries(recordGroup)) {
+      const dropdownOptionUUID = this.findSchemaDropdownOption(schemaEntry, idx);
+      const typedGroupElem = groupElem as Record<string, string[] | RecordBasic[]>;
+
+      if (dropdownOptionUUID) {
+        const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
+        // iterate within the elements inside the selectedDropdown option
+        await this.mapRecordListToSchemaEntry(typedGroupElem, dropdownOptionEntry as SchemaEntry);
       } else {
-        // Used for complex groups, which contains a number of subfields
-        if (recordGroup && typeof recordGroup === 'object') {
-          // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-          await this.mapRecordListToSchemaEntry(recordGroup, schemaEntry);
-        }
+        await this.mapRecordListToSchemaEntry(typedGroupElem, schemaEntry);
       }
     }
   }
 
-  private getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
+  private async traverseGroupsAndUIControls(recordGroup: any, schemaEntry: SchemaEntry) {
+    if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldTypeEnum)) {
+      await this.mapRecordValueToSchemaEntry({
+        schemaEntry,
+        recordKey: this.currentRecordGroupKey as string,
+        recordEntryValue: recordGroup,
+      });
+    } else if (recordGroup && typeof recordGroup === 'object') {
+      // Used for complex groups, which contains a number of subfields
+      // traverse within the selected record element (find dropdown options and elements ouside dropdown)
+      await this.mapRecordListToSchemaEntry(recordGroup, schemaEntry);
+    }
+  }
+
+  private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
     return this.schemaArray.filter((entry: SchemaEntry) => {
       const hasTheSameUri = entry.uri === containerBf2Uri;
       const hasTheSameDataTypeUri = containerDataTypeUri
@@ -253,10 +273,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
           });
         }
       });
-    } else {
-      if (this.hasCorrectUuid(schemaEntry, recordKey)) {
-        selectedSchemaEntryUuid = schemaEntry.uuid;
-      }
+    } else if (this.hasCorrectUuid(schemaEntry, recordKey)) {
+      selectedSchemaEntryUuid = schemaEntry.uuid;
     }
 
     return selectedSchemaEntryUuid;
@@ -323,7 +341,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     if (!schemaUiElem) return;
 
-    const { type, constraints } = schemaUiElem as SchemaEntry;
+    const { type, constraints } = schemaUiElem;
     const newValueKey = schemaElemUuid;
     const data = recordEntryValue;
 
@@ -371,24 +389,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     if (Array.isArray(recordEntryValue)) {
       for await (const [key, value] of Object.entries(recordEntryValue)) {
-        // Generate repeatable subcomponents
-        if (recordEntryValue.length > 1 && parseInt(key) !== 0) {
-          const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) || '';
-          this.updatedSchema = this.repeatableFieldsService?.get();
-
-          // Parameters are defined for further proper duplication of repeatable subcomponents
-          const duplicatedElem = this.updatedSchema.get(newEntryUuid);
-
-          if (duplicatedElem) {
-            duplicatedElem.cloneOf = schemaUiElem.uuid;
-            duplicatedElem.clonedBy = [];
-            schemaUiElem.clonedBy = Array.isArray(schemaUiElem.clonedBy)
-              ? [...schemaUiElem.clonedBy, newEntryUuid]
-              : [newEntryUuid];
-          }
-
-          this.schemaArray = Array.from(this.updatedSchema?.values() || []);
-
+        if (this.shouldDuplicateEntry(recordEntryValue, key)) {
+          const { newEntryUuid } = this.createDuplicateEntry(schemaUiElem);
           newValueKey = newEntryUuid;
           updatedData = value;
         }
@@ -412,6 +414,32 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         labelSelector,
       });
     }
+  }
+
+  private shouldDuplicateEntry(recordEntryValue: string[] | RecordBasic[], key: string): boolean {
+    return recordEntryValue.length > 1 && parseInt(key) !== 0;
+  }
+
+  private createDuplicateEntry(schemaUiElem: SchemaEntry): {
+    newEntryUuid: string;
+  } {
+    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) ?? '';
+    this.updatedSchema = this.repeatableFieldsService?.get();
+
+    // Parameters are defined for further proper duplication of repeatable subcomponents
+    const duplicatedElem = this.updatedSchema.get(newEntryUuid);
+
+    if (duplicatedElem) {
+      duplicatedElem.cloneOf = schemaUiElem.uuid;
+      duplicatedElem.clonedBy = [];
+      schemaUiElem.clonedBy = Array.isArray(schemaUiElem.clonedBy)
+        ? [...schemaUiElem.clonedBy, newEntryUuid]
+        : [newEntryUuid];
+    }
+
+    this.schemaArray = Array.from(this.updatedSchema?.values() || []);
+
+    return { newEntryUuid };
   }
 
   private async setUserValue({

@@ -11,5 +11,3 @@ export const buildSearchQuery = ({
 
   return searchableIndex?.[selector]?.replaceAll(SEARCH_QUERY_VALUE_PARAM, value);
 };
-
-export const buildBrowseQuery = () => {};

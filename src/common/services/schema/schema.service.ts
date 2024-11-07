@@ -15,13 +15,13 @@ import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.int
 
 export class SchemaService implements ISchema {
   private templates: ResourceTemplates;
-  private entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+  private entry: ProfileComponent;
   private schema: Map<string, SchemaEntry>;
-  private supportedEntries: string[];
+  private readonly supportedEntries: string[];
 
   constructor(
-    private selectedEntriesService: ISelectedEntries,
-    private entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
+    private readonly selectedEntriesService: ISelectedEntries,
+    private readonly entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
   ) {
     this.schema = new Map();
     this.supportedEntries = Object.keys(RESOURCE_TEMPLATE_IDS);
@@ -29,7 +29,7 @@ export class SchemaService implements ISchema {
     this.entry = {} as ProfileEntry;
   }
 
-  init(templates: ResourceTemplates, entry: ProfileEntry | ResourceTemplate | PropertyTemplate) {
+  init(templates: ResourceTemplates, entry: ProfileComponent) {
     this.schema = new Map();
     this.templates = templates;
     this.entry = entry;
@@ -49,138 +49,200 @@ export class SchemaService implements ISchema {
   }
 
   private traverseProfile({ entry, uuid = uuidv4(), path = [], auxType, firstOfSameType = false }: TraverseProfileDTO) {
-    const type = auxType || getAdvancedFieldType(entry);
+    const type = auxType ?? getAdvancedFieldType(entry);
     const updatedPath = [...path, uuid];
     const branchEnds = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
-    
+
     this.entryPropertiesGeneratorService?.addEntryWithHtmlId(uuid);
 
     if (branchEnds.includes(type as AdvancedFieldType)) {
-      const {
-        id,
-        propertyURI,
-        propertyLabel,
-        mandatory,
-        repeatable,
-        valueConstraint: { useValuesFrom, editable, valueDataType },
-        layout,
-        dependsOn,
-      } = entry as PropertyTemplate;
-
-      const constraints = {
-        ...CONSTRAINTS,
-        mandatory: Boolean(mandatory),
-        repeatable: Boolean(repeatable),
-        editable: Boolean(editable),
-        useValuesFrom,
-        valueDataType,
-      };
-
-      const { uriBFLite } = getUris({
-        uri: propertyURI,
-        dataTypeURI: valueDataType?.dataTypeURI,
-        schema: this.schema,
+      this.processBranchEnd({
+        entry: entry as PropertyTemplate,
+        uuid,
+        type: type as AdvancedFieldType,
         path,
       });
-
-      this.schema.set(
-        uuid,
-        this.generateSchemaEntry(
-          {
-            bfid: id,
-            uuid,
-            type,
-            path: [...path, uuid],
-            displayName: propertyLabel,
-            uri: propertyURI,
-            uriBFLite,
-            constraints,
-          },
-          layout,
-          dependsOn,
-        ),
-      );
     } else {
-      switch (type) {
-        // parent types (i.e Monograph)
-        case AdvancedFieldType.profile: {
-          const { title, id, resourceTemplates } = (entry as ProfileEntry).json.Profile;
-          const uuidArray = resourceTemplates.map(() => uuidv4());
+      this.processNonBranchEnd({
+        entry,
+        uuid,
+        type: type as AdvancedFieldType,
+        updatedPath,
+        path,
+        firstOfSameType,
+      });
+    }
+  }
 
-          this.schema.set(uuid, {
-            uuid,
-            type,
-            path: updatedPath,
-            displayName: title,
-            bfid: id,
-            children: uuidArray,
-          });
+  private processBranchEnd({
+    entry,
+    uuid,
+    type,
+    path,
+  }: {
+    entry: PropertyTemplate;
+    uuid: string;
+    type: AdvancedFieldType;
+    path: string[];
+  }) {
+    const {
+      id,
+      propertyURI,
+      propertyLabel,
+      mandatory,
+      repeatable,
+      valueConstraint: { useValuesFrom, editable, valueDataType },
+      layout,
+      dependsOn,
+    } = entry;
 
-          for (const [index, entry] of resourceTemplates.entries()) {
-            this.traverseProfile({
-              entry,
-              uuid: uuidArray[index],
-              path: updatedPath,
-            });
-          }
+    const constraints = {
+      ...CONSTRAINTS,
+      mandatory: Boolean(mandatory),
+      repeatable: Boolean(repeatable),
+      editable: Boolean(editable),
+      useValuesFrom,
+      valueDataType,
+    };
 
-          return;
-        }
-        case AdvancedFieldType.hidden:
-        case AdvancedFieldType.dropdownOption:
-        // i.e. Work, Instance, Item
-        case AdvancedFieldType.block: {
-          const { id, resourceURI, resourceLabel, propertyTemplates } = entry as ResourceTemplate;
-          const { uriBFLite } = getUris({ uri: resourceURI, schema: this.schema, path });
-          const uuidArray = propertyTemplates.map(() => uuidv4());
-          const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
+    const { uriBFLite } = getUris({
+      uri: propertyURI,
+      dataTypeURI: valueDataType?.dataTypeURI,
+      schema: this.schema,
+      path,
+    });
 
-          if (!this.supportedEntries.includes(id) && isProfileResourceTemplate) return;
+    this.schema.set(
+      uuid,
+      this.generateSchemaEntry(
+        {
+          bfid: id,
+          uuid,
+          type,
+          path: [...path, uuid],
+          displayName: propertyLabel,
+          uri: propertyURI,
+          uriBFLite,
+          constraints,
+        },
+        layout,
+        dependsOn,
+      ),
+    );
+  }
 
-          if (type === AdvancedFieldType.dropdownOption && firstOfSameType) {
-            this.selectedEntriesService.addNew(undefined, uuid);
-          }
+  private processNonBranchEnd({
+    entry,
+    uuid,
+    type,
+    updatedPath,
+    path,
+    firstOfSameType,
+  }: {
+    entry: ProfileComponent;
+    uuid: string;
+    type: AdvancedFieldType;
+    updatedPath: string[];
+    path: string[];
+    firstOfSameType: boolean;
+  }) {
+    switch (type) {
+      case AdvancedFieldType.profile:
+        this.processProfileType(entry as ProfileEntry, uuid, updatedPath);
+        break;
+      case AdvancedFieldType.hidden:
+      case AdvancedFieldType.dropdownOption:
+      case AdvancedFieldType.block:
+        this.processResourceTemplate({
+          entry: entry as ResourceTemplate,
+          uuid,
+          type,
+          updatedPath,
+          path,
+          firstOfSameType,
+        });
+        break;
+      case AdvancedFieldType.group:
+      case AdvancedFieldType.groupComplex:
+      case AdvancedFieldType.dropdown:
+        this.processGroup({
+          uuid,
+          entry,
+          type: type as AdvancedFieldType,
+          path,
+        });
+        break;
+      default:
+        console.error('Not implemented.', entry);
+        break;
+    }
+  }
 
-          this.schema.set(uuid, {
-            uuid,
-            type,
-            path: updatedPath,
-            displayName: resourceLabel,
-            bfid: id,
-            uri: resourceURI,
-            uriBFLite,
-            children: uuidArray,
-          });
+  private processProfileType(entry: ProfileEntry, uuid: string, updatedPath: string[]) {
+    const { title, id, resourceTemplates } = entry.json.Profile;
+    const uuidArray = resourceTemplates.map(() => uuidv4());
 
-          for (const [index, entry] of propertyTemplates.entries()) {
-            this.traverseProfile({
-              entry,
-              uuid: uuidArray[index],
-              path: updatedPath,
-            });
-          }
+    this.schema.set(uuid, {
+      uuid,
+      type: AdvancedFieldType.profile,
+      path: updatedPath,
+      displayName: title,
+      bfid: id,
+      children: uuidArray,
+    });
 
-          return;
-        }
-        // parent-intermediate-? types
-        case AdvancedFieldType.group:
-        case AdvancedFieldType.groupComplex:
-        case AdvancedFieldType.dropdown: {
-          this.processGroup({
-            uuid,
-            entry,
-            type: type as AdvancedFieldType,
-            path,
-          });
+    for (const [index, entry] of resourceTemplates.entries()) {
+      this.traverseProfile({
+        entry,
+        uuid: uuidArray[index],
+        path: updatedPath,
+      });
+    }
+  }
 
-          return;
-        }
-        default: {
-          console.error('Not implemented.', entry);
+  private processResourceTemplate({
+    entry,
+    uuid,
+    type,
+    updatedPath,
+    path,
+    firstOfSameType,
+  }: {
+    entry: ResourceTemplate;
+    uuid: string;
+    type: AdvancedFieldType;
+    updatedPath: string[];
+    path: string[];
+    firstOfSameType: boolean;
+  }) {
+    const { id, resourceURI, resourceLabel, propertyTemplates } = entry;
+    const { uriBFLite } = getUris({ uri: resourceURI, schema: this.schema, path });
+    const uuidArray = propertyTemplates.map(() => uuidv4());
+    const isProfileResourceTemplate = path.length <= GROUP_BY_LEVEL;
 
-          return;
-        }
-      }
+    if (!this.supportedEntries.includes(id) && isProfileResourceTemplate) return;
+
+    if (type === AdvancedFieldType.dropdownOption && firstOfSameType) {
+      this.selectedEntriesService.addNew(undefined, uuid);
+    }
+
+    this.schema.set(uuid, {
+      uuid,
+      type,
+      path: updatedPath,
+      displayName: resourceLabel,
+      bfid: id,
+      uri: resourceURI,
+      uriBFLite,
+      children: uuidArray,
+    });
+
+    for (const [index, entry] of propertyTemplates.entries()) {
+      this.traverseProfile({
+        entry,
+        uuid: uuidArray[index],
+        path: updatedPath,
+      });
     }
   }
 
@@ -190,7 +252,7 @@ export class SchemaService implements ISchema {
     uuid,
     type,
   }: {
-    entry: ProfileEntry | ResourceTemplate | PropertyTemplate;
+    entry: ProfileComponent;
     path: string[];
     uuid: string;
     type: AdvancedFieldType;
