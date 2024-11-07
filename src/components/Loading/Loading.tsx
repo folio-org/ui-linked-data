@@ -1,7 +1,12 @@
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import './Loading.scss';
 
-export const Loading = () => (
+type LoadingProps = {
+  hasLabel?: boolean;
+};
+
+export const Loading: FC<LoadingProps> = ({ hasLabel = true }) => (
   <>
     <div className="loader-overlay" />
     <div className="loader">
@@ -10,9 +15,12 @@ export const Loading = () => (
         <div className="bounce2" />
         <div className="bounce3" />
       </div>
-      <span className="loading-label">
-        <FormattedMessage id="ld.loading" />
-      </span>
+
+      {hasLabel && (
+        <span className="loading-label">
+          <FormattedMessage id="ld.loading" />
+        </span>
+      )}
     </div>
   </>
 );
