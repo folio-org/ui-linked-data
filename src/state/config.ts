@@ -35,7 +35,7 @@ const selectedEntries = atom<Array<string>>({
 
 const locale = atom<(typeof LOCALES)[keyof typeof LOCALES]>({
   key: 'config.locale',
-  default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH,
+  default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH_US,
 });
 
 const i18nMessages = atom<I18nMessages>({

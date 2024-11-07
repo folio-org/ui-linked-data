@@ -1,20 +1,15 @@
-export const loadI18nMessages = async (localesList: Record<string, string>) => {
-  const supportedLocales = Object.values(localesList);
-  const messages = {} as I18nMessages;
+export const loadI18nMessages = async (locale: string) => {
+  let loadedMessages;
 
-  for await (const locale of supportedLocales) {
+  try {
+    loadedMessages = (await import(`../../../translations/ui-linked-data/${locale.replace('-', '_')}.json`)).default;
+  } catch {
     try {
-      const result = await fetch(`/translations/ui-linked-data/${locale}.json`);
-
-      if (result.ok) {
-        const parsedMessages = await result.json();
-
-        messages[locale] = parsedMessages;
-      }
+      loadedMessages = (await import(`../../../translations/ui-linked-data/${locale.split('-')[0]}.json`)).default;
     } catch (error) {
       console.error('Error occured while loading i18n messages', error);
     }
   }
 
-  return messages;
+  return loadedMessages;
 };
