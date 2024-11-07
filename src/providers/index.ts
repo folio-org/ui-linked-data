@@ -1,3 +1,3 @@
 export { SearchProvider } from './SearchProvider';
 export { ServicesProvider } from './ServicesProvider';
-export { AsyncIntlProvider } from './IntlProvider';
+export { AsyncIntlProvider } from './AsyncIntlProvider';

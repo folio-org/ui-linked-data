@@ -64,7 +64,7 @@ const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   }, [config]);
 
   return (
-    <Suspense fallback={<Loading hasLabel={false} />}>
+    <Suspense fallback={<Loading hasLabel={false} data-testid="loading" />}>
       <AsyncIntlProvider cachedMessages={cachedMessages.current}>
         <ErrorBoundary>
           <ServicesProvider>

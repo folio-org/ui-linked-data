@@ -9,7 +9,7 @@ describe('App', () => {
     render(<App />);
   });
 
-  test('renders Root (default) component', () => {
-    expect(screen.getByTestId('root')).toBeInTheDocument();
+  test('renders Loading (default) component', () => {
+    expect(screen.getByTestId('loading')).toBeInTheDocument();
   });
 });

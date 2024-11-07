@@ -4,12 +4,13 @@ import './Loading.scss';
 
 type LoadingProps = {
   hasLabel?: boolean;
+  'data-testid'?: string;
 };
 
-export const Loading: FC<LoadingProps> = ({ hasLabel = true }) => (
+export const Loading: FC<LoadingProps> = ({ hasLabel = true, 'data-testid': dataTestId }) => (
   <>
     <div className="loader-overlay" />
-    <div className="loader">
+    <div className="loader" data-testid={dataTestId}>
       <div className="spinner">
         <div className="bounce1" />
         <div className="bounce2" />
