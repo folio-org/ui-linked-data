@@ -7,8 +7,7 @@
       "@components/*": ["src/components/*"],
       "@state": ["src/state"],
       "@views": ["src/views"],
-      "@src/*": ["src/*"],
-      "@translations/*": ["translations/*"]
+      "@src/*": ["src/*"]
     }
   }
 }
