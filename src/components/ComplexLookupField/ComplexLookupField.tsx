@@ -51,7 +51,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
                     {label}
                   </span>
                   <button
-                    role="button"
                     onClick={() => handleDelete(id)}
                     className="complex-lookup-selected-delete"
                     data-testid="complex-lookup-selected-delete"
@@ -64,8 +63,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
           )}
 
           <button
-            data-testid={getHtmlIdForSchemaControl(id, SchemaControlType.ChangeComplexFieldValue)}
-            role="button"
+            data-testid={getHtmlIdForSchemaControl(SchemaControlType.ChangeComplexFieldValue, id)}
             className="complex-lookup-select-button button-passive"
             onClick={openModal}
           >

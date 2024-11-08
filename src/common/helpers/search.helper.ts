@@ -76,8 +76,11 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
 
     const queryWithQualifier = applyQualifierSyntaxToQuery(query, qualifier);
     const shouldApplyOperator = total.length;
+    const operatorString = operator && shouldApplyOperator ? ` ${operator} ` : '';
 
-    return (total += `${operator && shouldApplyOperator ? ` ${operator} ` : ''}${index}${queryWithQualifier}`);
+    total += operatorString + index + queryWithQualifier;
+
+    return total;
   }, '');
 
   return `(${queryWithFormatting})`;
