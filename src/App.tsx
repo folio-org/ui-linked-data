@@ -6,7 +6,7 @@ import { Loading } from '@components/Loading';
 import { ROUTES } from '@common/constants/routes.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
-import { Root, Search, Load, EditWrapper, ExternalResourcePreview } from '@views';
+import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
 import state from '@state';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
@@ -36,10 +36,6 @@ export const routes: RouteObject[] = [
       {
         path: ROUTES.RESOURCE_CREATE.uri,
         element: <EditWrapper />,
-      },
-      {
-        path: ROUTES.DASHBOARD.uri,
-        element: <Load />,
       },
       {
         path: ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri,

@@ -4,8 +4,6 @@ import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
-const getMockedScrollEntity = () => jest.spyOn(PageScrollingHelper, 'scrollEntity').mockImplementation(() => undefined);
-
 describe('pageScrolling.helper', () => {
   const mockIsEmbeddedModeConstant = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');
 
@@ -37,39 +35,6 @@ describe('pageScrolling.helper', () => {
       PageScrollingHelper.scrollEntity(options);
 
       expect(window.scrollTo).toHaveBeenCalledWith(options);
-    });
-  });
-
-  describe('scrollElementIntoView', () => {
-    let spyScrollEntity: jest.SpyInstance<void | undefined, [options: ScrollToOptions], any>;
-
-    beforeEach(() => {
-      spyScrollEntity = getMockedScrollEntity();
-    });
-
-    test("doesn't call scrollEntity function", () => {
-      PageScrollingHelper.scrollElementIntoView();
-
-      expect(spyScrollEntity).not.toHaveBeenCalled();
-    });
-
-    test('calls scrollEntity function with calculated top property', () => {
-      const elem = document.createElement('div');
-      const navElem = document.createElement('div');
-
-      PageScrollingHelper.scrollElementIntoView(elem, navElem);
-
-      expect(spyScrollEntity).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' } as ScrollOptions);
-    });
-  });
-
-  describe('scrollToTop', () => {
-    test('calls scrollEntity function with proper options', () => {
-      getMockedScrollEntity();
-
-      PageScrollingHelper.scrollToTop();
-
-      expect(PageScrollingHelper.scrollEntity).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' } as ScrollOptions);
     });
   });
 });
