@@ -16,9 +16,11 @@ describe('TableFlex Component', () => {
   const onRowClick = jest.fn();
   const onHeaderCellClick = jest.fn();
 
-  test('renders TableFlex component', () => {
+  beforeEach(() => {
     render(<TableFlex header={header} data={data} onRowClick={onRowClick} onHeaderCellClick={onHeaderCellClick} />);
+  });
 
+  test('renders TableFlex component', () => {
     expect(screen.getByTestId('table')).toBeInTheDocument();
     expect(screen.getByTestId('th-name')).toHaveTextContent('Name');
     expect(screen.getByTestId('th-age')).toHaveTextContent('Age');
@@ -26,17 +28,31 @@ describe('TableFlex Component', () => {
   });
 
   test('calls onHeaderCellClick when header cell is clicked', () => {
-    render(<TableFlex header={header} data={data} onRowClick={onRowClick} onHeaderCellClick={onHeaderCellClick} />);
-
     fireEvent.click(screen.getByTestId('th-name'));
 
     expect(onHeaderCellClick).toHaveBeenCalledWith({ name: header.name });
   });
 
   test('calls onRowClick when row is clicked', () => {
-    render(<TableFlex header={header} data={data} onRowClick={onRowClick} onHeaderCellClick={onHeaderCellClick} />);
-
     fireEvent.click(screen.getAllByTestId('table-row')[0]);
+
+    expect(onRowClick).toHaveBeenCalledWith(data[0]);
+  });
+
+  test('calls onHeaderCellClick when Enter key is pressed on header cell', () => {
+    const headerCell = screen.getByTestId('th-name');
+    headerCell.focus();
+
+    fireEvent.keyDown(headerCell, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+    expect(onHeaderCellClick).toHaveBeenCalledWith({ name: header.name });
+  });
+
+  test('calls onRowClick when Enter key is pressed on a table row', () => {
+    const tableRow = screen.getAllByTestId('table-row')[0];
+    tableRow.focus();
+
+    fireEvent.keyDown(tableRow, { key: 'Enter', code: 'Enter', charCode: 13 });
 
     expect(onRowClick).toHaveBeenCalledWith(data[0]);
   });
