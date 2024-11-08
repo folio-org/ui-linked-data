@@ -48,7 +48,7 @@ export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: stri
   childElements?.forEach(elementId => {
     const schemaElem = schema.get(elementId);
 
-    if (!schemaElem || !schemaElem.type) return;
+    if (!schemaElem?.type) return;
 
     if (DISABLED_FIELD_TYPES.includes(schemaElem.type as AdvancedFieldType)) {
       disabledFields.set(schemaElem.uuid, schemaElem);

@@ -85,9 +85,7 @@ export const selectNonBFMappedGroupData = ({
   const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
   const recordEntry = getRecordEntry(selectedRecord);
   const selectedNonBFRecord =
-    isNonBFMappedGroup && mappedGroup && mappedGroup?.container?.key
-      ? recordEntry?.[mappedGroup.container.key]
-      : undefined;
+    isNonBFMappedGroup && mappedGroup?.container?.key ? recordEntry?.[mappedGroup.container.key] : undefined;
   const nonBFMappedGroup = isNonBFMappedGroup
     ? {
         uri: propertyURI,
@@ -177,9 +175,7 @@ export const getUdpatedAssociatedEntries = ({
   parentEntryChildren?: string[];
   dependsOnId?: string;
 }) => {
-  const constolledByEntry = getAssociatedControlledByEntry(schema, parentEntryChildren, dependsOnId) as
-    | SchemaEntry
-    | undefined;
+  const constolledByEntry = getAssociatedControlledByEntry(schema, parentEntryChildren, dependsOnId);
   const updatedConstolledByEntry = { ...constolledByEntry };
   const updatedDependentEntry = { ...dependentEntry };
 
@@ -207,5 +203,5 @@ export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: S
     .join(ENTRY_DELIMITER);
 };
 
-export const getHtmlIdForSchemaControl = (htmlId = '', controlType: SchemaControlType) =>
+export const getHtmlIdForSchemaControl = (controlType: SchemaControlType, htmlId = '') =>
   `${htmlId}${ENTRY_CONTROL_DELIMITER}${controlType}`;

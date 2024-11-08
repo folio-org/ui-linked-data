@@ -42,6 +42,22 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     };
   }, []);
 
+  const handleHeaderKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, key: string) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+
+      onHeaderCellClick?.({ [key]: header[key] });
+    }
+  };
+
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, row: Row) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+
+      onRowClick?.(row);
+    }
+  };
+
   return (
     <div data-testid="table" className={classNames(table, tableFlex, className)}>
       <div ref={tableHeadElemRef} className={tableHead}>
@@ -50,8 +66,11 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
             <div
               key={key}
               data-testid={`th-${key}`}
+              role="columnheader"
+              tabIndex={0}
               className={classNames(tableHeadCell, { clickable: onHeaderCellClick }, className)}
               onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
+              onKeyDown={event => handleHeaderKeyDown(event, key)}
               {...rest}
             >
               <div className="table-header-contents-wrapper">{label ?? ''}</div>
@@ -68,12 +87,15 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
               <div
                 data-testid="table-row"
                 key={rowMeta?.key || rowMeta?.id}
+                role="row"
+                tabIndex={0}
                 className={classNames(
                   tableRow,
                   { clickable: onRowClick, 'row-selected': selectedRows?.includes(rowMeta?.id) },
                   rowMeta?.className,
                 )}
                 onClick={() => onRowClick?.(row)}
+                onKeyDown={event => handleRowKeyDown(event, row)}
               >
                 {sortedHeaderEntries.map(([key, { className: headerClassName }]) => {
                   const { label, children, className, ...rest } = row?.[key] || {};

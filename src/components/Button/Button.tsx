@@ -52,9 +52,7 @@ export const Button: FC<Button> = ({
       [className]: className,
     })}
   >
-    <>
-      {prefix && prefix}
-      {children || label}
-    </>
+    {prefix}
+    {children || label}
   </button>
 );

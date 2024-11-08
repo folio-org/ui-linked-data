@@ -1,4 +1,4 @@
-import { normalizeLccn, validateLccn } from '@common/helpers/validations.helper';
+import { normalizeLccn, validateNormalizedLccn, validateNonNormalizedLccn } from '@common/helpers/validations.helper';
 
 describe('validations.helper', () => {
   describe('normalizeLccn', () => {
@@ -24,23 +24,23 @@ describe('validations.helper', () => {
 
   describe('validateLccn', () => {
     test('returns true for valid normalized lccn', () => {
-      expect(validateLccn('1234567890')).toBeTruthy();
+      expect(validateNormalizedLccn('1234567890')).toBeTruthy();
     });
 
     test('returns true for valid non-normalized lccn', () => {
-      expect(validateLccn(' 2017000002', false)).toBeTruthy();
-      expect(validateLccn('1234-1///aarrRRr', false)).toBeTruthy();
+      expect(validateNonNormalizedLccn(' 2017000002')).toBeTruthy();
+      expect(validateNonNormalizedLccn('1234-1///aarrRRr')).toBeTruthy();
     });
 
     test('returns false for invalid non-normalized lccn', () => {
-      expect(validateLccn('20161234567', false)).toBeFalsy();
-      expect(validateLccn('20121234', false)).toBeFalsy();
-      expect(validateLccn('20/121234', false)).toBeFalsy();
-      expect(validateLccn(' 20a17000002', false)).toBeFalsy();
-      expect(validateLccn('12R34-1r///aarrRRr', false)).toBeFalsy();
-      expect(validateLccn('aa12345-6-6', false)).toBeFalsy();
-      expect(validateLccn('1234567-123', false)).toBeFalsy();
-      expect(validateLccn('12       345-6   7 123', false)).toBeFalsy();
+      expect(validateNonNormalizedLccn('20161234567')).toBeFalsy();
+      expect(validateNonNormalizedLccn('20121234')).toBeFalsy();
+      expect(validateNonNormalizedLccn('20/121234')).toBeFalsy();
+      expect(validateNonNormalizedLccn(' 20a17000002')).toBeFalsy();
+      expect(validateNonNormalizedLccn('12R34-1r///aarrRRr')).toBeFalsy();
+      expect(validateNonNormalizedLccn('aa12345-6-6')).toBeFalsy();
+      expect(validateNonNormalizedLccn('1234567-123')).toBeFalsy();
+      expect(validateNonNormalizedLccn('12       345-6   7 123')).toBeFalsy();
     });
   });
 });
