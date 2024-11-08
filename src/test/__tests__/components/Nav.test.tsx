@@ -11,6 +11,8 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 const renderOnPath = (path: string) =>
   render(
     <RecoilRoot>

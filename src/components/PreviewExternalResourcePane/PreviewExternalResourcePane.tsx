@@ -1,13 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
 import { useRecoilValue } from 'recoil';
 import state from '@state';
 import { getRecordTitle } from '@common/helpers/record.helper';
+import { useContainerEvents } from '@common/hooks/useContainerEvents';
 
 export const PreviewExternalResourcePane = () => {
-  const navigate = useNavigate();
   const record = useRecoilValue(state.inputs.record);
+  const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
 
   return (
     <div className="nav-block nav-block-fixed-height">
@@ -15,7 +15,7 @@ export const PreviewExternalResourcePane = () => {
         <Button
           data-testid="nav-close-button"
           type={ButtonType.Icon}
-          onClick={() => navigate(-1)}
+          onClick={dispatchNavigateToOriginEventWithFallback}
           className="nav-close"
         >
           <Times16 />

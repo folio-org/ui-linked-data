@@ -53,10 +53,12 @@ const createRouter = (basename: string) => createBrowserRouter(routes, { basenam
 
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const setCustomEvents = useSetRecoilState(state.config.customEvents);
+  const setHasNavigationOrigin = useSetRecoilState(state.config.hasNavigationOrigin);
   const cachedMessages = useRef({});
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
+    config?.navigationOrigin && setHasNavigationOrigin(true);
   }, [config]);
 
   return (

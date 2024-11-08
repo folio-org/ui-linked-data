@@ -14,6 +14,10 @@ export const DEFAULT_PAGES_METADATA = {
   totalPages: 0,
 };
 
+export enum ApiErrorCodes {
+  AlreadyExists = 'already_exists_error',
+}
+
 export enum ExternalResourceIdType {
   Inventory = 'inventory',
 }

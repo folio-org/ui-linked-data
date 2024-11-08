@@ -10,6 +10,11 @@ const isMarcPreviewOpen = atom<boolean>({
   default: false,
 });
 
+const isDuplicateImportedResourceModalOpen = atom<boolean>({
+  key: 'ui.isDuplicateImportedResourceModalOpen',
+  default: false,
+});
+
 const collapsedGroups = atom<string[]>({
   key: 'ui.collapsedGroups',
   default: [],
@@ -31,4 +36,5 @@ export default {
   collapsedGroups,
   currentlyEditedEntityBfid,
   currentlyPreviewedEntityBfid,
+  isDuplicateImportedResourceModalOpen,
 };

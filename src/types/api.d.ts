@@ -16,6 +16,12 @@ type ResourceListItem = {
   type?: string;
 };
 
+type ApiError = {
+  errors: {
+    code?: string;
+  }[];
+};
+
 type GenericStructDTO<T> = {
   value?: string;
   type?: T;

@@ -58,6 +58,11 @@ const clonePrototypes = atom<string[]>({
   default: [],
 });
 
+const hasNavigationOrigin = atom<boolean>({
+  key: 'config.hasNavigationOrigin',
+  default: false,
+});
+
 export default {
   profiles,
   selectedProfile,
@@ -70,4 +75,5 @@ export default {
   collectRecordDataForPreview,
   customEvents,
   clonePrototypes,
+  hasNavigationOrigin,
 };

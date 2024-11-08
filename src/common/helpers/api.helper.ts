@@ -1,4 +1,5 @@
 import { getLookupDict } from '@common/api/lookup.api';
+import { ApiErrorCodes } from '@common/constants/api.constants';
 
 export const loadSimpleLookup = async (
   uris: string | string[],
@@ -30,3 +31,6 @@ const fetchSimpleLookup = async (url: string): Promise<any> => {
 
   return response;
 };
+
+export const checkHasErrorOfCodeType = (err: ApiError, codeType: ApiErrorCodes) =>
+  err?.errors.find(e => e.code === codeType);

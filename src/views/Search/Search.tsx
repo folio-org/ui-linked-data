@@ -15,9 +15,13 @@ import Plus16 from '@src/assets/plus-16.svg?react';
 import Compare from '@src/assets/compare.svg?react';
 import { filters } from './data/filters';
 import './Search.scss';
+import { useContainerEvents } from '@common/hooks/useContainerEvents';
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
+  const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
+
+  dispatchDropNavigateToOriginEvent();
 
   const items = useMemo(
     () => [

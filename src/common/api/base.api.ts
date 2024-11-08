@@ -33,13 +33,15 @@ async function doRequest({ url, requestParams, headers }: DoRequest) {
     });
 
     if (!response.ok) {
-      const errorBody = await response.text();
+      const errorBody = await response.json();
       throw errorBody;
     }
 
     return response;
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
+    const selectedError = err?.errors?.[0];
+    
+    selectedError && console.error(`${selectedError?.type}: ${selectedError?.message}`);
 
     throw err;
   }
