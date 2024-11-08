@@ -3,10 +3,6 @@ export const ROUTES = {
     uri: '/',
     name: 'ld.main',
   },
-  DASHBOARD: {
-    uri: '/dashboard',
-    name: 'ld.dashboard',
-  },
   SEARCH: {
     uri: '/search',
     name: 'ld.searchResource',
