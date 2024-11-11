@@ -4,6 +4,7 @@ import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Loading } from '@components/Loading';
 import { ROUTES } from '@common/constants/routes.constants';
+import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
@@ -55,7 +56,7 @@ const createRouter = (basename: string) => createBrowserRouter(routes, { basenam
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const setCustomEvents = useSetRecoilState(state.config.customEvents);
   const setHasNavigationOrigin = useSetRecoilState(state.config.hasNavigationOrigin);
-  const cachedMessages = useRef({ en });
+  const cachedMessages = useRef({ [DEFAULT_LOCALE]: en });
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
