@@ -4,6 +4,7 @@ import state from '@state';
 import { render, screen } from '@testing-library/react';
 import { ExternalResourcePreview } from '@views';
 import { Fragment, ReactNode } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -18,13 +19,18 @@ jest.mock('react-intl', () => ({
       </div>
     );
   },
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => id,
+  }),
 }));
 
 describe('ExternalResourcePreview', () => {
   const renderComponent = (withRecord = false) =>
     render(
       <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.record, withRecord ? {} : null)}>
-        <ExternalResourcePreview />
+        <MemoryRouter>
+          <ExternalResourcePreview />
+        </MemoryRouter>
       </RecoilRoot>,
     );
 

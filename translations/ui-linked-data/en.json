@@ -43,6 +43,8 @@
   "ld.startFromScratch": "Start from scratch",
   "ld.selectOrStartFromScratch": "{select} or {startFromScratch}",
   "ld.backToTop": "Back to top",
+  "ld.backToInventory": "Back to inventory",
+  "ld.properties": "Properties",
   "ld.preview": "Preview",
   "ld.confirmCloseRd": "Do you really want to close the resource description? All unsaved changes will be lost.",
   "ld.confirmDeleteRd": "Do you really want to delete the resource description?",
@@ -175,6 +177,7 @@
   "ld.notSpecified": "Not specified",
   "ld.externalResourcePreview": "External resource preview",
   "ld.errorFetchingExternalResourceForPreview": "Error fetching external resource for preview",
+  "ld.errorFetchingExternalResourceForEditing": "Error fetching external resource for editing",
   "ld.fetchingExternalResourceById": "Fetching external resource id {resourceId}...",
   "ld.lastUpdated": "Last updated",
   "ld.marcAuthorityRecord": "MARC authority record",
@@ -184,5 +187,7 @@
   "ld.aria.filters.select": "Select search identifiers",
   "ld.aria.filters.textbox": "Search query textbox",
   "ld.aria.filters.reset": "Reset filters button",
-  "ld.aria.filters.reset.announce": "Search field and filters are reset"
+  "ld.aria.filters.reset.announce": "Search field and filters are reset",
+  "ld.duplicateImportWarn": "Duplicate import warning",
+  "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?"
 }

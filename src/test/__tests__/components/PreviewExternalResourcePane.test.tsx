@@ -16,6 +16,8 @@ jest.mock('@common/helpers/record.helper', () => ({
   getRecordTitle: () => getRecordTitle(),
 }));
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
 describe('PreviewExternalResourcePane', () => {
   beforeEach(() =>
     render(

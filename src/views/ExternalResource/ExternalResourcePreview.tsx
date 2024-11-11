@@ -7,6 +7,7 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ExternalResourceIdType } from '@common/constants/api.constants';
 import { Preview } from '@components/Preview';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
+import { ModalDuplicateImportedResource } from '@components/ModalDuplicateImportedResource';
 import './ExternalResourcePreview.scss';
 
 export const ExternalResourcePreview = () => {
@@ -32,6 +33,7 @@ export const ExternalResourcePreview = () => {
       ) : (
         <ExternalResourceLoader />
       )}
+      <ModalDuplicateImportedResource />
     </div>
   );
 };
