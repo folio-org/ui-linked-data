@@ -13,7 +13,7 @@ export const useLoadI18nMessages = (cachedMessages: I18nMessages, defaultLocale 
     const messages = await loadI18nMessages(locale);
 
     if (messages) {
-      cachedMessages[locale] = {...cachedMessages[defaultLocale], messages};
+      cachedMessages[locale] = {...cachedMessages[defaultLocale], ...messages};
     }
   };
 
