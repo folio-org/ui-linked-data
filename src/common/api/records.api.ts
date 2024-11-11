@@ -32,6 +32,21 @@ export const getRecord = async ({ recordId, idType }: IGetRecord) => {
   });
 };
 
+const graphIdByInventoryIdUrl = '/resource/import/:recordId';
+
+export const getGraphIdByExternalId = async ({ recordId }: IGetRecord) => {
+  const url = baseApi.generateUrl(graphIdByInventoryIdUrl, { name: ':recordId', value: recordId });
+
+  const response = await baseApi.request({
+    url,
+    requestParams: {
+      method: 'POST',
+    },
+  });
+
+  return await response?.json();
+};
+
 const singleRecordMarcUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/marc`;
 
 export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { endpointUrl?: string }) => {

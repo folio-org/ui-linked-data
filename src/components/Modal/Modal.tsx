@@ -25,6 +25,7 @@ interface Props {
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
   titleClassName?: string;
+  alignTitleCenter?: boolean;
 }
 
 const Modal: FC<Props> = ({
@@ -44,6 +45,7 @@ const Modal: FC<Props> = ({
   showCloseIconButton = true,
   showModalControls = true,
   titleClassName,
+  alignTitleCenter = false,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: uncomment for using with Shadow DOM
@@ -73,6 +75,7 @@ const Modal: FC<Props> = ({
                 </button>
               )}
               <h3 className={classNames(['title', titleClassName])}>{title}</h3>
+              {alignTitleCenter && <span className="empty-block" />}
             </div>
             {!!children && children}
             {showModalControls && (

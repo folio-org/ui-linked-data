@@ -2,7 +2,13 @@ import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { applyUserValues } from '@common/helpers/profile.helper';
-import { postRecord, putRecord, deleteRecord as deleteRecordRequest } from '@common/api/records.api';
+import {
+  postRecord,
+  putRecord,
+  deleteRecord as deleteRecordRequest,
+  getGraphIdByExternalId,
+  getRecord,
+} from '@common/api/records.api';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -17,7 +23,6 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
 import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
-import { getRecord } from '@common/api/records.api';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
@@ -25,7 +30,8 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import state from '@state';
 import { useContainerEvents } from './useContainerEvents';
-import { ExternalResourceIdType } from '@common/constants/api.constants';
+import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
+import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -56,13 +62,14 @@ export const useRecordControls = () => {
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
+  const setIsDuplicateImportedResourceModalOpen = useSetRecoilState(state.ui.isDuplicateImportedResourceModalOpen);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
   const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
-  const { dispatchUnblockEvent } = useContainerEvents();
+  const { dispatchUnblockEvent, dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const [queryParams] = useSearchParams();
   const isClone = queryParams.get(QueryParams.CloneOf);
 
@@ -203,7 +210,7 @@ export const useRecordControls = () => {
   const discardRecord = (clearState = true) => {
     if (clearState) clearRecordState();
 
-    navigate(searchResultsUri);
+    dispatchNavigateToOriginEventWithFallback(searchResultsUri);
   };
 
   const deleteRecord = async () => {
@@ -296,6 +303,29 @@ export const useRecordControls = () => {
     });
   };
 
+  const tryFetchExternalRecordForEdit = async (recordId?: string) => {
+    try {
+      if (!recordId) return;
+
+      setIsLoading(true);
+
+      const { id } = await getGraphIdByExternalId({ recordId });
+
+      id && navigate(generateEditResourceUrl(id), { replace: true });
+    } catch (err: unknown) {
+      if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
+        setIsDuplicateImportedResourceModalOpen(true);
+      } else {
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetchingExternalResourceForEditing'),
+        ]);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchRecord,
     saveRecord,
@@ -305,5 +335,6 @@ export const useRecordControls = () => {
     clearRecordState,
     fetchRecordAndSelectEntityValues,
     fetchExternalRecordForPreview,
+    tryFetchExternalRecordForEdit,
   };
 };
