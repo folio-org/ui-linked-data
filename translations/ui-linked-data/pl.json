@@ -63,8 +63,8 @@
     "ld.cancel": "Cancel",
     "ld.loading": "Loading...",
     "ld.paginationCount": "{startCount} - {endCount} of {totalResultsCount}",
-    "ld.yes": "Yes",
-    "ld.no": "No",
+    "ld.yes": "Tak",
+    "ld.no": "Nie",
     "ld.cantLoadSimpleLookupData": "Cannot load data for a simple lookup",
     "ld.publishDate": "Publish date",
     "ld.format": "Format",
@@ -180,5 +180,14 @@
     "ld.marcAuthorityRecord": "MARC authority record",
     "ld.selectBrowseOption": "Select a browse option",
     "ld.searchQueryWouldBeHere": "{query} would be here",
-    "ld.continue": "Continue"
+    "ld.continue": "Continue",
+    "ld.aria.filters.select": "Select search identifiers",
+    "ld.aria.filters.textbox": "Search query textbox",
+    "ld.aria.filters.reset": "Reset filters button",
+    "ld.aria.filters.reset.announce": "Search field and filters are reset",
+    "ld.backToInventory": "Back to inventory",
+    "ld.properties": "Properties",
+    "ld.errorFetchingExternalResourceForEditing": "Error fetching external resource for editing",
+    "ld.duplicateImportWarn": "Duplicate import warning",
+    "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?"
 }
