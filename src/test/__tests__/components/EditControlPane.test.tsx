@@ -1,7 +1,6 @@
-import '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { navigateAsDuplicate } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { EditControlPane } from '@components/EditControlPane';
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import * as recordsApi from '@common/api/records.api';
@@ -36,20 +35,24 @@ describe('EditControlPane', () => {
     const getMarcRecordMock = (jest.spyOn(recordsApi, 'getMarcRecord') as any).mockImplementation(() =>
       Promise.resolve(null),
     );
-    
+
     const { findByText, findByTestId } = renderWrapper();
 
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.viewMarc'));
+    await act(async () => {
+      fireEvent.click(await findByTestId('edit-control-actions-toggle'));
+      fireEvent.click(await findByText('ld.viewMarc'));
+    });
 
     expect(getMarcRecordMock).toHaveBeenCalled();
   });
 
-  test('handles duplicate resource navigation', async () => {    
+  test('handles duplicate resource navigation', async () => {
     const { findByText, findByTestId } = renderWrapper();
 
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.duplicate'));
+    await act(async () => {
+      fireEvent.click(await findByTestId('edit-control-actions-toggle'));
+      fireEvent.click(await findByText('ld.duplicate'));
+    });
 
     expect(navigateAsDuplicate).toHaveBeenCalled();
   });

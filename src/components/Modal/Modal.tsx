@@ -64,7 +64,7 @@ const Modal: FC<Props> = ({
   return isOpen && portalElement
     ? createPortal(
         <>
-          <div className="overlay" onClick={onClose} data-testid="modal-overlay" />
+          <div className="overlay" onClick={onClose} role="presentation" data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (

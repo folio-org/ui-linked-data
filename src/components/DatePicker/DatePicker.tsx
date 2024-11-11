@@ -3,13 +3,21 @@ import './DatePicker.scss';
 
 type DatePickerProps = {
   id: string;
+  ['data-testid']?: string;
   placeholder?: string;
   name?: string;
   value?: string;
   onChange?: (value: string) => void | Dispatch<SetStateAction<string>>;
 };
 
-export const DatePicker: FC<DatePickerProps> = ({ id, value, onChange, name, placeholder }) => {
+export const DatePicker: FC<DatePickerProps> = ({
+  id,
+  value,
+  onChange,
+  name,
+  placeholder,
+  'data-testid': dataTestId,
+}) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.value);
   };
@@ -18,6 +26,7 @@ export const DatePicker: FC<DatePickerProps> = ({ id, value, onChange, name, pla
     <div className="date-picker">
       <input
         id={id}
+        data-testid={dataTestId ?? `date-picker-input-${id}`}
         type="date"
         className="date-picker-input"
         value={value}
