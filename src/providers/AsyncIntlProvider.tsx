@@ -9,14 +9,16 @@ type AsyncIntlProviderProps = {
   children: React.ReactNode;
 };
 
+const DEFAULT_LOCALE = 'en';
+
 export const AsyncIntlProvider: FC<AsyncIntlProviderProps> = ({ cachedMessages, children }) => {
   const locale = useRecoilValue(state.config.locale);
-  const { getMessages } = useLoadI18nMessages(cachedMessages);
+  const { getMessages } = useLoadI18nMessages(cachedMessages, DEFAULT_LOCALE);
 
   const i18nMessages = getMessages(locale);
 
   return (
-    <IntlProvider messages={i18nMessages || {}} locale={locale} defaultLocale="en">
+    <IntlProvider messages={i18nMessages || {}} locale={locale} defaultLocale={DEFAULT_LOCALE}>
       {children}
     </IntlProvider>
   );
