@@ -26,11 +26,11 @@ describe('DateRange Component', () => {
     const startDate: HTMLInputElement = screen.getByTestId('testFacet-start');
     const endDate: HTMLInputElement = screen.getByTestId('testFacet-end');
 
-    fireEvent.change(startDate, { target: { value: '2023-01-01' } });
-    fireEvent.change(endDate, { target: { value: '2023-01-31' } });
+    fireEvent.change(startDate, { target: { value: '2024-01-01' } });
+    fireEvent.change(endDate, { target: { value: '2024-01-31' } });
 
-    expect(startDate.value).toBe('2023-01-01');
-    expect(endDate.value).toBe('2023-01-31');
+    expect(startDate.value).toBe('2024-01-01');
+    expect(endDate.value).toBe('2024-01-31');
   });
 
   it('calls onSubmit with correct values when apply button is clicked', () => {
@@ -41,13 +41,13 @@ describe('DateRange Component', () => {
     const endDate: HTMLInputElement = screen.getByTestId('testFacet-end');
     const applyButton = screen.getByTestId('testFacet-apply');
 
-    fireEvent.change(startDate, { target: { value: '2023-01-01' } });
-    fireEvent.change(endDate, { target: { value: '2023-01-31' } });
+    fireEvent.change(startDate, { target: { value: '2024-01-01' } });
+    fireEvent.change(endDate, { target: { value: '2024-01-31' } });
     fireEvent.click(applyButton);
 
     expect(mockSubmit).toHaveBeenCalledWith('testFacet', {
-      dateStart: '2023-01-01',
-      dateEnd: '2023-01-31',
+      dateStart: '2024-01-01',
+      dateEnd: '2024-01-31',
     });
   });
 
