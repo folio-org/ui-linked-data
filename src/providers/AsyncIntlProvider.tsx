@@ -5,7 +5,7 @@ import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
 import state from '@state';
 
 type AsyncIntlProviderProps = {
-  cachedMessages: Record<string, Record<string, string>>;
+  cachedMessages: I18nMessages;
   children: React.ReactNode;
 };
 
@@ -16,7 +16,7 @@ export const AsyncIntlProvider: FC<AsyncIntlProviderProps> = ({ cachedMessages, 
   const i18nMessages = getMessages(locale);
 
   return (
-    <IntlProvider messages={i18nMessages || {}} locale={locale} defaultLocale="en-US">
+    <IntlProvider messages={i18nMessages || {}} locale={locale} defaultLocale="en">
       {children}
     </IntlProvider>
   );

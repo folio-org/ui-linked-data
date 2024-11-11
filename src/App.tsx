@@ -8,6 +8,7 @@ import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
 import state from '@state';
+import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
 
@@ -54,7 +55,7 @@ const createRouter = (basename: string) => createBrowserRouter(routes, { basenam
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const setCustomEvents = useSetRecoilState(state.config.customEvents);
   const setHasNavigationOrigin = useSetRecoilState(state.config.hasNavigationOrigin);
-  const cachedMessages = useRef({});
+  const cachedMessages = useRef({ en });
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
