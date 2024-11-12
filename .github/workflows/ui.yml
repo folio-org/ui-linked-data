@@ -13,3 +13,23 @@ jobs:
     secrets: inherit
     with:
       install-before-publish: true
+      # extened default list of exclusions
+      sonar-exclusions: >
+        artifacts/**,
+        docs/**,
+        dist/**,
+        examples/**,
+        resources/bigtest/interactors/**,
+        resources/bigtest/network/**,
+        LICENSE,
+        ci/**,
+        node_modules/**,
+        src/test/**,
+        src/common/constants/**,
+        jest.config.*,
+        tsconfig.*,
+        jest.config.*,
+        vite.config.*,
+        **/*.md,
+        **/*.scss,
+        **/*.json
