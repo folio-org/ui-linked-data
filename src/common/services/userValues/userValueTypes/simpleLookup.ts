@@ -11,8 +11,8 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   private contents?: UserValueContents[];
 
   constructor(
-    private apiClient: IApiClient,
-    private cacheService: ILookupCacheService,
+    private readonly apiClient: IApiClient,
+    private readonly cacheService: ILookupCacheService,
   ) {
     super();
   }
@@ -60,7 +60,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     }
 
     this.value = {
-      uuid: uuid || '',
+      uuid: uuid ?? '',
       contents: this.contents,
     };
 
@@ -70,7 +70,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   private checkDefaultGroupValues(groupUri?: string, itemUri?: string) {
     if (!groupUri || !itemUri) return false;
 
-    return (DEFAULT_GROUP_VALUES as DefaultGroupValues)[groupUri as string]?.value === itemUri;
+    return (DEFAULT_GROUP_VALUES as DefaultGroupValues)[groupUri]?.value === itemUri;
   }
 
   private generateContentItem({
@@ -100,7 +100,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
       ?.find(
         ({ label: optionLabel, value }) => value.uri === mappedUri || value.label === label || optionLabel === label,
       );
-    const selectedLabel = typesMap && itemUri ? loadedOption?.label || itemUri : loadedOption?.label || label;
+    const selectedLabel = typesMap && itemUri ? (loadedOption?.label ?? itemUri) : (loadedOption?.label ?? label);
 
     const contentItem = {
       label: selectedLabel,
