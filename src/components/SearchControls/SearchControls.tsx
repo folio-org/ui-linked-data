@@ -77,11 +77,11 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   }, []);
 
   return (
-    <div className="search-pane">
+    <div className="search-pane" role="region" aria-labelledby="search-pane-header-title">
       <div className="search-pane-header">
-        <strong className="search-pane-header-title">
+        <h2 className="search-pane-header-title">
           <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
-        </strong>
+        </h2>
         <CaretDown className="header-caret" />
       </div>
       <div className="search-pane-content">

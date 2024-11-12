@@ -33,9 +33,9 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
     <div className={classNames(['search-control-pane', IS_EMBEDDED_MODE && 'search-control-pane-embedded'])}>
       {renderCloseButton?.()}
       <div className="search-control-pane-title">
-        <div className="search-control-pane-mainLabel">
+        <h2 className="search-control-pane-mainLabel">
           <span>{label}</span>
-        </div>
+        </h2>
         {isVisibleSubLabel && !!renderSubLabel && (
           <div className="search-control-pane-subLabel">
             <span>{renderSubLabel?.(searchResultsMetadata?.totalElements)}</span>
