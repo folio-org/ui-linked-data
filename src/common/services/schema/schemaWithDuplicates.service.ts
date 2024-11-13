@@ -10,8 +10,8 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
 
   constructor(
     private schema: Map<string, SchemaEntry>,
-    private selectedEntriesService: ISelectedEntries,
-    private entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
+    private readonly selectedEntriesService: ISelectedEntries,
+    private readonly entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
   ) {
     this.set(schema);
     this.isManualDuplication = true;
@@ -107,7 +107,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
       if (!entry || entry.cloneOf) return;
 
       const { children } = entry;
-      let updatedEntryUuid = newUuids?.[index] || uuidv4();
+      let updatedEntryUuid = newUuids?.[index] ?? uuidv4();
       const isFirstAssociatedEntryElem = parentEntry?.dependsOn && newUuids && index === 0;
 
       if (isFirstAssociatedEntryElem) {
@@ -126,7 +126,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
         newUuids,
       });
 
-      if (controlledByEntry && controlledByEntry?.uuid) {
+      if (controlledByEntry?.uuid) {
         this.schema.set(controlledByEntry.uuid, controlledByEntry);
       }
 

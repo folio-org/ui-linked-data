@@ -4,9 +4,9 @@ import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
 
-export const useMarcData = <T>(markState: RecoilState<T>) => {
-  const setMarcPreviewData = useSetRecoilState(markState);
-  const clearMarcData = useResetRecoilState(markState);
+export const useMarcData = <T>(marcState: RecoilState<T>) => {
+  const setMarcPreviewData = useSetRecoilState(marcState);
+  const clearMarcData = useResetRecoilState(marcState);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setStatus = useSetRecoilState(state.status.commonMessages);
 
