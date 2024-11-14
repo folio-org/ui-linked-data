@@ -17,10 +17,10 @@ export const getMappedBFLiteUri = (uri: string | undefined, schema?: Schema, pat
     path?.forEach(elem => {
       const schemaElem = schema?.get(elem);
 
-      if (!schemaElem || !schemaElem.uri) return;
+      if (!schemaElem?.uri) return;
 
       const mappedUriTyped = mappedUri as BFMapEntry;
-      const schemaElemUri = schemaElem.uri as string;
+      const schemaElemUri = schemaElem.uri;
       const pathUri = mappedUriTyped?.[schemaElemUri];
 
       if (pathUri) {

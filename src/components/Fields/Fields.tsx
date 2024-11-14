@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC, memo, ReactElement } from 'react';
+import { FC, memo, ReactElement, ReactNode } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import state from '@state';
@@ -62,13 +62,12 @@ export const Fields: FC<IFields> = memo(
       />
     );
 
+    const WrapperComponent = (children: ReactNode) => (
+      <div className={classNames(groupClassName, { [`${groupClassName}-compact`]: isCompact })}>{children}</div>
+    );
+
     return (
-      <ConditionalWrapper
-        condition={shouldGroup}
-        wrapper={children => (
-          <div className={classNames(groupClassName, { [`${groupClassName}-compact`]: isCompact })}>{children}</div>
-        )}
-      >
+      <ConditionalWrapper condition={shouldGroup} wrapper={WrapperComponent}>
         {drawComponent?.({
           schema,
           entry,

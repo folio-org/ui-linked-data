@@ -133,7 +133,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     const formattedLookupData = formatLookupOptions(response, this.uri);
     const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri);
 
-    this.loadedData = filteredLookupData?.sort(alphabeticSortLabel);
+    this.loadedData = filteredLookupData?.toSorted(alphabeticSortLabel);
 
     this.saveLoadedData();
   }

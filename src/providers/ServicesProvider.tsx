@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { ServicesContext } from '@src/contexts';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { UserValuesService } from '@common/services/userValues';
@@ -18,36 +18,52 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const lookupCacheService = useLookupCacheService();
   const commonStatusService = useCommonStatus();
 
-  const entryPropertiesGeneratorService = new EntryPropertiesGeneratorService();
-  const selectedEntriesService = new SelectedEntriesService([]);
-  const userValuesService = new UserValuesService({}, apiClient, lookupCacheService);
-  const schemaWithDuplicatesService = new SchemaWithDuplicatesService(
-    {} as Schema,
-    selectedEntriesService,
-    entryPropertiesGeneratorService,
+  const entryPropertiesGeneratorService = useMemo(() => new EntryPropertiesGeneratorService(), []);
+  const selectedEntriesService = useMemo(() => new SelectedEntriesService([]), []);
+  const userValuesService = useMemo(
+    () => new UserValuesService({}, apiClient, lookupCacheService),
+    [lookupCacheService],
   );
-  const recordNormalizingService = new RecordNormalizingService();
-  const recordToSchemaMappingService = new RecordToSchemaMappingService(
-    selectedEntriesService,
-    schemaWithDuplicatesService,
-    userValuesService,
-    commonStatusService,
+  const schemaWithDuplicatesService = useMemo(
+    () => new SchemaWithDuplicatesService({} as Schema, selectedEntriesService, entryPropertiesGeneratorService),
+    [selectedEntriesService, entryPropertiesGeneratorService],
   );
-  const schemaCreatorService = new SchemaService(selectedEntriesService, entryPropertiesGeneratorService);
-
-  return (
-    <ServicesContext.Provider
-      value={{
+  const recordNormalizingService = useMemo(() => new RecordNormalizingService(), []);
+  const recordToSchemaMappingService = useMemo(
+    () =>
+      new RecordToSchemaMappingService(
         selectedEntriesService,
-        userValuesService,
         schemaWithDuplicatesService,
-        lookupCacheService,
-        recordNormalizingService,
-        recordToSchemaMappingService,
-        schemaCreatorService,
-      }}
-    >
-      {children}
-    </ServicesContext.Provider>
+        userValuesService,
+        commonStatusService,
+      ),
+    [selectedEntriesService, schemaWithDuplicatesService, userValuesService, commonStatusService],
   );
+  const schemaCreatorService = useMemo(
+    () => new SchemaService(selectedEntriesService, entryPropertiesGeneratorService),
+    [selectedEntriesService, entryPropertiesGeneratorService],
+  );
+
+  const servicesValue = useMemo(
+    () => ({
+      selectedEntriesService,
+      userValuesService,
+      schemaWithDuplicatesService,
+      lookupCacheService,
+      recordNormalizingService,
+      recordToSchemaMappingService,
+      schemaCreatorService,
+    }),
+    [
+      selectedEntriesService,
+      userValuesService,
+      schemaWithDuplicatesService,
+      lookupCacheService,
+      recordNormalizingService,
+      recordToSchemaMappingService,
+      schemaCreatorService,
+    ],
+  );
+
+  return <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>;
 };

@@ -16,8 +16,8 @@ export class UserValuesService implements IUserValues {
 
   constructor(
     private userValues: UserValues,
-    private apiClient: IApiClient,
-    private cacheService: ILookupCacheService,
+    private readonly apiClient: IApiClient,
+    private readonly cacheService: ILookupCacheService,
   ) {
     this.set(userValues);
     this.initialize();
@@ -28,7 +28,7 @@ export class UserValuesService implements IUserValues {
   }
 
   async setValue({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) {
-    this.type = type as AdvancedFieldType;
+    this.type = type;
     this.key = key;
     this.value = value;
 

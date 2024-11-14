@@ -28,7 +28,6 @@ interface Props {
   parentBlockUri?: string;
 }
 
-// TODO: add value subscription, add uncontrolled opts handling
 export const SimpleLookupField: FC<Props> = ({
   uri,
   uuid,
@@ -48,7 +47,7 @@ export const SimpleLookupField: FC<Props> = ({
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
-      value: { label: basicLabel || label, uri },
+      value: { label: basicLabel ?? label, uri },
       label,
       __isNew__: false,
     })) || [],
@@ -74,7 +73,7 @@ export const SimpleLookupField: FC<Props> = ({
     }
   };
 
-  // TODO: uncomment once uncontrolled options are required/supported
+  // Uncomment if uncontrolled options are required/supported
   // const getOptionLabel = (option: MultiselectOption): string =>
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
@@ -109,9 +108,9 @@ export const SimpleLookupField: FC<Props> = ({
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
       onMenuOpen={loadOptions}
-      // TODO: uncomment once uncontrolled options are required/supported
+      // Uncomment if uncontrolled options are required/supported
       // getOptionLabel={getOptionLabel}
-      // TODO: remove the line below once uncontrolled options are required/supported
+      // Remove the line below once uncontrolled options are required/supported
       isValidNewOption={() => false}
       onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
       value={localValue}

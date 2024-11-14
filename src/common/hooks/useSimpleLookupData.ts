@@ -17,7 +17,7 @@ export const useSimpleLookupData = () => {
 
       const formattedLookupData = formatLookupOptions(response, uri);
       const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI);
-      const sortedLookupData = filteredLookupData?.sort(alphabeticSortLabel);
+      const sortedLookupData = filteredLookupData?.toSorted(alphabeticSortLabel);
 
       lookupCacheService.save?.(uri, sortedLookupData);
 
