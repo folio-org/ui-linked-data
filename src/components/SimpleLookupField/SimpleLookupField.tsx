@@ -28,6 +28,8 @@ interface Props {
   parentBlockUri?: string;
 }
 
+const LoadingMessage: FC = () => <FormattedMessage id="ld.loading" />;
+
 export const SimpleLookupField: FC<Props> = ({
   uri,
   uuid,
@@ -115,7 +117,7 @@ export const SimpleLookupField: FC<Props> = ({
       onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
       value={localValue}
       placeholder={<FormattedMessage id="ld.select" />}
-      loadingMessage={() => <FormattedMessage id="ld.loading" />}
+      loadingMessage={LoadingMessage}
       inputId="creatable-select-input"
       styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({

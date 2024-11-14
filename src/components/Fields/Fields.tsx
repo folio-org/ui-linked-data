@@ -20,6 +20,12 @@ export type IFields = {
   groupingDisabled?: boolean;
 };
 
+const getWrapperComponent =
+  ({ groupClassName, isCompact }: { groupClassName?: string; isCompact: boolean }) =>
+  ({ children }: { children: ReactNode }) => (
+    <div className={classNames(groupClassName, { [`${groupClassName}-compact`]: isCompact })}>{children}</div>
+  );
+
 export const Fields: FC<IFields> = memo(
   ({
     uuid,
@@ -62,12 +68,8 @@ export const Fields: FC<IFields> = memo(
       />
     );
 
-    const WrapperComponent = (children: ReactNode) => (
-      <div className={classNames(groupClassName, { [`${groupClassName}-compact`]: isCompact })}>{children}</div>
-    );
-
     return (
-      <ConditionalWrapper condition={shouldGroup} wrapper={WrapperComponent}>
+      <ConditionalWrapper condition={shouldGroup} wrapper={getWrapperComponent({ groupClassName, isCompact })}>
         {drawComponent?.({
           schema,
           entry,

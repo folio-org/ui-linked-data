@@ -50,7 +50,7 @@ export const getUris = ({ uri, dataTypeURI, schema, path }: GetUris) => {
   }
 
   const uriBFLite = getMappedBFLiteUri(uri, schema, path);
-  const uriWithSelector = uriBFLite || uri;
+  const uriWithSelector = uriBFLite ?? uri;
 
   return { uriBFLite, uriWithSelector };
 };

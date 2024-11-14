@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
@@ -35,6 +35,38 @@ const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
 
   return (!children?.length || type === AdvancedFieldType.dropdown) && level !== GROUP_BY_LEVEL;
 };
+
+const getPreviewWrapper =
+  ({
+    isBlock,
+    wrapEntities,
+    isBlockContents,
+  }: {
+    isBlock: boolean;
+    isBlockContents: boolean;
+    wrapEntities?: boolean;
+  }) =>
+  ({ children }: { children: ReactNode }) => (
+    <div
+      className={classNames({
+        'preview-block': isBlock,
+        'preview-entity': wrapEntities,
+        'preview-block-contents': isBlockContents,
+      })}
+      data-testid="preview-fields"
+    >
+      {children}
+    </div>
+  );
+
+const getValueGroupWrapper =
+  ({ schemaEntry }: { schemaEntry?: SchemaEntry }) =>
+  ({ children }: { children: ReactNode }) =>
+    children ? (
+      <div id={schemaEntry?.htmlId} className="value-group-wrapper">
+        {children}
+      </div>
+    ) : null;
 
 type FieldsProps = {
   base: Schema;
@@ -131,18 +163,7 @@ export const Fields: FC<FieldsProps> = memo(
     return (
       <ConditionalWrapper
         condition={isBlock || isBlockContents || wrapEntities}
-        wrapper={children => (
-          <div
-            className={classNames({
-              'preview-block': isBlock,
-              'preview-entity': wrapEntities,
-              'preview-block-contents': isBlockContents,
-            })}
-            data-testid="preview-fields"
-          >
-            {children}
-          </div>
-        )}
+        wrapper={getPreviewWrapper({ isBlock, isBlockContents, wrapEntities })}
       >
         {shouldRenderLabelOrPlaceholders && (
           <strong
@@ -203,13 +224,7 @@ export const Fields: FC<FieldsProps> = memo(
             <ConditionalWrapper
               key={uuid}
               condition={!isGroupable && checkShouldGroupWrap(level, schemaEntry)}
-              wrapper={children =>
-                children ? (
-                  <div id={schemaEntry?.htmlId} className="value-group-wrapper">
-                    {children}
-                  </div>
-                ) : null
-              }
+              wrapper={getValueGroupWrapper({ schemaEntry })}
             >
               <Fields key={uuid} uuid={uuid} base={base} paths={paths} level={level + 1} />
             </ConditionalWrapper>

@@ -1,8 +1,8 @@
 import { FC, ReactNode, useState } from 'react';
-import './Accordion.scss';
-import CaretDown from '@src/assets/caret-down.svg?react';
 import classNames from 'classnames';
+import CaretDown from '@src/assets/caret-down.svg?react';
 import { Button, ButtonType } from '@components/Button';
+import './Accordion.scss';
 
 type Accordion = {
   id?: string;
