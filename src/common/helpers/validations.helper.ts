@@ -34,7 +34,7 @@ export const validateNonNormalizedLccn = (lccn: string) => {
 
   const preformatted = lccn.replaceAll(/\s+/g, '').split('/')[0];
 
-  // TODO: try to have a single regexp rule?
+  // Refactor: try to have a single regexp rule?
   const passes = regexForNonNormalizedLccn.test(preformatted);
 
   // if passes, return string with only digits and letters in it

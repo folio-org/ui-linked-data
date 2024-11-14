@@ -1,4 +1,5 @@
 import { useCallback, useContext } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { useIntl } from 'react-intl';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
 import {
@@ -7,9 +8,10 @@ import {
   wrapRecordValuesWithCommonContainer,
 } from '@common/helpers/record.helper';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 import { ServicesContext } from '@src/contexts';
 import state from '@state';
-import { useSetRecoilState } from 'recoil';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -19,6 +21,7 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setRecord = useSetRecoilState(state.inputs.record);
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
@@ -67,8 +70,12 @@ export const useProcessedRecordAndSchema = () => {
           updatedUserValues = userValuesService.getAllValues();
         }
       } catch (error) {
-        // TODO: display an user error
         console.error(error);
+
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'),
+        ]);
       }
 
       return {
@@ -83,6 +90,7 @@ export const useProcessedRecordAndSchema = () => {
       recordToSchemaMappingService,
       schemaWithDuplicatesService,
       setRecord,
+      setStatusMessages,
       userValuesService,
     ],
   );

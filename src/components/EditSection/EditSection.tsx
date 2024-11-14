@@ -174,7 +174,7 @@ export const EditSection = memo(() => {
         return (
           <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
             <SimpleLookupField
-              uri={constraints?.useValuesFrom[0] || ''}
+              uri={constraints?.useValuesFrom[0] ?? ''}
               uuid={uuid}
               onChange={onChange}
               parentUri={constraints?.valueDataType?.dataTypeURI}
@@ -200,7 +200,7 @@ export const EditSection = memo(() => {
     [selectedEntries, collapsedGroups],
   );
 
-  // TODO: uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
+  // Uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
   // const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
   return resourceTemplates ? (

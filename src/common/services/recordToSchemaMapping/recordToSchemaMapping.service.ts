@@ -95,8 +95,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
   private async processRecordGroup(
     recordGroupIndex: string,
-    recordEntry: any,
-    recordGroup: any,
+    recordEntry: unknown,
+    recordGroup: unknown,
     schemaEntries: SchemaEntry[],
     containerBf2Uri: string,
     containerDataTypeUri: string,
@@ -186,8 +186,6 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       entry.path.forEach(parentElemKey => {
         const parentElem = this.updatedSchema?.get(parentElemKey) as SchemaEntry;
 
-        // TODO: select a correct block
-        // TODO: use the mapped values instead of 'uriBFLite'
         if (parentElem.uriBFLite === this.currentBlockUri) {
           hasProperBlock = true;
         }
@@ -216,7 +214,6 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         if (entry?.type === AdvancedFieldTypeEnum.dropdownOption) {
           this.selectedEntriesService.remove(entry.uuid);
 
-          // TODO: use the mapped values instead of 'uriBFLite'
           if (entry.uriBFLite === recordKey) {
             selectedSchemaEntryUuid = entry.uuid;
             this.selectedEntriesService.addNew(undefined, entry.uuid);
@@ -317,7 +314,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }: {
     schemaEntry: SchemaEntry;
     recordKey: string;
-    recordEntryValue: string | string[] | RecordBasic[];
+    recordEntryValue: RecordEntryValue;
     id?: string;
   }) {
     let schemaElemUuid = this.findSchemaUIControl({
@@ -377,12 +374,12 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     data,
   }: {
     schemaUiElem: SchemaEntry;
-    recordEntryValue: string | string[] | RecordBasic[];
+    recordEntryValue: RecordEntryValue;
     id: string | undefined;
     recordKey: string;
     labelSelector: string;
     valueKey: string;
-    data: string | string[] | RecordBasic[];
+    data: RecordEntryValue;
   }) {
     let newValueKey = valueKey;
     let updatedData = data;
@@ -451,7 +448,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     labelSelector,
   }: {
     valueKey: string;
-    data: string | string[] | RecordBasic[];
+    data: RecordEntryValue;
     fieldUri: string;
     schemaUiElem: SchemaEntry;
     id?: string;
@@ -493,7 +490,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }: {
     schemaEntry: SchemaEntry;
     templates: ResourceTemplateMetadata[];
-    value: string | string[] | RecordBasic[];
+    value: RecordEntryValue;
   }) {
     const isValueArray = Array.isArray(value);
 

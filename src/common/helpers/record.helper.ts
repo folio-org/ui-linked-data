@@ -21,7 +21,7 @@ type IGetAdjustedRecordContents = {
 };
 
 export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, previewBlock?: string) => {
-  const block = selectedBlock || TYPE_URIS.INSTANCE;
+  const block = selectedBlock ?? TYPE_URIS.INSTANCE;
 
   return previewBlock ? (record?.resource?.[block]?.[previewBlock] as any[])?.[0]?.id : record?.resource?.[block]?.id;
 };
@@ -159,7 +159,7 @@ export const getRecordTitle = (record: RecordEntry) => {
 
   TITLE_CONTAINER_URIS.every(uri => {
     const selectedTitleContainer = (
-      recordContents[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, any>[]
+      recordContents[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, unknown>[]
     )?.find(obj => Object.hasOwn(obj, uri));
 
     if (selectedTitleContainer) {

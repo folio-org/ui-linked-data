@@ -36,3 +36,5 @@ type DefaultGroupValues = {
     value: string;
   };
 };
+
+type RecordEntryValue = string | string[] | RecordBasic[];

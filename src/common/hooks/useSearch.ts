@@ -49,7 +49,7 @@ export const useSearch = () => {
 
     setFacetsBySegments(prevValue => ({
       ...prevValue,
-      [selectedNavigationSegment as string]: {
+      [selectedNavigationSegment]: {
         query,
         searchBy,
         facets,
@@ -139,7 +139,7 @@ export const useSearch = () => {
     pageMetadataSelectorType: 'prev' | 'next';
   }) => {
     const isInitialPage = pageNumber === 0;
-    const selectedQuery = (isInitialPage ? query : pageMetadata?.[pageMetadataSelectorType]) || query;
+    const selectedQuery = (isInitialPage ? query : pageMetadata?.[pageMetadataSelectorType]) ?? query;
     const baseQuerySelector =
       isBrowseSearch && !isInitialPage ? baseQuerySelectorType : SearchableIndexQuerySelector.Query;
 

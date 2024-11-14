@@ -198,7 +198,7 @@ export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: S
       const uriSelector = uriBFLite ?? uri;
       const id = uriSelector ? uriSelector.split(BF_URI_DELIMITER).at(-1) : bfid?.split(BFID_DELIMITER).at(-1);
 
-      return [...acc, `${id}${ENTRY_COUNT_DELIMITER}${cloneIndex || 0}`];
+      return [...acc, `${id}${ENTRY_COUNT_DELIMITER}${cloneIndex ?? 0}`];
     }, [] as string[])
     .join(ENTRY_DELIMITER);
 };
