@@ -21,8 +21,8 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const setRecord = useSetRecoilState(state.inputs.record);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useContext(ServicesContext) as Required<ServicesParams>;
