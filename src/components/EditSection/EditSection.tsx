@@ -1,4 +1,4 @@
-import { useEffect, memo, useCallback, useContext } from 'react';
+import { useEffect, memo, useCallback } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
@@ -17,10 +17,10 @@ import { ComplexLookupField } from '@components/ComplexLookupField';
 import { Prompt } from '@components/Prompt';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
-import { Button, ButtonType } from '@components/Button';
-import { ServicesContext } from '@src/contexts';
-import './EditSection.scss';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
+import { useServicesContext } from '@common/hooks/useServicesContext';
+import { Button, ButtonType } from '@components/Button';
+import './EditSection.scss';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -31,7 +31,7 @@ export type IDrawComponent = {
 };
 
 export const EditSection = memo(() => {
-  const { selectedEntriesService } = useContext(ServicesContext) as Required<ServicesParams>;
+  const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
   const schema = useRecoilValue(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);

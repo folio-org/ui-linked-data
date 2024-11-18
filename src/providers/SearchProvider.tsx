@@ -14,7 +14,7 @@ export const SearchProvider: FC<SearchProviderProps> = ({ value, children }) => 
       ...value,
       navigationSegment: { value: navigationSegment, set: setNavigationSegment },
     }),
-    [value, navigationSegment],
+    [navigationSegment, value],
   );
 
   return <SearchContext.Provider value={contextValue}>{children}</SearchContext.Provider>;

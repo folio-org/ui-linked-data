@@ -25,10 +25,7 @@ const profiles = [
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
 
-jest.mock('recoil', () => ({
-  useRecoilState: jest.fn(),
-  useSetRecoilState: jest.fn(),
-}));
+jest.mock('recoil');
 jest.mock('@common/services/schema');
 jest.mock('@common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
@@ -65,6 +62,11 @@ jest.mock('@common/helpers/record.helper', () => ({
   getEditingRecordBlocks: jest.fn(),
   getRecordTitle: jest.fn(),
   getPrimaryEntitiesFromRecord: jest.fn(),
+}));
+jest.mock('@common/hooks/useProcessedRecordAndSchema.hook', () => ({
+  useProcessedRecordAndSchema: () => ({
+    getProcessedRecordAndSchema: jest.fn(),
+  }),
 }));
 
 describe('useConfig', () => {

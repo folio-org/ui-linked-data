@@ -1,6 +1,3 @@
-import { ReactNode, useMemo } from 'react';
-import { ServicesContext } from '@src/contexts';
-
 export const userValuesService = {
   set: jest.fn(),
   setValue: jest.fn(),
@@ -44,19 +41,14 @@ export const schemaCreatorService = {
   generate: jest.fn(),
 } as ISchemaService;
 
-export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
-  const servicesValue = useMemo(
-    () => ({
-      userValuesService,
-      selectedEntriesService,
-      schemaWithDuplicatesService,
-      lookupCacheService,
-      recordNormalizingService,
-      recordToSchemaMappingService,
-      schemaCreatorService,
-    }),
-    [],
-  );
-
-  return <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>;
-};
+jest.mock('@common/hooks/useServicesContext.ts', () => ({
+  useServicesContext: () => ({
+    userValuesService,
+    selectedEntriesService,
+    schemaWithDuplicatesService,
+    lookupCacheService,
+    recordNormalizingService,
+    recordToSchemaMappingService,
+    schemaCreatorService,
+  }),
+}));

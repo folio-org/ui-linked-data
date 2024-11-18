@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import { loadSimpleLookup } from '@common/helpers/api.helper';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
 import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
-import { ServicesContext } from '@src/contexts';
+import { useServicesContext } from './useServicesContext';
 
 export const useSimpleLookupData = () => {
-  const { lookupCacheService } = useContext(ServicesContext) as Required<ServicesParams>;
+  const { lookupCacheService } = useServicesContext() as Required<ServicesParams>;
 
   const getLookupData = lookupCacheService.getAll;
 
