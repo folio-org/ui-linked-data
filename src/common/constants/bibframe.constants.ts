@@ -122,6 +122,12 @@ export const PROVISION_ACTIVITY_OPTIONS = [
   'http://bibfra.me/vocab/marc/manufacture',
 ];
 
+export const BF2_PROPERTY_URIS = {
+  HAS_INSTANCE: 'http://id.loc.gov/ontologies/bibframe/hasInstance',
+  INSTANCE_OF: 'http://id.loc.gov/ontologies/bibframe/instanceOf',
+  HAS_ITEM: 'http://id.loc.gov/ontologies/bibframe/hasItem',
+};
+
 export const BFID_DELIMITER = ':';
 export const BF_URI_DELIMITER = '/';
 export const ENTRY_DELIMITER = '__';

@@ -159,7 +159,7 @@ export const getRecordTitle = (record: RecordEntry) => {
 
   TITLE_CONTAINER_URIS.every(uri => {
     const selectedTitleContainer = (
-      recordContents[block!]?.['http://bibfra.me/vocab/marc/title'] as unknown as Record<string, unknown>[]
+      recordContents[block!]?.[BFLITE_URIS.TITLE] as unknown as Record<string, unknown>[]
     )?.find(obj => Object.hasOwn(obj, uri));
 
     if (selectedTitleContainer) {
@@ -169,7 +169,7 @@ export const getRecordTitle = (record: RecordEntry) => {
     return !selectedTitleContainer;
   });
 
-  return selectedTitle?.['http://bibfra.me/vocab/marc/mainTitle']?.[0];
+  return selectedTitle?.[BFLITE_URIS.MAIN_TITLE]?.[0];
 };
 
 export const getAdjustedRecordContents = ({ record, block, reference, asClone }: IGetAdjustedRecordContents) => {

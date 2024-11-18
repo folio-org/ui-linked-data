@@ -23,6 +23,16 @@ export const BFLITE_URIS = {
   PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
   CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
   PROVISION_ACTIVITY: 'https://bibfra.me/vocab/marc/provisionActivity',
+  TITLE: 'http://bibfra.me/vocab/marc/title',
+  MAIN_TITLE: 'http://bibfra.me/vocab/marc/mainTitle',
+  PRODUCTION: 'http://bibfra.me/vocab/marc/production',
+  PUBLICATION: 'http://bibfra.me/vocab/marc/publication',
+  DISTRIBUTION: 'http://bibfra.me/vocab/marc/distribution',
+  MANUFACTURE: 'http://bibfra.me/vocab/marc/manufacture',
+  COPYRIGHT: 'http://bibfra.me/vocab/marc/copyright',
+  ISSUANCE: 'http://bibfra.me/vocab/marc/issuance',
+  LANGUAGE: 'http://bibfra.me/vocab/lite/language',
+  DATE: 'http://bibfra.me/vocab/lite/date'
 };
 
 export const BF2_URIS = {

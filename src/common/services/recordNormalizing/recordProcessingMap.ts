@@ -1,3 +1,4 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import {
   wrapWithContainer,
   extractValue,
@@ -10,32 +11,32 @@ import {
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
-  wrapWithContainer(record, blockKey, groupKey, 'https://bibfra.me/vocab/marc/provisionActivity');
+  wrapWithContainer(record, blockKey, groupKey, BFLITE_URIS.PROVISION_ACTIVITY);
 
 export const RECORD_NORMALIZING_CASES = {
-  'http://bibfra.me/vocab/marc/production': {
+  [BFLITE_URIS.PRODUCTION]: {
     process: processProvisionActivity,
   },
-  'http://bibfra.me/vocab/marc/publication': {
+  [BFLITE_URIS.PUBLICATION]: {
     process: processProvisionActivity,
   },
-  'http://bibfra.me/vocab/marc/distribution': {
+  [BFLITE_URIS.DISTRIBUTION]: {
     process: processProvisionActivity,
   },
-  'http://bibfra.me/vocab/marc/manufacture': {
+  [BFLITE_URIS.MANUFACTURE]: {
     process: processProvisionActivity,
   },
-  'http://bibfra.me/vocab/marc/copyright': {
+  [BFLITE_URIS.COPYRIGHT]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
-      extractValue(record, blockKey, groupKey, 'http://bibfra.me/vocab/lite/date'),
+      extractValue(record, blockKey, groupKey, BFLITE_URIS.DATE),
   },
-  'http://bibfra.me/vocab/marc/issuance': {
+  [BFLITE_URIS.ISSUANCE]: {
     process: wrapSimpleLookupData,
   },
   _notes: {
     process: notesMapping,
   },
-  'http://bibfra.me/vocab/lite/extent': {
+  [BFLITE_URIS.EXTENT]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_extent'),
   },
@@ -45,25 +46,25 @@ export const RECORD_NORMALIZING_CASES = {
   _contributorReference: {
     process: processCreator,
   },
-  'http://bibfra.me/vocab/marc/summary': {
+  [BFLITE_URIS.SUMMARY]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_notes'),
   },
-  'http://bibfra.me/vocab/marc/tableOfContents': {
+  [BFLITE_URIS.TABLE_OF_CONTENTS]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_notes'),
   },
-  'http://bibfra.me/vocab/lite/language': {
+  [BFLITE_URIS.LANGUAGE]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupWithLookup(record, blockKey, groupKey, '_language'),
   },
-  'http://bibfra.me/vocab/lite/classification': {
+  [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       extractDropdownOption(
         record,
         blockKey,
         groupKey,
-        'http://bibfra.me/vocab/marc/source',
+        BFLITE_URIS.SOURCE,
         '_assigningSourceReference',
       ),
   },
