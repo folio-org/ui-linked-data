@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useContext, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import {
   generateEmptyValueUuid,
@@ -8,10 +8,10 @@ import {
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ServicesContext } from '@src/contexts';
 import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
+import { useServicesContext } from './useServicesContext';
 
 export const useComplexLookup = ({
   entry,
@@ -24,7 +24,7 @@ export const useComplexLookup = ({
   lookupConfig: ComplexLookupsConfigEntry;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }) => {
-  const { selectedEntriesService } = useContext(ServicesContext) as Required<ServicesParams>;
+  const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const schema = useRecoilValue(state.config.schema);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);

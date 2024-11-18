@@ -1,8 +1,8 @@
 import { FC, ReactNode, useState } from 'react';
-import './Accordion.scss';
-import CaretDown from '@src/assets/caret-down.svg?react';
 import classNames from 'classnames';
+import CaretDown from '@src/assets/caret-down.svg?react';
 import { Button, ButtonType } from '@components/Button';
+import './Accordion.scss';
 
 type Accordion = {
   id?: string;
@@ -15,7 +15,9 @@ type Accordion = {
 
 export const Accordion: FC<Accordion> = ({ id, title, groupId, defaultState = false, onToggle, children }) => {
   const [isOpen, setIsOpen] = useState(defaultState);
-  const identifier = id || groupId;
+  const identifier = id ?? groupId;
+  const togglerTestId = identifier ? `accordion-toggle-${identifier}` : '';
+  const contentsTestId = identifier ? `accordion-contents-${identifier}` : '';
 
   const handleVisibilityToggle = () => {
     const updatedIsOpenState = !isOpen;
@@ -26,10 +28,7 @@ export const Accordion: FC<Accordion> = ({ id, title, groupId, defaultState = fa
 
   return (
     <section className="accordion">
-      <div
-        className="accordion-toggle"
-        data-testid={`accordion-toggle ${identifier ? `accordion-toggle-${identifier}` : ''}`}
-      >
+      <div className="accordion-toggle" data-testid={`accordion-toggle ${togglerTestId}`}>
         <Button
           type={ButtonType.Text}
           aria-expanded={isOpen}
@@ -43,7 +42,7 @@ export const Accordion: FC<Accordion> = ({ id, title, groupId, defaultState = fa
           </div>
         </Button>
       </div>
-      <div data-testid={`accordion-contents ${identifier ? `accordion-contents-${identifier}` : ''}`} hidden={!isOpen}>
+      <div data-testid={`accordion-contents ${contentsTestId}`} hidden={!isOpen}>
         {children}
       </div>
     </section>

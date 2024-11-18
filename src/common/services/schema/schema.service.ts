@@ -320,7 +320,6 @@ export class SchemaService implements ISchema {
 
     this.schema.set(newUuid, schemaEntry);
 
-    // TODO: how to avoid circular references when handling META | HIDE
     if (type === AdvancedFieldType.group) return;
 
     for (const [index, item] of valueTemplateRefs.entries()) {

@@ -6,7 +6,7 @@ export class LiteralUserValueService implements IUserValueType {
     const typedData = data as string | string[];
 
     return {
-      uuid: uuid || '',
+      uuid: uuid ?? '',
       contents: [{ label: Array.isArray(typedData) ? typedData[0] : typedData }],
     };
   }

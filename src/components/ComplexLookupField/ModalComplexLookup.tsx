@@ -145,9 +145,9 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultNavigationSegment={segments.defaultValues?.segment || SearchSegment.Search}
+            defaultNavigationSegment={segments.defaultValues?.segment ?? SearchSegment.Search}
             defaultSearchBy={
-              segments.defaultValues?.searchBy ||
+              segments.defaultValues?.searchBy ??
               (searchBy[SearchSegment.Search]?.[0]?.value as unknown as SearchIdentifiers)
             }
             defaultQuery={value}

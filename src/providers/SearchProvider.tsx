@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { SearchContext } from '@src/contexts';
 
 type SearchProviderProps = {
@@ -9,11 +9,13 @@ type SearchProviderProps = {
 export const SearchProvider: FC<SearchProviderProps> = ({ value, children }) => {
   const [navigationSegment, setNavigationSegment] = useState(value.defaultNavigationSegment);
 
-  return (
-    <SearchContext.Provider
-      value={{ ...value, navigationSegment: { value: navigationSegment, set: setNavigationSegment } }}
-    >
-      {children}
-    </SearchContext.Provider>
+  const contextValue = useMemo(
+    () => ({
+      ...value,
+      navigationSegment: { value: navigationSegment, set: setNavigationSegment },
+    }),
+    [navigationSegment, value],
   );
+
+  return <SearchContext.Provider value={contextValue}>{children}</SearchContext.Provider>;
 };

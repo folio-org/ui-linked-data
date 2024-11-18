@@ -1,12 +1,12 @@
-import { useContext, useRef } from 'react';
+import { useRef } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
-import { ServicesContext } from '@src/contexts';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
+import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {
   singular?: boolean;
@@ -20,9 +20,8 @@ type GetProfiles = {
 };
 
 export const useConfig = () => {
-  const { schemaCreatorService, userValuesService, selectedEntriesService } = useContext(
-    ServicesContext,
-  ) as Required<ServicesParams>;
+  const { schemaCreatorService, userValuesService, selectedEntriesService } =
+    useServicesContext() as Required<ServicesParams>;
   const [profiles, setProfiles] = useRecoilState(state.config.profiles);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const setUserValues = useSetRecoilState(state.inputs.userValues);
@@ -87,7 +86,7 @@ export const useConfig = () => {
     return { updatedSchema, initKey };
   };
 
-  const getProfiles = async ({ record, recordId, previewParams, asClone }: GetProfiles): Promise<any> => {
+  const getProfiles = async ({ record, recordId, previewParams, asClone }: GetProfiles): Promise<unknown> => {
     if (isProcessingProfiles.current && (record || recordId)) return;
 
     try {

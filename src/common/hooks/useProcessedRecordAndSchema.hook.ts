@@ -1,4 +1,5 @@
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
+import { useSetRecoilState } from 'recoil';
 import { useIntl } from 'react-intl';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
 import {
@@ -7,9 +8,10 @@ import {
   wrapRecordValuesWithCommonContainer,
 } from '@common/helpers/record.helper';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
-import { ServicesContext } from '@src/contexts';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
-import { useSetRecoilState } from 'recoil';
+import { useServicesContext } from './useServicesContext';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -20,9 +22,10 @@ type IGetProcessedRecordAndSchema = {
 
 export const useProcessedRecordAndSchema = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
+  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
-    useContext(ServicesContext) as Required<ServicesParams>;
+    useServicesContext() as Required<ServicesParams>;
 
   const getProcessedRecordAndSchema = useCallback(
     async ({ baseSchema, record, userValues, asClone = false }: IGetProcessedRecordAndSchema) => {
@@ -67,8 +70,12 @@ export const useProcessedRecordAndSchema = () => {
           updatedUserValues = userValuesService.getAllValues();
         }
       } catch (error) {
-        // TODO: display an user error
         console.error(error);
+
+        setStatusMessages(currentStatus => [
+          ...currentStatus,
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'),
+        ]);
       }
 
       return {
@@ -83,6 +90,7 @@ export const useProcessedRecordAndSchema = () => {
       recordToSchemaMappingService,
       schemaWithDuplicatesService,
       setRecord,
+      setStatusMessages,
       userValuesService,
     ],
   );

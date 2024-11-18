@@ -89,7 +89,7 @@ export const getMappedLookupValue = ({
     // Find lookup value in the map
     const selectedMappedUri = Object.entries(groupTypeMap.data)?.find(([_, value]) => value.uri === uri)?.[0];
 
-    mappedUri = selectedMappedUri || uri;
+    mappedUri = selectedMappedUri ?? uri;
   }
 
   return mappedUri;
@@ -152,7 +152,7 @@ const traverseSchema = ({
             uriBFLite,
             label,
             basicLabel,
-            uri: uri || parentUri,
+            uri: uri ?? parentUri,
             type: type as AdvancedFieldType,
             nonBFMappedGroup: updatedNonBFMappedGroup,
           });

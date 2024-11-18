@@ -9,7 +9,6 @@ const notificationMap = {
   [Status.warning]: Warning,
 };
 
-// TODO: define the default message type
 const DefaultNotification = Info as unknown as BaseNotification;
 
 type notificationTypes = (typeof notificationMap)[StatusType];

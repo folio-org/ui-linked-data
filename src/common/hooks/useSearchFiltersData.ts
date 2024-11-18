@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { StatusType } from '@common/constants/status.constants';
+import { UserNotificationFactory } from '@common/services/userNotification';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
 
@@ -11,6 +13,7 @@ export const useSearchFiltersData = () => {
   const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
+  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
 
   useEffect(() => {
     return resetSelectedFacetsGroups();
@@ -35,8 +38,12 @@ export const useSearchFiltersData = () => {
 
       setSourceData(sourceData);
     } catch (error) {
-      // TODO: handle error and show notification
       console.error(error);
+
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
+      ]);
     }
   };
 
@@ -47,14 +54,18 @@ export const useSearchFiltersData = () => {
 
     try {
       const facetsQueryParam = updatedSelectedFacetsGroups.join(',');
-      // TODO: generate query by selected values
+      // Generate query by selected values
       const query = DEFAULT_SEARCH_FACETS_QUERY;
       const response = await SearchApi.getSearchData(url, { facet: facetsQueryParam, query });
 
       setFacetsData(response.facets);
     } catch (error) {
-      // TODO: handle error and show notification
       console.error(error);
+
+      setCommonStatus(currentStatus => [
+        ...currentStatus,
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
+      ]);
     }
   };
 

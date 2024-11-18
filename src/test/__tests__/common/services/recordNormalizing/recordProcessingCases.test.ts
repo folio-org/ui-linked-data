@@ -22,6 +22,33 @@ describe('recordProcessingCases', () => {
     [creatorBFLiteUri]: { container: creatorNonBFUri },
   });
 
+  describe('getLabelUri', () => {
+    test('returns the correct label URI', () => {
+      const blockKey = 'block_1';
+      const groupKey = 'group_1';
+      const fieldKey = 'field_1';
+      const expectedLabel = 'testLabel';
+
+      jest.spyOn(RecordProcessingCases, 'getLabelUri').mockReturnValueOnce(expectedLabel);
+
+      const result = RecordProcessingCases.getLabelUri(blockKey, groupKey, fieldKey);
+
+      expect(result).toBe(expectedLabel);
+    });
+
+    test('returns an empty string if label URI is not found', () => {
+      const blockKey = 'block_1';
+      const groupKey = 'group_1';
+      const fieldKey = 'field_1';
+
+      jest.spyOn(RecordProcessingCases, 'getLabelUri').mockReturnValueOnce('');
+
+      const result = RecordProcessingCases.getLabelUri(blockKey, groupKey, fieldKey);
+
+      expect(result).toBe('');
+    });
+  });
+
   describe('wrapWithContainer', () => {
     const container = 'groupContainer_1';
 

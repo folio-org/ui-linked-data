@@ -18,10 +18,10 @@ import {
   getRecordId,
   getSelectedRecordBlocks,
   saveRecordLocally,
+  getSavedRecord,
 } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
-import { getSavedRecord } from '@common/helpers/record.helper';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
@@ -120,7 +120,6 @@ export const useRecordControls = () => {
         selectedRecordBlocks: updatedSelectedRecordBlocks,
       }) as RecordEntry;
 
-      // TODO: define a type
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
       const shouldPostRecord = !recordId || getRecordId(record) === DEFAULT_RECORD_ID || isClone;
 
@@ -138,7 +137,7 @@ export const useRecordControls = () => {
         UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
       ]);
 
-      // TODO: isEdited state update is not immediately reflected in the <Prompt />
+      // isEdited state update is not immediately reflected in the <Prompt />
       // blocker component, forcing <Prompt /> to block the navigation call below
       // right before isEdited is set to false, disabling <Prompt />
       //
@@ -163,7 +162,7 @@ export const useRecordControls = () => {
 
       if (asRefToNewRecord) {
         const blocksBfliteKey = (
-          searchParams.get(QueryParams.Type) || ResourceType.instance
+          searchParams.get(QueryParams.Type) ?? ResourceType.instance
         )?.toUpperCase() as BibframeEntities;
 
         const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;

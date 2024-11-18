@@ -21,9 +21,9 @@ export const useSearchFilterLookupOptions = ({
     options = facetValues.reduce((accum, { id, totalRecords }) => {
       const sourceElem = sourceData?.find(({ id: sourceDataId }) => sourceDataId === id);
       const selectedLabel = hasMappedSourceData ? sourceElem?.name : id;
-      const label = selectedLabel?.trim() || formatMessage({ id: 'ld.notSpecified' });
+      const label = selectedLabel?.trim() ?? formatMessage({ id: 'ld.notSpecified' });
 
-      // TODO: uncomment when the way to filter the options list is approved
+      // Uncomment when the way to filter the options list is approved
       // if (excludedOptions?.includes(id)) return accum;
 
       accum.push({

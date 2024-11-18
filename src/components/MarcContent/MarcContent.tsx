@@ -16,7 +16,7 @@ export const MarcContent: FC<MarcContent> = ({ marc, ...rest }) => {
           <tr>
             <td colSpan={4}>{`LEADER ${parsedContent?.leader}`}</td>
           </tr>
-          {parsedContent?.fields?.map((field, idx) => <MarcField field={field} key={idx} />)}
+          {parsedContent?.fields?.map(field => <MarcField field={field} key={Object.keys(field)[0]} />)}
         </tbody>
       </table>
     </section>

@@ -29,7 +29,7 @@ export const SearchFilters = () => {
                 title={<FormattedMessage id={labelId} />}
                 defaultState={isOpen}
                 onToggle={hasExternalDataSource ? getSearchFacetsData : undefined}
-                groupId={facet || labelId}
+                groupId={facet ?? labelId}
               >
                 {isGroupCheckType && (
                   <div onChange={isSingleGroupCheckType ? onChangeLimiters : onChangeLimitersMulti}>
