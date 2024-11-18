@@ -6,9 +6,9 @@ import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
+import { useSearchContext } from '@common/hooks/useSearchContext';
+import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
 import state from '@state';
-import { useSearchContext } from './useSearchContext';
-import { useFetchSearchData } from './useFetchSearchData';
 
 export const useSearch = () => {
   const {

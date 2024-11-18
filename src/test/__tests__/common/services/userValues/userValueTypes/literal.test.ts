@@ -8,9 +8,9 @@ describe('LiteralUserValueService', () => {
     literalUserValueService = new LiteralUserValueService();
   });
 
-  function testGeneratedData(data: string | string[]) {
+  function testGeneratedData(data: string | string[], uuid?: string) {
     const testResult = {
-      uuid: 'testUuid_1',
+      uuid: uuid ?? '',
       contents: [
         {
           label: 'test value 1',
@@ -20,14 +20,14 @@ describe('LiteralUserValueService', () => {
 
     const result = literalUserValueService.generate({
       data,
-      uuid: 'testUuid_1',
+      uuid,
     });
 
     expect(result).toEqual(testResult);
   }
 
   test('generates user value for string data', () => {
-    testGeneratedData('test value 1');
+    testGeneratedData('test value 1', 'testUuid_1');
   });
 
   test('generates user value for array data', () => {

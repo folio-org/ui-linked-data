@@ -72,14 +72,14 @@ describe('useSearchFiltersData', () => {
 
   test('onToggleFilterGroupState - updates selectedFacetsGroups', () => {
     const setSelectedFacetsGroups = jest.fn();
-    (useRecoilState as jest.Mock).mockReturnValue([['facet1'], setSelectedFacetsGroups]);
+    (useRecoilState as jest.Mock).mockReturnValue([['facet_1'], setSelectedFacetsGroups]);
 
     const { result } = renderHook(() => useSearchFiltersData());
 
     act(() => {
-      const updatedGroups = result.current.onToggleFilterGroupState('facet2', true);
-      expect(updatedGroups).toEqual(['facet1', 'facet2']);
-      expect(setSelectedFacetsGroups).toHaveBeenCalledWith(['facet1', 'facet2']);
+      const updatedGroups = result.current.onToggleFilterGroupState('facet_2', true);
+      expect(updatedGroups).toEqual(['facet_1', 'facet_2']);
+      expect(setSelectedFacetsGroups).toHaveBeenCalledWith(['facet_1', 'facet_2']);
     });
   });
 });
