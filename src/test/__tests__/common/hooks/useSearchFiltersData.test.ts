@@ -69,4 +69,17 @@ describe('useSearchFiltersData', () => {
     });
     expect(setFacetsData).toHaveBeenCalledWith('facetsData');
   });
+
+  test('onToggleFilterGroupState - updates selectedFacetsGroups', () => {
+    const setSelectedFacetsGroups = jest.fn();
+    (useRecoilState as jest.Mock).mockReturnValue([['facet1'], setSelectedFacetsGroups]);
+
+    const { result } = renderHook(() => useSearchFiltersData());
+
+    act(() => {
+      const updatedGroups = result.current.onToggleFilterGroupState('facet2', true);
+      expect(updatedGroups).toEqual(['facet1', 'facet2']);
+      expect(setSelectedFacetsGroups).toHaveBeenCalledWith(['facet1', 'facet2']);
+    });
+  });
 });
