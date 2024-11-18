@@ -1,4 +1,4 @@
-import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
+import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { renderHook } from '@testing-library/react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
@@ -110,7 +110,7 @@ describe('useConfig', () => {
       },
     };
 
-    const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
+    const { result } = renderHook(useConfig);
     const preparedFields = result.current.prepareFields(profiles);
 
     expect(setPreparedFields).toHaveBeenCalledWith(testResult);
@@ -126,7 +126,7 @@ describe('useConfig', () => {
       mockUseRecoilState();
       (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
-      const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
+      const { result } = renderHook(useConfig);
       const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
 
       expect(fetchProfiles).toHaveBeenCalled();
@@ -137,7 +137,7 @@ describe('useConfig', () => {
     test('does not call "fetchProfiles" and "setProfiles" and returns a stored array of profiles', async () => {
       mockUseRecoilState(profiles);
 
-      const { result } = renderHook(useConfig, { wrapper: MockServicesProvider });
+      const { result } = renderHook(useConfig);
 
       const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
 
