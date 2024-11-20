@@ -1,3 +1,4 @@
+import { BF2_PROPERTY_URIS } from '@common/constants/bibframe.constants';
 import { lookupConfig } from '@common/constants/lookup.constants';
 import { BaseFieldType, AdvancedFieldType } from '@common/constants/uiControls.constants';
 
@@ -18,14 +19,13 @@ export const getPropertyTemplateType = ({
 }: PropertyTemplate): FieldType => {
   // these meta componets are structural things, like add new instances/items. etc
   if (
-    propertyURI === 'http://id.loc.gov/ontologies/bibframe/hasInstance' ||
-    propertyURI === 'http://id.loc.gov/ontologies/bibframe/instanceOf'
+    propertyURI === BF2_PROPERTY_URIS.HAS_INSTANCE ||
+    propertyURI === BF2_PROPERTY_URIS.INSTANCE_OF
   )
     return BaseFieldType.META;
 
   // we handle this structural thing elsewhere
-  // TODO: ^ no idea what this means
-  if (propertyURI === 'http://id.loc.gov/ontologies/bibframe/hasItem') return BaseFieldType.HIDE;
+  if (propertyURI === BF2_PROPERTY_URIS.HAS_ITEM) return BaseFieldType.HIDE;
 
   if (valueTemplateRefs.length > 0) return BaseFieldType.REF;
 
@@ -44,8 +44,7 @@ export const getPropertyTemplateType = ({
   return localType;
 };
 
-// TODO: potentially clean up
-export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedFieldType => {
+export const getAdvancedFieldType = (struct: Record<string, unknown>): AdvancedFieldType => {
   // ProfileEntry
   if (struct?.configType === AdvancedFieldType.profile) return AdvancedFieldType.profile;
 
@@ -76,9 +75,6 @@ export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedField
       default:
         return AdvancedFieldType.__fallback;
     }
-
-    // TODO: REF -> META. HIDE
-    // in old handled by index = 0 & setAsGroup
   }
 
   return AdvancedFieldType.__fallback;
