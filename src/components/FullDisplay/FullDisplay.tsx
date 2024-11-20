@@ -20,15 +20,12 @@ export const FullDisplay = () => {
       previewContent.map(({ id, base, userValues, initKey, title, entities }) => {
         const resourceType = entities?.map(e => RESOURCE_TEMPLATE_IDS[e])?.[0];
         const resourceTypeWithFallback = resourceType ?? '-';
+        const handleButtonClick = () => setPreviewContent(previewContent.filter(entry => entry.id !== id));
 
         return (
           <div key={id}>
             <div className="full-display-control-panel">
-              <Button
-                className="close"
-                data-testid="preview-remove"
-                onClick={() => setPreviewContent(previewContent.filter(entry => entry.id !== id))}
-              >
+              <Button className="close" data-testid="preview-remove" onClick={handleButtonClick}>
                 <Times16 />
               </Button>
               <div className="info">
