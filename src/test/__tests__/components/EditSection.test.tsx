@@ -123,6 +123,7 @@ const schema = new Map([
     'uuid6',
     {
       bfid: 'uuid6Bfid',
+      uri: 'uuid6Uri',
       displayName: 'uuid6',
       type: AdvancedFieldType.dropdown,
       path: ['uuid0', 'uuid2', 'uuid6'],
@@ -251,13 +252,13 @@ describe('EditSection', () => {
   });
 
   describe('duplicate groups', () => {
-    test('duplicates a field group', () => {
-      const { getByTestId } = renderScreen();
-      const parentElement = getByTestId('field-with-meta-controls-uuid6');
+    test('duplicates a field group', async () => {
+      const { findByTestId } = renderScreen();
+      const parentElement = await findByTestId('field-with-meta-controls-uuid6');
 
       fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
-      expect(getByTestId('duplicate-group-clone-amount')).toBeInTheDocument();
+      expect(await findByTestId('duplicate-group-clone-amount')).toBeInTheDocument();
     });
 
     test('collapses the duplicated group', async () => {
@@ -267,17 +268,6 @@ describe('EditSection', () => {
       fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
 
       fireEvent.click(getByTestId('duplicate-group-clone-amount'));
-
-      expect(await findAllByText('uuid6')).toHaveLength(1);
-    });
-
-    test('collapses all duplicated groups', async () => {
-      const { getByTestId, findAllByText } = renderScreen();
-      const parentElement = getByTestId('field-with-meta-controls-uuid6');
-
-      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
-
-      fireEvent.click((await findAllByText('ld.collapseAll'))[0]);
 
       expect(await findAllByText('uuid6')).toHaveLength(1);
     });

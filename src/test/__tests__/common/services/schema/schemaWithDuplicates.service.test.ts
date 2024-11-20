@@ -30,10 +30,13 @@ describe('SchemaWithDuplicatesService', () => {
   });
 
   describe('duplicateEntry', () => {
+    const constraints = { repeatable: true } as Constraints;
     const entry = {
       path: ['testKey-0', 'testKey-2', 'testKey-4'],
       uuid: 'testKey-4',
+      uri: 'mockUri',
       children: ['testKey-5'],
+      constraints,
     };
 
     test('adds a copied entry', () => {
@@ -44,21 +47,28 @@ describe('SchemaWithDuplicatesService', () => {
         .mockReturnValueOnce('testKey-9')
         .mockReturnValueOnce('testKey-10');
 
-      const constraints = { repeatable: true } as Constraints;
       const entryData = { ...entry, constraints };
       const testResult = new Map([
         ['testKey-0', { path: ['testKey-0'], uuid: 'testKey-0', children: ['testKey-1', 'testKey-2'] }],
         ['testKey-1', { path: ['testKey-0', 'testKey-1'], uuid: 'testKey-1', children: ['testKey-3'] }],
-        ['testKey-2', { path: ['testKey-0', 'testKey-2'], uuid: 'testKey-2', children: ['testKey-4', 'testKey-7'] }],
+        [
+          'testKey-2',
+          {
+            path: ['testKey-0', 'testKey-2'],
+            uuid: 'testKey-2',
+            children: ['testKey-4', 'testKey-7'],
+            twinChildren: { mockUri: ['testKey-4', 'testKey-7'] },
+          },
+        ],
         ['testKey-3', { path: ['testKey-0', 'testKey-1', 'testKey-3'], uuid: 'testKey-3', children: [] }],
         [
           'testKey-4',
           {
             path: ['testKey-0', 'testKey-2', 'testKey-4'],
             uuid: 'testKey-4',
+            cloneIndex: 0,
             children: ['testKey-5'],
-            clonedBy: ['testKey-7'],
-            constraints,
+            deletable: true,
           },
         ],
         [
@@ -74,11 +84,11 @@ describe('SchemaWithDuplicatesService', () => {
           {
             path: ['testKey-0', 'testKey-2', 'testKey-7'],
             uuid: 'testKey-7',
+            uri: 'mockUri',
             cloneIndex: 1,
             children: ['testKey-8'],
+            deletable: true,
             constraints,
-            cloneOf: 'testKey-4',
-            clonedBy: undefined,
           },
         ],
         [
@@ -87,7 +97,6 @@ describe('SchemaWithDuplicatesService', () => {
             path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8'],
             uuid: 'testKey-8',
             children: ['testKey-9'],
-            clonedBy: [],
           },
         ],
         [
@@ -96,7 +105,6 @@ describe('SchemaWithDuplicatesService', () => {
             path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8', 'testKey-9'],
             uuid: 'testKey-9',
             children: [],
-            clonedBy: [],
           },
         ],
       ]);

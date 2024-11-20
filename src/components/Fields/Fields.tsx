@@ -39,18 +39,16 @@ export const Fields: FC<IFields> = memo(
   }) => {
     const schema = useRecoilValue(state.config.schema);
     const selectedEntries = useRecoilValue(state.config.selectedEntries);
-    const collapsedGroups = useRecoilValue(state.ui.collapsedGroups);
     const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
 
     const entry = uuid && schema?.get(uuid);
 
     if (!entry) return null;
 
-    const { type, bfid = '', children, cloneOf = '' } = entry;
+    const { type, bfid = '', children, twinChildren } = entry;
 
     const isDropdownAndSelected = type === AdvancedFieldType.dropdownOption && selectedEntries.includes(uuid);
-    const shouldRender =
-      !collapsedGroups.includes(cloneOf) && (level === ENTITY_LEVEL ? currentlyEditedEntityBfid?.has(bfid) : true);
+    const shouldRender = level === ENTITY_LEVEL ? currentlyEditedEntityBfid?.has(bfid) : true;
     const shouldRenderChildren = isDropdownAndSelected || type !== AdvancedFieldType.dropdownOption;
     const isCompact = !children?.length && level <= groupByLevel;
     const shouldGroup = !groupingDisabled && level === groupByLevel;
@@ -59,6 +57,7 @@ export const Fields: FC<IFields> = memo(
 
     const generateFieldsComponent = ({ ...fieldsProps }: Partial<IFields>) => (
       <Fields
+        key={fieldsProps.uuid}
         drawComponent={drawComponent}
         uuid={uuid}
         level={level + 1}
@@ -81,22 +80,36 @@ export const Fields: FC<IFields> = memo(
           children?.map(uuid => {
             const entry = schema.get(uuid);
 
+            if (!entry) return;
+
+            const { uri = '' } = entry;
+            const twinChildrenOfSameType = twinChildren?.[uri];
+            const isFirstTwinChild = twinChildrenOfSameType?.[0] === uuid;
+
             // render cloned / grouped items starting from the main item (prototype) separately
-            if (entry?.clonedBy) {
+            if (isFirstTwinChild) {
+              const restOfTwinChildren = twinChildrenOfSameType.slice(1);
+
               return level === 1 ? (
                 <DuplicateGroupContainer
                   key={uuid}
                   groupClassName={groupClassName}
                   entry={entry}
                   generateComponent={generateFieldsComponent}
+                  twins={restOfTwinChildren}
                 />
               ) : (
-                <DuplicateSubcomponentContainer key={uuid} entry={entry} generateComponent={generateFieldsComponent} />
+                <DuplicateSubcomponentContainer
+                  key={uuid}
+                  entry={entry}
+                  twins={restOfTwinChildren}
+                  generateComponent={generateFieldsComponent}
+                />
               );
             }
 
             // cloned / grouped items already rendered in the prototype
-            if (entry?.cloneOf) return null;
+            if (twinChildrenOfSameType) return null;
 
             return (
               <Fields

@@ -15,9 +15,14 @@ const isDuplicateImportedResourceModalOpen = atom<boolean>({
   default: false,
 });
 
-const collapsedGroups = atom<string[]>({
-  key: 'ui.collapsedGroups',
-  default: [],
+const collapsedEntries = atom<Set<string>>({
+  key: 'ui.collapsedEntries',
+  default: new Set(),
+});
+
+const collapsibleEntries = atom<Set<string>>({
+  key: 'ui.collapsibleEntries',
+  default: new Set(),
 });
 
 const currentlyEditedEntityBfid = atom<Set<string>>({
@@ -33,8 +38,9 @@ const currentlyPreviewedEntityBfid = atom<Set<string>>({
 export default {
   isAdvancedSearchOpen,
   isMarcPreviewOpen,
-  collapsedGroups,
+  collapsedEntries,
   currentlyEditedEntityBfid,
   currentlyPreviewedEntityBfid,
   isDuplicateImportedResourceModalOpen,
+  collapsibleEntries,
 };

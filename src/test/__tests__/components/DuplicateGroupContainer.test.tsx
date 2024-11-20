@@ -7,7 +7,6 @@ const mockClonedByUuid = '0xf';
 
 const mockEntry = {
   uuid: '0xb',
-  clonedBy: [mockClonedByUuid],
 };
 
 jest.mock('react-intl', () => ({
@@ -32,6 +31,7 @@ describe('DuplicateGroupContainer', () => {
         <DuplicateGroupContainer
           entry={mockEntry as SchemaEntry}
           generateComponent={({ uuid }) => <div key={uuid}>{uuid}</div>}
+          twins={[mockClonedByUuid]}
         />
       </RecoilRoot>,
     );

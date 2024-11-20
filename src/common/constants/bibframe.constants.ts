@@ -113,6 +113,7 @@ export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
 
 export const PREV_ENTRY_PATH_INDEX = 2;
+export const MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE = 2;
 export const GRANDPARENT_ENTRY_PATH_INDEX = PREV_ENTRY_PATH_INDEX + 1;
 
 export const PROVISION_ACTIVITY_OPTIONS = [

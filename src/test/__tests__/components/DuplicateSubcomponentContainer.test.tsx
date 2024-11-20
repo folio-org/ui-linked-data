@@ -4,7 +4,6 @@ import { IFields } from '@components/Fields';
 
 const mockEntry = {
   uuid: 'testUuid_1',
-  clonedBy: ['clonedByUuid_1', 'clonedByUuid_2'],
 } as SchemaEntry;
 const mockGenerateComponent = ({ uuid }: Partial<IFields>) => (
   <div key={uuid} data-testid={`test-repeatable-subcomponent-${uuid}`}>
@@ -16,7 +15,13 @@ describe('DuplicateSubcomponentContainer', () => {
   const { getByTestId } = screen;
 
   test('renders "DuplicateSubcomponentContainer" with generated subcomponents', () => {
-    render(<DuplicateSubcomponentContainer entry={mockEntry} generateComponent={mockGenerateComponent} />);
+    render(
+      <DuplicateSubcomponentContainer
+        entry={mockEntry}
+        twins={['clonedByUuid_1', 'clonedByUuid_2']}
+        generateComponent={mockGenerateComponent}
+      />,
+    );
 
     expect(getByTestId('test-repeatable-subcomponent-testUuid_1')).toBeInTheDocument();
     expect(getByTestId('test-repeatable-subcomponent-clonedByUuid_1')).toBeInTheDocument();

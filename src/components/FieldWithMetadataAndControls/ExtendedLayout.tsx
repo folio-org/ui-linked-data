@@ -14,12 +14,13 @@ type IExtendedLayout = {
   hasDuplicateGroupButton?: boolean;
   hasDuplicateSubcomponentButton?: boolean;
   onClickDuplicateGroup?: VoidFunction;
+  onClickDeleteGroup?: VoidFunction;
 };
 
 export const ExtendedLayout: FC<IExtendedLayout> = memo(
   ({
     children,
-    entry,
+    entry: { type, deletable },
     htmlId,
     displayName,
     showLabel,
@@ -27,16 +28,22 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
     hasDuplicateGroupButton,
     hasDuplicateSubcomponentButton,
     onClickDuplicateGroup,
+    onClickDeleteGroup,
   }) => {
-    const { type } = entry;
-
     return (
       <>
         <div className={classNames({ 'extended-layout-meta': hasDuplicateGroupButton })}>
           {displayName && showLabel && (
             <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
-          {hasDuplicateGroupButton && <DuplicateGroup htmlId={htmlId} onClick={onClickDuplicateGroup} />}
+          {hasDuplicateGroupButton && (
+            <DuplicateGroup
+              htmlId={htmlId}
+              deleteDisabled={!deletable}
+              onClickDuplicate={onClickDuplicateGroup}
+              onClickDelete={onClickDeleteGroup}
+            />
+          )}
         </div>
         {children && (
           <div className="children-container" data-testid={htmlId}>
@@ -51,7 +58,7 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
         {hasDuplicateSubcomponentButton && (
           <DuplicateGroup
             htmlId={htmlId}
-            onClick={onClickDuplicateGroup}
+            onClickDuplicate={onClickDuplicateGroup}
             hasDeleteButton={false}
             className="duplicate-subcomponent"
           />

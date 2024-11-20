@@ -6,7 +6,7 @@ describe('DuplicateGroup', () => {
   const onClick = jest.fn();
 
   function renderComponent(hasDeleteButton = true) {
-    render(<DuplicateGroup onClick={onClick} hasDeleteButton={hasDeleteButton} htmlId="mockHtmlId" />);
+    render(<DuplicateGroup onClickDuplicate={onClick} hasDeleteButton={hasDeleteButton} htmlId="mockHtmlId" />);
   }
 
   test('renders DuplicateGroup component', () => {
