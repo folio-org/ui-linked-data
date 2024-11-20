@@ -84,10 +84,10 @@ export const getAdvancedFieldType = (struct: Record<string, any>): AdvancedField
   return AdvancedFieldType.__fallback;
 };
 
-export const deleteFromSetImmutable = (set: Set<unknown>, toDelete: unknown[]) => {
+export const deleteFromSetImmutable = <T = unknown>(set: Set<T>, toDelete: T[]) => {
   const clone = new Set([...set]);
 
-  toDelete.forEach(entry => clone.delete(entry))
+  toDelete.forEach(entry => clone.delete(entry));
 
   return clone;
-}
+};

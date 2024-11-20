@@ -31,16 +31,12 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
     setCollapsedEntries(prev => {
       const twinsAndPrevCombined = new Set([...(twins ?? []), ...prev]);
 
-      if (twinsAndPrevCombined.size === prev.size) {
-        // Can use .difference method of Set() once it's been available for some time
-        return deleteFromSetImmutable(prev, twins) as Set<string>;
-      } else {
-        return twinsAndPrevCombined;
-      }
+      // Can use .difference method of Set() once it's been available for some time
+      return twinsAndPrevCombined.size === prev.size ? deleteFromSetImmutable(prev, twins) : twinsAndPrevCombined;
     });
 
   return (
-    <div key={uuid} className={classNames('duplicate-group-container', groupClassName)}>
+    <div className={classNames('duplicate-group-container', groupClassName)}>
       {generateComponent({ uuid, groupingDisabled: true })}
       {!!twinsAmount && (
         <Button data-testid="expand-collapse-button" className="expand-collapse-button" onClick={toggleCollapseExpand}>

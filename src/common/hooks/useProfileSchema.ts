@@ -27,7 +27,7 @@ export const useProfileSchema = () => {
     schemaWithDuplicatesService.set(schema);
     const deletedUuids = schemaWithDuplicatesService.deleteEntry(entry);
 
-    setCollapsibleEntries(prev => deleteFromSetImmutable(prev, [entry.uuid]) as Set<string>);
+    setCollapsibleEntries(prev => deleteFromSetImmutable(prev, [entry.uuid]));
     setSchema(schemaWithDuplicatesService.get());
     setUserValues(prev => Object.fromEntries(Object.entries(prev).filter(([key]) => !deletedUuids?.includes(key))));
 
