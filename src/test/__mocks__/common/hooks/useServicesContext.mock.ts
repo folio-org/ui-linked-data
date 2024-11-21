@@ -17,6 +17,7 @@ export const schemaWithDuplicatesService = {
   get: jest.fn(),
   set: jest.fn(),
   duplicateEntry: jest.fn(),
+  deleteEntry: jest.fn(),
 } as unknown as ISchemaWithDuplicatesService;
 
 export const lookupCacheService = {

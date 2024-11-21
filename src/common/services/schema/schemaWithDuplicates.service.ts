@@ -29,7 +29,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     if (!constraints?.repeatable) return;
 
     const updatedEntryUuid = uuidv4();
-    const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid, undefined);
+    const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
     updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
 
     const parentEntryUuid = getParentEntryUuid(path);
@@ -69,6 +69,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
           ...parent.twinChildren,
           [uri]: updatedTwinSiblings,
         },
+        children: parent.children?.filter(child => child !== uuid),
       });
 
       this.updateDeletabilityAndPositioning(updatedTwinSiblings);
