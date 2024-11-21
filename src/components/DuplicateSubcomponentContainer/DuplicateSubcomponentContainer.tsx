@@ -4,16 +4,17 @@ import { IFields } from '@components/Fields';
 interface IDuplicateSubcomponentContainer {
   entry: SchemaEntry;
   generateComponent: (f: Partial<IFields>) => ReactNode;
+  twins?: string[];
 }
 
-export const DuplicateSubcomponentContainer: FC<IDuplicateSubcomponentContainer> = ({ entry, generateComponent }) => {
-  const { uuid, clonedBy } = entry;
+export const DuplicateSubcomponentContainer: FC<IDuplicateSubcomponentContainer> = ({
+  entry: { uuid },
+  twins,
+  generateComponent,
+}) => (
+  <Fragment key={uuid}>
+    {generateComponent({ uuid, groupingDisabled: true })}
 
-  return (
-    <Fragment key={uuid}>
-      {generateComponent({ uuid, groupingDisabled: true })}
-
-      {clonedBy?.map(clonedByUuid => generateComponent({ uuid: clonedByUuid, groupingDisabled: true }))}
-    </Fragment>
-  );
-};
+    {twins?.map(twinUuid => generateComponent({ uuid: twinUuid, groupingDisabled: true }))}
+  </Fragment>
+);

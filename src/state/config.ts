@@ -53,11 +53,6 @@ const customEvents = atom<Record<string, string> | null>({
   default: null,
 });
 
-const clonePrototypes = atom<string[]>({
-  key: 'config.clonePrototypes',
-  default: [],
-});
-
 const hasNavigationOrigin = atom<boolean>({
   key: 'config.hasNavigationOrigin',
   default: false,
@@ -74,6 +69,5 @@ export default {
   i18nMessages,
   collectRecordDataForPreview,
   customEvents,
-  clonePrototypes,
   hasNavigationOrigin,
 };

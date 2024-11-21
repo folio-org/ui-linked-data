@@ -4,23 +4,27 @@ import { DuplicateGroup } from '@components/DuplicateGroup';
 
 type ICompactLayout = {
   children: ReactNode;
+  entry: SchemaEntry;
   displayName?: string;
   showLabel?: boolean;
   labelContainerClassName?: string;
   hasDuplicateGroupButton?: boolean;
   htmlId?: string;
   onClickDuplicateGroup?: VoidFunction;
+  onClickDeleteGroup?: VoidFunction;
 };
 
 export const CompactLayout: FC<ICompactLayout> = memo(
   ({
     children,
+    entry: { deletable },
     displayName,
     showLabel,
     labelContainerClassName,
     htmlId,
     hasDuplicateGroupButton,
     onClickDuplicateGroup,
+    onClickDeleteGroup,
   }) => {
     return (
       <>
@@ -28,7 +32,14 @@ export const CompactLayout: FC<ICompactLayout> = memo(
         <div className="children-container" data-testid={htmlId}>
           {children}
         </div>
-        {hasDuplicateGroupButton && <DuplicateGroup htmlId={htmlId} onClick={onClickDuplicateGroup} />}
+        {hasDuplicateGroupButton && (
+          <DuplicateGroup
+            deleteDisabled={!deletable}
+            htmlId={htmlId}
+            onClickDuplicate={onClickDuplicateGroup}
+            onClickDelete={onClickDeleteGroup}
+          />
+        )}
       </>
     );
   },

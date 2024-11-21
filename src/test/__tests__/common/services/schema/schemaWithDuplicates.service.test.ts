@@ -24,16 +24,21 @@ describe('SchemaWithDuplicatesService', () => {
 
   let schemaWithDuplicatesService: SchemaWithDuplicatesService;
 
-  beforeEach(() => {
+  const initServices = (altSchema: Schema = schema) => {
     const selectedEntriesService = new SelectedEntriesService(selectedEntries);
-    schemaWithDuplicatesService = new SchemaWithDuplicatesService(schema, selectedEntriesService);
-  });
+    schemaWithDuplicatesService = new SchemaWithDuplicatesService(altSchema, selectedEntriesService);
+  };
 
   describe('duplicateEntry', () => {
+    beforeEach(initServices);
+
+    const constraints = { repeatable: true } as Constraints;
     const entry = {
       path: ['testKey-0', 'testKey-2', 'testKey-4'],
       uuid: 'testKey-4',
+      uri: 'mockUri',
       children: ['testKey-5'],
+      constraints,
     };
 
     test('adds a copied entry', () => {
@@ -44,21 +49,28 @@ describe('SchemaWithDuplicatesService', () => {
         .mockReturnValueOnce('testKey-9')
         .mockReturnValueOnce('testKey-10');
 
-      const constraints = { repeatable: true } as Constraints;
       const entryData = { ...entry, constraints };
       const testResult = new Map([
         ['testKey-0', { path: ['testKey-0'], uuid: 'testKey-0', children: ['testKey-1', 'testKey-2'] }],
         ['testKey-1', { path: ['testKey-0', 'testKey-1'], uuid: 'testKey-1', children: ['testKey-3'] }],
-        ['testKey-2', { path: ['testKey-0', 'testKey-2'], uuid: 'testKey-2', children: ['testKey-4', 'testKey-7'] }],
+        [
+          'testKey-2',
+          {
+            path: ['testKey-0', 'testKey-2'],
+            uuid: 'testKey-2',
+            children: ['testKey-4', 'testKey-7'],
+            twinChildren: { mockUri: ['testKey-4', 'testKey-7'] },
+          },
+        ],
         ['testKey-3', { path: ['testKey-0', 'testKey-1', 'testKey-3'], uuid: 'testKey-3', children: [] }],
         [
           'testKey-4',
           {
             path: ['testKey-0', 'testKey-2', 'testKey-4'],
             uuid: 'testKey-4',
+            cloneIndex: 0,
             children: ['testKey-5'],
-            clonedBy: ['testKey-7'],
-            constraints,
+            deletable: true,
           },
         ],
         [
@@ -74,11 +86,11 @@ describe('SchemaWithDuplicatesService', () => {
           {
             path: ['testKey-0', 'testKey-2', 'testKey-7'],
             uuid: 'testKey-7',
+            uri: 'mockUri',
             cloneIndex: 1,
             children: ['testKey-8'],
+            deletable: true,
             constraints,
-            cloneOf: 'testKey-4',
-            clonedBy: undefined,
           },
         ],
         [
@@ -87,7 +99,6 @@ describe('SchemaWithDuplicatesService', () => {
             path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8'],
             uuid: 'testKey-8',
             children: ['testKey-9'],
-            clonedBy: [],
           },
         ],
         [
@@ -96,7 +107,6 @@ describe('SchemaWithDuplicatesService', () => {
             path: ['testKey-0', 'testKey-2', 'testKey-7', 'testKey-8', 'testKey-9'],
             uuid: 'testKey-9',
             children: [],
-            clonedBy: [],
           },
         ],
       ]);
@@ -111,6 +121,112 @@ describe('SchemaWithDuplicatesService', () => {
       const entryData = { ...entry, constraints };
 
       schemaWithDuplicatesService.duplicateEntry(entryData);
+
+      expect(schemaWithDuplicatesService.get()).toEqual(schema);
+    });
+  });
+
+  describe('deleteEntry', () => {
+    const entry = {
+      uri: 'mockUri',
+      path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-6'],
+      uuid: 'testKey-6',
+      children: ['nonExistent', 'testKey-7'],
+      deletable: true,
+    };
+
+    const getSchema = (altEntry: SchemaEntry = entry, otherEntries: [string, SchemaEntry][] = []) =>
+      new Map([
+        ['testKey-0', { path: ['testKey-0'], uuid: 'testKey-0', children: ['testKey-1', 'testKey-2'] }],
+        ['testKey-1', { path: ['testKey-0', 'testKey-1'], uuid: 'testKey-1', children: ['testKey-3'] }],
+        ['testKey-2', { path: ['testKey-0', 'testKey-2'], uuid: 'testKey-2', children: ['testKey-4'] }],
+        ['testKey-3', { path: ['testKey-0', 'testKey-1', 'testKey-3'], uuid: 'testKey-3', children: [] }],
+        [
+          'testKey-4',
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-4'],
+            uuid: 'testKey-4',
+            children: ['testKey-5', altEntry.uuid],
+            twinChildren: { mockUri: ['testKey-5', altEntry.uuid] },
+          },
+        ],
+        [
+          'testKey-5',
+          {
+            uri: 'mockUri',
+            path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
+            uuid: 'testKey-5',
+            children: [],
+            deletable: true,
+          },
+        ],
+        ['testKey-6', altEntry],
+        ...otherEntries,
+      ]);
+
+    test('deletes an entry', () => {
+      initServices(
+        getSchema(entry, [
+          [
+            'testKey-7',
+            {
+              path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-6', 'testKey-7'],
+              uuid: 'testKey-7',
+              children: [],
+            },
+          ],
+        ]),
+      );
+
+      const testResult = new Map([
+        ['testKey-0', { path: ['testKey-0'], uuid: 'testKey-0', children: ['testKey-1', 'testKey-2'] }],
+        ['testKey-1', { path: ['testKey-0', 'testKey-1'], uuid: 'testKey-1', children: ['testKey-3'] }],
+        ['testKey-2', { path: ['testKey-0', 'testKey-2'], uuid: 'testKey-2', children: ['testKey-4'] }],
+        ['testKey-3', { path: ['testKey-0', 'testKey-1', 'testKey-3'], uuid: 'testKey-3', children: [] }],
+        [
+          'testKey-4',
+          {
+            path: ['testKey-0', 'testKey-2', 'testKey-4'],
+            uuid: 'testKey-4',
+            children: ['testKey-5'],
+            twinChildren: { mockUri: ['testKey-5'] },
+          },
+        ],
+        [
+          'testKey-5',
+          {
+            uri: 'mockUri',
+            path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
+            uuid: 'testKey-5',
+            children: [],
+            deletable: false,
+          },
+        ],
+        [
+          'testKey-5',
+          {
+            uri: 'mockUri',
+            path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
+            uuid: 'testKey-5',
+            children: [],
+            cloneIndex: 0,
+            deletable: false,
+          },
+        ],
+      ]);
+
+      schemaWithDuplicatesService.deleteEntry(entry);
+
+      expect(schemaWithDuplicatesService.get()).toEqual(testResult);
+    });
+
+    test("doesn't delete an entry if it lack deletable property", () => {
+      const nonDeletableEntry = { ...entry, deletable: false };
+      const schema = getSchema(nonDeletableEntry);
+
+      initServices(schema);
+
+      schemaWithDuplicatesService.deleteEntry(nonDeletableEntry);
 
       expect(schemaWithDuplicatesService.get()).toEqual(schema);
     });

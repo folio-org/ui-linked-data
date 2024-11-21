@@ -76,14 +76,14 @@ type Constraints = {
 };
 
 type SchemaEntry = {
-  path: Array<string>;
+  path: string[];
   uuid: string;
   bfid?: string;
   uri?: string;
   uriBFLite?: string;
   displayName?: string;
   type?: string;
-  children?: Array<string>;
+  children?: string[];
   constraints?: Constraints;
   cloneOf?: string;
   clonedBy?: string[];
@@ -92,6 +92,8 @@ type SchemaEntry = {
   linkedEntry?: LinkedEntry;
   htmlId?: string;
   cloneIndex?: number;
+  twinChildren?: Record<string, string[]>;
+  deletable?: boolean;
 };
 
 type LinkedEntry = {

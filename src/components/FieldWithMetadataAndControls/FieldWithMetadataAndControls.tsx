@@ -33,7 +33,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
 }) => {
   const schema = useRecoilValue(state.config.schema);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const { getSchemaWithCopiedEntries } = useProfileSchema();
+  const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 
   const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled: disabled });
@@ -43,7 +43,12 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
     getSchemaWithCopiedEntries(entry, selectedEntries);
   };
 
+  const onClickDeleteGroup = () => {
+    getSchemaWithDeletedEntries(entry);
+  };
+
   const commonLayoutProps = {
+    entry,
     displayName,
     showLabel,
     htmlId,
@@ -51,6 +56,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
     hasDuplicateGroupButton,
     hasDuplicateSubcomponentButton,
     onClickDuplicateGroup,
+    onClickDeleteGroup,
   };
 
   return (
@@ -67,9 +73,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       {isCompact ? (
         <CompactLayout {...commonLayoutProps}>{children}</CompactLayout>
       ) : (
-        <ExtendedLayout entry={entry} {...commonLayoutProps}>
-          {children}
-        </ExtendedLayout>
+        <ExtendedLayout {...commonLayoutProps}>{children}</ExtendedLayout>
       )}
     </div>
   );

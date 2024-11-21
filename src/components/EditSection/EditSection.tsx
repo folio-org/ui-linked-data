@@ -40,8 +40,8 @@ export const EditSection = memo(() => {
   const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
-  const [collapsedGroups, setCollapsedGroups] = useRecoilState(state.ui.collapsedGroups);
-  const clonePrototypes = useRecoilValue(state.config.clonePrototypes);
+  const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
+  const collapsibleEntries = useRecoilValue(state.ui.collapsibleEntries);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
 
   useContainerEvents({ watchEditedState: true });
@@ -78,7 +78,7 @@ export const EditSection = memo(() => {
     }));
   };
 
-  const handleGroupsCollapseExpand = () => setCollapsedGroups(collapsedGroups.length ? [] : clonePrototypes);
+  const handleGroupsCollapseExpand = () => setCollapsedEntries(collapsedEntries.size ? new Set([]) : collapsibleEntries);
 
   const drawComponent = useCallback(
     ({ schema, entry, disabledFields, level = 0, isCompact = false }: IDrawComponent) => {
@@ -97,9 +97,9 @@ export const EditSection = memo(() => {
             className="entity-heading"
           >
             <strong className="heading">{displayNameWithAltValue}</strong>
-            {!!clonePrototypes.length && (
+            {!!collapsibleEntries.size && (
               <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
-                <FormattedMessage id={collapsedGroups.length ? 'ld.expandAll' : 'ld.collapseAll'} />
+                <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
               </Button>
             )}
           </FieldWithMetadataAndControls>
@@ -197,7 +197,7 @@ export const EditSection = memo(() => {
 
       return null;
     },
-    [selectedEntries, collapsedGroups],
+    [selectedEntries, collapsedEntries, schema],
   );
 
   // Uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
