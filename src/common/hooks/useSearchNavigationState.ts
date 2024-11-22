@@ -8,7 +8,7 @@ import state from '@state';
 export const useSearchNavigationState = () => {
   const [searchParams] = useSearchParams();
   const querySearchParam = searchParams.get(SearchQueryParams.Query);
-  const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy) as SearchIdentifiers;
+  const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy);
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
 
   const setNavigationState = useSetRecoilState(state.search.navigationState);
@@ -16,7 +16,7 @@ export const useSearchNavigationState = () => {
   useEffect(() => {
     const generatedState = generateSearchParamsState(
       querySearchParam,
-      searchBySearchParam,
+      searchBySearchParam as SearchIdentifiers,
       offsetSearchParam as unknown as number,
     );
 
