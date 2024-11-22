@@ -31,3 +31,10 @@ export enum SchemaControlType {
 export const UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
 
 export const UI_DROPDOWNS_LIST = [AdvancedFieldType.dropdown, AdvancedFieldType.dropdownOption];
+
+export const NOT_PREVIEWABLE_TYPES = [
+  AdvancedFieldType.profile,
+  AdvancedFieldType.hidden,
+  AdvancedFieldType.dropdownOption,
+  AdvancedFieldType.complex,
+];
