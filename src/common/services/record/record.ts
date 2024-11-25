@@ -1,7 +1,8 @@
 import { filterUserValues } from '@common/helpers/profile.helper';
 import { SchemaTraverser } from './schemaTraverser';
+import { IRecord } from './record.interface';
 
-export class RecordGenerator {
+export class RecordGenerator implements IRecord {
   private schema: Map<string, SchemaEntry>;
   private initKey: string | null;
   private userValues: UserValues;
@@ -30,8 +31,6 @@ export class RecordGenerator {
     this.initKey = initKey;
     this.userValues = userValues;
     this.selectedEntries = selectedEntries;
-
-    return this;
   }
 
   public generate() {

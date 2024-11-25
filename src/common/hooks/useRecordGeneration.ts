@@ -10,14 +10,14 @@ export const useRecordGeneration = () => {
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
 
   const generateRecord = () => {
-    return recordGeneratorService
-      ?.init({
-        schema,
-        initKey: initialSchemaKey,
-        userValues,
-        selectedEntries,
-      })
-      .generate();
+    recordGeneratorService?.init({
+      schema,
+      initKey: initialSchemaKey,
+      userValues,
+      selectedEntries,
+    });
+
+    return recordGeneratorService?.generate();
   };
 
   return { generateRecord };

@@ -4,7 +4,6 @@ export interface IRecord {
     initKey: string | null;
     userValues: UserValues;
     selectedEntries: string[];
-  }) => IRecord;
-
+  }) => void;
   generate: () => Record<string, RecordEntry<RecursiveRecordSchema>> | undefined;
 }
