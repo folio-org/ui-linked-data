@@ -2,7 +2,6 @@ import { useEffect, memo } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import classNames from 'classnames';
 import state from '@state';
-import { applyUserValues } from '@common/helpers/profile.helper';
 import { saveRecordLocally } from '@common/helpers/record.helper';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
@@ -13,11 +12,11 @@ import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useServicesContext } from '@common/hooks/useServicesContext';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
+import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const schema = useRecoilValue(state.config.schema);
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
@@ -27,6 +26,7 @@ export const EditSection = memo(() => {
   const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
   const collapsibleEntries = useRecoilValue(state.ui.collapsibleEntries);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+  const { generateRecord } = useRecordGeneration();
 
   useContainerEvents({ watchEditedState: true });
 
@@ -35,7 +35,7 @@ export const EditSection = memo(() => {
 
     const autoSaveRecord = setInterval(() => {
       try {
-        const parsed = applyUserValues(schema, initialSchemaKey, { userValues, selectedEntries });
+        const parsed = generateRecord();
 
         if (!parsed) return;
 

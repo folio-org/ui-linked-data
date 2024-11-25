@@ -6,6 +6,7 @@ type IRecordNormalizingService =
 type IRecordToSchemaMappingService =
   import('@common/services/recordToSchemaMapping/recordToSchemaMapping.interface').IRecordToSchemaMapping;
 type ISchemaService = import('@common/services/schema/schema.interface').ISchema;
+type IRecordService = import('@common/services/record/record.interface').IRecord;
 
 type ServicesParams = {
   selectedEntriesService?: ISelectedEntriesService;
@@ -15,4 +16,5 @@ type ServicesParams = {
   recordNormalizingService?: IRecordNormalizingService;
   recordToSchemaMappingService?: IRecordToSchemaMappingService;
   schemaCreatorService?: ISchemaService;
+  recordGeneratorService?: IRecordService;
 };
