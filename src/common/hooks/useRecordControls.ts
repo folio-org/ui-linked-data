@@ -188,7 +188,6 @@ export const useRecordControls = () => {
   };
 
   const saveLocalRecord = () => {
-    // const parsed = applyUserValues(schema, initialSchemaKey, { userValues, selectedEntries });
     const parsed = generateRecord();
 
     if (!parsed) return;
