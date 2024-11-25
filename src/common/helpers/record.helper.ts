@@ -2,6 +2,8 @@ import { AUTOCLEAR_TIMEOUT } from '@common/constants/storage.constants';
 import { localStorageService } from '@common/services/storage';
 import { generateRecordBackupKey } from './progressBackup.helper';
 import {
+  GROUP_BY_LEVEL,
+  GROUP_CONTENTS_LEVEL,
   IDENTIFIER_AS_VALUE,
   PROFILE_BFIDS,
   TITLE_CONTAINER_URIS,
@@ -12,6 +14,8 @@ import { BFLITE_URI_TO_BLOCK, BFLITE_URIS, BLOCKS_BFLITE } from '@common/constan
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
 import { cloneDeep } from 'lodash';
+import { NOT_PREVIEWABLE_TYPES, AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 
 type IGetAdjustedRecordContents = {
   record: RecordEntry;
@@ -202,4 +206,71 @@ export const checkIfRecordHasDependencies = (record: RecordEntry) => {
 
 export const getRecordPropertyData = (property: string[] | string) => {
   return Array.isArray(property) ? property[0] : property;
+};
+
+export const getPreviewFieldsConditions = ({
+  entry,
+  level,
+  userValues,
+  uuid,
+  schema,
+  isOnBranchWithUserValue,
+  altDisplayNames,
+  hideActions,
+  isEntity,
+  forceRenderAllTopLevelEntities,
+}: {
+  entry: SchemaEntry;
+  level: number;
+  userValues: UserValues;
+  uuid: string;
+  schema: Schema;
+  isOnBranchWithUserValue: boolean;
+  altDisplayNames?: Record<string, string>;
+  hideActions?: boolean;
+  isEntity: boolean;
+  forceRenderAllTopLevelEntities?: boolean;
+}) => {
+  const { displayName = '', children, type, bfid = '', linkedEntry } = entry;
+
+  const isPreviewable = !NOT_PREVIEWABLE_TYPES.includes(type as AdvancedFieldType);
+  const isGroupable = level <= GROUP_BY_LEVEL;
+  const hasChildren = children?.length;
+  const selectedUserValues = userValues[uuid];
+  const isBranchEnd = !hasChildren;
+  const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
+  const isBranchEndWithValues = !!selectedUserValues;
+  const shouldRenderLabelOrPlaceholders =
+    (isPreviewable && isGroupable) ||
+    type === AdvancedFieldType.dropdown ||
+    (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
+    isBranchEndWithoutValues;
+  const hasOnlyDropdownChildren =
+    hasChildren &&
+    !children.filter(childUuid => schema.get(childUuid)?.type !== AdvancedFieldType.dropdownOption).length;
+  const shouldRenderValuesOrPlaceholders = !hasChildren || hasOnlyDropdownChildren;
+  const shouldRenderPlaceholders =
+    (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
+  const isDependentDropdown = type === AdvancedFieldType.dropdown && !!linkedEntry?.controlledBy;
+  const displayNameWithAltValue =
+    altDisplayNames?.[displayName] ?? PREVIEW_ALT_DISPLAY_LABELS[displayName] ?? displayName;
+  const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
+  const isBlockContents = level === GROUP_CONTENTS_LEVEL;
+  const isInstance = bfid === PROFILE_BFIDS.INSTANCE;
+  const showEntityActions = !hideActions && isEntity;
+  const wrapEntities = forceRenderAllTopLevelEntities && isEntity;
+
+  return {
+    isGroupable,
+    shouldRenderLabelOrPlaceholders,
+    shouldRenderValuesOrPlaceholders,
+    shouldRenderPlaceholders,
+    isDependentDropdown,
+    displayNameWithAltValue,
+    isBlock,
+    isBlockContents,
+    isInstance,
+    showEntityActions,
+    wrapEntities,
+  };
 };

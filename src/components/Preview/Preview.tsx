@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
 import state from '@state';
 import { Fields } from './Fields';
 import './Preview.scss';
@@ -51,7 +51,8 @@ export const Preview: FC<IPreview> = ({
           paths={Object.keys(userValues)
             .map(key => schema.get(key)?.path || '')
             .flat()}
-          altUserValues={userValues}
+          altSchema={altSchema}
+          altUserValues={altUserValues}
           altDisplayNames={altDisplayNames}
           hideActions={hideActions}
           forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}

@@ -1,3 +1,3 @@
 export { EditSection } from './EditSection';
 
-export type { IDrawComponent } from './EditSection';
+export type { IDrawComponent } from './DrawComponent';
