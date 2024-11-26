@@ -1,5 +1,12 @@
 export type Container = Record<string, any>;
 
+export type InitSchemaParams = {
+  schema: Map<string, SchemaEntry>;
+  userValues: UserValues;
+  selectedEntries: string[];
+  initialContainer: Container;
+};
+
 export type TraverseSchemaParams = {
   container?: Container;
   key: string;
@@ -10,11 +17,6 @@ export type TraverseSchemaParams = {
 };
 
 export interface ISchemaTraverser {
-  init: (params: {
-    schema: Map<string, SchemaEntry>;
-    userValues: UserValues;
-    selectedEntries: string[];
-    initialContainer: Record<string, any>;
-  }) => ISchemaTraverser;
+  init: (params: InitSchemaParams) => ISchemaTraverser;
   traverse: (params: TraverseSchemaParams) => void;
 }

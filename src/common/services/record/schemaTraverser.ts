@@ -18,7 +18,7 @@ import {
   selectNonBFMappedGroupData,
   getAdvancedValuesField,
 } from '@common/helpers/schema.helper';
-import { Container, ISchemaTraverser, TraverseSchemaParams } from './schemaTraverser.interface';
+import { Container, InitSchemaParams, ISchemaTraverser, TraverseSchemaParams } from './schemaTraverser.interface';
 
 export class SchemaTraverser implements ISchemaTraverser {
   private schema: Map<string, SchemaEntry>;
@@ -33,17 +33,7 @@ export class SchemaTraverser implements ISchemaTraverser {
     this.initialContainer = {};
   }
 
-  public init({
-    schema,
-    userValues,
-    selectedEntries,
-    initialContainer,
-  }: {
-    schema: Map<string, SchemaEntry>;
-    userValues: UserValues;
-    selectedEntries: string[];
-    initialContainer: Container;
-  }) {
+  public init({ schema, userValues, selectedEntries, initialContainer }: InitSchemaParams) {
     this.schema = schema;
     this.userValues = userValues;
     this.selectedEntries = selectedEntries;
@@ -109,7 +99,9 @@ export class SchemaTraverser implements ISchemaTraverser {
   }
 
   private getNonArrayTypes() {
-    return [AdvancedFieldType.hidden, AdvancedFieldType.dropdownOption, AdvancedFieldType.profile];
+    const { hidden, dropdownOption, profile } = AdvancedFieldType;
+
+    return [hidden, dropdownOption, profile];
   }
 
   private getSelector(uri: string | undefined, uriBFLite: string | undefined, bfid: string | undefined) {
@@ -142,23 +134,19 @@ export class SchemaTraverser implements ISchemaTraverser {
 
   private checkGroupShouldHaveWrapper({
     type,
-    block,
-    groupComplex,
     uri,
     nonBFMappedGroup,
     shouldHaveRootWrapper,
     selector,
-    hidden,
   }: {
     type: AdvancedFieldType;
-    block: AdvancedFieldType;
-    groupComplex: AdvancedFieldType;
     uri: string;
     nonBFMappedGroup?: NonBFMappedGroup;
     shouldHaveRootWrapper: boolean;
     selector: string;
-    hidden: AdvancedFieldType;
   }) {
+    const { block, groupComplex, hidden } = AdvancedFieldType;
+
     return (
       (type === block ||
         (type === groupComplex && hasElement(COMPLEX_GROUPS, uri)) ||
@@ -174,7 +162,7 @@ export class SchemaTraverser implements ISchemaTraverser {
   }
 
   private hasUserValueAndSelector(userValueMatch: UserValue, uri?: string, selector?: string) {
-    return userValueMatch && uri && selector;
+    return !!(userValueMatch && uri && selector);
   }
 
   private checkDropdownOptionWithoutUserValues(type: AdvancedFieldType, key: string) {
@@ -294,7 +282,7 @@ export class SchemaTraverser implements ISchemaTraverser {
     return containerSelector;
   }
 
-  handleBasicGroup({
+  private handleBasicGroup({
     isArray,
     container,
     selector,
@@ -345,7 +333,7 @@ export class SchemaTraverser implements ISchemaTraverser {
     let containerSelector: RecursiveRecordSchema | RecursiveRecordSchema[] | string[];
     let hasRootWrapper = shouldHaveRootWrapper;
 
-    const { profile: profileType, block, dropdownOption, groupComplex, hidden } = AdvancedFieldType;
+    const { profile: profileType, dropdownOption } = AdvancedFieldType;
     const isGroupWithoutRootWrapper = hasElement(GROUPS_WITHOUT_ROOT_WRAPPER, uri);
     const identifierAsValueSelection = IDENTIFIER_AS_VALUE[selector];
 
@@ -354,13 +342,10 @@ export class SchemaTraverser implements ISchemaTraverser {
     } else if (
       this.checkGroupShouldHaveWrapper({
         type,
-        block,
-        groupComplex,
         uri,
         nonBFMappedGroup: updatedNonBFMappedGroup,
         shouldHaveRootWrapper,
         selector,
-        hidden,
       })
     ) {
       if (this.checkDropdownOptionWithoutUserValues(type, key)) {
