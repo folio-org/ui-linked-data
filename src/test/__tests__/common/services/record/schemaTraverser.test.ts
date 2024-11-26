@@ -4,8 +4,8 @@ import { Container, InitSchemaParams, TraverseSchemaParams } from '@common/servi
 
 describe('SchemaTraverser', () => {
   let schemaTraverser: SchemaTraverser;
-  let schema: Map<string, any>;
-  let userValues: any;
+  let schema: Map<string, SchemaEntry>;
+  let userValues: UserValues;
   let selectedEntries: string[];
   let initialContainer: Container;
 
@@ -41,8 +41,8 @@ describe('SchemaTraverser', () => {
         bfid: 'testBfid',
         type: AdvancedFieldType.simple,
       };
-      schema.set(key, schemaEntry);
-      userValues[key] = { contents: [{ id: '1', label: 'testLabel' }] };
+      schema.set(key, schemaEntry as unknown as SchemaEntry);
+      userValues[key] = { contents: [{ id: '1', label: 'testLabel' }] } as UserValue;
       schemaTraverser.init({ schema, userValues, selectedEntries, initialContainer });
 
       const handleUserValueMatchSpy = jest.spyOn(schemaTraverser as any, 'handleUserValueMatch');
@@ -61,14 +61,14 @@ describe('SchemaTraverser', () => {
         bfid: 'testBfid',
         type: AdvancedFieldType.groupComplex,
       };
-      schema.set(key, schemaEntry);
+      schema.set(key, schemaEntry as SchemaEntry);
       schema.set('childKey', {
         children: [],
         uri: 'childUri',
         uriBFLite: 'childUriBFLite',
         bfid: 'childBfid',
         type: AdvancedFieldType.simple,
-      });
+      } as unknown as SchemaEntry);
       schemaTraverser.init({ schema, userValues, selectedEntries, initialContainer });
 
       const handleGroupTraverseSpy = jest.spyOn(schemaTraverser as any, 'handleGroupTraverse');
@@ -96,8 +96,8 @@ describe('SchemaTraverser', () => {
     });
 
     it('returns correct shouldProceed value', () => {
-      userValues = { testKey: {} };
-      schema.set('testKey', { path: ['testKey'] });
+      userValues = { testKey: {} } as unknown as UserValues;
+      schema.set('testKey', { path: ['testKey'] } as unknown as SchemaEntry);
       schemaTraverser.init({ schema, userValues, selectedEntries, initialContainer });
 
       const shouldProceed = (schemaTraverser as any).shouldProceed('testKey');
