@@ -1,7 +1,6 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { applyUserValues } from '@common/helpers/profile.helper';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   postRecord,
   putRecord,
@@ -32,6 +31,7 @@ import state from '@state';
 import { useContainerEvents } from './useContainerEvents';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
+import { useRecordGeneration } from './useRecordGeneration';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -49,11 +49,8 @@ type IBaseFetchRecord = {
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
-  const schema = useRecoilValue(state.config.schema);
+  const setUserValues = useSetRecoilState(state.inputs.userValues);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
-  const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
@@ -72,6 +69,7 @@ export const useRecordControls = () => {
   const { dispatchUnblockEvent, dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const [queryParams] = useSearchParams();
   const isClone = queryParams.get(QueryParams.CloneOf);
+  const { generateRecord } = useRecordGeneration();
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     const profile = PROFILE_BFIDS.MONOGRAPH;
@@ -105,7 +103,7 @@ export const useRecordControls = () => {
     isNavigatingBack = true,
     shouldSetSearchParams = true,
   }: SaveRecordProps = {}) => {
-    const parsed = applyUserValues(schema, initialSchemaKey, { selectedEntries, userValues });
+    const parsed = generateRecord();
     const currentRecordId = record?.id;
 
     if (!parsed) return;
@@ -190,7 +188,7 @@ export const useRecordControls = () => {
   };
 
   const saveLocalRecord = () => {
-    const parsed = applyUserValues(schema, initialSchemaKey, { userValues, selectedEntries });
+    const parsed = generateRecord();
 
     if (!parsed) return;
 
