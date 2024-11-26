@@ -1,4 +1,4 @@
-export interface IRecord {
+export interface IRecordGenerator {
   init: (params: {
     schema: Map<string, SchemaEntry>;
     initKey: string | null;

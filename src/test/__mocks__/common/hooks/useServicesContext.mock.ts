@@ -45,7 +45,7 @@ export const schemaCreatorService = {
 export const recordGeneratorService = {
   init: jest.fn(),
   generate: jest.fn(),
-} as IRecordService;
+} as IRecordGeneratorService;
 
 jest.mock('@common/hooks/useServicesContext.ts', () => ({
   useServicesContext: () => ({

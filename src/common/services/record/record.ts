@@ -1,8 +1,8 @@
 import { filterUserValues } from '@common/helpers/profile.helper';
 import { SchemaTraverser } from './schemaTraverser';
-import { IRecord } from './record.interface';
+import { IRecordGenerator } from './record.interface';
 
-export class RecordGenerator implements IRecord {
+export class RecordGenerator implements IRecordGenerator {
   private schema: Map<string, SchemaEntry>;
   private initKey: string | null;
   private userValues: UserValues;
