@@ -2,6 +2,7 @@ import {
   BIBFRAME_API_ENDPOINT,
   ExternalResourceIdType,
   GET_RESOURCE_BY_TYPE_URIS,
+  INVENTORY_API_ENDPOINT,
   MAX_LIMIT,
 } from '@common/constants/api.constants';
 import baseApi from './base.api';
@@ -32,7 +33,7 @@ export const getRecord = async ({ recordId, idType }: IGetRecord) => {
   });
 };
 
-const graphIdByInventoryIdUrl = '/resource/import/:recordId';
+const graphIdByInventoryIdUrl = `${INVENTORY_API_ENDPOINT}/:recordId/import`;
 
 export const getGraphIdByExternalId = async ({ recordId }: IGetRecord) => {
   const url = baseApi.generateUrl(graphIdByInventoryIdUrl, { name: ':recordId', value: recordId });
