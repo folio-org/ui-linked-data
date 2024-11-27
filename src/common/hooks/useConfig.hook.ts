@@ -94,7 +94,7 @@ export const useConfig = () => {
 
       const hasStoredProfiles = profiles?.length;
       const response = hasStoredProfiles ? profiles : await fetchProfiles();
-      // TODO: check a list of supported profiles and implement the profile selection
+      // TODO: UILD-438 - check a list of supported profiles and implement the profile selection
       const selectedProfile = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
       const templates = preparedFields || prepareFields(response);
 

@@ -44,14 +44,14 @@ export const checkRepeatableSubcomponent = ({
     !isDisabled &&
     constraints?.repeatable &&
     // show "Duplicate" button only for Provision Activity's subcomponents
-    // TODO: change or remove to display "Duplicate" button for other groups
+    // change or remove to display "Duplicate" button for other groups
     findParentEntryByProperty({
       schema,
       path,
       key: 'uriBFLite',
       value: BFLITE_URIS.PROVISION_ACTIVITY,
     }) &&
-    // TODO: remove this condition after updating the profile
+    // remove this condition after updating the profile
     type === AdvancedFieldType.literal;
 
   return !!isRepeatable && UI_CONTROLS_LIST.includes(type as AdvancedFieldType);

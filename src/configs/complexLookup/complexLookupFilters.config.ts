@@ -6,7 +6,7 @@ import {
   References,
 } from '@common/constants/search.constants';
 
-// TODO: add the required identifiers when the way to filter the options list is approved
+// TODO: UILD-439 - add the required identifiers when the way to filter the options list is approved
 const EXCLUDED_AUTHORITY_SOURCE_OPTIONS = [] as string[];
 
 export const COMPLEX_LOOKUP_FILTERS_CONFIG = {

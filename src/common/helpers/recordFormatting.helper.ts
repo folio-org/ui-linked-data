@@ -46,7 +46,7 @@ const getReferenceIds = (record: RecordEntry, block: string, referenceKey: strin
   return typedReferenceBlock?.map(({ id }) => ({ id }));
 };
 
-// TODO: refactor this to make the processing consistent
+// TODO: UILD-148 - refactor this to make the processing consistent
 const getUpdatedRecordBlocks = (instanceComponent: Record<string, RecursiveRecordSchema[]>) => {
   let updatedRecord = cloneDeep(instanceComponent);
 
@@ -138,7 +138,6 @@ export const updateRecordWithRelationshipDesignator = (
 export const updateRecordForTargetAudience = (
   record: Record<string, RecursiveRecordSchema | RecursiveRecordSchema[]>,
 ) => {
-  // TODO: add suport for this field
   const workComponent = record[BFLITE_URIS.WORK] as unknown as Record<string, unknown>;
 
   if (workComponent?.[BF2_URIS.INTENDED_AUDIENCE]) {

@@ -5,7 +5,7 @@ import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import Times16 from '@src/assets/times-16.svg?react';
 import { Button, ButtonType } from '@components/Button';
 import './Modal.scss';
-// TODO: Uncomment for using with Shadow DOM
+// TODO: UILD-147 - Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 interface Props {
@@ -48,7 +48,7 @@ const Modal: FC<Props> = ({
   alignTitleCenter = false,
 }) => {
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
-  // TODO: uncomment for using with Shadow DOM
+  // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 
   useEffect(() => {

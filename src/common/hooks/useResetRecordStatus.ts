@@ -10,7 +10,7 @@ export const useResetRecordStatus = () => {
   const { resourceId } = useParams();
   const setRecordStatusAsOpen = () => setRecordStatus({ type: RecordStatus.open });
 
-  // TODO: temporary, might have to revise considering all edge cases
+  // TODO: UILD-444 - temporary, might have to revise considering all edge cases
   useEffect(() => {
     if (!recordStatus?.type || !prevResourceId) {
       setRecordStatusAsOpen();

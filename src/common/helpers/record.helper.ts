@@ -152,7 +152,7 @@ export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
 };
 
 export const getRecordTitle = (record: RecordEntry) => {
-  // TODO: unify interactions with record and its format
+  // TODO: UILD-442 - unify interactions with record and its format
   // Some functions expect { resource: { %RECORD_CONTENTS% }}
   // Others, like this one, expect { %RECORD_CONTENTS% }
   const recordContents = unwrapRecordValuesFromCommonContainer(record);
