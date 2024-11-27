@@ -1,6 +1,6 @@
 # @folio/linked-data
 
-This project is a new MARVA editor.
+This project is a new Linked data editor.
 
 ## Table of Contents
 
@@ -30,7 +30,7 @@ yarn install
 
 Create a JSON object with required data, then use it in such cases:
 
-- For development or using MARVA as a standalone application, in a browser's localstorage create a record with a key `okapi_config` and stringified JSON value (see "JSON config example");
+- For development or using Linked data as a standalone application, in a browser's localstorage create a record with a key `okapi_config` and stringified JSON value (see "JSON config example");
 
 - For an embedded application:
   Use JSON in the `config` attribute, see [Usage](#usage) section.
@@ -44,9 +44,9 @@ Create a JSON object with required data, then use it in such cases:
   "token": "YOUR_TOKEN",
   // For embedded application only. Events also should be dispatched or listened in the root application.
   "customEvents": {
-    "TRIGGER_MODAL": "triggermodal", // Root application can dispatch this event to open a prompt in MARVA which will inform a user about unsaved changes before leaving an Edit or Create page.
-    "PROCEED_NAVIGATION": "proceednavigation", // MARVA dispatches this event when a user clicks in the prompt "Save and continue" button or closes the prompt.
-    "BLOCK_NAVIGATION": "blocknavigation" // MARVA dispatches this event when user makes changes in a work form ("Create" or "Edit" page).
+    "TRIGGER_MODAL": "triggermodal", // Root application can dispatch this event to open a prompt in Linked data which will inform a user about unsaved changes before leaving an Edit or Create page.
+    "PROCEED_NAVIGATION": "proceednavigation", // Linked data dispatches this event when a user clicks in the prompt "Save and continue" button or closes the prompt.
+    "BLOCK_NAVIGATION": "blocknavigation" // Linked data dispatches this event when user makes changes in a work form ("Create" or "Edit" page).
   }
 }
 ```
@@ -85,13 +85,19 @@ The following scripts are available:
 1. Build the code as an embedded application using `npm run build:lib` command. The built code will be placed in `./dist` folder.
 2. Add the script on a page:
 
-```html
-<script src="[PATH_TO_SCRIPT]/linked-data.es.js"></script>
-```
+    1. As a package in the files where you plan to use the application if it was added to your project via package management tools:
+        ```js
+        import '@folio/linked-data';
+        ```
+    2. Or as a script: 
+        ```html
+        <script src="[PATH_TO_SCRIPT]/linked-data.es.js"></script>
+        ```
+
 
 3. Add a web component in the required HTML container on the page.
 
-   Use a config with a required API config for passing it in the MARVA application through the web component (see JSON config example in [Installation](#installation) section):
+   Use a config with a required API config for passing it in the Linked data application through the web component (see JSON config example in [Installation](#installation) section):
 
 ```html
 <div id="linked-data-container">
