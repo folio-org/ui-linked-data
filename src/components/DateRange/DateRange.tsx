@@ -4,7 +4,7 @@ import { Button, ButtonType } from '@components/Button';
 import { DatePicker } from '@components/DatePicker';
 import './DateRange.scss';
 
-// TODO: make the placeholder reusable depending on the locale
+// TODO: UILD-439 - make the placeholder reusable depending on the locale
 const DEFAULT_DATE_PLACEHOLDER = 'YYYY-MM-DD';
 
 type DateRangeProps = {

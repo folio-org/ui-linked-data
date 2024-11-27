@@ -38,7 +38,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
     setIsOpen(false);
   };
 
-  // TODO: potentially optimize
+  // potentially optimize
   const submitButtonDisabled = !rawQuery.filter(
     ({ rowIndex, operator, index, qualifier, query }) =>
       (rowIndex !== 0 ? operator : true) && index && qualifier && query,

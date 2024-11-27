@@ -32,14 +32,14 @@ export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
   const { options } = useSearchFilterLookupOptions({ facet, hasMappedSourceData, excludedOptions });
 
   const handleOnChange = (options: MultiValue<FilterLookupOption>) => {
-    // TODO: implement the options selection
+    // TODO: UILD-439 - implement the options selection
     const newValue = options.map<UserValueContents>(() => ({}));
 
     onChange(facet, newValue);
     setLocalValue([...options]);
   };
 
-  // TODO: make the props reusable
+  // TODO: UILD-439 - make the props reusable
   return (
     <CreatableSelect
       id={`fiter-simple-lookup-${facet}`}

@@ -92,7 +92,6 @@ export const EditControlPane = () => {
       <div className="heading">
         {!isLoading &&
           Array.from(currentlyEditedEntityBfid).map(bfid => (
-            // TODO: include resource title once record processing refactoring is completed
             <FormattedMessage
               key={bfid}
               id={`ld.${getEditActionPrefix(isInCreateMode, queryParams)}${RESOURCE_TEMPLATE_IDS[bfid]}`}

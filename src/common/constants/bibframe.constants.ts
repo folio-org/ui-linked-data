@@ -1,7 +1,6 @@
 import { BFLITE_URIS } from './bibframeMapping.constants';
 
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
-  // TODO: revise after demo
   'lc:RT:bf2:Monograph:Work': 'Work',
   'lc:RT:bf2:Monograph:Instance': 'Instance',
 };

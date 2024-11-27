@@ -12,7 +12,7 @@ import { IUserValues } from '@common/services/userValues/userValues.interface';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { IRecordToSchemaMappingInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
 
-// TODO: take into account a selected Profile
+// TODO: UILD-438 - take into account a selected Profile
 export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
@@ -483,7 +483,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }) {
     const isValueArray = Array.isArray(value);
 
-    // TODO: add support for RecordBasic[] value type if needed
+    // add support for RecordBasic[] value type if needed
     if (typeof value === 'object' && !isValueArray) return value;
 
     const entryPathAsUris = schemaEntry.path.map(id => this.updatedSchema.get(id)?.uriBFLite).filter(uri => uri);

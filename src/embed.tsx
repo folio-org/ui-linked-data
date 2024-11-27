@@ -4,13 +4,13 @@ import { App } from './App';
 import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 class MarvaNextComponent extends HTMLElement {
-  // TODO: uncomment for using with Shadow DOM
+  // TODO: UILD-147 - uncomment for using with Shadow DOM
   // private template: any | undefined;
   private mountElement: HTMLElement | undefined;
   private rootElement: ReactDOM.Root | undefined;
 
   connectedCallback() {
-    // TODO: uncomment for using with Shadow DOM
+    // TODO: UILD-147 - uncomment for using with Shadow DOM
     // this.createTemplate();
     this.setupRoot();
     this.render();
@@ -27,7 +27,7 @@ class MarvaNextComponent extends HTMLElement {
     this.render();
   }
 
-  // TODO: create template with all styles for Shadow DOM
+  // TODO: UILD-147 - create template with all styles for Shadow DOM
   /* private createTemplate() {
     const template = document.createElement('template');
     const styles = this.getAllStyles();
@@ -39,7 +39,7 @@ class MarvaNextComponent extends HTMLElement {
     this.template = template;
   } */
 
-  // TODO: get all styles for Shadow DOM
+  // TODO: UILD-147 - get all styles for Shadow DOM
   // private getAllStyles() {
   //   const filesGlob = import.meta.glob('./**/*.scss', { as: 'scss', eager: true });
 
@@ -48,7 +48,7 @@ class MarvaNextComponent extends HTMLElement {
   //   }, '');
   // }
 
-  // TODO: this is used for setting up Shadow DOM
+  // TODO: UILD-147 - this is used for setting up Shadow DOM
   /* private setupShadowRoot() {
     if (!this.template) return;
 
@@ -60,20 +60,20 @@ class MarvaNextComponent extends HTMLElement {
   } */
 
   private setupRoot() {
-    // TODO: used for Shadow DOM
+    // TODO: UILD-147 - used for Shadow DOM
     // if (!this.template) return;
 
     const mountElement = this.createMountElement();
 
     this.appendChild(mountElement);
 
-    // TODO: inserts inline styles in the Shadow DOM element
+    // TODO: UILD-147 - inserts inline styles in the Shadow DOM element
     // this.appendChild(this.template.content.cloneNode(true));
   }
 
   private createMountElement() {
     const mountElement = document.createElement('div');
-    // TODO: used for Shadow DOM
+    // TODO: UILD-147 - used for Shadow DOM
     // mountElement.setAttribute('id', 'editor-root');
     
     mountElement.className = 'embed-container';

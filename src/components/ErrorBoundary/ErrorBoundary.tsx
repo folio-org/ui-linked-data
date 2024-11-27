@@ -21,7 +21,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // TODO: log the error using Error service
+    // log the error using Error service
     console.error('Error:', error, errorInfo);
   }
 

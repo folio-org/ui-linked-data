@@ -45,7 +45,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: '*',
-        element: <Navigate to={ROUTES.SEARCH.uri} replace />, // TODO: create a component for 404 page
+        element: <Navigate to={ROUTES.SEARCH.uri} replace />, // TODO: UILD-441 - create a component for 404 page
       },
     ],
   },
@@ -78,7 +78,7 @@ const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
 
 export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
   useEffect(() => {
-    // TODO: localStorage cleanups on unmount (probably has to happen in the wrapper)
+    // TODO: UILD-440 - localStorage cleanups on unmount (probably has to happen in the wrapper)
     config && localStorageService.serialize(OKAPI_CONFIG, config);
   }, [config]);
 

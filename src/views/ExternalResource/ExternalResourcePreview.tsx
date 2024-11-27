@@ -16,7 +16,7 @@ export const ExternalResourcePreview = () => {
   const { externalId } = useParams();
 
   useEffect(() => {
-    // TODO: if applicable in future, pass in resource type from query params
+    // TODO: UILD-443 - if applicable in future, pass in resource type from query params
     fetchExternalRecordForPreview(externalId, ExternalResourceIdType.Inventory);
   }, [externalId]);
 
