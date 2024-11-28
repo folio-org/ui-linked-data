@@ -1,6 +1,7 @@
 # @folio/linked-data
 
-This project is a new Linked data editor.
+## Introduction
+UI application designed for performing operations on a library's linked data graph. This application can run standalone outside of the FOLIO platform. The [ui-ld-folio-wrapper](https://github.com/folio-org/ui-ld-folio-wrapper) module integrates this application for use within FOLIO.
 
 ## Table of Contents
 
