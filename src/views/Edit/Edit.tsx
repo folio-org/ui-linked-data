@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -27,12 +27,11 @@ export const Edit = () => {
   const { resourceId } = useParams();
   const { status, marcPreview } = useStoreSelector();
   const { recordStatus, addStatusMessages } = status;
-  const { data: marcPreviewData } = marcPreview;
+  const { value: marcPreviewData, resetValue: resetMarcPreviewData } = marcPreview;
   const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
   const [queryParams] = useSearchParams();
 
   useResetRecordStatus();

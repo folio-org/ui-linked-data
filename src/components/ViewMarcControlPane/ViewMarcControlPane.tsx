@@ -1,13 +1,14 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, ButtonType } from '@components/Button';
 import state from '@state';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import Times16 from '@src/assets/times-16.svg?react';
 import { getRecordTitle } from '@common/helpers/record.helper';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 export const ViewMarcControlPane = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
-  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
+  const { resetValue: resetMarcPreviewData } = useStoreSelector().marcPreview;
   const record = useRecoilValue(state.inputs.record);
   const { formatMessage } = useIntl();
 

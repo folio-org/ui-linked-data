@@ -28,10 +28,13 @@ export const useComplexLookup = ({
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const schema = useRecoilValue(state.config.schema);
-  const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const { setData, resetData: resetMarcPreviewData } = useStoreSelector().marcPreview;
-  const resetMarcPreviewMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
+  const {
+    setData,
+    resetData: resetMarcPreviewData,
+    metaData: marcPreviewMetadata,
+    resetMetaData: resetMarcPreviewMetadata,
+  } = useStoreSelector().marcPreview;
   const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { fetchMarcData } = useMarcData(setData);

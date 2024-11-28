@@ -54,10 +54,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
     const setSearchQuery = useSetRecoilState(state.search.query);
     const clearSearchQuery = useResetRecoilState(state.search.query);
-    const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
-    const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
-    const { setData, resetData } = useStoreSelector().marcPreview;
+    const {
+      setData,
+      resetData,
+      setMetaData: setMarcMetadata,
+      resetMetaData: clearMarcMetadata,
+    } = useStoreSelector().marcPreview;
     const { fetchMarcData } = useMarcData(setData);
 
     useEffect(() => {

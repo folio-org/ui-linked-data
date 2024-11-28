@@ -12,7 +12,7 @@ import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 export const Nav = () => {
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const isExternalResourceSectionOpen = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { data: marcPreviewData } = useStoreSelector().marcPreview;
+  const { value: marcPreviewData } = useStoreSelector().marcPreview;
   const record = useRecoilValue(state.inputs.record);
   const isVisible = isEditSectionOpen || (isExternalResourceSectionOpen && record);
 
