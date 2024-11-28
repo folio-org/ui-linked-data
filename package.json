@@ -40,7 +40,8 @@
     "react-router-dom": "^6.20.0",
     "react-select": "^5.8.0",
     "recoil": "^0.7.7",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
