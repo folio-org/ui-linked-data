@@ -12,6 +12,7 @@ import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
+import { useStoreSelector } from './useStoreSelectors';
 
 export const useComplexLookup = ({
   entry,
@@ -29,11 +30,11 @@ export const useComplexLookup = ({
   const schema = useRecoilValue(state.config.schema);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreviewData);
+  const { setData, resetData: resetMarcPreviewData } = useStoreSelector().marcPreview;
   const resetMarcPreviewMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
   const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const { fetchMarcData } = useMarcData(state.data.marcPreviewData);
+  const { fetchMarcData } = useMarcData(setData);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
 

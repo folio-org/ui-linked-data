@@ -19,6 +19,7 @@ import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { MarcPreviewComplexLookup } from './MarcPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -56,7 +57,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
     const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
-    const { fetchMarcData, clearMarcData } = useMarcData(state.data.marcPreviewData);
+    const { setData, resetData } = useStoreSelector().marcPreview;
+    const { fetchMarcData } = useMarcData(setData);
 
     useEffect(() => {
       if (!value) {
@@ -73,7 +75,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
 
     const onCloseModal = () => {
       onCloseMarcPreview();
-      clearMarcData();
+      resetData();
       clearMarcMetadata();
       onClose();
     };

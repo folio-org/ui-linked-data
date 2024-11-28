@@ -1,14 +1,13 @@
-import { RecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { getMarcRecord } from '@common/api/records.api';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
-export const useMarcData = <T>(marcState: RecoilState<T>) => {
-  const setMarcPreviewData = useSetRecoilState(marcState);
-  const clearMarcData = useResetRecoilState(marcState);
+export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setStatus = useSetRecoilState(state.status.commonMessages);
+  const { addStatusMessages } = useStoreSelector().status;
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return undefined;
@@ -22,10 +21,7 @@ export const useMarcData = <T>(marcState: RecoilState<T>) => {
 
       setMarcPreviewData(marcData);
     } catch (error) {
-      setStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'),
-      ]);
+      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
     } finally {
       setIsLoading(false);
     }
@@ -33,5 +29,5 @@ export const useMarcData = <T>(marcState: RecoilState<T>) => {
     return marcData;
   };
 
-  return { fetchMarcData, clearMarcData };
+  return { fetchMarcData };
 };

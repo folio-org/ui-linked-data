@@ -1,9 +1,8 @@
-import state from '@state';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 
 export const useRecordStatus = () => {
-  const lastSavedRecordId = useRecoilValue(state.status.lastSavedRecordId);
+  const { lastSavedRecordId } = useStoreSelector().status;
   const { resourceId } = useParams();
 
   const hasBeenSaved = resourceId && resourceId === lastSavedRecordId;

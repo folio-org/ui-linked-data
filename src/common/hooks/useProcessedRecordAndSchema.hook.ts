@@ -12,6 +12,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import { useServicesContext } from './useServicesContext';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -22,7 +23,7 @@ type IGetProcessedRecordAndSchema = {
 
 export const useProcessedRecordAndSchema = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
+  const { addStatusMessages } = useStoreSelector().status;
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useServicesContext() as Required<ServicesParams>;
@@ -72,10 +73,7 @@ export const useProcessedRecordAndSchema = () => {
       } catch (error) {
         console.error(error);
 
-        setStatusMessages(currentStatus => [
-          ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'),
-        ]);
+        addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       }
 
       return {
@@ -90,7 +88,7 @@ export const useProcessedRecordAndSchema = () => {
       recordToSchemaMappingService,
       schemaWithDuplicatesService,
       setRecord,
-      setStatusMessages,
+      addStatusMessages,
       userValuesService,
     ],
   );

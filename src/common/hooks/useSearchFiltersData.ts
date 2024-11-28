@@ -4,6 +4,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
@@ -13,7 +14,7 @@ export const useSearchFiltersData = () => {
   const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+  const { addStatusMessages } = useStoreSelector().status;
 
   useEffect(() => {
     return resetSelectedFacetsGroups();
@@ -40,10 +41,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -62,10 +60,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 

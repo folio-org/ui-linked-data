@@ -5,11 +5,12 @@ import state from '@state';
 import { useRecoilValue } from 'recoil';
 import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
 import './Footer.scss';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 export const Footer = () => {
   const showRecordControls = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const showExternalResourceControls = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const marcPreviewData = useRecoilValue(state.data.marcPreview);
+  const { data: marcPreviewData } = useStoreSelector().marcPreview;
   const record = useRecoilValue(state.inputs.record);
   const isVisible = (showRecordControls || (showExternalResourceControls && record)) && !marcPreviewData;
 

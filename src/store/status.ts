@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { createBaseSlice, SliceState } from './basic';
+import { createBaseSlice, SliceState } from './utils/slice';
 
 type LastSavedRecordId = string | null;
 
-type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
+export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
   SliceState<'isEditedRecord', boolean> &
   SliceState<'recordStatus', RecordStatus> &
-  SliceState<'messages', StatusEntry[]>;
+  SliceState<'statusMessages', StatusEntry[], StatusEntry>;
 
 const STORE_NAME = 'Status';
 
@@ -16,6 +16,10 @@ export const useStatusStore = create<StatusState>()(
     ...createBaseSlice('lastSavedRecordId', null as LastSavedRecordId, STORE_NAME)(...args),
     ...createBaseSlice('isEditedRecord', false, STORE_NAME)(...args),
     ...createBaseSlice('recordStatus', { type: undefined } as RecordStatus, STORE_NAME)(...args),
-    ...createBaseSlice('messages', [] as StatusEntry[], STORE_NAME)(...args),
+    ...createBaseSlice<'statusMessages', StatusEntry[], StatusEntry>(
+      'statusMessages',
+      [] as StatusEntry[],
+      STORE_NAME,
+    )(...args),
   })),
 );

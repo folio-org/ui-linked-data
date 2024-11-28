@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { createBaseSlice, SliceState } from './basic';
+import { createBaseSlice, SliceState } from './utils/slice';
 
 type MarcPreviewData = MarcDTO | null;
 type MarcPreviewMetaData = MarcPreviewMetadata | null;
 
-type MarcPreviewState = SliceState<'value', any> &
+export type MarcPreviewState = SliceState<'value', any> &
   SliceState<'data', MarcPreviewData> &
   SliceState<'metaData', MarcPreviewMetaData>;
 

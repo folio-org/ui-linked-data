@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
@@ -13,6 +13,7 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 import state from '@state';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
@@ -24,13 +25,15 @@ export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const isLoading = useRecoilValue(state.loadingState.isLoading);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
-  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
+  const { status, marcPreview } = useStoreSelector();
+  const { setRecordStatus } = status;
+  const { setValue } = marcPreview;
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
   const { navigateAsDuplicate } = useNavigateToEditPage();
   const [queryParams] = useSearchParams();
-  const { fetchMarcData } = useMarcData(state.data.marcPreview);
+  const { fetchMarcData } = useMarcData(setValue);
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 

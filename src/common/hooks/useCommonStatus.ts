@@ -1,13 +1,12 @@
-import { useSetRecoilState } from 'recoil';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import state from '@state';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 export const useCommonStatus = () => {
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+  const { addStatusMessages } = useStoreSelector().status;
 
   return {
     set: (l10nId: string, type: StatusType) => {
-      setCommonStatus(currentStatus => [...currentStatus, UserNotificationFactory.createMessage(type, l10nId)]);
+      addStatusMessages(UserNotificationFactory.createMessage(type, l10nId));
     },
   };
 };

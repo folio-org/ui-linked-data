@@ -13,6 +13,7 @@ import { useServicesContext } from '@common/hooks/useServicesContext';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
@@ -20,7 +21,7 @@ export const EditSection = memo(() => {
   const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
-  const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
+  const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStoreSelector().status;
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);

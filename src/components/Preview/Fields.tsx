@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
 import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constants';
@@ -10,6 +10,7 @@ import { getRecordId, getPreviewFieldsConditions } from '@common/helpers/record.
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
+import { useStoreSelector } from '@common/hooks/useStoreSelectors';
 import state from '@state';
 import { Labels } from './Labels';
 import { Values } from './Values';
@@ -78,10 +79,9 @@ export const Fields = ({
   const userValuesFromState = useRecoilValue(state.inputs.userValues);
   const schemaFromState = useRecoilValue(state.config.schema);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
-  const isEdited = useRecoilValue(state.status.recordIsEdited);
+  const { isEditedRecord: isEdited, setRecordStatus } = useStoreSelector().status;
   const { navigateToEditPage } = useNavigateToEditPage();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
