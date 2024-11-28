@@ -1,5 +1,9 @@
 # @folio/linked-data
 
+© 2024 EBSCO Information Services.
+
+This software is distributed under the terms of the Apache License, Version 2.0. See the file "[LICENSE](LICENSE)" for more information.
+
 ## Introduction
 UI application designed for performing operations on a library's linked data graph. This application can run standalone outside of the FOLIO platform. The [ui-ld-folio-wrapper](https://github.com/folio-org/ui-ld-folio-wrapper) module integrates this application for use within FOLIO.
 
@@ -25,9 +29,7 @@ or Yarn:
 yarn install
 ```
 
-### 2. Provide API config:
-
-#### a) For an external API:
+### 2. Configure the application:
 
 Create a JSON object with required data, then use it in such cases:
 
@@ -36,27 +38,35 @@ Create a JSON object with required data, then use it in such cases:
 - For an embedded application:
   Use JSON in the `config` attribute, see [Usage](#usage) section.
 
-###### JSON config example:
+###### Configuration options:
+  * `basePath`: Backend URI to which requests from the frontend are going to be directed.
+  * `tenant`: Okapi tenant.
+  * `token`: Okapi token.
+  * `customEvents`: A dictionary with custom event names. The keys of this dictionary have to be specific while the values can be arbitrary but unique. Events are used to communicate between this application and its container when running in embedded mode.
+      * `TRIGGER_MODAL`: Root application can dispatch this event to open a prompt in Linked data application which will inform a user about unsaved changes before leaving an Edit or Create page.
+      * `PROCEED_NAVIGATION`: Linked data application dispatches this event when a user clicks in the prompt "Save and continue" button or closes the prompt.
+      * `BLOCK_NAVIGATION`: Linked data application dispatches this event when user makes changes in a work form ("Create" or "Edit" page).
+      * `UNBLOCK_NAVIGATION`: Root application can dispatch this event to allow Linked data to proceed its navigation after it's been blocked.
+      * `NAVIGATE_TO_ORIGIN`: Linked data application dispatches this event when there is a need to navigate to the entrypoint from where the navigation to the Linked data application happened.
+      * `DROP_NAVIGATE_TO_ORIGIN`: Linked data application dispatches this event when there is no longer a need to navigate to the entrypoint from where the navigation to the Linked data application happened. Subsequent `NAVIGATE_TO_ORIGIN` calls have no effect unless a new navigation origin is set within the root application.
+
+###### Configuration example:
 
 ```json
 {
   "basePath": "YOUR_API_URI",
   "tenant": "YOUR_TENANT",
   "token": "YOUR_TOKEN",
-  // For embedded application only. Events also should be dispatched or listened in the root application.
   "customEvents": {
-    "TRIGGER_MODAL": "triggermodal", // Root application can dispatch this event to open a prompt in Linked data which will inform a user about unsaved changes before leaving an Edit or Create page.
-    "PROCEED_NAVIGATION": "proceednavigation", // Linked data dispatches this event when a user clicks in the prompt "Save and continue" button or closes the prompt.
-    "BLOCK_NAVIGATION": "blocknavigation" // Linked data dispatches this event when user makes changes in a work form ("Create" or "Edit" page).
+    "TRIGGER_MODAL": "TRIGGER_MODAL",
+    "PROCEED_NAVIGATION": "PROCEED_NAVIGATION",
+    "BLOCK_NAVIGATION": "BLOCK_NAVIGATION",
+    "UNBLOCK_NAVIGATION": "UNBLOCK_NAVIGATION",
+    "NAVIGATE_TO_ORIGIN": "NAVIGATE_TO_ORIGIN",
+    "DROP_NAVIGATE_TO_ORIGIN": "DROP_NAVIGATE_TO_ORIGIN"
   }
 }
 ```
-
-#### b) For an opened API (e.g. locally started. Can be used for development purposes):
-
-1. Rename `.env` file to `.env.local`.
-
-2. In that file change `EDITOR_API_BASE_PATH` variable's value.
 
 ## Scripts
 
