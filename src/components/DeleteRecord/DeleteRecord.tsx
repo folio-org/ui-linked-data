@@ -12,11 +12,11 @@ import { RESOURCE_URLS } from '@common/constants/routes.constants';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import { Button, ButtonType } from '@components/Button';
 import { useRecordStatus } from '@common/hooks/useRecordStatus';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 const DeleteRecord: FC = () => {
   const record = useRecoilValue(state.inputs.record);
-  const { isEditedRecord: isEdited } = useStoreSelector().status;
+  const { isEditedRecord: isEdited } = useStatusStore();
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const { deleteRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();

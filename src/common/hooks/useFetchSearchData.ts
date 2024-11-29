@@ -9,7 +9,7 @@ import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 export const useFetchSearchData = () => {
   const {
@@ -30,7 +30,7 @@ export const useFetchSearchData = () => {
   const [data, setData] = useRecoilState(state.search.data);
   const resetData = useResetRecoilState(state.search.data);
   const setPageMetadata = useSetRecoilState(state.search.pageMetadata);
-  const { addStatusMessages, resetStatusMessages } = useStoreSelector().status;
+  const { addStatusMessages, resetStatusMessages } = useStatusStore();
 
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { RecordStatus } from '@common/constants/record.constants';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 export const useResetRecordStatus = () => {
-  const { recordStatus, setRecordStatus } = useStoreSelector().status;
+  const { recordStatus, setRecordStatus } = useStatusStore();
   const [prevResourceId, setPrevResourceId] = useState<string | null>(null);
   const { resourceId } = useParams();
   const setRecordStatusAsOpen = () => setRecordStatus({ type: RecordStatus.open });

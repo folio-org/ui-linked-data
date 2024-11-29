@@ -1,8 +1,8 @@
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 export const useCommonStatus = () => {
-  const { addStatusMessages } = useStoreSelector().status;
+  const { addStatusMessages } = useStatusStore();
 
   return {
     set: (l10nId: string, type: StatusType) => {

@@ -15,7 +15,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useMarcPreviewStore, useStatusStore } from '@src/store';
 import state from '@state';
 import './Edit.scss';
 
@@ -25,9 +25,8 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const { status, marcPreview } = useStoreSelector();
-  const { recordStatus, addStatusMessages } = status;
-  const { value: marcPreviewData, resetValue: resetMarcPreviewData } = marcPreview;
+  const { recordStatus, addStatusMessages } = useStatusStore();
+  const { value: marcPreviewData, resetValue: resetMarcPreviewData } = useMarcPreviewStore();
   const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);

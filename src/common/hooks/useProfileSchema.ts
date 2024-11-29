@@ -2,14 +2,14 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import state from '@state';
 import { useServicesContext } from './useServicesContext';
 import { deleteFromSetImmutable } from '@common/helpers/common.helper';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
   const [schema, setSchema] = useRecoilState(state.config.schema);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setCollapsibleEntries = useSetRecoilState(state.ui.collapsibleEntries);
-  const { setIsEditedRecord: setIsEdited } = useStoreSelector().status;
+  const { setIsEditedRecord: setIsEdited } = useStatusStore();
   const setUserValues = useSetRecoilState(state.inputs.userValues);
 
   const getSchemaWithCopiedEntries = (entry: SchemaEntry, selectedEntries: string[]) => {

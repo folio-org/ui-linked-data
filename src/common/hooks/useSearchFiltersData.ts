@@ -4,7 +4,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import * as SearchApi from '@common/api/search.api';
 import state from '@state';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
@@ -14,7 +14,7 @@ export const useSearchFiltersData = () => {
   const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
-  const { addStatusMessages } = useStoreSelector().status;
+  const { addStatusMessages } = useStatusStore();
 
   useEffect(() => {
     return resetSelectedFacetsGroups();

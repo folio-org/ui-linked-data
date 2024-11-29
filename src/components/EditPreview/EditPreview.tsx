@@ -12,12 +12,12 @@ import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { checkIfRecordHasDependencies } from '@common/helpers/record.helper';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 import './EditPreview.scss';
 
 export const EditPreview = () => {
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
-  const { isEditedRecord: isEdited } = useStoreSelector().status;
+  const { isEditedRecord: isEdited } = useStatusStore();
   const record = useRecoilValue(state.inputs.record);
   const isPositionedSecond =
     currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;

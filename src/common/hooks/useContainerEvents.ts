@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { dispatchEventWrapper, getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { ROUTES } from '@common/constants/routes.constants';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 import state from '@state';
 
 type IUseContainerEvents =
@@ -17,7 +17,7 @@ type IUseContainerEvents =
 
 export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }: IUseContainerEvents = {}) => {
   const hasNavigationOrigin = useRecoilValue(state.config.hasNavigationOrigin);
-  const { isEditedRecord: isEdited } = useStoreSelector().status;
+  const { isEditedRecord: isEdited } = useStatusStore();
   const {
     BLOCK_NAVIGATION,
     UNBLOCK_NAVIGATION,

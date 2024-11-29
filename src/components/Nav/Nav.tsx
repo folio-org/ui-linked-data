@@ -7,12 +7,12 @@ import { useRecoilValue } from 'recoil';
 import { ViewMarcControlPane } from '@components/ViewMarcControlPane';
 import { PreviewExternalResourcePane } from '@components/PreviewExternalResourcePane';
 import './Nav.scss';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useMarcPreviewStore } from '@src/store';
 
 export const Nav = () => {
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const isExternalResourceSectionOpen = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { value: marcPreviewData } = useStoreSelector().marcPreview;
+  const { value: marcPreviewData } = useMarcPreviewStore();
   const record = useRecoilValue(state.inputs.record);
   const isVisible = isEditSectionOpen || (isExternalResourceSectionOpen && record);
 

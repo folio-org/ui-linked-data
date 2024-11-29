@@ -13,7 +13,7 @@ import { MultiValueRemove } from './MultiValueRemove';
 import { ClearIndicator } from './ClearIndicator';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 import './SimpleLookupField.scss';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 interface Props {
   uri: string;
@@ -43,7 +43,7 @@ export const SimpleLookupField: FC<Props> = ({
   const { getLookupData, loadLookupData } = useSimpleLookupData();
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
-  const { addStatusMessages } = useStoreSelector().status;
+  const { addStatusMessages } = useStatusStore();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(

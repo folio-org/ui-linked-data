@@ -32,7 +32,7 @@ import { useContainerEvents } from './useContainerEvents';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
 import { useRecordGeneration } from './useRecordGeneration';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -53,7 +53,7 @@ export const useRecordControls = () => {
   const setUserValues = useSetRecoilState(state.inputs.userValues);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const [record, setRecord] = useRecoilState(state.inputs.record);
-  const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessages } = useStoreSelector().status;
+  const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessages } = useStatusStore();
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);

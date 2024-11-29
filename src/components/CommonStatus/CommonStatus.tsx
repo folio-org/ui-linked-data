@@ -8,12 +8,12 @@ import CheckCircleIcon from '@src/assets/check-circle.svg?react';
 import WarningIcon from '@src/assets/exclamation-triangle.svg?react';
 import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
 import './CommonStatus.scss';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 const DELETE_TIMEOUT = 10000;
 
 export const CommonStatus: FC = () => {
-  const { statusMessages, setStatusMessages } = useStoreSelector().status;
+  const { statusMessages, setStatusMessages } = useStatusStore();
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(statusMessages.filter(({ id }) => id !== messageId));

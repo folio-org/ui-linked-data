@@ -18,7 +18,7 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import './SearchResultEntry.scss';
-import { useStoreSelector } from '@common/hooks/useStoreSelectors';
+import { useStatusStore } from '@src/store';
 
 type SearchResultEntry = {
   id: string;
@@ -62,7 +62,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const { addStatusMessages } = useStoreSelector().status;
+  const { addStatusMessages } = useStatusStore();
   const previewContent = useRecoilValue(state.inputs.previewContent);
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
