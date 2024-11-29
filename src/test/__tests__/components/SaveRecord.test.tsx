@@ -2,17 +2,15 @@ import { RecoilRoot } from 'recoil';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { SaveRecord } from '@components/SaveRecord';
-import state from '@state';
 import { BrowserRouter } from 'react-router-dom';
+import { useStatusStore } from '@src/store';
 
 describe('SaveRecord', () => {
-  function renderSaveRecordComponent(recordIsEdited = true) {
+  function renderSaveRecordComponent(isEditedRecord = true) {
+    (useStatusStore as jest.Mock).mockReturnValue({ isEditedRecord });
+
     render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.status.recordIsEdited, recordIsEdited);
-        }}
-      >
+      <RecoilRoot>
         <BrowserRouter>
           <SaveRecord primary />
         </BrowserRouter>

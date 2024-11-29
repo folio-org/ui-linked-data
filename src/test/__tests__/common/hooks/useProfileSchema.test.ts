@@ -1,8 +1,8 @@
-import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { schemaWithDuplicatesService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { renderHook } from '@testing-library/react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useStatusStore } from '@src/store';
 
 jest.mock('recoil');
 
@@ -15,8 +15,9 @@ describe('useProfileSchema', () => {
   };
 
   beforeEach(() => {
+    (useRecoilState as jest.Mock).mockReturnValue([new Set(), jest.fn()]);
     (useSetRecoilState as jest.Mock).mockImplementation(jest.fn);
-    (useRecoilState as jest.Mock).mockReturnValueOnce([new Set(), jest.fn()]);
+    (useStatusStore as jest.Mock).mockReturnValue({ setIsEditedRecord: jest.fn });
   });
 
   test('get schema with copied entries', () => {
@@ -25,7 +26,7 @@ describe('useProfileSchema', () => {
     result.current.getSchemaWithCopiedEntries(entry, []);
 
     expect(schemaWithDuplicatesService.duplicateEntry).toHaveBeenCalled();
-  })
+  });
 
   test('get schema with deleted entries', () => {
     const { result } = renderHook(() => useProfileSchema());
@@ -33,5 +34,5 @@ describe('useProfileSchema', () => {
     result.current.getSchemaWithDeletedEntries(entry);
 
     expect(schemaWithDuplicatesService.deleteEntry).toHaveBeenCalled();
-  })
-})
+  });
+});

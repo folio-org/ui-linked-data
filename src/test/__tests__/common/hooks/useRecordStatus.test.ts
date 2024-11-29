@@ -1,17 +1,18 @@
 import { renderHook } from '@testing-library/react';
-import { useRecoilValue } from 'recoil';
+import { useStatusStore } from '@src/store';
 import { useRecordStatus } from '@common/hooks/useRecordStatus';
 import { useParams } from 'react-router-dom';
 
 const mockResourceId = 'mockResourceId';
 
-jest.mock('recoil');
 jest.mock('react-router-dom');
 
 describe('useRecordStatus', () => {
   const renderUseRecordStatusHook = (lastSavedIdEqual = false) => {
     (useParams as jest.Mock).mockReturnValueOnce({ resourceId: mockResourceId });
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(lastSavedIdEqual ? mockResourceId : 'anotherId');
+    (useStatusStore as jest.Mock).mockReturnValueOnce({
+      lastSavedRecordId: lastSavedIdEqual ? mockResourceId : 'anotherId',
+    });
 
     const {
       result: { current },
