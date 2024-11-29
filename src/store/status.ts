@@ -20,6 +20,7 @@ export const useStatusStoreBase = create<StatusState>()(
       'statusMessages',
       [] as StatusEntry[],
       STORE_NAME,
+      true
     )(...args),
   })),
 );
