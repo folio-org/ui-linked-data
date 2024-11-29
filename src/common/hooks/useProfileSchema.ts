@@ -9,8 +9,8 @@ export const useProfileSchema = () => {
   const [schema, setSchema] = useRecoilState(state.config.schema);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setCollapsibleEntries = useSetRecoilState(state.ui.collapsibleEntries);
-  const { setIsEditedRecord: setIsEdited } = useStatusStore();
   const setUserValues = useSetRecoilState(state.inputs.userValues);
+  const { setIsEditedRecord: setIsEdited } = useStatusStore();
 
   const getSchemaWithCopiedEntries = (entry: SchemaEntry, selectedEntries: string[]) => {
     selectedEntriesService.set(selectedEntries);
