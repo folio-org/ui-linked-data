@@ -2,15 +2,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { CommonStatus } from '@components/CommonStatus';
 import { StatusType } from '@common/constants/status.constants';
 import { useStatusStore } from '@src/store';
+import { setInitialState } from '@src/test/__mocks__/store';
 
 describe('CommonStatus', () => {
-  const initialStatusStoreStates = useStatusStore.getState();
-
   const renderComponent = (commonMessagesState: StatusEntry[] = []) => {
-    useStatusStore.setState({
-      ...initialStatusStoreStates,
-      statusMessages: commonMessagesState,
-    });
+    setInitialState(useStatusStore, { statusMessages: commonMessagesState });
 
     return render(<CommonStatus />);
   };
