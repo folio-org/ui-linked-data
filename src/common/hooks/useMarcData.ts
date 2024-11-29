@@ -21,7 +21,7 @@ export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
 
       setMarcPreviewData(marcData);
     } catch (error) {
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
     } finally {
       setIsLoading(false);
     }

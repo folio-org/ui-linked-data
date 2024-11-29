@@ -182,7 +182,7 @@ export const useFetchSearchData = () => {
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
       } catch {
-        addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       } finally {
         setIsLoading(false);
       }

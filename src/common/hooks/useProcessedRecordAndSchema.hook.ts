@@ -73,7 +73,7 @@ export const useProcessedRecordAndSchema = () => {
       } catch (error) {
         console.error(error);
 
-        addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       }
 
       return {

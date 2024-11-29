@@ -41,7 +41,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -60,7 +60,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 

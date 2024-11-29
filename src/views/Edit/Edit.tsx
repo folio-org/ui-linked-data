@@ -88,7 +88,7 @@ export const Edit = () => {
           record: typedRecord,
         });
       } catch {
-        addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {
         setIsLoading(false);
       }

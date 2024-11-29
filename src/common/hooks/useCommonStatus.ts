@@ -6,7 +6,7 @@ export const useCommonStatus = () => {
 
   return {
     set: (l10nId: string, type: StatusType) => {
-      addStatusMessages(UserNotificationFactory.createMessage(type, l10nId));
+      addStatusMessages?.(UserNotificationFactory.createMessage(type, l10nId));
     },
   };
 };

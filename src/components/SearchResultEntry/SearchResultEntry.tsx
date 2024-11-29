@@ -74,7 +74,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     } catch (error) {
       console.error(error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {
       setIsLoading(false);
     }

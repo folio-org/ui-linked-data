@@ -128,7 +128,7 @@ export const useRecordControls = () => {
       dispatchUnblockEvent();
       !asRefToNewRecord && setRecord(parsedResponse);
 
-      addStatusMessages(
+      addStatusMessages?.(
         UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
       );
 
@@ -175,7 +175,7 @@ export const useRecordControls = () => {
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
     } finally {
       setIsLoading(false);
     }
@@ -211,13 +211,13 @@ export const useRecordControls = () => {
       await deleteRecordRequest(currentRecordId as unknown as string);
       deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 
       navigate(ROUTES.SEARCH.uri);
     } catch (error) {
       console.error('Cannot delete the resource description', error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
     }
   };
 
@@ -228,7 +228,7 @@ export const useRecordControls = () => {
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
-        addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
+        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
 
         return navigate(ROUTES.RESOURCE_CREATE.uri);
       }
@@ -248,7 +248,7 @@ export const useRecordControls = () => {
     } catch (e) {
       console.error('Error fetching record and selecting entity values: ', e);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -265,7 +265,7 @@ export const useRecordControls = () => {
 
       return recordData;
     } catch (_err) {
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
     }
   };
 
@@ -292,7 +292,7 @@ export const useRecordControls = () => {
       if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
         setIsDuplicateImportedResourceModalOpen(true);
       } else {
-        addStatusMessages(
+        addStatusMessages?.(
           UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetchingExternalResourceForEditing'),
         );
       }

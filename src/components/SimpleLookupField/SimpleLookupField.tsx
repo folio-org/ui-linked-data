@@ -65,7 +65,7 @@ export const SimpleLookupField: FC<Props> = ({
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 
-      addStatusMessages(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
+      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
     } finally {
       setIsLoading(false);
     }
