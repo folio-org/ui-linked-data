@@ -4,11 +4,11 @@ import { StatusType } from '@common/constants/status.constants';
 import { useStatusStore } from '@src/store';
 
 describe('CommonStatus', () => {
-  const initialStatusStoreState = useStatusStore.getState();
+  const initialStatusStoreStates = useStatusStore.getState();
 
   const renderComponent = (commonMessagesState: StatusEntry[] = []) => {
     useStatusStore.setState({
-      ...initialStatusStoreState,
+      ...initialStatusStoreStates,
       statusMessages: commonMessagesState,
     });
 

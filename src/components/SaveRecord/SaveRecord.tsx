@@ -5,10 +5,10 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { Button, ButtonType } from '@components/Button';
 import { useRecordStatus } from '@common/hooks/useRecordStatus';
 import { QueryParams } from '@common/constants/routes.constants';
-import { useStatusStore } from '@src/store';
+import { useStatusState } from '@src/store';
 
 const SaveRecord = ({ primary = false }) => {
-  const { isEditedRecord } = useStatusStore();
+  const { isEditedRecord } = useStatusState();
   const { saveRecord } = useRecordControls();
   const { hasBeenSaved } = useRecordStatus();
   const [searchParams] = useSearchParams();

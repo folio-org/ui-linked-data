@@ -12,7 +12,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import state from '@state';
 import { useServicesContext } from './useServicesContext';
-import { useStatusStore } from '@src/store';
+import { useStatusState } from '@src/store';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -23,7 +23,7 @@ type IGetProcessedRecordAndSchema = {
 
 export const useProcessedRecordAndSchema = () => {
   const setRecord = useSetRecoilState(state.inputs.record);
-  const { addStatusMessages } = useStatusStore();
+  const { addStatusMessages } = useStatusState();
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useServicesContext() as Required<ServicesParams>;

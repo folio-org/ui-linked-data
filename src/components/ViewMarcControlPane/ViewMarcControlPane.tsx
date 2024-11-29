@@ -4,11 +4,11 @@ import state from '@state';
 import { useRecoilValue } from 'recoil';
 import Times16 from '@src/assets/times-16.svg?react';
 import { getRecordTitle } from '@common/helpers/record.helper';
-import { useMarcPreviewStore } from '@src/store';
+import { useMarcPreviewState } from '@src/store';
 
 export const ViewMarcControlPane = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
-  const { resetValue: resetMarcPreviewData } = useMarcPreviewStore();
+  const { resetValue: resetMarcPreviewData } = useMarcPreviewState();
   const record = useRecoilValue(state.inputs.record);
   const { formatMessage } = useIntl();
 

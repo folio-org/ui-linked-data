@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { StatusType } from '@common/constants/status.constants';
 import { Button, ButtonType } from '@components/Button';
-import { useStatusStore } from '@src/store';
+import { useStatusState } from '@src/store';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import CheckCircleIcon from '@src/assets/check-circle.svg?react';
 import WarningIcon from '@src/assets/exclamation-triangle.svg?react';
@@ -13,7 +13,7 @@ import './CommonStatus.scss';
 const DELETE_TIMEOUT = 10000;
 
 export const CommonStatus: FC = () => {
-  const { statusMessages, setStatusMessages } = useStatusStore();
+  const { statusMessages, setStatusMessages } = useStatusState();
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(statusMessages.filter(({ id }) => id !== messageId));

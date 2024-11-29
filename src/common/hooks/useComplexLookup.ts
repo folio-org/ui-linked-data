@@ -12,7 +12,7 @@ import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
-import { useMarcPreviewStore } from '@src/store';
+import { useMarcPreviewState } from '@src/store';
 
 export const useComplexLookup = ({
   entry,
@@ -34,7 +34,7 @@ export const useComplexLookup = ({
     resetData: resetMarcPreviewData,
     metaData: marcPreviewMetadata,
     resetMetaData: resetMarcPreviewMetadata,
-  } = useMarcPreviewStore();
+  } = useMarcPreviewState();
   const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { fetchMarcData } = useMarcData(setData);

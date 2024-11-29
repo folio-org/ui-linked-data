@@ -3,11 +3,11 @@ import { getMarcRecord } from '@common/api/records.api';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import state from '@state';
-import { useStatusStore } from '@src/store';
+import { useStatusState } from '@src/store';
 
 export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const { addStatusMessages } = useStatusStore();
+  const { addStatusMessages } = useStatusState();
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return undefined;

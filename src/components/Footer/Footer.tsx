@@ -5,12 +5,12 @@ import state from '@state';
 import { useRecoilValue } from 'recoil';
 import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
 import './Footer.scss';
-import { useMarcPreviewStore } from '@src/store';
+import { useMarcPreviewState } from '@src/store';
 
 export const Footer = () => {
   const showRecordControls = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const showExternalResourceControls = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { value: marcPreviewData } = useMarcPreviewStore();
+  const { value: marcPreviewData } = useMarcPreviewState();
   const record = useRecoilValue(state.inputs.record);
   const isVisible = (showRecordControls || (showExternalResourceControls && record)) && !marcPreviewData;
 

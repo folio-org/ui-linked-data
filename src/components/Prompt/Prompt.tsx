@@ -12,7 +12,7 @@ import { RecordStatus } from '@common/constants/record.constants';
 import { getForceNavigateToDest } from '@common/helpers/navigation.helper';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import './Prompt.scss';
-import { useStatusStore } from '@src/store';
+import { useStatusState } from '@src/store';
 
 interface Props {
   when: boolean;
@@ -30,7 +30,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     setIsModalOpen: setIsSwitchToNewRecordModalOpen,
     openModal: openSwitchToNewRecordModal,
   } = useModalControls();
-  const { setIsEditedRecord: setIsEdited } = useStatusStore();
+  const { setIsEditedRecord: setIsEdited } = useStatusState();
   const setRecordStatus = useSetRecoilState(state.status.recordStatus);
   const [forceNavigateTo, setForceNavigateTo] = useState<{
     pathname: string;

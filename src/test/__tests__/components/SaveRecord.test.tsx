@@ -6,11 +6,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { useStatusStore } from '@src/store';
 
 describe('SaveRecord', () => {
-  const initialStatusStoreState = useStatusStore.getState();
+  const initialStatusStoreStates = useStatusStore.getState();
 
   function renderSaveRecordComponent(isEditedRecord = true) {
     useStatusStore.setState({
-      ...initialStatusStoreState,
+      ...initialStatusStoreStates,
       isEditedRecord,
     });
 
