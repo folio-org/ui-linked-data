@@ -11,7 +11,7 @@ export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
 
 const STORE_NAME = 'Status';
 
-export const useStatusStoreBase = create<StatusState>()(
+export const useStatusStore = create<StatusState>()(
   devtools((...args) => ({
     ...createBaseSlice('lastSavedRecordId', null as LastSavedRecordId, STORE_NAME)(...args),
     ...createBaseSlice('isEditedRecord', false, STORE_NAME)(...args),

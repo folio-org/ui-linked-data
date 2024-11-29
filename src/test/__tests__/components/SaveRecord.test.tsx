@@ -6,8 +6,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { useStatusStore } from '@src/store';
 
 describe('SaveRecord', () => {
+  const initialStatusStoreState = useStatusStore.getState();
+
   function renderSaveRecordComponent(isEditedRecord = true) {
-    (useStatusStore as jest.Mock).mockReturnValue({ isEditedRecord });
+    useStatusStore.setState({
+      ...initialStatusStoreState,
+      isEditedRecord,
+    });
 
     render(
       <RecoilRoot>

@@ -18,11 +18,17 @@ jest.mock('recoil');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('useContainerEvents', () => {
-  const renderUseContainerEventsHook = (isEdited: boolean) => {
+  const initialStatusStoreState = useStatusStore.getState();
+
+  const renderUseContainerEventsHook = (isEditedRecord: boolean) => {
     (domHelper.dispatchEventWrapper as jest.Mock) = mockDispatchEventWrapper;
-    (useStatusStore as jest.Mock).mockReturnValueOnce({ isEditedRecord: isEdited });
     (useRecoilValue as jest.Mock).mockReturnValueOnce(false);
     (useRecoilValue as jest.Mock).mockReturnValueOnce(mockEvents);
+
+    useStatusStore.setState({
+      ...initialStatusStoreState,
+      isEditedRecord,
+    });
 
     renderHook(() => useContainerEvents({ watchEditedState: true }));
   };

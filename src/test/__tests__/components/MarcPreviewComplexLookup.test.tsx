@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
+import { useMarcPreviewStore } from '@src/store';
 import state from '@state';
 
 jest.mock('@common/hooks/useSearchContext');
@@ -21,6 +22,7 @@ const marcPreviewMetadata = {
 } as MarcPreviewMetadata;
 
 describe('MarcPreviewComplexLookup', () => {
+  const initialMarcPreviewState = useMarcPreviewStore.getState();
   const onClose = jest.fn();
   const onAssignRecord = jest.fn();
 
@@ -33,6 +35,12 @@ describe('MarcPreviewComplexLookup', () => {
     marcPreviewData: MarcDTO,
     marcPreviewMetadata: MarcPreviewMetadata,
   ) => {
+    useMarcPreviewStore.setState({
+      ...initialMarcPreviewState,
+      data: marcPreviewData,
+      metaData: marcPreviewMetadata,
+    });
+
     return render(
       <RecoilRoot
         initializeState={({ set }) => {

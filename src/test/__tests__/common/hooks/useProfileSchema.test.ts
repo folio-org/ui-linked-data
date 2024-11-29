@@ -2,7 +2,6 @@ import { schemaWithDuplicatesService } from '@src/test/__mocks__/common/hooks/us
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
 import { renderHook } from '@testing-library/react';
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { useStatusStore } from '@src/store';
 
 jest.mock('recoil');
 
@@ -17,7 +16,6 @@ describe('useProfileSchema', () => {
   beforeEach(() => {
     (useRecoilState as jest.Mock).mockReturnValue([new Set(), jest.fn()]);
     (useSetRecoilState as jest.Mock).mockImplementation(jest.fn);
-    (useStatusStore as jest.Mock).mockReturnValue({ setIsEditedRecord: jest.fn });
   });
 
   test('get schema with copied entries', () => {

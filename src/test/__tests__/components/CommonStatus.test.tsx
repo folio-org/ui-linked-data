@@ -1,16 +1,19 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
-import state from '@state';
 import { CommonStatus } from '@components/CommonStatus';
 import { StatusType } from '@common/constants/status.constants';
+import { useStatusStore } from '@src/store';
 
 describe('CommonStatus', () => {
-  const renderComponent = (commonMessagesState: StatusEntry[] = []) =>
-    render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.status.commonMessages, commonMessagesState)}>
-        <CommonStatus />
-      </RecoilRoot>,
-    );
+  const initialStatusStoreState = useStatusStore.getState();
+
+  const renderComponent = (commonMessagesState: StatusEntry[] = []) => {
+    useStatusStore.setState({
+      ...initialStatusStoreState,
+      statusMessages: commonMessagesState,
+    });
+
+    return render(<CommonStatus />);
+  };
 
   const getStatusMessagesCount = (container: HTMLElement) => container.querySelectorAll('.status-message').length;
 

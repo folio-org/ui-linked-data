@@ -11,7 +11,7 @@ export type MarcPreviewState = SliceState<'value', any> &
 
 const STORE_NAME = 'MarcPreview';
 
-export const useMarcPreviewStoreBase = create<MarcPreviewState>()(
+export const useMarcPreviewStore = create<MarcPreviewState>()(
   devtools((...args) => ({
     ...createBaseSlice('value', null, STORE_NAME)(...args),
     ...createBaseSlice('data', null as MarcPreviewData, STORE_NAME)(...args),
