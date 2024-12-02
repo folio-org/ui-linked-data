@@ -47,7 +47,6 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
 export const createBaseSlice = <K extends string, V, S extends string = K, T = V>(
   keys: { basic: K; singleItem?: S },
   initialValue: V,
-  sliceTitle: string,
   canAddSingleItem = false,
 ): StateCreator<SliceState<K, V, S, T>, [['zustand/devtools', never]], [], SliceState<K, V, S, T>> => {
   return set => {
@@ -56,9 +55,8 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
     const baseSlice = {
       [keys.basic]: initialValue,
       [`set${capitalizedTitle}`]: (updatedValue: V) =>
-        set({ [keys.basic]: updatedValue } as any, false, `${sliceTitle}/set${capitalizedTitle}`),
-      [`reset${capitalizedTitle}`]: () =>
-        set({ [keys.basic]: initialValue } as any, false, `${sliceTitle}/reset${capitalizedTitle}`),
+        set({ [keys.basic]: updatedValue } as any, false, `set${capitalizedTitle}`),
+      [`reset${capitalizedTitle}`]: () => set({ [keys.basic]: initialValue } as any, false, `reset${capitalizedTitle}`),
     } as SliceState<K, V, S, T>;
 
     if (canAddSingleItem && keys.singleItem) {
@@ -70,7 +68,7 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
             return { [keys.basic]: updateValue(value, updatedValue) } as any;
           },
           false,
-          `${sliceTitle}/add${capitalizedTitle}`,
+          `add${capitalizedTitle}`,
         );
     }
 

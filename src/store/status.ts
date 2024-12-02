@@ -15,16 +15,15 @@ const STORE_NAME = 'Status';
 export const useStatusStore = create<StatusState>()(
   devtools(
     (...args) => ({
-      ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId, STORE_NAME)(...args),
-      ...createBaseSlice({ basic: 'isEditedRecord' }, false, STORE_NAME)(...args),
-      ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId)(...args),
+      ...createBaseSlice({ basic: 'isEditedRecord' }, false)(...args),
+      ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus)(...args),
       ...createBaseSlice<'statusMessages', StatusEntry[], 'statusMessage', StatusEntry>(
         { basic: 'statusMessages', singleItem: 'statusMessage' },
         [] as StatusEntry[],
-        STORE_NAME,
         true,
       )(...args),
     }),
-    { enabled: !IS_PROD_MODE },
+    { name: 'Linked Data Editor', store: STORE_NAME, enabled: !IS_PROD_MODE },
   ),
 );

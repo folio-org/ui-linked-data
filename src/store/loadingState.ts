@@ -10,8 +10,8 @@ const STORE_NAME = 'LoadingState';
 export const useLoadingStateStore = create<LoadingState>()(
   devtools(
     (...args) => ({
-      ...createBaseSlice({ basic: 'isLoading' }, false, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'isLoading' }, false)(...args),
     }),
-    { enabled: !IS_PROD_MODE },
+    { name: 'Linked Data Editor', store: STORE_NAME, enabled: !IS_PROD_MODE },
   ),
 );
