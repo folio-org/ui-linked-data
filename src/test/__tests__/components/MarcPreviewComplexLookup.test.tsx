@@ -41,8 +41,6 @@ describe('MarcPreviewComplexLookup', () => {
       <RecoilRoot
         initializeState={({ set }) => {
           set(state.ui.isMarcPreviewOpen, isMarcPreviewOpen);
-          set(state.data.marcPreviewData, marcPreviewData);
-          set(state.data.marcPreviewMetadata, marcPreviewMetadata);
         }}
       >
         <MarcPreviewComplexLookup onClose={onClose} />
