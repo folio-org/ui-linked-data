@@ -14,7 +14,7 @@ export const useSearchFiltersData = () => {
   const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
   const setFacetsData = useSetRecoilState(state.search.facetsData);
   const setSourceData = useSetRecoilState(state.search.sourceData);
-  const { addStatusMessages } = useStatusState();
+  const { addStatusMessage } = useStatusState();
 
   useEffect(() => {
     return resetSelectedFacetsGroups();
@@ -41,7 +41,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -60,7 +60,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 

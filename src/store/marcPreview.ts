@@ -15,9 +15,9 @@ const STORE_NAME = 'MarcPreview';
 export const useMarcPreviewStore = create<MarcPreviewState>()(
   devtools(
     (...args) => ({
-      ...createBaseSlice('basicValue', null, STORE_NAME)(...args),
-      ...createBaseSlice('complexValue', null as MarcPreviewData, STORE_NAME)(...args),
-      ...createBaseSlice('metaData', null as MarcPreviewMetaData, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'basicValue' }, null, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'complexValue' }, null as MarcPreviewData, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'metaData' }, null as MarcPreviewMetaData, STORE_NAME)(...args),
     }),
     { enabled: !IS_PROD_MODE },
   ),

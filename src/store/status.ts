@@ -8,18 +8,18 @@ type LastSavedRecordId = string | null;
 export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
   SliceState<'isEditedRecord', boolean> &
   SliceState<'recordStatus', RecordStatus> &
-  SliceState<'statusMessages', StatusEntry[], StatusEntry>;
+  SliceState<'statusMessages', StatusEntry[], 'statusMessage', StatusEntry>;
 
 const STORE_NAME = 'Status';
 
 export const useStatusStore = create<StatusState>()(
   devtools(
     (...args) => ({
-      ...createBaseSlice('lastSavedRecordId', null as LastSavedRecordId, STORE_NAME)(...args),
-      ...createBaseSlice('isEditedRecord', false, STORE_NAME)(...args),
-      ...createBaseSlice('recordStatus', { type: undefined } as RecordStatus, STORE_NAME)(...args),
-      ...createBaseSlice<'statusMessages', StatusEntry[], StatusEntry>(
-        'statusMessages',
+      ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'isEditedRecord' }, false, STORE_NAME)(...args),
+      ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus, STORE_NAME)(...args),
+      ...createBaseSlice<'statusMessages', StatusEntry[], 'statusMessage', StatusEntry>(
+        { basic: 'statusMessages', singleItem: 'statusMessage' },
         [] as StatusEntry[],
         STORE_NAME,
         true,

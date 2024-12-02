@@ -2,14 +2,14 @@ import { StateCreator } from 'zustand';
 
 type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : S;
 
-export type SliceState<K extends string, V, T = V> = {
+export type SliceState<K extends string, V, S extends string = K, T = V> = {
   [P in K]: V;
 } & {
   [P in `set${Capitalize<K>}`]: (value: V) => void;
 } & {
   [P in `reset${Capitalize<K>}`]: () => void;
 } & Partial<{
-    [P in `add${Capitalize<K>}`]: (value: T) => void;
+    [P in `add${Capitalize<S>}`]: (value: T) => void;
   }>;
 
 const capitalize = (value: string) => {
@@ -44,29 +44,29 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
   return updatedValue as any;
 };
 
-export const createBaseSlice = <K extends string, V, T = V>(
-  valueTitle: K,
+export const createBaseSlice = <K extends string, V, S extends string = K, T = V>(
+  keys: { basic: K; singleItem?: S },
   initialValue: V,
   sliceTitle: string,
   canAddSingleItem = false,
-): StateCreator<SliceState<K, V, T>, [['zustand/devtools', never]], [], SliceState<K, V, T>> => {
+): StateCreator<SliceState<K, V, S, T>, [['zustand/devtools', never]], [], SliceState<K, V, S, T>> => {
   return set => {
-    const capitalizedTitle = capitalize(valueTitle);
+    const capitalizedTitle = capitalize(keys.basic);
 
     const baseSlice = {
-      [valueTitle]: initialValue,
+      [keys.basic]: initialValue,
       [`set${capitalizedTitle}`]: (updatedValue: V) =>
-        set({ [valueTitle]: updatedValue } as any, false, `${sliceTitle}/set${capitalizedTitle}`),
+        set({ [keys.basic]: updatedValue } as any, false, `${sliceTitle}/set${capitalizedTitle}`),
       [`reset${capitalizedTitle}`]: () =>
-        set({ [valueTitle]: initialValue } as any, false, `${sliceTitle}/reset${capitalizedTitle}`),
-    } as SliceState<K, V, T>;
+        set({ [keys.basic]: initialValue } as any, false, `${sliceTitle}/reset${capitalizedTitle}`),
+    } as SliceState<K, V, S, T>;
 
-    if (canAddSingleItem) {
-      (baseSlice as any)[`add${capitalizedTitle}`] = (updatedValue: T) =>
+    if (canAddSingleItem && keys.singleItem) {
+      (baseSlice as any)[`add${capitalize(keys.singleItem)}`] = (updatedValue: T) =>
         set(
           state => {
-            const value = state[valueTitle] as any;
-            return { [valueTitle]: updateValue(value, updatedValue) } as any;
+            const value = state[keys.basic] as any;
+            return { [keys.basic]: updateValue(value, updatedValue) } as any;
           },
           false,
           `${sliceTitle}/add${capitalizedTitle}`,

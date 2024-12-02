@@ -62,7 +62,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const { addStatusMessages } = useStatusState();
+  const { addStatusMessage } = useStatusState();
   const previewContent = useRecoilValue(state.inputs.previewContent);
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
@@ -74,7 +74,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     } catch (error) {
       console.error(error);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {
       setIsLoading(false);
     }

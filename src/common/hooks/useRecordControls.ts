@@ -53,7 +53,7 @@ export const useRecordControls = () => {
   const setUserValues = useSetRecoilState(state.inputs.userValues);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const [record, setRecord] = useRecoilState(state.inputs.record);
-  const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessages } = useStatusState();
+  const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessage } = useStatusState();
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
@@ -128,7 +128,7 @@ export const useRecordControls = () => {
       dispatchUnblockEvent();
       !asRefToNewRecord && setRecord(parsedResponse);
 
-      addStatusMessages?.(
+      addStatusMessage?.(
         UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
       );
 
@@ -175,7 +175,7 @@ export const useRecordControls = () => {
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
     } finally {
       setIsLoading(false);
     }
@@ -211,13 +211,13 @@ export const useRecordControls = () => {
       await deleteRecordRequest(currentRecordId as unknown as string);
       deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 
       navigate(ROUTES.SEARCH.uri);
     } catch (error) {
       console.error('Cannot delete the resource description', error);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
     }
   };
 
@@ -228,7 +228,7 @@ export const useRecordControls = () => {
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
-        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
+        addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
 
         return navigate(ROUTES.RESOURCE_CREATE.uri);
       }
@@ -248,7 +248,7 @@ export const useRecordControls = () => {
     } catch (e) {
       console.error('Error fetching record and selecting entity values: ', e);
 
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -265,7 +265,7 @@ export const useRecordControls = () => {
 
       return recordData;
     } catch (_err) {
-      addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
+      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
     }
   };
 
@@ -292,7 +292,7 @@ export const useRecordControls = () => {
       if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
         setIsDuplicateImportedResourceModalOpen(true);
       } else {
-        addStatusMessages?.(
+        addStatusMessage?.(
           UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetchingExternalResourceForEditing'),
         );
       }

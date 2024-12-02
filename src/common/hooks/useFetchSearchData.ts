@@ -30,7 +30,7 @@ export const useFetchSearchData = () => {
   const [data, setData] = useRecoilState(state.search.data);
   const resetData = useResetRecoilState(state.search.data);
   const setPageMetadata = useSetRecoilState(state.search.pageMetadata);
-  const { addStatusMessages, resetStatusMessages } = useStatusState();
+  const { addStatusMessage, resetStatusMessages } = useStatusState();
 
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {
@@ -182,7 +182,7 @@ export const useFetchSearchData = () => {
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
       } catch {
-        addStatusMessages?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+        addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       } finally {
         setIsLoading(false);
       }
