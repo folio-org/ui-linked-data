@@ -29,14 +29,14 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
     }
 
     return newMap as any;
+  } else if (value instanceof Set) {
+    return new Set([...value, updatedValue]) as any;
   } else if (typeof value === 'object' && value !== null) {
     if (typeof updatedValue === 'object' && updatedValue !== null) {
       return { ...value, ...updatedValue } as any;
     }
 
     return updatedValue as any;
-  } else if (value instanceof Set) {
-    return new Set([...value, updatedValue]) as any;
   } else if (typeof value === 'string') {
     return `${value}${updatedValue}` as any;
   }
@@ -66,6 +66,7 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
         set(
           state => {
             const value = state[keys.basic] as any;
+
             return { [keys.basic]: updateValue(value, updatedValue) } as any;
           },
           false,
