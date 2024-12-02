@@ -4,11 +4,11 @@ import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.m
 import { SaveRecord } from '@components/SaveRecord';
 import { BrowserRouter } from 'react-router-dom';
 import { useStatusStore } from '@src/store';
-import { setInitialState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 describe('SaveRecord', () => {
   function renderSaveRecordComponent(isEditedRecord = true) {
-    setInitialState(useStatusStore, { isEditedRecord });
+    setInitialGlobalState(useStatusStore, { isEditedRecord });
 
     render(
       <RecoilRoot>

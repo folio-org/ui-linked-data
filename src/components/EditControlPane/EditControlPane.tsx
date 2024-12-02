@@ -26,13 +26,13 @@ export const EditControlPane = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
   const { setRecordStatus } = useStatusState();
-  const { setValue } = useMarcPreviewState();
+  const { setBasicValue } = useMarcPreviewState();
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
   const { navigateAsDuplicate } = useNavigateToEditPage();
   const [queryParams] = useSearchParams();
-  const { fetchMarcData } = useMarcData(setValue);
+  const { fetchMarcData } = useMarcData(setBasicValue);
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 

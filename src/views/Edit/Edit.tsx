@@ -26,7 +26,7 @@ export const Edit = () => {
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
   const { recordStatus, addStatusMessages } = useStatusState();
-  const { value: marcPreviewData, resetValue: resetMarcPreviewData } = useMarcPreviewState();
+  const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);

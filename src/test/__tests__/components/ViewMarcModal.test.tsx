@@ -1,6 +1,6 @@
 import { ViewMarcModal } from '@components/ViewMarcModal';
 import { useMarcPreviewStore } from '@src/store';
-import { setInitialState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { render } from '@testing-library/react';
 
 const { leader, subfieldContent } = {
@@ -35,7 +35,7 @@ const mockMarcPreview = {
 
 describe('ViewMarcModal', () => {
   test('renders modal and its contents', async () => {
-    setInitialState(useMarcPreviewStore, { value: mockMarcPreview });
+    setInitialGlobalState(useMarcPreviewStore, { basicValue: mockMarcPreview });
 
     const { findByText } = render(<ViewMarcModal />);
 

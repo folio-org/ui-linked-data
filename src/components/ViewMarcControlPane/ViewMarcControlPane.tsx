@@ -8,7 +8,7 @@ import { useMarcPreviewState } from '@src/store';
 
 export const ViewMarcControlPane = () => {
   const isLoading = useRecoilValue(state.loadingState.isLoading);
-  const { resetValue: resetMarcPreviewData } = useMarcPreviewState();
+  const { resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const record = useRecoilValue(state.inputs.record);
   const { formatMessage } = useIntl();
 

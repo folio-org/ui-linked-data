@@ -3,7 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
 import { useMarcPreviewStore } from '@src/store';
-import { setInitialState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import state from '@state';
 
 jest.mock('@common/hooks/useSearchContext');
@@ -35,7 +35,7 @@ describe('MarcPreviewComplexLookup', () => {
     marcPreviewData: MarcDTO,
     marcPreviewMetadata: MarcPreviewMetadata,
   ) => {
-    setInitialState(useMarcPreviewStore, { data: marcPreviewData, metaData: marcPreviewMetadata });
+    setInitialGlobalState(useMarcPreviewStore, { complexValue: marcPreviewData, metaData: marcPreviewMetadata });
 
     return render(
       <RecoilRoot

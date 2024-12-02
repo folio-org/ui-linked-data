@@ -30,14 +30,14 @@ export const useComplexLookup = ({
   const schema = useRecoilValue(state.config.schema);
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const {
-    setData,
-    resetData: resetMarcPreviewData,
+    setComplexValue,
+    resetComplexValue: resetMarcPreviewData,
     metaData: marcPreviewMetadata,
     resetMetaData: resetMarcPreviewMetadata,
   } = useMarcPreviewState();
   const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const { fetchMarcData } = useMarcData(setData);
+  const { fetchMarcData } = useMarcData(setComplexValue);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
 

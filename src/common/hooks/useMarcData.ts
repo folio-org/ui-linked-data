@@ -2,8 +2,8 @@ import { useSetRecoilState } from 'recoil';
 import { getMarcRecord } from '@common/api/records.api';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import state from '@state';
 import { useStatusState } from '@src/store';
+import state from '@state';
 
 export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
   const setIsLoading = useSetRecoilState(state.loadingState.isLoading);

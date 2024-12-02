@@ -3,7 +3,7 @@ import { MarcContent } from '@components/MarcContent';
 import './ViewMarcModal.scss';
 
 export const ViewMarcModal = () => {
-  const { value: marcPreviewData } = useMarcPreviewState();
+  const { basicValue: marcPreviewData } = useMarcPreviewState();
 
   return (
     marcPreviewData && (

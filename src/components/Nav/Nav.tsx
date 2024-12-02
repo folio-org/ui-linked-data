@@ -12,7 +12,7 @@ import { useMarcPreviewState } from '@src/store';
 export const Nav = () => {
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const isExternalResourceSectionOpen = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { value: marcPreviewData } = useMarcPreviewState();
+  const { basicValue: marcPreviewData } = useMarcPreviewState();
   const record = useRecoilValue(state.inputs.record);
   const isVisible = isEditSectionOpen || (isExternalResourceSectionOpen && record);
 

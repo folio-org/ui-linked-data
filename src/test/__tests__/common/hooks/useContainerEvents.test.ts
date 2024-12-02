@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import * as domHelper from '@common/helpers/dom.helper';
 import { useStatusStore } from '@src/store';
-import { setInitialState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -24,7 +24,7 @@ describe('useContainerEvents', () => {
     (useRecoilValue as jest.Mock).mockReturnValueOnce(false);
     (useRecoilValue as jest.Mock).mockReturnValueOnce(mockEvents);
 
-    setInitialState(useStatusStore, { isEditedRecord });
+    setInitialGlobalState(useStatusStore, { isEditedRecord });
 
     renderHook(() => useContainerEvents({ watchEditedState: true }));
   };
