@@ -1,7 +1,6 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { IS_PROD_MODE } from '@common/constants/bundle.constants';
+import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
+import { generateStore } from './utils/storeCreator';
 
 type MarcPreviewData = MarcDTO | null;
 type MarcPreviewMetaData = MarcPreviewMetadata | null;
@@ -12,13 +11,10 @@ export type MarcPreviewState = SliceState<'basicValue', any> &
 
 const STORE_NAME = 'MarcPreview';
 
-export const useMarcPreviewStore = create<MarcPreviewState>()(
-  devtools(
-    (...args) => ({
-      ...createBaseSlice({ basic: 'basicValue' }, null)(...args),
-      ...createBaseSlice({ basic: 'complexValue' }, null as MarcPreviewData)(...args),
-      ...createBaseSlice({ basic: 'metaData' }, null as MarcPreviewMetaData)(...args),
-    }),
-    { name: 'Linked Data Editor', store: STORE_NAME, enabled: !IS_PROD_MODE },
-  ),
-);
+const marcPreviewStore: StateCreator<MarcPreviewState, [['zustand/devtools', never]], []> = (...args) => ({
+  ...createBaseSlice({ basic: 'basicValue' }, null)(...args),
+  ...createBaseSlice({ basic: 'complexValue' }, null as MarcPreviewData)(...args),
+  ...createBaseSlice({ basic: 'metaData' }, null as MarcPreviewMetaData)(...args),
+});
+
+export const useMarcPreviewStore = generateStore(marcPreviewStore, STORE_NAME);

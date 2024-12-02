@@ -1,17 +1,13 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { IS_PROD_MODE } from '@common/constants/bundle.constants';
+import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
+import { generateStore } from './utils/storeCreator';
 
 export type LoadingState = SliceState<'isLoading', boolean>;
 
 const STORE_NAME = 'LoadingState';
 
-export const useLoadingStateStore = create<LoadingState>()(
-  devtools(
-    (...args) => ({
-      ...createBaseSlice({ basic: 'isLoading' }, false)(...args),
-    }),
-    { name: 'Linked Data Editor', store: STORE_NAME, enabled: !IS_PROD_MODE },
-  ),
-);
+const loadingStateStore: StateCreator<LoadingState, [['zustand/devtools', never]], []> = (...args) => ({
+  ...createBaseSlice({ basic: 'isLoading' }, false)(...args),
+});
+
+export const useLoadingStateStore = generateStore(loadingStateStore, STORE_NAME);

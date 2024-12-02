@@ -1,7 +1,6 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
-import { IS_PROD_MODE } from '@common/constants/bundle.constants';
+import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
+import { generateStore } from './utils/storeCreator';
 
 type LastSavedRecordId = string | null;
 
@@ -12,18 +11,15 @@ export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
 
 const STORE_NAME = 'Status';
 
-export const useStatusStore = create<StatusState>()(
-  devtools(
-    (...args) => ({
-      ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId)(...args),
-      ...createBaseSlice({ basic: 'isEditedRecord' }, false)(...args),
-      ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus)(...args),
-      ...createBaseSlice<'statusMessages', StatusEntry[], 'statusMessage', StatusEntry>(
-        { basic: 'statusMessages', singleItem: 'statusMessage' },
-        [] as StatusEntry[],
-        true,
-      )(...args),
-    }),
-    { name: 'Linked Data Editor', store: STORE_NAME, enabled: !IS_PROD_MODE },
-  ),
-);
+const statusStore: StateCreator<StatusState, [['zustand/devtools', never]], []> = (...args) => ({
+  ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId)(...args),
+  ...createBaseSlice({ basic: 'isEditedRecord' }, false)(...args),
+  ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus)(...args),
+  ...createBaseSlice<'statusMessages', StatusEntry[], 'statusMessage', StatusEntry>(
+    { basic: 'statusMessages', singleItem: 'statusMessage' },
+    [] as StatusEntry[],
+    true,
+  )(...args),
+});
+
+export const useStatusStore = generateStore(statusStore, STORE_NAME);
