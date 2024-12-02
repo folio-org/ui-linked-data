@@ -13,7 +13,7 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
-import { useMarcPreviewState, useStatusState } from '@src/store';
+import { useLoadingState, useMarcPreviewState, useStatusState } from '@src/store';
 import state from '@state';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
@@ -23,7 +23,7 @@ import './EditControlPane.scss';
 
 export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
-  const isLoading = useRecoilValue(state.loadingState.isLoading);
+  const { isLoading } = useLoadingState();
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
   const { setRecordStatus } = useStatusState();
   const { setBasicValue } = useMarcPreviewState();

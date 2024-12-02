@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
 import { useSearch } from '@common/hooks/useSearch';
 import { useSearchContext } from '@common/hooks/useSearchContext';
+import { useLoadingStateStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 const selectedNavigationSegment = 'defaultSegment';
 const defaultSearchBy = 'defaultSearchBy';
@@ -50,9 +52,6 @@ jest.mock('@state', () => ({
       userValues: {},
       previewContent: {},
     },
-    loadingState: {
-      isLoading: false,
-    },
   },
 }));
 
@@ -81,6 +80,7 @@ describe('useSearch hook', () => {
   };
 
   beforeEach(() => {
+    setInitialGlobalState(useLoadingStateStore, { isLoading: false, setIsLoading });
     (useSearchContext as jest.Mock).mockReturnValue(mockUseSearchContext);
     (useSearchParams as jest.Mock).mockReturnValue([null, setSearchParams]);
 
@@ -101,7 +101,7 @@ describe('useSearch hook', () => {
         },
         setFacetsBySegments,
       ]);
-    (useSetRecoilState as jest.Mock).mockReturnValueOnce(setIsLoading).mockReturnValueOnce(setForceRefreshSearch);
+    (useSetRecoilState as jest.Mock).mockReturnValueOnce(setForceRefreshSearch);
     (useResetRecoilState as jest.Mock)
       .mockReturnValueOnce(resetPreviewContent)
       .mockReturnValueOnce(clearFacetsBySegments);

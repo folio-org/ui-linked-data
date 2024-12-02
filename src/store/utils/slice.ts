@@ -25,7 +25,7 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
     if (updatedValue instanceof Map) {
       updatedValue.forEach((value, key) => newMap.set(key, value));
     } else if (typeof updatedValue === 'object' && updatedValue !== null) {
-      Object.entries(updatedValue).forEach(([k, v]) => newMap.set(k, v));
+      Object.entries(updatedValue).forEach(([key, value]) => newMap.set(key, value));
     }
 
     return newMap as any;

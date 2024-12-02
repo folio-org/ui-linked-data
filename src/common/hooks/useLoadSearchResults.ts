@@ -3,8 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
-import { useSearchContext } from './useSearchContext';
+import { useLoadingState } from '@src/store';
 import state from '@state';
+import { useSearchContext } from './useSearchContext';
 
 export const useLoadSearchResults = (
   fetchData: ({ query, searchBy, offset, selectedSegment, baseQuerySelector }: FetchDataParams) => Promise<void>,
@@ -13,7 +14,7 @@ export const useLoadSearchResults = (
     useSearchContext();
   const setData = useSetRecoilState(state.search.data);
   const setSearchBy = useSetRecoilState(state.search.index);
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const setQuery = useSetRecoilState(state.search.query);
   const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
   const resetFacetsData = useResetRecoilState(state.search.facetsData);

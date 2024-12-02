@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -17,8 +17,8 @@ import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { useLoadingState, useStatusState } from '@src/store';
 import './SearchResultEntry.scss';
-import { useStatusState } from '@src/store';
 
 type SearchResultEntry = {
   id: string;
@@ -61,7 +61,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const { navigateToEditPage } = useNavigateToEditPage();
   const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const { addStatusMessage } = useStatusState();
   const previewContent = useRecoilValue(state.inputs.previewContent);
   const toggleIsOpen = () => setIsOpen(!isOpen);

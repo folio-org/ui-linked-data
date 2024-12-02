@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { SetterOrUpdater, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
+import { useLoadingStateStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
@@ -20,9 +22,6 @@ jest.mock('@state', () => ({
       index: '',
       query: '',
     },
-    loadingState: {
-      isLoading: false,
-    },
   },
 }));
 
@@ -32,6 +31,10 @@ describe('useLoadSearchResults', () => {
   const setSearchBy = jest.fn();
   const setQuery = jest.fn();
   const setIsLoading = jest.fn();
+
+  beforeEach(() => {
+    setInitialGlobalState(useLoadingStateStore, { isLoading: false, setIsLoading });
+  });
 
   it('fetches data and updates state with query and searchBy', async () => {
     const searchParams = new URLSearchParams({
@@ -44,7 +47,6 @@ describe('useLoadSearchResults', () => {
     (useSetRecoilState as jest.Mock)
       .mockReturnValueOnce(setData)
       .mockReturnValueOnce(setSearchBy)
-      .mockReturnValueOnce(setIsLoading)
       .mockReturnValueOnce(setQuery);
     (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
       boolean,
@@ -66,7 +68,6 @@ describe('useLoadSearchResults', () => {
     (useSetRecoilState as jest.Mock)
       .mockReturnValueOnce(setData)
       .mockReturnValueOnce(setSearchBy)
-      .mockReturnValueOnce(setIsLoading)
       .mockReturnValueOnce(setQuery);
     (useRecoilState as jest.Mock).mockReturnValue([false, (value: boolean) => value] as [
       boolean,

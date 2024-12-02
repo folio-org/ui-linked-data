@@ -7,9 +7,9 @@ import { StatusType } from '@common/constants/status.constants';
 import { normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { useLoadingState, useStatusState } from '@src/store';
 import state from '@state';
 import { useSearchContext } from './useSearchContext';
-import { useStatusState } from '@src/store';
 
 export const useFetchSearchData = () => {
   const {
@@ -25,7 +25,7 @@ export const useFetchSearchData = () => {
     buildSearchQuery,
     precedingRecordsCount,
   } = useSearchContext();
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const setMessage = useSetRecoilState(state.search.message);
   const [data, setData] = useRecoilState(state.search.data);
   const resetData = useResetRecoilState(state.search.data);

@@ -15,7 +15,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
-import { useMarcPreviewState, useStatusState } from '@src/store';
+import { useLoadingState, useMarcPreviewState, useStatusState } from '@src/store';
 import state from '@state';
 import './Edit.scss';
 
@@ -28,7 +28,7 @@ export const Edit = () => {
   const { recordStatus, addStatusMessage } = useStatusState();
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
   const [queryParams] = useSearchParams();

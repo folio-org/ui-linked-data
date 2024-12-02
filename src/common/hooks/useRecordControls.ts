@@ -26,13 +26,13 @@ import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useBackToSearchUri } from './useBackToSearchUri';
-import state from '@state';
-import { useContainerEvents } from './useContainerEvents';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
+import { useLoadingState, useStatusState } from '@src/store';
+import state from '@state';
 import { useRecordGeneration } from './useRecordGeneration';
-import { useStatusState } from '@src/store';
+import { useBackToSearchUri } from './useBackToSearchUri';
+import { useContainerEvents } from './useContainerEvents';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -49,7 +49,7 @@ type IBaseFetchRecord = {
 
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const setUserValues = useSetRecoilState(state.inputs.userValues);
   const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
   const [record, setRecord] = useRecoilState(state.inputs.record);

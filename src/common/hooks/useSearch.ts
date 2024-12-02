@@ -8,6 +8,7 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
+import { useLoadingState } from '@src/store';
 import state from '@state';
 
 export const useSearch = () => {
@@ -20,7 +21,7 @@ export const useSearch = () => {
     searchByControlOptions,
     getSearchSourceData,
   } = useSearchContext();
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
+  const { setIsLoading } = useLoadingState();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const [facets, setFacets] = useRecoilState(state.search.limiters);
