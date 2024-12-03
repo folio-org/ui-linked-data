@@ -3,10 +3,12 @@ import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesProvider } from '@src/providers';
 import { routes } from '@src/App';
+import { useProfileStore } from '@src/store';
 import state from '@state';
 
 const userValues = {
@@ -186,14 +188,17 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 
 describe('EditSection', () => {
   const renderScreen = () => {
+    setInitialGlobalState(useProfileStore, {
+      selectedProfile: monograph as unknown as ProfileEntry,
+      initialSchemaKey: 'uuid0',
+      schema: schema as Schema,
+    });
+
     return render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
-          snapshot.set(state.config.schema, schema as Schema);
           snapshot.set(state.inputs.userValues, userValues);
-          snapshot.set(state.config.initialSchemaKey, 'uuid0');
-          snapshot.set(state.config.selectedProfile, monograph as unknown as ProfileEntry);
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >

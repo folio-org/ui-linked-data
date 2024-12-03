@@ -13,12 +13,12 @@ import { useServicesContext } from '@common/hooks/useServicesContext';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { useStatusState } from '@src/store';
+import { useProfileState, useStatusState } from '@src/store';
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
-  const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+  const { selectedProfile, initialSchemaKey } = useProfileState();
+  const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
   const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
   const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();

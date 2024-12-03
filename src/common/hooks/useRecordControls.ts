@@ -28,7 +28,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
-import { useLoadingState, useStatusState } from '@src/store';
+import { useLoadingState, useStatusState, useProfileState } from '@src/store';
 import state from '@state';
 import { useRecordGeneration } from './useRecordGeneration';
 import { useBackToSearchUri } from './useBackToSearchUri';
@@ -51,7 +51,7 @@ export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setIsLoading } = useLoadingState();
   const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
+  const { setSelectedProfile } = useProfileState();
   const [record, setRecord] = useRecoilState(state.inputs.record);
   const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessage } = useStatusState();
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);

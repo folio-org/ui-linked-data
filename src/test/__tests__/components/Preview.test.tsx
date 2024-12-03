@@ -1,4 +1,6 @@
 import { Preview } from '@components/Preview';
+import { useProfileStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import state from '@state';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -38,13 +40,13 @@ const schema = new Map([
 describe('Preview', () => {
   const { getAllByTestId, getByText } = screen;
 
-  beforeEach(() =>
-    render(
+  beforeEach(() => {
+    setInitialGlobalState(useProfileStore, { initialSchemaKey, schema });
+
+    return render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set(['uuid1Bfid']));
-          snapshot.set(state.config.schema, schema);
-          snapshot.set(state.config.initialSchemaKey, initialSchemaKey);
           snapshot.set(state.inputs.userValues, userValues);
         }}
       >
@@ -52,8 +54,8 @@ describe('Preview', () => {
           <Preview />
         </BrowserRouter>
       </RecoilRoot>,
-    ),
-  );
+    );
+  });
 
   test('renders Preview component if a profile is selected', () => {
     expect(getAllByTestId('preview-fields')[0]).toBeInTheDocument();

@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useRecoilValue } from 'recoil';
 import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
+import { useProfileState } from '@src/store';
 import state from '@state';
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
@@ -31,8 +32,8 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   disabled = false,
   ...restProps
 }) => {
-  const schema = useRecoilValue(state.config.schema);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
+  const { schema } = useProfileState();
   const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 

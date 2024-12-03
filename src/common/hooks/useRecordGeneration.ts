@@ -1,13 +1,13 @@
 import { useRecoilValue } from 'recoil';
-import { useServicesContext } from './useServicesContext';
+import { useProfileState } from '@src/store';
 import state from '@state';
+import { useServicesContext } from './useServicesContext';
 
 export const useRecordGeneration = () => {
   const { recordGeneratorService } = useServicesContext();
-  const schema = useRecoilValue(state.config.schema);
   const userValues = useRecoilValue(state.inputs.userValues);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
+  const { schema, initialSchemaKey } = useProfileState();
 
   const generateRecord = () => {
     recordGeneratorService?.init({

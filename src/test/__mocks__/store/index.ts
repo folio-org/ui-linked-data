@@ -5,3 +5,9 @@ export const setInitialGlobalState = <T>(store: StoreApi<T>, initialState: any) 
     ...store.getInitialState(),
     ...initialState,
   });
+
+export const setUpdatedGlobalState = <T>(store: StoreApi<T>, updatedState: any) =>
+  store.setState({
+    ...store.getState(),
+    ...updatedState,
+  });

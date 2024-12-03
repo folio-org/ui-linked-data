@@ -1,9 +1,11 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
 import * as SchemaService from '@common/services/schema';
+import { useProfileStore } from '@src/store';
 
 const profiles = [
   {
@@ -42,11 +44,6 @@ jest.mock('@common/api/client', () => ({
 jest.mock('@state', () => ({
   default: {
     config: {
-      profiles: [],
-      selectedProfile: {},
-      preparedFields: {},
-      schema: {},
-      initialSchemaKey: '',
       selectedEntries: [],
     },
     inputs: {
@@ -81,22 +78,28 @@ describe('useConfig', () => {
   const setSelectedRecordBlocks = jest.fn();
 
   const mockUseRecoilState = (profiles: ProfileEntry[] = []) => {
-    (useRecoilState as jest.Mock)
-      .mockReturnValueOnce([profiles, setProfiles])
-      .mockReturnValueOnce([null, setPreparedFields]);
+    setUpdatedGlobalState(useProfileStore, { profiles, preparedFields: null });
   };
 
   beforeEach(() => {
     (useSetRecoilState as jest.Mock)
-      .mockReturnValueOnce(setProfiles)
-      .mockReturnValueOnce(setSelectedProfile)
       .mockReturnValueOnce(setUserValues)
-      .mockReturnValueOnce(setPreparedFields)
-      .mockReturnValueOnce(setSchema)
-      .mockReturnValueOnce(setInitialSchemaKey)
       .mockReturnValueOnce(setSelectedEntries)
       .mockReturnValueOnce(setPreviewContent)
       .mockReturnValueOnce(setSelectedRecordBlocks);
+
+    setInitialGlobalState(useProfileStore, {
+      profiles: [],
+      setProfiles,
+      selectedProfile: {},
+      setSelectedProfile,
+      preparedFields: {},
+      setPreparedFields,
+      schema: {},
+      setSchema,
+      initialSchemaKey: '',
+      setInitialSchemaKey,
+    });
 
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });

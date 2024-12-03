@@ -1,10 +1,11 @@
 import { useRef } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+import { useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 
@@ -22,12 +23,16 @@ type GetProfiles = {
 export const useConfig = () => {
   const { schemaCreatorService, userValuesService, selectedEntriesService } =
     useServicesContext() as Required<ServicesParams>;
-  const [profiles, setProfiles] = useRecoilState(state.config.profiles);
-  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
+  const {
+    profiles,
+    setProfiles,
+    setSelectedProfile,
+    preparedFields,
+    setPreparedFields,
+    setInitialSchemaKey,
+    setSchema,
+  } = useProfileState();
   const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const [preparedFields, setPreparedFields] = useRecoilState(state.config.preparedFields);
-  const setSchema = useSetRecoilState(state.config.schema);
-  const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
   const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
