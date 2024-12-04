@@ -1,10 +1,5 @@
 import { atom } from 'recoil';
 
-const userValues = atom<UserValues>({
-  key: 'inputs.userValues',
-  default: {},
-});
-
 const previewContent = atom<PreviewContent[]>({
   key: 'inputs.previewContent',
   default: [],
@@ -21,7 +16,6 @@ const selectedRecordBlocks = atom<SelectedRecordBlocks | undefined>({
 });
 
 export default {
-  userValues,
   record,
   previewContent,
   selectedRecordBlocks,

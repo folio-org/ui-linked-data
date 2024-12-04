@@ -8,7 +8,7 @@ import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesProvider } from '@src/providers';
 import { routes } from '@src/App';
-import { useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 import state from '@state';
 
 const userValues = {
@@ -193,12 +193,14 @@ describe('EditSection', () => {
       initialSchemaKey: 'uuid0',
       schema: schema as Schema,
     });
+    setInitialGlobalState(useInputsStore, {
+      userValues,
+    });
 
     return render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
-          snapshot.set(state.inputs.userValues, userValues);
           snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >

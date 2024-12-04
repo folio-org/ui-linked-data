@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
-import { useProfileState } from '@src/store';
-import state from '@state';
+import { useInputsState, useProfileState } from '@src/store';
 import { Fields } from './Fields';
 import './Preview.scss';
 
@@ -28,7 +26,7 @@ export const Preview: FC<IPreview> = ({
   forceRenderAllTopLevelEntities,
   entityRowDisplay,
 }) => {
-  const userValuesFromState = useRecoilValue(state.inputs.userValues);
+  const { userValues: userValuesFromState } = useInputsState();
   const { schema: schemaFromState, initialSchemaKey: initialSchemaKeyFromState } = useProfileState();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;

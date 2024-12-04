@@ -10,7 +10,7 @@ import { getRecordId, getPreviewFieldsConditions } from '@common/helpers/record.
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { useProfileState, useStatusState } from '@src/store';
+import { useInputsState, useProfileState, useStatusState } from '@src/store';
 import state from '@state';
 import { Labels } from './Labels';
 import { Values } from './Values';
@@ -76,10 +76,10 @@ export const Fields = ({
   hideActions,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const userValuesFromState = useRecoilValue(state.inputs.userValues);
   const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
+  const { userValues: userValuesFromState } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { isEditedRecord: isEdited, setRecordStatus } = useStatusState();
   const { navigateToEditPage } = useNavigateToEditPage();

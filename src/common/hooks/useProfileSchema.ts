@@ -2,13 +2,13 @@ import { useSetRecoilState } from 'recoil';
 import state from '@state';
 import { useServicesContext } from './useServicesContext';
 import { deleteFromSetImmutable } from '@common/helpers/common.helper';
-import { useProfileState, useStatusState } from '@src/store';
+import { useInputsState, useProfileState, useStatusState } from '@src/store';
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setCollapsibleEntries = useSetRecoilState(state.ui.collapsibleEntries);
-  const setUserValues = useSetRecoilState(state.inputs.userValues);
+  const { userValues, setUserValues } = useInputsState();
   const { setIsEditedRecord: setIsEdited } = useStatusState();
   const { schema, setSchema } = useProfileState();
 
@@ -30,7 +30,7 @@ export const useProfileSchema = () => {
 
     setCollapsibleEntries(prev => deleteFromSetImmutable(prev, [entry.uuid]));
     setSchema(schemaWithDuplicatesService.get());
-    setUserValues(prev => Object.fromEntries(Object.entries(prev).filter(([key]) => !deletedUuids?.includes(key))));
+    setUserValues(Object.fromEntries(Object.entries(userValues).filter(([key]) => !deletedUuids?.includes(key))));
 
     setIsEdited(true);
   };

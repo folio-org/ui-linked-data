@@ -17,6 +17,10 @@ const capitalize = (value: string) => {
 };
 
 const updateValue = <V, T>(value: V, updatedValue: T): V => {
+  console.log('====================================');
+  console.log('value', value, 'updatedValue', updatedValue);
+  console.log('====================================');
+
   if (Array.isArray(value)) {
     return [...value, updatedValue] as any;
   } else if (value instanceof Map) {
@@ -59,8 +63,8 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
       [`reset${capitalizedTitle}`]: () => set({ [keys.basic]: initialValue } as any, false, `reset${capitalizedTitle}`),
     } as SliceState<K, V, S, T>;
 
-    if (canAddSingleItem && keys.singleItem) {
-      (baseSlice as any)[`add${capitalize(keys.singleItem)}`] = (updatedValue: T) =>
+    if (canAddSingleItem) {
+      (baseSlice as any)[`add${capitalize(keys.singleItem ?? keys.basic)}`] = (updatedValue: T) =>
         set(
           state => {
             const value = state[keys.basic] as any;

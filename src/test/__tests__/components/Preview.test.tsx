@@ -1,5 +1,5 @@
 import { Preview } from '@components/Preview';
-import { useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import state from '@state';
 import { render, screen } from '@testing-library/react';
@@ -42,12 +42,12 @@ describe('Preview', () => {
 
   beforeEach(() => {
     setInitialGlobalState(useProfileStore, { initialSchemaKey, schema });
+    setInitialGlobalState(useInputsStore, { userValues });
 
     return render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set(['uuid1Bfid']));
-          snapshot.set(state.inputs.userValues, userValues);
         }}
       >
         <BrowserRouter>

@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { renderHook } from '@testing-library/react';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 
 jest.mock('recoil');
 
@@ -15,8 +15,9 @@ describe('useRecordGeneration', () => {
     const initKey = 'mockInitialSchemaKey';
 
     setInitialGlobalState(useProfileStore, { schema, initialSchemaKey: initKey });
+    setInitialGlobalState(useInputsStore, { userValues });
 
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(userValues).mockReturnValueOnce(selectedEntries);
+    (useRecoilValue as jest.Mock).mockReturnValueOnce(selectedEntries);
 
     const { result } = renderHook(() => useRecordGeneration());
 

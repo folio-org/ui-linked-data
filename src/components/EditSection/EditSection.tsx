@@ -13,14 +13,14 @@ import { useServicesContext } from '@common/hooks/useServicesContext';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { useProfileState, useStatusState } from '@src/store';
+import { useInputsState, useProfileState, useStatusState } from '@src/store';
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const { selectedProfile, initialSchemaKey } = useProfileState();
   const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
   const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
+  const { userValues, addUserValues } = useInputsState();
   const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();
   const record = useRecoilValue(state.inputs.record);
   const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
@@ -54,13 +54,12 @@ export const EditSection = memo(() => {
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) setIsEdited(true);
 
-    setUserValues(oldValue => ({
-      ...oldValue,
+    addUserValues?.({
       [uuid]: {
         uuid,
         contents,
       },
-    }));
+    });
   };
 
   const handleGroupsCollapseExpand = () =>

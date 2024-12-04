@@ -5,7 +5,7 @@ import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
-import { useProfileState } from '@src/store';
+import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 
@@ -32,7 +32,7 @@ export const useConfig = () => {
     setInitialSchemaKey,
     setSchema,
   } = useProfileState();
-  const setUserValues = useSetRecoilState(state.inputs.userValues);
+  const { setUserValues } = useInputsState();
   const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
   const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
