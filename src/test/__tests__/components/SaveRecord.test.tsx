@@ -8,7 +8,12 @@ import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 describe('SaveRecord', () => {
   function renderSaveRecordComponent(isEditedRecord = true) {
-    setInitialGlobalState(useStatusStore, { isEditedRecord });
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { isEditedRecord },
+      },
+    ]);
 
     render(
       <RecoilRoot>

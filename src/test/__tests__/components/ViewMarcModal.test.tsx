@@ -35,7 +35,12 @@ const mockMarcPreview = {
 
 describe('ViewMarcModal', () => {
   test('renders modal and its contents', async () => {
-    setInitialGlobalState(useMarcPreviewStore, { basicValue: mockMarcPreview });
+    setInitialGlobalState([
+      {
+        store: useMarcPreviewStore,
+        state: { basicValue: mockMarcPreview },
+      },
+    ]);
 
     const { findByText } = render(<ViewMarcModal />);
 

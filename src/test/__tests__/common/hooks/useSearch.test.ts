@@ -80,7 +80,12 @@ describe('useSearch hook', () => {
   };
 
   beforeEach(() => {
-    setInitialGlobalState(useLoadingStateStore, { isLoading: false, setIsLoading });
+    setInitialGlobalState([
+      {
+        store: useLoadingStateStore,
+        state: { isLoading: false, setIsLoading },
+      },
+    ]);
     (useSearchContext as jest.Mock).mockReturnValue(mockUseSearchContext);
     (useSearchParams as jest.Mock).mockReturnValue([null, setSearchParams]);
 

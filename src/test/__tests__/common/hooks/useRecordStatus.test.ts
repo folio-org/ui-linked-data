@@ -11,7 +11,12 @@ jest.mock('react-router-dom');
 describe('useRecordStatus', () => {
   const renderUseRecordStatusHook = (lastSavedIdEqual = false) => {
     (useParams as jest.Mock).mockReturnValueOnce({ resourceId: mockResourceId });
-    setInitialGlobalState(useStatusStore, { lastSavedRecordId: lastSavedIdEqual ? mockResourceId : 'anotherId' });
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { lastSavedRecordId: lastSavedIdEqual ? mockResourceId : 'anotherId' },
+      },
+    ]);
 
     const {
       result: { current },

@@ -14,8 +14,21 @@ describe('useRecordGeneration', () => {
     const selectedEntries = 'mockSelectedEntries';
     const initKey = 'mockInitialSchemaKey';
 
-    setInitialGlobalState(useProfileStore, { schema, initialSchemaKey: initKey });
-    setInitialGlobalState(useInputsStore, { userValues });
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          schema,
+          initialSchemaKey: initKey,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          userValues,
+        },
+      },
+    ]);
 
     (useRecoilValue as jest.Mock).mockReturnValueOnce(selectedEntries);
 

@@ -6,7 +6,12 @@ import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 describe('CommonStatus', () => {
   const renderComponent = (statusMessages: StatusEntry[] = []) => {
-    setInitialGlobalState(useStatusStore, { statusMessages });
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { statusMessages },
+      },
+    ]);
 
     return render(<CommonStatus />);
   };

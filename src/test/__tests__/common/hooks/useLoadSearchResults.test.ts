@@ -33,7 +33,12 @@ describe('useLoadSearchResults', () => {
   const setIsLoading = jest.fn();
 
   beforeEach(() => {
-    setInitialGlobalState(useLoadingStateStore, { isLoading: false, setIsLoading });
+    setInitialGlobalState([
+      {
+        store: useLoadingStateStore,
+        state: { isLoading: false, setIsLoading },
+      },
+    ]);
   });
 
   it('fetches data and updates state with query and searchBy', async () => {

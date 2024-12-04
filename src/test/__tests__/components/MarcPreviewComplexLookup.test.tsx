@@ -35,7 +35,12 @@ describe('MarcPreviewComplexLookup', () => {
     marcPreviewData: MarcDTO,
     marcPreviewMetadata: MarcPreviewMetadata,
   ) => {
-    setInitialGlobalState(useMarcPreviewStore, { complexValue: marcPreviewData, metaData: marcPreviewMetadata });
+    setInitialGlobalState([
+      {
+        store: useMarcPreviewStore,
+        state: { complexValue: marcPreviewData, metaData: marcPreviewMetadata },
+      },
+    ]);
 
     return render(
       <RecoilRoot

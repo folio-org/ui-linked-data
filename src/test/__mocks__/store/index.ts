@@ -1,13 +1,31 @@
 import { StoreApi } from 'zustand';
 
-export const setInitialGlobalState = <T>(store: StoreApi<T>, initialState: any) =>
-  store.setState({
-    ...store.getInitialState(),
-    ...initialState,
-  });
+type StoreState = Record<string, any>;
 
-export const setUpdatedGlobalState = <T>(store: StoreApi<T>, updatedState: any) =>
-  store.setState({
-    ...store.getState(),
-    ...updatedState,
+interface StoreWithState {
+  store: StoreApi<StoreState>;
+  state: StoreState;
+}
+
+interface StoreWithUpdatedState<T> {
+  store: StoreApi<T>;
+  updatedState: Partial<T>;
+}
+
+export const setInitialGlobalState = (storeWithStates: StoreWithState[]) => {
+  storeWithStates.forEach(({ store, state }) => {
+    store.setState({
+      ...store.getInitialState(),
+      ...state,
+    });
   });
+};
+
+export const setUpdatedGlobalState = <T>(storeWithUpdatedStates: StoreWithUpdatedState<T>[]) => {
+  storeWithUpdatedStates.forEach(({ store, updatedState }) => {
+    store.setState({
+      ...store.getState(),
+      ...updatedState,
+    });
+  });
+};

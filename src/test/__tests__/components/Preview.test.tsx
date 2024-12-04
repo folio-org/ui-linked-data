@@ -41,8 +41,16 @@ describe('Preview', () => {
   const { getAllByTestId, getByText } = screen;
 
   beforeEach(() => {
-    setInitialGlobalState(useProfileStore, { initialSchemaKey, schema });
-    setInitialGlobalState(useInputsStore, { userValues });
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: { initialSchemaKey, schema },
+      },
+      {
+        store: useInputsStore,
+        state: { userValues },
+      },
+    ]);
 
     return render(
       <RecoilRoot

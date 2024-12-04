@@ -78,7 +78,12 @@ describe('useConfig', () => {
   const setSelectedRecordBlocks = jest.fn();
 
   const mockUseRecoilState = (profiles: ProfileEntry[] = []) => {
-    setUpdatedGlobalState(useProfileStore, { profiles, preparedFields: null });
+    setUpdatedGlobalState([
+      {
+        store: useProfileStore,
+        updatedState: { profiles, preparedFields: null },
+      },
+    ]);
   };
 
   beforeEach(() => {
@@ -88,18 +93,23 @@ describe('useConfig', () => {
       .mockReturnValueOnce(setPreviewContent)
       .mockReturnValueOnce(setSelectedRecordBlocks);
 
-    setInitialGlobalState(useProfileStore, {
-      profiles: [],
-      setProfiles,
-      selectedProfile: {},
-      setSelectedProfile,
-      preparedFields: {},
-      setPreparedFields,
-      schema: {},
-      setSchema,
-      initialSchemaKey: '',
-      setInitialSchemaKey,
-    });
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          profiles: [],
+          setProfiles,
+          selectedProfile: {},
+          setSelectedProfile,
+          preparedFields: {},
+          setPreparedFields,
+          schema: {},
+          setSchema,
+          initialSchemaKey: '',
+          setInitialSchemaKey,
+        },
+      },
+    ]);
 
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });

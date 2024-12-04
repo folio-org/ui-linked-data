@@ -24,7 +24,12 @@ describe('useContainerEvents', () => {
     (useRecoilValue as jest.Mock).mockReturnValueOnce(false);
     (useRecoilValue as jest.Mock).mockReturnValueOnce(mockEvents);
 
-    setInitialGlobalState(useStatusStore, { isEditedRecord });
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { isEditedRecord },
+      },
+    ]);
 
     renderHook(() => useContainerEvents({ watchEditedState: true }));
   };

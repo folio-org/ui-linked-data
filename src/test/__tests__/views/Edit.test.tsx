@@ -50,7 +50,12 @@ describe('Edit', () => {
 
   const renderComponent = (recordState: ProfileEntry | null) =>
     act(async () => {
-      setInitialGlobalState(useProfileStore, { selectedProfile: recordState });
+      setInitialGlobalState([
+        {
+          store: useProfileStore,
+          state: { selectedProfile: recordState },
+        },
+      ]);
 
       return render(
         <RecoilRoot>

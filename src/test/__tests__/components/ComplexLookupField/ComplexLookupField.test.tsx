@@ -31,7 +31,12 @@ describe('Complex Lookup Field', () => {
   const { getByTestId, getAllByTestId, queryByTestId, queryAllByTestId, getByRole } = screen;
 
   function renderComponent(entry: SchemaEntry = {} as SchemaEntry, value: UserValueContents[] = []) {
-    setInitialGlobalState(useProfileStore, { schema: {} as Schema });
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: { schema: {} as Schema },
+      },
+    ]);
 
     render(
       <RecoilRoot

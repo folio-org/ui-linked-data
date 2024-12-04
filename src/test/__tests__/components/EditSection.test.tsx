@@ -188,14 +188,20 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 
 describe('EditSection', () => {
   const renderScreen = () => {
-    setInitialGlobalState(useProfileStore, {
-      selectedProfile: monograph as unknown as ProfileEntry,
-      initialSchemaKey: 'uuid0',
-      schema: schema as Schema,
-    });
-    setInitialGlobalState(useInputsStore, {
-      userValues,
-    });
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          selectedProfile: monograph as unknown as ProfileEntry,
+          initialSchemaKey: 'uuid0',
+          schema: schema as Schema,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: { userValues },
+      },
+    ]);
 
     return render(
       <RecoilRoot

@@ -13,7 +13,12 @@ useRoutePathPattern.mockImplementation(() => null);
 
 describe('Root', () => {
   function renderRootComponent(isLoading = false) {
-    setInitialGlobalState(useLoadingStateStore, { isLoading });
+    setInitialGlobalState([
+      {
+        store: useLoadingStateStore,
+        state: { isLoading },
+      },
+    ]);
 
     render(
       <RecoilRoot>
