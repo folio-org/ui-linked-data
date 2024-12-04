@@ -10,7 +10,12 @@ import {
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
 import { formatRecord } from './recordFormatting.helper';
-import { BFLITE_URI_TO_BLOCK, BFLITE_URIS, BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
+import {
+  BFLITE_URI_TO_BLOCK,
+  BFLITE_URIS,
+  BLOCKS_BFLITE,
+  REF_TO_NAME,
+} from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
 import { cloneDeep } from 'lodash';
@@ -217,6 +222,7 @@ export const getPreviewFieldsConditions = ({
   isOnBranchWithUserValue,
   altDisplayNames,
   hideActions,
+  hideEntities,
   isEntity,
   forceRenderAllTopLevelEntities,
 }: {
@@ -228,6 +234,7 @@ export const getPreviewFieldsConditions = ({
   isOnBranchWithUserValue: boolean;
   altDisplayNames?: Record<string, string>;
   hideActions?: boolean;
+  hideEntities?: boolean;
   isEntity: boolean;
   forceRenderAllTopLevelEntities?: boolean;
 }) => {
@@ -241,7 +248,7 @@ export const getPreviewFieldsConditions = ({
   const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
   const isBranchEndWithValues = !!selectedUserValues;
   const shouldRenderLabelOrPlaceholders =
-    (isPreviewable && isGroupable) ||
+    (!(isEntity && hideEntities) && isPreviewable && isGroupable) ||
     type === AdvancedFieldType.dropdown ||
     (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
     isBranchEndWithoutValues;
@@ -273,4 +280,19 @@ export const getPreviewFieldsConditions = ({
     showEntityActions,
     wrapEntities,
   };
+};
+
+export const getRecordDependencies = (record?: RecordEntry | null) => {
+  if (!record) return;
+
+  const contents = unwrapRecordValuesFromCommonContainer(record);
+  const { block, reference } = getEditingRecordBlocks(contents);
+
+  if (block && reference) {
+    return {
+      keys: reference,
+      type: REF_TO_NAME[reference.key as keyof typeof REF_TO_NAME],
+      entries: contents[block][reference.key] as unknown as RecursiveRecordSchema[],
+    };
+  }
 };

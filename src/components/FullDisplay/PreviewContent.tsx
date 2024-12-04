@@ -38,7 +38,7 @@ export const PreviewContent = () => {
         </div>
         {Object.keys(userValues).length ? (
           <div data-testid="preview-contents-container" className="preview-contents-container">
-            <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} headless hideActions />
+            <Preview altSchema={base} altUserValues={userValues} altInitKey={initKey} hideActions />
           </div>
         ) : (
           <div>

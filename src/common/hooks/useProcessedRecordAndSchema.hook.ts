@@ -18,6 +18,7 @@ type IGetProcessedRecordAndSchema = {
   record: Record<string, unknown> | Array<unknown>;
   userValues: UserValues;
   asClone?: boolean;
+  noStateUpdate?: boolean;
 };
 
 export const useProcessedRecordAndSchema = () => {
@@ -28,7 +29,7 @@ export const useProcessedRecordAndSchema = () => {
     useServicesContext() as Required<ServicesParams>;
 
   const getProcessedRecordAndSchema = useCallback(
-    async ({ baseSchema, record, userValues, asClone = false }: IGetProcessedRecordAndSchema) => {
+    async ({ baseSchema, record, userValues, asClone = false, noStateUpdate }: IGetProcessedRecordAndSchema) => {
       let updatedSchema = baseSchema;
       let updatedUserValues = userValues;
       let selectedRecordBlocks = undefined;
@@ -52,7 +53,7 @@ export const useProcessedRecordAndSchema = () => {
               })
             : undefined;
 
-          setRecord(wrapRecordValuesWithCommonContainer(adjustedRecord));
+          !noStateUpdate && setRecord(wrapRecordValuesWithCommonContainer(adjustedRecord));
           selectedRecordBlocks = { block, reference };
           schemaWithDuplicatesService.set(baseSchema);
           recordNormalizingService.init(adjustedRecord, block, reference);

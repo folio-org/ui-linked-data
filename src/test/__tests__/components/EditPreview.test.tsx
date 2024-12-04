@@ -5,6 +5,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+
 const navigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({

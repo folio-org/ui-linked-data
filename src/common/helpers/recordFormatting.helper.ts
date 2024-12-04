@@ -7,6 +7,7 @@ import {
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
 import { getRecordPropertyData } from './record.helper';
+import { Row } from '@components/Table';
 
 export const formatRecord = ({
   parsedRecord,
@@ -232,3 +233,36 @@ export const applyIntlToTemplates = ({
     ...rest,
     template: Object.fromEntries(Object.entries(template).map(([k, v]) => [k, format({ id: v })])),
   }));
+
+export const formatDependeciesTable = (deps: Record<string, unknown>[]): Row[] => {
+  return deps.map(({ id, ...rest }) => {
+    const selectedPublication = (rest?.[BFLITE_URIS.PUBLICATION] as Record<string, unknown>)?.[0] as Record<
+      string,
+      unknown[]
+    >;
+    const selectedTitle = (rest?.[BFLITE_URIS.TITLE] as Record<string, unknown>)?.[0] as Record<
+      string,
+      Record<string, unknown[]>
+    >;
+
+    return {
+      __meta: {
+        id,
+        key: id,
+        ...rest,
+      },
+      title: {
+        label: selectedTitle?.[BFLITE_URIS.TITLE_CONTAINER]?.[BFLITE_URIS.MAIN_TITLE]?.[0],
+        className: 'title',
+      },
+      publisher: {
+        label: selectedPublication?.[BFLITE_URIS.NAME]?.[0],
+        className: 'publisher',
+      },
+      pubDate: {
+        label: selectedPublication?.[BFLITE_URIS.DATE]?.[0],
+        className: 'publication-date',
+      },
+    };
+  }) as Row[];
+};
