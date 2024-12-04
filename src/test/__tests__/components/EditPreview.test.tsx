@@ -1,5 +1,7 @@
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { EditPreview } from '@components/EditPreview';
+import { useInputsStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import state from '@state';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
@@ -14,11 +16,17 @@ jest.mock('react-router-dom', () => ({
 
 describe('EditPreview', () => {
   beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { record: {} },
+      },
+    ]);
+
     render(
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set([PROFILE_BFIDS.INSTANCE]));
-          snapshot.set(state.inputs.record, {});
         }}
       >
         <RouterProvider

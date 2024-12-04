@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useState } from 'react';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useResetRecoilState } from 'recoil';
 import {
   generateEmptyValueUuid,
   getLinkedField,
@@ -12,7 +12,7 @@ import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
-import { useMarcPreviewState, useProfileState } from '@src/store';
+import { useInputsState, useMarcPreviewState, useProfileState } from '@src/store';
 
 export const useComplexLookup = ({
   entry,
@@ -28,7 +28,7 @@ export const useComplexLookup = ({
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
   const { schema } = useProfileState();
-  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
+  const { selectedEntries, setSelectedEntries } = useInputsState();
   const {
     setComplexValue,
     resetComplexValue: resetMarcPreviewData,

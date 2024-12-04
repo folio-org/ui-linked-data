@@ -2,9 +2,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { ComplexLookupField } from '@components/ComplexLookupField';
-import state from '@state';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 
 const mockModalComponent = <div data-testid="complex-lookup-modal" />;
 
@@ -36,14 +35,14 @@ describe('Complex Lookup Field', () => {
         store: useProfileStore,
         state: { schema: {} as Schema },
       },
+      {
+        store: useInputsStore,
+        state: { selectedEntries: [] },
+      },
     ]);
 
     render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.config.selectedEntries, []);
-        }}
-      >
+      <RecoilRoot>
         <MockServicesProvider>
           <ComplexLookupField onChange={onChange} entry={entry} value={value} />
         </MockServicesProvider>

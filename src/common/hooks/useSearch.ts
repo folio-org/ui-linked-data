@@ -8,7 +8,7 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
-import { useLoadingState } from '@src/store';
+import { useInputsState, useLoadingState } from '@src/store';
 import state from '@state';
 
 export const useSearch = () => {
@@ -22,6 +22,7 @@ export const useSearch = () => {
     getSearchSourceData,
   } = useSearchContext();
   const { setIsLoading } = useLoadingState();
+  const { resetPreviewContent } = useInputsState();
   const [searchBy, setSearchBy] = useRecoilState(state.search.index);
   const [query, setQuery] = useRecoilState(state.search.query);
   const [facets, setFacets] = useRecoilState(state.search.limiters);
@@ -29,7 +30,6 @@ export const useSearch = () => {
   const [data, setData] = useRecoilState(state.search.data);
   const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
   const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
-  const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
   const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
   const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
 

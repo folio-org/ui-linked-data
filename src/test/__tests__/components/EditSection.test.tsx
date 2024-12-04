@@ -199,7 +199,7 @@ describe('EditSection', () => {
       },
       {
         store: useInputsStore,
-        state: { userValues },
+        state: { userValues, selectedEntries: ['uuid7'] },
       },
     ]);
 
@@ -207,7 +207,6 @@ describe('EditSection', () => {
       <RecoilRoot
         initializeState={snapshot => {
           snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
-          snapshot.set(state.config.selectedEntries, ['uuid7']);
         }}
       >
         <ServicesProvider>

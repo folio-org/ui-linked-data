@@ -76,10 +76,8 @@ export const Fields = ({
   hideActions,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const record = useRecoilValue(state.inputs.record);
   const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
-  const { userValues: userValuesFromState } = useInputsState();
+  const { userValues: userValuesFromState, record, selectedEntries } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { isEditedRecord: isEdited, setRecordStatus } = useStatusState();
   const { navigateToEditPage } = useNavigateToEditPage();

@@ -1,10 +1,8 @@
 import { FC, ReactNode } from 'react';
 import classNames from 'classnames';
-import { useRecoilValue } from 'recoil';
 import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
-import { useProfileState } from '@src/store';
-import state from '@state';
+import { useInputsState, useProfileState } from '@src/store';
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
 import './FieldWithMetadataAndControls.scss';
@@ -32,8 +30,8 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   disabled = false,
   ...restProps
 }) => {
-  const selectedEntries = useRecoilValue(state.config.selectedEntries);
   const { schema } = useProfileState();
+  const { selectedEntries } = useInputsState();
   const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 

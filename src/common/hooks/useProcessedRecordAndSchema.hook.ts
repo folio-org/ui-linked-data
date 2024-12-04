@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useSetRecoilState } from 'recoil';
 import { useIntl } from 'react-intl';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
 import {
@@ -10,9 +9,8 @@ import {
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
-import state from '@state';
 import { useServicesContext } from './useServicesContext';
-import { useStatusState } from '@src/store';
+import { useInputsState, useStatusState } from '@src/store';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
@@ -22,8 +20,8 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
-  const setRecord = useSetRecoilState(state.inputs.record);
   const { addStatusMessage } = useStatusState();
+  const { setRecord } = useInputsState();
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useServicesContext() as Required<ServicesParams>;

@@ -1,7 +1,5 @@
 import { useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
-import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
@@ -32,10 +30,8 @@ export const useConfig = () => {
     setInitialSchemaKey,
     setSchema,
   } = useProfileState();
-  const { setUserValues } = useInputsState();
-  const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
-  const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
-  const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
+  const { setUserValues, previewContent, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } =
+    useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
 
@@ -119,8 +115,8 @@ export const useConfig = () => {
         const { updatedSchema, initKey } = await buildSchema(selectedProfile, templates, recordData, asClone);
 
         if (previewParams && recordId) {
-          setPreviewContent(prev => [
-            ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
+          setPreviewContent([
+            ...(previewParams.singular ? [] : previewContent.filter(({ id }) => id !== recordId)),
             {
               id: recordId,
               base: updatedSchema,

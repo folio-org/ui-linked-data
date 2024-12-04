@@ -6,9 +6,8 @@ import { useInputsState, useProfileState, useStatusState } from '@src/store';
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
-  const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
   const setCollapsibleEntries = useSetRecoilState(state.ui.collapsibleEntries);
-  const { userValues, setUserValues } = useInputsState();
+  const { userValues, setUserValues, setSelectedEntries } = useInputsState();
   const { setIsEditedRecord: setIsEdited } = useStatusState();
   const { schema, setSchema } = useProfileState();
 

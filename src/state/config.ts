@@ -3,11 +3,6 @@ import { LOCALES } from '@common/i18n/locales';
 import { localStorageService } from '@common/services/storage';
 import { atom } from 'recoil';
 
-const selectedEntries = atom<Array<string>>({
-  key: 'config.selectedEntries',
-  default: [],
-});
-
 const locale = atom<(typeof LOCALES)[keyof typeof LOCALES]>({
   key: 'config.locale',
   default: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH_US,
@@ -29,7 +24,6 @@ const hasNavigationOrigin = atom<boolean>({
 });
 
 export default {
-  selectedEntries,
   locale,
   i18nMessages,
   customEvents,

@@ -1,6 +1,6 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import {
   postRecord,
   putRecord,
@@ -50,13 +50,11 @@ type IBaseFetchRecord = {
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setIsLoading } = useLoadingState();
-  const { resetUserValues } = useInputsState();
+  const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
   const { setSelectedProfile } = useProfileState();
-  const [record, setRecord] = useRecoilState(state.inputs.record);
   const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessage } = useStatusState();
   const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
   const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
   const setIsDuplicateImportedResourceModalOpen = useSetRecoilState(state.ui.isDuplicateImportedResourceModalOpen);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);

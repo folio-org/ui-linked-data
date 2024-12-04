@@ -17,7 +17,7 @@ import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
-import { useLoadingState, useStatusState } from '@src/store';
+import { useInputsState, useLoadingState, useStatusState } from '@src/store';
 import './SearchResultEntry.scss';
 
 type SearchResultEntry = {
@@ -63,7 +63,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const [isOpen, setIsOpen] = useState(true);
   const { setIsLoading } = useLoadingState();
   const { addStatusMessage } = useStatusState();
-  const previewContent = useRecoilValue(state.inputs.previewContent);
+  const { previewContent } = useInputsState();
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
 

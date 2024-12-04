@@ -1,7 +1,5 @@
 import { FC, memo } from 'react';
-import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
-import state from '@state';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
@@ -12,10 +10,10 @@ import { RESOURCE_URLS } from '@common/constants/routes.constants';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
 import { Button, ButtonType } from '@components/Button';
 import { useRecordStatus } from '@common/hooks/useRecordStatus';
-import { useStatusState } from '@src/store';
+import { useInputsState, useStatusState } from '@src/store';
 
 const DeleteRecord: FC = () => {
-  const record = useRecoilValue(state.inputs.record);
+  const { record } = useInputsState();
   const { isEditedRecord: isEdited } = useStatusState();
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const { deleteRecord } = useRecordControls();

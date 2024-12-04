@@ -8,7 +8,7 @@ import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { DuplicateSubcomponentContainer } from '@components/DuplicateSubcomponentContainer';
-import { useProfileState } from '@src/store';
+import { useInputsState, useProfileState } from '@src/store';
 
 export type IFields = {
   uuid: string | null;
@@ -38,9 +38,9 @@ export const Fields: FC<IFields> = memo(
     scrollToEnabled = false,
     groupingDisabled = false,
   }) => {
-    const selectedEntries = useRecoilValue(state.config.selectedEntries);
     const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
     const { schema } = useProfileState();
+    const { selectedEntries } = useInputsState();
 
     const entry = uuid && schema?.get(uuid);
 

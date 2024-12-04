@@ -2,9 +2,9 @@ import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
 import { generateStore } from './utils/storeCreator';
 
-type RecordState = RecordEntry | null;
-type SelectedRecordBlocksState = RecordEntry | null;
-type SelectedEntriesState = SelectedRecordBlocks | undefined;
+export type RecordState = RecordEntry | null;
+export type SelectedRecordBlocksState = SelectedRecordBlocks | undefined;
+export type SelectedEntriesState = string[];
 
 export type InputsState = SliceState<'userValues', UserValues> &
   SliceState<'previewContent', PreviewContent[]> &
@@ -18,8 +18,8 @@ const inputsStore: StateCreator<InputsState, [['zustand/devtools', never]], []> 
   ...createBaseSlice({ basic: 'userValues' }, {} as UserValues, true)(...args),
   ...createBaseSlice({ basic: 'previewContent' }, [] as PreviewContent[])(...args),
   ...createBaseSlice({ basic: 'record' }, null as RecordState)(...args),
-  ...createBaseSlice({ basic: 'selectedRecordBlocks' }, null as SelectedRecordBlocksState)(...args),
-  ...createBaseSlice({ basic: 'selectedEntries' }, undefined as SelectedEntriesState)(...args),
+  ...createBaseSlice({ basic: 'selectedRecordBlocks' }, undefined as SelectedRecordBlocksState)(...args),
+  ...createBaseSlice({ basic: 'selectedEntries' }, [] as SelectedEntriesState)(...args),
 });
 
 export const useInputsStore = generateStore(inputsStore, STORE_NAME);

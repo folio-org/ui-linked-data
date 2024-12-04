@@ -19,11 +19,9 @@ export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const { selectedProfile, initialSchemaKey } = useProfileState();
   const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
-  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const { userValues, addUserValues } = useInputsState();
+  const { userValues, addUserValues, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
+    useInputsState();
   const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();
-  const record = useRecoilValue(state.inputs.record);
-  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
   const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
   const collapsibleEntries = useRecoilValue(state.ui.collapsibleEntries);
   const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
