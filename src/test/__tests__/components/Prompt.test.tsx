@@ -3,7 +3,8 @@ import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import { RecoilRoot } from 'recoil';
-import state from '@state';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useConfigStore } from '@src/store';
 
 const mockedUseBlocker = {
   reset: jest.fn(),
@@ -49,11 +50,16 @@ jest.mock('@common/helpers/dom.helper', () => ({
 
 const mockPath = '/resources/:resourceId/edit';
 
-const renderPrompt = (isBlocking = true) =>
-  render(
-    <RecoilRoot
-      initializeState={snapshot => snapshot.set(state.config.customEvents, { TRIGGER_MODAL: 'triggermodal' })}
-    >
+const renderPrompt = (isBlocking = true) => {
+  setInitialGlobalState([
+    {
+      store: useConfigStore,
+      state: { customEvents: { TRIGGER_MODAL: 'triggermodal' } },
+    },
+  ]);
+
+  return render(
+    <RecoilRoot>
       <RouterProvider
         router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], {
           initialEntries: [mockPath],
@@ -61,6 +67,7 @@ const renderPrompt = (isBlocking = true) =>
       />
     </RecoilRoot>,
   );
+};
 
 describe('Prompt', () => {
   beforeAll(() => {

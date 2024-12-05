@@ -17,10 +17,6 @@ const capitalize = (value: string) => {
 };
 
 const updateValue = <V, T>(value: V, updatedValue: T): V => {
-  console.log('====================================');
-  console.log('value', value, 'updatedValue', updatedValue);
-  console.log('====================================');
-
   if (Array.isArray(value)) {
     return [...value, updatedValue] as any;
   } else if (value instanceof Map) {

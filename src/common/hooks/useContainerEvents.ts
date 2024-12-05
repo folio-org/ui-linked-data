@@ -1,12 +1,9 @@
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { dispatchEventWrapper, getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { ROUTES } from '@common/constants/routes.constants';
-import { useStatusState } from '@src/store';
-import state from '@state';
+import { useConfigState, useStatusState } from '@src/store';
 
 type IUseContainerEvents =
   | {
@@ -16,8 +13,9 @@ type IUseContainerEvents =
   | undefined;
 
 export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }: IUseContainerEvents = {}) => {
-  const hasNavigationOrigin = useRecoilValue(state.config.hasNavigationOrigin);
+  const { hasNavigationOrigin } = useConfigState();
   const { isEditedRecord: isEdited } = useStatusState();
+  const { customEvents } = useConfigState();
   const {
     BLOCK_NAVIGATION,
     UNBLOCK_NAVIGATION,
@@ -25,7 +23,7 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
     PROCEED_NAVIGATION,
     NAVIGATE_TO_ORIGIN,
     DROP_NAVIGATE_TO_ORIGIN,
-  } = useRecoilValue(state.config.customEvents) ?? {};
+  } = customEvents ?? {};
   const navigate = useNavigate();
 
   useEffect(() => {
