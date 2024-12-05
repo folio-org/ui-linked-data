@@ -16,7 +16,7 @@ export const CommonStatus: FC = () => {
   const { statusMessages, setStatusMessages } = useStatusState();
 
   const deleteMessage = (messageId?: string) => {
-    setStatusMessages(statusMessages.filter(({ id }) => id !== messageId));
+    setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
   };
 
   const deleteOldestMessage = () => deleteMessage(statusMessages[0].id);

@@ -30,6 +30,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
     setCollapsedEntries(prev => {
       const twinsAndPrevCombined = new Set([...(twins ?? []), ...prev]);
 
+      // Can use .difference method of Set() once it's been available for some time
       return twinsAndPrevCombined.size === prev.size ? deleteFromSetImmutable(prev, twins) : twinsAndPrevCombined;
     });
 

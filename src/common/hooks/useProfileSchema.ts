@@ -5,7 +5,7 @@ import { useInputsState, useProfileState, useStatusState, useUIState } from '@sr
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
   const { setCollapsibleEntries } = useUIState();
-  const { userValues, setUserValues, setSelectedEntries } = useInputsState();
+  const { setUserValues, setSelectedEntries } = useInputsState();
   const { setIsEditedRecord: setIsEdited } = useStatusState();
   const { schema, setSchema } = useProfileState();
 
@@ -27,7 +27,7 @@ export const useProfileSchema = () => {
 
     setCollapsibleEntries(prev => deleteFromSetImmutable(prev, [entry.uuid]));
     setSchema(schemaWithDuplicatesService.get());
-    setUserValues(Object.fromEntries(Object.entries(userValues).filter(([key]) => !deletedUuids?.includes(key))));
+    setUserValues(prev => Object.fromEntries(Object.entries(prev).filter(([key]) => !deletedUuids?.includes(key))));
 
     setIsEdited(true);
   };

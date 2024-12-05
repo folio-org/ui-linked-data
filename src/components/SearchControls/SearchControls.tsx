@@ -44,7 +44,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
   const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
-  const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState();
+  const { setIsAdvancedSearchOpen } = useUIState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
@@ -150,7 +150,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
             <Button
               type={ButtonType.Link}
               className="search-button"
-              onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
+              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
             >
               <FormattedMessage id="ld.advanced" />
             </Button>
