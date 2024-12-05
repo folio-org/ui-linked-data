@@ -56,7 +56,6 @@ type FieldsProps = {
   altSchema?: Schema;
   altUserValues?: UserValues;
   altDisplayNames?: Record<string, string>;
-  hideActions?: boolean;
   hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
 };
@@ -69,7 +68,6 @@ export const Fields = ({
   altSchema,
   altUserValues,
   altDisplayNames,
-  hideActions,
   hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
@@ -119,7 +117,6 @@ export const Fields = ({
     schema,
     isOnBranchWithUserValue,
     altDisplayNames,
-    hideActions,
     hideEntities,
     isEntity,
     forceRenderAllTopLevelEntities,
@@ -167,7 +164,6 @@ export const Fields = ({
               altSchema={altSchema}
               altUserValues={altUserValues}
               altDisplayNames={altDisplayNames}
-              hideActions={hideActions}
               hideEntities={hideEntities}
               forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
             />

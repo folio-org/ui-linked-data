@@ -10,7 +10,6 @@ type IPreview = {
   altUserValues?: UserValues;
   altInitKey?: string;
   altDisplayNames?: Record<string, string>;
-  hideActions?: boolean;
   hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
   entityRowDisplay?: boolean;
@@ -21,7 +20,6 @@ export const Preview: FC<IPreview> = ({
   altUserValues,
   altInitKey,
   altDisplayNames,
-  hideActions,
   hideEntities,
   forceRenderAllTopLevelEntities,
   entityRowDisplay,
@@ -48,7 +46,6 @@ export const Preview: FC<IPreview> = ({
           altSchema={altSchema}
           altUserValues={altUserValues}
           altDisplayNames={altDisplayNames}
-          hideActions={hideActions}
           hideEntities={hideEntities}
           forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
         />

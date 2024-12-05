@@ -25,7 +25,6 @@ export const ExternalResourcePreview = () => {
       {record ? (
         <Preview
           altDisplayNames={EDIT_ALT_DISPLAY_LABELS}
-          hideActions
           forceRenderAllTopLevelEntities
           entityRowDisplay
         />

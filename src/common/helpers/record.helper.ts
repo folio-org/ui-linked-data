@@ -221,7 +221,6 @@ export const getPreviewFieldsConditions = ({
   schema,
   isOnBranchWithUserValue,
   altDisplayNames,
-  hideActions,
   hideEntities,
   isEntity,
   forceRenderAllTopLevelEntities,
@@ -233,7 +232,6 @@ export const getPreviewFieldsConditions = ({
   schema: Schema;
   isOnBranchWithUserValue: boolean;
   altDisplayNames?: Record<string, string>;
-  hideActions?: boolean;
   hideEntities?: boolean;
   isEntity: boolean;
   forceRenderAllTopLevelEntities?: boolean;
@@ -264,7 +262,6 @@ export const getPreviewFieldsConditions = ({
   const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
   const isBlockContents = level === GROUP_CONTENTS_LEVEL;
   const isInstance = bfid === PROFILE_BFIDS.INSTANCE;
-  const showEntityActions = !hideActions && isEntity;
   const wrapEntities = forceRenderAllTopLevelEntities && isEntity;
 
   return {
@@ -277,7 +274,6 @@ export const getPreviewFieldsConditions = ({
     isBlock,
     isBlockContents,
     isInstance,
-    showEntityActions,
     wrapEntities,
   };
 };

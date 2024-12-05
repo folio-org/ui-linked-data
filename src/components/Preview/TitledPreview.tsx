@@ -8,7 +8,7 @@ import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import classNames from 'classnames';
 
-type ITitledPreview = {
+export type ITitledPreview = {
   showCloseCtl?: boolean;
   ownId?: string;
   refId?: string | null;
@@ -62,7 +62,12 @@ export const TitledPreview = ({
           </h3>
         )}
         {type === ResourceType.work && !previewContent && (
-          <Button type={ButtonType.Primary} className="toggle-entity-edit" onClick={navigateToRefEditPage}>
+          <Button
+            type={ButtonType.Primary}
+            className="toggle-entity-edit"
+            data-testid="edit-self-as-ref"
+            onClick={navigateToRefEditPage}
+          >
             <FormattedMessage id="ld.editWork" />
           </Button>
         )}
