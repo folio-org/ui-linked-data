@@ -68,11 +68,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
         editCtl: {
           className: 'edit-ctl',
           children: (
-            <Button
-              type={ButtonType.Primary}
-              onClick={onClickEdit}
-              data-testid={`edit-button__${row.__meta.id}`}
-            >
+            <Button type={ButtonType.Primary} onClick={onClickEdit} data-testid={`edit-button__${row.__meta.id}`}>
               <FormattedMessage id="ld.edit" />
             </Button>
           ),
@@ -88,7 +84,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
         <h3>
           <FormattedMessage id="ld.instances" />
         </h3>
-        <Button type={ButtonType.Primary} onClick={onClickNewInstance} data-testid="new-instance">
+        <Button type={ButtonType.Primary} onClick={onClickNewInstance} disabled={!refId} data-testid="new-instance">
           <FormattedMessage id="ld.newInstance" />
         </Button>
       </div>

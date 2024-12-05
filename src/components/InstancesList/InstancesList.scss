@@ -21,15 +21,18 @@
   table {
     th {
       background-color: transparent;
-      font-weight: normal;
     }
 
     tr {
       padding: 0.5rem 0
     }
-    // text-decoration: underline;
+
     .button-primary {
-      margin: 0.2rem 0;
+      margin: 0.4rem 0;
+    }
+
+    .button-link {
+      text-decoration: underline;
     }
 
     .edit-ctl {
