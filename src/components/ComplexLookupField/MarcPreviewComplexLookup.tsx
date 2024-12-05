@@ -1,13 +1,11 @@
 import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 import { FormattedDate, FormattedMessage } from 'react-intl';
 import { useSearchContext } from '@common/hooks/useSearchContext';
-import { useMarcPreviewState } from '@src/store';
+import { useMarcPreviewState, useUIState } from '@src/store';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { MarcContent } from '@components/MarcContent';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
-import state from '@state';
 import './MarcPreviewComplexLookup.scss';
 
 type MarcPreviewComplexLookupProps = {
@@ -16,7 +14,7 @@ type MarcPreviewComplexLookupProps = {
 
 export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
-  const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
+  const { isMarcPreviewOpen } = useUIState();
   const { complexValue: marcPreviewData, metaData: marcPreviewMetadata } = useMarcPreviewState();
 
   const renderCloseButton = () => (

@@ -1,6 +1,5 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import {
   postRecord,
   putRecord,
@@ -28,8 +27,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
-import { useLoadingState, useStatusState, useProfileState, useInputsState } from '@src/store';
-import state from '@state';
+import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
 import { useRecordGeneration } from './useRecordGeneration';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import { useContainerEvents } from './useContainerEvents';
@@ -52,10 +50,9 @@ export const useRecordControls = () => {
   const { setIsLoading } = useLoadingState();
   const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
   const { setSelectedProfile } = useProfileState();
+  const { setIsDuplicateImportedResourceModalOpen, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
+    useUIState();
   const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessage } = useStatusState();
-  const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
-  const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const setIsDuplicateImportedResourceModalOpen = useSetRecoilState(state.ui.isDuplicateImportedResourceModalOpen);
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();

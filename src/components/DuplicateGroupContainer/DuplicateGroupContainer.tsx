@@ -1,12 +1,11 @@
 import { FC, ReactNode } from 'react';
-import { Button } from '@components/Button';
-import state from '@state';
-import { useRecoilState } from 'recoil';
-import { IFields } from '@components/Fields';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
+import { Button } from '@components/Button';
+import { IFields } from '@components/Fields';
 import ArrowChevronUp from '@src/assets/arrow-chevron-up.svg?react';
 import { deleteFromSetImmutable } from '@common/helpers/common.helper';
+import { useUIState } from '@src/store';
 import './DuplicateGroupContainer.scss';
 
 interface IDuplicateGroupContainer {
@@ -22,7 +21,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
   generateComponent,
   groupClassName,
 }) => {
-  const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
+  const { collapsedEntries, setCollapsedEntries } = useUIState();
   const twinsAmount = twins.length;
   const visibleTwins = twins.filter(twinUuid => !collapsedEntries.has(twinUuid));
   const isCollapsed = visibleTwins.length === 0;
@@ -31,7 +30,6 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
     setCollapsedEntries(prev => {
       const twinsAndPrevCombined = new Set([...(twins ?? []), ...prev]);
 
-      // Can use .difference method of Set() once it's been available for some time
       return twinsAndPrevCombined.size === prev.size ? deleteFromSetImmutable(prev, twins) : twinsAndPrevCombined;
     });
 

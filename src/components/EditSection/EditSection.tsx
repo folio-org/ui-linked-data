@@ -1,7 +1,5 @@
 import { useEffect, memo } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
 import classNames from 'classnames';
-import state from '@state';
 import { saveRecordLocally } from '@common/helpers/record.helper';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
@@ -13,7 +11,7 @@ import { useServicesContext } from '@common/hooks/useServicesContext';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { useInputsState, useProfileState, useStatusState } from '@src/store';
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
@@ -22,9 +20,7 @@ export const EditSection = memo(() => {
   const { userValues, addUserValues, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
     useInputsState();
   const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();
-  const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
-  const collapsibleEntries = useRecoilValue(state.ui.collapsibleEntries);
-  const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+  const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
   const { generateRecord } = useRecordGeneration();
 
   useContainerEvents({ watchEditedState: true });

@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useState } from 'react';
-import { useResetRecoilState } from 'recoil';
 import {
   generateEmptyValueUuid,
   getLinkedField,
@@ -8,11 +7,10 @@ import {
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
-import { useInputsState, useMarcPreviewState, useProfileState } from '@src/store';
+import { useInputsState, useMarcPreviewState, useProfileState, useUIState } from '@src/store';
 
 export const useComplexLookup = ({
   entry,
@@ -35,7 +33,7 @@ export const useComplexLookup = ({
     metaData: marcPreviewMetadata,
     resetMetaData: resetMarcPreviewMetadata,
   } = useMarcPreviewState();
-  const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
+  const { resetIsMarcPreviewOpen } = useUIState();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { fetchMarcData } = useMarcData(setComplexValue);
   const { uuid, linkedEntry } = entry;

@@ -8,8 +8,7 @@ import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesProvider } from '@src/providers';
 import { routes } from '@src/App';
-import { useInputsStore, useProfileStore } from '@src/store';
-import state from '@state';
+import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
 
 const userValues = {
   uuid3: {
@@ -201,14 +200,14 @@ describe('EditSection', () => {
         store: useInputsStore,
         state: { userValues, selectedEntries: ['uuid7'] },
       },
+      {
+        store: useUIStore,
+        state: { currentlyEditedEntityBfid: new Set(['uuid2Bfid']) },
+      },
     ]);
 
     return render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
-        }}
-      >
+      <RecoilRoot>
         <ServicesProvider>
           <RouterProvider
             router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })}

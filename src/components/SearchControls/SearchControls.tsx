@@ -17,6 +17,7 @@ import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
 import './SearchControls.scss';
 import { Announcement } from '@components/Announcement/Announcement';
+import { useUIState } from '@src/store';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -42,8 +43,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const setMessage = useSetRecoilState(state.search.message);
   const setNavigationState = useSetRecoilState(state.search.navigationState);
   const resetControls = useResetRecoilState(state.search.limiters);
-  const setIsAdvancedSearchOpen = useSetRecoilState(state.ui.isAdvancedSearchOpen);
   const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
+  const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
@@ -144,15 +145,12 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
           >
             <FormattedMessage id="ld.reset" />
           </Button>
-          <Announcement
-            message={announcementMessage}
-            onClear={() => setAnnouncementMessage('')}
-          />
+          <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
           {isVisibleAdvancedSearch && (
             <Button
               type={ButtonType.Link}
               className="search-button"
-              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+              onClick={() => setIsAdvancedSearchOpen(!isAdvancedSearchOpen)}
             >
               <FormattedMessage id="ld.advanced" />
             </Button>

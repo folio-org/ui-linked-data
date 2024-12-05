@@ -5,7 +5,8 @@ import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import * as SearchHelper from '@common/helpers/search.helper';
 import { SearchQueryParams } from '@common/constants/routes.constants';
-import state from '@state';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useUIStore } from '@src/store';
 
 const setSearchParams = jest.fn();
 const clearValues = jest.fn();
@@ -20,9 +21,16 @@ describe('AdvancedSearchModal', () => {
     createModalContainer();
   });
 
-  beforeEach(() =>
-    render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.ui.isAdvancedSearchOpen, true)}>
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useUIStore,
+        state: { isAdvancedSearchOpen: true },
+      },
+    ]);
+
+    return render(
+      <RecoilRoot>
         <RouterProvider
           router={createMemoryRouter([
             {
@@ -32,8 +40,8 @@ describe('AdvancedSearchModal', () => {
           ])}
         />
       </RecoilRoot>,
-    ),
-  );
+    );
+  });
 
   test('toggles isOpen', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));

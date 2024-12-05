@@ -1,12 +1,10 @@
-import { useSetRecoilState } from 'recoil';
-import state from '@state';
 import { useServicesContext } from './useServicesContext';
 import { deleteFromSetImmutable } from '@common/helpers/common.helper';
-import { useInputsState, useProfileState, useStatusState } from '@src/store';
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
-  const setCollapsibleEntries = useSetRecoilState(state.ui.collapsibleEntries);
+  const { setCollapsibleEntries } = useUIState();
   const { userValues, setUserValues, setSelectedEntries } = useInputsState();
   const { setIsEditedRecord: setIsEdited } = useStatusState();
   const { schema, setSchema } = useProfileState();

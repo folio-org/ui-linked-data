@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
 import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constants';
@@ -10,8 +9,7 @@ import { getRecordId, getPreviewFieldsConditions } from '@common/helpers/record.
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { useInputsState, useProfileState, useStatusState } from '@src/store';
-import state from '@state';
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
 
@@ -76,7 +74,7 @@ export const Fields = ({
   hideActions,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
+  const { currentlyPreviewedEntityBfid } = useUIState();
   const { userValues: userValuesFromState, record, selectedEntries } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { isEditedRecord: isEdited, setRecordStatus } = useStatusState();

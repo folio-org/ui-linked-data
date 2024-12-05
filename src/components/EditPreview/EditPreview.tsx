@@ -1,10 +1,8 @@
-import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Preview } from '@components/Preview';
 import { Button, ButtonType } from '@components/Button';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import state from '@state';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryParams, RESOURCE_CREATE_URLS, ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
@@ -12,11 +10,11 @@ import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { checkIfRecordHasDependencies } from '@common/helpers/record.helper';
-import { useInputsState, useStatusState } from '@src/store';
+import { useInputsState, useStatusState, useUIState } from '@src/store';
 import './EditPreview.scss';
 
 export const EditPreview = () => {
-  const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
+  const { currentlyPreviewedEntityBfid } = useUIState();
   const { isEditedRecord: isEdited } = useStatusState();
   const { record } = useInputsState();
   const isPositionedSecond =

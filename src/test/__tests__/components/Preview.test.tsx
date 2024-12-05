@@ -1,7 +1,6 @@
 import { Preview } from '@components/Preview';
-import { useInputsStore, useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import state from '@state';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
@@ -50,14 +49,14 @@ describe('Preview', () => {
         store: useInputsStore,
         state: { userValues },
       },
+      {
+        store: useUIStore,
+        state: { currentlyPreviewedEntityBfid: new Set(['uuid1Bfid']) },
+      },
     ]);
 
     return render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set(['uuid1Bfid']));
-        }}
-      >
+      <RecoilRoot>
         <BrowserRouter>
           <Preview />
         </BrowserRouter>

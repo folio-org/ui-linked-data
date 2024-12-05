@@ -19,7 +19,7 @@ import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { MarcPreviewComplexLookup } from './MarcPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
-import { useMarcPreviewState } from '@src/store';
+import { useMarcPreviewState, useUIState } from '@src/store';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -51,10 +51,10 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
-    const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
     const setSearchQuery = useSetRecoilState(state.search.query);
     const clearSearchQuery = useResetRecoilState(state.search.query);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
+    const { setIsMarcPreviewOpen } = useUIState();
     const {
       setComplexValue,
       resetComplexValue: resetMarcPreviewValue,

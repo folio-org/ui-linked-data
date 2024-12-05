@@ -5,6 +5,7 @@ import { useMarcPreviewStore } from './marcPreview';
 import { useProfileStore } from './profile';
 import { useInputsStore } from './inputs';
 import { useConfigStore } from './config';
+import { useUIStore } from './ui';
 
 export const useStatusState = () => createSelectors(useStatusStore).use;
 export const useLoadingState = () => createSelectors(useLoadingStateStore).use;
@@ -12,3 +13,4 @@ export const useMarcPreviewState = () => createSelectors(useMarcPreviewStore).us
 export const useProfileState = () => createSelectors(useProfileStore).use;
 export const useInputsState = () => createSelectors(useInputsStore).use;
 export const useConfigState = () => createSelectors(useConfigStore).use;
+export const useUIState = () => createSelectors(useUIStore).use;

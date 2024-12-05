@@ -5,16 +5,22 @@ import { RouterProvider, createMemoryRouter } from 'react-router';
 import { RecoilRoot } from 'recoil';
 import * as recordsApi from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
-import state from '@state';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useUIStore } from '@src/store';
 
 const renderWrapper = (withDropdown = true) => {
   const path = withDropdown ? ROUTES.RESOURCE_EDIT.uri : ROUTES.RESOURCE_CREATE.uri;
 
+  setInitialGlobalState([
+    {
+      store: useUIStore,
+      state: { currentlyEditedEntityBfid: new Set([PROFILE_BFIDS.INSTANCE]) },
+    },
+  ]);
+
   return render(
-    <RecoilRoot
-      initializeState={snapshot => snapshot.set(state.ui.currentlyEditedEntityBfid, new Set([PROFILE_BFIDS.INSTANCE]))}
-    >
+    <RecoilRoot>
       <RouterProvider
         router={createMemoryRouter(
           [

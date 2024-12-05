@@ -5,7 +5,7 @@ type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Upperc
 export type SliceState<K extends string, V, S extends string = K, T = V> = {
   [P in K]: V;
 } & {
-  [P in `set${Capitalize<K>}`]: (value: V) => void;
+  [P in `set${Capitalize<K>}`]: (value: V | SetState<V>) => void;
 } & {
   [P in `reset${Capitalize<K>}`]: () => void;
 } & Partial<{
@@ -54,8 +54,16 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
 
     const baseSlice = {
       [keys.basic]: initialValue,
-      [`set${capitalizedTitle}`]: (updatedValue: V) =>
-        set({ [keys.basic]: updatedValue } as any, false, `set${capitalizedTitle}`),
+      [`set${capitalizedTitle}`]: (updatedValue: V | SetState<V>) =>
+        set(
+          state =>
+            ({
+              [keys.basic]:
+                typeof updatedValue === 'function' ? (updatedValue as SetState<V>)(state[keys.basic]) : updatedValue,
+            }) as any,
+          false,
+          `set${capitalizedTitle}`,
+        ),
       [`reset${capitalizedTitle}`]: () => set({ [keys.basic]: initialValue } as any, false, `reset${capitalizedTitle}`),
     } as SliceState<K, V, S, T>;
 

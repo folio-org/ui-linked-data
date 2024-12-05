@@ -1,4 +1,4 @@
-import { createBaseSlice } from '@src/store/utils/slice';
+import { createBaseSlice, SliceState } from '@src/store/utils/slice';
 
 describe('createBaseSlice', () => {
   type KeyBasic = 'testKey';
@@ -14,11 +14,37 @@ describe('createBaseSlice', () => {
     store = {};
   });
 
-  test('"set" method updates the state', () => {
-    const baseSlice = createBaseSlice(keys, initialValue)(set, get, store);
+  describe('"set" method', () => {
+    let baseSlice: SliceState<string, string, string, string>;
+    const initialState = { [keys.basic]: initialValue };
 
-    baseSlice.setTestKey('newValue');
-    expect(set).toHaveBeenCalledWith({ testKey: 'newValue' }, false, 'setTestKey');
+    beforeEach(() => {
+      baseSlice = createBaseSlice(keys, initialValue)(set, get, store);
+    });
+
+    test('updates state with direct value', () => {
+      const newValue = 'newValue';
+
+      baseSlice.setTestKey(newValue);
+
+      const stateUpdater = set.mock.calls[0][0];
+      const newState = stateUpdater(initialState);
+
+      expect(newState).toEqual({ [keys.basic]: newValue });
+      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'setTestKey');
+    });
+
+    test('updates state with updater function', () => {
+      baseSlice.setTestKey((prevValue: string) => `${prevValue}_updated`);
+
+      const stateUpdater = set.mock.calls[0][0];
+      const newState = stateUpdater(initialState);
+
+      expect(newState).toEqual({
+        [keys.basic]: `${initialValue}_updated`,
+      });
+      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'setTestKey');
+    });
   });
 
   test('"reset" method resets the state to initial value', () => {

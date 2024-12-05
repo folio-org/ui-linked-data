@@ -2,9 +2,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
-import { useMarcPreviewStore } from '@src/store';
+import { useMarcPreviewStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import state from '@state';
 
 jest.mock('@common/hooks/useSearchContext');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -40,14 +39,14 @@ describe('MarcPreviewComplexLookup', () => {
         store: useMarcPreviewStore,
         state: { complexValue: marcPreviewData, metaData: marcPreviewMetadata },
       },
+      {
+        store: useUIStore,
+        state: { isMarcPreviewOpen },
+      },
     ]);
 
     return render(
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(state.ui.isMarcPreviewOpen, isMarcPreviewOpen);
-        }}
-      >
+      <RecoilRoot>
         <MarcPreviewComplexLookup onClose={onClose} />
       </RecoilRoot>,
     );
