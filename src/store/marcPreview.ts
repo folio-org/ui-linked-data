@@ -1,6 +1,5 @@
-import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore } from './utils/storeCreator';
+import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
 
 type MarcPreviewData = MarcDTO | null;
 type MarcPreviewMetaData = MarcPreviewMetadata | null;
@@ -11,7 +10,7 @@ export type MarcPreviewState = SliceState<'basicValue', any> &
 
 const STORE_NAME = 'MarcPreview';
 
-const marcPreviewStore: StateCreator<MarcPreviewState, [['zustand/devtools', never]], []> = (...args) => ({
+const marcPreviewStore: StateCreatorTyped<MarcPreviewState> = (...args) => ({
   ...createBaseSlice({ basic: 'basicValue' }, null)(...args),
   ...createBaseSlice({ basic: 'complexValue' }, null as MarcPreviewData)(...args),
   ...createBaseSlice({ basic: 'metaData' }, null as MarcPreviewMetaData)(...args),

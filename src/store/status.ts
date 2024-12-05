@@ -1,6 +1,5 @@
-import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore } from './utils/storeCreator';
+import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
 
 type LastSavedRecordId = string | null;
 
@@ -11,7 +10,7 @@ export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
 
 const STORE_NAME = 'Status';
 
-const statusStore: StateCreator<StatusState, [['zustand/devtools', never]], []> = (...args) => ({
+const statusStore: StateCreatorTyped<StatusState> = (...args) => ({
   ...createBaseSlice({ basic: 'lastSavedRecordId' }, null as LastSavedRecordId)(...args),
   ...createBaseSlice({ basic: 'isEditedRecord' }, false)(...args),
   ...createBaseSlice({ basic: 'recordStatus' }, { type: undefined } as RecordStatus)(...args),

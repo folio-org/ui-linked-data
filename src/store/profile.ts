@@ -1,6 +1,5 @@
-import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore } from './utils/storeCreator';
+import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
 
 type SelectedProfileType = ProfileEntry | null;
 type PreparedFieldsType = ResourceTemplates | null;
@@ -14,7 +13,7 @@ export type ProfileState = SliceState<'profiles', ProfileEntry[]> &
 
 const STORE_NAME = 'Profile';
 
-const profileStore: StateCreator<ProfileState, [['zustand/devtools', never]], []> = (...args) => ({
+const profileStore: StateCreatorTyped<ProfileState> = (...args) => ({
   ...createBaseSlice({ basic: 'profiles' }, [] as ProfileEntry[])(...args),
   ...createBaseSlice({ basic: 'selectedProfile' }, null as SelectedProfileType)(...args),
   ...createBaseSlice({ basic: 'preparedFields' }, null as PreparedFieldsType)(...args),

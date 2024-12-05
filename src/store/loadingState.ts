@@ -1,12 +1,11 @@
-import { StateCreator } from 'zustand';
 import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore } from './utils/storeCreator';
+import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
 
 export type LoadingState = SliceState<'isLoading', boolean>;
 
 const STORE_NAME = 'Loading';
 
-const loadingStateStore: StateCreator<LoadingState, [['zustand/devtools', never]], []> = (...args) => ({
+const loadingStateStore: StateCreatorTyped<LoadingState> = (...args) => ({
   ...createBaseSlice({ basic: 'isLoading' }, false)(...args),
 });
 
