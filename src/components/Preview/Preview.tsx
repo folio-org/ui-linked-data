@@ -1,6 +1,5 @@
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import state from '@state';
 import { Fields } from './Fields';
@@ -11,8 +10,7 @@ type IPreview = {
   altUserValues?: UserValues;
   altInitKey?: string;
   altDisplayNames?: Record<string, string>;
-  headless?: boolean;
-  hideActions?: boolean;
+  hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
   entityRowDisplay?: boolean;
 };
@@ -22,8 +20,7 @@ export const Preview: FC<IPreview> = ({
   altUserValues,
   altInitKey,
   altDisplayNames,
-  headless = false,
-  hideActions,
+  hideEntities,
   forceRenderAllTopLevelEntities,
   entityRowDisplay,
 }) => {
@@ -39,11 +36,6 @@ export const Preview: FC<IPreview> = ({
       className={classNames('preview-panel', { 'preview-panel-row': entityRowDisplay })}
       data-testid="preview-fields"
     >
-      {!headless && (
-        <h3>
-          <FormattedMessage id="ld.preview" />
-        </h3>
-      )}
       {initialSchemaKey && (
         <Fields
           base={schema}
@@ -54,7 +46,7 @@ export const Preview: FC<IPreview> = ({
           altSchema={altSchema}
           altUserValues={altUserValues}
           altDisplayNames={altDisplayNames}
-          hideActions={hideActions}
+          hideEntities={hideEntities}
           forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
         />
       )}

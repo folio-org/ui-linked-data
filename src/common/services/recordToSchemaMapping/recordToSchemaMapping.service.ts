@@ -176,8 +176,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
   private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
     return this.schemaArray.filter((entry: SchemaEntry) => {
-      const hasTheSameUri = entry.uri === containerBf2Uri;
-      const hasTheSameDataTypeUri = containerDataTypeUri
+      const isOfSameUri = entry.uri === containerBf2Uri;
+      const isOfSameDataTypeUri = containerDataTypeUri
         ? entry.constraints?.valueDataType?.dataTypeURI === containerDataTypeUri
         : true;
       let hasBlockParent = false;
@@ -195,8 +195,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       if (this.updatedSchema?.get(getParentEntryUuid(entry.path))?.type === AdvancedFieldTypeEnum.block) {
         hasBlockParent = true;
       }
-
-      return hasTheSameUri && hasTheSameDataTypeUri && hasProperBlock && hasBlockParent;
+      return isOfSameUri && isOfSameDataTypeUri && hasProperBlock && hasBlockParent;
     });
   };
 

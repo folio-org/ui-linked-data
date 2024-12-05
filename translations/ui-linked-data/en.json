@@ -90,6 +90,8 @@
   "ld.classificationNumber": "Classification number",
   "ld.work": "Work",
   "ld.instances": "Instances",
+  "ld.instance": "Instance",
+  "ld.year": "Year",
   "ld.noInstancesAvailable": "No instances available.",
   "ld.noInstancesAdded": "No instances added",
   "ld.addAnInstance": "Add an instance",
