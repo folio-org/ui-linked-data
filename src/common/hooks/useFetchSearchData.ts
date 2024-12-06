@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
@@ -7,8 +6,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useStatusState } from '@src/store';
-import state from '@state';
+import { useLoadingState, useSearchState, useStatusState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
 
 export const useFetchSearchData = () => {
@@ -26,10 +24,7 @@ export const useFetchSearchData = () => {
     precedingRecordsCount,
   } = useSearchContext();
   const { setIsLoading } = useLoadingState();
-  const setMessage = useSetRecoilState(state.search.message);
-  const [data, setData] = useRecoilState(state.search.data);
-  const resetData = useResetRecoilState(state.search.data);
-  const setPageMetadata = useSetRecoilState(state.search.pageMetadata);
+  const { setMessage, data, setData, resetData, setPageMetadata } = useSearchState();
   const { addStatusMessage, resetStatusMessages } = useStatusState();
 
   const validateAndNormalizeQuery = useCallback(

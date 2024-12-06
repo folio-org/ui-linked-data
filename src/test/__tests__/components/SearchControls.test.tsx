@@ -2,10 +2,11 @@ import { render, screen } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as FeatureConstants from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
 import { SearchContext } from '@src/contexts';
-import state from '@state';
+import { useSearchStore } from '@src/store';
 
 const setSearchParams = jest.fn();
 const mockSearchFiltersComponent = <div data-testid="search-filters" />;
@@ -57,8 +58,15 @@ describe('SearchControls', () => {
     function renderSearchControls(searchParams: URLSearchParams, queryState: string) {
       (useSearchParams as jest.Mock).mockReturnValue([searchParams, setSearchParams]);
 
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: { query: queryState },
+        },
+      ]);
+
       render(
-        <RecoilRoot initializeState={snapshot => snapshot.set(state.search.query, queryState)}>
+        <RecoilRoot>
           <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
         </RecoilRoot>,
       );

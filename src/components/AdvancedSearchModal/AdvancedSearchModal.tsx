@@ -1,6 +1,5 @@
 import { FC, memo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '@components/Modal';
 import { Input } from '@components/Input';
@@ -12,8 +11,7 @@ import {
 } from '@common/constants/search.constants';
 import { formatRawQuery, generateSearchParamsState } from '@common/helpers/search.helper';
 import { Select } from '@components/Select';
-import { useUIState } from '@src/store';
-import state from '@state';
+import { useSearchState, useUIState } from '@src/store';
 import './AdvancedSearchModal.scss';
 
 enum AdvancedSearchInputs {
@@ -31,7 +29,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   const [, setSearchParams] = useSearchParams();
   const { formatMessage } = useIntl();
   const { isAdvancedSearchOpen: isOpen, setIsAdvancedSearchOpen: setIsOpen } = useUIState();
-  const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
+  const { setForceRefresh: setForceRefreshSearch } = useSearchState();
   const [rawQuery, setRawQuery] = useState(DEFAULT_ADVANCED_SEARCH_QUERY);
 
   const closeModal = () => {

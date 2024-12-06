@@ -6,6 +6,7 @@ export * from './profile';
 export * from './inputs';
 export * from './config';
 export * from './ui';
+export * from './search';
 
 // Selector hooks
 export * from './selectors';

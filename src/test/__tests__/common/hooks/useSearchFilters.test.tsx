@@ -1,8 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import { useSearchFilters } from '@common/hooks/useSearchFilters';
 import { ChangeEvent, ReactNode } from 'react';
-import state from '@state';
+import { useSearchFilters } from '@common/hooks/useSearchFilters';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useSearchStore } from '@src/store';
 
 describe('useSearchFilters', () => {
   const singlelimitersMock = {
@@ -12,13 +13,18 @@ describe('useSearchFilters', () => {
 
   const getWrapper =
     (initialLookupData: Limiters = {} as Limiters) =>
-    ({ children }: { children: ReactNode }) => (
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.search.limiters, initialLookupData)}>
-        {children}
-      </RecoilRoot>
-    );
+    ({ children }: { children: ReactNode }) => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: { facets: initialLookupData },
+        },
+      ]);
 
-  test('onChangeLimiters - should update single limiter', () => {
+      return <RecoilRoot>{children}</RecoilRoot>;
+    };
+
+  test('onChangeLimiters - should update single facets', () => {
     const testResult = {
       limiter_1: 'newValue',
       limiter_2: 'value_2',
@@ -33,10 +39,10 @@ describe('useSearchFilters', () => {
     const { result } = renderHook(useSearchFilters, { wrapper: getWrapper(singlelimitersMock) });
     act(() => result.current?.onChangeLimiters(eventMock));
 
-    expect(result.current.limiters).toEqual(testResult);
+    expect(result.current.facets).toEqual(testResult);
   });
 
-  test('onChangeLimitersMulti - should update multiple limiters', () => {
+  test('onChangeLimitersMulti - should update multiple facets', () => {
     const limitersMock = {
       limiter_1: 'value_1',
       limiter_2: ['value_2'],
@@ -56,10 +62,10 @@ describe('useSearchFilters', () => {
     const { result } = renderHook(useSearchFilters, { wrapper: getWrapper(limitersMock) });
     act(() => result.current.onChangeLimitersMulti(eventMock));
 
-    expect(result.current.limiters).toEqual(testResult);
+    expect(result.current.facets).toEqual(testResult);
   });
 
-  test('onChange - should not update limiters', () => {
+  test('onChange - should not update facets', () => {
     const eventMock = {
       target: {
         id: 'newValue',
@@ -70,13 +76,13 @@ describe('useSearchFilters', () => {
     const { result } = renderHook(useSearchFilters, { wrapper: getWrapper(singlelimitersMock) });
     act(() => result.current.onChange(eventMock));
 
-    expect(result.current.limiters).toEqual(singlelimitersMock);
+    expect(result.current.facets).toEqual(singlelimitersMock);
   });
 
   test('returns limiters and onChange functions', () => {
     const { result } = renderHook(useSearchFilters, { wrapper: getWrapper(singlelimitersMock) });
 
-    expect(result.current.limiters).toBe(singlelimitersMock);
+    expect(result.current.facets).toBe(singlelimitersMock);
     expect(result.current.onChangeLimiters).toBeInstanceOf(Function);
     expect(result.current.onChangeLimitersMulti).toBeInstanceOf(Function);
     expect(result.current.onChange).toBeInstanceOf(Function);

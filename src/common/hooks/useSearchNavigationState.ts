@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
-import state from '@state';
+import { useSearchState } from '@src/store';
 
 export const useSearchNavigationState = () => {
   const [searchParams] = useSearchParams();
@@ -11,7 +10,7 @@ export const useSearchNavigationState = () => {
   const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy);
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
 
-  const setNavigationState = useSetRecoilState(state.search.navigationState);
+  const { setNavigationState } = useSearchState();
 
   useEffect(() => {
     const generatedState = generateSearchParamsState(

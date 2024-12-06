@@ -1,5 +1,4 @@
 import { FC, memo, useCallback, useEffect } from 'react';
-import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
@@ -13,13 +12,12 @@ import { useMarcData } from '@common/hooks/useMarcData';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
+import { useMarcPreviewState, useSearchState, useUIState } from '@src/store';
 import { SearchControlPane } from '@components/SearchControlPane';
-import state from '@state';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { MarcPreviewComplexLookup } from './MarcPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
 import './ModalComplexLookup.scss';
-import { useMarcPreviewState, useUIState } from '@src/store';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
@@ -51,8 +49,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
-    const setSearchQuery = useSetRecoilState(state.search.query);
-    const clearSearchQuery = useResetRecoilState(state.search.query);
+    const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState();
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
     const { setIsMarcPreviewOpen } = useUIState();
     const {

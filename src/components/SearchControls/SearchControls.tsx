@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, FormEventHandler, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
@@ -11,13 +10,12 @@ import { Input } from '@components/Input';
 import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
 import { Textarea } from '@components/Textarea';
+import { Announcement } from '@components/Announcement';
+import { useSearchState, useUIState } from '@src/store';
 import SearchSegments from './SearchSegments';
-import state from '@state';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
 import './SearchControls.scss';
-import { Announcement } from '@components/Announcement/Announcement';
-import { useUIState } from '@src/store';
 
 type Props = {
   submitSearch: VoidFunction;
@@ -38,12 +36,17 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     defaultSearchBy,
     navigationSegment,
   } = useSearchContext();
-  const [searchBy, setSearchBy] = useRecoilState(state.search.index);
-  const [query, setQuery] = useRecoilState(state.search.query);
-  const setMessage = useSetRecoilState(state.search.message);
-  const setNavigationState = useSetRecoilState(state.search.navigationState);
-  const resetControls = useResetRecoilState(state.search.limiters);
-  const setFacetsBySegments = useSetRecoilState(state.search.facetsBySegments);
+
+  const {
+    searchBy,
+    setSearchBy,
+    query,
+    setQuery,
+    setMessage,
+    setNavigationState,
+    resetFacets: resetControls,
+    setFacetsBySegments,
+  } = useSearchState();
   const { setIsAdvancedSearchOpen } = useUIState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');

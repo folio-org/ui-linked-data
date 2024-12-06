@@ -1,6 +1,7 @@
-import { useRecoilValue } from 'recoil';
 import { renderHook, act } from '@testing-library/react';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { usePagination } from '@common/hooks/usePagination';
+import { useSearchStore } from '@src/store';
 
 const setSearchParams = jest.fn();
 
@@ -11,16 +12,18 @@ jest.mock('react-router-dom', () => ({
 jest.mock('recoil', () => ({
   useRecoilValue: jest.fn(),
 }));
-jest.mock('@state', () => ({
-  default: {
-    search: {
-      pageMetadata: { totalElements: 0, totalPages: 0 },
-    },
-  },
-}));
 
 describe('usePagination', () => {
   const hasSearchParams = true;
+
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: { pageMetadata: { totalElements: 0, totalPages: 0 } },
+      },
+    ]);
+  });
 
   function testOnPageClick({
     functionName,
@@ -44,11 +47,18 @@ describe('usePagination', () => {
 
   describe('onPrevPageClick', () => {
     test('the current page should not be changed', () => {
-      (useRecoilValue as jest.Mock).mockReturnValue({
-        number: 0,
-        totalElements: 0,
-        totalPages: 1,
-      });
+      setUpdatedGlobalState([
+        {
+          store: useSearchStore,
+          updatedState: {
+            pageMetadata: {
+              number: 0,
+              totalElements: 0,
+              totalPages: 1,
+            },
+          },
+        },
+      ]);
       const defaultPageNumber = 0;
 
       testOnPageClick({
@@ -60,11 +70,18 @@ describe('usePagination', () => {
     });
 
     test('the current page should be changed', () => {
-      (useRecoilValue as jest.Mock).mockReturnValue({
-        number: 1,
-        totalElements: 10,
-        totalPages: 2,
-      });
+      setUpdatedGlobalState([
+        {
+          store: useSearchStore,
+          updatedState: {
+            pageMetadata: {
+              number: 1,
+              totalElements: 10,
+              totalPages: 2,
+            },
+          },
+        },
+      ]);
       const defaultPageNumber = 1;
 
       testOnPageClick({
@@ -78,11 +95,18 @@ describe('usePagination', () => {
 
   describe('onNextPageClick', () => {
     test('the current page should not be changed', () => {
-      (useRecoilValue as jest.Mock).mockReturnValue({
-        number: 1,
-        totalElements: 0,
-        totalPages: 2,
-      });
+      setUpdatedGlobalState([
+        {
+          store: useSearchStore,
+          updatedState: {
+            pageMetadata: {
+              number: 1,
+              totalElements: 0,
+              totalPages: 2,
+            },
+          },
+        },
+      ]);
       const defaultPageNumber = 1;
 
       testOnPageClick({
@@ -94,11 +118,18 @@ describe('usePagination', () => {
     });
 
     test('the current page should be changed', () => {
-      (useRecoilValue as jest.Mock).mockReturnValue({
-        number: 0,
-        totalElements: 10,
-        totalPages: 2,
-      });
+      setUpdatedGlobalState([
+        {
+          store: useSearchStore,
+          updatedState: {
+            pageMetadata: {
+              number: 0,
+              totalElements: 10,
+              totalPages: 2,
+            },
+          },
+        },
+      ]);
       const defaultPageNumber = 0;
 
       testOnPageClick({

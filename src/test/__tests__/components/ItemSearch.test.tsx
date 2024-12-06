@@ -1,15 +1,15 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/usePagination.mock';
 import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
-import state from '@state';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useSearchStore } from '@src/store';
 
 let getByIdentifierMock: jest.SpyInstance<
   Promise<any>,
@@ -120,10 +120,15 @@ describe('Item Search', () => {
 
     window.history.pushState({}, '', '/');
 
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: { pageMetadata: { totalElements: 2, totalPages: 1 } },
+      },
+    ]);
+
     render(
-      <RecoilRoot
-        initializeState={snapshot => snapshot.set(state.search.pageMetadata, { totalElements: 2, totalPages: 1 })}
-      >
+      <RecoilRoot>
         <BrowserRouter basename="/">
           <Routes>
             <Route path="/" element={<ItemSearch />} />

@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState, useRecoilState, useResetRecoilState } from 'recoil';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
@@ -8,8 +7,7 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
-import { useInputsState, useLoadingState } from '@src/store';
-import state from '@state';
+import { useInputsState, useLoadingState, useSearchState } from '@src/store';
 
 export const useSearch = () => {
   const {
@@ -23,15 +21,24 @@ export const useSearch = () => {
   } = useSearchContext();
   const { setIsLoading } = useLoadingState();
   const { resetPreviewContent } = useInputsState();
-  const [searchBy, setSearchBy] = useRecoilState(state.search.index);
-  const [query, setQuery] = useRecoilState(state.search.query);
-  const [facets, setFacets] = useRecoilState(state.search.limiters);
-  const [message, setMessage] = useRecoilState(state.search.message);
-  const [data, setData] = useRecoilState(state.search.data);
-  const [pageMetadata, setPageMetadata] = useRecoilState(state.search.pageMetadata);
-  const setForceRefreshSearch = useSetRecoilState(state.search.forceRefresh);
-  const [facetsBySegments, setFacetsBySegments] = useRecoilState(state.search.facetsBySegments);
-  const clearFacetsBySegments = useResetRecoilState(state.search.facetsBySegments);
+  const {
+    searchBy,
+    setSearchBy,
+    query,
+    setQuery,
+    facets,
+    setFacets,
+    message,
+    setMessage,
+    data,
+    setData,
+    pageMetadata,
+    setPageMetadata,
+    setForceRefresh: setForceRefreshSearch,
+    facetsBySegments,
+    setFacetsBySegments,
+    resetFacetsBySegments,
+  } = useSearchState();
 
   const { fetchData } = useFetchSearchData();
   const {
@@ -199,8 +206,8 @@ export const useSearch = () => {
 
   // Reset Segments selection on unmount
   useEffect(() => {
-    return clearFacetsBySegments;
-  }, [clearFacetsBySegments]);
+    return resetFacetsBySegments;
+  }, [resetFacetsBySegments]);
 
   return {
     submitSearch,

@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import * as SearchApi from '@common/api/search.api';
 import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
+import { useSearchStore, useStatusStore } from '@src/store';
 
 jest.mock('recoil');
 jest.mock('@common/api/search.api');
@@ -13,18 +14,25 @@ describe('useSearchFiltersData', () => {
   const resetSelectedFacetsGroups = jest.fn();
   const setFacetsData = jest.fn();
   const setSourceData = jest.fn();
-  const setCommonStatus = jest.fn();
+  const addStatusMessage = jest.fn();
 
   const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
   const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
   beforeEach(() => {
-    (useRecoilState as jest.Mock).mockReturnValue([selectedFacetsGroupsState, setSelectedFacetsGroups]);
-    (useResetRecoilState as jest.Mock).mockReturnValue(resetSelectedFacetsGroups);
-    (useSetRecoilState as jest.Mock)
-      .mockReturnValueOnce(setFacetsData)
-      .mockReturnValueOnce(setSourceData)
-      .mockReturnValueOnce(setCommonStatus);
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          selectedFacetsGroups: selectedFacetsGroupsState,
+          setSelectedFacetsGroups,
+          resetSelectedFacetsGroups,
+          setFacetsData,
+          setSourceData,
+        },
+      },
+      { store: useStatusStore, state: { addStatusMessage } },
+    ]);
   });
 
   test('resets selectedFacetsGroups on unmount', () => {
@@ -38,10 +46,6 @@ describe('useSearchFiltersData', () => {
   test('getSearchSourceData - fetches data and sets source data', async () => {
     const searchData = { data: 'sourceData' };
     (SearchApi.getSearchData as jest.Mock).mockResolvedValue(searchData);
-    (useSetRecoilState as jest.Mock)
-      .mockReturnValueOnce(setFacetsData)
-      .mockReturnValueOnce(setSourceData)
-      .mockReturnValueOnce(setCommonStatus);
 
     const { result } = renderHook(useSearchFiltersData);
 
@@ -71,8 +75,12 @@ describe('useSearchFiltersData', () => {
   });
 
   test('onToggleFilterGroupState - updates selectedFacetsGroups', () => {
-    const setSelectedFacetsGroups = jest.fn();
-    (useRecoilState as jest.Mock).mockReturnValue([['facet_1'], setSelectedFacetsGroups]);
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { selectedFacetsGroups: ['facet_1'] },
+      },
+    ]);
 
     const { result } = renderHook(() => useSearchFiltersData());
 
