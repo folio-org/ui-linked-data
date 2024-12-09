@@ -49,7 +49,6 @@ export const TitledPreview = ({
   );
 
   const navigateToOwnEditPage = () => selectedOwnId && navigateToEditPage(generateEditResourceUrl(selectedOwnId));
-  const navigateToRefEditPage = () => refId && navigateToEditPage(generateEditResourceUrl(refId));
 
   return (
     <div className="titled-preview">
@@ -66,7 +65,7 @@ export const TitledPreview = ({
             type={ButtonType.Primary}
             className="toggle-entity-edit"
             data-testid="edit-self-as-ref"
-            onClick={navigateToRefEditPage}
+            onClick={navigateToOwnEditPage}
           >
             <FormattedMessage id="ld.editWork" />
           </Button>
