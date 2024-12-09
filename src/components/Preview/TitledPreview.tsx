@@ -39,11 +39,6 @@ export const TitledPreview = ({
       )}
       <div className="details">
         {title && <h5>{title}</h5>}
-        {type && (
-          <span>
-            <FormattedMessage id={`ld.${type}`} defaultMessage={'Resource'} />
-          </span>
-        )}
       </div>
     </>
   );
