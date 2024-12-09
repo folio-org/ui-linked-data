@@ -1,10 +1,11 @@
 import { FC, ReactNode, memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
-import { MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { AriaModalKind, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
 import Times16 from '@src/assets/times-16.svg?react';
 import { Button, ButtonType } from '@components/Button';
 import './Modal.scss';
+import { useIntl } from 'react-intl';
 // TODO: UILD-147 - Uncomment for using with Shadow DOM
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
@@ -26,6 +27,7 @@ interface Props {
   showModalControls?: boolean;
   titleClassName?: string;
   alignTitleCenter?: boolean;
+  ariaModalKind?: string;
 }
 
 const Modal: FC<Props> = ({
@@ -46,7 +48,9 @@ const Modal: FC<Props> = ({
   showModalControls = true,
   titleClassName,
   alignTitleCenter = false,
+  ariaModalKind = AriaModalKind.Basic,
 }) => {
+  const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
@@ -70,7 +74,11 @@ const Modal: FC<Props> = ({
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
-                <button onClick={onClose} className="close-button">
+                <button
+                  onClick={onClose}
+                  className="close-button"
+                  aria-label={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
+                >
                   <Times16 />
                 </button>
               )}

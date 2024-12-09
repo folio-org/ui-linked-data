@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@components/Button';
@@ -28,6 +28,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   handleOpenPreview,
   titles,
 }) => {
+  const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
   const title = getTitle(titles);
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
@@ -39,7 +40,12 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   return (
     <div className="work-details-card">
       <div className="heading">
-        <Button type={ButtonType.Ghost} onClick={toggleIsOpen} data-testid="work-details-card-toggle">
+        <Button
+          type={ButtonType.Ghost}
+          onClick={toggleIsOpen}
+          data-testid="work-details-card-toggle"
+          ariaLabel={formatMessage({ id: isOpen ? 'ld.aria.listEntry.close' : 'ld.aria.listEntry.open' })}
+        >
           <CaretDown className={classNames({ ['icon-collapsed']: !isOpen }, 'toggle-icon')} />
         </Button>
         <div className="title">

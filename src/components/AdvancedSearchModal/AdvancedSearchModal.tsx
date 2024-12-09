@@ -13,6 +13,7 @@ import {
 import { formatRawQuery, generateSearchParamsState } from '@common/helpers/search.helper';
 import { Select } from '@components/Select';
 import state from '@state';
+import { AriaModalKind } from '@common/constants/uiElements.constants';
 import './AdvancedSearchModal.scss';
 
 enum AdvancedSearchInputs {
@@ -70,6 +71,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
       onCancel={closeModal}
       shouldCloseOnEsc
       submitButtonDisabled={submitButtonDisabled}
+      ariaModalKind={AriaModalKind.AdvancedSearch}
     >
       <div className="advanced-search-container">
         {rawQuery.map(({ query, rowIndex, operator, qualifier, index }) => (
@@ -85,6 +87,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
                 options={SELECT_OPERATORS}
                 className="cell-operator"
                 onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Operator, rowIndex)}
+                ariaLabel={formatMessage({ id: 'ld.aria.advancedSearch.operator' })}
                 data-testid={`select-operators-${rowIndex}`}
               />
             )}
@@ -93,6 +96,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
               data-testid={`text-input-${rowIndex}`}
               value={query ?? ''}
               onChange={({ target: { value } }) => onChangeInput(value, AdvancedSearchInputs.Query, rowIndex)}
+              ariaLabel={formatMessage({ id: 'ld.aria.advancedSearch.queryInput' })}
             />
             <Select
               withIntl
@@ -100,6 +104,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
               options={SELECT_QUALIFIERS}
               className="cell-qualifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Qualifier, rowIndex)}
+              ariaLabel={formatMessage({ id: 'ld.aria.advancedSearch.qualifier' })}
               data-testid={`select-qualifiers-${rowIndex}`}
             />
             in
@@ -109,6 +114,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
               options={SELECT_IDENTIFIERS}
               className="cell-identifier"
               onChange={({ value }) => onChangeInput(value, AdvancedSearchInputs.Index, rowIndex)}
+              ariaLabel={formatMessage({ id: 'ld.aria.advancedSearch.identifier' })}
               data-testid={`select-identifiers-${rowIndex}`}
             />
           </div>
