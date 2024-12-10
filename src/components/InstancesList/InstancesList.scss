@@ -24,19 +24,29 @@
     }
 
     tr {
-      padding: 0.5rem 0
+      padding: 0.5rem 0;
     }
 
-    .button-primary {
-      margin: 0.4rem 0;
+    .publisher,
+    .publication-date {
+      max-width: 10rem;
     }
 
-    .button-link {
-      text-decoration: underline;
+    .title {
+      .button-link {
+        text-decoration: underline;
+        text-align: left;
+        height: 100%;
+      }
     }
 
     .edit-ctl {
       width: 0.5rem;
+
+      .button-primary {
+        margin: 0.4rem 0;
+        font-weight: 600;
+      }
     }
 
     td {
