@@ -1,6 +1,6 @@
 import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import * as ReactRouterDom from 'react-router-dom';
 import * as RecordsApi from '@common/api/records.api';
 
@@ -26,9 +26,11 @@ describe('PreviewExternalResourceControls', () => {
       jest.spyOn(ReactRouterDom, 'useParams').mockReturnValue({});
       renderComponent();
 
-      fireEvent.click(screen.getByTestId('continue-external-preview-button'));
+      act(() => {
+        fireEvent.click(screen.getByTestId('continue-external-preview-button'));
 
-      expect(navigate).not.toHaveBeenCalled();
+        expect(navigate).not.toHaveBeenCalled();
+      });
     });
 
     test('navigates if id is present', async () => {
@@ -47,8 +49,10 @@ describe('PreviewExternalResourceControls', () => {
   test('navigates back', () => {
     renderComponent();
 
-    fireEvent.click(screen.getByTestId('close-external-preview-button'));
+    act(() => {
+      fireEvent.click(screen.getByTestId('close-external-preview-button'));
 
-    expect(navigate).toHaveBeenCalled();
+      expect(navigate).toHaveBeenCalled();
+    });
   });
 });

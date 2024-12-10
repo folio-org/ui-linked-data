@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
@@ -45,12 +45,14 @@ describe('useLoadSearchResults', () => {
 
     fetchData.mockResolvedValue([{ test: ['test value'] }]);
     (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
-    setUpdatedGlobalState([
-      {
-        store: useSearchStore,
-        updatedState: { forceRefresh: false, searchBy: 'title' },
-      },
-    ]);
+    act(() =>
+      setUpdatedGlobalState([
+        {
+          store: useSearchStore,
+          updatedState: { forceRefresh: false, searchBy: 'title' },
+        },
+      ]),
+    );
 
     renderHook(() => useLoadSearchResults(fetchData));
 
