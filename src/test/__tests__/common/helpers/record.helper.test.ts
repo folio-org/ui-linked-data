@@ -199,9 +199,9 @@ describe('record.helper', () => {
   });
 
   describe('getRecordTitle', () => {
-    const mockMainTitle = '80085'
+    const mockMainTitle = '80085';
     const mockRecord = {
-      'testInstanceUri': {
+      testInstanceUri: {
         'http://bibfra.me/vocab/marc/title': [
           {
             'http://bibfra.me/vocab/marc/Title': {
@@ -214,6 +214,41 @@ describe('record.helper', () => {
 
     test('returns title', () => {
       expect(RecordHelper.getRecordTitle(mockRecord as unknown as RecordEntry)).toBe(mockMainTitle);
+    });
+  });
+
+  describe('getRecordDependencies', () => {
+    test("doesn't work if there's no record", () => {
+      expect(RecordHelper.getRecordDependencies(null)).toBeFalsy();
+    });
+
+    test('returns record dependencies', () => {
+      const record = {
+        testInstanceUri: {
+          testFieldUri_1: [],
+          testFieldUri_2: [],
+          workReferenceKey: [
+            {
+              testWorkFieldUri_1: [],
+              id: ['testWorkId'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: 'testInstanceUri',
+        reference: {
+          key: 'workReferenceKey',
+          uri: 'testWorkUri',
+        },
+      });
+
+      expect(RecordHelper.getRecordDependencies(record)).toEqual({
+        entries: [{ id: ['testWorkId'], testWorkFieldUri_1: [] }],
+        keys: { key: 'workReferenceKey', uri: 'testWorkUri' },
+        type: undefined,
+      });
     });
   });
 });

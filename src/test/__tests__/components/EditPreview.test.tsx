@@ -1,9 +1,11 @@
+import { render, screen } from '@testing-library/react';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { EditPreview } from '@components/EditPreview';
 import { useInputsStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 const navigate = jest.fn();
 
@@ -35,12 +37,6 @@ describe('EditPreview', () => {
   });
 
   const { getByTestId } = screen;
-
-  test('navigates to add new instance screen', () => {
-    fireEvent.click(getByTestId('create-instance-button'));
-
-    expect(navigate).toHaveBeenCalled();
-  });
 
   test('contains instances list when create work page is opened', () => {
     expect(getByTestId('instances-list')).toBeInTheDocument();

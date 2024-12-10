@@ -24,6 +24,7 @@ export const BFLITE_URIS = {
   CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
   PROVISION_ACTIVITY: 'https://bibfra.me/vocab/marc/provisionActivity',
   TITLE: 'http://bibfra.me/vocab/marc/title',
+  TITLE_CONTAINER: 'http://bibfra.me/vocab/marc/Title',
   MAIN_TITLE: 'http://bibfra.me/vocab/marc/mainTitle',
   PRODUCTION: 'http://bibfra.me/vocab/marc/production',
   PUBLICATION: 'http://bibfra.me/vocab/marc/publication',
@@ -215,28 +216,36 @@ export const BF_URIS = {
   LABEL: 'http://www.w3.org/2000/01/rdf-schema#label',
 };
 
+export const INSTANCE_REF_KEY = "_instanceReference"
+export const WORK_REF_KEY = "_workReference"
+
 export const BLOCKS_BFLITE = {
   INSTANCE: {
     uri: BFLITE_URIS.INSTANCE,
-    referenceKey: '_instanceReference',
+    referenceKey: INSTANCE_REF_KEY,
     resourceType: ResourceType.instance,
     reference: {
-      key: '_workReference',
+      key: WORK_REF_KEY,
       uri: BFLITE_URIS.WORK,
       name: ResourceType.work,
     },
   },
   WORK: {
     uri: BFLITE_URIS.WORK,
-    referenceKey: '_workReference',
+    referenceKey: WORK_REF_KEY,
     resourceType: ResourceType.work,
     reference: {
-      key: '_instanceReference',
+      key: INSTANCE_REF_KEY,
       uri: BFLITE_URIS.INSTANCE,
       name: ResourceType.instance,
     },
   },
 };
+
+export const REF_TO_NAME = {
+  [INSTANCE_REF_KEY]: ResourceType.instance,
+  [WORK_REF_KEY]: ResourceType.work,
+}
 
 export const BFLITE_BFID_TO_BLOCK = {
   'lc:RT:bf2:Monograph:Instance': BLOCKS_BFLITE.INSTANCE,
@@ -609,6 +618,9 @@ export const TYPE_MAP = {
 
 export const NEW_BF2_TO_BFLITE_MAPPING = {
   [BFLITE_URIS.INSTANCE]: {
+    [BFLITE_URIS.INSTANCE]: {
+      container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Instance' }
+    },
     'http://bibfra.me/vocab/marc/title': {
       container: { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/title' },
       options: {

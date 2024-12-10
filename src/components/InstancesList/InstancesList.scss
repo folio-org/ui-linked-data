@@ -1,6 +1,58 @@
-.instances-list-empty {
-  margin-top: 99px;
-  font-size: 1.125rem;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.62);
+.instances-list {
+  padding: 0.75rem 0.938rem;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.138rem;
+  }
+
+  .no-instances {
+    font-size: 1.125rem;
+    color: rgba(0, 0, 0, 0.62);
+    text-align: center;
+    padding: 2.5rem 0;
+  }
+
+  table {
+    th {
+      background-color: transparent;
+    }
+
+    tr {
+      padding: 0.5rem 0;
+    }
+
+    .publisher,
+    .publication-date {
+      max-width: 10rem;
+    }
+
+    .title {
+      .button-link {
+        text-decoration: underline;
+        text-align: left;
+        height: 100%;
+      }
+    }
+
+    .edit-ctl {
+      width: 0.5rem;
+
+      .button-primary {
+        margin: 0.4rem 0;
+        font-weight: 600;
+      }
+    }
+
+    td {
+      > * {
+        font-weight: normal;
+      }
+    }
+  }
 }

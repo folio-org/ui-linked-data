@@ -8,14 +8,23 @@ import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook'
 import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {
+  noStateUpdate?: boolean;
   singular?: boolean;
 };
 
-type GetProfiles = {
+type IGetProfiles = {
   record?: RecordEntry;
   recordId?: string;
   previewParams?: PreviewParams;
   asClone?: boolean;
+};
+
+type IBuildSchema = {
+  profile: ProfileEntry;
+  templates: ResourceTemplates;
+  record: Record<string, unknown> | Array<unknown>;
+  asClone?: boolean;
+  noStateUpdate?: boolean;
 };
 
 export const useConfig = () => {
@@ -57,12 +66,7 @@ export const useConfig = () => {
     return preparedFields;
   };
 
-  const buildSchema = async (
-    profile: ProfileEntry,
-    templates: ResourceTemplates,
-    record: Record<string, unknown> | Array<unknown>,
-    asClone = false,
-  ) => {
+  const buildSchema = async ({ profile, templates, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
     const initKey = uuidv4();
     const userValues: UserValues = {};
 
@@ -76,18 +80,21 @@ export const useConfig = () => {
       record,
       userValues,
       asClone,
+      noStateUpdate,
     });
 
-    setUserValues(updatedUserValues || userValues);
-    setInitialSchemaKey(initKey);
-    setSelectedEntries(selectedEntriesService.get());
-    setSchema(updatedSchema);
-    setSelectedRecordBlocks(selectedRecordBlocks);
+    if (!noStateUpdate) {
+      setUserValues(updatedUserValues || userValues);
+      setInitialSchemaKey(initKey);
+      setSelectedEntries(selectedEntriesService.get());
+      setSchema(updatedSchema);
+      setSelectedRecordBlocks(selectedRecordBlocks);
+    }
 
     return { updatedSchema, initKey };
   };
 
-  const getProfiles = async ({ record, recordId, previewParams, asClone }: GetProfiles): Promise<unknown> => {
+  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
     if (isProcessingProfiles.current && (record || recordId)) return;
 
     try {
@@ -103,16 +110,20 @@ export const useConfig = () => {
         setProfiles(response);
       }
 
-      setUserValues({});
-
       const recordData = record?.resource || {};
       const recordTitle = getRecordTitle(recordData as RecordEntry);
       const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
 
       if (selectedProfile) {
-        setSelectedProfile(selectedProfile);
+        !previewParams?.noStateUpdate && setSelectedProfile(selectedProfile);
 
-        const { updatedSchema, initKey } = await buildSchema(selectedProfile, templates, recordData, asClone);
+        const { updatedSchema, initKey } = await buildSchema({
+          profile: selectedProfile,
+          templates,
+          record: recordData,
+          asClone,
+          noStateUpdate: previewParams?.noStateUpdate,
+        });
 
         if (previewParams && recordId) {
           setPreviewContent([

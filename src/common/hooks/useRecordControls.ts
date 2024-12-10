@@ -43,6 +43,7 @@ type IBaseFetchRecord = {
   cachedRecord?: RecordEntry;
   idType?: ExternalResourceIdType;
   errorMessage?: string;
+  previewParams?: PreviewParams;
 };
 
 export const useRecordControls = () => {
@@ -247,7 +248,7 @@ export const useRecordControls = () => {
     }
   };
 
-  const getRecordAndInitializeParsing = async ({ recordId, cachedRecord, idType, errorMessage }: IBaseFetchRecord) => {
+  const getRecordAndInitializeParsing = async ({ recordId, cachedRecord, idType, previewParams, errorMessage }: IBaseFetchRecord) => {
     if (!recordId && !cachedRecord) return;
 
     try {
@@ -256,6 +257,7 @@ export const useRecordControls = () => {
       await getProfiles({
         record: recordData,
         recordId,
+        previewParams,
       });
 
       return recordData;
@@ -306,5 +308,6 @@ export const useRecordControls = () => {
     fetchRecordAndSelectEntityValues,
     fetchExternalRecordForPreview,
     tryFetchExternalRecordForEdit,
+    getRecordAndInitializeParsing,
   };
 };

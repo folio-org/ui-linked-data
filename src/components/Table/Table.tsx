@@ -21,7 +21,7 @@ export type Table = {
 };
 
 export const Table = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: Table) => {
-  const sortedHeaderEntries = Object.entries(header).sort(
+  const sortedHeaderEntries = Object.entries(header).toSorted(
     ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
   );
 

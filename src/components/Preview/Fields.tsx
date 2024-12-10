@@ -1,15 +1,11 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
 import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
-import { BFLITE_BFID_TO_BLOCK } from '@common/constants/bibframeMapping.constants';
-import { RecordStatus } from '@common/constants/record.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { getRecordId, getPreviewFieldsConditions } from '@common/helpers/record.helper';
+import { getPreviewFieldsConditions } from '@common/helpers/record.helper';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
 
@@ -59,7 +55,7 @@ type FieldsProps = {
   altSchema?: Schema;
   altUserValues?: UserValues;
   altDisplayNames?: Record<string, string>;
-  hideActions?: boolean;
+  hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
 };
 
@@ -71,25 +67,14 @@ export const Fields = ({
   altSchema,
   altUserValues,
   altDisplayNames,
-  hideActions,
+  hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const { currentlyPreviewedEntityBfid } = useUIState();
-  const { userValues: userValuesFromState, record, selectedEntries } = useInputsState();
+  const { userValues: userValuesFromState, selectedEntries } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
-  const { isEditedRecord: isEdited, setRecordStatus } = useStatusState();
-  const { navigateToEditPage } = useNavigateToEditPage();
+  const { currentlyPreviewedEntityBfid } = useUIState();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
-
-  const handleNavigateToEditPage = () => {
-    setRecordStatus({ type: isEdited ? RecordStatus.saveAndClose : RecordStatus.close });
-
-    const typedSelectedBlock = BFLITE_BFID_TO_BLOCK[bfid as keyof typeof BFLITE_BFID_TO_BLOCK];
-    const id = getRecordId(record, typedSelectedBlock.reference.uri, typedSelectedBlock.referenceKey);
-
-    navigateToEditPage(generateEditResourceUrl(id));
-  };
 
   const entry = base.get(uuid);
   const isOnBranchWithUserValue = paths.includes(uuid);
@@ -121,7 +106,6 @@ export const Fields = ({
     isBlock,
     isBlockContents,
     isInstance,
-    showEntityActions,
     wrapEntities,
   } = getPreviewFieldsConditions({
     entry,
@@ -131,7 +115,7 @@ export const Fields = ({
     schema,
     isOnBranchWithUserValue,
     altDisplayNames,
-    hideActions,
+    hideEntities,
     isEntity,
     forceRenderAllTopLevelEntities,
   });
@@ -149,10 +133,6 @@ export const Fields = ({
           isInstance={isInstance}
           altDisplayNames={altDisplayNames}
           displayNameWithAltValue={displayNameWithAltValue}
-          showEntityActions={showEntityActions}
-          bfid={bfid}
-          handleNavigateToEditPage={handleNavigateToEditPage}
-          record={record}
         />
       )}
       {shouldRenderValuesOrPlaceholders && (
@@ -182,7 +162,7 @@ export const Fields = ({
               altSchema={altSchema}
               altUserValues={altUserValues}
               altDisplayNames={altDisplayNames}
-              hideActions={hideActions}
+              hideEntities={hideEntities}
               forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
             />
           </ConditionalWrapper>

@@ -1,32 +1,31 @@
-import { FormattedMessage } from 'react-intl';
-import classNames from 'classnames';
-import { Preview } from '@components/Preview';
-import { Button, ButtonType } from '@components/Button';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { QueryParams, RESOURCE_CREATE_URLS, ROUTES } from '@common/constants/routes.constants';
+import { QueryParams, RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { InstancesList } from '@components/InstancesList';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { checkIfRecordHasDependencies } from '@common/helpers/record.helper';
-import { useInputsState, useStatusState, useUIState } from '@src/store';
+import { getRecordDependencies } from '@common/helpers/record.helper';
+import { memo, useEffect } from 'react';
+import { TitledPreview } from '@components/Preview/TitledPreview';
 import './EditPreview.scss';
+import { useInputsState, useUIState } from '@src/store';
 
-export const EditPreview = () => {
+export const EditPreview = memo(() => {
+  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
   const { currentlyPreviewedEntityBfid } = useUIState();
-  const { isEditedRecord: isEdited } = useStatusState();
-  const { record } = useInputsState();
+  const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
+  const { resourceId } = useParams();
+  const [queryParams] = useSearchParams();
   const isPositionedSecond =
     currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
-  const { resourceId } = useParams();
-  const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
-  const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
-  const recordHasDependencies = checkIfRecordHasDependencies(record as RecordEntry);
-  const showPreview = recordHasDependencies && !isCreateWorkPageOpened;
-  const { navigateToEditPage } = useNavigateToEditPage();
+  const dependencies = getRecordDependencies(record);
+  const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
+  const selectedForPreview = previewContent?.[0];
+
+  useEffect(() => resetPreviewContent, [resourceId]);
 
   return (
     <div
@@ -34,25 +33,18 @@ export const EditPreview = () => {
         'positioned-second': isPositionedSecond,
       })}
     >
-      {currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && (
-        <div className="preview-container-header">
-          {!recordHasDependencies && (
-            <Button
-              data-testid="create-instance-button"
-              type={ButtonType.Highlighted}
-              onClick={() =>
-                navigateToEditPage(
-                  `${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${resourceId ?? ''}`,
-                )
-              }
-              disabled={!record || isEdited || Boolean(queryParams.get(QueryParams.CloneOf))}
-            >
-              <FormattedMessage id="ld.addInstance" />
-            </Button>
-          )}
-        </div>
+      {showPreview ? (
+        <TitledPreview
+          ownId={dependencies?.entries?.[0]?.id?.toString()}
+          refId={resourceId ?? queryParams.get(QueryParams.Ref)}
+          type={dependencies?.type}
+          previewContent={selectedForPreview}
+          onClickClose={() => setPreviewContent(prev => prev.filter(({ id }) => id !== selectedForPreview.id))}
+          showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
+        />
+      ) : (
+        <InstancesList type={dependencies?.type} refId={resourceId} contents={dependencies} />
       )}
-      {showPreview ? <Preview headless /> : <InstancesList />}
     </div>
   );
-};
+});

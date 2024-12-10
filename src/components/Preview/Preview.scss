@@ -1,4 +1,6 @@
 .preview-panel {
+  padding: 0 0.938rem 0.75rem 0.938rem;
+
   .block {
     border: 1px solid red;
     min-height: 0.5rem;
@@ -80,4 +82,35 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.titled-preview {
+  padding: 0;
+
+  &-header {
+    padding: 0.2rem 0.938rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
+
+    &-plain {
+      padding-top: 0.75rem;
+      border-bottom: none;
+      background-color: transparent;
+    }
+
+    .details {
+      padding: 0.7rem;
+
+      h5 {
+        font-size: 0.95rem;
+      }
+
+      span {
+        color: rgba(0, 0, 0, 0.6)
+      }
+    }
+  }
 }

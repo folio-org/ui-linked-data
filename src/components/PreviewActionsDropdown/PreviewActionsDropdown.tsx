@@ -8,7 +8,7 @@ import { FC } from 'react';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 
 type Props = {
-  referenceId?: string;
+  referenceId?: string | null;
   entityType?: string;
   ownId?: string;
   handleNavigateToEditPage?: VoidFunction;
