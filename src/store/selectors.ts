@@ -1,12 +1,12 @@
 import { createSelectors } from './utils/selectors';
-import { useStatusStore } from './status';
-import { useLoadingStateStore } from './loadingState';
-import { useMarcPreviewStore } from './marcPreview';
-import { useProfileStore } from './profile';
-import { useInputsStore } from './inputs';
-import { useConfigStore } from './config';
-import { useUIStore } from './ui';
-import { useSearchStore } from './search';
+import { useStatusStore } from './stores/status';
+import { useLoadingStateStore } from './stores/loadingState';
+import { useMarcPreviewStore } from './stores/marcPreview';
+import { useProfileStore } from './stores/profile';
+import { useInputsStore } from './stores/inputs';
+import { useConfigStore } from './stores/config';
+import { useUIStore } from './stores/ui';
+import { useSearchStore } from './stores/search';
 
 export const useStatusState = () => createSelectors(useStatusStore).use;
 export const useLoadingState = () => createSelectors(useLoadingStateStore).use;

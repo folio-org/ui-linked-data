@@ -1,8 +1,8 @@
 import { LOCALES } from '@common/i18n/locales';
-import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
+import { createBaseSlice, SliceState } from '../utils/slice';
+import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
 
 type Locale = (typeof LOCALES)[keyof typeof LOCALES];
 type CustomEvents = Record<string, string> | null;

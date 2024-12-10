@@ -7,7 +7,7 @@ import * as Router from 'react-router-dom';
 import * as recordHelper from '@common/helpers/record.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { Edit } from '@views';
-import { useProfileStore } from '@src/store/profile';
+import { useProfileStore } from '@src/store/stores/profile';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 const monograph = {

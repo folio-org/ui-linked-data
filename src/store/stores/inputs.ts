@@ -1,5 +1,5 @@
-import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
+import { createBaseSlice, SliceState } from '../utils/slice';
+import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
 
 export type RecordState = RecordEntry | null;
 export type SelectedRecordBlocksState = SelectedRecordBlocks | undefined;

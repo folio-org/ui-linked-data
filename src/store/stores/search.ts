@@ -3,8 +3,8 @@ import {
   DEFAULT_SEARCH_BY,
   DEFAULT_SEARCH_LIMITERS,
 } from '@common/constants/search.constants';
-import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
+import { createBaseSlice, SliceState } from '../utils/slice';
+import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
 
 type Data = null | WorkAsSearchResultDTO[];
 type SourceData = SourceDataDTO | null;

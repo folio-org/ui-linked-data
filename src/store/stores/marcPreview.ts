@@ -1,5 +1,5 @@
-import { createBaseSlice, SliceState } from './utils/slice';
-import { generateStore, type StateCreatorTyped } from './utils/storeCreator';
+import { createBaseSlice, SliceState } from '../utils/slice';
+import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
 
 type MarcPreviewData = MarcDTO | null;
 type MarcPreviewMetaData = MarcPreviewMetadata | null;
