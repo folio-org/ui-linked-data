@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { ChangeEvent, ReactNode } from 'react';
 import { useSearchFilters } from '@common/hooks/useSearchFilters';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -21,7 +20,7 @@ describe('useSearchFilters', () => {
         },
       ]);
 
-      return <RecoilRoot>{children}</RecoilRoot>;
+      return <div>{children}</div>;
     };
 
   test('onChangeLimiters - should update single facets', () => {

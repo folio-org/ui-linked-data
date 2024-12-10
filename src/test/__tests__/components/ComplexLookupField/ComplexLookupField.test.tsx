@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -42,11 +41,9 @@ describe('Complex Lookup Field', () => {
     ]);
 
     render(
-      <RecoilRoot>
-        <MockServicesProvider>
-          <ComplexLookupField onChange={onChange} entry={entry} value={value} />
-        </MockServicesProvider>
-      </RecoilRoot>,
+      <MockServicesProvider>
+        <ComplexLookupField onChange={onChange} entry={entry} value={value} />
+      </MockServicesProvider>,
     );
   }
 

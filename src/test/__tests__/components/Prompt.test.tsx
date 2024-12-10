@@ -2,7 +2,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
-import { RecoilRoot } from 'recoil';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useConfigStore } from '@src/store';
 
@@ -59,13 +58,11 @@ const renderPrompt = (isBlocking = true) => {
   ]);
 
   return render(
-    <RecoilRoot>
-      <RouterProvider
-        router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], {
-          initialEntries: [mockPath],
-        })}
-      />
-    </RecoilRoot>,
+    <RouterProvider
+      router={createMemoryRouter([{ path: mockPath, element: <Prompt when={isBlocking} /> }], {
+        initialEntries: [mockPath],
+      })}
+    />,
   );
 };
 

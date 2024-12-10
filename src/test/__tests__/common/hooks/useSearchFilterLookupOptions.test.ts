@@ -3,8 +3,6 @@ import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useSearchFilterLookupOptions } from '@common/hooks/useSearchFilterLookupOptions';
 import { useSearchStore } from '@src/store';
 
-jest.mock('recoil');
-
 describe('useSearchFilterLookupOptions', () => {
   const facet = 'testFacet';
 

@@ -8,15 +8,6 @@ import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks_
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
-jest.mock('@state', () => ({
-  default: {
-    search: {
-      data: null,
-      index: '',
-      query: '',
-    },
-  },
-}));
 
 describe('useLoadSearchResults', () => {
   const setData = jest.fn();

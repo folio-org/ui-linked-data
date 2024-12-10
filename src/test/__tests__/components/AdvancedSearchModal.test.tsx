@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import * as SearchHelper from '@common/helpers/search.helper';
@@ -30,16 +29,14 @@ describe('AdvancedSearchModal', () => {
     ]);
 
     return render(
-      <RecoilRoot>
-        <RouterProvider
-          router={createMemoryRouter([
-            {
-              path: '/',
-              element: <AdvancedSearchModal clearValues={clearValues} />,
-            },
-          ])}
-        />
-      </RecoilRoot>,
+      <RouterProvider
+        router={createMemoryRouter([
+          {
+            path: '/',
+            element: <AdvancedSearchModal clearValues={clearValues} />,
+          },
+        ])}
+      />,
     );
   });
 

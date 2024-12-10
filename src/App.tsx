@@ -1,6 +1,5 @@
 import { FC, Suspense, useEffect, useRef } from 'react';
 import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Loading } from '@components/Loading';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -81,9 +80,5 @@ export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
     config && localStorageService.serialize(OKAPI_CONFIG, config);
   }, [config]);
 
-  return (
-    <RecoilRoot>
-      <Container routePrefix={routePrefix} config={config} />
-    </RecoilRoot>
-  );
+  return <Container routePrefix={routePrefix} config={config} />;
 };

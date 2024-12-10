@@ -3,7 +3,6 @@ import { useInputsStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 
 const navigate = jest.fn();
 const getRecordTitle = jest.fn();
@@ -28,11 +27,7 @@ describe('PreviewExternalResourcePane', () => {
       },
     ]);
 
-    return render(
-      <RecoilRoot>
-        <PreviewExternalResourcePane />
-      </RecoilRoot>,
-    );
+    return render(<PreviewExternalResourcePane />);
   });
 
   test('invokes getRecordTitle', () => {

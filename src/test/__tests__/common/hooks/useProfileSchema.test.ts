@@ -1,9 +1,6 @@
 import { schemaWithDuplicatesService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { useProfileSchema } from '@common/hooks/useProfileSchema';
-import { renderHook } from '@testing-library/react';
-import { useSetRecoilState, useRecoilState } from 'recoil';
-
-jest.mock('recoil');
+import { act, renderHook } from '@testing-library/react';
 
 describe('useProfileSchema', () => {
   const entry = {
@@ -13,15 +10,10 @@ describe('useProfileSchema', () => {
     children: ['nonExistent', 'testKey-7'],
   };
 
-  beforeEach(() => {
-    (useRecoilState as jest.Mock).mockReturnValue([new Set(), jest.fn()]);
-    (useSetRecoilState as jest.Mock).mockImplementation(jest.fn);
-  });
-
   test('get schema with copied entries', () => {
     const { result } = renderHook(() => useProfileSchema());
 
-    result.current.getSchemaWithCopiedEntries(entry, []);
+    act(() => result.current.getSchemaWithCopiedEntries(entry, []));
 
     expect(schemaWithDuplicatesService.duplicateEntry).toHaveBeenCalled();
   });
@@ -29,7 +21,7 @@ describe('useProfileSchema', () => {
   test('get schema with deleted entries', () => {
     const { result } = renderHook(() => useProfileSchema());
 
-    result.current.getSchemaWithDeletedEntries(entry);
+    act(() => result.current.getSchemaWithDeletedEntries(entry));
 
     expect(schemaWithDuplicatesService.deleteEntry).toHaveBeenCalled();
   });

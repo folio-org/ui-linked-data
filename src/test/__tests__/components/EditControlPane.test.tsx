@@ -2,7 +2,6 @@ import { navigateAsDuplicate } from '@src/test/__mocks__/common/hooks/useNavigat
 import { EditControlPane } from '@components/EditControlPane';
 import { act, fireEvent, render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
-import { RecoilRoot } from 'recoil';
 import * as recordsApi from '@common/api/records.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
@@ -20,19 +19,17 @@ const renderWrapper = (withDropdown = true) => {
   ]);
 
   return render(
-    <RecoilRoot>
-      <RouterProvider
-        router={createMemoryRouter(
-          [
-            {
-              path,
-              element: <EditControlPane />,
-            },
-          ],
-          { initialEntries: [path] },
-        )}
-      />
-    </RecoilRoot>,
+    <RouterProvider
+      router={createMemoryRouter(
+        [
+          {
+            path,
+            element: <EditControlPane />,
+          },
+        ],
+        { initialEntries: [path] },
+      )}
+    />,
   );
 };
 

@@ -4,7 +4,6 @@ import { useInputsStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
 const navigate = jest.fn();
 
@@ -27,13 +26,11 @@ describe('EditPreview', () => {
     ]);
 
     render(
-      <RecoilRoot>
-        <RouterProvider
-          router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
-            initialEntries: ['/resources/create?type=work'],
-          })}
-        />
-      </RecoilRoot>,
+      <RouterProvider
+        router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
+          initialEntries: ['/resources/create?type=work'],
+        })}
+      />,
     );
   });
 

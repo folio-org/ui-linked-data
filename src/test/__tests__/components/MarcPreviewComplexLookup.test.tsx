@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
 import { useMarcPreviewStore, useUIStore } from '@src/store';
@@ -45,11 +44,7 @@ describe('MarcPreviewComplexLookup', () => {
       },
     ]);
 
-    return render(
-      <RecoilRoot>
-        <MarcPreviewComplexLookup onClose={onClose} />
-      </RecoilRoot>,
-    );
+    return render(<MarcPreviewComplexLookup onClose={onClose} />);
   };
 
   it('renders the component when isMarcPreviewOpen is true and marcPreviewData is available', () => {

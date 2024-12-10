@@ -4,8 +4,6 @@ import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useInputsStore, useProfileStore } from '@src/store';
 
-jest.mock('recoil');
-
 describe('useRecordGeneration', () => {
   it('generates a record successfully', () => {
     const schema = 'mockSchema';

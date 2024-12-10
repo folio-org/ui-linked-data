@@ -3,7 +3,6 @@ import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { ItemSearch } from '@components/ItemSearch';
 import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
@@ -128,15 +127,13 @@ describe('Item Search', () => {
     ]);
 
     render(
-      <RecoilRoot>
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route path="/" element={<ItemSearch />} />
-            <Route path="/resources/:resourceId/edit" element={<Edit />} />
-          </Routes>
-          <CommonStatus />
-        </BrowserRouter>
-      </RecoilRoot>,
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path="/" element={<ItemSearch />} />
+          <Route path="/resources/:resourceId/edit" element={<Edit />} />
+        </Routes>
+        <CommonStatus />
+      </BrowserRouter>,
     );
   });
 

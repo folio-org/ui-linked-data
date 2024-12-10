@@ -1,6 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
 import { ChangeEvent } from 'react';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -18,16 +17,13 @@ import {
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useInputsStore } from '@src/store';
 
-jest.mock('recoil');
 jest.mock('@common/helpers/complexLookup.helper');
 jest.mock('@common/hooks/useMarcData');
 
 describe('useComplexLookup', () => {
-  const mockSchema = new Map();
   const mockSelectedEntries = [] as string[];
   const mockSetSelectedEntries = jest.fn();
   const mockClearhMarcData = jest.fn();
-  const mockResetRecoilState = jest.fn();
 
   const mockEntry = {
     uuid: 'testUuid',
@@ -53,13 +49,6 @@ describe('useComplexLookup', () => {
       },
     },
   } as ComplexLookupsConfigEntry;
-  const mockMarcPreviewMetadata = {
-    baseId: 'newId',
-    marcId: 'newMarcId',
-    srsId: 'newSrsId',
-    title: 'newTitle',
-    headingType: 'headingType',
-  };
 
   const mockOnChange = jest.fn();
   let result: any;
@@ -87,8 +76,6 @@ describe('useComplexLookup', () => {
       },
     ]);
 
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(mockSchema).mockReturnValueOnce(mockMarcPreviewMetadata);
-    (useResetRecoilState as jest.Mock).mockReturnValue(mockResetRecoilState);
     (useMarcData as jest.Mock).mockReturnValue({
       fetchMarcData: jest.fn().mockResolvedValue({ matchedId: 'newSrsId' }),
       clearMarcData: mockClearhMarcData,

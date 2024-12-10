@@ -2,7 +2,6 @@ import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -207,13 +206,9 @@ describe('EditSection', () => {
     ]);
 
     return render(
-      <RecoilRoot>
-        <ServicesProvider>
-          <RouterProvider
-            router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })}
-          />
-        </ServicesProvider>
-      </RecoilRoot>,
+      <ServicesProvider>
+        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
+      </ServicesProvider>,
     );
   };
 

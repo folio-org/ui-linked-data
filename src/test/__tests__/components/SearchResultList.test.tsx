@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { SearchResultList } from '@components/SearchResultList';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useSearchStore } from '@src/store';
@@ -19,9 +18,7 @@ describe('SearchResultList', () => {
 
     render(
       <BrowserRouter>
-        <RecoilRoot>
-          <SearchResultList />
-        </RecoilRoot>
+        <SearchResultList />
       </BrowserRouter>,
     );
   });

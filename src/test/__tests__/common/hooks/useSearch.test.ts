@@ -15,7 +15,6 @@ const getCurrentPageNumber = jest.fn().mockReturnValue(0);
 const fetchData = jest.fn();
 
 jest.mock('react-router-dom');
-jest.mock('recoil');
 jest.mock('@common/hooks/useSearchContext');
 jest.mock('@common/hooks/usePagination', () => ({
   usePagination: () => ({

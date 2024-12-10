@@ -2,7 +2,6 @@ import '@src/test/__mocks__/components/Loading.mock';
 import { useRoutePathPattern } from '@src/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useLoadingStateStore } from '@src/store';
 import { Root } from '@views';
@@ -21,13 +20,11 @@ describe('Root', () => {
     ]);
 
     render(
-      <RecoilRoot>
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route path="/" element={<Root />} />
-          </Routes>
-        </BrowserRouter>
-      </RecoilRoot>,
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path="/" element={<Root />} />
+        </Routes>
+      </BrowserRouter>,
     );
   }
 

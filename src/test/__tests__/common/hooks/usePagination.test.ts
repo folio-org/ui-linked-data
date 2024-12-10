@@ -9,9 +9,6 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: () => [new URLSearchParams({ offset: '0' }), setSearchParams],
 }));
-jest.mock('recoil', () => ({
-  useRecoilValue: jest.fn(),
-}));
 
 describe('usePagination', () => {
   const hasSearchParams = true;

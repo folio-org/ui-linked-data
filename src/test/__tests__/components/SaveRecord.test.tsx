@@ -1,4 +1,3 @@
-import { RecoilRoot } from 'recoil';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { SaveRecord } from '@components/SaveRecord';
@@ -16,11 +15,9 @@ describe('SaveRecord', () => {
     ]);
 
     render(
-      <RecoilRoot>
-        <BrowserRouter>
-          <SaveRecord primary />
-        </BrowserRouter>
-      </RecoilRoot>,
+      <BrowserRouter>
+        <SaveRecord primary />
+      </BrowserRouter>,
     );
   }
 

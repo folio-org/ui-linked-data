@@ -3,7 +3,6 @@ import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
 const initialSchemaKey = 'uuid0';
 
@@ -56,11 +55,9 @@ describe('Preview', () => {
     ]);
 
     return render(
-      <RecoilRoot>
-        <BrowserRouter>
-          <Preview />
-        </BrowserRouter>
-      </RecoilRoot>,
+      <BrowserRouter>
+        <Preview />
+      </BrowserRouter>,
     );
   });
 

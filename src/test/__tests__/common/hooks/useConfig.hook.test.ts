@@ -1,11 +1,10 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
-import { useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
 import * as SchemaService from '@common/services/schema';
-import { useProfileStore } from '@src/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 
 const profiles = [
   {
@@ -27,7 +26,6 @@ const profiles = [
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
 
-jest.mock('recoil');
 jest.mock('@common/services/schema');
 jest.mock('@common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
@@ -40,17 +38,6 @@ jest.mock('@common/api/profiles.api', () => ({
 }));
 jest.mock('@common/api/client', () => ({
   apiClient: jest.fn(),
-}));
-jest.mock('@state', () => ({
-  default: {
-    config: {
-      selectedEntries: [],
-    },
-    inputs: {
-      userValues: {},
-      previewContent: {},
-    },
-  },
 }));
 jest.mock('@common/services/userValues', () => ({
   UserValuesService: jest.fn(),
@@ -77,7 +64,7 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
 
-  const mockUseRecoilState = (profiles: ProfileEntry[] = []) => {
+  const mockUseGlobalState = (profiles: ProfileEntry[] = []) => {
     setUpdatedGlobalState([
       {
         store: useProfileStore,
@@ -87,12 +74,6 @@ describe('useConfig', () => {
   };
 
   beforeEach(() => {
-    (useSetRecoilState as jest.Mock)
-      .mockReturnValueOnce(setUserValues)
-      .mockReturnValueOnce(setSelectedEntries)
-      .mockReturnValueOnce(setPreviewContent)
-      .mockReturnValueOnce(setSelectedRecordBlocks);
-
     setInitialGlobalState([
       {
         store: useProfileStore,
@@ -109,13 +90,25 @@ describe('useConfig', () => {
           setInitialSchemaKey,
         },
       },
+      {
+        store: useInputsStore,
+        state: {
+          userValues: {},
+          previewContent: {},
+          selectedEntries: [],
+          setUserValues,
+          setSelectedEntries,
+          setPreviewContent,
+          setSelectedRecordBlocks,
+        },
+      },
     ]);
 
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 
   test('prepareFields - calls "setPreparedFields" and returns an object with required fields', async () => {
-    mockUseRecoilState();
+    mockUseGlobalState();
     const testResult = {
       templateId_1: {
         id: 'templateId_1',
@@ -136,7 +129,7 @@ describe('useConfig', () => {
     } as RecordEntry;
 
     test('calls "fetchProfiles" and "setProfiles" and returns an array of profiles', async () => {
-      mockUseRecoilState();
+      mockUseGlobalState();
       (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
       const { result } = renderHook(useConfig);
@@ -148,7 +141,7 @@ describe('useConfig', () => {
     });
 
     test('does not call "fetchProfiles" and "setProfiles" and returns a stored array of profiles', async () => {
-      mockUseRecoilState(profiles);
+      mockUseGlobalState(profiles);
 
       const { result } = renderHook(useConfig);
 

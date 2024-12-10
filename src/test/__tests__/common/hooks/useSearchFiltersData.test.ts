@@ -4,7 +4,6 @@ import * as SearchApi from '@common/api/search.api';
 import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
 import { useSearchStore, useStatusStore } from '@src/store';
 
-jest.mock('recoil');
 jest.mock('@common/api/search.api');
 jest.mock('@common/services/userNotification');
 

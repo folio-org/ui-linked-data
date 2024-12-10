@@ -3,7 +3,6 @@ import { getProfiles } from '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fetchRecord, clearRecordState } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import { act, render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import * as Router from 'react-router-dom';
 import * as recordHelper from '@common/helpers/record.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
@@ -58,11 +57,9 @@ describe('Edit', () => {
       ]);
 
       return render(
-        <RecoilRoot>
-          <Router.BrowserRouter>
-            <Edit />
-          </Router.BrowserRouter>
-        </RecoilRoot>,
+        <Router.BrowserRouter>
+          <Edit />
+        </Router.BrowserRouter>,
       );
     });
 

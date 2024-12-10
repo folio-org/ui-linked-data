@@ -3,7 +3,6 @@ import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 import * as ReactRouterDom from 'react-router-dom';
 import * as RecordsApi from '@common/api/records.api';
-import { RecoilRoot } from 'recoil';
 
 const navigate = jest.fn();
 
@@ -17,11 +16,9 @@ jest.mock('react-router-dom', () => ({
 describe('PreviewExternalResourceControls', () => {
   const renderComponent = () =>
     render(
-      <RecoilRoot>
-        <ReactRouterDom.MemoryRouter>
-          <PreviewExternalResourceControls />
-        </ReactRouterDom.MemoryRouter>
-      </RecoilRoot>,
+      <ReactRouterDom.MemoryRouter>
+        <PreviewExternalResourceControls />
+      </ReactRouterDom.MemoryRouter>,
     );
 
   describe('continue', () => {
