@@ -1,4 +1,5 @@
-import { useEffect, memo } from 'react';
+import { useEffect, memo, useRef } from 'react';
+import { debounce } from 'lodash';
 import classNames from 'classnames';
 import { saveRecordLocally } from '@common/helpers/record.helper';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
@@ -8,10 +9,12 @@ import { Fields } from '@components/Fields';
 import { Prompt } from '@components/Prompt';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useServicesContext } from '@common/hooks/useServicesContext';
-import { renderDrawComponent } from './renderDrawComponent';
-import './EditSection.scss';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { renderDrawComponent } from './renderDrawComponent';
+import './EditSection.scss';
+
+const USER_INPUT_DELAY = 750;
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
@@ -45,10 +48,16 @@ export const EditSection = memo(() => {
     return () => clearInterval(autoSaveRecord);
   }, [isEdited, userValues]);
 
+  const debouncedAddUserValues = useRef(
+    debounce((value: UserValues) => {
+      addUserValues?.(value);
+    }, USER_INPUT_DELAY),
+  ).current;
+
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) setIsEdited(true);
 
-    addUserValues?.({
+    debouncedAddUserValues({
       [uuid]: {
         uuid,
         contents,
