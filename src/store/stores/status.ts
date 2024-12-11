@@ -23,7 +23,6 @@ const sliceConfigs: SliceConfigs = {
   statusMessages: {
     initialValue: [],
     singleItem: { type: {} },
-    canAddSingleItem: true,
   },
 };
 

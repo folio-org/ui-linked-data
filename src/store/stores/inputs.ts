@@ -16,7 +16,6 @@ const STORE_NAME = 'Inputs';
 const sliceConfigs: SliceConfigs = {
   userValues: {
     initialValue: {},
-    canAddSingleItem: true,
     singleItem: { type: {} as UserValue },
   },
   previewContent: {

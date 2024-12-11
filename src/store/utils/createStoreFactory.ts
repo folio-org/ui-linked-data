@@ -6,7 +6,6 @@ type SliceConfig<Value = any, SingleItemType = any> = {
   singleItem?: {
     type: SingleItemType;
   };
-  canAddSingleItem?: boolean;
 };
 
 export type SliceConfigs = Record<string, SliceConfig>;
@@ -24,14 +23,14 @@ export function createStoreFactory<U, T extends SliceConfigs>(configs: T, storeN
 
   const storeCreator: StateCreatorTyped<State> = (set, get, api) =>
     Object.entries(configs).reduce(
-      (acc, [key, { initialValue, canAddSingleItem }]) => ({
+      (acc, [key, { initialValue, singleItem }]) => ({
         ...acc,
         ...createBaseSlice(
           {
             basic: key as keyof T & string,
           },
           initialValue,
-          canAddSingleItem,
+          !!singleItem,
         )(set as any, get as any, api as any),
       }),
       {} as State,
