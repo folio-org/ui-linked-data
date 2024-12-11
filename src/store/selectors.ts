@@ -1,4 +1,3 @@
-import { createSelectors } from './utils/selectors';
 import { useStatusStore } from './stores/status';
 import { useLoadingStateStore } from './stores/loadingState';
 import { useMarcPreviewStore } from './stores/marcPreview';
@@ -8,11 +7,13 @@ import { useConfigStore } from './stores/config';
 import { useUIStore } from './stores/ui';
 import { useSearchStore } from './stores/search';
 
-export const useStatusState = () => createSelectors(useStatusStore).use;
-export const useLoadingState = () => createSelectors(useLoadingStateStore).use;
-export const useMarcPreviewState = () => createSelectors(useMarcPreviewStore).use;
-export const useProfileState = () => createSelectors(useProfileStore).use;
-export const useInputsState = () => createSelectors(useInputsStore).use;
-export const useConfigState = () => createSelectors(useConfigStore).use;
-export const useUIState = () => createSelectors(useUIStore).use;
-export const useSearchState = () => createSelectors(useSearchStore).use;
+// "createSelectors" can be used here for generation of the memoized selectors.
+// Now this function is non-optimized and its usage causes memory leaks.
+export const useStatusState = useStatusStore;
+export const useLoadingState = useLoadingStateStore;
+export const useMarcPreviewState = useMarcPreviewStore;
+export const useProfileState = useProfileStore;
+export const useInputsState = useInputsStore;
+export const useConfigState = useConfigStore;
+export const useUIState = useUIStore;
+export const useSearchState = useSearchStore;
