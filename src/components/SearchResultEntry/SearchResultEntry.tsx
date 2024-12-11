@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
 import { Row, Table } from '@components/Table';
 import { Button, ButtonType } from '@components/Button';
@@ -57,6 +57,7 @@ const instancesListHeader: Row = {
 };
 
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
+  const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
   const navigationState = useRecoilValue(state.search.navigationState);
   const [isOpen, setIsOpen] = useState(true);
@@ -89,6 +90,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
             type={ButtonType.Link}
             onClick={() => handleOpenPreview(row?.__meta?.id)}
             data-testid={`preview-button__${row.__meta.id}`}
+            ariaLabel={formatMessage({ id: 'ld.aria.sections.openResourcePreview' })}
           >
             {row.title.label}
           </Button>
@@ -109,7 +111,12 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
       selectCtl: {
         children: (
           <div className="row-select-container">
-            <input id={`row-select-ctl-${row.__meta?.key}`} type="checkbox" disabled={IS_DISABLED_FOR_ALPHA} />
+            <input
+              id={`row-select-ctl-${row.__meta?.key}`}
+              type="checkbox"
+              disabled={IS_DISABLED_FOR_ALPHA}
+              aria-label={formatMessage({ id: 'ld.aria.table.selectRow' })}
+            />
           </div>
         ),
       },

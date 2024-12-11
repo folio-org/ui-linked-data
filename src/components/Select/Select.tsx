@@ -18,7 +18,7 @@ type Select = {
   withIntl?: boolean;
   className?: string;
   ariaLabel?: string;
-  ariaLabelledby?: string;
+  ariaLabelledBy?: string;
   [x: string]: any;
 };
 
@@ -30,7 +30,7 @@ export const Select: FC<Select> = ({
   withIntl = false,
   className,
   ariaLabel,
-  ariaLabelledby,
+  ariaLabelledBy,
   ...restProps
 }) => {
   const selectedValue = typeof value === 'string' ? value : value?.value;
@@ -48,7 +48,7 @@ export const Select: FC<Select> = ({
       role="combobox"
       aria-expanded="false"
       aria-label={ariaLabel}
-      aria-labelledby={ariaLabelledby}
+      aria-labelledby={ariaLabelledBy}
       {...restProps}
     >
       {options.map(id => {

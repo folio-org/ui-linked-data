@@ -1,5 +1,5 @@
 import { useRecoilState } from 'recoil';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { RESOURCE_TEMPLATE_IDS } from '@common/constants/bibframe.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -11,6 +11,7 @@ import './FullDisplay.scss';
 
 export const PreviewContent = () => {
   const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
+  const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
 
   return previewContent.map(({ id, base, userValues, initKey, title, entities }) => {
@@ -21,7 +22,12 @@ export const PreviewContent = () => {
     return (
       <div key={id}>
         <div className="full-display-control-panel">
-          <Button className="close" data-testid="preview-remove" onClick={handleButtonClick}>
+          <Button
+            className="close"
+            data-testid="preview-remove"
+            onClick={handleButtonClick}
+            ariaLabel={formatMessage({ id: 'ld.aria.sections.closeResourcePreview' })}
+          >
             <Times16 />
           </Button>
           <div className="info">
