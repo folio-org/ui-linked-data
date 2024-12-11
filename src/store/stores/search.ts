@@ -3,8 +3,8 @@ import {
   DEFAULT_SEARCH_BY,
   DEFAULT_SEARCH_LIMITERS,
 } from '@common/constants/search.constants';
-import { createBaseSlice, SliceState } from '../utils/slice';
-import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
+import { type SliceState } from '../utils/slice';
+import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
 
 type Data = null | WorkAsSearchResultDTO[];
 type SourceData = SourceDataDTO | null;
@@ -24,19 +24,43 @@ export type SearchState = SliceState<'query', string> &
 
 const STORE_NAME = 'Search';
 
-const searchStore: StateCreatorTyped<SearchState> = (...args) => ({
-  ...createBaseSlice({ basic: 'query' }, '')(...args),
-  ...createBaseSlice({ basic: 'message' }, '')(...args),
-  ...createBaseSlice({ basic: 'searchBy' }, DEFAULT_SEARCH_BY as SearchIdentifiers)(...args),
-  ...createBaseSlice({ basic: 'data' }, null as Data)(...args),
-  ...createBaseSlice({ basic: 'facets' }, DEFAULT_SEARCH_LIMITERS as Limiters)(...args),
-  ...createBaseSlice({ basic: 'navigationState' }, {} as SearchParamsState)(...args),
-  ...createBaseSlice({ basic: 'forceRefresh' }, false)(...args),
-  ...createBaseSlice({ basic: 'pageMetadata' }, { totalElements: 0, totalPages: 0 } as PageMetadata)(...args),
-  ...createBaseSlice({ basic: 'facetsBySegments' }, DEFAULT_FACET_BY_SEGMENT as FacetsBySegments)(...args),
-  ...createBaseSlice({ basic: 'sourceData' }, null as SourceData)(...args),
-  ...createBaseSlice({ basic: 'selectedFacetsGroups' }, [] as string[])(...args),
-  ...createBaseSlice({ basic: 'facetsData' }, {} as FacetsDTO)(...args),
-});
+const sliceConfigs: SliceConfigs = {
+  query: {
+    initialValue: '',
+  },
+  message: {
+    initialValue: '',
+  },
+  searchBy: {
+    initialValue: DEFAULT_SEARCH_BY,
+  },
+  data: {
+    initialValue: null,
+  },
+  facets: {
+    initialValue: DEFAULT_SEARCH_LIMITERS,
+  },
+  navigationState: {
+    initialValue: {},
+  },
+  forceRefresh: {
+    initialValue: false,
+  },
+  pageMetadata: {
+    initialValue: { totalElements: 0, totalPages: 0 },
+  },
+  facetsBySegments: {
+    initialValue: DEFAULT_FACET_BY_SEGMENT,
+  },
+  sourceData: {
+    initialValue: null,
+  },
+  selectedFacetsGroups: {
+    initialValue: [],
+  },
+  facetsData: {
+    initialValue: {},
+  },
+};
 
-export const useSearchStore = generateStore(searchStore, STORE_NAME);
+export const useSearchStore = createStoreFactory<SearchState, SliceConfigs>(sliceConfigs, STORE_NAME);

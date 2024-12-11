@@ -23,7 +23,7 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const { recordStatus, addStatusMessage } = useStatusState();
+  const { recordStatus, addStatusMessagesItem } = useStatusState();
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
@@ -85,7 +85,7 @@ export const Edit = () => {
           record: typedRecord,
         });
       } catch {
-        addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {
         setIsLoading(false);
       }

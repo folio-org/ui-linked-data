@@ -1,12 +1,14 @@
-import { createBaseSlice, SliceState } from '../utils/slice';
-import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
+import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { type SliceState } from '../utils/slice';
 
 export type LoadingState = SliceState<'isLoading', boolean>;
 
 const STORE_NAME = 'Loading';
 
-const loadingStateStore: StateCreatorTyped<LoadingState> = (...args) => ({
-  ...createBaseSlice({ basic: 'isLoading' }, false)(...args),
-});
+const sliceConfigs: SliceConfigs = {
+  isLoading: {
+    initialValue: false,
+  },
+};
 
-export const useLoadingStateStore = generateStore(loadingStateStore, STORE_NAME);
+export const useLoadingStateStore = createStoreFactory<LoadingState, SliceConfigs>(sliceConfigs, STORE_NAME);

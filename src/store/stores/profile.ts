@@ -1,5 +1,5 @@
-import { createBaseSlice, SliceState } from '../utils/slice';
-import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
+import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = ProfileEntry | null;
 type PreparedFieldsType = ResourceTemplates | null;
@@ -13,12 +13,22 @@ export type ProfileState = SliceState<'profiles', ProfileEntry[]> &
 
 const STORE_NAME = 'Profile';
 
-const profileStore: StateCreatorTyped<ProfileState> = (...args) => ({
-  ...createBaseSlice({ basic: 'profiles' }, [] as ProfileEntry[])(...args),
-  ...createBaseSlice({ basic: 'selectedProfile' }, null as SelectedProfileType)(...args),
-  ...createBaseSlice({ basic: 'preparedFields' }, null as PreparedFieldsType)(...args),
-  ...createBaseSlice({ basic: 'initialSchemaKey' }, null as InitialSchemaKeyType)(...args),
-  ...createBaseSlice({ basic: 'schema' }, new Map())(...args),
-});
+const sliceConfigs: SliceConfigs = {
+  profiles: {
+    initialValue: [],
+  },
+  selectedProfile: {
+    initialValue: null,
+  },
+  preparedFields: {
+    initialValue: null,
+  },
+  initialSchemaKey: {
+    initialValue: null,
+  },
+  schema: {
+    initialValue: new Map(),
+  },
+};
 
-export const useProfileStore = generateStore(profileStore, STORE_NAME);
+export const useProfileStore = createStoreFactory<ProfileState, SliceConfigs>(sliceConfigs, STORE_NAME);

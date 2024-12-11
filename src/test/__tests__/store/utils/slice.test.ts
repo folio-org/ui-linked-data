@@ -2,7 +2,6 @@ import { createBaseSlice, SliceState } from '@src/store/utils/slice';
 
 describe('createBaseSlice', () => {
   type KeyBasic = 'testKey';
-  type KeySingleItem = 'item';
 
   const keys = { basic: 'testKey' };
   const initialValue = 'initialValue';
@@ -15,7 +14,7 @@ describe('createBaseSlice', () => {
   });
 
   describe('"set" method', () => {
-    let baseSlice: SliceState<string, string, string, string>;
+    let baseSlice: SliceState<string, string, string>;
     const initialState = { [keys.basic]: initialValue };
 
     beforeEach(() => {
@@ -55,14 +54,14 @@ describe('createBaseSlice', () => {
   });
 
   describe('"add" method', () => {
-    const keys = { basic: 'testKey' as KeyBasic, singleItem: 'item' as KeySingleItem };
+    const keys = { basic: 'testKey' as KeyBasic };
 
     test('updates the state when canAddSingleItem is true', () => {
       const initialValue = ['initialValue'];
-      const baseSlice = createBaseSlice<'testKey', string[], 'item', string>(keys, initialValue, true)(set, get, store);
+      const baseSlice = createBaseSlice<'testKey', string[], string>(keys, initialValue, true)(set, get, store);
 
-      baseSlice.addItem?.('newItem');
-      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKey');
+      baseSlice.addTestKeyItem?.('newItem');
+      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKeyItem');
 
       const state = { testKey: ['initialValue'] };
       const updater = set.mock.calls[0][0];
@@ -71,33 +70,25 @@ describe('createBaseSlice', () => {
 
     test('updates the state when value is an object', () => {
       type StateEntry = Record<string, string>;
-      const initialValue = { key1: 'value_1' } as StateEntry;
-      const baseSlice = createBaseSlice<KeyBasic, StateEntry, KeySingleItem, StateEntry>(keys, initialValue, true)(
-        set,
-        get,
-        store,
-      );
+      const initialValue = { key_1: 'value_1' } as StateEntry;
+      const baseSlice = createBaseSlice<KeyBasic, StateEntry, StateEntry>(keys, initialValue, true)(set, get, store);
 
-      baseSlice.addItem?.({ key2: 'value_2' });
-      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKey');
+      baseSlice.addTestKeyItem?.({ key_2: 'value_2' });
+      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKeyItem');
 
-      const state = { testKey: { key1: 'value_1' } };
+      const state = { testKey: { key_1: 'value_1' } };
       const updater = set.mock.calls[0][0];
       expect(updater(state)).toEqual({
-        testKey: { key1: 'value_1', key2: 'value_2' },
+        testKey: { key_1: 'value_1', key_2: 'value_2' },
       });
     });
 
     test('updates the state when value is a Set', () => {
       const initialValue = new Set(['value_1']);
-      const baseSlice = createBaseSlice<KeyBasic, Set<string>, KeySingleItem, string>(keys, initialValue, true)(
-        set,
-        get,
-        store,
-      );
+      const baseSlice = createBaseSlice<KeyBasic, Set<string>, string>(keys, initialValue, true)(set, get, store);
 
-      baseSlice.addItem?.('value_2');
-      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKey');
+      baseSlice.addTestKeyItem?.('value_2');
+      expect(set).toHaveBeenCalledWith(expect.any(Function), false, 'addTestKeyItem');
 
       const state = { testKey: new Set(['value_1']) };
       const updater = set.mock.calls[0][0];

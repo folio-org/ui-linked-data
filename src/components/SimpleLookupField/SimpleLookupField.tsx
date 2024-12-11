@@ -43,7 +43,7 @@ export const SimpleLookupField: FC<Props> = ({
   const { getLookupData, loadLookupData } = useSimpleLookupData();
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
-  const { addStatusMessage } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
@@ -65,7 +65,7 @@ export const SimpleLookupField: FC<Props> = ({
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 
-      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
     } finally {
       setIsLoading(false);
     }

@@ -1,8 +1,8 @@
 import { LOCALES } from '@common/i18n/locales';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
-import { createBaseSlice, SliceState } from '../utils/slice';
-import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
+import { type SliceState } from '../utils/slice';
+import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
 
 type Locale = (typeof LOCALES)[keyof typeof LOCALES];
 type CustomEvents = Record<string, string> | null;
@@ -13,13 +13,16 @@ export type ConfigState = SliceState<'locale', Locale> &
 
 const STORE_NAME = 'Config';
 
-const configStore: StateCreatorTyped<ConfigState> = (...args) => ({
-  ...createBaseSlice(
-    { basic: 'locale' },
-    localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH_US,
-  )(...args),
-  ...createBaseSlice({ basic: 'customEvents' }, null as CustomEvents)(...args),
-  ...createBaseSlice({ basic: 'hasNavigationOrigin' }, false)(...args),
-});
+const sliceConfigs: SliceConfigs = {
+  locale: {
+    initialValue: localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH_US,
+  },
+  customEvents: {
+    initialValue: null as CustomEvents,
+  },
+  hasNavigationOrigin: {
+    initialValue: false,
+  },
+};
 
-export const useConfigStore = generateStore(configStore, STORE_NAME);
+export const useConfigStore = createStoreFactory<ConfigState, SliceConfigs>(sliceConfigs, STORE_NAME);

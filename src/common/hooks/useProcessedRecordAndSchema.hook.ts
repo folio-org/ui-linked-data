@@ -21,7 +21,7 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
-  const { addStatusMessage } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
   const { setRecord } = useInputsState();
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
@@ -72,7 +72,7 @@ export const useProcessedRecordAndSchema = () => {
       } catch (error) {
         console.error(error);
 
-        addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       }
 
       return {
@@ -87,7 +87,7 @@ export const useProcessedRecordAndSchema = () => {
       recordToSchemaMappingService,
       schemaWithDuplicatesService,
       setRecord,
-      addStatusMessage,
+      addStatusMessagesItem,
       userValuesService,
     ],
   );

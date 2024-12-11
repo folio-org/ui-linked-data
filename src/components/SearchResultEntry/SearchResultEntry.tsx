@@ -60,7 +60,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const { navigationState } = useSearchState();
   const [isOpen, setIsOpen] = useState(true);
   const { setIsLoading } = useLoadingState();
-  const { addStatusMessage } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
   const { previewContent } = useInputsState();
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
@@ -72,7 +72,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     } catch (error) {
       console.error(error);
 
-      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {
       setIsLoading(false);
     }

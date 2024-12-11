@@ -20,7 +20,7 @@ export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const { selectedProfile, initialSchemaKey } = useProfileState();
   const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
-  const { userValues, addUserValues, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
+  const { userValues, addUserValuesItem, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
     useInputsState();
   const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();
   const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
@@ -50,7 +50,7 @@ export const EditSection = memo(() => {
 
   const debouncedAddUserValues = useRef(
     debounce((value: UserValues) => {
-      addUserValues?.(value);
+      addUserValuesItem?.(value);
     }, USER_INPUT_DELAY),
   ).current;
 

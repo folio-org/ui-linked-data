@@ -13,7 +13,7 @@ describe('useSearchFiltersData', () => {
   const resetSelectedFacetsGroups = jest.fn();
   const setFacetsData = jest.fn();
   const setSourceData = jest.fn();
-  const addStatusMessage = jest.fn();
+  const addStatusMessagesItem = jest.fn();
 
   const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
   const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
@@ -30,7 +30,7 @@ describe('useSearchFiltersData', () => {
           setSourceData,
         },
       },
-      { store: useStatusStore, state: { addStatusMessage } },
+      { store: useStatusStore, state: { addStatusMessagesItem } },
     ]);
   });
 

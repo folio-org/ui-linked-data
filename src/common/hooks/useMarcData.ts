@@ -5,7 +5,7 @@ import { useLoadingState, useStatusState } from '@src/store';
 
 export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
   const { setIsLoading } = useLoadingState();
-  const { addStatusMessage } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return undefined;
@@ -19,7 +19,7 @@ export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
 
       setMarcPreviewData(marcData);
     } catch (error) {
-      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
     } finally {
       setIsLoading(false);
     }

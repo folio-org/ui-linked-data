@@ -4,6 +4,8 @@ import { IS_PROD_MODE } from '@common/constants/bundle.constants';
 
 const STORE_NAME = 'Linked Data Editor';
 
+export type WithDevtools<T> = ReturnType<typeof devtools<T>>;
+
 export type StateCreatorTyped<T> = StateCreator<T, [['zustand/devtools', never]], []>;
 
 export const generateStore = <T>(store: StateCreatorTyped<T>, name: string) =>

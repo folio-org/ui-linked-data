@@ -1,5 +1,5 @@
-import { createBaseSlice, SliceState } from '../utils/slice';
-import { generateStore, type StateCreatorTyped } from '../utils/storeCreator';
+import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { type SliceState } from '../utils/slice';
 
 export type RecordState = RecordEntry | null;
 export type SelectedRecordBlocksState = SelectedRecordBlocks | undefined;
@@ -13,12 +13,24 @@ export type InputsState = SliceState<'userValues', UserValues> &
 
 const STORE_NAME = 'Inputs';
 
-const inputsStore: StateCreatorTyped<InputsState> = (...args) => ({
-  ...createBaseSlice({ basic: 'userValues' }, {} as UserValues, true)(...args),
-  ...createBaseSlice({ basic: 'previewContent' }, [] as PreviewContent[])(...args),
-  ...createBaseSlice({ basic: 'record' }, null as RecordState)(...args),
-  ...createBaseSlice({ basic: 'selectedRecordBlocks' }, undefined as SelectedRecordBlocksState)(...args),
-  ...createBaseSlice({ basic: 'selectedEntries' }, [] as SelectedEntriesState)(...args),
-});
+const sliceConfigs: SliceConfigs = {
+  userValues: {
+    initialValue: {},
+    canAddSingleItem: true,
+    singleItem: { type: {} as UserValue },
+  },
+  previewContent: {
+    initialValue: [],
+  },
+  record: {
+    initialValue: null,
+  },
+  selectedRecordBlocks: {
+    initialValue: undefined,
+  },
+  selectedEntries: {
+    initialValue: [],
+  },
+};
 
-export const useInputsStore = generateStore(inputsStore, STORE_NAME);
+export const useInputsStore = createStoreFactory<InputsState, SliceConfigs>(sliceConfigs, STORE_NAME);

@@ -2,14 +2,14 @@ import { StateCreator } from 'zustand';
 
 type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : S;
 
-export type SliceState<K extends string, V, S extends string = K, T = V> = {
+export type SliceState<K extends string, V, T = V> = {
   [P in K]: V;
 } & {
   [P in `set${Capitalize<K>}`]: (value: V | SetState<V>) => void;
 } & {
   [P in `reset${Capitalize<K>}`]: () => void;
 } & Partial<{
-    [P in `add${Capitalize<S>}`]: (value: T) => void;
+    [P in `add${Capitalize<K>}Item`]: (value: T) => void;
   }>;
 
 const capitalize = (value: string) => {
@@ -18,7 +18,7 @@ const capitalize = (value: string) => {
 
 const updateValue = <V, T>(value: V, updatedValue: T): V => {
   if (Array.isArray(value)) {
-    return [...value, updatedValue] as any;
+    return [...value, updatedValue] as V;
   } else if (value instanceof Map) {
     const newMap = new Map(value);
 
@@ -28,9 +28,9 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
       Object.entries(updatedValue).forEach(([key, value]) => newMap.set(key, value));
     }
 
-    return newMap as any;
+    return newMap as V;
   } else if (value instanceof Set) {
-    return new Set([...value, updatedValue]) as any;
+    return new Set([...value, updatedValue]) as V;
   } else if (typeof value === 'object' && value !== null) {
     if (typeof updatedValue === 'object' && updatedValue !== null) {
       return { ...value, ...updatedValue } as any;
@@ -44,11 +44,11 @@ const updateValue = <V, T>(value: V, updatedValue: T): V => {
   return updatedValue as any;
 };
 
-export const createBaseSlice = <K extends string, V, S extends string = K, T = V>(
-  keys: { basic: K; singleItem?: S },
+export const createBaseSlice = <K extends string, V, T = V>(
+  keys: { basic: K },
   initialValue: V,
   canAddSingleItem = false,
-): StateCreator<SliceState<K, V, S, T>, [['zustand/devtools', never]], [], SliceState<K, V, S, T>> => {
+): StateCreator<SliceState<K, V, T>, [['zustand/devtools', never]], [], SliceState<K, V, T>> => {
   return set => {
     const capitalizedTitle = capitalize(keys.basic);
 
@@ -65,10 +65,10 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
           `set${capitalizedTitle}`,
         ),
       [`reset${capitalizedTitle}`]: () => set({ [keys.basic]: initialValue } as any, false, `reset${capitalizedTitle}`),
-    } as SliceState<K, V, S, T>;
+    } as SliceState<K, V, T>;
 
     if (canAddSingleItem) {
-      (baseSlice as any)[`add${capitalize(keys.singleItem ?? keys.basic)}`] = (updatedValue: T) =>
+      (baseSlice as any)[`add${capitalize(keys.basic)}Item`] = (updatedValue: T) =>
         set(
           state => {
             const value = state[keys.basic] as any;
@@ -76,7 +76,7 @@ export const createBaseSlice = <K extends string, V, S extends string = K, T = V
             return { [keys.basic]: updateValue(value, updatedValue) } as any;
           },
           false,
-          `add${capitalizedTitle}`,
+          `add${capitalizedTitle}Item`,
         );
     }
 

@@ -10,7 +10,7 @@ const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 export const useSearchFiltersData = () => {
   const { selectedFacetsGroups, setSelectedFacetsGroups, resetSelectedFacetsGroups, setFacetsData, setSourceData } =
     useSearchState();
-  const { addStatusMessage } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
 
   useEffect(() => {
     return resetSelectedFacetsGroups();
@@ -37,7 +37,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -56,7 +56,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      addStatusMessage?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 

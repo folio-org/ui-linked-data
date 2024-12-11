@@ -16,7 +16,7 @@ describe('useProcessedRecordAndSchema', () => {
     setInitialGlobalState([
       {
         store: useStatusStore,
-        state: { addStatusMessage: jest.fn() },
+        state: { addStatusMessagesItem: jest.fn() },
       },
       {
         store: useInputsStore,
