@@ -1,7 +1,7 @@
 import { createBaseSlice, type SliceState } from './slice';
 import { generateStore, type StateCreatorTyped } from './storeCreator';
 
-type SliceConfig<Value = any, SingleItemType = any> = {
+type SliceConfig<Value = unknown, SingleItemType = unknown> = {
   initialValue: Value;
   singleItem?: {
     type: SingleItemType;
@@ -31,7 +31,7 @@ export function createStoreFactory<U, T extends SliceConfigs>(configs: T, storeN
           },
           initialValue,
           !!singleItem,
-        )(set as any, get as any, api as any),
+        )(set, get, api),
       }),
       {} as State,
     );

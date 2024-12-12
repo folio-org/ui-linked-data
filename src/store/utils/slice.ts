@@ -71,9 +71,9 @@ export const createBaseSlice = <K extends string, V, T = V>(
       (baseSlice as any)[`add${capitalize(keys.basic)}Item`] = (updatedValue: T) =>
         set(
           state => {
-            const value = state[keys.basic] as any;
+            const value = state[keys.basic];
 
-            return { [keys.basic]: updateValue(value, updatedValue) } as any;
+            return { [keys.basic]: updateValue(value, updatedValue) } as Partial<SliceState<K, V, T>>;
           },
           false,
           `add${capitalizedTitle}Item`,
