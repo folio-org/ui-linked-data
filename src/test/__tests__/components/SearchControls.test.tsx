@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { useSearchParams } from 'react-router-dom';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as FeatureConstants from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
 import { SearchContext } from '@src/contexts';
-import state from '@state';
+import { useSearchStore } from '@src/store';
 
 const setSearchParams = jest.fn();
 const mockSearchFiltersComponent = <div data-testid="search-filters" />;
@@ -30,11 +30,9 @@ describe('SearchControls', () => {
       mockedSearchFiltersEnabled(true);
 
       const { getByTestId } = render(
-        <RecoilRoot>
-          <SearchContext.Provider value={{ isVisibleFilters: true } as unknown as SearchParams}>
-            <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
-          </SearchContext.Provider>
-        </RecoilRoot>,
+        <SearchContext.Provider value={{ isVisibleFilters: true } as unknown as SearchParams}>
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
+        </SearchContext.Provider>,
       );
 
       expect(getByTestId('search-filters')).toBeInTheDocument();
@@ -44,9 +42,7 @@ describe('SearchControls', () => {
       mockedSearchFiltersEnabled(false);
 
       const { queryByTestId } = render(
-        <RecoilRoot>
-          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
-        </RecoilRoot>,
+        <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />,
       );
 
       expect(queryByTestId('search-filters')).not.toBeInTheDocument();
@@ -57,11 +53,14 @@ describe('SearchControls', () => {
     function renderSearchControls(searchParams: URLSearchParams, queryState: string) {
       (useSearchParams as jest.Mock).mockReturnValue([searchParams, setSearchParams]);
 
-      render(
-        <RecoilRoot initializeState={snapshot => snapshot.set(state.search.query, queryState)}>
-          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
-        </RecoilRoot>,
-      );
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: { query: queryState },
+        },
+      ]);
+
+      render(<SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />);
     }
 
     test('renders button enabled if "query" search param and "query" state have values', () => {

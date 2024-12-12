@@ -1,9 +1,9 @@
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { EditPreview } from '@components/EditPreview';
-import state from '@state';
 import { render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { EditPreview } from '@components/EditPreview';
+import { useInputsStore, useUIStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
@@ -16,19 +16,23 @@ jest.mock('react-router-dom', () => ({
 
 describe('EditPreview', () => {
   beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { record: {} },
+      },
+      {
+        store: useUIStore,
+        state: { currentlyPreviewedEntityBfid: new Set([PROFILE_BFIDS.INSTANCE]) },
+      },
+    ]);
+
     render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set([PROFILE_BFIDS.INSTANCE]));
-          snapshot.set(state.inputs.record, {});
-        }}
-      >
-        <RouterProvider
-          router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
-            initialEntries: ['/resources/create?type=work'],
-          })}
-        />
-      </RecoilRoot>,
+      <RouterProvider
+        router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
+          initialEntries: ['/resources/create?type=work'],
+        })}
+      />,
     );
   });
 

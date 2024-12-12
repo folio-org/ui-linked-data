@@ -1,20 +1,19 @@
 import { ChangeEvent } from 'react';
-import { useRecoilState } from 'recoil';
 import { SearchLimiterNames } from '@common/constants/search.constants';
-import state from '@state';
+import { useSearchState } from '@src/store';
 
 export const useSearchFilters = () => {
-  const [limiters, setLimiters] = useRecoilState(state.search.limiters);
+  const { facets, setFacets } = useSearchState();
 
   const onChangeLimiters = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
-    setLimiters(prev => ({
+    setFacets(prev => ({
       ...prev,
       [name]: id,
     }));
   };
 
   const onChangeLimitersMulti = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
-    setLimiters(prev => {
+    setFacets(prev => {
       const initialLimiters = (prev[name as SearchLimiterNames] as any[]) || [];
 
       return {
@@ -29,7 +28,7 @@ export const useSearchFilters = () => {
   const onChange = (_e: ChangeEvent<HTMLInputElement>) => {};
 
   return {
-    limiters,
+    facets,
     onChangeLimiters,
     onChangeLimitersMulti,
     onChange,

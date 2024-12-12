@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { BrowserRouter } from 'react-router-dom';
 import { SearchResultEntry } from '@components/SearchResultEntry';
 import { itemSearchMockData } from './ItemSearch.test';
@@ -9,7 +8,7 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 const mockedUsedNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
+  ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate,
 }));
 
@@ -19,12 +18,9 @@ describe('SearchResultEntry', () => {
   describe('with instances', () => {
     beforeEach(() =>
       render(
-        <RecoilRoot>
-          <BrowserRouter>
-            <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
-          </BrowserRouter>
-          ,
-        </RecoilRoot>,
+        <BrowserRouter>
+          <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
+        </BrowserRouter>,
       ),
     );
 
@@ -56,11 +52,9 @@ describe('SearchResultEntry', () => {
   describe('without instances', () => {
     beforeEach(() =>
       render(
-        <RecoilRoot>
-          <BrowserRouter>
-            <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
-          </BrowserRouter>
-        </RecoilRoot>,
+        <BrowserRouter>
+          <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
+        </BrowserRouter>,
       ),
     );
 

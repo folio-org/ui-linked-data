@@ -1,7 +1,5 @@
 import { ExternalResourceLoader } from '@components/ExternalResourceLoader';
-import state from '@state';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ExternalResourceIdType } from '@common/constants/api.constants';
@@ -9,9 +7,10 @@ import { Preview } from '@components/Preview';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import { ModalDuplicateImportedResource } from '@components/ModalDuplicateImportedResource';
 import './ExternalResourcePreview.scss';
+import { useInputsState } from '@src/store';
 
 export const ExternalResourcePreview = () => {
-  const record = useRecoilValue(state.inputs.record);
+  const { record } = useInputsState();
   const { fetchExternalRecordForPreview } = useRecordControls();
   const { externalId } = useParams();
 

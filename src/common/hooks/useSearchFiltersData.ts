@@ -1,19 +1,16 @@
 import { useEffect } from 'react';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import * as SearchApi from '@common/api/search.api';
-import state from '@state';
+import { useSearchState, useStatusState } from '@src/store';
 
 const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
 export const useSearchFiltersData = () => {
-  const [selectedFacetsGroups, setSelectedFacetsGroups] = useRecoilState(state.search.selectedFacetsGroups);
-  const resetSelectedFacetsGroups = useResetRecoilState(state.search.selectedFacetsGroups);
-  const setFacetsData = useSetRecoilState(state.search.facetsData);
-  const setSourceData = useSetRecoilState(state.search.sourceData);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+  const { selectedFacetsGroups, setSelectedFacetsGroups, resetSelectedFacetsGroups, setFacetsData, setSourceData } =
+    useSearchState();
+  const { addStatusMessagesItem } = useStatusState();
 
   useEffect(() => {
     return resetSelectedFacetsGroups();
@@ -40,10 +37,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -62,10 +56,7 @@ export const useSearchFiltersData = () => {
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 

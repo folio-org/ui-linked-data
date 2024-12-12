@@ -1,11 +1,10 @@
-import { useRecoilValue } from 'recoil';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import state from '@state';
+import { useInputsState } from '@src/store';
 import './FullDisplay.scss';
 import { PreviewContent } from './PreviewContent';
 
 export const FullDisplay = () => {
-  const previewContent = useRecoilValue(state.inputs.previewContent);
+  const { previewContent } = useInputsState();
 
   return (
     !!previewContent.length && (

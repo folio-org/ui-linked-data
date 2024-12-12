@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
@@ -8,14 +7,14 @@ import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.h
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
+import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
-import state from '@state';
-import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
+import { useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -24,14 +23,11 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const { resourceId } = useParams();
-  const recordStatus = useRecoilValue(state.status.recordStatus);
+  const { recordStatus, addStatusMessagesItem } = useStatusState();
+  const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
-  const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const marcPreviewData = useRecoilValue(state.data.marcPreview);
-  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreview);
+  const { setIsLoading } = useLoadingState();
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
   const [queryParams] = useSearchParams();
 
   useResetRecordStatus();
@@ -89,10 +85,7 @@ export const Edit = () => {
           record: typedRecord,
         });
       } catch {
-        setStatusMessages(currentStatus => [
-          ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'),
-        ]);
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {
         setIsLoading(false);
       }

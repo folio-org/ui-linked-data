@@ -1,10 +1,9 @@
 import { FC } from 'react';
-import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { SearchSegment } from '@common/constants/search.constants';
-import state from '@state';
+import { useSearchState } from '@src/store';
 import './SearchControlPane.scss';
 
 type SearchControlPaneProps = {
@@ -22,7 +21,7 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   renderCloseButton,
   segmentsConfig,
 }) => {
-  const searchResultsMetadata = useRecoilValue(state.search.pageMetadata);
+  const { pageMetadata: searchResultsMetadata } = useSearchState();
   const { navigationSegment } = useSearchContext();
   const selectedSegment = navigationSegment?.value;
   const isVisibleSubLabel = segmentsConfig

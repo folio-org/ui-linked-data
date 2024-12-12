@@ -1,7 +1,5 @@
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import state from '@state';
 import classNames from 'classnames';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryParams, RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
@@ -11,12 +9,11 @@ import { getRecordDependencies } from '@common/helpers/record.helper';
 import { memo, useEffect } from 'react';
 import { TitledPreview } from '@components/Preview/TitledPreview';
 import './EditPreview.scss';
+import { useInputsState, useUIState } from '@src/store';
 
 export const EditPreview = memo(() => {
-  const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
-  const record = useRecoilValue(state.inputs.record);
-  const [previewContent, setPreviewContent] = useRecoilState(state.inputs.previewContent);
-  const resetPreviewContent = useResetRecoilState(state.inputs.previewContent);
+  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
+  const { currentlyPreviewedEntityBfid } = useUIState();
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();

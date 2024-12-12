@@ -1,4 +1,3 @@
-import { useRecoilValue } from 'recoil';
 import { FormattedMessage } from 'react-intl';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
@@ -11,7 +10,7 @@ import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
-import state from '@state';
+import { useUIState } from '@src/store';
 
 export const ItemSearch = () => {
   const {
@@ -40,7 +39,7 @@ export const ItemSearch = () => {
     fetchData,
     onChangeSegment,
   } = useSearch();
-  const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
+  const { isMarcPreviewOpen } = useUIState();
 
   useLoadSearchResults(fetchData);
 

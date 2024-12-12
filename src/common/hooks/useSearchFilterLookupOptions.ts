@@ -1,6 +1,5 @@
-import { useRecoilValue } from 'recoil';
 import { useIntl } from 'react-intl';
-import state from '@state';
+import { useSearchState } from '@src/store';
 
 export const useSearchFilterLookupOptions = ({
   facet,
@@ -10,8 +9,7 @@ export const useSearchFilterLookupOptions = ({
   hasMappedSourceData?: boolean;
   excludedOptions?: string[];
 }) => {
-  const sourceData = useRecoilValue(state.search.sourceData);
-  const facetsData = useRecoilValue(state.search.facetsData);
+  const { sourceData, facetsData } = useSearchState();
   const { formatMessage } = useIntl();
 
   const facetValues = facet && facetsData ? facetsData?.[facet]?.values : undefined;

@@ -1,12 +1,11 @@
 import { ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
 import classNames from 'classnames';
 import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getPreviewFieldsConditions } from '@common/helpers/record.helper';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import state from '@state';
+import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
 
@@ -71,10 +70,9 @@ export const Fields = ({
   hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const userValuesFromState = useRecoilValue(state.inputs.userValues);
-  const schemaFromState = useRecoilValue(state.config.schema);
-  const selectedEntries = useRecoilValue(state.config.selectedEntries);
-  const currentlyPreviewedEntityBfid = useRecoilValue(state.ui.currentlyPreviewedEntityBfid);
+  const { userValues: userValuesFromState, selectedEntries } = useInputsState();
+  const { schema: schemaFromState } = useProfileState();
+  const { currentlyPreviewedEntityBfid } = useUIState();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
 

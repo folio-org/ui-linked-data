@@ -2,12 +2,11 @@ import { openModal } from '@src/test/__mocks__/common/hooks/useModalControls.moc
 import { checkButtonDisabledState } from '@src/test/__mocks__/common/helpers/recordControls.helper.mock';
 import '@src/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/helpers/recordControls.helper.mock';
 import '@src/test/__mocks__/components/Modal.mock';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
-import state from '@state';
 import { DeleteRecord } from '@components/DeleteRecord';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useInputsStore } from '@src/store';
 
 describe('DeleteRecord', () => {
   const mockedRecord = {
@@ -15,12 +14,16 @@ describe('DeleteRecord', () => {
     profile: 'testProfile',
   } as unknown as RecordEntry;
 
-  const renderComponent = (recordState: RecordEntry | null) =>
-    render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.record, recordState)}>
-        <DeleteRecord />
-      </RecoilRoot>,
-    );
+  const renderComponent = (recordState: RecordEntry | null) => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { record: recordState },
+      },
+    ]);
+
+    return render(<DeleteRecord />);
+  };
 
   const getButtonElement = () => screen.getByTestId('delete-record-button');
 

@@ -1,11 +1,9 @@
-import { useRecoilValue } from 'recoil';
 import { renderHook } from '@testing-library/react';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useSearchFilterLookupOptions } from '@common/hooks/useSearchFilterLookupOptions';
-
-jest.mock('recoil');
+import { useSearchStore } from '@src/store';
 
 describe('useSearchFilterLookupOptions', () => {
-  const mockUseRecoilValue = useRecoilValue as jest.Mock;
   const facet = 'testFacet';
 
   function testUseSearchFilterLookupOptions(
@@ -13,7 +11,12 @@ describe('useSearchFilterLookupOptions', () => {
     { sourceData, facetsData }: { sourceData: SourceDataDTO | null; facetsData: FacetsDTO },
     testResult: FilterLookupOption[],
   ) {
-    mockUseRecoilValue.mockReturnValueOnce(sourceData).mockReturnValueOnce(facetsData);
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: { sourceData, facetsData },
+      },
+    ]);
 
     const { result } = renderHook(() => useSearchFilterLookupOptions(options));
 

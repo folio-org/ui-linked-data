@@ -1,7 +1,6 @@
 import { Nav } from '@components/Nav';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
 const mockNavigate = jest.fn();
 
@@ -14,11 +13,7 @@ jest.mock('react-router-dom', () => ({
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const renderOnPath = (path: string) =>
-  render(
-    <RecoilRoot>
-      <RouterProvider router={createMemoryRouter([{ path, element: <Nav /> }], { initialEntries: [path] })} />
-    </RecoilRoot>,
-  );
+  render(<RouterProvider router={createMemoryRouter([{ path, element: <Nav /> }], { initialEntries: [path] })} />);
 
 describe('Nav', () => {
   const { getByTestId } = screen;

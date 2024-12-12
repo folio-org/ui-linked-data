@@ -10,7 +10,6 @@ export default defineConfig(() => {
     '@src': path.resolve(__dirname, './src'),
     '@common': path.resolve(__dirname, './src/common'),
     '@components': path.resolve(__dirname, './src/components'),
-    '@state': path.resolve(__dirname, './src/state'),
     '@views': path.resolve(__dirname, './src/views'),
   };
 

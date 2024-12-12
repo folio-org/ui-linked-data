@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { SearchFilters } from '@components/SearchFilters';
 import { SearchContext } from '@src/contexts';
 import {
@@ -55,11 +54,9 @@ describe('SearchFilters', () => {
 
   beforeEach(() =>
     render(
-      <RecoilRoot>
-        <SearchContext.Provider value={{ filters } as unknown as SearchParams}>
-          <SearchFilters />
-        </SearchContext.Provider>
-      </RecoilRoot>,
+      <SearchContext.Provider value={{ filters } as unknown as SearchParams}>
+        <SearchFilters />
+      </SearchContext.Provider>,
     ),
   );
 

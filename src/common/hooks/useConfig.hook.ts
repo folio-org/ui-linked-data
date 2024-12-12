@@ -1,10 +1,9 @@
 import { useRef } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
-import state from '@state';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 
@@ -31,15 +30,17 @@ type IBuildSchema = {
 export const useConfig = () => {
   const { schemaCreatorService, userValuesService, selectedEntriesService } =
     useServicesContext() as Required<ServicesParams>;
-  const [profiles, setProfiles] = useRecoilState(state.config.profiles);
-  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const [preparedFields, setPreparedFields] = useRecoilState(state.config.preparedFields);
-  const setSchema = useSetRecoilState(state.config.schema);
-  const setInitialSchemaKey = useSetRecoilState(state.config.initialSchemaKey);
-  const setSelectedEntries = useSetRecoilState(state.config.selectedEntries);
-  const setPreviewContent = useSetRecoilState(state.inputs.previewContent);
-  const setSelectedRecordBlocks = useSetRecoilState(state.inputs.selectedRecordBlocks);
+  const {
+    profiles,
+    setProfiles,
+    setSelectedProfile,
+    preparedFields,
+    setPreparedFields,
+    setInitialSchemaKey,
+    setSchema,
+  } = useProfileState();
+  const { setUserValues, previewContent, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } =
+    useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
 
@@ -125,8 +126,8 @@ export const useConfig = () => {
         });
 
         if (previewParams && recordId) {
-          setPreviewContent(prev => [
-            ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
+          setPreviewContent([
+            ...(previewParams.singular ? [] : previewContent.filter(({ id }) => id !== recordId)),
             {
               id: recordId,
               base: updatedSchema,

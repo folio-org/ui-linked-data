@@ -1,5 +1,3 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { getRecordAndInitializeParsing } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import * as RecordFormatter from '@common/helpers/recordFormatting.helper';
@@ -7,7 +5,6 @@ import { InstancesList } from '@components/InstancesList';
 import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
-jest.mock('recoil');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('InstancesList', () => {

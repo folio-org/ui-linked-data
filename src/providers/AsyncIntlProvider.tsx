@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import { IntlProvider } from 'react-intl';
-import { useRecoilValue } from 'recoil';
 import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
 import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
-import state from '@state';
+import { useConfigState } from '@src/store';
 
 type AsyncIntlProviderProps = {
   cachedMessages: I18nMessages;
@@ -11,7 +10,7 @@ type AsyncIntlProviderProps = {
 };
 
 export const AsyncIntlProvider: FC<AsyncIntlProviderProps> = ({ cachedMessages, children }) => {
-  const locale = useRecoilValue(state.config.locale);
+  const { locale } = useConfigState();
   const { getMessages } = useLoadI18nMessages(cachedMessages, DEFAULT_LOCALE);
 
   const i18nMessages = getMessages(locale);

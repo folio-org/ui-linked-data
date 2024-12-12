@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
-import { RecoilRoot } from 'recoil';
 import { Fragment, ReactNode } from 'react';
 
 const mockClonedByUuid = '0xf';
@@ -27,13 +26,11 @@ describe('DuplicateGroupContainer', () => {
 
   beforeEach(() => {
     render(
-      <RecoilRoot>
-        <DuplicateGroupContainer
-          entry={mockEntry as SchemaEntry}
-          generateComponent={({ uuid }) => <div key={uuid}>{uuid}</div>}
-          twins={[mockClonedByUuid]}
-        />
-      </RecoilRoot>,
+      <DuplicateGroupContainer
+        entry={mockEntry as SchemaEntry}
+        generateComponent={({ uuid }) => <div key={uuid}>{uuid}</div>}
+        twins={[mockClonedByUuid]}
+      />,
     );
   });
 

@@ -1,8 +1,8 @@
 import { Preview } from '@components/Preview';
-import state from '@state';
+import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
 const initialSchemaKey = 'uuid0';
 
@@ -38,22 +38,28 @@ const schema = new Map([
 describe('Preview', () => {
   const { getAllByTestId, getByText } = screen;
 
-  beforeEach(() =>
-    render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.ui.currentlyPreviewedEntityBfid, new Set(['uuid1Bfid']));
-          snapshot.set(state.config.schema, schema);
-          snapshot.set(state.config.initialSchemaKey, initialSchemaKey);
-          snapshot.set(state.inputs.userValues, userValues);
-        }}
-      >
-        <BrowserRouter>
-          <Preview />
-        </BrowserRouter>
-      </RecoilRoot>,
-    ),
-  );
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: { initialSchemaKey, schema },
+      },
+      {
+        store: useInputsStore,
+        state: { userValues },
+      },
+      {
+        store: useUIStore,
+        state: { currentlyPreviewedEntityBfid: new Set(['uuid1Bfid']) },
+      },
+    ]);
+
+    return render(
+      <BrowserRouter>
+        <Preview />
+      </BrowserRouter>,
+    );
+  });
 
   test('renders Preview component if a profile is selected', () => {
     expect(getAllByTestId('preview-fields')[0]).toBeInTheDocument();

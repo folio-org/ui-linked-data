@@ -1,10 +1,9 @@
 import { useCallback, useMemo } from 'react';
-import { useRecoilValue } from 'recoil';
 import { useIntl } from 'react-intl';
 import { type Row } from '@components/Table';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { ComplexLookupSearchResultsProps } from '@components/ComplexLookupField/ComplexLookupSearchResults';
-import state from '@state';
+import { useSearchState } from '@src/store';
 
 export const useComplexLookupSearchResults = ({
   onTitleClick,
@@ -12,8 +11,7 @@ export const useComplexLookupSearchResults = ({
   searchResultsFormatter,
 }: ComplexLookupSearchResultsProps) => {
   const { onAssignRecord } = useSearchContext();
-  const data = useRecoilValue(state.search.data);
-  const sourceData = useRecoilValue(state.search.sourceData);
+  const { data, sourceData } = useSearchState();
   const { formatMessage } = useIntl();
 
   const applyActionItems = useCallback(

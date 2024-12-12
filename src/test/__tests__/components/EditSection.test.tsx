@@ -2,12 +2,12 @@ import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesProvider } from '@src/providers';
 import { routes } from '@src/App';
-import state from '@state';
+import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
 
 const userValues = {
   uuid3: {
@@ -186,23 +186,29 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 
 describe('EditSection', () => {
   const renderScreen = () => {
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          selectedProfile: monograph as unknown as ProfileEntry,
+          initialSchemaKey: 'uuid0',
+          schema: schema as Schema,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: { userValues, selectedEntries: ['uuid7'] },
+      },
+      {
+        store: useUIStore,
+        state: { currentlyEditedEntityBfid: new Set(['uuid2Bfid']) },
+      },
+    ]);
+
     return render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.ui.currentlyEditedEntityBfid, new Set(['uuid2Bfid']));
-          snapshot.set(state.config.schema, schema as Schema);
-          snapshot.set(state.inputs.userValues, userValues);
-          snapshot.set(state.config.initialSchemaKey, 'uuid0');
-          snapshot.set(state.config.selectedProfile, monograph as unknown as ProfileEntry);
-          snapshot.set(state.config.selectedEntries, ['uuid7']);
-        }}
-      >
-        <ServicesProvider>
-          <RouterProvider
-            router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })}
-          />
-        </ServicesProvider>
-      </RecoilRoot>,
+      <ServicesProvider>
+        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
+      </ServicesProvider>,
     );
   };
 

@@ -1,11 +1,10 @@
-import { RecordStatus } from '@common/constants/record.constants';
-import state from '@state';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { RecordStatus } from '@common/constants/record.constants';
+import { useStatusState } from '@src/store';
 
 export const useResetRecordStatus = () => {
-  const [recordStatus, setRecordStatus] = useRecoilState(state.status.recordStatus);
+  const { recordStatus, setRecordStatus } = useStatusState();
   const [prevResourceId, setPrevResourceId] = useState<string | null>(null);
   const { resourceId } = useParams();
   const setRecordStatusAsOpen = () => setRecordStatus({ type: RecordStatus.open });

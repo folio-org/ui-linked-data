@@ -1,10 +1,10 @@
-import { SetterOrUpdater } from 'recoil';
+import { type SelectedEntriesState } from '@src/store';
 import { DrawComponent, IDrawComponent } from './DrawComponent';
 
 export type EditSectionDataProps = {
   selectedEntriesService: ISelectedEntriesService;
   selectedEntries: string[];
-  setSelectedEntries: SetterOrUpdater<string[]>;
+  setSelectedEntries: (value: SelectedEntriesState) => void;
   userValues: UserValues;
   collapsedEntries: Set<string>;
   collapsibleEntries: Set<string>;

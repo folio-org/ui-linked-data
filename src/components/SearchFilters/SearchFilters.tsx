@@ -9,7 +9,7 @@ import { DateRange } from '@components/DateRange';
 
 export const SearchFilters = () => {
   const { filters, getSearchFacetsData } = useSearchContext();
-  const { limiters, onChangeLimiters, onChangeLimitersMulti, onChange } = useSearchFilters();
+  const { facets, onChangeLimiters, onChangeLimitersMulti, onChange } = useSearchFilters();
   const filtersLastGroupIndex = filters.length - 1;
 
   return (
@@ -36,7 +36,7 @@ export const SearchFilters = () => {
                     {children?.map(({ id, name, type, labelId }) => (
                       <label htmlFor={id} key={id}>
                         <input
-                          checked={isSingleGroupCheckType ? limiters[name] === id : limiters[name]?.includes(id)}
+                          checked={isSingleGroupCheckType ? facets[name] === id : facets[name]?.includes(id)}
                           name={name}
                           id={id}
                           type={type}
