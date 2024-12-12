@@ -22,4 +22,9 @@ export enum DropdownItemType {
   customComponent = 'customComponent',
 }
 
+export enum AriaModalKind {
+  Basic = 'Basic',
+  AdvancedSearch = 'Advanced search',
+}
+
 export const MAX_SEARCH_BAR_WIDTH = 30;
