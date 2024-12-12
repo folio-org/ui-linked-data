@@ -12,6 +12,7 @@ type InputProps = {
   onPressEnter?: VoidFunction;
   type?: HTMLInputTypeAttribute;
   ariaLabel?: string;
+  ariaLabelledBy?: string;
   role?: string;
   [x: string]: any;
 };
@@ -26,6 +27,7 @@ export const Input: FC<InputProps> = ({
   onPressEnter,
   type = 'text',
   ariaLabel,
+  ariaLabelledBy,
   role = 'textbox',
   ...restProps
 }) => {
@@ -46,6 +48,7 @@ export const Input: FC<InputProps> = ({
       }}
       type={type}
       aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       role={role}
       {...restProps}
     />

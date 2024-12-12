@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useRecoilValue } from 'recoil';
-import { FormattedDate, FormattedMessage } from 'react-intl';
+import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { MarcContent } from '@components/MarcContent';
@@ -15,6 +15,7 @@ type MarcPreviewComplexLookupProps = {
 
 export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
+  const { formatMessage } = useIntl();
   const isMarcPreviewOpen = useRecoilValue(state.ui.isMarcPreviewOpen);
   const marcPreviewData = useRecoilValue(state.data.marcPreviewData);
   const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
@@ -52,7 +53,11 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
             renderCloseButton={renderCloseButton}
           >
             <div>
-              <Button type={ButtonType.Highlighted} onClick={onClickAssignButton}>
+              <Button
+                type={ButtonType.Highlighted}
+                onClick={onClickAssignButton}
+                ariaLabel={formatMessage({ id: 'ld.aria.marcAuthorityPreview.close' })}
+              >
                 <FormattedMessage id="ld.assign" />
               </Button>
             </div>
