@@ -1,4 +1,4 @@
-import { createBaseSlice, type SliceState } from '../utils/slice';
+import { createBaseSlice, type SliceState } from './slice';
 import { generateStore, type StateCreatorTyped } from './storeCreator';
 
 type SliceConfig<Value = any, SingleItemType = any> = {
