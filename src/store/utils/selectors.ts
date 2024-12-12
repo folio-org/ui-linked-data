@@ -6,8 +6,8 @@ type WithSelectors<S> = S extends {
   ? S & { use: { [K in keyof T]: T[K] } }
   : never;
 
-// Use this function to generate all available selectors.
-// Now it causes memory leaks if invoke it after each re-render, so it should be memoized. 
+// Use this function to generate all available selectors
+// Currently, invoking it after each re-render leads to memory leaks, so it should be memoized to prevent this issue
 export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(_store: S) => {
   const store = _store as WithSelectors<typeof _store>;
   store.use = {};

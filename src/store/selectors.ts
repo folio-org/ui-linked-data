@@ -7,8 +7,8 @@ import { useConfigStore } from './stores/config';
 import { useUIStore } from './stores/ui';
 import { useSearchStore } from './stores/search';
 
-// "createSelectors" can be used here for generation of the memoized selectors.
-// Now this function is non-optimized and its usage causes memory leaks.
+// The "createSelectors" function can be utilized here to generate memoized selectors
+// Note: "createSelectors" is currently unoptimized and may result in memory leaks if used as is
 export const useStatusState = useStatusStore;
 export const useLoadingState = useLoadingStateStore;
 export const useMarcPreviewState = useMarcPreviewStore;
