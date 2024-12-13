@@ -20,6 +20,7 @@ interface Props {
   uri: string;
   uuid: string;
   value?: UserValueContents[];
+  htmlId?: string;
   parentUri?: string;
   isDisabled?: boolean;
   id?: string;
@@ -35,6 +36,7 @@ export const SimpleLookupField: FC<Props> = ({
   uuid,
   id,
   value,
+  htmlId,
   onChange,
   parentUri,
   isDisabled = false,
@@ -96,6 +98,7 @@ export const SimpleLookupField: FC<Props> = ({
   return (
     <CreatableSelect
       id={id}
+      aria-labelledby={htmlId}
       ref={simpleLookupRef}
       className="edit-section-field-input simple-lookup"
       classNamePrefix="simple-lookup"

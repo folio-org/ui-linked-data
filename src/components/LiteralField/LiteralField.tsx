@@ -3,6 +3,7 @@ import { Input } from '@components/Input';
 
 interface ILiteralField {
   uuid: string;
+  htmlId?: string;
   value?: string;
   isDisabled?: boolean;
   id?: string;
@@ -12,6 +13,7 @@ interface ILiteralField {
 
 export const LiteralField: FC<ILiteralField> = ({
   uuid,
+  htmlId,
   value = '',
   id,
   isDisabled = false,
@@ -34,6 +36,7 @@ export const LiteralField: FC<ILiteralField> = ({
       onChange={handleOnChange}
       value={localValue}
       disabled={isDisabled}
+      ariaLabelledBy={htmlId}
     />
   );
 };
