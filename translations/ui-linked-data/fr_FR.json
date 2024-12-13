@@ -189,5 +189,17 @@
     "ld.properties": "Properties",
     "ld.errorFetchingExternalResourceForEditing": "Error fetching external resource for editing",
     "ld.duplicateImportWarn": "Duplicate import warning",
-    "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?"
+    "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
+    "ld.instance": "Instance",
+    "ld.year": "Year",
+    "ld.aria.modal.close": "Close {modalKind} modal",
+    "ld.aria.advancedSearch.queryInput": "Advanced search row query input",
+    "ld.aria.advancedSearch.operator": "Advanced search row operator",
+    "ld.aria.advancedSearch.qualifier": "Advanced search row qualifier",
+    "ld.aria.advancedSearch.identifier": "Advanced search row identifier",
+    "ld.aria.listEntry.open": "Open collapsible list entry",
+    "ld.aria.listEntry.close": "Close collapsible list entry",
+    "ld.aria.table.selectRow": "Select table row",
+    "ld.aria.sections.openResourcePreview": "Open resource preview section",
+    "ld.aria.sections.closeResourcePreview": "Close resource preview section"
 }
