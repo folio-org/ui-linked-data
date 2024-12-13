@@ -4,7 +4,7 @@ import { type SliceState } from '../utils/slice';
 type LastSavedRecordId = string | null;
 
 export type StatusState = SliceState<'lastSavedRecordId', LastSavedRecordId> &
-  SliceState<'isEditedRecord', boolean> &
+  SliceState<'isRecordEdited', boolean> &
   SliceState<'recordStatus', RecordStatus> &
   SliceState<'statusMessages', StatusEntry[], StatusEntry>;
 
@@ -14,7 +14,7 @@ const sliceConfigs: SliceConfigs = {
   lastSavedRecordId: {
     initialValue: null,
   },
-  isEditedRecord: {
+  isRecordEdited: {
     initialValue: false,
   },
   recordStatus: {

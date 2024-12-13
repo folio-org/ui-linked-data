@@ -36,7 +36,7 @@ describe('MarcPreviewComplexLookup', () => {
     setInitialGlobalState([
       {
         store: useMarcPreviewStore,
-        state: { complexValue: marcPreviewData, metaData: marcPreviewMetadata },
+        state: { complexValue: marcPreviewData, metadata: marcPreviewMetadata },
       },
       {
         store: useUIStore,

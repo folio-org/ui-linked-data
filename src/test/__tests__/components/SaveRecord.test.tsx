@@ -6,11 +6,11 @@ import { useStatusStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 describe('SaveRecord', () => {
-  function renderSaveRecordComponent(isEditedRecord = true) {
+  function renderSaveRecordComponent(isRecordEdited = true) {
     setInitialGlobalState([
       {
         store: useStatusStore,
-        state: { isEditedRecord },
+        state: { isRecordEdited },
       },
     ]);
 

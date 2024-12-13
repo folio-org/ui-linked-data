@@ -53,7 +53,7 @@ export const useRecordControls = () => {
   const { setSelectedProfile } = useProfileState();
   const { setIsDuplicateImportedResourceModalOpen, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
     useUIState();
-  const { setRecordStatus, setLastSavedRecordId, setIsEditedRecord: setIsEdited, addStatusMessagesItem } = useStatusState();
+  const { setRecordStatus, setLastSavedRecordId, setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState();
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();

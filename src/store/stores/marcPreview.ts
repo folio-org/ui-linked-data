@@ -6,7 +6,7 @@ type MarcPreviewMetaData = MarcPreviewMetadata | null;
 
 export type MarcPreviewState = SliceState<'basicValue', any> &
   SliceState<'complexValue', MarcPreviewData> &
-  SliceState<'metaData', MarcPreviewMetaData>;
+  SliceState<'metadata', MarcPreviewMetaData>;
 
 const STORE_NAME = 'MarcPreview';
 
@@ -17,7 +17,7 @@ const sliceConfigs: SliceConfigs = {
   complexValue: {
     initialValue: null,
   },
-  metaData: {
+  metadata: {
     initialValue: null,
   },
 };

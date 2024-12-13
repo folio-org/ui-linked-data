@@ -55,8 +55,8 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const {
       setComplexValue,
       resetComplexValue: resetMarcPreviewValue,
-      setMetaData: setMarcMetadata,
-      resetMetaData: clearMarcMetadata,
+      setMetadata: setMarcMetadata,
+      resetMetadata: clearMarcMetadata,
     } = useMarcPreviewState();
     const { fetchMarcData } = useMarcData(setComplexValue);
 

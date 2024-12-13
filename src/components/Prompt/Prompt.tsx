@@ -28,7 +28,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     setIsModalOpen: setIsSwitchToNewRecordModalOpen,
     openModal: openSwitchToNewRecordModal,
   } = useModalControls();
-  const { setIsEditedRecord: setIsEdited, setRecordStatus } = useStatusState();
+  const { setIsRecordEdited: setIsEdited, setRecordStatus } = useStatusState();
   const [forceNavigateTo, setForceNavigateTo] = useState<{
     pathname: string;
     search: string;

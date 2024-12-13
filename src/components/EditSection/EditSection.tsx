@@ -22,7 +22,7 @@ export const EditSection = memo(() => {
   const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
   const { userValues, addUserValuesItem, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
     useInputsState();
-  const { isEditedRecord: isEdited, setIsEditedRecord: setIsEdited } = useStatusState();
+  const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState();
   const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
   const { generateRecord } = useRecordGeneration();
 

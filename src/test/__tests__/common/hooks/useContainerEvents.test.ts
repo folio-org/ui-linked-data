@@ -17,13 +17,13 @@ const mockEvents = {
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('useContainerEvents', () => {
-  const renderUseContainerEventsHook = (isEditedRecord: boolean) => {
+  const renderUseContainerEventsHook = (isRecordEdited: boolean) => {
     (domHelper.dispatchEventWrapper as jest.Mock) = mockDispatchEventWrapper;
 
     setInitialGlobalState([
       {
         store: useStatusStore,
-        state: { isEditedRecord },
+        state: { isRecordEdited },
       },
       {
         store: useConfigStore,

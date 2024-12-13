@@ -8,7 +8,7 @@ import { QueryParams } from '@common/constants/routes.constants';
 import { useStatusState } from '@src/store';
 
 const SaveRecord = ({ primary = false }) => {
-  const { isEditedRecord } = useStatusState();
+  const { isRecordEdited } = useStatusState();
   const { saveRecord } = useRecordControls();
   const { hasBeenSaved } = useRecordStatus();
   const [searchParams] = useSearchParams();
@@ -18,7 +18,7 @@ const SaveRecord = ({ primary = false }) => {
       data-testid={`save-record${primary ? '-and-close' : '-and-keep-editing'}`}
       type={primary ? ButtonType.Primary : ButtonType.Highlighted}
       onClick={() => saveRecord({ isNavigatingBack: primary })}
-      disabled={!searchParams.get(QueryParams.CloneOf) && !hasBeenSaved && !isEditedRecord}
+      disabled={!searchParams.get(QueryParams.CloneOf) && !hasBeenSaved && !isRecordEdited}
     >
       <FormattedMessage id={!primary ? 'ld.saveAndKeepEditing' : 'ld.saveAndClose'} />
     </Button>

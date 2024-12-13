@@ -15,7 +15,7 @@ type MarcPreviewComplexLookupProps = {
 export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
   const { isMarcPreviewOpen } = useUIState();
-  const { complexValue: marcPreviewData, metaData: marcPreviewMetadata } = useMarcPreviewState();
+  const { complexValue: marcPreviewData, metadata: marcPreviewMetadata } = useMarcPreviewState();
 
   const renderCloseButton = () => (
     <Button data-testid="nav-close-button" type={ButtonType.Icon} onClick={onClose} className="nav-close">

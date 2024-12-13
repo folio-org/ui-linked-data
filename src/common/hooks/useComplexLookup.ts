@@ -30,8 +30,8 @@ export const useComplexLookup = ({
   const {
     setComplexValue,
     resetComplexValue: resetMarcPreviewData,
-    metaData: marcPreviewMetadata,
-    resetMetaData: resetMarcPreviewMetadata,
+    metadata: marcPreviewMetadata,
+    resetMetadata: resetMarcPreviewMetadata,
   } = useMarcPreviewState();
   const { resetIsMarcPreviewOpen } = useUIState();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();

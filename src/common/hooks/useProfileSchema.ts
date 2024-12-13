@@ -6,7 +6,7 @@ export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
   const { setCollapsibleEntries } = useUIState();
   const { setUserValues, setSelectedEntries } = useInputsState();
-  const { setIsEditedRecord: setIsEdited } = useStatusState();
+  const { setIsRecordEdited: setIsEdited } = useStatusState();
   const { schema, setSchema } = useProfileState();
 
   const getSchemaWithCopiedEntries = (entry: SchemaEntry, selectedEntries: string[]) => {
