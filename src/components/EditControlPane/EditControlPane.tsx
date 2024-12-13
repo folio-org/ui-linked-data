@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { Dropdown } from '@components/Dropdown';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
 import { RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
@@ -31,6 +31,7 @@ export const EditControlPane = () => {
   const { navigateAsDuplicate } = useNavigateToEditPage();
   const [queryParams] = useSearchParams();
   const { fetchMarcData } = useMarcData(setBasicValue);
+  const { formatMessage } = useIntl();
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
@@ -85,6 +86,7 @@ export const EditControlPane = () => {
             navigate(searchResultsUri);
           }}
           className="nav-close"
+          ariaLabel={formatMessage({ id: 'ld.aria.edit.close' })}
         >
           <Times16 />
         </Button>

@@ -28,7 +28,11 @@ export const CompactLayout: FC<ICompactLayout> = memo(
   }) => {
     return (
       <>
-        {displayName && showLabel && <div className={classNames('label', labelContainerClassName)}>{displayName}</div>}
+        {displayName && showLabel && (
+          <div id={htmlId} className={classNames('label', labelContainerClassName)}>
+            {displayName}
+          </div>
+        )}
         <div className="children-container" data-testid={htmlId}>
           {children}
         </div>

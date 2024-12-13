@@ -35,7 +35,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   onChange,
   handleGroupsCollapseExpand,
 }) => {
-  const { uuid, displayName = '', type, children, constraints } = entry;
+  const { uuid, displayName = '', type, children, constraints, htmlId } = entry;
   const isDisabled = !!disabledFields?.get(uuid);
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
@@ -77,6 +77,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
         <LiteralField
           uuid={uuid}
+          htmlId={htmlId}
           value={selectedUserValue?.contents[0].label}
           onChange={onChange}
           isDisabled={isDisabled}
@@ -108,6 +109,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         <DropdownField
           options={options}
           uuid={uuid}
+          htmlId={htmlId}
           onChange={handleChange}
           value={selectedOption}
           isDisabled={isDisabled || entry?.layout?.readOnly}
@@ -129,6 +131,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         <SimpleLookupField
           uri={constraints?.useValuesFrom[0] ?? ''}
           uuid={uuid}
+          htmlId={htmlId}
           onChange={onChange}
           parentUri={constraints?.valueDataType?.dataTypeURI}
           value={selectedUserValue?.contents}

@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
-  const { layout } = entry;
+  const { layout, htmlId } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
   const buttonConfigLabel = lookupConfig?.labels?.button;
 
@@ -86,6 +86,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
           value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
           disabled={true}
           data-testid="complex-lookup-input"
+          ariaLabelledBy={htmlId}
         />
       )}
     </>

@@ -18,6 +18,7 @@ export const ViewMarcControlPane = () => {
           type={ButtonType.Icon}
           onClick={resetMarcPreviewData}
           className="nav-close"
+          ariaLabel={formatMessage({ id: 'ld.aria.marcPreview.close' })}
         >
           <Times16 />
         </Button>

@@ -6,6 +6,7 @@ import Trash16 from '@src/assets/trash-16.svg?react';
 import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
 import { SchemaControlType } from '@common/constants/uiControls.constants';
 import './DuplicateGroup.scss';
+import { useIntl } from 'react-intl';
 
 interface Props {
   onClickDuplicate?: VoidFunction;
@@ -17,25 +18,31 @@ interface Props {
 }
 
 export const DuplicateGroup: FC<Props> = memo(
-  ({ onClickDuplicate, onClickDelete, hasDeleteButton = true, className, htmlId, deleteDisabled = true }) => (
-    <div className={classNames(['duplicate-group', className])}>
-      <Button
-        data-testid={getHtmlIdForSchemaControl(SchemaControlType.Duplicate, htmlId)}
-        type={ButtonType.Icon}
-        onClick={onClickDuplicate}
-      >
-        <Plus16 />
-      </Button>
-      {hasDeleteButton && (
+  ({ onClickDuplicate, onClickDelete, hasDeleteButton = true, className, htmlId, deleteDisabled = true }) => {
+    const { formatMessage } = useIntl();
+
+    return (
+      <div className={classNames(['duplicate-group', className])}>
         <Button
-          data-testid={getHtmlIdForSchemaControl(SchemaControlType.RemoveDuplicate, htmlId)}
+          data-testid={getHtmlIdForSchemaControl(SchemaControlType.Duplicate, htmlId)}
           type={ButtonType.Icon}
-          disabled={deleteDisabled}
-          onClick={onClickDelete}
+          onClick={onClickDuplicate}
+          ariaLabel={formatMessage({ id: 'ld.aria.edit.duplicateComponent' })}
         >
-          <Trash16 />
+          <Plus16 />
         </Button>
-      )}
-    </div>
-  ),
+        {hasDeleteButton && (
+          <Button
+            data-testid={getHtmlIdForSchemaControl(SchemaControlType.RemoveDuplicate, htmlId)}
+            type={ButtonType.Icon}
+            disabled={deleteDisabled}
+            onClick={onClickDelete}
+            ariaLabel={formatMessage({ id: 'ld.aria.edit.deleteComponent' })}
+          >
+            <Trash16 />
+          </Button>
+        )}
+      </div>
+    );
+  },
 );

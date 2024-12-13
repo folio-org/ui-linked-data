@@ -7,6 +7,7 @@ interface IDropdownField {
   onChange: (value: ReactSelectOption, fieldId: string, isDynamicField?: boolean) => void;
   value?: ReactSelectOption;
   isDisabled?: boolean;
+  htmlId?: string;
   id?: string;
   'data-testid'?: string;
 }
@@ -15,6 +16,7 @@ export const DropdownField: FC<IDropdownField> = ({
   options,
   uuid,
   id,
+  htmlId,
   onChange,
   value,
   isDisabled = false,
@@ -40,6 +42,7 @@ export const DropdownField: FC<IDropdownField> = ({
       disabled={isDisabled}
       className="edit-section-field-input dropdown-field"
       data-testid={testId}
+      ariaLabelledby={htmlId}
     />
   );
 };
