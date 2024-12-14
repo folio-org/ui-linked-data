@@ -1,8 +1,8 @@
 import { PreviewExternalResourcePane } from '@components/PreviewExternalResourcePane';
-import state from '@state';
+import { useInputsStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 
 const navigate = jest.fn();
 const getRecordTitle = jest.fn();
@@ -19,13 +19,16 @@ jest.mock('@common/helpers/record.helper', () => ({
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('PreviewExternalResourcePane', () => {
-  beforeEach(() =>
-    render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.record, {})}>
-        <PreviewExternalResourcePane />
-      </RecoilRoot>,
-    ),
-  );
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { record: {} },
+      },
+    ]);
+
+    return render(<PreviewExternalResourcePane />);
+  });
 
   test('invokes getRecordTitle', () => {
     expect(getRecordTitle).toHaveBeenCalled();

@@ -1,8 +1,6 @@
 import { FC, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
 import { useModalControls } from '@common/hooks/useModalControls';
-import state from '@state';
-import { useSetRecoilState } from 'recoil';
 import { ModalCloseRecord } from '@components/ModalCloseRecord';
 import { ForceNavigateToDest, QueryParams } from '@common/constants/routes.constants';
 import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
@@ -11,6 +9,7 @@ import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { RecordStatus } from '@common/constants/record.constants';
 import { getForceNavigateToDest } from '@common/helpers/navigation.helper';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
+import { useStatusState } from '@src/store';
 import './Prompt.scss';
 
 interface Props {
@@ -29,8 +28,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     setIsModalOpen: setIsSwitchToNewRecordModalOpen,
     openModal: openSwitchToNewRecordModal,
   } = useModalControls();
-  const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
-  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
+  const { setIsRecordEdited: setIsEdited, setRecordStatus } = useStatusState();
   const [forceNavigateTo, setForceNavigateTo] = useState<{
     pathname: string;
     search: string;

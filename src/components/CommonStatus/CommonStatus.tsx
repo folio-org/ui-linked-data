@@ -1,10 +1,9 @@
 import { FC, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import state from '@state';
 import { StatusType } from '@common/constants/status.constants';
 import { Button, ButtonType } from '@components/Button';
+import { useStatusState } from '@src/store';
 import CloseIcon from '@src/assets/times-16.svg?react';
 import CheckCircleIcon from '@src/assets/check-circle.svg?react';
 import WarningIcon from '@src/assets/exclamation-triangle.svg?react';
@@ -14,10 +13,10 @@ import './CommonStatus.scss';
 const DELETE_TIMEOUT = 10000;
 
 export const CommonStatus: FC = () => {
-  const [statusMessages, setStatusMessages] = useRecoilState(state.status.commonMessages);
+  const { statusMessages, setStatusMessages } = useStatusState();
 
   const deleteMessage = (messageId?: string) => {
-    setStatusMessages(current => current.filter(({ id }) => id !== messageId));
+    setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
   };
 
   const deleteOldestMessage = () => deleteMessage(statusMessages[0].id);

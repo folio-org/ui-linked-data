@@ -1,6 +1,5 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   postRecord,
   putRecord,
@@ -26,12 +25,12 @@ import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useBackToSearchUri } from './useBackToSearchUri';
-import state from '@state';
-import { useContainerEvents } from './useContainerEvents';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
 import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
+import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
 import { useRecordGeneration } from './useRecordGeneration';
+import { useBackToSearchUri } from './useBackToSearchUri';
+import { useContainerEvents } from './useContainerEvents';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -49,18 +48,12 @@ type IBaseFetchRecord = {
 
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setUserValues = useSetRecoilState(state.inputs.userValues);
-  const setSelectedProfile = useSetRecoilState(state.config.selectedProfile);
-  const [record, setRecord] = useRecoilState(state.inputs.record);
-  const setIsEdited = useSetRecoilState(state.status.recordIsEdited);
-  const setRecordStatus = useSetRecoilState(state.status.recordStatus);
-  const setLastSavedRecordId = useSetRecoilState(state.status.lastSavedRecordId);
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const setCurrentlyEditedEntityBfid = useSetRecoilState(state.ui.currentlyEditedEntityBfid);
-  const setCurrentlyPreviewedEntityBfid = useSetRecoilState(state.ui.currentlyPreviewedEntityBfid);
-  const [selectedRecordBlocks, setSelectedRecordBlocks] = useRecoilState(state.inputs.selectedRecordBlocks);
-  const setIsDuplicateImportedResourceModalOpen = useSetRecoilState(state.ui.isDuplicateImportedResourceModalOpen);
+  const { setIsLoading } = useLoadingState();
+  const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
+  const { setSelectedProfile } = useProfileState();
+  const { setIsDuplicateImportedResourceModalOpen, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
+    useUIState();
+  const { setRecordStatus, setLastSavedRecordId, setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState();
   const profile = PROFILE_BFIDS.MONOGRAPH;
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
@@ -131,10 +124,9 @@ export const useRecordControls = () => {
       dispatchUnblockEvent();
       !asRefToNewRecord && setRecord(parsedResponse);
 
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
+      addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
-      ]);
+      );
 
       // isEdited state update is not immediately reflected in the <Prompt />
       // blocker component, forcing <Prompt /> to block the navigation call below
@@ -179,10 +171,7 @@ export const useRecordControls = () => {
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
     } finally {
       setIsLoading(false);
     }
@@ -197,7 +186,7 @@ export const useRecordControls = () => {
   };
 
   const clearRecordState = () => {
-    setUserValues({});
+    resetUserValues();
     setRecord(null);
     setSelectedRecordBlocks(undefined);
     setSelectedProfile(null);
@@ -218,19 +207,13 @@ export const useRecordControls = () => {
       await deleteRecordRequest(currentRecordId as unknown as string);
       deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 
       navigate(ROUTES.SEARCH.uri);
     } catch (error) {
       console.error('Cannot delete the resource description', error);
 
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
     }
   };
 
@@ -241,10 +224,7 @@ export const useRecordControls = () => {
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
-        setStatusMessages(currentStatus => [
-          ...currentStatus,
-          UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'),
-        ]);
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
 
         return navigate(ROUTES.RESOURCE_CREATE.uri);
       }
@@ -264,10 +244,7 @@ export const useRecordControls = () => {
     } catch (e) {
       console.error('Error fetching record and selecting entity values: ', e);
 
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
   };
 
@@ -285,10 +262,7 @@ export const useRecordControls = () => {
 
       return recordData;
     } catch (_err) {
-      setStatusMessages(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
     }
   };
 
@@ -315,10 +289,9 @@ export const useRecordControls = () => {
       if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
         setIsDuplicateImportedResourceModalOpen(true);
       } else {
-        setStatusMessages(currentStatus => [
-          ...currentStatus,
+        addStatusMessagesItem?.(
           UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetchingExternalResourceForEditing'),
-        ]);
+        );
       }
     } finally {
       setIsLoading(false);

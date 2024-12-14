@@ -1,13 +1,12 @@
 import classNames from 'classnames';
 import { FC, memo, ReactElement, ReactNode } from 'react';
-import { useRecoilValue } from 'recoil';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import state from '@state';
 import { IDrawComponent } from '@components/EditSection';
 import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { DuplicateSubcomponentContainer } from '@components/DuplicateSubcomponentContainer';
+import { useInputsState, useProfileState, useUIState } from '@src/store';
 
 export type IFields = {
   uuid: string | null;
@@ -37,9 +36,9 @@ export const Fields: FC<IFields> = memo(
     scrollToEnabled = false,
     groupingDisabled = false,
   }) => {
-    const schema = useRecoilValue(state.config.schema);
-    const selectedEntries = useRecoilValue(state.config.selectedEntries);
-    const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+    const { currentlyEditedEntityBfid } = useUIState();
+    const { schema } = useProfileState();
+    const { selectedEntries } = useInputsState();
 
     const entry = uuid && schema?.get(uuid);
 

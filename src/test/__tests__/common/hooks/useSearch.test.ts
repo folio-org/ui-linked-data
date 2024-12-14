@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { useSearch } from '@common/hooks/useSearch';
 import { useSearchContext } from '@common/hooks/useSearchContext';
+import { useInputsStore, useLoadingStateStore, useSearchStore } from '@src/store';
 
 const selectedNavigationSegment = 'defaultSegment';
 const defaultSearchBy = 'defaultSearchBy';
@@ -14,7 +15,6 @@ const getCurrentPageNumber = jest.fn().mockReturnValue(0);
 const fetchData = jest.fn();
 
 jest.mock('react-router-dom');
-jest.mock('recoil');
 jest.mock('@common/hooks/useSearchContext');
 jest.mock('@common/hooks/usePagination', () => ({
   usePagination: () => ({
@@ -29,32 +29,6 @@ jest.mock('@common/hooks/useFetchSearchData', () => ({
     fetchData,
   }),
 }));
-jest.mock('@state', () => ({
-  default: {
-    search: {
-      index: '',
-      query: '',
-      limiters: {},
-      message: '',
-      data: null,
-      pageMetadata: {},
-      facetsBySegments: {
-        defaultSegment: {
-          query: 'defaultQuery',
-          searchBy: 'defaultSearchBy',
-          facets: {},
-        },
-      },
-    },
-    inputs: {
-      userValues: {},
-      previewContent: {},
-    },
-    loadingState: {
-      isLoading: false,
-    },
-  },
-}));
 
 describe('useSearch hook', () => {
   const setIsLoading = jest.fn();
@@ -67,7 +41,7 @@ describe('useSearch hook', () => {
   const setFacetsBySegments = jest.fn();
   const setForceRefreshSearch = jest.fn();
   const resetPreviewContent = jest.fn();
-  const clearFacetsBySegments = jest.fn();
+  const resetFacetsBySegments = jest.fn();
   const setSearchParams = jest.fn();
 
   const mockUseSearchContext = {
@@ -81,30 +55,45 @@ describe('useSearch hook', () => {
   };
 
   beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useLoadingStateStore,
+        state: { isLoading: false, setIsLoading },
+      },
+      {
+        store: useInputsStore,
+        state: { previewContent: {}, resetPreviewContent },
+      },
+      {
+        store: useSearchStore,
+        state: {
+          searchBy: '',
+          setSearchBy,
+          query: '',
+          setQuery,
+          facets: {},
+          setFacets,
+          message: '',
+          setMessage,
+          data: null,
+          setData,
+          pageMetadata: {},
+          setPageMetadata,
+          setForceRefresh: setForceRefreshSearch,
+          facetsBySegments: {
+            defaultSegment: {
+              query: 'defaultQuery',
+              searchBy: 'defaultSearchBy',
+              facets: {},
+            },
+          },
+          setFacetsBySegments,
+          resetFacetsBySegments,
+        },
+      },
+    ]);
     (useSearchContext as jest.Mock).mockReturnValue(mockUseSearchContext);
     (useSearchParams as jest.Mock).mockReturnValue([null, setSearchParams]);
-
-    (useRecoilState as jest.Mock)
-      .mockReturnValueOnce(['', setSearchBy])
-      .mockReturnValueOnce(['', setQuery])
-      .mockReturnValueOnce([{}, setFacets])
-      .mockReturnValueOnce(['', setMessage])
-      .mockReturnValueOnce([null, setData])
-      .mockReturnValueOnce([{}, setPageMetadata])
-      .mockReturnValueOnce([
-        {
-          newSegment: {
-            query: 'newQuery',
-            searchBy: 'newSearchBy',
-            facets: {},
-          },
-        },
-        setFacetsBySegments,
-      ]);
-    (useSetRecoilState as jest.Mock).mockReturnValueOnce(setIsLoading).mockReturnValueOnce(setForceRefreshSearch);
-    (useResetRecoilState as jest.Mock)
-      .mockReturnValueOnce(resetPreviewContent)
-      .mockReturnValueOnce(clearFacetsBySegments);
   });
 
   test('initializes with default values and set up effects', () => {
@@ -167,6 +156,20 @@ describe('useSearch hook', () => {
 
   test('handles onChangeSegment and update states', async () => {
     const newSegment = 'newSegment' as SearchSegmentValue;
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: {
+          facetsBySegments: {
+            [newSegment]: {
+              query: 'newQuery',
+              searchBy: 'newSearchBy',
+              facets: {},
+            },
+          } as FacetsBySegments,
+        },
+      },
+    ]);
 
     const { result } = renderHook(useSearch);
 
@@ -186,6 +189,6 @@ describe('useSearch hook', () => {
 
     unmount();
 
-    expect(clearFacetsBySegments).toHaveBeenCalled();
+    expect(resetFacetsBySegments).toHaveBeenCalled();
   });
 });

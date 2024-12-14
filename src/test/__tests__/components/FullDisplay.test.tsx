@@ -1,12 +1,12 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { Fragment, ReactNode } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import { FullDisplay } from '@components/FullDisplay';
 import { Edit } from '@views';
-import state from '@state';
-import { Fragment, ReactNode } from 'react';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useInputsStore } from '@src/store';
 
 const mockPreviewContent = [
   {
@@ -40,20 +40,23 @@ jest.mock('react-intl', () => ({
 }));
 
 describe('FullDisplay', () => {
-  beforeEach(() =>
-    render(
-      <RecoilRoot
-        initializeState={snapshot => snapshot.set(state.inputs.previewContent, mockPreviewContent as PreviewContent[])}
-      >
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route path="/" element={<FullDisplay />} />
-            <Route path="/resources/:resourceId/edit" element={<Edit />} />
-          </Routes>
-        </BrowserRouter>
-      </RecoilRoot>,
-    ),
-  );
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { previewContent: mockPreviewContent as PreviewContent[] },
+      },
+    ]);
+
+    return render(
+      <BrowserRouter basename="/">
+        <Routes>
+          <Route path="/" element={<FullDisplay />} />
+          <Route path="/resources/:resourceId/edit" element={<Edit />} />
+        </Routes>
+      </BrowserRouter>,
+    );
+  });
 
   const { getByTestId, getAllByTestId, getByText } = screen;
 

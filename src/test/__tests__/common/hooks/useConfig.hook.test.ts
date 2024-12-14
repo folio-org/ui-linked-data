@@ -1,9 +1,10 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfiles } from '@common/api/profiles.api';
 import * as SchemaService from '@common/services/schema';
+import { useInputsStore, useProfileStore } from '@src/store';
 
 const profiles = [
   {
@@ -25,7 +26,6 @@ const profiles = [
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
 
-jest.mock('recoil');
 jest.mock('@common/services/schema');
 jest.mock('@common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
@@ -38,22 +38,6 @@ jest.mock('@common/api/profiles.api', () => ({
 }));
 jest.mock('@common/api/client', () => ({
   apiClient: jest.fn(),
-}));
-jest.mock('@state', () => ({
-  default: {
-    config: {
-      profiles: [],
-      selectedProfile: {},
-      preparedFields: {},
-      schema: {},
-      initialSchemaKey: '',
-      selectedEntries: [],
-    },
-    inputs: {
-      userValues: {},
-      previewContent: {},
-    },
-  },
 }));
 jest.mock('@common/services/userValues', () => ({
   UserValuesService: jest.fn(),
@@ -80,29 +64,51 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
 
-  const mockUseRecoilState = (profiles: ProfileEntry[] = []) => {
-    (useRecoilState as jest.Mock)
-      .mockReturnValueOnce([profiles, setProfiles])
-      .mockReturnValueOnce([null, setPreparedFields]);
+  const mockUseGlobalState = (profiles: ProfileEntry[] = []) => {
+    setUpdatedGlobalState([
+      {
+        store: useProfileStore,
+        updatedState: { profiles, preparedFields: null },
+      },
+    ]);
   };
 
   beforeEach(() => {
-    (useSetRecoilState as jest.Mock)
-      .mockReturnValueOnce(setProfiles)
-      .mockReturnValueOnce(setSelectedProfile)
-      .mockReturnValueOnce(setUserValues)
-      .mockReturnValueOnce(setPreparedFields)
-      .mockReturnValueOnce(setSchema)
-      .mockReturnValueOnce(setInitialSchemaKey)
-      .mockReturnValueOnce(setSelectedEntries)
-      .mockReturnValueOnce(setPreviewContent)
-      .mockReturnValueOnce(setSelectedRecordBlocks);
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          profiles: [],
+          setProfiles,
+          selectedProfile: {},
+          setSelectedProfile,
+          preparedFields: {},
+          setPreparedFields,
+          schema: {},
+          setSchema,
+          initialSchemaKey: '',
+          setInitialSchemaKey,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          userValues: {},
+          previewContent: {},
+          selectedEntries: [],
+          setUserValues,
+          setSelectedEntries,
+          setPreviewContent,
+          setSelectedRecordBlocks,
+        },
+      },
+    ]);
 
     (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 
   test('prepareFields - calls "setPreparedFields" and returns an object with required fields', async () => {
-    mockUseRecoilState();
+    mockUseGlobalState();
     const testResult = {
       templateId_1: {
         id: 'templateId_1',
@@ -123,7 +129,7 @@ describe('useConfig', () => {
     } as RecordEntry;
 
     test('calls "fetchProfiles" and "setProfiles" and returns an array of profiles', async () => {
-      mockUseRecoilState();
+      mockUseGlobalState();
       (fetchProfiles as jest.Mock).mockImplementation(() => profiles);
 
       const { result } = renderHook(useConfig);
@@ -135,7 +141,7 @@ describe('useConfig', () => {
     });
 
     test('does not call "fetchProfiles" and "setProfiles" and returns a stored array of profiles', async () => {
-      mockUseRecoilState(profiles);
+      mockUseGlobalState(profiles);
 
       const { result } = renderHook(useConfig);
 

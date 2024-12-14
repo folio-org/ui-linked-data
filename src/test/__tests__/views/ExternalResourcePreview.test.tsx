@@ -1,11 +1,10 @@
+import { useInputsStore } from '@src/store';
 import { fetchExternalRecordForPreview } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import state from '@state';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { render, screen } from '@testing-library/react';
 import { ExternalResourcePreview } from '@views';
 import { Fragment, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
@@ -25,14 +24,20 @@ jest.mock('react-intl', () => ({
 }));
 
 describe('ExternalResourcePreview', () => {
-  const renderComponent = (withRecord = false) =>
-    render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.inputs.record, withRecord ? {} : null)}>
-        <MemoryRouter>
-          <ExternalResourcePreview />
-        </MemoryRouter>
-      </RecoilRoot>,
+  const renderComponent = (withRecord = false) => {
+    setInitialGlobalState([
+      {
+        store: useInputsStore,
+        state: { record: withRecord ? {} : null },
+      },
+    ]);
+
+    return render(
+      <MemoryRouter>
+        <ExternalResourcePreview />
+      </MemoryRouter>,
     );
+  };
 
   test('calls fetchExternalRecordForPreview on externalId change', () => {
     renderComponent();

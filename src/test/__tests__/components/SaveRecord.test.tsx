@@ -1,22 +1,23 @@
-import { RecoilRoot } from 'recoil';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import { SaveRecord } from '@components/SaveRecord';
-import state from '@state';
 import { BrowserRouter } from 'react-router-dom';
+import { useStatusStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 describe('SaveRecord', () => {
-  function renderSaveRecordComponent(recordIsEdited = true) {
+  function renderSaveRecordComponent(isRecordEdited = true) {
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { isRecordEdited },
+      },
+    ]);
+
     render(
-      <RecoilRoot
-        initializeState={snapshot => {
-          snapshot.set(state.status.recordIsEdited, recordIsEdited);
-        }}
-      >
-        <BrowserRouter>
-          <SaveRecord primary />
-        </BrowserRouter>
-      </RecoilRoot>,
+      <BrowserRouter>
+        <SaveRecord primary />
+      </BrowserRouter>,
     );
   }
 

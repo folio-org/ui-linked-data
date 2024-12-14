@@ -1,9 +1,8 @@
 import { recordGeneratorService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { useRecoilValue } from 'recoil';
 import { renderHook } from '@testing-library/react';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-
-jest.mock('recoil');
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useInputsStore, useProfileStore } from '@src/store';
 
 describe('useRecordGeneration', () => {
   it('generates a record successfully', () => {
@@ -12,11 +11,22 @@ describe('useRecordGeneration', () => {
     const selectedEntries = 'mockSelectedEntries';
     const initKey = 'mockInitialSchemaKey';
 
-    (useRecoilValue as jest.Mock)
-      .mockReturnValueOnce(schema)
-      .mockReturnValueOnce(userValues)
-      .mockReturnValueOnce(selectedEntries)
-      .mockReturnValueOnce(initKey);
+    setInitialGlobalState([
+      {
+        store: useProfileStore,
+        state: {
+          schema,
+          initialSchemaKey: initKey,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          userValues,
+          selectedEntries,
+        },
+      },
+    ]);
 
     const { result } = renderHook(() => useRecordGeneration());
 

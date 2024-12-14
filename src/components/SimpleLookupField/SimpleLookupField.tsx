@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
 import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
-import { useSetRecoilState } from 'recoil';
 import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
 import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -12,9 +11,9 @@ import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
 import { ClearIndicator } from './ClearIndicator';
-import state from '@state';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 import './SimpleLookupField.scss';
+import { useStatusState } from '@src/store';
 
 interface Props {
   uri: string;
@@ -46,7 +45,7 @@ export const SimpleLookupField: FC<Props> = ({
   const { getLookupData, loadLookupData } = useSimpleLookupData();
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
+  const { addStatusMessagesItem } = useStatusState();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const [localValue, setLocalValue] = useState<MultiselectOption[]>(
@@ -68,10 +67,7 @@ export const SimpleLookupField: FC<Props> = ({
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 
-      setCommonStatus(currentStatus => [
-        ...currentStatus,
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'),
-      ]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
     } finally {
       setIsLoading(false);
     }

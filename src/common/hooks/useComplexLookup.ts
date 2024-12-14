@@ -1,5 +1,4 @@
 import { ChangeEvent, useCallback, useState } from 'react';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import {
   generateEmptyValueUuid,
   getLinkedField,
@@ -8,10 +7,10 @@ import {
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import state from '@state';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
+import { useInputsState, useMarcPreviewState, useProfileState, useUIState } from '@src/store';
 
 export const useComplexLookup = ({
   entry,
@@ -26,14 +25,17 @@ export const useComplexLookup = ({
 }) => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
-  const schema = useRecoilValue(state.config.schema);
-  const marcPreviewMetadata = useRecoilValue(state.data.marcPreviewMetadata);
-  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const resetMarcPreviewData = useResetRecoilState(state.data.marcPreviewData);
-  const resetMarcPreviewMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
-  const resetIsMarcPreviewOpen = useResetRecoilState(state.ui.isMarcPreviewOpen);
+  const { schema } = useProfileState();
+  const { selectedEntries, setSelectedEntries } = useInputsState();
+  const {
+    setComplexValue,
+    resetComplexValue: resetMarcPreviewData,
+    metadata: marcPreviewMetadata,
+    resetMetadata: resetMarcPreviewMetadata,
+  } = useMarcPreviewState();
+  const { resetIsMarcPreviewOpen } = useUIState();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const { fetchMarcData } = useMarcData(state.data.marcPreviewData);
+  const { fetchMarcData } = useMarcData(setComplexValue);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
 

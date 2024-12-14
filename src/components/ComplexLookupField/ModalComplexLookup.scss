@@ -156,6 +156,10 @@
       flex: 1;
       overflow: hidden;
 
+      .search-control-pane-mainLabel {
+        margin: 0;
+      }
+
       .item-search {
         overflow: hidden;
 

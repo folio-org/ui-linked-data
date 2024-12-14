@@ -1,6 +1,5 @@
 import { FC, Suspense, useEffect, useRef } from 'react';
 import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Loading } from '@components/Loading';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -8,10 +7,10 @@ import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
-import state from '@state';
 import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
+import { useConfigState } from './store';
 
 type IContainer = {
   routePrefix?: string;
@@ -54,8 +53,7 @@ export const routes: RouteObject[] = [
 const createRouter = (basename: string) => createBrowserRouter(routes, { basename });
 
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
-  const setCustomEvents = useSetRecoilState(state.config.customEvents);
-  const setHasNavigationOrigin = useSetRecoilState(state.config.hasNavigationOrigin);
+  const { setCustomEvents, setHasNavigationOrigin } = useConfigState();
   const cachedMessages = useRef({ [DEFAULT_LOCALE]: en });
 
   useEffect(() => {
@@ -82,9 +80,5 @@ export const App: FC<IContainer> = ({ routePrefix = '', config }) => {
     config && localStorageService.serialize(OKAPI_CONFIG, config);
   }, [config]);
 
-  return (
-    <RecoilRoot>
-      <Container routePrefix={routePrefix} config={config} />
-    </RecoilRoot>
-  );
+  return <Container routePrefix={routePrefix} config={config} />;
 };

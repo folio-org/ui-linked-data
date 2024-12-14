@@ -1,6 +1,5 @@
 import { FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -12,11 +11,11 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import state from '@state';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
+import { useInputsState, useLoadingState, useSearchState, useStatusState } from '@src/store';
 import './SearchResultEntry.scss';
 
 type SearchResultEntry = {
@@ -59,11 +58,11 @@ const instancesListHeader: Row = {
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const navigationState = useRecoilValue(state.search.navigationState);
+  const { navigationState } = useSearchState();
   const [isOpen, setIsOpen] = useState(true);
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setCommonStatus = useSetRecoilState(state.status.commonMessages);
-  const previewContent = useRecoilValue(state.inputs.previewContent);
+  const { setIsLoading } = useLoadingState();
+  const { addStatusMessagesItem } = useStatusState();
+  const { previewContent } = useInputsState();
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
 
@@ -74,7 +73,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     } catch (error) {
       console.error(error);
 
-      setCommonStatus(prev => [...prev, UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching')]);
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {
       setIsLoading(false);
     }

@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react';
-import { useRecoilValue } from 'recoil';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import * as domHelper from '@common/helpers/dom.helper';
+import { useConfigStore, useStatusStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -13,15 +14,22 @@ const mockEvents = {
   BLOCK_NAVIGATION: 'mockBlock',
   UNBLOCK_NAVIGATION: 'mockUnblock',
 };
-jest.mock('recoil');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('useContainerEvents', () => {
-  const renderUseContainerEventsHook = (isEdited: boolean) => {
+  const renderUseContainerEventsHook = (isRecordEdited: boolean) => {
     (domHelper.dispatchEventWrapper as jest.Mock) = mockDispatchEventWrapper;
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(false);
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(isEdited);
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(mockEvents);
+
+    setInitialGlobalState([
+      {
+        store: useStatusStore,
+        state: { isRecordEdited },
+      },
+      {
+        store: useConfigStore,
+        state: { customEvents: mockEvents },
+      },
+    ]);
 
     renderHook(() => useContainerEvents({ watchEditedState: true }));
   };

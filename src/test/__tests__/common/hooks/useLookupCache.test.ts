@@ -1,12 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
-import { RecoilRoot } from 'recoil';
 
 describe('useLookupCacheService', () => {
   test('sets a simple lookup value', () => {
-    const { result } = renderHook(useLookupCacheService, {
-      wrapper: RecoilRoot,
-    });
+    const { result } = renderHook(useLookupCacheService);
     const key = 'testKey_1';
     const value = [
       {

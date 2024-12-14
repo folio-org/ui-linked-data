@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { useSetRecoilState, useRecoilState, SetterOrUpdater, useResetRecoilState } from 'recoil';
 import { getByIdentifier } from '@common/api/search.api';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
@@ -7,7 +6,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { normalizeQuery } from '@common/helpers/search.helper';
 import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import state from '@state';
+import { useLoadingState, useSearchState, useStatusState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
 
 export const useFetchSearchData = () => {
@@ -24,13 +23,9 @@ export const useFetchSearchData = () => {
     buildSearchQuery,
     precedingRecordsCount,
   } = useSearchContext();
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setMessage = useSetRecoilState(state.search.message);
-  const [data, setData] = useRecoilState(state.search.data);
-  const resetData = useResetRecoilState(state.search.data);
-  const setPageMetadata = useSetRecoilState(state.search.pageMetadata);
-  const setStatusMessages = useSetRecoilState(state.status.commonMessages);
-  const resetStatusMessage = useResetRecoilState(state.status.commonMessages);
+  const { setIsLoading } = useLoadingState();
+  const { setMessage, data, setData, resetData, setPageMetadata } = useSearchState();
+  const { addStatusMessagesItem, resetStatusMessages } = useStatusState();
 
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {
@@ -130,13 +125,6 @@ export const useFetchSearchData = () => {
         });
   };
 
-  const handleFetchError = (setStatusMessages: SetterOrUpdater<StatusEntry[]>) => {
-    setStatusMessages(currentStatus => [
-      ...currentStatus,
-      UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'),
-    ]);
-  };
-
   const fetchData = useCallback(
     async ({
       query,
@@ -145,7 +133,7 @@ export const useFetchSearchData = () => {
       selectedSegment,
       baseQuerySelector = SearchableIndexQuerySelector.Query,
     }: FetchDataParams) => {
-      resetStatusMessage();
+      resetStatusMessages();
       const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
 
       data && resetData();
@@ -189,7 +177,7 @@ export const useFetchSearchData = () => {
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
       } catch {
-        handleFetchError(setStatusMessages);
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       } finally {
         setIsLoading(false);
       }

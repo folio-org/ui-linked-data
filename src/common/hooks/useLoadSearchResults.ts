@@ -1,22 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
+import { useLoadingState, useSearchState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
-import state from '@state';
 
 export const useLoadSearchResults = (
   fetchData: ({ query, searchBy, offset, selectedSegment, baseQuerySelector }: FetchDataParams) => Promise<void>,
 ) => {
   const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
     useSearchContext();
-  const setData = useSetRecoilState(state.search.data);
-  const setSearchBy = useSetRecoilState(state.search.index);
-  const setIsLoading = useSetRecoilState(state.loadingState.isLoading);
-  const setQuery = useSetRecoilState(state.search.query);
-  const [forceRefresh, setForceRefresh] = useRecoilState(state.search.forceRefresh);
-  const resetFacetsData = useResetRecoilState(state.search.facetsData);
+  const { setIsLoading } = useLoadingState();
+  const { setQuery, setData, setSearchBy, forceRefresh, setForceRefresh, resetFacetsData } = useSearchState();
   const [searchParams] = useSearchParams();
   const queryParam = searchParams.get(SearchQueryParams.Query);
   const searchByParam = searchParams.get(SearchQueryParams.SearchBy);

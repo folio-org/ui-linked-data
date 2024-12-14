@@ -1,7 +1,6 @@
-import { useEffect, memo } from 'react';
-import { useRecoilValue, useRecoilState } from 'recoil';
+import { useEffect, memo, useRef } from 'react';
+import { debounce } from 'lodash';
 import classNames from 'classnames';
-import state from '@state';
 import { saveRecordLocally } from '@common/helpers/record.helper';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { AUTOSAVE_INTERVAL } from '@common/constants/storage.constants';
@@ -10,22 +9,21 @@ import { Fields } from '@components/Fields';
 import { Prompt } from '@components/Prompt';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useServicesContext } from '@common/hooks/useServicesContext';
+import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
-import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
+
+const USER_INPUT_DELAY = 750;
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
-  const resourceTemplates = useRecoilValue(state.config.selectedProfile)?.json.Profile.resourceTemplates;
-  const initialSchemaKey = useRecoilValue(state.config.initialSchemaKey);
-  const [selectedEntries, setSelectedEntries] = useRecoilState(state.config.selectedEntries);
-  const [userValues, setUserValues] = useRecoilState(state.inputs.userValues);
-  const [isEdited, setIsEdited] = useRecoilState(state.status.recordIsEdited);
-  const record = useRecoilValue(state.inputs.record);
-  const selectedRecordBlocks = useRecoilValue(state.inputs.selectedRecordBlocks);
-  const [collapsedEntries, setCollapsedEntries] = useRecoilState(state.ui.collapsedEntries);
-  const collapsibleEntries = useRecoilValue(state.ui.collapsibleEntries);
-  const currentlyEditedEntityBfid = useRecoilValue(state.ui.currentlyEditedEntityBfid);
+  const { selectedProfile, initialSchemaKey } = useProfileState();
+  const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
+  const { userValues, addUserValuesItem, selectedRecordBlocks, record, selectedEntries, setSelectedEntries } =
+    useInputsState();
+  const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState();
+  const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
   const { generateRecord } = useRecordGeneration();
 
   useContainerEvents({ watchEditedState: true });
@@ -50,16 +48,21 @@ export const EditSection = memo(() => {
     return () => clearInterval(autoSaveRecord);
   }, [isEdited, userValues]);
 
+  const debouncedAddUserValues = useRef(
+    debounce((value: UserValues) => {
+      addUserValuesItem?.(value);
+    }, USER_INPUT_DELAY),
+  ).current;
+
   const onChange = (uuid: string, contents: Array<UserValueContents>) => {
     if (!isEdited) setIsEdited(true);
 
-    setUserValues(oldValue => ({
-      ...oldValue,
+    debouncedAddUserValues({
       [uuid]: {
         uuid,
         contents,
       },
-    }));
+    });
   };
 
   const handleGroupsCollapseExpand = () =>

@@ -1,11 +1,11 @@
-import { useRecoilValue } from 'recoil';
 import { renderHook } from '@testing-library/react';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useComplexLookupSearchResults } from '@common/hooks/useComplexLookupSearchResults';
 import { ComplexLookupSearchResultsProps } from '@components/ComplexLookupField/ComplexLookupSearchResults';
 import { Row } from '@components/Table';
+import { useSearchStore } from '@src/store';
 
-jest.mock('recoil');
 jest.mock('@common/hooks/useSearchContext', () => ({
   useSearchContext: jest.fn(),
 }));
@@ -44,7 +44,13 @@ describe('useComplesLookupSearchResults', () => {
     (useSearchContext as jest.Mock).mockReturnValue({
       onAssignRecord: jest.fn(),
     });
-    (useRecoilValue as jest.Mock).mockReturnValueOnce(data).mockReturnValueOnce(sourceData);
+
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: { data, sourceData },
+      },
+    ]);
   });
 
   it('returns "formattedData" and "listHeader"', () => {

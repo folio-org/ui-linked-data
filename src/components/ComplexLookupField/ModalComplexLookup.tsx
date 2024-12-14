@@ -1,5 +1,4 @@
 import { FC, memo, useCallback, useEffect } from 'react';
-import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@common/api/search.api';
@@ -13,8 +12,8 @@ import { useMarcData } from '@common/hooks/useMarcData';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Modal } from '@components/Modal';
 import { Search } from '@components/Search';
+import { useMarcPreviewState, useSearchState, useUIState } from '@src/store';
 import { SearchControlPane } from '@components/SearchControlPane';
-import state from '@state';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 import { MarcPreviewComplexLookup } from './MarcPreviewComplexLookup';
 import { SEARCH_RESULTS_TABLE_CONFIG } from './configs';
@@ -50,13 +49,16 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
-    const setIsMarcPreviewOpen = useSetRecoilState(state.ui.isMarcPreviewOpen);
-    const setSearchQuery = useSetRecoilState(state.search.query);
-    const clearSearchQuery = useResetRecoilState(state.search.query);
-    const setMarcMetadata = useSetRecoilState(state.data.marcPreviewMetadata);
-    const clearMarcMetadata = useResetRecoilState(state.data.marcPreviewMetadata);
+    const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState();
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
-    const { fetchMarcData, clearMarcData } = useMarcData(state.data.marcPreviewData);
+    const { setIsMarcPreviewOpen } = useUIState();
+    const {
+      setComplexValue,
+      resetComplexValue: resetMarcPreviewValue,
+      setMetadata: setMarcMetadata,
+      resetMetadata: clearMarcMetadata,
+    } = useMarcPreviewState();
+    const { fetchMarcData } = useMarcData(setComplexValue);
 
     useEffect(() => {
       if (!value) {
@@ -73,7 +75,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
 
     const onCloseModal = () => {
       onCloseMarcPreview();
-      clearMarcData();
+      resetMarcPreviewValue();
       clearMarcMetadata();
       onClose();
     };

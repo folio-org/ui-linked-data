@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
-import state from '@state';
+import { useMarcPreviewStore, useUIStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
 jest.mock('@common/hooks/useSearchContext');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -33,17 +33,18 @@ describe('MarcPreviewComplexLookup', () => {
     marcPreviewData: MarcDTO,
     marcPreviewMetadata: MarcPreviewMetadata,
   ) => {
-    return render(
-      <RecoilRoot
-        initializeState={({ set }) => {
-          set(state.ui.isMarcPreviewOpen, isMarcPreviewOpen);
-          set(state.data.marcPreviewData, marcPreviewData);
-          set(state.data.marcPreviewMetadata, marcPreviewMetadata);
-        }}
-      >
-        <MarcPreviewComplexLookup onClose={onClose} />
-      </RecoilRoot>,
-    );
+    setInitialGlobalState([
+      {
+        store: useMarcPreviewStore,
+        state: { complexValue: marcPreviewData, metadata: marcPreviewMetadata },
+      },
+      {
+        store: useUIStore,
+        state: { isMarcPreviewOpen },
+      },
+    ]);
+
+    return render(<MarcPreviewComplexLookup onClose={onClose} />);
   };
 
   it('renders the component when isMarcPreviewOpen is true and marcPreviewData is available', () => {

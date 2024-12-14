@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 import { SearchQueryParams } from '@common/constants/routes.constants';
-import state from '@state';
+import { useSearchState } from '@src/store';
 
 export const usePagination = (hasSearchParams = true, defaultPageNumber = 0, hasCycledPagination = false) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
-  const pageMetadata = useRecoilValue<PageMetadata>(state.search.pageMetadata);
+  const { pageMetadata } = useSearchState();
   const [currentPageNumber, setCurrentPageNumber] = useState(
     offsetSearchParam ? parseInt(offsetSearchParam) : defaultPageNumber,
   );

@@ -1,13 +1,12 @@
+import { useIntl } from 'react-intl';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
-import { useRecoilValue } from 'recoil';
-import state from '@state';
 import { getRecordTitle } from '@common/helpers/record.helper';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useIntl } from 'react-intl';
+import { useInputsState } from '@src/store';
 
 export const PreviewExternalResourcePane = () => {
-  const record = useRecoilValue(state.inputs.record);
+  const { record } = useInputsState();
   const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const { formatMessage } = useIntl();
 

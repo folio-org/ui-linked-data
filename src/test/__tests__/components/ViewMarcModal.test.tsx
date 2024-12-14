@@ -1,7 +1,7 @@
 import { ViewMarcModal } from '@components/ViewMarcModal';
-import state from '@state';
+import { useMarcPreviewStore } from '@src/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { render } from '@testing-library/react';
-import { RecoilRoot } from 'recoil';
 
 const { leader, subfieldContent } = {
   leader: '372489',
@@ -35,11 +35,14 @@ const mockMarcPreview = {
 
 describe('ViewMarcModal', () => {
   test('renders modal and its contents', async () => {
-    const { findByText } = render(
-      <RecoilRoot initializeState={snapshot => snapshot.set(state.data.marcPreview, mockMarcPreview)}>
-        <ViewMarcModal />
-      </RecoilRoot>,
-    );
+    setInitialGlobalState([
+      {
+        store: useMarcPreviewStore,
+        state: { basicValue: mockMarcPreview },
+      },
+    ]);
+
+    const { findByText } = render(<ViewMarcModal />);
 
     expect(await findByText(leader, { exact: false })).toBeInTheDocument();
     expect(await findByText(subfieldContent, { exact: false })).toBeInTheDocument();
