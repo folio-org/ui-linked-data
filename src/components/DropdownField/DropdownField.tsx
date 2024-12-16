@@ -42,7 +42,7 @@ export const DropdownField: FC<IDropdownField> = ({
       disabled={isDisabled}
       className="edit-section-field-input dropdown-field"
       data-testid={testId}
-      ariaLabelledby={htmlId}
+      ariaLabelledBy={htmlId}
     />
   );
 };

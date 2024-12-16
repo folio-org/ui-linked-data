@@ -9,5 +9,9 @@ type ButtonGroupProps = {
 };
 
 export const ButtonGroup = ({ className, fullWidth, children }: ButtonGroupProps) => {
-  return <div className={classNames('button-group', { 'full-width': fullWidth }, className)}>{children}</div>;
+  return (
+    <div role="tablist" className={classNames('button-group', { 'full-width': fullWidth }, className)}>
+      {children}
+    </div>
+  );
 };

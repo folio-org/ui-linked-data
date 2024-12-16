@@ -59,9 +59,9 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
   };
 
   return (
-    <div data-testid="table" className={classNames(table, tableFlex, className)}>
-      <div ref={tableHeadElemRef} className={tableHead}>
-        <div ref={tableHeadRowElemRef} className={tableRow}>
+    <div role="table" data-testid="table" className={classNames(table, tableFlex, className)}>
+      <div role="rowgroup" ref={tableHeadElemRef} className={tableHead}>
+        <div role="row" ref={tableHeadRowElemRef} className={tableRow}>
           {sortedHeaderEntries.map(([key, { label, className, ...rest }]) => (
             <div
               key={key}
@@ -105,6 +105,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
                       className={classNames('table-cell', className, headerClassName)}
                       data-testid={key}
                       key={key}
+                      role="cell"
                       {...rest}
                     >
                       <div className="table-cell-content">{(children || label) ?? ''}</div>
