@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { VALUE_DIVIDER } from '@common/constants/complexLookup.constants';
@@ -20,6 +20,7 @@ interface Props {
 }
 
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
+  const { formatMessage } = useIntl();
   const { layout, htmlId } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
   const buttonConfigLabel = lookupConfig?.labels?.button;
@@ -54,6 +55,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
                     onClick={() => handleDelete(id)}
                     className="complex-lookup-selected-delete"
                     data-testid="complex-lookup-selected-delete"
+                    aria-label={formatMessage({ id: 'ld.aria.edit.removeComplexLookupFieldValue' })}
                   >
                     <CloseIcon />
                   </button>
