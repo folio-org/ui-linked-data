@@ -25,7 +25,7 @@ export const useFetchSearchData = () => {
   } = useSearchContext();
   const { setIsLoading } = useLoadingState();
   const { setMessage, data, setData, resetData, setPageMetadata } = useSearchState();
-  const { addStatusMessagesItem, resetStatusMessages } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState();
 
   const validateAndNormalizeQuery = useCallback(
     (type: SearchIdentifiers, query: string) => {
@@ -133,7 +133,6 @@ export const useFetchSearchData = () => {
       selectedSegment,
       baseQuerySelector = SearchableIndexQuerySelector.Query,
     }: FetchDataParams) => {
-      resetStatusMessages();
       const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
 
       data && resetData();
