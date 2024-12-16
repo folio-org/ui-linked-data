@@ -5,10 +5,11 @@ export const EDITOR_API_BASE_PATH = 'EDITOR_API_BASE_PATH';
 
 // API endpoints
 export const BIBFRAME_API_ENDPOINT = '/linked-data/resource';
-export const INVENTORY_API_ENDPOINT = '/linked-data/inventory-instance'
+export const INVENTORY_API_ENDPOINT = '/linked-data/inventory-instance';
 export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const SEARCH_API_ENDPOINT = '/search/linked-data';
 export const SEARCH_RESOURCE_API_ENDPOINT = `${SEARCH_API_ENDPOINT}/works`;
+export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 
 export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,

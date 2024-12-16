@@ -208,5 +208,7 @@
   "ld.aria.filters.reset": "Reset filters button",
   "ld.aria.filters.reset.announce": "Search field and filters are reset",
   "ld.duplicateImportWarn": "Duplicate import warning",
-  "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?"
+  "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
+  "ld.errorMakingApiRequest": "Error making API request",
+  "ld.errorValidatingAuthorityRecord": "Error validating authority record"
 }

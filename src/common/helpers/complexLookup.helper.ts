@@ -66,3 +66,15 @@ export const getUpdatedSelectedEntries = ({
 
   return selectedEntriesService.get();
 };
+
+export const generateValidationRequestBody = (marcData: MarcDTO | null, target = 'CREATOR_OF_WORK') => {
+  if (!marcData) return {};
+
+  const rawMarcEncoded = JSON.stringify(marcData?.parsedRecord?.content, null, 2);
+  const excapedString = rawMarcEncoded.replace(/\r/g, '\r').replace(/\n/g, '\n');
+
+  return {
+    rawMarc: excapedString,
+    target,
+  };
+};
