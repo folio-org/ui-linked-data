@@ -24,7 +24,7 @@ export const useFetchSearchData = () => {
     precedingRecordsCount,
   } = useSearchContext();
   const { setIsLoading } = useLoadingState();
-  const { setMessage, data, setData, resetData, setPageMetadata } = useSearchState();
+  const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState();
   const { addStatusMessagesItem } = useStatusState();
 
   const validateAndNormalizeQuery = useCallback(
@@ -175,6 +175,7 @@ export const useFetchSearchData = () => {
 
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
+        resetMessage();
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       } finally {
