@@ -14,7 +14,7 @@ import { useInputsState, useProfileState, useStatusState, useUIState } from '@sr
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 
-const USER_INPUT_DELAY = 750;
+const USER_INPUT_DELAY = 100;
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
