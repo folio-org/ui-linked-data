@@ -37,6 +37,7 @@ export function useApi<T>() {
           urlParams,
           requestParams: {
             method,
+            headers: { 'content-type': 'application/json' },
             ...requestParams,
             ...(typeof body === 'object' && body !== null ? { body: JSON.stringify(body, null, 2) } : {}),
           },

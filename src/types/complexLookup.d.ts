@@ -40,7 +40,9 @@ type ComplexLookupApiEntryConfig = {
       [key in SearchSegment]: string;
     };
     marcPreview?: string;
+    validation?: string;
   };
+  validationTarget?: Record<string, string>;
   sourceKey?: string;
   searchQuery: {
     filter?: string;

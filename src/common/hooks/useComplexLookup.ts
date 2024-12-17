@@ -8,23 +8,26 @@ import {
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { StatusType } from '@common/constants/status.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
-import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { useApi } from './useApi';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
 
 export const useComplexLookup = ({
   entry,
   value,
   lookupConfig,
+  baseLabelType = 'creator',
   onChange,
 }: {
   entry: SchemaEntry;
   value?: UserValueContents[];
   lookupConfig: ComplexLookupsConfigEntry;
+  baseLabelType?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }) => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
@@ -72,16 +75,13 @@ export const useComplexLookup = ({
     resetIsMarcPreviewOpen();
   };
 
-  const validateMarcRecord = async (marcData: MarcDTO | null) => {
-    return await makeRequest({
-      url: '/linked-data/authority-assignment-check',
+  const validateMarcRecord = (marcData: MarcDTO | null) => {
+    const { endpoints, validationTarget } = lookupConfig.api;
+
+    return makeRequest({
+      url: endpoints.validation ?? AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
       method: 'POST',
-      body: generateValidationRequestBody(marcData),
-      requestParams: {
-        headers: {
-          'content-type': 'application/json',
-        },
-      },
+      body: generateValidationRequestBody(marcData, validationTarget?.[baseLabelType]),
     });
   };
 

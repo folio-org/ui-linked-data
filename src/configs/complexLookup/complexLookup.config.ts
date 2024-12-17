@@ -1,5 +1,6 @@
 import { SearchSegment } from '@common/constants/search.constants';
 import { ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
 import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
@@ -16,6 +17,10 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
           [SearchSegment.Browse]: '/browse/authorities',
         },
         marcPreview: '/source-storage/records/:recordId/formatted?idType=AUTHORITY',
+        validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+      },
+      validationTarget: {
+        creator: 'CREATOR_OF_WORK',
       },
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
