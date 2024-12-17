@@ -41,9 +41,9 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
 
   const onClickAssignButton = () => {
     onAssignRecord?.({
-      id: marcPreviewMetadata?.baseId || '',
-      title: marcPreviewMetadata?.title || '',
-      linkedFieldValue: marcPreviewMetadata?.headingType || '',
+      id: marcPreviewMetadata?.baseId ?? '',
+      title: marcPreviewMetadata?.title ?? '',
+      linkedFieldValue: marcPreviewMetadata?.headingType ?? '',
     });
   };
 
@@ -52,7 +52,7 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
       {isMarcPreviewOpen && marcPreviewData ? (
         <div className="marc-preview-container">
           <SearchControlPane
-            label={marcPreviewMetadata?.title || ''}
+            label={marcPreviewMetadata?.title ?? ''}
             renderSubLabel={renderSubLabel}
             renderCloseButton={renderCloseButton}
           >

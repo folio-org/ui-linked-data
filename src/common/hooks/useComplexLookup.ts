@@ -16,6 +16,7 @@ import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
 import { useApi } from './useApi';
+import { useComplexLookupValidation } from './useComplexLookupValidation';
 
 export const useComplexLookup = ({
   entry,
@@ -48,6 +49,7 @@ export const useComplexLookup = ({
   const linkedField = getLinkedField({ schema, linkedEntry });
   const { makeRequest } = useApi();
   const { addStatusMessagesItem } = useStatusState();
+  const { addFailedEntryId } = useComplexLookupValidation();
 
   const handleDelete = (id?: string) => {
     onChange(uuid, []);
@@ -140,9 +142,11 @@ export const useComplexLookup = ({
 
     const isValid = await validateMarcRecord(marcData);
 
-    if (isValid) {
+    if (!isValid) {
       assignMarcRecord({ id, title, srsId, linkedFieldValue });
     } else {
+      addFailedEntryId(id);
+
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, 'ld.errorValidatingAuthorityRecord'),
       );
