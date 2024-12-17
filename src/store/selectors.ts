@@ -18,4 +18,4 @@ export const useInputsState = useInputsStore;
 export const useConfigState = useConfigStore;
 export const useUIState = useUIStore;
 export const useSearchState = useSearchStore;
-export const useComplexLookup = useComplexLookupStore;
+export const useComplexLookupState = useComplexLookupStore;

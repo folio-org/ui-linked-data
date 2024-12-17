@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useSearchContext } from '@common/hooks/useSearchContext';
+import { useComplexLookupValidation } from '@common/hooks/useComplexLookupValidation';
 import { useMarcPreviewState, useUIState } from '@src/store';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { MarcContent } from '@components/MarcContent';
@@ -17,6 +18,7 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
   const { formatMessage } = useIntl();
   const { isMarcPreviewOpen } = useUIState();
   const { complexValue: marcPreviewData, metadata: marcPreviewMetadata } = useMarcPreviewState();
+  const { checkFailedId } = useComplexLookupValidation();
 
   const renderCloseButton = () => (
     <Button
@@ -47,6 +49,8 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
     });
   };
 
+  const isDisabledButton = checkFailedId(marcPreviewMetadata?.baseId);
+
   return (
     <>
       {isMarcPreviewOpen && marcPreviewData ? (
@@ -61,6 +65,7 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
                 type={ButtonType.Highlighted}
                 onClick={onClickAssignButton}
                 ariaLabel={formatMessage({ id: 'ld.aria.marcAuthorityPreview.close' })}
+                disabled={isDisabledButton}
               >
                 <FormattedMessage id="ld.assign" />
               </Button>

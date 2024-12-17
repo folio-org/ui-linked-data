@@ -1,7 +1,11 @@
-import { useComplexLookup } from '@src/store';
+import { useComplexLookupState } from '@src/store';
 
 export const useComplexLookupValidation = () => {
-  const { addAuthorityAssignmentCheckFailedIdsItem, resetAuthorityAssignmentCheckFailedIds } = useComplexLookup();
+  const {
+    authorityAssignmentCheckFailedIds,
+    addAuthorityAssignmentCheckFailedIdsItem,
+    resetAuthorityAssignmentCheckFailedIds,
+  } = useComplexLookupState();
 
   const addFailedEntryId = (id: string) => {
     addAuthorityAssignmentCheckFailedIdsItem?.(id);
@@ -11,5 +15,11 @@ export const useComplexLookupValidation = () => {
     resetAuthorityAssignmentCheckFailedIds();
   };
 
-  return { addFailedEntryId, clearFailedEntryIds };
+  const checkFailedId = (id?: string) => {
+    if (!id) return false;
+
+    return authorityAssignmentCheckFailedIds?.includes(id);
+  };
+
+  return { addFailedEntryId, clearFailedEntryIds, checkFailedId };
 };
