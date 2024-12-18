@@ -5,14 +5,14 @@ import { Button, ButtonType } from '@components/Button';
 export const AssignFormatter = ({
   row,
   onAssign,
-  validateId,
+  checkFailedId,
 }: {
   row: SearchResultsTableRow;
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
-  validateId: (id: string) => boolean;
+  checkFailedId: (id: string) => boolean;
 }) => {
   const isAuthorized = row.authorized.label === AuthRefType.Authorized;
-  const isDisabled = validateId(row.__meta.id);
+  const isDisabled = checkFailedId(row.__meta.id);
 
   return isAuthorized ? (
     <Button

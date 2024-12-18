@@ -30,7 +30,7 @@ export const useComplexLookupSearchResults = ({
                   formatMessage,
                   onAssign: onAssignRecord,
                   onTitleClick,
-                  validateId: checkFailedId,
+                  checkFailedId,
                 })
               : row[key].label,
           };
