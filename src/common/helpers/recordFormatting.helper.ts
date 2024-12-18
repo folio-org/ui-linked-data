@@ -240,7 +240,8 @@ export const formatDependeciesTable = (deps: Record<string, unknown>[]): Row[] =
       string,
       unknown[]
     >;
-    const selectedTitle = (rest?.[BFLITE_URIS.TITLE] as Record<string, unknown>)?.[0] as Record<
+    const titleContainer = rest?.[BFLITE_URIS.TITLE] as Record<string, unknown>[];
+    const selectedTitle = titleContainer?.find(title => Object.hasOwn(title, BFLITE_URIS.TITLE_CONTAINER)) as Record<
       string,
       Record<string, unknown[]>
     >;
