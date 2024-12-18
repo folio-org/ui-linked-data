@@ -1,18 +1,18 @@
 import { FormattedMessage } from 'react-intl';
-import { useComplexLookupValidation } from '@common/hooks/useComplexLookupValidation';
 import { AuthRefType } from '@common/constants/search.constants';
 import { Button, ButtonType } from '@components/Button';
 
 export const AssignFormatter = ({
   row,
   onAssign,
+  validateId,
 }: {
   row: SearchResultsTableRow;
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+  validateId: (id: string) => boolean;
 }) => {
-  const { checkFailedId } = useComplexLookupValidation();
   const isAuthorized = row.authorized.label === AuthRefType.Authorized;
-  const isDisabled = checkFailedId(row.__meta.id);
+  const isDisabled = validateId(row.__meta.id);
 
   return isAuthorized ? (
     <Button

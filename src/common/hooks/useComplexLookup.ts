@@ -49,7 +49,7 @@ export const useComplexLookup = ({
   const linkedField = getLinkedField({ schema, linkedEntry });
   const { makeRequest } = useApi();
   const { addStatusMessagesItem } = useStatusState();
-  const { addFailedEntryId } = useComplexLookupValidation();
+  const { addFailedEntryId, clearFailedEntryIds } = useComplexLookupValidation();
 
   const handleDelete = (id?: string) => {
     onChange(uuid, []);
@@ -68,6 +68,7 @@ export const useComplexLookup = ({
   };
 
   const closeModal = useCallback(() => {
+    clearFailedEntryIds();
     setIsModalOpen(false);
   }, []);
 
@@ -144,6 +145,9 @@ export const useComplexLookup = ({
 
     if (isValid) {
       assignMarcRecord({ id, title, srsId, linkedFieldValue });
+      clearFailedEntryIds();
+      reset();
+      closeModal();
     } else {
       addFailedEntryId(id);
 
@@ -151,9 +155,6 @@ export const useComplexLookup = ({
         UserNotificationFactory.createMessage(StatusType.error, 'ld.errorValidatingAuthorityRecord'),
       );
     }
-
-    reset();
-    closeModal();
   };
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
