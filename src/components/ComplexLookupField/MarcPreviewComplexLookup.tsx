@@ -66,7 +66,7 @@ export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ on
               </Button>
             </div>
           </SearchControlPane>
-          <div className="marc-preview-content" tabIndex={0}>
+          <div className="marc-preview-content">
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />
             </div>

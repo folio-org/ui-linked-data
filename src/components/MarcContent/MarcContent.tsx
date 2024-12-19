@@ -10,7 +10,7 @@ export const MarcContent: FC<MarcContent> = ({ marc, ...rest }) => {
   const parsedContent = marc?.parsedRecord?.content;
 
   return (
-    <section {...rest}>
+    <section tabIndex={0} {...rest}>{/* NOSONAR */}
       <table>
         <tbody>
           <tr>
