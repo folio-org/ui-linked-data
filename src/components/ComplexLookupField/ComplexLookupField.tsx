@@ -30,7 +30,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       entry,
       value,
       lookupConfig,
-      baseLabelType: layout?.baseLabelType,
+      authority: layout?.baseLabelType,
       onChange,
     });
 

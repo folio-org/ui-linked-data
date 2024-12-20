@@ -8,6 +8,7 @@ import {
 import * as ComplexLookupConstants from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { AuthorityValidationTarget } from '@common/constants/complexLookup.constants';
 
 const mockImportedConstant = getMockedImportedConstant(ComplexLookupConstants, 'COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING');
 mockImportedConstant({
@@ -150,13 +151,13 @@ describe('complexLookup.helper', () => {
 
       expect(result).toEqual({
         rawMarc: JSON.stringify(mockMarcContent, null, 2),
-        target: 'CREATOR_OF_WORK',
+        target: AuthorityValidationTarget.CreatorOfWork,
       });
     });
 
     it('returns correct request body with custom target', () => {
       const customTarget = 'CUSTOM_TARGET';
-      const result = generateValidationRequestBody(mockMarcData, customTarget);
+      const result = generateValidationRequestBody(mockMarcData, customTarget as AuthorityValidationTargetType);
 
       expect(result).toEqual({
         rawMarc: JSON.stringify(mockMarcContent, null, 2),

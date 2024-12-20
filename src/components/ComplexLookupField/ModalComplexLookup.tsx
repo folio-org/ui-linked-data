@@ -6,7 +6,7 @@ import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { SEARCH_QUERY_BUILDER } from '@common/helpers/search/queryBuilder';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { SearchSegment } from '@common/constants/search.constants';
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
+import { Authority, ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
@@ -35,7 +35,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     onClose,
     value,
     assignEntityName = ComplexLookupType.Authorities,
-    baseLabelType = 'creator',
+    baseLabelType = Authority.Creator,
   }) => {
     const {
       api,

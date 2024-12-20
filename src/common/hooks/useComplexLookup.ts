@@ -6,7 +6,7 @@ import {
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
 } from '@common/helpers/complexLookup.helper';
-import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
+import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING, Authority } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -22,13 +22,13 @@ export const useComplexLookup = ({
   entry,
   value,
   lookupConfig,
-  baseLabelType = 'creator',
+  authority = Authority.Creator,
   onChange,
 }: {
   entry: SchemaEntry;
   value?: UserValueContents[];
   lookupConfig: ComplexLookupsConfigEntry;
-  baseLabelType?: string;
+  authority?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }) => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
@@ -84,7 +84,7 @@ export const useComplexLookup = ({
     return makeRequest({
       url: endpoints.validation ?? AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
       method: 'POST',
-      body: generateValidationRequestBody(marcData, validationTarget?.[baseLabelType]),
+      body: generateValidationRequestBody(marcData, validationTarget?.[authority]),
     });
   };
 

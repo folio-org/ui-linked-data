@@ -1,6 +1,7 @@
 type SearchableIndexType = import('@common/constants/complexLookup.constants').SearchableIndex;
 type SearchableIndexQuerySelectorType =
   import('@common/constants/complexLookup.constants').SearchableIndexQuerySelector;
+type AuthorityValidationTargetType = import('@common/constants/complexLookup.constants').AuthorityValidationTarget;
 
 type ComplexLookupLabels = {
   button: {
@@ -42,7 +43,7 @@ type ComplexLookupApiEntryConfig = {
     marcPreview?: string;
     validation?: string;
   };
-  validationTarget?: Record<string, string>;
+  validationTarget?: Record<string, AuthorityValidationTargetType>;
   sourceKey?: string;
   searchQuery: {
     filter?: string;

@@ -1,5 +1,5 @@
 import { SearchSegment } from '@common/constants/search.constants';
-import { ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
+import { AuthorityValidationTarget, ComplexLookupType, SearchableIndex } from '@common/constants/complexLookup.constants';
 import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
@@ -20,7 +20,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
       },
       validationTarget: {
-        creator: 'CREATOR_OF_WORK',
+        creator: AuthorityValidationTarget.CreatorOfWork,
       },
       sourceKey: 'authoritySourceFiles',
       searchQuery: {
