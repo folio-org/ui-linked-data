@@ -18,7 +18,7 @@ export const useComplexLookupValidation = () => {
   const checkFailedId = (id?: string) => {
     if (!id) return false;
 
-    return authorityAssignmentCheckFailedIds?.includes(id);
+    return authorityAssignmentCheckFailedIds.includes(id);
   };
 
   return { addFailedEntryId, clearFailedEntryIds, checkFailedId };

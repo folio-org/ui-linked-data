@@ -6,7 +6,7 @@ import { useLoadingState, useStatusState } from '@src/store';
 
 interface RequestConfig {
   url: string;
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method?: APIRequestMethod;
   urlParams?: Record<string, string>;
   urlParam?: { name: string; value: string | number };
   requestParams?: RequestInit;

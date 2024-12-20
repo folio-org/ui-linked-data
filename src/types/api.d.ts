@@ -103,3 +103,5 @@ type MarcDTO = {
   };
   metadata: Metadata;
 };
+
+type APIRequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
