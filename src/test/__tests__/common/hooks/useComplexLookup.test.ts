@@ -16,14 +16,17 @@ import {
 } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useInputsStore } from '@src/store';
+import { useApi } from '@common/hooks/useApi';
 
 jest.mock('@common/helpers/complexLookup.helper');
 jest.mock('@common/hooks/useMarcData');
+jest.mock('@common/hooks/useApi');
 
 describe('useComplexLookup', () => {
   const mockSelectedEntries = [] as string[];
   const mockSetSelectedEntries = jest.fn();
   const mockClearhMarcData = jest.fn();
+  const mockMakeRequest = jest.fn();
 
   const mockEntry = {
     uuid: 'testUuid',
@@ -79,6 +82,10 @@ describe('useComplexLookup', () => {
     (useMarcData as jest.Mock).mockReturnValue({
       fetchMarcData: jest.fn().mockResolvedValue({ matchedId: 'newSrsId' }),
       clearMarcData: mockClearhMarcData,
+    });
+
+    (useApi as jest.Mock).mockReturnValue({
+      makeRequest: mockMakeRequest,
     });
 
     result = getRenderedHook()?.result;
@@ -155,6 +162,7 @@ describe('useComplexLookup', () => {
       (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
       (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'newLinkedFieldId' });
       (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId']);
+      mockMakeRequest.mockResolvedValue(true);
 
       result = getRenderedHook()?.result;
 
@@ -176,6 +184,8 @@ describe('useComplexLookup', () => {
     });
 
     test('updates state correctly and does not call "setSelectedEntries"', async () => {
+      mockMakeRequest.mockResolvedValue(true);
+
       result = getRenderedHook({
         ...mockEntry,
         linkedEntry: {

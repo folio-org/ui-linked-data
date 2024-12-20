@@ -4,6 +4,7 @@ import { type Row } from '@components/Table';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { ComplexLookupSearchResultsProps } from '@components/ComplexLookupField/ComplexLookupSearchResults';
 import { useSearchState } from '@src/store';
+import { useComplexLookupValidation } from './useComplexLookupValidation';
 
 export const useComplexLookupSearchResults = ({
   onTitleClick,
@@ -13,6 +14,7 @@ export const useComplexLookupSearchResults = ({
   const { onAssignRecord } = useSearchContext();
   const { data, sourceData } = useSearchState();
   const { formatMessage } = useIntl();
+  const { checkFailedId } = useComplexLookupValidation();
 
   const applyActionItems = useCallback(
     (rows: Row[]): Row[] =>
@@ -23,7 +25,13 @@ export const useComplexLookupSearchResults = ({
           formattedRow[key] = {
             ...row[key],
             children: column.formatter
-              ? column.formatter({ row, formatMessage, onAssign: onAssignRecord, onTitleClick })
+              ? column.formatter({
+                  row,
+                  formatMessage,
+                  onAssign: onAssignRecord,
+                  onTitleClick,
+                  checkFailedId,
+                })
               : row[key].label,
           };
         });

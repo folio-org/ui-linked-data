@@ -1,4 +1,5 @@
 import {
+  AuthorityValidationTarget,
   COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
 } from '@common/constants/complexLookup.constants';
@@ -65,4 +66,19 @@ export const getUpdatedSelectedEntries = ({
   selectedEntriesService.addNew(undefined, newValue);
 
   return selectedEntriesService.get();
+};
+
+export const generateValidationRequestBody = (
+  marcData: MarcDTO | null,
+  target = AuthorityValidationTarget.CreatorOfWork,
+) => {
+  if (!marcData) return {};
+
+  const rawMarcEncoded = JSON.stringify(marcData?.parsedRecord?.content, null, 2);
+  const escapedString = rawMarcEncoded.replace(/\r/g, '\r').replace(/\n/g, '\n');
+
+  return {
+    rawMarc: escapedString,
+    target,
+  };
 };

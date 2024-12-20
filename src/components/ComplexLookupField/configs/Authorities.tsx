@@ -16,18 +16,18 @@ export const authoritiesTableConfig: SearchResultsTableConfig = {
     },
     title: {
       label: 'ld.headingReference',
-      position: 1,
+      position: 2,
       className: 'cell-fixed cell-fixed-370',
       formatter: TitleFormatter,
     },
     subclass: {
       label: 'ld.typeOfHeading',
-      position: 2,
+      position: 3,
       className: 'cell-fixed cell-fixed-140',
     },
     authoritySource: {
       label: 'ld.authoritySource',
-      position: 3,
+      position: 4,
       className: 'cell-fixed cell-fixed-250',
     },
   },
