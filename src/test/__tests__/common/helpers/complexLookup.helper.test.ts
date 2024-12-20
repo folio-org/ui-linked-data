@@ -3,6 +3,7 @@ import {
   getLinkedField,
   updateLinkedFieldValue,
   getUpdatedSelectedEntries,
+  generateValidationRequestBody,
 } from '@common/helpers/complexLookup.helper';
 import * as ComplexLookupConstants from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -123,6 +124,59 @@ describe('complexLookup.helper', () => {
       const result = getUpdatedSelectedEntries({ selectedEntries });
 
       expect(result).toEqual(selectedEntries);
+    });
+  });
+
+  describe('generateValidationRequestBody', () => {
+    const mockMarcContent = {
+      field_1: 'value 1',
+      field_2: 'value 2',
+    };
+
+    const mockMarcData = {
+      parsedRecord: {
+        content: mockMarcContent,
+      },
+    } as unknown as MarcDTO;
+
+    it('returns empty object when marcData is null', () => {
+      const result = generateValidationRequestBody(null);
+
+      expect(result).toEqual({});
+    });
+
+    it('returns correct request body with default target', () => {
+      const result = generateValidationRequestBody(mockMarcData);
+
+      expect(result).toEqual({
+        rawMarc: JSON.stringify(mockMarcContent, null, 2),
+        target: 'CREATOR_OF_WORK',
+      });
+    });
+
+    it('returns correct request body with custom target', () => {
+      const customTarget = 'CUSTOM_TARGET';
+      const result = generateValidationRequestBody(mockMarcData, customTarget);
+
+      expect(result).toEqual({
+        rawMarc: JSON.stringify(mockMarcContent, null, 2),
+        target: customTarget,
+      });
+    });
+
+    it('returns correct request body with escaped content', () => {
+      const marcDataWithSpecialChars = {
+        parsedRecord: {
+          content: {
+            field: 'value\r\nwith\rlinebreaks',
+          },
+        },
+      } as unknown as MarcDTO;
+
+      const result = generateValidationRequestBody(marcDataWithSpecialChars);
+
+      expect(result.rawMarc).toContain('\\r');
+      expect(result.rawMarc).toContain('\\n');
     });
   });
 });
