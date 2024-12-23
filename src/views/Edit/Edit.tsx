@@ -2,8 +2,6 @@ import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import { getSavedRecord, getRecordWithUpdatedID } from '@common/helpers/record.helper';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
@@ -65,12 +63,7 @@ export const Edit = () => {
 
         clearRecordState();
 
-        const profile = PROFILE_BFIDS.MONOGRAPH;
-        const savedRecordData = getSavedRecord(profile);
-        const typedSavedRecord = savedRecordData ? (savedRecordData.data as RecordEntry) : null;
-        let record = typedSavedRecord
-          ? getRecordWithUpdatedID(typedSavedRecord, DEFAULT_RECORD_ID)
-          : (null as unknown as RecordEntry);
+        let record: RecordEntry | null = null;
 
         if (resourceReference) {
           record = (await fetchRecordAndSelectEntityValues(

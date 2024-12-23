@@ -7,17 +7,9 @@ import {
   getGraphIdByExternalId,
   getRecord,
 } from '@common/api/records.api';
-import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
-import {
-  deleteRecordLocally,
-  getPrimaryEntitiesFromRecord,
-  getRecordId,
-  getSelectedRecordBlocks,
-  saveRecordLocally,
-  getSavedRecord,
-} from '@common/helpers/record.helper';
+import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
 import { formatRecord } from '@common/helpers/recordFormatting.helper';
@@ -53,8 +45,12 @@ export const useRecordControls = () => {
   const { setSelectedProfile } = useProfileState();
   const { setIsDuplicateImportedResourceModalOpen, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
     useUIState();
-  const { setRecordStatus, setLastSavedRecordId, setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState();
-  const profile = PROFILE_BFIDS.MONOGRAPH;
+  const {
+    setRecordStatus,
+    setLastSavedRecordId,
+    setIsRecordEdited: setIsEdited,
+    addStatusMessagesItem,
+  } = useStatusState();
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
@@ -66,12 +62,7 @@ export const useRecordControls = () => {
   const { generateRecord } = useRecordGeneration();
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
-    const profile = PROFILE_BFIDS.MONOGRAPH;
-    const locallySavedData = getSavedRecord(profile, recordId);
-    const cachedRecord: RecordEntry | undefined =
-      locallySavedData && !previewParams ? (locallySavedData.data as RecordEntry) : undefined;
-
-    const recordData = await getRecordAndInitializeParsing({ recordId, cachedRecord });
+    const recordData = await getRecordAndInitializeParsing({ recordId });
 
     if (!recordData) return;
 
@@ -98,7 +89,6 @@ export const useRecordControls = () => {
     shouldSetSearchParams = true,
   }: SaveRecordProps = {}) => {
     const parsed = generateRecord();
-    const currentRecordId = record?.id;
 
     if (!parsed) return;
 
@@ -113,14 +103,13 @@ export const useRecordControls = () => {
       }) as RecordEntry;
 
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
-      const shouldPostRecord = !recordId || getRecordId(record) === DEFAULT_RECORD_ID || isClone;
+      const shouldPostRecord = !recordId || isClone;
 
       const response = shouldPostRecord
         ? await postRecord(formattedRecord)
         : await putRecord(recordId as string, formattedRecord);
       const parsedResponse = await response.json();
 
-      deleteRecordLocally(profile, currentRecordId as RecordID);
       dispatchUnblockEvent();
       !asRefToNewRecord && setRecord(parsedResponse);
 
@@ -177,14 +166,6 @@ export const useRecordControls = () => {
     }
   };
 
-  const saveLocalRecord = () => {
-    const parsed = generateRecord();
-
-    if (!parsed) return;
-
-    return saveRecordLocally({ profile, parsedRecord: parsed, record, selectedRecordBlocks });
-  };
-
   const clearRecordState = () => {
     resetUserValues();
     setRecord(null);
@@ -205,7 +186,6 @@ export const useRecordControls = () => {
       if (!currentRecordId) return;
 
       await deleteRecordRequest(currentRecordId as unknown as string);
-      deleteRecordLocally(profile, currentRecordId as unknown as string);
       discardRecord();
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 
@@ -224,7 +204,9 @@ export const useRecordControls = () => {
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
-        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'));
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'),
+        );
 
         return navigate(ROUTES.RESOURCE_CREATE.uri);
       }
@@ -248,7 +230,13 @@ export const useRecordControls = () => {
     }
   };
 
-  const getRecordAndInitializeParsing = async ({ recordId, cachedRecord, idType, previewParams, errorMessage }: IBaseFetchRecord) => {
+  const getRecordAndInitializeParsing = async ({
+    recordId,
+    cachedRecord,
+    idType,
+    previewParams,
+    errorMessage,
+  }: IBaseFetchRecord) => {
     if (!recordId && !cachedRecord) return;
 
     try {
@@ -262,7 +250,9 @@ export const useRecordControls = () => {
 
       return recordData;
     } catch (_err) {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'));
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
+      );
     }
   };
 
@@ -301,7 +291,6 @@ export const useRecordControls = () => {
   return {
     fetchRecord,
     saveRecord,
-    saveLocalRecord,
     deleteRecord,
     discardRecord,
     clearRecordState,
