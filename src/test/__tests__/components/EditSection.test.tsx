@@ -3,7 +3,6 @@ import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import * as RecordHelper from '@common/helpers/record.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ServicesProvider } from '@src/providers';
 import { routes } from '@src/App';
@@ -239,22 +238,6 @@ describe('EditSection', () => {
     fireEvent.change(getByTestId('literal-field'), { target: { value: 'sampleValue' } });
 
     await waitFor(async () => expect(await findByDisplayValue('sampleValue')).toBeInTheDocument());
-  });
-
-  test('saves record locally', () => {
-    jest.useFakeTimers();
-
-    const spyRecordHelper = jest.spyOn(RecordHelper, 'saveRecordLocally');
-
-    const { getByTestId } = renderScreen();
-
-    fireEvent.change(getByTestId('literal-field'), { target: { value: 'sampleValue' } });
-
-    expect(spyRecordHelper).not.toHaveBeenCalled();
-
-    jest.advanceTimersByTime(60 * 1000);
-
-    expect(spyRecordHelper).toHaveBeenCalled();
   });
 
   describe('duplicate groups', () => {

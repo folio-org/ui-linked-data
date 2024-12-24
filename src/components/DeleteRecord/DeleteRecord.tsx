@@ -1,10 +1,8 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { DEFAULT_RECORD_ID } from '@common/constants/storage.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
 import { useModalControls } from '@common/hooks/useModalControls';
-import { getRecordId } from '@common/helpers/record.helper';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { RESOURCE_URLS } from '@common/constants/routes.constants';
 import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
@@ -21,7 +19,7 @@ const DeleteRecord: FC = () => {
   const { hasBeenSaved } = useRecordStatus();
   const isDisabledForEditPage =
     checkButtonDisabledState({ resourceRoutePattern, isInitiallyLoaded: !hasBeenSaved, isEdited }) || false;
-  const isDisabled = !record || getRecordId(record) === DEFAULT_RECORD_ID || isDisabledForEditPage;
+  const isDisabled = !record || isDisabledForEditPage;
 
   return (
     <>

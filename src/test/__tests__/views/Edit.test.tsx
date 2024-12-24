@@ -4,7 +4,6 @@ import { fetchRecord, clearRecordState } from '@src/test/__mocks__/common/hooks/
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import { act, render, screen } from '@testing-library/react';
 import * as Router from 'react-router-dom';
-import * as recordHelper from '@common/helpers/record.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import { Edit } from '@views';
 import { useProfileStore } from '@src/store/stores/profile';
@@ -43,9 +42,6 @@ describe('Edit', () => {
   const testInstanceUri = 'testInstanceUri';
   const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   mockImportedConstant({ INSTANCE: testInstanceUri });
-  const mockContents = {
-    resource: { [testInstanceUri]: {} },
-  };
 
   const renderComponent = (recordState: ProfileEntry | null) =>
     act(async () => {
@@ -72,21 +68,13 @@ describe('Edit', () => {
     expect(fetchRecord).toHaveBeenCalled();
   });
 
-  test("gets profiles with saved record and doesn't call fetchRecord", async () => {
+  test("gets profiles and doesn't call fetchRecord", async () => {
     jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
-    jest.spyOn(recordHelper, 'getSavedRecord').mockReturnValue({
-      data: mockContents,
-      createdAt: 100500,
-    });
-    const testRecord = {
-      resource: { testInstanceUri: { id: 'testId' } },
-    };
-    jest.spyOn(recordHelper, 'getRecordWithUpdatedID').mockReturnValue(testRecord);
 
     await renderComponent(null);
 
     expect(getProfiles).toHaveBeenCalledWith({
-      record: testRecord,
+      record: null,
     });
     expect(fetchRecord).not.toHaveBeenCalled();
     expect(clearRecordState).toHaveBeenCalled();
