@@ -79,8 +79,9 @@ export const Fields = ({
   const entry = base.get(uuid);
   const isOnBranchWithUserValue = paths.includes(uuid);
   const isEntity = level === ENTITY_LEVEL;
+  const hasEmptyChildren = entry?.children?.every(id => !schema.get(id));
 
-  if (!entry) return null;
+  if (!entry || hasEmptyChildren) return null;
 
   const { displayName = '', children, type, bfid = '', path, htmlId } = entry;
   const isDependentDropdownOption =

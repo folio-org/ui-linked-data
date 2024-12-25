@@ -22,7 +22,6 @@ export const Labels: FC<LabelProps> = ({
   return (
     <strong
       className={classNames({
-        'entity-heading': isEntity,
         'sub-heading': isBlock,
         'value-heading': !isGroupable,
       })}
