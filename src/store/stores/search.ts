@@ -20,7 +20,8 @@ export type SearchState = SliceState<'query', string> &
   SliceState<'facetsBySegments', FacetsBySegments> &
   SliceState<'sourceData', SourceData> &
   SliceState<'selectedFacetsGroups', string[]> &
-  SliceState<'facetsData', FacetsDTO>;
+  SliceState<'facetsData', FacetsDTO>&
+  SliceState<'selectedInstances', string[]>;
 
 const STORE_NAME = 'Search';
 
@@ -60,6 +61,9 @@ const sliceConfigs: SliceConfigs = {
   },
   facetsData: {
     initialValue: {},
+  },
+  selectedInstances: {
+    initialValue: [],
   },
 };
 

@@ -6,7 +6,7 @@ import {
   NON_BF_RECORD_CONTAINERS,
   NON_BF_RECORD_ELEMENTS,
 } from '@common/constants/bibframeMapping.constants';
-import { getRecordPropertyData } from './record.helper';
+import { getEditingRecordBlocks, getRecordPropertyData, unwrapRecordValuesFromCommonContainer } from './record.helper';
 import { Row } from '@components/Table';
 
 export const formatRecord = ({
@@ -266,4 +266,13 @@ export const formatDependeciesTable = (deps: Record<string, unknown>[]): Row[] =
       },
     };
   }) as Row[];
+};
+
+export const getReferenceIdsRaw = (record: RecordEntry) => {
+  if (!record) return;
+
+  const contents = unwrapRecordValuesFromCommonContainer(record);
+  const { block, reference } = getEditingRecordBlocks(contents);
+
+  if (block && reference) return getReferenceIds(record, block, reference?.key);
 };

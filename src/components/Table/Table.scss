@@ -26,12 +26,7 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     }
 
     .row-selected {
-      background-color: #616161;
-      color: white;
-
-      > * > *:not(.button-primary) {
-        color: white;
-      }
+      background-color: #d3e4f3;
 
       > * {
         border-color: white;

@@ -6,6 +6,7 @@ import { Button, ButtonType } from '@components/Button';
 import { Preview } from '@components/Preview';
 import { useInputsState } from '@src/store';
 import Times16 from '@src/assets/times-16.svg?react';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import './FullDisplay.scss';
 
 export const PreviewContent = () => {
@@ -19,7 +20,7 @@ export const PreviewContent = () => {
     const handleButtonClick = () => setPreviewContent(previewContent.filter(entry => entry.id !== id));
 
     return (
-      <div key={id}>
+      <section className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
         <div className="full-display-control-panel">
           <Button
             className="close"
@@ -50,7 +51,7 @@ export const PreviewContent = () => {
             <FormattedMessage id="ld.resourceWithIdIsEmpty" values={{ id }} />
           </div>
         )}
-      </div>
+      </section>
     );
   });
 };
