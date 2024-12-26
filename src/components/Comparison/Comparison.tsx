@@ -74,7 +74,7 @@ export const Comparison = () => {
         {previewContent
           .slice(currentPage, currentPage + 2)
           .map(({ initKey, base, userValues, id, title, referenceIds }) => (
-            <section key={id} className='entry'>
+            <section key={id} className="entry">
               <div className="entry-header">
                 <div className="entry-header-controls">
                   <Button
@@ -104,7 +104,7 @@ export const Comparison = () => {
             </section>
           ))}
         {previewContent.length <= 1 && (
-          <div className="insufficient-resource-amt">
+          <div className="insufficient-resource-amt" data-testid="insufficient-resource-amt">
             <GeneralSearch />
             <FormattedMessage
               id={!previewContent.length ? 'ld.chooseTwoResourcesCompare' : 'ld.chooseOneResourceCompare'}

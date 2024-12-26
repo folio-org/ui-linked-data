@@ -20,7 +20,7 @@ export const PreviewContent = () => {
     const handleButtonClick = () => setPreviewContent(previewContent.filter(entry => entry.id !== id));
 
     return (
-      <section className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
+      <section key={id} className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
         <div className="full-display-control-panel">
           <Button
             className="close"
