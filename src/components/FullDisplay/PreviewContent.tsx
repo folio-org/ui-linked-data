@@ -15,7 +15,6 @@ export const PreviewContent = () => {
 
   return previewContent.map(({ id, base, userValues, initKey, title, entities }) => {
     const resourceType = entities?.map(e => RESOURCE_TEMPLATE_IDS[e])?.[0];
-    const resourceTypeWithFallback = resourceType ?? '-';
     const handleButtonClick = () => setPreviewContent(previewContent.filter(entry => entry.id !== id));
 
     return (
@@ -31,7 +30,6 @@ export const PreviewContent = () => {
           </Button>
           <div className="info">
             <span className="title">{title}</span>
-            <span className="type">{resourceTypeWithFallback}</span>
           </div>
           <Button
             data-testid="preview-fetch"
