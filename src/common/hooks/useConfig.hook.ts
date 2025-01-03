@@ -6,6 +6,7 @@ import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/re
 import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
+import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -39,7 +40,7 @@ export const useConfig = () => {
     setInitialSchemaKey,
     setSchema,
   } = useProfileState();
-  const { setUserValues, previewContent, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } =
+  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } =
     useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
@@ -113,6 +114,7 @@ export const useConfig = () => {
       const recordData = record?.resource || {};
       const recordTitle = getRecordTitle(recordData as RecordEntry);
       const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
+      const referenceIds = getReferenceIdsRaw(record as RecordEntry);
 
       if (selectedProfile) {
         !previewParams?.noStateUpdate && setSelectedProfile(selectedProfile);
@@ -126,8 +128,8 @@ export const useConfig = () => {
         });
 
         if (previewParams && recordId) {
-          setPreviewContent([
-            ...(previewParams.singular ? [] : previewContent.filter(({ id }) => id !== recordId)),
+          setPreviewContent(prev => [
+            ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
             {
               id: recordId,
               base: updatedSchema,
@@ -135,6 +137,7 @@ export const useConfig = () => {
               initKey,
               title: recordTitle,
               entities,
+              referenceIds,
             },
           ]);
         }

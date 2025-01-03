@@ -8,6 +8,17 @@
   height: 2.75rem;
   align-items: center;
 
+  .open-ctl {
+    height: 2.125rem;
+    width: 2.125rem;
+    padding: 0.5rem;
+
+    svg {
+      height: 12px;
+      transform: rotate(90deg);
+    }
+  }
+
   &-title {
     display: flex;
     flex-direction: column;

@@ -22,6 +22,11 @@ export enum DropdownItemType {
   customComponent = 'customComponent',
 }
 
+export enum FullDisplayType {
+  Basic = 'basic',
+  Comparison = 'comparison',
+}
+
 export enum AriaModalKind {
   Basic = 'Basic',
   AdvancedSearch = 'Advanced search',

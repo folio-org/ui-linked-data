@@ -2,26 +2,54 @@ import { useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
-import { DEFAULT_SEARCH_BY } from '@common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
+import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
 import { ROUTES } from '@common/constants/routes.constants';
 import { Dropdown } from '@components/Dropdown';
 import { ResourceType } from '@common/constants/record.constants';
 import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
-import Compare from '@src/assets/compare.svg?react';
+import Transfer16 from '@src/assets/transfer-16.svg?react';
 import { filters } from './data/filters';
-import './Search.scss';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
+import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
+import { StatusType } from '@common/constants/status.constants';
+import { useRecordControls } from '@common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import './Search.scss';
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
-
+  const { selectedInstances } = useSearchState();
+  const { setIsLoading } = useLoadingState();
+  const { fetchRecord } = useRecordControls();
+  const { addStatusMessagesItem } = useStatusState();
+  const { setFullDisplayComponentType } = useUIState();
+  const { resetPreviewContent } = useInputsState();
+  
   dispatchDropNavigateToOriginEvent();
+
+  const handlePreviewMultiple = async () => {
+    try {
+      setIsLoading(true);
+      resetPreviewContent();
+      setFullDisplayComponentType(FullDisplayType.Comparison)
+
+      for (const id of selectedInstances.toReversed()) {
+        await fetchRecord(id, {});
+      }
+    } catch (error) {
+      console.error(error);
+
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const items = useMemo(
     () => [
@@ -42,8 +70,9 @@ export const SearchView = () => {
             id: 'compare',
             type: DropdownItemType.basic,
             labelId: 'ld.compareSelected',
-            icon: <Compare />,
-            isDisabled: true,
+            icon: <Transfer16 />,
+            hidden: selectedInstances.length < MIN_AMT_OF_INSTANCES_TO_COMPARE,
+            action: handlePreviewMultiple,
           },
         ],
       },

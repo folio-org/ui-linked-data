@@ -43,7 +43,7 @@ jest.mock('@common/services/userValues', () => ({
   UserValuesService: jest.fn(),
 }));
 jest.mock('@common/helpers/record.helper', () => ({
-  getEditingRecordBlocks: jest.fn(),
+  ...jest.requireActual('@common/helpers/record.helper'),
   getRecordTitle: jest.fn(),
   getPrimaryEntitiesFromRecord: jest.fn(),
 }));

@@ -2,7 +2,7 @@ import { StoreApi } from 'zustand';
 
 type StoreState = Record<string, any>;
 
-interface StoreWithState {
+export interface StoreWithState {
   store: StoreApi<StoreState>;
   state: StoreState;
 }
