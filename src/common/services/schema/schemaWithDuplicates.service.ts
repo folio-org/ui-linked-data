@@ -1,7 +1,11 @@
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
-import { getParentEntryUuid, getUdpatedAssociatedEntries } from '@common/helpers/schema.helper';
+import {
+  generateTwinChildrenKey,
+  getParentEntryUuid,
+  getUdpatedAssociatedEntries,
+} from '@common/helpers/schema.helper';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE } from '@common/constants/bibframe.constants';
@@ -24,7 +28,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
   }
 
   duplicateEntry(entry: SchemaEntry) {
-    const { uuid, path, children, constraints, uri = '' } = entry;
+    const { path, children, constraints } = entry;
 
     if (!constraints?.repeatable) return;
 
@@ -36,16 +40,16 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     const parentEntry = this.schema.get(parentEntryUuid);
     const updatedParentEntry = this.getUpdatedParentEntry({
       parentEntry,
-      originalEntryUuid: uuid,
+      originalEntry: entry,
       updatedEntryUuid: updatedEntryUuid,
-      childEntryId: uri,
     });
 
     if (updatedParentEntry) {
       this.schema.set(parentEntryUuid, updatedParentEntry);
       this.schema.set(updatedEntryUuid, updatedEntry);
+      const twinChildrenKey = generateTwinChildrenKey(entry);
 
-      this.updateDeletabilityAndPositioning(updatedParentEntry?.twinChildren?.[uri]);
+      this.updateDeletabilityAndPositioning(updatedParentEntry?.twinChildren?.[twinChildrenKey]);
       this.entryPropertiesGeneratorService?.applyHtmlIdToEntries(this.schema);
     }
 
@@ -53,12 +57,13 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
   }
 
   deleteEntry(entry: SchemaEntry) {
-    const { deletable, uuid, path, uri = '' } = entry;
+    const { deletable, uuid, path } = entry;
 
     if (!deletable) return;
 
     const parent = this.schema.get(getParentEntryUuid(path));
-    const twinSiblings = parent?.twinChildren?.[uri];
+    const twinChildrenKey = generateTwinChildrenKey(entry);
+    const twinSiblings = parent?.twinChildren?.[twinChildrenKey];
 
     if (twinSiblings) {
       const updatedTwinSiblings = twinSiblings?.filter(twinUuid => twinUuid !== uuid);
@@ -67,7 +72,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
         ...parent,
         twinChildren: {
           ...parent.twinChildren,
-          [uri]: updatedTwinSiblings,
+          [twinChildrenKey]: updatedTwinSiblings,
         },
         children: parent.children?.filter(child => child !== uuid),
       });
@@ -168,28 +173,30 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
 
   private getUpdatedParentEntry({
     parentEntry,
-    originalEntryUuid,
+    originalEntry,
     updatedEntryUuid,
-    childEntryId,
   }: {
     parentEntry?: SchemaEntry;
-    originalEntryUuid: string;
+    originalEntry: SchemaEntry;
     updatedEntryUuid: string;
-    childEntryId?: string;
   }) {
     if (!parentEntry) return;
 
     const updatedParentEntry = cloneDeep(parentEntry);
     const { children } = updatedParentEntry;
-    const originalEntryIndex = children?.indexOf(originalEntryUuid);
+    const originalEntryIndex = children?.indexOf(originalEntry.uuid);
+    const { uri } = originalEntry;
+    const childEntryId = uri ?? '';
 
     if (childEntryId) {
+      const twinChildrenKey = generateTwinChildrenKey(originalEntry);
+
       if (!updatedParentEntry.twinChildren) {
         updatedParentEntry.twinChildren = {};
       }
 
-      updatedParentEntry.twinChildren[childEntryId] = [
-        ...new Set([...(updatedParentEntry.twinChildren[childEntryId] ?? []), originalEntryUuid, updatedEntryUuid]),
+      updatedParentEntry.twinChildren[twinChildrenKey] = [
+        ...new Set([...(updatedParentEntry.twinChildren[twinChildrenKey] ?? []), originalEntry.uuid, updatedEntryUuid]),
       ];
     }
 
