@@ -16,6 +16,7 @@ type PreviewContent = {
   initKey: string;
   title?: string;
   entities?: string[];
+  referenceIds?: { id: RecordEntry<RecursiveRecordSchema> }[];
 };
 
 type RecordReference = {

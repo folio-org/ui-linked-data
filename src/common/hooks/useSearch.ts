@@ -7,7 +7,8 @@ import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
-import { useInputsState, useLoadingState, useSearchState } from '@src/store';
+import { useInputsState, useLoadingState, useSearchState, useUIState } from '@src/store';
+import { FullDisplayType } from '@common/constants/uiElements.constants';
 
 export const useSearch = () => {
   const {
@@ -39,7 +40,7 @@ export const useSearch = () => {
     setFacetsBySegments,
     resetFacetsBySegments,
   } = useSearchState();
-
+  const { fullDisplayComponentType } = useUIState();
   const { fetchData } = useFetchSearchData();
   const {
     getCurrentPageNumber,
@@ -72,7 +73,7 @@ export const useSearch = () => {
 
   const submitSearch = useCallback(() => {
     clearPagination();
-    resetPreviewContent();
+    fullDisplayComponentType !== FullDisplayType.Comparison && resetPreviewContent();
     updateFacetsBySegments(query, searchBy, facets);
 
     if (hasSearchParams) {
@@ -90,7 +91,7 @@ export const useSearch = () => {
     setSearchBy(defaultSearchBy);
     setQuery('');
     setMessage('');
-    resetPreviewContent();
+    fullDisplayComponentType !== FullDisplayType.Comparison && resetPreviewContent();
     updateFacetsBySegments('', defaultSearchBy, {} as Limiters);
   }, [defaultSearchBy]);
 

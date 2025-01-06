@@ -11,7 +11,7 @@ import { Select } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
 import { Textarea } from '@components/Textarea';
 import { Announcement } from '@components/Announcement';
-import { useSearchState, useUIState } from '@src/store';
+import { useInputsState, useSearchState, useUIState } from '@src/store';
 import SearchSegments from './SearchSegments';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import XInCircle from '@src/assets/x-in-circle.svg?react';
@@ -47,7 +47,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetFacets: resetControls,
     setFacetsBySegments,
   } = useSearchState();
-  const { setIsAdvancedSearchOpen } = useUIState();
+  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, setIsAdvancedSearchOpen } = useUIState();
+  const { resetPreviewContent } = useInputsState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
@@ -70,6 +71,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
 
   const onResetButtonClick = () => {
     clearValuesAndResetControls();
+    resetPreviewContent();
     hasSearchParams && setSearchParams({});
     hasSearchParams && setNavigationState({});
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
@@ -80,88 +82,97 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     setFacetsBySegments(DEFAULT_FACET_BY_SEGMENT);
   }, []);
 
+  useEffect(() => () => setIsSearchPaneCollapsed(false), []);
+
   return (
-    <div className="search-pane" role="region" aria-labelledby="search-pane-header-title">
-      <div className="search-pane-header">
-        <h2 className="search-pane-header-title">
-          <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
-        </h2>
-        <CaretDown className="header-caret" />
-      </div>
-      <div className="search-pane-content">
-        {isVisibleSegments && <SearchSegments onChangeSegment={changeSegment} />}
-
-        <div className="inputs">
-          {isVisibleSearchByControl && (
-            <Select
-              withIntl
-              id="id-search-select"
-              data-testid="id-search-select"
-              className="select-input"
-              value={searchBy}
-              options={selectOptions}
-              onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
-              ariaLabel={formatMessage({ id: 'ld.aria.filters.select' })}
-            />
-          )}
-          {hasMultilineSearchInput ? (
-            <Textarea
-              id="id-search-textarea"
-              className="select-textarea"
-              value={query}
-              onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
-              data-testid="id-search-textarea"
-              fullWidth
-              ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
-            />
-          ) : (
-            <Input
-              id="id-search-input"
-              type="text"
-              value={query}
-              onChange={onChangeSearchInput}
-              className="text-input"
-              onPressEnter={submitSearch}
-              data-testid="id-search-input"
-              ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
-            />
-          )}
-        </div>
-        <Button
-          data-testid="id-search-button"
-          type={ButtonType.Highlighted}
-          className="search-button primary-search"
-          onClick={submitSearch}
-          disabled={!query}
-        >
-          <FormattedMessage id="ld.search" />
-        </Button>
-        <div className={classNames(['meta-controls', !isVisibleAdvancedSearch && 'meta-controls-centered'])}>
+    !isSearchPaneCollapsed && (
+      <div className="search-pane" role="region" aria-labelledby="search-pane-header-title">
+        <div className="search-pane-header">
+          <h2 className="search-pane-header-title">
+            <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
+          </h2>
           <Button
-            type={ButtonType.Text}
-            className="search-button"
-            onClick={onResetButtonClick}
-            prefix={<XInCircle />}
-            disabled={isDisabledResetButton}
-            data-testid="id-search-reset-button"
-            ariaLabel={formatMessage({ id: 'ld.aria.filters.reset' })}
+            className='close-ctl'
+            onClick={() => setIsSearchPaneCollapsed(true)}
+            ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}
           >
-            <FormattedMessage id="ld.reset" />
+            <CaretDown />
           </Button>
-          <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
-          {isVisibleAdvancedSearch && (
-            <Button
-              type={ButtonType.Link}
-              className="search-button"
-              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
-            >
-              <FormattedMessage id="ld.advanced" />
-            </Button>
-          )}
         </div>
+        <div className="search-pane-content">
+          {isVisibleSegments && <SearchSegments onChangeSegment={changeSegment} />}
+          <div className="inputs">
+            {isVisibleSearchByControl && (
+              <Select
+                withIntl
+                id="id-search-select"
+                data-testid="id-search-select"
+                className="select-input"
+                value={searchBy}
+                options={selectOptions}
+                onChange={({ value }) => setSearchBy(value as SearchIdentifiers)}
+                ariaLabel={formatMessage({ id: 'ld.aria.filters.select' })}
+              />
+            )}
+            {hasMultilineSearchInput ? (
+              <Textarea
+                id="id-search-textarea"
+                className="select-textarea"
+                value={query}
+                onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
+                data-testid="id-search-textarea"
+                fullWidth
+                ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
+              />
+            ) : (
+              <Input
+                id="id-search-input"
+                type="text"
+                value={query}
+                onChange={onChangeSearchInput}
+                className="text-input"
+                onPressEnter={submitSearch}
+                data-testid="id-search-input"
+                ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
+              />
+            )}
+          </div>
+          <Button
+            data-testid="id-search-button"
+            type={ButtonType.Highlighted}
+            className="search-button primary-search"
+            onClick={submitSearch}
+            disabled={!query}
+          >
+            <FormattedMessage id="ld.search" />
+          </Button>
+          <div className={classNames(['meta-controls', !isVisibleAdvancedSearch && 'meta-controls-centered'])}>
+            <Button
+              type={ButtonType.Text}
+              className="search-button"
+              onClick={onResetButtonClick}
+              prefix={<XInCircle />}
+              disabled={isDisabledResetButton}
+              data-testid="id-search-reset-button"
+              ariaLabel={formatMessage({ id: 'ld.aria.filters.reset' })}
+            >
+              <FormattedMessage id="ld.reset" />
+            </Button>
+            <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
+            {isVisibleAdvancedSearch && (
+              <Button
+                type={ButtonType.Link}
+                className="search-button"
+                onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+              >
+                <FormattedMessage id="ld.advanced" />
+              </Button>
+            )}
+          </div>
 
-        {isVisibleFilters && <SearchFilters />}
+          {isVisibleFilters && <SearchFilters />}
+        </div>
       </div>
-    </div>
+    )
   );
 };

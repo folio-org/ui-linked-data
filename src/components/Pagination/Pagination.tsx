@@ -29,7 +29,7 @@ export const Pagination: FC<Props> = memo(
     isLooped = false,
   }) => {
     const isFirstPage = currentPage === 0;
-    const isDisabledNext = totalPages ? currentPage === totalPages - 1 : false;
+    const isDisabledNext = totalPages ? currentPage >= totalPages - 1 : false;
     const startCount = isFirstPage ? 1 : currentPage * pageSize + 1;
     const pageNumber = currentPage + 1;
     let endCount;

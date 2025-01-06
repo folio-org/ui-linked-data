@@ -23,16 +23,30 @@
     .title {
       width: 100%;
       min-width: 15.625rem;
-      
-      > * {
-        font-size: 0.875rem;
-        font-weight: normal;
-        text-decoration: underline;
-        text-align: left;
-        justify-content: initial;
-        border-radius: 0;
-        height: auto;
-        padding: 0.2rem 0;
+
+      .title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        button {
+          font-size: 0.875rem;
+          font-weight: normal;
+          text-decoration: underline;
+          text-align: left;
+          justify-content: initial;
+          border-radius: 0;
+          height: auto;
+          padding: 0.2rem 0;
+        }
+
+        .comparison-index {
+          min-width: 1.125rem;
+          height: 1.125rem;
+          text-align: center;
+          background-color: #9fc7ea;
+          border-radius: 0.125rem;
+        }
       }
     }
 
