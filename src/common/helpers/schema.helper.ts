@@ -12,6 +12,7 @@ import {
   ENTRY_COUNT_DELIMITER,
   ENTRY_DELIMITER,
   PREV_ENTRY_PATH_INDEX,
+  TWIN_CHILDREN_KEY_DELIMITER,
 } from '@common/constants/bibframe.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
@@ -205,3 +206,11 @@ export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: S
 
 export const getHtmlIdForSchemaControl = (controlType: SchemaControlType, htmlId = '') =>
   `${htmlId}${ENTRY_CONTROL_DELIMITER}${controlType}`;
+
+export const generateTwinChildrenKey = (entry: SchemaEntry) => {
+  const { uri, constraints } = entry;
+  const { valueDataType } = constraints ?? {};
+  const suffix = valueDataType?.dataTypeURI ? `${TWIN_CHILDREN_KEY_DELIMITER}${valueDataType?.dataTypeURI}` : '';
+
+  return `${uri}${suffix}`;
+};

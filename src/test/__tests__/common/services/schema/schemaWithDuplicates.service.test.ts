@@ -230,5 +230,37 @@ describe('SchemaWithDuplicatesService', () => {
 
       expect(schemaWithDuplicatesService.get()).toEqual(schema);
     });
+
+    test('updates parent twinChildren when deleting entry', () => {
+      const parentEntry = {
+        uuid: 'testKey-1',
+        path: ['testKey-1'],
+        children: ['testKey-2', 'testKey-3'],
+        twinChildren: {
+          mockUri: ['testKey-2', 'testKey-3'],
+        },
+      };
+
+      const childEntry = {
+        uri: 'mockUri',
+        uuid: 'testKey-2',
+        path: ['testKey-1', 'testKey-2'],
+        deletable: true,
+      };
+
+      const testSchema = new Map([
+        ['testKey-1', parentEntry],
+        ['testKey-2', { ...childEntry, children: [], twinChildren: { mockUri: [] } }],
+        ['testKey-3', { ...childEntry, uuid: 'testKey-3', children: [], twinChildren: { mockUri: [] } }],
+      ]);
+
+      initServices(testSchema);
+
+      schemaWithDuplicatesService.deleteEntry(childEntry);
+
+      const updatedParent = schemaWithDuplicatesService.get().get('testKey-1');
+      expect(updatedParent?.twinChildren?.['mockUri']).toEqual(['testKey-3']);
+      expect(updatedParent?.children).toEqual(['testKey-3']);
+    });
   });
 });

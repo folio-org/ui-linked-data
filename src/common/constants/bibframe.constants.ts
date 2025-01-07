@@ -133,3 +133,4 @@ export const BF_URI_DELIMITER = '/';
 export const ENTRY_DELIMITER = '__';
 export const ENTRY_COUNT_DELIMITER = '::';
 export const ENTRY_CONTROL_DELIMITER = '--';
+export const TWIN_CHILDREN_KEY_DELIMITER = '$$';

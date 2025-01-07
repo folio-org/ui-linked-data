@@ -2,6 +2,7 @@ import * as SchemaHelper from '@common/helpers/schema.helper';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { generateTwinChildrenKey } from '@common/helpers/schema.helper';
 
 describe('schema.helper', () => {
   const {
@@ -302,6 +303,57 @@ describe('schema.helper', () => {
       const htmlId = getHtmlIdForEntry({ path }, schema);
 
       expect(htmlId).toEqual('mockBfid::0__mockUri::0__mockUriBFLite::0');
+    });
+  });
+
+  describe('generateTwinChildrenKey', () => {
+    test('returns just URI when no valueDataType exists', () => {
+      const entry = {
+        uri: 'test:uri',
+        constraints: {},
+      } as SchemaEntry;
+
+      const result = generateTwinChildrenKey(entry);
+
+      expect(result).toBe('test:uri');
+    });
+
+    test('returns concatenated string with valueDataType when present', () => {
+      const entry = {
+        uri: 'test:uri',
+        constraints: {
+          valueDataType: {
+            dataTypeURI: 'test:dataType',
+          },
+        },
+      } as SchemaEntry;
+
+      const result = generateTwinChildrenKey(entry);
+
+      expect(result).toBe('test:uri$$test:dataType');
+    });
+
+    test('returns URI when constraints is undefined', () => {
+      const entry = {
+        uri: 'test:uri',
+      } as SchemaEntry;
+
+      const result = generateTwinChildrenKey(entry);
+
+      expect(result).toBe('test:uri');
+    });
+
+    test('returns URI when valueDataType is empty object', () => {
+      const entry = {
+        uri: 'test:uri',
+        constraints: {
+          valueDataType: {},
+        },
+      } as SchemaEntry;
+
+      const result = generateTwinChildrenKey(entry);
+
+      expect(result).toBe('test:uri');
     });
   });
 });

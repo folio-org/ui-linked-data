@@ -3,6 +3,7 @@ import { FC, memo, ReactElement, ReactNode } from 'react';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IDrawComponent } from '@components/EditSection';
 import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
+import { generateTwinChildrenKey } from '@common/helpers/schema.helper';
 import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { DuplicateSubcomponentContainer } from '@components/DuplicateSubcomponentContainer';
@@ -81,8 +82,8 @@ export const Fields: FC<IFields> = memo(
 
             if (!entry) return;
 
-            const { uri = '' } = entry;
-            const twinChildrenOfSameType = twinChildren?.[uri];
+            const twinChildrenKey = generateTwinChildrenKey(entry);
+            const twinChildrenOfSameType = twinChildren?.[twinChildrenKey];
             const isFirstTwinChild = twinChildrenOfSameType?.[0] === uuid;
 
             // render cloned / grouped items starting from the main item (prototype) separately
