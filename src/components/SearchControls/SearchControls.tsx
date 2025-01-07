@@ -88,7 +88,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     !isSearchPaneCollapsed && (
       <div className="search-pane" role="region" aria-labelledby="search-pane-header-title">
         <div className="search-pane-header">
-          <h2 className="search-pane-header-title">
+          <h2 id="search-pane-header-title" className="search-pane-header-title">
             <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
           </h2>
           <Button
