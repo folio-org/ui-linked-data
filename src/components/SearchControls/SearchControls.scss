@@ -37,6 +37,17 @@
     padding: 0 1rem;
     background-color: rgba(0, 0, 0, 0.03);
 
+    .close-ctl {
+      height: 2.125rem;
+      width: 2.125rem;
+      padding: 0.5rem;
+
+      svg {
+        height: 12px;
+        transform: rotate(-90deg);
+      }
+    }
+
     &-title {
       font-size: 0.875rem;
     }

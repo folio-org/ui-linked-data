@@ -34,6 +34,7 @@ export const UI_DROPDOWNS_LIST = [AdvancedFieldType.dropdown, AdvancedFieldType.
 
 export const NOT_PREVIEWABLE_TYPES = [
   AdvancedFieldType.profile,
+  AdvancedFieldType.block,
   AdvancedFieldType.hidden,
   AdvancedFieldType.dropdownOption,
   AdvancedFieldType.complex,

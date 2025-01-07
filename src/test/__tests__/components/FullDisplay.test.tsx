@@ -58,11 +58,10 @@ describe('FullDisplay', () => {
     );
   });
 
-  const { getByTestId, getAllByTestId, getByText } = screen;
+  const { getByTestId, getAllByTestId } = screen;
 
   test('contains preview container and header', () => {
     expect(getByTestId('preview-contents-container')).toBeInTheDocument();
-    expect(getByText('Work')).toBeInTheDocument();
   });
 
   test('removes a preview content entry on close button click', () => {
