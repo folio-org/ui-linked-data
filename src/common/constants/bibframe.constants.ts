@@ -129,6 +129,7 @@ export const BF2_PROPERTY_URIS = {
 };
 
 export const BFID_DELIMITER = ':';
+export const EXTRA_BFID_DELIMITER = '$$';
 export const BF_URI_DELIMITER = '/';
 export const ENTRY_DELIMITER = '__';
 export const ENTRY_COUNT_DELIMITER = '::';

@@ -285,7 +285,7 @@ describe('schema.helper', () => {
 
   describe('getHtmlIdForEntry', () => {
     const schema = new Map([
-      ['blockUuid', { uuid: 'blockUuid', path: ['blockUuid'], bfid: 'mockBfid' }],
+      ['blockUuid', { uuid: 'blockUuid', path: ['blockUuid'], uriBFLite: 'mockUriBFLite', bfid: 'mockBfid' }],
       ['groupUuid', { uuid: 'groupUuid', path: ['blockUuid', 'groupUuid'], uri: 'mockUri' }],
       [
         'fieldUuid',
@@ -301,7 +301,7 @@ describe('schema.helper', () => {
     test('returns htmlId', () => {
       const htmlId = getHtmlIdForEntry({ path }, schema);
 
-      expect(htmlId).toEqual('mockBfid::0__mockUri::0__mockUriBFLite::0');
+      expect(htmlId).toEqual('mockUriBFLite$$mockBfid::0__mockUri::0__mockUriBFLite::0');
     });
   });
 });

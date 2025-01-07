@@ -11,6 +11,7 @@ import {
   ENTRY_CONTROL_DELIMITER,
   ENTRY_COUNT_DELIMITER,
   ENTRY_DELIMITER,
+  EXTRA_BFID_DELIMITER,
   PREV_ENTRY_PATH_INDEX,
 } from '@common/constants/bibframe.constants';
 
@@ -196,7 +197,12 @@ export const getHtmlIdForEntry = ({ path = [] }: Partial<SchemaEntry>, schema: S
 
       const { uriBFLite, uri, bfid, cloneIndex } = pathEntry;
       const uriSelector = uriBFLite ?? uri;
-      const id = uriSelector ? uriSelector.split(BF_URI_DELIMITER).at(-1) : bfid?.split(BFID_DELIMITER).at(-1);
+      const formattedBFId = bfid?.split(BFID_DELIMITER).at(-1);
+      let id = uriSelector ? uriSelector.split(BF_URI_DELIMITER).at(-1) : formattedBFId;
+
+      if (formattedBFId && formattedBFId !== id) {
+        id += `${EXTRA_BFID_DELIMITER}${formattedBFId}`;
+      }
 
       return [...acc, `${id}${ENTRY_COUNT_DELIMITER}${cloneIndex ?? 0}`];
     }, [] as string[])
