@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import { TableFlex } from '@components/Table/TableFlex';
 
 describe('TableFlex Component', () => {
