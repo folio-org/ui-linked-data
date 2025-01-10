@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { EditPreview } from '@components/EditPreview';
@@ -15,11 +15,16 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditPreview', () => {
+  const resetPreviewContent = jest.fn();
+
   beforeEach(() => {
     setInitialGlobalState([
       {
         store: useInputsStore,
-        state: { record: {} },
+        state: {
+          record: {},
+          resetPreviewContent,
+        },
       },
       {
         store: useUIStore,
@@ -40,5 +45,29 @@ describe('EditPreview', () => {
 
   test('contains instances list when create work page is opened', () => {
     expect(getByTestId('instances-list')).toBeInTheDocument();
+  });
+
+  test('calls resetPreviewContent when resourceId changes', () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: '/resources/:resourceId/edit',
+          element: <EditPreview />,
+        },
+      ],
+      {
+        initialEntries: ['/resources/123/edit'],
+      },
+    );
+
+    const { rerender } = render(<RouterProvider router={router} />);
+
+    act(() => {
+      router.navigate('/resources/456/edit');
+    });
+
+    rerender(<RouterProvider router={router} />);
+
+    expect(resetPreviewContent).toHaveBeenCalled();
   });
 });

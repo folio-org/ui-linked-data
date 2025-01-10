@@ -25,7 +25,9 @@ export const EditPreview = memo(() => {
   const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
   const selectedForPreview = previewContent?.[0];
 
-  useEffect(() => resetPreviewContent, [resourceId]);
+  useEffect(() => {
+    resetPreviewContent();
+  }, [resourceId]);
 
   return (
     <div
