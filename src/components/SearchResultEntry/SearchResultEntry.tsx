@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -58,7 +58,7 @@ const instancesListHeader: Row = {
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { navigationState, selectedInstances, setSelectedInstances } = useSearchState();
+  const { navigationState, selectedInstances, setSelectedInstances, resetSelectedInstances } = useSearchState();
   const [isOpen, setIsOpen] = useState(true);
   const { setIsLoading } = useLoadingState();
   const { addStatusMessagesItem } = useStatusState();
@@ -66,6 +66,13 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const { resetFullDisplayComponentType, fullDisplayComponentType } = useUIState();
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
+
+  useEffect(() => {
+    return () => {
+      resetFullDisplayComponentType();
+      resetSelectedInstances();
+    };
+  }, []);
 
   const handleOpenPreview = async (id: string) => {
     try {
