@@ -61,7 +61,7 @@ export const Comparison = () => {
           <Button
             data-testid="clear-comparison-selections"
             type={ButtonType.Icon}
-            onClick={resetPreviewContent}
+            onClick={handleCloseComparison}
             disabled={!previewContent.length}
             className="nav-close"
           >
