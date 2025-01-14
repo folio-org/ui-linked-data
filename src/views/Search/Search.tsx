@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
@@ -24,20 +24,27 @@ import './Search.scss';
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
-  const { selectedInstances } = useSearchState();
+  const { selectedInstances, resetSelectedInstances } = useSearchState();
   const { setIsLoading } = useLoadingState();
   const { fetchRecord } = useRecordControls();
   const { addStatusMessagesItem } = useStatusState();
-  const { setFullDisplayComponentType } = useUIState();
+  const { setFullDisplayComponentType, resetFullDisplayComponentType } = useUIState();
   const { resetPreviewContent } = useInputsState();
-  
+
+  useEffect(() => {
+    return () => {
+      resetFullDisplayComponentType();
+      resetSelectedInstances();
+    };
+  }, []);
+
   dispatchDropNavigateToOriginEvent();
 
   const handlePreviewMultiple = async () => {
     try {
       setIsLoading(true);
       resetPreviewContent();
-      setFullDisplayComponentType(FullDisplayType.Comparison)
+      setFullDisplayComponentType(FullDisplayType.Comparison);
 
       for (const id of selectedInstances.toReversed()) {
         await fetchRecord(id, {});

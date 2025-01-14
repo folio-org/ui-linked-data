@@ -1,7 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore, useUIStore } from '@src/store';
 import { SearchResultEntry } from '@components/SearchResultEntry';
 import { itemSearchMockData } from './ItemSearch.test';
 
@@ -64,39 +62,6 @@ describe('SearchResultEntry', () => {
 
     test('shows placeholder when there are no instances', () => {
       expect(getByText('ld.noInstancesAvailable')).toBeInTheDocument();
-    });
-  });
-
-  describe('component unmount', () => {
-    test('clears fullDisplayComponentType and selectedInstances on unmount', () => {
-      const mockResetFullDisplayComponentType = jest.fn();
-      const mockResetSelectedInstances = jest.fn();
-
-      setInitialGlobalState([
-        {
-          store: useUIStore,
-          state: {
-            resetFullDisplayComponentType: mockResetFullDisplayComponentType,
-          },
-        },
-        {
-          store: useSearchStore,
-          state: {
-            resetSelectedInstances: mockResetSelectedInstances,
-          },
-        },
-      ]);
-
-      const { unmount } = render(
-        <BrowserRouter>
-          <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
-      );
-
-      unmount();
-
-      expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
-      expect(mockResetSelectedInstances).toHaveBeenCalled();
     });
   });
 });
