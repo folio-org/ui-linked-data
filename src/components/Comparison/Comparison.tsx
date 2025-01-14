@@ -17,7 +17,7 @@ import './Comparison.scss';
 export const Comparison = () => {
   const { formatMessage } = useIntl();
   const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
-  const { resetSelectedInstances } = useSearchState();
+  const { setSelectedInstances, resetSelectedInstances } = useSearchState();
   const { resetFullDisplayComponentType } = useUIState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const [currentPage, setCurrentPage] = useState(0);
@@ -30,6 +30,7 @@ export const Comparison = () => {
 
   const handleRemoveComparisonItem = (id: string) => {
     setPreviewContent(prev => prev.filter(({ id: prevId }) => prevId !== id));
+    setSelectedInstances(prev => prev.filter(prevId => prevId !== id));
   };
 
   const handleNavigateToOwnEditPage = (id: string) => navigateToEditPage(generateEditResourceUrl(id));
