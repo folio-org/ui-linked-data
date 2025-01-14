@@ -24,16 +24,20 @@ describe('Comparison', () => {
   const resetPreviewContent = jest.fn();
   const resetFullDisplayComponentType = jest.fn();
   const resetSelectedInstances = jest.fn();
+  const setSelectedInstances = jest.fn();
+  const setPreviewContent = jest.fn();
 
   const baseMockState = [
     {
       store: useInputsStore,
-      state: { previewContent: [{ id: 'mockId', title: 'mockTitle' }] },
+      state: { previewContent: [{ id: 'mockId', title: 'mockTitle' }], setPreviewContent },
     },
   ];
 
   const renderWithState = (stateArgs?: StoreWithState[]) => {
-    stateArgs && setInitialGlobalState(stateArgs);
+    if (stateArgs) {
+      setInitialGlobalState(stateArgs);
+    }
 
     return render(
       <RouterProvider
@@ -60,11 +64,18 @@ describe('Comparison', () => {
   });
 
   test('removes an entry', () => {
-    const { getByTestId, getByText } = renderWithState(baseMockState);
+    const { getByTestId } = renderWithState([
+      ...baseMockState,
+      {
+        store: useSearchStore,
+        state: { setSelectedInstances },
+      },
+    ]);
 
     fireEvent.click(getByTestId('remove-comparison-entry'));
 
-    expect(getByText('ld.chooseTwoResourcesCompare')).toBeInTheDocument();
+    expect(setPreviewContent).toHaveBeenCalled();
+    expect(setSelectedInstances).toHaveBeenCalled();
   });
 
   test('closes comparison', async () => {
@@ -105,9 +116,9 @@ describe('Comparison', () => {
         store: useInputsStore,
         state: {
           previewContent: [
-            { id: 'mockId', title: 'mockTitle' },
-            { id: 'mockId', title: 'mockTitle' },
-            { id: 'mockId', title: 'mockTitle' },
+            { id: 'mockId_1', title: 'mockTitle 1' },
+            { id: 'mockId_2', title: 'mockTitle 2' },
+            { id: 'mockId_3', title: 'mockTitle 3' },
           ],
         },
       },
