@@ -72,10 +72,38 @@ describe('Comparison', () => {
       },
     ]);
 
-    fireEvent.click(getByTestId('remove-comparison-entry'));
+    fireEvent.click(getByTestId('remove-comparison-entry-mockId'));
 
     expect(setPreviewContent).toHaveBeenCalled();
     expect(setSelectedInstances).toHaveBeenCalled();
+  });
+
+  test('updates current page when removing last item on last page', () => {
+    const setPreviewContent = jest.fn();
+    const { getByTestId } = renderWithState([
+      {
+        store: useInputsStore,
+        state: {
+          previewContent: [
+            { id: 'mockId_1', title: 'mockTitle 1' },
+            { id: 'mockId_2', title: 'mockTitle 2' },
+            { id: 'mockId_3', title: 'mockTitle 3' },
+          ],
+          setPreviewContent,
+        },
+      },
+      {
+        store: useSearchStore,
+        state: { setSelectedInstances },
+      },
+    ]);
+
+    fireEvent.click(getByTestId('forward-button'));
+    fireEvent.click(getByTestId('remove-comparison-entry-mockId_3'));
+
+    expect(setPreviewContent).toHaveBeenCalled();
+    expect(setSelectedInstances).toHaveBeenCalled();
+    expect(getByTestId('backward-button')).toBeInTheDocument();
   });
 
   test('closes comparison', async () => {
