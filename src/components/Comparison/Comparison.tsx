@@ -29,6 +29,10 @@ export const Comparison = () => {
   };
 
   const handleRemoveComparisonItem = (id: string) => {
+    if (currentPage === totalPages - 1) {
+      setCurrentPage(prev => (prev - 1 >= 0 ? prev - 1 : 0));
+    }
+
     setPreviewContent(prev => prev.filter(({ id: prevId }) => prevId !== id));
     setSelectedInstances(prev => prev.filter(prevId => prevId !== id));
   };
@@ -79,7 +83,7 @@ export const Comparison = () => {
               <div className="entry-header">
                 <div className="entry-header-controls">
                   <Button
-                    data-testid="remove-comparison-entry"
+                    data-testid={`remove-comparison-entry-${id}`}
                     type={ButtonType.Icon}
                     onClick={() => handleRemoveComparisonItem(id)}
                     className="nav-close"
