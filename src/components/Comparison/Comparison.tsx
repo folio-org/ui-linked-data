@@ -30,7 +30,11 @@ export const Comparison = () => {
 
   const handleRemoveComparisonItem = (id: string) => {
     if (currentPage === totalPages - 1) {
-      setCurrentPage(prev => (prev - 1 >= 0 ? prev - 1 : 0));
+      setCurrentPage(prevValue => {
+        const previousPage = prevValue - 1;
+
+        return previousPage >= 0 ? previousPage : 0;
+      });
     }
 
     setPreviewContent(prev => prev.filter(({ id: prevId }) => prevId !== id));
