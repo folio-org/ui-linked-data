@@ -212,5 +212,15 @@
     "ld.aria.complexLookup.marcPreview.close": "Fechar a seção de pré-visualização do MARC",
     "ld.aria.edit.removeComplexLookupFieldValue": "Remover valor de campo de pesquisa complexo",
     "ld.errorMakingApiRequest": "Erro ao fazer requisição de API",
-    "ld.errorValidatingAuthorityRecord": "Erro ao validar registro de autoridade"
+    "ld.errorValidatingAuthorityRecord": "Erro ao validar registro de autoridade",
+    "ld.compareResources": "Comparar recursos",
+    "ld.selectedResources": "Recursos selecionados",
+    "ld.nResourcesSelected": "{n} recursos selecionados",
+    "ld.clearSelections": "Limpar seleções",
+    "ld.chooseTwoResourcesCompare": "Escolha dois ou mais recursos para comparar",
+    "ld.chooseOneResourceCompare": "Escolha outro recurso para comparar",
+    "ld.aria.comparison.close": "Fechar seção de comparação",
+    "ld.aria.comparison.removeEntry": "Remover entrada de comparação",
+    "ld.aria.searchPane.close": "Fechar painel de busca",
+    "ld.aria.searchPane.open": "Abrir painel de busca"
 }
