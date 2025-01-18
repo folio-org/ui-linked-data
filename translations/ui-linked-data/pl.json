@@ -212,5 +212,15 @@
     "ld.aria.complexLookup.marcPreview.close": "Close lookup MARC preview section",
     "ld.aria.edit.removeComplexLookupFieldValue": "Remove complex lookup field value",
     "ld.errorMakingApiRequest": "Error making API request",
-    "ld.errorValidatingAuthorityRecord": "Error validating authority record"
+    "ld.errorValidatingAuthorityRecord": "Error validating authority record",
+    "ld.compareResources": "Porównaj zasoby",
+    "ld.selectedResources": "Wybrane zasoby",
+    "ld.nResourcesSelected": "{n} wybrane zasoby",
+    "ld.clearSelections": "Wyczyść zaznaczenia",
+    "ld.chooseTwoResourcesCompare": "Wybierz dwa lub więcej zasobów do porównania",
+    "ld.chooseOneResourceCompare": "Wybierz inny zasób do porównania",
+    "ld.aria.comparison.close": "Close comparison section",
+    "ld.aria.comparison.removeEntry": "Remove comparison entry",
+    "ld.aria.searchPane.close": "Zamknij panel wyszukiwania",
+    "ld.aria.searchPane.open": "Otwórz panel wyszukiwania"
 }
