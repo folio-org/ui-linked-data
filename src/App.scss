@@ -191,4 +191,13 @@ h6 {
     gap: 8px;
     align-items: center;
   }
+
+  .invisible-text {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
 }
