@@ -1,13 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
-import { useSearchParams } from 'react-router-dom';
-import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useLoadSearchResults } from '@common/hooks/useLoadSearchResults';
 import { useLoadingStateStore, useSearchStore } from '@src/store';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-
-jest.mock('react-router-dom', () => ({
-  useSearchParams: jest.fn(),
-}));
 
 describe('useLoadSearchResults', () => {
   const setData = jest.fn();
@@ -38,13 +32,14 @@ describe('useLoadSearchResults', () => {
   });
 
   it('fetches data and updates state with query and searchBy', async () => {
-    const searchParams = new URLSearchParams({
-      [SearchQueryParams.Query]: 'test query',
-      [SearchQueryParams.SearchBy]: 'title',
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: '?query=test%20query&searchBy=title',
+      },
+      writable: true,
     });
 
     fetchData.mockResolvedValue([{ test: ['test value'] }]);
-    (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
     act(() =>
       setUpdatedGlobalState([
         {
@@ -62,9 +57,12 @@ describe('useLoadSearchResults', () => {
   });
 
   it('clears data when no query param', () => {
-    const searchParams = new URLSearchParams({});
-
-    (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: '',
+      },
+      writable: true,
+    });
 
     renderHook(() => useLoadSearchResults(fetchData));
 

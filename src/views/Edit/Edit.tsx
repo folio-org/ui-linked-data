@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
@@ -26,7 +26,10 @@ export const Edit = () => {
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
-  const [queryParams] = useSearchParams();
+  const queryParams = new URLSearchParams(window.location.search);
+  const cloneOfParam = queryParams.get(QueryParams.CloneOf);
+  const typeParam = queryParams.get(QueryParams.Type);
+  const refParam = queryParams.get(QueryParams.Ref);
 
   useResetRecordStatus();
 
@@ -42,8 +45,7 @@ export const Edit = () => {
 
       setIsLoading(true);
 
-      const cloneId = queryParams.get(QueryParams.CloneOf);
-      const fetchableId = resourceId ?? cloneId;
+      const fetchableId = resourceId ?? cloneOfParam;
 
       try {
         if (fetchableId) {
@@ -52,8 +54,8 @@ export const Edit = () => {
           return;
         }
 
-        const resourceDecriptionType = (queryParams.get(QueryParams.Type) as ResourceType) || ResourceType.instance;
-        const resourceReference = queryParams.get(QueryParams.Ref);
+        const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
+        const resourceReference = refParam;
         const isInstancePageType = resourceDecriptionType === ResourceType.instance;
         const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
         const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
@@ -85,7 +87,7 @@ export const Edit = () => {
     }
 
     loadRecord();
-  }, [resourceId, recordStatusType, queryParams]);
+  }, [resourceId, recordStatusType, cloneOfParam, typeParam, refParam]);
 
   return (
     <div data-testid="edit-page" className="edit-page">
