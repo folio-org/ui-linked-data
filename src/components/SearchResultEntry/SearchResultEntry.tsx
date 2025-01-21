@@ -28,6 +28,11 @@ type SearchResultEntry = {
 
 const instancesListHeader: Row = {
   selectCtl: {
+    label: (
+      <div className="invisible-text">
+        <FormattedMessage id="ld.aria.table.selectRow" />
+      </div>
+    ),
     position: 0,
   },
   title: {
@@ -51,6 +56,11 @@ const instancesListHeader: Row = {
     position: 5,
   },
   editCtl: {
+    label: (
+      <div className="invisible-text">
+        <FormattedMessage id="ld.editInstance" />
+      </div>
+    ),
     position: 6,
   },
 };
