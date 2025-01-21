@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
 import { useLoadingState, useSearchState } from '@src/store';
@@ -12,7 +11,7 @@ export const useLoadSearchResults = (
     useSearchContext();
   const { setIsLoading } = useLoadingState();
   const { setQuery, setData, setSearchBy, forceRefresh, setForceRefresh, resetFacetsData } = useSearchState();
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const queryParam = searchParams.get(SearchQueryParams.Query);
   const searchByParam = searchParams.get(SearchQueryParams.SearchBy);
   const offsetParam = searchParams.get(SearchQueryParams.Offset);
@@ -68,7 +67,7 @@ export const useLoadSearchResults = (
       await getSearchFacetsData?.();
 
       if (defaultSearchBy && defaultQuery) {
-        await fetchData({ query: defaultQuery as string, searchBy: defaultSearchBy, offset: 0 });
+        await fetchData({ query: defaultQuery, searchBy: defaultSearchBy, offset: 0 });
       }
 
       setIsLoading(false);
