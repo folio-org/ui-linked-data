@@ -10,6 +10,7 @@ import {
   SELECT_QUALIFIERS,
 } from '@common/constants/search.constants';
 import { formatRawQuery, generateSearchParamsState } from '@common/helpers/search.helper';
+import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
 import { Select } from '@components/Select';
 import { useSearchState, useUIState } from '@src/store';
 import { AriaModalKind } from '@common/constants/uiElements.constants';
@@ -31,6 +32,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   const { formatMessage } = useIntl();
   const { isAdvancedSearchOpen: isOpen, setIsAdvancedSearchOpen: setIsOpen } = useUIState();
   const { setForceRefresh: setForceRefreshSearch } = useSearchState();
+  const { fetchData } = useFetchSearchData();
   const [rawQuery, setRawQuery] = useState(DEFAULT_ADVANCED_SEARCH_QUERY);
 
   const closeModal = () => {
@@ -52,10 +54,18 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
     );
   };
 
-  const onDoSearch = () => {
+  const onDoSearch = async () => {
     clearValues();
-    setSearchParams(generateSearchParamsState(formatRawQuery(rawQuery)) as unknown as URLSearchParams);
+
+    const formattedQuery = formatRawQuery(rawQuery);
+    setSearchParams(generateSearchParamsState(formattedQuery) as unknown as URLSearchParams);
     setForceRefreshSearch(true);
+
+    await fetchData({
+      query: formattedQuery,
+      searchBy: undefined,
+    });
+
     closeModal();
   };
 

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
-import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
+import { SEARCH_RESULTS_LIMIT, SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { generateSearchParamsState } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
@@ -78,9 +78,9 @@ export const useSearch = () => {
 
     if (hasSearchParams) {
       setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
-    } else {
-      fetchData({ query, searchBy });
     }
+
+    fetchData({ query, searchBy });
 
     setForceRefreshSearch(true);
   }, [fetchData, hasSearchParams, query, searchBy, selectedNavigationSegment, facets]);
@@ -161,39 +161,51 @@ export const useSearch = () => {
     });
   };
 
-  const onPrevPageClick = hasCustomPagination
-    ? async () => {
-        const pageNumber = onPrevPageClickBase();
+  const onPrevPageClick = async () => {
+    const pageNumber = onPrevPageClickBase();
 
-        await handlePaginationClick({
-          pageNumber,
-          query,
-          pageMetadata,
-          isBrowseSearch,
-          searchBy,
-          navigationSegment,
-          baseQuerySelectorType: SearchableIndexQuerySelector.Prev,
-          pageMetadataSelectorType: 'prev',
-        });
-      }
-    : onPrevPageClickBase;
+    if (hasCustomPagination) {
+      await handlePaginationClick({
+        pageNumber,
+        query,
+        pageMetadata,
+        isBrowseSearch,
+        searchBy,
+        navigationSegment,
+        baseQuerySelectorType: SearchableIndexQuerySelector.Prev,
+        pageMetadataSelectorType: 'prev',
+      });
+    } else {
+      await fetchData({
+        query,
+        searchBy,
+        offset: pageNumber * SEARCH_RESULTS_LIMIT,
+      });
+    }
+  };
 
-  const onNextPageClick = hasCustomPagination
-    ? async () => {
-        const pageNumber = onNextPageClickBase();
+  const onNextPageClick = async () => {
+    const pageNumber = onNextPageClickBase();
 
-        await handlePaginationClick({
-          pageNumber,
-          query,
-          pageMetadata,
-          isBrowseSearch,
-          searchBy,
-          navigationSegment,
-          baseQuerySelectorType: SearchableIndexQuerySelector.Next,
-          pageMetadataSelectorType: 'next',
-        });
-      }
-    : onNextPageClickBase;
+    if (hasCustomPagination) {
+      await handlePaginationClick({
+        pageNumber,
+        query,
+        pageMetadata,
+        isBrowseSearch,
+        searchBy,
+        navigationSegment,
+        baseQuerySelectorType: SearchableIndexQuerySelector.Next,
+        pageMetadataSelectorType: 'next',
+      });
+    } else {
+      await fetchData({
+        query,
+        searchBy,
+        offset: pageNumber * SEARCH_RESULTS_LIMIT,
+      });
+    }
+  };
 
   useEffect(() => {
     setSearchBy(defaultSearchBy);
