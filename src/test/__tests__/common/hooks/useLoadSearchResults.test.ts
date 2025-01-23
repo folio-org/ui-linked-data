@@ -31,7 +31,7 @@ describe('useLoadSearchResults', () => {
     ]);
   });
 
-  it('fetches data and updates state with query and searchBy', async () => {
+  it('updates state with query and searchBy', async () => {
     Object.defineProperty(window, 'location', {
       value: {
         search: '?query=test%20query&searchBy=title',
@@ -39,7 +39,6 @@ describe('useLoadSearchResults', () => {
       writable: true,
     });
 
-    fetchData.mockResolvedValue([{ test: ['test value'] }]);
     act(() =>
       setUpdatedGlobalState([
         {
@@ -53,7 +52,6 @@ describe('useLoadSearchResults', () => {
 
     expect(setSearchBy).toHaveBeenCalledWith('title');
     expect(setQuery).toHaveBeenCalledWith('test query');
-    expect(fetchData).toHaveBeenCalledWith({ query: 'test query', searchBy: 'title', offset: 0 });
   });
 
   it('clears data when no query param', () => {

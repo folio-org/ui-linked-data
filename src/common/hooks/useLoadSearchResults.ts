@@ -60,8 +60,8 @@ export const useLoadSearchResults = (
       await getSearchSourceData?.();
       await getSearchFacetsData?.();
 
-      const query = queryParam ?? defaultQuery;
-      const searchBy = searchByParam ?? defaultSearchBy;
+      const query = hasSearchParams ? queryParam : defaultQuery;
+      const searchBy = hasSearchParams ? searchByParam : defaultSearchBy;
       const offset = offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0;
 
       if (searchByParam) {
@@ -72,7 +72,7 @@ export const useLoadSearchResults = (
         setQuery(queryParam);
       }
 
-      if (query && searchBy) {
+      if (query) {
         await fetchData({ query, searchBy, offset });
       }
 

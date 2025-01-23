@@ -80,7 +80,7 @@ export const useSearch = () => {
       setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
     }
 
-    fetchData({ query, searchBy });
+    fetchData({ query, searchBy, offset: 0 });
 
     setForceRefreshSearch(true);
   }, [fetchData, hasSearchParams, query, searchBy, selectedNavigationSegment, facets]);
