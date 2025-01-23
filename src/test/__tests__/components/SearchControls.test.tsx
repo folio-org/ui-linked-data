@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import * as FeatureConstants from '@common/constants/feature.constants';
 import { SearchControls } from '@components/SearchControls';
 import { SearchContext } from '@src/contexts';
-import { useSearchStore } from '@src/store';
+import { useInputsStore, useSearchStore, useUIStore } from '@src/store';
 
 const setSearchParams = jest.fn();
 const mockSearchFiltersComponent = <div data-testid="search-filters" />;
@@ -50,17 +50,44 @@ describe('SearchControls', () => {
   });
 
   describe('Reset button', () => {
+    const defaultSearchBy = 'testSearchBy';
+    const mockClearValues = jest.fn();
+    const mockResetFacets = jest.fn();
+    const mockSetSearchBy = jest.fn();
+    const mockResetPreviewContent = jest.fn();
+    const mockResetFullDisplayComponentType = jest.fn();
+    const mockResetSelectedInstances = jest.fn();
+
     function renderSearchControls(searchParams: URLSearchParams, queryState: string) {
       (useSearchParams as jest.Mock).mockReturnValue([searchParams, setSearchParams]);
 
       setInitialGlobalState([
         {
           store: useSearchStore,
-          state: { query: queryState },
+          state: {
+            query: queryState,
+            resetFacets: mockResetFacets,
+            setSearchBy: mockSetSearchBy,
+            resetSelectedInstances: mockResetSelectedInstances,
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            resetFullDisplayComponentType: mockResetFullDisplayComponentType,
+          },
+        },
+        {
+          store: useInputsStore,
+          state: { resetPreviewContent: mockResetPreviewContent },
         },
       ]);
 
-      render(<SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />);
+      render(
+        <SearchContext.Provider value={{ defaultSearchBy } as unknown as SearchParams}>
+          <SearchControls submitSearch={jest.fn} clearValues={mockClearValues} changeSegment={jest.fn} />
+        </SearchContext.Provider>,
+      );
     }
 
     test('renders button enabled if "query" search param and "query" state have values', () => {
@@ -85,6 +112,19 @@ describe('SearchControls', () => {
       renderSearchControls(new URLSearchParams(), '');
 
       expect(screen.queryByTestId('id-search-reset-button')).toBeDisabled();
+    });
+
+    test('resets state', () => {
+      renderSearchControls(new URLSearchParams({ query: 'test query' }), 'test state');
+
+      fireEvent.click(screen.getByTestId('id-search-reset-button'));
+
+      expect(mockClearValues).toHaveBeenCalled();
+      expect(mockResetFacets).toHaveBeenCalled();
+      expect(mockSetSearchBy).toHaveBeenCalledWith(defaultSearchBy);
+      expect(mockResetPreviewContent).toHaveBeenCalled();
+      expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
+      expect(mockResetSelectedInstances).toHaveBeenCalled();
     });
   });
 });

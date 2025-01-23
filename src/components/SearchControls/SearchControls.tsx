@@ -46,8 +46,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     setNavigationState,
     resetFacets: resetControls,
     setFacetsBySegments,
+    resetSelectedInstances,
   } = useSearchState();
-  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, setIsAdvancedSearchOpen } = useUIState();
+  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, setIsAdvancedSearchOpen, resetFullDisplayComponentType } =
+    useUIState();
   const { resetPreviewContent } = useInputsState();
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
@@ -72,6 +74,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const onResetButtonClick = () => {
     clearValuesAndResetControls();
     resetPreviewContent();
+    resetFullDisplayComponentType();
+    resetSelectedInstances();
     hasSearchParams && setSearchParams({});
     hasSearchParams && setNavigationState({});
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
@@ -92,7 +96,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
             <FormattedMessage id={isVisibleFilters ? 'ld.searchAndFilter' : 'ld.search'} />
           </h2>
           <Button
-            className='close-ctl'
+            className="close-ctl"
             onClick={() => setIsSearchPaneCollapsed(true)}
             ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}
           >

@@ -65,17 +65,24 @@ describe('Comparison', () => {
 
   test('removes an entry', () => {
     const { getByTestId } = renderWithState([
-      ...baseMockState,
+      {
+        store: useInputsStore,
+        state: { previewContent: [{ id: 'mockId', title: 'mockTitle' }] },
+      },
       {
         store: useSearchStore,
         state: { setSelectedInstances },
+      },
+      {
+        store: useUIStore,
+        state: { resetFullDisplayComponentType },
       },
     ]);
 
     fireEvent.click(getByTestId('remove-comparison-entry-mockId'));
 
-    expect(setPreviewContent).toHaveBeenCalled();
     expect(setSelectedInstances).toHaveBeenCalled();
+    expect(resetFullDisplayComponentType).toHaveBeenCalled();
   });
 
   test('updates current page when removing last item on last page', () => {

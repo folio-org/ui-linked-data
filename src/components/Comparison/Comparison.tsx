@@ -37,7 +37,15 @@ export const Comparison = () => {
       });
     }
 
-    setPreviewContent(prev => prev.filter(({ id: prevId }) => prevId !== id));
+    setPreviewContent(prev => {
+      const updatedPreviewContent = prev.filter(({ id: prevId }) => prevId !== id);
+
+      if (!updatedPreviewContent.length) {
+        resetFullDisplayComponentType();
+      }
+
+      return updatedPreviewContent;
+    });
     setSelectedInstances(prev => prev.filter(prevId => prevId !== id));
   };
 
