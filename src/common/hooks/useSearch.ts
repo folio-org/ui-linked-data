@@ -161,9 +161,11 @@ export const useSearch = () => {
     });
   };
 
-  const onPrevPageClick = async () => {
-    const pageNumber = onPrevPageClickBase();
-
+  const handlePageChange = async (
+    pageNumber: number,
+    querySelector: SearchableIndexQuerySelector,
+    metadataSelector: 'prev' | 'next',
+  ) => {
     if (hasCustomPagination) {
       await handlePaginationClick({
         pageNumber,
@@ -172,8 +174,8 @@ export const useSearch = () => {
         isBrowseSearch,
         searchBy,
         navigationSegment,
-        baseQuerySelectorType: SearchableIndexQuerySelector.Prev,
-        pageMetadataSelectorType: 'prev',
+        baseQuerySelectorType: querySelector,
+        pageMetadataSelectorType: metadataSelector,
       });
     } else {
       await fetchData({
@@ -184,27 +186,16 @@ export const useSearch = () => {
     }
   };
 
+  const onPrevPageClick = async () => {
+    const pageNumber = onPrevPageClickBase();
+
+    await handlePageChange(pageNumber, SearchableIndexQuerySelector.Prev, 'prev');
+  };
+
   const onNextPageClick = async () => {
     const pageNumber = onNextPageClickBase();
 
-    if (hasCustomPagination) {
-      await handlePaginationClick({
-        pageNumber,
-        query,
-        pageMetadata,
-        isBrowseSearch,
-        searchBy,
-        navigationSegment,
-        baseQuerySelectorType: SearchableIndexQuerySelector.Next,
-        pageMetadataSelectorType: 'next',
-      });
-    } else {
-      await fetchData({
-        query,
-        searchBy,
-        offset: pageNumber * SEARCH_RESULTS_LIMIT,
-      });
-    }
+    await handlePageChange(pageNumber, SearchableIndexQuerySelector.Next, 'next');
   };
 
   useEffect(() => {
