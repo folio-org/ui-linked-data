@@ -259,11 +259,15 @@ export const useRecordControls = () => {
   const fetchExternalRecordForPreview = async (recordId?: string, idType = ExternalResourceIdType.Inventory) => {
     if (!recordId) return;
 
+    setIsLoading(true);
+
     await getRecordAndInitializeParsing({
       recordId,
       idType,
       errorMessage: 'ld.errorFetchingExternalResourceForPreview',
     });
+
+    setIsLoading(false);
   };
 
   const tryFetchExternalRecordForEdit = async (recordId?: string) => {
