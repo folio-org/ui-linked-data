@@ -44,12 +44,6 @@ export const useLoadSearchResults = (
         setQuery(queryParam);
       }
 
-      await fetchData({
-        query: queryParam,
-        searchBy: searchByParam as SearchIdentifiers,
-        offset: offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0,
-      });
-
       setForceRefresh(false);
       prevSearchParams.current = { query: queryParam, searchBy: searchByParam, offset: offsetParam };
     }
@@ -66,8 +60,20 @@ export const useLoadSearchResults = (
       await getSearchSourceData?.();
       await getSearchFacetsData?.();
 
-      if (defaultSearchBy && defaultQuery) {
-        await fetchData({ query: defaultQuery, searchBy: defaultSearchBy, offset: 0 });
+      const query = hasSearchParams ? queryParam : defaultQuery;
+      const searchBy = hasSearchParams ? searchByParam : defaultSearchBy;
+      const offset = offsetParam ? parseInt(offsetParam) * SEARCH_RESULTS_LIMIT : 0;
+
+      if (searchByParam) {
+        setSearchBy(searchByParam);
+      }
+
+      if (searchByParam && queryParam) {
+        setQuery(queryParam);
+      }
+
+      if (query) {
+        await fetchData({ query, searchBy, offset });
       }
 
       setIsLoading(false);
