@@ -162,7 +162,7 @@ describe('useComplexLookup', () => {
       (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
       (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'newLinkedFieldId' });
       (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId']);
-      mockMakeRequest.mockResolvedValue(true);
+      mockMakeRequest.mockResolvedValue({ validAssignment: true });
 
       result = getRenderedHook()?.result;
 
@@ -184,7 +184,7 @@ describe('useComplexLookup', () => {
     });
 
     test('updates state correctly and does not call "setSelectedEntries"', async () => {
-      mockMakeRequest.mockResolvedValue(true);
+      mockMakeRequest.mockResolvedValue({ validAssignment: true });
 
       result = getRenderedHook({
         ...mockEntry,

@@ -141,9 +141,9 @@ export const useComplexLookup = ({
       }
     }
 
-    const isValid = await validateMarcRecord(marcData);
+    const { validAssignment } = await validateMarcRecord(marcData);
 
-    if (isValid) {
+    if (validAssignment) {
       assignMarcRecord({ id, title, srsId, linkedFieldValue });
       clearFailedEntryIds();
       reset();
