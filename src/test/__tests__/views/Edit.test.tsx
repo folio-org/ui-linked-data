@@ -5,6 +5,7 @@ import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/
 import { act, render, screen } from '@testing-library/react';
 import * as Router from 'react-router-dom';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
+import * as NavigationHelper from '@common/helpers/navigation.helper';
 import { Edit } from '@views';
 import { useProfileStore } from '@src/store/stores/profile';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -60,7 +61,7 @@ describe('Edit', () => {
     });
 
   test('renders EditSection component if a profile is selected and calls fetchRecord', async () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
+    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue('testResourceId');
 
     await renderComponent(monograph as unknown as ProfileEntry);
 
@@ -69,7 +70,7 @@ describe('Edit', () => {
   });
 
   test("gets profiles and doesn't call fetchRecord", async () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
+    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue(undefined);
 
     await renderComponent(null);
 
