@@ -61,6 +61,7 @@ describe('Edit', () => {
     });
 
   test('renders EditSection component if a profile is selected and calls fetchRecord', async () => {
+    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
     jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue('testResourceId');
 
     await renderComponent(monograph as unknown as ProfileEntry);
@@ -70,6 +71,7 @@ describe('Edit', () => {
   });
 
   test("gets profiles and doesn't call fetchRecord", async () => {
+    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
     jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue(undefined);
 
     await renderComponent(null);

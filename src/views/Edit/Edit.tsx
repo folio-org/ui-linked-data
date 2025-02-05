@@ -25,7 +25,7 @@ export const Edit = () => {
   const { recordStatus, addStatusMessagesItem } = useStatusState();
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
-  const { isLoading, setIsLoading } = useLoadingState();
+  const { setIsLoading } = useLoadingState();
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
   const queryParams = new URLSearchParams(window.location.search);
   const cloneOfParam = queryParams.get(QueryParams.CloneOf);
@@ -50,7 +50,7 @@ export const Edit = () => {
 
   useEffect(() => {
     async function loadRecord() {
-      if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType) || isLoading) return;
+      if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
 
       const fetchableId = resourceId ?? cloneOfParam;
 
@@ -101,7 +101,7 @@ export const Edit = () => {
     }
 
     loadRecord();
-  }, [resourceId, recordStatusType, cloneOfParam, typeParam, refParam, isLoading]);
+  }, [resourceId, recordStatusType, cloneOfParam, typeParam, refParam]);
 
   return (
     <div data-testid="edit-page" className="edit-page">
