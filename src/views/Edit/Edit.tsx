@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
+import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
@@ -12,7 +12,7 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
-import { useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
+import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -20,7 +20,8 @@ const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKe
 export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
-  const { resourceId } = useParams();
+  const resourceId = getResourceIdFromUri();
+  const { resetRecord, resetUserValues, resetSelectedEntries } = useInputsState();
   const { recordStatus, addStatusMessagesItem } = useStatusState();
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
@@ -31,24 +32,37 @@ export const Edit = () => {
   const typeParam = queryParams.get(QueryParams.Type);
   const refParam = queryParams.get(QueryParams.Ref);
 
+  const prevResourceId = useRef<string | null>(null);
+
   useResetRecordStatus();
 
   useEffect(() => {
     resetMarcPreviewData();
 
     scrollEntity({ top: 0, behavior: 'instant' });
+
+    return () => {
+      resetRecord();
+      resetUserValues();
+      resetSelectedEntries();
+    };
   }, []);
 
   useEffect(() => {
     async function loadRecord() {
       if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
 
-      setIsLoading(true);
-
       const fetchableId = resourceId ?? cloneOfParam;
+
+      if (fetchableId && prevResourceId.current === fetchableId) {
+        return;
+      }
+
+      setIsLoading(true);
 
       try {
         if (fetchableId) {
+          prevResourceId.current = fetchableId;
           await fetchRecord(fetchableId);
 
           return;

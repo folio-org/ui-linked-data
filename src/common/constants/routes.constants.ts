@@ -1,3 +1,9 @@
+export const ROUTE_PATH = {
+  RESOURCES: 'resources',
+  CREATE: 'create',
+  EDIT: 'edit',
+};
+
 export const ROUTES = {
   MAIN: {
     uri: '/',
@@ -8,15 +14,15 @@ export const ROUTES = {
     name: 'ld.searchResource',
   },
   RESOURCE_CREATE: {
-    uri: '/resources/create',
+    uri: `/${ROUTE_PATH.RESOURCES}/${ROUTE_PATH.CREATE}`,
     name: 'ld.create',
   },
   RESOURCE_EDIT: {
-    uri: '/resources/:resourceId/edit',
+    uri: `/${ROUTE_PATH.RESOURCES}/:resourceId/${ROUTE_PATH.EDIT}`,
     name: 'ld.editResource',
   },
   EXTERNAL_RESOURCE_PREVIEW: {
-    uri: '/resources/external/:externalId/preview',
+    uri: `/${ROUTE_PATH.RESOURCES}/external/:externalId/preview`,
     name: 'ld.externalResourcePreview',
   },
 };
