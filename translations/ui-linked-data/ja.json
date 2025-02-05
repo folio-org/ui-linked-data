@@ -57,7 +57,6 @@
     "ld.rdDeleted": "Resource description deleted",
     "ld.appFail": "エラーが発生しました。ページを再読み込みしてください。",
     "ld.searchSelectIndex": "Please select an index",
-    "ld.searchInvalidLccn": "LCCN is invalid, please correct",
     "ld.advancedSearch": "Advanced search",
     "ld.advanced": "Advanced",
     "ld.cancel": "キャンセル",
