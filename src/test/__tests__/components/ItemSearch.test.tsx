@@ -157,7 +157,7 @@ describe('Item Search', () => {
     await waitFor(() => {
       expect(getByIdentifierMock).toHaveBeenCalledWith({
         offset: '0',
-        query: '1234000001',
+        query: event.target.value,
         searchBy: id,
         endpointUrl: '',
         isSortedResults: true,
@@ -174,14 +174,5 @@ describe('Item Search', () => {
     fireEvent.click(getByTestId('id-search-button'));
 
     expect(await findByText('ld.searchNoRdsMatch')).toBeInTheDocument();
-  });
-
-  test("returns out of fetchData if query is subject to validation and doesn't pass validations", async () => {
-    fireEvent.change(getByTestId('id-search-input'), { target: { value: 'sm1f4a123' } });
-    fireEvent.click(getByTestId('id-search-button'));
-
-    await waitFor(() => {
-      expect(getByIdentifierMock).not.toHaveBeenCalled();
-    });
   });
 });

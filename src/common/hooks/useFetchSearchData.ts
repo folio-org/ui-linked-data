@@ -4,7 +4,6 @@ import { SearchIdentifiers, SearchSegment } from '@common/constants/search.const
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { normalizeQuery } from '@common/helpers/search.helper';
-import { normalizeLccn } from '@common/helpers/validations.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useSearchState, useStatusState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
@@ -26,21 +25,6 @@ export const useFetchSearchData = () => {
   const { setIsLoading } = useLoadingState();
   const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState();
   const { addStatusMessagesItem } = useStatusState();
-
-  const validateAndNormalizeQuery = useCallback(
-    (type: SearchIdentifiers, query: string) => {
-      if (type === SearchIdentifiers.LCCN) {
-        const normalized = normalizeLccn(query);
-
-        !normalized && setMessage('ld.searchInvalidLccn');
-
-        return normalized;
-      }
-
-      return normalizeQuery(query);
-    },
-    [setMessage],
-  );
 
   const getEndpointUrl = ({
     selectedSegment,
@@ -137,7 +121,7 @@ export const useFetchSearchData = () => {
 
       data && resetData();
 
-      const updatedQuery = validateAndNormalizeQuery(searchBy, query);
+      const updatedQuery = normalizeQuery(query);
       if (!updatedQuery) return;
 
       setIsLoading(true);
