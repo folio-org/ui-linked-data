@@ -20,6 +20,7 @@ describe('Pagination', () => {
       totalPages: number;
       pageSize: number;
       totalResultsCount: number;
+      useSlidingWindow?: boolean;
     };
     type ResultCounts = {
       start: number;
@@ -28,7 +29,7 @@ describe('Pagination', () => {
     };
 
     function testPaginationCounts(
-      { currentPage, totalPages, pageSize, totalResultsCount }: PaginationProps,
+      { currentPage, totalPages, pageSize, totalResultsCount, useSlidingWindow = false }: PaginationProps,
       { start, end, total }: ResultCounts,
     ) {
       render(
@@ -38,6 +39,7 @@ describe('Pagination', () => {
           totalPages={totalPages}
           pageSize={pageSize}
           totalResultsCount={totalResultsCount}
+          useSlidingWindow={useSlidingWindow}
         />,
       );
 
@@ -72,6 +74,29 @@ describe('Pagination', () => {
         { currentPage: 2, totalPages: 3, pageSize: 5, totalResultsCount: 12 },
         { start: 11, end: 12, total: 12 },
       );
+    });
+
+    describe('counts with sliding window', () => {
+      test('renders the correct count for the first sliding window page', () => {
+        testPaginationCounts(
+          { currentPage: 0, totalPages: 2, pageSize: 2, totalResultsCount: 4, useSlidingWindow: true },
+          { start: 1, end: 2, total: 4 },
+        );
+      });
+
+      test('renders the correct count after clicking next on the first page', () => {
+        testPaginationCounts(
+          { currentPage: 1, totalPages: 3, pageSize: 2, totalResultsCount: 4, useSlidingWindow: true },
+          { start: 2, end: 3, total: 4 },
+        );
+      });
+
+      test('renders the correct count for the last sliding window page', () => {
+        testPaginationCounts(
+          { currentPage: 2, totalPages: 3, pageSize: 2, totalResultsCount: 4, useSlidingWindow: true },
+          { start: 3, end: 4, total: 4 },
+        );
+      });
     });
   });
 

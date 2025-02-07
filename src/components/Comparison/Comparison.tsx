@@ -14,6 +14,8 @@ import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import './Comparison.scss';
 
+const COMPARED_ELEMENTS_COUNT = 2;
+
 export const Comparison = () => {
   const { formatMessage } = useIntl();
   const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
@@ -135,7 +137,9 @@ export const Comparison = () => {
           onNextPageClick={() => setCurrentPage(prev => prev + 1)}
           onPrevPageClick={() => setCurrentPage(prev => prev - 1)}
           totalPages={totalPages}
-          totalResultsCount={totalPages}
+          totalResultsCount={previewContent.length}
+          useSlidingWindow={true}
+          pageSize={COMPARED_ELEMENTS_COUNT}
           showCount
         />
       </nav>
