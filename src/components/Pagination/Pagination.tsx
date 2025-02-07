@@ -15,6 +15,7 @@ export type Props = {
   onPrevPageClick: VoidFunction;
   onNextPageClick: VoidFunction;
   isLooped?: boolean;
+  useSlidingWindow?: boolean;
 };
 
 export const Pagination: FC<Props> = memo(
@@ -27,19 +28,31 @@ export const Pagination: FC<Props> = memo(
     onPrevPageClick,
     onNextPageClick,
     isLooped = false,
+    useSlidingWindow = false,
   }) => {
     const isFirstPage = currentPage === 0;
-    const isDisabledNext = totalPages ? currentPage >= totalPages - 1 : false;
-    const startCount = isFirstPage ? 1 : currentPage * pageSize + 1;
     const pageNumber = currentPage + 1;
+    let startCount;
     let endCount;
+    let isDisabledNext;
 
-    if (totalPages === 1) {
-      endCount = totalResultsCount;
-    } else if (pageNumber === totalPages) {
-      endCount = startCount - 1 + totalResultsCount - currentPage * pageSize;
+    if (useSlidingWindow) {
+      startCount = currentPage + 1;
+      endCount = Math.min(startCount + pageSize - 1, totalResultsCount);
+      isDisabledNext = endCount >= totalResultsCount;
     } else {
-      endCount = pageNumber * pageSize;
+      const totalPagesDefined = totalPages ? totalPages - 1 : 0;
+      const isLastPage = currentPage >= totalPagesDefined;
+      isDisabledNext = isLastPage;
+      startCount = isFirstPage ? 1 : currentPage * pageSize + 1;
+
+      if (totalPages === 1) {
+        endCount = totalResultsCount;
+      } else if (pageNumber === totalPages) {
+        endCount = startCount - 1 + totalResultsCount - currentPage * pageSize;
+      } else {
+        endCount = pageNumber * pageSize;
+      }
     }
 
     return (
