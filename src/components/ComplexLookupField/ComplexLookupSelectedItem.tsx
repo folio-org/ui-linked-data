@@ -9,19 +9,19 @@ type ComplexLookupSelectedItemProps = {
   id?: string;
   label?: string;
   handleDelete: (id?: string) => void;
-  isPreferred?: boolean;
   noWarningField?: string;
+  noWarningValue?: boolean;
 };
 
 export const ComplexLookupSelectedItem: FC<ComplexLookupSelectedItemProps> = ({
   id,
   label,
-  isPreferred,
   handleDelete,
   noWarningField,
+  noWarningValue,
 }) => {
   const { formatMessage } = useIntl();
-  const hasWarningIcon = noWarningField && isPreferred !== undefined && !isPreferred;
+  const hasWarningIcon = noWarningField && noWarningValue !== undefined && !noWarningValue;
 
   return (
     <div

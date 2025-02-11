@@ -44,8 +44,8 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
                   id={id}
                   label={label}
                   handleDelete={handleDelete}
-                  isPreferred={meta?.isPreferred}
                   noWarningField={noWarningField}
+                  noWarningValue={meta?.isPreferred}
                 />
               ))}
             </div>
