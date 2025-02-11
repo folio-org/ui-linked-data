@@ -8,6 +8,7 @@ type UserValueContents = {
     bfLabel?: string;
     basicLabel?: string;
     srsId?: string;
+    isPreferred?: boolean;
   };
 };
 

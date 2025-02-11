@@ -22,9 +22,10 @@ export class ComplexLookupUserValueService implements IUserValueType {
         : [
             {
               id,
-              label: typedData,
+              label: (data as RecordBasic)?.label?.[0],
               meta: {
                 type,
+                isPreferred: (data as Record<string, boolean>)?.isPreferred,
               },
             },
           ],

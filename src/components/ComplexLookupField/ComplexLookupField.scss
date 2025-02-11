@@ -30,6 +30,16 @@
       color: #000;
     }
 
+    &-icon-warning {
+      min-height: 0.75rem;
+      min-width: 0.75rem;
+      margin: 0 8px;
+
+      path {
+        fill: rgba(0, 0, 0, 0.6);
+      }
+    }
+
     &-delete {
       display: flex;
       align-items: center;
@@ -56,6 +66,11 @@
         font-size: 1rem;
       }
 
+      .complex-lookup-selected-icon-warning {
+        min-height: 0.875rem;
+        min-width: 0.875rem;
+      }
+
       .complex-lookup-selected-delete {
         min-height: 1.4rem;
         width: 1.4rem;
@@ -64,6 +79,12 @@
 
     &-select-button {
       text-wrap: nowrap;
+    }
+
+    &-withWarning {
+      .complex-lookup-selected-label {
+        padding-right: 0;
+      }
     }
   }
 }

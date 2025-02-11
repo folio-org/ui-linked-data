@@ -1,5 +1,5 @@
 type UserValueDTO = {
-  data: string | string[] | RecordBasic | RecordBasic[];
+  data: string | string[] | RecordBasic | RecordBasic[] | Record<string, boolean>;
   id?: string;
   uri?: string;
   uuid?: string;
