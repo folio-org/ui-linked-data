@@ -21,7 +21,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
   const { layout, htmlId } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
   const buttonConfigLabel = lookupConfig?.labels?.button;
-  const noWarningField = lookupConfig?.ui?.noWarning?.fieldName;
 
   const { localValue, isModalOpen, openModal, closeModal, handleDelete, handleAssign, handleOnChangeBase } =
     useComplexLookup({
@@ -44,7 +43,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
                   id={id}
                   label={label}
                   handleDelete={handleDelete}
-                  noWarningField={noWarningField}
                   noWarningValue={meta?.isPreferred}
                 />
               ))}

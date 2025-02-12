@@ -51,11 +51,6 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         searchResults: 'ld.marcAuthority',
       },
     },
-    ui: {
-      noWarning: {
-        fieldName: 'isPreferred',
-      },
-    },
     // For displaying "Search" and "Browse" segments
     segments: {
       primary: {

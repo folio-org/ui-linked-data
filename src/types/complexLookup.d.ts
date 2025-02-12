@@ -14,12 +14,6 @@ type ComplexLookupLabels = {
   };
 };
 
-type ComplexLookupUI = {
-  noWarning?: {
-    fieldName?: string;
-  };
-};
-
 type ComplexLookupSearchBy = {
   [key in SearchSegment]: {
     label: string;
@@ -85,7 +79,6 @@ type ComplexLookupsConfigEntry = {
     };
   };
   labels: ComplexLookupLabels;
-  ui?: ComplexLookupUI;
   linkedField?: string;
   searchBy: ComplexLookupSearchBy;
   searchableIndicesMap: SearchableIndicesMap;

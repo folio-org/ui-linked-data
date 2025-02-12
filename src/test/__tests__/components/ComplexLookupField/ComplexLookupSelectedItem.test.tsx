@@ -37,9 +37,8 @@ describe('ComplexLookupSelectedItem', () => {
     expect(container.querySelector('.complex-lookup-selected-icon-warning')).not.toBeInTheDocument();
   });
 
-  it('shows warning icon when noWarningField is provided and noWarningValue is false', () => {
+  it('shows warning icon when noWarningValue is false', () => {
     const { container } = renderComponent({
-      noWarningField: 'isPreferred',
       noWarningValue: false,
     });
 
@@ -48,7 +47,6 @@ describe('ComplexLookupSelectedItem', () => {
 
   it('applies correct classes based on props', () => {
     const { getByTestId } = renderComponent({
-      noWarningField: 'isPreferred',
       noWarningValue: false,
     });
 
