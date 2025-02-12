@@ -69,7 +69,7 @@ export const processCreator = (record: RecordEntry, blockKey: string, key: strin
     const generatedValue = {
       id: [recordEntry.id],
       label: {
-        label: [recordEntry.label],
+        value: [recordEntry.label],
         isPreferred: recordEntry.isPreferred,
       },
     } as unknown as Record<string, string[] | Record<string, string[]>[]>;
