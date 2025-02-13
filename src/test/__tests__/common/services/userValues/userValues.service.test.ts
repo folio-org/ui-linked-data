@@ -121,7 +121,7 @@ describe('UserValuesService', () => {
       key: 'testKey_1',
       value: {
         id: 'testId_1',
-        data: 'test complex value 1',
+        data: ['test complex value 1'],
         uuid: 'testUuid_1',
         type: AdvancedFieldTypeEnum.complex as AdvancedFieldType,
       },

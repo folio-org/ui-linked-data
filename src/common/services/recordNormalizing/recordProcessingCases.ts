@@ -68,7 +68,10 @@ export const processCreator = (record: RecordEntry, blockKey: string, key: strin
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
     const generatedValue = {
       id: [recordEntry.id],
-      label: [recordEntry.label],
+      label: {
+        value: [recordEntry.label],
+        isPreferred: recordEntry.isPreferred,
+      },
     } as unknown as Record<string, string[] | Record<string, string[]>[]>;
 
     if (recordEntry[selector]) {
