@@ -221,5 +221,7 @@
   "ld.duplicateImportWarn": "Duplicate import warning",
   "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
   "ld.errorMakingApiRequest": "Error making API request",
-  "ld.errorValidatingAuthorityRecord": "Error validating authority record"
+  "ld.errorValidatingAuthorityRecord": "Error validating authority record",
+  "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
+  "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?"
 }
