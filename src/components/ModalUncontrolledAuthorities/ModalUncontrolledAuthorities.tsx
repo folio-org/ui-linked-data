@@ -6,15 +6,15 @@ import './ModalUncontrolledAuthorities.scss';
 type ModalUncontrolledAuthoritiesProps = {
   isOpen: boolean;
   onCancel: VoidFunction;
-  onContinue: VoidFunction;
+  onSubmit: VoidFunction;
   onClose: VoidFunction;
 };
 
 export const ModalUncontrolledAuthorities: FC<ModalUncontrolledAuthoritiesProps> = ({
   isOpen,
-  onCancel = () => {},
-  onContinue = () => {},
-  onClose = () => {},
+  onCancel,
+  onSubmit,
+  onClose,
 }) => {
   const { formatMessage } = useIntl();
 
@@ -25,7 +25,7 @@ export const ModalUncontrolledAuthorities: FC<ModalUncontrolledAuthoritiesProps>
       submitButtonLabel={formatMessage({ id: 'ld.continue' })}
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onClose={onClose}
-      onSubmit={onContinue}
+      onSubmit={onSubmit}
       onCancel={onCancel}
       className="modal-switch-to-new-record"
     >
