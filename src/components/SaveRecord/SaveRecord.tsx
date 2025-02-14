@@ -32,11 +32,15 @@ const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
   };
 
   const handleSave = () => {
+    saveRecord({ isNavigatingBack: primary });
+    onCloseModal();
+  };
+
+  const onCloseModal = () => {
     if (!hasShownAuthorityWarning) {
       setHasShownAuthorityWarning(true);
     }
 
-    saveRecord({ isNavigatingBack: primary });
     closeModal();
   };
 
@@ -52,9 +56,9 @@ const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
       </Button>
       <ModalUncontrolledAuthorities
         isOpen={isModalOpen}
-        onCancel={closeModal}
+        onCancel={onCloseModal}
         onSubmit={handleSave}
-        onClose={closeModal}
+        onClose={onCloseModal}
       />
     </>
   );
