@@ -5,9 +5,10 @@ import { Button, ButtonType } from '@components/Button';
 import { useRecordStatus } from '@common/hooks/useRecordStatus';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ModalUncontrolledAuthorities } from '@components/ModalUncontrolledAuthorities';
-import { useStatusState, useUIState } from '@src/store';
+import { useInputsState, useStatusState, useUIState } from '@src/store';
 import { useModalControls } from '@common/hooks/useModalControls';
 import { useRecordControls } from '@common/hooks/useRecordControls';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SaveRecordProps = {
   primary?: boolean;
@@ -16,15 +17,22 @@ type SaveRecordProps = {
 const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
   const { isRecordEdited } = useStatusState();
   const { hasShownAuthorityWarning, setHasShownAuthorityWarning } = useUIState();
+  const { userValues, selectedRecordBlocks } = useInputsState();
   const { hasBeenSaved } = useRecordStatus();
   const [searchParams] = useSearchParams();
   const { saveRecord } = useRecordControls();
   const { isModalOpen, openModal, closeModal } = useModalControls();
 
-  const handleButtonClick = () => {
-    const isVisibleModal = true;
+  const isWorkEditPage = selectedRecordBlocks?.block === TYPE_URIS.WORK;
+  const hasSelectedUncontrolledAuthority = Object.values(userValues).some((value: UserValue) => {
+    return value.contents.some(content => {
+      return content?.meta?.isPreferred !== undefined && !content?.meta?.isPreferred;
+    });
+  });
+  const shouldDisplayWarningMessage = isWorkEditPage && hasSelectedUncontrolledAuthority && !hasShownAuthorityWarning;
 
-    if (isVisibleModal && !hasShownAuthorityWarning) {
+  const handleButtonClick = () => {
+    if (shouldDisplayWarningMessage) {
       openModal();
     } else {
       handleSave();
@@ -37,7 +45,7 @@ const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
   };
 
   const onCloseModal = () => {
-    if (!hasShownAuthorityWarning) {
+    if (shouldDisplayWarningMessage) {
       setHasShownAuthorityWarning(true);
     }
 
