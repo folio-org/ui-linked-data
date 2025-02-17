@@ -1,35 +1,17 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useSearchParams } from 'react-router-dom';
 import { Button, ButtonType } from '@components/Button';
-import { useRecordStatus } from '@common/hooks/useRecordStatus';
-import { QueryParams } from '@common/constants/routes.constants';
 import { ModalUncontrolledAuthorities } from '@components/ModalUncontrolledAuthorities';
-import { useInputsState, useStatusState, useUIState } from '@src/store';
-import { useModalControls } from '@common/hooks/useModalControls';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { useSaveRecordWarning } from '@common/hooks/useSaveRecordWarning';
+import { useSaveRecord } from '@common/hooks/useSaveRecord';
 
 type SaveRecordProps = {
   primary?: boolean;
 };
 
 const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
-  const { isRecordEdited } = useStatusState();
-  const { hasShownAuthorityWarning, setHasShownAuthorityWarning } = useUIState();
-  const { userValues, selectedRecordBlocks } = useInputsState();
-  const { hasBeenSaved } = useRecordStatus();
-  const [searchParams] = useSearchParams();
-  const { saveRecord } = useRecordControls();
-  const { isModalOpen, openModal, closeModal } = useModalControls();
-
-  const isWorkEditPage = selectedRecordBlocks?.block === TYPE_URIS.WORK;
-  const hasSelectedUncontrolledAuthority = Object.values(userValues).some((value: UserValue) => {
-    return value.contents.some(content => {
-      return content?.meta?.isPreferred !== undefined && !content?.meta?.isPreferred;
-    });
-  });
-  const shouldDisplayWarningMessage = isWorkEditPage && hasSelectedUncontrolledAuthority && !hasShownAuthorityWarning;
+  const { shouldDisplayWarningMessage, setHasShownAuthorityWarning } = useSaveRecordWarning();
+  const { isButtonDisabled, isModalOpen, openModal, closeModal, saveRecord } = useSaveRecord(primary);
 
   const handleButtonClick = () => {
     if (shouldDisplayWarningMessage) {
@@ -40,15 +22,14 @@ const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
   };
 
   const handleSave = () => {
-    saveRecord({ isNavigatingBack: primary });
-    onCloseModal();
+    saveRecord();
+    handleCloseModal();
   };
 
-  const onCloseModal = () => {
+  const handleCloseModal = () => {
     if (shouldDisplayWarningMessage) {
       setHasShownAuthorityWarning(true);
     }
-
     closeModal();
   };
 
@@ -58,15 +39,15 @@ const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
         data-testid={`save-record${primary ? '-and-close' : '-and-keep-editing'}`}
         type={primary ? ButtonType.Primary : ButtonType.Highlighted}
         onClick={handleButtonClick}
-        disabled={!searchParams.get(QueryParams.CloneOf) && !hasBeenSaved && !isRecordEdited}
+        disabled={isButtonDisabled}
       >
-        <FormattedMessage id={!primary ? 'ld.saveAndKeepEditing' : 'ld.saveAndClose'} />
+        <FormattedMessage id={primary ? 'ld.saveAndClose' : 'ld.saveAndKeepEditing'} />
       </Button>
       <ModalUncontrolledAuthorities
         isOpen={isModalOpen}
-        onCancel={onCloseModal}
+        onCancel={handleCloseModal}
         onSubmit={handleSave}
-        onClose={onCloseModal}
+        onClose={handleCloseModal}
       />
     </>
   );
