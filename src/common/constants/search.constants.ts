@@ -104,7 +104,7 @@ export const SELECT_OPERATORS = Object.values(AdvancedSearchOperators);
 
 export const SELECT_QUALIFIERS = Object.values(AdvancedSearchQualifiers);
 
-export const DEFAULT_SEARCH_BY = SearchIdentifiers.LCCN;
+export const DEFAULT_SEARCH_BY = SearchIdentifiers.TITLE;
 
 export const DEFAULT_ADVANCED_SEARCH_ROW_VALUE: AdvancedSearchSchemaRow = {
   operator: AdvancedSearchOperators.AND,
