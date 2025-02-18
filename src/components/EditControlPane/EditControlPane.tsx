@@ -55,6 +55,7 @@ export const EditControlPane = () => {
           labelId: 'ld.viewLinkedData',
           icon: <EyeOpen16 />,
           isDisabled: IS_DISABLED_FOR_ALPHA,
+          hidden: true,
         },
         {
           id: 'viewMarc',
@@ -70,6 +71,7 @@ export const EditControlPane = () => {
           labelId: 'ld.viewInInventory',
           icon: <ExternalLink16 />,
           isDisabled: IS_DISABLED_FOR_ALPHA,
+          hidden: true,
         },
       ],
     },

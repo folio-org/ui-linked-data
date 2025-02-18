@@ -1,8 +1,8 @@
 export enum SearchIdentifiers {
-  LCCN = 'lccn',
-  ISBN = 'isbn',
   TITLE = 'title',
   CONTRIBUTOR = 'contributor',
+  ISBN = 'isbn',
+  LCCN = 'lccn',
 }
 
 export enum SearchLimiterNames {
