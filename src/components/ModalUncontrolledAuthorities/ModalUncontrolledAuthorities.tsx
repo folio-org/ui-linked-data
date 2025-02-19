@@ -27,7 +27,7 @@ export const ModalUncontrolledAuthorities: FC<ModalUncontrolledAuthoritiesProps>
       onClose={onClose}
       onSubmit={onSubmit}
       onCancel={onCancel}
-      className="modal-switch-to-new-record"
+      className="modal-uncontrolled-authorities-warning"
     >
       <div className="uncontrolled-authorities-contents" data-testid="modal-uncontrolled-authorities-warning">
         <FormattedMessage id="ld.modal.uncontrolledAuthoritiesWarning.body" />
