@@ -7,5 +7,9 @@ export const useModalControls = () => {
     !isModalOpen && setIsModalOpen(true);
   };
 
-  return { isModalOpen, setIsModalOpen, openModal };
+  const closeModal = () => {
+    isModalOpen && setIsModalOpen(false);
+  };
+
+  return { isModalOpen, setIsModalOpen, openModal, closeModal };
 };

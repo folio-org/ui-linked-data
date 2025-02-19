@@ -1,27 +1,55 @@
-import { memo } from 'react';
+import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useSearchParams } from 'react-router-dom';
-import { useRecordControls } from '@common/hooks/useRecordControls';
 import { Button, ButtonType } from '@components/Button';
-import { useRecordStatus } from '@common/hooks/useRecordStatus';
-import { QueryParams } from '@common/constants/routes.constants';
-import { useStatusState } from '@src/store';
+import { ModalUncontrolledAuthorities } from '@components/ModalUncontrolledAuthorities';
+import { useSaveRecordWarning } from '@common/hooks/useSaveRecordWarning';
+import { useSaveRecord } from '@common/hooks/useSaveRecord';
 
-const SaveRecord = ({ primary = false }) => {
-  const { isRecordEdited } = useStatusState();
-  const { saveRecord } = useRecordControls();
-  const { hasBeenSaved } = useRecordStatus();
-  const [searchParams] = useSearchParams();
+type SaveRecordProps = {
+  primary?: boolean;
+};
+
+const SaveRecord: FC<SaveRecordProps> = ({ primary = false }) => {
+  const { shouldDisplayWarningMessage, setHasShownAuthorityWarning } = useSaveRecordWarning();
+  const { isButtonDisabled, isModalOpen, openModal, closeModal, saveRecord } = useSaveRecord(primary);
+
+  const handleButtonClick = () => {
+    if (shouldDisplayWarningMessage) {
+      openModal();
+    } else {
+      handleSave();
+    }
+  };
+
+  const handleSave = () => {
+    saveRecord();
+    handleCloseModal();
+  };
+
+  const handleCloseModal = () => {
+    if (shouldDisplayWarningMessage) {
+      setHasShownAuthorityWarning(true);
+    }
+    closeModal();
+  };
 
   return (
-    <Button
-      data-testid={`save-record${primary ? '-and-close' : '-and-keep-editing'}`}
-      type={primary ? ButtonType.Primary : ButtonType.Highlighted}
-      onClick={() => saveRecord({ isNavigatingBack: primary })}
-      disabled={!searchParams.get(QueryParams.CloneOf) && !hasBeenSaved && !isRecordEdited}
-    >
-      <FormattedMessage id={!primary ? 'ld.saveAndKeepEditing' : 'ld.saveAndClose'} />
-    </Button>
+    <>
+      <Button
+        data-testid={`save-record${primary ? '-and-close' : '-and-keep-editing'}`}
+        type={primary ? ButtonType.Primary : ButtonType.Highlighted}
+        onClick={handleButtonClick}
+        disabled={isButtonDisabled}
+      >
+        <FormattedMessage id={primary ? 'ld.saveAndClose' : 'ld.saveAndKeepEditing'} />
+      </Button>
+      <ModalUncontrolledAuthorities
+        isOpen={isModalOpen}
+        onCancel={handleCloseModal}
+        onSubmit={handleSave}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 };
 
