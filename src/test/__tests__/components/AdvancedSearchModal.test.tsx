@@ -67,7 +67,7 @@ describe('AdvancedSearchModal', () => {
 
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
-    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('(lccn all "testValue" not title all "testValue*")');
+    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('(title all "testValue" not title all "testValue*")');
     expect(setSearchParams).toHaveBeenCalledWith(searchParams);
   });
 });
