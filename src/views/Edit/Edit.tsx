@@ -26,7 +26,7 @@ export const Edit = () => {
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
-  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState();
   const queryParams = new URLSearchParams(window.location.search);
   const cloneOfParam = queryParams.get(QueryParams.CloneOf);
   const typeParam = queryParams.get(QueryParams.Type);
@@ -45,8 +45,13 @@ export const Edit = () => {
       resetRecord();
       resetUserValues();
       resetSelectedEntries();
+      resetHasShownAuthorityWarning();
     };
   }, []);
+
+  useEffect(() => {
+    resetHasShownAuthorityWarning();
+  }, [resourceId]);
 
   useEffect(() => {
     async function loadRecord() {

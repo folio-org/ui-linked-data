@@ -236,6 +236,7 @@ describe('recordProcessingCases', () => {
               id: 'id_2',
               type: 'dropdownOption_2',
               label: 'testValue_2',
+              isPreferred: true,
             },
             {
               id: 'id_3',
@@ -252,7 +253,10 @@ describe('recordProcessingCases', () => {
             {
               dropdownOption_1: {
                 id: ['id_1'],
-                label: ['testValue_1'],
+                label: {
+                  value: ['testValue_1'],
+                  isPreferred: undefined,
+                },
                 [creatorNonBFUri]: [
                   {
                     [testLabel]: [''],
@@ -268,13 +272,19 @@ describe('recordProcessingCases', () => {
             {
               dropdownOption_2: {
                 id: ['id_2'],
-                label: ['testValue_2'],
+                label: {
+                  value: ['testValue_2'],
+                  isPreferred: true,
+                },
               },
             },
             {
               dropdownOption_3: {
                 id: ['id_3'],
-                label: ['testValue_3'],
+                label: {
+                  value: ['testValue_3'],
+                  isPreferred: undefined,
+                },
                 [creatorNonBFUri]: [
                   {
                     [testLabel]: [''],

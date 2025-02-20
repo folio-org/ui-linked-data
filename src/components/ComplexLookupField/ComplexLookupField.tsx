@@ -1,15 +1,13 @@
 import { FC } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
-import classNames from 'classnames';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+import { FormattedMessage } from 'react-intl';
 import { VALUE_DIVIDER } from '@common/constants/complexLookup.constants';
 import { SchemaControlType } from '@common/constants/uiControls.constants';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
 import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
 import { Input } from '@components/Input';
-import CloseIcon from '@src/assets/times-16.svg?react';
 import { ModalComplexLookup } from './ModalComplexLookup';
+import { ComplexLookupSelectedItem } from './ComplexLookupSelectedItem';
 import './ComplexLookupField.scss';
 
 interface Props {
@@ -20,7 +18,6 @@ interface Props {
 }
 
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
-  const { formatMessage } = useIntl();
   const { layout, htmlId } = entry;
   const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
   const buttonConfigLabel = lookupConfig?.labels?.button;
@@ -40,27 +37,14 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
         <div id={id} className="complex-lookup">
           {!!localValue.length && (
             <div className="complex-lookup-value" data-testid="complex-lookup-value">
-              {localValue?.map(({ id, label }) => (
-                <div
+              {localValue?.map(({ id, label, meta }) => (
+                <ComplexLookupSelectedItem
                   key={id}
-                  className={classNames([
-                    'complex-lookup-selected',
-                    IS_EMBEDDED_MODE && 'complex-lookup-selected-embedded',
-                  ])}
-                  data-testid="complex-lookup-selected"
-                >
-                  <span className="complex-lookup-selected-label" data-testid="complex-lookup-selected-label">
-                    {label}
-                  </span>
-                  <button
-                    onClick={() => handleDelete(id)}
-                    className="complex-lookup-selected-delete"
-                    data-testid="complex-lookup-selected-delete"
-                    aria-label={formatMessage({ id: 'ld.aria.edit.removeComplexLookupFieldValue' })}
-                  >
-                    <CloseIcon />
-                  </button>
-                </div>
+                  id={id}
+                  label={label}
+                  handleDelete={handleDelete}
+                  noWarningValue={meta?.isPreferred}
+                />
               ))}
             </div>
           )}

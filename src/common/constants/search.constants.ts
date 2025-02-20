@@ -1,8 +1,8 @@
 export enum SearchIdentifiers {
-  LCCN = 'lccn',
-  ISBN = 'isbn',
   TITLE = 'title',
   CONTRIBUTOR = 'contributor',
+  ISBN = 'isbn',
+  LCCN = 'lccn',
 }
 
 export enum SearchLimiterNames {
@@ -104,12 +104,12 @@ export const SELECT_OPERATORS = Object.values(AdvancedSearchOperators);
 
 export const SELECT_QUALIFIERS = Object.values(AdvancedSearchQualifiers);
 
-export const DEFAULT_SEARCH_BY = SearchIdentifiers.LCCN;
+export const DEFAULT_SEARCH_BY = SearchIdentifiers.TITLE;
 
 export const DEFAULT_ADVANCED_SEARCH_ROW_VALUE: AdvancedSearchSchemaRow = {
   operator: AdvancedSearchOperators.AND,
   qualifier: AdvancedSearchQualifiers.containsAll,
-  index: SearchIdentifiers.LCCN,
+  index: SearchIdentifiers.TITLE,
 };
 
 export const DEFAULT_ADVANCED_SEARCH_QUERY: AdvancedSearchSchema = new Array(6)

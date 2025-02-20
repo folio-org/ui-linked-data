@@ -12,7 +12,8 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'collapsibleEntries', UIEntries> &
   SliceState<'currentlyEditedEntityBfid', UIEntries> &
   SliceState<'fullDisplayComponentType', FullDisplayType> &
-  SliceState<'currentlyPreviewedEntityBfid', UIEntries>;
+  SliceState<'currentlyPreviewedEntityBfid', UIEntries> &
+  SliceState<'hasShownAuthorityWarning', boolean>;
 
 const STORE_NAME = 'UI';
 
@@ -43,6 +44,9 @@ const sliceConfigs: SliceConfigs = {
   },
   currentlyPreviewedEntityBfid: {
     initialValue: new Set(),
+  },
+  hasShownAuthorityWarning: {
+    initialValue: false,
   },
 };
 
