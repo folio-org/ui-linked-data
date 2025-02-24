@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
-import { generateSearchParamsState } from '@common/helpers/search.helper';
+import { generateSearchParamsState, normalizeQuery } from '@common/helpers/search.helper';
 import { usePagination } from '@common/hooks/usePagination';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
@@ -72,15 +72,16 @@ export const useSearch = () => {
   }, []);
 
   const submitSearch = useCallback(() => {
+    const normalizedQuery = normalizeQuery(query) ?? '';
     clearPagination();
     fullDisplayComponentType !== FullDisplayType.Comparison && resetPreviewContent();
-    updateFacetsBySegments(query, searchBy, facets);
+    updateFacetsBySegments(normalizedQuery, searchBy, facets);
 
     if (hasSearchParams) {
-      setSearchParams(generateSearchParamsState(query, searchBy) as unknown as URLSearchParams);
+      setSearchParams(generateSearchParamsState(normalizedQuery, searchBy) as unknown as URLSearchParams);
     }
 
-    fetchData({ query, searchBy, offset: 0 });
+    fetchData({ query: normalizedQuery, searchBy, offset: 0 });
 
     setForceRefreshSearch(true);
   }, [fetchData, hasSearchParams, query, searchBy, selectedNavigationSegment, facets]);
