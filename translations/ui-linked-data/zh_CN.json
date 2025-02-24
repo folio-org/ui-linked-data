@@ -211,5 +211,5 @@
     "ld.aria.complexLookup.marcPreview.close": "Close lookup MARC preview section",
     "ld.aria.edit.removeComplexLookupFieldValue": "Remove complex lookup field value",
     "ld.errorMakingApiRequest": "Error making API request",
-    "ld.errorValidatingAuthorityRecord": "Error validating authority record"
+    "ld.errorAssigningAuthority": "Error assigning authority"
 }
