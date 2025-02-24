@@ -1,9 +1,9 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo, useState, type ReactElement } from 'react';
 import { SearchContext } from '@src/contexts';
 
 type SearchProviderProps = {
   value: SearchParams & { defaultNavigationSegment?: string; hasMultilineSearchInput?: boolean };
-  children: ReactElement;
+  children: ReactElement<any>;
 };
 
 export const SearchProvider: FC<SearchProviderProps> = ({ value, children }) => {

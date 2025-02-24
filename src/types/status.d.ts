@@ -3,5 +3,5 @@ type StatusType = keyof typeof import('@common/constants/status.constants').Stat
 type StatusEntry = {
   id?: string;
   type: StatusType;
-  message: string | ReactElement;
+  message: string | ReactElement<any>;
 };

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC, memo, ReactElement, ReactNode } from 'react';
+import { FC, memo, type ReactElement, type ReactNode } from 'react';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IDrawComponent } from '@components/EditSection';
 import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
@@ -16,7 +16,7 @@ export type IFields = {
   groupClassName?: string;
   disabledFields?: any;
   scrollToEnabled?: boolean;
-  drawComponent?: ({ schema, entry, level, disabledFields }: IDrawComponent) => ReactElement | null;
+  drawComponent?: ({ schema, entry, level, disabledFields }: IDrawComponent) => ReactElement<any> | null;
   groupingDisabled?: boolean;
 };
 

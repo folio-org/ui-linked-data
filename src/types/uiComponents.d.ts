@@ -10,10 +10,10 @@ type DropdownItem = {
   type: DropdownItemType;
   isDisabled?: boolean;
   labelId?: string;
-  icon?: ReactElement;
+  icon?: ReactElement<any>;
   action?: VoidFunction;
   hidden?: boolean;
-  renderComponent?: (key: string | number) => ReactElement;
+  renderComponent?: (key: string | number) => ReactElement<any>;
 };
 
 type DropdownGroup = {
