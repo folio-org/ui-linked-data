@@ -3,7 +3,6 @@ import { getByIdentifier } from '@common/api/search.api';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { normalizeQuery } from '@common/helpers/search.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useSearchState, useStatusState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
@@ -121,8 +120,7 @@ export const useFetchSearchData = () => {
 
       data && resetData();
 
-      const updatedQuery = normalizeQuery(query);
-      if (!updatedQuery) return;
+      if (!query) return;
 
       setIsLoading(true);
 
@@ -134,7 +132,7 @@ export const useFetchSearchData = () => {
         });
         const generatedQuery = generateQuery({
           searchBy,
-          query: updatedQuery,
+          query,
           selectedSegment: selectedNavigationSegment,
           searchableIndicesMap,
           baseQuerySelector,

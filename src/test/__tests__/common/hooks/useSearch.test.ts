@@ -67,9 +67,9 @@ describe('useSearch hook', () => {
       {
         store: useSearchStore,
         state: {
-          searchBy: '',
+          searchBy: 'title',
           setSearchBy,
-          query: '',
+          query: 'lord of /the "rings',
           setQuery,
           facets: {},
           setFacets,
@@ -111,7 +111,11 @@ describe('useSearch hook', () => {
 
     result.current.submitSearch();
 
-    expect(fetchData).toHaveBeenCalled();
+    expect(fetchData).toHaveBeenCalledWith({
+      searchBy: 'title',
+      query: 'lord of \\/the \\"rings',
+      offset: 0,
+    });
     expect(setCurrentPageNumber).toHaveBeenCalledWith(0);
     expect(resetPreviewContent).toHaveBeenCalled();
     expect(setForceRefreshSearch).toHaveBeenCalledWith(true);
