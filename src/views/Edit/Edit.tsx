@@ -33,6 +33,7 @@ export const Edit = () => {
   const refParam = queryParams.get(QueryParams.Ref);
 
   const prevResourceId = useRef<string | null>(null);
+  const prevCloneOf = useRef<string | null>(null);
 
   useResetRecordStatus();
 
@@ -59,7 +60,10 @@ export const Edit = () => {
 
       const fetchableId = resourceId ?? cloneOfParam;
 
-      if (fetchableId && prevResourceId.current === fetchableId) {
+      if (
+        (!cloneOfParam && fetchableId && prevResourceId.current === fetchableId) ||
+        (cloneOfParam && prevCloneOf.current === cloneOfParam)
+      ) {
         return;
       }
 
@@ -67,6 +71,10 @@ export const Edit = () => {
 
       try {
         if (fetchableId) {
+          if (cloneOfParam) {
+            prevCloneOf.current = cloneOfParam;
+          }
+
           prevResourceId.current = fetchableId;
           await fetchRecord(fetchableId);
 
