@@ -141,7 +141,7 @@ export const useComplexLookup = ({
       }
     }
 
-    const { validAssignment } = await validateMarcRecord(marcData);
+    const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(marcData);
 
     if (validAssignment) {
       assignMarcRecord({ id, title, srsId, linkedFieldValue });
@@ -150,9 +150,12 @@ export const useComplexLookup = ({
       closeModal();
     } else {
       addFailedEntryId(id);
-
+      let messageKey = 'ld.errorAssigningAuthority';
+      if (invalidAssignmentReason) {
+        messageKey += `.${invalidAssignmentReason.toLowerCase()}`;
+      }
       addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorValidatingAuthorityRecord'),
+        UserNotificationFactory.createMessage(StatusType.error, messageKey),
       );
     }
   };

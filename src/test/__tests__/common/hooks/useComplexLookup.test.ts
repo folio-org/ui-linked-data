@@ -2,6 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { ChangeEvent } from 'react';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
 import { useMarcData } from '@common/hooks/useMarcData';
+import { useComplexLookupValidation } from '@common/hooks/useComplexLookupValidation';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import {
@@ -16,15 +17,20 @@ import {
 } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useInputsStore } from '@src/store';
+import { useStatusStore } from '@src/store';
 import { useApi } from '@common/hooks/useApi';
 
 jest.mock('@common/helpers/complexLookup.helper');
 jest.mock('@common/hooks/useMarcData');
 jest.mock('@common/hooks/useApi');
+jest.mock('@common/hooks/useComplexLookupValidation');
 
 describe('useComplexLookup', () => {
   const mockSelectedEntries = [] as string[];
+  const mockAddFailedEntryId = jest.fn();
+  const mockAddStatusMessagesItem = jest.fn();
   const mockSetSelectedEntries = jest.fn();
+  const mockClearFailedEntryIds = jest.fn();
   const mockClearhMarcData = jest.fn();
   const mockMakeRequest = jest.fn();
 
@@ -77,6 +83,12 @@ describe('useComplexLookup', () => {
           setSelectedEntries: mockSetSelectedEntries,
         },
       },
+      {
+        store: useStatusStore,
+        state: {
+          addStatusMessagesItem: mockAddStatusMessagesItem
+        }
+      }
     ]);
 
     (useMarcData as jest.Mock).mockReturnValue({
@@ -86,6 +98,11 @@ describe('useComplexLookup', () => {
 
     (useApi as jest.Mock).mockReturnValue({
       makeRequest: mockMakeRequest,
+    });
+
+    (useComplexLookupValidation as jest.Mock).mockReturnValue({
+      addFailedEntryId: mockAddFailedEntryId,
+      clearFailedEntryIds: mockClearFailedEntryIds,
     });
 
     result = getRenderedHook()?.result;
@@ -181,6 +198,7 @@ describe('useComplexLookup', () => {
         newValue: 'newLinkedFieldId',
       });
       expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId']);
+      expect(mockClearFailedEntryIds).toHaveBeenCalled();
     });
 
     test('updates state correctly and does not call "setSelectedEntries"', async () => {
@@ -203,6 +221,29 @@ describe('useComplexLookup', () => {
       expect(updateLinkedFieldValue).not.toHaveBeenCalled();
       expect(getUpdatedSelectedEntries).not.toHaveBeenCalled();
       expect(mockSetSelectedEntries).not.toHaveBeenCalled();
+      expect(mockClearFailedEntryIds).toHaveBeenCalled();
+    });
+
+    test('updates state correctly for invalid authority assignment', async () => {
+      (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
+      mockMakeRequest.mockResolvedValue({ validAssignment: false, invalidAssignmentReason: 'NOT_VALID_FOR_TARGET' });
+
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        result.current.handleAssign(mockAssignRecord);
+      });
+
+      expect(mockOnChange).not.toHaveBeenCalled();
+      expect(mockAddFailedEntryId).toHaveBeenCalledWith('newId');
+      expect(mockAddStatusMessagesItem).toHaveBeenCalledWith(
+        expect.objectContaining(
+          {
+            message: "ld.errorAssigningAuthority.not_valid_for_target", 
+            type: "error"
+          }
+        )
+      );
     });
   });
 

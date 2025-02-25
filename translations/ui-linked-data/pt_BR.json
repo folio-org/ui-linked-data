@@ -211,5 +211,5 @@
     "ld.aria.complexLookup.marcPreview.close": "Fechar a seção de pré-visualização do MARC",
     "ld.aria.edit.removeComplexLookupFieldValue": "Remover valor de campo de pesquisa complexo",
     "ld.errorMakingApiRequest": "Erro ao fazer requisição de API",
-    "ld.errorValidatingAuthorityRecord": "Erro ao validar registro de autoridade"
+    "ld.errorAssigningAuthority": "Erro ao validar registro de autoridade"
 }
