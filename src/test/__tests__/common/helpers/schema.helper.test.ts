@@ -358,28 +358,28 @@ describe('schema.helper', () => {
   });
 
   describe('checkEmptyChildren', () => {
-    const mockBase = new Map();
+    const mockSchema = new Map();
 
     it('returns false for UI control types', () => {
       const entry = {
         type: AdvancedFieldType.literal,
-        children: ['child1'],
+        children: ['child_1'],
       } as SchemaEntry;
 
-      expect(checkEmptyChildren(mockBase, entry)).toBe(false);
+      expect(checkEmptyChildren(mockSchema, entry)).toBe(false);
     });
 
     it('returns true for non-UI control with non-existent children', () => {
       const entry = {
         type: AdvancedFieldType.block,
-        children: ['child1', 'child2'],
+        children: ['child_1', 'child_2'],
       } as SchemaEntry;
 
-      expect(checkEmptyChildren(mockBase, entry)).toBe(true);
+      expect(checkEmptyChildren(mockSchema, entry)).toBe(true);
     });
 
     it('returns false for undefined entry', () => {
-      expect(checkEmptyChildren(mockBase)).toBe(false);
+      expect(checkEmptyChildren(mockSchema)).toBe(false);
     });
   });
 });

@@ -221,7 +221,7 @@ export const generateTwinChildrenKey = (entry: SchemaEntry) => {
   return `${uri}${suffix}`;
 };
 
-export const checkEmptyChildren = (schema: Schema, entry?: SchemaEntry): boolean => {
+export const checkEmptyChildren = (schema: Schema, entry?: SchemaEntry) => {
   if (!entry) return false;
 
   const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldType);
