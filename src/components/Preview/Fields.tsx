@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getPreviewFieldsConditions } from '@common/helpers/record.helper';
-import { getParentEntryUuid } from '@common/helpers/schema.helper';
+import { checkEmptyChildren, getParentEntryUuid } from '@common/helpers/schema.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
@@ -79,7 +79,7 @@ export const Fields = ({
   const entry = base.get(uuid);
   const isOnBranchWithUserValue = paths.includes(uuid);
   const isEntity = level === ENTITY_LEVEL;
-  const hasEmptyChildren = entry?.children?.every(id => !schema.get(id));
+  const hasEmptyChildren = checkEmptyChildren(base, entry);
 
   if (!entry || hasEmptyChildren) return null;
 
