@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo, useEffect } from 'react';
+import { FC, ReactNode, memo, useEffect, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { AriaModalKind, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 
 interface Props {
   isOpen: boolean;
-  title: string | ReactElement;
+  title: string | ReactElement<any>;
   className?: string;
   classNameHeader?: string;
   submitButtonDisabled?: boolean;

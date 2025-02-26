@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, type ReactElement } from 'react';
 import classNames from 'classnames';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
@@ -10,11 +10,11 @@ import { useIntl } from 'react-intl';
 import './SearchControlPane.scss';
 
 type SearchControlPaneProps = {
-  children?: ReactElement;
-  label: string | ReactElement;
+  children?: ReactElement<any>;
+  label: string | ReactElement<any>;
   segmentsConfig?: PrimarySegmentsConfig;
-  renderSubLabel?: (count: number) => ReactElement;
-  renderCloseButton?: () => ReactElement;
+  renderSubLabel?: (count: number) => ReactElement<any>;
+  renderCloseButton?: () => ReactElement<any>;
 };
 
 export const SearchControlPane: FC<SearchControlPaneProps> = ({

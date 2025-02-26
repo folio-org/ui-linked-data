@@ -169,7 +169,7 @@ export const Dropdown: FC<DropdownProps> = ({
                         <button
                           type="button"
                           key={id}
-                          ref={elem => (optionsRef.current[index] = elem)}
+                          ref={elem => {optionsRef.current[index] = elem}}
                           role="menuitem"
                           disabled={isDisabled}
                           aria-disabled={isDisabled}

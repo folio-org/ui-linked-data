@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useState, type JSX } from 'react';
 import classNames from 'classnames';
 import CaretDown from '@src/assets/caret-down.svg?react';
 import { Button, ButtonType } from '@components/Button';

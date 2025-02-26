@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, type ReactElement } from 'react';
 import { ServicesContext } from '@src/contexts';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { UserValuesService } from '@common/services/userValues';
@@ -12,7 +12,7 @@ import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPr
 import { RecordGenerator, SchemaTraverser } from '@common/services/record';
 
 type ServicesProviderProps = {
-  children: ReactElement;
+  children: ReactElement<any>;
 };
 
 export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
