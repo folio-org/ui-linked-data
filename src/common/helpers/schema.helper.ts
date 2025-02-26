@@ -1,4 +1,4 @@
-import { AdvancedFieldType, SchemaControlType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType, SchemaControlType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
 import {
   BFLITE_LABELS_MAP,
   BFLITE_URIS,
@@ -219,4 +219,13 @@ export const generateTwinChildrenKey = (entry: SchemaEntry) => {
   const suffix = valueDataType?.dataTypeURI ? `${TWIN_CHILDREN_KEY_DELIMITER}${valueDataType?.dataTypeURI}` : '';
 
   return `${uri}${suffix}`;
+};
+
+export const checkEmptyChildren = (schema: Schema, entry?: SchemaEntry): boolean => {
+  if (!entry) return false;
+
+  const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldType);
+  if (isUIControl) return false;
+
+  return entry.children?.every(id => !schema.get(id)) ?? false;
 };
