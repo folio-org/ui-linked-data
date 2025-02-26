@@ -222,9 +222,9 @@
   "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
   "ld.errorMakingApiRequest": "Error making API request",
   "ld.errorAssigningAuthority": "Error assigning authority",
-  "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type that matches the authority field being edited, (e.g. select an LCNAF authority for the Creator field or an LCSH authority for the Subject field).",
-  "ld.errorAssigningAuthority.no_lccn": "Only authorities sourced from Library of Congress can be assigned to a bibliographic resource. This restriction is temporary until the Linked Data Editor supports additional source types.",
-  "ld.errorAssigningAuthority.unsupported_marc": "The selected authority has not been mapped to Linked Data and cannot be assigned to the resource at this time. This restriction is temporary, until mapping of MARC Authority tags are completed.",
+  "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type matching the edited authority field (e.g. LCNAF authority for the Creator field)",
+  "ld.errorAssigningAuthority.no_lccn": "Only Library of Congress authorities can be assigned for now. This is temporary until additional source types are supported.",
+  "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
   "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
   "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?"
 }
