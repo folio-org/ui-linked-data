@@ -82,4 +82,20 @@ describe('Edit', () => {
     expect(fetchRecord).not.toHaveBeenCalled();
     expect(clearRecordState).toHaveBeenCalled();
   });
+
+  test('calls fetchRecord with correct parameters when cloneOfParam search param is provided', async () => {
+    const cloneOfParam = 'testCloneOfParam';
+    Object.defineProperty(window, 'location', {
+      value: {
+        search: `?cloneOf=${cloneOfParam}`,
+        pathname: `/resources/create?cloneOf=${cloneOfParam}`,
+      },
+      writable: true,
+    });
+    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
+
+    await renderComponent(monograph as unknown as ProfileEntry);
+
+    expect(fetchRecord).toHaveBeenCalledWith(cloneOfParam);
+  });
 });
