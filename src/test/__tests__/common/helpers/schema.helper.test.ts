@@ -2,7 +2,7 @@ import * as SchemaHelper from '@common/helpers/schema.helper';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { generateTwinChildrenKey } from '@common/helpers/schema.helper';
+import { checkEmptyChildren, generateTwinChildrenKey } from '@common/helpers/schema.helper';
 
 describe('schema.helper', () => {
   const {
@@ -354,6 +354,32 @@ describe('schema.helper', () => {
       const result = generateTwinChildrenKey(entry);
 
       expect(result).toBe('test:uri');
+    });
+  });
+
+  describe('checkEmptyChildren', () => {
+    const mockSchema = new Map();
+
+    it('returns false for UI control types', () => {
+      const entry = {
+        type: AdvancedFieldType.literal,
+        children: ['child_1'],
+      } as SchemaEntry;
+
+      expect(checkEmptyChildren(mockSchema, entry)).toBe(false);
+    });
+
+    it('returns true for non-UI control with non-existent children', () => {
+      const entry = {
+        type: AdvancedFieldType.block,
+        children: ['child_1', 'child_2'],
+      } as SchemaEntry;
+
+      expect(checkEmptyChildren(mockSchema, entry)).toBe(true);
+    });
+
+    it('returns false for undefined entry', () => {
+      expect(checkEmptyChildren(mockSchema)).toBe(false);
     });
   });
 });
