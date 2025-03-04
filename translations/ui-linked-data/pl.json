@@ -211,5 +211,20 @@
     "ld.aria.complexLookup.marcPreview.close": "Close lookup MARC preview section",
     "ld.aria.edit.removeComplexLookupFieldValue": "Remove complex lookup field value",
     "ld.errorMakingApiRequest": "Error making API request",
-    "ld.errorAssigningAuthority": "Error assigning authority"
+    "ld.compareResources": "Porównaj zasoby",
+    "ld.selectedResources": "Wybrane zasoby",
+    "ld.nResourcesSelected": "{n} wybrane zasoby",
+    "ld.clearSelections": "Wyczyść zaznaczenia",
+    "ld.chooseTwoResourcesCompare": "Wybierz dwa lub więcej zasobów do porównania",
+    "ld.chooseOneResourceCompare": "Wybierz inny zasób do porównania",
+    "ld.aria.comparison.close": "Close comparison section",
+    "ld.aria.comparison.removeEntry": "Remove comparison entry",
+    "ld.aria.searchPane.close": "Zamknij panel wyszukiwania",
+    "ld.aria.searchPane.open": "Otwórz panel wyszukiwania",
+    "ld.modal.uncontrolledAuthoritiesWarning.title": "Ostrzeżenie o niektontrolowanych hasłach",
+    "ld.modal.uncontrolledAuthoritiesWarning.body": "Ten opis obejmuje jeden lub więcej niekontrolowanych haseł.\nCzy chcesz zapisać zmiany?",
+    "ld.errorAssigningAuthority": "Błąd przypisywania hasła",
+    "ld.errorAssigningAuthority.not_valid_for_target": "Wybierz kartotekę, której typ zasobu odpowiada edytowanemu polu kartoteki (np. kartoteka LCNAF dla pola Twórca)",
+    "ld.errorAssigningAuthority.no_lccn": "Tylko kartoteka Biblioteki Kongresu może być przypisana do zasobu bibliograficznego. To ograniczenie jest tymczasowe, dopóki Edytor Linked Data nie będzie obsługiwał dodatkowych typów źródeł.",
+    "ld.errorAssigningAuthority.unsupported_marc": "Wybrana kartoteka nie została zmapowana do Linked Data i nie może zostać przypisana do zasobu w tym momencie. To ograniczenie jest tymczasowe, dopóki mapowanie tagów KHW nie zostanie ukończone."
 }
