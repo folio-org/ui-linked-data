@@ -3,6 +3,7 @@ import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
 describe('getResourceIdFromUri', () => {
   const originalWindow = { ...window };
 
+  
   beforeEach(() => {
     delete (window as any).location;
 
