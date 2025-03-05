@@ -34,7 +34,7 @@ export const MarcField: FC<MarcField> = ({ field }) => {
     <tr className="marc-field" data-test-instance-marc-field>
       <td className="field-code">{fieldTag}</td>
       {hasIndicators && (
-        <td>{`${normalizeIndicator(typedSelectedFieldTag?.ind1)} ${normalizeIndicator(
+        <td className="field-indicators">{`${normalizeIndicator(typedSelectedFieldTag?.ind1)} ${normalizeIndicator(
           typedSelectedFieldTag?.ind2,
         )}`}</td>
       )}
