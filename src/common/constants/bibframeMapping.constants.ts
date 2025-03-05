@@ -768,7 +768,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/lite/Family': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family' },
         'http://bibfra.me/vocab/lite/Organization': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization' },
         'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
-        'http://id.loc.gov/ontologies/bibframe/Jurisdiction': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction' },
+        'http://bibfra.me/vocab/lite/Jurisdiction': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction' },
       },
       fields: {
         label: { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
@@ -849,7 +849,7 @@ export const NEW_BF2_TO_BFLITE_MAPPING = {
         'http://bibfra.me/vocab/lite/Family': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family' },
         'http://bibfra.me/vocab/lite/Organization': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization' },
         'http://bibfra.me/vocab/lite/Meeting': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting' },
-        'http://id.loc.gov/ontologies/bibframe/Jurisdiction': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction' },
+        'http://bibfra.me/vocab/lite/Jurisdiction': { bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction' },
       },
       fields: {
         label: { bf2Uri: 'http://www.w3.org/2002/07/owl#sameAs' },
