@@ -96,6 +96,7 @@ export const NONARRAY_DROPDOWN_OPTIONS = [
   'http://bibfra.me/vocab/lite/Family',
   'http://bibfra.me/vocab/lite/Organization',
   'http://bibfra.me/vocab/lite/Meeting',
+  'http://bibfra.me/vocab/lite/Jurisdiction',
 ];
 
 export const IDENTIFIER_AS_VALUE: Record<string, { field: string; value: string }> = {
