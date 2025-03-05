@@ -4,16 +4,20 @@ describe('getResourceIdFromUri', () => {
   const originalWindow = { ...window };
 
   beforeEach(() => {
-    delete (window as any).location;
-
-    window.location = {
-      ...originalWindow.location,
-      pathname: '',
-    };
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: {
+        ...originalWindow.location,
+        pathname: '',
+      },
+    });
   });
 
   afterEach(() => {
-    window.location = originalWindow.location;
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: originalWindow.location,
+    });
   });
 
   test('returns undefined when pathname is empty', () => {
