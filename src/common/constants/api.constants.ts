@@ -18,6 +18,14 @@ export const DEFAULT_PAGES_METADATA = {
 
 export enum ApiErrorCodes {
   AlreadyExists = 'already_exists_error',
+  RequiredPrimaryMainTitle = 'required_primary_main_title',
+  LccnDoesNotMatchPattern = 'lccn_does_not_match_pattern',
+  LccnNotUnique = 'lccn_not_unique',
+  FailedDependency = 'failed_dependency',
+  NotFound = 'not_found',
+  Mapping = 'mapping',
+  GenericBadRequest = 'generic_bad_request',
+  Server = 'server',
 }
 
 export enum ExternalResourceIdType {
