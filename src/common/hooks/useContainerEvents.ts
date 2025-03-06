@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
 import { dispatchEventWrapper, getWrapperAsWebComponent } from '@common/helpers/dom.helper';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -13,9 +13,8 @@ type IUseContainerEvents =
   | undefined;
 
 export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }: IUseContainerEvents = {}) => {
-  const { hasNavigationOrigin } = useConfigState();
+  const { hasNavigationOrigin, customEvents } = useConfigState();
   const { isRecordEdited: isEdited } = useStatusState();
-  const { customEvents } = useConfigState();
   const {
     BLOCK_NAVIGATION,
     UNBLOCK_NAVIGATION,
@@ -25,6 +24,7 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
     DROP_NAVIGATE_TO_ORIGIN,
   } = customEvents ?? {};
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (IS_EMBEDDED_MODE && TRIGGER_MODAL && onTriggerModal) {
@@ -46,8 +46,11 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
 
   const dispatchProceedNavigationEvent = () => dispatchEventWrapper(PROCEED_NAVIGATION);
 
-  const dispatchNavigateToOriginEventWithFallback = (fallbackUri?: string) =>
-    hasNavigationOrigin ? dispatchEventWrapper(NAVIGATE_TO_ORIGIN) : navigate(fallbackUri ?? ROUTES.SEARCH.uri);
+  const dispatchNavigateToOriginEventWithFallback = (fallbackUri?: string) => {
+    hasNavigationOrigin && location.state.isNavigatedFromExternal
+      ? dispatchEventWrapper(NAVIGATE_TO_ORIGIN)
+      : navigate(fallbackUri ?? ROUTES.SEARCH.uri);
+  };
 
   const dispatchDropNavigateToOriginEvent = () => dispatchEventWrapper(DROP_NAVIGATE_TO_ORIGIN);
 
