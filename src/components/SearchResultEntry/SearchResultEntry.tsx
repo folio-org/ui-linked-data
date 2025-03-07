@@ -97,7 +97,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
-      const comparisonIndex = previewContent.findIndex(({ id }) => id === row.__meta.id);
+      const comparisonIndex = selectedInstances.findIndex(id => id === row.__meta.id);
 
       return {
         ...row,
