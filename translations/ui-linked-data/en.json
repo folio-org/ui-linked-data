@@ -226,5 +226,14 @@
   "ld.errorAssigningAuthority.no_lccn": "Only Library of Congress authorities can be assigned for now. This is temporary until additional source types are supported.",
   "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
   "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
-  "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?"
+  "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?",
+
+  "ld.required_primary_main_title": "Please add the main title in order to save.",
+  "ld.lccn_does_not_match_pattern": "LCCN Pattern validation enabled: Please provide an LCCN that complies with standard structure.",
+  "ld.lccn_not_unique": "LCCN uniqueness enabled: The LCCN you provided already exists. Please provide a different LCCN.",
+  "ld.failed_dependency": "Unable to verify if LCCN is duplicated.",
+  "ld.not_found": "The resource ID has been changed by another user while you had this resource open. Please refresh your browser’s window.",
+  "ld.mapping": "There’s been a mapping issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
+  "ld.generic_bad_request": "There’s been a UI issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
+  "ld.server": "There’s been a server issue. Please report this to your support team, with screenshots and a detailed account of what happened."
 }
