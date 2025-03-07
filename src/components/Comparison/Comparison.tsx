@@ -19,7 +19,7 @@ const COMPARED_ELEMENTS_COUNT = 2;
 export const Comparison = () => {
   const { formatMessage } = useIntl();
   const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
-  const { setSelectedInstances, resetSelectedInstances } = useSearchState();
+  const { setSelectedInstances, resetSelectedInstances, selectedInstances } = useSearchState();
   const { resetFullDisplayComponentType } = useUIState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const [currentPage, setCurrentPage] = useState(0);
@@ -53,6 +53,7 @@ export const Comparison = () => {
 
   const handleNavigateToOwnEditPage = (id: string) => navigateToEditPage(generateEditResourceUrl(id));
   const totalPages = (previewContent.length > 1 ? previewContent.length : 2) - 1;
+  const comparisonIndex = previewContent.findIndex(({ id }) => id);
 
   return (
     <section className="comparison">
@@ -91,8 +92,9 @@ export const Comparison = () => {
       </header>
       <div className="comparison-contents">
         {previewContent
+          .sort((a, b) => selectedInstances.indexOf(a.id) - selectedInstances.indexOf(b.id))
           .slice(currentPage, currentPage + 2)
-          .map(({ initKey, base, userValues, id, title, referenceIds }) => (
+          .map(({ initKey, base, userValues, id, title, referenceIds }, index) => (
             <section key={id} className="entry">
               <div className="entry-header">
                 <div className="entry-header-controls">
@@ -112,7 +114,10 @@ export const Comparison = () => {
                     handleNavigateToEditPage={() => handleNavigateToOwnEditPage(id)}
                   />
                 </div>
-                <h3>{title}</h3>
+                <h3>
+                  <span className="comparison-index">{comparisonIndex + currentPage + index + 1}</span>
+                  {title}
+                </h3>
               </div>
               <Preview
                 altInitKey={initKey}

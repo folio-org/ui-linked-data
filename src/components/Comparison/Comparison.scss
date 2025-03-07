@@ -32,6 +32,23 @@
     }
   }
 
+  h3{
+    display: flex;
+    align-items: center;
+  }
+
+  .comparison-index {
+    width: 1.125rem;
+    height: 1.125rem;
+    text-align: center;
+    background-color: #9fc7ea;
+    border-radius: 0.125rem;
+    line-height: 1.1rem;
+    font-size: 0.875rem;
+    display: inline-block;
+    margin-right: 0.625rem;
+  }
+
   &-contents {
     display: flex;
     flex-grow: 1;
