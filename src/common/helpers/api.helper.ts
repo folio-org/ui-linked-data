@@ -31,3 +31,12 @@ const fetchSimpleLookup = async (url: string): Promise<any> => {
 
 export const checkHasErrorOfCodeType = (err: ApiError, codeType: ApiErrorCodes) =>
   err?.errors.find(e => e.code === codeType);
+
+export const getFriendlyErrorMessage = (err: unknown) => {
+  const apiError = err as Partial<{ errors: { code: string }[] }>;
+
+  if (!apiError.errors?.length) return 'ld.cantSaveRd';
+  const errorCode = apiError.errors[0].code as keyof typeof ApiErrorCodes;
+
+  return `ld.${ApiErrorCodes[errorCode] ?? errorCode}`;
+}
