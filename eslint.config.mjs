@@ -50,6 +50,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-expressions': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
       'no-fallthrough': [
         'error',
         {
