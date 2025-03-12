@@ -71,6 +71,7 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
 
   return (
     <Modal
+      id={'advanced-search'}
       isOpen={isOpen}
       title={formatMessage({ id: 'ld.advancedSearch' })}
       submitButtonLabel={formatMessage({ id: 'ld.search' })}
