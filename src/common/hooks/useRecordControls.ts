@@ -18,7 +18,7 @@ import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
-import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
+import { checkHasErrorOfCodeType, getFriendlyErrorMessage } from '@common/helpers/api.helper';
 import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
 import { useRecordGeneration } from './useRecordGeneration';
 import { useBackToSearchUri } from './useBackToSearchUri';
@@ -160,7 +160,8 @@ export const useRecordControls = () => {
     } catch (error) {
       console.error('Cannot save the resource description', error);
 
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSaveRd'));
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
+
     } finally {
       setIsLoading(false);
     }
@@ -278,7 +279,7 @@ export const useRecordControls = () => {
 
       const { id } = await getGraphIdByExternalId({ recordId });
 
-      id && navigate(generateEditResourceUrl(id), { replace: true });
+      id && navigate(generateEditResourceUrl(id), { state: { isNavigatedFromExternal: true }, replace: true });
     } catch (err: unknown) {
       if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
         setIsDuplicateImportedResourceModalOpen(true);

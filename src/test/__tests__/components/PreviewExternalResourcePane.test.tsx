@@ -10,6 +10,7 @@ const getRecordTitle = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => navigate,
+  useLocation: jest.fn(),
 }));
 
 jest.mock('@common/helpers/record.helper', () => ({
