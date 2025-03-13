@@ -1,4 +1,4 @@
-import { FC, ReactNode, memo, useEffect, useRef, type ReactElement } from 'react';
+import { FC, ReactNode, memo, useEffect, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { AriaModalKind, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
@@ -54,7 +54,7 @@ const Modal: FC<Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
-  const ref = useRef(null);
+
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 
@@ -70,12 +70,12 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const elementId = `modal-${id}`;
+  const elementId = `modal-${id ?? 'default'}`;
   const existingElement = !document.getElementById(elementId);
 
   return isOpen && portalElement && !existingElement
     ? createPortal(
-        <div id={elementId} ref={ref}>
+        <div id={elementId}>
           <div className="overlay" onClick={onClose} role="presentation" data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className={classNames(['modal-header', classNameHeader])}>

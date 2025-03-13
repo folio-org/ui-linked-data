@@ -4,6 +4,7 @@ import { createModalContainer } from '@src/test/__mocks__/common/misc/createModa
 
 describe('Modal', () => {
   const props = {
+    id: 'test',
     isOpen: true,
     title: 'test modal',
     onSubmit: jest.fn(),
@@ -26,7 +27,8 @@ describe('Modal', () => {
   test('renders Modal component', () => {
     render(<Modal {...props} />);
 
-    expect(screen.getByTestId('modal')).toBeInTheDocument();
+    expect(screen.getByText('test modal')).toBeInTheDocument();
+    expect(screen.getByTestId('modal')).toHaveAttribute('id', 'modal-test');
   });
 
   describe('event handlers', () => {
