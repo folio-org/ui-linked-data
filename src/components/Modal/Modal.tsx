@@ -10,7 +10,6 @@ import { useIntl } from 'react-intl';
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 interface Props {
-  id?: string;
   isOpen: boolean;
   title: string | ReactElement<any>;
   className?: string;
@@ -32,7 +31,6 @@ interface Props {
 }
 
 const Modal: FC<Props> = ({
-  id,
   isOpen,
   className,
   classNameHeader,
@@ -70,12 +68,9 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const elementId = `modal-${id ?? 'default'}`;
-  const existingElement = !document.getElementById(elementId);
-
-  return isOpen && portalElement && !existingElement
+  return isOpen && portalElement
     ? createPortal(
-        <div id={elementId}>
+        <>
           <div className="overlay" onClick={onClose} role="presentation" data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className={classNames(['modal-header', classNameHeader])}>
@@ -113,7 +108,7 @@ const Modal: FC<Props> = ({
               </div>
             )}
           </div>
-        </div>,
+        </>,
         portalElement,
       )
     : null;

@@ -15,7 +15,6 @@ export const ModalCloseRecord: FC<Props> = memo(({ isOpen, onCancel, onSubmit, o
 
   return (
     <Modal
-      id="close-record"
       isOpen={isOpen}
       title={formatMessage({ id: 'ld.closeRd' })}
       submitButtonLabel={formatMessage({ id: 'ld.no' })}
