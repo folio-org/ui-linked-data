@@ -52,7 +52,6 @@ const Modal: FC<Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
-
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 

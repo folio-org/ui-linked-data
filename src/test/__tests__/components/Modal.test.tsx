@@ -26,7 +26,7 @@ describe('Modal', () => {
   test('renders Modal component', () => {
     render(<Modal {...props} />);
 
-    expect(screen.getByText('test modal')).toBeInTheDocument();
+    expect(screen.getByTestId('modal')).toBeInTheDocument();
   });
 
   describe('event handlers', () => {
