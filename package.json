@@ -1,9 +1,9 @@
 {
   "name": "@folio/linked-data",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "publishConfig": {
-    "registry": "https://repository.folio.org/repository/npm-folioci/"
+    "registry": "https://repository.folio.org/repository/npm-folio/"
   },
   "files": [
     "dist"
@@ -22,6 +22,7 @@
     "build:lib": "npm run build --type=library",
     "prepare": "npm run build:lib",
     "formatjs-compile": "formatjs compile-folder --ast --format simple ./translations/ui-linked-data ./translations/ui-linked-data/compiled",
+    "lint": "eslint src",
     "lint:errors-only": "eslint src --report-unused-disable-directives --quiet",
     "lint:full": "eslint src --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",

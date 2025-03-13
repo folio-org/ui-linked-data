@@ -7,7 +7,9 @@
   
   .field-indicators {
     width: 30px;
-    white-space: pre
+    white-space: pre;
+    display: flex;
+    justify-content: center;
   }
 
   .field-contents {
