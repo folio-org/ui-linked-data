@@ -1,3 +1,5 @@
+# Change history for ui-linked-data
+
 ## 1.0.2 (IN PROGRESS)
 
 Comparison Mode Refinement - Numbered icons. Refs [UILD-475].
