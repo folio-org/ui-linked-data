@@ -81,15 +81,16 @@ export const Fields = ({
   const isEntity = level === ENTITY_LEVEL;
   const hasEmptyChildren = checkEmptyChildren(base, entry);
 
-  if (!entry || hasEmptyChildren) return null;
-
-  const { displayName = '', children, type, bfid = '', path, htmlId } = entry;
   const isDependentDropdownOption =
-    type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(path))?.linkedEntry?.controlledBy;
+    entry?.type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
   const visibleDropdownOption =
-    isDependentDropdownOption && selectedEntries.includes(uuid) ? <div>{displayName}</div> : null;
+    isDependentDropdownOption && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
 
   if (visibleDropdownOption) return visibleDropdownOption;
+
+  if (!entry || hasEmptyChildren) return null;
+
+  const { children, type, bfid = '', htmlId } = entry;
 
   // don't render empty dropdown options and their descendants
   if (type === AdvancedFieldType.dropdownOption && !isOnBranchWithUserValue) return null;
