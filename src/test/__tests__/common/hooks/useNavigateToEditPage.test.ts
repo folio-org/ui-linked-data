@@ -1,11 +1,12 @@
 import { renderHook } from '@testing-library/react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { useSearchStore } from '@src/store';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
+  useLocation: jest.fn(),
 }));
 
 describe('useNavigateToEditPage', () => {
@@ -30,12 +31,13 @@ describe('useNavigateToEditPage', () => {
     ]);
 
     (useNavigate as jest.Mock).mockReturnValue(navigate);
+    (useLocation as jest.Mock).mockReturnValue({ pathname: '/search' });
 
     const { result } = renderHook(() => useNavigateToEditPage());
     const { navigateToEditPage } = result.current;
 
     navigateToEditPage(uri);
 
-    expect(navigate).toHaveBeenCalledWith(uri, { state: navigationState });
+    expect(navigate).toHaveBeenCalledWith(uri, { state: { ...navigationState, origin: '/search' } });
   });
 });
