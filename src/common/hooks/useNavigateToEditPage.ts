@@ -1,9 +1,10 @@
 import { ROUTES, QueryParams } from '@common/constants/routes.constants';
 import { useSearchState } from '@src/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const useNavigateToEditPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { navigationState } = useSearchState();
 
   const navigateAsDuplicate = (duplicateId: string) => {
@@ -11,7 +12,8 @@ export const useNavigateToEditPage = () => {
   };
 
   return {
-    navigateToEditPage: (uri: string, { ...options } = {}) => navigate(uri, { state: navigationState, ...options }),
+    navigateToEditPage: (uri: string, { ...options } = {}) =>
+      navigate(uri, { state: { ...navigationState, origin: location.pathname }, ...options }),
     navigateAsDuplicate,
   };
 };
