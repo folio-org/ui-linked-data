@@ -47,7 +47,7 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
   const dispatchProceedNavigationEvent = () => dispatchEventWrapper(PROCEED_NAVIGATION);
 
   const dispatchNavigateToOriginEventWithFallback = (fallbackUri?: string) => {
-    if (hasNavigationOrigin && !location.state?.origin) {
+    if (hasNavigationOrigin && !location.state?.isNavigatedFromLDE) {
       dispatchEventWrapper(NAVIGATE_TO_ORIGIN);
     } else {
       navigate(fallbackUri ?? ROUTES.SEARCH.uri);
