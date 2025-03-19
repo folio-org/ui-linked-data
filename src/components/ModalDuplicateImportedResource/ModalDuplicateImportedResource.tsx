@@ -20,7 +20,7 @@ export const ModalDuplicateImportedResource = memo(() => {
       alignTitleCenter
       cancelButtonLabel={formatMessage({ id: 'ld.backToInventory' })}
       onClose={() => setIsDuplicateImportedResourceModalOpen(false)}
-      onCancel={dispatchNavigateToOriginEventWithFallback}
+      onCancel={() => dispatchNavigateToOriginEventWithFallback()}
     >
       <div className="duplicate-imported-resource-contents" data-testid="modal-duplicate-imported-resource">
         <FormattedMessage id="ld.rdPropertiesMatchContinue" />

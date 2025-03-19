@@ -16,7 +16,7 @@ export const PreviewExternalResourcePane = () => {
         <Button
           data-testid="nav-close-button"
           type={ButtonType.Icon}
-          onClick={dispatchNavigateToOriginEventWithFallback}
+          onClick={() => dispatchNavigateToOriginEventWithFallback()}
           className="nav-close"
           ariaLabel={formatMessage({ id: 'ld.aria.externalResourcePreview.close' })}
         >

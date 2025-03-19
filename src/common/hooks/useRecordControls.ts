@@ -161,7 +161,6 @@ export const useRecordControls = () => {
       console.error('Cannot save the resource description', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
-
     } finally {
       setIsLoading(false);
     }
@@ -279,7 +278,7 @@ export const useRecordControls = () => {
 
       const { id } = await getGraphIdByExternalId({ recordId });
 
-      id && navigate(generateEditResourceUrl(id), { state: { isNavigatedFromExternal: true }, replace: true });
+      id && navigate(generateEditResourceUrl(id), { replace: true });
     } catch (err: unknown) {
       if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
         setIsDuplicateImportedResourceModalOpen(true);
