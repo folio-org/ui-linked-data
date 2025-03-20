@@ -7,6 +7,9 @@ import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
+import { Profile as ProfileSchema } from '../../data/profile-schema_updated';
+import RecordExample_1 from '../../data/instance-1.json';
+// import RecordExample_2 from '../../data/record-work-1.json';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -40,8 +43,7 @@ export const useConfig = () => {
     setInitialSchemaKey,
     setSchema,
   } = useProfileState();
-  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } =
-    useInputsState();
+  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
 
@@ -68,16 +70,22 @@ export const useConfig = () => {
   };
 
   const buildSchema = async ({ profile, templates, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
-    const initKey = uuidv4();
+    // const initKey = uuidv4();
     const userValues: UserValues = {};
 
     userValuesService.set(userValues);
     selectedEntriesService.set([]);
-    schemaCreatorService.init(templates, profile);
-    schemaCreatorService.generate(initKey);
+    /* schemaCreatorService.init(templates, profile);
+    schemaCreatorService.generate(initKey); */
+
+    const baseSchema = new Map<string, SchemaEntry>();
+
+    ProfileSchema.forEach(entry => {
+      baseSchema.set(entry.uuid, entry as SchemaEntry);
+    });
 
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
-      baseSchema: schemaCreatorService.get(),
+      baseSchema,
       record,
       userValues,
       asClone,
@@ -86,13 +94,13 @@ export const useConfig = () => {
 
     if (!noStateUpdate) {
       setUserValues(updatedUserValues || userValues);
-      setInitialSchemaKey(initKey);
+      setInitialSchemaKey(ProfileSchema[0]?.uuid);
       setSelectedEntries(selectedEntriesService.get());
       setSchema(updatedSchema);
       setSelectedRecordBlocks(selectedRecordBlocks);
     }
 
-    return { updatedSchema, initKey };
+    return { updatedSchema, initKey: ProfileSchema[0]?.uuid };
   };
 
   const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
@@ -111,10 +119,11 @@ export const useConfig = () => {
         setProfiles(response);
       }
 
-      const recordData = record?.resource || {};
-      const recordTitle = getRecordTitle(recordData as RecordEntry);
-      const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
-      const referenceIds = getReferenceIdsRaw(record as RecordEntry);
+      const recordData = RecordExample_1?.resource || {};
+      // const recordData = record?.resource || {};
+      const recordTitle = getRecordTitle(recordData as unknown as RecordEntry);
+      const entities = getPrimaryEntitiesFromRecord(RecordExample_1 as unknown as RecordEntry);
+      const referenceIds = getReferenceIdsRaw(RecordExample_1 as unknown as RecordEntry);
 
       if (selectedProfile) {
         !previewParams?.noStateUpdate && setSelectedProfile(selectedProfile);

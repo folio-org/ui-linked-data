@@ -1,0 +1,60 @@
+{
+  "resource": {
+    "http://bibfra.me/vocab/lite/Work": {
+      "id": "-7047047487227899194",
+      "http://bibfra.me/vocab/marc/title": [
+        {
+          "http://bibfra.me/vocab/marc/Title": {
+            "id": "-3206678219442113097",
+            "http://bibfra.me/vocab/marc/mainTitle": ["CORPORATE TEST - SUBFIELDS"],
+            "http://bibfra.me/vocab/bflc/nonSortNum": ["0"]
+          }
+        }
+      ],
+      "_creatorReference": [
+        {
+          "id": "6769683717993561600",
+          "label": "CORPORATE - SUBFIELD A 5, SUBFIELD B, SUBFIELD C, SUBFIELD D",
+          "isPreferred": true,
+          "type": "http://bibfra.me/vocab/lite/Organization"
+        }
+      ],
+      "_instanceReference": [
+        {
+          "id": "-4732956253541169140",
+          "http://bibfra.me/vocab/marc/title": [
+            {
+              "http://bibfra.me/vocab/marc/Title": {
+                "id": "-3206678219442113097",
+                "http://bibfra.me/vocab/marc/mainTitle": ["CORPORATE TEST - SUBFIELDS"],
+                "http://bibfra.me/vocab/bflc/nonSortNum": ["0"]
+              }
+            }
+          ],
+          "_workReference": [
+            {
+              "id": "-7047047487227899194",
+              "http://bibfra.me/vocab/marc/title": [
+                {
+                  "http://bibfra.me/vocab/marc/Title": {
+                    "id": "-3206678219442113097",
+                    "http://bibfra.me/vocab/marc/mainTitle": ["CORPORATE TEST - SUBFIELDS"],
+                    "http://bibfra.me/vocab/bflc/nonSortNum": ["0"]
+                  }
+                }
+              ],
+              "_creatorReference": [
+                {
+                  "id": "6769683717993561600",
+                  "label": "CORPORATE - SUBFIELD A 5, SUBFIELD B, SUBFIELD C, SUBFIELD D",
+                  "isPreferred": true,
+                  "type": "http://bibfra.me/vocab/lite/Organization"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

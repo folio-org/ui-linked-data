@@ -1,0 +1,384 @@
+{
+  "resource": {
+    "http://bibfra.me/vocab/lite/Instance": {
+      "id": "1427000534073580867",
+      "http://bibfra.me/vocab/marc/title": [
+        {
+          "http://bibfra.me/vocab/marc/Title": {
+            "id": "288529371653271115",
+            "http://bibfra.me/vocab/marc/partName": ["1"],
+            "http://bibfra.me/vocab/marc/partNumber": ["1"],
+            "http://bibfra.me/vocab/marc/mainTitle": [
+              "resource instance test 1"
+            ],
+            "http://bibfra.me/vocab/marc/subTitle": ["1"],
+            "http://bibfra.me/vocab/bflc/nonSortNum": ["42"]
+          }
+        },
+        {
+          "http://bibfra.me/vocab/marc/VariantTitle": {
+            "id": "-6629314939439109347",
+            "http://bibfra.me/vocab/marc/partName": ["2"],
+            "http://bibfra.me/vocab/marc/partNumber": ["42"],
+            "http://bibfra.me/vocab/marc/mainTitle": ["Variant Title"],
+            "http://bibfra.me/vocab/marc/subTitle": ["other 2"],
+            "http://bibfra.me/vocab/lite/note": ["2"],
+            "http://bibfra.me/vocab/lite/date": ["date "],
+            "http://bibfra.me/vocab/marc/variantType": ["2"]
+          }
+        }
+      ],
+      "http://bibfra.me/vocab/marc/publication": [
+        {
+          "http://bibfra.me/vocab/lite/date": ["Date 1"],
+          "http://bibfra.me/vocab/lite/name": ["Name 1"],
+          "http://bibfra.me/vocab/lite/providerDate": ["date 1"],
+          "http://bibfra.me/vocab/lite/place": ["Place 1"],
+          "http://bibfra.me/vocab/lite/providerPlace": [
+            {
+              "id": "4017598837711867308",
+              "http://bibfra.me/vocab/lite/name": ["Afghanistan"],
+              "http://bibfra.me/vocab/marc/code": ["af"],
+              "http://bibfra.me/vocab/lite/label": ["Afghanistan"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/countries/af"
+              ]
+            }
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/distribution": [
+        {
+          "http://bibfra.me/vocab/lite/date": ["Date 2"],
+          "http://bibfra.me/vocab/lite/name": ["Name 2"],
+          "http://bibfra.me/vocab/lite/providerDate": ["date 2"],
+          "http://bibfra.me/vocab/lite/place": ["Place 2"],
+          "http://bibfra.me/vocab/lite/providerPlace": [
+            {
+              "id": "6799114755302351365",
+              "http://bibfra.me/vocab/lite/name": ["Alabama"],
+              "http://bibfra.me/vocab/marc/code": ["alu"],
+              "http://bibfra.me/vocab/lite/label": ["Alabama"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/countries/alu"
+              ]
+            }
+          ]
+        }
+      ],
+      "http://library.link/vocab/map": [
+        {
+          "http://library.link/identifier/LCCN": {
+            "id": "945256316348572603",
+            "http://bibfra.me/vocab/lite/name": ["123321"],
+            "http://bibfra.me/vocab/marc/status": [
+              {
+                "id": "-2556266232358006986",
+                "http://bibfra.me/vocab/lite/link": [
+                  "http://id.loc.gov/vocabulary/mstatus/cancinv"
+                ],
+                "http://bibfra.me/vocab/lite/label": ["canceled or invalid"]
+              }
+            ]
+          }
+        },
+        {
+          "http://library.link/identifier/ISBN": {
+            "id": "1855930486735440824",
+            "http://bibfra.me/vocab/lite/name": ["111222333"],
+            "http://bibfra.me/vocab/marc/status": [
+              {
+                "id": "8609710094853481552",
+                "http://bibfra.me/vocab/lite/link": [
+                  "http://id.loc.gov/vocabulary/mstatus/d"
+                ],
+                "http://bibfra.me/vocab/lite/label": ["deleted"]
+              }
+            ],
+            "http://bibfra.me/vocab/marc/qualifier": ["111"]
+          }
+        }
+      ],
+      "http://bibfra.me/vocab/marc/supplementaryContent": [
+        {
+          "id": "-7944454936539253355",
+          "http://bibfra.me/vocab/lite/link": [
+            "URL for Supplementary Content 1"
+          ],
+          "http://bibfra.me/vocab/lite/name": ["Note 1"]
+        },
+        {
+          "id": "-6103937717065938954",
+          "http://bibfra.me/vocab/lite/link": [
+            "URL for Supplementary Content 2"
+          ],
+          "http://bibfra.me/vocab/lite/name": ["Note 2"]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/accessLocation": [
+        {
+          "id": "-7853118678418219496",
+          "http://bibfra.me/vocab/lite/link": ["URL 1"],
+          "http://bibfra.me/vocab/lite/note": ["Note 1"]
+        },
+        {
+          "id": "5322341715511076499",
+          "http://bibfra.me/vocab/lite/link": ["URL 2"],
+          "http://bibfra.me/vocab/lite/note": ["Note 2"]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/media": [
+        {
+          "id": "-2774967383370131858",
+          "http://bibfra.me/vocab/marc/code": ["c"],
+          "http://bibfra.me/vocab/marc/term": ["computer"],
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/mediaTypes/c"
+          ]
+        },
+        {
+          "id": "7856236908538010255",
+          "http://bibfra.me/vocab/marc/code": ["s"],
+          "http://bibfra.me/vocab/marc/term": ["audio"],
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/mediaTypes/s"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/carrier": [
+        {
+          "id": "-8239904156872304569",
+          "http://bibfra.me/vocab/marc/code": ["ha"],
+          "http://bibfra.me/vocab/marc/term": ["aperture card"],
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/carriers/ha"
+          ]
+        },
+        {
+          "id": "7691098912157877848",
+          "http://bibfra.me/vocab/marc/code": ["se"],
+          "http://bibfra.me/vocab/marc/term": ["audio cylinder"],
+          "http://bibfra.me/vocab/lite/link": [
+            "http://id.loc.gov/vocabulary/carriers/se"
+          ]
+        }
+      ],
+      "http://bibfra.me/vocab/marc/edition": [
+        "Edition Statement 1",
+        "Edition Statement 2"
+      ],
+      "http://bibfra.me/vocab/marc/copyright": [
+        {
+          "id": "4762093659830741380",
+          "http://bibfra.me/vocab/lite/date": ["Copyright Date 2"]
+        },
+        {
+          "id": "8519276751928593395",
+          "http://bibfra.me/vocab/lite/date": ["Copyright Date 1"]
+        }
+      ],
+      "http://bibfra.me/vocab/lite/extent": ["Extent 1", "Extent 2"],
+      "http://bibfra.me/vocab/marc/dimensions": [
+        "Dimensions 1",
+        "Dimensions 2"
+      ],
+      "http://bibfra.me/vocab/marc/issuance": [
+        "integrating resource",
+        "multipart monograph"
+      ],
+      "http://bibfra.me/vocab/marc/statementOfResponsibility": [
+        "Statement of Responsibility 1",
+        "Statement of Responsibility 2"
+      ],
+      "_notes": [
+        {
+          "value": ["Note 1"],
+          "type": ["http://bibfra.me/vocab/marc/additionalPhysicalForm"]
+        },
+        {
+          "value": ["Note 2"],
+          "type": [
+            "http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial"
+          ]
+        }
+      ],
+      "_workReference": [
+        {
+          "id": "-3234815189013600010",
+          "http://bibfra.me/vocab/marc/title": [
+            {
+              "http://bibfra.me/vocab/marc/Title": {
+                "id": "5273374170258473818",
+                "http://bibfra.me/vocab/marc/partName": ["Part name 1"],
+                "http://bibfra.me/vocab/marc/partNumber": ["Part number 1"],
+                "http://bibfra.me/vocab/marc/mainTitle": ["resource test 1"],
+                "http://bibfra.me/vocab/bflc/nonSortNum": ["1"]
+              }
+            },
+            {
+              "http://bibfra.me/vocab/marc/VariantTitle": {
+                "id": "5153983809243959758",
+                "http://bibfra.me/vocab/marc/partName": ["Part name 2"],
+                "http://bibfra.me/vocab/marc/partNumber": ["2"],
+                "http://bibfra.me/vocab/marc/mainTitle": ["var title"],
+                "http://bibfra.me/vocab/marc/subTitle": [
+                  "Other title information"
+                ],
+                "http://bibfra.me/vocab/lite/note": ["note 1"],
+                "http://bibfra.me/vocab/lite/date": [" date"],
+                "http://bibfra.me/vocab/marc/variantType": ["type 1"]
+              }
+            }
+          ],
+          "http://bibfra.me/vocab/marc/targetAudience": [
+            {
+              "id": "75727510400882053",
+              "http://bibfra.me/vocab/marc/code": ["e"],
+              "http://bibfra.me/vocab/marc/term": ["adult"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/maudience/adu"
+              ]
+            },
+            {
+              "id": "1603261775658195837",
+              "http://bibfra.me/vocab/marc/code": ["d"],
+              "http://bibfra.me/vocab/marc/term": ["adolescent"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/maudience/ado"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/marc/tableOfContents": [
+            "Contents note 1",
+            "Contents note 2"
+          ],
+          "http://bibfra.me/vocab/marc/summary": [
+            "Summary note 1",
+            "Summary note 2"
+          ],
+          "http://bibfra.me/vocab/lite/language": [
+            {
+              "id": "-6422135687277971214",
+              "http://bibfra.me/vocab/marc/code": ["ace"],
+              "http://bibfra.me/vocab/marc/term": ["Achinese"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/languages/ace"
+              ]
+            },
+            {
+              "id": "7345236356804212104",
+              "http://bibfra.me/vocab/marc/code": ["abk"],
+              "http://bibfra.me/vocab/marc/term": ["Abkhaz"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/languages/abk"
+              ]
+            }
+          ],
+          "_notes": [
+            {
+              "value": ["note 2"],
+              "type": ["http://bibfra.me/vocab/marc/languageNote"]
+            },
+            {
+              "value": ["note 1"],
+              "type": ["http://bibfra.me/vocab/marc/bibliographyNote"]
+            }
+          ],
+          "http://bibfra.me/vocab/lite/classification": [
+            {
+              "id": "-6811249111516992632",
+              "http://bibfra.me/vocab/marc/code": ["Classification number 1"],
+              "http://bibfra.me/vocab/marc/source": ["lc"],
+              "http://bibfra.me/vocab/marc/itemNumber": [
+                "Additional call number information 1"
+              ],
+              "http://bibfra.me/vocab/marc/status": [
+                {
+                  "id": "-2556266232358006986",
+                  "http://bibfra.me/vocab/lite/link": [
+                    "http://id.loc.gov/vocabulary/mstatus/cancinv"
+                  ],
+                  "http://bibfra.me/vocab/lite/label": ["canceled or invalid"]
+                }
+              ]
+            },
+            {
+              "id": "3185192117070097176",
+              "http://bibfra.me/vocab/marc/code": ["Classification number 2"],
+              "http://bibfra.me/vocab/marc/source": ["ddc"],
+              "http://bibfra.me/vocab/marc/itemNumber": [
+                "Additional call number information 2"
+              ],
+              "http://bibfra.me/vocab/marc/editionNumber": [
+                "Dewey Edition number"
+              ],
+              "http://bibfra.me/vocab/marc/edition": ["Dewey full or abridged?"]
+            }
+          ],
+          "http://bibfra.me/vocab/marc/content": [
+            {
+              "id": "-6445640910602524428",
+              "http://bibfra.me/vocab/marc/code": ["cri"],
+              "http://bibfra.me/vocab/marc/term": ["cartographic image"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/contentTypes/cri"
+              ]
+            },
+            {
+              "id": "-1835244009711438850",
+              "http://bibfra.me/vocab/marc/code": ["crd"],
+              "http://bibfra.me/vocab/marc/term": ["cartographic dataset"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/contentTypes/crd"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/lite/dateStart": ["date 1", "date 2"],
+          "http://bibfra.me/vocab/marc/governmentPublication": [
+            {
+              "id": "-917649228310605616",
+              "http://bibfra.me/vocab/marc/code": ["f"],
+              "http://bibfra.me/vocab/marc/term": ["federal"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/mgovtpubtype/f"
+              ]
+            },
+            {
+              "id": "4116466570261215341",
+              "http://bibfra.me/vocab/marc/code": ["a"],
+              "http://bibfra.me/vocab/marc/term": ["autonomous"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/mgovtpubtype/a"
+              ]
+            }
+          ],
+          "http://bibfra.me/vocab/marc/originPlace": [
+            {
+              "id": "4017598837711867308",
+              "http://bibfra.me/vocab/lite/name": ["Afghanistan"],
+              "http://bibfra.me/vocab/marc/code": ["af"],
+              "http://bibfra.me/vocab/lite/label": ["Afghanistan"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/countries/af"
+              ]
+            },
+            {
+              "id": "6799114755302351365",
+              "http://bibfra.me/vocab/lite/name": ["Alabama"],
+              "http://bibfra.me/vocab/marc/code": ["alu"],
+              "http://bibfra.me/vocab/lite/label": ["Alabama"],
+              "http://bibfra.me/vocab/lite/link": [
+                "http://id.loc.gov/vocabulary/countries/alu"
+              ]
+            }
+          ]
+        }
+      ],
+      "folioMetadata": {
+        "source": "LINKED_DATA",
+        "inventoryId": "c13f4069-391f-4d3f-bfbd-829ced7f744b",
+        "srsId": "43bad894-a54e-48e9-8d7b-f60ff7f3cef7"
+      }
+    }
+  }
+}

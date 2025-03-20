@@ -79,7 +79,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     const containerBf2Uri = this.recordMap.container.bf2Uri;
     const containerDataTypeUri = this.recordMap.container.dataTypeUri as string;
-    const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri);
+    const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri, recordKey);
 
     for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
       await this.processRecordGroup(
@@ -89,6 +89,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         schemaEntries,
         containerBf2Uri,
         containerDataTypeUri,
+        recordKey,
       );
     }
   }
@@ -100,6 +101,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     schemaEntries: SchemaEntry[],
     containerBf2Uri: string,
     containerDataTypeUri: string,
+    recordKey?: string,
   ) {
     if (!schemaEntries?.length) return;
 
@@ -107,7 +109,9 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     // generate repeatable fields
     if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-      const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[parseInt(recordGroupIndex) - 1];
+      const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri, recordKey)[
+        parseInt(recordGroupIndex) - 1
+      ];
       const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) ?? '';
       this.updatedSchema = this.repeatableFieldsService?.get();
       this.schemaArray = Array.from(this.updatedSchema?.values() || []);
@@ -174,9 +178,10 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     }
   }
 
-  private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
+  private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string, recordKey?: string) => {
     return this.schemaArray.filter((entry: SchemaEntry) => {
       const isOfSameUri = entry.uri === containerBf2Uri;
+      const isOfSameBFLiteUri = entry.uriBFLite === recordKey;
       const isOfSameDataTypeUri = containerDataTypeUri
         ? entry.constraints?.valueDataType?.dataTypeURI === containerDataTypeUri
         : true;
@@ -186,7 +191,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       entry.path.forEach(parentElemKey => {
         const parentElem = this.updatedSchema?.get(parentElemKey) as SchemaEntry;
 
-        if (parentElem.uriBFLite === this.currentBlockUri) {
+        if (parentElem?.uriBFLite === this.currentBlockUri) {
           hasProperBlock = true;
         }
       });
@@ -195,7 +200,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       if (this.updatedSchema?.get(getParentEntryUuid(entry.path))?.type === AdvancedFieldTypeEnum.block) {
         hasBlockParent = true;
       }
-      return isOfSameUri && isOfSameDataTypeUri && hasProperBlock && hasBlockParent;
+
+      return isOfSameBFLiteUri && isOfSameDataTypeUri && hasProperBlock && hasBlockParent;
     });
   };
 
@@ -279,12 +285,13 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private hasCorrectUuid(entry: SchemaEntry, recordKey: string) {
     const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldTypeEnum);
     const hasTheRecordUri = entry.uriBFLite === recordKey;
-    const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
-    const mappedRecordGroupFields = this.currentBlockUri
+    // const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
+    /* const mappedRecordGroupFields = this.currentBlockUri
       ? typedMap?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields
-      : undefined;
-    const mappedFieldUri = mappedRecordGroupFields?.[recordKey]?.bf2Uri;
-    const hasTheMappedFieldUri = entry.uri === mappedFieldUri;
+      : undefined; */
+    // const mappedFieldUri = mappedRecordGroupFields?.[recordKey]?.bf2Uri;
+    // const hasTheMappedFieldUri = entry.uri === mappedFieldUri;
+    const hasTheMappedFieldUri = entry.uriBFLite === recordKey;
 
     return isUIControl && (hasTheRecordUri || hasTheMappedFieldUri);
   }

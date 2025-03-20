@@ -11,6 +11,11 @@ import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
 import { useConfigState } from './store';
+import * as ReGen from './common/services/recordGenerator/recordGenerator';
+
+console.log('====================================');
+console.log('ReGen', ReGen);
+console.log('====================================');
 
 type IContainer = {
   routePrefix?: string;
