@@ -36,6 +36,6 @@ describe('useNavigateToEditPage', () => {
 
     navigateToEditPage(uri);
 
-    expect(navigate).toHaveBeenCalledWith(uri, { state: navigationState });
+    expect(navigate).toHaveBeenCalledWith(uri, { state: { ...navigationState, isNavigatedFromLDE: true } });
   });
 });

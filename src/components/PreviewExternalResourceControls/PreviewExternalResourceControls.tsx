@@ -15,7 +15,7 @@ export const PreviewExternalResourceControls = () => {
       <Button
         data-testid="close-external-preview-button"
         type={ButtonType.Primary}
-        onClick={dispatchNavigateToOriginEventWithFallback}
+        onClick={() => dispatchNavigateToOriginEventWithFallback()}
       >
         <FormattedMessage id="ld.cancel" />
       </Button>

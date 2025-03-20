@@ -116,7 +116,7 @@ export const Comparison = () => {
                 </div>
                 <h3>
                   <span className="comparison-index">{comparisonIndex + currentPage + index + 1}</span>
-                  {title}
+                  <span>{title}</span>
                 </h3>
               </div>
               <Preview

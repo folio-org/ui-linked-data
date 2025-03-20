@@ -16,6 +16,10 @@ class MarvaNextComponent extends HTMLElement {
     this.render();
   }
 
+  disconnectedCallback() {
+    this.rootElement?.unmount();
+  }
+
   // A workaround for 'forcing' the navigation to homepage
   // triggered from outside the web component.
   //
@@ -75,7 +79,7 @@ class MarvaNextComponent extends HTMLElement {
     const mountElement = document.createElement('div');
     // TODO: UILD-147 - used for Shadow DOM
     // mountElement.setAttribute('id', 'editor-root');
-    
+
     mountElement.className = 'embed-container';
     this.mountElement = mountElement;
 
