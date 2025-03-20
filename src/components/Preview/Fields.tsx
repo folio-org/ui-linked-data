@@ -83,8 +83,11 @@ export const Fields = ({
 
   const isDependentDropdownOption =
     entry?.type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
+
+  const controlledEntry = schema.get(getParentEntryUuid(entry?.path || []))?.linkedEntry?.controlledBy;
+  const controlledEntryValue = controlledEntry ? userValuesFromState[controlledEntry] : undefined;
   const visibleDropdownOption =
-    isDependentDropdownOption && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
+    isDependentDropdownOption && controlledEntryValue && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
 
   if (visibleDropdownOption) return visibleDropdownOption;
 
