@@ -235,5 +235,5 @@
     "ld.mapping": "Houve um problema de mapeamento. Por favor, relate isso à sua equipe de suporte, com capturas de tela e um relato detalhado do que aconteceu.",
     "ld.generic_bad_request": "Houve um problema de interface do usuário. Por favor, relate isso à sua equipe de suporte, com capturas de tela e um relato detalhado do que aconteceu.",
     "ld.server": "Houve um problema no servidor. Por favor, relate isso à sua equipe de suporte, com capturas de tela e um relato detalhado do que aconteceu.",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "O mesmo ID de recurso já existe."
 }
