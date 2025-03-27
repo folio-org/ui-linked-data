@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 1.0.3 (IN PROGRESS)
+*  Empty header cell in table changed from `<th>` to `<td>`. Fixes [UILD-485]
+
+[UILD-485]:https://folio-org.atlassian.net/browse/UILD-485
 
 ## 1.0.2 (2025-03-27)
 * Several modals shown at once/Wrong app background colour when Advanced search modal is opened. Fixes [UILD-506]. 
