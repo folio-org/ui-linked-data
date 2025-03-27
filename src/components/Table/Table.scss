@@ -35,7 +35,8 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
   }
 
   th,
-  .table-head-cell {
+  .table-head-cell,
+  .table-head-empty {
     vertical-align: bottom;
     text-align: left;
     background-color: $row-even-bg-color;
@@ -49,6 +50,10 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
       padding: 0 0.625rem 0.2rem 0.625rem;
       border-bottom: 5px solid $blue-600;
     }
+  }
+
+  .table-head-empty {
+    border: none;
   }
 
   td,
