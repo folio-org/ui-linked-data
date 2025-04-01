@@ -90,6 +90,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
       const comparisonIndex = selectedInstances.findIndex(id => id === row.__meta.id);
+      const typedTitle = row.title.label as string;
 
       return {
         ...row,
@@ -105,7 +106,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
                 type={ButtonType.Link}
                 onClick={() => handleOpenPreview(row?.__meta?.id)}
                 data-testid={`preview-button__${row.__meta.id}`}
-                ariaLabel={formatMessage({ id: 'ld.aria.sections.openResourcePreview' })}
+                ariaLabel={formatMessage({ id: 'ld.aria.sections.openResourcePreview' }, { title: typedTitle })}
               >
                 {row.title.label}
               </Button>
@@ -119,6 +120,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
               onClick={() => navigateToEditPage(generateEditResourceUrl(row.__meta?.id))}
               data-testid={`edit-button__${row.__meta.id}`}
               className={classNames(['button-nowrap', 'button-capitalize'])}
+              ariaLabel={formatMessage({ id: 'ld.aria.sections.editInstance' }, { title: typedTitle })}
             >
               <FormattedMessage id="ld.editInstance" />
             </Button>
@@ -132,7 +134,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
                 type="checkbox"
                 checked={selectedInstances.includes(row.__meta?.id)}
                 onChange={e => toggleInstanceSelect(row.__meta?.id, e.target.checked)}
-                aria-label={formatMessage({ id: 'ld.aria.table.selectRow' })}
+                aria-label={formatMessage({ id: 'ld.aria.table.selectRow' }, { title: typedTitle })}
               />
             </div>
           ),
