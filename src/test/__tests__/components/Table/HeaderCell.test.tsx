@@ -26,7 +26,7 @@ describe('HeaderCell', () => {
     expect(getHeaderCell(`${elementType}-${defaultProps.cellKey}`).tagName).toBe(elementType.toUpperCase());
   };
 
-  const expectLabel = (label: string | JSX.Element | undefined, expectedContent?: string) => {
+  const expectLabel = (label: string | JSX.Element | undefined) => {
     renderHeaderCell({ label });
 
     if (typeof label === 'string') {
