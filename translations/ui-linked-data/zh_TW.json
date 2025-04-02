@@ -198,8 +198,8 @@
     "ld.aria.advancedSearch.identifier": "Advanced search row identifier",
     "ld.aria.listEntry.open": "Open collapsible list entry",
     "ld.aria.listEntry.close": "Close collapsible list entry",
-    "ld.aria.table.selectRow": "Select table row",
-    "ld.aria.sections.openResourcePreview": "Open resource preview section",
+    "ld.aria.table.selectRow": "Select resource: {title}",
+    "ld.aria.sections.openResourcePreview": "Open resource preview section: {title}",
     "ld.aria.sections.closeResourcePreview": "Close resource preview section",
     "ld.aria.edit.close": "Close edit page",
     "ld.aria.edit.deleteComponent": "Delete component",
@@ -235,5 +235,6 @@
     "ld.mapping": "發生了 mapping 對應問題。請向您的支援團隊回報此問題，並附上截圖和詳細的事件說明。",
     "ld.generic_bad_request": "發生使用者介面問題。請向您的支援團隊回報此問題，並附上截圖和詳細的事件說明。",
     "ld.server": "發生伺服器問題。請向您的支援團隊回報此問題，並附上截圖和詳細的事件說明。",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "The same resource ID already exists.",
+    "ld.aria.sections.editInstance": "Edit instance: {title}"
 }
