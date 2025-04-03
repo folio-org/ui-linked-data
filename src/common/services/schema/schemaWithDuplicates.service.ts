@@ -143,6 +143,8 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
         newUuids[index] = updatedEntryUuid;
       }
 
+      this.updateTwinChildrenEntry(entry, updatedEntryUuid, parentEntry);
+
       const copiedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
       this.schema.set(updatedEntryUuid, copiedEntry);
 
@@ -169,6 +171,19 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     });
 
     return updatedChildren;
+  }
+
+  private updateTwinChildrenEntry(entry: SchemaEntry, updatedEntryUuid: string, parentEntry?: SchemaEntry) {
+    if (!parentEntry?.twinChildren) return;
+
+    const twinChildrenKey = generateTwinChildrenKey(entry);
+    const twinChildren = parentEntry.twinChildren[twinChildrenKey];
+
+    if (twinChildren?.includes(entry.uuid)) {
+      const index = twinChildren.indexOf(entry.uuid);
+
+      twinChildren[index] = updatedEntryUuid;
+    }
   }
 
   private getUpdatedParentEntry({
