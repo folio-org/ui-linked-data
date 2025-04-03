@@ -4,6 +4,9 @@ import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks_
 import { useSearch } from '@common/hooks/useSearch';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useInputsStore, useLoadingStateStore, useSearchStore } from '@src/store';
+import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
+import { SEARCH_RESULTS_LIMIT, SearchSegment } from '@common/constants/search.constants';
+import { SearchQueryParams } from '@common/constants/routes.constants';
 
 const selectedNavigationSegment = 'defaultSegment';
 const defaultSearchBy = 'defaultSearchBy';
@@ -132,6 +135,83 @@ describe('useSearch hook', () => {
     expect(setQuery).toHaveBeenCalledWith('');
     expect(setMessage).toHaveBeenCalledWith('');
     expect(resetPreviewContent).toHaveBeenCalled();
+  });
+
+  describe('handlePageChange', () => {
+    test('handles page change without custom pagination', async () => {
+      const mockSearchParams = new URLSearchParams();
+      mockSearchParams.set(SearchQueryParams.Query, 'test query');
+      mockSearchParams.set(SearchQueryParams.SearchBy, 'test-search-by');
+
+      (useSearchParams as jest.Mock).mockReturnValue([mockSearchParams, setSearchParams]);
+      (useSearchContext as jest.Mock).mockReturnValue({
+        ...mockUseSearchContext,
+        hasCustomPagination: false,
+      });
+
+      const { result } = renderHook(useSearch);
+
+      await result.current.handlePageChange(2, SearchableIndexQuerySelector.Next, 'next');
+
+      expect(fetchData).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'test-search-by',
+        offset: 2 * SEARCH_RESULTS_LIMIT,
+      });
+    });
+
+    test('handles page change with empty search params', async () => {
+      const emptySearchParams = new URLSearchParams();
+      (useSearchParams as jest.Mock).mockReturnValue([emptySearchParams, setSearchParams]);
+      (useSearchContext as jest.Mock).mockReturnValue({
+        ...mockUseSearchContext,
+        hasCustomPagination: false,
+      });
+
+      const { result } = renderHook(useSearch);
+
+      await result.current.handlePageChange(1, SearchableIndexQuerySelector.Next, 'next');
+
+      expect(fetchData).toHaveBeenCalledWith({
+        query: '',
+        searchBy: null,
+        offset: 1 * SEARCH_RESULTS_LIMIT,
+      });
+    });
+
+    test('handles page change with browse search', async () => {
+      (useSearchContext as jest.Mock).mockReturnValue({
+        ...mockUseSearchContext,
+        navigationSegment: { value: SearchSegment.Browse },
+      });
+
+      const { result } = renderHook(useSearch);
+
+      await result.current.handlePageChange(1, SearchableIndexQuerySelector.Next, 'next');
+
+      expect(fetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseQuerySelector: SearchableIndexQuerySelector.Next,
+        }),
+      );
+    });
+
+    test('handles initial page (page 0) with browse search', async () => {
+      (useSearchContext as jest.Mock).mockReturnValue({
+        ...mockUseSearchContext,
+        navigationSegment: { value: SearchSegment.Browse },
+      });
+
+      const { result } = renderHook(useSearch);
+
+      await result.current.handlePageChange(0, SearchableIndexQuerySelector.Next, 'next');
+
+      expect(fetchData).toHaveBeenCalledWith(
+        expect.objectContaining({
+          baseQuerySelector: SearchableIndexQuerySelector.Query,
+        }),
+      );
+    });
   });
 
   test('handles onPrevPageClick with custom pagination', async () => {

@@ -112,8 +112,8 @@ export const useSearch = () => {
     }
 
     const typeSearchBy = updatedSearchBy as SearchIdentifiers;
-    const selectedQuery = savedFacetsData.query || '';
-    const selectedFacets = savedFacetsData.facets || {};
+    const selectedQuery = savedFacetsData.query ?? '';
+    const selectedFacets = savedFacetsData.facets ?? {};
 
     setSearchBy(typeSearchBy);
     setQuery(selectedQuery);
@@ -228,5 +228,6 @@ export const useSearch = () => {
     data,
     fetchData,
     onChangeSegment,
+    handlePageChange
   };
 };
