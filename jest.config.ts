@@ -5,7 +5,14 @@ export default {
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        astTransformers: {
+          before: ['@formatjs/ts-transformer/ts-jest-integration'],
+        },
+      },
+    ],
   },
   coverageDirectory: '<rootDir>/artifacts/coverage-jest/',
   moduleNameMapper: {
