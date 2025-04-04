@@ -190,7 +190,7 @@
     "ld.duplicateImportWarn": "Duplicate import warning",
     "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
     "ld.instance": "Біб.запис (інстанс)",
-    "ld.year": "Year",
+    "ld.year": "Рік",
     "ld.aria.modal.close": "Close {modalKind} modal",
     "ld.aria.advancedSearch.queryInput": "Advanced search row query input",
     "ld.aria.advancedSearch.operator": "Advanced search row operator",
@@ -198,10 +198,10 @@
     "ld.aria.advancedSearch.identifier": "Advanced search row identifier",
     "ld.aria.listEntry.open": "Open collapsible list entry",
     "ld.aria.listEntry.close": "Close collapsible list entry",
-    "ld.aria.table.selectRow": "Select table row",
-    "ld.aria.sections.openResourcePreview": "Open resource preview section",
+    "ld.aria.table.selectRow": "Select resource: {title}",
+    "ld.aria.sections.openResourcePreview": "Open resource preview section: {title}",
     "ld.aria.sections.closeResourcePreview": "Close resource preview section",
-    "ld.aria.edit.close": "Close edit page",
+    "ld.aria.edit.close": "Закрити сторінку редагування",
     "ld.aria.edit.deleteComponent": "Delete component",
     "ld.aria.edit.duplicateComponent": "Duplicate component",
     "ld.aria.resourcePreview.close": "Close resource preview pane",
@@ -235,5 +235,6 @@
     "ld.mapping": "There’s been a mapping issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
     "ld.generic_bad_request": "There’s been a UI issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
     "ld.server": "There’s been a server issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "Такий ІД ресурсу вже існує.",
+    "ld.aria.sections.editInstance": "Редагувати біб.запис (інстанс): {title}"
 }
