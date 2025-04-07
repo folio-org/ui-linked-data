@@ -235,5 +235,6 @@
     "ld.mapping": "Vyskytl se problém s mapováním. Nahlaste to svému týmu podpory se snímky obrazovky a podrobným popisem toho, co se stalo.",
     "ld.generic_bad_request": "Vyskytl se problém s uživatelským rozhraním. Nahlaste to svému týmu podpory se snímky obrazovky a podrobným popisem toho, co se stalo.",
     "ld.server": "Vyskytl se problém se serverem. Nahlaste to svému týmu podpory se snímky obrazovky a podrobným popisem toho, co se stalo.",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "Stejné ID zdroje již existuje.",
+    "ld.aria.sections.editInstance": "Upravit titul: {title}"
 }

@@ -198,8 +198,8 @@
     "ld.aria.advancedSearch.identifier": "Advanced search row identifier",
     "ld.aria.listEntry.open": "Open collapsible list entry",
     "ld.aria.listEntry.close": "Close collapsible list entry",
-    "ld.aria.table.selectRow": "Select table row",
-    "ld.aria.sections.openResourcePreview": "Open resource preview section",
+    "ld.aria.table.selectRow": "Select resource: {title}",
+    "ld.aria.sections.openResourcePreview": "Open resource preview section: {title}",
     "ld.aria.sections.closeResourcePreview": "Close resource preview section",
     "ld.aria.edit.close": "Close edit page",
     "ld.aria.edit.deleteComponent": "Delete component",
@@ -235,5 +235,6 @@
     "ld.mapping": "There’s been a mapping issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
     "ld.generic_bad_request": "There’s been a UI issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
     "ld.server": "There’s been a server issue. Please report this to your support team, with screenshots and a detailed account of what happened.",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "The same resource ID already exists.",
+    "ld.aria.sections.editInstance": "Edit instance: {title}"
 }

@@ -4,11 +4,13 @@
 * Empty header cell in table changed from `<th>` to `<td>`. Fixes [UILD-485]
 * A11y enhanced by including resource titles in ARIA labels for buttons and checkboxes in Search results table. Fixes [UILD-486]
 * Implement updateTwinChildrenEntry method to synchronize UUIDs in twin children on entry updates. Fixes [UILD-492]
+* Refactor `useSearch` hook to use `searchParams` when making API calls after clicking pagination button. Fixes [UILD-517]
 * Add history action check to blocker to prevent navigation blocking on back button. Fixes [UILD-532]
 
 [UILD-485]:https://folio-org.atlassian.net/browse/UILD-485
 [UILD-486]:https://folio-org.atlassian.net/browse/UILD-486
 [UILD-492]: https://folio-org.atlassian.net/browse/UILD-492
+[UILD-517]: https://folio-org.atlassian.net/browse/UILD-517
 [UILD-532]: https://folio-org.atlassian.net/browse/UILD-532
 
 ## 1.0.2 (2025-03-27)

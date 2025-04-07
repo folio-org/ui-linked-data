@@ -198,8 +198,8 @@
     "ld.aria.advancedSearch.identifier": "Advanced search row identifier",
     "ld.aria.listEntry.open": "Open collapsible list entry",
     "ld.aria.listEntry.close": "Close collapsible list entry",
-    "ld.aria.table.selectRow": "Select table row",
-    "ld.aria.sections.openResourcePreview": "Open resource preview section",
+    "ld.aria.table.selectRow": "Select resource: {title}",
+    "ld.aria.sections.openResourcePreview": "Open resource preview section: {title}",
     "ld.aria.sections.closeResourcePreview": "Close resource preview section",
     "ld.aria.edit.close": "Close edit page",
     "ld.aria.edit.deleteComponent": "Delete component",
@@ -235,5 +235,6 @@
     "ld.mapping": "Wystąpił problem z mapowaniem. Zgłoś to swojemu zespołowi wsparcia, dołączając zrzuty ekranu i szczegółowy opis tego, co się stało.",
     "ld.generic_bad_request": "Wystąpił problem z interfejsem użytkownika. Zgłoś to swojemu zespołowi wsparcia, dołączając zrzuty ekranu i szczegółowy opis tego, co się stało.",
     "ld.server": "Wystąpił problem z serwerem. Zgłoś to swojemu zespołowi wsparcia, dołączając zrzuty ekranu i szczegółowy opis tego, co się stało.",
-    "ld.already_exists": "The same resource ID already exists."
+    "ld.already_exists": "Taki sam identyfikator zasobu już istnieje.",
+    "ld.aria.sections.editInstance": "Edit instance: {title}"
 }
