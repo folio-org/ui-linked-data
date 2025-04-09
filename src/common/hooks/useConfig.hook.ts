@@ -85,7 +85,7 @@ export const useConfig = () => {
     });
 
     if (!noStateUpdate) {
-      setUserValues(updatedUserValues || userValues);
+      setUserValues(updatedUserValues ?? userValues);
       setInitialSchemaKey(initKey);
       setSelectedEntries(selectedEntriesService.get());
       setSchema(updatedSchema);
@@ -105,7 +105,7 @@ export const useConfig = () => {
       const response = hasStoredProfiles ? profiles : await fetchProfiles();
       // TODO: UILD-438 - check a list of supported profiles and implement the profile selection
       const selectedProfile = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
-      const templates = preparedFields || prepareFields(response);
+      const templates = preparedFields ?? prepareFields(response);
 
       if (!hasStoredProfiles) {
         setProfiles(response);

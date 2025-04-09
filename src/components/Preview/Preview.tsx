@@ -27,8 +27,8 @@ export const Preview: FC<IPreview> = ({
 }) => {
   const { userValues: userValuesFromState } = useInputsState();
   const { schema: schemaFromState, initialSchemaKey: initialSchemaKeyFromState } = useProfileState();
-  const userValues = altUserValues || userValuesFromState;
-  const schema = altSchema || schemaFromState;
+  const userValues = altUserValues ?? userValuesFromState;
+  const schema = altSchema ?? schemaFromState;
   const initialSchemaKey = altInitKey ?? initialSchemaKeyFromState;
 
   return (
@@ -41,7 +41,7 @@ export const Preview: FC<IPreview> = ({
           base={schema}
           uuid={initialSchemaKey}
           paths={Object.keys(userValues)
-            .map(key => schema.get(key)?.path || '')
+            .map(key => schema.get(key)?.path ?? '')
             .flat()}
           altSchema={altSchema}
           altUserValues={altUserValues}
