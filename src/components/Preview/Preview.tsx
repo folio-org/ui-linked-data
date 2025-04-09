@@ -7,6 +7,7 @@ import './Preview.scss';
 type IPreview = {
   altSchema?: Schema;
   altUserValues?: UserValues;
+  altSelectedEntries?: Array<string>;
   altInitKey?: string;
   altDisplayNames?: Record<string, string>;
   hideEntities?: boolean;
@@ -17,6 +18,7 @@ type IPreview = {
 export const Preview: FC<IPreview> = ({
   altSchema,
   altUserValues,
+  altSelectedEntries,
   altInitKey,
   altDisplayNames,
   hideEntities,
@@ -43,6 +45,7 @@ export const Preview: FC<IPreview> = ({
             .flat()}
           altSchema={altSchema}
           altUserValues={altUserValues}
+          altSelectedEntries={altSelectedEntries}
           altDisplayNames={altDisplayNames}
           hideEntities={hideEntities}
           forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}

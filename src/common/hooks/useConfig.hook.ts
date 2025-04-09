@@ -134,6 +134,7 @@ export const useConfig = () => {
               id: recordId,
               base: updatedSchema,
               userValues: userValuesService.getAllValues(),
+              selectedEntries: selectedEntriesService.get(),
               initKey,
               title: recordTitle,
               entities,
