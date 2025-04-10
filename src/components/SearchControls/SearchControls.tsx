@@ -55,7 +55,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
-  const [searachValue, setSearchValue] = useState(query);
+  const [searchValue, setSearchValue] = useState(query);
   const selectOptions =
     searchByControlOptions && navigationSegment?.value
       ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
@@ -134,7 +134,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               <Input
                 id="id-search-input"
                 type="text"
-                value={searachValue}
+                value={searchValue}
                 onChange={onChangeSearchInput}
                 className="text-input"
                 onPressEnter={submitSearch}
