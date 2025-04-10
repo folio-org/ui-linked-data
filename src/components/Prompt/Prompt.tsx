@@ -44,12 +44,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     setIsSwitchToNewRecordModalOpen(false);
   };
 
-  const blocker = useBlocker(({ currentLocation, nextLocation: { pathname, search }, historyAction }) => {
+  const blocker = useBlocker(({ currentLocation, nextLocation: { pathname, search } }) => {
     // TODO: investigate what's the case for this behavior
     if (currentLocation?.pathname === pathname) return false;
-
-    // Don't block if using browser back button
-    if (historyAction === 'POP') return false;
 
     // ATM that means we're switching to a new record which will
     // use the current one as a reference. Meaning, we'll have to

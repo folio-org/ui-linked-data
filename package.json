@@ -1,6 +1,6 @@
 {
   "name": "@folio/linked-data",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "publishConfig": {
     "registry": "https://repository.folio.org/repository/npm-folio/"
