@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 1.0.4 (IN PROGRESS)
+* Update blocker logic in Prompt component and add fetchableId check in Edit component. Fixes [UILD-543]
+
+[UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
 
 ## 1.0.3 (2025-04-08)
 * Empty header cell in table changed from `<th>` to `<td>`. Fixes [UILD-485]
