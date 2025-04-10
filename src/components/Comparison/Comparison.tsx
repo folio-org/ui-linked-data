@@ -94,7 +94,7 @@ export const Comparison = () => {
         {previewContent
           .sort((a, b) => selectedInstances.indexOf(a.id) - selectedInstances.indexOf(b.id))
           .slice(currentPage, currentPage + 2)
-          .map(({ initKey, base, userValues, id, title, referenceIds }, index) => (
+          .map(({ initKey, base, userValues, id, title, referenceIds, selectedEntries }, index) => (
             <section key={id} className="entry">
               <div className="entry-header">
                 <div className="entry-header-controls">
@@ -123,6 +123,7 @@ export const Comparison = () => {
                 altInitKey={initKey}
                 altSchema={base}
                 altUserValues={userValues}
+                altSelectedEntries={selectedEntries}
                 forceRenderAllTopLevelEntities
               />
             </section>
