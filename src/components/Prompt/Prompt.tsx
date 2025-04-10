@@ -74,10 +74,10 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   };
 
   const proceedNavigation = () => {
+    blocker.proceed?.();
+    setIsEdited(false);
     dispatchProceedNavigationEvent();
     closeAllModals();
-    setIsEdited(false);
-    blocker.proceed?.();
     setRecordStatus({ type: RecordStatus.open });
   };
 
@@ -95,11 +95,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
         navigateToEditPage(forceNavigateTo.pathname, { replace: true });
       } else {
         const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
+        const paramKey = forceNavigateTo.to === ForceNavigateToDest.CreatePage ? QueryParams.Ref : QueryParams.CloneOf;
 
-        forceNavigateTo.to === ForceNavigateToDest.CreatePage
-          ? newSearchParams.set(QueryParams.Ref, recordId)
-          : newSearchParams.set(QueryParams.CloneOf, recordId);
-
+        newSearchParams.set(paramKey, recordId);
         navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
       }
     }
