@@ -170,7 +170,7 @@ const monograph = {
   configType: 'profile',
   json: {
     Profile: {
-      resourceTemplates: [],
+      resourceTemplates: ['lc:RT:bf2:Monograph:Work', 'lc:RT:bf2:Monograph:Instance'],
       author: 'author',
       date: 'date',
       description: 'description',
@@ -200,7 +200,7 @@ describe('EditSection', () => {
       },
       {
         store: useUIStore,
-        state: { currentlyEditedEntityBfid: new Set(['uuid2Bfid']) },
+        state: { currentlyEditedEntityBfid: new Set(['lc:RT:bf2:Monograph:Instance']) },
       },
     ]);
 

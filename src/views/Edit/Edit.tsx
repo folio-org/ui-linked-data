@@ -61,6 +61,7 @@ export const Edit = () => {
       const fetchableId = resourceId ?? cloneOfParam;
 
       if (
+        !fetchableId ||
         (!cloneOfParam && fetchableId && prevResourceId.current === fetchableId) ||
         (cloneOfParam && prevCloneOf.current === cloneOfParam)
       ) {

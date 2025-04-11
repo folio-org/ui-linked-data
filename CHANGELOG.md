@@ -2,8 +2,10 @@
 
 ## 1.0.4 (IN PROGRESS)
 * Added "selectedEntries" property to compared resources to properly render dropdown options. Fixes [UILD-533]
+* Update blocker logic in Prompt component and add fetchableId check in Edit component. Fixes [UILD-543]
 
 [UILD-533]:https://folio-org.atlassian.net/browse/UILD-533
+[UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
 
 * Search query shows slashes when entered value has quotation marks. Fixes [UILD-535].
 

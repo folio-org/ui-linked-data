@@ -76,11 +76,9 @@ describe('Edit', () => {
 
     await renderComponent(null);
 
-    expect(getProfiles).toHaveBeenCalledWith({
-      record: null,
-    });
+    expect(getProfiles).not.toHaveBeenCalled();
     expect(fetchRecord).not.toHaveBeenCalled();
-    expect(clearRecordState).toHaveBeenCalled();
+    expect(clearRecordState).not.toHaveBeenCalled();
   });
 
   test('calls fetchRecord with correct parameters when cloneOfParam search param is provided', async () => {
