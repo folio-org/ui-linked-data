@@ -5,6 +5,10 @@
 
 [UILD-533]:https://folio-org.atlassian.net/browse/UILD-533
 
+* Search query shows slashes when entered value has quotation marks. Fixes [UILD-535].
+
+[UILD-535]: https://folio-org.atlassian.net/browse/UILD-535
+
 ## 1.0.3 (2025-04-08)
 * Empty header cell in table changed from `<th>` to `<td>`. Fixes [UILD-485]
 * A11y enhanced by including resource titles in ARIA labels for buttons and checkboxes in Search results table. Fixes [UILD-486]
