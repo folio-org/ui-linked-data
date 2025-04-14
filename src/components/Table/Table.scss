@@ -34,6 +34,19 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     }
   }
 
+  thead tr > td {
+    height: 0;
+    padding: 0;
+    border: none;
+
+    .table-header-contents-wrapper {
+      height: 100%;
+      padding: 0 0.625rem 0.2rem 0.625rem;
+      border-bottom: 5px solid $blue-600;
+      box-sizing: border-box;
+    }
+  }
+
   th,
   .table-head-cell,
   .table-head-empty {
