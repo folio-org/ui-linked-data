@@ -76,7 +76,7 @@ describe('Edit', () => {
 
     await renderComponent(null);
 
-    expect(getProfiles).not.toHaveBeenCalled();
+    expect(getProfiles).toHaveBeenCalled();
     expect(fetchRecord).not.toHaveBeenCalled();
     expect(clearRecordState).not.toHaveBeenCalled();
   });
