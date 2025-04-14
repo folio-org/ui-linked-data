@@ -35,6 +35,16 @@ export const Edit = () => {
   const prevResourceId = useRef<string | null>(null);
   const prevCloneOf = useRef<string | null>(null);
 
+  function setEntitesBFIds() {
+    const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
+    const isInstancePageType = resourceDecriptionType === ResourceType.instance;
+    const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
+    const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
+
+    setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
+    setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
+  }
+
   useResetRecordStatus();
 
   useEffect(() => {
@@ -51,6 +61,26 @@ export const Edit = () => {
   }, []);
 
   useEffect(() => {
+    async function init() {
+      if (resourceId ?? cloneOfParam) {
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        await getProfiles({});
+        setEntitesBFIds();
+      } catch {
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    init();
+  }, []);
+
+  useEffect(() => {
     resetHasShownAuthorityWarning();
   }, [resourceId]);
 
@@ -61,9 +91,9 @@ export const Edit = () => {
       const fetchableId = resourceId ?? cloneOfParam;
 
       if (
-        !fetchableId ||
         (!cloneOfParam && fetchableId && prevResourceId.current === fetchableId) ||
-        (cloneOfParam && prevCloneOf.current === cloneOfParam)
+        (cloneOfParam && prevCloneOf.current === cloneOfParam) ||
+        (!fetchableId && !refParam)
       ) {
         return;
       }
@@ -84,13 +114,7 @@ export const Edit = () => {
 
         const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
         const resourceReference = refParam;
-        const isInstancePageType = resourceDecriptionType === ResourceType.instance;
-        const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
-        const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
-
-        setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
-        setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
-
+        setEntitesBFIds();
         clearRecordState();
 
         let record: RecordEntry | null = null;

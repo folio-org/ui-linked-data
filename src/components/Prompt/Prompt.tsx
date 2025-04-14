@@ -75,9 +75,9 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
 
   const proceedNavigation = () => {
     blocker.proceed?.();
-    setIsEdited(false);
     dispatchProceedNavigationEvent();
     closeAllModals();
+    setIsEdited(false);
     setRecordStatus({ type: RecordStatus.open });
   };
 
