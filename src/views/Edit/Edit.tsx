@@ -52,15 +52,6 @@ export const Edit = () => {
 
     scrollEntity({ top: 0, behavior: 'instant' });
 
-    return () => {
-      resetRecord();
-      resetUserValues();
-      resetSelectedEntries();
-      resetHasShownAuthorityWarning();
-    };
-  }, []);
-
-  useEffect(() => {
     async function init() {
       if (resourceId ?? cloneOfParam) {
         return;
@@ -78,6 +69,13 @@ export const Edit = () => {
     }
 
     init();
+
+    return () => {
+      resetRecord();
+      resetUserValues();
+      resetSelectedEntries();
+      resetHasShownAuthorityWarning();
+    };
   }, []);
 
   useEffect(() => {
