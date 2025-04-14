@@ -54,6 +54,7 @@ type FieldsProps = {
   paths: Array<string>;
   altSchema?: Schema;
   altUserValues?: UserValues;
+  altSelectedEntries?: Array<string>;
   altDisplayNames?: Record<string, string>;
   hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
@@ -66,15 +67,17 @@ export const Fields = ({
   level = 0,
   altSchema,
   altUserValues,
+  altSelectedEntries,
   altDisplayNames,
   hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const { userValues: userValuesFromState, selectedEntries } = useInputsState();
+  const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { currentlyPreviewedEntityBfid } = useUIState();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
+  const selectedEntries = altSelectedEntries || selectedEntriesFromState;
 
   const entry = base.get(uuid);
   const isOnBranchWithUserValue = paths.includes(uuid);
@@ -85,7 +88,7 @@ export const Fields = ({
     entry?.type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
 
   const controlledEntry = schema.get(getParentEntryUuid(entry?.path || []))?.linkedEntry?.controlledBy;
-  const controlledEntryValue = controlledEntry ? userValuesFromState[controlledEntry] : undefined;
+  const controlledEntryValue = controlledEntry ? userValues[controlledEntry] : undefined;
   const visibleDropdownOption =
     isDependentDropdownOption && controlledEntryValue && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
 
@@ -166,6 +169,7 @@ export const Fields = ({
               level={level + 1}
               altSchema={altSchema}
               altUserValues={altUserValues}
+              altSelectedEntries={altSelectedEntries}
               altDisplayNames={altDisplayNames}
               hideEntities={hideEntities}
               forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
