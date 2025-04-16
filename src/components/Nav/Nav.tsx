@@ -18,7 +18,7 @@ export const Nav = () => {
     isVisible && (
       <div data-testid="nav" className={DOM_ELEMENTS.classNames.nav}>
         {isEditSectionOpen && !marcPreviewData && <EditControlPane />}
-        {marcPreviewData && <ViewMarcControlPane />}
+        {marcPreviewData && !isExternalResourceSectionOpen && <ViewMarcControlPane />}
         {isExternalResourceSectionOpen && <PreviewExternalResourcePane />}
       </div>
     )
