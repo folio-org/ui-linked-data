@@ -134,14 +134,8 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
 
       if (!entry) return;
 
-      if (isAutoDuplication && entry?.cloneIndex && entry?.cloneIndex > 0 && parentEntry) {
-        parentEntry.children = parentEntry.children?.filter(child => child !== entry.uuid) || [];
-
-        if (parentEntry.twinChildren && entry.uri && parentEntry.twinChildren[entry.uri]) {
-          parentEntry.twinChildren[entry.uri] = parentEntry.twinChildren[entry.uri].filter(
-            twinUuid => twinUuid !== entry.uuid,
-          );
-        }
+      if (isAutoDuplication && this.isAutoDuplicatedEntry(entry)) {
+        this.removeEntryReferences(entry, parentEntry);
 
         return;
       }
@@ -183,6 +177,31 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     });
 
     return updatedChildren;
+  }
+
+  private isAutoDuplicatedEntry(entry: SchemaEntry): boolean {
+    return Boolean(entry?.cloneIndex && entry.cloneIndex > 0);
+  }
+
+  private removeEntryReferences(entry: SchemaEntry, parentEntry?: SchemaEntry): void {
+    if (!parentEntry) return;
+
+    this.removeFromParentChildren(entry, parentEntry);
+    this.removeFromTwinChildren(entry, parentEntry);
+  }
+
+  private removeFromParentChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
+    parentEntry.children = parentEntry.children?.filter(childId => childId !== entry.uuid) || [];
+  }
+
+  private removeFromTwinChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
+    const hasTwinChildren = parentEntry.twinChildren && entry.uri && parentEntry.twinChildren[entry.uri];
+
+    if (!hasTwinChildren || !parentEntry.twinChildren || !entry.uri) {
+      return;
+    }
+
+    parentEntry.twinChildren[entry.uri] = parentEntry.twinChildren[entry.uri].filter(twinId => twinId !== entry.uuid);
   }
 
   private updateTwinChildrenEntry(entry: SchemaEntry, updatedEntryUuid: string, parentEntry?: SchemaEntry) {
