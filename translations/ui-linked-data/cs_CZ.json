@@ -225,7 +225,7 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "Tento popis zahrnuje jednu nebo více nekontrolovaných autorit.\n Chcete uložit změny?",
     "ld.errorAssigningAuthority": "Chyba při přiřazování autority",
     "ld.errorAssigningAuthority.not_valid_for_target": "Vyberte prosím autoritu s typem zdroje odpovídajícím upravovanému poli autority (např. autorita LCNAF pro pole Tvůrce)",
-    "ld.errorAssigningAuthority.no_lccn": "Prozatím lze přidělovat pouze autority Kongresové knihovny. Jedná se o dočasný stav, dokud nebudou podporovány další typy zdrojů.",
+    "ld.errorAssigningAuthority.no_lccn": "Prozatím lze přidělovat pouze autority Kongresové knihovny. Jedná se o dočasný stav, dokud nebudou podporovány další typy obsahu.",
     "ld.errorAssigningAuthority.unsupported_marc": "Vybraná autorita není namapována na propojená data a nelze ji zatím přiřadit. Je to dočasné, protože mapování MARC probíhá.",
     "ld.required_primary_main_title": "Pro uložení přidejte hlavní název.",
     "ld.lccn_does_not_match_pattern": "Ověření vzoru LCCN povoleno: Uveďte LCCN, které odpovídá standardní struktuře.",
