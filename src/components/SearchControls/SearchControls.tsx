@@ -54,8 +54,8 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
-  const isDisabledResetButton = !query && !searchQueryParam;
   const [searchValue, setSearchValue] = useState(query);
+  const isDisabledResetButton = !query && !searchQueryParam && !searchValue;
   const selectOptions =
     searchByControlOptions && navigationSegment?.value
       ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
@@ -78,6 +78,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetPreviewContent();
     resetFullDisplayComponentType();
     resetSelectedInstances();
+    setSearchValue('');
     hasSearchParams && setSearchParams({});
     hasSearchParams && setNavigationState({});
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
