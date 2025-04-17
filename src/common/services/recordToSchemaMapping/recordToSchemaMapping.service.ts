@@ -108,7 +108,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     // generate repeatable fields
     if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
       const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[parseInt(recordGroupIndex) - 1];
-      const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) ?? '';
+      const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, true) ?? '';
       this.updatedSchema = this.repeatableFieldsService?.get();
       this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
@@ -419,7 +419,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private createDuplicateEntry(schemaUiElem: SchemaEntry): {
     newEntryUuid: string;
   } {
-    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) ?? '';
+    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, true) ?? '';
     this.updatedSchema = this.repeatableFieldsService?.get();
 
     this.schemaArray = Array.from(this.updatedSchema?.values() || []);

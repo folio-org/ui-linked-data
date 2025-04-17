@@ -88,7 +88,7 @@ describe('RecordToSchemaMappingService', () => {
         displayName: 'Literal label 1',
         path: ['testKey-1', 'testKey-2', 'testKey-3'],
       }),
-      false,
+      true,
     );
     expect(repeatableFieldsService.get).toHaveBeenCalled();
     expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
@@ -139,7 +139,7 @@ describe('RecordToSchemaMappingService', () => {
         displayName: 'Dropdown Option 1 Item 1',
         path: ['testKey-1', 'testKey-2', 'testKey-5', 'testKey-7', 'testKey-9'],
       }),
-      false,
+      true,
     );
 
     expect(repeatableFieldsService.get).toHaveBeenCalled();

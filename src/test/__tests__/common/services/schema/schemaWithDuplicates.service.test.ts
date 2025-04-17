@@ -1,6 +1,7 @@
 import * as uuid from 'uuid';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
+import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
 
 jest.mock('uuid');
 
@@ -302,6 +303,93 @@ describe('SchemaWithDuplicatesService', () => {
       const updatedParent = schemaWithDuplicatesService.get().get('testKey-1');
       expect(updatedParent?.twinChildren?.['mockUri']).toEqual(['testKey-3']);
       expect(updatedParent?.children).toEqual(['testKey-3']);
+    });
+  });
+
+  describe('duplicateEntry with auto-duplication', () => {
+    const initialSchema = new Map([
+      [
+        'parent',
+        {
+          uuid: 'parent',
+          path: ['parent'],
+          uri: 'parent-uri',
+          children: ['child-1', 'child-2'],
+          constraints: { repeatable: true },
+          twinChildren: {
+            'child-uri': ['child-1', 'child-2'],
+          },
+        },
+      ],
+      [
+        'child-1',
+        {
+          uuid: 'child-1',
+          path: ['parent', 'child-1'],
+          uri: 'child-uri',
+          cloneIndex: 0,
+          children: [],
+        },
+      ],
+      [
+        'child-2',
+        {
+          uuid: 'child-2',
+          path: ['parent', 'child-2'],
+          uri: 'child-uri',
+          cloneIndex: 1,
+          children: [],
+        },
+      ],
+    ]) as Schema;
+
+    let selectedEntriesService: ISelectedEntries;
+
+    beforeEach(() => {
+      jest
+        .spyOn(uuid, 'v4')
+        .mockReturnValueOnce('new-parent')
+        .mockReturnValueOnce('new-child-1')
+        .mockReturnValueOnce('new-child-2');
+
+      selectedEntriesService = new SelectedEntriesService([]);
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(initialSchema, selectedEntriesService);
+    });
+
+    test('skips auto-duplicated entries when duplicating with isAutoDuplication flag', () => {
+      schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, true);
+
+      const resultSchema = schemaWithDuplicatesService.get();
+
+      // Check that new parent entry was created
+      expect(resultSchema.get('new-parent')).toBeTruthy();
+
+      // Check that only the first child was duplicated (non auto-duplicated entry)
+      expect(resultSchema.get('new-parent')?.children).toHaveLength(1);
+      expect(resultSchema.get('new-parent')?.children).toContain('new-child-1');
+
+      // Check that twin children were updated correctly
+      expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toHaveLength(1);
+      expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-1');
+    });
+
+    test('preserves all entries when duplicating without isAutoDuplication flag', () => {
+      schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, false);
+
+      const resultSchema = schemaWithDuplicatesService.get();
+
+      // Check that new parent entry was created
+      expect(resultSchema.get('new-parent')).toBeTruthy();
+
+      // Check that both children were duplicated
+      expect(resultSchema.get('new-parent')?.children).toHaveLength(2);
+      expect(resultSchema.get('new-parent')?.children).toContain('new-child-1');
+      expect(resultSchema.get('new-parent')?.children).toContain('new-child-2');
+
+      // Check that twin children were preserved
+      expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toHaveLength(2);
+      expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-1');
+      expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-2');
     });
   });
 });
