@@ -187,14 +187,14 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     if (!parentEntry) return;
 
     this.removeFromParentChildren(entry, parentEntry);
-    this.removeFromTwinChildren(entry, parentEntry);
+    this.removeFromParentTwinChildren(entry, parentEntry);
   }
 
   private removeFromParentChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
     parentEntry.children = parentEntry.children?.filter(childId => childId !== entry.uuid) || [];
   }
 
-  private removeFromTwinChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
+  private removeFromParentTwinChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
     const hasTwinChildren = parentEntry.twinChildren && entry.uri && parentEntry.twinChildren[entry.uri];
 
     if (!hasTwinChildren || !parentEntry.twinChildren || !entry.uri) {
