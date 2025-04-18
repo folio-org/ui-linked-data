@@ -6,6 +6,7 @@
 * Search query shows slashes when entered value has quotation marks. Fixes [UILD-535].
 * Fix double title shown when importing after marc preview is opened. Fixes [UILD-534].
 * Add safe formatting to the console error message. Fixes [UILD-526].
+* Clear MARC preview state to display controls on the External Preview pane. Fixes [UILD-534].
 
 [UILD-533]: https://folio-org.atlassian.net/browse/UILD-533
 [UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
