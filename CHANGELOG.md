@@ -4,12 +4,14 @@
 * Added "selectedEntries" property to compared resources to properly render dropdown options. Fixes [UILD-533]
 * Update blocker logic in Prompt component and add fetchableId check in Edit component. Fixes [UILD-543]
 * Search query shows slashes when entered value has quotation marks. Fixes [UILD-535].
-* Fix double title shown when importing after marc preview is opened. Fixex [UILD-534].
+* Fix double title shown when importing after marc preview is opened. Fixes [UILD-534].
+* Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
 
-[UILD-533]: https://folio-org.atlassian.net/browse/UILD-533
+[UILD-533]:https://folio-org.atlassian.net/browse/UILD-533
 [UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
-[UILD-535]: https://folio-org.atlassian.net/browse/UILD-535
-[UILD-534]: https://folio-org.atlassian.net/browse/UILD-534
+[UILD-535]:https://folio-org.atlassian.net/browse/UILD-535
+[UILD-534]:https://folio-org.atlassian.net/browse/UILD-534
+[UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
 
 
 ## 1.0.3 (2025-04-08)

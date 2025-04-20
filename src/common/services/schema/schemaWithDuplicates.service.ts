@@ -27,14 +27,14 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     this.schema = cloneDeep(schema);
   }
 
-  duplicateEntry(entry: SchemaEntry) {
+  duplicateEntry(entry: SchemaEntry, isAutoDuplication?: boolean) {
     const { path, children, constraints } = entry;
 
     if (!constraints?.repeatable) return;
 
     const updatedEntryUuid = uuidv4();
     const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
-    updatedEntry.children = this.getUpdatedChildren(children, updatedEntry);
+    updatedEntry.children = this.getUpdatedChildren(children, updatedEntry, isAutoDuplication);
 
     const parentEntryUuid = getParentEntryUuid(path);
     const parentEntry = this.schema.get(parentEntryUuid);
@@ -124,7 +124,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     return copiedEntry;
   }
 
-  private getUpdatedChildren(children: string[] | undefined, parentEntry?: SchemaEntry) {
+  private getUpdatedChildren(children: string[] | undefined, parentEntry?: SchemaEntry, isAutoDuplication?: boolean) {
     const updatedChildren = [] as string[];
     const parentElemPath = parentEntry?.path;
     const newUuids = children?.map(() => uuidv4());
@@ -133,6 +133,12 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
       const entry = this.schema.get(entryUuid);
 
       if (!entry) return;
+
+      if (isAutoDuplication && this.isAutoDuplicatedEntry(entry)) {
+        this.removeEntryReferences(entry, parentEntry);
+
+        return;
+      }
 
       const { children } = entry;
       let updatedEntryUuid = newUuids?.[index] ?? uuidv4();
@@ -148,7 +154,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
       const copiedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
       this.schema.set(updatedEntryUuid, copiedEntry);
 
-      copiedEntry.children = this.getUpdatedChildren(children, copiedEntry);
+      copiedEntry.children = this.getUpdatedChildren(children, copiedEntry, isAutoDuplication);
 
       const { updatedEntry, controlledByEntry } = this.getUpdatedAssociatedEntries({
         initialEntry: copiedEntry,
@@ -171,6 +177,31 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     });
 
     return updatedChildren;
+  }
+
+  private isAutoDuplicatedEntry(entry: SchemaEntry): boolean {
+    return Boolean(entry?.cloneIndex && entry.cloneIndex > 0);
+  }
+
+  private removeEntryReferences(entry: SchemaEntry, parentEntry?: SchemaEntry): void {
+    if (!parentEntry) return;
+
+    this.removeFromParentChildren(entry, parentEntry);
+    this.removeFromParentTwinChildren(entry, parentEntry);
+  }
+
+  private removeFromParentChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
+    parentEntry.children = parentEntry.children?.filter(childId => childId !== entry.uuid) || [];
+  }
+
+  private removeFromParentTwinChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
+    const hasTwinChildren = parentEntry.twinChildren && entry.uri && parentEntry.twinChildren[entry.uri];
+
+    if (!hasTwinChildren || !parentEntry.twinChildren || !entry.uri) {
+      return;
+    }
+
+    parentEntry.twinChildren[entry.uri] = parentEntry.twinChildren[entry.uri].filter(twinId => twinId !== entry.uuid);
   }
 
   private updateTwinChildrenEntry(entry: SchemaEntry, updatedEntryUuid: string, parentEntry?: SchemaEntry) {
