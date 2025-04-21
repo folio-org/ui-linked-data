@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
-import { removeBackslashes } from '@common/helpers/search.helper';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select } from '@components/Select';
