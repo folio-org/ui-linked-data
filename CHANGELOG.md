@@ -7,12 +7,14 @@
 * Fix double title shown when importing after marc preview is opened. Fixes [UILD-534].
 * Add safe formatting to the console error message. Fixes [UILD-526].
 * Clear MARC preview state to display controls on the External Preview pane. Fixes [UILD-534].
+* Fix text alignment for details title in Search results set. Fixes [UILD-529].
 
 [UILD-533]: https://folio-org.atlassian.net/browse/UILD-533
 [UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
 [UILD-535]: https://folio-org.atlassian.net/browse/UILD-535
 [UILD-534]: https://folio-org.atlassian.net/browse/UILD-534
 [UILD-526]: https://folio-org.atlassian.net/browse/UILD-526
+[UILD-529]: https://folio-org.atlassian.net/browse/UILD-529
 
 
 ## 1.0.3 (2025-04-08)
