@@ -102,3 +102,12 @@ export const generateSearchParamsState = (query: string | null, searchBy?: Searc
 export const normalizeQuery = (query?: string | null) => {
   return query?.replaceAll(/['"/\\]/g, '\\$&');
 };
+
+export const removeBackslashes = (query?: string | null) => {
+  if (!query) return '';
+
+  return query
+    .replace(/\\"/g, '"') // replace escaped double quotes with double quotes
+    .replace(/\\\\/g, '\\') // replace double backslashes with single
+    .replace(/([^\\])\\(?!\\)/g, '$1'); // remove single backslashes;
+};
