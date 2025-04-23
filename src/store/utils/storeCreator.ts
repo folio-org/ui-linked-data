@@ -4,7 +4,7 @@ import { IS_PROD_MODE } from '@common/constants/bundle.constants';
 
 const STORE_NAME = 'Linked Data Editor';
 
-const storeResetFunctions = new Set<() => void>();
+export const storeResetFunctions = new Set<() => void>();
 
 export type WithDevtools<T> = ReturnType<typeof devtools<T>>;
 
