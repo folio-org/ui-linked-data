@@ -1,5 +1,10 @@
 # Change history for ui-linked-data
 
+## 1.1.0 (IN PROGRESS)
+* Clear global state on web component disconnection. Refs [UILD-552].
+ 
+[UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
+
 ## 1.0.4 (IN PROGRESS)
 * Added "selectedEntries" property to compared resources to properly render dropdown options. Fixes [UILD-533]
 * Update blocker logic in Prompt component and add fetchableId check in Edit component. Fixes [UILD-543]

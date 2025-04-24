@@ -10,3 +10,5 @@ export * from './stores/search';
 
 // Selector hooks
 export * from './selectors';
+
+export { resetAllStores } from './utils/storeCreator';
