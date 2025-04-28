@@ -32,7 +32,7 @@ export const Edit = () => {
   const typeParam = queryParams.get(QueryParams.Type);
   const refParam = queryParams.get(QueryParams.Ref);
 
-  const prevResourceId = useRef<string | null>(null);
+  const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
 
   function setEntitesBFIds() {
@@ -89,7 +89,7 @@ export const Edit = () => {
       const fetchableId = resourceId ?? cloneOfParam;
 
       if (
-        (!cloneOfParam && fetchableId && prevResourceId.current === fetchableId) ||
+        (!cloneOfParam && resourceId && prevResourceId.current === resourceId) ||
         (cloneOfParam && prevCloneOf.current === cloneOfParam) ||
         (!fetchableId && !refParam)
       ) {
@@ -101,7 +101,7 @@ export const Edit = () => {
       try {
         if (fetchableId) {
           prevCloneOf.current = cloneOfParam;
-          prevResourceId.current = fetchableId;
+          prevResourceId.current = resourceId;
 
           await fetchRecord(fetchableId);
 
