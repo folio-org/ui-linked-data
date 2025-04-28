@@ -100,11 +100,9 @@ export const Edit = () => {
 
       try {
         if (fetchableId) {
-          if (cloneOfParam) {
-            prevCloneOf.current = cloneOfParam;
-          }
-
+          prevCloneOf.current = cloneOfParam;
           prevResourceId.current = resourceId;
+
           await fetchRecord(fetchableId);
 
           return;
