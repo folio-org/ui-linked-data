@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 1.0.5 (IN PROGRESS)
+* Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
+
+[UILD-553]:https://folio-org.atlassian.net/browse/UILD-553
 
 ## 1.0.4 (2025-04-24)
 * Added "selectedEntries" property to compared resources to properly render dropdown options. Fixes [UILD-533]
