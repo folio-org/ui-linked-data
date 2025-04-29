@@ -235,6 +235,6 @@
     "ld.mapping": "Er heeft zich een probleem voorgedaan met de mapping. Rapport dit alstublieft aan uw supportteam, met schermafbeeldingen en een gedetailleerd verslag van wat er is gebeurd.",
     "ld.generic_bad_request": "Er heeft zich een UI probleem voorgedaan. Rapport dit alstublieft aan uw supportteam, met schermafbeeldingen en een gedetailleerd verslag van wat er is gebeurd.",
     "ld.server": "Er is een probleem met de server. Rapport dit alstublieft aan uw supportteam, met schermafbeeldingen en een gedetailleerd verslag van wat er is gebeurd.",
-    "ld.already_exists": "The same resource ID already exists.",
-    "ld.aria.sections.editInstance": "Edit instance: {title}"
+    "ld.already_exists": "Hetzelfde ID van de bron bestaat al.",
+    "ld.aria.sections.editInstance": "Instance bewerken: {titel}"
 }
