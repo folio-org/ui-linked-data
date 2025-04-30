@@ -3,14 +3,11 @@ export const Profile = [
     "uuid": "ade54fa5-c456-4884-9996-241c913d1e6d",
     "type": "profile",
     "path": ["ade54fa5-c456-4884-9996-241c913d1e6d"],
-    "displayName": "BIBFRAME 2.0 Monograph",
+    "displayName": "Monograph",
     "bfid": "lc:profile:bf2:Monograph",
     "children": [
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "17d2875b-f164-4de9-9597-59012a58320d",
-      "ff17d38e-a9a5-4d52-8d87-2f564148b024",
-      "5e5533bc-3b68-4f46-8ce3-52da2e8257bd"
     ],
     "htmlId": "Monograph::0"
   },
@@ -36,18 +33,10 @@ export const Profile = [
       "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
       "9cc073dd-7c9f-470d-b4d3-ae1b5d1afa1b",
       "9fce2e4c-c16a-4ba8-b313-19ce2b9f47ff",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
       "2d5f32f0-005f-4313-b1e0-7fa13fd9d50a",
       '0c3d8d8d-a561-4750-a743-856a05c0d13e'
-      // "8e1f9732-1e16-4034-b060-b4c66a8c23b9"
     ],
     "htmlId": "Monograph::0__Work::0",
-    "twinChildren": {
-      "http://id.loc.gov/ontologies/bibframe/classification": [
-        "9fce2e4c-c16a-4ba8-b313-19ce2b9f47ff",
-        "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2"
-      ]
-    }
   },
   {
     "uuid": "4f06d90b-bc8e-4246-8614-88057a9305dc",
@@ -112,7 +101,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f_empty"
     ],
@@ -129,7 +117,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f"
     ],
     "displayName": "Subclass",
@@ -164,7 +151,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "3697eaa3-af9d-43ea-bc29-a4fc083d90a2"
     ],
@@ -182,7 +168,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "01373a1f-f8a9-46b9-b3a5-a0a94fbd6da8"
     ],
@@ -200,7 +185,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "0b723982-ff76-4636-99b2-cb5d42a87d9f"
     ],
@@ -218,7 +202,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "78a8d284-cc4c-417e-a300-30f9c558261b"
     ],
@@ -236,7 +219,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "bdfe14bb-0080-4ae9-ab04-c198f53a611f",
       "30b67a19-bba4-421c-a013-19df8c0dfab4"
     ],
@@ -254,7 +236,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "4f06d90b-bc8e-4246-8614-88057a9305dc",
-      "9b41e7a3-01e8-4ca1-a073-ed82509ef527",
       "dff3319a-104d-4289-bf34-2b74c67633df"
     ],
     "displayName": "Relationship",
@@ -1672,39 +1653,15 @@ export const Profile = [
     },
     "htmlId": "Monograph::0__Work::0__content::0"
   },
-  /* {
-    "uuid": "8e1f9732-1e16-4034-b060-b4c66a8c23b9",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "8e1f9732-1e16-4034-b060-b4c66a8c23b9"
-    ],
-    "displayName": "Language",
-    "uri": "http://id.loc.gov/ontologies/bibframe/language",
-    "uriBFLite": "http://bibfra.me/vocab/lite/language",
-    "constraints": {
-      "repeatable": true,
-      "editable": true,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {
-        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Language"
-      }
-    },
-    "children": ["0c3d8d8d-a561-4750-a743-856a05c0d13e"],
-    "htmlId": "Monograph::0__Work::0__language::0"
-  }, */
   {
     "uuid": "0c3d8d8d-a561-4750-a743-856a05c0d13e",
     "type": "simple",
     "path": [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      // "8e1f9732-1e16-4034-b060-b4c66a8c23b9",
       "0c3d8d8d-a561-4750-a743-856a05c0d13e"
     ],
+    "groupName": "Language",
     "displayName": "Language code",
     "uri": "http://www.w3.org/2002/07/owl#sameAs",
     "uriBFLite": "http://bibfra.me/vocab/lite/language",
@@ -1737,7 +1694,6 @@ export const Profile = [
       "5e3dbdaa-9b6b-465d-b006-1c74db8df8de",
       "c49d71ba-aaf9-4f53-8d94-541b12af20c2",
       "b9401d74-ede6-4573-9c0d-46df374c0a2c",
-      // "80d2bad5-ff0d-4204-b7ea-c224fbaa2a04",
       "d67511ae-335d-4a87-99ca-6c17027171c0",
       "bf793ffd-1630-4526-861a-bb9485cec5bc",
       "bf793ffd-1630-4526-861a-bb9485cec5bc1",
@@ -3306,36 +3262,15 @@ export const Profile = [
     },
     "htmlId": "Monograph::0__Instance::0__media::0"
   },
-  /* {
-    "uuid": "80d2bad5-ff0d-4204-b7ea-c224fbaa2a04",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "80d2bad5-ff0d-4204-b7ea-c224fbaa2a04"
-    ],
-    "displayName": "Extent",
-    "uri": "http://id.loc.gov/ontologies/bibframe/extent",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["d67511ae-335d-4a87-99ca-6c17027171c0"],
-    "htmlId": "Monograph::0__Instance::0__extent::0"
-  }, */
   {
     "uuid": "d67511ae-335d-4a87-99ca-6c17027171c0",
     "type": "literal",
     "path": [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      // "80d2bad5-ff0d-4204-b7ea-c224fbaa2a04",
       "d67511ae-335d-4a87-99ca-6c17027171c0"
     ],
+    "groupName": "Extent",
     "displayName": "Extent",
     "uri": "http://www.w3.org/2000/01/rdf-schema#label",
     "uriBFLite": "http://bibfra.me/vocab/lite/extent",
@@ -3503,319 +3438,5 @@ export const Profile = [
       "valueDataType": {}
     },
     "htmlId": "Monograph::0__Instance::0__accessLocation::0__rdf-schema#Resource$$URL::0__note::0__Note$$NoteSimple::0__note::0"
-  },
-  {
-    "uuid": "6649f36c-d0c5-4ee9-9980-fd13e667fa7a",
-    "type": "dropdownOption",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "6649f36c-d0c5-4ee9-9980-fd13e667fa7a"
-    ],
-    "displayName": "Library of Congress Classification",
-    "bfid": "lc:RT:bf2:LCC",
-    "uri": "http://id.loc.gov/ontologies/bibframe/ClassificationLcc",
-    "uriBFLite": "lc",
-    "children": [
-      "25b5151a-0489-4bc0-b737-b50ee087192f",
-      "a734e011-bbb3-4e1d-b8f9-c932a080913d",
-      "6af54fa2-6a69-4643-b3b2-4eef7a4eb0d8",
-      "fed1557c-ab28-4089-bbae-0973bf0f600a"
-    ],
-    "htmlId": "Monograph::0__Work::0__classification::1__lc$$LCC::0"
-  },
-  {
-    "uuid": "25b5151a-0489-4bc0-b737-b50ee087192f",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "6649f36c-d0c5-4ee9-9980-fd13e667fa7a",
-      "25b5151a-0489-4bc0-b737-b50ee087192f"
-    ],
-    "displayName": "Classification number",
-    "uri": "http://id.loc.gov/ontologies/bibframe/classificationPortion",
-    "uriBFLite": "http://bibfra.me/vocab/marc/code",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__lc$$LCC::0__code::0",
-    "children": []
-  },
-  {
-    "uuid": "a734e011-bbb3-4e1d-b8f9-c932a080913d",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "6649f36c-d0c5-4ee9-9980-fd13e667fa7a",
-      "a734e011-bbb3-4e1d-b8f9-c932a080913d"
-    ],
-    "displayName": "Additional call number information",
-    "uri": "http://id.loc.gov/ontologies/bibframe/itemPortion",
-    "uriBFLite": "http://bibfra.me/vocab/marc/itemNumber",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__lc$$LCC::0__itemNumber::0",
-    "children": []
-  },
-  {
-    "uuid": "6af54fa2-6a69-4643-b3b2-4eef7a4eb0d8",
-    "type": "complex",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "6649f36c-d0c5-4ee9-9980-fd13e667fa7a",
-      "6af54fa2-6a69-4643-b3b2-4eef7a4eb0d8"
-    ],
-    "displayName": "Assigning agency",
-    "uri": "http://id.loc.gov/ontologies/bibframe/assigner",
-    "uriBFLite": "_assigningSourceReference",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
-      "valueDataType": {
-        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent"
-      }
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__lc$$LCC::0___assigningSourceReference::0",
-    "children": []
-  },
-  {
-    "uuid": "fed1557c-ab28-4089-bbae-0973bf0f600a",
-    "type": "simple",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "6649f36c-d0c5-4ee9-9980-fd13e667fa7a",
-      "fed1557c-ab28-4089-bbae-0973bf0f600a"
-    ],
-    "displayName": "Used by assigning agency?",
-    "uri": "http://id.loc.gov/ontologies/bibframe/status",
-    "uriBFLite": "http://bibfra.me/vocab/marc/status",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": ["http://id.loc.gov/vocabulary/mstatus"],
-      "valueDataType": {
-        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Status"
-      }
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__lc$$LCC::0__status::0",
-    "children": []
-  },
-  {
-    "uuid": "1e908830-f60a-4e71-b634-bd04c8313662",
-    "type": "dropdownOption",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662"
-    ],
-    "displayName": "Dewey Decimal Classification",
-    "bfid": "lc:RT:bf2:DDC",
-    "uri": "http://id.loc.gov/ontologies/bibframe/ClassificationDdc",
-    "uriBFLite": "ddc",
-    "children": [
-      "412345b4-4667-478d-9bfc-4c70f62a70a4",
-      "a108885d-a0d0-4ae2-a246-492b33a52584",
-      "cd5d7c6a-2df8-4e0e-9f0a-58d0cee4db4e",
-      "e1d05afa-48b6-4847-a912-21657e02a390",
-      "679053f5-0e3f-49e4-9260-b9ea326212a5"
-    ],
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0"
-  },
-  {
-    "uuid": "412345b4-4667-478d-9bfc-4c70f62a70a4",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "412345b4-4667-478d-9bfc-4c70f62a70a4"
-    ],
-    "displayName": "Classification number",
-    "uri": "http://id.loc.gov/ontologies/bibframe/classificationPortion",
-    "uriBFLite": "http://bibfra.me/vocab/marc/code",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0__code::0",
-    "children": []
-  },
-  {
-    "uuid": "a108885d-a0d0-4ae2-a246-492b33a52584",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "a108885d-a0d0-4ae2-a246-492b33a52584"
-    ],
-    "displayName": "Additional call number information",
-    "uri": "http://id.loc.gov/ontologies/bibframe/itemPortion",
-    "uriBFLite": "http://bibfra.me/vocab/marc/itemNumber",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0__itemNumber::0",
-    "children": []
-  },
-  {
-    "uuid": "cd5d7c6a-2df8-4e0e-9f0a-58d0cee4db4e",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "cd5d7c6a-2df8-4e0e-9f0a-58d0cee4db4e"
-    ],
-    "displayName": "Dewey Edition number",
-    "uri": "http://id.loc.gov/ontologies/bibframe/source",
-    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
-    "constraints": {
-      "repeatable": true,
-      "editable": true,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": { "dataTypeURI": "" }
-    },
-    "children": ["659808ab-8d26-4ebc-86c9-2632e8800f59"],
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0__edition::0"
-  },
-  {
-    "uuid": "659808ab-8d26-4ebc-86c9-2632e8800f59",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "cd5d7c6a-2df8-4e0e-9f0a-58d0cee4db4e",
-      "659808ab-8d26-4ebc-86c9-2632e8800f59"
-    ],
-    "displayName": "Dewey Edition number",
-    "uri": "http://id.loc.gov/ontologies/bibframe/code",
-    "uriBFLite": "http://bibfra.me/vocab/marc/editionNumber",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0__edition::0__Source$$DDCEdNum::0__editionNumber::0",
-    "children": []
-  },
-  {
-    "uuid": "e1d05afa-48b6-4847-a912-21657e02a390",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "e1d05afa-48b6-4847-a912-21657e02a390"
-    ],
-    "displayName": "Dewey full or abridged?",
-    "uri": "http://id.loc.gov/ontologies/bibframe/edition",
-    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0__edition::0",
-    "children": []
-  },
-  {
-    "uuid": "679053f5-0e3f-49e4-9260-b9ea326212a5",
-    "type": "complex",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-      "1e908830-f60a-4e71-b634-bd04c8313662",
-      "679053f5-0e3f-49e4-9260-b9ea326212a5"
-    ],
-    "displayName": "Assigner",
-    "uri": "http://id.loc.gov/ontologies/bibframe/assigner",
-    "uriBFLite": "_assigningSourceReference",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
-      "valueDataType": {
-        "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent"
-      }
-    },
-    "htmlId": "Monograph::0__Work::0__classification::1__ddc$$DDC::0___assigningSourceReference::0",
-    "children": []
-  },
-  {
-    "uuid": "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2",
-    "type": "dropdown",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5ae8ebb0-ea06-42e5-8377-f0a5c11543b2"
-    ],
-    "displayName": "Classification numbers",
-    "uri": "http://id.loc.gov/ontologies/bibframe/classification",
-    "uriBFLite": "http://bibfra.me/vocab/lite/classification",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["6649f36c-d0c5-4ee9-9980-fd13e667fa7a", "1e908830-f60a-4e71-b634-bd04c8313662"],
-    "htmlId": "Monograph::0__Work::0__classification::1",
-    "deletable": true,
-    "cloneIndex": 1
   }
 ]
