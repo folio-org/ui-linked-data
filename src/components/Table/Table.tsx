@@ -1,5 +1,6 @@
 import type { JSX } from 'react';
 import classNames from 'classnames';
+import { HeaderCell } from './HeaderCell';
 import './Table.scss';
 
 export type Cell = {
@@ -31,15 +32,16 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick, 
       <thead>
         <tr>
           {sortedHeaderEntries.map(([key, { label, className, ...rest }]) => (
-            <th
+            <HeaderCell
               key={key}
-              data-testid={`th-${key}`}
-              className={classNames({ clickable: onHeaderCellClick }, className)}
-              onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
+              elementType={label ? 'th' : 'td'}
+              cellKey={key}
+              label={label}
+              className={className}
+              onHeaderCellClick={onHeaderCellClick}
+              header={header}
               {...rest}
-            >
-              <div className="table-header-contents-wrapper">{label ?? ''}</div>
-            </th>
+            />
           ))}
         </tr>
       </thead>

@@ -16,6 +16,7 @@ describe('TitledPreview', () => {
       base: new Map(),
       initKey: 'mockInitKey',
       userValues: {},
+      selectedEntries: [],
     },
   };
 

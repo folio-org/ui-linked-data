@@ -54,6 +54,7 @@ type FieldsProps = {
   paths: Array<string>;
   altSchema?: Schema;
   altUserValues?: UserValues;
+  altSelectedEntries?: Array<string>;
   altDisplayNames?: Record<string, string>;
   hideEntities?: boolean;
   forceRenderAllTopLevelEntities?: boolean;
@@ -66,30 +67,36 @@ export const Fields = ({
   level = 0,
   altSchema,
   altUserValues,
+  altSelectedEntries,
   altDisplayNames,
   hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldsProps) => {
-  const { userValues: userValuesFromState, selectedEntries } = useInputsState();
+  const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { currentlyPreviewedEntityBfid } = useUIState();
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
+  const selectedEntries = altSelectedEntries || selectedEntriesFromState;
 
   const entry = base.get(uuid);
   const isOnBranchWithUserValue = paths.includes(uuid);
   const isEntity = level === ENTITY_LEVEL;
   const hasEmptyChildren = checkEmptyChildren(base, entry);
 
-  if (!entry || hasEmptyChildren) return null;
-
-  const { displayName = '', children, type, bfid = '', path, htmlId } = entry;
   const isDependentDropdownOption =
-    type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(path))?.linkedEntry?.controlledBy;
+    entry?.type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
+
+  const controlledEntry = schema.get(getParentEntryUuid(entry?.path || []))?.linkedEntry?.controlledBy;
+  const controlledEntryValue = controlledEntry ? userValues[controlledEntry] : undefined;
   const visibleDropdownOption =
-    isDependentDropdownOption && selectedEntries.includes(uuid) ? <div>{displayName}</div> : null;
+    isDependentDropdownOption && controlledEntryValue && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
 
   if (visibleDropdownOption) return visibleDropdownOption;
+
+  if (!entry || hasEmptyChildren) return null;
+
+  const { children, type, bfid = '', htmlId } = entry;
 
   // don't render empty dropdown options and their descendants
   if (type === AdvancedFieldType.dropdownOption && !isOnBranchWithUserValue) return null;
@@ -162,6 +169,7 @@ export const Fields = ({
               level={level + 1}
               altSchema={altSchema}
               altUserValues={altUserValues}
+              altSelectedEntries={altSelectedEntries}
               altDisplayNames={altDisplayNames}
               hideEntities={hideEntities}
               forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}

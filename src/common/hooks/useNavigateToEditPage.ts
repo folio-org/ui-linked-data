@@ -11,7 +11,8 @@ export const useNavigateToEditPage = () => {
   };
 
   return {
-    navigateToEditPage: (uri: string, { ...options } = {}) => navigate(uri, { state: navigationState, ...options }),
+    navigateToEditPage: (uri: string, { ...options } = {}) =>
+      navigate(uri, { state: { ...navigationState, isNavigatedFromLDE: true }, ...options }),
     navigateAsDuplicate,
   };
 };

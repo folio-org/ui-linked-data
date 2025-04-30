@@ -9,6 +9,7 @@ import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
 import { useInputsState, useLoadingState, useSearchState, useUIState } from '@src/store';
 import { FullDisplayType } from '@common/constants/uiElements.constants';
+import { SearchQueryParams } from '@common/constants/routes.constants';
 
 export const useSearch = () => {
   const {
@@ -49,7 +50,7 @@ export const useSearch = () => {
     onNextPageClick: onNextPageClickBase,
   } = usePagination(hasSearchParams, 0, hasCustomPagination);
   const currentPageNumber = getCurrentPageNumber();
-  const setSearchParams = useSearchParams()?.[1];
+  const [searchParams, setSearchParams] = useSearchParams();
   const selectedNavigationSegment = navigationSegment?.value;
   const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
 
@@ -111,8 +112,8 @@ export const useSearch = () => {
     }
 
     const typeSearchBy = updatedSearchBy as SearchIdentifiers;
-    const selectedQuery = savedFacetsData.query || '';
-    const selectedFacets = savedFacetsData.facets || {};
+    const selectedQuery = savedFacetsData.query ?? '';
+    const selectedFacets = savedFacetsData.facets ?? {};
 
     setSearchBy(typeSearchBy);
     setQuery(selectedQuery);
@@ -179,9 +180,11 @@ export const useSearch = () => {
         pageMetadataSelectorType: metadataSelector,
       });
     } else {
+      const queryValue = searchParams.get(SearchQueryParams.Query) ?? '';
+
       await fetchData({
-        query,
-        searchBy,
+        query: queryValue,
+        searchBy: searchParams.get(SearchQueryParams.SearchBy),
         offset: pageNumber * SEARCH_RESULTS_LIMIT,
       });
     }
@@ -225,5 +228,6 @@ export const useSearch = () => {
     data,
     fetchData,
     onChangeSegment,
+    handlePageChange
   };
 };

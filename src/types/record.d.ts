@@ -13,6 +13,7 @@ type PreviewContent = {
   id: string;
   base: Map<string, any>;
   userValues: UserValues;
+  selectedEntries: string[];
   initKey: string;
   title?: string;
   entities?: string[];

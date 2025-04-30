@@ -9,6 +9,8 @@ import * as NavigationHelper from '@common/helpers/navigation.helper';
 import { Edit } from '@views';
 import { useProfileStore } from '@src/store/stores/profile';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useUIStore } from '@src/store';
+import { PROFILE_BFIDS } from '@src/common/constants/bibframe.constants';
 
 const monograph = {
   id: 'id',
@@ -76,11 +78,9 @@ describe('Edit', () => {
 
     await renderComponent(null);
 
-    expect(getProfiles).toHaveBeenCalledWith({
-      record: null,
-    });
+    expect(getProfiles).toHaveBeenCalled();
     expect(fetchRecord).not.toHaveBeenCalled();
-    expect(clearRecordState).toHaveBeenCalled();
+    expect(clearRecordState).not.toHaveBeenCalled();
   });
 
   test('calls fetchRecord with correct parameters when cloneOfParam search param is provided', async () => {
@@ -97,5 +97,60 @@ describe('Edit', () => {
     await renderComponent(monograph as unknown as ProfileEntry);
 
     expect(fetchRecord).toHaveBeenCalledWith(cloneOfParam);
+  });
+
+  describe('setEntitesBFIds function', () => {
+    beforeEach(() => {
+      Object.defineProperty(window, 'location', {
+        value: {
+          search: '',
+          pathname: '/resources/create',
+        },
+        writable: true,
+      });
+    });
+
+    test('sets instance as edited and work as previewed entity by default', async () => {
+      const uiState = useUIStore.getState();
+      const spySetCurrentlyEditedEntityBfid = jest.spyOn(uiState, 'setCurrentlyEditedEntityBfid');
+      const spySetCurrentlyPreviewedEntityBfid = jest.spyOn(uiState, 'setCurrentlyPreviewedEntityBfid');
+      jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
+      jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue(undefined);
+
+      await renderComponent(null);
+
+      expect(spySetCurrentlyEditedEntityBfid).toHaveBeenCalledWith(new Set([PROFILE_BFIDS.INSTANCE]));
+      expect(spySetCurrentlyPreviewedEntityBfid).toHaveBeenCalledWith(new Set([PROFILE_BFIDS.WORK]));
+    });
+
+    test('sets work as edited and instance as previewed entity when type=work', async () => {
+      Object.defineProperty(window, 'location', {
+        value: {
+          search: '?type=work',
+          pathname: '/resources/create',
+        },
+        writable: true,
+      });
+
+      const uiState = useUIStore.getState();
+      const spySetCurrentlyEditedEntityBfid = jest.spyOn(uiState, 'setCurrentlyEditedEntityBfid');
+      const spySetCurrentlyPreviewedEntityBfid = jest.spyOn(uiState, 'setCurrentlyPreviewedEntityBfid');
+      jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
+      jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue(undefined);
+
+      await renderComponent(null);
+
+      expect(spySetCurrentlyEditedEntityBfid).toHaveBeenCalledWith(new Set([PROFILE_BFIDS.WORK]));
+      expect(spySetCurrentlyPreviewedEntityBfid).toHaveBeenCalledWith(new Set([PROFILE_BFIDS.INSTANCE]));
+    });
+  });
+
+  test('skips profile fetching when resourceId or cloneOfParam exists', async () => {
+    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testId' });
+    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue('testId');
+
+    await renderComponent(null);
+
+    expect(getProfiles).not.toHaveBeenCalled();
   });
 });

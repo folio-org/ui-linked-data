@@ -17,8 +17,8 @@ import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ApiErrorCodes, ExternalResourceIdType } from '@common/constants/api.constants';
-import { checkHasErrorOfCodeType, getFriendlyErrorMessage } from '@common/helpers/api.helper';
+import { ExternalResourceIdType } from '@common/constants/api.constants';
+import { getFriendlyErrorMessage } from '@common/helpers/api.helper';
 import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
 import { useRecordGeneration } from './useRecordGeneration';
 import { useBackToSearchUri } from './useBackToSearchUri';
@@ -43,7 +43,7 @@ export const useRecordControls = () => {
   const { setIsLoading } = useLoadingState();
   const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
   const { setSelectedProfile } = useProfileState();
-  const { setIsDuplicateImportedResourceModalOpen, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
     useUIState();
   const {
     setRecordStatus,
@@ -161,7 +161,6 @@ export const useRecordControls = () => {
       console.error('Cannot save the resource description', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
-
     } finally {
       setIsLoading(false);
     }
@@ -279,15 +278,9 @@ export const useRecordControls = () => {
 
       const { id } = await getGraphIdByExternalId({ recordId });
 
-      id && navigate(generateEditResourceUrl(id), { state: { isNavigatedFromExternal: true }, replace: true });
+      id && navigate(generateEditResourceUrl(id), { replace: true });
     } catch (err: unknown) {
-      if (checkHasErrorOfCodeType(err as ApiError, ApiErrorCodes.AlreadyExists)) {
-        setIsDuplicateImportedResourceModalOpen(true);
-      } else {
-        addStatusMessagesItem?.(
-          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetchingExternalResourceForEditing'),
-        );
-      }
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(err)));
     } finally {
       setIsLoading(false);
     }

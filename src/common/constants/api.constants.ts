@@ -17,7 +17,7 @@ export const DEFAULT_PAGES_METADATA = {
 };
 
 export enum ApiErrorCodes {
-  AlreadyExists = 'already_exists_error',
+  AlreadyExists = 'already_exists',
   RequiredPrimaryMainTitle = 'required_primary_main_title',
   LccnDoesNotMatchPattern = 'lccn_does_not_match_pattern',
   LccnNotUnique = 'lccn_not_unique',
