@@ -46,14 +46,14 @@ export const RECORD_NORMALIZING_CASES = {
   _contributorReference: {
     process: processCreator,
   },
-  [BFLITE_URIS.SUMMARY]: {
+  /* [BFLITE_URIS.SUMMARY]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_notes'),
-  },
-  [BFLITE_URIS.TABLE_OF_CONTENTS]: {
+  }, */
+  /* [BFLITE_URIS.TABLE_OF_CONTENTS]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_notes'),
-  },
+  }, */
   /* [BFLITE_URIS.LANGUAGE]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupWithLookup(record, blockKey, groupKey, '_language'),

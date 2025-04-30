@@ -29,8 +29,10 @@ export const Profile = [
       "6acf9f3a-7de9-4efd-b51c-d90a1c469a81",
       "e3fe0699-0432-4564-bcf6-6ffbc0e896c4",
       "db605822-bf0b-4162-a517-5414aa2252f4",
-      "7d9ae903-74c7-4d84-b799-ff6271ecce88",
-      "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
+      // "7d9ae903-74c7-4d84-b799-ff6271ecce88",
+      "7d4072b8-497d-48fa-bbe7-b8343802637a",
+      // "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
+      "2f4e3d64-ffae-4aa5-8fdb-2eaafaabca43",
       "9cc073dd-7c9f-470d-b4d3-ae1b5d1afa1b",
       "9fce2e4c-c16a-4ba8-b313-19ce2b9f47ff",
       "2d5f32f0-005f-4313-b1e0-7fa13fd9d50a",
@@ -1195,36 +1197,14 @@ export const Profile = [
     "htmlId": "Monograph::0__Work::0__note::0__Note::0__noteType::0"
   },
   {
-    "uuid": "7d9ae903-74c7-4d84-b799-ff6271ecce88",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "7d9ae903-74c7-4d84-b799-ff6271ecce88"
-    ],
-    "displayName": "Contents",
-    "uri": "http://id.loc.gov/ontologies/bibframe/tableOfContents",
-    "uriBFLite": "_notes",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["7d4072b8-497d-48fa-bbe7-b8343802637a"],
-    "htmlId": "Monograph::0__Work::0__tableOfContents::0"
-  },
-  {
     "uuid": "7d4072b8-497d-48fa-bbe7-b8343802637a",
     "type": "literal",
     "path": [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "7d9ae903-74c7-4d84-b799-ff6271ecce88",
       "7d4072b8-497d-48fa-bbe7-b8343802637a"
     ],
+    "groupName": "Contents",
     "displayName": "Contents note",
     "uri": "http://www.w3.org/2000/01/rdf-schema#label",
     "uriBFLite": "http://bibfra.me/vocab/marc/tableOfContents",
@@ -1239,38 +1219,14 @@ export const Profile = [
     "htmlId": "Monograph::0__Work::0__tableOfContents::0__TableOfContents$$Contents::0__tableOfContents::0"
   },
   {
-    "uuid": "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "ae405b9d-57dd-4d50-93cc-31b0cfc0af08"
-    ],
-    "displayName": "Summary",
-    "uri": "http://id.loc.gov/ontologies/bibframe/summary",
-    "uriBFLite": "http://bibfra.me/vocab/marc/summary",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["2f4e3d64-ffae-4aa5-8fdb-2eaafaabca43"],
-    "htmlId": "Monograph::0__Work::0__summary::0"
-  },
-  {
     "uuid": "2f4e3d64-ffae-4aa5-8fdb-2eaafaabca43",
     "type": "literal",
     "path": [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
       "2f4e3d64-ffae-4aa5-8fdb-2eaafaabca43"
     ],
     "displayName": "Summary note",
-    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
     "uriBFLite": "http://bibfra.me/vocab/marc/summary",
     "constraints": {
       "repeatable": true,
@@ -1696,7 +1652,6 @@ export const Profile = [
       "b9401d74-ede6-4573-9c0d-46df374c0a2c",
       "d67511ae-335d-4a87-99ca-6c17027171c0",
       "bf793ffd-1630-4526-861a-bb9485cec5bc",
-      "bf793ffd-1630-4526-861a-bb9485cec5bc1",
       "ad763206-75f3-467b-8539-034182eec383",
       "a3efd7ed-0d62-4f8f-9133-c4ef4d348271",
     ],
@@ -3291,27 +3246,6 @@ export const Profile = [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
       "bf793ffd-1630-4526-861a-bb9485cec5bc"
-    ],
-    "displayName": "Dimensions",
-    "uri": "http://id.loc.gov/ontologies/bibframe/dimensions",
-    "uriBFLite": "http://bibfra.me/vocab/marc/dimensions",
-    "constraints": {
-      "repeatable": true,
-      "editable": true,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "htmlId": "Monograph::0__Instance::0__dimensions::0"
-  },
-  {
-    "uuid": "bf793ffd-1630-4526-861a-bb9485cec5bc1",
-    "type": "literal",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "bf793ffd-1630-4526-861a-bb9485cec5bc1"
     ],
     "displayName": "Dimensions",
     "uri": "http://id.loc.gov/ontologies/bibframe/dimensions",
