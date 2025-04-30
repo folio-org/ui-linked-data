@@ -7,7 +7,7 @@ export const Profile = [
     "bfid": "lc:profile:bf2:Monograph",
     "children": [
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
+      "f66de7a5-50b2-43d3-93b9-43b5f0e06433"
     ],
     "htmlId": "Monograph::0"
   },
@@ -29,16 +29,14 @@ export const Profile = [
       "6acf9f3a-7de9-4efd-b51c-d90a1c469a81",
       "e3fe0699-0432-4564-bcf6-6ffbc0e896c4",
       "db605822-bf0b-4162-a517-5414aa2252f4",
-      // "7d9ae903-74c7-4d84-b799-ff6271ecce88",
       "7d4072b8-497d-48fa-bbe7-b8343802637a",
-      // "ae405b9d-57dd-4d50-93cc-31b0cfc0af08",
       "2f4e3d64-ffae-4aa5-8fdb-2eaafaabca43",
       "9cc073dd-7c9f-470d-b4d3-ae1b5d1afa1b",
       "9fce2e4c-c16a-4ba8-b313-19ce2b9f47ff",
       "2d5f32f0-005f-4313-b1e0-7fa13fd9d50a",
-      '0c3d8d8d-a561-4750-a743-856a05c0d13e'
+      "0c3d8d8d-a561-4750-a743-856a05c0d13e"
     ],
-    "htmlId": "Monograph::0__Work::0",
+    "htmlId": "Monograph::0__Work::0"
   },
   {
     "uuid": "4f06d90b-bc8e-4246-8614-88057a9305dc",
@@ -413,7 +411,7 @@ export const Profile = [
       "ef60dfc5-bb66-4f63-8ab2-c6f3dee69101",
       "0403267d-6bb1-482c-816f-e3f87daeaa1e",
       "75ebd009-fa99-4620-9776-779316c9439c",
-      "97edcf84-f37b-4778-b8d1-0a8f21690e2d"
+      "d4a60529-fb0b-4496-95b1-30712bb634ff"
     ],
     "htmlId": "Monograph::0__Work::0__title::0__VariantTitle$$VarTitle::0"
   },
@@ -556,30 +554,6 @@ export const Profile = [
     "htmlId": "Monograph::0__Work::0__title::0__VariantTitle$$VarTitle::0__variantType::0"
   },
   {
-    "uuid": "97edcf84-f37b-4778-b8d1-0a8f21690e2d",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5a3e9d80-d6d1-4e2c-9cae-0d8da58ab292",
-      "3139661d-eff3-4a32-b156-883591ca6f6c",
-      "97edcf84-f37b-4778-b8d1-0a8f21690e2d"
-    ],
-    "displayName": "Note",
-    "uri": "http://id.loc.gov/ontologies/bibframe/note",
-    "uriBFLite": "http://bibfra.me/vocab/lite/note",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["d4a60529-fb0b-4496-95b1-30712bb634ff"],
-    "htmlId": "Monograph::0__Work::0__title::0__VariantTitle$$VarTitle::0__note::0"
-  },
-  {
     "uuid": "d4a60529-fb0b-4496-95b1-30712bb634ff",
     "type": "literal",
     "path": [
@@ -587,7 +561,6 @@ export const Profile = [
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "5a3e9d80-d6d1-4e2c-9cae-0d8da58ab292",
       "3139661d-eff3-4a32-b156-883591ca6f6c",
-      "97edcf84-f37b-4778-b8d1-0a8f21690e2d",
       "d4a60529-fb0b-4496-95b1-30712bb634ff"
     ],
     "displayName": "Note",
@@ -622,7 +595,7 @@ export const Profile = [
       "0a3514f5-480a-4c3e-a17d-249a5415f5c1",
       "86e89033-5e16-4c59-bad2-ab742ac2a2f4",
       "c93417e8-fba7-4e61-9b76-ba147b94ad6d",
-      "eebafa12-7505-4cb4-bc59-7d570e07561b"
+      "5c8238b5-318c-4c1c-9538-b46de0c5ce0b"
     ],
     "htmlId": "Monograph::0__Work::0__title::0__ParallelTitle::0"
   },
@@ -742,30 +715,6 @@ export const Profile = [
     "htmlId": "Monograph::0__Work::0__title::0__ParallelTitle::0__date::0"
   },
   {
-    "uuid": "eebafa12-7505-4cb4-bc59-7d570e07561b",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
-      "5a3e9d80-d6d1-4e2c-9cae-0d8da58ab292",
-      "114ab6d5-9ba9-40ef-9f60-4998a4595752",
-      "eebafa12-7505-4cb4-bc59-7d570e07561b"
-    ],
-    "displayName": "Note",
-    "uri": "http://id.loc.gov/ontologies/bibframe/note",
-    "uriBFLite": "http://bibfra.me/vocab/lite/note",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["5c8238b5-318c-4c1c-9538-b46de0c5ce0b"],
-    "htmlId": "Monograph::0__Work::0__title::0__ParallelTitle::0__note::0"
-  },
-  {
     "uuid": "5c8238b5-318c-4c1c-9538-b46de0c5ce0b",
     "type": "literal",
     "path": [
@@ -773,7 +722,6 @@ export const Profile = [
       "dfcd5049-ace6-4e8c-9405-d83128dfa6cb",
       "5a3e9d80-d6d1-4e2c-9cae-0d8da58ab292",
       "114ab6d5-9ba9-40ef-9f60-4998a4595752",
-      "eebafa12-7505-4cb4-bc59-7d570e07561b",
       "5c8238b5-318c-4c1c-9538-b46de0c5ce0b"
     ],
     "displayName": "Note",
@@ -1653,7 +1601,7 @@ export const Profile = [
       "d67511ae-335d-4a87-99ca-6c17027171c0",
       "bf793ffd-1630-4526-861a-bb9485cec5bc",
       "ad763206-75f3-467b-8539-034182eec383",
-      "a3efd7ed-0d62-4f8f-9133-c4ef4d348271",
+      "a3efd7ed-0d62-4f8f-9133-c4ef4d348271"
     ],
     "htmlId": "Monograph::0__Instance::0"
   },
@@ -1840,7 +1788,7 @@ export const Profile = [
       "4771c87a-9355-4431-90a6-db8b9aea0aff",
       "1171491a-de3b-4148-bb73-5568f9a678cd",
       "35164ffe-82cd-41d0-a7a3-fd06c87a1624",
-      "56628118-c0d6-45b9-809b-d7f7207bd0d9"
+      "1868f304-d36d-4022-a3ea-07b89acbafc1"
     ],
     "htmlId": "Monograph::0__Instance::0__title::0__VariantTitle$$VarTitle::0"
   },
@@ -1983,30 +1931,6 @@ export const Profile = [
     "htmlId": "Monograph::0__Instance::0__title::0__VariantTitle$$VarTitle::0__variantType::0"
   },
   {
-    "uuid": "56628118-c0d6-45b9-809b-d7f7207bd0d9",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "95619ddc-f991-45c0-aea3-6406a266ad83",
-      "14b45b86-46b3-4863-9b17-cf587c3c7335",
-      "56628118-c0d6-45b9-809b-d7f7207bd0d9"
-    ],
-    "displayName": "Note",
-    "uri": "http://id.loc.gov/ontologies/bibframe/note",
-    "uriBFLite": "http://bibfra.me/vocab/lite/note",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["1868f304-d36d-4022-a3ea-07b89acbafc1"],
-    "htmlId": "Monograph::0__Instance::0__title::0__VariantTitle$$VarTitle::0__note::0"
-  },
-  {
     "uuid": "1868f304-d36d-4022-a3ea-07b89acbafc1",
     "type": "literal",
     "path": [
@@ -2014,7 +1938,6 @@ export const Profile = [
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
       "95619ddc-f991-45c0-aea3-6406a266ad83",
       "14b45b86-46b3-4863-9b17-cf587c3c7335",
-      "56628118-c0d6-45b9-809b-d7f7207bd0d9",
       "1868f304-d36d-4022-a3ea-07b89acbafc1"
     ],
     "displayName": "Note",
@@ -2049,7 +1972,7 @@ export const Profile = [
       "24ace688-56b6-4a95-b8d5-de2912700561",
       "149c7402-2963-4f2e-b4d0-47e5088356f6",
       "e4a9740f-3795-4af1-8015-46d5f5636946",
-      "9248bc51-b492-458b-be4d-d1814b05d184"
+      "62ab9e4b-fde9-4803-9a8f-89eb621c9cb5"
     ],
     "htmlId": "Monograph::0__Instance::0__title::0__ParallelTitle::0"
   },
@@ -2169,30 +2092,6 @@ export const Profile = [
     "htmlId": "Monograph::0__Instance::0__title::0__ParallelTitle::0__date::0"
   },
   {
-    "uuid": "9248bc51-b492-458b-be4d-d1814b05d184",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "95619ddc-f991-45c0-aea3-6406a266ad83",
-      "5aec9965-4e22-47f4-99c2-5f51607a457c",
-      "9248bc51-b492-458b-be4d-d1814b05d184"
-    ],
-    "displayName": "Note",
-    "uri": "http://id.loc.gov/ontologies/bibframe/note",
-    "uriBFLite": "http://bibfra.me/vocab/lite/note",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["62ab9e4b-fde9-4803-9a8f-89eb621c9cb5"],
-    "htmlId": "Monograph::0__Instance::0__title::0__ParallelTitle::0__note::0"
-  },
-  {
     "uuid": "62ab9e4b-fde9-4803-9a8f-89eb621c9cb5",
     "type": "literal",
     "path": [
@@ -2200,7 +2099,6 @@ export const Profile = [
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
       "95619ddc-f991-45c0-aea3-6406a266ad83",
       "5aec9965-4e22-47f4-99c2-5f51607a457c",
-      "9248bc51-b492-458b-be4d-d1814b05d184",
       "62ab9e4b-fde9-4803-9a8f-89eb621c9cb5"
     ],
     "displayName": "Note",
@@ -3302,7 +3200,7 @@ export const Profile = [
       "useValuesFrom": [],
       "valueDataType": {}
     },
-    "children": ["8045b8b7-13ab-48d5-b7dd-0fae09a67795", "1efb38fa-33f2-4482-94b8-01c07891d6a2"],
+    "children": ["8045b8b7-13ab-48d5-b7dd-0fae09a67795", "a2b1ac86-a763-422d-955b-50f2916db120"],
     "htmlId": "Monograph::0__Instance::0__accessLocation::0"
   },
   {
@@ -3328,36 +3226,12 @@ export const Profile = [
     "htmlId": "Monograph::0__Instance::0__accessLocation::0__rdf-schema#Resource$$URL::0__link::0"
   },
   {
-    "uuid": "1efb38fa-33f2-4482-94b8-01c07891d6a2",
-    "type": "group",
-    "path": [
-      "ade54fa5-c456-4884-9996-241c913d1e6d",
-      "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
-      "a3efd7ed-0d62-4f8f-9133-c4ef4d348271",
-      "1efb38fa-33f2-4482-94b8-01c07891d6a2"
-    ],
-    "displayName": "Note",
-    "uri": "http://id.loc.gov/ontologies/bibframe/note",
-    "uriBFLite": "http://bibfra.me/vocab/lite/note",
-    "constraints": {
-      "repeatable": true,
-      "editable": false,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": {}
-    },
-    "children": ["a2b1ac86-a763-422d-955b-50f2916db120"],
-    "htmlId": "Monograph::0__Instance::0__accessLocation::0__rdf-schema#Resource$$URL::0__note::0"
-  },
-  {
     "uuid": "a2b1ac86-a763-422d-955b-50f2916db120",
     "type": "literal",
     "path": [
       "ade54fa5-c456-4884-9996-241c913d1e6d",
       "f66de7a5-50b2-43d3-93b9-43b5f0e06433",
       "a3efd7ed-0d62-4f8f-9133-c4ef4d348271",
-      "1efb38fa-33f2-4482-94b8-01c07891d6a2",
       "a2b1ac86-a763-422d-955b-50f2916db120"
     ],
     "displayName": "Note",
