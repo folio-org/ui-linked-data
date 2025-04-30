@@ -1,6 +1,8 @@
 # Change history for ui-linked-data
 
-## 1.0.5 (IN PROGRESS)
+## 1.0.6 (IN PROGRESS)
+
+## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
 
