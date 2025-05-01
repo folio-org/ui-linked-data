@@ -1,13 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { PROFILE_NODE_ID_DELIMITER } from '@common/constants/bibframe.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { ISchemaGenerator } from './schemaGenerator.interface';
-
-interface INodeTransformer {
-  transform(node: ProfileNode, uuid: string): TransformedNode;
-}
 
 interface TransformedNode extends SchemaEntry {
   emptyOptionUuid?: string;
@@ -81,6 +78,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
 
   private createTransformedNode(node: ProfileNode, uuid: string): TransformedNode {
     const baseNode = this.createBaseNode(node, uuid);
+
     return this.addEmptyOptionIfNeeded(baseNode);
   }
 
@@ -154,7 +152,9 @@ export class SchemaGeneratorService implements ISchemaGenerator {
         path.unshift(currentUUID);
       }
 
-      currentId = currentId.includes(':') ? currentId.split(':').slice(0, -1).join(':') : null;
+      currentId = currentId.includes(PROFILE_NODE_ID_DELIMITER)
+        ? currentId.split(PROFILE_NODE_ID_DELIMITER).slice(0, -1).join(PROFILE_NODE_ID_DELIMITER)
+        : null;
     }
 
     return path;
