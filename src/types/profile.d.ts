@@ -1,4 +1,4 @@
-type ProfileItem = {
+type ProfileNode = {
   type: string;
   displayName: string;
   bfid?: string;
@@ -17,4 +17,4 @@ type ProfileItem = {
   cloneIndex?: number;
 };
 
-type Profile = ProfileItem[];
+type Profile = ProfileNode[];

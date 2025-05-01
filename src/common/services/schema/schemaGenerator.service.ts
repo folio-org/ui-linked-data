@@ -30,32 +30,46 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   generate(initKey: string) {
     this.transformIdToUUID(initKey);
 
-    this.profile.forEach(node => {
-      const newUUID = this.idToUUID.get(node.id) ?? '';
-      const newNode = {
-        ...node,
-        uuid: newUUID,
-        path: this.getPathForNode(node.id),
-      };
+    this.profile.forEach(node => this.processNode(node));
+  }
 
-      if (newNode.children) {
-        newNode.children = newNode.children.map(childId => this.idToUUID.get(childId) ?? childId);
-      }
+  private processNode(node: ProfileNode): void {
+    const uuid = this.idToUUID.get(node.id) ?? '';
+    const newNode = this.createTransformedNode(node, uuid);
 
-      if (newNode.linkedEntry) {
-        if (newNode.linkedEntry.dependent) {
-          newNode.linkedEntry.dependent =
-            this.idToUUID.get(newNode.linkedEntry.dependent) ?? newNode.linkedEntry.dependent;
-        }
+    this.schema.set(newNode.uuid, newNode);
+  }
 
-        if (newNode.linkedEntry.controlledBy) {
-          newNode.linkedEntry.controlledBy =
-            this.idToUUID.get(newNode.linkedEntry.controlledBy) ?? newNode.linkedEntry.controlledBy;
-        }
-      }
+  private createTransformedNode(node: ProfileNode, uuid: string): SchemaEntry {
+    return {
+      ...node,
+      uuid,
+      path: this.getPathForNode(node.id),
+      children: this.transformChildren(node.children),
+      linkedEntry: this.transformLinkedEntry(node.linkedEntry),
+    };
+  }
 
-      this.schema.set(newNode.uuid, newNode);
-    });
+  private transformChildren(children?: string[]): string[] | undefined {
+    if (!children) return undefined;
+
+    return children.map(childId => this.idToUUID.get(childId) ?? childId);
+  }
+
+  private transformLinkedEntry(linkedEntry?: LinkedEntry): LinkedEntry | undefined {
+    if (!linkedEntry) return undefined;
+
+    return {
+      ...linkedEntry,
+      dependent: this.transformLinkedId(linkedEntry.dependent),
+      controlledBy: this.transformLinkedId(linkedEntry.controlledBy),
+    };
+  }
+
+  private transformLinkedId(id?: string): string | undefined {
+    if (!id) return undefined;
+
+    return this.idToUUID.get(id) ?? id;
   }
 
   private transformIdToUUID(initKey: string) {
