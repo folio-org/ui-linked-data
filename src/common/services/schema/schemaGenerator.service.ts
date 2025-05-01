@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
+import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { ISchemaGenerator } from './schemaGenerator.interface';
@@ -6,7 +8,7 @@ import { ISchemaGenerator } from './schemaGenerator.interface';
 export class SchemaGeneratorService implements ISchemaGenerator {
   private profile: Profile;
   private schema: Map<string, SchemaEntry>;
-  private idToUUID: Map<string, string>;
+  private idToUuid: Map<string, string>;
 
   constructor(
     private readonly selectedEntriesService: ISelectedEntries,
@@ -14,13 +16,13 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   ) {
     this.profile = [];
     this.schema = new Map();
-    this.idToUUID = new Map();
+    this.idToUuid = new Map();
   }
 
   init(profile: Profile) {
     this.profile = profile;
     this.schema = new Map();
-    this.idToUUID = new Map();
+    this.idToUuid = new Map();
   }
 
   get() {
@@ -28,35 +30,61 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   }
 
   generate(initKey: string) {
-    this.transformIdToUUID(initKey);
-
+    this.transformidToUuid(initKey);
     this.profile.forEach(node => this.processNode(node));
+    this.entryPropertiesGeneratorService?.applyHtmlIdToEntries(this.schema);
   }
 
-  private processNode(node: ProfileNode): void {
-    const uuid = this.idToUUID.get(node.id) ?? '';
-    const newNode = this.createTransformedNode(node, uuid);
+  private processNode(node: ProfileNode) {
+    const uuid = this.idToUuid.get(node.id) ?? '';
+    const { emptyOptionUuid, ...newNode } = this.createTransformedNode(node, uuid);
+
+    // Select first dropdown option if this is a dropdown node
+    if (newNode.type === AdvancedFieldType.dropdown && newNode.children?.length) {
+      const firstOptionId = newNode.children[0];
+
+      this.selectedEntriesService.addNew(undefined, firstOptionId);
+    }
+
+    // If this node has an empty option value, select it
+    if (emptyOptionUuid) {
+      this.selectedEntriesService.addNew(undefined, emptyOptionUuid);
+    }
+
+    this.entryPropertiesGeneratorService?.addEntryWithHtmlId(uuid);
 
     this.schema.set(newNode.uuid, newNode);
   }
 
-  private createTransformedNode(node: ProfileNode, uuid: string): SchemaEntry {
-    return {
+  private createTransformedNode(node: ProfileNode, uuid: string) {
+    const transformedNode = {
       ...node,
       uuid,
       path: this.getPathForNode(node.id),
       children: this.transformChildren(node.children),
       linkedEntry: this.transformLinkedEntry(node.linkedEntry),
-    };
+    } as SchemaEntry & { emptyOptionUuid?: string };
+
+    // Add empty option for controlled fields
+    if (transformedNode.linkedEntry?.controlledBy) {
+      const emptyOptionUuid = generateEmptyValueUuid(uuid);
+
+      transformedNode.emptyOptionUuid = emptyOptionUuid;
+      transformedNode.children = transformedNode.children
+        ? [emptyOptionUuid, ...transformedNode.children]
+        : [emptyOptionUuid];
+    }
+
+    return transformedNode;
   }
 
-  private transformChildren(children?: string[]): string[] | undefined {
+  private transformChildren(children?: string[]) {
     if (!children) return undefined;
 
-    return children.map(childId => this.idToUUID.get(childId) ?? childId);
+    return children.map(childId => this.idToUuid.get(childId) ?? childId);
   }
 
-  private transformLinkedEntry(linkedEntry?: LinkedEntry): LinkedEntry | undefined {
+  private transformLinkedEntry(linkedEntry?: LinkedEntry) {
     if (!linkedEntry) return undefined;
 
     return {
@@ -66,17 +94,17 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     };
   }
 
-  private transformLinkedId(id?: string): string | undefined {
+  private transformLinkedId(id?: string) {
     if (!id) return undefined;
 
-    return this.idToUUID.get(id) ?? id;
+    return this.idToUuid.get(id) ?? id;
   }
 
-  private transformIdToUUID(initKey: string) {
+  private transformidToUuid(initKey: string) {
     this.profile.forEach((node, index) => {
       const newUUID = index === 0 ? initKey : uuidv4();
 
-      this.idToUUID.set(node.id, newUUID);
+      this.idToUuid.set(node.id, newUUID);
     });
   }
 
@@ -85,7 +113,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     let currentId = nodeId;
 
     while (currentId) {
-      const currentUUID = this.idToUUID.get(currentId);
+      const currentUUID = this.idToUuid.get(currentId);
 
       if (currentUUID) {
         path.unshift(currentUUID);
