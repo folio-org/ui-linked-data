@@ -1,0 +1,2156 @@
+[
+  {
+    "type": "profile",
+    "displayName": "Monograph",
+    "bfid": "lc:profile:bf2:Monograph",
+    "children": ["Monograph:Work", "Monograph:Instance"],
+    "id": "Monograph"
+  },
+  {
+    "type": "block",
+    "displayName": "Work",
+    "bfid": "lc:RT:bf2:Monograph:Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Work",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Work",
+    "children": [
+      "Monograph:Work:CreatorOfWork",
+      "Monograph:Work:TitleInformation",
+      "Monograph:Work:GovernmentPublication",
+      "Monograph:Work:DateOfWork",
+      "Monograph:Work:PlaceOfOriginOfTheWork",
+      "Monograph:Work:GeographicCoverage",
+      "Monograph:Work:IntendedAudience",
+      "Monograph:Work:OtherContributors",
+      "Monograph:Work:NotesAboutTheWork",
+      "Monograph:Work:ContentsNote",
+      "Monograph:Work:SummaryNote",
+      "Monograph:Work:SubjectOfTheWork",
+      "Monograph:Work:ClassificationNumbers",
+      "Monograph:Work:ContentType",
+      "Monograph:Work:LanguageCode"
+    ],
+    "id": "Monograph:Work"
+  },
+  {
+    "type": "group",
+    "displayName": "Creator of Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/contribution",
+    "uriBFLite": "http://bibfra.me/vocab/lite/creator",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution" }
+    },
+    "children": [
+      "Monograph:Work:CreatorOfWork:Name",
+      "Monograph:Work:CreatorOfWork:Subclass",
+      "Monograph:Work:CreatorOfWork:Relationship"
+    ],
+    "id": "Monograph:Work:CreatorOfWork"
+  },
+  {
+    "bfid": "lc:RT:bf2:search:name",
+    "type": "complex",
+    "displayName": "Name",
+    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
+      "valueDataType": {}
+    },
+    "layout": { "api": "authorities", "isNew": true, "baseLabelType": "creator" },
+    "linkedEntry": { "dependent": "Monograph:Work:CreatorOfWork:Subclass" },
+    "id": "Monograph:Work:CreatorOfWork:Name"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "",
+    "bfid": "",
+    "uri": "",
+    "uriBFLite": "",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Subclass",
+    "uri": "http://id.loc.gov/ontologies/bibframe/agent",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution" }
+    },
+    "children": [
+      "Monograph:Work:CreatorOfWork:Subclass:",
+      "Monograph:Work:CreatorOfWork:Subclass:Person",
+      "Monograph:Work:CreatorOfWork:Subclass:Family",
+      "Monograph:Work:CreatorOfWork:Subclass:CorporateBody",
+      "Monograph:Work:CreatorOfWork:Subclass:Jurisdiction",
+      "Monograph:Work:CreatorOfWork:Subclass:Conference"
+    ],
+    "layout": { "readOnly": true },
+    "dependsOn": "lc:RT:bf2:search:name",
+    "linkedEntry": { "controlledBy": "Monograph:Work:CreatorOfWork:Name" },
+    "id": "Monograph:Work:CreatorOfWork:Subclass"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Person",
+    "bfid": "lc:RT:bf2:Agent:bfPerson:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Person",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Person",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:Person"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Family",
+    "bfid": "lc:RT:bf2:Agent:bfFamily:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Family",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Family",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:Family"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Corporate Body",
+    "bfid": "lc:RT:bf2:Agent:bfCorp:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Organization",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Organization",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:CorporateBody"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Jurisdiction",
+    "bfid": "lc:RT:bf2:Agent:bfJurisdiction:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Jurisdiction",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Jurisdiction",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:Jurisdiction"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Conference",
+    "bfid": "lc:RT:bf2:Agent:bfConf:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Meeting",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Meeting",
+    "children": [],
+    "id": "Monograph:Work:CreatorOfWork:Subclass:Conference"
+  },
+  {
+    "type": "simple",
+    "displayName": "Relationship",
+    "uri": "http://id.loc.gov/ontologies/bibframe/role",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/relators", "https://id.loc.gov/vocabulary/rbmsrel"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Role" }
+    },
+    "id": "Monograph:Work:CreatorOfWork:Relationship"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Title Information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/title",
+    "uriBFLite": "http://bibfra.me/vocab/marc/title",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": [
+      "Monograph:Work:TitleInformation:WorkTitle",
+      "Monograph:Work:TitleInformation:VariantTitle",
+      "Monograph:Work:TitleInformation:ParallelTitle"
+    ],
+    "id": "Monograph:Work:TitleInformation"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Work Title",
+    "bfid": "lc:RT:bf2:WorkTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Title",
+    "uriBFLite": "http://bibfra.me/vocab/marc/Title",
+    "children": [
+      "Monograph:Work:TitleInformation:WorkTitle:NonSortCharacterCount",
+      "Monograph:Work:TitleInformation:WorkTitle:PreferredTitleForWork",
+      "Monograph:Work:TitleInformation:WorkTitle:PartNumber",
+      "Monograph:Work:TitleInformation:WorkTitle:PartName"
+    ],
+    "id": "Monograph:Work:TitleInformation:WorkTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Non-sort character count",
+    "uri": "http://id.loc.gov/ontologies/bflc/nonSortNum",
+    "uriBFLite": "http://bibfra.me/vocab/bflc/nonSortNum",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:WorkTitle:NonSortCharacterCount"
+  },
+  {
+    "type": "literal",
+    "displayName": "Preferred Title for Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "dataTypeURI": "" }
+    },
+    "id": "Monograph:Work:TitleInformation:WorkTitle:PreferredTitleForWork"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:WorkTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:WorkTitle:PartName"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Variant Title",
+    "bfid": "lc:RT:bf2:Title:VarTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/VariantTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/VariantTitle",
+    "children": [
+      "Monograph:Work:TitleInformation:VariantTitle:VariantTitle",
+      "Monograph:Work:TitleInformation:VariantTitle:PartNumber",
+      "Monograph:Work:TitleInformation:VariantTitle:PartName",
+      "Monograph:Work:TitleInformation:VariantTitle:OtherTitleInformation",
+      "Monograph:Work:TitleInformation:VariantTitle:Date",
+      "Monograph:Work:TitleInformation:VariantTitle:VariantTitleType",
+      "Monograph:Work:TitleInformation:VariantTitle:Note"
+    ],
+    "id": "Monograph:Work:TitleInformation:VariantTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Variant Title",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:VariantTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:PartName"
+  },
+  {
+    "type": "literal",
+    "displayName": "Other title information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subtitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/subTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:OtherTitleInformation"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:Date"
+  },
+  {
+    "type": "literal",
+    "displayName": "Variant title type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/variantType",
+    "uriBFLite": "http://bibfra.me/vocab/marc/variantType",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:VariantTitleType"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/note",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:VariantTitle:Note"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Parallel Title",
+    "bfid": "lc:RT:bf2:ParallelTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/ParallelTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/ParallelTitle",
+    "children": [
+      "Monograph:Work:TitleInformation:ParallelTitle:ParallelTitle",
+      "Monograph:Work:TitleInformation:ParallelTitle:OtherTitleInformation",
+      "Monograph:Work:TitleInformation:ParallelTitle:PartNumber",
+      "Monograph:Work:TitleInformation:ParallelTitle:PartName",
+      "Monograph:Work:TitleInformation:ParallelTitle:Date",
+      "Monograph:Work:TitleInformation:ParallelTitle:Note"
+    ],
+    "id": "Monograph:Work:TitleInformation:ParallelTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Parallel Title",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:ParallelTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Other Title Information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subtitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/subTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:OtherTitleInformation"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:PartName"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:Date"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/note",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:TitleInformation:ParallelTitle:Note"
+  },
+  {
+    "type": "simple",
+    "displayName": "Government publication",
+    "uri": "http://id.loc.gov/ontologies/bflc/governmentPubType",
+    "uriBFLite": "http://bibfra.me/vocab/marc/governmentPublication",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mgovtpubtype"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bflc/GovernmentPubType" }
+    },
+    "id": "Monograph:Work:GovernmentPublication"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date of Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/originDate",
+    "uriBFLite": "http://bibfra.me/vocab/lite/dateStart",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:DateOfWork"
+  },
+  {
+    "type": "simple",
+    "displayName": "Place of Origin of the Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/originPlace",
+    "uriBFLite": "http://bibfra.me/vocab/marc/originPlace",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place" }
+    },
+    "id": "Monograph:Work:PlaceOfOriginOfTheWork"
+  },
+  {
+    "type": "group",
+    "displayName": "Geographic Coverage",
+    "uri": "http://id.loc.gov/ontologies/bibframe/geographicCoverage",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Work:GeographicCoverage:SearchLCNAFLCSHOrGAC"],
+    "id": "Monograph:Work:GeographicCoverage"
+  },
+  {
+    "type": "complex",
+    "displayName": "Search LCNAF, LCSH or GAC",
+    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "uriBFLite": "_geographicCoverageReference",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/authorities/geographics"],
+      "valueDataType": { "remark": "", "dataTypeURI": "" }
+    },
+    "id": "Monograph:Work:GeographicCoverage:SearchLCNAFLCSHOrGAC"
+  },
+  {
+    "type": "simple",
+    "displayName": "Intended Audience",
+    "uri": "http://id.loc.gov/ontologies/bibframe/intendedAudience",
+    "uriBFLite": "http://bibfra.me/vocab/marc/targetAudience",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/maudience"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/IntendedAudience" }
+    },
+    "id": "Monograph:Work:IntendedAudience"
+  },
+  {
+    "type": "group",
+    "displayName": "Other contributors",
+    "uri": "http://id.loc.gov/ontologies/bibframe/contribution",
+    "uriBFLite": "http://bibfra.me/vocab/lite/contributor",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Contribution" }
+    },
+    "children": [
+      "Monograph:Work:OtherContributors:Name",
+      "Monograph:Work:OtherContributors:Subclass",
+      "Monograph:Work:OtherContributors:Relationship"
+    ],
+    "id": "Monograph:Work:OtherContributors"
+  },
+  {
+    "bfid": "lc:RT:bf2:search:name",
+    "type": "complex",
+    "displayName": "Name",
+    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
+      "valueDataType": {}
+    },
+    "layout": { "api": "authorities", "isNew": true, "baseLabelType": "contributor" },
+    "linkedEntry": { "dependent": "Monograph:Work:OtherContributors:Subclass" },
+    "id": "Monograph:Work:OtherContributors:Name"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "",
+    "bfid": "",
+    "uri": "",
+    "uriBFLite": "",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Subclass",
+    "uri": "http://id.loc.gov/ontologies/bibframe/agent",
+    "constraints": { "repeatable": true, "editable": true, "mandatory": true, "defaults": [], "useValuesFrom": [] },
+    "children": [
+      "Monograph:Work:OtherContributors:Subclass:",
+      "Monograph:Work:OtherContributors:Subclass:Person",
+      "Monograph:Work:OtherContributors:Subclass:Family",
+      "Monograph:Work:OtherContributors:Subclass:CorporateBody",
+      "Monograph:Work:OtherContributors:Subclass:Jurisdiction",
+      "Monograph:Work:OtherContributors:Subclass:Conference"
+    ],
+    "layout": { "readOnly": true },
+    "dependsOn": "lc:RT:bf2:search:name",
+    "linkedEntry": { "controlledBy": "Monograph:Work:OtherContributors:Name" },
+    "id": "Monograph:Work:OtherContributors:Subclass"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Person",
+    "bfid": "lc:RT:bf2:Agent:bfPerson:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Person",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Person",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:Person"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Family",
+    "bfid": "lc:RT:bf2:Agent:bfFamily:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Family",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Family",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:Family"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Corporate Body",
+    "bfid": "lc:RT:bf2:Agent:bfCorp:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Organization",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Organization",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:CorporateBody"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Jurisdiction",
+    "bfid": "lc:RT:bf2:Agent:bfJurisdiction:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Jurisdiction",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Jurisdiction",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:Jurisdiction"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Conference",
+    "bfid": "lc:RT:bf2:Agent:bfConf:v2",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Meeting",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Meeting",
+    "children": [],
+    "id": "Monograph:Work:OtherContributors:Subclass:Conference"
+  },
+  {
+    "type": "simple",
+    "displayName": "Relationship",
+    "uri": "http://id.loc.gov/ontologies/bibframe/role",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/relators", "https://id.loc.gov/vocabulary/rbmsrel"]
+    },
+    "id": "Monograph:Work:OtherContributors:Relationship"
+  },
+  {
+    "type": "group",
+    "displayName": "Notes about the Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/note",
+    "uriBFLite": "_notes",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Work:NotesAboutTheWork:Note", "Monograph:Work:NotesAboutTheWork:NoteType"],
+    "id": "Monograph:Work:NotesAboutTheWork"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "value",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:NotesAboutTheWork:Note"
+  },
+  {
+    "type": "simple",
+    "displayName": "Note type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/noteType",
+    "uriBFLite": "type",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mnotetype"],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:NotesAboutTheWork:NoteType"
+  },
+  {
+    "type": "literal",
+    "groupName": "Contents",
+    "displayName": "Contents note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/marc/tableOfContents",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ContentsNote"
+  },
+  {
+    "type": "literal",
+    "displayName": "Summary note",
+    "uriBFLite": "http://bibfra.me/vocab/marc/summary",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:SummaryNote"
+  },
+  {
+    "type": "group",
+    "displayName": "Subject of the Work",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subject",
+    "uriBFLite": "http://bibfra.me/vocab/lite/subject",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Work:SubjectOfTheWork:SearchLCSHLCNAF"],
+    "id": "Monograph:Work:SubjectOfTheWork"
+  },
+  {
+    "type": "complex",
+    "displayName": "Search LCSH/LCNAF",
+    "uri": "http://www.loc.gov/mads/rdf/v1#Topic",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/authorities/subjects", "http://preprod.id.loc.gov/authorities/names"],
+      "valueDataType": { "dataTypeURI": "" }
+    },
+    "id": "Monograph:Work:SubjectOfTheWork:SearchLCSHLCNAF"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Classification numbers",
+    "uri": "http://id.loc.gov/ontologies/bibframe/classification",
+    "uriBFLite": "http://bibfra.me/vocab/lite/classification",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": [
+      "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification",
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification"
+    ],
+    "deletable": true,
+    "cloneIndex": 0,
+    "id": "Monograph:Work:ClassificationNumbers"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Library of Congress Classification",
+    "bfid": "lc:RT:bf2:LCC",
+    "uri": "http://id.loc.gov/ontologies/bibframe/ClassificationLcc",
+    "uriBFLite": "lc",
+    "children": [
+      "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:ClassificationNumber",
+      "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:AdditionalCallNumberInformation",
+      "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:AssigningAgency",
+      "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:UsedByAssigningAgency"
+    ],
+    "id": "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification"
+  },
+  {
+    "type": "literal",
+    "displayName": "Classification number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/classificationPortion",
+    "uriBFLite": "http://bibfra.me/vocab/marc/code",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:ClassificationNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Additional call number information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/itemPortion",
+    "uriBFLite": "http://bibfra.me/vocab/marc/itemNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:AdditionalCallNumberInformation"
+  },
+  {
+    "type": "complex",
+    "displayName": "Assigning agency",
+    "uri": "http://id.loc.gov/ontologies/bibframe/assigner",
+    "uriBFLite": "_assigningSourceReference",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent" }
+    },
+    "id": "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:AssigningAgency"
+  },
+  {
+    "type": "simple",
+    "displayName": "Used by assigning agency?",
+    "uri": "http://id.loc.gov/ontologies/bibframe/status",
+    "uriBFLite": "http://bibfra.me/vocab/marc/status",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mstatus"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Status" }
+    },
+    "id": "Monograph:Work:ClassificationNumbers:LibraryOfCongressClassification:UsedByAssigningAgency"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Dewey Decimal Classification",
+    "bfid": "lc:RT:bf2:DDC",
+    "uri": "http://id.loc.gov/ontologies/bibframe/ClassificationDdc",
+    "uriBFLite": "ddc",
+    "children": [
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:ClassificationNumber",
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:AdditionalCallNumberInformation",
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber",
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyFullOrAbridged",
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:Assigner"
+    ],
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification"
+  },
+  {
+    "type": "literal",
+    "displayName": "Classification number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/classificationPortion",
+    "uriBFLite": "http://bibfra.me/vocab/marc/code",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:ClassificationNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Additional call number information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/itemPortion",
+    "uriBFLite": "http://bibfra.me/vocab/marc/itemNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:AdditionalCallNumberInformation"
+  },
+  {
+    "type": "group",
+    "displayName": "Dewey Edition number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/source",
+    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "dataTypeURI": "" }
+    },
+    "children": [
+      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber:DeweyEditionNumber"
+    ],
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Dewey Edition number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/code",
+    "uriBFLite": "http://bibfra.me/vocab/marc/editionNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber:DeweyEditionNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Dewey full or abridged?",
+    "uri": "http://id.loc.gov/ontologies/bibframe/edition",
+    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyFullOrAbridged"
+  },
+  {
+    "type": "complex",
+    "displayName": "Assigner",
+    "uri": "http://id.loc.gov/ontologies/bibframe/assigner",
+    "uriBFLite": "_assigningSourceReference",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent" }
+    },
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:Assigner"
+  },
+  {
+    "type": "simple",
+    "displayName": "Content Type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/content",
+    "uriBFLite": "http://bibfra.me/vocab/marc/content",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/contentTypes"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Content" }
+    },
+    "id": "Monograph:Work:ContentType"
+  },
+  {
+    "type": "simple",
+    "groupName": "Language",
+    "displayName": "Language code",
+    "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "uriBFLite": "http://bibfra.me/vocab/lite/language",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/languages"],
+      "valueDataType": { "remark": "", "dataTypeURI": "" }
+    },
+    "id": "Monograph:Work:LanguageCode"
+  },
+  {
+    "type": "block",
+    "displayName": "Instance",
+    "bfid": "lc:RT:bf2:Monograph:Instance",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Instance",
+    "uriBFLite": "http://bibfra.me/vocab/lite/Instance",
+    "children": [
+      "Monograph:Instance:TitleInformation",
+      "Monograph:Instance:StatementOfResponsibility",
+      "Monograph:Instance:EditionStatement",
+      "Monograph:Instance:ProvisionActivity",
+      "Monograph:Instance:CopyrightDate",
+      "Monograph:Instance:ModeOfIssuance",
+      "Monograph:Instance:Identifiers",
+      "Monograph:Instance:NotesAboutTheInstance",
+      "Monograph:Instance:SupplementaryContentNote",
+      "Monograph:Instance:MediaType",
+      "Monograph:Instance:Extent",
+      "Monograph:Instance:Dimensions",
+      "Monograph:Instance:CarrierType",
+      "Monograph:Instance:URLOfInstance"
+    ],
+    "id": "Monograph:Instance"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Title Information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/title",
+    "uriBFLite": "http://bibfra.me/vocab/marc/title",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": { "remark": "" }
+    },
+    "children": [
+      "Monograph:Instance:TitleInformation:InstanceTitle",
+      "Monograph:Instance:TitleInformation:VariantTitle",
+      "Monograph:Instance:TitleInformation:ParallelTitle"
+    ],
+    "id": "Monograph:Instance:TitleInformation"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Instance Title",
+    "bfid": "lc:RT:bf2:InstanceTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Title",
+    "uriBFLite": "http://bibfra.me/vocab/marc/Title",
+    "children": [
+      "Monograph:Instance:TitleInformation:InstanceTitle:NonSortCharacterCount",
+      "Monograph:Instance:TitleInformation:InstanceTitle:MainTitle",
+      "Monograph:Instance:TitleInformation:InstanceTitle:PartNumber",
+      "Monograph:Instance:TitleInformation:InstanceTitle:PartName",
+      "Monograph:Instance:TitleInformation:InstanceTitle:OtherTitleInformation"
+    ],
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Non-sort character count",
+    "uri": "http://id.loc.gov/ontologies/bflc/nonSortNum",
+    "uriBFLite": "http://bibfra.me/vocab/bflc/nonSortNum",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle:NonSortCharacterCount"
+  },
+  {
+    "type": "literal",
+    "displayName": "Main Title",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle:MainTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle:PartName"
+  },
+  {
+    "type": "literal",
+    "displayName": "Other Title Information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subtitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/subTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:InstanceTitle:OtherTitleInformation"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Variant Title",
+    "bfid": "lc:RT:bf2:Title:VarTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/VariantTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/VariantTitle",
+    "children": [
+      "Monograph:Instance:TitleInformation:VariantTitle:VariantTitle",
+      "Monograph:Instance:TitleInformation:VariantTitle:PartNumber",
+      "Monograph:Instance:TitleInformation:VariantTitle:PartName",
+      "Monograph:Instance:TitleInformation:VariantTitle:OtherTitleInformation",
+      "Monograph:Instance:TitleInformation:VariantTitle:Date",
+      "Monograph:Instance:TitleInformation:VariantTitle:VariantTitleType",
+      "Monograph:Instance:TitleInformation:VariantTitle:Note"
+    ],
+    "id": "Monograph:Instance:TitleInformation:VariantTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Variant Title",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:VariantTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:PartName"
+  },
+  {
+    "type": "literal",
+    "displayName": "Other title information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subtitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/subTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:OtherTitleInformation"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:Date"
+  },
+  {
+    "type": "literal",
+    "displayName": "Variant title type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/variantType",
+    "uriBFLite": "http://bibfra.me/vocab/marc/variantType",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:VariantTitleType"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/note",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:VariantTitle:Note"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Parallel Title",
+    "bfid": "lc:RT:bf2:ParallelTitle",
+    "uri": "http://id.loc.gov/ontologies/bibframe/ParallelTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/ParallelTitle",
+    "children": [
+      "Monograph:Instance:TitleInformation:ParallelTitle:ParallelTitle",
+      "Monograph:Instance:TitleInformation:ParallelTitle:OtherTitleInformation",
+      "Monograph:Instance:TitleInformation:ParallelTitle:PartNumber",
+      "Monograph:Instance:TitleInformation:ParallelTitle:PartName",
+      "Monograph:Instance:TitleInformation:ParallelTitle:Date",
+      "Monograph:Instance:TitleInformation:ParallelTitle:Note"
+    ],
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Parallel Title",
+    "uri": "http://id.loc.gov/ontologies/bibframe/mainTitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/mainTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:ParallelTitle"
+  },
+  {
+    "type": "literal",
+    "displayName": "Other Title Information",
+    "uri": "http://id.loc.gov/ontologies/bibframe/subtitle",
+    "uriBFLite": "http://bibfra.me/vocab/marc/subTitle",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:OtherTitleInformation"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part number",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partNumber",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partNumber",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:PartNumber"
+  },
+  {
+    "type": "literal",
+    "displayName": "Part name",
+    "uri": "http://id.loc.gov/ontologies/bibframe/partName",
+    "uriBFLite": "http://bibfra.me/vocab/marc/partName",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:PartName"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:Date"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/note",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:TitleInformation:ParallelTitle:Note"
+  },
+  {
+    "type": "literal",
+    "displayName": "Statement of Responsibility",
+    "uri": "http://id.loc.gov/ontologies/bibframe/responsibilityStatement",
+    "uriBFLite": "http://bibfra.me/vocab/marc/statementOfResponsibility",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:StatementOfResponsibility"
+  },
+  {
+    "type": "literal",
+    "displayName": "Edition Statement",
+    "uri": "http://id.loc.gov/ontologies/bibframe/editionStatement",
+    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:EditionStatement"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Provision Activity",
+    "uri": "http://id.loc.gov/ontologies/bibframe/provisionActivity",
+    "uriBFLite": "https://bibfra.me/vocab/marc/provisionActivity",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": [
+      "Monograph:Instance:ProvisionActivity:Publication",
+      "Monograph:Instance:ProvisionActivity:Distribution",
+      "Monograph:Instance:ProvisionActivity:Manufacture",
+      "Monograph:Instance:ProvisionActivity:Production"
+    ],
+    "id": "Monograph:Instance:ProvisionActivity"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Publication",
+    "bfid": "lc:RT:bf2:PubInfoNew",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Publication",
+    "uriBFLite": "http://bibfra.me/vocab/marc/publication",
+    "children": [
+      "Monograph:Instance:ProvisionActivity:Publication:EDTFDateToFrom008",
+      "Monograph:Instance:ProvisionActivity:Publication:SearchPlaceOfPublicationToFrom008",
+      "Monograph:Instance:ProvisionActivity:Publication:PlaceToFrom26XA",
+      "Monograph:Instance:ProvisionActivity:Publication:NameToFrom26XB",
+      "Monograph:Instance:ProvisionActivity:Publication:DateToFrom26XC"
+    ],
+    "id": "Monograph:Instance:ProvisionActivity:Publication"
+  },
+  {
+    "type": "literal",
+    "displayName": "EDTF Date (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerDate",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Publication:EDTFDateToFrom008"
+  },
+  {
+    "type": "simple",
+    "displayName": "Search place of publication (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/place",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerPlace",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place" }
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Publication:SearchPlaceOfPublicationToFrom008"
+  },
+  {
+    "type": "literal",
+    "displayName": "Place (to/from 26X $a)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simplePlace",
+    "uriBFLite": "http://bibfra.me/vocab/lite/place",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Publication:PlaceToFrom26XA"
+  },
+  {
+    "type": "literal",
+    "displayName": "Name (to/from 26X $b)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleAgent",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Publication:NameToFrom26XB"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date (to/from 26X $c)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleDate",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Publication:DateToFrom26XC"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Distribution",
+    "bfid": "lc:RT:bf2:DistInfoNew",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Distribution",
+    "uriBFLite": "http://bibfra.me/vocab/marc/distribution",
+    "children": [
+      "Monograph:Instance:ProvisionActivity:Distribution:EDTFDateToFrom008",
+      "Monograph:Instance:ProvisionActivity:Distribution:SearchPlaceOfPublicationToFrom008",
+      "Monograph:Instance:ProvisionActivity:Distribution:PlaceToFrom26XA",
+      "Monograph:Instance:ProvisionActivity:Distribution:NameToFrom26XB",
+      "Monograph:Instance:ProvisionActivity:Distribution:DateToFrom26XC"
+    ],
+    "id": "Monograph:Instance:ProvisionActivity:Distribution"
+  },
+  {
+    "type": "literal",
+    "displayName": "EDTF Date (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerDate",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Distribution:EDTFDateToFrom008"
+  },
+  {
+    "type": "simple",
+    "displayName": "Search place of publication (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/place",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerPlace",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place" }
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Distribution:SearchPlaceOfPublicationToFrom008"
+  },
+  {
+    "type": "literal",
+    "displayName": "Place (to/from 26X $a)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simplePlace",
+    "uriBFLite": "http://bibfra.me/vocab/lite/place",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Distribution:PlaceToFrom26XA"
+  },
+  {
+    "type": "literal",
+    "displayName": "Name (to/from 26X $b)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleAgent",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Distribution:NameToFrom26XB"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date (to/from 26X $c)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleDate",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Distribution:DateToFrom26XC"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Manufacture",
+    "bfid": "lc:RT:bf2:ManuInfoNew",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Manufacture",
+    "uriBFLite": "http://bibfra.me/vocab/marc/manufacture",
+    "children": [
+      "Monograph:Instance:ProvisionActivity:Manufacture:EDTFDateToFrom008",
+      "Monograph:Instance:ProvisionActivity:Manufacture:SearchPlaceOfPublicationToFrom008",
+      "Monograph:Instance:ProvisionActivity:Manufacture:PlaceToFrom26XA",
+      "Monograph:Instance:ProvisionActivity:Manufacture:NameToFrom26XB",
+      "Monograph:Instance:ProvisionActivity:Manufacture:DateToFrom26XC"
+    ],
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture"
+  },
+  {
+    "type": "literal",
+    "displayName": "EDTF Date (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerDate",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture:EDTFDateToFrom008"
+  },
+  {
+    "type": "simple",
+    "displayName": "Search place of publication (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/place",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerPlace",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place" }
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture:SearchPlaceOfPublicationToFrom008"
+  },
+  {
+    "type": "literal",
+    "displayName": "Place (to/from 26X $a)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simplePlace",
+    "uriBFLite": "http://bibfra.me/vocab/lite/place",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture:PlaceToFrom26XA"
+  },
+  {
+    "type": "literal",
+    "displayName": "Name (to/from 26X $b)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleAgent",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture:NameToFrom26XB"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date (to/from 26X $c)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleDate",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Manufacture:DateToFrom26XC"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "Production",
+    "bfid": "lc:RT:bf2:ProdInfoNew",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Production",
+    "uriBFLite": "http://bibfra.me/vocab/marc/production",
+    "children": [
+      "Monograph:Instance:ProvisionActivity:Production:EDTFDateToFrom008",
+      "Monograph:Instance:ProvisionActivity:Production:SearchPlaceOfPublicationToFrom008",
+      "Monograph:Instance:ProvisionActivity:Production:PlaceToFrom26XA",
+      "Monograph:Instance:ProvisionActivity:Production:NameToFrom26XB",
+      "Monograph:Instance:ProvisionActivity:Production:DateToFrom26XC"
+    ],
+    "id": "Monograph:Instance:ProvisionActivity:Production"
+  },
+  {
+    "type": "literal",
+    "displayName": "EDTF Date (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/date",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerDate",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Production:EDTFDateToFrom008"
+  },
+  {
+    "type": "simple",
+    "displayName": "Search place of publication (to/from 008)",
+    "uri": "http://id.loc.gov/ontologies/bibframe/place",
+    "uriBFLite": "http://bibfra.me/vocab/lite/providerPlace",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place" }
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Production:SearchPlaceOfPublicationToFrom008"
+  },
+  {
+    "type": "literal",
+    "displayName": "Place (to/from 26X $a)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simplePlace",
+    "uriBFLite": "http://bibfra.me/vocab/lite/place",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Production:PlaceToFrom26XA"
+  },
+  {
+    "type": "literal",
+    "displayName": "Name (to/from 26X $b)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleAgent",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Production:NameToFrom26XB"
+  },
+  {
+    "type": "literal",
+    "displayName": "Date (to/from 26X $c)",
+    "uri": "http://id.loc.gov/ontologies/bflc/simpleDate",
+    "uriBFLite": "http://bibfra.me/vocab/lite/date",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:ProvisionActivity:Production:DateToFrom26XC"
+  },
+  {
+    "type": "literal",
+    "displayName": "Copyright Date",
+    "uri": "http://id.loc.gov/ontologies/bibframe/copyrightDate",
+    "uriBFLite": "http://bibfra.me/vocab/marc/copyright",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:CopyrightDate"
+  },
+  {
+    "type": "simple",
+    "displayName": "Mode of Issuance",
+    "uri": "http://id.loc.gov/ontologies/bibframe/issuance",
+    "uriBFLite": "http://bibfra.me/vocab/marc/issuance",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/issuance"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Issuance" }
+    },
+    "id": "Monograph:Instance:ModeOfIssuance"
+  },
+  {
+    "type": "dropdown",
+    "displayName": "Identifiers",
+    "uri": "http://id.loc.gov/ontologies/bibframe/identifiedBy",
+    "uriBFLite": "http://library.link/vocab/map",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Instance:Identifiers:LCCN", "Monograph:Instance:Identifiers:ISBN"],
+    "id": "Monograph:Instance:Identifiers"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "LCCN",
+    "bfid": "lc:RT:bf2:Identifiers:LCCN",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Lccn",
+    "uriBFLite": "http://library.link/identifier/LCCN",
+    "children": ["Monograph:Instance:Identifiers:LCCN:LCCN", "Monograph:Instance:Identifiers:LCCN:InvalidCanceled"],
+    "id": "Monograph:Instance:Identifiers:LCCN"
+  },
+  {
+    "type": "literal",
+    "displayName": "LCCN",
+    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:Identifiers:LCCN:LCCN"
+  },
+  {
+    "type": "simple",
+    "displayName": "Invalid/Canceled?",
+    "uri": "http://id.loc.gov/ontologies/bibframe/status",
+    "uriBFLite": "http://bibfra.me/vocab/marc/status",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mstatus"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Status" }
+    },
+    "id": "Monograph:Instance:Identifiers:LCCN:InvalidCanceled"
+  },
+  {
+    "type": "dropdownOption",
+    "displayName": "ISBN",
+    "bfid": "lc:RT:bf2:Identifiers:ISBN",
+    "uri": "http://id.loc.gov/ontologies/bibframe/Isbn",
+    "uriBFLite": "http://library.link/identifier/ISBN",
+    "children": [
+      "Monograph:Instance:Identifiers:ISBN:ISBN",
+      "Monograph:Instance:Identifiers:ISBN:Qualifier",
+      "Monograph:Instance:Identifiers:ISBN:IncorrectInvalidOrCanceled"
+    ],
+    "id": "Monograph:Instance:Identifiers:ISBN"
+  },
+  {
+    "type": "literal",
+    "displayName": "ISBN",
+    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:Identifiers:ISBN:ISBN"
+  },
+  {
+    "type": "literal",
+    "displayName": "Qualifier",
+    "uri": "http://id.loc.gov/ontologies/bibframe/qualifier",
+    "uriBFLite": "http://bibfra.me/vocab/marc/qualifier",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:Identifiers:ISBN:Qualifier"
+  },
+  {
+    "type": "simple",
+    "displayName": "Incorrect, Invalid or Canceled?",
+    "uri": "http://id.loc.gov/ontologies/bibframe/status",
+    "uriBFLite": "http://bibfra.me/vocab/marc/status",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mstatus"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Status" }
+    },
+    "id": "Monograph:Instance:Identifiers:ISBN:IncorrectInvalidOrCanceled"
+  },
+  {
+    "type": "group",
+    "displayName": "Notes about the Instance",
+    "uri": "http://id.loc.gov/ontologies/bibframe/note",
+    "uriBFLite": "_notes",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Instance:NotesAboutTheInstance:Note", "Monograph:Instance:NotesAboutTheInstance:NoteType"],
+    "id": "Monograph:Instance:NotesAboutTheInstance"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "value",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:NotesAboutTheInstance:Note"
+  },
+  {
+    "type": "simple",
+    "displayName": "Note type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/noteType",
+    "uriBFLite": "type",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mnotetype"],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:NotesAboutTheInstance:NoteType"
+  },
+  {
+    "type": "group",
+    "displayName": "Supplementary Content note",
+    "uri": "http://id.loc.gov/ontologies/bibframe/supplementaryContent",
+    "uriBFLite": "http://bibfra.me/vocab/marc/supplementaryContent",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": [
+      "Monograph:Instance:SupplementaryContentNote:Note",
+      "Monograph:Instance:SupplementaryContentNote:URLForSupplementaryContent"
+    ],
+    "id": "Monograph:Instance:SupplementaryContentNote"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/name",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:SupplementaryContentNote:Note"
+  },
+  {
+    "type": "literal",
+    "displayName": "URL for Supplementary Content",
+    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "uriBFLite": "http://bibfra.me/vocab/lite/link",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:SupplementaryContentNote:URLForSupplementaryContent"
+  },
+  {
+    "type": "simple",
+    "displayName": "Media type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/media",
+    "uriBFLite": "http://bibfra.me/vocab/marc/media",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/mediaTypes"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Media" }
+    },
+    "id": "Monograph:Instance:MediaType"
+  },
+  {
+    "type": "literal",
+    "groupName": "Extent",
+    "displayName": "Extent",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/extent",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:Extent"
+  },
+  {
+    "type": "literal",
+    "displayName": "Dimensions",
+    "uri": "http://id.loc.gov/ontologies/bibframe/dimensions",
+    "uriBFLite": "http://bibfra.me/vocab/marc/dimensions",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:Dimensions"
+  },
+  {
+    "type": "simple",
+    "displayName": "Carrier type",
+    "uri": "http://id.loc.gov/ontologies/bibframe/carrier",
+    "uriBFLite": "http://bibfra.me/vocab/marc/carrier",
+    "constraints": {
+      "repeatable": true,
+      "editable": true,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": ["http://id.loc.gov/vocabulary/carriers"],
+      "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Carrier" }
+    },
+    "id": "Monograph:Instance:CarrierType"
+  },
+  {
+    "type": "group",
+    "displayName": "URL of Instance",
+    "uri": "http://id.loc.gov/ontologies/bibframe/electronicLocator",
+    "uriBFLite": "http://bibfra.me/vocab/marc/accessLocation",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "children": ["Monograph:Instance:URLOfInstance:URL", "Monograph:Instance:URLOfInstance:Note"],
+    "id": "Monograph:Instance:URLOfInstance"
+  },
+  {
+    "type": "literal",
+    "displayName": "URL",
+    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#value",
+    "uriBFLite": "http://bibfra.me/vocab/lite/link",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:URLOfInstance:URL"
+  },
+  {
+    "type": "literal",
+    "displayName": "Note",
+    "uri": "http://www.w3.org/2000/01/rdf-schema#label",
+    "uriBFLite": "http://bibfra.me/vocab/lite/note",
+    "constraints": {
+      "repeatable": true,
+      "editable": false,
+      "mandatory": true,
+      "defaults": [],
+      "useValuesFrom": [],
+      "valueDataType": {}
+    },
+    "id": "Monograph:Instance:URLOfInstance:Note"
+  }
+]

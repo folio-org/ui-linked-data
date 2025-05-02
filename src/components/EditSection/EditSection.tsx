@@ -3,6 +3,7 @@ import { debounce } from 'lodash';
 import classNames from 'classnames';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 import { Fields } from '@components/Fields';
 import { Prompt } from '@components/Prompt';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
@@ -16,7 +17,7 @@ const USER_INPUT_DELAY = 100;
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const { selectedProfile, initialSchemaKey } = useProfileState();
-  const resourceTemplates = selectedProfile?.json.Profile.resourceTemplates;
+  const resourceTemplates = CUSTOM_PROFILE_ENABLED ? true : selectedProfile?.json.Profile.resourceTemplates;
   const { userValues, addUserValuesItem, selectedEntries, setSelectedEntries } = useInputsState();
   const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState();
   const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();

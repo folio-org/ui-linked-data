@@ -7,6 +7,7 @@ type IRecordToSchemaMappingService =
   import('@common/services/recordToSchemaMapping/recordToSchemaMapping.interface').IRecordToSchemaMapping;
 type ISchemaService = import('@common/services/schema/schema.interface').ISchema;
 type IRecordGeneratorService = import('@common/services/record/record.interface').IRecordGenerator;
+type ISchemaGeneratorService = import('@common/services/schema/schemaGenerator.interface').ISchemaGenerator;
 
 type ServicesParams = {
   selectedEntriesService?: ISelectedEntriesService;
@@ -17,4 +18,5 @@ type ServicesParams = {
   recordToSchemaMappingService?: IRecordToSchemaMappingService;
   schemaCreatorService?: ISchemaService;
   recordGeneratorService?: IRecordGeneratorService;
+  schemaGeneratorService?: ISchemaGeneratorService;
 };
