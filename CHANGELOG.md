@@ -1,5 +1,10 @@
 # Change history for ui-linked-data
 
+## 1.1.0 (IN PROGRESS)
+* Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
+
+[UILD-546]:https://folio-org.atlassian.net/browse/UILD-546
+
 ## 1.0.6 (IN PROGRESS)
 
 ## 1.0.5 (2025-04-30)
