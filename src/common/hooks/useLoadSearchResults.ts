@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@common/constants/search.constants';
+import { removeBackslashes } from '@common/helpers/search.helper';
 import { useLoadingState, useSearchState } from '@src/store';
 import { useSearchContext } from './useSearchContext';
 
@@ -41,7 +42,7 @@ export const useLoadSearchResults = (
 
       // Sets query's value for Basic search
       if (searchByParam && prevQuery !== queryParam) {
-        setQuery(queryParam);
+        setQuery(removeBackslashes(queryParam));
       }
 
       setForceRefresh(false);
@@ -69,7 +70,7 @@ export const useLoadSearchResults = (
       }
 
       if (searchByParam && queryParam) {
-        setQuery(queryParam);
+        setQuery(removeBackslashes(queryParam));
       }
 
       if (query) {

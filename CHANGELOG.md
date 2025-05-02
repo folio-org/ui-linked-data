@@ -1,22 +1,42 @@
 # Change history for ui-linked-data
 
 ## 1.1.0 (IN PROGRESS)
+* Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
 * Clear global state on web component disconnection. Refs [UILD-552].
+* Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
  
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
+[UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
+[UILD-546]:https://folio-org.atlassian.net/browse/UILD-546
 
-## 1.0.4 (IN PROGRESS)
+## 1.0.6 (IN PROGRESS)
+
+## 1.0.5 (2025-04-30)
+* Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
+* Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
+
+[UILD-553]:https://folio-org.atlassian.net/browse/UILD-553
+[UILD-554]:https://folio-org.atlassian.net/browse/UILD-554
+
+## 1.0.4 (2025-04-24)
 * Added "selectedEntries" property to compared resources to properly render dropdown options. Fixes [UILD-533]
 * Update blocker logic in Prompt component and add fetchableId check in Edit component. Fixes [UILD-543]
 * Search query shows slashes when entered value has quotation marks. Fixes [UILD-535].
 * Fix double title shown when importing after marc preview is opened. Fixes [UILD-534].
-* Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
+* Add safe formatting to the console error message. Fixes [UILD-526].
+* Clear MARC preview state to display controls on the External Preview pane. Fixes [UILD-534].
+* Fix text alignment for details title in Search results set. Fixes [UILD-529].
+* Fixed table header cell styles: empty cells did not have the required bottom border and had excess borders. Fixes [UILD-545]
 
 [UILD-533]:https://folio-org.atlassian.net/browse/UILD-533
 [UILD-543]:https://folio-org.atlassian.net/browse/UILD-543
 [UILD-535]:https://folio-org.atlassian.net/browse/UILD-535
 [UILD-534]:https://folio-org.atlassian.net/browse/UILD-534
-[UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
+[UILD-535]: https://folio-org.atlassian.net/browse/UILD-535
+[UILD-534]: https://folio-org.atlassian.net/browse/UILD-534
+[UILD-526]: https://folio-org.atlassian.net/browse/UILD-526
+[UILD-529]: https://folio-org.atlassian.net/browse/UILD-529
+[UILD-545]: https://folio-org.atlassian.net/browse/UILD-545
 
 
 ## 1.0.3 (2025-04-08)

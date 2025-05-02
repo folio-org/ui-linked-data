@@ -77,7 +77,9 @@ export class UserValuesService implements IUserValues {
       this.generatedValue = await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });
     } catch (error) {
       console.error(
-        `Error occurred generating value for ${this.value?.fieldUri} field of the ${this.value?.groupUri} record entry`,
+        `Error occurred generating value for %s field of the %s record entry`,
+        this.value?.groupUri,
+        this.value?.fieldUri,
         error,
       );
     }

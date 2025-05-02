@@ -54,8 +54,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
-  const [searchValue, setSearchValue] = useState(query);
-  const isDisabledResetButton = !query && !searchQueryParam && !searchValue;
+  const isDisabledResetButton = !query && !searchQueryParam;
   const selectOptions =
     searchByControlOptions && navigationSegment?.value
       ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
@@ -64,7 +63,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
     setQuery(value);
-    setSearchValue(value.replace(/\\/g, ''));
   };
 
   const clearValuesAndResetControls = () => {
@@ -78,7 +76,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetPreviewContent();
     resetFullDisplayComponentType();
     resetSelectedInstances();
-    setSearchValue('');
     hasSearchParams && setSearchParams({});
     hasSearchParams && setNavigationState({});
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
@@ -135,7 +132,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
               <Input
                 id="id-search-input"
                 type="text"
-                value={searchValue}
+                value={query}
                 onChange={onChangeSearchInput}
                 className="text-input"
                 onPressEnter={submitSearch}
