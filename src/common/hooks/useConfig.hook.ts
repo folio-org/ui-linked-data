@@ -120,10 +120,7 @@ export const useConfig = () => {
         const hasStoredProfiles = profiles?.length;
         response = hasStoredProfiles ? profiles : await fetchProfiles();
         // TODO: UILD-438 - check a list of supported profiles and implement the profile selection
-        selectedProfile = CUSTOM_PROFILE_ENABLED
-          ? response
-          : response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
-
+        selectedProfile = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
         templates = preparedFields ?? prepareFields(response);
 
         if (!hasStoredProfiles) {
