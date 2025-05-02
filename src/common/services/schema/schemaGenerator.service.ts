@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { PROFILE_NODE_ID_DELIMITER } from '@common/constants/bibframe.constants';
-import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { ISchemaGenerator } from './schemaGenerator.interface';
 
@@ -22,7 +21,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   private idToUuid: Map<string, string>;
 
   constructor(
-    private readonly selectedEntriesService: ISelectedEntries,
+    private readonly selectedEntriesService: ISelectedEntriesService,
     private readonly entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
   ) {
     this.profile = [];
@@ -135,9 +134,9 @@ export class SchemaGeneratorService implements ISchemaGenerator {
 
   private transformidToUuid(initKey: string) {
     this.profile.forEach((node, index) => {
-      const newUUID = index === 0 ? initKey : uuidv4();
+      const newUuid = index === 0 ? initKey : uuidv4();
 
-      this.idToUuid.set(node.id, newUUID);
+      this.idToUuid.set(node.id, newUuid);
     });
   }
 
@@ -146,10 +145,10 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     let currentId = nodeId;
 
     while (currentId) {
-      const currentUUID = this.idToUuid.get(currentId);
+      const currentUuid = this.idToUuid.get(currentId);
 
-      if (currentUUID) {
-        path.unshift(currentUUID);
+      if (currentUuid) {
+        path.unshift(currentUuid);
       }
 
       currentId = currentId.includes(PROFILE_NODE_ID_DELIMITER)
