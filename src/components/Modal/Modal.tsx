@@ -25,6 +25,7 @@ interface Props {
   children?: ReactNode;
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
+  spreadModalControls?: boolean;
   titleClassName?: string;
   alignTitleCenter?: boolean;
   ariaModalKind?: string;
@@ -46,6 +47,7 @@ const Modal: FC<Props> = ({
   cancelButtonDisabled,
   showCloseIconButton = true,
   showModalControls = true,
+  spreadModalControls = false,
   titleClassName,
   alignTitleCenter = false,
   ariaModalKind = AriaModalKind.Basic,
@@ -87,7 +89,7 @@ const Modal: FC<Props> = ({
             </div>
             {!!children && children}
             {showModalControls && (
-              <div className="modal-controls">
+              <div className={spreadModalControls ? "modal-controls-spread" : "modal-controls"}>
                 <Button
                   disabled={cancelButtonDisabled}
                   onClick={onCancel}
