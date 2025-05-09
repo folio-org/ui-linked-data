@@ -13,7 +13,8 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'currentlyEditedEntityBfid', UIEntries> &
   SliceState<'fullDisplayComponentType', FullDisplayType> &
   SliceState<'currentlyPreviewedEntityBfid', UIEntries> &
-  SliceState<'hasShownAuthorityWarning', boolean>;
+  SliceState<'hasShownAuthorityWarning', boolean> &
+  SliceState<'isImportModalOpen', boolean>;
 
 const STORE_NAME = 'UI';
 
@@ -48,6 +49,9 @@ const sliceConfigs: SliceConfigs = {
   hasShownAuthorityWarning: {
     initialValue: false,
   },
+  isImportModalOpen: {
+    initialValue: false,
+  }
 };
 
 export const useUIStore = createStoreFactory<UIState, SliceConfigs>(sliceConfigs, STORE_NAME);
