@@ -1,0 +1,32 @@
+.modal {
+  .description, .selector, .mode {
+    margin-top: 24px;
+  }
+
+  label {
+    font-weight: bold;
+  }
+
+  .mode-select, input {
+    background-color: rgba(0, 0, 0, 3%);
+    width: 100%;
+  }
+
+  .mode {
+    margin-bottom: 40px;
+  }
+
+  .file-mode {
+    height: 150px;
+  }
+
+  &-controls-spread {
+    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding-top: 15px;
+  }
+
+  &-controls {
+    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding-top: 15px;
+  }
+}
