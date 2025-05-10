@@ -249,5 +249,7 @@
   "ld.importUrlLabel": "JSON file URL",
   "ld.importFileInstructions": "Drag and drop to upload an instance",
   "ld.importFileChoose": "or choose files",
-  "ld.importFileDrop": "Drop to start import"
+  "ld.importFileDrop": "Drop to start import",
+  "ld.importFileTypeError": "You are unable to upload that file type. Please try again.",
+  "ld.importFileSizeError": "Your file is too large. Please try again."
 }

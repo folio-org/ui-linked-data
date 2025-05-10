@@ -6,16 +6,48 @@ import { Modal } from '@components/Modal';
 import { Select } from '@components/Select';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
+import { importFile } from '@common/api/import.api';
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
   const [ importMode, setImportMode ] = useState(ImportModes.JsonFile);
+  const [ importReady, setImportReady ] = useState(false);
+  const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]);
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
 
   const switchMode = (value: string) => {
     setImportMode(value as ImportModes);
+    onImportNotReady();
     return true;
+  };
+
+  const onImportReady = (files: File[]) => {
+    setFilesToUpload(files);
+    setImportReady(true);
+  };
+
+  const onImportNotReady = () => {
+    setFilesToUpload([]);
+    setImportReady(false);
+  };
+
+  const processImport = async () => {
+    switch(importMode) {
+      case ImportModes.JsonFile:
+        try {
+          setImportReady(false);
+          // show active upload message and disable button controls
+          // also disable leaving modal?
+          await importFile(filesToUpload);
+          // show success message and alter controls
+        } catch (error : any) {
+          // show error message and alter controls
+        }
+        break;
+      case ImportModes.JsonUrl:
+        break;
+    }
   };
 
   return (
@@ -24,7 +56,8 @@ export const ModalImport = memo(() => {
       isOpen={isImportModalOpen}
       title={formatMessage({ id: 'ld.importInstances' })}
       submitButtonLabel={formatMessage({ id: 'ld.import' })}
-      submitButtonDisabled
+      submitButtonDisabled={!importReady}
+      onSubmit={processImport}
       alignTitleCenter
       spreadModalControls
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
@@ -50,7 +83,7 @@ export const ModalImport = memo(() => {
       </div>
       { importMode === ImportModes.JsonFile && (
         <div className='mode file-mode'>
-          <Dropzone />
+          <Dropzone {...{onImportReady, onImportNotReady}} />
         </div>
       )}
       { importMode === ImportModes.JsonUrl && (
