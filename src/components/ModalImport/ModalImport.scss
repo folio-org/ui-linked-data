@@ -1,6 +1,14 @@
 .modal {
+  padding: 0;
+
+  .modal-header {
+    border-bottom: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding: 24px 24px 16px 24px;
+  }
+
   .description, .selector, .mode {
     margin-top: 24px;
+    padding: 0 24px;
   }
 
   label {
@@ -18,11 +26,11 @@
 
   &-controls-spread {
     border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
-    padding-top: 15px;
+    padding: 15px 24px 16px 24px;
   }
 
   &-controls {
     border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
-    padding-top: 15px;
+    padding: 15px 24px 16px 24px;
   }
 }

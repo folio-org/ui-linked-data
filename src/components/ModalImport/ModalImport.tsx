@@ -11,10 +11,21 @@ import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
   const [ importMode, setImportMode ] = useState(ImportModes.JsonFile);
-  const [ importReady, setImportReady ] = useState(false);
+  const [ isImportReady, setIsImportReady ] = useState(false);
+  const [ isImportSubmitted, setIsImportSubmitted ] = useState(false);
+  const [ isImportCompleted, setIsImportCompleted ] = useState(false);
   const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]);
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
+
+  const reset = () => {
+    setIsImportReady(false);
+    setIsImportSubmitted(false);
+    setIsImportCompleted(false);
+    setFilesToUpload([]);
+    setImportMode(ImportModes.JsonFile);
+    setIsImportModalOpen(false);
+  };
 
   const switchMode = (value: string) => {
     setImportMode(value as ImportModes);
@@ -24,30 +35,30 @@ export const ModalImport = memo(() => {
 
   const onImportReady = (files: File[]) => {
     setFilesToUpload(files);
-    setImportReady(true);
+    setIsImportReady(true);
   };
 
   const onImportNotReady = () => {
     setFilesToUpload([]);
-    setImportReady(false);
+    setIsImportReady(false);
   };
 
   const processImport = async () => {
+    setIsImportReady(false);
+    setIsImportSubmitted(true);
     switch(importMode) {
       case ImportModes.JsonFile:
         try {
-          setImportReady(false);
-          // show active upload message and disable button controls
-          // also disable leaving modal?
           await importFile(filesToUpload);
-          // show success message and alter controls
         } catch (error : any) {
-          // show error message and alter controls
+          // handle error
         }
         break;
       case ImportModes.JsonUrl:
         break;
     }
+    setIsImportSubmitted(false);
+    setIsImportCompleted(true);
   };
 
   return (
@@ -56,47 +67,61 @@ export const ModalImport = memo(() => {
       isOpen={isImportModalOpen}
       title={formatMessage({ id: 'ld.importInstances' })}
       submitButtonLabel={formatMessage({ id: 'ld.import' })}
-      submitButtonDisabled={!importReady}
+      submitButtonDisabled={!isImportReady}
       onSubmit={processImport}
       alignTitleCenter
       spreadModalControls
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
-      onCancel={() => setIsImportModalOpen(false)}
-      onClose={() => setIsImportModalOpen(false)}
+      onCancel={reset}
+      onClose={reset}
     >
-      <div className='description'>
-        <FormattedMessage id='ld.importDescription'/>
-      </div>
-      <div className='selector'>
-        <label htmlFor='mode-select'>
-          <FormattedMessage id='ld.importOption'/>
-        </label>
-        <Select 
-          id='mode-select'
-          options={[
-            { value: ImportModes.JsonFile, label: 'importFile'},
-            { value: ImportModes.JsonUrl, label: 'importUrl'},
-          ]}
-          withIntl={true}
-          className='mode-select'
-          onChange={({value}) => switchMode(value)}/>
-      </div>
-      { importMode === ImportModes.JsonFile && (
-        <div className='mode file-mode'>
-          <Dropzone {...{onImportReady, onImportNotReady}} />
-        </div>
-      )}
-      { importMode === ImportModes.JsonUrl && (
-        <div className='mode url-mode'>
-          <label htmlFor='url'>
-            <FormattedMessage id='ld.importUrlLabel'/>
-          </label>
-          <Input
-            id='url'
-            onChange={() => {}}
-          />
-        </div>
-      )}
+      { !isImportSubmitted && !isImportCompleted &&
+        <>
+          <div className='description'>
+            <FormattedMessage id='ld.importDescription'/>
+          </div>
+          <div className='selector'>
+            <label htmlFor='mode-select'>
+              <FormattedMessage id='ld.importOption'/>
+            </label>
+            <Select
+              id='mode-select'
+              options={[
+                { value: ImportModes.JsonFile, label: 'importFile'},
+                { value: ImportModes.JsonUrl, label: 'importUrl'},
+              ]}
+              withIntl={true}
+              className='mode-select'
+              onChange={({value}) => switchMode(value)}/>
+          </div>
+          { importMode === ImportModes.JsonFile && (
+            <div className='mode file-mode'>
+              <Dropzone {...{onImportReady, onImportNotReady}} />
+            </div>
+          )}
+          { importMode === ImportModes.JsonUrl && (
+            <div className='mode url-mode'>
+              <label htmlFor='url'>
+                <FormattedMessage id='ld.importUrlLabel'/>
+              </label>
+              <Input
+                id='url'
+                onChange={() => {}}
+              />
+            </div>
+          )}
+        </>
+      }
+      { isImportSubmitted &&
+        <>
+          <FormattedMessage id='ld.importingFile'/> . . .
+        </>
+      }
+      { isImportCompleted &&
+        <>
+          <FormattedMessage id='ld.importFileSuccess'/>
+        </>
+      }
     </Modal>
   );
 });
