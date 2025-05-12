@@ -65,5 +65,9 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    button:only-child {
+      margin-left: auto;
+    }
   }
 }
