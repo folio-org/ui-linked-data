@@ -1,13 +1,12 @@
 import { memo, useState } from 'react';
 import { ImportModes } from '@common/constants/import.constants';
-import { Dropzone } from '@components/Dropzone';
-import { Input } from '@components/Input';
 import { Modal } from '@components/Modal';
-import { Select } from '@components/Select';
-import { SpinnerEllipsis } from '@components/SpinnerEllipsis';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
 import { importFile } from '@common/api/import.api';
+import { SelectorImportMode } from './SelectorImportMode';
+import { Submitted } from './Submitted';
+import { Completed } from './Completed';
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
@@ -113,57 +112,10 @@ export const ModalImport = memo(() => {
     >
       <div className='body'>
         { !isImportSubmitted && !isImportCompleted &&
-          <>
-            <div className='description'>
-              <FormattedMessage id='ld.importDescription'/>
-            </div>
-            <div className='selector'>
-              <label htmlFor='mode-select'>
-                <FormattedMessage id='ld.importOption'/>
-              </label>
-              <Select
-                id='mode-select'
-                options={[
-                  { value: ImportModes.JsonFile, label: 'importFile'},
-                  { value: ImportModes.JsonUrl, label: 'importUrl'},
-                ]}
-                withIntl={true}
-                className='mode-select'
-                onChange={({value}) => switchMode(value)}/>
-            </div>
-            { importMode === ImportModes.JsonFile && (
-              <div className='mode file-mode'>
-                <Dropzone {...{onImportReady, onImportNotReady}} />
-              </div>
-            )}
-            { importMode === ImportModes.JsonUrl && (
-              <div className='mode url-mode'>
-                <label htmlFor='url'>
-                  <FormattedMessage id='ld.importUrlLabel'/>
-                </label>
-                <Input
-                  id='url'
-                  onChange={() => {}}
-                />
-              </div>
-            )}
-          </>
+          <SelectorImportMode {...{importMode, switchMode, onImportReady, onImportNotReady}} />
         }
-        { isImportSubmitted &&
-          <div className='submitted'>
-            <SpinnerEllipsis />
-            <FormattedMessage id='ld.importingFile'/>...
-          </div>
-        }
-        { isImportCompleted &&
-          <div className='completed'>
-            { isImportSuccessful ?
-              <FormattedMessage id='ld.importFileSuccess'/>
-              :
-              <FormattedMessage id='ld.importFileFailure'/>
-            }
-          </div>
-        }
+        { isImportSubmitted && <Submitted /> }
+        { isImportCompleted && <Completed {...{isImportSuccessful}} /> }
       </div>
     </Modal>
   );
