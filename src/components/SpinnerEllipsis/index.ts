@@ -1,1 +1,1 @@
-export { SpinnerEllipsis } from "./SpinnerEllipsis";
+export { SpinnerEllipsis } from './SpinnerEllipsis';

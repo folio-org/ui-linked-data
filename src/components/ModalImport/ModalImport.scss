@@ -10,7 +10,11 @@
   .body {
     padding: 0 24px;
 
-    .description, .selector, .mode, .submitted, .completed {
+    .description,
+    .selector,
+    .mode,
+    .submitted,
+    .completed {
       margin-top: 24px;
     }
 
@@ -18,12 +22,15 @@
       font-weight: bold;
     }
 
-    .mode-select, input {
+    .mode-select,
+    input {
       background-color: rgba(0, 0, 0, 3%);
       width: 100%;
     }
 
-    .mode, .submitted, .completed {
+    .mode,
+    .submitted,
+    .completed {
       margin-bottom: 40px;
     }
 

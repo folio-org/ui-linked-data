@@ -91,8 +91,8 @@ const Modal: FC<Props> = ({
             </div>
             {!!children && children}
             {showModalControls && (
-              <div className={spreadModalControls ? "modal-controls-spread" : "modal-controls"}>
-                {!cancelButtonHidden &&
+              <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                {!cancelButtonHidden && (
                   <Button
                     disabled={cancelButtonDisabled}
                     onClick={onCancel}
@@ -101,7 +101,7 @@ const Modal: FC<Props> = ({
                   >
                     {cancelButtonLabel}
                   </Button>
-                }
+                )}
                 <Button
                   disabled={submitButtonDisabled}
                   type={ButtonType.Highlighted}

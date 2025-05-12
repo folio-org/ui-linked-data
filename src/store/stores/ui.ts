@@ -51,7 +51,7 @@ const sliceConfigs: SliceConfigs = {
   },
   isImportModalOpen: {
     initialValue: false,
-  }
+  },
 };
 
 export const useUIStore = createStoreFactory<UIState, SliceConfigs>(sliceConfigs, STORE_NAME);
