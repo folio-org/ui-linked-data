@@ -11,17 +11,14 @@ import './Dropzone.scss';
 interface Props {
   onImportReady?: (files: File[]) => void;
   onImportNotReady?: () => void;
-};
+}
 
-export const Dropzone: FC<Props> = ({
-  onImportReady,
-  onImportNotReady
-}) => {
-  const [ acceptedFiles, setAcceptedFiles ] = useState<File[]>([]);
+export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
+  const [acceptedFiles, setAcceptedFiles] = useState<File[]>([]);
   const { formatMessage } = useIntl();
 
-  const onDropAccepted = (accepted : File[]) => {
-    const newFiles = [...acceptedFiles, ...accepted]
+  const onDropAccepted = (accepted: File[]) => {
+    const newFiles = [...acceptedFiles, ...accepted];
     setAcceptedFiles(newFiles);
     if (onImportReady) {
       onImportReady(newFiles);
@@ -32,14 +29,14 @@ export const Dropzone: FC<Props> = ({
     if (file.size > MAX_FILE_SIZE_BYTES) {
       return {
         code: 'file-too-large',
-        message: formatMessage({ id: 'ld.importFileSizeError' })
+        message: formatMessage({ id: 'ld.importFileSizeError' }),
       };
     }
 
     return null;
   };
 
-  const onRemoveFile = (file : File) => {
+  const onRemoveFile = (file: File) => {
     const newFiles = [...acceptedFiles];
     newFiles.splice(newFiles.indexOf(file), 1);
     setAcceptedFiles(newFiles);
@@ -55,9 +52,9 @@ export const Dropzone: FC<Props> = ({
   const renderErrors = (rejecting: boolean) => {
     if (rejecting) {
       return (
-        <div className='error'>
-          <ErrorIcon className='icon'/>
-          <FormattedMessage id='ld.importFileTypeError'/>
+        <div className="error">
+          <ErrorIcon className="icon" />
+          <FormattedMessage id="ld.importFileTypeError" />
         </div>
       );
     }
@@ -73,23 +70,25 @@ export const Dropzone: FC<Props> = ({
   const renderAllErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
     if (isDragReject || rejections.length > 0) {
       if (rejections.length > 0) {
-        return (
-          rejections.map(({ file, errors }) => {
-            return <>
-              {errors.map((e) => {
-                return <div key={e.code + file.path} className='error'>
-                  <ErrorIcon className='icon'/>
-                  {file.path}: {e.message}
-                </div>
+        return rejections.map(({ file, errors }) => {
+          return (
+            <>
+              {errors.map(e => {
+                return (
+                  <div key={e.code + file.path} className="error">
+                    <ErrorIcon className="icon" />
+                    {file.path}: {e.message}
+                  </div>
+                );
               })}
             </>
-          })
-        );
+          );
+        });
       } else if (isDragReject) {
         return (
-          <div className='error'>
-            <ErrorIcon className='icon'/>
-            <FormattedMessage id='ld.importFileTypeError'/>
+          <div className="error">
+            <ErrorIcon className="icon" />
+            <FormattedMessage id="ld.importFileTypeError" />
           </div>
         );
       }
@@ -97,55 +96,46 @@ export const Dropzone: FC<Props> = ({
     return <></>;
   };
 
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isDragReject
-  } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     multiple: false,
     accept: {
-      "application/json": [".json"]
+      'application/json': ['.json'],
     },
     validator,
-    onDropAccepted
+    onDropAccepted,
   });
 
   return (
-    <div className='dropzone-wrapper'>
-      {
-        hasAcceptedFiles() ?
-        <div className='dropzone-files'>
+    <div className="dropzone-wrapper">
+      {hasAcceptedFiles() ? (
+        <div className="dropzone-files">
           {acceptedFiles.map((file: File) => {
-            return <DropzoneFile key={file.name} {...{file, onRemoveFile}} />
+            return <DropzoneFile key={file.name} {...{ file, onRemoveFile }} />;
           })}
         </div>
-        :
-        <div className={classNames(['dropzone',
-          { 'dragging' : isDragActive },
-          { 'waiting' : !isDragActive }
-        ])} {...getRootProps()}>
-          <input {...getInputProps()}/>
-          {
-            isDragActive ?
-              <div>
-                <FormattedMessage id='ld.importFileDrop'/>
+      ) : (
+        <div
+          className={classNames(['dropzone', { dragging: isDragActive }, { waiting: !isDragActive }])}
+          {...getRootProps()}
+        >
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <div>
+              <FormattedMessage id="ld.importFileDrop" />
+            </div>
+          ) : (
+            <div>
+              <FormattedMessage id="ld.importFileInstructions" />
+              <div className="choose">
+                <Button type={ButtonType.Highlighted} onClick={() => {}}>
+                  <FormattedMessage id="ld.importFileChoose" />
+                </Button>
               </div>
-              :
-              <div>
-                <FormattedMessage id='ld.importFileInstructions'/>
-                <div className='choose'>
-                  <Button
-                    type={ButtonType.Highlighted}
-                    onClick={() => {}}>
-                    <FormattedMessage id='ld.importFileChoose'/>
-                  </Button>
-                </div>
-              </div>
-          }
+            </div>
+          )}
         </div>
-      }
+      )}
       {renderErrors(isDragReject)}
     </div>
-  )
+  );
 };

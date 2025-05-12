@@ -10,12 +10,12 @@ import { Completed } from './Completed';
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
-  const [ importMode, setImportMode ] = useState(ImportModes.JsonFile);
-  const [ isImportReady, setIsImportReady ] = useState(false);
-  const [ isImportSubmitted, setIsImportSubmitted ] = useState(false);
-  const [ isImportCompleted, setIsImportCompleted ] = useState(false);
-  const [ isImportSuccessful, setIsImportSuccessful ] = useState(false);
-  const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]);
+  const [importMode, setImportMode] = useState(ImportModes.JsonFile);
+  const [isImportReady, setIsImportReady] = useState(false);
+  const [isImportSubmitted, setIsImportSubmitted] = useState(false);
+  const [isImportCompleted, setIsImportCompleted] = useState(false);
+  const [isImportSuccessful, setIsImportSuccessful] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
 
@@ -26,7 +26,7 @@ export const ModalImport = memo(() => {
     setIsImportSuccessful(false);
     setFilesToUpload([]);
     setImportMode(ImportModes.JsonFile);
-  }
+  };
 
   const reset = () => {
     restart();
@@ -52,7 +52,7 @@ export const ModalImport = memo(() => {
   const processImport = async () => {
     setIsImportReady(false);
     setIsImportSubmitted(true);
-    switch(importMode) {
+    switch (importMode) {
       case ImportModes.JsonFile:
         try {
           // Wait at least long enough to read the loading message for success.
@@ -64,7 +64,7 @@ export const ModalImport = memo(() => {
             await new Promise(r => setTimeout(r, delta));
           }
           setIsImportSuccessful(true);
-        } catch (error : any) {
+        } catch (error: any) {
           setIsImportSuccessful(false);
         }
         break;
@@ -83,7 +83,7 @@ export const ModalImport = memo(() => {
       msg = { id: 'ld.importFailed' };
     }
     return formatMessage(msg);
-  }
+  };
 
   const submitButtonLabel = () => {
     let msg = { id: 'ld.import' };
@@ -103,11 +103,11 @@ export const ModalImport = memo(() => {
     } else {
       processImport();
     }
-  }
+  };
 
   return (
     <Modal
-      className='import'
+      className="import"
       isOpen={isImportModalOpen}
       title={title()}
       submitButtonLabel={submitButtonLabel()}
@@ -120,12 +120,12 @@ export const ModalImport = memo(() => {
       onCancel={reset}
       onClose={reset}
     >
-      <div className='body'>
-        { !isImportSubmitted && !isImportCompleted &&
-          <SelectorImportMode {...{importMode, switchMode, onImportReady, onImportNotReady}} />
-        }
-        { isImportSubmitted && <Submitted /> }
-        { isImportCompleted && <Completed {...{isImportSuccessful}} /> }
+      <div className="body">
+        {!isImportSubmitted && !isImportCompleted && (
+          <SelectorImportMode {...{ importMode, switchMode, onImportReady, onImportNotReady }} />
+        )}
+        {isImportSubmitted && <Submitted />}
+        {isImportCompleted && <Completed {...{ isImportSuccessful }} />}
       </div>
     </Modal>
   );

@@ -9,28 +9,21 @@ interface Props {
   onRemoveFile: (file: File) => void;
 }
 
-export const DropzoneFile: FC<Props> = ({
-  file,
-  onRemoveFile,
-}) => {
+export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString();
   };
 
   return (
-    <div className='dropzone-file'>
-      <span className='file-info'>
-        <span className='name'>
-          <Report16 className='icon' />
+    <div className="dropzone-file">
+      <span className="file-info">
+        <span className="name">
+          <Report16 className="icon" />
           {file.name}
         </span>
-        <span className='date'>
-          {formatTimestamp(file.lastModified)}
-        </span>
+        <span className="date">{formatTimestamp(file.lastModified)}</span>
       </span>
-      <Button
-        onClick={() => onRemoveFile(file)}
-      >
+      <Button onClick={() => onRemoveFile(file)}>
         <Trash16 />
       </Button>
     </div>

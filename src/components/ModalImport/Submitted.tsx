@@ -3,9 +3,10 @@ import { FormattedMessage } from 'react-intl';
 
 export const Submitted = () => {
   return (
-    <div className='submitted'>
+    <div className="submitted">
       <SpinnerEllipsis />
-      <FormattedMessage id='ld.importingFile'/>...
+      <FormattedMessage id="ld.importingFile" />
+      ...
     </div>
   );
 };
