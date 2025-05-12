@@ -75,8 +75,18 @@ export const ModalImport = memo(() => {
     setIsImportCompleted(true);
   };
 
-  const submitButtonLabel = () => {
+  const title = () => {
     let msg = { id: 'ld.importInstances' };
+    if (isImportSuccessful) {
+      msg = { id: 'ld.importSuccessful' };
+    } else if (isImportCompleted) {
+      msg = { id: 'ld.importFailed' };
+    }
+    return formatMessage(msg);
+  }
+
+  const submitButtonLabel = () => {
+    let msg = { id: 'ld.import' };
     if (isImportSuccessful) {
       msg = { id: 'ld.importDone' };
     } else if (isImportCompleted) {
@@ -97,9 +107,9 @@ export const ModalImport = memo(() => {
 
   return (
     <Modal
-      className='import-file'
+      className='import'
       isOpen={isImportModalOpen}
-      title={formatMessage({ id: 'ld.importInstances' })}
+      title={title()}
       submitButtonLabel={submitButtonLabel()}
       submitButtonDisabled={!isImportReady && !isImportCompleted}
       onSubmit={onSubmit}

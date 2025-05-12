@@ -253,7 +253,9 @@
   "ld.importFileTypeError": "You are unable to upload that file type. Please try again.",
   "ld.importFileSizeError": "Your file is too large. Please try again.",
   "ld.importFileSuccess": "Your file was successfully imported and an import log file downloaded.",
+  "ld.importSuccessful": "Import successful",
   "ld.importFileFailure": "Your file was unable to be imported. Please check the import log downloaded to your browser for more details.",
+  "ld.importFailed": "Import failed",
   "ld.importDone": "Done",
   "ld.importTryAgain": "Try again"
 }

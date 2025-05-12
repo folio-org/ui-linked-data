@@ -1,4 +1,4 @@
-.modal {
+.modal.import {
   padding: 0;
   width: 630px;
 
@@ -40,12 +40,12 @@
     }
   }
 
-  &-controls-spread {
+  .modal-controls-spread {
     border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
     padding: 15px 24px 16px 24px;
   }
 
-  &-controls {
+  .modal-controls {
     border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
     padding: 15px 24px 16px 24px;
   }
