@@ -20,8 +20,8 @@ export const DropzoneFile: FC<Props> = ({
   return (
     <div className='dropzone-file'>
       <span className='file-info'>
-        <Report16 />
         <span className='name'>
+          <Report16 className='icon' />
           {file.name}
         </span>
         <span className='date'>
