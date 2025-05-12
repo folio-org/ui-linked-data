@@ -52,7 +52,25 @@ export const Dropzone: FC<Props> = ({
     return acceptedFiles.length > 0;
   };
 
-  const renderErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
+  const renderErrors = (rejecting: boolean) => {
+    if (rejecting) {
+      return (
+        <div className='error'>
+          <ErrorIcon className='icon'/>
+          <FormattedMessage id='ld.importFileTypeError'/>
+        </div>
+      );
+    }
+    return <></>;
+  };
+
+  // Not currently used. Add fileRejections to dropzone results
+  // and pass to this method, replacing renderErrors. Not used
+  // because the library catches file type incompatibility and
+  // returns its own error instead of our generic isDragReject
+  // i18n message. For now, all errors result in the same error
+  // message.
+  const renderAllErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
     if (isDragReject || rejections.length > 0) {
       if (rejections.length > 0) {
         return (
@@ -80,7 +98,6 @@ export const Dropzone: FC<Props> = ({
   };
 
   const {
-    fileRejections,
     getRootProps,
     getInputProps,
     isDragActive,
@@ -128,7 +145,7 @@ export const Dropzone: FC<Props> = ({
           }
         </div>
       }
-      {renderErrors(isDragReject, fileRejections)}
+      {renderErrors(isDragReject)}
     </div>
   )
 };
