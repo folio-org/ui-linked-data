@@ -1,6 +1,6 @@
 # Change history for ui-linked-data
 
-## 1.0.6 (IN PROGRESS)
+## 2.0.0 (IN PROGRESS)
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
