@@ -1,10 +1,11 @@
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-import { useDropzone, FileRejection } from 'react-dropzone';
+// import { useDropzone, FileRejection } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
 import { Button, ButtonType } from '@components/Button';
-import { DropzoneFile } from '@components/DropzoneFile';
+import { DropzoneFile } from './DropzoneFile';
 import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
 import './Dropzone.scss';
 
@@ -67,6 +68,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
   // returns its own error instead of our generic isDragReject
   // i18n message. For now, all errors result in the same error
   // message.
+  /*
   const renderAllErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
     if (isDragReject || rejections.length > 0) {
       if (rejections.length > 0) {
@@ -95,6 +97,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
     }
     return <></>;
   };
+  */
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     multiple: false,
@@ -118,7 +121,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
           className={classNames(['dropzone', { dragging: isDragActive }, { waiting: !isDragActive }])}
           {...getRootProps()}
         >
-          <input {...getInputProps()} />
+          <input {...getInputProps()} data-testid="modal-import-file-input" />
           {isDragActive ? (
             <div>
               <FormattedMessage id="ld.importFileDrop" />
