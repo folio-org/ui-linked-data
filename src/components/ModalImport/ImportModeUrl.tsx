@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 export const ImportModeUrl = () => {
   return (
-    <div className="mode url-mode">
+    <div className="mode url-mode" data-testid="modal-import-url-mode">
       <label htmlFor="url">
         <FormattedMessage id="ld.importUrlLabel" />
       </label>

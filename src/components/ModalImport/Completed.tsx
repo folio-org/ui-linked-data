@@ -7,7 +7,7 @@ type CompletedProps = {
 
 export const Completed: FC<CompletedProps> = ({ isImportSuccessful }) => {
   return (
-    <div className="completed">
+    <div className="completed" data-testid="modal-import-completed">
       {isImportSuccessful ? (
         <FormattedMessage id="ld.importFileSuccess" />
       ) : (

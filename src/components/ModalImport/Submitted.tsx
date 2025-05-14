@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 export const Submitted = () => {
   return (
-    <div className="submitted">
+    <div className="submitted" data-testid="modal-import-waiting">
       <SpinnerEllipsis />
       <FormattedMessage id="ld.importingFile" />
       ...
