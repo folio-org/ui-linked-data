@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { ImportModes } from '@common/constants/import.constants';
+import { ImportModes, HOLD_LOADING_SCREEN_MS } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -59,7 +59,7 @@ export const ModalImport = memo(() => {
           const started = Date.now();
           await importFile(filesToUpload);
           const elapsed = Date.now() - started;
-          const delta = 2500 - elapsed;
+          const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
             await new Promise(r => setTimeout(r, delta));
           }
@@ -120,7 +120,7 @@ export const ModalImport = memo(() => {
       onCancel={reset}
       onClose={reset}
     >
-      <div className="body">
+      <div className="body" data-testid="modal-import">
         {!isImportSubmitted && !isImportCompleted && (
           <SelectorImportMode {...{ importMode, switchMode, onImportReady, onImportNotReady }} />
         )}
