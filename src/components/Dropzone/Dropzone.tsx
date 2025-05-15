@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-// import { useDropzone, FileRejection } from 'react-dropzone';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileRejection } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
 import { Button, ButtonType } from '@components/Button';
@@ -50,26 +49,14 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
     return acceptedFiles.length > 0;
   };
 
-  const renderErrors = (rejecting: boolean) => {
-    if (rejecting) {
-      return (
-        <div className="error" data-testid="dropzone-error">
-          <ErrorIcon className="icon" />
-          <FormattedMessage id="ld.importFileTypeError" />
-        </div>
-      );
-    }
-    return <></>;
-  };
-
+  // TODO: deal with this.
   // Not currently used. Add fileRejections to dropzone results
   // and pass to this method, replacing renderErrors. Not used
   // because the library catches file type incompatibility and
   // returns its own error instead of our generic isDragReject
   // i18n message. For now, all errors result in the same error
   // message.
-  /*
-  const renderAllErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
+  const renderErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
     if (isDragReject || rejections.length > 0) {
       if (rejections.length > 0) {
         return rejections.map(({ file, errors }) => {
@@ -97,9 +84,8 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
     }
     return <></>;
   };
-  */
 
-  const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     accept: {
       'application/json': ['.json'],
@@ -139,7 +125,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
           )}
         </div>
       )}
-      {renderErrors(isDragReject)}
+      {renderErrors(isDragReject, fileRejections)}
     </div>
   );
 };
