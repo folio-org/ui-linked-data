@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-// import { useDropzone, FileRejection } from 'react-dropzone';
 import { useDropzone } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
@@ -61,43 +60,6 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
     }
     return <></>;
   };
-
-  // Not currently used. Add fileRejections to dropzone results
-  // and pass to this method, replacing renderErrors. Not used
-  // because the library catches file type incompatibility and
-  // returns its own error instead of our generic isDragReject
-  // i18n message. For now, all errors result in the same error
-  // message.
-  /*
-  const renderAllErrors = (isDragReject: boolean, rejections: readonly FileRejection[]) => {
-    if (isDragReject || rejections.length > 0) {
-      if (rejections.length > 0) {
-        return rejections.map(({ file, errors }) => {
-          return (
-            <>
-              {errors.map(e => {
-                return (
-                  <div key={e.code + file.path} className="error">
-                    <ErrorIcon className="icon" />
-                    {file.path}: {e.message}
-                  </div>
-                );
-              })}
-            </>
-          );
-        });
-      } else if (isDragReject) {
-        return (
-          <div className="error">
-            <ErrorIcon className="icon" />
-            <FormattedMessage id="ld.importFileTypeError" />
-          </div>
-        );
-      }
-    }
-    return <></>;
-  };
-  */
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     multiple: false,
