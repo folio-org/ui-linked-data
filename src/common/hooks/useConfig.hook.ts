@@ -8,7 +8,7 @@ import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook'
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
-import * as CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
+import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;

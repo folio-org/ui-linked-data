@@ -35,7 +35,7 @@
     "type": "group",
     "displayName": "Creator of Work",
     "uri": "http://id.loc.gov/ontologies/bibframe/contribution",
-    "uriBFLite": "http://bibfra.me/vocab/lite/creator",
+    "uriBFLite": "_creatorReference",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -56,6 +56,7 @@
     "type": "complex",
     "displayName": "Name",
     "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "uriBFLite": "_name",
     "constraints": {
       "repeatable": true,
       "editable": false,
@@ -69,18 +70,10 @@
     "id": "Monograph:Work:CreatorOfWork:Name"
   },
   {
-    "type": "dropdownOption",
-    "displayName": "",
-    "bfid": "",
-    "uri": "",
-    "uriBFLite": "",
-    "children": [],
-    "id": "Monograph:Work:CreatorOfWork:Subclass:"
-  },
-  {
     "type": "dropdown",
     "displayName": "Subclass",
     "uri": "http://id.loc.gov/ontologies/bibframe/agent",
+    "uriBFLite": "_subclass",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -90,7 +83,6 @@
       "valueDataType": { "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution" }
     },
     "children": [
-      "Monograph:Work:CreatorOfWork:Subclass:",
       "Monograph:Work:CreatorOfWork:Subclass:Person",
       "Monograph:Work:CreatorOfWork:Subclass:Family",
       "Monograph:Work:CreatorOfWork:Subclass:CorporateBody",
@@ -151,6 +143,7 @@
     "type": "simple",
     "displayName": "Relationship",
     "uri": "http://id.loc.gov/ontologies/bibframe/role",
+    "uriBFLite": "_relationship",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -791,6 +784,7 @@
     "type": "complex",
     "displayName": "Search LCSH/LCNAF",
     "uri": "http://www.loc.gov/mads/rdf/v1#Topic",
+    "uriBFLite": "label",
     "constraints": {
       "repeatable": true,
       "editable": true,

@@ -5,6 +5,7 @@ import {
   UI_DROPDOWNS_LIST,
 } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS, NEW_BF2_TO_BFLITE_MAPPING } from '@common/constants/bibframeMapping.constants';
+import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
@@ -79,7 +80,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     const containerBf2Uri = this.recordMap.container.bf2Uri;
     const containerDataTypeUri = this.recordMap.container.dataTypeUri as string;
-    const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri);
+    const schemaEntries = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri, recordKey);
 
     for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
       await this.processRecordGroup(
@@ -89,6 +90,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         schemaEntries,
         containerBf2Uri,
         containerDataTypeUri,
+        recordKey,
       );
     }
   }
@@ -100,6 +102,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     schemaEntries: SchemaEntry[],
     containerBf2Uri: string,
     containerDataTypeUri: string,
+    recordKey?: string,
   ) {
     if (!schemaEntries?.length) return;
 
@@ -107,7 +110,9 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     // generate repeatable fields
     if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-      const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri)[parseInt(recordGroupIndex) - 1];
+      const schemaEntry = this.getSchemaEntries(containerBf2Uri, containerDataTypeUri, recordKey)[
+        parseInt(recordGroupIndex) - 1
+      ];
       const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, false) ?? '';
       this.updatedSchema = this.repeatableFieldsService?.get();
       this.schemaArray = Array.from(this.updatedSchema?.values() || []);
@@ -137,7 +142,11 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }) {
     if (!schemaEntry) return;
 
-    if (dropdownOptionsMap) {
+    const isDropdown = CUSTOM_PROFILE_ENABLED
+      ? schemaEntry.type === AdvancedFieldTypeEnum.dropdown
+      : dropdownOptionsMap;
+
+    if (isDropdown) {
       await this.traverseDropdownOptions(recordGroup, schemaEntry);
     } else {
       await this.traverseGroupsAndUIControls(recordGroup, schemaEntry);
@@ -174,9 +183,9 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     }
   }
 
-  private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string) => {
+  private readonly getSchemaEntries = (containerBf2Uri?: string, containerDataTypeUri?: string, recordKey?: string) => {
     return this.schemaArray.filter((entry: SchemaEntry) => {
-      const isOfSameUri = entry.uri === containerBf2Uri;
+      const isOfSameUri = CUSTOM_PROFILE_ENABLED ? entry.uriBFLite === recordKey : entry.uri === containerBf2Uri;
       const isOfSameDataTypeUri = containerDataTypeUri
         ? entry.constraints?.valueDataType?.dataTypeURI === containerDataTypeUri
         : true;
@@ -186,7 +195,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       entry.path.forEach(parentElemKey => {
         const parentElem = this.updatedSchema?.get(parentElemKey) as SchemaEntry;
 
-        if (parentElem.uriBFLite === this.currentBlockUri) {
+        if (parentElem?.uriBFLite === this.currentBlockUri) {
           hasProperBlock = true;
         }
       });
@@ -195,6 +204,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       if (this.updatedSchema?.get(getParentEntryUuid(entry.path))?.type === AdvancedFieldTypeEnum.block) {
         hasBlockParent = true;
       }
+
       return isOfSameUri && isOfSameDataTypeUri && hasProperBlock && hasBlockParent;
     });
   };
@@ -255,7 +265,11 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         if (!childEntry) return;
 
         // Ignore dropdown and options
-        if (childEntry.type && UI_DROPDOWNS_LIST.includes(childEntry.type as AdvancedFieldTypeEnum)) {
+        if (
+          !CUSTOM_PROFILE_ENABLED &&
+          childEntry.type &&
+          UI_DROPDOWNS_LIST.includes(childEntry.type as AdvancedFieldTypeEnum)
+        ) {
           return;
         }
 
@@ -279,12 +293,18 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private hasCorrectUuid(entry: SchemaEntry, recordKey: string) {
     const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldTypeEnum);
     const hasTheRecordUri = entry.uriBFLite === recordKey;
-    const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
-    const mappedRecordGroupFields = this.currentBlockUri
-      ? typedMap?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields
-      : undefined;
-    const mappedFieldUri = mappedRecordGroupFields?.[recordKey]?.bf2Uri;
-    const hasTheMappedFieldUri = entry.uri === mappedFieldUri;
+    let hasTheMappedFieldUri;
+
+    if (CUSTOM_PROFILE_ENABLED) {
+      hasTheMappedFieldUri = entry.uriBFLite === recordKey;
+    } else {
+      const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
+      const mappedRecordGroupFields = this.currentBlockUri
+        ? typedMap?.[this.currentBlockUri]?.[this.currentRecordGroupKey as string]?.fields
+        : undefined;
+      const mappedFieldUri = mappedRecordGroupFields?.[recordKey]?.bf2Uri;
+      hasTheMappedFieldUri = entry.uri === mappedFieldUri;
+    }
 
     return isUIControl && (hasTheRecordUri || hasTheMappedFieldUri);
   }
@@ -341,6 +361,10 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     const newValueKey = schemaElemUuid;
     const data = recordEntryValue;
 
+    if (CUSTOM_PROFILE_ENABLED && type === AdvancedFieldTypeEnum.dropdown) {
+      this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
+    }
+
     if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
       await this.handleRepeatableSubcomponents({
         schemaUiElem,
@@ -360,6 +384,18 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         id,
         labelSelector,
       });
+    }
+  }
+
+  private async handleDropdownOptions(schemaUiElem: SchemaEntry, recordEntryValue?: string) {
+    const dropdownOptionUUID = this.findSchemaDropdownOption(schemaUiElem, recordEntryValue as string);
+
+    if (dropdownOptionUUID) {
+      const dropdownOptionEntry = this.updatedSchema?.get(dropdownOptionUUID);
+
+      if (dropdownOptionEntry) {
+        this.selectedEntriesService.addNew(undefined, dropdownOptionEntry.uuid);
+      }
     }
   }
 
