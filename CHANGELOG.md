@@ -1,6 +1,6 @@
 # Change history for ui-linked-data
 
-## 1.1.0 (IN PROGRESS)
+## 2.0.0 (IN PROGRESS)
 * Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
 * Clear global state on web component disconnection. Refs [UILD-552].
 * Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
@@ -8,8 +8,6 @@
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
 [UILD-546]:https://folio-org.atlassian.net/browse/UILD-546
-
-## 1.0.6 (IN PROGRESS)
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
