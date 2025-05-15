@@ -53,7 +53,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
   const renderErrors = (rejecting: boolean) => {
     if (rejecting) {
       return (
-        <div className="error">
+        <div className="error" data-testid="dropzone-error">
           <ErrorIcon className="icon" />
           <FormattedMessage id="ld.importFileTypeError" />
         </div>
@@ -109,7 +109,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
   });
 
   return (
-    <div className="dropzone-wrapper">
+    <div className="dropzone-wrapper" data-testid="dropzone-wrapper">
       {hasAcceptedFiles() ? (
         <div className="dropzone-files">
           {acceptedFiles.map((file: File) => {
@@ -120,8 +120,9 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
         <div
           className={classNames(['dropzone', { dragging: isDragActive }, { waiting: !isDragActive }])}
           {...getRootProps()}
+          data-testid="dropzone"
         >
-          <input {...getInputProps()} data-testid="modal-import-file-input" />
+          <input {...getInputProps()} data-testid="dropzone-file-input" />
           {isDragActive ? (
             <div>
               <FormattedMessage id="ld.importFileDrop" />

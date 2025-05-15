@@ -45,13 +45,13 @@ describe('ModalImport', () => {
   });
 
   test('an added file enables import to proceed', async () => {
-    const input = screen.getByTestId('modal-import-file-input');
+    const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
   });
 
   test('clicking import moves to loading message', async () => {
-    const input = screen.getByTestId('modal-import-file-input');
+    const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(importFileMock).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('ModalImport', () => {
   test('successful import shows done button which closes modal', async () => {
     jest.useFakeTimers({ advanceTimers: true });
     importFileMock.mockResolvedValueOnce(null);
-    const input = screen.getByTestId('modal-import-file-input');
+    const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
     await jest.advanceTimersToNextTimerAsync();
@@ -75,7 +75,7 @@ describe('ModalImport', () => {
 
   test('failed import shows try again button which resets modal state', async () => {
     importFileMock.mockRejectedValueOnce(null);
-    const input = screen.getByTestId('modal-import-file-input');
+    const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();

@@ -15,7 +15,7 @@ export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
   };
 
   return (
-    <div className="dropzone-file">
+    <div className="dropzone-file" data-testid="dropzone-file">
       <span className="file-info">
         <span className="name">
           <Report16 className="icon" />
@@ -23,7 +23,7 @@ export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
         </span>
         <span className="date">{formatTimestamp(file.lastModified)}</span>
       </span>
-      <Button onClick={() => onRemoveFile(file)}>
+      <Button onClick={() => onRemoveFile(file)} data-testid="dropzone-file-remove">
         <Trash16 />
       </Button>
     </div>
