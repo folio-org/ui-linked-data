@@ -455,7 +455,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private createDuplicateEntry(schemaUiElem: SchemaEntry): {
     newEntryUuid: string;
   } {
-    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, false) ?? '';
+    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, true) ?? '';
     this.updatedSchema = this.repeatableFieldsService?.get();
 
     this.schemaArray = Array.from(this.updatedSchema?.values() || []);
