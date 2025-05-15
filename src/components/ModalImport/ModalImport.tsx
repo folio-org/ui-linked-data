@@ -64,7 +64,7 @@ export const ModalImport = memo(() => {
             await new Promise(r => setTimeout(r, delta));
           }
           setIsImportSuccessful(true);
-        } catch (error: any) {
+        } catch {
           setIsImportSuccessful(false);
         }
         break;
