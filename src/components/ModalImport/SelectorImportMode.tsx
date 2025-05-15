@@ -8,8 +8,10 @@ import { ImportModeUrl } from './ImportModeUrl';
 type SelectorImportModeProps = {
   importMode: ImportModes;
   switchMode: (value: string) => boolean;
-  onImportReady: (files: File[]) => void;
+  onImportReady: () => void;
   onImportNotReady: VoidFunction;
+  filesToUpload: File[],
+  setFilesToUpload: (files: File[]) => void;
 };
 
 export const SelectorImportMode: FC<SelectorImportModeProps> = ({
@@ -17,6 +19,8 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
   switchMode,
   onImportReady,
   onImportNotReady,
+  filesToUpload,
+  setFilesToUpload,
 }) => {
   return (
     <>
@@ -39,7 +43,7 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
           data-testid="modal-import-mode-selector"
         />
       </div>
-      {importMode === ImportModes.JsonFile && <ImportModeFile {...{ onImportReady, onImportNotReady }} />}
+      {importMode === ImportModes.JsonFile && <ImportModeFile {...{ onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }} />}
       {importMode === ImportModes.JsonUrl && <ImportModeUrl />}
     </>
   );

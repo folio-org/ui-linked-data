@@ -39,13 +39,11 @@ export const ModalImport = memo(() => {
     return true;
   };
 
-  const onImportReady = (files: File[]) => {
-    setFilesToUpload(files);
+  const onImportReady = () => {
     setIsImportReady(true);
   };
 
   const onImportNotReady = () => {
-    setFilesToUpload([]);
     setIsImportReady(false);
   };
 
@@ -122,7 +120,7 @@ export const ModalImport = memo(() => {
     >
       <div className="body" data-testid="modal-import">
         {!isImportSubmitted && !isImportCompleted && (
-          <SelectorImportMode {...{ importMode, switchMode, onImportReady, onImportNotReady }} />
+          <SelectorImportMode {...{ importMode, switchMode, onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }} />
         )}
         {isImportSubmitted && <Submitted />}
         {isImportCompleted && <Completed {...{ isImportSuccessful }} />}

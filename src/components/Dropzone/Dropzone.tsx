@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
@@ -9,19 +9,20 @@ import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
 import './Dropzone.scss';
 
 interface Props {
-  onImportReady?: (files: File[]) => void;
+  onImportReady?: () => void;
   onImportNotReady?: () => void;
+  files: File[];
+  setFiles: (files: File[]) => void;
 }
 
-export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
-  const [acceptedFiles, setAcceptedFiles] = useState<File[]>([]);
+export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady, files, setFiles }) => {
   const { formatMessage } = useIntl();
 
   const onDropAccepted = (accepted: File[]) => {
-    const newFiles = [...acceptedFiles, ...accepted];
-    setAcceptedFiles(newFiles);
+    const newFiles = [...files, ...accepted];
+    setFiles(newFiles);
     if (onImportReady) {
-      onImportReady(newFiles);
+      onImportReady();
     }
   };
 
@@ -37,16 +38,16 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
   };
 
   const onRemoveFile = (file: File) => {
-    const newFiles = [...acceptedFiles];
+    const newFiles = [...files];
     newFiles.splice(newFiles.indexOf(file), 1);
-    setAcceptedFiles(newFiles);
+    setFiles(newFiles);
     if (!hasAcceptedFiles() && onImportNotReady) {
       onImportNotReady();
     }
   };
 
   const hasAcceptedFiles = () => {
-    return acceptedFiles.length > 0;
+    return files.length > 0;
   };
 
   const renderErrors = (rejecting: boolean) => {
@@ -74,7 +75,7 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady }) => {
     <div className="dropzone-wrapper" data-testid="dropzone-wrapper">
       {hasAcceptedFiles() ? (
         <div className="dropzone-files">
-          {acceptedFiles.map((file: File) => {
+          {files.map((file: File) => {
             return <DropzoneFile key={file.name} {...{ file, onRemoveFile }} />;
           })}
         </div>

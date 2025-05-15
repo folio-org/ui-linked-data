@@ -8,7 +8,11 @@ describe('Dropzone', () => {
   const rejectableFile = new File([''], 'not-json.txt', { type: 'text/plain' });
 
   beforeEach(() => {
-    render(<Dropzone />)
+    let files: File[] = [];
+    const setFiles = (f: File[]) => {
+      files = f;
+    };
+    render(<Dropzone {...{ files, setFiles }} />)
   });
 
   test('renders dropzone', () => {
