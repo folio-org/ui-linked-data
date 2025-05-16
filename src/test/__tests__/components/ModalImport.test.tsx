@@ -79,7 +79,7 @@ describe('ModalImport', () => {
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
-    expect(screen.queryByTestId('modal-button-cancel')).toBeInTheDocument();
+    expect(screen.getByTestId('modal-button-cancel')).toBeInTheDocument();
     expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
