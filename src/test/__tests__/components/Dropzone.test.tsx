@@ -11,8 +11,9 @@ describe('Dropzone', () => {
     let files: File[] = [];
     const setFiles = (f: File[]) => {
       files = f;
+      rerender(<Dropzone {...{ files, setFiles }} />);
     };
-    render(<Dropzone {...{ files, setFiles }} />)
+    const { rerender } = render(<Dropzone {...{ files, setFiles }} />)
   });
 
   test('renders dropzone', () => {
@@ -47,7 +48,7 @@ describe('Dropzone', () => {
   test('removes an accepted file and returns to initial state', async () => {
     const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, acceptableFile);
-    await fireEvent.click(screen.getByTestId('dropzone-file-remove'));
+    fireEvent.click(screen.getByTestId('dropzone-file-remove'));
     expect(screen.queryByTestId('dropzone-file')).not.toBeInTheDocument();
   });
 });
