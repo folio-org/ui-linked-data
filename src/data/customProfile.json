@@ -142,7 +142,7 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "http://id.loc.gov/ontologies/bibframe/role",
+    "uri": "_relationship",
     "uriBFLite": "_relationship",
     "constraints": {
       "repeatable": true,
