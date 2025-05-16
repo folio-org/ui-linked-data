@@ -87,6 +87,31 @@ export const processCreator = (record: RecordEntry, blockKey: string, key: strin
   }) as unknown as RecursiveRecordSchema;
 };
 
+export const processComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const generatedValue = {
+      id: [recordEntry.id],
+      _name: {
+        value: [recordEntry.label],
+        isPreferred: recordEntry.isPreferred,
+      },
+    } as unknown as RecursiveRecordSchema;
+
+    if (recordEntry.type) {
+      generatedValue._subclass = recordEntry.type as unknown as string;
+    }
+
+    if (recordEntry.roles) {
+      generatedValue._relationship = (recordEntry.roles as unknown as string[])?.map((role: string) => ({
+        [BFLITE_URIS.LINK]: [role],
+        [BFLITE_URIS.LABEL]: [''],
+      })) as unknown as string[];
+    }
+
+    return generatedValue;
+  }) as unknown as RecursiveRecordSchema;
+};
+
 export const processComplexGroupWithLookup = (
   record: RecordEntry,
   blockKey: string,

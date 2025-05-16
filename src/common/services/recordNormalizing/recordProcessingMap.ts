@@ -8,12 +8,14 @@ import {
   processCreator,
   processComplexGroupWithLookup,
   extractDropdownOption,
+  processComplexLookup,
 } from './recordProcessingCases';
+import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
   wrapWithContainer(record, blockKey, groupKey, BFLITE_URIS.PROVISION_ACTIVITY);
 
-export const RECORD_NORMALIZING_CASES = {
+export const recordNormalizingCases = {
   [BFLITE_URIS.PRODUCTION]: {
     process: processProvisionActivity,
   },
@@ -36,15 +38,23 @@ export const RECORD_NORMALIZING_CASES = {
   _notes: {
     process: notesMapping,
   },
+  _creatorReference: {
+    process: processComplexLookup,
+  },
+  _contributorReference: {
+    process: processComplexLookup,
+  },
+  [BFLITE_URIS.CLASSIFICATION]: {
+    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      extractDropdownOption(record, blockKey, groupKey, BFLITE_URIS.SOURCE, '_assigningSourceReference'),
+  },
+};
+
+const recordNormalizingCasesLegacy = {
+  ...recordNormalizingCases,
   [BFLITE_URIS.EXTENT]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupValues(record, blockKey, groupKey, '_extent'),
-  },
-  _creatorReference: {
-    process: processCreator,
-  },
-  _contributorReference: {
-    process: processCreator,
   },
   [BFLITE_URIS.SUMMARY]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -58,14 +68,12 @@ export const RECORD_NORMALIZING_CASES = {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processComplexGroupWithLookup(record, blockKey, groupKey, '_language'),
   },
-  [BFLITE_URIS.CLASSIFICATION]: {
-    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
-      extractDropdownOption(
-        record,
-        blockKey,
-        groupKey,
-        BFLITE_URIS.SOURCE,
-        '_assigningSourceReference',
-      ),
+  _creatorReference: {
+    process: processCreator,
+  },
+  _contributorReference: {
+    process: processCreator,
   },
 };
+
+export const RECORD_NORMALIZING_CASES = CUSTOM_PROFILE_ENABLED ? recordNormalizingCases : recordNormalizingCasesLegacy;

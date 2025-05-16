@@ -12,11 +12,12 @@ describe('recordProcessingCases', () => {
   const fieldName = 'testFieldName';
   const noteBFLiteUri = 'noteBFLiteUri';
   const linkBFLiteUri = 'linkBFLiteUri';
+  const labelBFLiteUri = 'labelBFLiteUri';
   const creatorBFLiteUri = 'creatorBFLiteUri';
   const noteNonBFUri = '_notes';
   const creatorNonBFUri = '_creator';
 
-  mockedBFLiteUris({ NOTE: noteBFLiteUri, LINK: linkBFLiteUri, CREATOR: creatorBFLiteUri });
+  mockedBFLiteUris({ NOTE: noteBFLiteUri, LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
   mockedNonBFRecordElements({
     [noteBFLiteUri]: { container: noteNonBFUri },
     [creatorBFLiteUri]: { container: creatorNonBFUri },
@@ -384,6 +385,198 @@ describe('recordProcessingCases', () => {
       };
 
       RecordProcessingCases.extractDropdownOption(record, blockKey, groupKey, fieldName, lookupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('processComplexLookup', () => {
+    test('transforms entry with id and label', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Test Label',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              _name: {
+                value: ['Test Label'],
+                isPreferred: undefined,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with id, label, and type', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Test Label',
+              type: 'TestType',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              _name: {
+                value: ['Test Label'],
+                isPreferred: undefined,
+              },
+              _subclass: 'TestType',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with id, label, and preferred status', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Test Label',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              _name: {
+                value: ['Test Label'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with roles', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Test Label',
+              roles: ['role_1', 'role_2'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              _name: {
+                value: ['Test Label'],
+                isPreferred: undefined,
+              },
+              _relationship: [
+                {
+                  [linkBFLiteUri]: ['role_1'],
+                  [labelBFLiteUri]: [''],
+                },
+                {
+                  [linkBFLiteUri]: ['role_2'],
+                  [labelBFLiteUri]: [''],
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple entries with different combinations of fields', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Label 1',
+              type: 'Type_1',
+              roles: ['role_1'],
+            },
+            {
+              id: 'test_id_2',
+              label: 'Label 2',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              _name: {
+                value: ['Label 1'],
+                isPreferred: undefined,
+              },
+              _subclass: 'Type_1',
+              _relationship: [
+                {
+                  [linkBFLiteUri]: ['role_1'],
+                  [labelBFLiteUri]: [''],
+                },
+              ],
+            },
+            {
+              id: ['test_id_2'],
+              _name: {
+                value: ['Label 2'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
 
       expect(record).toEqual(testResult);
     });
