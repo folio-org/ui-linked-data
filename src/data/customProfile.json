@@ -570,7 +570,7 @@
     "type": "group",
     "displayName": "Other contributors",
     "uri": "http://id.loc.gov/ontologies/bibframe/contribution",
-    "uriBFLite": "http://bibfra.me/vocab/lite/contributor",
+    "uriBFLite": "_contributorReference",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -591,6 +591,7 @@
     "type": "complex",
     "displayName": "Name",
     "uri": "http://www.w3.org/2002/07/owl#sameAs",
+    "uriBFLite": "_name",
     "constraints": {
       "repeatable": true,
       "editable": false,
@@ -604,18 +605,10 @@
     "id": "Monograph:Work:OtherContributors:Name"
   },
   {
-    "type": "dropdownOption",
-    "displayName": "",
-    "bfid": "",
-    "uri": "",
-    "uriBFLite": "",
-    "children": [],
-    "id": "Monograph:Work:OtherContributors:Subclass:"
-  },
-  {
     "type": "dropdown",
     "displayName": "Subclass",
     "uri": "http://id.loc.gov/ontologies/bibframe/agent",
+    "uriBFLite": "_subclass",
     "constraints": { "repeatable": true, "editable": true, "mandatory": true, "defaults": [], "useValuesFrom": [] },
     "children": [
       "Monograph:Work:OtherContributors:Subclass:",
@@ -678,7 +671,8 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "http://id.loc.gov/ontologies/bibframe/role",
+    "uri": "_relationship",
+    "uriBFLite": "_relationship",
     "constraints": {
       "repeatable": true,
       "editable": true,
