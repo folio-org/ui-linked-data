@@ -16,6 +16,7 @@ interface Props {
   classNameHeader?: string;
   submitButtonDisabled?: boolean;
   cancelButtonDisabled?: boolean;
+  cancelButtonHidden?: boolean;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
@@ -25,6 +26,7 @@ interface Props {
   children?: ReactNode;
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
+  spreadModalControls?: boolean;
   titleClassName?: string;
   alignTitleCenter?: boolean;
   ariaModalKind?: string;
@@ -44,8 +46,10 @@ const Modal: FC<Props> = ({
   children,
   submitButtonDisabled,
   cancelButtonDisabled,
+  cancelButtonHidden,
   showCloseIconButton = true,
   showModalControls = true,
+  spreadModalControls = false,
   titleClassName,
   alignTitleCenter = false,
   ariaModalKind = AriaModalKind.Basic,
@@ -87,15 +91,17 @@ const Modal: FC<Props> = ({
             </div>
             {!!children && children}
             {showModalControls && (
-              <div className="modal-controls">
-                <Button
-                  disabled={cancelButtonDisabled}
-                  onClick={onCancel}
-                  type={ButtonType.Primary}
-                  data-testid="modal-button-cancel"
-                >
-                  {cancelButtonLabel}
-                </Button>
+              <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                {!cancelButtonHidden && (
+                  <Button
+                    disabled={cancelButtonDisabled}
+                    onClick={onCancel}
+                    type={ButtonType.Primary}
+                    data-testid="modal-button-cancel"
+                  >
+                    {cancelButtonLabel}
+                  </Button>
+                )}
                 <Button
                   disabled={submitButtonDisabled}
                   type={ButtonType.Highlighted}

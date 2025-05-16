@@ -4,6 +4,7 @@ import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
 import { SearchControlPane } from '@components/SearchControlPane';
+import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -13,6 +14,7 @@ import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Transfer16 from '@src/assets/transfer-16.svg?react';
+import Lightning16 from '@src/assets/lightning-16.svg?react';
 import { filters } from './data/filters';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
@@ -29,6 +31,7 @@ export const SearchView = () => {
   const { fetchRecord } = useRecordControls();
   const { addStatusMessagesItem } = useStatusState();
   const { setFullDisplayComponentType, resetFullDisplayComponentType } = useUIState();
+  const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { resetPreviewContent } = useInputsState();
 
   useEffect(() => {
@@ -58,6 +61,12 @@ export const SearchView = () => {
     }
   };
 
+  const handleImport = async() => {
+    if (!isImportModalOpen) {
+      setIsImportModalOpen(true);
+    }
+  };
+
   const items = useMemo(
     () => [
       {
@@ -80,6 +89,13 @@ export const SearchView = () => {
             icon: <Transfer16 />,
             hidden: selectedInstances.length < MIN_AMT_OF_INSTANCES_TO_COMPARE,
             action: handlePreviewMultiple,
+          },
+          {
+            id: 'import',
+            type: DropdownItemType.basic,
+            labelId: 'ld.importInstances',
+            icon: <Lightning16 />,
+            action: handleImport,
           },
         ],
       },
@@ -124,6 +140,7 @@ export const SearchView = () => {
         renderSearchControlPane={renderSearchControlPane}
         renderResultsList={renderResultsList}
       />
+      <ModalImport />
     </div>
   );
 };

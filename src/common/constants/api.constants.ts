@@ -10,6 +10,7 @@ export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const SEARCH_API_ENDPOINT = '/search/linked-data';
 export const SEARCH_RESOURCE_API_ENDPOINT = `${SEARCH_API_ENDPOINT}/works`;
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
+export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
 
 export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,
