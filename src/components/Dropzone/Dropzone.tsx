@@ -1,10 +1,9 @@
-import classNames from 'classnames';
 import { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
-import { Button, ButtonType } from '@components/Button';
-import { DropzoneFile } from './DropzoneFile';
+import { FilesList } from './FilesList';
+import { Drop } from './Drop';
 import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
 import './Dropzone.scss';
 
@@ -74,33 +73,9 @@ export const Dropzone: FC<Props> = ({ onImportReady, onImportNotReady, files, se
   return (
     <div className="dropzone-wrapper" data-testid="dropzone-wrapper">
       {hasAcceptedFiles() ? (
-        <div className="dropzone-files">
-          {files.map((file: File) => {
-            return <DropzoneFile key={file.name} {...{ file, onRemoveFile }} />;
-          })}
-        </div>
+        <FilesList {...{ files, onRemoveFile }} />
       ) : (
-        <div
-          className={classNames(['dropzone', { dragging: isDragActive }, { waiting: !isDragActive }])}
-          {...getRootProps()}
-          data-testid="dropzone"
-        >
-          <input {...getInputProps()} data-testid="dropzone-file-input" />
-          {isDragActive ? (
-            <div>
-              <FormattedMessage id="ld.importFileDrop" />
-            </div>
-          ) : (
-            <div>
-              <FormattedMessage id="ld.importFileInstructions" />
-              <div className="choose">
-                <Button type={ButtonType.Highlighted} onClick={() => {}}>
-                  <FormattedMessage id="ld.importFileChoose" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
+        <Drop {...{ getRootProps, getInputProps, isDragActive }} />
       )}
       {renderErrors(isDragReject)}
     </div>
