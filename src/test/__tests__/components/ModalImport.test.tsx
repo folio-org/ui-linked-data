@@ -17,16 +17,14 @@ describe('ModalImport', () => {
   });
 
   beforeEach(() => {
-    importFileMock = (jest.spyOn(importApi, 'importFile') as any).mockImplementation(() =>
-      Promise.resolve(null)
-    );
+    importFileMock = (jest.spyOn(importApi, 'importFile') as any).mockImplementation(() => Promise.resolve(null));
     setInitialGlobalState([
       {
         store: useUIStore,
         state: { isImportModalOpen: true },
       },
     ]);
-    render(<ModalImport/>,);
+    render(<ModalImport />);
   });
 
   test('renders import window', () => {

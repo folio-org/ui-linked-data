@@ -8,7 +8,12 @@ type ImportModeFileProps = {
   setFilesToUpload: (files: File[]) => void;
 };
 
-export const ImportModeFile: FC<ImportModeFileProps> = ({ onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }) => {
+export const ImportModeFile: FC<ImportModeFileProps> = ({
+  onImportReady,
+  onImportNotReady,
+  filesToUpload,
+  setFilesToUpload,
+}) => {
   return (
     <div className="mode file-mode" data-testid="modal-import-file-mode">
       <Dropzone files={filesToUpload} setFiles={setFilesToUpload} {...{ onImportReady, onImportNotReady }} />

@@ -13,7 +13,7 @@ describe('Dropzone', () => {
       files = f;
       rerender(<Dropzone {...{ files, setFiles }} />);
     };
-    const { rerender } = render(<Dropzone {...{ files, setFiles }} />)
+    const { rerender } = render(<Dropzone {...{ files, setFiles }} />);
   });
 
   test('renders dropzone', () => {
@@ -24,11 +24,13 @@ describe('Dropzone', () => {
     const data = {
       dataTransfer: {
         files: [rejectableFile],
-        items: [{
-          kind: 'file',
-          type: 'text/plain',
-          getAsFile: () => rejectableFile
-        }],
+        items: [
+          {
+            kind: 'file',
+            type: 'text/plain',
+            getAsFile: () => rejectableFile,
+          },
+        ],
         types: ['Files'],
       },
     };
