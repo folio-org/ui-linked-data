@@ -29,6 +29,14 @@ export const EditPreview = memo(() => {
     resetPreviewContent();
   }, [resourceId]);
 
+  useEffect(() => {
+    if (isCreateWorkPageOpened) {
+      const initialInputsState = useInputsState.getInitialState();
+
+      useInputsState.setState(initialInputsState, true);
+    }
+  }, [isCreateWorkPageOpened]);
+
   return (
     <div
       className={classNames('preview-container', {
