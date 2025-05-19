@@ -11,6 +11,7 @@ import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndCo
 import { LiteralField } from '@components/LiteralField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { EditSectionDataProps } from './renderDrawComponent';
+import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -63,7 +64,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
     (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) &&
     level < GROUP_COMPLEX_CUTOFF_LEVEL
   ) {
-    const isComplexGroup = type === AdvancedFieldType.groupComplex;
+    const isComplexGroup = CUSTOM_PROFILE_ENABLED ? true : type === AdvancedFieldType.groupComplex;
 
     return (
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact} showLabel={isComplexGroup}>

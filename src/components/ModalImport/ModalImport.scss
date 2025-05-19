@@ -1,0 +1,59 @@
+.modal.import {
+  padding: 0;
+  width: 630px;
+
+  .modal-header {
+    border-bottom: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding: 24px 24px 16px 24px;
+  }
+
+  .body {
+    padding: 0 24px;
+
+    .description,
+    .selector,
+    .mode,
+    .submitted,
+    .completed {
+      margin-top: 24px;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    .mode-select,
+    input {
+      background-color: rgba(0, 0, 0, 3%);
+      width: 100%;
+    }
+
+    .mode,
+    .submitted,
+    .completed {
+      margin-bottom: 40px;
+    }
+
+    .submitted {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      .spinner {
+        margin-right: 15px;
+        height: 3em;
+        width: 6em;
+      }
+    }
+  }
+
+  .modal-controls-spread {
+    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding: 15px 24px 16px 24px;
+  }
+
+  .modal-controls {
+    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
+    padding: 15px 24px 16px 24px;
+  }
+}

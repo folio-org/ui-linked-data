@@ -29,6 +29,14 @@ describe('Modal', () => {
     expect(screen.getByTestId('modal')).toBeInTheDocument();
   });
 
+  test('renders Modal component without a cancel button', () => {
+    const updatedProps = { ...props, cancelButtonHidden: true };
+
+    render(<Modal {...updatedProps} />);
+
+    expect(screen.queryByTestId('modal-cancel-button')).not.toBeInTheDocument();
+  });
+
   describe('event handlers', () => {
     beforeEach(() => {
       render(<Modal {...props} />);

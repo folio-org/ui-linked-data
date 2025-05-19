@@ -1,0 +1,38 @@
+/* https://github.com/folio-org/stripes-components/blob/master/lib/Icon/DotSpinner.css */
+
+.spinner {
+  display: flex;
+  align-items: center;
+  width: 2.5em;
+  height: 1.25em;
+
+  & .bounce1 {
+    animation-delay: -0.32s;
+  }
+
+  & .bounce2 {
+    animation-delay: -0.16s;
+  }
+
+  & > div {
+    width: 33%;
+    height: 33%;
+    margin: 0 8%;
+    background-color: rgba(0, 0, 0, 62%);
+    border-radius: 999px;
+    display: inline-block;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  }
+}
+
+@keyframes sk-bouncedelay {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
+}
