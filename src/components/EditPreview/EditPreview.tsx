@@ -12,16 +12,7 @@ import './EditPreview.scss';
 import { useInputsState, useUIState } from '@src/store';
 
 export const EditPreview = memo(() => {
-  const {
-    record,
-    previewContent,
-    setPreviewContent,
-    resetPreviewContent,
-    resetRecord,
-    resetSelectedEntries,
-    resetUserValues,
-    resetSelectedRecordBlocks,
-  } = useInputsState();
+  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
   const { currentlyPreviewedEntityBfid } = useUIState();
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
@@ -38,15 +29,11 @@ export const EditPreview = memo(() => {
     resetPreviewContent();
   }, [resourceId]);
 
-  // TODO: UILD-552 - Temporary solution to reset the preview content when the user opens the create work page.
-  // The store should be cleared when the user navigates outside the LDE.
   useEffect(() => {
     if (isCreateWorkPageOpened) {
-      resetPreviewContent();
-      resetRecord();
-      resetSelectedEntries();
-      resetUserValues();
-      resetSelectedRecordBlocks();
+      const initialInputsState = useInputsState.getInitialState();
+
+      useInputsState.setState(initialInputsState, true);
     }
   }, [isCreateWorkPageOpened]);
 
