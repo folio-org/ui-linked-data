@@ -5,11 +5,13 @@
 * Clear global state on web component disconnection. Refs [UILD-552].
 * Fixed incorrect instances list display when the user opens the Create Work page. Fixes [UILD-560].
 * Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
+* Extended services to process the loaded record using the updated profile. Refs [UILD-547].
  
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
 [UILD-560]:https://folio-org.atlassian.net/browse/UILD-560
 [UILD-546]:https://folio-org.atlassian.net/browse/UILD-546
+[UILD-547]:https://folio-org.atlassian.net/browse/UILD-547
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

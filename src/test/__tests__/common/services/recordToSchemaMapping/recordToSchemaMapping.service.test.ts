@@ -4,6 +4,7 @@ import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
+import * as FeatureConstants from '@common/constants/feature.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { getLabelEntry, schema } from './data/schema.data';
 import { updatedSchema, updatedSchemaWithRepeatableSubcomponents } from './data/updatedSchema.data';
@@ -11,6 +12,7 @@ import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents
 
 const mockedNewBf2ToBFLiteMapping = getMockedImportedConstant(BibframeMappingConstants, 'NEW_BF2_TO_BFLITE_MAPPING');
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+const mockedCustomProfileEnabled = getMockedImportedConstant(FeatureConstants, 'CUSTOM_PROFILE_ENABLED');
 mockedNewBf2ToBFLiteMapping({
   block_1: {
     uriBFLite_literal_1: {
@@ -112,6 +114,85 @@ describe('RecordToSchemaMappingService', () => {
 
     expect(spyLogError).toHaveBeenCalledWith('Cannot apply a record to the schema:', error);
     expect(commonStatusService.set).toHaveBeenCalledWith('ld.recordMappingToSchema', StatusType.error);
+  });
+
+  describe('dropdown options handling', () => {
+    beforeEach(() => {
+      jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchema as Schema);
+    });
+
+    test('handles dropdown option when found in schema', async () => {
+      const mockRecord = {
+        block_1: {
+          uriBFLite_group_1: [
+            {
+              uriBFLite_option_1: [
+                {
+                  uriBFLite_option_literal_1: ['test value'],
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: schema as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(selectedEntriesService.remove).toHaveBeenCalledWith('testKey-7');
+      expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
+    });
+
+    test('does not add dropdown option when not found in schema', async () => {
+      const mockRecord = {
+        block_1: {
+          uriBFLite_group_1: [
+            {
+              nonexistent_option: [
+                {
+                  uriBFLite_option_literal_1: ['test value'],
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: schema as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(selectedEntriesService.addNew).not.toHaveBeenCalledWith(undefined, 'testKey-7');
+      expect(selectedEntriesService.remove).toHaveBeenCalledWith('testKey-7');
+    });
+
+    test('handles dropdown option when CUSTOM_PROFILE_ENABLED is true', async () => {
+      mockedCustomProfileEnabled(true);
+
+      const mockRecord = {
+        block_1: {
+          uriBFLite_group_1: [
+            {
+              uriBFLite_option_1: 'test value',
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: schema as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(selectedEntriesService.remove).toHaveBeenCalledWith('testKey-7');
+      expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
+    });
   });
 
   test('returns updated schema with repeatable subcomponents', async () => {
