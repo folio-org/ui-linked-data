@@ -91,103 +91,13 @@ export const model: RecordModel = {
           },
         },
       },
+      'http://bibfra.me/vocab/marc/statementOfResponsibility': {
+        type: RecordModelType.array,
+        value: RecordModelType.string,
+      },
       'http://bibfra.me/vocab/marc/edition': {
         type: RecordModelType.array,
         value: RecordModelType.string,
-      },
-      'http://bibfra.me/vocab/marc/publisher': {
-        type: RecordModelType.array,
-        value: RecordModelType.string,
-      },
-      'http://bibfra.me/vocab/marc/dimensions': {
-        type: RecordModelType.array,
-        value: RecordModelType.string,
-      },
-      'http://bibfra.me/vocab/marc/media': {
-        type: RecordModelType.array,
-        value: RecordModelType.object,
-        fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-          'http://bibfra.me/vocab/marc/term': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-          'http://bibfra.me/vocab/lite/link': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-        },
-      },
-      'http://bibfra.me/vocab/marc/carrier': {
-        type: RecordModelType.array,
-        value: RecordModelType.object,
-        fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-          'http://bibfra.me/vocab/marc/term': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-          'http://bibfra.me/vocab/lite/link': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-        },
-      },
-      'http://library.link/vocab/map': {
-        type: RecordModelType.array,
-        value: RecordModelType.object,
-        fields: {
-          'http://library.link/identifier/LCCN': {
-            type: RecordModelType.object,
-            fields: {
-              'http://bibfra.me/vocab/lite/name': {
-                type: RecordModelType.array,
-                value: RecordModelType.string,
-              },
-              'http://bibfra.me/vocab/marc/status': {
-                type: RecordModelType.object,
-                fields: {
-                  'http://bibfra.me/vocab/marc/label': {
-                    type: RecordModelType.array,
-                    value: RecordModelType.string,
-                  },
-                  'http://bibfra.me/vocab/lite/link': {
-                    type: RecordModelType.array,
-                    value: RecordModelType.string,
-                  },
-                },
-              },
-            },
-          },
-          'http://library.link/identifier/ISBN': {
-            type: RecordModelType.object,
-            fields: {
-              'http://bibfra.me/vocab/lite/name': {
-                type: RecordModelType.array,
-                value: RecordModelType.string,
-              },
-              'http://bibfra.me/vocab/marc/status': {
-                type: RecordModelType.object,
-                fields: {
-                  'http://bibfra.me/vocab/marc/label': {
-                    type: RecordModelType.array,
-                    value: RecordModelType.string,
-                  },
-                  'http://bibfra.me/vocab/lite/link': {
-                    type: RecordModelType.array,
-                    value: RecordModelType.string,
-                  },
-                },
-              },
-            },
-          },
-        },
       },
       'https://bibfra.me/vocab/marc/provisionActivity': {
         type: RecordModelType.array,
@@ -283,6 +193,156 @@ export const model: RecordModel = {
                 },
               },
             },
+          },
+        },
+      },
+      'http://bibfra.me/vocab/marc/copyright': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/marc/date': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
+      'http://bibfra.me/vocab/marc/issuance': {
+        type: RecordModelType.array,
+        value: RecordModelType.string,
+      },
+      'http://library.link/vocab/map': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://library.link/identifier/LCCN': {
+            type: RecordModelType.object,
+            fields: {
+              'http://bibfra.me/vocab/lite/name': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/status': {
+                type: RecordModelType.object,
+                fields: {
+                  'http://bibfra.me/vocab/marc/label': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/link': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                },
+              },
+            },
+          },
+          'http://library.link/identifier/ISBN': {
+            type: RecordModelType.object,
+            fields: {
+              'http://bibfra.me/vocab/lite/name': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/status': {
+                type: RecordModelType.object,
+                fields: {
+                  'http://bibfra.me/vocab/marc/label': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/link': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      _notes: {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          type: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          value: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
+      'http://bibfra.me/vocab/marc/supplementaryContent': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/lite/link': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/lite/name': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
+      'http://bibfra.me/vocab/marc/media': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/marc/code': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/marc/term': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/lite/link': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
+      'http://bibfra.me/vocab/lite/extent': {
+        type: RecordModelType.array,
+        value: RecordModelType.string,
+      },
+      'http://bibfra.me/vocab/marc/dimensions': {
+        type: RecordModelType.array,
+        value: RecordModelType.string,
+      },
+      'http://bibfra.me/vocab/marc/carrier': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/marc/code': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/marc/term': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/lite/link': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
+      'http://bibfra.me/vocab/marc/accessLocation': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/lite/link': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/lite/note': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
           },
         },
       },
