@@ -1,4 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
 
 export class RecordGenerator implements IRecordGenerator {
@@ -229,11 +230,11 @@ export class RecordGenerator implements IRecordGenerator {
     // Handle non-dropdown cases
     const values = this.userValues[schemaEntry.uuid]?.contents || [];
 
-    if (modelField.type === 'array') {
+    if (modelField.type === RecordModelType.array) {
       return { value: this.processArrayType(modelField, schemaEntry, values), options };
     }
 
-    if (modelField.type === 'object' && modelField.fields) {
+    if (modelField.type === RecordModelType.object && modelField.fields) {
       return { value: this.processObjectType(modelField), options };
     }
 
@@ -242,12 +243,12 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private processArrayType(modelField: RecordModelField, schemaEntry: SchemaEntry, values: any[]) {
-    if (modelField.value === 'string') {
+    if (modelField.value === RecordModelType.string) {
       return values.map(({ label }) => label);
     }
 
     if (
-      modelField.value === 'object' &&
+      modelField.value === RecordModelType.object &&
       (schemaEntry.type === AdvancedFieldType.complex || schemaEntry.type === AdvancedFieldType.simple)
     ) {
       return this.processComplexArrayObjects(modelField, values);
@@ -297,7 +298,7 @@ export class RecordGenerator implements IRecordGenerator {
 
       if (!childResult.value) continue;
 
-      if (field.type === 'array') {
+      if (field.type === RecordModelType.array) {
         this.processArrayField(key, childResult, result);
       } else {
         result[key] = childResult.value;
