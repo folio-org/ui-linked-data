@@ -1,4 +1,4 @@
-import { recordGeneratorService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
+import { recordGeneratorServiceLegacy } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { renderHook } from '@testing-library/react';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -32,12 +32,12 @@ describe('useRecordGeneration', () => {
 
     result.current.generateRecord();
 
-    expect(recordGeneratorService.init).toHaveBeenCalledWith({
+    expect(recordGeneratorServiceLegacy.init).toHaveBeenCalledWith({
       schema,
       initKey,
       userValues,
       selectedEntries,
     });
-    expect(recordGeneratorService.generate).toHaveBeenCalled();
+    expect(recordGeneratorServiceLegacy.generate).toHaveBeenCalled();
   });
 });

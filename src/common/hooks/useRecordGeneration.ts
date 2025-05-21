@@ -2,19 +2,19 @@ import { useInputsState, useProfileState } from '@src/store';
 import { useServicesContext } from './useServicesContext';
 
 export const useRecordGeneration = () => {
-  const { recordGeneratorService } = useServicesContext();
+  const { recordGeneratorServiceLegacy } = useServicesContext();
   const { userValues, selectedEntries } = useInputsState();
   const { schema, initialSchemaKey } = useProfileState();
 
   const generateRecord = () => {
-    recordGeneratorService?.init({
+    recordGeneratorServiceLegacy?.init({
       schema,
       initKey: initialSchemaKey,
       userValues,
       selectedEntries,
     });
 
-    return recordGeneratorService?.generate();
+    return recordGeneratorServiceLegacy?.generate();
   };
 
   return { generateRecord };
