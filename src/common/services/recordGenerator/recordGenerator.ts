@@ -60,12 +60,26 @@ export class RecordGenerator implements IRecordGenerator {
     }
   }
 
-  private findSchemaEntriesByUriBFLite(uriBFLite: string) {
+  private findSchemaEntriesByUriBFLite(uriBFLite: string, parentPath?: string[]) {
     if (this.uriBFLiteIndex === null) {
       this.buildUriBFLiteIndex();
     }
 
-    return this.uriBFLiteIndex?.get(uriBFLite) || [];
+    const entries = this.uriBFLiteIndex?.get(uriBFLite) || [];
+
+    if (parentPath && parentPath.length > 0) {
+      return entries.filter(entry => {
+        if (entry.path.length < parentPath.length) return false;
+
+        for (let i = 0; i < parentPath.length; i++) {
+          if (entry.path[i] !== parentPath[i]) return false;
+        }
+
+        return true;
+      });
+    }
+
+    return entries;
   }
 
   // Builds an index of schema entries grouped by their uriBFLite value
@@ -258,7 +272,7 @@ export class RecordGenerator implements IRecordGenerator {
     }
 
     if (modelField.type === RecordModelType.object && modelField.fields) {
-      return { value: this.processObjectType(modelField), options };
+      return { value: this.processObjectType(modelField, schemaEntry), options };
     }
 
     // Default case for simple fields
@@ -301,20 +315,23 @@ export class RecordGenerator implements IRecordGenerator {
     });
   }
 
-  private processObjectType(modelField: RecordModelField) {
+  private processObjectType(modelField: RecordModelField, schemaEntry: SchemaEntry) {
     const result: Record<string, any> = {};
 
     if (!modelField.fields) return null;
 
+    const parentPath = schemaEntry ? schemaEntry.path : undefined;
+
     for (const [key, field] of Object.entries(modelField.fields)) {
-      this.processObjectField(key, field, result);
+      this.processObjectField(key, field, result, parentPath);
     }
 
     return Object.keys(result).length > 0 ? result : null;
   }
 
-  private processObjectField(key: string, field: RecordModelField, result: Record<string, any>) {
-    const childEntries = this.findSchemaEntriesByUriBFLite(key);
+  private processObjectField(key: string, field: RecordModelField, result: Record<string, any>, parentPath?: string[]) {
+    const localParentPath = parentPath ? [...parentPath] : undefined;
+    const childEntries = this.findSchemaEntriesByUriBFLite(key, localParentPath);
 
     for (const childEntry of childEntries) {
       const childResult = this.generateValueFromModel(field, childEntry);
