@@ -1,6 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
+import { SchemaManager } from './SchemaManager';
 
 interface UserValueContent {
   id?: string;
@@ -21,18 +22,14 @@ type GroupedValue = Array<{
   valueAtIndex: UserValueContent | null;
 }>;
 export class RecordGenerator implements IRecordGenerator {
-  private schema: Map<string, SchemaEntry>;
+  private readonly schemaManager: SchemaManager;
   private model: RecordModel;
   private userValues: UserValues;
-  private cachedSchemaValues: SchemaEntry[] | null = null;
-  private uriBFLiteIndex: Map<string, SchemaEntry[]> | null = null;
 
   constructor() {
-    this.schema = new Map();
+    this.schemaManager = new SchemaManager();
     this.model = {};
     this.userValues = {};
-    this.cachedSchemaValues = null;
-    this.uriBFLiteIndex = null;
   }
 
   generate(data: { schema: Schema; model: RecordModel; userValues: UserValues }) {
@@ -43,7 +40,7 @@ export class RecordGenerator implements IRecordGenerator {
     };
 
     for (const [rootKey, rootField] of Object.entries(this.model)) {
-      const rootEntries = this.findSchemaEntriesByUriBFLite(rootKey);
+      const rootEntries = this.schemaManager.findSchemaEntriesByUriBFLite(rootKey);
 
       for (const entry of rootEntries) {
         const { value } = this.generateValueFromModel(rootField, entry);
@@ -58,54 +55,9 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private init({ schema, model, userValues }: { schema: Schema; model: RecordModel; userValues: UserValues }) {
-    this.schema = schema;
-    this.cachedSchemaValues = null;
-    this.uriBFLiteIndex = null;
-
+    this.schemaManager.init(schema);
     this.model = model;
     this.userValues = userValues;
-  }
-
-  private findSchemaEntriesByUriBFLite(uriBFLite: string, parentPath?: string[]) {
-    if (this.uriBFLiteIndex === null) {
-      this.buildUriBFLiteIndex();
-    }
-
-    const entries = this.uriBFLiteIndex?.get(uriBFLite) || [];
-
-    if (parentPath && parentPath.length > 0) {
-      return entries.filter(entry => {
-        if (entry.path.length < parentPath.length) return false;
-
-        for (let i = 0; i < parentPath.length; i++) {
-          if (entry.path[i] !== parentPath[i]) return false;
-        }
-
-        return true;
-      });
-    }
-
-    return entries;
-  }
-
-  // Builds an index of schema entries grouped by their uriBFLite value
-  // This improves the performance of lookups by uriBFLite
-  private buildUriBFLiteIndex() {
-    this.uriBFLiteIndex = new Map();
-
-    this.cachedSchemaValues ??= Array.from(this.schema.values());
-
-    for (const entry of this.cachedSchemaValues) {
-      if (!entry.uriBFLite) continue;
-
-      const currentEntries = this.uriBFLiteIndex.get(entry.uriBFLite);
-
-      if (currentEntries) {
-        currentEntries.push(entry);
-      } else {
-        this.uriBFLiteIndex.set(entry.uriBFLite, [entry]);
-      }
-    }
   }
 
   private processDropdownStructure(dropdownEntry: SchemaEntry) {
@@ -114,11 +66,11 @@ export class RecordGenerator implements IRecordGenerator {
     if (!dropdownEntry.children) return results;
 
     for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schema.get(optionUuid);
+      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
 
       if (!optionEntry?.children) continue;
 
-      if (!this.hasOptionValues(optionEntry)) continue;
+      if (!this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
 
       const result = this.processOptionEntry(optionEntry);
 
@@ -128,14 +80,6 @@ export class RecordGenerator implements IRecordGenerator {
     }
 
     return results;
-  }
-
-  private hasOptionValues(optionEntry: SchemaEntry) {
-    return !!optionEntry.children?.some(childUuid => {
-      const childEntry = this.schema.get(childUuid);
-
-      return !!childEntry && !!this.userValues[childEntry.uuid]?.contents?.length;
-    });
   }
 
   private processOptionEntry(optionEntry: SchemaEntry) {
@@ -166,7 +110,7 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private processChildAndAddToStructure(childUuid: string, structureResult: Record<string, any>) {
-    const childEntry = this.schema.get(childUuid);
+    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
 
@@ -185,7 +129,7 @@ export class RecordGenerator implements IRecordGenerator {
     }
   }
 
-  private isUnwrappedDropdownOption(modelField: RecordModelField, schemaEntry: SchemaEntry): boolean {
+  private isUnwrappedDropdownOption(modelField: RecordModelField, schemaEntry: SchemaEntry) {
     return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.hiddenWrapper === true;
   }
 
@@ -195,9 +139,9 @@ export class RecordGenerator implements IRecordGenerator {
     if (!dropdownEntry.children) return results;
 
     for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schema.get(optionUuid);
+      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.hasOptionValues(optionEntry)) continue;
+      if (!optionEntry?.children || !this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
 
       const result = this.processUnwrappedOptionEntry(optionEntry);
 
@@ -235,7 +179,7 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private processUnwrappedChildAndAddToStructure(childUuid: string, wrappedResult: Record<string, any>) {
-    const childEntry = this.schema.get(childUuid);
+    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
 
@@ -346,7 +290,7 @@ export class RecordGenerator implements IRecordGenerator {
 
   private processObjectField(key: string, field: RecordModelField, result: Record<string, any>, parentPath?: string[]) {
     const localParentPath = parentPath ? [...parentPath] : undefined;
-    const childEntries = this.findSchemaEntriesByUriBFLite(key, localParentPath);
+    const childEntries = this.schemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 
     for (const childEntry of childEntries) {
       const childResult = this.generateValueFromModel(field, childEntry);
@@ -389,7 +333,7 @@ export class RecordGenerator implements IRecordGenerator {
   private getChildEntriesWithValues(children: string[]) {
     return children
       .map(childUuid => {
-        const childEntry = this.schema.get(childUuid);
+        const childEntry = this.schemaManager.getSchemaEntry(childUuid);
 
         if (!childEntry?.type || !childEntry.uriBFLite) return null;
 
