@@ -1,7 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
-import { SchemaManager } from './SchemaManager';
+import { SchemaManager } from './schemaManager';
 
 interface UserValueContent {
   id?: string;
@@ -60,7 +60,7 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = userValues;
   }
 
-  private processDropdownStructure(dropdownEntry: SchemaEntry) {
+  private processDropdown(dropdownEntry: SchemaEntry) {
     const results: Array<Record<string, any>> = [];
 
     if (!dropdownEntry.children) return results;
@@ -72,7 +72,7 @@ export class RecordGenerator implements IRecordGenerator {
 
       if (!this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
 
-      const result = this.processOptionEntry(optionEntry);
+      const result = this.processDropdownOptionEntry(optionEntry);
 
       if (result) {
         results.push(result);
@@ -82,10 +82,10 @@ export class RecordGenerator implements IRecordGenerator {
     return results;
   }
 
-  private processOptionEntry(optionEntry: SchemaEntry) {
+  private processDropdownOptionEntry(optionEntry: SchemaEntry) {
     if (!optionEntry.uriBFLite) return null;
 
-    const structureResult = this.buildOptionStructure(optionEntry);
+    const structureResult = this.buildDropdownOptionValue(optionEntry);
 
     if (Object.keys(structureResult).length === 0) return null;
 
@@ -95,7 +95,7 @@ export class RecordGenerator implements IRecordGenerator {
     return result;
   }
 
-  private buildOptionStructure(optionEntry: SchemaEntry) {
+  private buildDropdownOptionValue(optionEntry: SchemaEntry) {
     const structureResult: Record<string, any> = {};
 
     if (!optionEntry.children) {
@@ -103,13 +103,13 @@ export class RecordGenerator implements IRecordGenerator {
     }
 
     for (const optionChildUuid of optionEntry.children) {
-      this.processChildAndAddToStructure(optionChildUuid, structureResult);
+      this.processDropdownOptionChild(optionChildUuid, structureResult);
     }
 
     return structureResult;
   }
 
-  private processChildAndAddToStructure(childUuid: string, structureResult: Record<string, any>) {
+  private processDropdownOptionChild(childUuid: string, structureResult: Record<string, any>) {
     const childEntry = this.schemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
@@ -133,7 +133,7 @@ export class RecordGenerator implements IRecordGenerator {
     return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.hiddenWrapper === true;
   }
 
-  private processUnwrappedDropdownStructure(dropdownEntry: SchemaEntry) {
+  private processUnwrappedDropdownOption(dropdownEntry: SchemaEntry) {
     const results: any[] = [];
 
     if (!dropdownEntry.children) return results;
@@ -156,7 +156,7 @@ export class RecordGenerator implements IRecordGenerator {
   private processUnwrappedOptionEntry(optionEntry: SchemaEntry) {
     if (!optionEntry.uriBFLite) return null;
 
-    const wrappedResult = this.buildUnwrappedStructure(optionEntry);
+    const wrappedResult = this.buildUnwrappedDropdownOptionValue(optionEntry);
 
     if (Object.keys(wrappedResult).length === 0) return null;
 
@@ -166,19 +166,19 @@ export class RecordGenerator implements IRecordGenerator {
     };
   }
 
-  private buildUnwrappedStructure(optionEntry: SchemaEntry) {
+  private buildUnwrappedDropdownOptionValue(optionEntry: SchemaEntry) {
     const wrappedResult: Record<string, any> = {};
 
     if (!optionEntry.children) return wrappedResult;
 
     for (const childUuid of optionEntry.children) {
-      this.processUnwrappedChildAndAddToStructure(childUuid, wrappedResult);
+      this.processUnwrappedChild(childUuid, wrappedResult);
     }
 
     return wrappedResult;
   }
 
-  private processUnwrappedChildAndAddToStructure(childUuid: string, wrappedResult: Record<string, any>) {
+  private processUnwrappedChild(childUuid: string, wrappedResult: Record<string, any>) {
     const childEntry = this.schemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
@@ -207,11 +207,11 @@ export class RecordGenerator implements IRecordGenerator {
     if (this.isUnwrappedDropdownOption(modelField, schemaEntry)) {
       options.hiddenWrapper = true;
 
-      return { value: this.processUnwrappedDropdownStructure(schemaEntry), options };
+      return { value: this.processUnwrappedDropdownOption(schemaEntry), options };
     }
 
     if (schemaEntry.type === AdvancedFieldType.dropdown) {
-      return { value: this.processDropdownStructure(schemaEntry), options };
+      return { value: this.processDropdown(schemaEntry), options };
     }
 
     // Handle non-dropdown cases
