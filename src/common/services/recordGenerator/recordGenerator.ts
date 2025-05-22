@@ -24,7 +24,6 @@ export class RecordGenerator implements IRecordGenerator {
   private schema: Map<string, SchemaEntry>;
   private model: RecordModel;
   private userValues: UserValues;
-  private pathToEntry: Map<string, SchemaEntry>;
   private cachedSchemaValues: SchemaEntry[] | null = null;
   private uriBFLiteIndex: Map<string, SchemaEntry[]> | null = null;
 
@@ -32,7 +31,6 @@ export class RecordGenerator implements IRecordGenerator {
     this.schema = new Map();
     this.model = {};
     this.userValues = {};
-    this.pathToEntry = new Map();
     this.cachedSchemaValues = null;
     this.uriBFLiteIndex = null;
   }
@@ -63,19 +61,9 @@ export class RecordGenerator implements IRecordGenerator {
     this.schema = schema;
     this.cachedSchemaValues = null;
     this.uriBFLiteIndex = null;
-    this.buildPathMap();
 
     this.model = model;
     this.userValues = userValues;
-    this.pathToEntry = new Map();
-  }
-
-  private buildPathMap() {
-    for (const entry of this.schema.values()) {
-      const pathKey = entry.path.join('::');
-
-      this.pathToEntry.set(pathKey, entry);
-    }
   }
 
   private findSchemaEntriesByUriBFLite(uriBFLite: string, parentPath?: string[]) {
