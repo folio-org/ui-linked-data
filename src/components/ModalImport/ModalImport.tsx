@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { ImportModes, HOLD_LOADING_SCREEN_MS } from '@common/constants/import.constants';
+import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -55,7 +55,19 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          await importFile(filesToUpload);
+          // Reject (throw) if importFile is taking too long since we've removed
+          // the ability to alter the modal state during load.
+          await new Promise(async (resolve, reject) => {
+            const timeout = setTimeout(() => reject(), LOADING_TIMEOUT_MS);
+            try {
+              const result = await importFile(filesToUpload);
+              resolve(result);
+            } catch {
+              reject();
+            } finally {
+              clearTimeout(timeout);
+            }
+          })
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
@@ -108,13 +120,15 @@ export const ModalImport = memo(() => {
       className="import"
       isOpen={isImportModalOpen}
       title={title()}
-      submitButtonLabel={submitButtonLabel()}
       submitButtonDisabled={!isImportReady && !isImportCompleted}
+      submitButtonLabel={submitButtonLabel()}
       onSubmit={onSubmit}
       alignTitleCenter
       spreadModalControls
-      cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
+      cancelButtonDisabled={isImportSubmitted}
+      showCloseIconButton={!isImportSubmitted}
       cancelButtonHidden={isImportSuccessful}
+      cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onCancel={reset}
       onClose={reset}
     >

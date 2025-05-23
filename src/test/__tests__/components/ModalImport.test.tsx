@@ -55,6 +55,7 @@ describe('ModalImport', () => {
     expect(importFileMock).toHaveBeenCalled();
     expect(screen.getByTestId('modal-import-waiting')).toBeInTheDocument();
     expect(screen.getByTestId('modal-button-submit')).toBeDisabled();
+    expect(screen.getByTestId('modal-button-cancel')).toBeDisabled();
   });
 
   test('successful import shows done button which closes modal', async () => {
@@ -70,6 +71,21 @@ describe('ModalImport', () => {
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.queryByTestId('modal-import')).not.toBeInTheDocument();
   });
+
+  test('import timeout progresses to failed load state', async () => {
+    jest.useFakeTimers({ advanceTimers: true });
+    importFileMock = (jest.spyOn(importApi, 'importFile') as any).mockImplementation(() => {
+      setTimeout(() => {
+        Promise.resolve(null);
+      }, 30 * 1000);
+    });
+    const input = screen.getByTestId('dropzone-file-input');
+    await user.upload(input, file);
+    await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
+    expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
+  });
+
 
   test('failed import shows try again button which resets modal state', async () => {
     importFileMock.mockRejectedValueOnce(null);
