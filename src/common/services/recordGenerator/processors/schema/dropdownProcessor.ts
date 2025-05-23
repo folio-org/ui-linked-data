@@ -3,24 +3,18 @@ import { SchemaManager } from '../../schemaManager';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 
 export class DropdownProcessor implements ISchemaProcessor {
-  private userValues: UserValues;
+  private userValues: UserValues = {};
 
-  constructor(private readonly schemaManager: SchemaManager) {
-    this.userValues = {};
-  }
+  constructor(private readonly schemaManager: SchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry): boolean {
-    return schemaEntry.type === AdvancedFieldType.dropdown;
+  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField): boolean {
+    return schemaEntry.type === AdvancedFieldType.dropdown && !modelField.options?.hiddenWrapper;
   }
 
   process(schemaEntry: SchemaEntry, userValues: UserValues): Record<string, any> {
     this.userValues = userValues;
 
-    const dropdownEntry = this.schemaManager.getSchemaEntry(schemaEntry.uuid);
-
-    if (!dropdownEntry) return [];
-
-    return this.processDropdown(dropdownEntry);
+    return this.processDropdown(schemaEntry);
   }
 
   private processDropdown(dropdownEntry: SchemaEntry) {

@@ -3,11 +3,9 @@ import { SchemaManager } from '../../schemaManager';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 
 export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
-  private userValues: UserValues;
+  private userValues: UserValues = {};
 
-  constructor(private readonly schemaManager: SchemaManager) {
-    this.userValues = {};
-  }
+  constructor(private readonly schemaManager: SchemaManager) {}
 
   canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
     return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.hiddenWrapper === true;
@@ -16,11 +14,7 @@ export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
   process(schemaEntry: SchemaEntry, userValues: UserValues) {
     this.userValues = userValues;
 
-    const dropdownEntry = this.schemaManager.getSchemaEntry(schemaEntry.uuid);
-
-    if (!dropdownEntry) return [];
-
-    return this.processUnwrappedDropdownOption(dropdownEntry);
+    return this.processUnwrappedDropdownOption(schemaEntry);
   }
 
   private processUnwrappedDropdownOption(dropdownEntry: SchemaEntry) {
