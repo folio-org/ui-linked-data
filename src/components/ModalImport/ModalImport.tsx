@@ -67,7 +67,7 @@ export const ModalImport = memo(() => {
                 resolve(result);
               })
               .catch(e => {
-                reject(e);
+                reject(new Error(e));
               })
               .finally(() => {
                 clearTimeout(timeout);
