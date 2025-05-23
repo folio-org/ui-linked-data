@@ -6,6 +6,7 @@ interface RecordModelField {
   fields?: Record<string, RecordModelField>;
   options?: {
     hiddenWrapper?: boolean;
+    isReference?: boolean;
   };
 }
 

@@ -1,5 +1,6 @@
 export interface ValueOptions {
   hiddenWrapper?: boolean;
+  isReference?: boolean;
 }
 
 export type SchemaFieldValue = string | SchemaFieldValueArray | SchemaFieldValueObject;

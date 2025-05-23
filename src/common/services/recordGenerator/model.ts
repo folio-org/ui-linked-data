@@ -346,6 +346,19 @@ export const model: RecordModel = {
           },
         },
       },
+      _workReference: {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        options: {
+          isReference: true,
+        },
+        fields: {
+          id: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
     },
   },
 };

@@ -18,7 +18,7 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = {};
   }
 
-  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues }): GeneratedValue {
+  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues; record?: RecordEntry }): GeneratedValue {
     this.init(data);
 
     const result: GeneratedValue = {
