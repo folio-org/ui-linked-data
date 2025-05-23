@@ -86,7 +86,6 @@ describe('ModalImport', () => {
     expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
   });
 
-
   test('failed import shows try again button which resets modal state', async () => {
     importFileMock.mockRejectedValueOnce(null);
     const input = screen.getByTestId('dropzone-file-input');

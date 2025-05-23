@@ -55,19 +55,24 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          // Reject (throw) if importFile is taking too long since we've removed
+          // Reject if importFile is taking too long since we've removed
           // the ability to alter the modal state during load.
-          await new Promise(async (resolve, reject) => {
-            const timeout = setTimeout(() => reject(), LOADING_TIMEOUT_MS);
-            try {
-              const result = await importFile(filesToUpload);
-              resolve(result);
-            } catch {
-              reject();
-            } finally {
-              clearTimeout(timeout);
-            }
-          })
+          await new Promise((resolve, reject) => {
+            const timeout = setTimeout(
+              () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
+              LOADING_TIMEOUT_MS,
+            );
+            importFile(filesToUpload)
+              .then(result => {
+                resolve(result);
+              })
+              .catch(e => {
+                reject(e);
+              })
+              .finally(() => {
+                clearTimeout(timeout);
+              });
+          });
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
