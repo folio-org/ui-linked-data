@@ -1,8 +1,8 @@
 import { SchemaManager } from '../../schemaManager';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 import { DropdownProcessor } from './dropdownProcessor';
-import { GroupProcessor } from './GroupProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
+import { GroupProcessor } from './groupProcessor';
 
 export class SchemaProcessorManager {
   private readonly processors: ISchemaProcessor[];

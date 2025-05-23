@@ -1,6 +1,6 @@
 import { RecordModelType } from '@common/constants/recordModel.constants';
 
-export const model: RecordModel = {
+export const monographInstanceModel: RecordModel = {
   'http://bibfra.me/vocab/lite/Instance': {
     type: RecordModelType.object,
     fields: {

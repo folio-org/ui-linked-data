@@ -4,6 +4,7 @@ import { IRecordGenerator } from './recordGenerator.interface';
 import { SchemaManager } from './schemaManager';
 import { SchemaProcessorManager } from './processors/schema/schemaProcessorManager';
 import { GeneratedValue, UserValueContent, ValueOptions, ValueResult } from './types/valueTypes';
+import { ModelFactory } from './modelFactory';
 
 export class RecordGenerator implements IRecordGenerator {
   private readonly schemaManager: SchemaManager;
@@ -18,8 +19,18 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = {};
   }
 
-  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues; record?: RecordEntry }): GeneratedValue {
-    this.init(data);
+  generate(
+    data: { schema: Schema; userValues: UserValues; record?: RecordEntry },
+    profileType: ProfileType = 'monograph',
+    entityType: ProfileEntityType = 'instance',
+  ): GeneratedValue {
+    const model = ModelFactory.getModel(profileType, entityType);
+
+    if (!model) {
+      throw new Error(`Model not found for profile type: ${profileType}, entity type: ${entityType}`);
+    }
+
+    this.init({ ...data, model });
 
     const result: GeneratedValue = {
       resource: {},

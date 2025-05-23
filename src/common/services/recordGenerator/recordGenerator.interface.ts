@@ -1,3 +1,7 @@
 export interface IRecordGenerator {
-  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues, record?: RecordEntry }): Record<string, any>;
+  generate(
+    data: { schema: Schema; userValues: UserValues; record?: RecordEntry; selectedEntries?: string[] },
+    profileType?: ProfileType,
+    entityType?: ProfileEntityType,
+  ): Record<string, any>;
 }
