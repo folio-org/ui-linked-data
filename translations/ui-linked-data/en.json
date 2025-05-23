@@ -257,5 +257,6 @@
   "ld.importFileFailure": "Your file was unable to be imported. Please check the import log downloaded to your browser for more details.",
   "ld.importFailed": "Import failed",
   "ld.importDone": "Done",
-  "ld.importTryAgain": "Try again"
+  "ld.importTryAgain": "Try again",
+  "ld.importTimedout": "Import failed to complete in time"
 }
