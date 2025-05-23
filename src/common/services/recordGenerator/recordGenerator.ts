@@ -89,7 +89,7 @@ export class RecordGenerator implements IRecordGenerator {
       modelField.value === RecordModelType.object &&
       (schemaEntry.type === AdvancedFieldType.complex || schemaEntry.type === AdvancedFieldType.simple)
     ) {
-      return this.processComplexArrayObjects(modelField, values);
+      return this.processArrayObjectsForLookups(modelField, values);
     }
 
     // Handle regular groups with children (e.g. accessLocation, supplementaryContent, _notes)
@@ -102,7 +102,7 @@ export class RecordGenerator implements IRecordGenerator {
     return null;
   }
 
-  private processComplexArrayObjects(modelField: RecordModelField, values: UserValueContent[]) {
+  private processArrayObjectsForLookups(modelField: RecordModelField, values: UserValueContent[]) {
     return values.map(({ meta, label }) => {
       const result: GeneratedValue = {};
 
@@ -119,6 +119,7 @@ export class RecordGenerator implements IRecordGenerator {
           result[key] = [label];
         }
       }
+
       return result;
     });
   }
