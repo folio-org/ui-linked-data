@@ -2,6 +2,8 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
 import { SchemaManager } from './schemaManager';
+import { SchemaProcessorManager } from './processors/schema/schemaProcessorManager';
+import { GeneratedValue, ValueOptions, ValueResult } from './processors/schema/valueTypes';
 
 interface UserValueContent {
   id?: string;
@@ -21,21 +23,24 @@ type GroupedValue = Array<{
   childEntry: SchemaEntry;
   valueAtIndex: UserValueContent | null;
 }>;
+
 export class RecordGenerator implements IRecordGenerator {
   private readonly schemaManager: SchemaManager;
+  private readonly schemaProcessorManager: SchemaProcessorManager;
   private model: RecordModel;
   private userValues: UserValues;
 
   constructor() {
     this.schemaManager = new SchemaManager();
+    this.schemaProcessorManager = new SchemaProcessorManager(this.schemaManager);
     this.model = {};
     this.userValues = {};
   }
 
-  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues }) {
+  generate(data: { schema: Schema; model: RecordModel; userValues: UserValues }): GeneratedValue {
     this.init(data);
 
-    const result: Record<string, any> = {
+    const result: GeneratedValue = {
       resource: {},
     };
 
@@ -46,7 +51,9 @@ export class RecordGenerator implements IRecordGenerator {
         const { value } = this.generateValueFromModel(rootField, entry);
 
         if (value && (Array.isArray(value) ? value.length > 0 : true)) {
-          result.resource[rootKey] = value;
+          if (typeof result.resource === 'object' && result.resource !== null) {
+            (result.resource as GeneratedValue)[rootKey] = value;
+          }
         }
       }
     }
@@ -60,178 +67,39 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = userValues;
   }
 
-  private processDropdown(dropdownEntry: SchemaEntry) {
-    const results: Array<Record<string, any>> = [];
-
-    if (!dropdownEntry.children) return results;
-
-    for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
-
-      if (!optionEntry?.children) continue;
-
-      if (!this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
-
-      const result = this.processDropdownOptionEntry(optionEntry);
-
-      if (result) {
-        results.push(result);
-      }
-    }
-
-    return results;
-  }
-
-  private processDropdownOptionEntry(optionEntry: SchemaEntry) {
-    if (!optionEntry.uriBFLite) return null;
-
-    const structureResult = this.buildDropdownOptionValue(optionEntry);
-
-    if (Object.keys(structureResult).length === 0) return null;
-
-    const result: Record<string, any> = {};
-    result[optionEntry.uriBFLite] = structureResult;
-
-    return result;
-  }
-
-  private buildDropdownOptionValue(optionEntry: SchemaEntry) {
-    const structureResult: Record<string, any> = {};
-
-    if (!optionEntry.children) {
-      return structureResult;
-    }
-
-    for (const optionChildUuid of optionEntry.children) {
-      this.processDropdownOptionChild(optionChildUuid, structureResult);
-    }
-
-    return structureResult;
-  }
-
-  private processDropdownOptionChild(childUuid: string, structureResult: Record<string, any>) {
-    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
-
-    if (!childEntry) return;
-
-    const childValues = this.userValues[childEntry.uuid]?.contents || [];
-
-    if (childValues.length === 0 || !childEntry.uriBFLite) return;
-
-    if (childEntry.type === AdvancedFieldType.literal) {
-      structureResult[childEntry.uriBFLite] = childValues.map(({ label }) => label);
-    } else if (childEntry.type === AdvancedFieldType.simple) {
-      structureResult[childEntry.uriBFLite] = childValues.map(({ meta, label }) => ({
-        // TODO: take field names from the model
-        'http://bibfra.me/vocab/lite/link': [meta?.uri],
-        'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label],
-      }));
-    }
-  }
-
-  private isUnwrappedDropdownOption(modelField: RecordModelField, schemaEntry: SchemaEntry) {
-    return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.hiddenWrapper === true;
-  }
-
-  private processUnwrappedDropdownOption(dropdownEntry: SchemaEntry) {
-    const results: any[] = [];
-
-    if (!dropdownEntry.children) return results;
-
-    for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
-
-      if (!optionEntry?.children || !this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
-
-      const result = this.processUnwrappedOptionEntry(optionEntry);
-
-      if (result) {
-        results.push(result);
-      }
-    }
-
-    return results;
-  }
-
-  private processUnwrappedOptionEntry(optionEntry: SchemaEntry) {
-    if (!optionEntry.uriBFLite) return null;
-
-    const wrappedResult = this.buildUnwrappedDropdownOptionValue(optionEntry);
-
-    if (Object.keys(wrappedResult).length === 0) return null;
-
-    // Use the dropdown option's uriBFLite (e.g. distribution) instead of provisionActivity
-    return {
-      [optionEntry.uriBFLite]: [wrappedResult],
-    };
-  }
-
-  private buildUnwrappedDropdownOptionValue(optionEntry: SchemaEntry) {
-    const wrappedResult: Record<string, any> = {};
-
-    if (!optionEntry.children) return wrappedResult;
-
-    for (const childUuid of optionEntry.children) {
-      this.processUnwrappedChild(childUuid, wrappedResult);
-    }
-
-    return wrappedResult;
-  }
-
-  private processUnwrappedChild(childUuid: string, wrappedResult: Record<string, any>) {
-    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
-
-    if (!childEntry) return;
-
-    const childValues = this.userValues[childEntry.uuid]?.contents || [];
-
-    if (childValues.length === 0 || !childEntry.uriBFLite) return;
-
-    if (childEntry.type === AdvancedFieldType.literal) {
-      wrappedResult[childEntry.uriBFLite] = childValues.map(({ label }) => label);
-    } else if (childEntry.type === AdvancedFieldType.simple) {
-      // TODO: take field names from the model
-      wrappedResult[childEntry.uriBFLite] = childValues.map(({ meta, label }) => ({
-        'http://bibfra.me/vocab/lite/name': [meta?.basicLabel ?? label],
-        'http://bibfra.me/vocab/marc/code': [meta?.uri?.split('/').pop()],
-        'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label],
-        'http://bibfra.me/vocab/lite/link': [meta?.uri],
-      }));
-    }
-  }
-
   private generateValueFromModel(modelField: RecordModelField, schemaEntry: SchemaEntry) {
-    const options: any = {}; // TODO: Can be populated with metadata/options if needed
+    const options: ValueOptions = {};
 
-    // Handle dropdown cases
-    if (this.isUnwrappedDropdownOption(modelField, schemaEntry)) {
-      options.hiddenWrapper = true;
-
-      return { value: this.processUnwrappedDropdownOption(schemaEntry), options };
+    const processorValue = this.schemaProcessorManager.process(schemaEntry, modelField, this.userValues);
+    if (Object.keys(processorValue).length > 0) {
+      if (modelField.options?.hiddenWrapper) {
+        options.hiddenWrapper = true;
+      }
+      return { value: processorValue, options };
     }
 
-    if (schemaEntry.type === AdvancedFieldType.dropdown) {
-      return { value: this.processDropdown(schemaEntry), options };
-    }
-
-    // Handle non-dropdown cases
+    // Handle non-processor cases
     const values = this.userValues[schemaEntry.uuid]?.contents || [];
 
     if (modelField.type === RecordModelType.array) {
-      return { value: this.processArrayType(modelField, schemaEntry, values), options };
+      const arrayResult = this.processArrayType(modelField, schemaEntry, values as UserValueContent[]);
+      return { value: arrayResult, options };
     }
 
     if (modelField.type === RecordModelType.object && modelField.fields) {
       return { value: this.processObjectType(modelField, schemaEntry), options };
     }
 
-    // Default case for simple fields
-    return { value: values.map(({ label }) => label), options };
+    // Default case for simple fields - ensure we filter out any undefined values
+    return {
+      value: values.map(({ label }) => label).filter((label): label is string => label !== undefined),
+      options,
+    };
   }
 
-  private processArrayType(modelField: RecordModelField, schemaEntry: SchemaEntry, values: any[]) {
+  private processArrayType(modelField: RecordModelField, schemaEntry: SchemaEntry, values: UserValueContent[]) {
     if (modelField.value === RecordModelType.string) {
-      return values.map(({ label }) => label);
+      return values.map(({ label }) => label).filter((label): label is string => label !== undefined);
     }
 
     if (
@@ -253,9 +121,9 @@ export class RecordGenerator implements IRecordGenerator {
     return null;
   }
 
-  private processComplexArrayObjects(modelField: RecordModelField, values: any[]) {
+  private processComplexArrayObjects(modelField: RecordModelField, values: UserValueContent[]) {
     return values.map(({ meta, label }) => {
-      const result: Record<string, any> = {};
+      const result: GeneratedValue = {};
 
       if (!modelField.fields) return result;
 
@@ -275,7 +143,7 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private processObjectType(modelField: RecordModelField, schemaEntry: SchemaEntry) {
-    const result: Record<string, any> = {};
+    const result: GeneratedValue = {};
 
     if (!modelField.fields) return null;
 
@@ -288,7 +156,7 @@ export class RecordGenerator implements IRecordGenerator {
     return Object.keys(result).length > 0 ? result : null;
   }
 
-  private processObjectField(key: string, field: RecordModelField, result: Record<string, any>, parentPath?: string[]) {
+  private processObjectField(key: string, field: RecordModelField, result: GeneratedValue, parentPath?: string[]) {
     const localParentPath = parentPath ? [...parentPath] : undefined;
     const childEntries = this.schemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 
@@ -305,12 +173,24 @@ export class RecordGenerator implements IRecordGenerator {
     }
   }
 
-  private processArrayField(key: string, childResult: { value: any; options: any }, result: Record<string, any>) {
+  private processArrayField(key: string, childResult: ValueResult, result: GeneratedValue) {
     if (childResult.options.hiddenWrapper) {
-      Object.assign(result, childResult.value[0]);
+      const firstValue = Array.isArray(childResult.value) ? childResult.value[0] : null;
+      if (firstValue && typeof firstValue === 'object') {
+        Object.assign(result, firstValue);
+      }
     } else {
       result[key] = result[key] ?? [];
-      result[key] = result[key].concat(childResult.value);
+
+      const existingValue = result[key];
+
+      if (Array.isArray(existingValue)) {
+        if (Array.isArray(childResult.value)) {
+          result[key] = [...existingValue, ...childResult.value];
+        } else if (childResult.value !== null) {
+          result[key] = [...existingValue, childResult.value];
+        }
+      }
     }
   }
 
@@ -352,8 +232,8 @@ export class RecordGenerator implements IRecordGenerator {
       .filter(obj => Object.keys(obj).length > 0);
   }
 
-  private createGroupObject(indexGroup: GroupedValue, modelFields: Record<string, RecordModelField>) {
-    const groupObject: Record<string, string[]> = {};
+  private createGroupObject(indexGroup: GroupedValue, modelFields: Record<string, RecordModelField>): GeneratedValue {
+    const groupObject: GeneratedValue = {};
 
     for (const { childEntry, valueAtIndex } of indexGroup) {
       if (!childEntry.uriBFLite || !valueAtIndex) continue;
@@ -368,7 +248,7 @@ export class RecordGenerator implements IRecordGenerator {
     childEntry: SchemaEntry,
     valueAtIndex: UserValueContent,
     modelFields: Record<string, RecordModelField>,
-    groupObject: Record<string, string[]>,
+    groupObject: GeneratedValue,
   ) {
     const { uriBFLite, type } = childEntry;
 
