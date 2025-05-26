@@ -1,4 +1,4 @@
-import { profileModels } from './models';
+import { profileModels } from './profiles';
 
 export class ModelFactory {
   static getModel(profileType: ProfileType, entityType: ProfileEntityType): RecordModel {

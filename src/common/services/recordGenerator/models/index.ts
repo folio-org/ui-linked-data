@@ -1,1 +1,1 @@
-export { profileModels } from './profiles';
+export { ModelFactory } from './modelFactory';
