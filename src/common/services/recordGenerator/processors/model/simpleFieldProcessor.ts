@@ -14,7 +14,7 @@ export class SimpleFieldProcessor implements ModelFieldProcessor {
     const options: ValueOptions = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };
-    const values = userValues[entry.uuid]?.contents || [];
+    const values: UserValueContents[] = userValues[entry.uuid]?.contents || [];
 
     return this.valueProcessor.process(values, options);
   }

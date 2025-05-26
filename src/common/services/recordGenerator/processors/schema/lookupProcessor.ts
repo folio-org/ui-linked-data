@@ -1,6 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordModelType } from '@common/constants/recordModel.constants';
-import { GeneratedValue, UserValueContent } from '../../types/valueTypes';
+import { GeneratedValue } from '../../types/valueTypes';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 
 export class LookupProcessor implements ISchemaProcessor {
@@ -15,10 +15,10 @@ export class LookupProcessor implements ISchemaProcessor {
   process(schemaEntry: SchemaEntry, userValues: UserValues, modelField: RecordModelField) {
     const values = userValues[schemaEntry.uuid]?.contents || [];
 
-    return this.processLookupValues(modelField, values as UserValueContent[]);
+    return this.processLookupValues(modelField, values);
   }
 
-  private processLookupValues(modelField: RecordModelField, values: UserValueContent[]) {
+  private processLookupValues(modelField: RecordModelField, values: UserValueContents[]) {
     if (!modelField.fields || values.length === 0) {
       return [];
     }
@@ -27,7 +27,7 @@ export class LookupProcessor implements ISchemaProcessor {
       const result: GeneratedValue = {};
 
       for (const key of Object.keys(modelField.fields || {})) {
-        this.mapFieldValue(key, meta, label, result);
+        this.mapFieldValue(result, key, meta, label);
       }
 
       return result;
@@ -35,19 +35,19 @@ export class LookupProcessor implements ISchemaProcessor {
   }
 
   private mapFieldValue(
-    key: string,
-    meta: UserValueContent['meta'] | undefined,
-    label: string,
     result: GeneratedValue,
+    key: string,
+    meta: UserValueContents['meta'] | undefined,
+    label?: string,
   ) {
     if (meta?.uri && key.includes('link')) {
       result[key] = [meta.uri];
     } else if (meta?.basicLabel && key.includes('term')) {
       result[key] = [meta.basicLabel];
     } else if (key.includes('code')) {
-      result[key] = [meta?.uri?.split('/').pop() ?? label];
+      result[key] = [meta?.uri?.split('/').pop() ?? label ?? ''];
     } else {
-      result[key] = [label];
+      result[key] = label ? [label] : [];
     }
   }
 }

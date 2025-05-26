@@ -2,7 +2,7 @@ import { RecordModelType } from '@common/constants/recordModel.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 import { SchemaManager } from '../../schemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue, UserValueContent } from '../../types/valueTypes';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/valueTypes';
 
 export class GroupProcessor implements ISchemaProcessor {
   private userValues: UserValues = {};
@@ -75,7 +75,7 @@ export class GroupProcessor implements ISchemaProcessor {
 
   private mapValueToModelField(
     childEntry: SchemaEntry,
-    valueAtIndex: UserValueContent,
+    valueAtIndex: UserValueContents,
     modelFields: Record<string, RecordModelField>,
     groupObject: GeneratedValue,
   ) {
@@ -89,7 +89,11 @@ export class GroupProcessor implements ISchemaProcessor {
 
     for (const key of Object.keys(modelFields)) {
       if (key === uriBFLite) {
-        groupObject[key] = this.getValueForType(fieldType, valueAtIndex);
+        const value = this.getValueForType(fieldType, valueAtIndex);
+
+        if (value.length === 0) continue;
+
+        groupObject[key] = value;
       }
     }
   }
@@ -98,12 +102,15 @@ export class GroupProcessor implements ISchemaProcessor {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
   }
 
-  private getValueForType(type: AdvancedFieldType, value: UserValueContent) {
+  private getValueForType(type: AdvancedFieldType, value: UserValueContents) {
     switch (type) {
       case AdvancedFieldType.literal:
-        return [value.label];
-      case AdvancedFieldType.simple:
-        return [value.meta?.uri ?? value.label];
+        return value.label ? [value.label] : [];
+      case AdvancedFieldType.simple: {
+        const label = value.meta?.basicLabel ?? value.label;
+
+        return label ? [label] : [];
+      }
       default:
         return [];
     }

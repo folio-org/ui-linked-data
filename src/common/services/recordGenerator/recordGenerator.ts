@@ -48,7 +48,7 @@ export class RecordGenerator implements IRecordGenerator {
       const rootEntries = this.schemaManager.findSchemaEntriesByUriBFLite(rootKey);
 
       for (const entry of rootEntries) {
-        const { value } = this.generateValueFromModel(rootField, entry);
+        const { value } = this.modelFieldManager.processField(rootField, entry, this.userValues);
 
         if (value && (Array.isArray(value) ? value.length > 0 : true)) {
           if (typeof result.resource === 'object' && result.resource !== null) {
@@ -65,9 +65,5 @@ export class RecordGenerator implements IRecordGenerator {
     this.schemaManager.init(schema);
     this.model = model;
     this.userValues = userValues;
-  }
-
-  private generateValueFromModel(modelField: RecordModelField, schemaEntry: SchemaEntry) {
-    return this.modelFieldManager.processField(modelField, schemaEntry, this.userValues);
   }
 }

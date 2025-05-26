@@ -18,21 +18,12 @@ export interface ValueResult {
 
 export type GeneratedValue = SchemaFieldValueObject;
 
-export interface UserValueContent {
-  id?: string;
-  label: string;
-  meta?: {
-    uri?: string;
-    basicLabel?: string;
-  };
-}
-
 export interface ChildEntryWithValues {
   childEntry: SchemaEntry;
-  childValues: UserValueContent[];
+  childValues: UserValueContents[];
 }
 
 export type GroupedValue = Array<{
   childEntry: SchemaEntry;
-  valueAtIndex: UserValueContent | null;
+  valueAtIndex: UserValueContents | null;
 }>;
