@@ -1,11 +1,11 @@
-import { UserValueContent, ValueOptions, ValueResult } from '../../types/valueTypes';
+import { UserValueContent, ValueOptions } from '../../types/valueTypes';
 
 export class ValueProcessor {
-  processSimpleValues(values: UserValueContent[]): string[] {
-    return values?.map(({ label }) => label).filter((label): label is string => label !== undefined);
+  processSimpleValues(values: UserValueContent[]) {
+    return values?.map(({ label }) => label).filter(label => label !== undefined);
   }
 
-  process(values: UserValueContent[], options: ValueOptions = {}): ValueResult {
+  process(values: UserValueContent[], options: ValueOptions = {}) {
     const processedValue = this.processSimpleValues(values);
 
     return {
@@ -14,7 +14,7 @@ export class ValueProcessor {
     };
   }
 
-  processSchemaValues(processorValue: Record<string, any>, options: ValueOptions = {}): ValueResult {
+  processSchemaValues(processorValue: Record<string, any>, options: ValueOptions = {}) {
     if (Object.keys(processorValue).length === 0) {
       return { value: null, options };
     }
