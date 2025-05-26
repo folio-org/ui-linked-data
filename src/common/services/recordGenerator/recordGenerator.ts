@@ -1,4 +1,3 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
 import { SchemaManager } from './schemaManager';
@@ -96,14 +95,6 @@ export class RecordGenerator implements IRecordGenerator {
       return values.map(({ label }) => label).filter((label): label is string => label !== undefined);
     }
 
-    if (
-      modelField.value === RecordModelType.object &&
-      (schemaEntry.type === AdvancedFieldType.complex || schemaEntry.type === AdvancedFieldType.simple)
-    ) {
-      return this.processArrayObjectsForLookups(modelField, values);
-    }
-
-    // Handle regular groups with children (e.g. accessLocation, supplementaryContent, _notes)
     const processorValue = this.schemaProcessorManager.process(schemaEntry, modelField, this.userValues);
 
     if (Object.keys(processorValue).length > 0) {
@@ -111,28 +102,6 @@ export class RecordGenerator implements IRecordGenerator {
     }
 
     return null;
-  }
-
-  private processArrayObjectsForLookups(modelField: RecordModelField, values: UserValueContent[]) {
-    return values.map(({ meta, label }) => {
-      const result: GeneratedValue = {};
-
-      if (!modelField.fields) return result;
-
-      for (const key of Object.keys(modelField.fields)) {
-        if (meta?.uri && key.includes('link')) {
-          result[key] = [meta.uri];
-        } else if (meta?.basicLabel && key.includes('term')) {
-          result[key] = [meta.basicLabel];
-        } else if (key.includes('code')) {
-          result[key] = [meta?.uri?.split('/').pop() ?? label];
-        } else {
-          result[key] = [label];
-        }
-      }
-
-      return result;
-    });
   }
 
   private processObjectType(modelField: RecordModelField, schemaEntry: SchemaEntry) {

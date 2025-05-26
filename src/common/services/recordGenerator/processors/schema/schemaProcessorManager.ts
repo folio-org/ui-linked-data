@@ -3,6 +3,7 @@ import { ISchemaProcessor } from './schemaProcessor.interface';
 import { DropdownProcessor } from './dropdownProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
 import { GroupProcessor } from './groupProcessor';
+import { LookupProcessor } from './lookupProcessor';
 
 export class SchemaProcessorManager {
   private readonly processors: ISchemaProcessor[];
@@ -12,11 +13,8 @@ export class SchemaProcessorManager {
       new GroupProcessor(schemaManager),
       new DropdownProcessor(schemaManager),
       new UnwrappedDropdownOptionProcessor(schemaManager),
+      new LookupProcessor(),
     ];
-  }
-
-  registerProcessor(processor: ISchemaProcessor) {
-    this.processors.push(processor);
   }
 
   process(schemaEntry: SchemaEntry, modelField: RecordModelField, userValues: UserValues): Record<string, any> {
