@@ -1,19 +1,21 @@
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { IRecordGenerator } from './recordGenerator.interface';
 import { SchemaManager } from './schemaManager';
-import { SchemaProcessorManager } from './processors/schema/schemaProcessorManager';
+import { SchemaProcessorManager, ValueProcessor } from './processors';
 import { GeneratedValue, UserValueContent, ValueOptions, ValueResult } from './types/valueTypes';
 import { ModelFactory } from './modelFactory';
 
 export class RecordGenerator implements IRecordGenerator {
   private readonly schemaManager: SchemaManager;
   private readonly schemaProcessorManager: SchemaProcessorManager;
+  private readonly valueProcessor: ValueProcessor;
   private model: RecordModel;
   private userValues: UserValues;
 
   constructor() {
     this.schemaManager = new SchemaManager();
     this.schemaProcessorManager = new SchemaProcessorManager(this.schemaManager);
+    this.valueProcessor = new ValueProcessor();
     this.model = {};
     this.userValues = {};
   }
@@ -59,15 +61,13 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private generateValueFromModel(modelField: RecordModelField, schemaEntry: SchemaEntry) {
-    const options: ValueOptions = {};
+    const options: ValueOptions = {
+      hiddenWrapper: modelField.options?.hiddenWrapper ?? false,
+    };
     const processorValue = this.schemaProcessorManager.process(schemaEntry, modelField, this.userValues);
 
     if (Object.keys(processorValue).length > 0) {
-      if (modelField.options?.hiddenWrapper) {
-        options.hiddenWrapper = true;
-      }
-
-      return { value: processorValue, options };
+      return this.valueProcessor.processSchemaValues(processorValue, options);
     }
 
     // Handle non-processor cases
@@ -75,7 +75,6 @@ export class RecordGenerator implements IRecordGenerator {
 
     if (modelField.type === RecordModelType.array) {
       const arrayResult = this.processArrayType(modelField, schemaEntry, values as UserValueContent[]);
-
       return { value: arrayResult, options };
     }
 
@@ -83,20 +82,16 @@ export class RecordGenerator implements IRecordGenerator {
       return { value: this.processObjectType(modelField, schemaEntry), options };
     }
 
-    // Default case for simple fields - ensure we filter out any undefined values
-    return {
-      value: values.map(({ label }) => label).filter((label): label is string => label !== undefined),
-      options,
-    };
+    // Default case for simple fields
+    return this.valueProcessor.process(values as UserValueContent[], options);
   }
 
   private processArrayType(modelField: RecordModelField, schemaEntry: SchemaEntry, values: UserValueContent[]) {
     if (modelField.value === RecordModelType.string) {
-      return values.map(({ label }) => label).filter((label): label is string => label !== undefined);
+      return this.valueProcessor.processSimpleValues(values);
     }
 
     const processorValue = this.schemaProcessorManager.process(schemaEntry, modelField, this.userValues);
-
     if (Object.keys(processorValue).length > 0) {
       return processorValue;
     }
