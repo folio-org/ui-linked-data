@@ -70,7 +70,7 @@ export class RecordGenerator implements IRecordGenerator {
   private processRootEntry(rootKey: string, rootField: RecordModelField) {
     const rootEntries = this.schemaManager.findSchemaEntriesByUriBFLite(rootKey);
     const processedValues = rootEntries
-      .map(entry => this.modelFieldManager.processField(rootField, entry, this.userValues).value)
+      .map(entry => this.modelFieldManager.processField({ field: rootField, entry, userValues: this.userValues }).value)
       .filter((value): value is SchemaFieldValue => value !== null);
 
     return processedValues.length === 1 ? processedValues[0] : processedValues;

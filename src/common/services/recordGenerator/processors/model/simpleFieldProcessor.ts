@@ -1,7 +1,7 @@
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { ValueOptions } from '../../types/valueTypes';
 import { ValueProcessor } from '../value/valueProcessor';
-import { ModelFieldProcessor } from './modelFieldProcessor.interface';
+import { ModelFieldProcessingContext, ModelFieldProcessor } from './modelFieldProcessor.interface';
 
 export class SimpleFieldProcessor implements ModelFieldProcessor {
   constructor(private readonly valueProcessor: ValueProcessor) {}
@@ -10,7 +10,7 @@ export class SimpleFieldProcessor implements ModelFieldProcessor {
     return field.type !== RecordModelType.array && field.type !== RecordModelType.object;
   }
 
-  process(field: RecordModelField, entry: SchemaEntry, userValues: UserValues) {
+  process({ field, entry, userValues }: ModelFieldProcessingContext) {
     const options: ValueOptions = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };

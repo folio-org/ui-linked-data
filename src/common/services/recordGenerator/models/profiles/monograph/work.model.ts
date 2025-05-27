@@ -239,6 +239,19 @@ export const monographWorkModel: RecordModel = {
           },
         },
       },
+      _instanceReference: {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        options: {
+          isReference: true,
+        },
+        fields: {
+          id: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
     },
   },
 };

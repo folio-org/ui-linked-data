@@ -2,7 +2,7 @@ import { RecordModelType } from '@common/constants/recordModel.constants';
 import { GeneratedValue, ValueOptions, ValueResult } from '../../types/valueTypes';
 import { SchemaManager } from '../../schemaManager';
 import { ValueProcessor } from '../value/valueProcessor';
-import { ModelFieldProcessor } from './modelFieldProcessor.interface';
+import { ModelFieldProcessingContext, ModelFieldProcessor } from './modelFieldProcessor.interface';
 import { ModelFieldManager } from './modelFieldManager';
 
 export class ObjectFieldProcessor implements ModelFieldProcessor {
@@ -16,7 +16,7 @@ export class ObjectFieldProcessor implements ModelFieldProcessor {
     return field.type === RecordModelType.object && !!field.fields;
   }
 
-  process(field: RecordModelField, entry: SchemaEntry, userValues: UserValues) {
+  process({ field, entry, userValues }: ModelFieldProcessingContext) {
     const options: ValueOptions = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };
@@ -47,7 +47,7 @@ export class ObjectFieldProcessor implements ModelFieldProcessor {
 
     for (const childEntry of childEntries) {
       // Find the appropriate processor for this field type
-      const childResult = this.modelFieldManager.processField(field, childEntry, userValues);
+      const childResult = this.modelFieldManager.processField({ field, userValues, entry: childEntry });
 
       if (!childResult.value) continue;
 

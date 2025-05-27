@@ -25,10 +25,10 @@ export class ModelFieldManager {
     );
   }
 
-  processField(field: RecordModelField, entry: SchemaEntry, userValues: UserValues) {
+  processField({ field, entry, userValues }: { field: RecordModelField; entry: SchemaEntry; userValues: UserValues }) {
     const processor = this.getProcessorForField(field);
 
-    return processor.process(field, entry, userValues);
+    return processor.process({ field, entry, userValues });
   }
 
   private getProcessorForField(field: RecordModelField) {
