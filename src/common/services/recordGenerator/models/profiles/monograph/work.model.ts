@@ -4,6 +4,20 @@ export const monographWorkModel: RecordModel = {
   'http://bibfra.me/vocab/lite/Work': {
     type: RecordModelType.object,
     fields: {
+      _creatorReference: {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          id: {
+            type: RecordModelType.string,
+            value: RecordModelType.string,
+          },
+          roles: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
       'http://bibfra.me/vocab/marc/title': {
         type: RecordModelType.array,
         value: {
@@ -153,6 +167,20 @@ export const monographWorkModel: RecordModel = {
           },
         },
       },
+      _contributorReference: {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          id: {
+            type: RecordModelType.string,
+            value: RecordModelType.string,
+          },
+          roles: {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
+      },
       _notes: {
         type: RecordModelType.array,
         value: RecordModelType.object,
@@ -174,6 +202,24 @@ export const monographWorkModel: RecordModel = {
       'http://bibfra.me/vocab/marc/tableOfContents': {
         type: RecordModelType.array,
         value: RecordModelType.string,
+      },
+      'http://bibfra.me/vocab/marc/content': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          'http://bibfra.me/vocab/marc/code': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/marc/term': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+          'http://bibfra.me/vocab/lite/link': {
+            type: RecordModelType.array,
+            value: RecordModelType.string,
+          },
+        },
       },
       'http://bibfra.me/vocab/lite/language': {
         type: RecordModelType.array,

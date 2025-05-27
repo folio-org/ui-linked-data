@@ -142,8 +142,8 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "_relationship",
-    "uriBFLite": "_relationship",
+    "uri": "roles",
+    "uriBFLite": "roles",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -671,8 +671,8 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "_relationship",
-    "uriBFLite": "_relationship",
+    "uri": "roles",
+    "uriBFLite": "roles",
     "constraints": {
       "repeatable": true,
       "editable": true,
