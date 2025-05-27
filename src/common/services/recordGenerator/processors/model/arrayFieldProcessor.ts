@@ -18,10 +18,8 @@ export class ArrayFieldProcessor implements ModelFieldProcessor {
     const options: ValueOptions = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };
-
     const values = userValues[entry.uuid]?.contents || [];
 
-    // Handle string array type
     if (field.value === RecordModelType.string) {
       return this.valueProcessor.process(values, options);
     }

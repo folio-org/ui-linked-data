@@ -3,7 +3,7 @@ import { IValueProcessor } from './valueProcessor.interface';
 
 export class ValueProcessor implements IValueProcessor {
   processSimpleValues(values: UserValueContents[]) {
-    return values?.map(({ label }) => label).filter(label => label !== undefined);
+    return values?.map(({ label, meta }) => meta?.basicLabel || label).filter(label => label !== undefined);
   }
 
   process(values: UserValueContents[], options: ValueOptions = {}) {
