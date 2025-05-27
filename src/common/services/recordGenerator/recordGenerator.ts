@@ -1,4 +1,4 @@
-import { IRecordGenerator } from './recordGenerator.interface';
+import { IRecordGenerator, IRecordGeneratorData } from './recordGenerator.interface';
 import { SchemaManager } from './schemaManager';
 import { SchemaProcessorManager, ValueProcessor, ModelFieldManager } from './processors';
 import { GeneratedValue, SchemaFieldValue } from './types/valueTypes';
@@ -11,6 +11,7 @@ export class RecordGenerator implements IRecordGenerator {
   private readonly modelFieldManager: ModelFieldManager;
   private model: RecordModel;
   private userValues: UserValues;
+  private referenceIds?: { id: string }[];
 
   constructor() {
     this.schemaManager = new SchemaManager();
@@ -27,11 +28,7 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = {};
   }
 
-  generate(
-    data: { schema: Schema; userValues: UserValues; record?: RecordEntry },
-    profileType: ProfileType = 'monograph',
-    entityType: ProfileEntityType = 'instance',
-  ) {
+  generate(data: IRecordGeneratorData, profileType: ProfileType = 'monograph', entityType: ResourceType = 'work') {
     const model = this.getValidatedModel(profileType, entityType);
 
     this.init({ ...data, model });
@@ -39,7 +36,7 @@ export class RecordGenerator implements IRecordGenerator {
     return this.processModel();
   }
 
-  private getValidatedModel(profileType: ProfileType, entityType: ProfileEntityType) {
+  private getValidatedModel(profileType: ProfileType, entityType: ResourceType) {
     const model = ModelFactory.getModel(profileType, entityType);
 
     if (!model) {
@@ -49,10 +46,11 @@ export class RecordGenerator implements IRecordGenerator {
     return model;
   }
 
-  private init({ schema, model, userValues }: { schema: Schema; model: RecordModel; userValues: UserValues }) {
+  private init({ schema, model, userValues, referenceIds }: IRecordGeneratorData & { model: RecordModel }) {
     this.schemaManager.init(schema);
     this.model = model;
     this.userValues = userValues;
+    this.referenceIds = referenceIds;
   }
 
   private processModel() {

@@ -1,7 +1,7 @@
 import { profileModels } from './profiles';
 
 export class ModelFactory {
-  static getModel(profileType: ProfileType, entityType: ProfileEntityType): RecordModel {
+  static getModel(profileType: ProfileType, entityType: ResourceType): RecordModel {
     if (!profileModels[profileType]) {
       throw new Error(`Unknown profile type: ${profileType}`);
     }

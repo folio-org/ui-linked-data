@@ -2,9 +2,9 @@
   {
     "type": "profile",
     "displayName": "Monograph",
-    "bfid": "lc:profile:bf2:Monograph",
+    "bfid": "monograph",
     "children": ["Monograph:Work", "Monograph:Instance"],
-    "id": "Monograph"
+    "id": "monograph"
   },
   {
     "type": "block",

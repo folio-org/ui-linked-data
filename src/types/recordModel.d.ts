@@ -13,7 +13,3 @@ interface RecordModelField {
 interface RecordModel {
   [key: string]: RecordModelField;
 }
-
-type ProfileType = 'monograph';
-
-type ProfileEntityType = 'work' | 'instance';
