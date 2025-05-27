@@ -17,7 +17,7 @@ export class SchemaProcessorManager {
     ];
   }
 
-  process(schemaEntry: SchemaEntry, modelField: RecordModelField, userValues: UserValues): Record<string, any> {
+  process(schemaEntry: SchemaEntry, modelField: RecordModelField, userValues: UserValues) {
     for (const processor of this.processors) {
       if (processor.canProcess(schemaEntry, modelField)) {
         return processor.process(schemaEntry, userValues, modelField);

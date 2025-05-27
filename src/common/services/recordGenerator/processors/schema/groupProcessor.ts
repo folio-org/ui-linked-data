@@ -9,7 +9,7 @@ export class GroupProcessor implements ISchemaProcessor {
 
   constructor(private readonly schemaManager: SchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField): boolean {
+  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
     return (
       schemaEntry.type === AdvancedFieldType.group &&
       !!schemaEntry.children &&
@@ -17,7 +17,7 @@ export class GroupProcessor implements ISchemaProcessor {
     );
   }
 
-  process(schemaEntry: SchemaEntry, userValues: UserValues, modelField: RecordModelField): Record<string, any> {
+  process(schemaEntry: SchemaEntry, userValues: UserValues, modelField: RecordModelField) {
     this.userValues = userValues;
 
     return this.processGroupWithChildren(schemaEntry, modelField);

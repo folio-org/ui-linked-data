@@ -1,6 +1,7 @@
 import { ValueOptions } from '../../types/valueTypes';
+import { IValueProcessor } from './valueProcessor.interface';
 
-export class ValueProcessor {
+export class ValueProcessor implements IValueProcessor {
   processSimpleValues(values: UserValueContents[]) {
     return values?.map(({ label }) => label).filter(label => label !== undefined);
   }

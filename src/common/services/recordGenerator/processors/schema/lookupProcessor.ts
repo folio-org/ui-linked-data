@@ -4,7 +4,7 @@ import { GeneratedValue } from '../../types/valueTypes';
 import { ISchemaProcessor } from './schemaProcessor.interface';
 
 export class LookupProcessor implements ISchemaProcessor {
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField): boolean {
+  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
     return (
       modelField.type === RecordModelType.array &&
       modelField.value === RecordModelType.object &&

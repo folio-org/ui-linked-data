@@ -20,7 +20,7 @@ export class ModelFieldManager {
   private initProcessors() {
     this.processors.push(
       new ArrayFieldProcessor(this.valueProcessor, this.schemaProcessorManager),
-      new ObjectFieldProcessor(this.schemaManager, this),
+      new ObjectFieldProcessor(this.valueProcessor, this.schemaManager, this),
       new SimpleFieldProcessor(this.valueProcessor),
     );
   }

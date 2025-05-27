@@ -7,11 +7,11 @@ export class DropdownProcessor implements ISchemaProcessor {
 
   constructor(private readonly schemaManager: SchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField): boolean {
+  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
     return schemaEntry.type === AdvancedFieldType.dropdown && !modelField.options?.hiddenWrapper;
   }
 
-  process(schemaEntry: SchemaEntry, userValues: UserValues): Record<string, any> {
+  process(schemaEntry: SchemaEntry, userValues: UserValues) {
     this.userValues = userValues;
 
     return this.processDropdown(schemaEntry);

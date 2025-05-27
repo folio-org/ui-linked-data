@@ -1,11 +1,13 @@
 import { RecordModelType } from '@common/constants/recordModel.constants';
 import { GeneratedValue, ValueOptions, ValueResult } from '../../types/valueTypes';
 import { SchemaManager } from '../../schemaManager';
+import { ValueProcessor } from '../value/valueProcessor';
 import { ModelFieldProcessor } from './modelFieldProcessor.interface';
 import { ModelFieldManager } from './modelFieldManager';
 
 export class ObjectFieldProcessor implements ModelFieldProcessor {
   constructor(
+    private readonly valueProcessor: ValueProcessor,
     private readonly schemaManager: SchemaManager,
     private readonly modelFieldManager: ModelFieldManager,
   ) {}
@@ -20,7 +22,9 @@ export class ObjectFieldProcessor implements ModelFieldProcessor {
     };
     const result: GeneratedValue = {};
 
-    if (!field.fields) return { value: null, options };
+    if (!field.fields) {
+      return this.valueProcessor.processSchemaValues({}, options);
+    }
 
     const parentPath = entry ? entry.path : undefined;
 
@@ -28,10 +32,7 @@ export class ObjectFieldProcessor implements ModelFieldProcessor {
       this.processObjectField(key, childField, result, parentPath, userValues);
     }
 
-    return {
-      value: Object.keys(result).length > 0 ? result : null,
-      options,
-    };
+    return this.valueProcessor.processSchemaValues(result, options);
   }
 
   private processObjectField(

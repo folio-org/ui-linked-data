@@ -23,19 +23,11 @@ export class ArrayFieldProcessor implements ModelFieldProcessor {
 
     // Handle string array type
     if (field.value === RecordModelType.string) {
-      return {
-        value: this.valueProcessor.processSimpleValues(values),
-        options,
-      };
+      return this.valueProcessor.process(values, options);
     }
 
-    // Try processor-based handling
     const processorValue = this.schemaProcessorManager.process(entry, field, userValues);
 
-    if (Object.keys(processorValue).length > 0) {
-      return this.valueProcessor.processSchemaValues(processorValue, options);
-    }
-
-    return { value: null, options };
+    return this.valueProcessor.processSchemaValues(processorValue, options);
   }
 }
