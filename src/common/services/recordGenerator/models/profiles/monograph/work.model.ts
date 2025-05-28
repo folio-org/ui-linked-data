@@ -113,10 +113,6 @@ export const monographWorkModel: RecordModel = {
         type: RecordModelType.array,
         value: RecordModelType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
           'http://bibfra.me/vocab/marc/term': {
             type: RecordModelType.array,
             value: RecordModelType.string,
@@ -135,10 +131,6 @@ export const monographWorkModel: RecordModel = {
         type: RecordModelType.array,
         value: RecordModelType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
           'http://bibfra.me/vocab/lite/name': {
             type: RecordModelType.array,
             value: RecordModelType.string,
@@ -153,10 +145,6 @@ export const monographWorkModel: RecordModel = {
         type: RecordModelType.array,
         value: RecordModelType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
           'http://bibfra.me/vocab/marc/term': {
             type: RecordModelType.array,
             value: RecordModelType.string,
@@ -208,10 +196,6 @@ export const monographWorkModel: RecordModel = {
         value: RecordModelType.object,
         fields: {
           'http://bibfra.me/vocab/marc/code': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-          'http://bibfra.me/vocab/marc/term': {
             type: RecordModelType.array,
             value: RecordModelType.string,
           },

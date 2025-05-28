@@ -1,7 +1,7 @@
-import { ModelFieldProcessor } from './modelFieldProcessor.interface';
+import { SchemaManager } from '../../schemaManager';
 import { ValueProcessor } from '../value/valueProcessor';
 import { SchemaProcessorManager } from '../schema/schemaProcessorManager';
-import { SchemaManager } from '../../schemaManager';
+import { ModelFieldProcessor } from './modelFieldProcessor.interface';
 import { ArrayFieldProcessor } from './arrayFieldProcessor';
 import { ObjectFieldProcessor } from './objectFieldProcessor';
 import { SimpleFieldProcessor } from './simpleFieldProcessor';
