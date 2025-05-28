@@ -18,5 +18,4 @@ interface RecordModelReferenceDefinition {
 
 interface RecordModel {
   [key: string]: RecordModelField;
-  references?: RecordModelReferenceDefinition[];
 }

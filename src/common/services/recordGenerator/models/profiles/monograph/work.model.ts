@@ -199,6 +199,68 @@ export const monographWorkModel: RecordModel = {
         type: RecordModelType.array,
         value: RecordModelType.string,
       },
+      'http://bibfra.me/vocab/lite/classification': {
+        type: RecordModelType.array,
+        value: RecordModelType.object,
+        fields: {
+          lc: {
+            type: RecordModelType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/code': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/itemNumber': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/source': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/status': {
+                type: RecordModelType.array,
+                value: RecordModelType.object,
+                fields: {
+                  'http://bibfra.me/vocab/marc/label': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/link': {
+                    type: RecordModelType.array,
+                    value: RecordModelType.string,
+                  },
+                },
+              },
+            },
+          },
+          ddc: {
+            type: RecordModelType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/code': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/itemNumber': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/edition': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/editionNumber': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+              'http://bibfra.me/vocab/marc/source': {
+                type: RecordModelType.array,
+                value: RecordModelType.string,
+              },
+            },
+          },
+        },
+      },
       'http://bibfra.me/vocab/marc/content': {
         type: RecordModelType.array,
         value: RecordModelType.object,
