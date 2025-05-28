@@ -7,9 +7,16 @@ interface RecordModelField {
   options?: {
     hiddenWrapper?: boolean;
     isReference?: boolean;
+    isRootEntity?: boolean;
   };
+}
+
+interface RecordModelReferenceDefinition {
+  targetEntityType: ResourceType;
+  outputField: string;
 }
 
 interface RecordModel {
   [key: string]: RecordModelField;
+  references?: RecordModelReferenceDefinition[];
 }

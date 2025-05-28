@@ -64,6 +64,11 @@ export class RecordGenerator implements IRecordGenerator {
       }
     });
 
+    // Process references if defined in the model
+    if ('references' in this.model && Array.isArray(this.model.references) && this.referenceIds?.length) {
+      this.processReferences(result);
+    }
+
     return result;
   }
 
@@ -84,5 +89,47 @@ export class RecordGenerator implements IRecordGenerator {
     if (typeof result.resource === 'object' && result.resource !== null) {
       (result.resource as Record<string, SchemaFieldValue>)[key] = value;
     }
+  }
+
+  private processReferences(result: GeneratedValue) {
+    const modelWithRefs = this.model as RecordModel & { references: RecordModelReferenceDefinition[] };
+
+    if (!this.referenceIds?.length) {
+      return;
+    }
+
+    const rootEntityKey = this.findRootEntityKey();
+
+    if (!rootEntityKey || !result.resource) {
+      return;
+    }
+
+    const resourceObj = result.resource as Record<string, SchemaFieldValue>;
+
+    if (!resourceObj[rootEntityKey]) {
+      return;
+    }
+
+    modelWithRefs.references?.forEach(refDef => {
+      const entityNode = resourceObj[rootEntityKey];
+
+      if (typeof entityNode === 'object' && entityNode !== null) {
+        (entityNode as Record<string, SchemaFieldValue>)[refDef.outputField] = this
+          .referenceIds as unknown as SchemaFieldValue;
+      }
+    });
+  }
+
+  private findRootEntityKey() {
+    for (const [key, field] of Object.entries(this.model)) {
+      if (field.options?.isRootEntity) {
+        return key;
+      }
+    }
+
+    // If no root entity explicitly marked, use the first non-special key
+    const entityKeys = Object.keys(this.model).filter(key => !key.startsWith('_') && key !== 'references');
+
+    return entityKeys.length > 0 ? entityKeys[0] : null;
   }
 }

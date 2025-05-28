@@ -3,6 +3,9 @@ import { RecordModelType } from '@common/constants/recordModel.constants';
 export const monographInstanceModel: RecordModel = {
   'http://bibfra.me/vocab/lite/Instance': {
     type: RecordModelType.object,
+    options: {
+      isRootEntity: true,
+    },
     fields: {
       'http://bibfra.me/vocab/marc/title': {
         type: RecordModelType.array,
@@ -361,4 +364,10 @@ export const monographInstanceModel: RecordModel = {
       },
     },
   },
+  references: [
+    {
+      targetEntityType: 'work',
+      outputField: '_workReference',
+    },
+  ],
 };
