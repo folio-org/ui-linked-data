@@ -11,7 +11,13 @@ interface RecordModelField {
     references?: RecordModelReferenceDefinition[];
     flattenDropdown?: boolean;
     sourceField?: string;
+    valueContainer?: ValueContainerOption;
   };
+}
+
+interface ValueContainerOption {
+  field: string;
+  type?: 'array' | 'object';
 }
 
 interface RecordModelReferenceDefinition {
