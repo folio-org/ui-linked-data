@@ -55,19 +55,19 @@ export class RecordGenerator implements IRecordGenerator {
 
   private processModel() {
     const result: GeneratedValue = { resource: {} };
+    const rootEntityKey = this.findRootEntityKey();
 
     Object.entries(this.model).forEach(([rootKey, rootField]) => {
       const processedValue = this.processRootEntry(rootKey, rootField);
 
       if (this.isValidValue(processedValue)) {
+        if (rootKey === rootEntityKey && rootField.options?.references && this.referenceIds?.length) {
+          this.addReferencesToRootEntity(processedValue, rootField.options.references);
+        }
+
         this.addValueToResource(result, rootKey, processedValue);
       }
     });
-
-    // Process references if defined in the model
-    if ('references' in this.model && Array.isArray(this.model.references) && this.referenceIds?.length) {
-      this.processReferences(result);
-    }
 
     return result;
   }
@@ -91,35 +91,6 @@ export class RecordGenerator implements IRecordGenerator {
     }
   }
 
-  private processReferences(result: GeneratedValue) {
-    const modelWithRefs = this.model as RecordModel & { references: RecordModelReferenceDefinition[] };
-
-    if (!this.referenceIds?.length) {
-      return;
-    }
-
-    const rootEntityKey = this.findRootEntityKey();
-
-    if (!rootEntityKey || !result.resource) {
-      return;
-    }
-
-    const resourceObj = result.resource as Record<string, SchemaFieldValue>;
-
-    if (!resourceObj[rootEntityKey]) {
-      return;
-    }
-
-    modelWithRefs.references?.forEach(refDef => {
-      const entityNode = resourceObj[rootEntityKey];
-
-      if (typeof entityNode === 'object' && entityNode !== null) {
-        (entityNode as Record<string, SchemaFieldValue>)[refDef.outputField] = this
-          .referenceIds as unknown as SchemaFieldValue;
-      }
-    });
-  }
-
   private findRootEntityKey() {
     for (const [key, field] of Object.entries(this.model)) {
       if (field.options?.isRootEntity) {
@@ -127,9 +98,19 @@ export class RecordGenerator implements IRecordGenerator {
       }
     }
 
-    // If no root entity explicitly marked, use the first non-special key
     const entityKeys = Object.keys(this.model).filter(key => !key.startsWith('_') && key !== 'references');
 
     return entityKeys.length > 0 ? entityKeys[0] : null;
+  }
+
+  private addReferencesToRootEntity(entityNode: SchemaFieldValue, references: RecordModelReferenceDefinition[]) {
+    if (typeof entityNode !== 'object' || entityNode === null) {
+      return;
+    }
+
+    references.forEach(refDef => {
+      (entityNode as Record<string, SchemaFieldValue>)[refDef.outputField] = this
+        .referenceIds as unknown as SchemaFieldValue;
+    });
   }
 }

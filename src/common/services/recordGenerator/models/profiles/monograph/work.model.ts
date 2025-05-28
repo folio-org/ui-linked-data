@@ -5,6 +5,11 @@ export const monographWorkModel: RecordModel = {
     type: RecordModelType.object,
     options: {
       isRootEntity: true,
+      references: [
+        {
+          outputField: '_instanceReference',
+        },
+      ],
     },
     fields: {
       _creatorReference: {
@@ -228,10 +233,4 @@ export const monographWorkModel: RecordModel = {
       },
     },
   },
-  references: [
-    {
-      targetEntityType: 'instance',
-      outputField: '_instanceReference',
-    },
-  ],
 };

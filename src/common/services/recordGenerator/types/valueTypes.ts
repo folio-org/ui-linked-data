@@ -1,6 +1,10 @@
 export interface ValueOptions {
   hiddenWrapper?: boolean;
   isReference?: boolean;
+  references?: Array<{
+    targetEntityType: string;
+    outputField: string;
+  }>;
 }
 
 export type SchemaFieldValue = string | SchemaFieldValueArray | SchemaFieldValueObject;

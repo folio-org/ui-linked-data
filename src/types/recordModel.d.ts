@@ -8,11 +8,11 @@ interface RecordModelField {
     hiddenWrapper?: boolean;
     isReference?: boolean;
     isRootEntity?: boolean;
+    references?: RecordModelReferenceDefinition[];
   };
 }
 
 interface RecordModelReferenceDefinition {
-  targetEntityType: ResourceType;
   outputField: string;
 }
 

@@ -5,6 +5,11 @@ export const monographInstanceModel: RecordModel = {
     type: RecordModelType.object,
     options: {
       isRootEntity: true,
+      references: [
+        {
+          outputField: '_workReference',
+        },
+      ],
     },
     fields: {
       'http://bibfra.me/vocab/marc/title': {
@@ -364,10 +369,4 @@ export const monographInstanceModel: RecordModel = {
       },
     },
   },
-  references: [
-    {
-      targetEntityType: 'work',
-      outputField: '_workReference',
-    },
-  ],
 };
