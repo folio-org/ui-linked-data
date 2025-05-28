@@ -8,7 +8,11 @@ export class DropdownProcessor implements ISchemaProcessor {
   constructor(private readonly schemaManager: SchemaManager) {}
 
   canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
-    return schemaEntry.type === AdvancedFieldType.dropdown && !modelField.options?.hiddenWrapper;
+    return (
+      schemaEntry.type === AdvancedFieldType.dropdown &&
+      !modelField.options?.hiddenWrapper &&
+      !modelField.options?.flattenDropdown
+    );
   }
 
   process(schemaEntry: SchemaEntry, userValues: UserValues) {

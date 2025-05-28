@@ -4,6 +4,7 @@ import { DropdownProcessor } from './dropdownProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
 import { GroupProcessor } from './groupProcessor';
 import { LookupProcessor } from './lookupProcessor';
+import { FlattenedDropdownProcessor } from './flattenedDropdownProcessor';
 
 export class SchemaProcessorManager {
   private readonly processors: ISchemaProcessor[];
@@ -11,6 +12,7 @@ export class SchemaProcessorManager {
   constructor(schemaManager: SchemaManager) {
     this.processors = [
       new GroupProcessor(schemaManager),
+      new FlattenedDropdownProcessor(schemaManager),
       new DropdownProcessor(schemaManager),
       new UnwrappedDropdownOptionProcessor(schemaManager),
       new LookupProcessor(),

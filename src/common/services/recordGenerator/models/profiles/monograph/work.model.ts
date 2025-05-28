@@ -202,6 +202,10 @@ export const monographWorkModel: RecordModel = {
       'http://bibfra.me/vocab/lite/classification': {
         type: RecordModelType.array,
         value: RecordModelType.object,
+        options: {
+          flattenDropdown: true,
+          sourceField: 'http://bibfra.me/vocab/marc/source',
+        },
         fields: {
           lc: {
             type: RecordModelType.object,
@@ -211,10 +215,6 @@ export const monographWorkModel: RecordModel = {
                 value: RecordModelType.string,
               },
               'http://bibfra.me/vocab/marc/itemNumber': {
-                type: RecordModelType.array,
-                value: RecordModelType.string,
-              },
-              'http://bibfra.me/vocab/marc/source': {
                 type: RecordModelType.array,
                 value: RecordModelType.string,
               },
@@ -250,10 +250,6 @@ export const monographWorkModel: RecordModel = {
                 value: RecordModelType.string,
               },
               'http://bibfra.me/vocab/marc/editionNumber': {
-                type: RecordModelType.array,
-                value: RecordModelType.string,
-              },
-              'http://bibfra.me/vocab/marc/source': {
                 type: RecordModelType.array,
                 value: RecordModelType.string,
               },

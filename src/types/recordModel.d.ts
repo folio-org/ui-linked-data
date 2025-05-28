@@ -9,6 +9,8 @@ interface RecordModelField {
     isReference?: boolean;
     isRootEntity?: boolean;
     references?: RecordModelReferenceDefinition[];
+    flattenDropdown?: boolean;
+    sourceField?: string;
   };
 }
 
