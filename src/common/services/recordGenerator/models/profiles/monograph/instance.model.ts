@@ -206,13 +206,7 @@ export const monographInstanceModel: RecordModel = {
       },
       'http://bibfra.me/vocab/marc/copyright': {
         type: RecordModelType.array,
-        value: RecordModelType.object,
-        fields: {
-          'http://bibfra.me/vocab/marc/date': {
-            type: RecordModelType.array,
-            value: RecordModelType.string,
-          },
-        },
+        value: RecordModelType.string,
       },
       'http://bibfra.me/vocab/marc/issuance': {
         type: RecordModelType.array,
