@@ -55,13 +55,19 @@ export class GroupProcessor implements IProfileSchemaProcessor {
       .filter((entry): entry is ChildEntryWithValues => entry !== null);
   }
 
-  private createStructuredObjects(groupedValues: GroupedValue[], recordSchemaEntries: Record<string, RecordSchemaEntry>) {
+  private createStructuredObjects(
+    groupedValues: GroupedValue[],
+    recordSchemaEntries: Record<string, RecordSchemaEntry>,
+  ) {
     return groupedValues
       .map(indexGroup => this.createGroupObject(indexGroup, recordSchemaEntries))
       .filter(obj => Object.keys(obj).length > 0);
   }
 
-  private createGroupObject(indexGroup: GroupedValue, recordSchemaEntries: Record<string, RecordSchemaEntry>): GeneratedValue {
+  private createGroupObject(
+    indexGroup: GroupedValue,
+    recordSchemaEntries: Record<string, RecordSchemaEntry>,
+  ): GeneratedValue {
     const groupObject: GeneratedValue = {};
 
     for (const { childEntry, valueAtIndex } of indexGroup) {
@@ -81,24 +87,54 @@ export class GroupProcessor implements IProfileSchemaProcessor {
   ) {
     const { uriBFLite, type } = childEntry;
 
-    if (!uriBFLite || type === undefined) return;
+    if (!this.isValidEntry(uriBFLite, type)) return;
 
     const entryType = this.validateEntryType(type);
 
-    if (entryType === null) return;
+    if (entryType === null || !uriBFLite) return;
 
-    for (const key of Object.keys(recordSchemaEntries)) {
-      if (key === uriBFLite) {
-        const value = this.getValueForType(entryType, valueAtIndex);
+    const matchingEntry = this.findMatchingSchemaEntry(uriBFLite, recordSchemaEntries);
 
-        if (value.length === 0) continue;
+    if (!matchingEntry) return;
 
-        groupObject[key] = value;
-      }
+    this.setValueInGroupObject(uriBFLite, entryType, valueAtIndex, groupObject);
+  }
+
+  private isValidEntry(uriBFLite: string | undefined, type: string | undefined): boolean {
+    return uriBFLite !== undefined && type !== undefined;
+  }
+
+  private findMatchingSchemaEntry(
+    uriBFLite: string,
+    recordSchemaEntries: Record<string, RecordSchemaEntry>,
+  ): RecordSchemaEntry | undefined {
+    return recordSchemaEntries[uriBFLite];
+  }
+
+  private setValueInGroupObject(
+    uriBFLite: string,
+    entryType: AdvancedFieldType,
+    valueAtIndex: UserValueContents,
+    groupObject: GeneratedValue,
+  ) {
+    const value = this.getValueForType(entryType, valueAtIndex);
+
+    if (value.length === 0) return;
+
+    if (entryType === AdvancedFieldType.complex) {
+      const key = this.selectComplexTypeKey(valueAtIndex);
+
+      groupObject[key] = value;
+    } else {
+      groupObject[uriBFLite] = value;
     }
   }
 
-  private validateEntryType(type: string) {
+  private selectComplexTypeKey(valueAtIndex: UserValueContents): string {
+    return valueAtIndex.meta?.srsId ? 'srsId' : 'id';
+  }
+
+  private validateEntryType(type?: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
   }
 
@@ -110,6 +146,11 @@ export class GroupProcessor implements IProfileSchemaProcessor {
         const label = value.meta?.basicLabel ?? value.label;
 
         return label ? [label] : [];
+      }
+      case AdvancedFieldType.complex: {
+        const selectedId = value.meta?.srsId ?? value.id;
+
+        return Array.isArray(selectedId) ? selectedId[0] : selectedId;
       }
       default:
         return [];

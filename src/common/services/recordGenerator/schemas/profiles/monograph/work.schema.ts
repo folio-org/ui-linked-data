@@ -16,8 +16,8 @@ export const monographWorkRecordSchema: RecordSchema = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          id: {
-            type: RecordSchemaEntryType.string,
+          _name: {
+            type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
           roles: {
@@ -167,8 +167,8 @@ export const monographWorkRecordSchema: RecordSchema = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          id: {
-            type: RecordSchemaEntryType.string,
+          _name: {
+            type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
           roles: {

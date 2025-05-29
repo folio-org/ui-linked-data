@@ -7,7 +7,7 @@ import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from '
 export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
   constructor(
     private readonly valueProcessor: ValueProcessor,
-    private readonly schemaProcessorManager: ProfileSchemaProcessorManager,
+    private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
   ) {}
 
   canProcess(field: RecordSchemaEntry): boolean {
@@ -54,7 +54,11 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     userValues: UserValues,
     options: ValueOptions,
   ): ValueResult {
-    const processedValues = this.schemaProcessorManager.process(profileSchemaEntry, recordSchemaEntry, userValues);
+    const processedValues = this.profileSchemaProcessorManager.process(
+      profileSchemaEntry,
+      recordSchemaEntry,
+      userValues,
+    );
 
     return this.valueProcessor.processSchemaValues(processedValues, options);
   }

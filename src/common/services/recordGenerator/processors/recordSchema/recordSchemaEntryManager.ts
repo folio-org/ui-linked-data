@@ -11,7 +11,7 @@ export class RecordSchemaEntryManager {
 
   constructor(
     private readonly valueProcessor: ValueProcessor,
-    private readonly schemaProcessorManager: ProfileSchemaProcessorManager,
+    private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
     private readonly profileSchemaManager: ProfileSchemaManager,
   ) {
     this.initProcessors();
@@ -19,7 +19,7 @@ export class RecordSchemaEntryManager {
 
   private initProcessors() {
     this.processors.push(
-      new ArrayEntryProcessor(this.valueProcessor, this.schemaProcessorManager),
+      new ArrayEntryProcessor(this.valueProcessor, this.profileSchemaProcessorManager),
       new ObjectEntryProcessor(this.valueProcessor, this.profileSchemaManager, this),
       new SimpleEntryProcessor(this.valueProcessor),
     );
