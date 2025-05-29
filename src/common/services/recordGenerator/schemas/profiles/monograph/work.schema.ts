@@ -17,7 +17,7 @@ export const monographWorkRecordSchema: RecordSchema = {
         value: RecordSchemaEntryType.object,
         fields: {
           _name: {
-            type: RecordSchemaEntryType.array,
+            type: RecordSchemaEntryType.string,
             value: RecordSchemaEntryType.string,
           },
           roles: {
@@ -149,6 +149,16 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
+      'http://id.loc.gov/ontologies/bibframe/geographicCoverage': {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        fields: {
+          _geographicCoverageReference: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
+      },
       'http://bibfra.me/vocab/marc/targetAudience': {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
@@ -168,7 +178,7 @@ export const monographWorkRecordSchema: RecordSchema = {
         value: RecordSchemaEntryType.object,
         fields: {
           _name: {
-            type: RecordSchemaEntryType.array,
+            type: RecordSchemaEntryType.string,
             value: RecordSchemaEntryType.string,
           },
           roles: {
@@ -194,6 +204,16 @@ export const monographWorkRecordSchema: RecordSchema = {
       'http://bibfra.me/vocab/marc/summary': {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.string,
+      },
+      'http://bibfra.me/vocab/lite/subject': {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        fields: {
+          label: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
       },
       'http://bibfra.me/vocab/marc/tableOfContents': {
         type: RecordSchemaEntryType.array,
@@ -232,6 +252,10 @@ export const monographWorkRecordSchema: RecordSchema = {
                   },
                 },
               },
+              _assigningSourceReference: {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
             },
           },
           ddc: {
@@ -250,6 +274,10 @@ export const monographWorkRecordSchema: RecordSchema = {
                 value: RecordSchemaEntryType.string,
               },
               'http://bibfra.me/vocab/marc/editionNumber': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              _assigningSourceReference: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
