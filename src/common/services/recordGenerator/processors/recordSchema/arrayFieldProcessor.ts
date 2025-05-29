@@ -14,47 +14,47 @@ export class ArrayFieldProcessor implements RecordSchemaEntryProcessor {
     return field.type === RecordSchemaEntryType.array;
   }
 
-  process({ field, entry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
-    if (!entry.type) {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
+    if (!profileSchemaEntry.type) {
       return { value: null, options: {} };
     }
 
-    const processingResult = this.processArrayField(field, entry, userValues);
+    const processingResult = this.processArrayField(recordSchemaEntry, profileSchemaEntry, userValues);
 
-    return this.applyValueContainer(processingResult, field.options?.valueContainer);
+    return this.applyValueContainer(processingResult, recordSchemaEntry.options?.valueContainer);
   }
 
   private processArrayField(
-    field: RecordSchemaEntry,
-    entry: RecordSchemaEntryProcessingContext['entry'],
+    recordSchemaEntry: RecordSchemaEntry,
+    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
     userValues: UserValues,
   ): ValueResult {
     const options = {
-      hiddenWrapper: field.options?.hiddenWrapper ?? false,
+      hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
 
-    return field.value === RecordSchemaEntryType.string
-      ? this.processStringArrayValues(entry, userValues, options)
-      : this.processSchemaArrayValues(entry, field, userValues, options);
+    return recordSchemaEntry.value === RecordSchemaEntryType.string
+      ? this.processStringArrayValues(profileSchemaEntry, userValues, options)
+      : this.processSchemaArrayValues(profileSchemaEntry, recordSchemaEntry, userValues, options);
   }
 
   private processStringArrayValues(
-    entry: RecordSchemaEntryProcessingContext['entry'],
+    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
     userValues: UserValues,
     options: ValueOptions,
   ): ValueResult {
-    const values = userValues[entry.uuid]?.contents;
+    const values = userValues[profileSchemaEntry.uuid]?.contents;
 
     return this.valueProcessor.process(values, options);
   }
 
   private processSchemaArrayValues(
-    entry: RecordSchemaEntryProcessingContext['entry'],
-    field: RecordSchemaEntry,
+    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
+    recordSchemaEntry: RecordSchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
   ): ValueResult {
-    const processedValues = this.schemaProcessorManager.process(entry, field, userValues);
+    const processedValues = this.schemaProcessorManager.process(profileSchemaEntry, recordSchemaEntry, userValues);
 
     return this.valueProcessor.processSchemaValues(processedValues, options);
   }

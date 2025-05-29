@@ -60,14 +60,14 @@ export class RecordGenerator implements IRecordGenerator {
 
   private processRecordSchema() {
     const result: GeneratedValue = { resource: {} };
-    const rootEntityKey = this.findRootEntityKey();
+    const rootEntryKey = this.findRootEntryKey();
 
     Object.entries(this.recordSchema).forEach(([rootKey, rootField]) => {
       const processedValue = this.processRootEntry(rootKey, rootField);
 
       if (this.isValidValue(processedValue)) {
-        if (rootKey === rootEntityKey && rootField.options?.references && this.referenceIds?.length) {
-          this.addReferencesToRootEntity(processedValue, rootField.options.references);
+        if (rootKey === rootEntryKey && rootField.options?.references && this.referenceIds?.length) {
+          this.addReferencesToRootEntry(processedValue, rootField.options.references);
         }
 
         this.addValueToResource(result, rootKey, processedValue);
@@ -82,7 +82,11 @@ export class RecordGenerator implements IRecordGenerator {
     const processedValues = rootEntries
       .map(
         entry =>
-          this.recordSchemaEntryManager.processField({ field: rootField, entry, userValues: this.userValues }).value,
+          this.recordSchemaEntryManager.processEntry({
+            recordSchemaEntry: rootField,
+            profileSchemaEntry: entry,
+            userValues: this.userValues,
+          }).value,
       )
       .filter((value): value is SchemaFieldValue => value !== null);
 
@@ -99,9 +103,9 @@ export class RecordGenerator implements IRecordGenerator {
     }
   }
 
-  private findRootEntityKey() {
-    for (const [key, field] of Object.entries(this.recordSchema)) {
-      if (field.options?.isRootEntity) {
+  private findRootEntryKey() {
+    for (const [key, entry] of Object.entries(this.recordSchema)) {
+      if (entry.options?.isRootEntry) {
         return key;
       }
     }
@@ -111,13 +115,13 @@ export class RecordGenerator implements IRecordGenerator {
     return entityKeys.length > 0 ? entityKeys[0] : null;
   }
 
-  private addReferencesToRootEntity(entityNode: SchemaFieldValue, references: RecordSchemaReferenceDefinition[]) {
-    if (typeof entityNode !== 'object' || entityNode === null) {
+  private addReferencesToRootEntry(entryNode: SchemaFieldValue, references: RecordSchemaReferenceDefinition[]) {
+    if (typeof entryNode !== 'object' || entryNode === null) {
       return;
     }
 
     references.forEach(refDef => {
-      (entityNode as Record<string, SchemaFieldValue>)[refDef.outputField] = this
+      (entryNode as Record<string, SchemaFieldValue>)[refDef.outputField] = this
         .referenceIds as unknown as SchemaFieldValue;
     });
   }

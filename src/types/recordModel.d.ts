@@ -7,7 +7,7 @@ interface RecordSchemaEntry {
   options?: {
     hiddenWrapper?: boolean;
     isReference?: boolean;
-    isRootEntity?: boolean;
+    isRootEntry?: boolean;
     references?: RecordSchemaReferenceDefinition[];
     flattenDropdown?: boolean;
     sourceField?: string;

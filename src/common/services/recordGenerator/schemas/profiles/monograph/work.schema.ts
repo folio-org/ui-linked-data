@@ -4,7 +4,7 @@ export const monographWorkRecordSchema: RecordSchema = {
   'http://bibfra.me/vocab/lite/Work': {
     type: RecordSchemaEntryType.object,
     options: {
-      isRootEntity: true,
+      isRootEntry: true,
       references: [
         {
           outputField: '_instanceReference',

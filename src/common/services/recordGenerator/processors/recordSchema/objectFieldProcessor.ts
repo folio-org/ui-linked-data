@@ -12,23 +12,23 @@ export class ObjectFieldProcessor implements RecordSchemaEntryProcessor {
     private readonly recordSchemaEntryManager: RecordSchemaEntryManager,
   ) {}
 
-  canProcess(field: RecordSchemaEntry) {
-    return field.type === RecordSchemaEntryType.object && !!field.fields;
+  canProcess(recordSchemaEntry: RecordSchemaEntry) {
+    return recordSchemaEntry.type === RecordSchemaEntryType.object && !!recordSchemaEntry.fields;
   }
 
-  process({ field, entry, userValues }: RecordSchemaEntryProcessingContext) {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
     const options: ValueOptions = {
-      hiddenWrapper: field.options?.hiddenWrapper ?? false,
+      hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
     const result: GeneratedValue = {};
 
-    if (!field.fields) {
+    if (!recordSchemaEntry.fields) {
       return this.valueProcessor.processSchemaValues({}, options);
     }
 
-    const parentPath = entry ? entry.path : undefined;
+    const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
 
-    for (const [key, childField] of Object.entries(field.fields)) {
+    for (const [key, childField] of Object.entries(recordSchemaEntry.fields)) {
       this.processObjectField(key, childField, result, parentPath, userValues);
     }
 
@@ -37,7 +37,7 @@ export class ObjectFieldProcessor implements RecordSchemaEntryProcessor {
 
   private processObjectField(
     key: string,
-    field: RecordSchemaEntry,
+    recordSchemaEntry: RecordSchemaEntry,
     result: GeneratedValue,
     parentPath: string[] | undefined,
     userValues: UserValues,
@@ -46,11 +46,15 @@ export class ObjectFieldProcessor implements RecordSchemaEntryProcessor {
     const childEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 
     for (const childEntry of childEntries) {
-      const childResult = this.recordSchemaEntryManager.processField({ field, userValues, entry: childEntry });
+      const childResult = this.recordSchemaEntryManager.processEntry({
+        recordSchemaEntry,
+        userValues,
+        profileSchemaEntry: childEntry,
+      });
 
       if (!childResult.value) continue;
 
-      if (field.type === RecordSchemaEntryType.array) {
+      if (recordSchemaEntry.type === RecordSchemaEntryType.array) {
         this.processArrayField(key, childResult, result);
       } else {
         result[key] = childResult.value;

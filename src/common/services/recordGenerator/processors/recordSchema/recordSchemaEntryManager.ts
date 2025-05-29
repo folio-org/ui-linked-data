@@ -25,17 +25,25 @@ export class RecordSchemaEntryManager {
     );
   }
 
-  processField({ field, entry, userValues }: { field: RecordSchemaEntry; entry: SchemaEntry; userValues: UserValues }) {
-    const processor = this.getProcessorForField(field);
+  processEntry({
+    recordSchemaEntry,
+    profileSchemaEntry,
+    userValues,
+  }: {
+    recordSchemaEntry: RecordSchemaEntry;
+    profileSchemaEntry: SchemaEntry;
+    userValues: UserValues;
+  }) {
+    const processor = this.getProcessorForEntry(recordSchemaEntry);
 
-    return processor.process({ field, entry, userValues });
+    return processor.process({ recordSchemaEntry, profileSchemaEntry, userValues });
   }
 
-  private getProcessorForField(field: RecordSchemaEntry) {
-    const processor = this.processors.find(processor => processor.canProcess(field));
+  private getProcessorForEntry(recordSchemaEntry: RecordSchemaEntry) {
+    const processor = this.processors.find(processor => processor.canProcess(recordSchemaEntry));
 
     if (!processor) {
-      throw new Error(`No processor found for field type: ${field.type}`);
+      throw new Error(`No processor found for field type: ${recordSchemaEntry.type}`);
     }
 
     return processor;

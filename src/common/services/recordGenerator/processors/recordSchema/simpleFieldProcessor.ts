@@ -6,15 +6,17 @@ import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from '
 export class SimpleFieldProcessor implements RecordSchemaEntryProcessor {
   constructor(private readonly valueProcessor: ValueProcessor) {}
 
-  canProcess(field: RecordSchemaEntry) {
-    return field.type !== RecordSchemaEntryType.array && field.type !== RecordSchemaEntryType.object;
+  canProcess(recordSchemaEntry: RecordSchemaEntry) {
+    return (
+      recordSchemaEntry.type !== RecordSchemaEntryType.array && recordSchemaEntry.type !== RecordSchemaEntryType.object
+    );
   }
 
-  process({ field, entry, userValues }: RecordSchemaEntryProcessingContext) {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
     const options: ValueOptions = {
-      hiddenWrapper: field.options?.hiddenWrapper ?? false,
+      hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
-    const values: UserValueContents[] = userValues[entry.uuid]?.contents || [];
+    const values: UserValueContents[] = userValues[profileSchemaEntry.uuid]?.contents || [];
 
     return this.valueProcessor.process(values, options);
   }

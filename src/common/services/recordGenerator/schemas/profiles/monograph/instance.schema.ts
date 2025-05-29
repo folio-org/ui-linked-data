@@ -4,7 +4,7 @@ export const monographInstanceRecordSchema: RecordSchema = {
   'http://bibfra.me/vocab/lite/Instance': {
     type: RecordSchemaEntryType.object,
     options: {
-      isRootEntity: true,
+      isRootEntry: true,
       references: [
         {
           outputField: '_workReference',
@@ -210,8 +210,8 @@ export const monographInstanceRecordSchema: RecordSchema = {
         options: {
           valueContainer: {
             field: 'http://bibfra.me/vocab/lite/date',
-            type: 'array'
-          }
+            type: 'array',
+          },
         },
       },
       'http://bibfra.me/vocab/marc/issuance': {
@@ -349,19 +349,6 @@ export const monographInstanceRecordSchema: RecordSchema = {
             value: RecordSchemaEntryType.string,
           },
           'http://bibfra.me/vocab/lite/note': {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
-      _workReference: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        options: {
-          isReference: true,
-        },
-        fields: {
-          id: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },

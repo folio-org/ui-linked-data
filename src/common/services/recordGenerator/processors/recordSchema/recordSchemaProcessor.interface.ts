@@ -1,13 +1,13 @@
 import { ValueResult } from '../../types/valueTypes';
 
 export type RecordSchemaEntryProcessingContext = {
-  field: RecordSchemaEntry;
-  entry: SchemaEntry;
+  recordSchemaEntry: RecordSchemaEntry;
+  profileSchemaEntry: SchemaEntry;
   userValues: UserValues;
 };
 
 export interface RecordSchemaEntryProcessor {
-  canProcess(field: RecordSchemaEntry): boolean;
+  canProcess(recordSchemaEntry: RecordSchemaEntry): boolean;
 
-  process(RecordSchemaEntryProcessingContext: RecordSchemaEntryProcessingContext): ValueResult;
+  process(recordSchemaEntryProcessingContext: RecordSchemaEntryProcessingContext): ValueResult;
 }
