@@ -142,10 +142,6 @@ export const monographInstanceRecordSchema: RecordSchema = {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
                   },
-                  'http://bibfra.me/vocab/marc/code': {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
                   'http://bibfra.me/vocab/lite/label': {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
@@ -186,7 +182,83 @@ export const monographInstanceRecordSchema: RecordSchema = {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
                   },
-                  'http://bibfra.me/vocab/marc/code': {
+                  'http://bibfra.me/vocab/lite/label': {
+                    type: RecordSchemaEntryType.array,
+                    value: RecordSchemaEntryType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/link': {
+                    type: RecordSchemaEntryType.array,
+                    value: RecordSchemaEntryType.string,
+                  },
+                },
+              },
+            },
+          },
+          'http://bibfra.me/vocab/marc/manufacture': {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/date': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/name': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/providerDate': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/place': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/providerPlace': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.object,
+                fields: {
+                  'http://bibfra.me/vocab/lite/name': {
+                    type: RecordSchemaEntryType.array,
+                    value: RecordSchemaEntryType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/label': {
+                    type: RecordSchemaEntryType.array,
+                    value: RecordSchemaEntryType.string,
+                  },
+                  'http://bibfra.me/vocab/lite/link': {
+                    type: RecordSchemaEntryType.array,
+                    value: RecordSchemaEntryType.string,
+                  },
+                },
+              },
+            },
+          },
+          'http://bibfra.me/vocab/marc/production': {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/date': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/name': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/providerDate': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/place': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/providerPlace': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.object,
+                fields: {
+                  'http://bibfra.me/vocab/lite/name': {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
                   },
