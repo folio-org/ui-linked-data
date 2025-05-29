@@ -1,4 +1,4 @@
-import { ValueOptions } from '../../types/valueTypes';
+import { ValueOptions } from '../../types/value.types';
 
 export interface UserValueContents {
   label?: string;

@@ -1,4 +1,4 @@
-import { ValueResult } from '../../types/valueTypes';
+import { ValueResult } from '../../types/value.types';
 
 export type RecordSchemaEntryProcessingContext = {
   recordSchemaEntry: RecordSchemaEntry;

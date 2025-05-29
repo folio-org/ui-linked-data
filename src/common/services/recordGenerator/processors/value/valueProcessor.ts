@@ -1,4 +1,4 @@
-import { ValueOptions } from '../../types/valueTypes';
+import { ValueOptions } from '../../types/value.types';
 import { IValueProcessor } from './valueProcessor.interface';
 
 export class ValueProcessor implements IValueProcessor {

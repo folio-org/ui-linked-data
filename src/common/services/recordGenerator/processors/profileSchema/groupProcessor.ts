@@ -2,7 +2,7 @@ import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants'
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/valueTypes';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/value.types';
 
 export class GroupProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};

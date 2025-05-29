@@ -1,7 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
-import { ProcessorResult } from './types';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 
 export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected userValues: UserValues = {};
@@ -39,23 +39,27 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected abstract processOptionEntry(optionEntry: SchemaEntry): ProcessorResult | null;
 
   protected processChildValues(childEntry?: SchemaEntry) {
-    if (!childEntry) return null;
+    if (!childEntry) {
+      return null;
+    }
 
     const childValues = this.userValues[childEntry.uuid]?.contents || [];
 
-    if (childValues.length === 0 || !childEntry.uriBFLite) return null;
+    if (childValues.length === 0 || !childEntry.uriBFLite) {
+      return null;
+    }
 
     if (childEntry.type === AdvancedFieldType.literal) {
-      return childValues?.map(({ label }) => label);
+      return childValues.map(({ label }) => label ?? '').filter(Boolean);
     }
 
     return this.processSimpleChildValues(childValues);
   }
-
   protected processSimpleChildValues(childValues?: UserValueContents[]) {
-    return childValues?.map(({ meta, label }) => ({
+    if (!childValues) return [];
+    return childValues.map(({ meta, label }) => ({
       'http://bibfra.me/vocab/lite/link': [meta?.uri ?? ''],
-      'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label],
+      'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label ?? ''],
     }));
   }
 

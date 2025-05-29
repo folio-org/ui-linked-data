@@ -2,7 +2,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class DropdownProcessor extends BaseDropdownProcessor {
-  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean {
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
       profileSchemaEntry.type === AdvancedFieldType.dropdown &&
       !recordSchemaEntry.options?.hiddenWrapper &&

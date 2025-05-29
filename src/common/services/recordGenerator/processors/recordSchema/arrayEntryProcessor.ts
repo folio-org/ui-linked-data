@@ -1,5 +1,5 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { ValueOptions, ValueResult, SchemaFieldValue } from '../../types/valueTypes';
+import { ValueOptions, ValueResult, SchemaFieldValue } from '../../types/value.types';
 import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
 import { ValueProcessor } from '../value/valueProcessor';
 import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';

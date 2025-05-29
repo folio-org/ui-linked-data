@@ -1,5 +1,5 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { ValueOptions } from '../../types/valueTypes';
+import { ValueOptions } from '../../types/value.types';
 import { ValueProcessor } from '../value/valueProcessor';
 import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 

@@ -1,7 +1,7 @@
 import { IRecordGenerator, IRecordGeneratorData } from './recordGenerator.interface';
 import { ProfileSchemaManager } from './profileSchemaManager';
 import { ProfileSchemaProcessorManager, ValueProcessor, RecordSchemaEntryManager } from './processors';
-import { GeneratedValue, SchemaFieldValue } from './types/valueTypes';
+import { GeneratedValue, SchemaFieldValue } from './types/value.types';
 import { RecordSchemaFactory } from './schemas';
 
 export class RecordGenerator implements IRecordGenerator {

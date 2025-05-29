@@ -1,6 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GeneratedValue } from '../../types/valueTypes';
+import { GeneratedValue } from '../../types/value.types';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 
 export class LookupProcessor implements IProfileSchemaProcessor {

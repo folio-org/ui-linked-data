@@ -3,7 +3,7 @@ import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
-  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean {
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
       profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.flattenDropdown === true
     );
