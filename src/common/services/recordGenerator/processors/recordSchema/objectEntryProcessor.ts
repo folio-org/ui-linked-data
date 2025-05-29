@@ -5,7 +5,7 @@ import { ValueProcessor } from '../value/valueProcessor';
 import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 import { RecordSchemaEntryManager } from './recordSchemaEntryManager';
 
-export class ObjectFieldProcessor implements RecordSchemaEntryProcessor {
+export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
   constructor(
     private readonly valueProcessor: ValueProcessor,
     private readonly profileSchemaManager: ProfileSchemaManager,

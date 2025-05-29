@@ -2,9 +2,9 @@ import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { ValueProcessor } from '../value/valueProcessor';
 import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
 import { RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { ArrayFieldProcessor } from './arrayFieldProcessor';
-import { ObjectFieldProcessor } from './objectFieldProcessor';
-import { SimpleFieldProcessor } from './simpleFieldProcessor';
+import { ArrayEntryProcessor } from './arrayEntryProcessor';
+import { ObjectEntryProcessor } from './objectEntryProcessor';
+import { SimpleEntryProcessor } from './simpleEntryProcessor';
 
 export class RecordSchemaEntryManager {
   private readonly processors: RecordSchemaEntryProcessor[] = [];
@@ -19,9 +19,9 @@ export class RecordSchemaEntryManager {
 
   private initProcessors() {
     this.processors.push(
-      new ArrayFieldProcessor(this.valueProcessor, this.schemaProcessorManager),
-      new ObjectFieldProcessor(this.valueProcessor, this.profileSchemaManager, this),
-      new SimpleFieldProcessor(this.valueProcessor),
+      new ArrayEntryProcessor(this.valueProcessor, this.schemaProcessorManager),
+      new ObjectEntryProcessor(this.valueProcessor, this.profileSchemaManager, this),
+      new SimpleEntryProcessor(this.valueProcessor),
     );
   }
 
@@ -43,7 +43,7 @@ export class RecordSchemaEntryManager {
     const processor = this.processors.find(processor => processor.canProcess(recordSchemaEntry));
 
     if (!processor) {
-      throw new Error(`No processor found for field type: ${recordSchemaEntry.type}`);
+      throw new Error(`No processor found for entry type: ${recordSchemaEntry.type}`);
     }
 
     return processor;

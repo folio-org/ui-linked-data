@@ -3,7 +3,7 @@ import { ValueOptions } from '../../types/valueTypes';
 import { ValueProcessor } from '../value/valueProcessor';
 import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
-export class SimpleFieldProcessor implements RecordSchemaEntryProcessor {
+export class SimpleEntryProcessor implements RecordSchemaEntryProcessor {
   constructor(private readonly valueProcessor: ValueProcessor) {}
 
   canProcess(recordSchemaEntry: RecordSchemaEntry) {
