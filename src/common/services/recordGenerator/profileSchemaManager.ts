@@ -1,4 +1,4 @@
-export class SchemaManager {
+export class ProfileSchemaManager {
   private schema: Schema;
   private cachedSchemaValues: SchemaEntry[] | null;
   private uriBFLiteIndex: Map<string, SchemaEntry[]> | null;

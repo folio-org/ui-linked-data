@@ -1,34 +1,34 @@
-import { RecordModelType } from '@common/constants/recordModel.constants';
+import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ISchemaProcessor } from './schemaProcessor.interface';
-import { SchemaManager } from '../../schemaManager';
+import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
+import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/valueTypes';
 
-export class GroupProcessor implements ISchemaProcessor {
+export class GroupProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};
 
-  constructor(private readonly schemaManager: SchemaManager) {}
+  constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
-      schemaEntry.type === AdvancedFieldType.group &&
-      !!schemaEntry.children &&
-      modelField.value === RecordModelType.object
+      profileSchemaEntry.type === AdvancedFieldType.group &&
+      !!profileSchemaEntry.children &&
+      recordSchemaEntry.value === RecordSchemaEntryType.object
     );
   }
 
-  process(schemaEntry: SchemaEntry, userValues: UserValues, modelField: RecordModelField) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
     this.userValues = userValues;
 
-    return this.processGroupWithChildren(schemaEntry, modelField);
+    return this.processGroupWithChildren(profileSchemaEntry, recordSchemaEntry);
   }
 
-  private processGroupWithChildren(schemaEntry: SchemaEntry, modelField: RecordModelField) {
-    if (!schemaEntry.children || !modelField.fields) {
+  private processGroupWithChildren(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
+    if (!profileSchemaEntry.children || !recordSchemaEntry.fields) {
       return [];
     }
 
-    const childEntriesWithValues = this.getChildEntriesWithValues(schemaEntry.children);
+    const childEntriesWithValues = this.getChildEntriesWithValues(profileSchemaEntry.children);
 
     if (childEntriesWithValues.length === 0) {
       return [];
@@ -36,13 +36,13 @@ export class GroupProcessor implements ISchemaProcessor {
 
     const groupedValues = this.groupValuesByIndex(childEntriesWithValues);
 
-    return this.createStructuredObjects(groupedValues, modelField.fields);
+    return this.createStructuredObjects(groupedValues, recordSchemaEntry.fields);
   }
 
   private getChildEntriesWithValues(children: string[]) {
     return children
       .map(childUuid => {
-        const childEntry = this.schemaManager.getSchemaEntry(childUuid);
+        const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
         if (!childEntry?.type || !childEntry.uriBFLite) return null;
 
@@ -55,41 +55,41 @@ export class GroupProcessor implements ISchemaProcessor {
       .filter((entry): entry is ChildEntryWithValues => entry !== null);
   }
 
-  private createStructuredObjects(groupedValues: GroupedValue[], modelFields: Record<string, RecordModelField>) {
+  private createStructuredObjects(groupedValues: GroupedValue[], recordSchemaEntries: Record<string, RecordSchemaEntry>) {
     return groupedValues
-      .map(indexGroup => this.createGroupObject(indexGroup, modelFields))
+      .map(indexGroup => this.createGroupObject(indexGroup, recordSchemaEntries))
       .filter(obj => Object.keys(obj).length > 0);
   }
 
-  private createGroupObject(indexGroup: GroupedValue, modelFields: Record<string, RecordModelField>): GeneratedValue {
+  private createGroupObject(indexGroup: GroupedValue, recordSchemaEntries: Record<string, RecordSchemaEntry>): GeneratedValue {
     const groupObject: GeneratedValue = {};
 
     for (const { childEntry, valueAtIndex } of indexGroup) {
       if (!childEntry.uriBFLite || !valueAtIndex) continue;
 
-      this.mapValueToModelField(childEntry, valueAtIndex, modelFields, groupObject);
+      this.mapValueToRecordSchemaEntry(childEntry, valueAtIndex, recordSchemaEntries, groupObject);
     }
 
     return groupObject;
   }
 
-  private mapValueToModelField(
+  private mapValueToRecordSchemaEntry(
     childEntry: SchemaEntry,
     valueAtIndex: UserValueContents,
-    modelFields: Record<string, RecordModelField>,
+    recordSchemaEntries: Record<string, RecordSchemaEntry>,
     groupObject: GeneratedValue,
   ) {
     const { uriBFLite, type } = childEntry;
 
     if (!uriBFLite || type === undefined) return;
 
-    const fieldType = this.validateFieldType(type);
+    const entryType = this.validateEntryType(type);
 
-    if (fieldType === null) return;
+    if (entryType === null) return;
 
-    for (const key of Object.keys(modelFields)) {
+    for (const key of Object.keys(recordSchemaEntries)) {
       if (key === uriBFLite) {
-        const value = this.getValueForType(fieldType, valueAtIndex);
+        const value = this.getValueForType(entryType, valueAtIndex);
 
         if (value.length === 0) continue;
 
@@ -98,7 +98,7 @@ export class GroupProcessor implements ISchemaProcessor {
     }
   }
 
-  private validateFieldType(type: string) {
+  private validateEntryType(type: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
   }
 

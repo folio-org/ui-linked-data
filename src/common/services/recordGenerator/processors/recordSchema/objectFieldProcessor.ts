@@ -1,22 +1,22 @@
-import { RecordModelType } from '@common/constants/recordModel.constants';
+import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { GeneratedValue, ValueOptions, ValueResult } from '../../types/valueTypes';
-import { SchemaManager } from '../../schemaManager';
+import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { ValueProcessor } from '../value/valueProcessor';
-import { ModelFieldProcessingContext, ModelFieldProcessor } from './modelFieldProcessor.interface';
-import { ModelFieldManager } from './modelFieldManager';
+import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { RecordSchemaEntryManager } from './recordSchemaEntryManager';
 
-export class ObjectFieldProcessor implements ModelFieldProcessor {
+export class ObjectFieldProcessor implements RecordSchemaEntryProcessor {
   constructor(
     private readonly valueProcessor: ValueProcessor,
-    private readonly schemaManager: SchemaManager,
-    private readonly modelFieldManager: ModelFieldManager,
+    private readonly profileSchemaManager: ProfileSchemaManager,
+    private readonly recordSchemaEntryManager: RecordSchemaEntryManager,
   ) {}
 
-  canProcess(field: RecordModelField) {
-    return field.type === RecordModelType.object && !!field.fields;
+  canProcess(field: RecordSchemaEntry) {
+    return field.type === RecordSchemaEntryType.object && !!field.fields;
   }
 
-  process({ field, entry, userValues }: ModelFieldProcessingContext) {
+  process({ field, entry, userValues }: RecordSchemaEntryProcessingContext) {
     const options: ValueOptions = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };
@@ -37,21 +37,20 @@ export class ObjectFieldProcessor implements ModelFieldProcessor {
 
   private processObjectField(
     key: string,
-    field: RecordModelField,
+    field: RecordSchemaEntry,
     result: GeneratedValue,
     parentPath: string[] | undefined,
     userValues: UserValues,
   ) {
     const localParentPath = parentPath ? [...parentPath] : undefined;
-    const childEntries = this.schemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
+    const childEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 
     for (const childEntry of childEntries) {
-      // Find the appropriate processor for this field type
-      const childResult = this.modelFieldManager.processField({ field, userValues, entry: childEntry });
+      const childResult = this.recordSchemaEntryManager.processField({ field, userValues, entry: childEntry });
 
       if (!childResult.value) continue;
 
-      if (field.type === RecordModelType.array) {
+      if (field.type === RecordSchemaEntryType.array) {
         this.processArrayField(key, childResult, result);
       } else {
         result[key] = childResult.value;

@@ -1,20 +1,20 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { SchemaManager } from '../../schemaManager';
-import { ISchemaProcessor } from './schemaProcessor.interface';
+import { ProfileSchemaManager } from '../../profileSchemaManager';
+import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 
-export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
+export class UnwrappedDropdownOptionProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};
 
-  constructor(private readonly schemaManager: SchemaManager) {}
+  constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
-    return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.hiddenWrapper === true;
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
+    return profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.hiddenWrapper === true;
   }
 
-  process(schemaEntry: SchemaEntry, userValues: UserValues) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues) {
     this.userValues = userValues;
 
-    return this.processUnwrappedDropdownOption(schemaEntry);
+    return this.processUnwrappedDropdownOption(profileSchemaEntry);
   }
 
   private processUnwrappedDropdownOption(dropdownEntry: SchemaEntry) {
@@ -23,9 +23,9 @@ export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
     if (!dropdownEntry.children) return results;
 
     for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
+      const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
+      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
 
       const result = this.processUnwrappedOptionEntry(optionEntry);
 
@@ -63,7 +63,7 @@ export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
   }
 
   private processUnwrappedChild(childUuid: string, wrappedResult: Record<string, any>) {
-    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
+    const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
 
@@ -74,7 +74,7 @@ export class UnwrappedDropdownOptionProcessor implements ISchemaProcessor {
     if (childEntry.type === AdvancedFieldType.literal) {
       wrappedResult[childEntry.uriBFLite] = childValues.map(({ label }) => label);
     } else if (childEntry.type === AdvancedFieldType.simple) {
-      // TODO: take field names from the model
+      // TODO: take field names from the record schema
       wrappedResult[childEntry.uriBFLite] = childValues.map(({ meta, label }) => ({
         'http://bibfra.me/vocab/lite/name': [meta?.basicLabel ?? label],
         'http://bibfra.me/vocab/marc/code': [meta?.uri?.split('/').pop()],

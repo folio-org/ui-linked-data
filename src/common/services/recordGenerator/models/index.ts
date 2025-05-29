@@ -1,1 +1,0 @@
-export { ModelFactory } from './modelFactory';

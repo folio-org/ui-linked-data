@@ -1,45 +1,45 @@
-import { RecordModelType } from '@common/constants/recordModel.constants';
+import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions, ValueResult, SchemaFieldValue } from '../../types/valueTypes';
-import { SchemaProcessorManager } from '../schema/schemaProcessorManager';
+import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
 import { ValueProcessor } from '../value/valueProcessor';
-import { ModelFieldProcessingContext, ModelFieldProcessor } from './modelFieldProcessor.interface';
+import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
-export class ArrayFieldProcessor implements ModelFieldProcessor {
+export class ArrayFieldProcessor implements RecordSchemaEntryProcessor {
   constructor(
     private readonly valueProcessor: ValueProcessor,
-    private readonly schemaProcessorManager: SchemaProcessorManager,
+    private readonly schemaProcessorManager: ProfileSchemaProcessorManager,
   ) {}
 
-  canProcess(field: RecordModelField): boolean {
-    return field.type === RecordModelType.array;
+  canProcess(field: RecordSchemaEntry): boolean {
+    return field.type === RecordSchemaEntryType.array;
   }
 
-  process({ field, entry, userValues }: ModelFieldProcessingContext): ValueResult {
+  process({ field, entry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
     if (!entry.type) {
       return { value: null, options: {} };
     }
 
-    const processingResult = this.processArrayField(field as RecordModelField, entry, userValues);
+    const processingResult = this.processArrayField(field, entry, userValues);
 
     return this.applyValueContainer(processingResult, field.options?.valueContainer);
   }
 
   private processArrayField(
-    field: RecordModelField,
-    entry: ModelFieldProcessingContext['entry'],
+    field: RecordSchemaEntry,
+    entry: RecordSchemaEntryProcessingContext['entry'],
     userValues: UserValues,
   ): ValueResult {
     const options = {
       hiddenWrapper: field.options?.hiddenWrapper ?? false,
     };
 
-    return field.value === RecordModelType.string
+    return field.value === RecordSchemaEntryType.string
       ? this.processStringArrayValues(entry, userValues, options)
       : this.processSchemaArrayValues(entry, field, userValues, options);
   }
 
   private processStringArrayValues(
-    entry: ModelFieldProcessingContext['entry'],
+    entry: RecordSchemaEntryProcessingContext['entry'],
     userValues: UserValues,
     options: ValueOptions,
   ): ValueResult {
@@ -49,8 +49,8 @@ export class ArrayFieldProcessor implements ModelFieldProcessor {
   }
 
   private processSchemaArrayValues(
-    entry: ModelFieldProcessingContext['entry'],
-    field: RecordModelField,
+    entry: RecordSchemaEntryProcessingContext['entry'],
+    field: RecordSchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
   ): ValueResult {

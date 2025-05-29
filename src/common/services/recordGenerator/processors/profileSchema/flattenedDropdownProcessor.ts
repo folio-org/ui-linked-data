@@ -1,34 +1,36 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { SchemaManager } from '../../schemaManager';
-import { ISchemaProcessor } from './schemaProcessor.interface';
+import { ProfileSchemaManager } from '../../profileSchemaManager';
+import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 
-export class FlattenedDropdownProcessor implements ISchemaProcessor {
+export class FlattenedDropdownProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};
 
-  constructor(private readonly schemaManager: SchemaManager) {}
+  constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
 
-  canProcess(schemaEntry: SchemaEntry, modelField: RecordModelField) {
-    return schemaEntry.type === AdvancedFieldType.dropdown && modelField.options?.flattenDropdown === true;
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
+    return (
+      profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.flattenDropdown === true
+    );
   }
 
-  process(schemaEntry: SchemaEntry, userValues: UserValues, modelField: RecordModelField) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
     this.userValues = userValues;
 
-    const sourceField = modelField.options?.sourceField ?? BFLITE_URIS.SOURCE;
+    const sourceField = recordSchemaEntry.options?.sourceField ?? BFLITE_URIS.SOURCE;
 
-    return this.processFlattenedDropdown(schemaEntry, sourceField);
+    return this.processFlattenedDropdown(profileSchemaEntry, sourceField);
   }
 
-  private processFlattenedDropdown(dropdownEntry: SchemaEntry, sourceField: string) {
+  private processFlattenedDropdown(profileSchemaEntry: SchemaEntry, sourceField: string) {
     const results: Array<Record<string, any>> = [];
 
-    if (!dropdownEntry.children) return results;
+    if (!profileSchemaEntry.children) return results;
 
-    for (const optionUuid of dropdownEntry.children) {
-      const optionEntry = this.schemaManager.getSchemaEntry(optionUuid);
+    for (const optionUuid of profileSchemaEntry.children) {
+      const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.schemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
+      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
 
       const result = this.processDropdownOptionEntry(optionEntry, sourceField);
 
@@ -55,7 +57,7 @@ export class FlattenedDropdownProcessor implements ISchemaProcessor {
   }
 
   private processChildField(childUuid: string, result: Record<string, any>) {
-    const childEntry = this.schemaManager.getSchemaEntry(childUuid);
+    const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
     if (!childEntry) return;
 

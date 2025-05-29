@@ -1,63 +1,68 @@
 import { IRecordGenerator, IRecordGeneratorData } from './recordGenerator.interface';
-import { SchemaManager } from './schemaManager';
-import { SchemaProcessorManager, ValueProcessor, ModelFieldManager } from './processors';
+import { ProfileSchemaManager } from './profileSchemaManager';
+import { ProfileSchemaProcessorManager, ValueProcessor, RecordSchemaEntryManager } from './processors';
 import { GeneratedValue, SchemaFieldValue } from './types/valueTypes';
-import { ModelFactory } from './models';
+import { RecordSchemaFactory } from './schemas';
 
 export class RecordGenerator implements IRecordGenerator {
-  private readonly schemaManager: SchemaManager;
-  private readonly schemaProcessorManager: SchemaProcessorManager;
+  private readonly profileSchemaManager: ProfileSchemaManager;
+  private readonly schemaProcessorManager: ProfileSchemaProcessorManager;
   private readonly valueProcessor: ValueProcessor;
-  private readonly modelFieldManager: ModelFieldManager;
-  private model: RecordModel;
+  private readonly recordSchemaEntryManager: RecordSchemaEntryManager;
+  private recordSchema: RecordSchema;
   private userValues: UserValues;
   private referenceIds?: { id: string }[];
 
   constructor() {
-    this.schemaManager = new SchemaManager();
-    this.schemaProcessorManager = new SchemaProcessorManager(this.schemaManager);
+    this.profileSchemaManager = new ProfileSchemaManager();
+    this.schemaProcessorManager = new ProfileSchemaProcessorManager(this.profileSchemaManager);
     this.valueProcessor = new ValueProcessor();
 
-    this.modelFieldManager = new ModelFieldManager(
+    this.recordSchemaEntryManager = new RecordSchemaEntryManager(
       this.valueProcessor,
       this.schemaProcessorManager,
-      this.schemaManager,
+      this.profileSchemaManager,
     );
 
-    this.model = {};
+    this.recordSchema = {};
     this.userValues = {};
   }
 
   generate(data: IRecordGeneratorData, profileType: ProfileType = 'monograph', entityType: ResourceType = 'work') {
-    const model = this.getValidatedModel(profileType, entityType);
+    const recordSchema = this.getValidatedRecordSchema(profileType, entityType);
 
-    this.init({ ...data, model });
+    this.init({ ...data, recordSchema });
 
-    return this.processModel();
+    return this.processRecordSchema();
   }
 
-  private getValidatedModel(profileType: ProfileType, entityType: ResourceType) {
-    const model = ModelFactory.getModel(profileType, entityType);
+  private getValidatedRecordSchema(profileType: ProfileType, entityType: ResourceType) {
+    const recordSchema = RecordSchemaFactory.getRecordSchema(profileType, entityType);
 
-    if (!model) {
-      throw new Error(`Model not found for profile type: ${profileType}, entity type: ${entityType}`);
+    if (!recordSchema) {
+      throw new Error(`Record schema not found for profile type: ${profileType}, entity type: ${entityType}`);
     }
 
-    return model;
+    return recordSchema;
   }
 
-  private init({ schema, model, userValues, referenceIds }: IRecordGeneratorData & { model: RecordModel }) {
-    this.schemaManager.init(schema);
-    this.model = model;
+  private init({
+    schema,
+    recordSchema,
+    userValues,
+    referenceIds,
+  }: IRecordGeneratorData & { recordSchema: RecordSchema }) {
+    this.profileSchemaManager.init(schema);
+    this.recordSchema = recordSchema;
     this.userValues = userValues;
     this.referenceIds = referenceIds;
   }
 
-  private processModel() {
+  private processRecordSchema() {
     const result: GeneratedValue = { resource: {} };
     const rootEntityKey = this.findRootEntityKey();
 
-    Object.entries(this.model).forEach(([rootKey, rootField]) => {
+    Object.entries(this.recordSchema).forEach(([rootKey, rootField]) => {
       const processedValue = this.processRootEntry(rootKey, rootField);
 
       if (this.isValidValue(processedValue)) {
@@ -72,10 +77,13 @@ export class RecordGenerator implements IRecordGenerator {
     return result;
   }
 
-  private processRootEntry(rootKey: string, rootField: RecordModelField) {
-    const rootEntries = this.schemaManager.findSchemaEntriesByUriBFLite(rootKey);
+  private processRootEntry(rootKey: string, rootField: RecordSchemaEntry) {
+    const rootEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(rootKey);
     const processedValues = rootEntries
-      .map(entry => this.modelFieldManager.processField({ field: rootField, entry, userValues: this.userValues }).value)
+      .map(
+        entry =>
+          this.recordSchemaEntryManager.processField({ field: rootField, entry, userValues: this.userValues }).value,
+      )
       .filter((value): value is SchemaFieldValue => value !== null);
 
     return processedValues.length === 1 ? processedValues[0] : processedValues;
@@ -92,18 +100,18 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private findRootEntityKey() {
-    for (const [key, field] of Object.entries(this.model)) {
+    for (const [key, field] of Object.entries(this.recordSchema)) {
       if (field.options?.isRootEntity) {
         return key;
       }
     }
 
-    const entityKeys = Object.keys(this.model).filter(key => !key.startsWith('_') && key !== 'references');
+    const entityKeys = Object.keys(this.recordSchema).filter(key => !key.startsWith('_') && key !== 'references');
 
     return entityKeys.length > 0 ? entityKeys[0] : null;
   }
 
-  private addReferencesToRootEntity(entityNode: SchemaFieldValue, references: RecordModelReferenceDefinition[]) {
+  private addReferencesToRootEntity(entityNode: SchemaFieldValue, references: RecordSchemaReferenceDefinition[]) {
     if (typeof entityNode !== 'object' || entityNode === null) {
       return;
     }

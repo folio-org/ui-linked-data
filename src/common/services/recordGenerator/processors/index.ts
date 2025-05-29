@@ -1,3 +1,3 @@
-export { SchemaProcessorManager } from './schema/schemaProcessorManager';
+export { ProfileSchemaProcessorManager } from './profileSchema/profileSchemaProcessorManager';
 export { ValueProcessor } from './value/valueProcessor';
-export { ModelFieldManager } from './model/modelFieldManager';
+export { RecordSchemaEntryManager } from './recordSchema/recordSchemaEntryManager';
