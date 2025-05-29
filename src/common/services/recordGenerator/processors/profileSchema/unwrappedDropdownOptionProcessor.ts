@@ -29,13 +29,4 @@ export class UnwrappedDropdownOptionProcessor extends BaseDropdownProcessor {
       [optionEntry.uriBFLite]: [result],
     };
   }
-
-  protected override processSimpleChildValues(childValues: UserValueContents[]) {
-    return childValues.map(({ meta, label }) => ({
-      'http://bibfra.me/vocab/lite/name': [meta?.basicLabel ?? label ?? ''],
-      'http://bibfra.me/vocab/marc/code': [meta?.uri?.split('/').pop() ?? ''],
-      'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label ?? ''],
-      'http://bibfra.me/vocab/lite/link': [meta?.uri ?? ''],
-    }));
-  }
 }

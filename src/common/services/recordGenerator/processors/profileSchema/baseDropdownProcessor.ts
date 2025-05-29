@@ -2,13 +2,17 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ProfileSchemaProcessorManager } from './profileSchemaProcessorManager';
 
 export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected userValues: UserValues = {};
   protected profileSchemaEntry: SchemaEntry | null = null;
   protected recordSchemaEntry: RecordSchemaEntry | null = null;
 
-  constructor(protected readonly profileSchemaManager: ProfileSchemaManager) {}
+  constructor(
+    protected readonly profileSchemaManager: ProfileSchemaManager,
+    protected readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
+  ) {}
 
   abstract canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean;
 
@@ -40,7 +44,7 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
 
   protected abstract processOptionEntry(optionEntry: SchemaEntry): ProcessorResult | null;
 
-  protected processChildValues(childEntry?: SchemaEntry) {
+  protected processChildValues(childEntry?: SchemaEntry, recordSchemaEntry?: RecordSchemaEntry) {
     if (!childEntry) {
       return null;
     }
@@ -55,8 +59,13 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
       return childValues.map(({ label }) => label ?? '').filter(Boolean);
     }
 
-    return this.processSimpleChildValues(childValues);
+    if (recordSchemaEntry) {
+      return this.profileSchemaProcessorManager.process(childEntry, recordSchemaEntry, this.userValues);
+    } else {
+      return this.processSimpleChildValues(childValues);
+    }
   }
+
   protected processSimpleChildValues(childValues?: UserValueContents[]) {
     if (!childValues) return [];
 
@@ -69,11 +78,16 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected processChildren(optionEntry: SchemaEntry) {
     const result: ProcessorResult = {};
 
-    if (!optionEntry.children) return result;
+    if (!optionEntry.children || !this.recordSchemaEntry?.fields) return result;
+    const recordSchemaField = this.recordSchemaEntry.fields[optionEntry.uriBFLite ?? ''];
 
     for (const childUuid of optionEntry.children) {
       const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
-      const childValues = this.processChildValues(childEntry);
+      const childRecordSchemaField = recordSchemaField?.fields?.[childEntry?.uriBFLite ?? ''];
+
+      if (!childEntry) continue;
+
+      const childValues = this.processChildValues(childEntry, childRecordSchemaField);
 
       if (childEntry?.uriBFLite && childValues) {
         result[childEntry.uriBFLite] = childValues;

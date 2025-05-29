@@ -42,7 +42,7 @@ export class LookupProcessor implements IProfileSchemaProcessor {
   ) {
     if (meta?.uri && key.includes('link')) {
       result[key] = [meta.uri];
-    } else if (meta?.basicLabel && key.includes('term')) {
+    } else if (meta?.basicLabel && (key.includes('term') || key.includes('label') || key.includes('name'))) {
       result[key] = [meta.basicLabel];
     } else if (key.includes('code')) {
       result[key] = [meta?.uri?.split('/').pop() ?? label ?? ''];

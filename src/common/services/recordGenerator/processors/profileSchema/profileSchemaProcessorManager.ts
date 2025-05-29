@@ -12,9 +12,9 @@ export class ProfileSchemaProcessorManager {
   constructor(profileSchemaManager: ProfileSchemaManager) {
     this.processors = [
       new GroupProcessor(profileSchemaManager),
-      new FlattenedDropdownProcessor(profileSchemaManager),
-      new DropdownProcessor(profileSchemaManager),
-      new UnwrappedDropdownOptionProcessor(profileSchemaManager),
+      new FlattenedDropdownProcessor(profileSchemaManager, this),
+      new DropdownProcessor(profileSchemaManager, this),
+      new UnwrappedDropdownOptionProcessor(profileSchemaManager, this),
       new LookupProcessor(),
     ];
   }

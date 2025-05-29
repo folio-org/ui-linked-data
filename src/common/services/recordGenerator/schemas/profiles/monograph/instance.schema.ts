@@ -14,86 +14,84 @@ export const monographInstanceRecordSchema: RecordSchema = {
     fields: {
       'http://bibfra.me/vocab/marc/title': {
         type: RecordSchemaEntryType.array,
-        value: {
-          type: RecordSchemaEntryType.object,
-          fields: {
-            'http://bibfra.me/vocab/marc/Title': {
-              type: RecordSchemaEntryType.object,
-              fields: {
-                'http://bibfra.me/vocab/marc/partName': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/partNumber': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/mainTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/subTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/bflc/nonSortNum': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
+        value: RecordSchemaEntryType.object,
+        fields: {
+          'http://bibfra.me/vocab/marc/Title': {
+            type: RecordSchemaEntryType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/partName': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/partNumber': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/mainTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/subTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/bflc/nonSortNum': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
               },
             },
-            'http://bibfra.me/vocab/marc/VariantTitle': {
-              type: RecordSchemaEntryType.object,
-              fields: {
-                'http://bibfra.me/vocab/marc/partName': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/partNumber': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/mainTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/subTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/bflc/nonSortNum': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
+          },
+          'http://bibfra.me/vocab/marc/VariantTitle': {
+            type: RecordSchemaEntryType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/partName': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/partNumber': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/mainTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/subTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/bflc/nonSortNum': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
               },
             },
-            'http://bibfra.me/vocab/marc/ParallelTitle': {
-              type: RecordSchemaEntryType.object,
-              fields: {
-                'http://bibfra.me/vocab/marc/partName': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/partNumber': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/mainTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/marc/subTitle': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/lite/note': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
-                'http://bibfra.me/vocab/lite/date': {
-                  type: RecordSchemaEntryType.array,
-                  value: RecordSchemaEntryType.string,
-                },
+          },
+          'http://bibfra.me/vocab/marc/ParallelTitle': {
+            type: RecordSchemaEntryType.object,
+            fields: {
+              'http://bibfra.me/vocab/marc/partName': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/partNumber': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/mainTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/marc/subTitle': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/note': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
+              },
+              'http://bibfra.me/vocab/lite/date': {
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.string,
               },
             },
           },
@@ -302,7 +300,8 @@ export const monographInstanceRecordSchema: RecordSchema = {
                 value: RecordSchemaEntryType.string,
               },
               'http://bibfra.me/vocab/marc/status': {
-                type: RecordSchemaEntryType.object,
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.object,
                 fields: {
                   'http://bibfra.me/vocab/marc/label': {
                     type: RecordSchemaEntryType.array,
@@ -324,7 +323,8 @@ export const monographInstanceRecordSchema: RecordSchema = {
                 value: RecordSchemaEntryType.string,
               },
               'http://bibfra.me/vocab/marc/status': {
-                type: RecordSchemaEntryType.object,
+                type: RecordSchemaEntryType.array,
+                value: RecordSchemaEntryType.object,
                 fields: {
                   'http://bibfra.me/vocab/marc/label': {
                     type: RecordSchemaEntryType.array,
@@ -398,10 +398,6 @@ export const monographInstanceRecordSchema: RecordSchema = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
           'http://bibfra.me/vocab/marc/term': {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
