@@ -6,8 +6,10 @@ export class UnwrappedDropdownOptionProcessor extends BaseDropdownProcessor {
     return profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.hiddenWrapper === true;
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, _recordSchemaEntry: RecordSchemaEntry) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+    this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
 
     return this.processDropdownChildren(profileSchemaEntry);
   }

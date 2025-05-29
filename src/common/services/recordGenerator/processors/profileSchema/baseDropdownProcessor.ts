@@ -5,6 +5,8 @@ import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 
 export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected userValues: UserValues = {};
+  protected profileSchemaEntry: SchemaEntry | null = null;
+  protected recordSchemaEntry: RecordSchemaEntry | null = null;
 
   constructor(protected readonly profileSchemaManager: ProfileSchemaManager) {}
 
@@ -57,6 +59,7 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   }
   protected processSimpleChildValues(childValues?: UserValueContents[]) {
     if (!childValues) return [];
+
     return childValues.map(({ meta, label }) => ({
       'http://bibfra.me/vocab/lite/link': [meta?.uri ?? ''],
       'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label ?? ''],

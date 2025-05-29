@@ -10,8 +10,10 @@ export class DropdownProcessor extends BaseDropdownProcessor {
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, _recordSchemaEntry: RecordSchemaEntry) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+    this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
 
     return this.processDropdownChildren(profileSchemaEntry);
   }

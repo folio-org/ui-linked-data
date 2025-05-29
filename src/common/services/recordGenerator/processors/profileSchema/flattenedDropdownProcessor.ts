@@ -10,7 +10,9 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
   }
 
   process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+    this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
 
     const sourceField = recordSchemaEntry.options?.sourceField ?? BFLITE_URIS.SOURCE;
 
