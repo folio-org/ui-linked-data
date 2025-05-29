@@ -1,3 +1,4 @@
+import { SIMPLE_LOOKUP_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 
 export const monographWorkRecordSchema: RecordSchema = {
@@ -23,6 +24,9 @@ export const monographWorkRecordSchema: RecordSchema = {
           roles: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
+            options: {
+              mappedValues: SIMPLE_LOOKUP_MAPPING._contributions,
+            },
           },
         },
       },
@@ -184,6 +188,9 @@ export const monographWorkRecordSchema: RecordSchema = {
           roles: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
+            options: {
+              mappedValues: SIMPLE_LOOKUP_MAPPING._contributions,
+            },
           },
         },
       },
@@ -194,6 +201,9 @@ export const monographWorkRecordSchema: RecordSchema = {
           type: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
+            options: {
+              mappedValues: SIMPLE_LOOKUP_MAPPING._notes,
+            },
           },
           value: {
             type: RecordSchemaEntryType.array,

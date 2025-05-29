@@ -4,29 +4,33 @@ import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 
 export class DropdownProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};
+  private profileSchemaEntry: SchemaEntry | null = null;
+  private recordSchemaEntry: RecordSchemaEntry | null = null;
 
   constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
 
-  canProcess(profileSchemaEntry: SchemaEntry, RecordSchemaEntry: RecordSchemaEntry) {
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
       profileSchemaEntry.type === AdvancedFieldType.dropdown &&
-      !RecordSchemaEntry.options?.hiddenWrapper &&
-      !RecordSchemaEntry.options?.flattenDropdown
+      !recordSchemaEntry.options?.hiddenWrapper &&
+      !recordSchemaEntry.options?.flattenDropdown
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues) {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+    this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
 
-    return this.processDropdown(profileSchemaEntry);
+    return this.processDropdown();
   }
 
-  private processDropdown(dropdownEntry: SchemaEntry) {
+  private processDropdown() {
     const results: Array<Record<string, any>> = [];
 
-    if (!dropdownEntry.children) return results;
+    if (!this.profileSchemaEntry?.children) return results;
 
-    for (const optionUuid of dropdownEntry.children) {
+    for (const optionUuid of this.profileSchemaEntry.children) {
       const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
       if (!optionEntry?.children) continue;

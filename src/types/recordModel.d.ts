@@ -12,6 +12,7 @@ interface RecordSchemaEntry {
     flattenDropdown?: boolean;
     sourceField?: string;
     valueContainer?: ValueContainerOption;
+    mappedValues?: Record<string, { uri?: string }>;
   };
 }
 

@@ -6,6 +6,8 @@ import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/
 
 export class GroupProcessor implements IProfileSchemaProcessor {
   private userValues: UserValues = {};
+  private profileSchemaEntry: SchemaEntry | null = null;
+  private recordSchemaEntry: RecordSchemaEntry | null = null;
 
   constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
 
@@ -18,17 +20,19 @@ export class GroupProcessor implements IProfileSchemaProcessor {
   }
 
   process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+    this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
 
-    return this.processGroupWithChildren(profileSchemaEntry, recordSchemaEntry);
+    return this.processGroupWithChildren();
   }
 
-  private processGroupWithChildren(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
-    if (!profileSchemaEntry.children || !recordSchemaEntry.fields) {
+  private processGroupWithChildren() {
+    if (!this.profileSchemaEntry?.children || !this.recordSchemaEntry?.fields) {
       return [];
     }
 
-    const childEntriesWithValues = this.getChildEntriesWithValues(profileSchemaEntry.children);
+    const childEntriesWithValues = this.getChildEntriesWithValues(this.profileSchemaEntry.children);
 
     if (childEntriesWithValues.length === 0) {
       return [];
@@ -36,7 +40,7 @@ export class GroupProcessor implements IProfileSchemaProcessor {
 
     const groupedValues = this.groupValuesByIndex(childEntriesWithValues);
 
-    return this.createStructuredObjects(groupedValues, recordSchemaEntry.fields);
+    return this.createStructuredObjects(groupedValues, this.recordSchemaEntry.fields);
   }
 
   private getChildEntriesWithValues(children: string[]) {

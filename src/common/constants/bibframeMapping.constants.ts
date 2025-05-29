@@ -262,7 +262,7 @@ export const BFLITE_URI_TO_BLOCK = {
   'http://bibfra.me/vocab/lite/Work': BLOCKS_BFLITE.WORK,
 };
 
-const SIMPLE_LOOKUP_MAPPING = {
+export const SIMPLE_LOOKUP_MAPPING = {
   _notes: {
     [BFLITE_URIS.NOTE]: {
       uri: BF2_URIS.NOTE,
