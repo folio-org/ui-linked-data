@@ -6,7 +6,7 @@ import { RecordSchemaFactory } from './schemas';
 
 export class RecordGenerator implements IRecordGenerator {
   private readonly profileSchemaManager: ProfileSchemaManager;
-  private readonly schemaProcessorManager: ProfileSchemaProcessorManager;
+  private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager;
   private readonly valueProcessor: ValueProcessor;
   private readonly recordSchemaEntryManager: RecordSchemaEntryManager;
   private recordSchema: RecordSchema;
@@ -15,12 +15,12 @@ export class RecordGenerator implements IRecordGenerator {
 
   constructor() {
     this.profileSchemaManager = new ProfileSchemaManager();
-    this.schemaProcessorManager = new ProfileSchemaProcessorManager(this.profileSchemaManager);
+    this.profileSchemaProcessorManager = new ProfileSchemaProcessorManager(this.profileSchemaManager);
     this.valueProcessor = new ValueProcessor();
 
     this.recordSchemaEntryManager = new RecordSchemaEntryManager(
       this.valueProcessor,
-      this.schemaProcessorManager,
+      this.profileSchemaProcessorManager,
       this.profileSchemaManager,
     );
 

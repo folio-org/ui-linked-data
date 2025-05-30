@@ -64,23 +64,54 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
 
   private processArrayField(key: string, childResult: ValueResult, result: GeneratedValue) {
     if (childResult.options.hiddenWrapper) {
-      const firstValue = Array.isArray(childResult.value) ? childResult.value[0] : null;
-
-      if (firstValue && typeof firstValue === 'object') {
-        Object.assign(result, firstValue);
-      }
+      this.processHiddenWrapperArray(result, childResult);
     } else {
-      result[key] = result[key] ?? [];
+      this.processRegularArray(key, result, childResult);
+    }
+  }
 
-      const existingValue = result[key];
+  private processHiddenWrapperArray(result: GeneratedValue, childResult: ValueResult) {
+    const firstValue = this.getFirstArrayValue(childResult.value);
 
-      if (Array.isArray(existingValue)) {
-        if (Array.isArray(childResult.value)) {
-          result[key] = [...existingValue, ...childResult.value];
-        } else if (childResult.value !== null) {
-          result[key] = [...existingValue, childResult.value];
-        }
-      }
+    if (!firstValue || typeof firstValue !== 'object') return;
+
+    Object.entries(firstValue as Record<string, unknown>).forEach(([key, value]) => {
+      this.mergeValueIntoResult(result, key, value as GeneratedValue[keyof GeneratedValue]);
+    });
+  }
+
+  private getFirstArrayValue(value: unknown): unknown {
+    return Array.isArray(value) ? value[0] : null;
+  }
+
+  private mergeValueIntoResult(result: GeneratedValue, key: string, value: GeneratedValue[keyof GeneratedValue]) {
+    if (!(key in result)) {
+      result[key] = value;
+
+      return;
+    }
+
+    const existingValue = result[key];
+
+    if (Array.isArray(existingValue) && Array.isArray(value)) {
+      result[key] = [...existingValue, ...value];
+    } else if (typeof existingValue === 'object' && typeof value === 'object') {
+      result[key] = { ...existingValue, ...value };
+    } else {
+      result[key] = value;
+    }
+  }
+
+  private processRegularArray(key: string, result: GeneratedValue, childResult: ValueResult) {
+    result[key] = result[key] ?? [];
+    const existingValue = result[key];
+
+    if (!Array.isArray(existingValue)) return;
+
+    if (Array.isArray(childResult.value)) {
+      result[key] = [...existingValue, ...childResult.value];
+    } else if (childResult.value !== null) {
+      result[key] = [...existingValue, childResult.value];
     }
   }
 }
