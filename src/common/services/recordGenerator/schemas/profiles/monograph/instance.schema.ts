@@ -1,3 +1,4 @@
+import { SIMPLE_LOOKUP_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 
 export const monographInstanceRecordSchema: RecordSchema = {
@@ -347,6 +348,9 @@ export const monographInstanceRecordSchema: RecordSchema = {
           type: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
+            options: {
+              mappedValues: SIMPLE_LOOKUP_MAPPING._notes,
+            },
           },
           value: {
             type: RecordSchemaEntryType.array,

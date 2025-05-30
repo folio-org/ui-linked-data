@@ -121,7 +121,7 @@ export class GroupProcessor implements IProfileSchemaProcessor {
     valueAtIndex: UserValueContents,
     groupObject: GeneratedValue,
   ) {
-    const value = this.getValueForType(entryType, valueAtIndex);
+    const value = this.getValueForType(entryType, valueAtIndex, this.recordSchemaEntry?.fields?.[uriBFLite]);
 
     if (value.length === 0) return;
 
@@ -134,7 +134,7 @@ export class GroupProcessor implements IProfileSchemaProcessor {
     }
   }
 
-  private selectComplexTypeKey(valueAtIndex: UserValueContents): string {
+  private selectComplexTypeKey(valueAtIndex: UserValueContents) {
     return valueAtIndex.meta?.srsId ? 'srsId' : 'id';
   }
 
@@ -142,14 +142,27 @@ export class GroupProcessor implements IProfileSchemaProcessor {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
   }
 
-  private getValueForType(type: AdvancedFieldType, value: UserValueContents) {
+  private findMappedUri(uri: string, mappedValues: Record<string, { uri?: string }>) {
+    for (const [mappedUri, mappedValue] of Object.entries(mappedValues)) {
+      if (mappedValue.uri === uri) {
+        return mappedUri;
+      }
+    }
+    return null;
+  }
+
+  private getValueForType(type: AdvancedFieldType, value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry) {
     switch (type) {
       case AdvancedFieldType.literal:
         return value.label ? [value.label] : [];
       case AdvancedFieldType.simple: {
-        const label = value.meta?.basicLabel ?? value.label;
+        if (!value.meta?.uri) return [];
 
-        return label ? [label] : [];
+        const mappedUri =
+          recordSchemaEntry?.options?.mappedValues &&
+          this.findMappedUri(value.meta.uri, recordSchemaEntry.options.mappedValues);
+
+        return [mappedUri ?? value.meta.uri];
       }
       case AdvancedFieldType.complex: {
         const selectedId = value.meta?.srsId ?? value.id;
