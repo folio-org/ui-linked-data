@@ -28,9 +28,9 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
 
     const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
 
-    for (const [key, childField] of Object.entries(recordSchemaEntry.fields)) {
+    Object.entries(recordSchemaEntry.fields).forEach(([key, childField]) => {
       this.processObjectField(key, childField, result, parentPath, userValues);
-    }
+    });
 
     return this.valueProcessor.processSchemaValues(result, options);
   }
@@ -45,21 +45,21 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
     const localParentPath = parentPath ? [...parentPath] : undefined;
     const childEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 
-    for (const childEntry of childEntries) {
+    childEntries.forEach(childEntry => {
       const childResult = this.recordSchemaEntryManager.processEntry({
         recordSchemaEntry,
         userValues,
         profileSchemaEntry: childEntry,
       });
 
-      if (!childResult.value) continue;
+      if (!childResult.value) return;
 
       if (recordSchemaEntry.type === RecordSchemaEntryType.array) {
         this.processArrayField(key, childResult, result);
       } else {
         result[key] = childResult.value;
       }
-    }
+    });
   }
 
   private processArrayField(key: string, childResult: ValueResult, result: GeneratedValue) {

@@ -26,9 +26,9 @@ export class LookupProcessor implements IProfileSchemaProcessor {
     return values.map(({ meta, label }) => {
       const result: GeneratedValue = {};
 
-      for (const key of Object.keys(recordSchemaEntry.fields || {})) {
+      Object.keys(recordSchemaEntry.fields || {}).forEach(key => {
         this.mapEntryValue(result, key, meta, label);
-      }
+      });
 
       return result;
     });

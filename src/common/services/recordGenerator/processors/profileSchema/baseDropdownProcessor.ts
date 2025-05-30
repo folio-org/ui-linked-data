@@ -37,17 +37,17 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
 
     if (!dropdownEntry.children) return results;
 
-    for (const optionUuid of dropdownEntry.children) {
+    dropdownEntry.children.forEach(optionUuid => {
       const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) continue;
+      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) return;
 
       const result = this.processOptionEntry(optionEntry);
 
       if (result) {
         results.push(result);
       }
-    }
+    });
 
     return results;
   }
@@ -104,10 +104,10 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
     recordSchemaField: RecordSchemaEntry | undefined,
     result: ProcessorResult,
   ): void {
-    for (const childUuid of childUuids) {
+    childUuids.forEach(childUuid => {
       const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
-      if (!childEntry?.uriBFLite) continue;
+      if (!childEntry?.uriBFLite) return;
 
       const childRecordSchemaField = recordSchemaField?.fields?.[childEntry.uriBFLite];
       const childValues = this.processChildValues(childEntry, childRecordSchemaField);
@@ -115,7 +115,7 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
       if (childValues) {
         this.mergeChildValues(result, childEntry.uriBFLite, childValues);
       }
-    }
+    });
   }
 
   private mergeChildValues(
