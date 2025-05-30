@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { ResourceType } from './record.constants';
 
 export const BFLITE_URIS = {
