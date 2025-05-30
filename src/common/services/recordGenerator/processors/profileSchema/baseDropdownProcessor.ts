@@ -22,6 +22,16 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
     recordSchemaEntry: RecordSchemaEntry,
   ): ProcessorResult[];
 
+  protected initializeProcessor(
+    profileSchemaEntry: SchemaEntry,
+    userValues: UserValues,
+    recordSchemaEntry: RecordSchemaEntry,
+  ) {
+    this.profileSchemaEntry = profileSchemaEntry;
+    this.userValues = userValues;
+    this.recordSchemaEntry = recordSchemaEntry;
+  }
+
   protected processDropdownChildren(dropdownEntry: SchemaEntry) {
     const results: ProcessorResult[] = [];
 

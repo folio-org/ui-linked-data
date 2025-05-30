@@ -1,5 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
@@ -10,15 +11,17 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
   }
 
   process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.profileSchemaEntry = profileSchemaEntry;
-    this.userValues = userValues;
-    this.recordSchemaEntry = recordSchemaEntry;
+    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
 
     const sourceField = recordSchemaEntry.options?.sourceField ?? BFLITE_URIS.SOURCE;
 
-    return this.processDropdownChildren(profileSchemaEntry).map(result => ({
-      [sourceField]: [Object.keys(result)[0]],
-    }));
+    return this.processDropdownChildren(profileSchemaEntry).map(
+      result =>
+        ({
+          [sourceField]: [Object.keys(result)[0]],
+          ...Object.values(result)[0],
+        }) as ProcessorResult,
+    );
   }
 
   protected processOptionEntry(optionEntry: SchemaEntry) {
