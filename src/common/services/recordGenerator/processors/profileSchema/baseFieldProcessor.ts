@@ -49,7 +49,7 @@ export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {
     }
   }
 
-  protected mergeValues(existing: any, childValues: any): any {
+  protected mergeValues(existing: any, childValues: any) {
     if (ProcessorUtils.canMergeArrays(existing, childValues)) {
       return ProcessorUtils.mergeArrays(existing, childValues);
     }

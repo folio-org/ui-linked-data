@@ -1,7 +1,7 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/value.types';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaFieldValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
@@ -19,16 +19,13 @@ export class GroupProcessor extends BaseFieldProcessor {
     );
   }
 
-  process(
-    profileSchemaEntry: SchemaEntry,
-    userValues: UserValues,
-    recordSchemaEntry: RecordSchemaEntry,
-  ): ProcessorResult[] {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
     this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
+
     return this.processGroupWithChildren();
   }
 
-  private processGroupWithChildren(): ProcessorResult[] {
+  private processGroupWithChildren() {
     if (!this.profileSchemaEntry?.children || !this.recordSchemaEntry?.fields) {
       return [];
     }
@@ -69,10 +66,7 @@ export class GroupProcessor extends BaseFieldProcessor {
       .filter(obj => Object.keys(obj).length > 0);
   }
 
-  private createGroupObject(
-    indexGroup: GroupedValue,
-    recordSchemaEntries: Record<string, RecordSchemaEntry>,
-  ): ProcessorResult {
+  private createGroupObject(indexGroup: GroupedValue, recordSchemaEntries: Record<string, RecordSchemaEntry>) {
     const groupObject: ProcessorResult = {};
 
     for (const { childEntry, valueAtIndex } of indexGroup) {
@@ -105,14 +99,11 @@ export class GroupProcessor extends BaseFieldProcessor {
     this.setValueInGroupObject(uriBFLite, entryType, valueAtIndex, groupObject);
   }
 
-  private isValidEntry(uriBFLite: string | undefined, type: string | undefined): boolean {
+  private isValidEntry(uriBFLite: string | undefined, type: string | undefined) {
     return uriBFLite !== undefined && type !== undefined;
   }
 
-  private findMatchingSchemaEntry(
-    uriBFLite: string,
-    recordSchemaEntries: Record<string, RecordSchemaEntry>,
-  ): RecordSchemaEntry | undefined {
+  private findMatchingSchemaEntry(uriBFLite: string, recordSchemaEntries: Record<string, RecordSchemaEntry>) {
     return recordSchemaEntries[uriBFLite];
   }
 
@@ -127,13 +118,29 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!value || (Array.isArray(value) && value.length === 0)) return;
 
-    if (entryType === AdvancedFieldType.complex && !Array.isArray(value)) {
-      const key = valueAtIndex.meta?.srsId ? 'srsId' : 'id';
-
-      groupObject[key] = value;
+    if (this.isComplexNonArrayValue(entryType, value)) {
+      this.setComplexValue(valueAtIndex, groupObject, value);
     } else {
-      groupObject[uriBFLite] = Array.isArray(value) ? value : [value];
+      this.setRegularValue(uriBFLite, value, groupObject);
     }
+  }
+
+  private isComplexNonArrayValue(entryType: AdvancedFieldType, value: unknown) {
+    return entryType === AdvancedFieldType.complex && !Array.isArray(value);
+  }
+
+  private setComplexValue(
+    valueAtIndex: UserValueContents,
+    groupObject: GeneratedValue,
+    value: SchemaFieldValue | null,
+  ) {
+    const key = valueAtIndex.meta?.srsId ? 'srsId' : 'id';
+
+    groupObject[key] = value;
+  }
+
+  private setRegularValue(uriBFLite: string, value: unknown, groupObject: GeneratedValue) {
+    groupObject[uriBFLite] = Array.isArray(value) ? value : [value];
   }
 
   private validateEntryType(type?: string) {

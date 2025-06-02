@@ -76,7 +76,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     }
   }
 
-  protected processSimpleChildValues(childValues?: UserValueContents[]): SimpleFieldResult[] {
+  protected processSimpleChildValues(childValues?: UserValueContents[]) {
     if (!childValues) return [];
 
     return childValues
@@ -102,7 +102,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     childUuids: string[],
     recordSchemaField: RecordSchemaEntry | undefined,
     result: ProcessorResult,
-  ): void {
+  ) {
     childUuids.forEach(childUuid => {
       const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
@@ -121,7 +121,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     result: ProcessorResult,
     key: string,
     childValues: string[] | ProcessorResult | SimpleFieldResult[] | null,
-  ): void {
+  ) {
     if (!childValues) return;
 
     if (result[key]) {

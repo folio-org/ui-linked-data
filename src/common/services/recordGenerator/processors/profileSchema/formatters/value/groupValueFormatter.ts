@@ -1,11 +1,11 @@
 import { IValueFormatter } from './valueFormater.interface';
 
 export class GroupValueFormatter implements IValueFormatter {
-  formatLiteral(value: UserValueContents): string[] {
+  formatLiteral(value: UserValueContents) {
     return value.label ? [value.label] : [];
   }
 
-  formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry): string[] {
+  formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry) {
     if (!value.meta?.uri) return [];
 
     if (recordSchemaEntry?.options?.mappedValues) {
@@ -19,7 +19,7 @@ export class GroupValueFormatter implements IValueFormatter {
     return [value.meta.uri];
   }
 
-  formatComplex(value: UserValueContents): string | string[] {
+  formatComplex(value: UserValueContents) {
     const selectedId = value.meta?.srsId ?? value.id ?? '';
 
     return Array.isArray(selectedId) ? selectedId[0] : selectedId;

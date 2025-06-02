@@ -10,11 +10,11 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
   ) {}
 
-  canProcess(field: RecordSchemaEntry): boolean {
+  canProcess(field: RecordSchemaEntry) {
     return field.type === RecordSchemaEntryType.array;
   }
 
-  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
     if (!profileSchemaEntry.type) {
       return { value: null, options: {} };
     }
@@ -28,7 +28,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     recordSchemaEntry: RecordSchemaEntry,
     profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
     userValues: UserValues,
-  ): ValueResult {
+  ) {
     const options = {
       hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
@@ -42,7 +42,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
     userValues: UserValues,
     options: ValueOptions,
-  ): ValueResult {
+  ) {
     const values = userValues[profileSchemaEntry.uuid]?.contents;
 
     return this.valueProcessor.process(values, options);
@@ -53,7 +53,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     recordSchemaEntry: RecordSchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
-  ): ValueResult {
+  ) {
     const processedValues = this.profileSchemaProcessorManager.process(
       profileSchemaEntry,
       recordSchemaEntry,
@@ -63,10 +63,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     return this.valueProcessor.processSchemaValues(processedValues, options);
   }
 
-  private applyValueContainer(
-    result: ValueResult,
-    container?: { field: string; type?: 'array' | 'object' },
-  ): ValueResult {
+  private applyValueContainer(result: ValueResult, container?: { field: string; type?: 'array' | 'object' }) {
     if (!container || !result.value) {
       return result;
     }

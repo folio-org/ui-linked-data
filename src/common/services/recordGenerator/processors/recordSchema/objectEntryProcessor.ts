@@ -80,7 +80,7 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
     });
   }
 
-  private getFirstArrayValue(value: unknown): unknown {
+  private getFirstArrayValue(value: unknown) {
     return Array.isArray(value) ? value[0] : null;
   }
 
