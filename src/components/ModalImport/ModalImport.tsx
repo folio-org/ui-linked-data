@@ -132,6 +132,8 @@ export const ModalImport = memo(() => {
       spreadModalControls
       cancelButtonDisabled={isImportSubmitted}
       showCloseIconButton={!isImportSubmitted}
+      shouldCloseOnEsc={!isImportSubmitted}
+      shouldCloseOnExternalClick={!isImportSubmitted}
       cancelButtonHidden={isImportSuccessful}
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onCancel={reset}
