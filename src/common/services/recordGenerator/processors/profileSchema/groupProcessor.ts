@@ -1,7 +1,7 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaFieldValue } from '../../types/value.types';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';

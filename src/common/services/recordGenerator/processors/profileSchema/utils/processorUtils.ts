@@ -1,5 +1,9 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { ProcessorResult, SimpleFieldResult, ExtendedFieldResult } from '../../../types/profileSchemaProcessor.types';
+import {
+  ProcessorResult,
+  SimpleFieldResult,
+  ExtendedFieldResult,
+} from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 export class ProcessorUtils {
   static isStringArray(arr: unknown[]): boolean {

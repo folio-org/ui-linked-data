@@ -1,5 +1,5 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { SimpleFieldResult } from '../../../../types/profileSchemaProcessor.types';
+import { SimpleFieldResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 import { IValueFormatter } from './valueFormater.interface';
 
 export class DropdownValueFormatter implements IValueFormatter {
