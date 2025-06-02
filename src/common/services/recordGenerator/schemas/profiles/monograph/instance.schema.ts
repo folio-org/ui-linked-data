@@ -1,5 +1,22 @@
 import { BFLITE_URIS, SIMPLE_LOOKUP_MAPPING } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import {
+  stringArrayField,
+  standardTitleFields,
+  extendedTitleFields,
+  providerFields,
+  statusFields,
+  linkAndTermFields,
+  codeTermLinkFields,
+  nameAndLinkFields
+} from '../../common/fieldDefinitions';
+import {
+  createObjectField,
+  createArrayObjectField,
+  createNotesField,
+  createStatusField,
+  createStringArrayField
+} from '../../common/schemaBuilders';
 
 export const monographInstanceRecordSchema: RecordSchema = {
   [BFLITE_URIS.INSTANCE]: {
@@ -13,419 +30,57 @@ export const monographInstanceRecordSchema: RecordSchema = {
       ],
     },
     fields: {
-      [BFLITE_URIS.TITLE]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.TITLE]: {
-            type: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_PART_NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_PART_NUMBER]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MAIN_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_SUB_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.BFLC_NON_SORT_NUM]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-            },
-          },
-          [BFLITE_URIS.MARC_VARIANT_TITLE]: {
-            type: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_PART_NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_PART_NUMBER]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MAIN_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_SUB_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.BFLC_NON_SORT_NUM]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-            },
-          },
-          [BFLITE_URIS.MARC_PARALLEL_TITLE]: {
-            type: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_PART_NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_PART_NUMBER]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MAIN_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_SUB_TITLE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.NOTE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-            },
-          },
+      [BFLITE_URIS.TITLE]: createArrayObjectField({
+        [BFLITE_URIS.TITLE]: createObjectField(standardTitleFields),
+        [BFLITE_URIS.MARC_VARIANT_TITLE]: createObjectField(standardTitleFields),
+        [BFLITE_URIS.MARC_PARALLEL_TITLE]: createObjectField(extendedTitleFields),
+      }),
+      
+      [BFLITE_URIS.MARC_STATEMENT_OF_RESPONSIBILITY]: stringArrayField,
+      [BFLITE_URIS.EDITION]: stringArrayField,
+      
+      [BFLITE_URIS.PROVISION_ACTIVITY]: createArrayObjectField({
+        [BFLITE_URIS.PUBLICATION]: createArrayObjectField(providerFields),
+        [BFLITE_URIS.DISTRIBUTION]: createArrayObjectField(providerFields),
+        [BFLITE_URIS.MANUFACTURE]: createArrayObjectField(providerFields),
+        [BFLITE_URIS.PRODUCTION]: createArrayObjectField(providerFields),
+      }, { hiddenWrapper: true }),
+      
+      [BFLITE_URIS.COPYRIGHT]: createStringArrayField({
+        valueContainer: {
+          field: BFLITE_URIS.DATE,
+          type: 'array',
         },
-      },
-      [BFLITE_URIS.MARC_STATEMENT_OF_RESPONSIBILITY]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-      },
-      [BFLITE_URIS.EDITION]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-      },
-      [BFLITE_URIS.PROVISION_ACTIVITY]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        options: {
-          hiddenWrapper: true,
-        },
-        fields: {
-          [BFLITE_URIS.PUBLICATION]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PROVIDER_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.PROVIDER_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.NAME]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-          [BFLITE_URIS.DISTRIBUTION]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PROVIDER_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.PROVIDER_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.NAME]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-          [BFLITE_URIS.MANUFACTURE]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PROVIDER_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.PROVIDER_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.NAME]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-          [BFLITE_URIS.PRODUCTION]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.MARC_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PROVIDER_DATE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.LITE_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.PROVIDER_PLACE]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.NAME]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      [BFLITE_URIS.COPYRIGHT]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-        options: {
-          valueContainer: {
-            field: BFLITE_URIS.DATE,
-            type: 'array',
-          },
-        },
-      },
-      [BFLITE_URIS.ISSUANCE]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-      },
-      [BFLITE_URIS.MAP]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.IDENTIFIER_LCCN]: {
-            type: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_STATUS]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.MARC_LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-          [BFLITE_URIS.IDENTIFIER_ISBN]: {
-            type: RecordSchemaEntryType.object,
-            fields: {
-              [BFLITE_URIS.NAME]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.string,
-              },
-              [BFLITE_URIS.MARC_STATUS]: {
-                type: RecordSchemaEntryType.array,
-                value: RecordSchemaEntryType.object,
-                fields: {
-                  [BFLITE_URIS.MARC_LABEL]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                  [BFLITE_URIS.LINK]: {
-                    type: RecordSchemaEntryType.array,
-                    value: RecordSchemaEntryType.string,
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      [BFLITE_URIS.NOTES]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          type: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-            options: {
-              mappedValues: SIMPLE_LOOKUP_MAPPING._notes,
-            },
-          },
-          value: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
-      [BFLITE_URIS.MARC_SUPPLEMENTARY_CONTENT]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.LINK]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-          [BFLITE_URIS.NAME]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
-      [BFLITE_URIS.MARC_MEDIA]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.CODE]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-          [BFLITE_URIS.TERM]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-          [BFLITE_URIS.LINK]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
-      [BFLITE_URIS.EXTENT]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-      },
-      [BFLITE_URIS.MARC_DIMENSIONS]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.string,
-      },
-      [BFLITE_URIS.MARC_CARRIER]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.TERM]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-          [BFLITE_URIS.LINK]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
-      [BFLITE_URIS.MARC_ACCESS_LOCATION]: {
-        type: RecordSchemaEntryType.array,
-        value: RecordSchemaEntryType.object,
-        fields: {
-          [BFLITE_URIS.LINK]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-          [BFLITE_URIS.NOTE]: {
-            type: RecordSchemaEntryType.array,
-            value: RecordSchemaEntryType.string,
-          },
-        },
-      },
+      }),
+      
+      [BFLITE_URIS.ISSUANCE]: stringArrayField,
+      
+      [BFLITE_URIS.MAP]: createArrayObjectField({
+        [BFLITE_URIS.IDENTIFIER_LCCN]: createObjectField({
+          [BFLITE_URIS.NAME]: stringArrayField,
+          [BFLITE_URIS.MARC_STATUS]: createStatusField(statusFields),
+        }),
+        [BFLITE_URIS.IDENTIFIER_ISBN]: createObjectField({
+          [BFLITE_URIS.NAME]: stringArrayField,
+          [BFLITE_URIS.MARC_STATUS]: createStatusField(statusFields),
+        }),
+      }),
+      
+      [BFLITE_URIS.NOTES]: createNotesField(SIMPLE_LOOKUP_MAPPING._notes),
+      
+      [BFLITE_URIS.MARC_SUPPLEMENTARY_CONTENT]: createArrayObjectField(nameAndLinkFields),
+      
+      [BFLITE_URIS.MARC_MEDIA]: createArrayObjectField(codeTermLinkFields),
+      
+      [BFLITE_URIS.EXTENT]: stringArrayField,
+      [BFLITE_URIS.MARC_DIMENSIONS]: stringArrayField,
+      
+      [BFLITE_URIS.MARC_CARRIER]: createArrayObjectField(linkAndTermFields),
+      
+      [BFLITE_URIS.MARC_ACCESS_LOCATION]: createArrayObjectField({
+        [BFLITE_URIS.LINK]: stringArrayField,
+        [BFLITE_URIS.NOTE]: stringArrayField,
+      }),
     },
   },
 };
