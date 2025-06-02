@@ -1,4 +1,6 @@
 import { memo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ImportModes, HOLD_LOADING_SCREEN_MS } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
@@ -16,8 +18,10 @@ export const ModalImport = memo(() => {
   const [isImportCompleted, setIsImportCompleted] = useState(false);
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [navigationTarget, setNavigationTarget] = useState("");
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
+  const navigate = useNavigate();
 
   const restart = () => {
     setIsImportReady(false);
@@ -31,6 +35,9 @@ export const ModalImport = memo(() => {
   const reset = () => {
     restart();
     setIsImportModalOpen(false);
+    if (navigationTarget !== "") {
+      navigate(generateEditResourceUrl(navigationTarget));
+    }
   };
 
   const switchMode = (value: string) => {
@@ -55,12 +62,16 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          await importFile(filesToUpload);
+          const response = await importFile(filesToUpload);
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
             await new Promise(r => setTimeout(r, delta));
           }
+          if (response.resources.length === 1) {
+            setNavigationTarget(response.resources[0])
+          }
+          // download response.log
           setIsImportSuccessful(true);
         } catch {
           setIsImportSuccessful(false);
