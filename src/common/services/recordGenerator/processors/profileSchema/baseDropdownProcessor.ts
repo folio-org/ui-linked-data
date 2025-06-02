@@ -1,19 +1,18 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
-import { ExtendedFieldResult, ProcessorResult, SimpleFieldResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessorResult, SimpleFieldResult } from '../../types/profileSchemaProcessor.types';
 import { ProfileSchemaProcessorManager } from './profileSchemaProcessorManager';
+import { ProcessorUtils } from './utils/processorUtils';
+import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
+import { BaseFieldProcessor } from './baseFieldProcessor';
 
-export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
-  protected userValues: UserValues = {};
-  protected profileSchemaEntry: SchemaEntry | null = null;
-  protected recordSchemaEntry: RecordSchemaEntry | null = null;
-
+export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
   constructor(
     protected readonly profileSchemaManager: ProfileSchemaManager,
     protected readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
-  ) {}
+  ) {
+    super(profileSchemaManager, new DropdownValueFormatter());
+  }
 
   abstract canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean;
 
@@ -67,7 +66,7 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
     }
 
     if (childEntry.type === AdvancedFieldType.literal) {
-      return childValues.map(({ label }) => label ?? '').filter(Boolean);
+      return childValues.flatMap(value => this.valueFormat.formatLiteral(value)).filter(Boolean);
     }
 
     if (recordSchemaEntry) {
@@ -80,10 +79,9 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   protected processSimpleChildValues(childValues?: UserValueContents[]): SimpleFieldResult[] {
     if (!childValues) return [];
 
-    return childValues.map(({ meta, label }) => ({
-      [BFLITE_URIS.LINK]: [meta?.uri ?? ''],
-      [BFLITE_URIS.LABEL]: [meta?.basicLabel ?? label ?? ''],
-    }));
+    return childValues
+      .map(value => this.valueFormat.formatSimple(value))
+      .filter((result): result is SimpleFieldResult => !Array.isArray(result));
   }
 
   protected processChildren(optionEntry: SchemaEntry) {
@@ -129,56 +127,13 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
     if (result[key]) {
       const existing = result[key];
 
-      if (this.canMergeArrays(existing, childValues)) {
-        result[key] = this.mergeArrays(existing, childValues);
+      if (ProcessorUtils.canMergeArrays(existing, childValues)) {
+        result[key] = ProcessorUtils.mergeArrays(existing, childValues);
       } else {
         result[key] = childValues;
       }
     } else {
       result[key] = childValues;
     }
-  }
-
-  private canMergeArrays(
-    existing: string[] | SimpleFieldResult[] | ExtendedFieldResult[] | ProcessorResult | ProcessorResult[],
-    childValues: string[] | ProcessorResult | SimpleFieldResult[],
-  ) {
-    return (
-      Array.isArray(existing) &&
-      Array.isArray(childValues) &&
-      ((this.isStringArray(existing as unknown[]) && this.isStringArray(childValues as unknown[])) ||
-        (this.isSimpleFieldResultArray(existing as unknown[]) &&
-          this.isSimpleFieldResultArray(childValues as unknown[])))
-    );
-  }
-
-  private mergeArrays(
-    existing: string[] | SimpleFieldResult[] | ExtendedFieldResult[] | ProcessorResult | ProcessorResult[],
-    childValues: string[] | ProcessorResult | SimpleFieldResult[],
-  ) {
-    if (this.isStringArray(existing as unknown[]) && this.isStringArray(childValues as unknown[])) {
-      return [...(existing as string[]), ...(childValues as string[])];
-    }
-
-    if (
-      this.isSimpleFieldResultArray(existing as unknown[]) &&
-      this.isSimpleFieldResultArray(childValues as unknown[])
-    ) {
-      return [...(existing as SimpleFieldResult[]), ...(childValues as SimpleFieldResult[])];
-    }
-
-    // Default case - just return the new values
-    return childValues as string[] | SimpleFieldResult[];
-  }
-
-  private isStringArray(arr: unknown[]) {
-    return arr.length === 0 || typeof arr[0] === 'string';
-  }
-
-  private isSimpleFieldResultArray(arr: unknown[]) {
-    return (
-      arr.length === 0 ||
-      (typeof arr[0] === 'object' && arr[0] !== null && BFLITE_URIS.LINK in arr[0] && BFLITE_URIS.LABEL in arr[0])
-    );
   }
 }

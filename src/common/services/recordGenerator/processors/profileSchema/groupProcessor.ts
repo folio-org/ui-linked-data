@@ -1,15 +1,15 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue } from '../../types/value.types';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaFieldValue } from '../../types/value.types';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { BaseFieldProcessor } from './baseFieldProcessor';
+import { GroupValueFormatter } from './formatters';
 
-export class GroupProcessor implements IProfileSchemaProcessor {
-  private userValues: UserValues = {};
-  private profileSchemaEntry: SchemaEntry | null = null;
-  private recordSchemaEntry: RecordSchemaEntry | null = null;
-
-  constructor(private readonly profileSchemaManager: ProfileSchemaManager) {}
+export class GroupProcessor extends BaseFieldProcessor {
+  constructor(profileSchemaManager: ProfileSchemaManager) {
+    super(profileSchemaManager, new GroupValueFormatter());
+  }
 
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
@@ -19,15 +19,16 @@ export class GroupProcessor implements IProfileSchemaProcessor {
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.profileSchemaEntry = profileSchemaEntry;
-    this.userValues = userValues;
-    this.recordSchemaEntry = recordSchemaEntry;
-
+  process(
+    profileSchemaEntry: SchemaEntry,
+    userValues: UserValues,
+    recordSchemaEntry: RecordSchemaEntry,
+  ): ProcessorResult[] {
+    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
     return this.processGroupWithChildren();
   }
 
-  private processGroupWithChildren() {
+  private processGroupWithChildren(): ProcessorResult[] {
     if (!this.profileSchemaEntry?.children || !this.recordSchemaEntry?.fields) {
       return [];
     }
@@ -71,8 +72,8 @@ export class GroupProcessor implements IProfileSchemaProcessor {
   private createGroupObject(
     indexGroup: GroupedValue,
     recordSchemaEntries: Record<string, RecordSchemaEntry>,
-  ): GeneratedValue {
-    const groupObject: GeneratedValue = {};
+  ): ProcessorResult {
+    const groupObject: ProcessorResult = {};
 
     for (const { childEntry, valueAtIndex } of indexGroup) {
       if (!childEntry.uriBFLite || !valueAtIndex) continue;
@@ -121,57 +122,22 @@ export class GroupProcessor implements IProfileSchemaProcessor {
     valueAtIndex: UserValueContents,
     groupObject: GeneratedValue,
   ) {
-    const value = this.getValueForType(entryType, valueAtIndex, this.recordSchemaEntry?.fields?.[uriBFLite]);
+    const recordSchemaField = this.recordSchemaEntry?.fields?.[uriBFLite];
+    const value = this.processValueByType(entryType, valueAtIndex, recordSchemaField);
 
-    if (value.length === 0) return;
+    if (!value || (Array.isArray(value) && value.length === 0)) return;
 
-    if (entryType === AdvancedFieldType.complex) {
-      const key = this.selectComplexTypeKey(valueAtIndex);
+    if (entryType === AdvancedFieldType.complex && !Array.isArray(value)) {
+      const key = valueAtIndex.meta?.srsId ? 'srsId' : 'id';
 
       groupObject[key] = value;
     } else {
-      groupObject[uriBFLite] = value;
+      groupObject[uriBFLite] = Array.isArray(value) ? value : [value];
     }
-  }
-
-  private selectComplexTypeKey(valueAtIndex: UserValueContents) {
-    return valueAtIndex.meta?.srsId ? 'srsId' : 'id';
   }
 
   private validateEntryType(type?: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
-  }
-
-  private findMappedUri(uri: string, mappedValues: Record<string, { uri?: string }>) {
-    for (const [mappedUri, mappedValue] of Object.entries(mappedValues)) {
-      if (mappedValue.uri === uri) {
-        return mappedUri;
-      }
-    }
-    return null;
-  }
-
-  private getValueForType(type: AdvancedFieldType, value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry) {
-    switch (type) {
-      case AdvancedFieldType.literal:
-        return value.label ? [value.label] : [];
-      case AdvancedFieldType.simple: {
-        if (!value.meta?.uri) return [];
-
-        const mappedUri =
-          recordSchemaEntry?.options?.mappedValues &&
-          this.findMappedUri(value.meta.uri, recordSchemaEntry.options.mappedValues);
-
-        return [mappedUri ?? value.meta.uri];
-      }
-      case AdvancedFieldType.complex: {
-        const selectedId = value.meta?.srsId ?? value.id;
-
-        return Array.isArray(selectedId) ? selectedId[0] : selectedId;
-      }
-      default:
-        return [];
-    }
   }
 
   private groupValuesByIndex(childEntriesWithValues: ChildEntryWithValues[]) {
