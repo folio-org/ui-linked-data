@@ -1,8 +1,8 @@
-import { SIMPLE_LOOKUP_MAPPING } from '@common/constants/bibframeMapping.constants';
+import { SIMPLE_LOOKUP_MAPPING, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 
 export const monographWorkRecordSchema: RecordSchema = {
-  'http://bibfra.me/vocab/lite/Work': {
+  [BFLITE_URIS.WORK]: {
     type: RecordSchemaEntryType.object,
     options: {
       isRootEntry: true,
@@ -30,89 +30,88 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/title': {
+      [BFLITE_URIS.TITLE]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-
         fields: {
-          'http://bibfra.me/vocab/marc/Title': {
+          [BFLITE_URIS.TITLE_CONTAINER]: {
             type: RecordSchemaEntryType.object,
             fields: {
-              'http://bibfra.me/vocab/marc/partName': {
+              [BFLITE_URIS.MARC_PART_NAME]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/partNumber': {
+              [BFLITE_URIS.MARC_PART_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/mainTitle': {
+              [BFLITE_URIS.MAIN_TITLE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/bflc/nonSortNum': {
+              [BFLITE_URIS.BFLC_NON_SORT_NUM]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
             },
           },
-          'http://bibfra.me/vocab/marc/VariantTitle': {
+          [BFLITE_URIS.MARC_VARIANT_TITLE]: {
             type: RecordSchemaEntryType.object,
             fields: {
-              'http://bibfra.me/vocab/marc/partName': {
+              [BFLITE_URIS.MARC_PART_NAME]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/partNumber': {
+              [BFLITE_URIS.MARC_PART_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/mainTitle': {
+              [BFLITE_URIS.MAIN_TITLE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/subTitle': {
+              [BFLITE_URIS.MARC_SUB_TITLE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/lite/note': {
+              [BFLITE_URIS.NOTE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/lite/date': {
+              [BFLITE_URIS.DATE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/lite/variantType': {
+              [BFLITE_URIS.VARIANT_TYPE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
             },
           },
-          'http://bibfra.me/vocab/marc/ParallelTitle': {
+          [BFLITE_URIS.MARC_PARALLEL_TITLE]: {
             type: RecordSchemaEntryType.object,
             fields: {
-              'http://bibfra.me/vocab/marc/partName': {
+              [BFLITE_URIS.MARC_PART_NAME]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/partNumber': {
+              [BFLITE_URIS.MARC_PART_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/mainTitle': {
+              [BFLITE_URIS.MAIN_TITLE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/subTitle': {
+              [BFLITE_URIS.MARC_SUB_TITLE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/lite/note': {
+              [BFLITE_URIS.NOTE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/lite/date': {
+              [BFLITE_URIS.DATE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
@@ -120,39 +119,39 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/governmentPublication': {
+      [BFLITE_URIS.GOVERNMENT_PUBLICATION]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/term': {
+          [BFLITE_URIS.TERM]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/lite/link': {
+          [BFLITE_URIS.LINK]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
         },
       },
-      'http://bibfra.me/vocab/lite/dateStart': {
+      [BFLITE_URIS.DATE_START]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.string,
       },
-      'http://bibfra.me/vocab/marc/originPlace': {
+      [BFLITE_URIS.ORIGIN_PLACE]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/lite/name': {
+          [BFLITE_URIS.NAME]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/lite/link': {
+          [BFLITE_URIS.LINK]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
         },
       },
-      'http://id.loc.gov/ontologies/bibframe/geographicCoverage': {
+      [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
@@ -162,15 +161,15 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/targetAudience': {
+      [BFLITE_URIS.TARGET_AUDIENCE]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/term': {
+          [BFLITE_URIS.TERM]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/lite/link': {
+          [BFLITE_URIS.LINK]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
@@ -210,11 +209,11 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/summary': {
+      [BFLITE_URIS.SUMMARY]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.string,
       },
-      'http://bibfra.me/vocab/lite/subject': {
+      [BFLITE_URIS.SUBJECT]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
@@ -224,38 +223,38 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/tableOfContents': {
+      [BFLITE_URIS.TABLE_OF_CONTENTS]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.string,
       },
-      'http://bibfra.me/vocab/lite/classification': {
+      [BFLITE_URIS.CLASSIFICATION]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         options: {
           flattenDropdown: true,
-          sourceField: 'http://bibfra.me/vocab/marc/source',
+          sourceField: BFLITE_URIS.SOURCE,
         },
         fields: {
           lc: {
             type: RecordSchemaEntryType.object,
             fields: {
-              'http://bibfra.me/vocab/marc/code': {
+              [BFLITE_URIS.CODE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/itemNumber': {
+              [BFLITE_URIS.ITEM_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/status': {
+              [BFLITE_URIS.MARC_STATUS]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.object,
                 fields: {
-                  'http://bibfra.me/vocab/marc/label': {
+                  [BFLITE_URIS.MARC_LABEL]: {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
                   },
-                  'http://bibfra.me/vocab/lite/link': {
+                  [BFLITE_URIS.LINK]: {
                     type: RecordSchemaEntryType.array,
                     value: RecordSchemaEntryType.string,
                   },
@@ -270,19 +269,19 @@ export const monographWorkRecordSchema: RecordSchema = {
           ddc: {
             type: RecordSchemaEntryType.object,
             fields: {
-              'http://bibfra.me/vocab/marc/code': {
+              [BFLITE_URIS.CODE]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/itemNumber': {
+              [BFLITE_URIS.ITEM_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/edition': {
+              [BFLITE_URIS.EDITION]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
-              'http://bibfra.me/vocab/marc/editionNumber': {
+              [BFLITE_URIS.EDITION_NUMBER]: {
                 type: RecordSchemaEntryType.array,
                 value: RecordSchemaEntryType.string,
               },
@@ -294,33 +293,33 @@ export const monographWorkRecordSchema: RecordSchema = {
           },
         },
       },
-      'http://bibfra.me/vocab/marc/content': {
+      [BFLITE_URIS.CONTENT]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
+          [BFLITE_URIS.CODE]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/lite/link': {
+          [BFLITE_URIS.LINK]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
         },
       },
-      'http://bibfra.me/vocab/lite/language': {
+      [BFLITE_URIS.LANGUAGE]: {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         fields: {
-          'http://bibfra.me/vocab/marc/code': {
+          [BFLITE_URIS.CODE]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/marc/term': {
+          [BFLITE_URIS.TERM]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          'http://bibfra.me/vocab/lite/link': {
+          [BFLITE_URIS.LINK]: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
