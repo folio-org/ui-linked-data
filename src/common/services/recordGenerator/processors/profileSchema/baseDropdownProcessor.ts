@@ -1,4 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { ExtendedFieldResult, ProcessorResult, SimpleFieldResult } from '../../types/profileSchemaProcessor.types';
@@ -80,8 +81,8 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
     if (!childValues) return [];
 
     return childValues.map(({ meta, label }) => ({
-      'http://bibfra.me/vocab/lite/link': [meta?.uri ?? ''],
-      'http://bibfra.me/vocab/lite/label': [meta?.basicLabel ?? label ?? ''],
+      [BFLITE_URIS.LINK]: [meta?.uri ?? ''],
+      [BFLITE_URIS.LABEL]: [meta?.basicLabel ?? label ?? ''],
     }));
   }
 
@@ -177,10 +178,7 @@ export abstract class BaseDropdownProcessor implements IProfileSchemaProcessor {
   private isSimpleFieldResultArray(arr: unknown[]) {
     return (
       arr.length === 0 ||
-      (typeof arr[0] === 'object' &&
-        arr[0] !== null &&
-        'http://bibfra.me/vocab/lite/link' in arr[0] &&
-        'http://bibfra.me/vocab/lite/label' in arr[0])
+      (typeof arr[0] === 'object' && arr[0] !== null && BFLITE_URIS.LINK in arr[0] && BFLITE_URIS.LABEL in arr[0])
     );
   }
 }

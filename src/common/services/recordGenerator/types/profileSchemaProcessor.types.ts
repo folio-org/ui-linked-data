@@ -1,11 +1,13 @@
+import { BFLITE_URIS } from "@common/constants/bibframeMapping.constants";
+
 export interface SimpleFieldResult {
-  'http://bibfra.me/vocab/lite/link': string[];
-  'http://bibfra.me/vocab/lite/label': string[];
+  [BFLITE_URIS.LINK]: string[];
+  [BFLITE_URIS.LABEL]: string[];
 }
 
 export interface ExtendedFieldResult extends SimpleFieldResult {
-  'http://bibfra.me/vocab/lite/name': string[];
-  'http://bibfra.me/vocab/marc/code': string[];
+  [BFLITE_URIS.NAME]: string[];
+  [BFLITE_URIS.CODE]: string[];
 }
 
 export interface ProcessorResult {
