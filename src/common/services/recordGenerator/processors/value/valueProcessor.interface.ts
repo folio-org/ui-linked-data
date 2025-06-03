@@ -1,9 +1,11 @@
 import { ValueOptions } from '../../types/value.types';
 
 export interface UserValueContents {
+  id?: string;
   label?: string;
   meta?: {
     basicLabel?: string;
+    srsId?: string;
     [key: string]: any;
   };
 }
