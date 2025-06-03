@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS } from '@common/constants/import.constants';
+import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS, IMPORT_FILE_LOG_MEDIA_TYPE, IMPORT_FILE_LOG_NAME } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -54,6 +54,37 @@ export const ModalImport = memo(() => {
     setIsImportReady(false);
   };
 
+  const doImport = async () => {
+    return new Promise<ImportFileResponseDTO>((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
+      LOADING_TIMEOUT_MS,
+    );
+    importFile(filesToUpload)
+      .then(result => {
+        resolve(result);
+      })
+      .catch(e => {
+        reject(new Error(e));
+      })
+      .finally(() => {
+        clearTimeout(timeout);
+      });
+    });
+  };
+
+  const downloadLog = (log: string) => {
+    const blob = new Blob([log], { type: IMPORT_FILE_LOG_MEDIA_TYPE });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = IMPORT_FILE_LOG_NAME;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
   const processImport = async () => {
     setIsImportReady(false);
     setIsImportSubmitted(true);
@@ -64,22 +95,7 @@ export const ModalImport = memo(() => {
           const started = Date.now();
           // Reject if importFile is taking too long since we've removed
           // the ability to alter the modal state during load.
-          const response = await new Promise<ImportFileResponseDTO>((resolve, reject) => {
-            const timeout = setTimeout(
-              () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-              LOADING_TIMEOUT_MS,
-            );
-            importFile(filesToUpload)
-              .then(result => {
-                resolve(result);
-              })
-              .catch(e => {
-                reject(new Error(e));
-              })
-              .finally(() => {
-                clearTimeout(timeout);
-              });
-          });
+          const response = await doImport();
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
@@ -89,7 +105,7 @@ export const ModalImport = memo(() => {
           if (response.resources.length === 1) {
             setNavigationTarget(response.resources[0])
           }
-          // TODO download response.log
+          downloadLog(response.log);
         } catch {
           setIsImportSuccessful(false);
         }
