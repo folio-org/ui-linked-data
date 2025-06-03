@@ -7,7 +7,7 @@ export const LOADING_TIMEOUT_MS = 60 * 1000;
 
 export const IMPORT_FILE_LOG_MEDIA_TYPE = 'text/csv';
 
-export const IMPORT_FILE_LOG_NAME= 'import-activity-log-%s.csv';
+export const IMPORT_FILE_LOG_NAME= 'import-activity-log.csv';
 
 export enum ImportModes {
   JsonFile = 'jsonfile',
