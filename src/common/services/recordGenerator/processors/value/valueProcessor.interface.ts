@@ -2,6 +2,10 @@ import { ValueOptions } from '../../types/value.types';
 
 export interface UserValueContents {
   label?: string;
+  meta?: {
+    basicLabel?: string;
+    [key: string]: any;
+  };
 }
 
 export interface SchemaValue {
