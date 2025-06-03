@@ -33,10 +33,6 @@ describe('RecordGenerator', () => {
     jest.spyOn(RecordSchemaFactory, 'getRecordSchema').mockReturnValue(mockRecordSchema);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('generate', () => {
     it('throws error when record schema is not found', () => {
       (RecordSchemaFactory.getRecordSchema as jest.Mock).mockReturnValue(null);

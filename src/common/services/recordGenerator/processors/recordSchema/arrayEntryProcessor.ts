@@ -26,7 +26,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
 
   private processArrayField(
     recordSchemaEntry: RecordSchemaEntry,
-    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
+    profileSchemaEntry: SchemaEntry,
     userValues: UserValues,
   ) {
     const options = {
@@ -39,7 +39,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
   }
 
   private processStringArrayValues(
-    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
+    profileSchemaEntry: SchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
   ) {
@@ -49,7 +49,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
   }
 
   private processSchemaArrayValues(
-    profileSchemaEntry: RecordSchemaEntryProcessingContext['profileSchemaEntry'],
+    profileSchemaEntry: SchemaEntry,
     recordSchemaEntry: RecordSchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
