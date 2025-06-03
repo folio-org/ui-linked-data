@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
@@ -21,7 +21,7 @@ export const ModalImport = memo(() => {
   const [navigationTarget, setNavigationTarget] = useState("");
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
-  const navigate = useNavigate();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const restart = () => {
     setIsImportReady(false);
@@ -36,7 +36,7 @@ export const ModalImport = memo(() => {
     restart();
     setIsImportModalOpen(false);
     if (navigationTarget !== "") {
-      navigate(generateEditResourceUrl(navigationTarget));
+      navigateToEditPage(generateEditResourceUrl(navigationTarget));
     }
   };
 
