@@ -1,8 +1,6 @@
 import { GroupValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/groupValueFormatter';
 import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
 
-// RecordSchemaEntryType is available globally from types/recordModel.d.ts
-
 describe('GroupValueFormatter', () => {
   let formatter: GroupValueFormatter;
 
@@ -66,8 +64,8 @@ describe('GroupValueFormatter', () => {
         type: 'string' as RecordSchemaEntryType,
         options: {
           mappedValues: {
-            'mapped_key': { uri: 'test_uri' },
-            'other_key': { uri: 'other_uri' },
+            mapped_key: { uri: 'test_uri' },
+            other_key: { uri: 'other_uri' },
           },
         },
       };
@@ -83,8 +81,8 @@ describe('GroupValueFormatter', () => {
         type: 'string' as RecordSchemaEntryType,
         options: {
           mappedValues: {
-            'mapped_key': { uri: 'different_uri' },
-            'other_key': { uri: 'other_uri' },
+            mapped_key: { uri: 'different_uri' },
+            other_key: { uri: 'other_uri' },
           },
         },
       };
