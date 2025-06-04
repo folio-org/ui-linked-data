@@ -20,6 +20,7 @@ interface Props {
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
+  shouldCloseOnExternalClick? : boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
   onClose: () => void;
@@ -40,6 +41,7 @@ const Modal: FC<Props> = ({
   submitButtonLabel,
   cancelButtonLabel,
   shouldCloseOnEsc = true,
+  shouldCloseOnExternalClick = true,
   onSubmit,
   onCancel,
   onClose,
@@ -69,12 +71,18 @@ const Modal: FC<Props> = ({
     window.addEventListener('keydown', handleEscape);
 
     return () => window.removeEventListener('keydown', handleEscape);
-  }, []);
+  }, [shouldCloseOnEsc]);
+
+  const onExternalClickClose = () => {
+    if (shouldCloseOnExternalClick) {
+      onClose();
+    }
+  };
 
   return isOpen && portalElement
     ? createPortal(
         <>
-          <div className="overlay" onClick={onClose} role="presentation" data-testid="modal-overlay" />
+          <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
           <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
