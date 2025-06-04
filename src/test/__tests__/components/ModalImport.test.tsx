@@ -6,11 +6,14 @@ import { createModalContainer } from '@src/test/__mocks__/common/misc/createModa
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useUIStore } from '@src/store';
 import * as importApi from '@common/api/import.api';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('ModalImport', () => {
   const user = userEvent.setup();
   const file = new File(['{}'], 'resources.json', { type: 'application/json' });
   let importFileMock = jest.fn();
+  window.URL.createObjectURL = jest.fn();
+  window.URL.revokeObjectURL = (_: string) => jest.fn();
 
   beforeAll(() => {
     createModalContainer();
@@ -24,7 +27,15 @@ describe('ModalImport', () => {
         state: { isImportModalOpen: true },
       },
     ]);
-    render(<ModalImport />);
+    render(
+      <BrowserRouter>
+        <ModalImport />
+      </BrowserRouter>
+    );
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   test('renders import window', () => {
@@ -54,13 +65,18 @@ describe('ModalImport', () => {
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(importFileMock).toHaveBeenCalled();
     expect(screen.getByTestId('modal-import-waiting')).toBeInTheDocument();
+    // Verify all modal close actions have been disabled
     expect(screen.getByTestId('modal-button-submit')).toBeDisabled();
     expect(screen.getByTestId('modal-button-cancel')).toBeDisabled();
+    await user.click(screen.getByTestId('modal-overlay'));
+    expect(screen.getByTestId('modal-import')).toBeInTheDocument();
+    await fireEvent.keyPress(screen.getByTestId('modal-import'), { key: 'Escape', charCode: 27 });
+    expect(screen.getByTestId('modal-import')).toBeInTheDocument();
   });
 
   test('successful import shows done button which closes modal', async () => {
     jest.useFakeTimers({ advanceTimers: true });
-    importFileMock.mockResolvedValueOnce(null);
+    importFileMock.mockResolvedValueOnce({ resources: ['1'], log: '' });
     const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
