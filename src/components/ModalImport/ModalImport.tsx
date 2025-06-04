@@ -1,7 +1,13 @@
 import { memo, useState } from 'react';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS, IMPORT_FILE_LOG_MEDIA_TYPE, IMPORT_FILE_LOG_NAME } from '@common/constants/import.constants';
+import {
+  ImportModes,
+  HOLD_LOADING_SCREEN_MS,
+  LOADING_TIMEOUT_MS,
+  IMPORT_FILE_LOG_MEDIA_TYPE,
+  IMPORT_FILE_LOG_NAME,
+} from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -18,7 +24,7 @@ export const ModalImport = memo(() => {
   const [isImportCompleted, setIsImportCompleted] = useState(false);
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
-  const [navigationTarget, setNavigationTarget] = useState("");
+  const [navigationTarget, setNavigationTarget] = useState('');
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -35,7 +41,7 @@ export const ModalImport = memo(() => {
   const reset = () => {
     restart();
     setIsImportModalOpen(false);
-    if (navigationTarget !== "") {
+    if (navigationTarget !== '') {
       navigateToEditPage(generateEditResourceUrl(navigationTarget));
     }
   };
@@ -56,20 +62,20 @@ export const ModalImport = memo(() => {
 
   const doImport = async () => {
     return new Promise<ImportFileResponseDTO>((resolve, reject) => {
-    const timeout = setTimeout(
-      () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-      LOADING_TIMEOUT_MS,
-    );
-    importFile(filesToUpload)
-      .then(result => {
-        resolve(result);
-      })
-      .catch(e => {
-        reject(new Error(e));
-      })
-      .finally(() => {
-        clearTimeout(timeout);
-      });
+      const timeout = setTimeout(
+        () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
+        LOADING_TIMEOUT_MS,
+      );
+      importFile(filesToUpload)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(e => {
+          reject(new Error(e));
+        })
+        .finally(() => {
+          clearTimeout(timeout);
+        });
     });
   };
 
@@ -103,7 +109,7 @@ export const ModalImport = memo(() => {
           }
           setIsImportSuccessful(true);
           if (response.resources?.length === 1) {
-            setNavigationTarget(response.resources[0])
+            setNavigationTarget(response.resources[0]);
           }
           downloadLog(response.log);
         } catch {

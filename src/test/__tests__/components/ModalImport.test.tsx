@@ -31,7 +31,7 @@ describe('ModalImport', () => {
     render(
       <BrowserRouter>
         <ModalImport />
-      </BrowserRouter>
+      </BrowserRouter>,
     );
   });
 
@@ -114,7 +114,6 @@ describe('ModalImport', () => {
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
   });
-
 
   test('successful import of one resource navigates to edit the resource', async () => {
     jest.useFakeTimers({ advanceTimers: true });

@@ -19,5 +19,5 @@ export const importFile = async (files: File[]) => {
     },
   });
 
-  return await response?.json() as Promise<ImportFileResponseDTO>;
+  return (await response?.json()) as Promise<ImportFileResponseDTO>;
 };
