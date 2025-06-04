@@ -1,4 +1,5 @@
 import { recordGeneratorServiceLegacy } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
+import * as Router from 'react-router-dom';
 import { renderHook } from '@testing-library/react';
 import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -10,6 +11,8 @@ describe('useRecordGeneration', () => {
     const userValues = 'mockUserValues';
     const selectedEntries = 'mockSelectedEntries';
     const initKey = 'mockInitialSchemaKey';
+
+    jest.spyOn(Router, 'useSearchParams').mockReturnValueOnce([new URLSearchParams(), jest.fn()]);
 
     setInitialGlobalState([
       {
