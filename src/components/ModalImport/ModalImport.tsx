@@ -6,7 +6,7 @@ import {
   HOLD_LOADING_SCREEN_MS,
   LOADING_TIMEOUT_MS,
   IMPORT_FILE_LOG_MEDIA_TYPE,
-  IMPORT_FILE_LOG_NAME,
+  IMPORT_FILE_LOG_NAME_SUFFIX,
 } from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
@@ -82,12 +82,20 @@ export const ModalImport = memo(() => {
     });
   };
 
-  const downloadLog = (log: string) => {
+  const getFilenameWithoutExtension = (filename: string) => {
+    const extensionIndex = filename.lastIndexOf('.');
+    if (extensionIndex > 0) {
+      return filename.substring(0, extensionIndex);
+    }
+    return filename;
+  };
+
+  const downloadLog = (filePrefix: string, log: string) => {
     const blob = new Blob([log], { type: IMPORT_FILE_LOG_MEDIA_TYPE });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = IMPORT_FILE_LOG_NAME;
+    a.download = `${filePrefix}${IMPORT_FILE_LOG_NAME_SUFFIX}`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -112,7 +120,7 @@ export const ModalImport = memo(() => {
           if (response.resources?.length === 1) {
             setNavigationTarget(response.resources[0]);
           }
-          downloadLog(response.log);
+          downloadLog(getFilenameWithoutExtension(filesToUpload[0].name), response.log);
         } catch {
           setIsImportSuccessful(false);
         }
