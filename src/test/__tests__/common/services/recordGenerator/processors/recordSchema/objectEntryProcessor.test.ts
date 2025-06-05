@@ -25,11 +25,11 @@ describe('ObjectEntryProcessor', () => {
   });
 
   describe('canProcess', () => {
-    it('returns true for object type entry with fields', () => {
+    it('returns true for object type entry with properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
 
@@ -38,10 +38,10 @@ describe('ObjectEntryProcessor', () => {
       expect(result).toBe(true);
     });
 
-    it('returns false for object type entry without fields', () => {
+    it('returns false for object type entry without properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: undefined,
+        properties: undefined,
       } as RecordSchemaEntry;
 
       const result = processor.canProcess(recordSchemaEntry);
@@ -61,10 +61,10 @@ describe('ObjectEntryProcessor', () => {
   });
 
   describe('process', () => {
-    it('returns empty object when fields are not defined', () => {
+    it('returns empty object when properties are not defined', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: undefined,
+        properties: undefined,
         options: {
           hiddenWrapper: true,
         },
@@ -93,12 +93,12 @@ describe('ObjectEntryProcessor', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('processes object fields correctly', () => {
+    it('processes object properties correctly', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: { type: RecordSchemaEntryType.string },
-          field_uri_2: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_uri_1: { type: RecordSchemaEntryType.string },
+          property_uri_2: { type: RecordSchemaEntryType.string },
         },
         options: {
           hiddenWrapper: false,
@@ -124,8 +124,8 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          field_uri_1: 'string value 1',
-          field_uri_2: 'string value 2',
+          property_uri_1: 'string value 1',
+          property_uri_2: 'string value 2',
         },
         options: expectedOptions,
       };
@@ -142,11 +142,11 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_2', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_2', [
         'parent_1',
         'child_1',
       ]);
@@ -162,8 +162,8 @@ describe('ObjectEntryProcessor', () => {
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          field_uri_1: 'string value 1',
-          field_uri_2: 'string value 2',
+          property_uri_1: 'string value 1',
+          property_uri_2: 'string value 2',
         },
         expectedOptions,
       );
@@ -173,8 +173,8 @@ describe('ObjectEntryProcessor', () => {
     it('handles empty child entries', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_uri_1: { type: RecordSchemaEntryType.string },
         },
         options: {
           hiddenWrapper: false,
@@ -203,7 +203,7 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
@@ -215,8 +215,8 @@ describe('ObjectEntryProcessor', () => {
     it('handles null child result value', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_uri_1: { type: RecordSchemaEntryType.string },
         },
         options: {
           hiddenWrapper: false,
@@ -250,7 +250,7 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
@@ -263,11 +263,11 @@ describe('ObjectEntryProcessor', () => {
       expect(result).toEqual(expectedProcessResult);
     });
 
-    it('processes array field with hiddenWrapper option', () => {
+    it('processes array property with hiddenWrapper option', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.object,
           },
@@ -283,7 +283,7 @@ describe('ObjectEntryProcessor', () => {
       const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1: ValueResult = {
-        value: [{ nested_field: 'nested value' }],
+        value: [{ nested_property: 'nested value' }],
         options: {
           hiddenWrapper: true,
         },
@@ -293,7 +293,7 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          nested_field: 'nested value',
+          nested_property: 'nested value',
         },
         options: expectedOptions,
       };
@@ -308,7 +308,7 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
@@ -322,18 +322,18 @@ describe('ObjectEntryProcessor', () => {
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          nested_field: 'nested value',
+          nested_property: 'nested value',
         },
         expectedOptions,
       );
       expect(result).toEqual(expectedProcessResult);
     });
 
-    it('processes array field without hiddenWrapper option', () => {
+    it('processes array property without hiddenWrapper option', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
@@ -359,7 +359,7 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          field_uri_1: ['value_1', 'value_2'],
+          property_uri_1: ['value_1', 'value_2'],
         },
         options: expectedOptions,
       };
@@ -373,7 +373,7 @@ describe('ObjectEntryProcessor', () => {
         profileSchemaEntry,
         userValues,
       });
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
@@ -387,18 +387,18 @@ describe('ObjectEntryProcessor', () => {
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          field_uri_1: ['value_1', 'value_2'],
+          property_uri_1: ['value_1', 'value_2'],
         },
         expectedOptions,
       );
       expect(result).toEqual(expectedProcessResult);
     });
 
-    it('merges array values correctly when field already exists', () => {
+    it('merges array values correctly when property already exists', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
@@ -431,7 +431,7 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          field_uri_1: ['value_1', 'value_2', 'value_3', 'value_4'],
+          property_uri_1: ['value_1', 'value_2', 'value_3', 'value_4'],
         },
         options: expectedOptions,
       };
@@ -448,14 +448,14 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
       expect(mockRecordSchemaEntryManager.processEntry).toHaveBeenCalledTimes(2);
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          field_uri_1: ['value_1', 'value_2', 'value_3', 'value_4'],
+          property_uri_1: ['value_1', 'value_2', 'value_3', 'value_4'],
         },
         expectedOptions,
       );
@@ -465,8 +465,8 @@ describe('ObjectEntryProcessor', () => {
     it('handles non-array value in processRegularArray', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
@@ -492,7 +492,7 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          field_uri_1: ['not an array'],
+          property_uri_1: ['not an array'],
         },
         options: expectedOptions,
       };
@@ -509,7 +509,7 @@ describe('ObjectEntryProcessor', () => {
 
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          field_uri_1: ['not an array'],
+          property_uri_1: ['not an array'],
         },
         expectedOptions,
       );
@@ -519,8 +519,8 @@ describe('ObjectEntryProcessor', () => {
     it('handles non-object value in processHiddenWrapperArray', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
@@ -566,8 +566,8 @@ describe('ObjectEntryProcessor', () => {
     it('merges existing values properly in processHiddenWrapperArray', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_uri_1: {
+        properties: {
+          property_uri_1: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.object,
           },
@@ -584,13 +584,13 @@ describe('ObjectEntryProcessor', () => {
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childEntry_2 = { uuid: 'child_uuid_2' } as SchemaEntry;
       const childResult_1: ValueResult = {
-        value: [{ field1: 'value_1', field2: 'value_2' }],
+        value: [{ property1: 'value_1', property2: 'value_2' }],
         options: {
           hiddenWrapper: true,
         },
       };
       const childResult_2: ValueResult = {
-        value: [{ field1: 'value_1-more', field3: 'value_3' }],
+        value: [{ property1: 'value_1-more', property3: 'value_3' }],
         options: {
           hiddenWrapper: true,
         },
@@ -600,9 +600,9 @@ describe('ObjectEntryProcessor', () => {
       };
       const expectedProcessResult = {
         value: {
-          field1: 'value_1-more',
-          field2: 'value_2',
-          field3: 'value_3',
+          property1: 'value_1-more',
+          property2: 'value_2',
+          property3: 'value_3',
         },
         options: expectedOptions,
       };
@@ -617,16 +617,16 @@ describe('ObjectEntryProcessor', () => {
         userValues,
       });
 
-      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('field_uri_1', [
+      expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
         'child_1',
       ]);
       expect(mockRecordSchemaEntryManager.processEntry).toHaveBeenCalledTimes(2);
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
         {
-          field1: 'value_1-more',
-          field2: 'value_2',
-          field3: 'value_3',
+          property1: 'value_1-more',
+          property2: 'value_2',
+          property3: 'value_3',
         },
         expectedOptions,
       );

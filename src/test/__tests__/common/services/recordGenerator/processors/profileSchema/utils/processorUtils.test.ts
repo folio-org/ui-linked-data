@@ -1,8 +1,8 @@
 import { ProcessorUtils } from '@common/services/recordGenerator/processors/profileSchema/utils/processorUtils';
 import {
   ProcessorResult,
-  SimpleFieldResult,
-  ExtendedFieldResult,
+  SimplePropertyResult,
+  ExtendedPropertyResult,
 } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
@@ -43,20 +43,20 @@ describe('ProcessorUtils', () => {
     });
   });
 
-  describe('isSimpleFieldResultArray', () => {
+  describe('isSimplePropertyResultArray', () => {
     it('returns true for empty array', () => {
-      const result = ProcessorUtils.isSimpleFieldResultArray([]);
+      const result = ProcessorUtils.isSimplePropertyResultArray([]);
 
       expect(result).toBe(true);
     });
 
-    it('returns true for array of SimpleFieldResult objects', () => {
-      const simpleFieldResults = [
+    it('returns true for array of SimplePropertyResult objects', () => {
+      const simplePropertyResults = [
         { [BFLITE_URIS.LINK]: ['link_1'], [BFLITE_URIS.LABEL]: ['label_1'] },
         { [BFLITE_URIS.LINK]: ['link_2'], [BFLITE_URIS.LABEL]: ['label_2'] },
       ];
 
-      const result = ProcessorUtils.isSimpleFieldResultArray(simpleFieldResults);
+      const result = ProcessorUtils.isSimplePropertyResultArray(simplePropertyResults);
 
       expect(result).toBe(true);
     });
@@ -67,19 +67,19 @@ describe('ProcessorUtils', () => {
         { key3: 'value_3', key4: 'value_4' },
       ];
 
-      const result = ProcessorUtils.isSimpleFieldResultArray(invalidObjects);
+      const result = ProcessorUtils.isSimplePropertyResultArray(invalidObjects);
 
       expect(result).toBe(false);
     });
 
     it('returns false for array of strings', () => {
-      const result = ProcessorUtils.isSimpleFieldResultArray(['string_1', 'string_2']);
+      const result = ProcessorUtils.isSimplePropertyResultArray(['string_1', 'string_2']);
 
       expect(result).toBe(false);
     });
 
     it('returns false for array with null values', () => {
-      const result = ProcessorUtils.isSimpleFieldResultArray([null, null]);
+      const result = ProcessorUtils.isSimplePropertyResultArray([null, null]);
 
       expect(result).toBe(false);
     });
@@ -95,12 +95,14 @@ describe('ProcessorUtils', () => {
       expect(result).toEqual(['string_1', 'string_2', 'string_3', 'string_4']);
     });
 
-    it('merges two SimpleFieldResult arrays', () => {
+    it('merges two SimplePropertyResult arrays', () => {
       const existing = [
         { [BFLITE_URIS.LINK]: ['link_1'], [BFLITE_URIS.LABEL]: ['label_1'] },
         { [BFLITE_URIS.LINK]: ['link_2'], [BFLITE_URIS.LABEL]: ['label_2'] },
-      ] as SimpleFieldResult[];
-      const childValues = [{ [BFLITE_URIS.LINK]: ['link_3'], [BFLITE_URIS.LABEL]: ['label_3'] }] as SimpleFieldResult[];
+      ] as SimplePropertyResult[];
+      const childValues = [
+        { [BFLITE_URIS.LINK]: ['link_3'], [BFLITE_URIS.LABEL]: ['label_3'] },
+      ] as SimplePropertyResult[];
 
       const result = ProcessorUtils.mergeArrays(existing, childValues);
 
@@ -120,16 +122,16 @@ describe('ProcessorUtils', () => {
       expect(result).toBe(childValues);
     });
 
-    it('returns child values when existing is not a string or SimpleFieldResult array', () => {
+    it('returns child values when existing is not a string or SimplePropertyResult array', () => {
       const existing = [
         {
           [BFLITE_URIS.LINK]: ['link_1'],
           [BFLITE_URIS.LABEL]: ['label_1'],
           [BFLITE_URIS.NAME]: ['name1'],
           [BFLITE_URIS.CODE]: ['code1'],
-          complexField: ['value'],
+          complexProperty: ['value'],
         },
-      ] as unknown as ExtendedFieldResult[];
+      ] as unknown as ExtendedPropertyResult[];
       const childValues = ['string_1', 'string_2'];
 
       const result = ProcessorUtils.mergeArrays(existing, childValues);
@@ -148,12 +150,14 @@ describe('ProcessorUtils', () => {
       expect(result).toBe(true);
     });
 
-    it('returns true for two SimpleFieldResult arrays', () => {
+    it('returns true for two SimplePropertyResult arrays', () => {
       const existing = [
         { [BFLITE_URIS.LINK]: ['link_1'], [BFLITE_URIS.LABEL]: ['label_1'] },
         { [BFLITE_URIS.LINK]: ['link_2'], [BFLITE_URIS.LABEL]: ['label_2'] },
-      ] as SimpleFieldResult[];
-      const childValues = [{ [BFLITE_URIS.LINK]: ['link_3'], [BFLITE_URIS.LABEL]: ['label_3'] }] as SimpleFieldResult[];
+      ] as SimplePropertyResult[];
+      const childValues = [
+        { [BFLITE_URIS.LINK]: ['link_3'], [BFLITE_URIS.LABEL]: ['label_3'] },
+      ] as SimplePropertyResult[];
 
       const result = ProcessorUtils.canMergeArrays(existing, childValues);
 
@@ -180,7 +184,9 @@ describe('ProcessorUtils', () => {
 
     it('returns false when arrays are of different types', () => {
       const existing = ['string_1', 'string_2'];
-      const childValues = [{ [BFLITE_URIS.LINK]: ['link_1'], [BFLITE_URIS.LABEL]: ['label_1'] }] as SimpleFieldResult[];
+      const childValues = [
+        { [BFLITE_URIS.LINK]: ['link_1'], [BFLITE_URIS.LABEL]: ['label_1'] },
+      ] as SimplePropertyResult[];
 
       const result = ProcessorUtils.canMergeArrays(existing, childValues);
 

@@ -1,9 +1,9 @@
-import { SimpleFieldResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
+import { SimplePropertyResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 export interface IValueFormatter {
   formatLiteral(value: UserValueContents): string[];
 
-  formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry): string[] | SimpleFieldResult;
+  formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry): string[] | SimplePropertyResult;
 
   formatComplex(value: UserValueContents): any;
 }

@@ -1,5 +1,5 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { ValueOptions, ValueResult, SchemaFieldValue } from '../../types/value.types';
+import { ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
 import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
 import { ValueProcessor } from '../value/valueProcessor';
 import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
@@ -10,8 +10,8 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
   ) {}
 
-  canProcess(field: RecordSchemaEntry) {
-    return field.type === RecordSchemaEntryType.array;
+  canProcess(property: RecordSchemaEntry) {
+    return property.type === RecordSchemaEntryType.array;
   }
 
   process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
@@ -19,12 +19,12 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
       return { value: null, options: {} };
     }
 
-    const processingResult = this.processArrayField(recordSchemaEntry, profileSchemaEntry, userValues);
+    const processingResult = this.processArrayEntry(recordSchemaEntry, profileSchemaEntry, userValues);
 
     return this.applyValueContainer(processingResult, recordSchemaEntry.options?.valueContainer);
   }
 
-  private processArrayField(
+  private processArrayEntry(
     recordSchemaEntry: RecordSchemaEntry,
     profileSchemaEntry: SchemaEntry,
     userValues: UserValues,
@@ -38,11 +38,7 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
       : this.processSchemaArrayValues(profileSchemaEntry, recordSchemaEntry, userValues, options);
   }
 
-  private processStringArrayValues(
-    profileSchemaEntry: SchemaEntry,
-    userValues: UserValues,
-    options: ValueOptions,
-  ) {
+  private processStringArrayValues(profileSchemaEntry: SchemaEntry, userValues: UserValues, options: ValueOptions) {
     const values = userValues[profileSchemaEntry.uuid]?.contents;
 
     return this.valueProcessor.process(values, options);
@@ -63,15 +59,15 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     return this.valueProcessor.processSchemaValues(processedValues, options);
   }
 
-  private applyValueContainer(result: ValueResult, container?: { field: string; type?: 'array' | 'object' }) {
+  private applyValueContainer(result: ValueResult, container?: { property: string; type?: 'array' | 'object' }) {
     if (!container || !result.value) {
       return result;
     }
 
-    const { field: containerField, type = 'array' } = container;
+    const { property: containerProperty, type = 'array' } = container;
     const arrayValues = Array.isArray(result.value) ? result.value : [result.value];
-    const wrappedValues = arrayValues.map((value: SchemaFieldValue) => ({
-      [containerField]: type === 'array' ? [value] : value,
+    const wrappedValues = arrayValues.map((value: SchemaPropertyValue) => ({
+      [containerProperty]: type === 'array' ? [value] : value,
     }));
 
     return {

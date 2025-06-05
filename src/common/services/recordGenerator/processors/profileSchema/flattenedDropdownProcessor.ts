@@ -13,12 +13,12 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
   process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
     this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
 
-    const sourceField = recordSchemaEntry.options?.sourceField ?? BFLITE_URIS.SOURCE;
+    const sourceProperty = recordSchemaEntry.options?.sourceProperty ?? BFLITE_URIS.SOURCE;
 
     return this.processDropdownChildren(profileSchemaEntry).map(
       result =>
         ({
-          [sourceField]: [Object.keys(result)[0]],
+          [sourceProperty]: [Object.keys(result)[0]],
           ...Object.values(result)[0],
         }) as ProcessorResult,
     );

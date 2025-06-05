@@ -145,7 +145,7 @@ describe('FlattenedDropdownProcessor', () => {
       expect(result).toEqual([]);
     });
 
-    it('uses default source field when no sourceField option is provided', () => {
+    it('uses default source property when no sourceProperty option is provided', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
         uuid: 'dropdown_uuid',
@@ -161,10 +161,10 @@ describe('FlattenedDropdownProcessor', () => {
         options: {
           flattenDropdown: true,
         },
-        fields: {
+        properties: {
           option_1_uri: {
-            fields: {
-              field_1_uri: { type: RecordSchemaEntryType.string },
+            properties: {
+              property_1_uri: { type: RecordSchemaEntryType.string },
             },
           },
         },
@@ -180,7 +180,7 @@ describe('FlattenedDropdownProcessor', () => {
         .mockReturnValueOnce({
           uuid: 'child_1_uuid',
           type: AdvancedFieldType.literal,
-          uriBFLite: 'field_1_uri',
+          uriBFLite: 'property_1_uri',
         } as SchemaEntry);
 
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
@@ -190,12 +190,12 @@ describe('FlattenedDropdownProcessor', () => {
       expect(result).toEqual([
         {
           source_uri: ['option_1_uri'],
-          field_1_uri: ['test value'],
+          property_1_uri: ['test value'],
         },
       ]);
     });
 
-    it('uses custom source field when sourceField option is provided', () => {
+    it('uses custom source property when sourceProperty option is provided', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
         uuid: 'dropdown_uuid',
@@ -210,12 +210,12 @@ describe('FlattenedDropdownProcessor', () => {
         type: RecordSchemaEntryType.object,
         options: {
           flattenDropdown: true,
-          sourceField: 'custom_source_field',
+          sourceProperty: 'custom_source_property',
         },
-        fields: {
+        properties: {
           option_1_uri: {
-            fields: {
-              field_1_uri: { type: RecordSchemaEntryType.string },
+            properties: {
+              property_1_uri: { type: RecordSchemaEntryType.string },
             },
           },
         },
@@ -231,7 +231,7 @@ describe('FlattenedDropdownProcessor', () => {
         .mockReturnValueOnce({
           uuid: 'child_1_uuid',
           type: AdvancedFieldType.literal,
-          uriBFLite: 'field_1_uri',
+          uriBFLite: 'property_1_uri',
         } as SchemaEntry);
 
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
@@ -240,8 +240,8 @@ describe('FlattenedDropdownProcessor', () => {
 
       expect(result).toEqual([
         {
-          custom_source_field: ['option_1_uri'],
-          field_1_uri: ['test value'],
+          custom_source_property: ['option_1_uri'],
+          property_1_uri: ['test value'],
         },
       ]);
     });

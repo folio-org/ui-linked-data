@@ -132,7 +132,7 @@ describe('ArrayEntryProcessor', () => {
         type: 'object',
       } as SchemaEntry;
       const userValues = {} as UserValues;
-      const processedValues = { field1: 'value 1', field2: 'value 2' };
+      const processedValues = { property_1: 'value 1', property_2: 'value 2' };
       const expectedOptions: ValueOptions = {
         hiddenWrapper: false,
       };
@@ -166,7 +166,7 @@ describe('ArrayEntryProcessor', () => {
         options: {
           hiddenWrapper: false,
           valueContainer: {
-            field: 'wrapper',
+            property: 'wrapper',
             type: 'array',
           },
         },
@@ -212,7 +212,7 @@ describe('ArrayEntryProcessor', () => {
         options: {
           hiddenWrapper: false,
           valueContainer: {
-            field: 'wrapper',
+            property: 'wrapper',
             type: 'object',
           },
         },
@@ -258,7 +258,7 @@ describe('ArrayEntryProcessor', () => {
         options: {
           hiddenWrapper: false,
           valueContainer: {
-            field: 'wrapper',
+            property: 'wrapper',
             type: 'array',
           },
         },
@@ -269,14 +269,14 @@ describe('ArrayEntryProcessor', () => {
       } as SchemaEntry;
       const userValues = {} as UserValues;
 
-      const processedValues = { field1: 'value 1' };
+      const processedValues = { property_1: 'value 1' };
       const valueProcessorResult = {
-        value: processedValues, // Non-array value
+        value: processedValues,
         options: { hiddenWrapper: false },
       };
 
       const expectedResult = {
-        value: [{ wrapper: [{ field1: 'value 1' }] }],
+        value: [{ wrapper: [{ property_1: 'value 1' }] }],
         options: { hiddenWrapper: false },
       };
 
@@ -340,7 +340,7 @@ describe('ArrayEntryProcessor', () => {
         options: {
           hiddenWrapper: true,
           valueContainer: {
-            field: 'wrapper',
+            property: 'wrapper',
             type: 'array',
           },
         },

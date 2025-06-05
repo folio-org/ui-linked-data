@@ -1,12 +1,12 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
-type SimpleFieldKeys = typeof BFLITE_URIS.LINK | typeof BFLITE_URIS.LABEL;
-type ExtendedFieldKeys = SimpleFieldKeys | typeof BFLITE_URIS.NAME | typeof BFLITE_URIS.CODE;
+type SimplePropertyKeys = typeof BFLITE_URIS.LINK | typeof BFLITE_URIS.LABEL;
+type ExtendedPropertyKeys = SimplePropertyKeys | typeof BFLITE_URIS.NAME | typeof BFLITE_URIS.CODE;
 
-export type SimpleFieldResult = Record<SimpleFieldKeys, string[]>;
+export type SimplePropertyResult = Record<SimplePropertyKeys, string[]>;
 
-export type ExtendedFieldResult = Record<ExtendedFieldKeys, string[]>;
+export type ExtendedPropertyResult = Record<ExtendedPropertyKeys, string[]>;
 
 export interface ProcessorResult {
-  [key: string]: string[] | SimpleFieldResult[] | ExtendedFieldResult[] | ProcessorResult | ProcessorResult[];
+  [key: string]: string[] | SimplePropertyResult[] | ExtendedPropertyResult[] | ProcessorResult | ProcessorResult[];
 }

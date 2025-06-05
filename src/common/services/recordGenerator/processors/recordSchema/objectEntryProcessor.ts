@@ -13,7 +13,7 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
   ) {}
 
   canProcess(recordSchemaEntry: RecordSchemaEntry) {
-    return recordSchemaEntry.type === RecordSchemaEntryType.object && !!recordSchemaEntry.fields;
+    return recordSchemaEntry.type === RecordSchemaEntryType.object && !!recordSchemaEntry.properties;
   }
 
   process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
@@ -22,20 +22,20 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
     };
     const result: GeneratedValue = {};
 
-    if (!recordSchemaEntry.fields) {
+    if (!recordSchemaEntry.properties) {
       return this.valueProcessor.processSchemaValues({}, options);
     }
 
     const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
 
-    Object.entries(recordSchemaEntry.fields).forEach(([key, childField]) => {
-      this.processObjectField(key, childField, result, parentPath, userValues);
+    Object.entries(recordSchemaEntry.properties).forEach(([key, childProperty]) => {
+      this.processObjectProperty(key, childProperty, result, parentPath, userValues);
     });
 
     return this.valueProcessor.processSchemaValues(result, options);
   }
 
-  private processObjectField(
+  private processObjectProperty(
     key: string,
     recordSchemaEntry: RecordSchemaEntry,
     result: GeneratedValue,
@@ -55,14 +55,14 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
       if (!childResult.value) return;
 
       if (recordSchemaEntry.type === RecordSchemaEntryType.array) {
-        this.processArrayField(key, childResult, result);
+        this.processArrayEntry(key, childResult, result);
       } else {
         result[key] = childResult.value;
       }
     });
   }
 
-  private processArrayField(key: string, childResult: ValueResult, result: GeneratedValue) {
+  private processArrayEntry(key: string, childResult: ValueResult, result: GeneratedValue) {
     if (childResult.options.hiddenWrapper) {
       this.processHiddenWrapperArray(result, childResult);
     } else {

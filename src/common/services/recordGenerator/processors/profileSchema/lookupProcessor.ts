@@ -19,14 +19,14 @@ export class LookupProcessor implements IProfileSchemaProcessor {
   }
 
   private processLookupValues(recordSchemaEntry: RecordSchemaEntry, values: UserValueContents[]) {
-    if (!recordSchemaEntry.fields || values.length === 0) {
+    if (!recordSchemaEntry.properties || values.length === 0) {
       return [];
     }
 
     return values.map(({ meta, label }) => {
       const result: GeneratedValue = {};
 
-      Object.keys(recordSchemaEntry.fields || {}).forEach(key => {
+      Object.keys(recordSchemaEntry.properties || {}).forEach(key => {
         this.mapEntryValue(result, key, meta, label);
       });
 

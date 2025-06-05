@@ -85,7 +85,7 @@ describe('LookupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           link: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -100,11 +100,11 @@ describe('LookupProcessor', () => {
       expect(result).toEqual([]);
     });
 
-    it('returns empty array when record schema entry has no fields', () => {
+    it('returns empty array when record schema entry has no properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: undefined,
+        properties: undefined,
       } as RecordSchemaEntry;
       const profileSchemaEntry = {
         uuid: 'test-uuid',
@@ -121,13 +121,13 @@ describe('LookupProcessor', () => {
       expect(result).toEqual([]);
     });
 
-    it('processes values with basicLabel for term and label fields', () => {
+    it('processes values with basicLabel for term and label properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           term: { type: RecordSchemaEntryType.string },
-          labelField: { type: RecordSchemaEntryType.string },
+          labelProperty: { type: RecordSchemaEntryType.string },
           displayName: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -151,17 +151,17 @@ describe('LookupProcessor', () => {
       expect(result).toEqual([
         {
           term: ['Basic Label Value'],
-          labelField: ['Basic Label Value'],
+          labelProperty: ['Basic Label Value'],
           displayName: ['test value'],
         },
       ]);
     });
 
-    it('processes values with URI for code fields', () => {
+    it('processes values with URI for code properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           code: { type: RecordSchemaEntryType.string },
           label: { type: RecordSchemaEntryType.string },
         },
@@ -191,11 +191,11 @@ describe('LookupProcessor', () => {
       ]);
     });
 
-    it('uses label for code fields when uri is missing', () => {
+    it('uses label for code properties when uri is missing', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           code: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -223,11 +223,11 @@ describe('LookupProcessor', () => {
       ]);
     });
 
-    it('uses empty string for code fields when uri and label are missing', () => {
+    it('uses empty string for code properties when uri and label are missing', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           code: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -254,11 +254,11 @@ describe('LookupProcessor', () => {
       ]);
     });
 
-    it('uses label for general fields', () => {
+    it('uses label for general properties', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           general: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -286,11 +286,11 @@ describe('LookupProcessor', () => {
       ]);
     });
 
-    it('uses empty array for general fields when label is missing', () => {
+    it('uses empty array for general properties when label is missing', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           general: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -321,7 +321,7 @@ describe('LookupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           link: { type: RecordSchemaEntryType.string },
           term: { type: RecordSchemaEntryType.string },
           code: { type: RecordSchemaEntryType.string },

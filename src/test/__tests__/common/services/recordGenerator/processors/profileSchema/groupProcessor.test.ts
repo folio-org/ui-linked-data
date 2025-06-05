@@ -86,8 +86,8 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
-          field_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
 
@@ -96,7 +96,7 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([]);
     });
 
-    it('returns empty array when record schema entry has no fields', () => {
+    it('returns empty array when record schema entry has no properties', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.group,
         uuid: 'test_uuid',
@@ -123,8 +123,8 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
-          field_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
 
@@ -159,7 +159,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -189,7 +189,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -219,7 +219,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -249,7 +249,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -285,7 +285,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
           uri_2: { type: RecordSchemaEntryType.string },
           uri_3: { type: RecordSchemaEntryType.string },
@@ -334,7 +334,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -367,7 +367,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
           uri_2: { type: RecordSchemaEntryType.string },
         },
@@ -416,7 +416,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
           uri_2: { type: RecordSchemaEntryType.string },
         },
@@ -439,7 +439,7 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([{ uri_1: ['valid value'] }]);
     });
 
-    it('skips child entries with no matching record schema fields', () => {
+    it('skips child entries with no matching record schema properties', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.group,
         uuid: 'test_uuid',
@@ -456,7 +456,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -492,7 +492,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -508,7 +508,7 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([]);
     });
 
-    it('handles mapped values for simple type fields', () => {
+    it('handles mapped values for simple type properties', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.group,
         uuid: 'test_uuid',
@@ -522,7 +522,7 @@ describe('GroupProcessor', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           uri_1: {
             type: RecordSchemaEntryType.string,
             options: {

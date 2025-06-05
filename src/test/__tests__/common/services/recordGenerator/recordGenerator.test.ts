@@ -22,12 +22,12 @@ describe('RecordGenerator', () => {
           isRootEntry: true,
           references: [
             {
-              outputField: 'refs',
+              outputProperty: 'refs',
             },
           ],
         },
       } as RecordSchemaEntry,
-      field_1: {} as RecordSchemaEntry,
+      property_1: {} as RecordSchemaEntry,
     };
 
     jest.spyOn(RecordSchemaFactory, 'getRecordSchema').mockReturnValue(mockRecordSchema);
@@ -70,7 +70,7 @@ describe('RecordGenerator', () => {
             test_1: 'value 1',
             refs: [{ id: 'test-reference-id' }],
           },
-          field_1: {
+          property_1: {
             test_2: 'value 2',
           },
         },
@@ -124,7 +124,7 @@ describe('RecordGenerator', () => {
           root: {
             test_1: 'value 1',
           },
-          field_1: {
+          property_1: {
             test_2: 'value 2',
           },
         },
@@ -167,7 +167,7 @@ describe('RecordGenerator', () => {
 
     it('finds root entry key from schema when not marked', () => {
       const mockSchemaWithoutRoot = {
-        field_1: {} as RecordSchemaEntry,
+        property_1: {} as RecordSchemaEntry,
       };
       jest.spyOn(RecordSchemaFactory, 'getRecordSchema').mockReturnValue(mockSchemaWithoutRoot);
 
@@ -189,7 +189,7 @@ describe('RecordGenerator', () => {
       expect(processSpy).toHaveBeenCalled();
       expect(result).toEqual({
         resource: {
-          field_1: {
+          property_1: {
             test: 'value',
           },
         },

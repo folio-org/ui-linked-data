@@ -3,24 +3,24 @@ export interface ValueOptions {
   isReference?: boolean;
   references?: Array<{
     targetEntityType: string;
-    outputField: string;
+    outputProperty: string;
   }>;
 }
 
-export type SchemaFieldValue = string | SchemaFieldValueArray | SchemaFieldValueObject;
+export type SchemaPropertyValue = string | SchemaPropertyValueArray | SchemaPropertyValueObject;
 
-export type SchemaFieldValueArray = Array<SchemaFieldValue>;
+export type SchemaPropertyValueArray = Array<SchemaPropertyValue>;
 
-export interface SchemaFieldValueObject {
-  [key: string]: SchemaFieldValue | SchemaFieldValueArray | null;
+export interface SchemaPropertyValueObject {
+  [key: string]: SchemaPropertyValue | SchemaPropertyValueArray | null;
 }
 
 export interface ValueResult {
-  value: SchemaFieldValue | null;
+  value: SchemaPropertyValue | null;
   options: ValueOptions;
 }
 
-export type GeneratedValue = SchemaFieldValueObject;
+export type GeneratedValue = SchemaPropertyValueObject;
 
 export interface ChildEntryWithValues {
   childEntry: SchemaEntry;

@@ -42,7 +42,7 @@ describe('DropdownValueFormatter', () => {
   });
 
   describe('formatSimple', () => {
-    it('returns object with uri in LINK field and label in LABEL field when all values exist', () => {
+    it('returns object with uri in LINK property and label in LABEL property when all values exist', () => {
       const value = {
         label: 'test label',
         meta: {
@@ -75,7 +75,7 @@ describe('DropdownValueFormatter', () => {
       });
     });
 
-    it('returns empty string in LINK field when uri is not available', () => {
+    it('returns empty string in LINK property when uri is not available', () => {
       const value = {
         label: 'test label',
         meta: {},
@@ -89,7 +89,7 @@ describe('DropdownValueFormatter', () => {
       });
     });
 
-    it('returns empty string in LABEL field when both basicLabel and label are not available', () => {
+    it('returns empty string in LABEL property when both basicLabel and label are not available', () => {
       const value = {
         label: undefined,
         meta: {

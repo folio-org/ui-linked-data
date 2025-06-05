@@ -140,10 +140,10 @@ describe('UnwrappedDropdownOptionProcessor', () => {
         options: {
           hiddenWrapper: true,
         },
-        fields: {
+        properties: {
           option_uri: {
             type: RecordSchemaEntryType.object,
-            fields: {
+            properties: {
               child_uri: { type: RecordSchemaEntryType.string },
             },
           },
@@ -182,10 +182,10 @@ describe('UnwrappedDropdownOptionProcessor', () => {
         options: {
           hiddenWrapper: true,
         },
-        fields: {
+        properties: {
           option_uri: {
             type: RecordSchemaEntryType.object,
-            fields: {},
+            properties: {},
           },
         },
       };

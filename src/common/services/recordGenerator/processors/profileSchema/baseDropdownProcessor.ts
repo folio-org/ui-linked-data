@@ -1,6 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ProcessorResult, SimpleFieldResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
 import { ProfileSchemaProcessorManager } from './profileSchemaProcessorManager';
 import { ProcessorUtils } from './utils/processorUtils';
 import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
@@ -81,26 +81,26 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
 
     return childValues
       .map(value => this.valueFormat.formatSimple(value))
-      .filter((result): result is SimpleFieldResult => !Array.isArray(result));
+      .filter((result): result is SimplePropertyResult => !Array.isArray(result));
   }
 
   protected processChildren(optionEntry: SchemaEntry) {
     const result: ProcessorResult = {};
 
-    if (!optionEntry.children || !this.recordSchemaEntry?.fields) {
+    if (!optionEntry.children || !this.recordSchemaEntry?.properties) {
       return result;
     }
 
-    const recordSchemaField = this.recordSchemaEntry.fields[optionEntry.uriBFLite ?? ''];
+    const recordSchemaProperty = this.recordSchemaEntry.properties[optionEntry.uriBFLite ?? ''];
 
-    this.processChildEntries(optionEntry.children, recordSchemaField, result);
+    this.processChildEntries(optionEntry.children, recordSchemaProperty, result);
 
     return result;
   }
 
   private processChildEntries(
     childUuids: string[],
-    recordSchemaField: RecordSchemaEntry | undefined,
+    recordSchemaProperty: RecordSchemaEntry | undefined,
     result: ProcessorResult,
   ) {
     childUuids.forEach(childUuid => {
@@ -108,8 +108,8 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
 
       if (!childEntry?.uriBFLite) return;
 
-      const childRecordSchemaField = recordSchemaField?.fields?.[childEntry.uriBFLite];
-      const childValues = this.processChildValues(childEntry, childRecordSchemaField);
+      const childRecordSchemaProperty = recordSchemaProperty?.properties?.[childEntry.uriBFLite];
+      const childValues = this.processChildValues(childEntry, childRecordSchemaProperty);
 
       if (childValues) {
         this.mergeChildValues(result, childEntry.uriBFLite, childValues);
@@ -120,7 +120,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
   private mergeChildValues(
     result: ProcessorResult,
     key: string,
-    childValues: string[] | ProcessorResult | SimpleFieldResult[] | null,
+    childValues: string[] | ProcessorResult | SimplePropertyResult[] | null,
   ) {
     if (!childValues) return;
 

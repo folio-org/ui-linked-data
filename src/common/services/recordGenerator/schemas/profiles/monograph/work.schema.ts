@@ -1,21 +1,21 @@
 import { SIMPLE_LOOKUP_MAPPING, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import {
-  stringArrayField,
-  standardTitleFields,
-  extendedTitleFields,
-  variantTitleFields,
-  statusFields,
-  linkAndTermFields,
-  codeTermLinkFields,
-  contributorFields,
-  nameAndLinkFields,
-} from '../../common/fieldDefinitions';
+  stringArrayProperty,
+  standardTitleProperties,
+  extendedTitleProperties,
+  variantTitleProperties,
+  statusProperties,
+  linkAndTermProperties,
+  codeTermLinkProperties,
+  contributorProperties,
+  nameAndLinkProperties,
+} from '../../common/propertyDefinitions';
 import {
-  createObjectField,
-  createArrayObjectField,
-  createNotesField,
-  createStatusField,
+  createObjectProperty,
+  createArrayObjectProperty,
+  createNotesProperty,
+  createStatusProperty,
 } from '../../common/schemaBuilders';
 
 export const monographWorkRecordSchema: RecordSchema = {
@@ -25,71 +25,71 @@ export const monographWorkRecordSchema: RecordSchema = {
       isRootEntry: true,
       references: [
         {
-          outputField: '_instanceReference',
+          outputProperty: '_instanceReference',
         },
       ],
     },
-    fields: {
-      _creatorReference: createArrayObjectField(contributorFields),
+    properties: {
+      _creatorReference: createArrayObjectProperty(contributorProperties),
 
-      [BFLITE_URIS.TITLE]: createArrayObjectField({
-        [BFLITE_URIS.TITLE_CONTAINER]: createObjectField(standardTitleFields),
-        [BFLITE_URIS.MARC_VARIANT_TITLE]: createObjectField(variantTitleFields),
-        [BFLITE_URIS.MARC_PARALLEL_TITLE]: createObjectField(extendedTitleFields),
+      [BFLITE_URIS.TITLE]: createArrayObjectProperty({
+        [BFLITE_URIS.TITLE_CONTAINER]: createObjectProperty(standardTitleProperties),
+        [BFLITE_URIS.MARC_VARIANT_TITLE]: createObjectProperty(variantTitleProperties),
+        [BFLITE_URIS.MARC_PARALLEL_TITLE]: createObjectProperty(extendedTitleProperties),
       }),
 
-      [BFLITE_URIS.GOVERNMENT_PUBLICATION]: createArrayObjectField(linkAndTermFields),
+      [BFLITE_URIS.GOVERNMENT_PUBLICATION]: createArrayObjectProperty(linkAndTermProperties),
 
-      [BFLITE_URIS.DATE_START]: stringArrayField,
+      [BFLITE_URIS.DATE_START]: stringArrayProperty,
 
-      [BFLITE_URIS.ORIGIN_PLACE]: createArrayObjectField(nameAndLinkFields),
+      [BFLITE_URIS.ORIGIN_PLACE]: createArrayObjectProperty(nameAndLinkProperties),
 
-      [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: createArrayObjectField({
-        _geographicCoverageReference: stringArrayField,
+      [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: createArrayObjectProperty({
+        _geographicCoverageReference: stringArrayProperty,
       }),
 
-      [BFLITE_URIS.TARGET_AUDIENCE]: createArrayObjectField(linkAndTermFields),
+      [BFLITE_URIS.TARGET_AUDIENCE]: createArrayObjectProperty(linkAndTermProperties),
 
-      _contributorReference: createArrayObjectField(contributorFields),
+      _contributorReference: createArrayObjectProperty(contributorProperties),
 
-      _notes: createNotesField(SIMPLE_LOOKUP_MAPPING._notes),
+      _notes: createNotesProperty(SIMPLE_LOOKUP_MAPPING._notes),
 
-      [BFLITE_URIS.SUMMARY]: stringArrayField,
+      [BFLITE_URIS.SUMMARY]: stringArrayProperty,
 
-      [BFLITE_URIS.SUBJECT]: createArrayObjectField({
-        label: stringArrayField,
+      [BFLITE_URIS.SUBJECT]: createArrayObjectProperty({
+        label: stringArrayProperty,
       }),
 
-      [BFLITE_URIS.TABLE_OF_CONTENTS]: stringArrayField,
+      [BFLITE_URIS.TABLE_OF_CONTENTS]: stringArrayProperty,
 
-      [BFLITE_URIS.CLASSIFICATION]: createArrayObjectField(
+      [BFLITE_URIS.CLASSIFICATION]: createArrayObjectProperty(
         {
-          lc: createObjectField({
-            [BFLITE_URIS.CODE]: stringArrayField,
-            [BFLITE_URIS.ITEM_NUMBER]: stringArrayField,
-            [BFLITE_URIS.MARC_STATUS]: createStatusField(statusFields),
-            _assigningSourceReference: stringArrayField,
+          lc: createObjectProperty({
+            [BFLITE_URIS.CODE]: stringArrayProperty,
+            [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
+            [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
+            _assigningSourceReference: stringArrayProperty,
           }),
-          ddc: createObjectField({
-            [BFLITE_URIS.CODE]: stringArrayField,
-            [BFLITE_URIS.ITEM_NUMBER]: stringArrayField,
-            [BFLITE_URIS.EDITION]: stringArrayField,
-            [BFLITE_URIS.EDITION_NUMBER]: stringArrayField,
-            _assigningSourceReference: stringArrayField,
+          ddc: createObjectProperty({
+            [BFLITE_URIS.CODE]: stringArrayProperty,
+            [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
+            [BFLITE_URIS.EDITION]: stringArrayProperty,
+            [BFLITE_URIS.EDITION_NUMBER]: stringArrayProperty,
+            _assigningSourceReference: stringArrayProperty,
           }),
         },
         {
           flattenDropdown: true,
-          sourceField: BFLITE_URIS.SOURCE,
+          sourceProperty: BFLITE_URIS.SOURCE,
         },
       ),
 
-      [BFLITE_URIS.CONTENT]: createArrayObjectField({
-        [BFLITE_URIS.CODE]: stringArrayField,
-        [BFLITE_URIS.LINK]: stringArrayField,
+      [BFLITE_URIS.CONTENT]: createArrayObjectProperty({
+        [BFLITE_URIS.CODE]: stringArrayProperty,
+        [BFLITE_URIS.LINK]: stringArrayProperty,
       }),
 
-      [BFLITE_URIS.LANGUAGE]: createArrayObjectField(codeTermLinkFields),
+      [BFLITE_URIS.LANGUAGE]: createArrayObjectProperty(codeTermLinkProperties),
     },
   },
 };

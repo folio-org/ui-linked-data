@@ -1,105 +1,105 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import {
-  createObjectField,
-  createArrayObjectField,
-  createStatusField,
-  createNotesField,
-  createStringArrayField,
+  createObjectProperty,
+  createArrayObjectProperty,
+  createStatusProperty,
+  createNotesProperty,
+  createStringArrayProperty,
 } from '@common/services/recordGenerator/schemas/common/schemaBuilders';
 
 describe('SchemaBuilders', () => {
-  describe('createObjectField', () => {
-    it('creates an object field with empty options', () => {
-      const fields = {
-        field_1: { type: RecordSchemaEntryType.string },
+  describe('createObjectProperty', () => {
+    it('creates an object property with empty options', () => {
+      const properties = {
+        property_1: { type: RecordSchemaEntryType.string },
       };
 
-      const result = createObjectField(fields);
+      const result = createObjectProperty(properties);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.object,
-        fields,
+        properties,
       });
     });
 
-    it('creates an object field with provided options', () => {
-      const fields = {
-        field_1: { type: RecordSchemaEntryType.string },
+    it('creates an object property with provided options', () => {
+      const properties = {
+        property_1: { type: RecordSchemaEntryType.string },
       };
       const options = { someOption: 'value' };
 
-      const result = createObjectField(fields, options);
+      const result = createObjectProperty(properties, options);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.object,
-        fields,
+        properties,
         options,
       });
     });
   });
 
-  describe('createArrayObjectField', () => {
-    it('creates an array object field with empty options', () => {
-      const fields = {
-        field_1: { type: RecordSchemaEntryType.string },
+  describe('createArrayObjectProperty', () => {
+    it('creates an array object property with empty options', () => {
+      const properties = {
+        property_1: { type: RecordSchemaEntryType.string },
       };
 
-      const result = createArrayObjectField(fields);
+      const result = createArrayObjectProperty(properties);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields,
+        properties,
       });
     });
 
-    it('creates an array object field with provided options', () => {
-      const fields = {
-        field_1: { type: RecordSchemaEntryType.string },
+    it('creates an array object property with provided options', () => {
+      const properties = {
+        property_1: { type: RecordSchemaEntryType.string },
       };
       const options = { someOption: 'value' };
 
-      const result = createArrayObjectField(fields, options);
+      const result = createArrayObjectProperty(properties, options);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields,
+        properties,
         options,
       });
     });
   });
 
-  describe('createStatusField', () => {
-    it('creates a status field with provided status fields', () => {
-      const statusFields = {
+  describe('createStatusProperty', () => {
+    it('creates a status property with provided status properties', () => {
+      const statusProperties = {
         status: { type: RecordSchemaEntryType.string },
         date: { type: RecordSchemaEntryType.string },
       };
 
-      const result = createStatusField(statusFields);
+      const result = createStatusProperty(statusProperties);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: statusFields,
+        properties: statusProperties,
       });
     });
   });
 
-  describe('createNotesField', () => {
-    it('creates a notes field with mapping reference', () => {
+  describe('createNotesProperty', () => {
+    it('creates a notes property with mapping reference', () => {
       const mappingReference = {
         note1: { uri: 'uri_1' },
         note2: { uri: 'uri_2' },
       };
 
-      const result = createNotesField(mappingReference);
+      const result = createNotesProperty(mappingReference);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           type: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
@@ -116,9 +116,9 @@ describe('SchemaBuilders', () => {
     });
   });
 
-  describe('createStringArrayField', () => {
-    it('creates a string array field with empty options', () => {
-      const result = createStringArrayField();
+  describe('createStringArrayProperty', () => {
+    it('creates a string array property with empty options', () => {
+      const result = createStringArrayProperty();
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,
@@ -126,10 +126,10 @@ describe('SchemaBuilders', () => {
       });
     });
 
-    it('creates a string array field with provided options', () => {
+    it('creates a string array property with provided options', () => {
       const options = { someOption: 'value' };
 
-      const result = createStringArrayField(options);
+      const result = createStringArrayProperty(options);
 
       expect(result).toEqual({
         type: RecordSchemaEntryType.array,

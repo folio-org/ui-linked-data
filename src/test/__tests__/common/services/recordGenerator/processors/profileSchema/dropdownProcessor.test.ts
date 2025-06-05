@@ -209,10 +209,10 @@ describe('DropdownProcessor', () => {
       } as unknown as UserValues;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           option_1: {
             type: RecordSchemaEntryType.object,
-            fields: {
+            properties: {
               child_1: { type: RecordSchemaEntryType.string },
             },
           },
@@ -259,16 +259,16 @@ describe('DropdownProcessor', () => {
       } as unknown as UserValues;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           option_1: {
             type: RecordSchemaEntryType.object,
-            fields: {
+            properties: {
               child_1: { type: RecordSchemaEntryType.string },
             },
           },
           option_2: {
             type: RecordSchemaEntryType.object,
-            fields: {
+            properties: {
               child_2: { type: RecordSchemaEntryType.string },
             },
           },
@@ -318,10 +318,10 @@ describe('DropdownProcessor', () => {
       const childRecordSchemaEntry = { type: RecordSchemaEntryType.string };
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
+        properties: {
           option_1: {
             type: RecordSchemaEntryType.object,
-            fields: {
+            properties: {
               child_1: childRecordSchemaEntry,
             },
           },

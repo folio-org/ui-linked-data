@@ -1,7 +1,7 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaFieldValue } from '../../types/value.types';
+import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaPropertyValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
@@ -26,7 +26,7 @@ export class GroupProcessor extends BaseFieldProcessor {
   }
 
   private processGroupWithChildren() {
-    if (!this.profileSchemaEntry?.children || !this.recordSchemaEntry?.fields) {
+    if (!this.profileSchemaEntry?.children || !this.recordSchemaEntry?.properties) {
       return [];
     }
 
@@ -38,7 +38,7 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     const groupedValues = this.groupValuesByIndex(childEntriesWithValues);
 
-    return this.createStructuredObjects(groupedValues, this.recordSchemaEntry.fields);
+    return this.createStructuredObjects(groupedValues, this.recordSchemaEntry.properties);
   }
 
   private getChildEntriesWithValues(children: string[]) {
@@ -113,8 +113,8 @@ export class GroupProcessor extends BaseFieldProcessor {
     valueAtIndex: UserValueContents,
     groupObject: GeneratedValue,
   ) {
-    const recordSchemaField = this.recordSchemaEntry?.fields?.[uriBFLite];
-    const value = this.processValueByType(entryType, valueAtIndex, recordSchemaField);
+    const recordSchemaProperty = this.recordSchemaEntry?.properties?.[uriBFLite];
+    const value = this.processValueByType(entryType, valueAtIndex, recordSchemaProperty);
 
     if (!value || (Array.isArray(value) && value.length === 0)) return;
 
@@ -132,7 +132,7 @@ export class GroupProcessor extends BaseFieldProcessor {
   private setComplexValue(
     valueAtIndex: UserValueContents,
     groupObject: GeneratedValue,
-    value: SchemaFieldValue | null,
+    value: SchemaPropertyValue | null,
   ) {
     const key = valueAtIndex.meta?.srsId ? 'srsId' : 'id';
 

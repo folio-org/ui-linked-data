@@ -91,8 +91,8 @@ describe('ValueProcessor', () => {
   describe('processSchemaValues', () => {
     it('returns original processor value when not empty', () => {
       const processorValue = {
-        field1: 'value1',
-        field2: 'value2',
+        property_1: 'value 1',
+        property_2: 'value 2',
       };
       const options: ValueOptions = {
         isReference: true,
@@ -122,7 +122,7 @@ describe('ValueProcessor', () => {
 
     it('processes with default options when none provided', () => {
       const processorValue = {
-        field1: 'value1',
+        property_1: 'value 1',
       };
 
       const result = processor.processSchemaValues(processorValue);

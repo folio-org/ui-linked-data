@@ -138,8 +138,8 @@ describe('RecordSchemaEntryManager', () => {
     it('uses correct processor for object type entry', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
-        fields: {
-          field_1: { type: RecordSchemaEntryType.string },
+        properties: {
+          property_1: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
       const profileSchemaEntry = {
@@ -150,7 +150,7 @@ describe('RecordSchemaEntryManager', () => {
         hiddenWrapper: false,
       };
       const expectedResult = {
-        value: { field_1: 'test value' },
+        value: { property_1: 'test value' },
         options: expectedOptions,
       };
 
