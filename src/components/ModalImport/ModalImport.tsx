@@ -43,6 +43,7 @@ export const ModalImport = memo(() => {
     setIsImportModalOpen(false);
     if (navigationTarget !== '') {
       navigateToEditPage(generateEditResourceUrl(navigationTarget));
+      setNavigationTarget('');
     }
   };
 
@@ -61,6 +62,8 @@ export const ModalImport = memo(() => {
   };
 
   const doImport = async () => {
+    // Reject if importFile is taking too long since we've removed
+    // the ability to alter the modal state during load.
     return new Promise<ImportFileResponseDTO>((resolve, reject) => {
       const timeout = setTimeout(
         () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
@@ -99,8 +102,6 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          // Reject if importFile is taking too long since we've removed
-          // the ability to alter the modal state during load.
           const response = await doImport();
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
