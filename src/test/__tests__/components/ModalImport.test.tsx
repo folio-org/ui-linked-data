@@ -71,7 +71,7 @@ describe('ModalImport', () => {
     expect(screen.getByTestId('modal-button-cancel')).toBeDisabled();
     await user.click(screen.getByTestId('modal-overlay'));
     expect(screen.getByTestId('modal-import')).toBeInTheDocument();
-    await fireEvent.keyPress(screen.getByTestId('modal-import'), { key: 'Escape', charCode: 27 });
+    await user.keyboard('{Escape}');
     expect(screen.getByTestId('modal-import')).toBeInTheDocument();
   });
 
