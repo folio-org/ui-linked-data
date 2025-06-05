@@ -6,7 +6,7 @@ export const fetchProfiles = () =>
     url: PROFILE_API_ENDPOINT,
   });
 
-export const fetchProfile = (profileId = 'monograph') =>
+export const fetchProfile = (profileId = 1) =>
   baseApi.getJson({
     url: `${PROFILE_API_ENDPOINT}/${profileId}`,
   });

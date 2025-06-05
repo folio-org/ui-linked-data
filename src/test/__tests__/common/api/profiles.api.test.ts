@@ -42,10 +42,10 @@ describe('profiles.api', () => {
     };
     jest.spyOn(baseApi, 'getJson').mockResolvedValue(testResult);
 
-    const result = await fetchProfile('monograph');
+    const result = await fetchProfile(1);
 
     expect(baseApi.getJson).toHaveBeenCalledWith({
-      url: '/linked-data/profile/monograph',
+      url: '/linked-data/profile/1',
     });
     expect(result).toEqual(testResult);
   });
@@ -54,7 +54,7 @@ describe('profiles.api', () => {
     const testResult = {
       data: {
         profile: {
-          id: 'monograph',
+          id: '1',
           name: 'Monograph',
         },
       },
@@ -64,7 +64,7 @@ describe('profiles.api', () => {
     const result = await fetchProfile();
 
     expect(baseApi.getJson).toHaveBeenCalledWith({
-      url: '/linked-data/profile/monograph',
+      url: '/linked-data/profile/1',
     });
     expect(result).toEqual(testResult);
   });
