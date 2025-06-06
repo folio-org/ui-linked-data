@@ -102,7 +102,7 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
     }
 
     if (recordEntry.roles) {
-      generatedValue._relationship = (recordEntry.roles as unknown as string[])?.map((role: string) => ({
+      generatedValue.roles = (recordEntry.roles as unknown as string[])?.map((role: string) => ({
         [BFLITE_URIS.LINK]: [role],
         [BFLITE_URIS.LABEL]: [''],
       })) as unknown as string[];

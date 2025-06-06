@@ -9,6 +9,7 @@ import {
 } from '@common/api/records.api';
 import { BibframeEntities } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
+import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
@@ -43,8 +44,7 @@ export const useRecordControls = () => {
   const { setIsLoading } = useLoadingState();
   const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
   const { setSelectedProfile } = useProfileState();
-  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } =
-    useUIState();
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
   const {
     setRecordStatus,
     setLastSavedRecordId,
@@ -88,19 +88,21 @@ export const useRecordControls = () => {
     isNavigatingBack = true,
     shouldSetSearchParams = true,
   }: SaveRecordProps = {}) => {
-    const parsed = generateRecord();
+    const generatedRecord = generateRecord();
 
-    if (!parsed) return;
+    if (!generatedRecord) return;
 
     setIsLoading(true);
 
     try {
       const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
-      const formattedRecord = formatRecord({
-        parsedRecord: parsed,
-        record,
-        selectedRecordBlocks: updatedSelectedRecordBlocks,
-      }) as RecordEntry;
+      const formattedRecord = CUSTOM_PROFILE_ENABLED
+        ? generatedRecord
+        : (formatRecord({
+            parsedRecord: generatedRecord,
+            record,
+            selectedRecordBlocks: updatedSelectedRecordBlocks,
+          }) as RecordEntry);
 
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
       const shouldPostRecord = !recordId || isClone;

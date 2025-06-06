@@ -509,7 +509,7 @@ describe('recordProcessingCases', () => {
                 value: ['Test Label'],
                 isPreferred: undefined,
               },
-              _relationship: [
+              roles: [
                 {
                   [linkBFLiteUri]: ['role_1'],
                   [labelBFLiteUri]: [''],
@@ -558,7 +558,7 @@ describe('recordProcessingCases', () => {
                 isPreferred: undefined,
               },
               _subclass: 'Type_1',
-              _relationship: [
+              roles: [
                 {
                   [linkBFLiteUri]: ['role_1'],
                   [labelBFLiteUri]: [''],
