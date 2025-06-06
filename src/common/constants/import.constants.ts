@@ -5,7 +5,9 @@ export const HOLD_LOADING_SCREEN_MS = 2.5 * 1000;
 
 export const LOADING_TIMEOUT_MS = 60 * 1000;
 
-export const LD_JSON_MIME_TYPE = 'application/ld+json';
+export const IMPORT_FILE_LOG_MEDIA_TYPE = 'text/csv';
+
+export const IMPORT_FILE_LOG_NAME_SUFFIX = '-import-log.csv';
 
 export enum ImportModes {
   JsonFile = 'jsonfile',
