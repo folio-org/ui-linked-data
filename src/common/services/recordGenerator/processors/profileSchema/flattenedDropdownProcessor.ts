@@ -14,25 +14,29 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
     this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
 
     const sourceProperty = recordSchemaEntry.options?.sourceProperty ?? BFLITE_URIS.SOURCE;
+    const dropdownResults = this.processDropdownChildren(profileSchemaEntry);
 
-    return this.processDropdownChildren(profileSchemaEntry).map(
-      result =>
-        ({
-          [sourceProperty]: [Object.keys(result)[0]],
-          ...Object.values(result)[0],
-        }) as ProcessorResult,
-    );
+    return dropdownResults.map(result => {
+      // Each result is an object with a single key (the URI) and its associated value
+      const uri = Object.keys(result)[0]; // Get the URI from the first (and only) key
+      const value = Object.values(result)[0]; // Get the associated value
+
+      return {
+        [sourceProperty]: [uri],
+        ...value,
+      } as ProcessorResult;
+    });
   }
 
   protected processOptionEntry(optionEntry: SchemaEntry) {
     if (!optionEntry.uriBFLite) return null;
 
-    const result = this.processChildren(optionEntry);
+    const childrenResults = this.processChildren(optionEntry);
 
-    if (Object.keys(result).length === 0) return null;
+    if (Object.keys(childrenResults).length === 0) return null;
 
     return {
-      [optionEntry.uriBFLite]: result,
+      [optionEntry.uriBFLite]: childrenResults,
     };
   }
 }
