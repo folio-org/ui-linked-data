@@ -1,3 +1,4 @@
+import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { ModalImport } from '@components/ModalImport';
@@ -6,11 +7,14 @@ import { createModalContainer } from '@src/test/__mocks__/common/misc/createModa
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useUIStore } from '@src/store';
 import * as importApi from '@common/api/import.api';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('ModalImport', () => {
   const user = userEvent.setup();
   const file = new File(['{}'], 'resources.json', { type: 'application/json' });
   let importFileMock = jest.fn();
+  window.URL.createObjectURL = jest.fn();
+  window.URL.revokeObjectURL = jest.fn();
 
   beforeAll(() => {
     createModalContainer();
@@ -24,7 +28,15 @@ describe('ModalImport', () => {
         state: { isImportModalOpen: true },
       },
     ]);
-    render(<ModalImport />);
+    render(
+      <BrowserRouter>
+        <ModalImport />
+      </BrowserRouter>,
+    );
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   test('renders import window', () => {
@@ -54,13 +66,18 @@ describe('ModalImport', () => {
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(importFileMock).toHaveBeenCalled();
     expect(screen.getByTestId('modal-import-waiting')).toBeInTheDocument();
+    // Verify all modal close actions have been disabled
     expect(screen.getByTestId('modal-button-submit')).toBeDisabled();
     expect(screen.getByTestId('modal-button-cancel')).toBeDisabled();
+    await user.click(screen.getByTestId('modal-overlay'));
+    expect(screen.getByTestId('modal-import')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    expect(screen.getByTestId('modal-import')).toBeInTheDocument();
   });
 
   test('successful import shows done button which closes modal', async () => {
     jest.useFakeTimers({ advanceTimers: true });
-    importFileMock.mockResolvedValueOnce(null);
+    importFileMock.mockResolvedValueOnce({ resources: ['1'], log: '' });
     const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
@@ -77,7 +94,7 @@ describe('ModalImport', () => {
     importFileMock = (jest.spyOn(importApi, 'importFile') as any).mockImplementation(() => {
       setTimeout(() => {
         Promise.resolve(null);
-      }, 30 * 1000);
+      }, 90 * 1000);
     });
     const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
@@ -96,5 +113,39 @@ describe('ModalImport', () => {
     expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
     await user.click(screen.getByTestId('modal-button-submit'));
     expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
+  });
+
+  test('successful import of one resource navigates to edit the resource', async () => {
+    jest.useFakeTimers({ advanceTimers: true });
+    importFileMock.mockResolvedValueOnce({ resources: ['1'], log: '' });
+    const input = screen.getByTestId('dropzone-file-input');
+    await user.upload(input, file);
+    await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
+    await user.click(screen.getByTestId('modal-button-submit'));
+    expect(navigateToEditPage).toHaveBeenCalled();
+  });
+
+  test('successful import of anything other than one resource does not navigate', async () => {
+    jest.useFakeTimers({ advanceTimers: true });
+    importFileMock.mockResolvedValueOnce({ resources: ['1', '2', '3'], log: '' });
+    const input = screen.getByTestId('dropzone-file-input');
+    await user.upload(input, file);
+    await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
+    await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
+    expect(navigateToEditPage).not.toHaveBeenCalled();
+  });
+
+  test('import creates activity log link element', async () => {
+    const spy = jest.spyOn(document, 'createElement');
+    jest.useFakeTimers({ advanceTimers: true });
+    importFileMock.mockResolvedValueOnce({ resources: ['1', '2'], log: '1' });
+    const input = screen.getByTestId('dropzone-file-input');
+    await user.upload(input, file);
+    await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
+    expect(spy).toHaveBeenCalled();
   });
 });

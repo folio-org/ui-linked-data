@@ -1,5 +1,13 @@
 import { memo, useState } from 'react';
-import { ImportModes, HOLD_LOADING_SCREEN_MS, LOADING_TIMEOUT_MS } from '@common/constants/import.constants';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import {
+  ImportModes,
+  HOLD_LOADING_SCREEN_MS,
+  LOADING_TIMEOUT_MS,
+  IMPORT_FILE_LOG_MEDIA_TYPE,
+  IMPORT_FILE_LOG_NAME_SUFFIX,
+} from '@common/constants/import.constants';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -16,8 +24,10 @@ export const ModalImport = memo(() => {
   const [isImportCompleted, setIsImportCompleted] = useState(false);
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [navigationTarget, setNavigationTarget] = useState('');
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { formatMessage } = useIntl();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const restart = () => {
     setIsImportReady(false);
@@ -31,6 +41,10 @@ export const ModalImport = memo(() => {
   const reset = () => {
     restart();
     setIsImportModalOpen(false);
+    if (navigationTarget !== '') {
+      navigateToEditPage(generateEditResourceUrl(navigationTarget));
+      setNavigationTarget('');
+    }
   };
 
   const switchMode = (value: string) => {
@@ -47,6 +61,47 @@ export const ModalImport = memo(() => {
     setIsImportReady(false);
   };
 
+  const doImport = async () => {
+    // Reject if importFile is taking too long since we've removed
+    // the ability to alter the modal state during load.
+    return new Promise<ImportFileResponseDTO>((resolve, reject) => {
+      const timeout = setTimeout(
+        () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
+        LOADING_TIMEOUT_MS,
+      );
+      importFile(filesToUpload)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(e => {
+          reject(new Error(e));
+        })
+        .finally(() => {
+          clearTimeout(timeout);
+        });
+    });
+  };
+
+  const getFilenameWithoutExtension = (filename: string) => {
+    const extensionIndex = filename.lastIndexOf('.');
+    if (extensionIndex > 0) {
+      return filename.substring(0, extensionIndex);
+    }
+    return filename;
+  };
+
+  const downloadLog = (filePrefix: string, log: string) => {
+    const blob = new Blob([log], { type: IMPORT_FILE_LOG_MEDIA_TYPE });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filePrefix}${IMPORT_FILE_LOG_NAME_SUFFIX}`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
   const processImport = async () => {
     setIsImportReady(false);
     setIsImportSubmitted(true);
@@ -55,30 +110,17 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          // Reject if importFile is taking too long since we've removed
-          // the ability to alter the modal state during load.
-          await new Promise((resolve, reject) => {
-            const timeout = setTimeout(
-              () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-              LOADING_TIMEOUT_MS,
-            );
-            importFile(filesToUpload)
-              .then(result => {
-                resolve(result);
-              })
-              .catch(e => {
-                reject(new Error(e));
-              })
-              .finally(() => {
-                clearTimeout(timeout);
-              });
-          });
+          const response = await doImport();
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
             await new Promise(r => setTimeout(r, delta));
           }
           setIsImportSuccessful(true);
+          if (response.resources?.length === 1) {
+            setNavigationTarget(response.resources[0]);
+          }
+          downloadLog(getFilenameWithoutExtension(filesToUpload[0].name), response.log);
         } catch {
           setIsImportSuccessful(false);
         }
