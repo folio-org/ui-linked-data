@@ -6,7 +6,7 @@ export type RecordSchemaEntryProcessingContext = {
   userValues: UserValues;
 };
 
-export interface RecordSchemaEntryProcessor {
+export interface IRecordSchemaEntryProcessor {
   canProcess(recordSchemaEntry: RecordSchemaEntry): boolean;
 
   process(recordSchemaEntryProcessingContext: RecordSchemaEntryProcessingContext): ValueResult;

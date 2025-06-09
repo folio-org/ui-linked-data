@@ -1,13 +1,13 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
-import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
-import { ValueProcessor } from '../value/valueProcessor';
-import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
+import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
+import { RecordSchemaEntryProcessingContext, IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
-export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
+export class ArrayEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(
-    private readonly valueProcessor: ValueProcessor,
-    private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
+    private readonly valueProcessor: IValueProcessor,
+    private readonly profileSchemaProcessorManager: IProfileSchemaProcessorManager,
   ) {}
 
   canProcess(property: RecordSchemaEntry) {
@@ -49,14 +49,20 @@ export class ArrayEntryProcessor implements RecordSchemaEntryProcessor {
     recordSchemaEntry: RecordSchemaEntry,
     userValues: UserValues,
     options: ValueOptions,
-  ) {
+  ): ValueResult {
     const processedValues = this.profileSchemaProcessorManager.process(
       profileSchemaEntry,
       recordSchemaEntry,
       userValues,
     );
 
-    return this.valueProcessor.processSchemaValues(processedValues, options);
+    const result = this.valueProcessor.processSchemaValues(processedValues as Record<string, SchemaValue>, options);
+
+    // Transform the result to match ValueResult type
+    return {
+      value: result.value as unknown as SchemaPropertyValue,
+      options: result.options,
+    };
   }
 
   private applyValueContainer(result: ValueResult, container?: { property: string; type?: 'array' | 'object' }) {

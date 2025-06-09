@@ -1,18 +1,19 @@
-import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ValueProcessor } from '../value/valueProcessor';
-import { ProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager';
-import { RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
+import { IValueProcessor } from '../value/valueProcessor.interface';
+import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IProcessEntryProps, IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { ArrayEntryProcessor } from './arrayEntryProcessor';
 import { ObjectEntryProcessor } from './objectEntryProcessor';
 import { SimpleEntryProcessor } from './simpleEntryProcessor';
 
-export class RecordSchemaEntryManager {
-  private readonly processors: RecordSchemaEntryProcessor[] = [];
+export class RecordSchemaEntryManager implements IRecordSchemaEntryManager {
+  private readonly processors: IRecordSchemaEntryProcessor[] = [];
 
   constructor(
-    private readonly valueProcessor: ValueProcessor,
-    private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
-    private readonly profileSchemaManager: ProfileSchemaManager,
+    private readonly valueProcessor: IValueProcessor,
+    private readonly profileSchemaProcessorManager: IProfileSchemaProcessorManager,
+    private readonly profileSchemaManager: IProfileSchemaManager,
   ) {
     this.initProcessors();
   }
@@ -25,15 +26,7 @@ export class RecordSchemaEntryManager {
     );
   }
 
-  processEntry({
-    recordSchemaEntry,
-    profileSchemaEntry,
-    userValues,
-  }: {
-    recordSchemaEntry: RecordSchemaEntry;
-    profileSchemaEntry: SchemaEntry;
-    userValues: UserValues;
-  }) {
+  processEntry({ recordSchemaEntry, profileSchemaEntry, userValues }: IProcessEntryProps) {
     const processor = this.getProcessorForEntry(recordSchemaEntry);
 
     return processor.process({ recordSchemaEntry, profileSchemaEntry, userValues });

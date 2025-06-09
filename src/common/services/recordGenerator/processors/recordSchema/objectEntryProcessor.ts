@@ -1,29 +1,35 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GeneratedValue, ValueOptions, ValueResult } from '../../types/value.types';
-import { ProfileSchemaManager } from '../../profileSchemaManager';
-import { ValueProcessor } from '../value/valueProcessor';
-import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { RecordSchemaEntryManager } from './recordSchemaEntryManager';
+import { GeneratedValue, ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
+import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
+import { RecordSchemaEntryProcessingContext, IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
-export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
+export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(
-    private readonly valueProcessor: ValueProcessor,
-    private readonly profileSchemaManager: ProfileSchemaManager,
-    private readonly recordSchemaEntryManager: RecordSchemaEntryManager,
+    private readonly valueProcessor: IValueProcessor,
+    private readonly profileSchemaManager: IProfileSchemaManager,
+    private readonly recordSchemaEntryManager: IRecordSchemaEntryManager,
   ) {}
 
   canProcess(recordSchemaEntry: RecordSchemaEntry) {
     return recordSchemaEntry.type === RecordSchemaEntryType.object && !!recordSchemaEntry.properties;
   }
 
-  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
     const options: ValueOptions = {
       hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
     const result: GeneratedValue = {};
 
     if (!recordSchemaEntry.properties) {
-      return this.valueProcessor.processSchemaValues({}, options);
+      const result = this.valueProcessor.processSchemaValues({}, options);
+
+      // Transform the result to match ValueResult type
+      return {
+        value: result.value as unknown as SchemaPropertyValue,
+        options: result.options,
+      };
     }
 
     const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
@@ -32,7 +38,16 @@ export class ObjectEntryProcessor implements RecordSchemaEntryProcessor {
       this.processObjectProperty(key, childProperty, result, parentPath, userValues);
     });
 
-    return this.valueProcessor.processSchemaValues(result, options);
+    const processedResult = this.valueProcessor.processSchemaValues(
+      result as unknown as Record<string, SchemaValue>,
+      options,
+    );
+
+    // Transform the result to match ValueResult type
+    return {
+      value: processedResult.value as unknown as SchemaPropertyValue,
+      options: processedResult.options,
+    };
   }
 
   private processObjectProperty(

@@ -1,10 +1,10 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions } from '../../types/value.types';
-import { ValueProcessor } from '../value/valueProcessor';
-import { RecordSchemaEntryProcessingContext, RecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IValueProcessor } from '../value/valueProcessor.interface';
+import { RecordSchemaEntryProcessingContext, IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
-export class SimpleEntryProcessor implements RecordSchemaEntryProcessor {
-  constructor(private readonly valueProcessor: ValueProcessor) {}
+export class SimpleEntryProcessor implements IRecordSchemaEntryProcessor {
+  constructor(private readonly valueProcessor: IValueProcessor) {}
 
   canProcess(recordSchemaEntry: RecordSchemaEntry) {
     return (

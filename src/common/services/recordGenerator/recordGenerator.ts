@@ -1,14 +1,18 @@
 import { IRecordGenerator, IRecordGeneratorData } from './recordGenerator.interface';
 import { ProfileSchemaManager } from './profileSchemaManager';
 import { ProfileSchemaProcessorManager, ValueProcessor, RecordSchemaEntryManager } from './processors';
+import { IRecordSchemaEntryManager } from './processors/recordSchema/recordSchemaEntryManager.interface';
+import { IProfileSchemaProcessorManager } from './processors/profileSchema/profileSchemaProcessorManager.interface';
+import { IValueProcessor } from './processors/value/valueProcessor.interface';
 import { GeneratedValue, SchemaPropertyValue } from './types/value.types';
 import { RecordSchemaFactory } from './schemas';
+import { IProfileSchemaManager } from './profileSchemaManager.interface';
 
 export class RecordGenerator implements IRecordGenerator {
-  private readonly profileSchemaManager: ProfileSchemaManager;
-  private readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager;
-  private readonly valueProcessor: ValueProcessor;
-  private readonly recordSchemaEntryManager: RecordSchemaEntryManager;
+  private readonly profileSchemaManager: IProfileSchemaManager;
+  private readonly profileSchemaProcessorManager: IProfileSchemaProcessorManager;
+  private readonly valueProcessor: IValueProcessor;
+  private readonly recordSchemaEntryManager: IRecordSchemaEntryManager;
   private recordSchema: RecordSchema;
   private userValues: UserValues;
   private referenceIds?: { id: string }[];
