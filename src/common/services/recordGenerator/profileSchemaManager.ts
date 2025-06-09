@@ -1,4 +1,6 @@
-export class ProfileSchemaManager {
+import { IProfileSchemaManager } from './profileSchemaManager.interface';
+
+export class ProfileSchemaManager implements IProfileSchemaManager {
   private schema: Schema;
   private cachedSchemaValues: SchemaEntry[] | null;
   private uriBFLiteIndex: Map<string, SchemaEntry[]> | null;

@@ -1,6 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { IValueFormatter } from './formatters';
 import { ProcessorUtils } from './utils/processorUtils';
@@ -11,7 +11,7 @@ export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {
   protected recordSchemaEntry: RecordSchemaEntry | null = null;
 
   constructor(
-    protected readonly profileSchemaManager: ProfileSchemaManager,
+    protected readonly profileSchemaManager: IProfileSchemaManager,
     protected readonly valueFormat: IValueFormatter,
   ) {}
 

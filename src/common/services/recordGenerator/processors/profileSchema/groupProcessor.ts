@@ -1,13 +1,13 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ProfileSchemaManager } from '../../profileSchemaManager';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ChildEntryWithValues, GroupedValue, GeneratedValue, SchemaPropertyValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
 
 export class GroupProcessor extends BaseFieldProcessor {
-  constructor(profileSchemaManager: ProfileSchemaManager) {
+  constructor(profileSchemaManager: IProfileSchemaManager) {
     super(profileSchemaManager, new GroupValueFormatter());
   }
 

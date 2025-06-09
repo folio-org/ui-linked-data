@@ -1,15 +1,16 @@
-import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { DropdownProcessor } from './dropdownProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
 import { GroupProcessor } from './groupProcessor';
 import { LookupProcessor } from './lookupProcessor';
 import { FlattenedDropdownProcessor } from './flattenedDropdownProcessor';
+import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 
-export class ProfileSchemaProcessorManager {
+export class ProfileSchemaProcessorManager implements IProfileSchemaProcessorManager {
   private readonly processors: IProfileSchemaProcessor[];
 
-  constructor(profileSchemaManager: ProfileSchemaManager) {
+  constructor(profileSchemaManager: IProfileSchemaManager) {
     this.processors = [
       new GroupProcessor(profileSchemaManager),
       new FlattenedDropdownProcessor(profileSchemaManager, this),

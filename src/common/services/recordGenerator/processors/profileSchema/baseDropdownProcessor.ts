@@ -1,15 +1,15 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ProfileSchemaManager } from '../../profileSchemaManager';
 import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
-import { ProfileSchemaProcessorManager } from './profileSchemaProcessorManager';
+import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
 import { ProcessorUtils } from './utils/processorUtils';
 import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
 import { BaseFieldProcessor } from './baseFieldProcessor';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 
 export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
   constructor(
-    protected readonly profileSchemaManager: ProfileSchemaManager,
-    protected readonly profileSchemaProcessorManager: ProfileSchemaProcessorManager,
+    protected readonly profileSchemaManager: IProfileSchemaManager,
+    protected readonly profileSchemaProcessorManager: IProfileSchemaProcessorManager,
   ) {
     super(profileSchemaManager, new DropdownValueFormatter());
   }
