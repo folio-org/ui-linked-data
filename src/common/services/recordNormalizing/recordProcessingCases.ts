@@ -1,14 +1,5 @@
-import {
-  BFLITE_URIS,
-  NEW_BF2_TO_BFLITE_MAPPING,
-  NON_BF_RECORD_ELEMENTS,
-} from '@common/constants/bibframeMapping.constants';
-
-export const getLabelUri = (blockKey: string, groupKey: string, fieldKey: string) => {
-  const typedMap = NEW_BF2_TO_BFLITE_MAPPING as BF2BFLiteMap;
-
-  return typedMap?.[blockKey]?.[groupKey]?.fields?.[fieldKey]?.label ?? '';
-};
+import { BFLITE_URIS, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
+import { getLookupLabelKey } from '@common/helpers/schema.helper';
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
   (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {
@@ -24,7 +15,7 @@ export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: st
 };
 
 export const wrapSimpleLookupData = (record: RecordEntry, blockKey: string, key: string) => {
-  const label = getLabelUri(blockKey, key, key);
+  const label = getLookupLabelKey(key);
 
   record[blockKey][key] = (record[blockKey][key] as unknown as string[]).map(recordEntry => ({
     [label]: [recordEntry],
@@ -36,14 +27,12 @@ export const notesMapping = (record: RecordEntry, blockKey: string) => {
 
   if (!record[blockKey][selector]) return;
 
-  const label = getLabelUri(blockKey, selector, 'type');
-
   record[blockKey][selector] = (record[blockKey][selector] as unknown as RecordBasic[]).map(recordEntry => ({
     ...recordEntry,
     type: [
       {
         [BFLITE_URIS.LINK]: recordEntry.type,
-        [label]: [''],
+        [BFLITE_URIS.LABEL]: [''],
       },
     ],
   })) as unknown as RecursiveRecordSchema;
