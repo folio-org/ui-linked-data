@@ -55,38 +55,6 @@ export const extractValue = (record: RecordEntry, blockKey: string, key: string,
   ) as unknown as RecursiveRecordSchema;
 };
 
-export const processComplexGroupValues = (record: RecordEntry, blockKey: string, key: string, fieldName: string) => {
-  record[blockKey][key] = (record[blockKey][key] as unknown as RecordForComplexGroupsDTO).map(recordEntry => ({
-    [fieldName]: recordEntry,
-  })) as unknown as RecursiveRecordSchema;
-};
-
-export const processCreator = (record: RecordEntry, blockKey: string, key: string) => {
-  const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container;
-  const label = getLabelUri(blockKey, key, selector);
-
-  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
-    const generatedValue = {
-      id: [recordEntry.id],
-      label: {
-        value: [recordEntry.label],
-        isPreferred: recordEntry.isPreferred,
-      },
-    } as unknown as Record<string, string[] | Record<string, string[]>[]>;
-
-    if (recordEntry[selector]) {
-      generatedValue[selector] = (recordEntry[selector] as unknown as string[])?.map((role: string) => ({
-        [BFLITE_URIS.LINK]: [role],
-        [label]: [''],
-      }));
-    }
-
-    return {
-      [recordEntry.type as unknown as string]: generatedValue,
-    };
-  }) as unknown as RecursiveRecordSchema;
-};
-
 export const processComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
     const generatedValue = {
@@ -110,17 +78,6 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
 
     return generatedValue;
   }) as unknown as RecursiveRecordSchema;
-};
-
-export const processComplexGroupWithLookup = (
-  record: RecordEntry,
-  blockKey: string,
-  key: string,
-  fieldName: string,
-) => {
-  record[blockKey][key] = (record[blockKey][key] as unknown as string[]).map(recordEntry => ({
-    [fieldName]: recordEntry,
-  })) as unknown as RecursiveRecordSchema;
 };
 
 export const extractDropdownOption = (

@@ -9,11 +9,9 @@ import {
 } from '@common/api/records.api';
 import { BibframeEntities } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
-import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
-import { formatRecord } from '@common/helpers/recordFormatting.helper';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@common/constants/record.constants';
@@ -96,20 +94,12 @@ export const useRecordControls = () => {
 
     try {
       const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
-      const formattedRecord = CUSTOM_PROFILE_ENABLED
-        ? generatedRecord
-        : (formatRecord({
-            parsedRecord: generatedRecord,
-            record,
-            selectedRecordBlocks: updatedSelectedRecordBlocks,
-          }) as RecordEntry);
-
       const recordId = getRecordId(record, selectedRecordBlocks?.block);
       const shouldPostRecord = !recordId || isClone;
 
       const response = shouldPostRecord
-        ? await postRecord(formattedRecord)
-        : await putRecord(recordId as string, formattedRecord);
+        ? await postRecord(generatedRecord)
+        : await putRecord(recordId as string, generatedRecord);
       const parsedResponse = await response.json();
 
       dispatchUnblockEvent();

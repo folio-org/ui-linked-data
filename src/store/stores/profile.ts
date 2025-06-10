@@ -2,12 +2,10 @@ import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFacto
 import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = ProfileEntry | null;
-type PreparedFieldsType = ResourceTemplates | null;
 type InitialSchemaKeyType = string | null;
 
 export type ProfileState = SliceState<'profiles', ProfileEntry[]> &
   SliceState<'selectedProfile', SelectedProfileType> &
-  SliceState<'preparedFields', PreparedFieldsType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
   SliceState<'schema', Map<string, SchemaEntry>>;
 
@@ -18,9 +16,6 @@ const sliceConfigs: SliceConfigs = {
     initialValue: [],
   },
   selectedProfile: {
-    initialValue: null,
-  },
-  preparedFields: {
     initialValue: null,
   },
   initialSchemaKey: {

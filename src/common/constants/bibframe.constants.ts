@@ -1,13 +1,8 @@
 import { BFLITE_URIS } from './bibframeMapping.constants';
-import { CUSTOM_PROFILE_ENABLED } from './feature.constants';
 
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   'lc:RT:bf2:Monograph:Work': 'Work',
   'lc:RT:bf2:Monograph:Instance': 'Instance',
-};
-
-export const PROFILE_NAMES = {
-  MONOGRAPH: CUSTOM_PROFILE_ENABLED ? 'Monograph' : 'BIBFRAME 2.0 Monograph',
 };
 
 export enum BibframeEntitiesMap {

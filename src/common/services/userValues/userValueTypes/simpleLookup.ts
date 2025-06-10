@@ -2,7 +2,7 @@ import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/h
 import { UserValueType } from './userValueType';
 import { IUserValueType } from './userValueType.interface';
 import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
   private uri?: string;
@@ -17,7 +17,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     super();
   }
 
-  async generate({ data, uri, uuid, labelSelector, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
+  async generate({ data, uri, uuid, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
     this.uri = uri;
     this.propertyUri = propertyUri;
     const cachedData = this.getCachedData();
@@ -34,7 +34,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
 
         if (!this.checkDefaultGroupValues(groupUri, itemUri)) {
           this.generateContentItem({
-            label: dataEntry[labelSelector as string]?.[0],
+            label: this.extractLabel(dataEntry),
             itemUri,
             uri,
             groupUri,
@@ -49,7 +49,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
 
       if (!this.checkDefaultGroupValues(groupUri, itemUri)) {
         this.generateContentItem({
-          label: typedData[labelSelector as string]?.[0],
+          label: this.extractLabel(typedData),
           itemUri,
           uri,
           groupUri,
@@ -67,6 +67,28 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     return this.value;
   }
 
+  private extractLabel(dataEntry: RecordBasic): string | undefined {
+    const nameField = dataEntry[BFLITE_URIS.NAME]?.[0];
+
+    if (nameField !== undefined) {
+      return nameField;
+    }
+
+    const labelField = dataEntry[BFLITE_URIS.LABEL]?.[0];
+
+    if (labelField !== undefined) {
+      return labelField;
+    }
+
+    const termField = dataEntry[BFLITE_URIS.TERM]?.[0];
+
+    if (termField !== undefined) {
+      return termField;
+    }
+
+    return undefined;
+  }
+
   private checkDefaultGroupValues(groupUri?: string, itemUri?: string) {
     if (!groupUri || !itemUri) return false;
 
@@ -81,7 +103,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     type,
     fieldUri,
   }: {
-    label: string;
+    label?: string;
     itemUri?: string;
     uri?: string;
     groupUri?: string;
@@ -98,9 +120,13 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     const loadedOption = this.cacheService
       .getById(uri as string)
       ?.find(
-        ({ label: optionLabel, value }) => value.uri === mappedUri || value.label === label || optionLabel === label,
+        ({ label: optionLabel, value }) =>
+          value.uri === mappedUri || (label && value.label === label) || (label && optionLabel === label),
       );
-    const selectedLabel = typesMap && itemUri ? (loadedOption?.label ?? itemUri) : (loadedOption?.label ?? label);
+
+    // Use a default empty string if label is undefined
+    const safeLabel = label || '';
+    const selectedLabel = typesMap && itemUri ? (loadedOption?.label ?? itemUri) : (loadedOption?.label ?? safeLabel);
 
     const contentItem = {
       label: selectedLabel,

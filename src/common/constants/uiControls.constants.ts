@@ -1,5 +1,3 @@
-import { CUSTOM_PROFILE_ENABLED } from './feature.constants';
-
 export enum BaseFieldType {
   META = 'META',
   HIDE = 'HIDE',
@@ -32,11 +30,7 @@ export enum SchemaControlType {
 
 const BASE_UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
 
-export const UI_CONTROLS_LIST = CUSTOM_PROFILE_ENABLED
-  ? [...BASE_UI_CONTROLS_LIST, AdvancedFieldType.dropdown]
-  : BASE_UI_CONTROLS_LIST;
-
-export const UI_DROPDOWNS_LIST = [AdvancedFieldType.dropdown, AdvancedFieldType.dropdownOption];
+export const UI_CONTROLS_LIST = [...BASE_UI_CONTROLS_LIST, AdvancedFieldType.dropdown];
 
 export const NOT_PREVIEWABLE_TYPES = [
   AdvancedFieldType.profile,

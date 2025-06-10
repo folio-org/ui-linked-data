@@ -7,8 +7,6 @@ export const ServicesContext = createContext<ServicesParams>({
   lookupCacheService: undefined,
   recordNormalizingService: undefined,
   recordToSchemaMappingService: undefined,
-  schemaCreatorService: undefined,
-  recordGeneratorServiceLegacy: undefined,
   schemaGeneratorService: undefined,
   recordGeneratorService: undefined,
 });

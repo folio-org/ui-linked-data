@@ -1,13 +1,10 @@
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchProfiles } from '@common/api/profiles.api';
-import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
-import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
 
 export type PreviewParams = {
@@ -24,68 +21,31 @@ type IGetProfiles = {
 
 type IBuildSchema = {
   profile: ProfileEntry;
-  templates?: ResourceTemplates;
   record: Record<string, unknown> | Array<unknown>;
   asClone?: boolean;
   noStateUpdate?: boolean;
 };
 
 export const useConfig = () => {
-  const { schemaCreatorService, userValuesService, selectedEntriesService, schemaGeneratorService } =
+  const {  userValuesService, selectedEntriesService, schemaGeneratorService } =
     useServicesContext() as Required<ServicesParams>;
-  const {
-    profiles,
-    setProfiles,
-    setSelectedProfile,
-    preparedFields,
-    setPreparedFields,
-    setInitialSchemaKey,
-    setSchema,
-  } = useProfileState();
+  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState();
   const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
 
-  const prepareFields = (profiles: ProfileEntry[]): ResourceTemplates => {
-    const preparedFields = profiles.reduce<ResourceTemplates>((fields, profile) => {
-      const resourceTemplate = profile.json.Profile.resourceTemplates.reduce<ResourceTemplates>(
-        (resourceObject, resourceTemplate) => {
-          resourceObject[resourceTemplate.id] = resourceTemplate;
-
-          return resourceObject;
-        },
-        {},
-      );
-
-      return {
-        ...fields,
-        ...resourceTemplate,
-      };
-    }, {});
-
-    setPreparedFields(preparedFields);
-
-    return preparedFields;
-  };
-
-  const buildSchema = async ({ profile, templates, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
+  const buildSchema = async ({ profile,  record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
     const initKey = uuidv4();
     const userValues: UserValues = {};
 
     userValuesService.set(userValues);
     selectedEntriesService.set([]);
 
-    if (CUSTOM_PROFILE_ENABLED) {
-      schemaGeneratorService.init(profile as unknown as Profile);
-      schemaGeneratorService.generate(initKey);
-    } else {
-      // TODO: UILD-550 - delete this service after refactoring
-      schemaCreatorService.init(templates ?? {}, profile);
-      schemaCreatorService.generate(initKey);
-    }
+    schemaGeneratorService.init(profile as unknown as Profile);
+    schemaGeneratorService.generate(initKey);
 
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
-      baseSchema: CUSTOM_PROFILE_ENABLED ? schemaGeneratorService.get() : schemaCreatorService.get(),
+      baseSchema: schemaGeneratorService.get(),
       record,
       userValues,
       asClone,
@@ -106,27 +66,14 @@ export const useConfig = () => {
   const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
     if (isProcessingProfiles.current && (record || recordId)) return;
 
-    let templates;
     let selectedProfile;
     let response;
 
     try {
       isProcessingProfiles.current = true;
 
-      if (CUSTOM_PROFILE_ENABLED) {
-        // TODO: use a new API to fetch a profile when it is ready
-        selectedProfile = CUSTOM_PROFILE_MONOGRAPH;
-      } else {
-        const hasStoredProfiles = profiles?.length;
-        response = hasStoredProfiles ? profiles : await fetchProfiles();
-        // TODO: UILD-438 - check a list of supported profiles and implement the profile selection
-        selectedProfile = response.find(({ name }: ProfileEntry) => name === PROFILE_NAMES.MONOGRAPH);
-        templates = preparedFields ?? prepareFields(response);
-
-        if (!hasStoredProfiles) {
-          setProfiles(response);
-        }
-      }
+      // TODO: use a new API to fetch a profile when it is ready
+      selectedProfile = CUSTOM_PROFILE_MONOGRAPH as unknown as ProfileEntry;
 
       const recordData = record?.resource || {};
       const recordTitle = getRecordTitle(recordData as RecordEntry);
@@ -138,7 +85,6 @@ export const useConfig = () => {
 
         const { updatedSchema, initKey } = await buildSchema({
           profile: selectedProfile,
-          templates,
           record: recordData,
           asClone,
           noStateUpdate: previewParams?.noStateUpdate,
@@ -167,5 +113,5 @@ export const useConfig = () => {
     }
   };
 
-  return { getProfiles, prepareFields };
+  return { getProfiles };
 };
