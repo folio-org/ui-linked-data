@@ -10,6 +10,7 @@ import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMap
 import { useCommonStatus } from '@common/hooks/useCommonStatus';
 import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPropertiesGenerator.service';
 import { RecordGenerator, SchemaTraverser } from '@common/services/record';
+import { RecordGenerator as RecordGeneratorNew } from '@common/services/recordGenerator';
 
 type ServicesProviderProps = {
   children: ReactElement<any>;
@@ -44,11 +45,13 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
     () => new SchemaService(selectedEntriesService, entryPropertiesGeneratorService),
     [selectedEntriesService, entryPropertiesGeneratorService],
   );
-  const recordGeneratorService = useMemo(() => new RecordGenerator(new SchemaTraverser()), []);
+  const recordGeneratorServiceLegacy = useMemo(() => new RecordGenerator(new SchemaTraverser()), []);
   const schemaGeneratorService = useMemo(
     () => new SchemaGeneratorService(selectedEntriesService, entryPropertiesGeneratorService),
     [selectedEntriesService, entryPropertiesGeneratorService],
   );
+
+  const recordGeneratorService = useMemo(() => new RecordGeneratorNew(), []);
 
   const servicesValue = useMemo(
     () => ({
@@ -59,8 +62,9 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
       recordNormalizingService,
       recordToSchemaMappingService,
       schemaCreatorService,
-      recordGeneratorService,
+      recordGeneratorServiceLegacy,
       schemaGeneratorService,
+      recordGeneratorService,
     }),
     [
       selectedEntriesService,
@@ -70,8 +74,9 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
       recordNormalizingService,
       recordToSchemaMappingService,
       schemaCreatorService,
-      recordGeneratorService,
+      recordGeneratorServiceLegacy,
       schemaGeneratorService,
+      recordGeneratorService,
     ],
   );
 

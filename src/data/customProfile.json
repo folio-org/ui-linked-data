@@ -2,7 +2,7 @@
   {
     "type": "profile",
     "displayName": "Monograph",
-    "bfid": "lc:profile:bf2:Monograph",
+    "bfid": "monograph",
     "children": ["Monograph:Work", "Monograph:Instance"],
     "id": "Monograph"
   },
@@ -142,8 +142,8 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "_relationship",
-    "uriBFLite": "_relationship",
+    "uri": "roles",
+    "uriBFLite": "roles",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -671,8 +671,8 @@
   {
     "type": "simple",
     "displayName": "Relationship",
-    "uri": "_relationship",
-    "uriBFLite": "_relationship",
+    "uri": "roles",
+    "uriBFLite": "roles",
     "constraints": {
       "repeatable": true,
       "editable": true,
@@ -930,24 +930,6 @@
     "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:AdditionalCallNumberInformation"
   },
   {
-    "type": "group",
-    "displayName": "Dewey Edition number",
-    "uri": "http://id.loc.gov/ontologies/bibframe/source",
-    "uriBFLite": "http://bibfra.me/vocab/marc/edition",
-    "constraints": {
-      "repeatable": true,
-      "editable": true,
-      "mandatory": true,
-      "defaults": [],
-      "useValuesFrom": [],
-      "valueDataType": { "dataTypeURI": "" }
-    },
-    "children": [
-      "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber:DeweyEditionNumber"
-    ],
-    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber"
-  },
-  {
     "type": "literal",
     "displayName": "Dewey Edition number",
     "uri": "http://id.loc.gov/ontologies/bibframe/code",
@@ -960,7 +942,7 @@
       "useValuesFrom": [],
       "valueDataType": {}
     },
-    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber:DeweyEditionNumber"
+    "id": "Monograph:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber"
   },
   {
     "type": "literal",

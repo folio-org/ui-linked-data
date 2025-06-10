@@ -1,3 +1,5 @@
+type ProfileType = 'Monograph';
+
 type ProfileNode = {
   type: string;
   displayName: string;
