@@ -114,7 +114,8 @@ export const useConfig = () => {
 
       if (CUSTOM_PROFILE_ENABLED) {
         // TODO: pass the profile ID after adding profile selection
-        selectedProfile = await fetchProfile();
+        response = await fetchProfile();
+        selectedProfile = response?.value;
       } else {
         const hasStoredProfiles = profiles?.length;
         response = hasStoredProfiles ? profiles : await fetchProfiles();

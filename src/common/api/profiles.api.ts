@@ -9,4 +9,4 @@ export const fetchProfiles = () =>
 export const fetchProfile = (profileId = 1) =>
   baseApi.getJson({
     url: `${PROFILE_API_ENDPOINT}/${profileId}`,
-  });
+  }) as Promise<ProfileDTO>;
