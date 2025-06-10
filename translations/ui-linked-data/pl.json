@@ -256,5 +256,6 @@
     "ld.importFileFailure": "Nie udało się zaimportować Twojego pliku. Sprawdź dziennik importu pobrany do przeglądarki, aby uzyskać więcej szczegółów.",
     "ld.importFailed": "Import się nie powiódł",
     "ld.importDone": "Zrobione",
-    "ld.importTryAgain": "Spróbuj ponownie"
+    "ld.importTryAgain": "Spróbuj ponownie",
+    "ld.importTimedout": "Import failed to complete in time"
 }

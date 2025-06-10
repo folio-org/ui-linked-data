@@ -256,5 +256,6 @@
     "ld.importFileFailure": "Uw bestand kon niet geïmporteerd worden. Controleer het import logboek dat naar uw browser is gedownload voor meer details.",
     "ld.importFailed": "Import mislukt",
     "ld.importDone": "Gedaan",
-    "ld.importTryAgain": "Probeer opnieuw"
+    "ld.importTryAgain": "Probeer opnieuw",
+    "ld.importTimedout": "Import failed to complete in time"
 }

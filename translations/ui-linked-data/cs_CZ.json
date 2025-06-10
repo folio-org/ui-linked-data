@@ -256,5 +256,6 @@
     "ld.importFileFailure": "Váš soubor se nepodařilo importovat. Další podrobnosti naleznete v logu importu staženém do prohlížeče.",
     "ld.importFailed": "Import se nezdařil",
     "ld.importDone": "Hotovo",
-    "ld.importTryAgain": "Zkuste to znovu"
+    "ld.importTryAgain": "Zkuste to znovu",
+    "ld.importTimedout": "Import se nepodařilo dokončit včas"
 }

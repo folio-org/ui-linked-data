@@ -256,5 +256,6 @@
     "ld.importFileFailure": "Não foi possível importar seu arquivo. Verifique o log de importação baixado para o seu navegador para obter mais detalhes.",
     "ld.importFailed": "Falha na importação",
     "ld.importDone": "Feito",
-    "ld.importTryAgain": "Tente novamente"
+    "ld.importTryAgain": "Tente novamente",
+    "ld.importTimedout": "A importação não foi concluída a tempo"
 }
