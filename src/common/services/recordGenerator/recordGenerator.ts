@@ -32,7 +32,7 @@ export class RecordGenerator implements IRecordGenerator {
     this.userValues = {};
   }
 
-  generate(data: IRecordGeneratorData, profileType: ProfileType = 'monograph', entityType: ResourceType = 'work') {
+  generate(data: IRecordGeneratorData, profileType: ProfileType = 'Monograph', entityType: ResourceType = 'work') {
     const recordSchema = this.getValidatedRecordSchema(profileType, entityType);
 
     this.init({ ...data, recordSchema });

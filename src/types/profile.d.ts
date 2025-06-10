@@ -1,4 +1,4 @@
-type ProfileType = 'monograph';
+type ProfileType = 'Monograph';
 
 type ProfileNode = {
   type: string;

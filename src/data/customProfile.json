@@ -4,7 +4,7 @@
     "displayName": "Monograph",
     "bfid": "monograph",
     "children": ["Monograph:Work", "Monograph:Instance"],
-    "id": "monograph"
+    "id": "Monograph"
   },
   {
     "type": "block",

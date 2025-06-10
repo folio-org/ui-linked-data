@@ -7,7 +7,7 @@ export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
 };
 
 export const PROFILE_NAMES = {
-  MONOGRAPH: CUSTOM_PROFILE_ENABLED ? 'monograph' : 'BIBFRAME 2.0 Monograph',
+  MONOGRAPH: CUSTOM_PROFILE_ENABLED ? 'Monograph' : 'BIBFRAME 2.0 Monograph',
 };
 
 export enum BibframeEntitiesMap {

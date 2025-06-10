@@ -43,7 +43,7 @@ describe('RecordGenerator', () => {
           userValues: mockUserValues,
           referenceIds: mockReferenceIds,
         });
-      }).toThrow('Record schema not found for profile type: monograph, entity type: work');
+      }).toThrow('Record schema not found for profile type: Monograph, entity type: work');
     });
 
     it('processes record schema correctly', () => {

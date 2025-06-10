@@ -30,7 +30,7 @@ export const useRecordGeneration = () => {
     generateRecord = () =>
       recordGeneratorService?.generate(
         { schema, userValues, referenceIds },
-        (selectedProfile?.id as ProfileType) ?? 'monograph',
+        (selectedProfile?.id as ProfileType) ?? 'Monograph',
         entityType,
       );
   } else {
