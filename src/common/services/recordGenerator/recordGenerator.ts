@@ -1,0 +1,132 @@
+import { IRecordGenerator, IRecordGeneratorData } from './recordGenerator.interface';
+import { ProfileSchemaManager } from './profileSchemaManager';
+import { ProfileSchemaProcessorManager, ValueProcessor, RecordSchemaEntryManager } from './processors';
+import { IRecordSchemaEntryManager } from './processors/recordSchema/recordSchemaEntryManager.interface';
+import { IProfileSchemaProcessorManager } from './processors/profileSchema/profileSchemaProcessorManager.interface';
+import { IValueProcessor } from './processors/value/valueProcessor.interface';
+import { GeneratedValue, SchemaPropertyValue } from './types/value.types';
+import { RecordSchemaFactory } from './schemas';
+import { IProfileSchemaManager } from './profileSchemaManager.interface';
+
+export class RecordGenerator implements IRecordGenerator {
+  private readonly profileSchemaManager: IProfileSchemaManager;
+  private readonly profileSchemaProcessorManager: IProfileSchemaProcessorManager;
+  private readonly valueProcessor: IValueProcessor;
+  private readonly recordSchemaEntryManager: IRecordSchemaEntryManager;
+  private recordSchema: RecordSchema;
+  private userValues: UserValues;
+  private referenceIds?: { id: string }[];
+
+  constructor() {
+    this.profileSchemaManager = new ProfileSchemaManager();
+    this.profileSchemaProcessorManager = new ProfileSchemaProcessorManager(this.profileSchemaManager);
+    this.valueProcessor = new ValueProcessor();
+
+    this.recordSchemaEntryManager = new RecordSchemaEntryManager(
+      this.valueProcessor,
+      this.profileSchemaProcessorManager,
+      this.profileSchemaManager,
+    );
+
+    this.recordSchema = {};
+    this.userValues = {};
+  }
+
+  generate(data: IRecordGeneratorData, profileType: ProfileType = 'Monograph', entityType: ResourceType = 'work') {
+    const recordSchema = this.getValidatedRecordSchema(profileType, entityType);
+
+    this.init({ ...data, recordSchema });
+
+    return this.processRecordSchema();
+  }
+
+  private getValidatedRecordSchema(profileType: ProfileType, entityType: ResourceType) {
+    const recordSchema = RecordSchemaFactory.getRecordSchema(profileType, entityType);
+
+    if (!recordSchema) {
+      throw new Error(`Record schema not found for profile type: ${profileType}, entity type: ${entityType}`);
+    }
+
+    return recordSchema;
+  }
+
+  private init({
+    schema,
+    recordSchema,
+    userValues,
+    referenceIds,
+  }: IRecordGeneratorData & { recordSchema: RecordSchema }) {
+    this.profileSchemaManager.init(schema);
+    this.recordSchema = recordSchema;
+    this.userValues = userValues;
+    this.referenceIds = referenceIds;
+  }
+
+  private processRecordSchema() {
+    const result: GeneratedValue = { resource: {} };
+    const rootEntryKey = this.findRootEntryKey();
+
+    Object.entries(this.recordSchema).forEach(([rootKey, rootProperty]) => {
+      const processedValue = this.processRootEntry(rootKey, rootProperty);
+
+      if (this.isValidValue(processedValue)) {
+        if (rootKey === rootEntryKey && rootProperty.options?.references && this.referenceIds?.length) {
+          this.addReferencesToRootEntry(processedValue, rootProperty.options.references);
+        }
+
+        this.addValueToResource(result, rootKey, processedValue);
+      }
+    });
+
+    return result;
+  }
+
+  private processRootEntry(rootKey: string, rootProperty: RecordSchemaEntry) {
+    const rootEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(rootKey);
+    const processedValues = rootEntries
+      .map(
+        entry =>
+          this.recordSchemaEntryManager.processEntry({
+            recordSchemaEntry: rootProperty,
+            profileSchemaEntry: entry,
+            userValues: this.userValues,
+          }).value,
+      )
+      .filter((value): value is SchemaPropertyValue => value !== null);
+
+    return processedValues.length === 1 ? processedValues[0] : processedValues;
+  }
+
+  private isValidValue(value: SchemaPropertyValue) {
+    return Array.isArray(value) ? value.length > 0 : true;
+  }
+
+  private addValueToResource(result: GeneratedValue, key: string, value: SchemaPropertyValue) {
+    if (typeof result.resource === 'object' && result.resource !== null) {
+      (result.resource as Record<string, SchemaPropertyValue>)[key] = value;
+    }
+  }
+
+  private findRootEntryKey() {
+    for (const [key, entry] of Object.entries(this.recordSchema)) {
+      if (entry.options?.isRootEntry) {
+        return key;
+      }
+    }
+
+    const entityKeys = Object.keys(this.recordSchema).filter(key => !key.startsWith('_') && key !== 'references');
+
+    return entityKeys.length > 0 ? entityKeys[0] : null;
+  }
+
+  private addReferencesToRootEntry(entryNode: SchemaPropertyValue, references: RecordSchemaReferenceDefinition[]) {
+    if (typeof entryNode !== 'object' || entryNode === null) {
+      return;
+    }
+
+    references.forEach(refDef => {
+      (entryNode as Record<string, SchemaPropertyValue>)[refDef.outputProperty] = this
+        .referenceIds as unknown as SchemaPropertyValue;
+    });
+  }
+}
