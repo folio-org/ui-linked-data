@@ -1,5 +1,4 @@
 import { RecordGenerator, SchemaTraverser } from '@common/services/record';
-import * as ProfileHelper from '@common/helpers/profile.helper';
 
 describe('RecordGenerator', () => {
   let recordGenerator: RecordGenerator;
@@ -69,7 +68,6 @@ describe('RecordGenerator', () => {
 
     it('calls "schemaTraverser.init" and "traverse" when all conditions are met', () => {
       const filteredValues = { key_1: { contents: [] } } as unknown as UserValues;
-      jest.spyOn(ProfileHelper, 'filterUserValues').mockReturnValue(filteredValues);
       schemaTraverserMock.traverse = jest.fn(() => {});
 
       recordGenerator['userValues'] = { key_1: { contents: [] } } as unknown as UserValues;
