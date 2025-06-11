@@ -71,7 +71,7 @@ describe('useConfig', () => {
     setUpdatedGlobalState([
       {
         store: useProfileStore,
-        updatedState: { profiles, preparedFields: null },
+        updatedState: { profiles },
       },
     ]);
   };
@@ -107,23 +107,7 @@ describe('useConfig', () => {
       },
     ]);
 
-    (SchemaService.SchemaService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
-  });
-
-  test('prepareFields - calls "setPreparedFields" and returns an object with required fields', async () => {
-    mockUseGlobalState();
-    const testResult = {
-      templateId_1: {
-        id: 'templateId_1',
-        name: 'Template 1',
-      },
-    };
-
-    const { result } = renderHook(useConfig);
-    const preparedFields = result.current.prepareFields(profiles);
-
-    expect(setPreparedFields).toHaveBeenCalledWith(testResult);
-    expect(preparedFields).toEqual(testResult);
+    (SchemaService.SchemaGeneratorService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 
   describe('getProfiles', () => {
