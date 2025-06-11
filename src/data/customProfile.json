@@ -611,7 +611,6 @@
     "uriBFLite": "_subclass",
     "constraints": { "repeatable": true, "editable": true, "mandatory": true, "defaults": [], "useValuesFrom": [] },
     "children": [
-      "Monograph:Work:OtherContributors:Subclass:",
       "Monograph:Work:OtherContributors:Subclass:Person",
       "Monograph:Work:OtherContributors:Subclass:Family",
       "Monograph:Work:OtherContributors:Subclass:CorporateBody",
