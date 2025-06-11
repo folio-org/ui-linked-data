@@ -41,7 +41,7 @@ export const formatLookupOptions = (
     });
 
 export const getBFGroup = (typeMap: FieldTypeMap, propertyURI: string) =>
-  Object.values(typeMap).find(({ field }) => field.uri === propertyURI);
+  Object.values(typeMap).find(({ field }) => (field as { uri: string }).uri === propertyURI);
 
 export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[], propertyURI?: string) => {
   if (!propertyURI) return lookupData;

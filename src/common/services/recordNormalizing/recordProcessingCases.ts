@@ -1,4 +1,4 @@
-import { BFLITE_URIS, NON_BF_RECORD_ELEMENTS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { getLookupLabelKey } from '@common/helpers/schema.helper';
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
@@ -23,7 +23,7 @@ export const wrapSimpleLookupData = (record: RecordEntry, blockKey: string, key:
 };
 
 export const notesMapping = (record: RecordEntry, blockKey: string) => {
-  const selector = NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container;
+  const selector = '_notes';
 
   if (!record[blockKey][selector]) return;
 

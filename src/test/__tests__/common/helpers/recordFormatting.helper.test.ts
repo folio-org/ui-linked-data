@@ -10,7 +10,6 @@ describe('recordFormatting', () => {
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBF2Constant = getMockedImportedConstant(BibframeMappingConstants, 'BF2_URIS');
-  const mockNonBFRecordElementsConstant = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockBFLiteUriConstant({
     INSTANCE: testInstanceUri,
@@ -30,11 +29,6 @@ describe('recordFormatting', () => {
     MAIN_TITLE: 'testMainTitleUri',
   });
   mockBF2Constant({ ...BF2_URIS, CREATOR_NAME: 'creatorNameBF2Uri', ROLE: 'roleBF2Uri' });
-  mockNonBFRecordElementsConstant({
-    testNoteUri: { container: '_notes' },
-    testCreatorUri: { container: 'roles' },
-    testContributorUri: { container: 'roles' },
-  });
 
   describe('formatDependeciesTable', () => {
     test('converts record dependencies into Rows', () => {

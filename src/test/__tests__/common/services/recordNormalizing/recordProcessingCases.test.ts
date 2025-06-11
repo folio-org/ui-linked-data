@@ -4,7 +4,6 @@ import * as BibframeMappingConstants from '@common/constants/bibframeMapping.con
 import * as SchemaHelper from '@common/helpers/schema.helper';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
-const mockedNonBFRecordElements = getMockedImportedConstant(BibframeMappingConstants, 'NON_BF_RECORD_ELEMENTS');
 
 jest.mock('@common/helpers/schema.helper', () => ({
   getLookupLabelKey: jest.fn(),
@@ -20,13 +19,8 @@ describe('recordProcessingCases', () => {
   const labelBFLiteUri = 'labelBFLiteUri';
   const creatorBFLiteUri = 'creatorBFLiteUri';
   const noteNonBFUri = '_notes';
-  const creatorNonBFUri = '_creator';
 
   mockedBFLiteUris({ NOTE: noteBFLiteUri, LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
-  mockedNonBFRecordElements({
-    [noteBFLiteUri]: { container: noteNonBFUri },
-    [creatorBFLiteUri]: { container: creatorNonBFUri },
-  });
 
   describe('wrapWithContainer', () => {
     const container = 'groupContainer_1';

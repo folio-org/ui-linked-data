@@ -480,38 +480,18 @@ export const SIMPLE_LOOKUP_MAPPING = {
   },
 };
 
-export const TYPE_MAP = {
-  [BF2_URIS.NOTE]: {
-    field: {
-      uri: 'http://id.loc.gov/ontologies/bibframe/noteType',
-    },
-    data: SIMPLE_LOOKUP_MAPPING._notes,
-  },
-  [BF2_URIS.CONTRIBUTION]: {
-    field: {
-      uri: 'http://id.loc.gov/ontologies/bibframe/role',
-    },
-    data: SIMPLE_LOOKUP_MAPPING._contributions,
-  },
-};
-
 export const BFLITE_TYPES_MAP = {
-  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: {
-    field: TYPE_MAP[BF2_URIS.NOTE].field,
-    data: TYPE_MAP[BF2_URIS.NOTE].data,
+  _notes: {
+    field: { uri: 'http://id.loc.gov/ontologies/bibframe/noteType' },
+    data: SIMPLE_LOOKUP_MAPPING._notes,
   },
   _creatorReference: {
     field: '',
     data: {},
     fields: {
-      // TODO: UILD-550 - remove this when refactoring is done
-      [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CREATOR].container]: {
-        field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
-        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
-      },
-      _relationship: {
-        field: { uri: '_relationship' },
-        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
+      roles: {
+        field: { uri: 'roles' },
+        data: SIMPLE_LOOKUP_MAPPING._contributions,
       },
     },
   },
@@ -519,19 +499,14 @@ export const BFLITE_TYPES_MAP = {
     field: '',
     data: {},
     fields: {
-      // TODO: UILD-550 - remove this when refactoring is done
-      [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.CONTRIBUTOR].container]: {
-        field: TYPE_MAP[BF2_URIS.CONTRIBUTION].field,
-        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
-      },
-      _relationship: {
-        field: { uri: '_relationship' },
-        data: TYPE_MAP[BF2_URIS.CONTRIBUTION].data,
+      roles: {
+        field: { uri: 'roles' },
+        data: SIMPLE_LOOKUP_MAPPING._contributions,
       },
     },
   },
 };
 
 export const DEFAULT_GROUP_VALUES = {
-  [NON_BF_RECORD_ELEMENTS[BFLITE_URIS.NOTE].container]: { value: BFLITE_URIS.NOTE },
+  _notes: { value: BFLITE_URIS.NOTE },
 };

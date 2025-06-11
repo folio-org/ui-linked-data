@@ -110,6 +110,11 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     type?: AdvancedFieldType;
     fieldUri?: string;
   }) {
+    console.log('====================================');
+    console.log('BFLITE_TYPES_MAP', BFLITE_TYPES_MAP);
+    console.log('groupUri', groupUri);
+    console.log('====================================');
+
     const typesMap = (BFLITE_TYPES_MAP as FieldTypeMap)[groupUri as string];
     const mappedUri =
       typesMap && itemUri
