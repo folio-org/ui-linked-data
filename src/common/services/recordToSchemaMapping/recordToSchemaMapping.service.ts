@@ -407,7 +407,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     schemaUiElem: SchemaEntry;
     id?: string;
   }) {
-    const { type, constraints, uri } = schemaUiElem;
+    const { type, constraints, uriBFLite } = schemaUiElem;
     const partialTemplateMatch = this.templateMetadata?.filter(({ path }) => path.at(-1) === fieldUri);
     let updatedData = data;
 
@@ -427,7 +427,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         data: updatedData,
         uri: constraints?.useValuesFrom?.[0],
         uriSelector: BFLITE_URIS.LINK,
-        propertyUri: uri,
+        propertyUri: uriBFLite,
         blockUri: this.currentBlockUri,
         groupUri: this.currentRecordGroupKey,
         fieldUri,

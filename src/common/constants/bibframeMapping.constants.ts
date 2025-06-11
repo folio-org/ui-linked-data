@@ -482,8 +482,14 @@ export const SIMPLE_LOOKUP_MAPPING = {
 
 export const BFLITE_TYPES_MAP = {
   _notes: {
-    field: { uri: 'http://id.loc.gov/ontologies/bibframe/noteType' },
-    data: SIMPLE_LOOKUP_MAPPING._notes,
+    field: '',
+    data: {},
+    fields: {
+      type: {
+        field: { uri: 'type' },
+        data: SIMPLE_LOOKUP_MAPPING._notes,
+      },
+    },
   },
   _creatorReference: {
     field: '',

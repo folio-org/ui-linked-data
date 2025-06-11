@@ -8,14 +8,14 @@ export const useSimpleLookupData = () => {
 
   const getLookupData = lookupCacheService.getAll;
 
-  const loadLookupData = async (uri: string, propertyURI?: string) => {
+  const loadLookupData = async (uri: string, propertyURI?: string, parentGroupUri?: string) => {
     try {
       const response = await loadSimpleLookup(uri);
 
       if (!response) return null;
 
       const formattedLookupData = formatLookupOptions(response, uri);
-      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI);
+      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, propertyURI, parentGroupUri);
       const sortedLookupData = filteredLookupData?.toSorted(alphabeticSortLabel);
 
       lookupCacheService.save?.(uri, sortedLookupData);

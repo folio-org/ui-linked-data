@@ -40,15 +40,23 @@ export const formatLookupOptions = (
       };
     });
 
-export const getBFGroup = (typeMap: FieldTypeMap, propertyURI: string) =>
-  Object.values(typeMap).find(({ field }) => (field as { uri: string }).uri === propertyURI);
+export const getBFGroup = (typeMap: FieldTypeMap, propertyURI: string, parentGroupUri?: string) => {
+  return (
+    Object.values(typeMap).find(({ field }) => (field as { uri: string }).uri === propertyURI) ??
+    (parentGroupUri ? typeMap[parentGroupUri]?.fields?.[propertyURI] : undefined)
+  );
+};
 
-export const filterLookupOptionsByMappedValue = (lookupData: MultiselectOption[], propertyURI?: string) => {
+export const filterLookupOptionsByMappedValue = (
+  lookupData: MultiselectOption[],
+  propertyURI?: string,
+  parentGroupUri?: string,
+) => {
   if (!propertyURI) return lookupData;
 
   let filteredLookupData = lookupData;
   const typesMap = BFLITE_TYPES_MAP;
-  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI);
+  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI, parentGroupUri);
 
   if (bfGroup) {
     const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
@@ -63,6 +71,7 @@ export const filterLookupOptionsByParentBlock = (
   lookupData?: MultiselectOption[] | Nullish,
   propertyURI?: string,
   parentBlockUri?: string,
+  parentGroupUri?: string,
 ) => {
   if (!lookupData) return;
 
@@ -70,7 +79,7 @@ export const filterLookupOptionsByParentBlock = (
 
   let filteredLookupData = lookupData;
   const typesMap = BFLITE_TYPES_MAP;
-  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI);
+  const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI, parentGroupUri);
 
   if (bfGroup) {
     const bf20MappedData = Object.values(bfGroup.data);

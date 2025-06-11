@@ -120,6 +120,13 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       value: AdvancedFieldType.block,
     });
 
+    const groupEntry = findParentEntryByProperty({
+      schema,
+      path: entry.path,
+      key: 'type',
+      value: AdvancedFieldType.group,
+    });
+
     return (
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
         <SimpleLookupField
@@ -130,8 +137,9 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
           parentUri={constraints?.valueDataType?.dataTypeURI}
           value={selectedUserValue?.contents}
           isDisabled={isDisabled}
-          propertyUri={entry.uri}
+          propertyUri={entry.uriBFLite}
           parentBlockUri={blockEntry?.uriBFLite}
+          parentGroupUri={groupEntry?.uriBFLite}
         />
       </FieldWithMetadataAndControls>
     );

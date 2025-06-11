@@ -6,6 +6,7 @@ import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES, BFLITE_URIS } from '@common/con
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
   private uri?: string;
+  private groupUri?: string;
   private propertyUri?: string;
   private loadedData?: MultiselectOption[];
   private contents?: UserValueContents[];
@@ -19,6 +20,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
 
   async generate({ data, uri, uuid, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
     this.uri = uri;
+    this.groupUri = groupUri;
     this.propertyUri = propertyUri;
     const cachedData = this.getCachedData();
 
@@ -110,11 +112,6 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     type?: AdvancedFieldType;
     fieldUri?: string;
   }) {
-    console.log('====================================');
-    console.log('BFLITE_TYPES_MAP', BFLITE_TYPES_MAP);
-    console.log('groupUri', groupUri);
-    console.log('====================================');
-
     const typesMap = (BFLITE_TYPES_MAP as FieldTypeMap)[groupUri as string];
     const mappedUri =
       typesMap && itemUri
@@ -162,7 +159,7 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     if (!response) return;
 
     const formattedLookupData = formatLookupOptions(response, this.uri);
-    const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri);
+    const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri, this.groupUri);
 
     this.loadedData = filteredLookupData?.toSorted(alphabeticSortLabel);
 
