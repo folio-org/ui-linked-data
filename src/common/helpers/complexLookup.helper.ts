@@ -30,7 +30,7 @@ export const updateLinkedFieldValue = ({
   const linkedFieldValueTyped =
     linkedFieldValue as keyof (typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING)[typeof linkedFieldTyped];
   const linkedFieldValueUri =
-    COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[linkedFieldTyped]?.[linkedFieldValueTyped]?.bfLiteUri;
+    COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[linkedFieldTyped]?.[linkedFieldValueTyped]?.uriBFLite;
 
   let updatedValue: SchemaEntry | undefined;
 

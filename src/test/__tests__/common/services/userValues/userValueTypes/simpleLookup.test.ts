@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
 import { SimpleLookupUserValueService } from '@common/services/userValues/userValueTypes';
 import { IUserValueType } from '@common/services/userValues/userValueTypes/userValueType.interface';
@@ -25,7 +26,7 @@ describe('SimpleLookupUserValueService', () => {
       fieldUri: 'testFieldUri_1',
     } as UserValueDTO;
 
-    const result = await simpleLookupUserValueService.generate(value);
+    const result = await waitFor(() => simpleLookupUserValueService.generate(value));
 
     expect(result).toEqual(testResult);
   }

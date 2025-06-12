@@ -110,7 +110,7 @@ describe('schema.helper', () => {
   describe('getHtmlIdForEntry', () => {
     const schema = new Map([
       ['blockUuid', { uuid: 'blockUuid', path: ['blockUuid'], uriBFLite: 'mockUriBFLite', bfid: 'mockBfid' }],
-      ['groupUuid', { uuid: 'groupUuid', path: ['blockUuid', 'groupUuid'], uri: 'mockUri' }],
+      ['groupUuid', { uuid: 'groupUuid', path: ['blockUuid', 'groupUuid'], uriBFLite: 'mockUri' }],
       [
         'fieldUuid',
         {
@@ -132,7 +132,7 @@ describe('schema.helper', () => {
   describe('generateTwinChildrenKey', () => {
     test('returns just URI when no valueDataType exists', () => {
       const entry = {
-        uri: 'test:uri',
+        uriBFLite: 'test:uri',
         constraints: {},
       } as SchemaEntry;
 
@@ -143,7 +143,7 @@ describe('schema.helper', () => {
 
     test('returns concatenated string with valueDataType when present', () => {
       const entry = {
-        uri: 'test:uri',
+        uriBFLite: 'test:uri',
         constraints: {
           valueDataType: {
             dataTypeURI: 'test:dataType',
@@ -158,7 +158,7 @@ describe('schema.helper', () => {
 
     test('returns URI when constraints is undefined', () => {
       const entry = {
-        uri: 'test:uri',
+        uriBFLite: 'test:uri',
       } as SchemaEntry;
 
       const result = generateTwinChildrenKey(entry);
@@ -168,7 +168,7 @@ describe('schema.helper', () => {
 
     test('returns URI when valueDataType is empty object', () => {
       const entry = {
-        uri: 'test:uri',
+        uriBFLite: 'test:uri',
         constraints: {
           valueDataType: {},
         },

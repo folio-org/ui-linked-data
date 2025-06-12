@@ -14,13 +14,12 @@ describe('recordProcessingCases', () => {
   const groupKey = 'group_1';
   const testLabel = 'testLabel';
   const fieldName = 'testFieldName';
-  const noteBFLiteUri = 'noteBFLiteUri';
   const linkBFLiteUri = 'linkBFLiteUri';
   const labelBFLiteUri = 'labelBFLiteUri';
   const creatorBFLiteUri = 'creatorBFLiteUri';
   const noteNonBFUri = '_notes';
 
-  mockedBFLiteUris({ NOTE: noteBFLiteUri, LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
+  mockedBFLiteUris({ LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
 
   describe('wrapWithContainer', () => {
     const container = 'groupContainer_1';
@@ -123,7 +122,7 @@ describe('recordProcessingCases', () => {
               type: [
                 {
                   [linkBFLiteUri]: ['testNoteType_1'],
-                  [testLabel]: [''],
+                  [labelBFLiteUri]: [''],
                 },
               ],
             },
@@ -132,7 +131,7 @@ describe('recordProcessingCases', () => {
               type: [
                 {
                   [linkBFLiteUri]: ['testNoteType_2'],
-                  [testLabel]: [''],
+                  [labelBFLiteUri]: [''],
                 },
               ],
             },
