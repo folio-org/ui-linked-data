@@ -25,23 +25,23 @@ export enum SearchableIndexQuerySelector {
 export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
   subclass: {
     PERSON: {
-      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Person',
+      bfLiteUri: 'http://bibfra.me/vocab/lite/Person',
       labelId: 'ld.person',
     },
     FAMILY: {
-      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Family',
+      bfLiteUri: 'http://bibfra.me/vocab/lite/Family',
       labelId: 'ld.family',
     },
     ORGANIZATION: {
-      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Organization',
+      bfLiteUri: 'http://bibfra.me/vocab/lite/Organization',
       labelId: 'ld.organization',
     },
     MEETING: {
-      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Meeting',
+      bfLiteUri: 'http://bibfra.me/vocab/lite/Meeting',
       labelId: 'ld.meeting',
     },
     JURISDICTION: {
-      bf2Uri: 'http://id.loc.gov/ontologies/bibframe/Jurisdiction',
+      bfLiteUri: 'http://bibfra.me/vocab/lite/Jurisdiction',
       labelId: 'ld.jurisdiction',
     },
   },

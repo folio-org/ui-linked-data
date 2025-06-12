@@ -30,7 +30,7 @@ export const updateLinkedFieldValue = ({
   const linkedFieldValueTyped =
     linkedFieldValue as keyof (typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING)[typeof linkedFieldTyped];
   const linkedFieldValueUri =
-    COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[linkedFieldTyped]?.[linkedFieldValueTyped]?.bf2Uri;
+    COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING?.[linkedFieldTyped]?.[linkedFieldValueTyped]?.bfLiteUri;
 
   let updatedValue: SchemaEntry | undefined;
 
@@ -40,7 +40,7 @@ export const updateLinkedFieldValue = ({
     const childEntry = schema.get(uuid);
     const isDropdownOption = childEntry?.type === AdvancedFieldType.dropdownOption;
 
-    if (isDropdownOption && childEntry.uri === linkedFieldValueUri) {
+    if (isDropdownOption && childEntry.uriBFLite === linkedFieldValueUri) {
       updatedValue = childEntry;
     }
   });

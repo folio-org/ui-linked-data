@@ -129,11 +129,11 @@ export const getHtmlIdForSchemaControl = (controlType: SchemaControlType, htmlId
   `${htmlId}${ENTRY_CONTROL_DELIMITER}${controlType}`;
 
 export const generateTwinChildrenKey = (entry: SchemaEntry) => {
-  const { uri, constraints } = entry;
+  const { uriBFLite, constraints } = entry;
   const { valueDataType } = constraints ?? {};
   const suffix = valueDataType?.dataTypeURI ? `${TWIN_CHILDREN_KEY_DELIMITER}${valueDataType?.dataTypeURI}` : '';
 
-  return `${uri}${suffix}`;
+  return `${uriBFLite}${suffix}`;
 };
 
 export const checkEmptyChildren = (schema: Schema, entry?: SchemaEntry) => {

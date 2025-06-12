@@ -85,8 +85,8 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       .map(id => schema.get(id))
       .map(entry => ({
         label: entry?.displayName ?? '',
-        value: entry?.uri ?? '', // TBD
-        uri: entry?.uri ?? '',
+        value: entry?.uriBFLite ?? '', // TBD
+        uri: entry?.uriBFLite ?? '',
         id: entry?.uuid,
       }));
 

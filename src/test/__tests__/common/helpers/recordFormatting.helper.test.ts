@@ -2,14 +2,12 @@ import * as RecordFormattingHelper from '@common/helpers/recordFormatting.helper
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { BF2_URIS } from '@common/constants/bibframeMapping.constants';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';
   const testWorkUri = 'testWorkUri';
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   const mockBFLiteUriConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
-  const mockBF2Constant = getMockedImportedConstant(BibframeMappingConstants, 'BF2_URIS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
   mockBFLiteUriConstant({
     INSTANCE: testInstanceUri,
@@ -28,7 +26,6 @@ describe('recordFormatting', () => {
     TITLE_CONTAINER: 'testTitleContainerUri',
     MAIN_TITLE: 'testMainTitleUri',
   });
-  mockBF2Constant({ ...BF2_URIS, CREATOR_NAME: 'creatorNameBF2Uri', ROLE: 'roleBF2Uri' });
 
   describe('formatDependeciesTable', () => {
     test('converts record dependencies into Rows', () => {
