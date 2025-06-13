@@ -58,6 +58,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       if (!this.record[this.currentBlockUri]) return;
 
       for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
+        if (!recordEntry) continue;
+
         await this.processRecordEntry(recordKey, recordEntry);
       }
     } catch (error) {
