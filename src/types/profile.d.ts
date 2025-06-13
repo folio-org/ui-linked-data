@@ -20,3 +20,10 @@ type ProfileNode = {
 };
 
 type Profile = ProfileNode[];
+
+type ProfileDTO = {
+  id: string;
+  name: string;
+  resourceType: string;
+  value: Profile;
+};

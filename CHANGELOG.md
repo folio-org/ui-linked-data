@@ -7,6 +7,7 @@
 * Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
 * Extended services to process the loaded record using the updated profile. Refs [UILD-547].
 * Added import file action. Refs [UILD-561], [UILD-568].
+* Added and utilized a new API request to get the new custom profile. Refs [UILD-571].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -15,6 +16,7 @@
 [UILD-547]:https://folio-org.atlassian.net/browse/UILD-547
 [UILD-561]:https://folio-org.atlassian.net/browse/UILD-561
 [UILD-568]:https://folio-org.atlassian.net/browse/UILD-568
+[UILD-571]:https://folio-org.atlassian.net/browse/UILD-571
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

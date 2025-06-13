@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchProfiles } from '@common/api/profiles.api';
+import { fetchProfile, fetchProfiles } from '@common/api/profiles.api';
 import { PROFILE_NAMES } from '@common/constants/bibframe.constants';
 import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useProfileState } from '@src/store';
@@ -8,7 +8,6 @@ import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook'
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
-import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -114,8 +113,9 @@ export const useConfig = () => {
       isProcessingProfiles.current = true;
 
       if (CUSTOM_PROFILE_ENABLED) {
-        // TODO: use a new API to fetch a profile when it is ready
-        selectedProfile = CUSTOM_PROFILE_MONOGRAPH;
+        // TODO: pass the profile ID after adding profile selection
+        response = await fetchProfile();
+        selectedProfile = response;
       } else {
         const hasStoredProfiles = profiles?.length;
         response = hasStoredProfiles ? profiles : await fetchProfiles();

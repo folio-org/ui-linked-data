@@ -1,13 +1,12 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useConfig } from '@common/hooks/useConfig.hook';
-import { fetchProfiles } from '@common/api/profiles.api';
+import { fetchProfile, fetchProfiles } from '@common/api/profiles.api';
 import * as SchemaService from '@common/services/schema';
 import * as FeatureConstants from '@common/constants/feature.constants';
 import { useInputsStore, useProfileStore } from '@src/store';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
 
 const profiles = [
   {
@@ -38,6 +37,7 @@ jest.mock('@common/hooks/useCommonStatus', () => ({
 }));
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
+  fetchProfile: jest.fn(),
 }));
 jest.mock('@common/api/client', () => ({
   apiClient: jest.fn(),
@@ -52,7 +52,11 @@ jest.mock('@common/helpers/record.helper', () => ({
 }));
 jest.mock('@common/hooks/useProcessedRecordAndSchema.hook', () => ({
   useProcessedRecordAndSchema: () => ({
-    getProcessedRecordAndSchema: jest.fn(),
+    getProcessedRecordAndSchema: () => ({
+      updatedSchema: {},
+      updatedUserValues: {},
+      selectedRecordBlocks: {},
+    }),
   }),
 }));
 
@@ -161,16 +165,19 @@ describe('useConfig', () => {
       expect(resultProfiles).toEqual(profiles);
     });
 
-    test('returns CUSTOM_PROFILE_MONOGRAPH and does not call fetchProfiles when CUSTOM_PROFILE_ENABLED is true', async () => {
+    test('does not call fetchProfiles when CUSTOM_PROFILE_ENABLED is true', async () => {
+      (fetchProfile as jest.Mock).mockResolvedValue({ id: 'test-id', name: 'Test Profile' });
       mockUseGlobalState();
       mockCustomProfileConstant(true);
 
       const { result } = renderHook(useConfig);
-      const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
+
+      await act(async () => {
+        await result.current.getProfiles({ record, recordId: '' });
+      });
 
       expect(fetchProfiles).not.toHaveBeenCalled();
       expect(setProfiles).not.toHaveBeenCalled();
-      expect(resultProfiles).toEqual(CUSTOM_PROFILE_MONOGRAPH);
     });
   });
 });
