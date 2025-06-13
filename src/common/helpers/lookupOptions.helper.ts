@@ -15,6 +15,7 @@ export const generateLabelWithCode = (label: string, optionUri: string) => {
 
   return `${label}${codeString}`;
 };
+
 export const formatLookupOptions = (
   data: LoadSimpleLookupResponseItem[] = [],
   parentURI?: string,
