@@ -2,7 +2,7 @@ import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Fragment, ReactNode } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { FullDisplay } from '@components/FullDisplay';
 import { Edit } from '@views';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
@@ -48,14 +48,18 @@ describe('FullDisplay', () => {
       },
     ]);
 
-    return render(
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route path="/" element={<FullDisplay />} />
-          <Route path="/resources/:resourceId/edit" element={<Edit />} />
-        </Routes>
-      </BrowserRouter>,
-    );
+    const routes = [
+      {
+        path: '/',
+        element: <FullDisplay />,
+      },
+      {
+        path: '/resources/:resourceId/edit',
+        element: <Edit />,
+      },
+    ];
+
+    return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />);
   });
 
   const { getByTestId, getAllByTestId } = screen;
