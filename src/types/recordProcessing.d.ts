@@ -3,7 +3,6 @@ type UserValueDTO = {
   id?: string;
   uri?: string;
   uuid?: string;
-  labelSelector?: string;
   uriSelector?: string;
   type?: AdvancedFieldType;
   propertyUri?: string;

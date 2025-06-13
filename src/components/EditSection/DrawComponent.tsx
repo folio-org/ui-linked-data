@@ -11,7 +11,6 @@ import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndCo
 import { LiteralField } from '@components/LiteralField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { EditSectionDataProps } from './renderDrawComponent';
-import { CUSTOM_PROFILE_ENABLED } from '@common/constants/feature.constants';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -64,13 +63,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
     (type === AdvancedFieldType.group || type === AdvancedFieldType.groupComplex) &&
     level < GROUP_COMPLEX_CUTOFF_LEVEL
   ) {
-    const isComplexGroup = CUSTOM_PROFILE_ENABLED ? true : type === AdvancedFieldType.groupComplex;
-
-    return (
-      <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact} showLabel={isComplexGroup}>
-        {!isComplexGroup && <span className="group-label">{displayNameWithAltValue}</span>}
-      </FieldWithMetadataAndControls>
-    );
+    return <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact} showLabel />;
   }
 
   if (type === AdvancedFieldType.literal) {
@@ -92,8 +85,8 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       .map(id => schema.get(id))
       .map(entry => ({
         label: entry?.displayName ?? '',
-        value: entry?.uri ?? '', // TBD
-        uri: entry?.uri ?? '',
+        value: entry?.uriBFLite ?? '', // TBD
+        uri: entry?.uriBFLite ?? '',
         id: entry?.uuid,
       }));
 
@@ -127,6 +120,13 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       value: AdvancedFieldType.block,
     });
 
+    const groupEntry = findParentEntryByProperty({
+      schema,
+      path: entry.path,
+      key: 'type',
+      value: AdvancedFieldType.group,
+    });
+
     return (
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
         <SimpleLookupField
@@ -137,8 +137,9 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
           parentUri={constraints?.valueDataType?.dataTypeURI}
           value={selectedUserValue?.contents}
           isDisabled={isDisabled}
-          propertyUri={entry.uri}
+          propertyUri={entry.uriBFLite}
           parentBlockUri={blockEntry?.uriBFLite}
+          parentGroupUri={groupEntry?.uriBFLite}
         />
       </FieldWithMetadataAndControls>
     );

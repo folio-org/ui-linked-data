@@ -122,7 +122,7 @@ const schema = new Map([
     'uuid6',
     {
       bfid: 'uuid6Bfid',
-      uri: 'uuid6Uri',
+      uriBFLite: 'uuid6Uri',
       displayName: 'uuid6',
       type: AdvancedFieldType.dropdown,
       path: ['uuid0', 'uuid2', 'uuid6'],
@@ -135,7 +135,7 @@ const schema = new Map([
     'uuid7',
     {
       bfid: 'uuid7Bfid',
-      uri: 'http://bibfra.me/vocab/lite/Person',
+      uriBFLite: 'http://bibfra.me/vocab/lite/Person',
       displayName: 'uuid7',
       type: AdvancedFieldType.dropdownOption,
       path: ['uuid0', 'uuid2', 'uuid6', 'uuid7'],

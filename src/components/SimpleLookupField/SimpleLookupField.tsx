@@ -26,6 +26,7 @@ interface Props {
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   propertyUri?: string;
   parentBlockUri?: string;
+  parentGroupUri?: string;
 }
 
 const LoadingMessage: FC = () => <FormattedMessage id="ld.loading" />;
@@ -38,13 +39,14 @@ export const SimpleLookupField: FC<Props> = ({
   htmlId,
   onChange,
   parentUri,
+  parentGroupUri,
   isDisabled = false,
   propertyUri,
   parentBlockUri,
 }) => {
   const { getLookupData, loadLookupData } = useSimpleLookupData();
   const loadedOptions = getLookupData()?.[uri] || [];
-  const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri);
+  const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri, parentGroupUri);
   const { addStatusMessagesItem } = useStatusState();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
@@ -63,7 +65,7 @@ export const SimpleLookupField: FC<Props> = ({
     setIsLoading(true);
 
     try {
-      await loadLookupData(uri, propertyUri);
+      await loadLookupData(uri, propertyUri, parentGroupUri);
     } catch (error) {
       console.error('Cannot load data for the Lookup:', error);
 

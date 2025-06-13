@@ -9,7 +9,7 @@ import './FieldWithMetadataAndControls.scss';
 
 type IFieldWithMetadataAndControls = {
   entry: SchemaEntry;
-  children: ReactNode;
+  children?: ReactNode;
   isCompact?: boolean;
   className?: string;
   labelContainerClassName?: string;

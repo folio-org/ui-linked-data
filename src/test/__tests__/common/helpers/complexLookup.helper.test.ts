@@ -13,7 +13,7 @@ import { AuthorityValidationTarget } from '@common/constants/complexLookup.const
 const mockImportedConstant = getMockedImportedConstant(ComplexLookupConstants, 'COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING');
 mockImportedConstant({
   testField: {
-    testValue: { bf2Uri: 'testUri' },
+    testValue: { uriBFLite: 'testUri' },
   },
 });
 
@@ -66,7 +66,7 @@ describe('complexLookup.helper', () => {
           path: ['childUuid'],
           uuid: 'childUuid',
           type: AdvancedFieldType.dropdownOption,
-          uri: 'testUri',
+          uriBFLite: 'testUri',
         },
       ],
     ]);

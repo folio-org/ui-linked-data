@@ -7,6 +7,8 @@
 * Added a service to process a new custom profile. Extended logic to apply this service. Refs [UILD-546].
 * Extended services to process the loaded record using the updated profile. Refs [UILD-547].
 * Added import file action. Refs [UILD-561], [UILD-568].
+* Added new services for the record generation. Refs [UILD-548].
+* Removed unused code after introducing the new profile. Remove BF2-BFLite mapping. Refs [UILD-550].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -15,6 +17,8 @@
 [UILD-547]:https://folio-org.atlassian.net/browse/UILD-547
 [UILD-561]:https://folio-org.atlassian.net/browse/UILD-561
 [UILD-568]:https://folio-org.atlassian.net/browse/UILD-568
+[UILD-548]:https://folio-org.atlassian.net/browse/UILD-548
+[UILD-550]:https://folio-org.atlassian.net/browse/UILD-550
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

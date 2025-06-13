@@ -1,17 +1,11 @@
 import {
   GROUP_BY_LEVEL,
   GROUP_CONTENTS_LEVEL,
-  IDENTIFIER_AS_VALUE,
   PROFILE_BFIDS,
   TITLE_CONTAINER_URIS,
   TYPE_URIS,
 } from '@common/constants/bibframe.constants';
-import {
-  BFLITE_URI_TO_BLOCK,
-  BFLITE_URIS,
-  BLOCKS_BFLITE,
-  REF_TO_NAME,
-} from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
 import { cloneDeep } from 'lodash';
@@ -29,20 +23,6 @@ export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, 
   const block = selectedBlock ?? TYPE_URIS.INSTANCE;
 
   return previewBlock ? (record?.resource?.[block]?.[previewBlock] as any[])?.[0]?.id : record?.resource?.[block]?.id;
-};
-
-export const checkIdentifierAsValue = (record: Record<string, string[]>, uri: string) => {
-  const identifierAsValueSelection = IDENTIFIER_AS_VALUE[uri];
-
-  if (identifierAsValueSelection) {
-    const { field, value } = identifierAsValueSelection;
-
-    if (record?.[field]?.includes(value)) {
-      return record;
-    }
-  }
-
-  return false;
 };
 
 export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = true) => {
@@ -124,20 +104,6 @@ export const unwrapRecordValuesFromCommonContainer = (record: RecordEntry) =>
   (record.resource ?? record) as RecordEntry;
 
 export const wrapRecordValuesWithCommonContainer = (record: RecordEntry) => ({ resource: record });
-
-export const checkIfRecordHasDependencies = (record: RecordEntry) => {
-  if (!record?.resource) return false;
-
-  for (const [key, val] of Object.entries(record.resource)) {
-    if (val[BFLITE_URI_TO_BLOCK[key as keyof typeof BFLITE_URI_TO_BLOCK]?.reference?.key]) return true;
-  }
-
-  return false;
-};
-
-export const getRecordPropertyData = (property: string[] | string) => {
-  return Array.isArray(property) ? property[0] : property;
-};
 
 export const getPreviewFieldsConditions = ({
   entry,

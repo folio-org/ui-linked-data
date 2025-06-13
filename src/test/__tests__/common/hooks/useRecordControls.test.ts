@@ -28,10 +28,6 @@ jest.mock('@common/api/records.api', () => ({
   putRecord: jest.fn(),
 }));
 
-jest.mock('@common/helpers/recordFormatting.helper', () => ({
-  formatRecord: jest.fn(),
-}));
-
 const mockGenerateRecord = jest.fn();
 jest.mock('@common/hooks/useRecordGeneration', () => ({
   useRecordGeneration: () => ({

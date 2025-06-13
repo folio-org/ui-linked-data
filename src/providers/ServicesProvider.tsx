@@ -4,13 +4,12 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { UserValuesService } from '@common/services/userValues';
 import { apiClient } from '@common/api/client';
 import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
-import { SchemaGeneratorService, SchemaService, SchemaWithDuplicatesService } from '@common/services/schema';
+import { SchemaGeneratorService, SchemaWithDuplicatesService } from '@common/services/schema';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { useCommonStatus } from '@common/hooks/useCommonStatus';
 import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPropertiesGenerator.service';
-import { RecordGenerator, SchemaTraverser } from '@common/services/record';
-import { RecordGenerator as RecordGeneratorNew } from '@common/services/recordGenerator';
+import { RecordGenerator } from '@common/services/recordGenerator';
 
 type ServicesProviderProps = {
   children: ReactElement<any>;
@@ -41,17 +40,11 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
       ),
     [selectedEntriesService, schemaWithDuplicatesService, userValuesService, commonStatusService],
   );
-  const schemaCreatorService = useMemo(
-    () => new SchemaService(selectedEntriesService, entryPropertiesGeneratorService),
-    [selectedEntriesService, entryPropertiesGeneratorService],
-  );
-  const recordGeneratorServiceLegacy = useMemo(() => new RecordGenerator(new SchemaTraverser()), []);
   const schemaGeneratorService = useMemo(
     () => new SchemaGeneratorService(selectedEntriesService, entryPropertiesGeneratorService),
     [selectedEntriesService, entryPropertiesGeneratorService],
   );
-
-  const recordGeneratorService = useMemo(() => new RecordGeneratorNew(), []);
+  const recordGeneratorService = useMemo(() => new RecordGenerator(), []);
 
   const servicesValue = useMemo(
     () => ({
@@ -61,8 +54,6 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
       lookupCacheService,
       recordNormalizingService,
       recordToSchemaMappingService,
-      schemaCreatorService,
-      recordGeneratorServiceLegacy,
       schemaGeneratorService,
       recordGeneratorService,
     }),
@@ -73,8 +64,6 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
       lookupCacheService,
       recordNormalizingService,
       recordToSchemaMappingService,
-      schemaCreatorService,
-      recordGeneratorServiceLegacy,
       schemaGeneratorService,
       recordGeneratorService,
     ],

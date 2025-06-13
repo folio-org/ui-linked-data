@@ -38,12 +38,6 @@ export const recordToSchemaMappingService = {
   get: jest.fn(),
 } as IRecordToSchemaMappingService;
 
-export const schemaCreatorService = {
-  init: jest.fn(),
-  get: jest.fn(),
-  generate: jest.fn(),
-} as ISchemaService;
-
 export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
   const servicesValue = useMemo(
     () => ({
@@ -53,7 +47,6 @@ export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
       lookupCacheService,
       recordNormalizingService,
       recordToSchemaMappingService,
-      schemaCreatorService,
     }),
     [],
   );

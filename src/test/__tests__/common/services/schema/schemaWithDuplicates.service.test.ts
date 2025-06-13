@@ -37,7 +37,7 @@ describe('SchemaWithDuplicatesService', () => {
     const entry = {
       path: ['testKey-0', 'testKey-2', 'testKey-4'],
       uuid: 'testKey-4',
-      uri: 'mockUri',
+      uriBFLite: 'mockUri',
       children: ['testKey-5'],
       constraints,
     };
@@ -87,7 +87,7 @@ describe('SchemaWithDuplicatesService', () => {
           {
             path: ['testKey-0', 'testKey-2', 'testKey-7'],
             uuid: 'testKey-7',
-            uri: 'mockUri',
+            uriBFLite: 'mockUri',
             cloneIndex: 1,
             children: ['testKey-8'],
             deletable: true,
@@ -129,7 +129,7 @@ describe('SchemaWithDuplicatesService', () => {
 
   describe('deleteEntry', () => {
     const entry = {
-      uri: 'mockUri',
+      uriBFLite: 'mockUri',
       path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-6'],
       uuid: 'testKey-6',
       children: ['nonExistent', 'testKey-7'],
@@ -154,7 +154,7 @@ describe('SchemaWithDuplicatesService', () => {
         [
           'testKey-5',
           {
-            uri: 'mockUri',
+            uriBFLite: 'mockUri',
             path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
             uuid: 'testKey-5',
             children: [],
@@ -196,7 +196,7 @@ describe('SchemaWithDuplicatesService', () => {
         [
           'testKey-5',
           {
-            uri: 'mockUri',
+            uriBFLite: 'mockUri',
             path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
             uuid: 'testKey-5',
             children: [],
@@ -206,7 +206,7 @@ describe('SchemaWithDuplicatesService', () => {
         [
           'testKey-5',
           {
-            uri: 'mockUri',
+            uriBFLite: 'mockUri',
             path: ['testKey-0', 'testKey-2', 'testKey-4', 'testKey-5'],
             uuid: 'testKey-5',
             children: [],
@@ -245,7 +245,7 @@ describe('SchemaWithDuplicatesService', () => {
       };
 
       const childEntry = {
-        uri: 'mockUri',
+        uriBFLite: 'mockUri',
         uuid: 'testKey-2',
         path: ['testKey-1', 'testKey-2'],
         children: ['testKey-3'],
@@ -284,7 +284,7 @@ describe('SchemaWithDuplicatesService', () => {
       };
 
       const childEntry = {
-        uri: 'mockUri',
+        uriBFLite: 'mockUri',
         uuid: 'testKey-2',
         path: ['testKey-1', 'testKey-2'],
         deletable: true,
@@ -313,7 +313,7 @@ describe('SchemaWithDuplicatesService', () => {
         {
           uuid: 'parent',
           path: ['parent'],
-          uri: 'parent-uri',
+          uriBFLite: 'parent-uri',
           children: ['child-1', 'child-2'],
           constraints: { repeatable: true },
           twinChildren: {
@@ -326,7 +326,7 @@ describe('SchemaWithDuplicatesService', () => {
         {
           uuid: 'child-1',
           path: ['parent', 'child-1'],
-          uri: 'child-uri',
+          uriBFLite: 'child-uri',
           cloneIndex: 0,
           children: [],
         },
@@ -336,7 +336,7 @@ describe('SchemaWithDuplicatesService', () => {
         {
           uuid: 'child-2',
           path: ['parent', 'child-2'],
-          uri: 'child-uri',
+          uriBFLite: 'child-uri',
           cloneIndex: 1,
           children: [],
         },

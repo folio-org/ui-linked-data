@@ -136,7 +136,7 @@ type FieldTypeMapDataEntry = {
 };
 
 type FieldTypeMapEntry = {
-  field: { uri: string };
+  field: string | { uri: string };
   data: FieldTypeMapDataEntry;
   fields?: FieldTypeMap;
 };

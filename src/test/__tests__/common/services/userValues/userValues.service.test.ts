@@ -1,3 +1,4 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
 import { UserValuesService } from '@common/services/userValues';
 import { IUserValues } from '@common/services/userValues/userValues.interface';
@@ -10,14 +11,14 @@ jest.mock('@common/services/userValues/userValueTypes/simpleLookup.ts', () => ({
       this.generatedValue = undefined;
     }
 
-    generate({ data, uuid, uri, labelSelector, type, fieldUri }: UserValueDTO) {
+    generate({ data, uuid, uri, type, fieldUri }: UserValueDTO) {
       const typedData = data as RecordBasic;
 
       this.generatedValue = {
         uuid: uuid || '',
         contents: [
           {
-            label: typedData[labelSelector as string]?.[0] || '',
+            label: typedData[BFLITE_URIS.LABEL]?.[0] || '',
             meta: {
               parentUri: uri,
               uri: fieldUri,
@@ -85,12 +86,11 @@ describe('UserValuesService', () => {
       key: 'testKey_2',
       value: {
         data: {
-          testKey_1: ['test simple value 1'],
+          [BFLITE_URIS.LABEL]: ['test simple value 1'],
           testKey_2: ['test simple value 2'],
         },
         uuid: 'testUuid_1',
         uri: 'testUri_1',
-        labelSelector: 'testKey_1',
         type: AdvancedFieldTypeEnum.simple as AdvancedFieldType,
         fieldUri: 'testFieldUri_1',
       },
