@@ -1,7 +1,7 @@
 import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
-type SelectedProfileType = ProfileEntry | null;
+type SelectedProfileType = Profile | null;
 type InitialSchemaKeyType = string | null;
 
 export type ProfileState = SliceState<'profiles', ProfileEntry[]> &

@@ -43,7 +43,7 @@ describe('useRecordGeneration', () => {
 
     expect(recordGeneratorService.generate).toHaveBeenCalledWith(
       { schema, userValues, referenceIds: undefined },
-      'monograph',
+      'Monograph',
       'work',
     );
   });

@@ -27,7 +27,7 @@ export const useRecordGeneration = () => {
   const generateRecord = () =>
     recordGeneratorService?.generate(
       { schema, userValues, referenceIds },
-      (selectedProfile?.id as ProfileType) ?? 'Monograph',
+      (selectedProfile?.[0]?.id as ProfileType) ?? 'Monograph',
       entityType,
     );
 

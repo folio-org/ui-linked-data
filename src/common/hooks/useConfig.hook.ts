@@ -5,7 +5,7 @@ import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
-import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
+import { fetchProfile } from '@common/api/profiles.api';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -20,21 +20,21 @@ type IGetProfiles = {
 };
 
 type IBuildSchema = {
-  profile: ProfileEntry;
+  profile: Profile;
   record: Record<string, unknown> | Array<unknown>;
   asClone?: boolean;
   noStateUpdate?: boolean;
 };
 
 export const useConfig = () => {
-  const {  userValuesService, selectedEntriesService, schemaGeneratorService } =
+  const { userValuesService, selectedEntriesService, schemaGeneratorService } =
     useServicesContext() as Required<ServicesParams>;
   const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState();
   const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
 
-  const buildSchema = async ({ profile,  record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
+  const buildSchema = async ({ profile, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
     const initKey = uuidv4();
     const userValues: UserValues = {};
 
@@ -72,8 +72,9 @@ export const useConfig = () => {
     try {
       isProcessingProfiles.current = true;
 
-      // TODO: use a new API to fetch a profile when it is ready
-      selectedProfile = CUSTOM_PROFILE_MONOGRAPH as unknown as ProfileEntry;
+      // TODO: pass the profile ID after adding profile selection
+      response = await fetchProfile();
+      selectedProfile = response;
 
       const recordData = record?.resource || {};
       const recordTitle = getRecordTitle(recordData as RecordEntry);

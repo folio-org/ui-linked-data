@@ -2,10 +2,8 @@ import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
 import { useConfig } from '@common/hooks/useConfig.hook';
-import { fetchProfiles } from '@common/api/profiles.api';
-import * as SchemaService from '@common/services/schema';
+import { fetchProfile } from '@common/api/profiles.api';
 import { useInputsStore, useProfileStore } from '@src/store';
-import CUSTOM_PROFILE_MONOGRAPH from '@src/data/customProfile.json';
 
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
@@ -18,7 +16,7 @@ jest.mock('@common/hooks/useCommonStatus', () => ({
   useCommonStatus: () => commonStatusService,
 }));
 jest.mock('@common/api/profiles.api', () => ({
-  fetchProfiles: jest.fn(),
+  fetchProfile: jest.fn(),
 }));
 jest.mock('@common/api/client', () => ({
   apiClient: jest.fn(),
@@ -31,9 +29,16 @@ jest.mock('@common/helpers/record.helper', () => ({
   getRecordTitle: jest.fn(),
   getPrimaryEntitiesFromRecord: jest.fn(),
 }));
+jest.mock('@common/helpers/recordFormatting.helper', () => ({
+  getReferenceIdsRaw: jest.fn().mockReturnValue([]),
+}));
 jest.mock('@common/hooks/useProcessedRecordAndSchema.hook', () => ({
   useProcessedRecordAndSchema: () => ({
-    getProcessedRecordAndSchema: jest.fn(),
+    getProcessedRecordAndSchema: jest.fn().mockResolvedValue({
+      updatedSchema: {},
+      updatedUserValues: {},
+      selectedRecordBlocks: {},
+    }),
   }),
 }));
 
@@ -58,6 +63,7 @@ describe('useConfig', () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     setInitialGlobalState([
       {
         store: useProfileStore,
@@ -78,7 +84,7 @@ describe('useConfig', () => {
         store: useInputsStore,
         state: {
           userValues: {},
-          previewContent: {},
+          previewContent: [],
           selectedEntries: [],
           setUserValues,
           setSelectedEntries,
@@ -87,8 +93,6 @@ describe('useConfig', () => {
         },
       },
     ]);
-
-    (SchemaService.SchemaGeneratorService as jest.Mock).mockImplementation(() => ({ generate: jest.fn() }));
   });
 
   describe('getProfiles', () => {
@@ -96,15 +100,17 @@ describe('useConfig', () => {
       resource: {},
     } as RecordEntry;
 
-    test('returns CUSTOM_PROFILE_MONOGRAPH and does not call fetchProfiles', async () => {
+    test('calls fetchProfile and returns a profile', async () => {
+      const mockProfile = [{ id: 'Monograph' }] as Profile;
+      (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
       mockUseGlobalState();
 
       const { result } = renderHook(useConfig);
       const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
 
-      expect(fetchProfiles).not.toHaveBeenCalled();
-      expect(setProfiles).not.toHaveBeenCalled();
-      expect(resultProfiles).toEqual(CUSTOM_PROFILE_MONOGRAPH);
+      expect(fetchProfile).toHaveBeenCalled();
+      expect(setSelectedProfile).toHaveBeenCalledWith(mockProfile);
+      expect(resultProfiles).toEqual(mockProfile);
     });
   });
 });
