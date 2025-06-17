@@ -195,13 +195,15 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
   }
 
   private removeFromParentTwinChildren(entry: SchemaEntry, parentEntry: SchemaEntry): void {
-    const hasTwinChildren = parentEntry.twinChildren && entry.uri && parentEntry.twinChildren[entry.uri];
+    const hasTwinChildren = parentEntry.twinChildren && entry.uriBFLite && parentEntry.twinChildren[entry.uriBFLite];
 
-    if (!hasTwinChildren || !parentEntry.twinChildren || !entry.uri) {
+    if (!hasTwinChildren || !parentEntry.twinChildren || !entry.uriBFLite) {
       return;
     }
 
-    parentEntry.twinChildren[entry.uri] = parentEntry.twinChildren[entry.uri].filter(twinId => twinId !== entry.uuid);
+    parentEntry.twinChildren[entry.uriBFLite] = parentEntry.twinChildren[entry.uriBFLite].filter(
+      twinId => twinId !== entry.uuid,
+    );
   }
 
   private updateTwinChildrenEntry(entry: SchemaEntry, updatedEntryUuid: string, parentEntry?: SchemaEntry) {
@@ -231,8 +233,8 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     const updatedParentEntry = cloneDeep(parentEntry);
     const { children } = updatedParentEntry;
     const originalEntryIndex = children?.indexOf(originalEntry.uuid);
-    const { uri } = originalEntry;
-    const childEntryId = uri ?? '';
+    const { uriBFLite } = originalEntry;
+    const childEntryId = uriBFLite ?? '';
 
     if (childEntryId) {
       const twinChildrenKey = generateTwinChildrenKey(originalEntry);

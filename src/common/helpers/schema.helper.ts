@@ -1,10 +1,5 @@
 import { AdvancedFieldType, SchemaControlType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
-import {
-  BFLITE_LABELS_MAP,
-  BFLITE_URIS,
-  ADVANCED_FIELDS,
-  NON_BF_GROUP_TYPE,
-} from '@common/constants/bibframeMapping.constants';
+import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import {
   BF_URI_DELIMITER,
   BFID_DELIMITER,
@@ -22,20 +17,6 @@ export const getLookupLabelKey = (uriBFLite?: string) => {
   return uriBFLite ? BFLITE_LABELS_MAP[typedUriBFLite] || BFLITE_URIS.LABEL : BFLITE_URIS.TERM;
 };
 
-export const getAdvancedValuesField = (uriBFLite?: string) => {
-  const typedUriBFLite = uriBFLite as keyof typeof ADVANCED_FIELDS;
-
-  return uriBFLite ? ADVANCED_FIELDS[typedUriBFLite]?.valueUri : undefined;
-};
-
-export const generateAdvancedFieldObject = ({
-  advancedValueField,
-  label,
-}: {
-  advancedValueField?: string;
-  label?: string;
-}) => (advancedValueField && label ? { [advancedValueField]: [label] } : undefined);
-
 export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: string[]) => {
   if (!children) return false;
 
@@ -46,56 +27,6 @@ export const hasChildEntry = (schema: Map<string, SchemaEntry>, children?: strin
 
     return accum;
   }, false);
-};
-
-export const getMappedNonBFGroupType = (propertyURI?: string) => {
-  if (!propertyURI || !NON_BF_GROUP_TYPE[propertyURI]) return undefined;
-
-  return NON_BF_GROUP_TYPE[propertyURI] as unknown as NonBFMappedGroupData;
-};
-
-export const checkGroupIsNonBFMapped = ({
-  propertyURI,
-  parentEntryType,
-  type,
-}: {
-  propertyURI?: string;
-  parentEntryType?: AdvancedFieldType;
-  type: AdvancedFieldType;
-}) => {
-  const { block, groupComplex } = AdvancedFieldType;
-  const mappedGroup = getMappedNonBFGroupType(propertyURI);
-
-  return !!mappedGroup && parentEntryType === block && type === groupComplex;
-};
-
-export const getRecordEntry = (recordEntry?: Record<string, RecordBasic[]>) =>
-  Array.isArray(recordEntry) ? recordEntry[0] : recordEntry;
-
-export const selectNonBFMappedGroupData = ({
-  propertyURI,
-  type,
-  parentEntryType,
-  selectedRecord,
-}: {
-  propertyURI: string;
-  type: AdvancedFieldType;
-  parentEntryType?: AdvancedFieldType;
-  selectedRecord?: Record<string, RecordBasic[]>;
-}) => {
-  const mappedGroup = getMappedNonBFGroupType(propertyURI);
-  const isNonBFMappedGroup = checkGroupIsNonBFMapped({ propertyURI, parentEntryType, type });
-  const recordEntry = getRecordEntry(selectedRecord);
-  const selectedNonBFRecord =
-    isNonBFMappedGroup && mappedGroup?.container?.key ? recordEntry?.[mappedGroup.container.key] : undefined;
-  const nonBFMappedGroup = isNonBFMappedGroup
-    ? {
-        uri: propertyURI,
-        data: mappedGroup,
-      }
-    : undefined;
-
-  return { selectedNonBFRecord, nonBFMappedGroup };
 };
 
 export const findParentEntryByProperty = <T>({
@@ -122,22 +53,6 @@ export const findParentEntryByProperty = <T>({
     },
     null as SchemaEntry | null,
   );
-
-export const normalizeLayoutProperty = (layout?: PropertyLayout<string>) => {
-  if (!layout) return;
-
-  const normalizedLayout = { ...layout } as unknown as PropertyLayout<boolean>;
-
-  if (layout?.readOnly) {
-    normalizedLayout.readOnly = Boolean(layout?.readOnly);
-  }
-
-  if (layout?.isNew) {
-    normalizedLayout.isNew = Boolean(layout.isNew);
-  }
-
-  return normalizedLayout;
-};
 
 export const getParentEntryUuid = (path: string[]) => {
   const index = path.length - PREV_ENTRY_PATH_INDEX;
@@ -214,11 +129,11 @@ export const getHtmlIdForSchemaControl = (controlType: SchemaControlType, htmlId
   `${htmlId}${ENTRY_CONTROL_DELIMITER}${controlType}`;
 
 export const generateTwinChildrenKey = (entry: SchemaEntry) => {
-  const { uri, constraints } = entry;
+  const { uriBFLite, constraints } = entry;
   const { valueDataType } = constraints ?? {};
   const suffix = valueDataType?.dataTypeURI ? `${TWIN_CHILDREN_KEY_DELIMITER}${valueDataType?.dataTypeURI}` : '';
 
-  return `${uri}${suffix}`;
+  return `${uriBFLite}${suffix}`;
 };
 
 export const checkEmptyChildren = (schema: Schema, entry?: SchemaEntry) => {

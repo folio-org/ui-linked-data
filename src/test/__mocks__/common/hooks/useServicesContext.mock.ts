@@ -36,17 +36,6 @@ export const recordToSchemaMappingService = {
   get: jest.fn(),
 } as IRecordToSchemaMappingService;
 
-export const schemaCreatorService = {
-  init: jest.fn(),
-  get: jest.fn(),
-  generate: jest.fn(),
-} as ISchemaService;
-
-export const recordGeneratorServiceLegacy = {
-  init: jest.fn(),
-  generate: jest.fn(),
-} as IRecordGeneratorServiceLegacy;
-
 export const recordGeneratorService = {
   generate: jest.fn(),
 } as IRecordGeneratorService;
@@ -65,8 +54,6 @@ jest.mock('@common/hooks/useServicesContext.ts', () => ({
     lookupCacheService,
     recordNormalizingService,
     recordToSchemaMappingService,
-    schemaCreatorService,
-    recordGeneratorServiceLegacy,
     recordGeneratorService,
     schemaGeneratorService,
   }),

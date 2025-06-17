@@ -10,34 +10,6 @@ describe('record.helper', () => {
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
 
-  describe('checkIdentifierAsValue', () => {
-    const mockedIdentifierAsValueConstant = {
-      sampleUri: {
-        field: 'sampleField',
-        value: 'sampleValue',
-      },
-    };
-
-    beforeEach(() => {
-      const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'IDENTIFIER_AS_VALUE');
-      mockImportedConstant(mockedIdentifierAsValueConstant);
-    });
-
-    test('returns false if no identifier as value selection', () => {
-      expect(RecordHelper.checkIdentifierAsValue({}, 'nonExistentUri')).toEqual(false);
-    });
-
-    test('returns false if identifier as value present but no corresponding value in record', () => {
-      expect(RecordHelper.checkIdentifierAsValue({}, 'sampleUri')).toEqual(false);
-    });
-
-    test('returns record if identifier as value and corresponding value in record present', () => {
-      expect(RecordHelper.checkIdentifierAsValue({ sampleField: ['sampleValue'] }, 'sampleUri')).toEqual({
-        sampleField: ['sampleValue'],
-      });
-    });
-  });
-
   describe('getEditingRecordBlocks', () => {
     test("returns an object with the record's blocks", () => {
       mockBlocksBFLiteConstant({

@@ -51,17 +51,15 @@ describe('FullDisplay', () => {
     const routes = [
       {
         path: '/',
-        element: <FullDisplay />
+        element: <FullDisplay />,
       },
       {
         path: '/resources/:resourceId/edit',
-        element: <Edit />
-      }
+        element: <Edit />,
+      },
     ];
 
-    return render(
-      <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />
-    );
+    return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />);
   });
 
   const { getByTestId, getAllByTestId } = screen;
