@@ -1,5 +1,6 @@
 export enum ComplexLookupType {
   Authorities = 'authorities',
+  AuthoritiesSubject = 'authoritiesSubject',
 }
 
 export enum SearchableIndex {
@@ -53,8 +54,10 @@ export const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLE
 
 export enum Authority {
   Creator = 'creator',
+  Subject = 'subject',
 }
 
 export enum AuthorityValidationTarget {
   CreatorOfWork = 'CREATOR_OF_WORK',
+  SubjectOfWork = 'SUBJECT_OF_WORK',
 }
