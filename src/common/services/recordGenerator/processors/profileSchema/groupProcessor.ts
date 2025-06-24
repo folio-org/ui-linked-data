@@ -11,29 +11,25 @@ export class GroupProcessor extends BaseFieldProcessor {
     super(profileSchemaManager, new GroupValueFormatter());
   }
 
-  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean {
+  canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return this.isValidGroupEntry(profileSchemaEntry) && this.isValidRecordSchema(recordSchemaEntry);
   }
 
-  private isValidGroupEntry(entry: SchemaEntry): boolean {
+  private isValidGroupEntry(entry: SchemaEntry) {
     return entry.type === AdvancedFieldType.group && Array.isArray(entry.children);
   }
 
-  private isValidRecordSchema(entry: RecordSchemaEntry): boolean {
+  private isValidRecordSchema(entry: RecordSchemaEntry) {
     return entry.value === RecordSchemaEntryType.object;
   }
 
-  process(
-    profileSchemaEntry: SchemaEntry,
-    userValues: UserValues,
-    recordSchemaEntry: RecordSchemaEntry,
-  ): ProcessorResult[] {
+  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
     this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
 
     return this.processGroupWithChildren();
   }
 
-  private processGroupWithChildren(): ProcessorResult[] {
+  private processGroupWithChildren() {
     if (!this.canProcessChildren()) {
       return [];
     }
@@ -49,11 +45,11 @@ export class GroupProcessor extends BaseFieldProcessor {
     return this.wrapGroupObjectInArray(groupObject);
   }
 
-  private canProcessChildren(): boolean {
+  private canProcessChildren() {
     return !!(this.profileSchemaEntry?.children && this.recordSchemaEntry?.properties);
   }
 
-  private getValidChildEntries(): ChildEntryWithValues[] {
+  private getValidChildEntries() {
     if (!this.profileSchemaEntry?.children) {
       return [];
     }
@@ -63,7 +59,7 @@ export class GroupProcessor extends BaseFieldProcessor {
       .filter((entry): entry is ChildEntryWithValues => entry !== null);
   }
 
-  private createChildEntryWithValues(childUuid: string): ChildEntryWithValues | null {
+  private createChildEntryWithValues(childUuid: string) {
     const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
     if (!this.isValidChildEntry(childEntry)) {
@@ -83,7 +79,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     return !!entry?.type && !!entry.uriBFLite;
   }
 
-  private buildGroupObject(childEntriesWithValues: ChildEntryWithValues[]): ProcessorResult {
+  private buildGroupObject(childEntriesWithValues: ChildEntryWithValues[]) {
     const groupObject: ProcessorResult = {};
 
     for (const { childEntry, childValues } of childEntriesWithValues) {
@@ -93,11 +89,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     return groupObject;
   }
 
-  private processChildEntry(
-    childEntry: SchemaEntry,
-    childValues: UserValueContents[],
-    groupObject: GeneratedValue,
-  ): void {
+  private processChildEntry(childEntry: SchemaEntry, childValues: UserValueContents[], groupObject: GeneratedValue) {
     const entryType = this.validateEntryType(childEntry.type);
 
     if (!entryType || !childEntry.uriBFLite) return;
@@ -116,7 +108,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
-  ): void {
+  ) {
     if (entryType === AdvancedFieldType.complex) {
       this.processComplexEntry(values, recordSchemaProperty, groupObject);
     } else {
@@ -128,7 +120,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
-  ): void {
+  ) {
     const valueWithId = values.find(value => value.meta?.srsId ?? value.id);
 
     if (!valueWithId) return;
@@ -147,7 +139,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
-  ): void {
+  ) {
     const processedValues = this.processSimpleValues(entryType, values, recordSchemaProperty);
 
     if (processedValues.length > 0) {
@@ -159,25 +151,22 @@ export class GroupProcessor extends BaseFieldProcessor {
     entryType: AdvancedFieldType,
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
-  ): SchemaPropertyValue[] {
+  ) {
     return values
       .map(value => this.processValueByType(entryType, value, recordSchemaProperty))
       .filter((value: SchemaPropertyValue) => value !== null)
       .flat();
   }
 
-  private wrapGroupObjectInArray(groupObject: ProcessorResult): ProcessorResult[] {
+  private wrapGroupObjectInArray(groupObject: ProcessorResult) {
     return Object.keys(groupObject).length > 0 ? [groupObject] : [];
   }
 
-  private findMatchingSchemaEntry(
-    uriBFLite: string,
-    recordSchemaEntries: Record<string, RecordSchemaEntry>,
-  ): RecordSchemaEntry | undefined {
+  private findMatchingSchemaEntry(uriBFLite: string, recordSchemaEntries: Record<string, RecordSchemaEntry>) {
     return recordSchemaEntries[uriBFLite];
   }
 
-  private validateEntryType(type?: string): AdvancedFieldType | null {
+  private validateEntryType(type?: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
   }
 }
