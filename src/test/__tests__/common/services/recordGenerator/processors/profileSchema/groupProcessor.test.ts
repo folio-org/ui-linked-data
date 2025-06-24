@@ -347,7 +347,7 @@ describe('GroupProcessor', () => {
 
       const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
 
-      expect(result).toEqual([{ uri_1: ['value 1'] }, { uri_1: ['value 2'] }]);
+      expect(result).toEqual([{ uri_1: ['value 1', 'value 2'] }]);
     });
 
     it('processes multiple children with multiple values correctly', () => {
@@ -389,12 +389,8 @@ describe('GroupProcessor', () => {
 
       expect(result).toEqual([
         {
-          uri_1: ['child_1 value 1'],
-          uri_2: ['child_2 value 1'],
-        },
-        {
-          uri_1: ['child_1 value 2'],
-          uri_2: ['child_2 value 2'],
+          uri_1: ['child_1 value 1', 'child_1 value 2'],
+          uri_2: ['child_2 value 1', 'child_2 value 2'],
         },
       ]);
     });
