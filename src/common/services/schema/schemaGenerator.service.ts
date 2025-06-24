@@ -103,6 +103,17 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     const emptyOptionUuid = generateEmptyValueUuid(node.uuid);
     const children = node.children ? [emptyOptionUuid, ...node.children] : [emptyOptionUuid];
 
+    this.schema.set(emptyOptionUuid, {
+      uuid: emptyOptionUuid,
+      type: AdvancedFieldType.dropdownOption,
+      path: [...node.path, emptyOptionUuid],
+      displayName: '',
+      bfid: '',
+      uri: '',
+      uriBFLite: '',
+      children: [],
+    });
+
     return {
       ...node,
       emptyOptionUuid,

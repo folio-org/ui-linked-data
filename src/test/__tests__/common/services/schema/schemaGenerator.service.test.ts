@@ -75,7 +75,7 @@ describe('SchemaGeneratorService', () => {
 
       const schema = service.get();
 
-      expect(schema.size).toBe(2);
+      expect(schema.size).toBe(3);
       expect(schema.has('init-key')).toBeTruthy();
       expect(schema.has('generated-uuid')).toBeTruthy();
     });
