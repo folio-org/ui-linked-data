@@ -1,23 +1,14 @@
 import { ReactNode } from 'react';
 import classNames from 'classnames';
-import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { getPreviewFieldsConditions } from '@common/helpers/record.helper';
 import { checkEmptyChildren, getParentEntryUuid } from '@common/helpers/schema.helper';
+import { getPreviewFieldsConditions } from '@common/helpers/preview.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
 import { ChildFields } from './ChildFields';
-
-export const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
-  const { children, type } = entry;
-
-  return (!children?.length || type === AdvancedFieldType.dropdown || type === AdvancedFieldType.group) &&
-    type === AdvancedFieldType.group
-    ? level === GROUP_BY_LEVEL
-    : level !== GROUP_BY_LEVEL;
-};
 
 export const getPreviewWrapper =
   ({

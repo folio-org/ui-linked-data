@@ -1,7 +1,8 @@
 import { FC } from 'react';
+import { checkShouldGroupWrap } from '@common/helpers/preview.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { Fields } from '@components/Preview/Fields';
-import { checkShouldGroupWrap, getValueGroupWrapper } from './Fields';
+import { getValueGroupWrapper } from './Fields';
 
 type ChildFieldsProps = {
   schema: Schema;
