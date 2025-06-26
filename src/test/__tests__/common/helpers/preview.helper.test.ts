@@ -134,19 +134,19 @@ describe('preview.helper', () => {
     test('handles dropdown with only dropdown option children', () => {
       const schema = new Map([
         [
-          'child1',
+          'child_1',
           {
             type: AdvancedFieldType.dropdownOption,
-            path: ['root', 'child1'],
-            uuid: 'child1',
+            path: ['root', 'child_1'],
+            uuid: 'child_1',
           },
         ],
         [
-          'child2',
+          'child_2',
           {
             type: AdvancedFieldType.dropdownOption,
-            path: ['root', 'child2'],
-            uuid: 'child2',
+            path: ['root', 'child_2'],
+            uuid: 'child_2',
           },
         ],
       ]);
@@ -155,7 +155,7 @@ describe('preview.helper', () => {
         ...baseParams,
         entry: {
           ...baseParams.entry,
-          children: ['child1', 'child2'],
+          children: ['child_1', 'child_2'],
         },
         schema,
       });
@@ -214,11 +214,11 @@ describe('preview.helper', () => {
     test('handles non-dropdown children correctly', () => {
       const schema = new Map([
         [
-          'child1',
+          'child_1',
           {
             type: AdvancedFieldType.literal,
-            path: ['root', 'child1'],
-            uuid: 'child1',
+            path: ['root', 'child_1'],
+            uuid: 'child_1',
           },
         ],
       ]);
@@ -227,7 +227,7 @@ describe('preview.helper', () => {
         ...baseParams,
         entry: {
           ...baseParams.entry,
-          children: ['child1'],
+          children: ['child_1'],
         },
         schema,
       });
@@ -248,11 +248,11 @@ describe('preview.helper', () => {
     test('handles branch without user values but with children', () => {
       const schema = new Map([
         [
-          'child1',
+          'child_1',
           {
             type: AdvancedFieldType.literal,
-            path: ['root', 'child1'],
-            uuid: 'child1',
+            path: ['root', 'child_1'],
+            uuid: 'child_1',
           },
         ],
       ]);
@@ -261,7 +261,7 @@ describe('preview.helper', () => {
         ...baseParams,
         entry: {
           ...baseParams.entry,
-          children: ['child1'],
+          children: ['child_1'],
         },
         schema,
         isOnBranchWithUserValue: false,
