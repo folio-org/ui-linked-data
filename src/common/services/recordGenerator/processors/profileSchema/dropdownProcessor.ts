@@ -14,7 +14,7 @@ export class DropdownProcessor extends BaseDropdownProcessor {
   process(data: ProcessContext) {
     this.initializeProcessor(data);
 
-    return this.processDropdownChildren(data.profileSchemaEntry);
+    return this.processDropdownChildren(data.profileSchemaEntry, data.selectedEntries);
   }
 
   protected processOptionEntry(optionEntry: SchemaEntry) {

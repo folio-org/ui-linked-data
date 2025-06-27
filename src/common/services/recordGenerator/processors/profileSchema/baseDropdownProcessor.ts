@@ -31,7 +31,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     this.recordSchemaEntry = recordSchemaEntry;
   }
 
-  protected processDropdownChildren(dropdownEntry: SchemaEntry) {
+  protected processDropdownChildren(dropdownEntry: SchemaEntry, selectedEntries: string[]) {
     const results: ProcessorResult[] = [];
 
     if (!dropdownEntry.children) return results;
@@ -39,7 +39,12 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     dropdownEntry.children.forEach(optionUuid => {
       const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) return;
+      if (
+        !optionEntry?.children ||
+        !selectedEntries.includes(optionEntry.uuid) ||
+        !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)
+      )
+        return;
 
       const result = this.processOptionEntry(optionEntry);
 

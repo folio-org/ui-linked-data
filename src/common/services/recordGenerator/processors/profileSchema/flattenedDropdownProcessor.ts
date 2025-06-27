@@ -15,7 +15,7 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
     this.initializeProcessor(data);
 
     const sourceProperty = data.recordSchemaEntry.options?.sourceProperty ?? BFLITE_URIS.SOURCE;
-    const dropdownResults = this.processDropdownChildren(data.profileSchemaEntry);
+    const dropdownResults = this.processDropdownChildren(data.profileSchemaEntry, data.selectedEntries);
 
     return dropdownResults.map(result => {
       // Each result is an object with a single key (the URI) and its associated value
