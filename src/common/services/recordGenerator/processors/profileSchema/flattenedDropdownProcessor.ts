@@ -1,6 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessContext } from '../../types/common.types';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
@@ -10,11 +11,11 @@ export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
+  process(data: ProcessContext) {
+    this.initializeProcessor(data);
 
-    const sourceProperty = recordSchemaEntry.options?.sourceProperty ?? BFLITE_URIS.SOURCE;
-    const dropdownResults = this.processDropdownChildren(profileSchemaEntry);
+    const sourceProperty = data.recordSchemaEntry.options?.sourceProperty ?? BFLITE_URIS.SOURCE;
+    const dropdownResults = this.processDropdownChildren(data.profileSchemaEntry);
 
     return dropdownResults.map(result => {
       // Each result is an object with a single key (the URI) and its associated value

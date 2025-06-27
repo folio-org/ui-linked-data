@@ -3,7 +3,8 @@ import { GeneratedValue, ValueOptions, ValueResult, SchemaPropertyValue } from '
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
-import { RecordSchemaEntryProcessingContext, IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { ProcessContext } from '../../types/common.types';
 
 export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(
@@ -16,7 +17,7 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
     return recordSchemaEntry.type === RecordSchemaEntryType.object && !!recordSchemaEntry.properties;
   }
 
-  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext): ValueResult {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues, selectedEntries }: ProcessContext): ValueResult {
     const options: ValueOptions = {
       hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };
@@ -35,7 +36,7 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
     const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
 
     Object.entries(recordSchemaEntry.properties).forEach(([key, childProperty]) => {
-      this.processObjectProperty(key, childProperty, result, parentPath, userValues);
+      this.processObjectProperty(key, childProperty, result, parentPath, userValues, selectedEntries);
     });
 
     const processedResult = this.valueProcessor.processSchemaValues(
@@ -56,6 +57,7 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
     result: GeneratedValue,
     parentPath: string[] | undefined,
     userValues: UserValues,
+    selectedEntries: string[],
   ) {
     const localParentPath = parentPath ? [...parentPath] : undefined;
     const childEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
@@ -65,6 +67,7 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
         recordSchemaEntry,
         userValues,
         profileSchemaEntry: childEntry,
+        selectedEntries,
       });
 
       if (!childResult.value) return;

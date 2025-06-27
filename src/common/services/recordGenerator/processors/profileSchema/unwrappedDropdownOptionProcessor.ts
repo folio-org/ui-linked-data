@@ -1,15 +1,16 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
+import { ProcessContext } from '../../types/common.types';
 
 export class UnwrappedDropdownOptionProcessor extends BaseDropdownProcessor {
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.hiddenWrapper === true;
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
+  process(data: ProcessContext) {
+    this.initializeProcessor(data);
 
-    return this.processDropdownChildren(profileSchemaEntry);
+    return this.processDropdownChildren(data.profileSchemaEntry);
   }
 
   protected processOptionEntry(optionEntry: SchemaEntry) {

@@ -2,10 +2,11 @@ import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
 import { IValueProcessor } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { IProcessEntryProps, IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
+import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { ArrayEntryProcessor } from './arrayEntryProcessor';
 import { ObjectEntryProcessor } from './objectEntryProcessor';
 import { SimpleEntryProcessor } from './simpleEntryProcessor';
+import { ProcessContext } from '../../types/common.types';
 
 export class RecordSchemaEntryManager implements IRecordSchemaEntryManager {
   private readonly processors: IRecordSchemaEntryProcessor[] = [];
@@ -26,10 +27,10 @@ export class RecordSchemaEntryManager implements IRecordSchemaEntryManager {
     );
   }
 
-  processEntry({ recordSchemaEntry, profileSchemaEntry, userValues }: IProcessEntryProps) {
+  processEntry({ recordSchemaEntry, profileSchemaEntry, userValues, selectedEntries }: ProcessContext) {
     const processor = this.getProcessorForEntry(recordSchemaEntry);
 
-    return processor.process({ recordSchemaEntry, profileSchemaEntry, userValues });
+    return processor.process({ recordSchemaEntry, profileSchemaEntry, userValues, selectedEntries });
   }
 
   private getProcessorForEntry(recordSchemaEntry: RecordSchemaEntry) {
