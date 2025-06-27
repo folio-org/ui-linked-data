@@ -1,8 +1,9 @@
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
 import { IValueProcessor } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { IProcessEntryProps, IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
+import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { ArrayEntryProcessor } from './arrayEntryProcessor';
 import { ObjectEntryProcessor } from './objectEntryProcessor';
 import { SimpleEntryProcessor } from './simpleEntryProcessor';
@@ -26,10 +27,10 @@ export class RecordSchemaEntryManager implements IRecordSchemaEntryManager {
     );
   }
 
-  processEntry({ recordSchemaEntry, profileSchemaEntry, userValues }: IProcessEntryProps) {
-    const processor = this.getProcessorForEntry(recordSchemaEntry);
+  processEntry(data: ProcessContext) {
+    const processor = this.getProcessorForEntry(data.recordSchemaEntry);
 
-    return processor.process({ recordSchemaEntry, profileSchemaEntry, userValues });
+    return processor.process(data);
   }
 
   private getProcessorForEntry(recordSchemaEntry: RecordSchemaEntry) {

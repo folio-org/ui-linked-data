@@ -98,6 +98,7 @@ describe('FlattenedDropdownProcessor', () => {
         children: undefined,
       } as SchemaEntry;
       const userValues = {} as UserValues;
+      const selectedEntries: string[] = [];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         options: {
@@ -105,7 +106,7 @@ describe('FlattenedDropdownProcessor', () => {
         },
       };
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -117,6 +118,7 @@ describe('FlattenedDropdownProcessor', () => {
         children: ['option_1_uuid', 'option_2_uuid'],
       } as SchemaEntry;
       const userValues = {} as UserValues;
+      const selectedEntries: string[] = ['option_1_uuid', 'option_2_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         options: {
@@ -140,7 +142,7 @@ describe('FlattenedDropdownProcessor', () => {
 
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(false);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -156,6 +158,7 @@ describe('FlattenedDropdownProcessor', () => {
           contents: [{ label: 'test value' }],
         },
       } as unknown as UserValues;
+      const selectedEntries = ['option_1_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         options: {
@@ -185,7 +188,7 @@ describe('FlattenedDropdownProcessor', () => {
 
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -206,6 +209,7 @@ describe('FlattenedDropdownProcessor', () => {
           contents: [{ label: 'test value' }],
         },
       } as unknown as UserValues;
+      const selectedEntries = ['option_1_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         options: {
@@ -236,7 +240,7 @@ describe('FlattenedDropdownProcessor', () => {
 
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {

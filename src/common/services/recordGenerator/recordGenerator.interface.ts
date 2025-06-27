@@ -1,6 +1,7 @@
 export interface IRecordGeneratorData {
   schema: Schema;
   userValues: UserValues;
+  selectedEntries: string[];
   referenceIds?: { id: string }[];
 }
 

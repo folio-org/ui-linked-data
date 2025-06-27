@@ -1,7 +1,5 @@
+import { ProcessContext } from '../../types/common.types';
+
 export interface IProfileSchemaProcessorManager {
-  process(
-    profileSchemaEntry: SchemaEntry,
-    recordSchemaEntry: RecordSchemaEntry,
-    userValues: UserValues,
-  ): Record<string, any> | never[];
+  process(data: ProcessContext): Record<string, any> | never[];
 }

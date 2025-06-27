@@ -8,10 +8,14 @@ jest.mock('@common/services/recordGenerator/processors/value/valueProcessor');
 describe('SimpleEntryProcessor', () => {
   let processor: SimpleEntryProcessor;
   let mockValueProcessor: jest.Mocked<ValueProcessor>;
+  let userValues: Record<string, any>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     mockValueProcessor = new ValueProcessor() as jest.Mocked<ValueProcessor>;
     processor = new SimpleEntryProcessor(mockValueProcessor);
+    userValues = {};
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -73,6 +77,7 @@ describe('SimpleEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([{ label: 'test value' }], expectedOptions);
@@ -108,6 +113,7 @@ describe('SimpleEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([{ label: 'test value' }], expectedOptions);
@@ -122,7 +128,6 @@ describe('SimpleEntryProcessor', () => {
         uuid: 'test-uuid',
       } as SchemaEntry;
 
-      const userValues = {} as UserValues;
       const expectedOptions: ValueOptions = {
         hiddenWrapper: false,
       };
@@ -137,6 +142,7 @@ describe('SimpleEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([], expectedOptions);
@@ -169,6 +175,7 @@ describe('SimpleEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([], expectedOptions);

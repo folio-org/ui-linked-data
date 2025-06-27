@@ -14,6 +14,8 @@ describe('ObjectEntryProcessor', () => {
   let mockValueProcessor: jest.Mocked<ValueProcessor>;
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
   let mockRecordSchemaEntryManager: jest.Mocked<RecordSchemaEntryManager>;
+  let userValues: Record<string, any>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     mockValueProcessor = new ValueProcessor() as jest.Mocked<ValueProcessor>;
@@ -22,6 +24,8 @@ describe('ObjectEntryProcessor', () => {
       processEntry: jest.fn(),
     } as unknown as jest.Mocked<RecordSchemaEntryManager>;
     processor = new ObjectEntryProcessor(mockValueProcessor, mockProfileSchemaManager, mockRecordSchemaEntryManager);
+    userValues = {};
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -72,7 +76,6 @@ describe('ObjectEntryProcessor', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const expectedOptions = {
         hiddenWrapper: true,
       };
@@ -87,6 +90,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith({}, expectedOptions);
@@ -108,7 +112,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childEntry_2 = { uuid: 'child_uuid_2' } as SchemaEntry;
       const childResult_1 = {
@@ -140,6 +143,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
@@ -153,11 +157,13 @@ describe('ObjectEntryProcessor', () => {
       expect(mockRecordSchemaEntryManager.processEntry).toHaveBeenCalledWith({
         recordSchemaEntry: { type: RecordSchemaEntryType.string },
         userValues,
+        selectedEntries,
         profileSchemaEntry: childEntry_1,
       });
       expect(mockRecordSchemaEntryManager.processEntry).toHaveBeenCalledWith({
         recordSchemaEntry: { type: RecordSchemaEntryType.string },
         userValues,
+        selectedEntries,
         profileSchemaEntry: childEntry_2,
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
@@ -184,7 +190,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
 
       const expectedOptions = {
         hiddenWrapper: false,
@@ -201,6 +206,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
@@ -226,7 +232,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1 = {
         value: null,
@@ -248,6 +253,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
@@ -257,6 +263,7 @@ describe('ObjectEntryProcessor', () => {
       expect(mockRecordSchemaEntryManager.processEntry).toHaveBeenCalledWith({
         recordSchemaEntry: { type: RecordSchemaEntryType.string },
         userValues,
+        selectedEntries,
         profileSchemaEntry: childEntry_1,
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith({}, expectedOptions);
@@ -280,7 +287,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1: ValueResult = {
         value: [{ nested_property: 'nested value' }],
@@ -306,6 +312,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
@@ -318,6 +325,7 @@ describe('ObjectEntryProcessor', () => {
           value: RecordSchemaEntryType.object,
         },
         userValues,
+        selectedEntries,
         profileSchemaEntry: childEntry_1,
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
@@ -346,7 +354,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1: ValueResult = {
         value: ['value_1', 'value_2'],
@@ -372,6 +379,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
         'parent_1',
@@ -383,6 +391,7 @@ describe('ObjectEntryProcessor', () => {
           value: RecordSchemaEntryType.string,
         },
         userValues,
+        selectedEntries,
         profileSchemaEntry: childEntry_1,
       });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
@@ -411,7 +420,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childEntry_2 = { uuid: 'child_uuid_2' } as SchemaEntry;
       const childResult_1: ValueResult = {
@@ -446,6 +454,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [
@@ -479,7 +488,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1: ValueResult = {
         value: 'not an array',
@@ -505,6 +513,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(
@@ -533,7 +542,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childResult_1: ValueResult = {
         value: ['simple string'],
@@ -557,6 +565,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith({}, expectedOptions);
@@ -580,7 +589,6 @@ describe('ObjectEntryProcessor', () => {
         uuid: 'test-uuid',
         path: ['parent_1', 'child_1'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const childEntry_1 = { uuid: 'child_uuid_1' } as SchemaEntry;
       const childEntry_2 = { uuid: 'child_uuid_2' } as SchemaEntry;
       const childResult_1: ValueResult = {
@@ -615,6 +623,7 @@ describe('ObjectEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockProfileSchemaManager.findSchemaEntriesByUriBFLite).toHaveBeenCalledWith('property_uri_1', [

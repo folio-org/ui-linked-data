@@ -9,6 +9,7 @@ describe('useRecordGeneration', () => {
   it('generates a record using new service', () => {
     const schema = 'mockSchema';
     const userValues = 'mockUserValues';
+    const selectedEntries: string[] = [];
     const selectedProfile = { id: 'monograph' };
 
     const searchParams = new URLSearchParams('?block=testBlock&reference.key=testKey');
@@ -26,6 +27,7 @@ describe('useRecordGeneration', () => {
         store: useInputsStore,
         state: {
           userValues,
+          selectedEntries,
           record: {
             resource: {
               testBlock: {
@@ -42,7 +44,7 @@ describe('useRecordGeneration', () => {
     result.current.generateRecord();
 
     expect(recordGeneratorService.generate).toHaveBeenCalledWith(
-      { schema, userValues, referenceIds: undefined },
+      { schema, userValues, selectedEntries, referenceIds: undefined },
       'Monograph',
       'work',
     );

@@ -14,6 +14,7 @@ describe('ArrayEntryProcessor', () => {
   let mockValueProcessor: jest.Mocked<ValueProcessor>;
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
   let mockProfileSchemaProcessorManager: jest.Mocked<ProfileSchemaProcessorManager>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     mockValueProcessor = new ValueProcessor() as jest.Mocked<ValueProcessor>;
@@ -22,6 +23,7 @@ describe('ArrayEntryProcessor', () => {
       mockProfileSchemaManager,
     ) as jest.Mocked<ProfileSchemaProcessorManager>;
     processor = new ArrayEntryProcessor(mockValueProcessor, mockProfileSchemaProcessorManager);
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -71,6 +73,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(result).toEqual({
@@ -110,6 +113,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith(
@@ -148,13 +152,15 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
-      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith(
+      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith({
         profileSchemaEntry,
         recordSchemaEntry,
         userValues,
-      );
+        selectedEntries,
+      });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(processedValues, expectedOptions);
       expect(result).toEqual(expectedResult);
     });
@@ -197,6 +203,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([{ label: 'value 1' }, { label: 'value 2' }], {
@@ -243,6 +250,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([{ label: 'value 1' }, { label: 'value 2' }], {
@@ -287,13 +295,15 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
-      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith(
+      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith({
         profileSchemaEntry,
         recordSchemaEntry,
         userValues,
-      );
+        selectedEntries,
+      });
       expect(mockValueProcessor.processSchemaValues).toHaveBeenCalledWith(processedValues, { hiddenWrapper: false });
       expect(result).toEqual(expectedResult);
     });
@@ -327,6 +337,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith([{ label: 'value 1' }], { hiddenWrapper: true });
@@ -363,6 +374,7 @@ describe('ArrayEntryProcessor', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockValueProcessor.process).toHaveBeenCalledWith(undefined, { hiddenWrapper: true });

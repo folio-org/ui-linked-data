@@ -1,7 +1,8 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions } from '../../types/value.types';
+import { ProcessContext } from '../../types/common.types';
 import { IValueProcessor } from '../value/valueProcessor.interface';
-import { RecordSchemaEntryProcessingContext, IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
+import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
 export class SimpleEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(private readonly valueProcessor: IValueProcessor) {}
@@ -12,7 +13,7 @@ export class SimpleEntryProcessor implements IRecordSchemaEntryProcessor {
     );
   }
 
-  process({ recordSchemaEntry, profileSchemaEntry, userValues }: RecordSchemaEntryProcessingContext) {
+  process({ recordSchemaEntry, profileSchemaEntry, userValues }: ProcessContext) {
     const options: ValueOptions = {
       hiddenWrapper: recordSchemaEntry.options?.hiddenWrapper ?? false,
     };

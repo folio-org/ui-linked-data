@@ -8,6 +8,7 @@ describe('RecordGenerator', () => {
   let generator: RecordGenerator;
   let mockSchema: Schema;
   let mockUserValues: UserValues;
+  let mockSelectedEntries: string[];
   let mockReferenceIds: { id: string }[];
   let mockRecordSchema: RecordSchema;
 
@@ -15,6 +16,7 @@ describe('RecordGenerator', () => {
     generator = new RecordGenerator();
     mockSchema = new Map();
     mockUserValues = {};
+    mockSelectedEntries = [];
     mockReferenceIds = [{ id: 'test-reference-id' }];
     mockRecordSchema = {
       root: {
@@ -41,6 +43,7 @@ describe('RecordGenerator', () => {
         generator.generate({
           schema: mockSchema,
           userValues: mockUserValues,
+          selectedEntries: mockSelectedEntries,
           referenceIds: mockReferenceIds,
         });
       }).toThrow('Record schema not found for profile type: Monograph, entity type: work');
@@ -59,6 +62,7 @@ describe('RecordGenerator', () => {
       const result = generator.generate({
         schema: mockSchema,
         userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
         referenceIds: mockReferenceIds,
       });
 
@@ -93,6 +97,7 @@ describe('RecordGenerator', () => {
         {
           schema: mockSchema,
           userValues: mockUserValues,
+          selectedEntries: mockSelectedEntries,
           referenceIds: mockReferenceIds,
         },
         profileType,
@@ -117,6 +122,7 @@ describe('RecordGenerator', () => {
       const result = generator.generate({
         schema: mockSchema,
         userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
       });
 
       expect(result).toEqual({
@@ -137,6 +143,7 @@ describe('RecordGenerator', () => {
       const result = generator.generate({
         schema: mockSchema,
         userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
         referenceIds: mockReferenceIds,
       });
 
@@ -157,6 +164,7 @@ describe('RecordGenerator', () => {
       const result = generator.generate({
         schema: mockSchema,
         userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
         referenceIds: mockReferenceIds,
       });
 
@@ -182,6 +190,7 @@ describe('RecordGenerator', () => {
       const result = generator.generate({
         schema: mockSchema,
         userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
         referenceIds: mockReferenceIds,
       });
 

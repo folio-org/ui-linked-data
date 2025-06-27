@@ -4,9 +4,11 @@ import { LookupProcessor } from '@common/services/recordGenerator/processors/pro
 
 describe('LookupProcessor', () => {
   let processor: LookupProcessor;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     processor = new LookupProcessor();
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -95,7 +97,7 @@ describe('LookupProcessor', () => {
       } as SchemaEntry;
       const userValues = {} as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -116,7 +118,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -146,7 +148,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -181,7 +183,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -214,7 +216,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -245,7 +247,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -277,7 +279,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -308,7 +310,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -353,7 +355,7 @@ describe('LookupProcessor', () => {
         },
       } as unknown as UserValues;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {

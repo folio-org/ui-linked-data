@@ -15,6 +15,7 @@ export class RecordGenerator implements IRecordGenerator {
   private readonly recordSchemaEntryManager: IRecordSchemaEntryManager;
   private recordSchema: RecordSchema;
   private userValues: UserValues;
+  private selectedEntries: string[];
   private referenceIds?: { id: string }[];
 
   constructor() {
@@ -30,6 +31,7 @@ export class RecordGenerator implements IRecordGenerator {
 
     this.recordSchema = {};
     this.userValues = {};
+    this.selectedEntries = [];
   }
 
   generate(data: IRecordGeneratorData, profileType: ProfileType = 'Monograph', entityType: ResourceType = 'work') {
@@ -54,11 +56,13 @@ export class RecordGenerator implements IRecordGenerator {
     schema,
     recordSchema,
     userValues,
+    selectedEntries,
     referenceIds,
   }: IRecordGeneratorData & { recordSchema: RecordSchema }) {
     this.profileSchemaManager.init(schema);
     this.recordSchema = recordSchema;
     this.userValues = userValues;
+    this.selectedEntries = selectedEntries;
     this.referenceIds = referenceIds;
   }
 
@@ -90,6 +94,7 @@ export class RecordGenerator implements IRecordGenerator {
             recordSchemaEntry: rootProperty,
             profileSchemaEntry: entry,
             userValues: this.userValues,
+            selectedEntries: this.selectedEntries,
           }).value,
       )
       .filter((value): value is SchemaPropertyValue => value !== null);

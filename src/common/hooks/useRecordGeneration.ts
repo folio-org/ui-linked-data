@@ -13,7 +13,7 @@ const getReferenceIds = (record: RecordEntry, block: string, referenceKey: strin
 export const useRecordGeneration = () => {
   const [searchParams] = useSearchParams();
   const { recordGeneratorService } = useServicesContext();
-  const { record, userValues, selectedRecordBlocks } = useInputsState();
+  const { record, userValues, selectedEntries, selectedRecordBlocks } = useInputsState();
   const { selectedProfile, schema } = useProfileState();
 
   const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
@@ -26,7 +26,7 @@ export const useRecordGeneration = () => {
 
   const generateRecord = () =>
     recordGeneratorService?.generate(
-      { schema, userValues, referenceIds },
+      { schema, userValues, selectedEntries, referenceIds },
       (selectedProfile?.[0]?.id as ProfileType) ?? 'Monograph',
       entityType,
     );

@@ -3,6 +3,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ChildEntryWithValues, GeneratedValue, SchemaPropertyValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessContext } from '../../types/common.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
 
@@ -23,8 +24,8 @@ export class GroupProcessor extends BaseFieldProcessor {
     return entry.value === RecordSchemaEntryType.object;
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
+  process(data: ProcessContext) {
+    this.initializeProcessor(data);
 
     return this.processGroupWithChildren();
   }
