@@ -1,9 +1,9 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
+import { ProcessContext } from '../../types/common.types';
 import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
 import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { ProcessContext } from '../../types/common.types';
 
 export class ArrayEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(

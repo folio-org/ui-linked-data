@@ -1,10 +1,10 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { GeneratedValue, ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { ProcessContext } from '../../types/common.types';
 
 export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(
@@ -36,7 +36,14 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
     const parentPath = profileSchemaEntry ? profileSchemaEntry.path : undefined;
 
     Object.entries(recordSchemaEntry.properties).forEach(([key, childProperty]) => {
-      this.processObjectProperty(key, childProperty, result, parentPath, userValues, selectedEntries);
+      this.processObjectProperty({
+        key,
+        recordSchemaEntry: childProperty,
+        result,
+        parentPath,
+        userValues,
+        selectedEntries,
+      });
     });
 
     const processedResult = this.valueProcessor.processSchemaValues(
@@ -51,14 +58,21 @@ export class ObjectEntryProcessor implements IRecordSchemaEntryProcessor {
     };
   }
 
-  private processObjectProperty(
-    key: string,
-    recordSchemaEntry: RecordSchemaEntry,
-    result: GeneratedValue,
-    parentPath: string[] | undefined,
-    userValues: UserValues,
-    selectedEntries: string[],
-  ) {
+  private processObjectProperty({
+    key,
+    recordSchemaEntry,
+    result,
+    parentPath,
+    userValues,
+    selectedEntries,
+  }: {
+    key: string;
+    recordSchemaEntry: RecordSchemaEntry;
+    result: GeneratedValue;
+    parentPath?: string[];
+    userValues: UserValues;
+    selectedEntries: string[];
+  }) {
     const localParentPath = parentPath ? [...parentPath] : undefined;
     const childEntries = this.profileSchemaManager.findSchemaEntriesByUriBFLite(key, localParentPath);
 

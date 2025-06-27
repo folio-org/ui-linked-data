@@ -1,6 +1,6 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BaseDropdownProcessor } from './baseDropdownProcessor';
 import { ProcessContext } from '../../types/common.types';
+import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class UnwrappedDropdownOptionProcessor extends BaseDropdownProcessor {
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {

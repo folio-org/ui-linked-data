@@ -1,8 +1,8 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { ValueOptions } from '../../types/value.types';
+import { ProcessContext } from '../../types/common.types';
 import { IValueProcessor } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { ProcessContext } from '../../types/common.types';
 
 export class SimpleEntryProcessor implements IRecordSchemaEntryProcessor {
   constructor(private readonly valueProcessor: IValueProcessor) {}

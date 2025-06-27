@@ -1,3 +1,5 @@
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { DropdownProcessor } from './dropdownProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
@@ -5,8 +7,6 @@ import { GroupProcessor } from './groupProcessor';
 import { LookupProcessor } from './lookupProcessor';
 import { FlattenedDropdownProcessor } from './flattenedDropdownProcessor';
 import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
-import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ProcessContext } from '../../types/common.types';
 
 export class ProfileSchemaProcessorManager implements IProfileSchemaProcessorManager {
   private readonly processors: IProfileSchemaProcessor[];
