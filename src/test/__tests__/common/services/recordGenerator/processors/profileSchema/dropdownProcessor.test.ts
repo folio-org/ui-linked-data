@@ -104,12 +104,13 @@ describe('DropdownProcessor', () => {
         uuid: 'dropdown_uuid',
         children: undefined,
       } as SchemaEntry;
-      const userValues = {} as UserValues;
+      const userValues: UserValues = {};
+      const selectedEntries: string[] = [];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
       };
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -120,14 +121,15 @@ describe('DropdownProcessor', () => {
         uuid: 'dropdown_uuid',
         children: ['option_1_uuid', 'option_2_uuid'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
+      const userValues: UserValues = {};
+      const selectedEntries: string[] = [];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
       };
 
       mockProfileSchemaManager.getSchemaEntry.mockReturnValue(undefined);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
@@ -145,7 +147,8 @@ describe('DropdownProcessor', () => {
         uriBFLite: 'option_1',
         children: undefined,
       } as SchemaEntry;
-      const userValues = {} as UserValues;
+      const userValues: UserValues = {};
+      const selectedEntries: string[] = [];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
       } as RecordSchemaEntry;
@@ -153,7 +156,7 @@ describe('DropdownProcessor', () => {
       mockProfileSchemaManager.getSchemaEntry.mockReturnValue(optionEntry);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(false);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
@@ -170,7 +173,8 @@ describe('DropdownProcessor', () => {
         uriBFLite: undefined,
         children: ['child_1_uuid'],
       } as SchemaEntry;
-      const userValues = {} as UserValues;
+      const userValues: UserValues = {};
+      const selectedEntries = ['option_1_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
       };
@@ -178,7 +182,7 @@ describe('DropdownProcessor', () => {
       mockProfileSchemaManager.getSchemaEntry.mockReturnValue(optionEntry);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
@@ -207,6 +211,7 @@ describe('DropdownProcessor', () => {
           contents: [{ label: 'child value' }],
         },
       } as unknown as UserValues;
+      const selectedEntries = ['option_1_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         properties: {
@@ -222,7 +227,7 @@ describe('DropdownProcessor', () => {
       mockProfileSchemaManager.getSchemaEntry.mockReturnValueOnce(optionEntry).mockReturnValueOnce(childEntry);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ option_1: { child_1: ['child value'] } }]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
@@ -257,6 +262,7 @@ describe('DropdownProcessor', () => {
           contents: [{ label: 'child value' }],
         },
       } as unknown as UserValues;
+      const selectedEntries = ['option_1_uuid', 'option_2_uuid'];
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
         properties: {
@@ -283,7 +289,7 @@ describe('DropdownProcessor', () => {
       });
       mockProfileSchemaManager.hasOptionValues.mockImplementation(entry => entry.uuid === 'option_1_uuid');
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ option_1: { child_1: ['child value'] } }]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
@@ -315,6 +321,7 @@ describe('DropdownProcessor', () => {
           contents: [{ label: 'child value' }],
         },
       } as unknown as UserValues;
+      const selectedEntries = ['option_1_uuid'];
       const childRecordSchemaEntry = { type: RecordSchemaEntryType.string };
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
@@ -332,17 +339,18 @@ describe('DropdownProcessor', () => {
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
       mockProfileSchemaProcessorManager.process.mockReturnValue(['processed value']);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ option_1: { child_1: ['processed value'] } }]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1_uuid');
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('child_1_uuid');
       expect(mockProfileSchemaManager.hasOptionValues).toHaveBeenCalledWith(optionEntry, userValues);
-      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith(
-        childEntry,
-        childRecordSchemaEntry,
+      expect(mockProfileSchemaProcessorManager.process).toHaveBeenCalledWith({
+        profileSchemaEntry: childEntry,
+        recordSchemaEntry: childRecordSchemaEntry,
         userValues,
-      );
+        selectedEntries,
+      });
     });
   });
 });

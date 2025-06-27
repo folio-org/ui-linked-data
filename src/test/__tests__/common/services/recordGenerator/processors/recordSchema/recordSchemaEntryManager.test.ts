@@ -23,8 +23,12 @@ describe('RecordSchemaEntryManager', () => {
   let mockArrayEntryProcessor: jest.Mocked<ArrayEntryProcessor>;
   let mockObjectEntryProcessor: jest.Mocked<ObjectEntryProcessor>;
   let mockSimpleEntryProcessor: jest.Mocked<SimpleEntryProcessor>;
+  let userValues: Record<string, any>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
+    userValues = {};
+    selectedEntries = [];
     mockValueProcessor = new ValueProcessor() as jest.Mocked<ValueProcessor>;
     mockProfileSchemaManager = new ProfileSchemaManager() as jest.Mocked<ProfileSchemaManager>;
     mockProfileSchemaProcessorManager = new ProfileSchemaProcessorManager(
@@ -70,7 +74,6 @@ describe('RecordSchemaEntryManager', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const expectedOptions: ValueOptions = {
         hiddenWrapper: false,
       };
@@ -88,6 +91,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockSimpleEntryProcessor.canProcess).toHaveBeenCalledWith(recordSchemaEntry);
@@ -95,6 +99,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
       expect(result).toEqual(expectedResult);
     });
@@ -106,7 +111,6 @@ describe('RecordSchemaEntryManager', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const expectedOptions: ValueOptions = {
         hiddenWrapper: false,
       };
@@ -124,6 +128,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockArrayEntryProcessor.canProcess).toHaveBeenCalledWith(recordSchemaEntry);
@@ -131,6 +136,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
       expect(result).toEqual(expectedResult);
     });
@@ -145,7 +151,6 @@ describe('RecordSchemaEntryManager', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
       const expectedOptions: ValueOptions = {
         hiddenWrapper: false,
       };
@@ -163,6 +168,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockObjectEntryProcessor.canProcess).toHaveBeenCalledWith(recordSchemaEntry);
@@ -170,6 +176,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
       expect(result).toEqual(expectedResult);
     });
@@ -181,7 +188,6 @@ describe('RecordSchemaEntryManager', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
 
       mockSimpleEntryProcessor.canProcess.mockReturnValue(false);
       mockArrayEntryProcessor.canProcess.mockReturnValue(false);
@@ -192,6 +198,7 @@ describe('RecordSchemaEntryManager', () => {
           recordSchemaEntry,
           profileSchemaEntry,
           userValues,
+          selectedEntries,
         });
       }).toThrow(`No processor found for entry type: unknown-type`);
     });
@@ -205,7 +212,6 @@ describe('RecordSchemaEntryManager', () => {
       const profileSchemaEntry = {
         uuid: 'test-uuid',
       } as SchemaEntry;
-      const userValues = {} as UserValues;
 
       mockArrayEntryProcessor.canProcess.mockReturnValue(true);
       mockObjectEntryProcessor.canProcess.mockReturnValue(true);
@@ -219,6 +225,7 @@ describe('RecordSchemaEntryManager', () => {
         recordSchemaEntry,
         profileSchemaEntry,
         userValues,
+        selectedEntries,
       });
 
       expect(mockArrayEntryProcessor.process).toHaveBeenCalled();

@@ -11,6 +11,7 @@ describe('UnwrappedDropdownOptionProcessor', () => {
   let processor: UnwrappedDropdownOptionProcessor;
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
   let mockProfileSchemaProcessorManager: jest.Mocked<ProfileSchemaProcessorManager>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     mockProfileSchemaManager = new ProfileSchemaManager() as jest.Mocked<ProfileSchemaManager>;
@@ -18,6 +19,7 @@ describe('UnwrappedDropdownOptionProcessor', () => {
       mockProfileSchemaManager,
     ) as jest.Mocked<ProfileSchemaProcessorManager>;
     processor = new UnwrappedDropdownOptionProcessor(mockProfileSchemaManager, mockProfileSchemaProcessorManager);
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -97,7 +99,7 @@ describe('UnwrappedDropdownOptionProcessor', () => {
       };
       const userValues = {};
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -118,7 +120,7 @@ describe('UnwrappedDropdownOptionProcessor', () => {
       mockProfileSchemaManager.getSchemaEntry.mockReturnValue(undefined);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(false);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1');
@@ -150,13 +152,14 @@ describe('UnwrappedDropdownOptionProcessor', () => {
         },
       };
       const userValues = {};
+      selectedEntries = ['option_1'];
 
       mockProfileSchemaManager.getSchemaEntry
         .mockReturnValueOnce(optionEntry)
         .mockReturnValueOnce({ uuid: 'child_1', uriBFLite: 'child_uri' } as SchemaEntry);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
       expect(mockProfileSchemaManager.getSchemaEntry).toHaveBeenCalledWith('option_1');
@@ -190,11 +193,12 @@ describe('UnwrappedDropdownOptionProcessor', () => {
         },
       };
       const userValues = {};
+      selectedEntries = ['option_1'];
 
       mockProfileSchemaManager.getSchemaEntry.mockReturnValueOnce(optionEntry).mockReturnValueOnce(childEntry);
       mockProfileSchemaManager.hasOptionValues.mockReturnValue(true);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });

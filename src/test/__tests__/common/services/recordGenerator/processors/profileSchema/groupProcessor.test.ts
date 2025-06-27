@@ -8,10 +8,12 @@ jest.mock('@common/services/recordGenerator/profileSchemaManager');
 describe('GroupProcessor', () => {
   let processor: GroupProcessor;
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
+  let selectedEntries: string[];
 
   beforeEach(() => {
     mockProfileSchemaManager = new ProfileSchemaManager() as jest.Mocked<ProfileSchemaManager>;
     processor = new GroupProcessor(mockProfileSchemaManager);
+    selectedEntries = [];
   });
 
   describe('canProcess', () => {
@@ -91,7 +93,7 @@ describe('GroupProcessor', () => {
         },
       } as RecordSchemaEntry;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -108,7 +110,7 @@ describe('GroupProcessor', () => {
         value: RecordSchemaEntryType.object,
       } as RecordSchemaEntry;
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -140,7 +142,7 @@ describe('GroupProcessor', () => {
           uriBFLite: 'uri_2',
         } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -170,7 +172,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['test value'] }]);
     });
@@ -200,7 +202,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['test_uri'] }]);
     });
@@ -230,7 +232,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ srsId: 'test_srs_id' }]);
     });
@@ -260,7 +262,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ id: 'test_id' }]);
     });
@@ -309,7 +311,7 @@ describe('GroupProcessor', () => {
           uriBFLite: 'uri_3',
         } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -345,7 +347,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['value 1', 'value 2'] }]);
     });
@@ -385,7 +387,7 @@ describe('GroupProcessor', () => {
           uriBFLite: 'uri_2',
         } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([
         {
@@ -430,7 +432,7 @@ describe('GroupProcessor', () => {
           uriBFLite: 'uri_2',
         } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['valid value'] }]);
     });
@@ -469,7 +471,7 @@ describe('GroupProcessor', () => {
           uriBFLite: 'uri_2',
         } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['value 1'] }]);
     });
@@ -499,7 +501,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([]);
     });
@@ -536,7 +538,7 @@ describe('GroupProcessor', () => {
         uriBFLite: 'uri_1',
       } as SchemaEntry);
 
-      const result = processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['mapped_key'] }]);
     });
