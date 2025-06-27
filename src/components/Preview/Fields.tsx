@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-import classNames from 'classnames';
 import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { checkEmptyChildren, getParentEntryUuid } from '@common/helpers/schema.helper';
@@ -9,51 +7,8 @@ import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
 import { ChildFields } from './ChildFields';
-
-export const getPreviewWrapper =
-  ({
-    isBlock,
-    wrapEntities,
-    isBlockContents,
-  }: {
-    isBlock: boolean;
-    isBlockContents: boolean;
-    wrapEntities?: boolean;
-  }) =>
-  ({ children }: { children: ReactNode }) => (
-    <div
-      className={classNames({
-        'preview-block': isBlock,
-        'preview-entity': wrapEntities,
-        'preview-block-contents': isBlockContents,
-      })}
-      data-testid="preview-fields"
-    >
-      {children}
-    </div>
-  );
-
-export const getValueGroupWrapper =
-  ({ schemaEntry }: { schemaEntry?: SchemaEntry }) =>
-  ({ children }: { children: ReactNode }) =>
-    children ? (
-      <div id={schemaEntry?.htmlId} className="value-group-wrapper">
-        {children}
-      </div>
-    ) : null;
-
-type FieldsProps = {
-  base: Schema;
-  uuid: string;
-  level?: number;
-  paths: Array<string>;
-  altSchema?: Schema;
-  altUserValues?: UserValues;
-  altSelectedEntries?: Array<string>;
-  altDisplayNames?: Record<string, string>;
-  hideEntities?: boolean;
-  forceRenderAllTopLevelEntities?: boolean;
-};
+import { getPreviewWrapper } from './preview.wrappers';
+import { FieldProps } from './preview.types';
 
 export const Fields = ({
   base,
@@ -66,7 +21,7 @@ export const Fields = ({
   altDisplayNames,
   hideEntities,
   forceRenderAllTopLevelEntities,
-}: FieldsProps) => {
+}: FieldProps) => {
   const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { currentlyPreviewedEntityBfid } = useUIState();
@@ -143,6 +98,7 @@ export const Fields = ({
         forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
         isGroupable={isGroupable}
         isGroup={isGroup}
+        renderField={(props) => <Fields {...props} />}
       />
     );
   };

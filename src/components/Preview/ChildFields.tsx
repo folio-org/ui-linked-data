@@ -1,23 +1,8 @@
 import { FC } from 'react';
 import { checkShouldGroupWrap } from '@common/helpers/preview.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { Fields } from '@components/Preview/Fields';
-import { getValueGroupWrapper } from './Fields';
-
-type ChildFieldsProps = {
-  schema: Schema;
-  entryChildren?: string[];
-  level: number;
-  paths: Array<string>;
-  altSchema?: Schema;
-  altUserValues?: UserValues;
-  altSelectedEntries?: Array<string>;
-  altDisplayNames?: Record<string, string>;
-  hideEntities?: boolean;
-  forceRenderAllTopLevelEntities?: boolean;
-  isGroupable?: boolean;
-  isGroup?: boolean;
-};
+import { getValueGroupWrapper } from './preview.wrappers';
+import { ChildFieldsProps } from './preview.types';
 
 export const ChildFields: FC<ChildFieldsProps> = ({
   schema,
@@ -32,6 +17,7 @@ export const ChildFields: FC<ChildFieldsProps> = ({
   forceRenderAllTopLevelEntities,
   isGroupable,
   isGroup,
+  renderField,
 }) => {
   return (
     <>
@@ -44,19 +30,18 @@ export const ChildFields: FC<ChildFieldsProps> = ({
             condition={(!isGroupable && checkShouldGroupWrap(level, schemaEntry)) || isGroup}
             wrapper={getValueGroupWrapper({ schemaEntry })}
           >
-            <Fields
-              key={uuid}
-              uuid={uuid}
-              base={schema}
-              paths={paths}
-              level={level + 1}
-              altSchema={altSchema}
-              altUserValues={altUserValues}
-              altSelectedEntries={altSelectedEntries}
-              altDisplayNames={altDisplayNames}
-              hideEntities={hideEntities}
-              forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
-            />
+            {renderField({
+              uuid,
+              base: schema,
+              paths,
+              level: level + 1,
+              altSchema,
+              altUserValues,
+              altSelectedEntries,
+              altDisplayNames,
+              hideEntities,
+              forceRenderAllTopLevelEntities,
+            })}
           </ConditionalWrapper>
         );
       })}
