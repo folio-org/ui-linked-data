@@ -1,16 +1,8 @@
-import {
-  GROUP_BY_LEVEL,
-  GROUP_CONTENTS_LEVEL,
-  PROFILE_BFIDS,
-  TITLE_CONTAINER_URIS,
-  TYPE_URIS,
-} from '@common/constants/bibframe.constants';
+import { cloneDeep } from 'lodash';
+import { PROFILE_BFIDS, TITLE_CONTAINER_URIS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@common/constants/bibframeMapping.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
-import { cloneDeep } from 'lodash';
-import { NOT_PREVIEWABLE_TYPES, AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 
 type IGetAdjustedRecordContents = {
   record: RecordEntry;
@@ -104,71 +96,6 @@ export const unwrapRecordValuesFromCommonContainer = (record: RecordEntry) =>
   (record.resource ?? record) as RecordEntry;
 
 export const wrapRecordValuesWithCommonContainer = (record: RecordEntry) => ({ resource: record });
-
-export const getPreviewFieldsConditions = ({
-  entry,
-  level,
-  userValues,
-  uuid,
-  schema,
-  isOnBranchWithUserValue,
-  altDisplayNames,
-  hideEntities,
-  isEntity,
-  forceRenderAllTopLevelEntities,
-}: {
-  entry: SchemaEntry;
-  level: number;
-  userValues: UserValues;
-  uuid: string;
-  schema: Schema;
-  isOnBranchWithUserValue: boolean;
-  altDisplayNames?: Record<string, string>;
-  hideEntities?: boolean;
-  isEntity: boolean;
-  forceRenderAllTopLevelEntities?: boolean;
-}) => {
-  const { displayName = '', children, type, bfid = '', linkedEntry } = entry;
-
-  const isPreviewable = !NOT_PREVIEWABLE_TYPES.includes(type as AdvancedFieldType);
-  const isGroupable = level <= GROUP_BY_LEVEL;
-  const hasChildren = children?.length;
-  const selectedUserValues = userValues[uuid];
-  const isBranchEnd = !hasChildren;
-  const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
-  const isBranchEndWithValues = !!selectedUserValues;
-  const shouldRenderLabelOrPlaceholders =
-    (!(isEntity && hideEntities) && isPreviewable && isGroupable) ||
-    type === AdvancedFieldType.dropdown ||
-    (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
-    isBranchEndWithoutValues;
-  const hasOnlyDropdownChildren =
-    hasChildren &&
-    !children.filter(childUuid => schema.get(childUuid)?.type !== AdvancedFieldType.dropdownOption).length;
-  const shouldRenderValuesOrPlaceholders = !hasChildren || hasOnlyDropdownChildren;
-  const shouldRenderPlaceholders =
-    (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
-  const isDependentDropdown = type === AdvancedFieldType.dropdown && !!linkedEntry?.controlledBy;
-  const displayNameWithAltValue =
-    altDisplayNames?.[displayName] ?? PREVIEW_ALT_DISPLAY_LABELS[displayName] ?? displayName;
-  const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;
-  const isBlockContents = level === GROUP_CONTENTS_LEVEL;
-  const isInstance = bfid === PROFILE_BFIDS.INSTANCE;
-  const wrapEntities = forceRenderAllTopLevelEntities && isEntity;
-
-  return {
-    isGroupable,
-    shouldRenderLabelOrPlaceholders,
-    shouldRenderValuesOrPlaceholders,
-    shouldRenderPlaceholders,
-    isDependentDropdown,
-    displayNameWithAltValue,
-    isBlock,
-    isBlockContents,
-    isInstance,
-    wrapEntities,
-  };
-};
 
 export const getRecordDependencies = (record?: RecordEntry | null) => {
   if (!record) return;
