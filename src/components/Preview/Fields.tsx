@@ -1,64 +1,14 @@
-import { ReactNode } from 'react';
-import classNames from 'classnames';
-import { ENTITY_LEVEL, GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { getPreviewFieldsConditions } from '@common/helpers/record.helper';
 import { checkEmptyChildren, getParentEntryUuid } from '@common/helpers/schema.helper';
+import { getPreviewFieldsConditions } from '@common/helpers/preview.helper';
 import { ConditionalWrapper } from '@components/ConditionalWrapper';
 import { useInputsState, useProfileState, useUIState } from '@src/store';
 import { Labels } from './Labels';
 import { Values } from './Values';
-
-const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
-  const { children, type } = entry;
-
-  return (!children?.length || type === AdvancedFieldType.dropdown) && level !== GROUP_BY_LEVEL;
-};
-
-const getPreviewWrapper =
-  ({
-    isBlock,
-    wrapEntities,
-    isBlockContents,
-  }: {
-    isBlock: boolean;
-    isBlockContents: boolean;
-    wrapEntities?: boolean;
-  }) =>
-  ({ children }: { children: ReactNode }) => (
-    <div
-      className={classNames({
-        'preview-block': isBlock,
-        'preview-entity': wrapEntities,
-        'preview-block-contents': isBlockContents,
-      })}
-      data-testid="preview-fields"
-    >
-      {children}
-    </div>
-  );
-
-const getValueGroupWrapper =
-  ({ schemaEntry }: { schemaEntry?: SchemaEntry }) =>
-  ({ children }: { children: ReactNode }) =>
-    children ? (
-      <div id={schemaEntry?.htmlId} className="value-group-wrapper">
-        {children}
-      </div>
-    ) : null;
-
-type FieldsProps = {
-  base: Schema;
-  uuid: string;
-  level?: number;
-  paths: Array<string>;
-  altSchema?: Schema;
-  altUserValues?: UserValues;
-  altSelectedEntries?: Array<string>;
-  altDisplayNames?: Record<string, string>;
-  hideEntities?: boolean;
-  forceRenderAllTopLevelEntities?: boolean;
-};
+import { ChildFields } from './ChildFields';
+import { getPreviewWrapper } from './preview.wrappers';
+import { FieldProps } from './preview.types';
 
 export const Fields = ({
   base,
@@ -71,7 +21,7 @@ export const Fields = ({
   altDisplayNames,
   hideEntities,
   forceRenderAllTopLevelEntities,
-}: FieldsProps) => {
+}: FieldProps) => {
   const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState();
   const { schema: schemaFromState } = useProfileState();
   const { currentlyPreviewedEntityBfid } = useUIState();
@@ -85,12 +35,15 @@ export const Fields = ({
   const hasEmptyChildren = checkEmptyChildren(base, entry);
 
   const isDependentDropdownOption =
-    entry?.type === AdvancedFieldType.dropdownOption && !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
+    entry?.type === AdvancedFieldType.dropdownOption &&
+    !!schema.get(getParentEntryUuid(entry?.path))?.linkedEntry?.controlledBy;
 
   const controlledEntry = schema.get(getParentEntryUuid(entry?.path || []))?.linkedEntry?.controlledBy;
   const controlledEntryValue = controlledEntry ? userValues[controlledEntry] : undefined;
   const visibleDropdownOption =
-    isDependentDropdownOption && controlledEntryValue && selectedEntries.includes(uuid) ? <div>{entry?.displayName}</div> : null;
+    isDependentDropdownOption && controlledEntryValue && selectedEntries.includes(uuid) ? (
+      <div>{entry?.displayName}</div>
+    ) : null;
 
   if (visibleDropdownOption) return visibleDropdownOption;
 
@@ -103,6 +56,8 @@ export const Fields = ({
 
   // don't render top level entities not selected for preview
   if (isEntity && !currentlyPreviewedEntityBfid.has(bfid) && !forceRenderAllTopLevelEntities) return null;
+
+  const isGroupParentEntryType = base.get(entry.path[entry.path.length - 2])?.type === AdvancedFieldType.group;
 
   const {
     isGroupable,
@@ -128,9 +83,32 @@ export const Fields = ({
     forceRenderAllTopLevelEntities,
   });
 
+  const renderChildren = (children: string[] | undefined, isGroup = false) => {
+    return (
+      <ChildFields
+        schema={base}
+        entryChildren={children}
+        paths={paths}
+        level={level}
+        altSchema={altSchema}
+        altUserValues={altUserValues}
+        altSelectedEntries={altSelectedEntries}
+        altDisplayNames={altDisplayNames}
+        hideEntities={hideEntities}
+        forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
+        isGroupable={isGroupable}
+        isGroup={isGroup}
+        renderField={(props) => <Fields {...props} />}
+      />
+    );
+  };
+
   return (
     <ConditionalWrapper
-      condition={isBlock || isBlockContents || wrapEntities}
+      condition={
+        ((isBlock || isBlockContents || wrapEntities) && !isGroupParentEntryType) ||
+        entry.type === AdvancedFieldType.group
+      }
       wrapper={getPreviewWrapper({ isBlock, isBlockContents, wrapEntities })}
     >
       {shouldRenderLabelOrPlaceholders && (
@@ -152,31 +130,13 @@ export const Fields = ({
           htmlId={htmlId}
         />
       )}
-      {children?.map(uuid => {
-        const schemaEntry = schema.get(uuid);
-
-        return (
-          <ConditionalWrapper
-            key={uuid}
-            condition={!isGroupable && checkShouldGroupWrap(level, schemaEntry)}
-            wrapper={getValueGroupWrapper({ schemaEntry })}
-          >
-            <Fields
-              key={uuid}
-              uuid={uuid}
-              base={base}
-              paths={paths}
-              level={level + 1}
-              altSchema={altSchema}
-              altUserValues={altUserValues}
-              altSelectedEntries={altSelectedEntries}
-              altDisplayNames={altDisplayNames}
-              hideEntities={hideEntities}
-              forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
-            />
-          </ConditionalWrapper>
-        );
-      })}
+      {entry.type === AdvancedFieldType.group ? (
+        <div className="preview-block-contents" data-testid="preview-fields">
+          {renderChildren(children, true)}
+        </div>
+      ) : (
+        renderChildren(children)
+      )}
     </ConditionalWrapper>
   );
 };
