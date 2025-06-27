@@ -257,5 +257,6 @@
     "ld.importFailed": "Import failed",
     "ld.importDone": "Done",
     "ld.importTryAgain": "Try again",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "Import failed to complete in time",
+    "ld.exportInstanceRdf": "Export instance RDF file"
 }

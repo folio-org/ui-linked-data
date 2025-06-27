@@ -61,6 +61,17 @@ export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { 
   });
 };
 
+const instanceRdfUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/rdf`;
+
+export const getRdfRecordLink = ( recordId: string ) => {
+  const url = baseApi.generateUrl(instanceRdfUrl, {
+    name: ':recordId',
+    value: recordId,
+  });
+
+  return url;
+};
+
 export const getAllRecords = async ({
   pageSize = MAX_LIMIT,
   pageNumber = MAX_LIMIT,
