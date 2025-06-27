@@ -11,6 +11,7 @@
 * Added new services for the record generation. Refs [UILD-548].
 * Removed unused code after introducing the new profile. Remove BF2-BFLite mapping. Refs [UILD-550].
 * Extended configs to add support for Subject of Work. Refs [UILD-555].
+* Added export RDF file action. Refs [UILD-587].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -23,6 +24,7 @@
 [UILD-548]:https://folio-org.atlassian.net/browse/UILD-548
 [UILD-550]:https://folio-org.atlassian.net/browse/UILD-550
 [UILD-555]:https://folio-org.atlassian.net/browse/UILD-555
+[UILD-587]:https://folio-org.atlassian.net/browse/UILD-587
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
