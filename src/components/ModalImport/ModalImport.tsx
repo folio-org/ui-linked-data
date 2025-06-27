@@ -8,6 +8,7 @@ import {
   IMPORT_FILE_LOG_MEDIA_TYPE,
   IMPORT_FILE_LOG_NAME_SUFFIX,
 } from '@common/constants/import.constants';
+import { initiateUserAgentDownload } from '@common/helpers/download.helper';
 import { Modal } from '@components/Modal';
 import { useIntl } from 'react-intl';
 import { useUIState } from '@src/store';
@@ -92,14 +93,7 @@ export const ModalImport = memo(() => {
 
   const downloadLog = (filePrefix: string, log: string) => {
     const blob = new Blob([log], { type: IMPORT_FILE_LOG_MEDIA_TYPE });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${filePrefix}${IMPORT_FILE_LOG_NAME_SUFFIX}`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
+    initiateUserAgentDownload(blob, `${filePrefix}${IMPORT_FILE_LOG_NAME_SUFFIX}`);
   };
 
   const processImport = async () => {

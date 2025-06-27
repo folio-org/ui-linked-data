@@ -63,13 +63,15 @@ export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { 
 
 const instanceRdfUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/rdf`;
 
-export const getRdfRecordLink = ( recordId: string ) => {
+export const getRdfRecord = ( recordId: string ) => {
   const url = baseApi.generateUrl(instanceRdfUrl, {
     name: ':recordId',
     value: recordId,
   });
 
-  return url;
+  return baseApi.request({
+    url,
+  });
 };
 
 export const getAllRecords = async ({
