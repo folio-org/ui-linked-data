@@ -17,7 +17,7 @@ export const useResourceExport = () => {
         const rdf = await response.blob();
         initiateUserAgentDownload(rdf, `${resourceId}.json`);
       } else {
-        throw 'Invalid response';
+        throw new Error('Invalid response');
       }
     } catch {
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorExportingRdf'));
