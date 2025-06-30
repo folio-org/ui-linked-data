@@ -1,10 +1,11 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
 import { ProcessorUtils } from './utils/processorUtils';
 import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
 import { BaseFieldProcessor } from './baseFieldProcessor';
-import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 
 export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
   constructor(
@@ -16,23 +17,21 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
 
   abstract canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry): boolean;
 
-  abstract process(
-    profileSchemaEntry: SchemaEntry,
-    userValues: UserValues,
-    recordSchemaEntry: RecordSchemaEntry,
-  ): ProcessorResult[];
+  abstract process(data: ProcessContext): ProcessorResult[];
 
-  protected initializeProcessor(
-    profileSchemaEntry: SchemaEntry,
-    userValues: UserValues,
-    recordSchemaEntry: RecordSchemaEntry,
-  ) {
+  protected initializeProcessor({
+    profileSchemaEntry,
+    userValues,
+    selectedEntries,
+    recordSchemaEntry,
+  }: ProcessContext) {
     this.profileSchemaEntry = profileSchemaEntry;
     this.userValues = userValues;
+    this.selectedEntries = selectedEntries;
     this.recordSchemaEntry = recordSchemaEntry;
   }
 
-  protected processDropdownChildren(dropdownEntry: SchemaEntry) {
+  protected processDropdownChildren(dropdownEntry: SchemaEntry, selectedEntries: string[]) {
     const results: ProcessorResult[] = [];
 
     if (!dropdownEntry.children) return results;
@@ -40,7 +39,12 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     dropdownEntry.children.forEach(optionUuid => {
       const optionEntry = this.profileSchemaManager.getSchemaEntry(optionUuid);
 
-      if (!optionEntry?.children || !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)) return;
+      if (
+        !optionEntry?.children ||
+        !selectedEntries.includes(optionEntry.uuid) ||
+        !this.profileSchemaManager.hasOptionValues(optionEntry, this.userValues)
+      )
+        return;
 
       const result = this.processOptionEntry(optionEntry);
 
@@ -70,7 +74,12 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
     }
 
     if (recordSchemaEntry) {
-      return this.profileSchemaProcessorManager.process(childEntry, recordSchemaEntry, this.userValues);
+      return this.profileSchemaProcessorManager.process({
+        profileSchemaEntry: childEntry,
+        recordSchemaEntry,
+        userValues: this.userValues,
+        selectedEntries: this.selectedEntries,
+      });
     } else {
       return this.processSimpleChildValues(childValues);
     }

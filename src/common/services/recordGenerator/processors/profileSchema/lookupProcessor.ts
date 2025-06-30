@@ -1,6 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { GeneratedValue } from '../../types/value.types';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 
 export class LookupProcessor implements IProfileSchemaProcessor {
@@ -12,7 +13,7 @@ export class LookupProcessor implements IProfileSchemaProcessor {
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
+  process({ profileSchemaEntry, userValues, recordSchemaEntry }: ProcessContext) {
     const values = userValues[profileSchemaEntry.uuid]?.contents || [];
 
     return this.processLookupValues(recordSchemaEntry, values);

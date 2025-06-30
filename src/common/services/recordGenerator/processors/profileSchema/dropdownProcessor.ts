@@ -1,4 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { ProcessContext } from '../../types/common.types';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class DropdownProcessor extends BaseDropdownProcessor {
@@ -10,10 +11,10 @@ export class DropdownProcessor extends BaseDropdownProcessor {
     );
   }
 
-  process(profileSchemaEntry: SchemaEntry, userValues: UserValues, recordSchemaEntry: RecordSchemaEntry) {
-    this.initializeProcessor(profileSchemaEntry, userValues, recordSchemaEntry);
+  process(data: ProcessContext) {
+    this.initializeProcessor(data);
 
-    return this.processDropdownChildren(profileSchemaEntry);
+    return this.processDropdownChildren(data.profileSchemaEntry, data.selectedEntries);
   }
 
   protected processOptionEntry(optionEntry: SchemaEntry) {

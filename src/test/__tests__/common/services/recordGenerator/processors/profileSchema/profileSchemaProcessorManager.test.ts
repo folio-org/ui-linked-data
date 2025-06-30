@@ -91,6 +91,7 @@ describe('ProfileSchemaProcessorManager', () => {
     let mockProfileSchemaEntry: SchemaEntry;
     let mockRecordSchemaEntry: RecordSchemaEntry;
     let mockUserValues: UserValues;
+    let mockSelectedEntries: string[];
     let expectedResult: any[];
 
     beforeEach(() => {
@@ -106,6 +107,7 @@ describe('ProfileSchemaProcessorManager', () => {
           contents: [{ label: 'test value' }],
         },
       } as unknown as UserValues;
+      mockSelectedEntries = [];
       expectedResult = [{ value: 'processed value' }];
     });
 
@@ -117,18 +119,24 @@ describe('ProfileSchemaProcessorManager', () => {
       mockUnwrappedDropdownOptionProcessor.canProcess.mockReturnValue(true);
       mockLookupProcessor.canProcess.mockReturnValue(true);
 
-      const result = manager.process(mockProfileSchemaEntry, mockRecordSchemaEntry, mockUserValues);
+      const result = manager.process({
+        profileSchemaEntry: mockProfileSchemaEntry,
+        recordSchemaEntry: mockRecordSchemaEntry,
+        userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
+      });
 
       expect(mockGroupProcessor.canProcess).toHaveBeenCalledWith(mockProfileSchemaEntry, mockRecordSchemaEntry);
       expect(mockFlattenedDropdownProcessor.canProcess).toHaveBeenCalledWith(
         mockProfileSchemaEntry,
         mockRecordSchemaEntry,
       );
-      expect(mockFlattenedDropdownProcessor.process).toHaveBeenCalledWith(
-        mockProfileSchemaEntry,
-        mockUserValues,
-        mockRecordSchemaEntry,
-      );
+      expect(mockFlattenedDropdownProcessor.process).toHaveBeenCalledWith({
+        profileSchemaEntry: mockProfileSchemaEntry,
+        userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
+        recordSchemaEntry: mockRecordSchemaEntry,
+      });
       expect(mockDropdownProcessor.canProcess).not.toHaveBeenCalled();
       expect(mockUnwrappedDropdownOptionProcessor.canProcess).not.toHaveBeenCalled();
       expect(mockLookupProcessor.canProcess).not.toHaveBeenCalled();
@@ -142,7 +150,12 @@ describe('ProfileSchemaProcessorManager', () => {
       mockUnwrappedDropdownOptionProcessor.canProcess.mockReturnValue(false);
       mockLookupProcessor.canProcess.mockReturnValue(false);
 
-      const result = manager.process(mockProfileSchemaEntry, mockRecordSchemaEntry, mockUserValues);
+      const result = manager.process({
+        profileSchemaEntry: mockProfileSchemaEntry,
+        recordSchemaEntry: mockRecordSchemaEntry,
+        userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
+      });
 
       expect(mockGroupProcessor.canProcess).toHaveBeenCalledWith(mockProfileSchemaEntry, mockRecordSchemaEntry);
       expect(mockFlattenedDropdownProcessor.canProcess).toHaveBeenCalledWith(
@@ -166,7 +179,12 @@ describe('ProfileSchemaProcessorManager', () => {
       mockLookupProcessor.canProcess.mockReturnValue(true);
       mockLookupProcessor.process.mockReturnValue(expectedResult);
 
-      const result = manager.process(mockProfileSchemaEntry, mockRecordSchemaEntry, mockUserValues);
+      const result = manager.process({
+        profileSchemaEntry: mockProfileSchemaEntry,
+        recordSchemaEntry: mockRecordSchemaEntry,
+        userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
+      });
 
       expect(mockGroupProcessor.canProcess).toHaveBeenCalledWith(mockProfileSchemaEntry, mockRecordSchemaEntry);
       expect(mockFlattenedDropdownProcessor.canProcess).toHaveBeenCalledWith(
@@ -179,11 +197,12 @@ describe('ProfileSchemaProcessorManager', () => {
         mockRecordSchemaEntry,
       );
       expect(mockLookupProcessor.canProcess).toHaveBeenCalledWith(mockProfileSchemaEntry, mockRecordSchemaEntry);
-      expect(mockLookupProcessor.process).toHaveBeenCalledWith(
-        mockProfileSchemaEntry,
-        mockUserValues,
-        mockRecordSchemaEntry,
-      );
+      expect(mockLookupProcessor.process).toHaveBeenCalledWith({
+        profileSchemaEntry: mockProfileSchemaEntry,
+        userValues: mockUserValues,
+        selectedEntries: mockSelectedEntries,
+        recordSchemaEntry: mockRecordSchemaEntry,
+      });
       expect(result).toEqual(expectedResult);
     });
   });

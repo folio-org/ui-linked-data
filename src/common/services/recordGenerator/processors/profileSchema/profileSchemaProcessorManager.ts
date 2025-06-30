@@ -1,3 +1,5 @@
+import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { DropdownProcessor } from './dropdownProcessor';
 import { UnwrappedDropdownOptionProcessor } from './unwrappedDropdownOptionProcessor';
@@ -5,7 +7,6 @@ import { GroupProcessor } from './groupProcessor';
 import { LookupProcessor } from './lookupProcessor';
 import { FlattenedDropdownProcessor } from './flattenedDropdownProcessor';
 import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
-import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 
 export class ProfileSchemaProcessorManager implements IProfileSchemaProcessorManager {
   private readonly processors: IProfileSchemaProcessor[];
@@ -20,10 +21,10 @@ export class ProfileSchemaProcessorManager implements IProfileSchemaProcessorMan
     ];
   }
 
-  process(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry, userValues: UserValues) {
+  process(data: ProcessContext) {
     for (const processor of this.processors) {
-      if (processor.canProcess(profileSchemaEntry, recordSchemaEntry)) {
-        return processor.process(profileSchemaEntry, userValues, recordSchemaEntry);
+      if (processor.canProcess(data.profileSchemaEntry, data.recordSchemaEntry)) {
+        return processor.process(data);
       }
     }
 
