@@ -65,4 +65,19 @@ describe('EditControlPane', () => {
 
     expect(queryByText('ld.actions')).not.toBeInTheDocument();
   });
+
+  test('fetches RDF data', async () => {
+    const getRdfRecordMock = (jest.spyOn(recordsApi, 'getRdfRecord') as any).mockImplementation(() =>
+      Promise.resolve(null),
+    );
+
+    const { findByText, findByTestId } = renderWrapper();
+
+    await act(async () => {
+      fireEvent.click(await findByTestId('edit-control-actions-toggle'));
+      fireEvent.click(await findByText('ld.exportInstanceRdf'));
+    });
+
+    expect(getRdfRecordMock).toHaveBeenCalled();
+  });
 });

@@ -11,10 +11,12 @@ import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
 import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useMarcData } from '@common/hooks/useMarcData';
+import { useResourceExport } from '@common/hooks/useResourceExport';
 import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
 import { useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
+import Download16 from '@src/assets/download-16.svg?react';
 import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
 import './EditControlPane.scss';
@@ -32,10 +34,13 @@ export const EditControlPane = () => {
   const [queryParams] = useSearchParams();
   const { fetchMarcData } = useMarcData(setBasicValue);
   const { formatMessage } = useIntl();
+  const { exportInstanceRdf } = useResourceExport();
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
   const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
+
+  const handleExportInstanceRdf = () => resourceId && exportInstanceRdf(resourceId);
 
   const items = [
     {
@@ -72,6 +77,13 @@ export const EditControlPane = () => {
           icon: <ExternalLink16 />,
           isDisabled: IS_DISABLED_FOR_ALPHA,
           hidden: true,
+        },
+        {
+          id: 'exportInstanceRdf',
+          type: DropdownItemType.basic,
+          labelId: 'ld.exportInstanceRdf',
+          icon: <Download16 />,
+          action: handleExportInstanceRdf,
         },
       ],
     },
