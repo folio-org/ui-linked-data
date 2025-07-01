@@ -4,7 +4,7 @@ import { type SliceState } from '../utils/slice';
 type SelectedProfileType = Profile | null;
 type InitialSchemaKeyType = string | null;
 
-export type ProfileState = SliceState<'profiles', ProfileEntry[]> &
+export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
   SliceState<'selectedProfile', SelectedProfileType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
   SliceState<'schema', Map<string, SchemaEntry>>;
@@ -13,7 +13,7 @@ const STORE_NAME = 'Profile';
 
 const sliceConfigs: SliceConfigs = {
   profiles: {
-    initialValue: [],
+    initialValue: {},
   },
   selectedProfile: {
     initialValue: null,
