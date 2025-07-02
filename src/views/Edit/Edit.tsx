@@ -129,10 +129,13 @@ export const Edit = () => {
         }
 
         const typedRecord = record as unknown as RecordEntry;
-
-        await getProfiles({
+        const getProfilesParams = {
+          // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
+          profile: getProfileConfig('Monograph', typeParam as ResourceType),
           record: typedRecord,
-        });
+        };
+
+        await getProfiles(getProfilesParams);
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {

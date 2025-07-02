@@ -13,6 +13,8 @@ export const getProfileConfig = (profileId: keyof typeof PROFILES_CONFIG, pageTy
     ids = [api.work];
   } else if (pageType === ResourceType.instance) {
     ids = [api.work, api.instance];
+  } else {
+    ids = [api.profile];
   }
 
   return { ids, rootEntry: rootEntry as ProfileNode };
