@@ -15,17 +15,6 @@
     width: 100%;
     gap: 1rem;
 
-    .button-ghost {
-      background-color: transparent;
-
-      &:active,
-      &:focus,
-      &:focus-visible {
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
     .toggle-icon {
       cursor: pointer;
       height: 1.2rem;
@@ -62,6 +51,23 @@
       font-weight: 700;
       text-align: left;
       color: $blue-2f;
+      border-radius: 3px;
+      padding: 3px 8px;
+
+      &:hover {
+        color: #23385a;
+        background-color: $buttonHover;
+      }
+
+      &:focus-visible {
+        color: #23385a;
+        outline-color: $blue-2f;
+      }
+
+      &:active {
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.62);
+      }
     }
 
     &-item {
