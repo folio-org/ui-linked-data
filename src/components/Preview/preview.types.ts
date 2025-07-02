@@ -4,7 +4,7 @@ export type FieldProps = {
   uuid: string;
   base: Schema;
   paths: Array<string>;
-  level: number;
+  level?: number;
   altSchema?: Schema;
   altUserValues?: UserValues;
   altSelectedEntries?: Array<string>;
