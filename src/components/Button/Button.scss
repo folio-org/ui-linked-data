@@ -90,6 +90,7 @@
   }
 
   &-link {
+    border-radius: $btn-icon-border-radius;
     color: $blue-2f;
     text-decoration: 1px underline solid $gray-200;
     height: 24px;
@@ -101,8 +102,7 @@
 
     &:focus-visible {
       outline: 1px solid $blue-550;
-      border-radius: 6px;
-      box-shadow: 0 0 0 3px $buttonActive;
+      box-shadow: 0 0 0 3px $buttonFocus;
     }
 
     &:active:not(:disabled) {
@@ -159,25 +159,27 @@
   }
 
   &-icon {
-    border-radius: 8px;
+    border-radius: $btn-icon-border-radius;
     padding: 0.188rem;
     height: fit-content;
     background-color: transparent;
     border: 1px solid transparent;
 
     &:hover {
-      background-color: rgba(37, 118, 195, 0.2);
+      background-color: $buttonHover;
     }
 
     &:focus,
-    &:focus-visible,
-    &:active {
-      border: 1px solid rgba(0, 0, 0, 0.2);
-      box-shadow: 0 0 0 3px rgba(37, 118, 195, 0.3);
+    &:focus-visible {
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      background-color: $buttonFocus;
+      box-shadow: 0 0 0 3px $buttonFocus;
     }
 
     &:active {
-      background-color: #1960a4;
+      border: 1px solid rgba(0, 0, 0, 0.5);
+      background-color: $buttonHighlighted;
+      box-shadow: 0 0 0 3px $buttonFocus;
       color: #fff;
 
       > svg,
