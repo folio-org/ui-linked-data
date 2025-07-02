@@ -3,6 +3,7 @@ import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
+import { getProfileConfig } from '@common/helpers/profile.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
@@ -59,7 +60,12 @@ export const Edit = () => {
 
       try {
         setIsLoading(true);
-        await getProfiles({});
+        const params = {
+          // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
+          profile: getProfileConfig('Monograph', typeParam as ResourceType),
+        };
+
+        await getProfiles(params);
         setEntitesBFIds();
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
