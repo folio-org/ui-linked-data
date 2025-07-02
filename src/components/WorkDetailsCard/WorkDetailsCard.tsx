@@ -41,7 +41,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
     <div className="work-details-card">
       <div className="heading">
         <Button
-          type={ButtonType.Ghost}
+          type={ButtonType.Icon}
           onClick={toggleIsOpen}
           data-testid="work-details-card-toggle"
           ariaLabel={formatMessage({ id: isOpen ? 'ld.aria.listEntry.close' : 'ld.aria.listEntry.open' })}
@@ -65,7 +65,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
       </div>
       <div className="details">
         <Button
-          type={ButtonType.Ghost}
+          type={ButtonType.Link}
           onClick={() => handleOpenPreview?.(id)}
           className="title"
           data-testid={`preview-button__${id}`}
