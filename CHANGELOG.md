@@ -12,6 +12,7 @@
 * Removed unused code after introducing the new profile. Remove BF2-BFLite mapping. Refs [UILD-550].
 * Extended configs to add support for Subject of Work. Refs [UILD-555].
 * Added export RDF file action. Refs [UILD-587].
+* Address general accessibility issues with focus. Refs [UILD-579].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -25,6 +26,7 @@
 [UILD-550]:https://folio-org.atlassian.net/browse/UILD-550
 [UILD-555]:https://folio-org.atlassian.net/browse/UILD-555
 [UILD-587]:https://folio-org.atlassian.net/browse/UILD-587
+[UILD-579]:https://folio-org.atlassian.net/browse/UILD-579
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
