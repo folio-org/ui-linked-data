@@ -1,7 +1,7 @@
 import { ResourceType } from '@common/constants/record.constants';
 import { PROFILES_CONFIG } from '@src/configs';
 
-export const getProfileConfig = (profileId: keyof typeof PROFILES_CONFIG, pageType: ResourceType) => {
+export const getProfileConfig = (profileId: keyof typeof PROFILES_CONFIG, pageType?: ResourceType) => {
   if (!PROFILES_CONFIG[profileId]) {
     throw new Error(`Profile with ID ${profileId} does not exist in the configuration.`);
   }

@@ -1,5 +1,5 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfile } from '@common/api/profiles.api';
@@ -53,15 +53,6 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
 
-  const mockUseGlobalState = (profiles: ProfileEntry[] = []) => {
-    setUpdatedGlobalState([
-      {
-        store: useProfileStore,
-        updatedState: { profiles },
-      },
-    ]);
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
     setInitialGlobalState([
@@ -100,17 +91,51 @@ describe('useConfig', () => {
       resource: {},
     } as RecordEntry;
 
-    test('calls fetchProfile and returns a profile', async () => {
+    test('calls fetchProfile and sets profile', async () => {
       const mockProfile = [{ id: 'Monograph' }] as Profile;
       (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
-      mockUseGlobalState();
 
       const { result } = renderHook(useConfig);
-      const resultProfiles = await result.current.getProfiles({ record, recordId: '' });
+      await result.current.getProfiles({ record, recordId: '' });
 
       expect(fetchProfile).toHaveBeenCalled();
       expect(setSelectedProfile).toHaveBeenCalledWith(mockProfile);
-      expect(resultProfiles).toEqual(mockProfile);
+    });
+
+    test('loads single profile when no rootEntry is provided', async () => {
+      const mockProfileResult = { id: 'SingleProfile' };
+      (fetchProfile as jest.Mock).mockResolvedValue(mockProfileResult);
+
+      const { result } = renderHook(useConfig);
+      await result.current.getProfiles({
+        record,
+        recordId: '',
+        profile: {
+          ids: [1],
+        },
+      });
+
+      expect(setSelectedProfile).toHaveBeenCalledWith(mockProfileResult);
+    });
+
+    test('combines rootEntry with loaded profiles when rootEntry is provided', async () => {
+      const mockProfileResult1 = { id: 'Profile1' };
+      const mockProfileResult2 = { id: 'Profile2' };
+      const rootEntry = { id: 'RootProfile' } as ProfileNode;
+
+      (fetchProfile as jest.Mock).mockResolvedValueOnce(mockProfileResult1).mockResolvedValueOnce(mockProfileResult2);
+
+      const { result } = renderHook(useConfig);
+      await result.current.getProfiles({
+        record,
+        recordId: '',
+        profile: {
+          ids: [1, 2],
+          rootEntry,
+        },
+      });
+
+      expect(setSelectedProfile).toHaveBeenCalledWith([rootEntry, mockProfileResult1, mockProfileResult2]);
     });
   });
 });
