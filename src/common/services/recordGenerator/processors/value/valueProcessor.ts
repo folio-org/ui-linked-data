@@ -3,7 +3,15 @@ import { IValueProcessor } from './valueProcessor.interface';
 
 export class ValueProcessor implements IValueProcessor {
   processSimpleValues(values: UserValueContents[]) {
-    return values?.map(({ label, meta }) => meta?.basicLabel || label).filter(label => label !== undefined);
+    const processedValues = values
+      ?.map(({ label, meta }) => meta?.basicLabel || label)
+      .filter(label => label !== undefined && label !== null && label !== '');
+
+    if (!processedValues || !processedValues.length) {
+      return null;
+    }
+
+    return processedValues;
   }
 
   process(values: UserValueContents[], options: ValueOptions = {}) {
