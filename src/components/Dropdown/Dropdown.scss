@@ -88,7 +88,7 @@
       }
 
       &:hover {
-        background-color: $buttonActive;
+        background-color: $buttonHover;
 
         &:disabled {
           background-color: transparent;
@@ -97,8 +97,8 @@
 
       &:focus {
         border-color: rgba(0, 0, 0, 0.2);
-        background-color: $buttonActive;
-        box-shadow: 0 0 0 3px $buttonActive;
+        background-color: $buttonFocus;
+        box-shadow: 0 0 0 3px $buttonFocus;
       }
 
       &:active {
