@@ -7,7 +7,7 @@ export class ValueProcessor implements IValueProcessor {
       ?.map(({ label, meta }) => meta?.basicLabel || label)
       .filter(label => label !== undefined && label !== null && label !== '');
 
-    if (!processedValues || !processedValues.length) {
+    if (!processedValues?.length) {
       return null;
     }
 
