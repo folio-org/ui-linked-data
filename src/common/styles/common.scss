@@ -1,22 +1,24 @@
-$blue-500: #3e75cf;
 $base: #fff;
-// TODO: naming
-$blue-500-hover: #3465a8;
-$blue-700: #255096;
 $blue-50: #e9effa;
-$blue-700: #255096;
-$blue-600: #2d62b7;
-$blue-800: #1d3f75;
-$gray-200: #d7d8da;
-$gray-400: #727272;
-$gray-600: #3d3f42;
 $blue-100: #d8e3f5;
 $blue-400: #6591d9;
+$blue-500: #3e75cf;
+// TODO: naming
+$blue-500-hover: #3465a8;
+$blue-550: #3b5f9a;
+$blue-600: #2d62b7;
+$blue-700: #255096;
+$blue-800: #1d3f75;
+$blue-850: #23385a;
 $blue-2f: #2f609f;
+$gray-200: #d7dfeb;
+$gray-400: #727272;
+$gray-600: #3d3f42;
 $disabled-input-bg-color: #ebebe4;
 $disabled-input-color: #777;
 $buttonHighlighted: #1960a4;
-$buttonActive: rgba(37, 118, 195, 0.3);
+$buttonHover: rgba(37, 118, 195, 0.2);
+$buttonFocus: rgba(37, 118, 195, 0.3);
 $error: #990000;
 
 $btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37);
@@ -30,6 +32,7 @@ $secondary-focusable-outline-box-shadow:
   0 0 0 4px $blue-100;
 
 $btn-border-radius: 12px;
+$btn-icon-border-radius: 6px;
 $btn-height: 24px;
 
 @mixin focused-outline-primary {

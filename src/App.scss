@@ -200,4 +200,25 @@ h6 {
     height: 1px;
     overflow: hidden;
   }
+
+  a {
+    color: $blue-2f;
+    text-decoration: 1px underline solid $gray-200;
+
+    &:hover {
+      color: $blue-850;
+      text-decoration-color: $blue-850;
+    }
+
+    &:active {
+      color: #000;
+      text-decoration-color: $blue-850;
+    }
+
+    &:focus-visible {
+      outline: 1px solid $blue-550;
+      border-radius: 6px;
+      box-shadow: 0 0 0 3px $buttonFocus;
+    }
+  }
 }

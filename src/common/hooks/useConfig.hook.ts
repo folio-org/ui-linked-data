@@ -5,7 +5,7 @@ import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
-import { fetchProfile } from '@common/api/profiles.api';
+import { useLoadProfile } from './useLoadProfile';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -17,6 +17,10 @@ type IGetProfiles = {
   recordId?: string;
   previewParams?: PreviewParams;
   asClone?: boolean;
+  profile?: {
+    ids: number[];
+    rootEntry?: ProfileNode;
+  };
 };
 
 type IBuildSchema = {
@@ -33,6 +37,7 @@ export const useConfig = () => {
   const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState();
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
+  const { loadProfile } = useLoadProfile();
 
   const buildSchema = async ({ profile, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
     const initKey = uuidv4();
@@ -63,18 +68,28 @@ export const useConfig = () => {
     return { updatedSchema, initKey };
   };
 
-  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
+  const getProfiles = async ({
+    record,
+    recordId,
+    previewParams,
+    asClone,
+    profile = {
+      ids: [1],
+    },
+  }: IGetProfiles): Promise<unknown> => {
     if (isProcessingProfiles.current && (record || recordId)) return;
 
-    let selectedProfile;
-    let response;
-
     try {
+      let selectedProfile: Profile;
       isProcessingProfiles.current = true;
 
-      // TODO: pass the profile ID after adding profile selection
-      response = await fetchProfile();
-      selectedProfile = response;
+      const loadedProfiles = await Promise.all(profile.ids?.map(profileId => loadProfile(profileId)));
+
+      if (profile.rootEntry) {
+        selectedProfile = [profile.rootEntry, ...loadedProfiles.flat()];
+      } else {
+        selectedProfile = loadedProfiles[0];
+      }
 
       const recordData = record?.resource || {};
       const recordTitle = getRecordTitle(recordData as RecordEntry);
@@ -107,8 +122,6 @@ export const useConfig = () => {
           ]);
         }
       }
-
-      return response;
     } finally {
       isProcessingProfiles.current = false;
     }
