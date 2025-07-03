@@ -49,7 +49,6 @@ export const BFLITE_URIS = {
   IDENTIFIER_LCCN: 'http://library.link/identifier/LCCN',
   IDENTIFIER_ISBN: 'http://library.link/identifier/ISBN',
   MARC_STATUS: 'http://bibfra.me/vocab/marc/status',
-  MARC_LABEL: 'http://bibfra.me/vocab/marc/label',
   MARC_SUPPLEMENTARY_CONTENT: 'http://bibfra.me/vocab/marc/supplementaryContent',
   MARC_MEDIA: 'http://bibfra.me/vocab/marc/media',
   MARC_DIMENSIONS: 'http://bibfra.me/vocab/marc/dimensions',
