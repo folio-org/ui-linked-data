@@ -10,6 +10,10 @@ describe('record.helper', () => {
   const mockTypeUriConstant = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
   mockTypeUriConstant({ INSTANCE: testInstanceUri });
 
+  interface UserValueContents {
+    label: string | undefined;
+  }
+
   describe('getEditingRecordBlocks', () => {
     test("returns an object with the record's blocks", () => {
       mockBlocksBFLiteConstant({
@@ -105,6 +109,30 @@ describe('record.helper', () => {
         keys: { key: 'workReferenceKey', uri: 'testWorkUri' },
         type: undefined,
       });
+    });
+  });
+
+  describe('hasEmptyValues', () => {
+    test('returns true when all values have empty labels', () => {
+      const values: UserValueContents[] = [{ label: '' }, { label: undefined }];
+
+      const result = RecordHelper.hasEmptyValues(values);
+
+      expect(result).toBe(true);
+    });
+
+    test('returns false when any value has a non-empty label', () => {
+      const values: UserValueContents[] = [{ label: '' }, { label: 'Some content' }, { label: undefined }];
+
+      const result = RecordHelper.hasEmptyValues(values);
+
+      expect(result).toBe(false);
+    });
+
+    test('returns true for empty array', () => {
+      const result = RecordHelper.hasEmptyValues([]);
+
+      expect(result).toBe(true);
     });
   });
 });

@@ -5,7 +5,7 @@ export class ValueProcessor implements IValueProcessor {
   processSimpleValues(values: UserValueContents[]) {
     const processedValues = values
       ?.map(({ label, meta }) => meta?.basicLabel || label)
-      .filter(label => label !== undefined && label !== null && label !== '');
+      .filter(label => label !== undefined && label !== '');
 
     if (!processedValues?.length) {
       return null;

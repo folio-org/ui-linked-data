@@ -18,12 +18,12 @@ describe('ValueProcessor', () => {
       expect(result).toEqual(['Label 1', 'Label 2']);
     });
 
-    it('returns empty array for empty input', () => {
+    it('returns null for empty input', () => {
       const values: UserValueContents[] = [];
 
       const result = processor.processSimpleValues(values);
 
-      expect(result).toEqual([]);
+      expect(result).toBeNull();
     });
 
     it('prefers meta.basicLabel over label', () => {
@@ -43,6 +43,22 @@ describe('ValueProcessor', () => {
       const result = processor.processSimpleValues(values);
 
       expect(result).toEqual(['Label 1', 'Label 3']);
+    });
+
+    it('filters out empty string labels', () => {
+      const values: UserValueContents[] = [{ label: 'Label 1' }, { label: '' }, { label: 'Label 3' }];
+
+      const result = processor.processSimpleValues(values);
+
+      expect(result).toEqual(['Label 1', 'Label 3']);
+    });
+
+    it('returns null when all values are filtered out', () => {
+      const values: UserValueContents[] = [{ label: '' }, { label: undefined }];
+
+      const result = processor.processSimpleValues(values);
+
+      expect(result).toBeNull();
     });
   });
 
@@ -82,7 +98,7 @@ describe('ValueProcessor', () => {
       const result = processor.process(values, options);
 
       expect(result).toEqual({
-        value: [],
+        value: null,
         options,
       });
     });
