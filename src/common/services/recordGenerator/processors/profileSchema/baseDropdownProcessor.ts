@@ -1,5 +1,5 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { hasEmptyValues } from '@common/helpers/record.helper';
+import { hasAllEmptyValues } from '@common/helpers/record.helper';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
 import { ProcessContext } from '../../types/common.types';
@@ -66,7 +66,7 @@ export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
 
     const childValues = this.userValues[childEntry.uuid]?.contents || [];
 
-    if (childValues.length === 0 || hasEmptyValues(childValues) || !childEntry.uriBFLite) {
+    if (childValues.length === 0 || hasAllEmptyValues(childValues) || !childEntry.uriBFLite) {
       return null;
     }
 

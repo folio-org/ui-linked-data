@@ -112,11 +112,11 @@ describe('record.helper', () => {
     });
   });
 
-  describe('hasEmptyValues', () => {
+  describe('hasAllEmptyValues', () => {
     test('returns true when all values have empty labels', () => {
       const values: UserValueContents[] = [{ label: '' }, { label: undefined }];
 
-      const result = RecordHelper.hasEmptyValues(values);
+      const result = RecordHelper.hasAllEmptyValues(values);
 
       expect(result).toBe(true);
     });
@@ -124,13 +124,13 @@ describe('record.helper', () => {
     test('returns false when any value has a non-empty label', () => {
       const values: UserValueContents[] = [{ label: '' }, { label: 'Some content' }, { label: undefined }];
 
-      const result = RecordHelper.hasEmptyValues(values);
+      const result = RecordHelper.hasAllEmptyValues(values);
 
       expect(result).toBe(false);
     });
 
     test('returns true for empty array', () => {
-      const result = RecordHelper.hasEmptyValues([]);
+      const result = RecordHelper.hasAllEmptyValues([]);
 
       expect(result).toBe(true);
     });
