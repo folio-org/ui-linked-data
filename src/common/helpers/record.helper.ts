@@ -111,3 +111,7 @@ export const getRecordDependencies = (record?: RecordEntry | null) => {
     };
   }
 };
+
+export const hasAllEmptyValues = (values: UserValueContents[]) => {
+  return values.every(({ label }) => label === '' || label === undefined);
+};

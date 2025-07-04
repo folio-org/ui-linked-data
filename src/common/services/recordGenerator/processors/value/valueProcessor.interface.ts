@@ -15,12 +15,12 @@ export interface SchemaValue {
 }
 
 export interface IValueProcessor {
-  processSimpleValues(values: UserValueContents[]): string[];
+  processSimpleValues(values: UserValueContents[]): (string | undefined)[] | null;
   process(
     values: UserValueContents[],
     options?: ValueOptions,
   ): {
-    value: string[] | null;
+    value: (string | undefined)[] | null;
     options: ValueOptions;
   };
   processSchemaValues(

@@ -52,7 +52,7 @@ export const providerProperties = {
 };
 
 export const statusProperties = {
-  [BFLITE_URIS.MARC_LABEL]: stringArrayProperty,
+  [BFLITE_URIS.LABEL]: stringArrayProperty,
   [BFLITE_URIS.LINK]: stringArrayProperty,
 };
 

@@ -85,7 +85,7 @@ export const monographWorkRecordSchema: RecordSchema = {
       ),
 
       [BFLITE_URIS.CONTENT]: createArrayObjectProperty({
-        [BFLITE_URIS.CODE]: stringArrayProperty,
+        [BFLITE_URIS.TERM]: stringArrayProperty,
         [BFLITE_URIS.LINK]: stringArrayProperty,
       }),
 

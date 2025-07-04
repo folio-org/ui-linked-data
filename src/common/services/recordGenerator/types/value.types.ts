@@ -7,7 +7,7 @@ export interface ValueOptions {
   }>;
 }
 
-export type SchemaPropertyValue = string | SchemaPropertyValueArray | SchemaPropertyValueObject;
+export type SchemaPropertyValue = undefined | string | SchemaPropertyValueArray | SchemaPropertyValueObject;
 
 export type SchemaPropertyValueArray = Array<SchemaPropertyValue>;
 
