@@ -83,6 +83,7 @@ export const EditControlPane = () => {
           type: DropdownItemType.basic,
           labelId: 'ld.exportInstanceRdf',
           icon: <Download16 />,
+          hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
           action: handleExportInstanceRdf,
         },
       ],
