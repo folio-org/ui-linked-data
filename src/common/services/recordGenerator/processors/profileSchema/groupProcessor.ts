@@ -56,11 +56,11 @@ export class GroupProcessor extends BaseFieldProcessor {
     }
 
     return this.profileSchemaEntry.children
-      .map(childUuid => this.createChildEntryWithValues(childUuid))
+      .map(childUuid => this.createChildEntryWithValues(childUuid, this.profileSchemaEntry?.children))
       .filter((entry): entry is ChildEntryWithValues => entry !== null);
   }
 
-  private createChildEntryWithValues(childUuid: string) {
+  private createChildEntryWithValues(childUuid: string, allChildren?: string[]) {
     const childEntry = this.profileSchemaManager.getSchemaEntry(childUuid);
 
     if (!this.isValidChildEntry(childEntry)) {
@@ -70,6 +70,24 @@ export class GroupProcessor extends BaseFieldProcessor {
     const childValues = this.userValues[childEntry.uuid]?.contents || [];
 
     if (childValues.length === 0) {
+      const recordSchemaProperty = this.recordSchemaEntry?.properties?.[childEntry.uriBFLite as string];
+      const defaultValue = recordSchemaProperty?.options?.defaultValue;
+      const linkedProperty = recordSchemaProperty?.options?.linkedProperty;
+
+      if (defaultValue) {
+        const linkedEntry = allChildren?.find(child => {
+          const entry = this.profileSchemaManager.getSchemaEntry(child);
+
+          return entry?.uriBFLite === linkedProperty;
+        });
+
+        const linkedEntryValue = linkedEntry ? this.userValues[linkedEntry]?.contents || [] : [];
+
+        if (linkedEntryValue.length > 0) {
+          return { childEntry, childValues: [{ label: '', meta: { uri: defaultValue } }] };
+        }
+      }
+
       return null;
     }
 
