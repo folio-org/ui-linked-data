@@ -1,3 +1,4 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import {
   createObjectProperty,
@@ -105,6 +106,8 @@ describe('SchemaBuilders', () => {
             value: RecordSchemaEntryType.string,
             options: {
               mappedValues: mappingReference,
+              defaultValue: BFLITE_URIS.NOTE,
+              linkedProperty: 'value',
             },
           },
           value: {
