@@ -1,6 +1,5 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { link } from 'fs';
 
 export function createObjectProperty(properties: Record<string, RecordSchemaEntry>, options = {}) {
   return {
@@ -38,7 +37,7 @@ export function createNotesProperty(mappingReference: Record<string, { uri?: str
         options: {
           mappedValues: mappingReference,
           defaultValue: BFLITE_URIS.NOTE,
-          linkedProperty: 'value'
+          linkedProperty: 'value',
         },
       },
       value: {
