@@ -10,6 +10,26 @@ describe('GroupProcessor', () => {
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
   let selectedEntries: string[];
 
+  function mockGetSchemaEntry() {
+    mockProfileSchemaManager.getSchemaEntry.mockImplementation(uuid => {
+      if (uuid === 'child_with_default') {
+        return {
+          uuid: 'child_with_default',
+          type: AdvancedFieldType.simple,
+          uriBFLite: 'default_uri',
+        } as SchemaEntry;
+      } else if (uuid === 'linked_child') {
+        return {
+          uuid: 'linked_child',
+          type: AdvancedFieldType.literal,
+          uriBFLite: 'linked_uri',
+        } as SchemaEntry;
+      }
+
+      return undefined;
+    });
+  }
+
   beforeEach(() => {
     mockProfileSchemaManager = new ProfileSchemaManager() as jest.Mocked<ProfileSchemaManager>;
     processor = new GroupProcessor(mockProfileSchemaManager);
@@ -541,6 +561,134 @@ describe('GroupProcessor', () => {
       const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
       expect(result).toEqual([{ uri_1: ['mapped_key'] }]);
+    });
+
+    describe('when processing group entries with default values', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_with_default', 'linked_child'],
+      } as SchemaEntry;
+
+      it('handles default values for child entries when linked property has values', () => {
+        const userValues = {
+          linked_child: {
+            contents: [{ label: 'linked value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            default_uri: {
+              type: RecordSchemaEntryType.string,
+              options: {
+                defaultValue: 'default_value_uri',
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: { type: RecordSchemaEntryType.string },
+          },
+        } as RecordSchemaEntry;
+        mockGetSchemaEntry();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            default_uri: ['default_value_uri'],
+            linked_uri: ['linked value'],
+          },
+        ]);
+      });
+
+      it('does not set default values when linked property has no values', () => {
+        const userValues = {} as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            default_uri: {
+              type: RecordSchemaEntryType.string,
+              options: {
+                defaultValue: 'default_value_uri',
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: { type: RecordSchemaEntryType.string },
+          },
+        } as RecordSchemaEntry;
+        mockGetSchemaEntry();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('ignores default values when child entry already has user values', () => {
+        const userValues = {
+          child_with_default: {
+            contents: [{ label: 'existing value', meta: { uri: 'existing_uri' } }],
+          },
+          linked_child: {
+            contents: [{ label: 'linked value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            default_uri: {
+              type: RecordSchemaEntryType.string,
+              options: {
+                defaultValue: 'default_value_uri',
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: { type: RecordSchemaEntryType.string },
+          },
+        } as RecordSchemaEntry;
+        mockGetSchemaEntry();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            default_uri: ['existing_uri'],
+            linked_uri: ['linked value'],
+          },
+        ]);
+      });
+
+      it('does not use default values when options are missing linkedProperty', () => {
+        const userValues = {
+          linked_child: {
+            contents: [{ label: 'linked value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            default_uri: {
+              type: RecordSchemaEntryType.string,
+              options: {
+                defaultValue: 'default_value_uri',
+              },
+            },
+            linked_uri: { type: RecordSchemaEntryType.string },
+          },
+        } as RecordSchemaEntry;
+        mockGetSchemaEntry();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            linked_uri: ['linked value'],
+          },
+        ]);
+      });
     });
   });
 });
