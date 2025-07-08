@@ -67,31 +67,57 @@ export class GroupProcessor extends BaseFieldProcessor {
       return null;
     }
 
-    const childValues = this.userValues[childEntry.uuid]?.contents || [];
+    const childValues = this.getUserValues(childEntry.uuid);
 
-    if (childValues.length === 0) {
-      const recordSchemaProperty = this.recordSchemaEntry?.properties?.[childEntry.uriBFLite as string];
-      const defaultValue = recordSchemaProperty?.options?.defaultValue;
-      const linkedProperty = recordSchemaProperty?.options?.linkedProperty;
+    return childValues.length > 0 ? { childEntry, childValues } : this.handleDefaultValue(childEntry, allChildren);
+  }
 
-      if (defaultValue) {
-        const linkedEntry = allChildren?.find(child => {
-          const entry = this.profileSchemaManager.getSchemaEntry(child);
+  private getUserValues(entryUuid: string) {
+    return this.userValues[entryUuid]?.contents || [];
+  }
 
-          return entry?.uriBFLite === linkedProperty;
-        });
-
-        const linkedEntryValue = linkedEntry ? this.userValues[linkedEntry]?.contents || [] : [];
-
-        if (linkedEntryValue.length > 0) {
-          return { childEntry, childValues: [{ label: '', meta: { uri: defaultValue } }] };
-        }
-      }
-
+  private handleDefaultValue(childEntry: SchemaEntry, allChildren?: string[]) {
+    if (!childEntry.uriBFLite) {
       return null;
     }
 
-    return { childEntry, childValues };
+    const recordSchemaProperty = this.getRecordSchemaProperty(childEntry.uriBFLite);
+    const { defaultValue, linkedProperty } = recordSchemaProperty?.options || {};
+
+    if (!defaultValue || !linkedProperty) {
+      return null;
+    }
+
+    return this.createEntryWithDefaultValue(childEntry, defaultValue, linkedProperty, allChildren);
+  }
+
+  private getRecordSchemaProperty(uriBFLite: string) {
+    return this.recordSchemaEntry?.properties?.[uriBFLite];
+  }
+
+  private createEntryWithDefaultValue(
+    childEntry: SchemaEntry,
+    defaultValue: string,
+    linkedProperty: string,
+    allChildren?: string[],
+  ) {
+    const linkedEntry = this.findLinkedEntry(linkedProperty, allChildren);
+    const linkedEntryValues = linkedEntry ? this.getUserValues(linkedEntry) : [];
+
+    return linkedEntryValues.length > 0
+      ? {
+          childEntry,
+          childValues: [{ label: '', meta: { uri: defaultValue } }],
+        }
+      : null;
+  }
+
+  private findLinkedEntry(linkedProperty: string, allChildren?: string[]) {
+    return allChildren?.find(child => {
+      const entry = this.profileSchemaManager.getSchemaEntry(child);
+
+      return entry?.uriBFLite === linkedProperty;
+    });
   }
 
   private isValidChildEntry(entry: SchemaEntry | undefined | null): entry is SchemaEntry {
