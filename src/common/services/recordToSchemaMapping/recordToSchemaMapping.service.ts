@@ -209,10 +209,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }) {
     let selectedSchemaEntryUuid = selectedEntryId;
 
-    if (
-      UI_CONTROLS_LIST.includes(schemaEntry.type as AdvancedFieldTypeEnum) &&
-      this.hasCorrectUuid(schemaEntry, recordKey)
-    ) {
+    if (this.hasCorrectUuid(schemaEntry, recordKey)) {
       return schemaEntry.uuid;
     }
 
@@ -246,9 +243,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private hasCorrectUuid(entry: SchemaEntry, recordKey: string) {
     const isUIControl = UI_CONTROLS_LIST.includes(entry.type as AdvancedFieldTypeEnum);
     const hasTheRecordUri = entry.uriBFLite === recordKey;
-    const hasTheMappedFieldUri = entry.uriBFLite === recordKey;
 
-    return isUIControl && (hasTheRecordUri || hasTheMappedFieldUri);
+    return isUIControl && hasTheRecordUri;
   }
 
   private async mapRecordListToSchemaEntry(
