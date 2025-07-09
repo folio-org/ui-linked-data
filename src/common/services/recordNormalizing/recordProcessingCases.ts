@@ -69,6 +69,20 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
   }) as unknown as RecursiveRecordSchema;
 };
 
+export const processComplexSubjectLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const generatedValue = {
+      id: [recordEntry.id],
+      label: {
+        value: [recordEntry.label],
+        isPreferred: recordEntry.isPreferred,
+      },
+    } as unknown as RecursiveRecordSchema;
+
+    return generatedValue;
+  }) as unknown as RecursiveRecordSchema;
+};
+
 export const extractDropdownOption = (
   record: RecordEntry,
   blockKey: string,

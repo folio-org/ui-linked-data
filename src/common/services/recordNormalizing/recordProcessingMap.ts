@@ -6,6 +6,7 @@ import {
   notesMapping,
   extractDropdownOption,
   processComplexLookup,
+  processComplexSubjectLookup,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -43,5 +44,8 @@ export const RECORD_NORMALIZING_CASES = {
   [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       extractDropdownOption(record, blockKey, groupKey, BFLITE_URIS.SOURCE, '_assigningSourceReference'),
+  },
+  [BFLITE_URIS.SUBJECT]: {
+    process: processComplexSubjectLookup,
   },
 };
