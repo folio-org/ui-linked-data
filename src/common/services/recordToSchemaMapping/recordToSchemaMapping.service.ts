@@ -302,6 +302,9 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     if (type === AdvancedFieldTypeEnum.dropdown) {
       this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
+
+      // no need to set the value if the dropdown option is selected
+      return;
     }
 
     if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
