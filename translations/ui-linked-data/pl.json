@@ -257,5 +257,5 @@
     "ld.importFailed": "Import się nie powiódł",
     "ld.importDone": "Zrobione",
     "ld.importTryAgain": "Spróbuj ponownie",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "Import nie został ukończony na czas"
 }
