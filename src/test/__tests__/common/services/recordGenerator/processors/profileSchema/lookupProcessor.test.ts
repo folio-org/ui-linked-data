@@ -319,6 +319,72 @@ describe('LookupProcessor', () => {
       ]);
     });
 
+    it('processes values with srsId property correctly when meta.srsId is present', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          srsId: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              id: 'record-id-123',
+              label: 'test value',
+              meta: { srsId: 'srs-123' },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          srsId: 'srs-123',
+        },
+      ]);
+    });
+
+    it('processes values with srsId property correctly when meta.srsId is not present', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          srsId: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              id: 'record-id-123',
+              label: 'test value',
+              meta: { uri: 'http://example.com/resource/123' },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          id: 'record-id-123',
+        },
+      ]);
+    });
+
     it('processes multiple user value contents correctly', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,

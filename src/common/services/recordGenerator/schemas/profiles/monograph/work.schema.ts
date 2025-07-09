@@ -10,6 +10,7 @@ import {
   codeTermLinkProperties,
   contributorProperties,
   nameAndLinkProperties,
+  assigningSourceProperty,
 } from '../../common/propertyDefinitions';
 import {
   createObjectProperty,
@@ -68,14 +69,14 @@ export const monographWorkRecordSchema: RecordSchema = {
             [BFLITE_URIS.CODE]: stringArrayProperty,
             [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
             [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
-            _assigningSourceReference: stringArrayProperty,
+            _assigningSourceReference: assigningSourceProperty,
           }),
           ddc: createObjectProperty({
             [BFLITE_URIS.CODE]: stringArrayProperty,
             [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
             [BFLITE_URIS.EDITION]: stringArrayProperty,
             [BFLITE_URIS.EDITION_NUMBER]: stringArrayProperty,
-            _assigningSourceReference: stringArrayProperty,
+            _assigningSourceReference: assigningSourceProperty,
           }),
         },
         {
