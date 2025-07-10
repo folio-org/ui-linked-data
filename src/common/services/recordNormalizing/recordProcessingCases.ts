@@ -44,15 +44,16 @@ export const extractValue = (record: RecordEntry, blockKey: string, key: string,
   ) as unknown as RecursiveRecordSchema;
 };
 
-export const processComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+export const processComplexLookup = (record: RecordEntry, blockKey: string, key: string, fieldName: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
     const generatedValue = {
       id: [recordEntry.id],
-      _name: {
-        value: [recordEntry.label],
-        isPreferred: recordEntry.isPreferred,
-      },
     } as unknown as RecursiveRecordSchema;
+
+    generatedValue[fieldName] = {
+      value: [recordEntry.label],
+      isPreferred: recordEntry.isPreferred,
+    } as unknown as RecordBasic;
 
     if (recordEntry.type) {
       generatedValue._subclass = recordEntry.type as unknown as string;
@@ -64,20 +65,6 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
         [BFLITE_URIS.LABEL]: [''],
       })) as unknown as string[];
     }
-
-    return generatedValue;
-  }) as unknown as RecursiveRecordSchema;
-};
-
-export const processComplexSubjectLookup = (record: RecordEntry, blockKey: string, key: string) => {
-  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
-    const generatedValue = {
-      id: [recordEntry.id],
-      label: {
-        value: [recordEntry.label],
-        isPreferred: recordEntry.isPreferred,
-      },
-    } as unknown as RecursiveRecordSchema;
 
     return generatedValue;
   }) as unknown as RecursiveRecordSchema;
