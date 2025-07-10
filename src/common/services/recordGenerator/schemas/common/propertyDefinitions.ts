@@ -85,3 +85,11 @@ export const contributorProperties = {
     },
   },
 };
+
+export const assigningSourceProperty = {
+  type: RecordSchemaEntryType.array,
+  value: RecordSchemaEntryType.object,
+  properties: {
+    srsId: stringArrayProperty,
+  },
+};
