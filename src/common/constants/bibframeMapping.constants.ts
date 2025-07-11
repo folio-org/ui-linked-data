@@ -186,6 +186,26 @@ export const SIMPLE_LOOKUP_MAPPING = {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/lang',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
+    'http://bibfra.me/vocab/marc/adminhist': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/adminhist',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
+    },
+    'http://bibfra.me/vocab/marc/biogdata': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/biogdata',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
+    },
+    'http://bibfra.me/vocab/marc/physicalDescription': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/physical',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
+    },
+    'http://bibfra.me/vocab/marc/accompanyingMaterial': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/accmat',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
+    },
+    'http://bibfra.me/vocab/marc/awardsNote': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/award',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
+    },
   },
   _contributions: {
     'http://bibfra.me/vocab/relation/abridger': { uri: 'http://id.loc.gov/vocabulary/relators/abr' },

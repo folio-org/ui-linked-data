@@ -14,6 +14,7 @@
 * Added export RDF file action. Refs [UILD-587].
 * Address general accessibility issues with focus. Refs [UILD-579].
 * Loading separate profiles for Work and Instance on the Create resource page. Refs [UILD-578].
+* Add support for administrative history, biographical data, physical description, accompanying material and award notes. Refs [UILD-569].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -29,6 +30,7 @@
 [UILD-587]:https://folio-org.atlassian.net/browse/UILD-587
 [UILD-579]:https://folio-org.atlassian.net/browse/UILD-579
 [UILD-578]:https://folio-org.atlassian.net/browse/UILD-578
+[UILD-569]:https://folio-org.atlassian.net/browse/UILD-569
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
