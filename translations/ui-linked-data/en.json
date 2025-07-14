@@ -261,5 +261,6 @@
   "ld.importTimedout": "Import failed to complete in time",
   "ld.resourceProfile": "Resource profile",
   "ld.modal.chooseResourceProfile.subtitle": "Choose a resource profile to get started.",
-  "ld.modal.chooseResourceProfile.setAsDefault": "Set as my default"
+  "ld.modal.chooseResourceProfile.setAsDefault": "Set as my default",
+  "ld.create.base": "Create"
 }

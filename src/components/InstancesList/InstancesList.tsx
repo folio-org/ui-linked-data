@@ -5,9 +5,11 @@ import { Button, ButtonType } from '@components/Button';
 import { formatDependeciesTable } from '@common/helpers/recordFormatting.helper';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { useProfileSelection } from '@common/hooks/useProfileSelection';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { wrapRecordValuesWithCommonContainer } from '@common/helpers/record.helper';
 import { ROUTES, QueryParams } from '@common/constants/routes.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import './InstancesList.scss';
 
 type IInstancesList = {
@@ -37,11 +39,21 @@ const instancesListHeader: Row = {
 export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } = {}, type, refId }) => {
   const { getRecordAndInitializeParsing } = useRecordControls();
   const { navigateToEditPage } = useNavigateToEditPage();
+  const { checkProfileAndProceed } = useProfileSelection();
 
-  const onClickNewInstance = () =>
-    type &&
-    refId &&
-    navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${type}&${QueryParams.Ref}=${refId}`);
+  const onClickNewInstance = () => {
+    checkProfileAndProceed(TYPE_URIS.INSTANCE, profileId => {
+      console.log('checkProfileAndProceed - profileId', refId);
+    });
+
+    return;
+
+    if (type && refId) {
+      navigateToEditPage(
+        `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${type}&${QueryParams.Ref}=${refId}&profileId={}`,
+      );
+    }
+  };
 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
