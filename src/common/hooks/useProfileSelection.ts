@@ -2,24 +2,28 @@ import { fetchProfiles, fetchPreferredProfiles } from '@common/api/profiles.api'
 import { useLoadingState, useProfileState, useUIState } from '@src/store';
 
 export const useProfileSelection = () => {
-  const { preferredProfiles, setPreferredProfiles, profilesMetadata, setProfilesMetadata } = useProfileState();
+  const { preferredProfiles, setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState();
   const { setIsLoading } = useLoadingState();
   const { setIsProfileSelectionModalOpen } = useUIState();
 
-  const checkProfileAndProceed = async (resourceType: string, callback: (profileId: number) => void) => {
+  const checkProfileAndProceed = async ({
+    resourceTypeURL,
+    callback,
+  }: {
+    resourceTypeURL: string;
+    callback: (profileId: string) => void;
+  }) => {
     try {
       setIsLoading(true);
       // Check if we have a preferred profile
-      const preferredProfilesResult = !preferredProfiles
-        ? await fetchPreferredProfiles(resourceType)
-        : preferredProfiles;
+      const preferredProfilesResult = preferredProfiles ?? (await fetchPreferredProfiles(resourceTypeURL));
 
       if (preferredProfilesResult.length === 0) {
         // No preferred profile, load profiles list and show modal
-        if (!profilesMetadata?.length) {
-          const availableProfiles = await fetchProfiles(resourceType);
+        if (!availableProfiles?.length) {
+          const result = await fetchProfiles(resourceTypeURL);
 
-          setProfilesMetadata(availableProfiles);
+          setAvailableProfiles(result);
         }
 
         setIsProfileSelectionModalOpen(true);
@@ -27,15 +31,13 @@ export const useProfileSelection = () => {
         setPreferredProfiles(preferredProfilesResult);
 
         // Use the preferred profile
-        const profile = preferredProfilesResult.find(profile => profile.resourceType === resourceType);
+        const profile = preferredProfilesResult.find(profile => profile.resourceType === resourceTypeURL);
 
         if (profile) {
-          callback(Number(profile.id));
+          callback(profile.id);
         } else {
           setIsProfileSelectionModalOpen(true);
         }
-
-        return true;
       }
     } catch (error) {
       // TODO: handle the error

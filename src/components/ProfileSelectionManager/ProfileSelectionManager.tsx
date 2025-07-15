@@ -1,18 +1,24 @@
+import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ModalChooseProfile } from '@components/ModalChooseProfile';
-import { useProfileState, useUIState } from '@src/store';
+import { useNavigationState, useProfileState, useUIState } from '@src/store';
 
 export const ProfileSelectionManager = () => {
   const { isProfileSelectionModalOpen, setIsProfileSelectionModalOpen } = useUIState();
-  const { profilesMetadata } = useProfileState();
-
-  console.log('====================================');
-  console.log('profilesMetadata', profilesMetadata);
-  console.log('====================================');
-
-  const onSubmit = () => {};
+  const { availableProfiles } = useProfileState();
+  const { queryParams } = useNavigationState();
+  const { navigateToEditPage } = useNavigateToEditPage();
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
+  };
+
+  const onSubmit = (profileId: string) => {
+    onClose();
+
+    navigateToEditPage(
+      `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${queryParams?.[QueryParams.Type]}&${QueryParams.Ref}=${queryParams?.[QueryParams.Ref]}&${QueryParams.ProfileId}=${profileId}`,
+    );
   };
 
   return (
@@ -21,8 +27,7 @@ export const ProfileSelectionManager = () => {
       onCancel={onClose}
       onSubmit={onSubmit}
       onClose={onClose}
-      profiles={profilesMetadata}
-      onSelectProfile={() => {}}
+      profiles={availableProfiles}
     />
   );
 };

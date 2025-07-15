@@ -11,6 +11,7 @@ import { wrapRecordValuesWithCommonContainer } from '@common/helpers/record.help
 import { ROUTES, QueryParams } from '@common/constants/routes.constants';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import './InstancesList.scss';
+import { useNavigationState } from '@src/store';
 
 type IInstancesList = {
   contents?: { keys: { key?: string; uri?: string }; entries: Record<string, unknown>[] };
@@ -40,19 +41,26 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
   const { getRecordAndInitializeParsing } = useRecordControls();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { checkProfileAndProceed } = useProfileSelection();
+  const { setQueryParams } = useNavigationState();
 
   const onClickNewInstance = () => {
-    checkProfileAndProceed(TYPE_URIS.INSTANCE, profileId => {
-      console.log('checkProfileAndProceed - profileId', refId);
+    setQueryParams({
+      [QueryParams.Type]: type,
+      [QueryParams.Ref]: refId,
     });
 
-    return;
+    const onProfileChecked = (profileId: string) => {
+      if (type && refId) {
+        navigateToEditPage(
+          `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${type}&${QueryParams.Ref}=${refId}&${QueryParams.ProfileId}=${profileId}`,
+        );
+      }
+    };
 
-    if (type && refId) {
-      navigateToEditPage(
-        `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${type}&${QueryParams.Ref}=${refId}&profileId={}`,
-      );
-    }
+    checkProfileAndProceed({
+      resourceTypeURL: TYPE_URIS.INSTANCE,
+      callback: onProfileChecked,
+    });
   };
 
   const applyActionItems = (rows: Row[]): Row[] =>

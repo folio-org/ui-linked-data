@@ -1,3 +1,4 @@
+import { ResourceType } from '@common/constants/record.constants';
 import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
@@ -7,7 +8,7 @@ type ProfilesMetadata = ProfileDTO[];
 type PreferredProfiles = ProfileDTO[];
 
 export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
-  SliceState<'profilesMetadata', ProfilesMetadata> &
+  SliceState<'availableProfiles', ProfilesMetadata> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
@@ -19,7 +20,7 @@ const sliceConfigs: SliceConfigs = {
   profiles: {
     initialValue: {},
   },
-  profilesMetadata: {
+  availableProfiles: {
     initialValue: null,
   },
   preferredProfiles: {

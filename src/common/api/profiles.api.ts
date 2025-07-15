@@ -10,7 +10,7 @@ export const fetchProfile = (profileId = 1) =>
     url: `${PROFILE_API_ENDPOINT}/${profileId}`,
   }) as Promise<Profile>;
 
-export const fetchProfiles = async (resourceType: string): Promise<ProfileDTO[]> =>
+export const fetchProfiles = async (resourceType: string) =>
   (await baseApi.getJson({
     url: `${PROFILE_METADATA_API_ENDPOINT}?resourceType=${encodeURIComponent(resourceType)}`,
   })) as Promise<ProfileDTO[]>;
