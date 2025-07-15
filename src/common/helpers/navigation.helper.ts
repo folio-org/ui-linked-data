@@ -25,3 +25,27 @@ export const getResourceIdFromUri = () => {
 
   return splittedPath[resourceIndex + 1];
 };
+
+export const generatePageURL = ({
+  url,
+  queryParams,
+  profileId,
+}: {
+  url: string;
+  queryParams: Record<QueryParams, string>;
+  profileId: string;
+}) => {
+  const urlParams = new URLSearchParams();
+
+  if (queryParams) {
+    Object.entries(queryParams).forEach(([key, value]) => {
+      if (value) {
+        urlParams.append(key, value);
+      }
+    });
+  }
+
+  urlParams.set(QueryParams.ProfileId, profileId);
+
+  return `${url}?${urlParams.toString()}`;
+};

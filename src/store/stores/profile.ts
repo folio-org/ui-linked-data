@@ -1,4 +1,3 @@
-import { ResourceType } from '@common/constants/record.constants';
 import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 

@@ -5,13 +5,11 @@ import { Button, ButtonType } from '@components/Button';
 import { formatDependeciesTable } from '@common/helpers/recordFormatting.helper';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useProfileSelection } from '@common/hooks/useProfileSelection';
+import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { wrapRecordValuesWithCommonContainer } from '@common/helpers/record.helper';
-import { ROUTES, QueryParams } from '@common/constants/routes.constants';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import './InstancesList.scss';
-import { useNavigationState } from '@src/store';
 
 type IInstancesList = {
   contents?: { keys: { key?: string; uri?: string }; entries: Record<string, unknown>[] };
@@ -40,26 +38,15 @@ const instancesListHeader: Row = {
 export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } = {}, type, refId }) => {
   const { getRecordAndInitializeParsing } = useRecordControls();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { checkProfileAndProceed } = useProfileSelection();
-  const { setQueryParams } = useNavigationState();
+  const { onCreateNewResource } = useNavigateToCreatePage();
 
   const onClickNewInstance = () => {
-    setQueryParams({
-      [QueryParams.Type]: type,
-      [QueryParams.Ref]: refId,
-    });
-
-    const onProfileChecked = (profileId: string) => {
-      if (type && refId) {
-        navigateToEditPage(
-          `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${type}&${QueryParams.Ref}=${refId}&${QueryParams.ProfileId}=${profileId}`,
-        );
-      }
-    };
-
-    checkProfileAndProceed({
+    onCreateNewResource({
       resourceTypeURL: TYPE_URIS.INSTANCE,
-      callback: onProfileChecked,
+      queryParams: {
+        type,
+        refId,
+      },
     });
   };
 

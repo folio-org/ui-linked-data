@@ -1,4 +1,5 @@
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { ROUTES } from '@common/constants/routes.constants';
+import { generatePageURL } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { ModalChooseProfile } from '@components/ModalChooseProfile';
 import { useNavigationState, useProfileState, useUIState } from '@src/store';
@@ -16,9 +17,9 @@ export const ProfileSelectionManager = () => {
   const onSubmit = (profileId: string) => {
     onClose();
 
-    navigateToEditPage(
-      `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${queryParams?.[QueryParams.Type]}&${QueryParams.Ref}=${queryParams?.[QueryParams.Ref]}&${QueryParams.ProfileId}=${profileId}`,
-    );
+    const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
+
+    navigateToEditPage(url);
   };
 
   return (
