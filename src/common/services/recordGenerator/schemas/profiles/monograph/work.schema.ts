@@ -11,6 +11,7 @@ import {
   contributorProperties,
   nameAndLinkProperties,
   assigningSourceProperty,
+  seriesProperties,
 } from '../../common/propertyDefinitions';
 import {
   createObjectProperty,
@@ -91,6 +92,8 @@ export const monographWorkRecordSchema: RecordSchema = {
       }),
 
       [BFLITE_URIS.LANGUAGE]: createArrayObjectProperty(codeTermLinkProperties),
+
+      [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
     },
   },
 };
