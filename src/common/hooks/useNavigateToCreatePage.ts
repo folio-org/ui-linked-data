@@ -9,10 +9,11 @@ export const useNavigateToCreatePage = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { checkProfileAndProceed } = useProfileSelection();
   const { setQueryParams } = useNavigationState();
-  const queryParamsRef = useRef<{ type?: string; refId?: string }>({
+  const queryParamsRef = useRef<{ type?: string | null; refId?: string | null }>({
     type: undefined,
     refId: undefined,
   });
+  const navigationStateRef = useRef<SearchParamsState>();
 
   const createQueryParams = ({ type, refId }: { type: string; refId: string }): Record<QueryParams, string> | null => {
     if (!type || !refId) return null;
@@ -38,16 +39,18 @@ export const useNavigateToCreatePage = () => {
         profileId,
       });
 
-      navigateToEditPage(url);
+      navigateToEditPage(url, navigationStateRef.current);
     }
   };
 
   const onCreateNewResource = ({
     resourceTypeURL,
     queryParams,
+    navigationState,
   }: {
     resourceTypeURL: string;
-    queryParams: { type?: string; refId?: string };
+    queryParams: { type?: string | null; refId?: string | null };
+    navigationState?: SearchParamsState;
   }): void => {
     const params =
       queryParams.type && queryParams.refId
@@ -55,6 +58,7 @@ export const useNavigateToCreatePage = () => {
         : null;
 
     queryParamsRef.current = queryParams;
+    navigationStateRef.current = navigationState;
 
     if (params) {
       setQueryParams(params);
