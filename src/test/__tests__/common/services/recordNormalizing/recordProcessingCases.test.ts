@@ -18,6 +18,8 @@ describe('recordProcessingCases', () => {
   const labelBFLiteUri = 'labelBFLiteUri';
   const creatorBFLiteUri = 'creatorBFLiteUri';
   const noteNonBFUri = '_notes';
+  const nameFieldName = '_name';
+  const labelFieldName = 'label';
 
   mockedBFLiteUris({ LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
 
@@ -236,7 +238,7 @@ describe('recordProcessingCases', () => {
         },
       };
 
-      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
 
       expect(record).toEqual(testResult);
     });
@@ -269,7 +271,7 @@ describe('recordProcessingCases', () => {
         },
       };
 
-      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
 
       expect(record).toEqual(testResult);
     });
@@ -301,7 +303,39 @@ describe('recordProcessingCases', () => {
         },
       };
 
-      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with id, label, and preferred status, using label field name', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'test_id_1',
+              label: 'Test Label',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['test_id_1'],
+              label: {
+                value: ['Test Label'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, labelFieldName);
 
       expect(record).toEqual(testResult);
     });
@@ -343,7 +377,7 @@ describe('recordProcessingCases', () => {
         },
       };
 
-      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
 
       expect(record).toEqual(testResult);
     });
@@ -395,7 +429,7 @@ describe('recordProcessingCases', () => {
         },
       };
 
-      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey);
+      RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
 
       expect(record).toEqual(testResult);
     });

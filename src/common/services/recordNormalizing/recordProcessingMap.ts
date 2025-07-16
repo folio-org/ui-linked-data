@@ -11,6 +11,12 @@ import {
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
   wrapWithContainer(record, blockKey, groupKey, BFLITE_URIS.PROVISION_ACTIVITY);
 
+const processContributorComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
+  processComplexLookup(record, blockKey, groupKey, '_name');
+
+const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
+  processComplexLookup(record, blockKey, groupKey, 'label');
+
 export const RECORD_NORMALIZING_CASES = {
   [BFLITE_URIS.PRODUCTION]: {
     process: processProvisionActivity,
@@ -35,13 +41,16 @@ export const RECORD_NORMALIZING_CASES = {
     process: notesMapping,
   },
   _creatorReference: {
-    process: processComplexLookup,
+    process: processContributorComplexLookup,
   },
   _contributorReference: {
-    process: processComplexLookup,
+    process: processContributorComplexLookup,
   },
   [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       extractDropdownOption(record, blockKey, groupKey, BFLITE_URIS.SOURCE, '_assigningSourceReference'),
+  },
+  [BFLITE_URIS.SUBJECT]: {
+    process: processSubjectComplexLookup,
   },
 };
