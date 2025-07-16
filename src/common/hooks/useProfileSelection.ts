@@ -9,41 +9,76 @@ export const useProfileSelection = () => {
   const { setIsProfileSelectionModalOpen } = useUIState();
   const { addStatusMessagesItem } = useStatusState();
 
+  // Loads available profiles if they haven't been loaded yet
+  const loadAvailableProfiles = async (resourceTypeURL: string): Promise<void> => {
+    if (!availableProfiles?.length) {
+      try {
+        const result = await fetchProfiles(resourceTypeURL);
+
+        setAvailableProfiles(result);
+      } catch (error) {
+        console.error('Failed to load available profiles:', error);
+        // Re-throw to be handled by 'checkProfileAndProceed'
+        throw error;
+      }
+    }
+  };
+
+  // Loads preferred profiles if they haven't been loaded yet
+  const getPreferredProfiles = async (resourceTypeURL: string): Promise<ProfileDTO[]> => {
+    return preferredProfiles ?? (await fetchPreferredProfiles(resourceTypeURL));
+  };
+
+  // Processes the case when a preferred profile exists
+  const handlePreferredProfileCase = (
+    profiles: ProfileDTO[],
+    resourceTypeURL: string,
+    callback: (profileId: string) => void,
+  ): boolean => {
+    setPreferredProfiles(profiles);
+
+    const profile = profiles.find(profile => profile.resourceType === resourceTypeURL);
+
+    if (profile) {
+      callback(profile.id);
+
+      return true;
+    }
+
+    return false;
+  };
+
   const checkProfileAndProceed = async ({
     resourceTypeURL,
     callback,
   }: {
     resourceTypeURL: string;
     callback: (profileId: string) => void;
-  }) => {
+  }): Promise<void> => {
     try {
       setIsLoading(true);
-      // Check if we have a preferred profile
-      const preferredProfilesResult = preferredProfiles ?? (await fetchPreferredProfiles(resourceTypeURL));
 
-      if (preferredProfilesResult.length === 0) {
-        // No preferred profile, load profiles list and show modal
-        if (!availableProfiles?.length) {
-          const result = await fetchProfiles(resourceTypeURL);
+      // Get preferred profiles
+      const preferredProfilesResult = await getPreferredProfiles(resourceTypeURL);
 
-          setAvailableProfiles(result);
-        }
+      if (preferredProfilesResult.length > 0) {
+        const profileProcessed = handlePreferredProfileCase(preferredProfilesResult, resourceTypeURL, callback);
 
-        setIsProfileSelectionModalOpen(true);
-      } else {
-        setPreferredProfiles(preferredProfilesResult);
-
-        // Use the preferred profile
-        const profile = preferredProfilesResult.find(profile => profile.resourceType === resourceTypeURL);
-
-        if (profile) {
-          callback(profile.id);
-        } else {
+        // If no matching profile was found, show the modal
+        if (!profileProcessed) {
           setIsProfileSelectionModalOpen(true);
         }
+
+        return;
       }
-    } catch {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+
+      // No preferred profiles, load available profiles and show modal
+      await loadAvailableProfiles(resourceTypeURL);
+      setIsProfileSelectionModalOpen(true);
+    } catch (error) {
+      console.error('Failed to check profile and proceed:', error);
+
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfiles'));
     } finally {
       setIsLoading(false);
     }

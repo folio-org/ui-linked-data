@@ -13,9 +13,9 @@ interface Props {
 
 export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit, onClose, profiles }) => {
   const { formatMessage } = useIntl();
-  const [selectedValue, setSelectedValue] = useState<string>();
+  const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0].id);
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
 
@@ -43,7 +43,12 @@ export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit,
           <label htmlFor="select-profile">
             <FormattedMessage id="ld.resourceProfile" />
           </label>
-          <select name={formatMessage({ id: 'ld.resourceProfile' })} id="select-profile" onChange={onChange}>
+          <select
+            name={formatMessage({ id: 'ld.resourceProfile' })}
+            id="select-profile"
+            onChange={onChange}
+            value={selectedValue}
+          >
             {profiles?.map(({ id, name }) => (
               <option key={id} value={id}>
                 {name}

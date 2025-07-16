@@ -1,20 +1,23 @@
+import { useRef } from 'react';
 import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { generatePageURL } from '@common/helpers/navigation.helper';
+import { useNavigationState } from '@src/store';
 import { useNavigateToEditPage } from './useNavigateToEditPage';
 import { useProfileSelection } from './useProfileSelection';
-import { useNavigationState } from '@src/store';
-import { generatePageURL } from '@common/helpers/navigation.helper';
-import { useRef } from 'react';
 
 export const useNavigateToCreatePage = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { checkProfileAndProceed } = useProfileSelection();
   const { setQueryParams } = useNavigationState();
+
+  // References to store query parameters and navigation state for later use
   const queryParamsRef = useRef<{ type?: string | null; refId?: string | null }>({
     type: undefined,
     refId: undefined,
   });
   const navigationStateRef = useRef<SearchParamsState>();
 
+  // Creates query parameters object for resource creation
   const createQueryParams = ({ type, refId }: { type: string; refId: string }): Record<QueryParams, string> | null => {
     if (!type || !refId) return null;
 
@@ -24,6 +27,7 @@ export const useNavigateToCreatePage = () => {
     } as Record<QueryParams, string>;
   };
 
+  // Handles navigation after profile selection
   const handleProfileSelection = (profileId: string): void => {
     if (!queryParamsRef.current.type || !queryParamsRef.current.refId) return;
 
@@ -43,6 +47,7 @@ export const useNavigateToCreatePage = () => {
     }
   };
 
+  // Initiates the resource creation process with profile selection
   const onCreateNewResource = ({
     resourceTypeURL,
     queryParams,
@@ -57,6 +62,7 @@ export const useNavigateToCreatePage = () => {
         ? createQueryParams({ type: queryParams.type, refId: queryParams.refId })
         : null;
 
+    // Store current query parameters and navigation state for later use
     queryParamsRef.current = queryParams;
     navigationStateRef.current = navigationState;
 
@@ -64,6 +70,7 @@ export const useNavigateToCreatePage = () => {
       setQueryParams(params);
     }
 
+    // Check for profile and proceed with resource creation
     checkProfileAndProceed({
       resourceTypeURL,
       callback: handleProfileSelection,
