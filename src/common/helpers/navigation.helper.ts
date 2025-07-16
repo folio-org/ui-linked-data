@@ -45,7 +45,9 @@ export const generatePageURL = ({
     });
   }
 
-  urlParams.set(QueryParams.ProfileId, profileId);
+  if (profileId) {
+    urlParams.set(QueryParams.ProfileId, profileId);
+  }
 
-  return `${url}?${urlParams.toString()}`;
+  return urlParams.size ? `${url}?${urlParams.toString()}` : url;
 };

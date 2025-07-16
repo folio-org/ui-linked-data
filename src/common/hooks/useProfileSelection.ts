@@ -1,10 +1,13 @@
 import { fetchProfiles, fetchPreferredProfiles } from '@common/api/profiles.api';
-import { useLoadingState, useProfileState, useUIState } from '@src/store';
+import { StatusType } from '@common/constants/status.constants';
+import { UserNotificationFactory } from '@common/services/userNotification';
+import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const useProfileSelection = () => {
   const { preferredProfiles, setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState();
   const { setIsLoading } = useLoadingState();
   const { setIsProfileSelectionModalOpen } = useUIState();
+  const { addStatusMessagesItem } = useStatusState();
 
   const checkProfileAndProceed = async ({
     resourceTypeURL,
@@ -39,9 +42,8 @@ export const useProfileSelection = () => {
           setIsProfileSelectionModalOpen(true);
         }
       }
-    } catch (error) {
-      // TODO: handle the error
-      console.error('Error checking profiles:', error);
+    } catch {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
     } finally {
       setIsLoading(false);
     }

@@ -25,6 +25,7 @@
   "ld.searchBySth": "Search by{by}...",
   "ld.errorFetching": "Error fetching data",
   "ld.errorLoadingResource": "Error loading resource",
+  "ld.errorLoadingProfiles": "Error loading profiles",
   "ld.actions": "Actions",
   "ld.isbnLccn": "ISBN/LCCN",
   "ld.isbn": "ISBN",
