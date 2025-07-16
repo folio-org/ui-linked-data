@@ -1,3 +1,56 @@
-.modal-content{
-  padding: 1.5rem 0;
+@import '@common/styles/common.scss';
+
+.modal-choose-profile {
+  min-width: 515px;
+  padding: 0;
+
+  // TODO: UILD-513 - use these styles in "Modal.scss" to make them consistent acroll all modals
+  .modal-header,
+  .modal-content,
+  .modal-controls {
+    padding: 1.125rem;
+  }
+
+  .modal-header {
+    padding: 1.125rem;
+    border: 1px solid $gray-300;
+    border-radius: 8px 8px 0 0;
+
+    .title {
+      width: 100%;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  .modal-description {
+    font-size: 1rem;
+  }
+
+  .modal-content {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1rem;
+
+    &-controls-block {
+      margin-bottom: 1rem;
+    }
+
+    &-subheader {
+      margin-bottom: 4px;
+      line-height: 1.5rem;
+      color: $gray-500;
+      font-weight: 600;
+    }
+
+    &-label {
+      line-height: 1.5rem;
+    }
+  }
+
+  .modal-controls {
+    border-top: 1px solid $gray-300;
+    justify-content: space-between;
+  }
 }
