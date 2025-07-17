@@ -18,7 +18,7 @@ export const useNavigateToCreatePage = () => {
   const navigationStateRef = useRef<SearchParamsState>();
 
   // Creates query parameters object for resource creation
-  const createQueryParams = ({ type, refId }: { type: string; refId: string }): Record<QueryParams, string> | null => {
+  const createQueryParams = ({ type, refId }: { type: string; refId: string }) => {
     if (!type || !refId) return null;
 
     return {
@@ -28,7 +28,7 @@ export const useNavigateToCreatePage = () => {
   };
 
   // Handles navigation after profile selection
-  const handleProfileSelection = (profileId: string): void => {
+  const handleProfileSelection = (profileId: string) => {
     if (!queryParamsRef.current.type || !queryParamsRef.current.refId) return;
 
     const params = createQueryParams({
@@ -56,7 +56,7 @@ export const useNavigateToCreatePage = () => {
     resourceTypeURL: string;
     queryParams: { type?: string | null; refId?: string | null };
     navigationState?: SearchParamsState;
-  }): void => {
+  }) => {
     const params =
       queryParams.type && queryParams.refId
         ? createQueryParams({ type: queryParams.type, refId: queryParams.refId })

@@ -14,7 +14,7 @@ interface Props {
 export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit, onClose, profiles }) => {
   const { formatMessage } = useIntl();
   const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0].id);
-  const [asDefault, setAsDefault] = useState(false);
+  const [isDefault, setIsDefault] = useState(false);
 
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
@@ -63,9 +63,9 @@ export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit,
             <label className="modal-content-label">
               <input
                 type="checkbox"
-                checked={asDefault}
+                checked={isDefault}
                 onChange={() => {
-                  setAsDefault(prev => !prev);
+                  setIsDefault(prev => !prev);
                 }}
                 name={labelSetAsDefault}
                 aria-label={labelSetAsDefault}

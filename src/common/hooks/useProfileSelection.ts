@@ -10,7 +10,7 @@ export const useProfileSelection = () => {
   const { addStatusMessagesItem } = useStatusState();
 
   // Loads available profiles if they haven't been loaded yet
-  const loadAvailableProfiles = async (resourceTypeURL: string): Promise<void> => {
+  const loadAvailableProfiles = async (resourceTypeURL: string) => {
     if (!availableProfiles?.length) {
       try {
         const result = await fetchProfiles(resourceTypeURL);
@@ -25,7 +25,7 @@ export const useProfileSelection = () => {
   };
 
   // Loads preferred profiles if they haven't been loaded yet
-  const getPreferredProfiles = async (resourceTypeURL: string): Promise<ProfileDTO[]> => {
+  const getPreferredProfiles = async (resourceTypeURL: string) => {
     return preferredProfiles ?? (await fetchPreferredProfiles(resourceTypeURL));
   };
 
@@ -54,7 +54,7 @@ export const useProfileSelection = () => {
   }: {
     resourceTypeURL: string;
     callback: (profileId: string) => void;
-  }): Promise<void> => {
+  }) => {
     try {
       setIsLoading(true);
 
