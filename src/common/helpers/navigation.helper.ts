@@ -49,5 +49,7 @@ export const generatePageURL = ({
     urlParams.set(QueryParams.ProfileId, profileId);
   }
 
-  return urlParams.size ? `${url}?${urlParams.toString()}` : url;
+  const paramString = urlParams.toString();
+
+  return paramString ? `${url}?${paramString}` : url;
 };

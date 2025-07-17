@@ -55,6 +55,72 @@ describe('profile.helper', () => {
       });
     });
 
+    test('uses provided profileId when ResourceType is instance', () => {
+      const customProfileId = 42;
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        resourceType: ResourceType.instance,
+        profileId: customProfileId,
+      });
+
+      expect(result).toEqual({
+        ids: [1, customProfileId],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
+    test('uses default instance id when profileId is null and ResourceType is instance', () => {
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        resourceType: ResourceType.instance,
+        profileId: null,
+      });
+
+      expect(result).toEqual({
+        ids: [1, 2],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
+    test('ignores profileId when ResourceType is work', () => {
+      const customProfileId = 42;
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        resourceType: ResourceType.work,
+        profileId: customProfileId,
+      });
+
+      expect(result).toEqual({
+        ids: [1],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
+    test('ignores profileId when ResourceType is not specified', () => {
+      const customProfileId = 42;
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        profileId: customProfileId,
+      });
+
+      expect(result).toEqual({
+        ids: [3],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
     test('throws error when profile does not exist in configuration', () => {
       expect(() => {
         getProfileConfig({ profileName: 'non-existent-profile' as any, resourceType: ResourceType.work });
