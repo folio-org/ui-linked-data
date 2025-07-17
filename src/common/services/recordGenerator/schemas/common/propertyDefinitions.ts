@@ -72,6 +72,12 @@ export const nameAndLinkProperties = {
   [BFLITE_URIS.LINK]: stringArrayProperty,
 };
 
+export const seriesProperties = {
+  [BFLITE_URIS.NAME]: stringArrayProperty,
+  [BFLITE_URIS.ISSN]: stringArrayProperty,
+  [BFLITE_URIS.VOLUME]: stringArrayProperty,
+};
+
 export const contributorProperties = {
   _name: {
     type: RecordSchemaEntryType.string,
