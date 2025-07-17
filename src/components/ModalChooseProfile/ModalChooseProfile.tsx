@@ -14,16 +14,14 @@ interface Props {
 export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit, onClose, profiles }) => {
   const { formatMessage } = useIntl();
   const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0].id);
-  const [asSefault, setAsDefault] = useState(false);
+  const [asDefault, setAsDefault] = useState(false);
 
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
 
   const handleSubmit = () => {
-    if (selectedValue) {
-      onSubmit(selectedValue);
-    }
+    onSubmit(selectedValue);
   };
 
   const labelSetAsDefault = formatMessage({ id: 'ld.modal.chooseResourceProfile.setAsDefault' });
@@ -65,7 +63,7 @@ export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit,
             <label className="modal-content-label">
               <input
                 type="checkbox"
-                checked={asSefault}
+                checked={asDefault}
                 onChange={() => {
                   setAsDefault(prev => !prev);
                 }}
