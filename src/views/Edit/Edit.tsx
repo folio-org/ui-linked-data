@@ -32,6 +32,7 @@ export const Edit = () => {
   const cloneOfParam = queryParams.get(QueryParams.CloneOf);
   const typeParam = queryParams.get(QueryParams.Type);
   const refParam = queryParams.get(QueryParams.Ref);
+  const profileIdParam = queryParams.get(QueryParams.ProfileId);
 
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
@@ -62,7 +63,11 @@ export const Edit = () => {
         setIsLoading(true);
         const params = {
           // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
-          profile: getProfileConfig('Monograph', typeParam as ResourceType),
+          profile: getProfileConfig({
+            profileName: 'Monograph',
+            resourceType: typeParam as ResourceType,
+            profileId: Number(profileIdParam),
+          }),
         };
 
         await getProfiles(params);
@@ -131,7 +136,11 @@ export const Edit = () => {
         const typedRecord = record as unknown as RecordEntry;
         const getProfilesParams = {
           // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
-          profile: getProfileConfig('Monograph', typeParam as ResourceType),
+          profile: getProfileConfig({
+            profileName: 'Monograph',
+            resourceType: typeParam as ResourceType,
+            profileId: Number(profileIdParam),
+          }),
           record: typedRecord,
         };
 

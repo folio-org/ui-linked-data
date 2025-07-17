@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -7,7 +6,6 @@ import { Row, Table } from '@components/Table';
 import { Button, ButtonType } from '@components/Button';
 import { formatItemSearchInstanceListData } from '@common/helpers/search.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
@@ -17,6 +15,8 @@ import { StatusType } from '@common/constants/status.constants';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
 import { FullDisplayType } from '@common/constants/uiElements.constants';
 import './SearchResultEntry.scss';
+import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SearchResultEntry = {
   id: string;
@@ -68,6 +68,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const { resetFullDisplayComponentType, fullDisplayComponentType } = useUIState();
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
+  const { onCreateNewResource } = useNavigateToCreatePage();
 
   const handleOpenPreview = async (id: string) => {
     try {
@@ -144,6 +145,17 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   const formattedInstances = applyActionItems(formatItemSearchInstanceListData(instances || []));
 
+  const onClickNewInstance = () => {
+    onCreateNewResource({
+      resourceTypeURL: TYPE_URIS.INSTANCE,
+      queryParams: {
+        type: ResourceType.instance,
+        refId: restOfWork.id,
+      },
+      navigationState,
+    });
+  };
+
   return (
     <div className="search-result-entry-container">
       <WorkDetailsCard
@@ -175,12 +187,9 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
             <span>
               <FormattedMessage id="ld.noInstancesAvailable" />
             </span>
-            <Link
-              to={`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.instance}&ref=${restOfWork.id}`}
-              state={navigationState}
-            >
+            <Button type={ButtonType.Link} onClick={onClickNewInstance} data-testid="add-instance">
               <FormattedMessage id="ld.addAnInstance" />
-            </Link>
+            </Button>
           </span>
         </div>
       )}

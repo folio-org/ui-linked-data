@@ -40,6 +40,7 @@ export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
   CloneOf = 'cloneOf',
+  ProfileId = 'profileId'
 }
 
 export enum SearchQueryParams {

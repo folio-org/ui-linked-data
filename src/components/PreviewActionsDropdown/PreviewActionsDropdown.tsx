@@ -1,11 +1,12 @@
+import { FC } from 'react';
 import { DropdownItemType } from '@common/constants/uiElements.constants';
 import { Dropdown } from '@components/Dropdown';
+import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import Edit16 from '@src/assets/edit-16.svg?react';
 import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Plus16 from '@src/assets/plus-16.svg?react';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { FC } from 'react';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
 
 type Props = {
   referenceId?: string | null;
@@ -15,9 +16,20 @@ type Props = {
 };
 
 export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityType, handleNavigateToEditPage }) => {
-  const { navigateToEditPage, navigateAsDuplicate } = useNavigateToEditPage();
+  const { navigateAsDuplicate } = useNavigateToEditPage();
+  const { onCreateNewResource } = useNavigateToCreatePage();
 
   const handleDuplicate = () => ownId && navigateAsDuplicate(ownId);
+
+  const handleClickNewInstance = () => {
+    onCreateNewResource({
+      resourceTypeURL: TYPE_URIS.INSTANCE,
+      queryParams: {
+        type: entityType,
+        refId: referenceId,
+      },
+    });
+  };
 
   const actionDropdownItems = [
     {
@@ -43,12 +55,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityTy
           type: DropdownItemType.basic,
           labelId: 'ld.newInstance',
           icon: <Plus16 />,
-          action: () =>
-            entityType &&
-            referenceId &&
-            navigateToEditPage(
-              `${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.Type}=${entityType}&${QueryParams.Ref}=${referenceId}`,
-            ),
+          action: handleClickNewInstance,
         },
       ],
     },

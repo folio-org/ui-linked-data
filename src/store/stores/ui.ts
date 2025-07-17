@@ -14,7 +14,8 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'fullDisplayComponentType', FullDisplayType> &
   SliceState<'currentlyPreviewedEntityBfid', UIEntries> &
   SliceState<'hasShownAuthorityWarning', boolean> &
-  SliceState<'isImportModalOpen', boolean>;
+  SliceState<'isImportModalOpen', boolean> &
+  SliceState<'isProfileSelectionModalOpen', boolean>;
 
 const STORE_NAME = 'UI';
 
@@ -50,6 +51,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: false,
   },
   isImportModalOpen: {
+    initialValue: false,
+  },
+  isProfileSelectionModalOpen: {
     initialValue: false,
   },
 };
