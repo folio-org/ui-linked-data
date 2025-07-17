@@ -84,7 +84,7 @@
     "ld.publisher": "Wydawca",
     "ld.creator": "Twórca",
     "ld.language": "Język",
-    "ld.classificationNumber": "Classification number",
+    "ld.classificationNumber": "Numer klasyfikacji",
     "ld.work": "Work",
     "ld.instances": "Instancje",
     "ld.noInstancesAvailable": "Brak dostępnych instancji.",
@@ -191,7 +191,7 @@
     "ld.rdPropertiesMatchContinue": "Właściwości tego zasobu pasują do istniejącego zasobu. Czy chcesz kontynuować?",
     "ld.instance": "Instancja",
     "ld.year": "Rok",
-    "ld.aria.modal.close": "Close {modalKind} modal",
+    "ld.aria.modal.close": "Zamknij {modalKind} okno modalne",
     "ld.aria.advancedSearch.queryInput": "Advanced search row query input",
     "ld.aria.advancedSearch.operator": "Advanced search row operator",
     "ld.aria.advancedSearch.qualifier": "Advanced search row qualifier",
@@ -257,5 +257,5 @@
     "ld.importFailed": "Import się nie powiódł",
     "ld.importDone": "Zrobione",
     "ld.importTryAgain": "Spróbuj ponownie",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "Import nie został ukończony na czas"
 }
