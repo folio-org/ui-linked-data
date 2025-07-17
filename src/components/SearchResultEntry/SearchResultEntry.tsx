@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { WorkDetailsCard } from '@components/WorkDetailsCard';
@@ -7,7 +6,6 @@ import { Row, Table } from '@components/Table';
 import { Button, ButtonType } from '@components/Button';
 import { formatItemSearchInstanceListData } from '@common/helpers/search.helper';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ROUTES } from '@common/constants/routes.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import CommentIcon from '@src/assets/comment-lines-12.svg?react';
