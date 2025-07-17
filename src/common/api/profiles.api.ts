@@ -10,15 +10,15 @@ export const fetchProfile = (profileId = 1) =>
     url: `${PROFILE_API_ENDPOINT}/${profileId}`,
   }) as Promise<Profile>;
 
-export const fetchProfiles = async (resourceType: string) =>
-  (await baseApi.getJson({
+export const fetchProfiles = (resourceType: string) =>
+  baseApi.getJson({
     url: `${PROFILE_METADATA_API_ENDPOINT}?resourceType=${encodeURIComponent(resourceType)}`,
-  })) as Promise<ProfileDTO[]>;
+  }) as Promise<ProfileDTO[]>;
 
-export const fetchPreferredProfiles = async (resourceType?: string) => {
+export const fetchPreferredProfiles = (resourceType?: string) => {
   const url = resourceType
     ? `${PROFILE_PREFERRED_API_ENDPOINT}?resourceType=${encodeURIComponent(resourceType)}`
     : PROFILE_PREFERRED_API_ENDPOINT;
 
-  return (await baseApi.getJson({ url })) as Promise<ProfileDTO[]>;
+  return baseApi.getJson({ url }) as Promise<ProfileDTO[]>;
 };
