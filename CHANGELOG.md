@@ -15,6 +15,8 @@
 * Address general accessibility issues with focus. Refs [UILD-579].
 * Loading separate profiles for Work and Instance on the Create resource page. Refs [UILD-578].
 * Add support for administrative history, biographical data, physical description, accompanying material and award notes. Refs [UILD-569].
+* Address accessibility issues. Refs [UILD-579].
+* Add support for serials. Refs [UILD-594].
 * Added Profile selection when the user creates a new Instance. Refs[UILD-573].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -32,6 +34,8 @@
 [UILD-579]:https://folio-org.atlassian.net/browse/UILD-579
 [UILD-578]:https://folio-org.atlassian.net/browse/UILD-578
 [UILD-569]:https://folio-org.atlassian.net/browse/UILD-569
+[UILD-579]:https://folio-org.atlassian.net/browse/UILD-579
+[UILD-594]:https://folio-org.atlassian.net/browse/UILD-594
 [UILD-573]:https://folio-org.atlassian.net/browse/UILD-573
 
 ## 1.0.5 (2025-04-30)
