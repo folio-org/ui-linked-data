@@ -20,7 +20,7 @@ jest.mock('@src/configs', () => ({
 describe('profile.helper', () => {
   describe('getProfileConfig', () => {
     test('returns work profile configuration when ResourceType is work', () => {
-      const result = getProfileConfig('Monograph', ResourceType.work);
+      const result = getProfileConfig({ profileName: 'Monograph', resourceType: ResourceType.work });
 
       expect(result).toEqual({
         ids: [1],
@@ -32,7 +32,7 @@ describe('profile.helper', () => {
     });
 
     test('returns work and instance profile configuration when ResourceType is instance', () => {
-      const result = getProfileConfig('Monograph', ResourceType.instance);
+      const result = getProfileConfig({ profileName: 'Monograph', resourceType: ResourceType.instance });
 
       expect(result).toEqual({
         ids: [1, 2],
@@ -44,7 +44,7 @@ describe('profile.helper', () => {
     });
 
     test('returns profile configuration when ResourceType is not work or instance', () => {
-      const result = getProfileConfig('Monograph');
+      const result = getProfileConfig({ profileName: 'Monograph' });
 
       expect(result).toEqual({
         ids: [3],
@@ -57,7 +57,7 @@ describe('profile.helper', () => {
 
     test('throws error when profile does not exist in configuration', () => {
       expect(() => {
-        getProfileConfig('non-existent-profile' as any, ResourceType.work);
+        getProfileConfig({ profileName: 'non-existent-profile' as any, resourceType: ResourceType.work });
       }).toThrow('Profile with ID non-existent-profile does not exist in the configuration.');
     });
   });
