@@ -14,9 +14,8 @@ export const BFLITE_URIS = {
   TABLE_OF_CONTENTS: 'http://bibfra.me/vocab/marc/tableOfContents',
   SUMMARY: 'http://bibfra.me/vocab/marc/summary',
   INSTANTIATES: 'http://bibfra.me/vocab/lite/instantiates',
-  EXTENT_TEMP: 'BFLITE_URI_TEMP_EXTENT', // TODO: set the value when the API contract for Extent field is updated
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
-  APPLIES_TO_TEMP: 'APPLIES_TO_TEMP',
+  APPLIES_TO: 'http://bibfra.me/vocab/marc/materialsSpecified',
   NOTE: 'http://bibfra.me/vocab/lite/note',
   CREATOR: 'http://bibfra.me/vocab/lite/creator',
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',

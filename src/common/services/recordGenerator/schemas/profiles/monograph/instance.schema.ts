@@ -72,7 +72,11 @@ export const monographInstanceRecordSchema: RecordSchema = {
       
       [BFLITE_URIS.MARC_MEDIA]: createArrayObjectProperty(codeTermLinkProperties),
       
-      [BFLITE_URIS.EXTENT]: stringArrayProperty,
+      [BFLITE_URIS.EXTENT]: createArrayObjectProperty({
+        [BFLITE_URIS.LABEL]: stringArrayProperty,
+        [BFLITE_URIS.APPLIES_TO]: stringArrayProperty,
+      }),
+
       [BFLITE_URIS.MARC_DIMENSIONS]: stringArrayProperty,
       
       [BFLITE_URIS.MARC_CARRIER]: createArrayObjectProperty(linkAndTermProperties),
