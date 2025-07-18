@@ -22,7 +22,7 @@ export default defineConfig(() => {
           lib: {
             entry: path.resolve(__dirname, 'src/embed.tsx'),
             name: 'linked-data',
-            formats: ['es', 'umd'],
+            formats: ['es'],
             fileName: format => `linked-data.${format}.js`,
           },
         },
