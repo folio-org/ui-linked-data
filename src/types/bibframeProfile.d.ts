@@ -157,12 +157,4 @@ type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;
 
 type ProfileComponent = ProfileEntry | ResourceTemplate | PropertyTemplate;
 
-type TraverseProfileDTO = {
-  entry: ProfileComponent;
-  uuid?: string;
-  path?: Array<string>;
-  auxType?: AdvancedFieldType;
-  firstOfSameType?: boolean;
-};
-
 type ResourceType = keyof typeof import('@common/constants/record.constants').ResourceType;

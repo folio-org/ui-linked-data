@@ -25,6 +25,7 @@
   "ld.searchBySth": "Search by{by}...",
   "ld.errorFetching": "Error fetching data",
   "ld.errorLoadingResource": "Error loading resource",
+  "ld.errorLoadingProfiles": "Error loading profiles",
   "ld.actions": "Actions",
   "ld.isbnLccn": "ISBN/LCCN",
   "ld.isbn": "ISBN",
@@ -258,5 +259,9 @@
   "ld.importFailed": "Import failed",
   "ld.importDone": "Done",
   "ld.importTryAgain": "Try again",
-  "ld.importTimedout": "Import failed to complete in time"
+  "ld.importTimedout": "Import failed to complete in time",
+  "ld.resourceProfile": "Resource profile",
+  "ld.modal.chooseResourceProfile.subtitle": "Choose a resource profile to get started.",
+  "ld.modal.chooseResourceProfile.setAsDefault": "Set as my default",
+  "ld.create.base": "Create"
 }
