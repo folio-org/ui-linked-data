@@ -1,4 +1,5 @@
 import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { onCreateNewResource } from '@src/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
 import { getRecordAndInitializeParsing } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import * as RecordFormatter from '@common/helpers/recordFormatting.helper';
 import { InstancesList } from '@components/InstancesList';
@@ -51,7 +52,13 @@ describe('InstancesList', () => {
 
     fireEvent.click(getByTestId('new-instance'));
 
-    expect(navigateToEditPage).toHaveBeenCalled();
+    expect(onCreateNewResource).toHaveBeenCalledWith({
+      resourceTypeURL: expect.any(String),
+      queryParams: {
+        type: 'mockType',
+        refId: 'mockRefId',
+      },
+    });
   });
 
   test('invokes preview control', () => {
