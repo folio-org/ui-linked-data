@@ -7,7 +7,7 @@ import {
   variantTitleProperties,
   statusProperties,
   linkAndTermProperties,
-  codeTermLinkProperties,
+  languagesProperties,
   contributorProperties,
   nameAndLinkProperties,
   assigningSourceProperty,
@@ -91,7 +91,9 @@ export const monographWorkRecordSchema: RecordSchema = {
         [BFLITE_URIS.LINK]: stringArrayProperty,
       }),
 
-      [BFLITE_URIS.LANGUAGE]: createArrayObjectProperty(codeTermLinkProperties),
+      [BFLITE_URIS.LANGUAGE]: createArrayObjectProperty(languagesProperties),
+
+      [BFLITE_URIS.LANGUAGE_CODE]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
     },

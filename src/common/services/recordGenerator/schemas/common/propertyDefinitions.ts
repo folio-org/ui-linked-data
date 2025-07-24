@@ -67,6 +67,10 @@ export const codeTermLinkProperties = {
   [BFLITE_URIS.LINK]: stringArrayProperty,
 };
 
+export const languagesProperties = {
+  [BFLITE_URIS.LANGUAGE_TYPES]: stringArrayProperty,
+};
+
 export const nameAndLinkProperties = {
   [BFLITE_URIS.NAME]: stringArrayProperty,
   [BFLITE_URIS.LINK]: stringArrayProperty,
