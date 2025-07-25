@@ -96,6 +96,17 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       selectedEntriesService.addNew(selectedOption?.id, option.id);
 
       setSelectedEntries(selectedEntriesService.get());
+
+      // TODO adding this allows for obtaining values from dropdowns,
+      //      but this isn't the right way to this - temporary for languages
+      onChange(uuid, [{
+        id: option.id,
+        label: option.label,
+        meta: {
+          uri: option.value,
+          basicLabel: option.label,
+        }
+      }]);
     };
 
     return (

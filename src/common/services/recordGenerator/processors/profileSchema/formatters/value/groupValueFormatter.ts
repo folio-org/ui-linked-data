@@ -1,3 +1,4 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { IValueFormatter } from './valueFormatter.interface';
 
 export class GroupValueFormatter implements IValueFormatter {
@@ -14,6 +15,13 @@ export class GroupValueFormatter implements IValueFormatter {
       )?.[0];
 
       if (mappedUri) return [mappedUri];
+    }
+
+    if (recordSchemaEntry?.options?.includeTerm) {
+      return {
+        [BFLITE_URIS.LINK]: [value.meta.uri],
+        [BFLITE_URIS.TERM]: [value.meta?.basicLabel ?? value.label ?? ''],
+      };
     }
 
     return [value.meta.uri];

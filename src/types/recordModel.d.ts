@@ -15,6 +15,7 @@ interface RecordSchemaEntry {
     mappedValues?: Record<string, { uri?: string }>;
     defaultValue?: string;
     linkedProperty?: string; // Used for linking to a specific property in the valueContainer
+    includeTerm?: boolean;
   };
 }
 
