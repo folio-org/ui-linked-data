@@ -208,6 +208,10 @@ export const SIMPLE_LOOKUP_MAPPING = {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/award',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
+    'http://bibfra.me/vocab/marc/datesOfPublicationNote': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/number',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri }
+    }
   },
   _contributions: {
     'http://bibfra.me/vocab/relation/abridger': { uri: 'http://id.loc.gov/vocabulary/relators/abr' },
