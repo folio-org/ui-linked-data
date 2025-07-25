@@ -1,4 +1,4 @@
-import { IValueFormatter } from './valueFormater.interface';
+import { IValueFormatter } from './valueFormatter.interface';
 
 export class GroupValueFormatter implements IValueFormatter {
   formatLiteral(value: UserValueContents) {
