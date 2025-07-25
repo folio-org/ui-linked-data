@@ -19,6 +19,7 @@
 * Add support for serials. Refs [UILD-594].
 * Add support for updated extent handling. Rfs [UILD-557].
 * Added Profile selection when the user creates a new Instance. Refs[UILD-573].
+* Add support for dates of publication note (MARC 362). Refs [UILD-606].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -39,6 +40,7 @@
 [UILD-594]:https://folio-org.atlassian.net/browse/UILD-594
 [UILD-557]:https://folio-org.atlassian.net/browse/UILD-557
 [UILD-573]:https://folio-org.atlassian.net/browse/UILD-573
+[UILD-606]:https://folio-org.atlassian.net/browse/UILD-606
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
