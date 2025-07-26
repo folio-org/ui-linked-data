@@ -41,10 +41,7 @@ export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {
       case AdvancedFieldType.literal:
         return this.valueFormat.formatLiteral(value);
       case AdvancedFieldType.simple:
-      case AdvancedFieldType.dropdown:
-        // TODO adding dropdown above enables treating dropdowns as a values source,
-        //      but this is not the right way to do it - temporarily used for languages
-        //      see DrawComponent for the other half
+      case AdvancedFieldType.enumerated:
         return this.valueFormat.formatSimple(value, recordSchemaEntry);
       case AdvancedFieldType.complex:
         return this.valueFormat.formatComplex(value);

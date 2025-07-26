@@ -7,7 +7,9 @@ import { BaseDropdownProcessor } from './baseDropdownProcessor';
 export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
-      profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.flattenDropdown === true
+      (profileSchemaEntry.type === AdvancedFieldType.dropdown ||
+        profileSchemaEntry.type === AdvancedFieldType.enumerated) &&
+      recordSchemaEntry.options?.flattenDropdown === true
     );
   }
 

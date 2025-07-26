@@ -64,7 +64,11 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   }
 
   private isDropdownWithChildren(node: TransformedNode): boolean {
-    return node.type === AdvancedFieldType.dropdown && Array.isArray(node.children) && node.children.length > 0;
+    return (
+      (node.type === AdvancedFieldType.dropdown || node.type === AdvancedFieldType.enumerated) &&
+      Array.isArray(node.children) &&
+      node.children.length > 0
+    );
   }
 
   private addNodeToSchema(node: TransformedNode): void {
