@@ -85,6 +85,8 @@ export const monographInstanceRecordSchema: RecordSchema = {
         [BFLITE_URIS.LINK]: stringArrayProperty,
         [BFLITE_URIS.NOTE]: stringArrayProperty,
       }),
+
+      [BFLITE_URIS.BOOK_FORMAT]: createArrayObjectProperty(linkAndTermProperties),
     },
   },
 };

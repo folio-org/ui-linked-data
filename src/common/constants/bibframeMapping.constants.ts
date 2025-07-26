@@ -66,6 +66,7 @@ export const BFLITE_URIS = {
   IS_PART_OF: 'http://bibfra.me/vocab/relation/isPartOf',
   ISSN: 'http://bibfra.me/vocab/marc/issn',
   VOLUME: 'http://bibfra.me/vocab/marc/volume',
+  BOOK_FORMAT: 'http://bibfra.me/vocab/marc/bookFormat',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
