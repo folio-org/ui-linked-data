@@ -430,6 +430,11 @@ export const lookupConfig: Record<string, any> = {
     type: 'complex',
     modes: [],
   },
+  'http://id.loc.gov/vocabulary/bookformat': {
+    name: 'bookFormat',
+    type: 'simple',
+    modes: [],
+  },
   'http://id.loc.gov/vocabulary/carriers': {
     name: 'carriers',
     type: 'simple',
