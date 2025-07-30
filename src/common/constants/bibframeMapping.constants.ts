@@ -21,7 +21,7 @@ export const BFLITE_URIS = {
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
   PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
   CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
-  PROVISION_ACTIVITY: 'https://bibfra.me/vocab/marc/provisionActivity',
+  PROVISION_ACTIVITY: 'http://bibfra.me/vocab/marc/provisionActivity',
   TITLE: 'http://bibfra.me/vocab/marc/title',
   TITLE_CONTAINER: 'http://bibfra.me/vocab/marc/Title',
   MAIN_TITLE: 'http://bibfra.me/vocab/marc/mainTitle',
