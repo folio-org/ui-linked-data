@@ -257,5 +257,10 @@
     "ld.importFailed": "Falha na importação",
     "ld.importDone": "Feito",
     "ld.importTryAgain": "Tente novamente",
-    "ld.importTimedout": "A importação não foi concluída a tempo"
+    "ld.importTimedout": "A importação não foi concluída a tempo",
+    "ld.errorLoadingProfiles": "Erro ao carregar perfis",
+    "ld.resourceProfile": "Perfil de recurso",
+    "ld.modal.chooseResourceProfile.subtitle": "Escolha um perfil de recurso para começar.",
+    "ld.modal.chooseResourceProfile.setAsDefault": "Definir como meu padrão",
+    "ld.create.base": "Criar"
 }

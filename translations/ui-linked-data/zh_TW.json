@@ -257,5 +257,10 @@
     "ld.importFailed": "Import failed",
     "ld.importDone": "Done",
     "ld.importTryAgain": "Try again",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "Import failed to complete in time",
+    "ld.errorLoadingProfiles": "Error loading profiles",
+    "ld.resourceProfile": "Resource profile",
+    "ld.modal.chooseResourceProfile.subtitle": "Choose a resource profile to get started.",
+    "ld.modal.chooseResourceProfile.setAsDefault": "Set as my default",
+    "ld.create.base": "Create"
 }
