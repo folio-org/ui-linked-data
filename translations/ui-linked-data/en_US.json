@@ -230,6 +230,7 @@
     "ld.required_primary_main_title": "Please add the main title in order to save.",
     "ld.lccn_does_not_match_pattern": "LCCN Pattern validation enabled: Please provide an LCCN that complies with standard structure.",
     "ld.lccn_not_unique": "LCCN uniqueness enabled: The LCCN you provided already exists. Please provide a different LCCN.",
+    "ld.required_series_title": "Please add a title to each series in order to save.",
     "ld.failed_dependency": "Unable to verify if LCCN is duplicated.",
     "ld.not_found": "The resource ID has been changed by another user while you had this resource open. Please refresh your browser’s window.",
     "ld.mapping": "There’s been a mapping issue. Please report this to your support team, with screenshots and a detailed account of what happened.",

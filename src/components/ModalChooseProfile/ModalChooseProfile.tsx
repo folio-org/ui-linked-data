@@ -1,4 +1,4 @@
-import { FC, memo, useState } from 'react';
+import { FC, memo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Modal } from '@components/Modal';
 import './ModalChooseProfile.scss';
@@ -13,8 +13,14 @@ interface Props {
 
 export const ModalChooseProfile: FC<Props> = memo(({ isOpen, onCancel, onSubmit, onClose, profiles }) => {
   const { formatMessage } = useIntl();
-  const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0].id);
+  const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0]?.id);
   const [isDefault, setIsDefault] = useState(false);
+
+  useEffect(() => {
+    if (profiles && profiles.length > 0 && !selectedValue) {
+      setSelectedValue(profiles[0].id);
+    }
+  }, [profiles, selectedValue]);
 
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);

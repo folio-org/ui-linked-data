@@ -67,6 +67,7 @@ export const BFLITE_URIS = {
   IS_PART_OF: 'http://bibfra.me/vocab/relation/isPartOf',
   ISSN: 'http://bibfra.me/vocab/marc/issn',
   VOLUME: 'http://bibfra.me/vocab/marc/volume',
+  BOOK_FORMAT: 'http://bibfra.me/vocab/marc/bookFormat',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
@@ -209,6 +210,10 @@ export const SIMPLE_LOOKUP_MAPPING = {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/award',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
+    'http://bibfra.me/vocab/marc/datesOfPublicationNote': {
+      uri: 'http://id.loc.gov/vocabulary/mnotetype/number',
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri }
+    }
   },
   _contributions: {
     'http://bibfra.me/vocab/relation/abridger': { uri: 'http://id.loc.gov/vocabulary/relators/abr' },

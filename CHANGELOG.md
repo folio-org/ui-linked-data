@@ -19,6 +19,8 @@
 * Add support for serials. Refs [UILD-594].
 * Add support for updated extent handling. Refs [UILD-557].
 * Added Profile selection when the user creates a new Instance. Refs[UILD-573].
+* Add support for dates of publication note (MARC 362). Refs [UILD-606].
+* Add support for book format. Refs [UILD-607].
 * Added language subclass support.  Refs [UILD-564].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -40,6 +42,8 @@
 [UILD-594]:https://folio-org.atlassian.net/browse/UILD-594
 [UILD-557]:https://folio-org.atlassian.net/browse/UILD-557
 [UILD-573]:https://folio-org.atlassian.net/browse/UILD-573
+[UILD-606]:https://folio-org.atlassian.net/browse/UILD-606
+[UILD-607]:https://folio-org.atlassian.net/browse/UILD-607
 [UILD-564]:https://folio-org.atlassian.net/browse/UILD-564
 
 ## 1.0.5 (2025-04-30)

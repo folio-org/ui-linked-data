@@ -13,6 +13,10 @@ describe('ModalChooseProfile', () => {
   const onSubmit = jest.fn();
   const onClose = jest.fn();
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   beforeAll(() => {
     createModalContainer();
   });
@@ -161,5 +165,36 @@ describe('ModalChooseProfile', () => {
     );
 
     expect(container.firstChild).toBeNull();
+  });
+
+  test('calls onSubmit with correct profile id when form is submitted without manual selection', async () => {
+    
+    const { rerender } = render(
+      <ModalChooseProfile
+        isOpen={true}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={[]}
+      />,
+    );
+    
+    rerender(
+      <ModalChooseProfile
+        isOpen={true}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith('profile_1');
+      expect(onSubmit).not.toHaveBeenCalledWith('0');
+      expect(onSubmit).not.toHaveBeenCalledWith(undefined);
+    });
   });
 });
