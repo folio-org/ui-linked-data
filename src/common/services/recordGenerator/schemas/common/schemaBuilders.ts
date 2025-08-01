@@ -66,11 +66,11 @@ export function createLanguagesProperty() {
         value: RecordSchemaEntryType.object,
         properties: {
           [BFLITE_URIS.LINK]: {
-            type: RecordSchemaEntryType.string,
+            type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
           [BFLITE_URIS.TERM]: {
-            type: RecordSchemaEntryType.string,
+            type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
         },
