@@ -38,9 +38,39 @@ describe('DropdownProcessor', () => {
       expect(result).toBe(true);
     });
 
+    it('returns true for enumerated type entry without hiddenWrapper and flattenDropdown options', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          hiddenWrapper: false,
+          flattenDropdown: false,
+        },
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(true);
+    });
+
     it('returns true for dropdown type entry with no options', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(true);
+    });
+
+    it('returns true for enumerated type entry with no options', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
       } as SchemaEntry;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
@@ -70,6 +100,22 @@ describe('DropdownProcessor', () => {
     it('returns false for dropdown type entry with flattenDropdown option', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          flattenDropdown: true,
+        },
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false for enumerated type entry with flattenDropdown option', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
       } as SchemaEntry;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,
