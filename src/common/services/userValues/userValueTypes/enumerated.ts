@@ -4,25 +4,21 @@ import { UserValueType } from './userValueType';
 export class EnumeratedUserValueService extends UserValueType implements IUserValueType {
   private contents?: UserValueContents[];
 
-  async generate({ data, uri, uuid, type }: UserValueDTO) {
+  async generate({ data, uuid, type }: UserValueDTO) {
     this.contents = [];
 
     if (Array.isArray(data)) {
       for (const dataEntry of data as string[]) {
         const itemUri = dataEntry;
         this.generateContentItem({
-          label: itemUri,
           itemUri,
-          uri,
           type,
         });
       }
     } else {
       const itemUri = data as string;
       this.generateContentItem({
-        label: itemUri,
         itemUri,
-        uri,
         type,
       });
     }
@@ -36,26 +32,18 @@ export class EnumeratedUserValueService extends UserValueType implements IUserVa
   }
 
   private generateContentItem({
-    label,
     itemUri,
-    uri,
     type,
   }: {
-    label?: string;
     itemUri?: string;
-    uri?: string;
     type?: AdvancedFieldType;
   }) {
-    // Use a default empty string if label is undefined
-    const safeLabel = label || '';
-
     const contentItem = {
-      label: safeLabel,
+      label: itemUri,
       meta: {
-        parentUri: uri,
         uri: itemUri,
         type,
-        basicLabel: safeLabel,
+        basicLabel: itemUri,
       },
     };
 
