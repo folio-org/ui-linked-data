@@ -297,11 +297,22 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     const newValueKey = schemaElemUuid;
     const data = recordEntryValue;
 
-    if (type === AdvancedFieldTypeEnum.dropdown || type === AdvancedFieldTypeEnum.enumerated) {
+    if (type === AdvancedFieldTypeEnum.dropdown) {
       this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
 
       // no need to set the value if the dropdown option is selected
       return;
+    }
+
+    if (type === AdvancedFieldTypeEnum.enumerated) {
+      this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
+      await this.setUserValue({
+        valueKey: newValueKey,
+        data,
+        fieldUri: recordKey,
+        schemaUiElem,
+        id,
+      });
     }
 
     if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
