@@ -1,11 +1,15 @@
 import { useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
+import { QueryParams } from '@common/constants/routes.constants';
+import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
+import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 import { useLoadProfile } from './useLoadProfile';
+import { getProfileConfig } from '@common/helpers/profile.helper';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -23,14 +27,29 @@ type IGetProfiles = {
   };
 };
 
+type RecordData = {
+  [key: string]: RecursiveRecordSchema;
+};
+
+type IExtractProfileParams = {
+  recordData: RecordData;
+  profileIdParam: string | null;
+  typeParam: string | null;
+  editingRecordBlocks?: SelectedRecordBlocks;
+};
+
 type IBuildSchema = {
   profile: Profile;
   record: Record<string, unknown> | Array<unknown>;
+  editingRecordBlocks?: SelectedRecordBlocks;
   asClone?: boolean;
   noStateUpdate?: boolean;
 };
 
 export const useConfig = () => {
+  const [searchParams] = useSearchParams();
+  const typeParam = searchParams.get(QueryParams.Type);
+  const profileIdParam = searchParams.get(QueryParams.ProfileId);
   const { userValuesService, selectedEntriesService, schemaGeneratorService } =
     useServicesContext() as Required<ServicesParams>;
   const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState();
@@ -39,7 +58,13 @@ export const useConfig = () => {
   const isProcessingProfiles = useRef(false);
   const { loadProfile } = useLoadProfile();
 
-  const buildSchema = async ({ profile, record, asClone = false, noStateUpdate = false }: IBuildSchema) => {
+  const buildSchema = async ({
+    profile,
+    record,
+    editingRecordBlocks,
+    asClone = false,
+    noStateUpdate = false,
+  }: IBuildSchema) => {
     const initKey = uuidv4();
     const userValues: UserValues = {};
 
@@ -52,6 +77,7 @@ export const useConfig = () => {
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
       baseSchema: schemaGeneratorService.get(),
       record,
+      editingRecordBlocks,
       userValues,
       asClone,
       noStateUpdate,
@@ -68,30 +94,57 @@ export const useConfig = () => {
     return { updatedSchema, initKey };
   };
 
-  const getProfiles = async ({
-    record,
-    recordId,
-    previewParams,
-    asClone,
-    profile = {
-      ids: [1],
-    },
-  }: IGetProfiles): Promise<unknown> => {
+  const extractProfileParams = ({
+    recordData,
+    profileIdParam,
+    typeParam,
+    editingRecordBlocks,
+  }: IExtractProfileParams) => {
+    if (recordData && Object.keys(recordData).length) {
+      const block = editingRecordBlocks?.block as keyof typeof BibframeEntitiesMap;
+      const reference = editingRecordBlocks?.reference?.key;
+      const profileId = recordData[block]?.profileId as string | null | undefined;
+      const referenceProfileId = (recordData[block]?.[reference as string] as unknown as RecursiveRecordSchema[])?.[0]
+        ?.profileId as string;
+
+      return {
+        profileId,
+        referenceProfileId,
+        resourceType: BibframeEntitiesMap[block] as ResourceType,
+      };
+    }
+
+    return { profileId: profileIdParam, resourceType: typeParam as ResourceType };
+  };
+
+  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
     if (isProcessingProfiles.current && (record || recordId)) return;
 
     try {
-      let selectedProfile: Profile;
+      const recordData = record?.resource || {};
       isProcessingProfiles.current = true;
+      let editingRecordBlocks;
 
-      const loadedProfiles = await Promise.all(profile.ids?.map(profileId => loadProfile(profileId)));
-
-      if (profile.rootEntry) {
-        selectedProfile = [profile.rootEntry, ...loadedProfiles.flat()];
-      } else {
-        selectedProfile = loadedProfiles[0];
+      if (recordData && Object.keys(recordData).length) {
+        editingRecordBlocks = getEditingRecordBlocks(recordData as RecordEntry);
       }
 
-      const recordData = record?.resource || {};
+      const { profileId, referenceProfileId, resourceType } = extractProfileParams({
+        recordData,
+        profileIdParam,
+        typeParam,
+        editingRecordBlocks,
+      });
+      const profile = getProfileConfig({
+        profileName: 'Monograph', // TODO: UILD-613 - remove the Profile Name
+        resourceType,
+        profileId,
+        referenceProfileId,
+      });
+
+      const loadedProfiles = await Promise.all(profile?.ids?.map(profileId => loadProfile(profileId)));
+      const selectedProfile = profile?.rootEntry ? [profile.rootEntry, ...loadedProfiles.flat()] : loadedProfiles[0];
+
       const recordTitle = getRecordTitle(recordData as RecordEntry);
       const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
       const referenceIds = getReferenceIdsRaw(record as RecordEntry);
@@ -102,6 +155,7 @@ export const useConfig = () => {
         const { updatedSchema, initKey } = await buildSchema({
           profile: selectedProfile,
           record: recordData,
+          editingRecordBlocks,
           asClone,
           noStateUpdate: previewParams?.noStateUpdate,
         });
