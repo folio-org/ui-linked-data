@@ -3,7 +3,6 @@ import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
-import { getProfileConfig } from '@common/helpers/profile.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
@@ -32,7 +31,6 @@ export const Edit = () => {
   const cloneOfParam = queryParams.get(QueryParams.CloneOf);
   const typeParam = queryParams.get(QueryParams.Type);
   const refParam = queryParams.get(QueryParams.Ref);
-  const profileIdParam = queryParams.get(QueryParams.ProfileId);
 
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
@@ -61,16 +59,8 @@ export const Edit = () => {
 
       try {
         setIsLoading(true);
-        const params = {
-          // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
-          profile: getProfileConfig({
-            profileName: 'Monograph',
-            resourceType: typeParam as ResourceType,
-            profileId: Number(profileIdParam),
-          }),
-        };
 
-        await getProfiles(params);
+        await getProfiles({});
         setEntitesBFIds();
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
@@ -134,17 +124,10 @@ export const Edit = () => {
         }
 
         const typedRecord = record as unknown as RecordEntry;
-        const getProfilesParams = {
-          // TODO: UILD-575 - remove the hardcoded value once the profile metadata is set in the store
-          profile: getProfileConfig({
-            profileName: 'Monograph',
-            resourceType: typeParam as ResourceType,
-            profileId: Number(profileIdParam),
-          }),
-          record: typedRecord,
-        };
 
-        await getProfiles(getProfilesParams);
+        await getProfiles({
+          record: typedRecord,
+        });
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {

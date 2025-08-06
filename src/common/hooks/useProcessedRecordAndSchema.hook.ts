@@ -1,11 +1,7 @@
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
-import {
-  getAdjustedRecordContents,
-  getEditingRecordBlocks,
-  wrapRecordValuesWithCommonContainer,
-} from '@common/helpers/record.helper';
+import { getAdjustedRecordContents, wrapRecordValuesWithCommonContainer } from '@common/helpers/record.helper';
 import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
@@ -15,6 +11,10 @@ import { useInputsState, useStatusState } from '@src/store';
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;
   record: Record<string, unknown> | Array<unknown>;
+  editingRecordBlocks?: {
+    block: string | undefined;
+    reference: RecordReference | undefined;
+  };
   userValues: UserValues;
   asClone?: boolean;
   noStateUpdate?: boolean;
@@ -28,7 +28,14 @@ export const useProcessedRecordAndSchema = () => {
     useServicesContext() as Required<ServicesParams>;
 
   const getProcessedRecordAndSchema = useCallback(
-    async ({ baseSchema, record, userValues, asClone = false, noStateUpdate }: IGetProcessedRecordAndSchema) => {
+    async ({
+      baseSchema,
+      record,
+      editingRecordBlocks,
+      userValues,
+      asClone = false,
+      noStateUpdate,
+    }: IGetProcessedRecordAndSchema) => {
       let updatedSchema = baseSchema;
       let updatedUserValues = userValues;
       let selectedRecordBlocks = undefined;
@@ -36,7 +43,7 @@ export const useProcessedRecordAndSchema = () => {
       try {
         if (record && Object.keys(record).length) {
           const typedRecord = record as RecordEntry;
-          const { block, reference } = getEditingRecordBlocks(typedRecord);
+          const { block, reference } = editingRecordBlocks ?? { block: undefined, reference: undefined };
           const { record: adjustedRecord } = getAdjustedRecordContents({
             record: typedRecord,
             block,
