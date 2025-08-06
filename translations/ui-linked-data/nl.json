@@ -257,5 +257,10 @@
     "ld.importFailed": "Import mislukt",
     "ld.importDone": "Gedaan",
     "ld.importTryAgain": "Probeer opnieuw",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "Import is niet op tijd voltooid",
+    "ld.errorLoadingProfiles": "Fout bij het invoeren van profielen",
+    "ld.resourceProfile": "Hulpbronprofiel",
+    "ld.modal.chooseResourceProfile.subtitle": "Kies een resourceprofiel om te beginnen.",
+    "ld.modal.chooseResourceProfile.setAsDefault": "Ingesteld als mijn standaard",
+    "ld.create.base": "Aanmaken"
 }

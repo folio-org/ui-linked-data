@@ -257,5 +257,10 @@
     "ld.importFailed": "导入失败",
     "ld.importDone": "完成",
     "ld.importTryAgain": "再试一次",
-    "ld.importTimedout": "Import failed to complete in time"
+    "ld.importTimedout": "导入未能及时完成",
+    "ld.errorLoadingProfiles": "加载配置文件时出错",
+    "ld.resourceProfile": "资源配置文件",
+    "ld.modal.chooseResourceProfile.subtitle": "选择资源配置文件即可开始。",
+    "ld.modal.chooseResourceProfile.setAsDefault": "设置为我的默认设置",
+    "ld.create.base": "创建"
 }
