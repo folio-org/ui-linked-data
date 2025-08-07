@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { QueryParams } from '@common/constants/routes.constants';
 import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
-import { ResourceType } from '@common/constants/record.constants';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';

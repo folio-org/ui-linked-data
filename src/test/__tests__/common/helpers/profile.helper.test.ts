@@ -31,11 +31,11 @@ describe('profile.helper', () => {
       });
     });
 
-    test('returns work and instance profile configuration when ResourceType is instance', () => {
+    test('returns instance profile configuration when ResourceType is instance', () => {
       const result = getProfileConfig({ profileName: 'Monograph', resourceType: ResourceType.instance });
 
       expect(result).toEqual({
-        ids: [1, 2],
+        ids: [2],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -56,7 +56,7 @@ describe('profile.helper', () => {
     });
 
     test('uses provided profileId when ResourceType is instance', () => {
-      const customProfileId = 42;
+      const customProfileId = '42';
       const result = getProfileConfig({
         profileName: 'Monograph',
         resourceType: ResourceType.instance,
@@ -64,7 +64,26 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [1, customProfileId],
+        ids: [Number(customProfileId)],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
+    test('uses provided referenceProfileId', () => {
+      const customProfileId = '42';
+      const referenceProfileId = '123';
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        resourceType: ResourceType.instance,
+        profileId: customProfileId,
+        referenceProfileId,
+      });
+
+      expect(result).toEqual({
+        ids: [Number(customProfileId), Number(referenceProfileId)],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -80,24 +99,7 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [1, 2],
-        rootEntry: {
-          id: 'root',
-          type: 'root',
-        },
-      });
-    });
-
-    test('ignores profileId when ResourceType is work', () => {
-      const customProfileId = 42;
-      const result = getProfileConfig({
-        profileName: 'Monograph',
-        resourceType: ResourceType.work,
-        profileId: customProfileId,
-      });
-
-      expect(result).toEqual({
-        ids: [1],
+        ids: [2],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -106,7 +108,7 @@ describe('profile.helper', () => {
     });
 
     test('ignores profileId when ResourceType is not specified', () => {
-      const customProfileId = 42;
+      const customProfileId = '42';
       const result = getProfileConfig({
         profileName: 'Monograph',
         profileId: customProfileId,
