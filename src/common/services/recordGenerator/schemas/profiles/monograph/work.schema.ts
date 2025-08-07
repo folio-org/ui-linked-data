@@ -42,7 +42,7 @@ export const monographWorkRecordSchema: RecordSchema = {
 
       [BFLITE_URIS.GOVERNMENT_PUBLICATION]: createArrayObjectProperty(linkAndTermProperties),
 
-      [BFLITE_URIS.SUPPLEMENTARY_CONTENT]: createArrayObjectProperty(linkAndTermProperties),
+      [BFLITE_URIS.MARC_SUPPLEMENTARY_CONTENT]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.DATE_START]: stringArrayProperty,
 
