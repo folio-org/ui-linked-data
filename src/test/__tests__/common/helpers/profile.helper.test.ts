@@ -1,5 +1,5 @@
 import { ResourceType } from '@common/constants/record.constants';
-import { getProfileConfig } from '@common/helpers/profile.helper';
+import { getProfileConfig, getMappedResourceType } from '@common/helpers/profile.helper';
 
 jest.mock('@src/configs', () => ({
   PROFILES_CONFIG: {
@@ -127,6 +127,32 @@ describe('profile.helper', () => {
       expect(() => {
         getProfileConfig({ profileName: 'non-existent-profile' as any, resourceType: ResourceType.work });
       }).toThrow('Profile with ID non-existent-profile does not exist in the configuration.');
+    });
+  });
+
+  describe('getMappedResourceType', () => {
+    test('returns ResourceType.work when resourceTypeValue is "work"', () => {
+      const result = getMappedResourceType('work');
+
+      expect(result).toEqual(ResourceType.work);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is "instance"', () => {
+      const result = getMappedResourceType('instance');
+
+      expect(result).toEqual(ResourceType.instance);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is null', () => {
+      const result = getMappedResourceType(null);
+
+      expect(result).toEqual(ResourceType.instance);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is any other string', () => {
+      const result = getMappedResourceType('any-other-value');
+      
+      expect(result).toEqual(ResourceType.instance);
     });
   });
 });
