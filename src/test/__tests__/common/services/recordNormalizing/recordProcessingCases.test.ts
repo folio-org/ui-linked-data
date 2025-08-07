@@ -20,6 +20,7 @@ describe('recordProcessingCases', () => {
   const noteNonBFUri = '_notes';
   const nameFieldName = '_name';
   const labelFieldName = 'label';
+  const languagesNonBFUri = '_languages';
 
   mockedBFLiteUris({ LINK: linkBFLiteUri, LABEL: labelBFLiteUri, CREATOR: creatorBFLiteUri });
 
@@ -142,6 +143,65 @@ describe('recordProcessingCases', () => {
       };
 
       RecordProcessingCases.notesMapping(record, blockKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('languagesMapping', () => {
+    test('updates a record with "_languages" objects', () => {
+      const record = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+              _codes: [
+                {
+                  [linkBFLiteUri]: ['testLanguageLink_1'],
+                  [labelBFLiteUri]: ['testLanguageLabel_1'],
+                }
+              ],
+              _types: ['testLanguageType_1'],
+            },
+            {
+              _codes: [
+                {
+                  [linkBFLiteUri]: ['testLanguageLink_2'],
+                  [labelBFLiteUri]: ['testLanguageLabel_2'],
+                }
+              ],
+              _types: ['testLanguageType_2'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+               _codes: [
+                {
+                  [linkBFLiteUri]: ['testLanguageLink_1'],
+                  [labelBFLiteUri]: ['testLanguageLabel_1'],
+                }
+              ],
+              _types: 'testLanguageType_1',
+
+            },
+            {
+              _codes: [
+                {
+                  [linkBFLiteUri]: ['testLanguageLink_2'],
+                  [labelBFLiteUri]: ['testLanguageLabel_2'],
+                }
+              ],
+              _types: 'testLanguageType_2',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.languagesMapping(record, blockKey);
 
       expect(record).toEqual(testResult);
     });

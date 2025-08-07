@@ -47,11 +47,12 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
         </div>
         {children && (
           <div className="children-container" data-testid={htmlId}>
-            {type === AdvancedFieldType.dropdown && hasDuplicateGroupButton && (
-              <div className="label">
-                <FormattedMessage id="ld.type" />
-              </div>
-            )}
+            {(type === AdvancedFieldType.dropdown || type === AdvancedFieldType.enumerated) &&
+              hasDuplicateGroupButton && (
+                <div className="label">
+                  <FormattedMessage id="ld.type" />
+                </div>
+              )}
             {children}
           </div>
         )}

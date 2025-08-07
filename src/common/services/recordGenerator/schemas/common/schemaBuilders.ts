@@ -48,6 +48,40 @@ export function createNotesProperty(mappingReference: Record<string, { uri?: str
   };
 }
 
+export function createLanguagesProperty() {
+  return {
+    type: RecordSchemaEntryType.array,
+    value: RecordSchemaEntryType.object,
+    properties: {
+      _types: {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.string,
+        options: {
+          defaultValue: BFLITE_URIS.LANGUAGE,
+          linkedProperty: '_codes',
+        },
+      },
+      _codes: {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LINK]: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          [BFLITE_URIS.TERM]: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
+        options: {
+          includeTerm: true,
+        },
+      },
+    },
+  };
+}
+
 export function createStringArrayProperty(options = {}) {
   return {
     type: RecordSchemaEntryType.array,

@@ -5,7 +5,10 @@ import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constan
 export const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
   const { children, type } = entry;
 
-  return (!children?.length || type === AdvancedFieldType.dropdown || type === AdvancedFieldType.group) &&
+  return (!children?.length ||
+    type === AdvancedFieldType.dropdown ||
+    type === AdvancedFieldType.enumerated ||
+    type === AdvancedFieldType.group) &&
     type === AdvancedFieldType.group
     ? level === GROUP_BY_LEVEL
     : level !== GROUP_BY_LEVEL;
@@ -46,6 +49,7 @@ export const getPreviewFieldsConditions = ({
   const shouldRenderLabelOrPlaceholders =
     (!(isEntity && hideEntities) && isPreviewable && isGroupable) ||
     type === AdvancedFieldType.dropdown ||
+    type === AdvancedFieldType.enumerated ||
     (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
     isBranchEndWithoutValues;
   const hasOnlyDropdownChildren =
@@ -54,7 +58,8 @@ export const getPreviewFieldsConditions = ({
   const shouldRenderValuesOrPlaceholders = !hasChildren || hasOnlyDropdownChildren;
   const shouldRenderPlaceholders =
     (isPreviewable && isGroupable && !isOnBranchWithUserValue) || !isOnBranchWithUserValue;
-  const isDependentDropdown = type === AdvancedFieldType.dropdown && !!linkedEntry?.controlledBy;
+  const isDependentDropdown =
+    (type === AdvancedFieldType.dropdown || type === AdvancedFieldType.enumerated) && !!linkedEntry?.controlledBy;
   const displayNameWithAltValue =
     altDisplayNames?.[displayName] ?? PREVIEW_ALT_DISPLAY_LABELS[displayName] ?? displayName;
   const isBlock = level === GROUP_BY_LEVEL && shouldRenderLabelOrPlaceholders;

@@ -39,6 +39,22 @@ describe('UnwrappedDropdownOptionProcessor', () => {
       expect(result).toBe(true);
     });
 
+    it('returns true for enumerated type entry with hiddenWrapper option set to true', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          hiddenWrapper: true,
+        },
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(true);
+    });
+
     it('returns false for dropdown type entry without hiddenWrapper option', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
@@ -52,9 +68,38 @@ describe('UnwrappedDropdownOptionProcessor', () => {
       expect(result).toBe(false);
     });
 
+    it('returns false for enumerated type entry without hiddenWrapper option', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(false);
+    });
+
     it('returns false for dropdown type entry with hiddenWrapper option set to false', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.dropdown,
+      } as SchemaEntry;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          hiddenWrapper: false,
+        },
+      };
+
+      const result = processor.canProcess(profileSchemaEntry, recordSchemaEntry);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false for enumerated type entry with hiddenWrapper option set to false', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.enumerated,
       } as SchemaEntry;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.object,

@@ -38,6 +38,17 @@ export const notesMapping = (record: RecordEntry, blockKey: string) => {
   })) as unknown as RecursiveRecordSchema;
 };
 
+export const languagesMapping = (record: RecordEntry, blockKey: string) => {
+  const selector = '_languages';
+
+  if (!record[blockKey][selector]) return;
+
+  record[blockKey][selector] = (record[blockKey][selector] as unknown as RecordBasic[]).map(recordEntry => ({
+    ...recordEntry,
+    _types: recordEntry._types[0],
+  })) as unknown as RecursiveRecordSchema;
+};
+
 export const extractValue = (record: RecordEntry, blockKey: string, key: string, source: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordWithNestedFieldsDTO).map(
     recordEntry => recordEntry[source],

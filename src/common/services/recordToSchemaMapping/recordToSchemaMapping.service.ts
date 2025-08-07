@@ -109,7 +109,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private async traverseEntries({ recordGroup, schemaEntry }: { recordGroup: unknown; schemaEntry?: SchemaEntry }) {
     if (!schemaEntry) return;
 
-    const isDropdown = schemaEntry.type === AdvancedFieldTypeEnum.dropdown;
+    const isDropdown =
+      schemaEntry.type === AdvancedFieldTypeEnum.dropdown || schemaEntry.type === AdvancedFieldTypeEnum.enumerated;
 
     if (isDropdown) {
       await this.traverseDropdownOptions(recordGroup, schemaEntry);
@@ -301,6 +302,17 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
       // no need to set the value if the dropdown option is selected
       return;
+    }
+
+    if (type === AdvancedFieldTypeEnum.enumerated) {
+      this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
+      await this.setUserValue({
+        valueKey: newValueKey,
+        data,
+        fieldUri: recordKey,
+        schemaUiElem,
+        id,
+      });
     }
 
     if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {

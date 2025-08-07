@@ -5,7 +5,8 @@ import { BaseDropdownProcessor } from './baseDropdownProcessor';
 export class DropdownProcessor extends BaseDropdownProcessor {
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
     return (
-      profileSchemaEntry.type === AdvancedFieldType.dropdown &&
+      (profileSchemaEntry.type === AdvancedFieldType.dropdown ||
+        profileSchemaEntry.type === AdvancedFieldType.enumerated) &&
       !recordSchemaEntry.options?.hiddenWrapper &&
       !recordSchemaEntry.options?.flattenDropdown
     );

@@ -4,7 +4,11 @@ import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class UnwrappedDropdownOptionProcessor extends BaseDropdownProcessor {
   canProcess(profileSchemaEntry: SchemaEntry, recordSchemaEntry: RecordSchemaEntry) {
-    return profileSchemaEntry.type === AdvancedFieldType.dropdown && recordSchemaEntry.options?.hiddenWrapper === true;
+    return (
+      (profileSchemaEntry.type === AdvancedFieldType.dropdown ||
+        profileSchemaEntry.type === AdvancedFieldType.enumerated) &&
+      recordSchemaEntry.options?.hiddenWrapper === true
+    );
   }
 
   process(data: ProcessContext) {

@@ -6,6 +6,7 @@ const DISABLED_FIELD_TYPES = [
   AdvancedFieldType.simple,
   AdvancedFieldType.complex,
   AdvancedFieldType.dropdown,
+  AdvancedFieldType.enumerated,
 ];
 
 const DISABLED_PARENT_BFIDS = [PROFILE_BFIDS.WORK];

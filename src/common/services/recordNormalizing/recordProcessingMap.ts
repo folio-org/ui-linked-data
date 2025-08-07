@@ -6,6 +6,7 @@ import {
   notesMapping,
   extractDropdownOption,
   processComplexLookup,
+  languagesMapping,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -45,6 +46,9 @@ export const RECORD_NORMALIZING_CASES = {
   },
   _contributorReference: {
     process: processContributorComplexLookup,
+  },
+  _languages: {
+    process: languagesMapping
   },
   [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
