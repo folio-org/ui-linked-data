@@ -33,3 +33,7 @@ export const getProfileConfig = ({
 
   return { ids, rootEntry: rootEntry as ProfileNode };
 };
+
+export const getMappedResourceType = (resourceTypeValue: string | null) => {
+  return resourceTypeValue === 'work' ? ResourceType.work : ResourceType.instance;
+};

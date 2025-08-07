@@ -3,13 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { QueryParams } from '@common/constants/routes.constants';
 import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
+import { ResourceType } from '@common/constants/record.constants';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 import { useLoadProfile } from './useLoadProfile';
-import { getProfileConfig } from '@common/helpers/profile.helper';
+import { getMappedResourceType, getProfileConfig } from '@common/helpers/profile.helper';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -106,15 +107,20 @@ export const useConfig = () => {
       const profileId = recordData[block]?.profileId as string | null | undefined;
       const referenceProfileId = (recordData[block]?.[reference as string] as unknown as RecursiveRecordSchema[])?.[0]
         ?.profileId as string;
+      const resourceTypeValue = BibframeEntitiesMap[block];
+      const mappedResourceType = getMappedResourceType(resourceTypeValue);
 
       return {
         profileId,
         referenceProfileId,
-        resourceType: BibframeEntitiesMap[block] as ResourceType,
+        resourceType: mappedResourceType,
       };
     }
 
-    return { profileId: profileIdParam, resourceType: typeParam as ResourceType };
+    return {
+      profileId: profileIdParam,
+      resourceType: getMappedResourceType(typeParam),
+    };
   };
 
   const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
@@ -150,7 +156,9 @@ export const useConfig = () => {
       const referenceIds = getReferenceIdsRaw(record as RecordEntry);
 
       if (selectedProfile) {
-        !previewParams?.noStateUpdate && setSelectedProfile(selectedProfile);
+        if (!previewParams?.noStateUpdate) {
+          setSelectedProfile(selectedProfile);
+        }
 
         const { updatedSchema, initKey } = await buildSchema({
           profile: selectedProfile,
