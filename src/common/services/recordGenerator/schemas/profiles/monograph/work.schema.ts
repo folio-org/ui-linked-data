@@ -40,6 +40,8 @@ export const monographWorkRecordSchema: RecordSchema = {
         [BFLITE_URIS.MARC_PARALLEL_TITLE]: createObjectProperty(extendedTitleProperties),
       }),
 
+      [BFLITE_URIS.ILLUSTRATIONS]: createArrayObjectProperty(linkAndTermProperties),
+
       [BFLITE_URIS.GOVERNMENT_PUBLICATION]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.MARC_SUPPLEMENTARY_CONTENT]: createArrayObjectProperty(linkAndTermProperties),
