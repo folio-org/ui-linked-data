@@ -96,6 +96,8 @@ export const monographWorkRecordSchema: RecordSchema = {
       [BFLITE_URIS.LANGUAGES]: createLanguagesProperty(),
 
       [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
+
+      [BFLITE_URIS.MARC_CHARACTERISTIC]: createArrayObjectProperty(linkAndTermProperties),
     },
   },
 };
