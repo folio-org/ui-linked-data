@@ -8,6 +8,7 @@ export enum AdvancedFieldType {
   groupComplex = 'groupComplex',
   hidden = 'hidden',
   dropdown = 'dropdown',
+  enumerated = 'enumerated',
   dropdownOption = 'dropdownOption',
   __fallback = '__fallback',
 }
@@ -20,7 +21,7 @@ export enum SchemaControlType {
 
 const BASE_UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
 
-export const UI_CONTROLS_LIST = [...BASE_UI_CONTROLS_LIST, AdvancedFieldType.dropdown];
+export const UI_CONTROLS_LIST = [...BASE_UI_CONTROLS_LIST, AdvancedFieldType.dropdown, AdvancedFieldType.enumerated];
 
 export const NOT_PREVIEWABLE_TYPES = [
   AdvancedFieldType.profile,

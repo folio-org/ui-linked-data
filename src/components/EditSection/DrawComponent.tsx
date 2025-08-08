@@ -80,7 +80,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
     );
   }
 
-  if (type === AdvancedFieldType.dropdown && children) {
+  if ((type === AdvancedFieldType.dropdown || type === AdvancedFieldType.enumerated) && children) {
     const options = children
       .map(id => schema.get(id))
       .map(entry => ({
@@ -96,6 +96,19 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       selectedEntriesService.addNew(selectedOption?.id, option.id);
 
       setSelectedEntries(selectedEntriesService.get());
+
+      if (type === AdvancedFieldType.enumerated) {
+        onChange(uuid, [
+          {
+            id: option.id,
+            label: option.label,
+            meta: {
+              uri: option.value,
+              basicLabel: option.label,
+            },
+          },
+        ]);
+      }
     };
 
     return (

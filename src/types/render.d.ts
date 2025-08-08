@@ -30,6 +30,7 @@ type AdvancedFieldType =
   | 'groupComplex'
   | 'hidden'
   | 'dropdown'
+  | 'enumerated'
   | 'dropdownOption';
 
 type RenderedFieldValue = {

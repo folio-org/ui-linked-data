@@ -162,6 +162,41 @@ const schema = new Map([
       uuid: 'uuid9',
     },
   ],
+  [
+    'uuid10',
+    {
+      bfid: 'uuid10Bfid',
+      displayName: 'uuid10',
+      uriBFLite: 'uuid10Uri',
+      type: AdvancedFieldType.enumerated,
+      path: ['uuid0', 'uuid2', 'uuid10'],
+      uuid: 'uuid10',
+      children: ['uuid11', 'uuid12'],
+      constraints: { repeatable: true },
+    },
+  ],
+  [
+    'uuid11',
+    {
+      bfid: 'uuid11Bfid',
+      uriBFLite: 'http://bibfra.me/vocab/lite/language',
+      displayName: 'uuid11',
+      type: AdvancedFieldType.dropdownOption,
+      path: ['uuid0', 'uuid2', 'uuid10', 'uuid11'],
+      uuid: 'uuid11',
+    },
+  ],
+  [
+    'uuid12',
+    {
+      bfid: 'uuid12Bfid',
+      uriBFLite: 'http://bibfra.me/vocab/lite/summaryLanguage',
+      displayName: 'uuid12',
+      type: AdvancedFieldType.dropdownOption,
+      path: ['uuid0', 'uuid2', 'uuid10', 'uuid12'],
+      uuid: 'uuid12',
+    },
+  ],
 ]);
 
 const monograph = {
@@ -220,10 +255,19 @@ describe('EditSection', () => {
   });
 
   test('renders dropdown field', async () => {
-    const { findByText } = renderScreen();
+    const { getByTestId, findByText } = renderScreen();
 
-    expect(await findByText('ld.type')).toBeInTheDocument();
+    const section = await getByTestId('field-with-meta-controls-uuid6');
+    expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid7')).toBeInTheDocument();
+  });
+
+  test('renders enumerated field', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    const section = await getByTestId('field-with-meta-controls-uuid10')
+    expect(await within(section).findByText('ld.type')).toBeInTheDocument();
+    expect(await findByText('uuid11')).toBeInTheDocument();
   });
 
   test('renders group component', async () => {
@@ -238,6 +282,15 @@ describe('EditSection', () => {
     fireEvent.change(getByTestId('literal-field'), { target: { value: 'sampleValue' } });
 
     await waitFor(async () => expect(await findByDisplayValue('sampleValue')).toBeInTheDocument());
+  });
+
+  test('calls onchange for enumerated and sets values', async () => {
+    const { getByTestId, findByDisplayValue } = renderScreen();
+
+    const section = await getByTestId('field-with-meta-controls-uuid10')
+    fireEvent.change(within(section).getByTestId('dropdown-field'), { target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' } });
+
+    await waitFor(async () => expect(await findByDisplayValue('uuid12')).toBeInTheDocument());
   });
 
   describe('duplicate groups', () => {

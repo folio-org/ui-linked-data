@@ -3,6 +3,7 @@ import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/ui
 import { ComplexLookupUserValueService, LiteralUserValueService, SimpleLookupUserValueService } from './userValueTypes';
 import { IUserValueType } from './userValueTypes/userValueType.interface';
 import { IUserValues } from './userValues.interface';
+import { EnumeratedUserValueService } from './userValueTypes/enumerated';
 
 export class UserValuesService implements IUserValues {
   private generatedValue?: UserValue;
@@ -13,6 +14,7 @@ export class UserValuesService implements IUserValues {
   private literalUserValueService?: IUserValueType;
   private simpleLookupUserValueService?: IUserValueType;
   private complexLookupUserValueService?: IUserValueType;
+  private enumeratedUserValueService?: IUserValueType;
 
   constructor(
     private userValues: UserValues,
@@ -52,6 +54,7 @@ export class UserValuesService implements IUserValues {
     this.literalUserValueService = new LiteralUserValueService();
     this.simpleLookupUserValueService = new SimpleLookupUserValueService(this.apiClient, this.cacheService);
     this.complexLookupUserValueService = new ComplexLookupUserValueService();
+    this.enumeratedUserValueService = new EnumeratedUserValueService();
   }
 
   private selectFactoryByType() {
@@ -64,6 +67,9 @@ export class UserValuesService implements IUserValues {
         break;
       case AdvancedFieldTypeEnum.complex:
         this.userValueFactory = this.complexLookupUserValueService;
+        break;
+      case AdvancedFieldTypeEnum.enumerated:
+        this.userValueFactory = this.enumeratedUserValueService;
         break;
       default:
         this.userValueFactory = this.literalUserValueService;
