@@ -34,19 +34,19 @@ export class RecordGenerator implements IRecordGenerator {
     this.selectedEntries = [];
   }
 
-  generate(data: IRecordGeneratorData, profileType: ProfileType = 'Monograph', entityType: ResourceType = 'work') {
-    const recordSchema = this.getValidatedRecordSchema(profileType, entityType);
+  generate(data: IRecordGeneratorData, entityType: ResourceType = 'work') {
+    const recordSchema = this.getValidatedRecordSchema(entityType);
 
     this.init({ ...data, recordSchema });
 
     return this.processRecordSchema();
   }
 
-  private getValidatedRecordSchema(profileType: ProfileType, entityType: ResourceType) {
-    const recordSchema = RecordSchemaFactory.getRecordSchema(profileType, entityType);
+  private getValidatedRecordSchema(entityType: ResourceType) {
+    const recordSchema = RecordSchemaFactory.getRecordSchema(entityType);
 
     if (!recordSchema) {
-      throw new Error(`Record schema not found for profile type: ${profileType}, entity type: ${entityType}`);
+      throw new Error(`Record schema not found for entity type: ${entityType}`);
     }
 
     return recordSchema;
