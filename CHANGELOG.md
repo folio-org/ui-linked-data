@@ -22,9 +22,10 @@
 * Add support for dates of publication note (MARC 362). Refs [UILD-606].
 * Add support for book format. Refs [UILD-607].
 * Add support for supplementary content. Refs [UILD-611].
-* Added language subclass support.  Refs [UILD-564].
+* Add language subclass support.  Refs [UILD-564].
 * Open Instance using associated profile's Edit/Display form. Refs [UILD-575].
 * Add support for illustrative content. Refs [UILD-610].
+* Add characteristic / serial publication type support. Refs [UILD-604].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -51,6 +52,7 @@
 [UILD-564]:https://folio-org.atlassian.net/browse/UILD-564
 [UILD-575]:https://folio-org.atlassian.net/browse/UILD-575
 [UILD-610]:https://folio-org.atlassian.net/browse/UILD-610
+[UILD-604]:https://folio-org.atlassian.net/browse/UILD-604
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

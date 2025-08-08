@@ -69,6 +69,7 @@ export const BFLITE_URIS = {
   VOLUME: 'http://bibfra.me/vocab/marc/volume',
   BOOK_FORMAT: 'http://bibfra.me/vocab/marc/bookFormat',
   ILLUSTRATIONS: 'http://bibfra.me/vocab/marc/illustrations',
+  MARC_CHARACTERISTIC: 'http://bibfra.me/vocab/marc/characteristic',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
