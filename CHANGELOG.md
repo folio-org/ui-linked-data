@@ -23,6 +23,7 @@
 * Add support for book format. Refs [UILD-607].
 * Add support for supplementary content. Refs [UILD-611].
 * Add language subclass support.  Refs [UILD-564].
+* Open Instance using associated profile's Edit/Display form. Refs [UILD-575].
 * Add characteristic / serial publication type support. Refs [UILD-604].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -48,6 +49,7 @@
 [UILD-607]:https://folio-org.atlassian.net/browse/UILD-607
 [UILD-611]:https://folio-org.atlassian.net/browse/UILD-611
 [UILD-564]:https://folio-org.atlassian.net/browse/UILD-564
+[UILD-575]:https://folio-org.atlassian.net/browse/UILD-575
 [UILD-604]:https://folio-org.atlassian.net/browse/UILD-604
 
 ## 1.0.5 (2025-04-30)

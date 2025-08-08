@@ -5,10 +5,12 @@ export const getProfileConfig = ({
   profileName,
   resourceType,
   profileId,
+  referenceProfileId,
 }: {
   profileName: keyof typeof PROFILES_CONFIG;
   resourceType?: ResourceType;
-  profileId?: number | null;
+  profileId?: string | null;
+  referenceProfileId?: string;
 }) => {
   if (!PROFILES_CONFIG[profileName]) {
     throw new Error(`Profile with ID ${profileName} does not exist in the configuration.`);
@@ -18,12 +20,20 @@ export const getProfileConfig = ({
   let ids: number[] = [];
 
   if (resourceType === ResourceType.work) {
-    ids = [api.work];
+    ids = typeof profileId === 'string' ? [Number(profileId)] : [api.work];
   } else if (resourceType === ResourceType.instance) {
-    ids = [api.work, profileId ?? api.instance];
+    ids = typeof profileId === 'string' ? [Number(profileId)] : [api.instance];
   } else {
     ids = [api.profile];
   }
 
+  if (referenceProfileId) {
+    ids.push(Number(referenceProfileId));
+  }
+
   return { ids, rootEntry: rootEntry as ProfileNode };
+};
+
+export const getMappedResourceType = (resourceTypeValue: string | null) => {
+  return resourceTypeValue === 'work' ? ResourceType.work : ResourceType.instance;
 };

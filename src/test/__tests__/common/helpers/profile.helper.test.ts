@@ -1,5 +1,5 @@
 import { ResourceType } from '@common/constants/record.constants';
-import { getProfileConfig } from '@common/helpers/profile.helper';
+import { getProfileConfig, getMappedResourceType } from '@common/helpers/profile.helper';
 
 jest.mock('@src/configs', () => ({
   PROFILES_CONFIG: {
@@ -31,11 +31,11 @@ describe('profile.helper', () => {
       });
     });
 
-    test('returns work and instance profile configuration when ResourceType is instance', () => {
+    test('returns instance profile configuration when ResourceType is instance', () => {
       const result = getProfileConfig({ profileName: 'Monograph', resourceType: ResourceType.instance });
 
       expect(result).toEqual({
-        ids: [1, 2],
+        ids: [2],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -56,7 +56,7 @@ describe('profile.helper', () => {
     });
 
     test('uses provided profileId when ResourceType is instance', () => {
-      const customProfileId = 42;
+      const customProfileId = '42';
       const result = getProfileConfig({
         profileName: 'Monograph',
         resourceType: ResourceType.instance,
@@ -64,7 +64,26 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [1, customProfileId],
+        ids: [Number(customProfileId)],
+        rootEntry: {
+          id: 'root',
+          type: 'root',
+        },
+      });
+    });
+
+    test('uses provided referenceProfileId', () => {
+      const customProfileId = '42';
+      const referenceProfileId = '123';
+      const result = getProfileConfig({
+        profileName: 'Monograph',
+        resourceType: ResourceType.instance,
+        profileId: customProfileId,
+        referenceProfileId,
+      });
+
+      expect(result).toEqual({
+        ids: [Number(customProfileId), Number(referenceProfileId)],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -80,24 +99,7 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [1, 2],
-        rootEntry: {
-          id: 'root',
-          type: 'root',
-        },
-      });
-    });
-
-    test('ignores profileId when ResourceType is work', () => {
-      const customProfileId = 42;
-      const result = getProfileConfig({
-        profileName: 'Monograph',
-        resourceType: ResourceType.work,
-        profileId: customProfileId,
-      });
-
-      expect(result).toEqual({
-        ids: [1],
+        ids: [2],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -106,7 +108,7 @@ describe('profile.helper', () => {
     });
 
     test('ignores profileId when ResourceType is not specified', () => {
-      const customProfileId = 42;
+      const customProfileId = '42';
       const result = getProfileConfig({
         profileName: 'Monograph',
         profileId: customProfileId,
@@ -125,6 +127,32 @@ describe('profile.helper', () => {
       expect(() => {
         getProfileConfig({ profileName: 'non-existent-profile' as any, resourceType: ResourceType.work });
       }).toThrow('Profile with ID non-existent-profile does not exist in the configuration.');
+    });
+  });
+
+  describe('getMappedResourceType', () => {
+    test('returns ResourceType.work when resourceTypeValue is "work"', () => {
+      const result = getMappedResourceType('work');
+
+      expect(result).toEqual(ResourceType.work);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is "instance"', () => {
+      const result = getMappedResourceType('instance');
+
+      expect(result).toEqual(ResourceType.instance);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is null', () => {
+      const result = getMappedResourceType(null);
+
+      expect(result).toEqual(ResourceType.instance);
+    });
+
+    test('returns ResourceType.instance when resourceTypeValue is any other string', () => {
+      const result = getMappedResourceType('any-other-value');
+      
+      expect(result).toEqual(ResourceType.instance);
     });
   });
 });
