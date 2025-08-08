@@ -1,5 +1,5 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { IValueFormatter } from './valueFormater.interface';
+import { IValueFormatter } from './valueFormatter.interface';
 
 export class DropdownValueFormatter implements IValueFormatter {
   formatLiteral(value: UserValueContents) {

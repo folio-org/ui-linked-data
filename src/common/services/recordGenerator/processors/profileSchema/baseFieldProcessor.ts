@@ -41,6 +41,7 @@ export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {
       case AdvancedFieldType.literal:
         return this.valueFormat.formatLiteral(value);
       case AdvancedFieldType.simple:
+      case AdvancedFieldType.enumerated:
         return this.valueFormat.formatSimple(value, recordSchemaEntry);
       case AdvancedFieldType.complex:
         return this.valueFormat.formatComplex(value);

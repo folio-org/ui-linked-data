@@ -1,3 +1,4 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import { GroupValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/groupValueFormatter';
 import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
 
@@ -113,6 +114,37 @@ describe('GroupValueFormatter', () => {
       const result = formatter.formatSimple(value, recordSchemaEntry);
 
       expect(result).toEqual(['test_uri']);
+    });
+
+    it('returns uri when recordSchemaEntry.options includeTerm is false', () => {
+      const value: UserValueContents = { label: 'test label', meta: { uri: 'test_uri' } };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: false,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual(['test_uri']);
+    });
+
+    it('returns object with link and term when recordSchemaEntry.options has includeTerm', () => {
+      const value: UserValueContents = { label: 'test label', meta: { uri: 'test_uri' } };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: true,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test label'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
     });
   });
   describe('formatComplex', () => {

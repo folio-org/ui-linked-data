@@ -32,6 +32,7 @@ export const BFLITE_URIS = {
   COPYRIGHT: 'http://bibfra.me/vocab/marc/copyright',
   ISSUANCE: 'http://bibfra.me/vocab/marc/issuance',
   LANGUAGE: 'http://bibfra.me/vocab/lite/language',
+  LANGUAGES: '_languages',
   DATE: 'http://bibfra.me/vocab/lite/date',
   MARC_VARIANT_TITLE: 'http://bibfra.me/vocab/marc/VariantTitle',
   MARC_PARALLEL_TITLE: 'http://bibfra.me/vocab/marc/ParallelTitle',

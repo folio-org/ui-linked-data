@@ -100,6 +100,37 @@ describe('UserValuesService', () => {
     expect(result).toEqual(testResult);
   });
 
+  test('sets a user value for Enumerated field', async () => {
+    const testResult = {
+      testKey_2: {
+        contents: [
+          {
+            label: 'testValue_1',
+            meta: {
+              basicLabel: 'testValue_1',
+              type: 'enumerated',
+              uri: 'testValue_1',
+            },
+          },
+        ],
+        uuid: 'testKey_2',
+      },
+    };
+
+    await userValuesService.setValue({
+      type: AdvancedFieldTypeEnum.enumerated as AdvancedFieldType,
+      key: 'testKey_2',
+      value: {
+        data: 'testValue_1',
+        uuid: 'testUuid_1',
+        type: AdvancedFieldTypeEnum.enumerated as AdvancedFieldType,
+      },
+    });
+    const result = userValuesService.getAllValues();
+
+    expect(result).toEqual(testResult);
+  });
+
   test('sets a user value for Complex lookup field', async () => {
     const testResult = {
       testKey_1: {
