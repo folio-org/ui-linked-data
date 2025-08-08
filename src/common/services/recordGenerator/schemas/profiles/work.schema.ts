@@ -11,16 +11,16 @@ import {
   nameAndLinkProperties,
   assigningSourceProperty,
   seriesProperties,
-} from '../../common/propertyDefinitions';
+} from '../common/propertyDefinitions';
 import {
   createObjectProperty,
   createArrayObjectProperty,
   createNotesProperty,
   createStatusProperty,
   createLanguagesProperty,
-} from '../../common/schemaBuilders';
+} from '../common/schemaBuilders';
 
-export const monographWorkRecordSchema: RecordSchema = {
+export const workRecordSchema: RecordSchema = {
   [BFLITE_URIS.WORK]: {
     type: RecordSchemaEntryType.object,
     options: {

@@ -1,5 +1,7 @@
-import { monographRecordSchemas } from './monograph';
+import { instanceRecordSchema } from './instance.schema';
+import { workRecordSchema } from './work.schema';
 
 export const profileRecordSchemas = {
-  monograph: monographRecordSchemas,
+  instance: instanceRecordSchema,
+  work: workRecordSchema,
 };

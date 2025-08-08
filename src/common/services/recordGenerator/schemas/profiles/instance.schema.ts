@@ -9,16 +9,16 @@ import {
   linkAndTermProperties,
   codeTermLinkProperties,
   nameAndLinkProperties
-} from '../../common/propertyDefinitions';
+} from '../common/propertyDefinitions';
 import {
   createObjectProperty,
   createArrayObjectProperty,
   createNotesProperty,
   createStatusProperty,
   createStringArrayProperty
-} from '../../common/schemaBuilders';
+} from '../common/schemaBuilders';
 
-export const monographInstanceRecordSchema: RecordSchema = {
+export const instanceRecordSchema: RecordSchema = {
   [BFLITE_URIS.INSTANCE]: {
     type: RecordSchemaEntryType.object,
     options: {

@@ -141,7 +141,6 @@ export const useConfig = () => {
         editingRecordBlocks,
       });
       const profile = getProfileConfig({
-        profileName: 'Monograph', // TODO: UILD-613 - remove the Profile Name
         resourceType,
         profileId,
         referenceProfileId,
