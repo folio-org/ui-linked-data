@@ -1,13 +1,22 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
+import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfile } from '@common/api/profiles.api';
 import { useInputsStore, useProfileStore } from '@src/store';
+import { getProfileConfig } from '@common/helpers/profile.helper';
 
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
 
+jest.mock('react-router-dom', () => ({
+  useSearchParams: jest.fn(),
+}));
+jest.mock('@common/helpers/profile.helper', () => ({
+  ...jest.requireActual('@common/helpers/profile.helper'),
+  getProfileConfig: jest.fn(),
+}));
 jest.mock('@common/services/schema');
 jest.mock('@common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
@@ -52,9 +61,14 @@ describe('useConfig', () => {
   const setSelectedEntries = jest.fn();
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
+  const setSearchParams = jest.fn();
+
+  const mockProfileConfig = {
+    ids: [],
+    rootEntry: { id: 'root' },
+  };
 
   beforeEach(() => {
-    jest.clearAllMocks();
     setInitialGlobalState([
       {
         store: useProfileStore,
@@ -84,6 +98,8 @@ describe('useConfig', () => {
         },
       },
     ]);
+
+    (getProfileConfig as jest.Mock).mockReturnValue(mockProfileConfig);
   });
 
   describe('getProfiles', () => {
@@ -94,25 +110,33 @@ describe('useConfig', () => {
     test('calls fetchProfile and sets profile', async () => {
       const mockProfile = [{ id: 'Monograph' }] as Profile;
       (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
+      const mockQueryParams = new URLSearchParams();
+      (useSearchParams as jest.Mock).mockReturnValue([mockQueryParams, setSearchParams]);
+      (getProfileConfig as jest.Mock).mockReturnValue({
+        ...mockProfileConfig,
+        ids: ['1'],
+      });
 
       const { result } = renderHook(useConfig);
       await result.current.getProfiles({ record, recordId: '' });
 
       expect(fetchProfile).toHaveBeenCalled();
-      expect(setSelectedProfile).toHaveBeenCalledWith(mockProfile);
+      expect(setSelectedProfile).toHaveBeenCalledWith([{ id: 'root' }, ...mockProfile]);
     });
 
     test('loads single profile when no rootEntry is provided', async () => {
       const mockProfileResult = { id: 'SingleProfile' };
       (fetchProfile as jest.Mock).mockResolvedValue(mockProfileResult);
+      const mockQueryParams = new URLSearchParams();
+      (useSearchParams as jest.Mock).mockReturnValue([mockQueryParams, setSearchParams]);
+      (getProfileConfig as jest.Mock).mockReturnValue({
+        ids: ['1'],
+      });
 
       const { result } = renderHook(useConfig);
       await result.current.getProfiles({
         record,
         recordId: '',
-        profile: {
-          ids: [1],
-        },
       });
 
       expect(setSelectedProfile).toHaveBeenCalledWith(mockProfileResult);
@@ -122,6 +146,13 @@ describe('useConfig', () => {
       const mockProfileResult1 = { id: 'Profile1' };
       const mockProfileResult2 = { id: 'Profile2' };
       const rootEntry = { id: 'RootProfile' } as ProfileNode;
+      const mockQueryParams = new URLSearchParams();
+      (useSearchParams as jest.Mock).mockReturnValue([mockQueryParams, setSearchParams]);
+      (getProfileConfig as jest.Mock).mockReturnValue({
+        ...mockProfileConfig,
+        ids: ['1', '2'],
+        rootEntry,
+      });
 
       (fetchProfile as jest.Mock).mockResolvedValueOnce(mockProfileResult1).mockResolvedValueOnce(mockProfileResult2);
 
@@ -129,10 +160,6 @@ describe('useConfig', () => {
       await result.current.getProfiles({
         record,
         recordId: '',
-        profile: {
-          ids: [1, 2],
-          rootEntry,
-        },
       });
 
       expect(setSelectedProfile).toHaveBeenCalledWith([rootEntry, mockProfileResult1, mockProfileResult2]);
