@@ -24,6 +24,8 @@
 * Add support for supplementary content. Refs [UILD-611].
 * Added language subclass support.  Refs [UILD-564].
 * Open Instance using associated profile's Edit/Display form. Refs [UILD-575].
+* Refactor profile handling logic to streamline schema management. Refs [UILD-613].
+* Refactor record generation logic to remove hardcoded profile references. Refs [UILD-614].
 * Add support for illustrative content. Refs [UILD-610].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -50,6 +52,8 @@
 [UILD-611]:https://folio-org.atlassian.net/browse/UILD-611
 [UILD-564]:https://folio-org.atlassian.net/browse/UILD-564
 [UILD-575]:https://folio-org.atlassian.net/browse/UILD-575
+[UILD-613]:https://folio-org.atlassian.net/browse/UILD-613
+[UILD-614]:https://folio-org.atlassian.net/browse/UILD-614
 [UILD-610]:https://folio-org.atlassian.net/browse/UILD-610
 
 ## 1.0.5 (2025-04-30)

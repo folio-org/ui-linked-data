@@ -6,5 +6,5 @@ export interface IRecordGeneratorData {
 }
 
 export interface IRecordGenerator {
-  generate(data: IRecordGeneratorData, profileType?: ProfileType, entityType?: ResourceType): Record<string, any>;
+  generate(data: IRecordGeneratorData, entityType?: ResourceType): Record<string, any>;
 }
