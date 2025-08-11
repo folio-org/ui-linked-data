@@ -70,7 +70,7 @@ const schema = new Map([
   [
     'uuid1',
     {
-      bfid: 'lc:RT:bf2:Monograph:Work',
+      bfid: 'lde:Profile:Work',
       type: AdvancedFieldType.block,
       displayName: 'uuid1',
       path: ['uuid0', 'uuid1'],
@@ -80,7 +80,7 @@ const schema = new Map([
   [
     'uuid2',
     {
-      bfid: 'lc:RT:bf2:Monograph:Instance',
+      bfid: 'lde:Profile:Instance',
       displayName: 'uuid2',
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
@@ -205,7 +205,7 @@ const monograph = {
   configType: 'profile',
   json: {
     Profile: {
-      resourceTemplates: ['lc:RT:bf2:Monograph:Work', 'lc:RT:bf2:Monograph:Instance'],
+      resourceTemplates: ['lde:Profile:Work', 'lde:Profile:Instance'],
       author: 'author',
       date: 'date',
       description: 'description',
@@ -235,7 +235,7 @@ describe('EditSection', () => {
       },
       {
         store: useUIStore,
-        state: { currentlyEditedEntityBfid: new Set(['lc:RT:bf2:Monograph:Instance']) },
+        state: { currentlyEditedEntityBfid: new Set(['lde:Profile:Instance']) },
       },
     ]);
 

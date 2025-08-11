@@ -16,7 +16,7 @@ const mockPreviewContent = [
       mockUserValueKey: null,
     },
     initKey: 'key1',
-    entities: ['lc:RT:bf2:Monograph:Work'],
+    entities: ['lde:Profile:Work'],
   },
   {
     id: 'k2',
