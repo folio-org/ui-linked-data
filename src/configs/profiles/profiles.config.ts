@@ -1,17 +1,14 @@
-export const PROFILES_CONFIG = {
-  Monograph: {
-    // TODO: UILD-575 - delete this when the profile API is fully integrated
-    api: {
-      profile: 1,
-      work: 2,
-      instance: 3,
-    },
-    rootEntry: {
-      type: 'profile',
-      displayName: 'Monograph',
-      bfid: 'monograph',
-      children: ['Monograph:Work', 'Monograph:Instance'],
-      id: 'Monograph',
-    },
+export const PROFILE_CONFIG = {
+  // TODO: UILD-438 - Remove hardcoded profile IDs and names after implementing profile selection for Work
+  defaultProfileIds: {
+    work: 2,
+    instance: 3,
+  },
+  rootEntry: {
+    type: 'profile',
+    displayName: 'Monograph',
+    bfid: 'monograph',
+    children: ['Monograph:Work', 'Monograph:Instance'],
+    id: 'Monograph',
   },
 };

@@ -46,7 +46,7 @@ describe('RecordGenerator', () => {
           selectedEntries: mockSelectedEntries,
           referenceIds: mockReferenceIds,
         });
-      }).toThrow('Record schema not found for profile type: Monograph, entity type: work');
+      }).toThrow('Record schema not found for entity type: work');
     });
 
     it('processes record schema correctly', () => {
@@ -82,7 +82,6 @@ describe('RecordGenerator', () => {
     });
 
     it('initializes schema and process with custom profile and entity types', () => {
-      const profileType = 'serial' as ProfileType;
       const entityType: ResourceType = 'instance';
 
       const profileSchemaManagerSpy = jest
@@ -100,11 +99,10 @@ describe('RecordGenerator', () => {
           selectedEntries: mockSelectedEntries,
           referenceIds: mockReferenceIds,
         },
-        profileType,
         entityType,
       );
 
-      expect(RecordSchemaFactory.getRecordSchema).toHaveBeenCalledWith(profileType, entityType);
+      expect(RecordSchemaFactory.getRecordSchema).toHaveBeenCalledWith(entityType);
       expect(profileSchemaManagerSpy).toHaveBeenCalled();
       expect(processSpy).toHaveBeenCalled();
     });
