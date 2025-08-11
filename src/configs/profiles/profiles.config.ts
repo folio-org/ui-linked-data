@@ -7,7 +7,7 @@ export const PROFILE_CONFIG = {
   rootEntry: {
     type: 'profile',
     displayName: 'Profile',
-    bfid: 'profile',
+    bfid: 'lde:Profile',
     children: ['Profile:Work', 'Profile:Instance'],
     id: 'Profile',
   },
