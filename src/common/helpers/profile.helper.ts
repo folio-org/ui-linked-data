@@ -10,13 +10,13 @@ export const getProfileConfig = ({
   profileId?: string | null;
   referenceProfileId?: string;
 }) => {
-  const { api, rootEntry } = PROFILE_CONFIG;
+  const { defaultProfileIds, rootEntry } = PROFILE_CONFIG;
   let ids: number[] = [];
 
   if (resourceType === ResourceType.work) {
-    ids = typeof profileId === 'string' ? [Number(profileId)] : [api.work];
+    ids = typeof profileId === 'string' ? [Number(profileId)] : [defaultProfileIds.work];
   } else if (resourceType === ResourceType.instance) {
-    ids = typeof profileId === 'string' ? [Number(profileId)] : [api.instance];
+    ids = typeof profileId === 'string' ? [Number(profileId)] : [defaultProfileIds.instance];
   } else {
     ids = [];
   }

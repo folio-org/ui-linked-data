@@ -3,7 +3,7 @@ import { getProfileConfig, getMappedResourceType } from '@common/helpers/profile
 
 jest.mock('@src/configs', () => ({
   PROFILE_CONFIG: {
-    api: {
+    defaultProfileIds: {
       work: 1,
       instance: 2,
     },
