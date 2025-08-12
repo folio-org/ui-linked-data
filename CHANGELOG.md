@@ -28,6 +28,7 @@
 * Refactor record generation logic to remove hardcoded profile references. Refs [UILD-614].
 * Add support for illustrative content. Refs [UILD-610].
 * Add characteristic / serial publication type support. Refs [UILD-604].
+* Adjust Profile prefix. Refs [UILD-619].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -57,6 +58,7 @@
 [UILD-614]:https://folio-org.atlassian.net/browse/UILD-614
 [UILD-610]:https://folio-org.atlassian.net/browse/UILD-610
 [UILD-604]:https://folio-org.atlassian.net/browse/UILD-604
+[UILD-619]:https://folio-org.atlassian.net/browse/UILD-619
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

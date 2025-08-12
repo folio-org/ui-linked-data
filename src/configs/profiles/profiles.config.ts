@@ -6,9 +6,9 @@ export const PROFILE_CONFIG = {
   },
   rootEntry: {
     type: 'profile',
-    displayName: 'Monograph',
-    bfid: 'monograph',
-    children: ['Monograph:Work', 'Monograph:Instance'],
-    id: 'Monograph',
+    displayName: 'Profile',
+    bfid: 'lde:Profile',
+    children: ['Profile:Work', 'Profile:Instance'],
+    id: 'Profile',
   },
 };

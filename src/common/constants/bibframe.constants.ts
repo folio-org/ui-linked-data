@@ -1,6 +1,6 @@
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
-  'lc:RT:bf2:Monograph:Work': 'Work',
-  'lc:RT:bf2:Monograph:Instance': 'Instance',
+  'lde:Profile:Work': 'Work',
+  'lde:Profile:Instance': 'Instance',
 };
 
 export enum BibframeEntitiesMap {
@@ -9,9 +9,8 @@ export enum BibframeEntitiesMap {
 }
 
 export const PROFILE_BFIDS = {
-  MONOGRAPH: 'lc:profile:bf2:Monograph',
-  WORK: 'lc:RT:bf2:Monograph:Work',
-  INSTANCE: 'lc:RT:bf2:Monograph:Instance',
+  WORK: 'lde:Profile:Work',
+  INSTANCE: 'lde:Profile:Instance',
 };
 
 export enum BibframeEntities {
