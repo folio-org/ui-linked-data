@@ -22,11 +22,12 @@
 * Add support for dates of publication note (MARC 362). Refs [UILD-606].
 * Add support for book format. Refs [UILD-607].
 * Add support for supplementary content. Refs [UILD-611].
-* Added language subclass support.  Refs [UILD-564].
+* Add language subclass support.  Refs [UILD-564].
 * Open Instance using associated profile's Edit/Display form. Refs [UILD-575].
 * Refactor profile handling logic to streamline schema management. Refs [UILD-613].
 * Refactor record generation logic to remove hardcoded profile references. Refs [UILD-614].
 * Add support for illustrative content. Refs [UILD-610].
+* Add characteristic / serial publication type support. Refs [UILD-604].
 * Adjust Profile prefix. Refs [UILD-619].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -56,6 +57,7 @@
 [UILD-613]:https://folio-org.atlassian.net/browse/UILD-613
 [UILD-614]:https://folio-org.atlassian.net/browse/UILD-614
 [UILD-610]:https://folio-org.atlassian.net/browse/UILD-610
+[UILD-604]:https://folio-org.atlassian.net/browse/UILD-604
 [UILD-619]:https://folio-org.atlassian.net/browse/UILD-619
 
 ## 1.0.5 (2025-04-30)

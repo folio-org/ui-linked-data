@@ -621,6 +621,11 @@ export const lookupConfig: Record<string, any> = {
     type: 'simple',
     modes: [],
   },
+  'http://id.loc.gov/vocabulary/mserialpubtype': {
+    name: 'mscript',
+    type: 'simple',
+    modes: [],
+  },
   'http://id.loc.gov/vocabulary/msoundcontent': {
     name: 'msoundcontent',
     type: 'simple',
