@@ -61,7 +61,7 @@ export const useProfileSelection = () => {
     resourceTypeURL,
     callback,
   }: {
-    resourceTypeURL: keyof typeof BibframeEntitiesMap;
+    resourceTypeURL: ResourceTypeURL;
     callback: (profileId: string) => void;
   }) => {
     try {
