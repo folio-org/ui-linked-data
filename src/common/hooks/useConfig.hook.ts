@@ -103,7 +103,7 @@ export const useConfig = () => {
     if (recordData && Object.keys(recordData).length) {
       const block = editingRecordBlocks?.block as keyof typeof BibframeEntitiesMap;
       const reference = editingRecordBlocks?.reference?.key;
-      const profileId = recordData[block]?.profileId as string | null | undefined;
+      const profileId = profileIdParam ?? (recordData[block]?.profileId as string | null | undefined);
       const referenceProfileId = (recordData[block]?.[reference as string] as unknown as RecursiveRecordSchema[])?.[0]
         ?.profileId as string;
       const resourceTypeValue = BibframeEntitiesMap[block];
