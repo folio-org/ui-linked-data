@@ -84,7 +84,7 @@ export const ModalChooseProfile: FC<Props> = memo(
               </label>
             </div>
 
-            {profileSelectionType !== 'set' && (
+            {profileSelectionType.action === 'change' && (
               <div>
                 <p>Change profiles warning</p>
               </div>

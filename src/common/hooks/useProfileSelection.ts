@@ -49,11 +49,19 @@ export const useProfileSelection = () => {
     return false;
   };
 
+  const openModal = ({ action, resourceType }: { action: ProfileSelectionActionType; resourceType: ResourceType }) => {
+    setIsProfileSelectionModalOpen(true);
+    setProfileSelectionType({
+      action,
+      resourceType,
+    });
+  };
+
   const checkProfileAndProceed = async ({
     resourceTypeURL,
     callback,
   }: {
-    resourceTypeURL: string;
+    resourceTypeURL: keyof typeof BibframeEntitiesMap;
     callback: (profileId: string) => void;
   }) => {
     try {
@@ -67,8 +75,7 @@ export const useProfileSelection = () => {
 
         // If no matching profile was found, show the modal
         if (!profileProcessed) {
-          setIsProfileSelectionModalOpen(true);
-          setProfileSelectionType('set');
+          openModal({ action: 'set', resourceType: BibframeEntitiesMap[resourceTypeURL] });
         }
 
         return;
@@ -76,8 +83,7 @@ export const useProfileSelection = () => {
 
       // No preferred profiles, load available profiles and show modal
       await loadAvailableProfiles(resourceTypeURL);
-      setIsProfileSelectionModalOpen(true);
-      setProfileSelectionType('set');
+      openModal({ action: 'set', resourceType: BibframeEntitiesMap[resourceTypeURL] });
     } catch (error) {
       console.error('Failed to check profile and proceed:', error);
 
@@ -87,17 +93,12 @@ export const useProfileSelection = () => {
     }
   };
 
-  const changeProfile = async ({ resourceTypeURL }: { resourceTypeURL: keyof typeof BibframeEntitiesMap }) => {
+  const changeProfile = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
     try {
       setIsLoading(true);
 
       await loadAvailableProfiles(resourceTypeURL);
-
-      setIsProfileSelectionModalOpen(true);
-
-      const newProfileSelectionType: ProfileSelectionType =
-        BibframeEntitiesMap[resourceTypeURL] === 'work' ? 'changeForWork' : 'changeForInstance';
-      setProfileSelectionType(newProfileSelectionType);
+      openModal({ action: 'change', resourceType: BibframeEntitiesMap[resourceTypeURL] });
     } catch (error) {
       console.error('Failed to load profiles and proceed:', error);
 

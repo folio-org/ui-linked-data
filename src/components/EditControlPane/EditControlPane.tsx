@@ -47,7 +47,10 @@ export const EditControlPane = () => {
     if (!resourceId) return;
 
     setIsProfileSelectionModalOpen(true);
-    setProfileSelectionType('changeForInstance');
+    setProfileSelectionType({
+      action: 'change',
+      resourceType: 'instance',
+    });
   };
 
   const items = [

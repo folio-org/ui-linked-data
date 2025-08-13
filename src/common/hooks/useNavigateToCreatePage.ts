@@ -53,7 +53,7 @@ export const useNavigateToCreatePage = () => {
     queryParams,
     navigationState,
   }: {
-    resourceTypeURL: string;
+    resourceTypeURL: ResourceTypeURL;
     queryParams: { type?: string | null; refId?: string | null };
     navigationState?: SearchParamsState;
   }) => {

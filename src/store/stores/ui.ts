@@ -4,7 +4,11 @@ import { type SliceState } from '../utils/slice';
 
 export type UIEntries = Set<string>;
 
-export type ProfileSelectionType = 'set' | 'changeForInstance' | 'changeForWork';
+export type ProfileSelectionActionType = 'set' | 'change';
+export type ProfileSelectionType = {
+  action: ProfileSelectionActionType;
+  resourceType: ResourceType;
+};
 
 export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'isMarcPreviewOpen', boolean> &
@@ -18,7 +22,7 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'hasShownAuthorityWarning', boolean> &
   SliceState<'isImportModalOpen', boolean> &
   SliceState<'isProfileSelectionModalOpen', boolean> &
-  SliceState<'profileSelectionType', ProfileSelectionType>;
+  SliceState<'profileSelectionType', { action: ProfileSelectionActionType; resourceType: ResourceType }>;
 
 const STORE_NAME = 'UI';
 
@@ -60,8 +64,8 @@ const sliceConfigs: SliceConfigs = {
     initialValue: false,
   },
   profileSelectionType: {
-    initialValue: 'set'
-  }
+    initialValue: 'set',
+  },
 };
 
 export const useUIStore = createStoreFactory<UIState, SliceConfigs>(sliceConfigs, STORE_NAME);

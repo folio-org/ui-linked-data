@@ -158,3 +158,4 @@ type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;
 type ProfileComponent = ProfileEntry | ResourceTemplate | PropertyTemplate;
 
 type ResourceType = keyof typeof import('@common/constants/record.constants').ResourceType;
+type ResourceTypeURL = keyof typeof import('@common/constants/bibframe.constants').BibframeEntitiesMap;
