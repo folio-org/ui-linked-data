@@ -5,7 +5,7 @@ import { ModalChooseProfile } from '@components/ModalChooseProfile';
 import { useNavigationState, useProfileState, useUIState } from '@src/store';
 
 export const ProfileSelectionManager = () => {
-  const { isProfileSelectionModalOpen, setIsProfileSelectionModalOpen } = useUIState();
+  const { isProfileSelectionModalOpen, setIsProfileSelectionModalOpen, profileSelectionType } = useUIState();
   const { availableProfiles } = useProfileState();
   const { queryParams } = useNavigationState();
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -25,6 +25,7 @@ export const ProfileSelectionManager = () => {
   return (
     <ModalChooseProfile
       isOpen={isProfileSelectionModalOpen}
+      profileSelectionType={profileSelectionType}
       onCancel={onClose}
       onSubmit={onSubmit}
       onClose={onClose}

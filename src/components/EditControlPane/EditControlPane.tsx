@@ -19,12 +19,13 @@ import ExternalLink16 from '@src/assets/external-link-16.svg?react';
 import Download16 from '@src/assets/download-16.svg?react';
 import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
+import Settings from '@src/assets/settings.svg?react';
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { isLoading } = useLoadingState();
-  const { currentlyEditedEntityBfid } = useUIState();
+  const { currentlyEditedEntityBfid, setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState();
   const { setRecordStatus } = useStatusState();
   const { setBasicValue } = useMarcPreviewState();
   const navigate = useNavigate();
@@ -41,6 +42,13 @@ export const EditControlPane = () => {
   const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
 
   const handleExportInstanceRdf = () => resourceId && exportInstanceRdf(resourceId);
+
+  const handleChangeInstanceProfile = () => {
+    if (!resourceId) return;
+
+    setIsProfileSelectionModalOpen(true);
+    setProfileSelectionType('changeForInstance');
+  };
 
   const items = [
     {
@@ -85,6 +93,14 @@ export const EditControlPane = () => {
           icon: <Download16 />,
           hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
           action: handleExportInstanceRdf,
+        },
+        {
+          id: 'changeInstanceProfile',
+          type: DropdownItemType.basic,
+          labelId: 'ld.changeInstanceProfile',
+          icon: <Settings />,
+          hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
+          action: handleChangeInstanceProfile,
         },
       ],
     },
