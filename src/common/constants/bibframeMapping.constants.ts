@@ -73,6 +73,13 @@ export const BFLITE_URIS = {
   BOOK_FORMAT: 'http://bibfra.me/vocab/marc/bookFormat',
   ILLUSTRATIONS: 'http://bibfra.me/vocab/marc/illustrations',
   MARC_CHARACTERISTIC: 'http://bibfra.me/vocab/marc/characteristic',
+  ADMIN_METADATA: 'http://bibfra.me/vocab/marc/adminMetadata',
+  CONTROL_NUMBER: 'http://bibfra.me/vocab/marc/controlNumber',
+  CREATED_DATE: 'http://bibfra.me/vocab/lite/createdDate',
+  CATALOGING_AGENCY: 'http://bibfra.me/vocab/marc/catalogingAgency',
+  MODIFYING_AGENCY: 'http://bibfra.me/vocab/marc/modifyingAgency',
+  TRANSCRIBING_AGENCY: 'http://bibfra.me/vocab/marc/transcribingAgency',
+  CATALOGING_LANGUAGE: 'http://bibfra.me/vocab/lite/catalogingLanguage',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
