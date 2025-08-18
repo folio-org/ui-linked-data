@@ -12,8 +12,9 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { useResourceExport } from '@common/hooks/useResourceExport';
+import { useProfileSelection } from '@common/hooks/useProfileSelection';
 import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
-import { useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
+import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
 import Download16 from '@src/assets/download-16.svg?react';
@@ -25,7 +26,7 @@ import './EditControlPane.scss';
 export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { isLoading } = useLoadingState();
-  const { currentlyEditedEntityBfid, setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState();
+  const { currentlyEditedEntityBfid } = useUIState();
   const { setRecordStatus } = useStatusState();
   const { setBasicValue } = useMarcPreviewState();
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ export const EditControlPane = () => {
   const { fetchMarcData } = useMarcData(setBasicValue);
   const { formatMessage } = useIntl();
   const { exportInstanceRdf } = useResourceExport();
+  const { openChangeProfile } = useProfileSelection();
+  const { selectedRecordBlocks } = useInputsState();
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
@@ -46,11 +49,7 @@ export const EditControlPane = () => {
   const handleChangeInstanceProfile = () => {
     if (!resourceId) return;
 
-    setIsProfileSelectionModalOpen(true);
-    setProfileSelectionType({
-      action: 'change',
-      resourceType: 'instance',
-    });
+    openChangeProfile({ resourceTypeURL: selectedRecordBlocks?.block as ResourceTypeURL });
   };
 
   const items = [

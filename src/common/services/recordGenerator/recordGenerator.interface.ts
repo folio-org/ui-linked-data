@@ -3,6 +3,7 @@ export interface IRecordGeneratorData {
   userValues: UserValues;
   selectedEntries: string[];
   referenceIds?: { id: string }[];
+  profileId?: string | null;
 }
 
 export interface IRecordGenerator {

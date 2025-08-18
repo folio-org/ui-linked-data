@@ -17,6 +17,7 @@ export class RecordGenerator implements IRecordGenerator {
   private userValues: UserValues;
   private selectedEntries: string[];
   private referenceIds?: { id: string }[];
+  private profileId?: string | null;
 
   constructor() {
     this.profileSchemaManager = new ProfileSchemaManager();
@@ -58,12 +59,14 @@ export class RecordGenerator implements IRecordGenerator {
     userValues,
     selectedEntries,
     referenceIds,
+    profileId,
   }: IRecordGeneratorData & { recordSchema: RecordSchema }) {
     this.profileSchemaManager.init(schema);
     this.recordSchema = recordSchema;
     this.userValues = userValues;
     this.selectedEntries = selectedEntries;
     this.referenceIds = referenceIds;
+    this.profileId = profileId;
   }
 
   private processRecordSchema() {
@@ -76,6 +79,7 @@ export class RecordGenerator implements IRecordGenerator {
       if (this.isValidValue(processedValue)) {
         if (rootKey === rootEntryKey && rootProperty.options?.references && this.referenceIds?.length) {
           this.addReferencesToRootEntry(processedValue, rootProperty.options.references);
+          this.addProfileId(processedValue as unknown as SchemaEntry);
         }
 
         this.addValueToResource(result, rootKey, processedValue);
@@ -133,5 +137,13 @@ export class RecordGenerator implements IRecordGenerator {
       (entryNode as Record<string, SchemaPropertyValue>)[refDef.outputProperty] = this
         .referenceIds as unknown as SchemaPropertyValue;
     });
+  }
+
+  private addProfileId(entryNode: SchemaEntry) {
+    if ((typeof entryNode !== 'object' || entryNode === null) && typeof this.profileId !== 'string') {
+      return;
+    }
+
+    entryNode.profileId = Number(this.profileId);
   }
 }

@@ -27,6 +27,7 @@ type SaveRecordProps = {
   asRefToNewRecord?: boolean;
   shouldSetSearchParams?: boolean;
   isNavigatingBack?: boolean;
+  profileId?: string;
 };
 
 type IBaseFetchRecord = {
@@ -85,8 +86,9 @@ export const useRecordControls = () => {
     asRefToNewRecord = false,
     isNavigatingBack = true,
     shouldSetSearchParams = true,
+    profileId,
   }: SaveRecordProps = {}) => {
-    const generatedRecord = generateRecord();
+    const generatedRecord = generateRecord({ profileId });
 
     if (!generatedRecord) return;
 

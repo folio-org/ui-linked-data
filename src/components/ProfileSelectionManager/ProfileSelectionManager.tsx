@@ -1,6 +1,7 @@
 import { ROUTES } from '@common/constants/routes.constants';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { useRecordControls } from '@common/hooks/useRecordControls';
 import { ModalChooseProfile } from '@components/ModalChooseProfile';
 import { useNavigationState, useProfileState, useUIState } from '@src/store';
 
@@ -9,6 +10,7 @@ export const ProfileSelectionManager = () => {
   const { availableProfiles } = useProfileState();
   const { queryParams } = useNavigationState();
   const { navigateToEditPage } = useNavigateToEditPage();
+  const { saveRecord } = useRecordControls();
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
@@ -17,9 +19,13 @@ export const ProfileSelectionManager = () => {
   const onSubmit = (profileId: string) => {
     onClose();
 
-    const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
+    if (profileSelectionType.action === 'set') {
+      const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
 
-    navigateToEditPage(url);
+      navigateToEditPage(url);
+    } else {
+      saveRecord({ isNavigatingBack: false, profileId });
+    }
   };
 
   return (
@@ -29,7 +35,7 @@ export const ProfileSelectionManager = () => {
       onCancel={onClose}
       onSubmit={onSubmit}
       onClose={onClose}
-      profiles={availableProfiles}
+      profiles={availableProfiles?.[profileSelectionType?.resourceType]}
     />
   );
 };

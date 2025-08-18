@@ -11,12 +11,19 @@ export const useProfileSelection = () => {
   const { addStatusMessagesItem } = useStatusState();
 
   // Loads available profiles if they haven't been loaded yet
-  const loadAvailableProfiles = async (resourceTypeURL: string) => {
-    if (!availableProfiles?.length) {
+  const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {
+    const key = BibframeEntitiesMap[resourceTypeURL];
+
+    if (!availableProfiles?.[key]?.length) {
       try {
         const result = await fetchProfiles(resourceTypeURL);
 
-        setAvailableProfiles(result);
+        setAvailableProfiles(prev => {
+          return {
+            ...prev,
+            [key]: result,
+          };
+        });
       } catch (error) {
         console.error('Failed to load available profiles:', error);
         // Re-throw to be handled by 'checkProfileAndProceed'
@@ -93,7 +100,7 @@ export const useProfileSelection = () => {
     }
   };
 
-  const changeProfile = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
+  const openChangeProfile = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
     try {
       setIsLoading(true);
 
@@ -110,6 +117,6 @@ export const useProfileSelection = () => {
 
   return {
     checkProfileAndProceed,
-    changeProfile,
+    openChangeProfile,
   };
 };

@@ -52,3 +52,7 @@ type ResourceTemplateMetadata = {
   path: string[];
   template: UserValueTemplate;
 };
+
+type RecordData = {
+  [key: string]: RecursiveRecordSchema;
+};
