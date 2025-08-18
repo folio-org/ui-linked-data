@@ -7,22 +7,23 @@ export const getProfileConfig = ({
   referenceProfileId,
 }: {
   resourceType?: ResourceType;
-  profileId?: number | null;
+  profileId?: string | number | null;
   referenceProfileId?: string;
 }) => {
   const { defaultProfileIds, rootEntry } = PROFILE_CONFIG;
-  let ids: number[] = [];
+  let ids: (string | number)[] = [];
+  const isValidProfileId = typeof profileId === 'number' || typeof profileId === 'string';
 
   if (resourceType === ResourceType.work) {
-    ids = typeof profileId === 'number' ? [profileId] : [defaultProfileIds.work];
+    ids = isValidProfileId ? [profileId] : [defaultProfileIds.work];
   } else if (resourceType === ResourceType.instance) {
-    ids = typeof profileId === 'number' ? [profileId] : [defaultProfileIds.instance];
+    ids = isValidProfileId ? [profileId] : [defaultProfileIds.instance];
   } else {
     ids = [];
   }
 
   if (referenceProfileId) {
-    ids.push(Number(referenceProfileId));
+    ids.push(referenceProfileId);
   }
 
   return { ids, rootEntry: rootEntry as ProfileNode };

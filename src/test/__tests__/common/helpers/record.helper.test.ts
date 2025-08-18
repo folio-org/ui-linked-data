@@ -135,4 +135,58 @@ describe('record.helper', () => {
       expect(result).toBe(true);
     });
   });
+
+  describe('getRecordProfileId', () => {
+    test('returns profileId for instance block', () => {
+      const profileId = 123;
+      const record = {
+        resource: {
+          testInstanceUri: {
+            profileId,
+          },
+        },
+      } as unknown as RecordEntry;
+      jest
+        .spyOn(RecordHelper, 'getEditingRecordBlocks')
+        .mockReturnValue({ block: 'testInstanceUri', reference: {} as RecordReference });
+
+      const result = RecordHelper.getRecordProfileId(record);
+
+      expect(result).toBe(profileId);
+    });
+
+    test('returns undefined if no profileId', () => {
+      const record = {
+        resource: {
+          testInstanceUri: {},
+        },
+      } as unknown as RecordEntry;
+      jest
+        .spyOn(RecordHelper, 'getEditingRecordBlocks')
+        .mockReturnValue({ block: 'testInstanceUri', reference: {} as RecordReference });
+
+      const result = RecordHelper.getRecordProfileId(record);
+
+      expect(result).toBeUndefined();
+    });
+
+    test('returns undefined if no block', () => {
+      const record = {
+        resource: {},
+      } as unknown as RecordEntry;
+      jest
+        .spyOn(RecordHelper, 'getEditingRecordBlocks')
+        .mockReturnValue({ block: undefined, reference: {} as RecordReference });
+
+      const result = RecordHelper.getRecordProfileId(record);
+
+      expect(result).toBeUndefined();
+    });
+
+    test('returns undefined for null record', () => {
+      const result = RecordHelper.getRecordProfileId(null);
+
+      expect(result).toBeUndefined();
+    });
+  });
 });

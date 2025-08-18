@@ -4,7 +4,7 @@ import { useProfileState } from '@src/store';
 export const useLoadProfile = () => {
   const { profiles, setProfiles } = useProfileState();
 
-  const loadProfile = async (profileId: number) => {
+  const loadProfile = async (profileId: string | number) => {
     if (profiles[profileId]) {
       return profiles[profileId];
     }

@@ -138,7 +138,7 @@ export const useConfig = () => {
       });
       const profile = getProfileConfig({
         resourceType,
-        profileId: profileId ? Number(profileId) : undefined,
+        profileId,
         referenceProfileId,
       });
 
