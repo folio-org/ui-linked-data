@@ -15,7 +15,8 @@ import {
   createArrayObjectProperty,
   createNotesProperty,
   createStatusProperty,
-  createStringArrayProperty
+  createStringArrayProperty,
+  createLinkTermObjectArrayProperty
 } from '../common/schemaBuilders';
 
 export const instanceRecordSchema: RecordSchema = {
@@ -99,6 +100,15 @@ export const instanceRecordSchema: RecordSchema = {
       }),
 
       [BFLITE_URIS.BOOK_FORMAT]: createArrayObjectProperty(linkAndTermProperties),
+
+      [BFLITE_URIS.ADMIN_METADATA]: createArrayObjectProperty({
+        [BFLITE_URIS.CREATED_DATE]: stringArrayProperty,
+        [BFLITE_URIS.CONTROL_NUMBER]: stringArrayProperty,
+        [BFLITE_URIS.CATALOGING_AGENCY]: stringArrayProperty,
+        [BFLITE_URIS.CATALOGING_LANGUAGE]: createLinkTermObjectArrayProperty(),
+        [BFLITE_URIS.TRANSCRIBING_AGENCY]: stringArrayProperty,
+        [BFLITE_URIS.MODIFYING_AGENCY]: stringArrayProperty,
+      }),
     },
   },
 };

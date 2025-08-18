@@ -108,10 +108,12 @@ describe('ModalImport', () => {
     const input = screen.getByTestId('dropzone-file-input');
     await user.upload(input, file);
     await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
     expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
     expect(screen.getByTestId('modal-button-cancel')).toBeInTheDocument();
     expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
     await user.click(screen.getByTestId('modal-button-submit'));
+    await jest.advanceTimersToNextTimerAsync();
     expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
   });
 
