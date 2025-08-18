@@ -22,7 +22,7 @@ type ProfileNode = {
 type Profile = ProfileNode[];
 
 type ProfileDTO = {
-  id: string;
+  id: number;
   name: string;
   resourceType: string;
 };

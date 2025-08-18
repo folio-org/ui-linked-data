@@ -7,9 +7,10 @@ interface Props {
   isOpen: boolean;
   profileSelectionType: ProfileSelectionType;
   onCancel: VoidFunction;
-  onSubmit: (id: string) => void;
+  onSubmit: (id: number) => void;
   onClose: VoidFunction;
   profiles: ProfileDTO[];
+  selectedProfileId?: number | null;
 }
 
 const getLabelId = ({
@@ -35,9 +36,9 @@ const getLabelId = ({
 };
 
 export const ModalChooseProfile: FC<Props> = memo(
-  ({ isOpen, profileSelectionType, onCancel, onSubmit, onClose, profiles }) => {
+  ({ isOpen, profileSelectionType, onCancel, onSubmit, onClose, profiles, selectedProfileId }) => {
     const { formatMessage } = useIntl();
-    const [selectedValue, setSelectedValue] = useState<string>(profiles?.[0]?.id);
+    const [selectedValue, setSelectedValue] = useState<number>(selectedProfileId ?? profiles?.[0]?.id);
     const [isDefault, setIsDefault] = useState(false);
 
     useEffect(() => {
@@ -46,8 +47,14 @@ export const ModalChooseProfile: FC<Props> = memo(
       }
     }, [profiles, selectedValue]);
 
+    useEffect(() => {
+      if (selectedProfileId) {
+        setSelectedValue(selectedProfileId);
+      }
+    }, [selectedProfileId]);
+
     const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedValue(event.target.value);
+      setSelectedValue(Number(event.target.value));
     };
 
     const handleSubmit = () => {

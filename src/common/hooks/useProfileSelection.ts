@@ -41,7 +41,7 @@ export const useProfileSelection = () => {
   const handlePreferredProfileCase = (
     profiles: ProfileDTO[],
     resourceTypeURL: string,
-    callback: (profileId: string) => void,
+    callback: (profileId: number) => void,
   ): boolean => {
     setPreferredProfiles(profiles);
 
@@ -69,7 +69,7 @@ export const useProfileSelection = () => {
     callback,
   }: {
     resourceTypeURL: ResourceTypeURL;
-    callback: (profileId: string) => void;
+    callback: (profileId: number) => void;
   }) => {
     try {
       setIsLoading(true);
@@ -100,7 +100,7 @@ export const useProfileSelection = () => {
     }
   };
 
-  const openChangeProfile = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
+  const openModalForProfileChange = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
     try {
       setIsLoading(true);
 
@@ -117,6 +117,6 @@ export const useProfileSelection = () => {
 
   return {
     checkProfileAndProceed,
-    openChangeProfile,
+    openModalForProfileChange,
   };
 };

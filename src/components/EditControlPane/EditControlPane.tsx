@@ -37,7 +37,7 @@ export const EditControlPane = () => {
   const { fetchMarcData } = useMarcData(setBasicValue);
   const { formatMessage } = useIntl();
   const { exportInstanceRdf } = useResourceExport();
-  const { openChangeProfile } = useProfileSelection();
+  const { openModalForProfileChange } = useProfileSelection();
   const { selectedRecordBlocks } = useInputsState();
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
@@ -49,7 +49,7 @@ export const EditControlPane = () => {
   const handleChangeInstanceProfile = () => {
     if (!resourceId) return;
 
-    openChangeProfile({ resourceTypeURL: selectedRecordBlocks?.block as ResourceTypeURL });
+    openModalForProfileChange({ resourceTypeURL: selectedRecordBlocks?.block as ResourceTypeURL });
   };
 
   const items = [

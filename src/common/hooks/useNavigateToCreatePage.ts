@@ -28,7 +28,7 @@ export const useNavigateToCreatePage = () => {
   };
 
   // Handles navigation after profile selection
-  const handleProfileSelection = (profileId: string) => {
+  const handleProfileSelection = (profileId: number) => {
     if (!queryParamsRef.current.type || !queryParamsRef.current.refId) return;
 
     const params = createQueryParams({

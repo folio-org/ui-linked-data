@@ -280,6 +280,43 @@ export const useRecordControls = () => {
     }
   };
 
+  const changeRecordProfile = async ({ profileId }: { profileId: number }) => {
+    const generatedRecord = generateRecord({ profileId: profileId.toString() });
+
+    if (!generatedRecord) return;
+
+    setIsLoading(true);
+
+    try {
+      const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
+      const recordId = getRecordId(record, selectedRecordBlocks?.block);
+
+      const response = await putRecord(recordId as string, generatedRecord);
+      const parsedResponse = await response.json();
+
+      dispatchUnblockEvent();
+      setRecord(parsedResponse);
+
+      flushSync(() => setIsEdited(false));
+
+      const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
+      setLastSavedRecordId(updatedRecordId);
+
+      navigate(generateEditResourceUrl(updatedRecordId as string), {
+        replace: true,
+        state: location.state,
+      });
+
+      await getProfiles({
+        record: parsedResponse,
+      });
+    } catch (error: unknown) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchRecord,
     saveRecord,
@@ -290,5 +327,6 @@ export const useRecordControls = () => {
     fetchExternalRecordForPreview,
     tryFetchExternalRecordForEdit,
     getRecordAndInitializeParsing,
+    changeRecordProfile,
   };
 };
