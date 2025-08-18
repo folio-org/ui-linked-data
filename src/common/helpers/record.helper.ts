@@ -118,7 +118,7 @@ export const hasAllEmptyValues = (values: UserValueContents[]) => {
 
 export const getRecordProfileId = (record?: RecordEntry<RecursiveRecordSchema> | null) => {
   const recordData = record?.resource ?? {};
-  let selectedProfileId: number | null | undefined;
+  let selectedProfileId: string | number | null | undefined;
 
   if (recordData && Object.keys(recordData).length) {
     const { block } = getEditingRecordBlocks(recordData as RecordEntry);

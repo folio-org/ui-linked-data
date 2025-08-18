@@ -41,7 +41,7 @@ export const useProfileSelection = () => {
   const handlePreferredProfileCase = (
     profiles: ProfileDTO[],
     resourceTypeURL: string,
-    callback: (profileId: number) => void,
+    callback: (profileId: string | number) => void,
   ): boolean => {
     setPreferredProfiles(profiles);
 
@@ -69,7 +69,7 @@ export const useProfileSelection = () => {
     callback,
   }: {
     resourceTypeURL: ResourceTypeURL;
-    callback: (profileId: number) => void;
+    callback: (profileId: string | number) => void;
   }) => {
     try {
       setIsLoading(true);

@@ -18,7 +18,7 @@ export const ProfileSelectionManager = () => {
     setIsProfileSelectionModalOpen(false);
   };
 
-  const onSubmit = async (profileId: number) => {
+  const onSubmit = async (profileId: string | number) => {
     if (profileSelectionType.action === 'set') {
       onClose();
 

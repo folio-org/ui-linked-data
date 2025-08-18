@@ -17,7 +17,7 @@ export class RecordGenerator implements IRecordGenerator {
   private userValues: UserValues;
   private selectedEntries: string[];
   private referenceIds?: { id: string }[];
-  private profileId?: string | null;
+  private profileId?: string | number | null;
 
   constructor() {
     this.profileSchemaManager = new ProfileSchemaManager();

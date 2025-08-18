@@ -280,8 +280,8 @@ export const useRecordControls = () => {
     }
   };
 
-  const changeRecordProfile = async ({ profileId }: { profileId: number }) => {
-    const generatedRecord = generateRecord({ profileId: profileId.toString() });
+  const changeRecordProfile = async ({ profileId }: { profileId: string | number }) => {
+    const generatedRecord = generateRecord({ profileId: `${profileId}` });
 
     if (!generatedRecord) return;
 

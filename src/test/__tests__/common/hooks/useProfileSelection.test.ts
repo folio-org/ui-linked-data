@@ -25,7 +25,7 @@ describe('useProfileSelection', () => {
   const addStatusMessagesItem = jest.fn();
   const callbackMock = jest.fn();
 
-  const resourceTypeURL = 'test-resource-type';
+  const resourceTypeURL = 'test-resource-type' as ResourceTypeURL;
   const profileId = 'test-profile-id';
   const mockProfiles = [
     {

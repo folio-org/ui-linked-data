@@ -39,7 +39,7 @@ describe('useRecordGeneration', () => {
 
     const { result } = renderHook(() => useRecordGeneration());
 
-    result.current.generateRecord();
+    result.current.generateRecord({});
 
     expect(recordGeneratorService.generate).toHaveBeenCalledWith(
       { schema, userValues, selectedEntries, referenceIds: undefined },
