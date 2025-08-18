@@ -64,6 +64,18 @@ export const instanceRecordSchema: RecordSchema = {
           [BFLITE_URIS.NAME]: stringArrayProperty,
           [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
         }),
+        [BFLITE_URIS.IDENTIFIER_ISSN]: createObjectProperty({
+          [BFLITE_URIS.NAME]: stringArrayProperty,
+          [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
+        }),
+        [BFLITE_URIS.IDENTIFIER_IAN]: createObjectProperty({
+          [BFLITE_URIS.NAME]: stringArrayProperty,
+          [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
+        }),
+        [BFLITE_URIS.IDENTIFIER_OTHER]: createObjectProperty({
+          [BFLITE_URIS.NAME]: stringArrayProperty,
+          [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
+        }),        
       }),
       
       [BFLITE_URIS.NOTES]: createNotesProperty(SIMPLE_LOOKUP_MAPPING._notes),
