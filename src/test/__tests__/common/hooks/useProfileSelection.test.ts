@@ -255,4 +255,100 @@ describe('useProfileSelection', () => {
       expect(callbackMock).toHaveBeenCalledWith(profileId);
     });
   });
+
+  describe('openModalForProfileChange', () => {
+    test('loads available profiles and opens modal for profile change', async () => {
+      (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
+
+      const setProfileSelectionType = jest.fn();
+      setInitialGlobalState([
+        {
+          store: useUIState,
+          state: {
+            setIsProfileSelectionModalOpen,
+            setProfileSelectionType,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(setAvailableProfiles).toHaveBeenCalled();
+      const callArg = setAvailableProfiles.mock.calls[0][0];
+      expect(typeof callArg).toBe('function');
+      const prev = {};
+      const updated = callArg(prev);
+      expect(updated).toMatchObject({ 'test-resource-type': mockProfiles });
+      expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
+      expect(setProfileSelectionType).toHaveBeenCalledWith({
+        action: 'change',
+        resourceType: 'test-resource-type',
+      });
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+
+    test('skips loading available profiles if they are already loaded', async () => {
+      const setProfileSelectionType = jest.fn();
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: null,
+            availableProfiles: { 'test-resource-type': mockProfiles },
+            setPreferredProfiles,
+            setAvailableProfiles,
+          },
+        },
+        {
+          store: useUIState,
+          state: {
+            setIsProfileSelectionModalOpen,
+            setProfileSelectionType,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).not.toHaveBeenCalled();
+      expect(setAvailableProfiles).not.toHaveBeenCalled();
+      expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
+      expect(setProfileSelectionType).toHaveBeenCalledWith({
+        action: 'change',
+        resourceType: 'test-resource-type',
+      });
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+
+    test('handles error when loading available profiles', async () => {
+      const error = new Error('Failed to load available profiles');
+      (fetchProfiles as jest.Mock).mockRejectedValue(error);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.errorLoadingProfiles');
+      expect(addStatusMessagesItem).toHaveBeenCalled();
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+  });
 });

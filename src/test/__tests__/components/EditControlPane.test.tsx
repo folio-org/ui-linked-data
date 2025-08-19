@@ -3,10 +3,11 @@ import { EditControlPane } from '@components/EditControlPane';
 import { act, fireEvent, render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 import * as recordsApi from '@common/api/records.api';
+import * as useProfileSelectionHook from '@common/hooks/useProfileSelection';
 import { ROUTES } from '@common/constants/routes.constants';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useUIStore } from '@src/store';
+import { useInputsState, useUIStore } from '@src/store';
 
 const renderWrapper = (withDropdown = true) => {
   const path = withDropdown ? ROUTES.RESOURCE_EDIT.uri : ROUTES.RESOURCE_CREATE.uri;
@@ -15,6 +16,10 @@ const renderWrapper = (withDropdown = true) => {
     {
       store: useUIStore,
       state: { currentlyEditedEntityBfid: new Set([PROFILE_BFIDS.INSTANCE]) },
+    },
+    {
+      store: useInputsState,
+      state: { selectedRecordBlocks: { block: 'test-block' } },
     },
   ]);
 
@@ -79,5 +84,22 @@ describe('EditControlPane', () => {
     });
 
     expect(getRdfRecordMock).toHaveBeenCalled();
+  });
+
+  test('opens Profile Change modal', async () => {
+    const openModalForProfileChangeMock = jest.fn();
+    jest.spyOn(useProfileSelectionHook, 'useProfileSelection').mockReturnValue({
+      checkProfileAndProceed: jest.fn(),
+      openModalForProfileChange: openModalForProfileChangeMock,
+    } as any);
+
+    const { findByText, findByTestId } = renderWrapper();
+
+    await act(async () => {
+      fireEvent.click(await findByTestId('edit-control-actions-toggle'));
+      fireEvent.click(await findByText('ld.changeInstanceProfile'));
+    });
+
+    expect(openModalForProfileChangeMock).toHaveBeenCalledWith({ resourceTypeURL: 'test-block' });
   });
 });
