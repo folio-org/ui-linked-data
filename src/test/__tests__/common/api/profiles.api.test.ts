@@ -32,7 +32,7 @@ describe('profiles.api', () => {
     };
     jest.spyOn(baseApi, 'getJson').mockResolvedValue(testResult);
 
-    const result = await fetchProfile();
+    const result = await fetchProfile('1');
 
     expect(baseApi.getJson).toHaveBeenCalledWith({
       url: '/linked-data/profile/1',

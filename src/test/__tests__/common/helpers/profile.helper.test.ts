@@ -78,7 +78,7 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [Number(customProfileId), Number(referenceProfileId)],
+        ids: [Number(customProfileId), referenceProfileId],
         rootEntry: {
           id: 'root',
           type: 'root',

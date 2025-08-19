@@ -7,10 +7,16 @@ import { useNavigationState, useProfileState, useUIState } from '@src/store';
 
 const mockSetIsProfileSelectionModalOpen = jest.fn();
 const mockNavigateToEditPage = jest.fn();
+const mockChangeRecordProfile = jest.fn();
 
 jest.mock('@common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: () => ({
     navigateToEditPage: mockNavigateToEditPage,
+  }),
+}));
+jest.mock('@common/hooks/useRecordControls', () => ({
+  useRecordControls: () => ({
+    changeRecordProfile: mockChangeRecordProfile,
   }),
 }));
 
@@ -22,15 +28,22 @@ describe('ProfileSelectionManager', () => {
         state: {
           isProfileSelectionModalOpen: true,
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+          profileSelectionType: {
+            action: 'set',
+            resourceType: 'work',
+          },
         },
       },
       {
         store: useProfileState,
         state: {
-          availableProfiles: [
-            { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-            { id: 'profile_2', name: 'Test Profile 2', resourceType: 'instance' },
-          ],
+          availableProfiles: {
+            work: [
+              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+            ],
+            instance: [{ id: 'profile_3', name: 'Test Profile 2', resourceType: 'instance' }],
+          },
         },
       },
       {

@@ -4,7 +4,9 @@ import { fetchPreferredProfiles, fetchProfiles } from '@common/api/profiles.api'
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { StatusType } from '@common/constants/status.constants';
+import * as BibframeConstants from '@common/constants/bibframe.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
@@ -16,6 +18,12 @@ jest.mock('@common/services/userNotification', () => ({
     createMessage: jest.fn().mockReturnValue('mocked-message'),
   },
 }));
+
+enum MockBibframeEntitiesMap {
+  'test-resource-type' = 'test-resource-type',
+}
+const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'BibframeEntitiesMap');
+mockImportedConstant(MockBibframeEntitiesMap);
 
 describe('useProfileSelection', () => {
   const setPreferredProfiles = jest.fn();
@@ -127,7 +135,9 @@ describe('useProfileSelection', () => {
       expect(setIsLoading).toHaveBeenCalledWith(true);
       expect(fetchPreferredProfiles).toHaveBeenCalledWith(resourceTypeURL);
       expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
-      expect(setAvailableProfiles).toHaveBeenCalledWith(mockProfiles);
+      expect(setAvailableProfiles).toHaveBeenCalled();
+      const callArg = setAvailableProfiles.mock.calls[0][0];
+      expect(typeof callArg).toBe('function');
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });
@@ -139,7 +149,7 @@ describe('useProfileSelection', () => {
           store: useProfileState,
           state: {
             preferredProfiles: null,
-            availableProfiles: mockProfiles,
+            availableProfiles: { 'test-resource-type': mockProfiles },
             setPreferredProfiles,
             setAvailableProfiles,
           },

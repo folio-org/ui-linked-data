@@ -76,6 +76,7 @@ describe('RecordGenerator', () => {
           root: {
             test_1: 'value 1',
             refs: [{ id: 'test-reference-id' }],
+            profileId: mockProfileId,
           },
           property_1: {
             test_2: 'value 2',

@@ -140,10 +140,11 @@ export class RecordGenerator implements IRecordGenerator {
   }
 
   private addProfileId(entryNode: SchemaEntry) {
-    if ((typeof entryNode !== 'object' || entryNode === null) && typeof this.profileId !== 'string') {
-      return;
-    }
+    const isValidEntryNode = typeof entryNode === 'object' || entryNode !== null;
+    const isValidProfileId = typeof this.profileId === 'string' || typeof this.profileId === 'number';
 
-    entryNode.profileId = Number(this.profileId);
+    if (isValidEntryNode && isValidProfileId) {
+      entryNode.profileId = this.profileId;
+    }
   }
 }
