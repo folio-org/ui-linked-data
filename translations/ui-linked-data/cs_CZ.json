@@ -257,5 +257,10 @@
     "ld.importFailed": "Import se nezdařil",
     "ld.importDone": "Hotovo",
     "ld.importTryAgain": "Zkuste to znovu",
-    "ld.importTimedout": "Import se nepodařilo dokončit včas"
+    "ld.importTimedout": "Import se nepodařilo dokončit včas",
+    "ld.errorLoadingProfiles": "Chyba při načítání profilů",
+    "ld.resourceProfile": "Profil zdroje",
+    "ld.modal.chooseResourceProfile.subtitle": "Pro zahájení vyberte profil zdroje.",
+    "ld.modal.chooseResourceProfile.setAsDefault": "Nastavit jako výchozí",
+    "ld.create.base": "Vytvořit"
 }
