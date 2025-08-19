@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { EditSection } from '@components/EditSection';
-import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
+import { BibframeEntities, PROFILE_BFIDS, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
 import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
 import { useConfig } from '@common/hooks/useConfig.hook';
@@ -13,6 +13,7 @@ import { EditPreview } from '@components/EditPreview';
 import { QueryParams } from '@common/constants/routes.constants';
 import { ViewMarcModal } from '@components/ViewMarcModal';
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
+import { useProfileSelection } from '@common/hooks/useProfileSelection';
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -27,6 +28,7 @@ export const Edit = () => {
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState();
+  const { loadAvailableProfiles } = useProfileSelection();
   const queryParams = new URLSearchParams(window.location.search);
   const cloneOfParam = queryParams.get(QueryParams.CloneOf);
   const typeParam = queryParams.get(QueryParams.Type);
@@ -128,6 +130,9 @@ export const Edit = () => {
         await getProfiles({
           record: typedRecord,
         });
+        await loadAvailableProfiles(
+          TYPE_URIS[resourceDecriptionType.toUpperCase() as BibframeEntities]
+        );
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       } finally {

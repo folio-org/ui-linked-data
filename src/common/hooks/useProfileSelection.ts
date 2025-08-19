@@ -85,6 +85,7 @@ export const useProfileSelection = () => {
   };
 
   return {
+    loadAvailableProfiles,
     checkProfileAndProceed,
   };
 };

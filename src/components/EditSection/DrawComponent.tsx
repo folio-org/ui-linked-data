@@ -34,6 +34,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   collapsibleEntries,
   onChange,
   handleGroupsCollapseExpand,
+  profileTitle,
 }) => {
   const { uuid, displayName = '', type, children, constraints, htmlId } = entry;
   const isDisabled = !!disabledFields?.get(uuid);
@@ -49,7 +50,10 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         showLabel={false}
         className="entity-heading"
       >
-        <strong className="heading">{displayNameWithAltValue}</strong>
+        <strong className="heading">
+          {displayNameWithAltValue}
+          { profileTitle ? " - " + profileTitle : "" }
+        </strong>
         {!!collapsibleEntries.size && (
           <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
             <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />

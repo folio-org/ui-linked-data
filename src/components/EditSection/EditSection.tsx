@@ -1,8 +1,10 @@
 import { memo, useRef } from 'react';
 import { debounce } from 'lodash';
 import classNames from 'classnames';
+import { useSearchParams } from 'react-router-dom';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
+import { QueryParams } from '@common/constants/routes.constants';
 import { Fields } from '@components/Fields';
 import { Prompt } from '@components/Prompt';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
@@ -15,10 +17,12 @@ const USER_INPUT_DELAY = 100;
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
-  const { initialSchemaKey } = useProfileState();
+  const { availableProfiles, initialSchemaKey } = useProfileState();
   const { userValues, addUserValuesItem, selectedEntries, setSelectedEntries } = useInputsState();
   const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState();
   const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
+  const [searchParams] = useSearchParams();
+  const profileIdParam = searchParams.get(QueryParams.ProfileId);
 
   useContainerEvents({ watchEditedState: true });
 
@@ -45,6 +49,9 @@ export const EditSection = memo(() => {
   // Uncomment if it is needed to render certain groups of fields disabled, then use it as a prop in Fields component
   // const disabledFields = useMemo(() => getAllDisabledFields(schema), [schema]);
 
+  const profileMeta = availableProfiles?.find(profile => profile.id == profileIdParam);
+  const profileTitle = profileMeta?.name;
+
   const drawComponent = renderDrawComponent({
     selectedEntriesService,
     selectedEntries,
@@ -54,6 +61,7 @@ export const EditSection = memo(() => {
     collapsibleEntries,
     onChange,
     handleGroupsCollapseExpand,
+    profileTitle,
   });
 
   return (

@@ -10,6 +10,7 @@ export type EditSectionDataProps = {
   collapsibleEntries: Set<string>;
   onChange: (uuid: string, contents: UserValueContents[]) => void;
   handleGroupsCollapseExpand: VoidFunction;
+  profileTitle: string | undefined;
 };
 
 export const renderDrawComponent =
