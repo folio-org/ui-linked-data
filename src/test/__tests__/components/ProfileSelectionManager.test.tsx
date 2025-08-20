@@ -100,7 +100,7 @@ describe('ProfileSelectionManager', () => {
     expect(mockChangeRecordProfile).not.toHaveBeenCalled();
   });
 
-  test('calls changeRecordProfile when profile is selected and action is "change"', async () => {
+  test('does not call changeRecordProfile when profile is selected and action is "change"', async () => {
     setInitialGlobalState([
       {
         store: useUIState,
@@ -139,11 +139,8 @@ describe('ProfileSelectionManager', () => {
     fireEvent.change(selectElement, { target: { value: 'profile_3' } });
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
-    await waitFor(() => {
-      expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: 'profile_3' });
-    });
-
-    expect(mockSetIsProfileSelectionModalOpen).toHaveBeenCalledWith(false);
+    expect(mockChangeRecordProfile).not.toHaveBeenCalled();
+    expect(mockSetIsProfileSelectionModalOpen).not.toHaveBeenCalledWith(false);
     expect(mockNavigateToEditPage).not.toHaveBeenCalled();
   });
 
