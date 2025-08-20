@@ -53,10 +53,16 @@
       font-family: 'Source Sans Pro', sans-serif;
 
       .warning-title {
+        display: flex;
+        flex-direction: row;
         margin-bottom: 0.5rem;
         font-weight: 400;
         font-size: 1.14rem;
         color: $error;
+
+        &-text {
+          margin-left: 10px;
+        }
       }
 
       .warning-content {
