@@ -1,9 +1,11 @@
 import { FC, memo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { getLabelId } from '@common/helpers/profileSelection.helper';
 import { Modal } from '@components/Modal';
+import { WarningMessages } from './WarningMessages';
 import './ModalChooseProfile.scss';
 
-interface Props {
+interface ModalChooseProfileProps {
   isOpen: boolean;
   profileSelectionType: ProfileSelectionType;
   onCancel: VoidFunction;
@@ -13,29 +15,7 @@ interface Props {
   selectedProfileId?: string | number | null;
 }
 
-const getLabelId = ({
-  labels: { workChange, instanceChange, defaultSet },
-  profileSelectionType: { action, resourceType },
-}: {
-  labels: {
-    workChange: string;
-    instanceChange: string;
-    defaultSet: string;
-  };
-  profileSelectionType: ProfileSelectionType;
-}) => {
-  let labelId;
-
-  if (action === 'change') {
-    labelId = resourceType === 'work' ? workChange : instanceChange;
-  } else {
-    labelId = defaultSet;
-  }
-
-  return labelId;
-};
-
-export const ModalChooseProfile: FC<Props> = memo(
+export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
   ({ isOpen, profileSelectionType, onCancel, onSubmit, onClose, profiles, selectedProfileId }) => {
     const { formatMessage } = useIntl();
     const [selectedValue, setSelectedValue] = useState<string | number>(selectedProfileId ?? profiles?.[0]?.id);
@@ -61,12 +41,24 @@ export const ModalChooseProfile: FC<Props> = memo(
       onSubmit(selectedValue);
     };
 
+    const title = formatMessage({
+      id: getLabelId({
+        labels: {
+          workChange: 'ld.changeWorkProfile',
+          instanceChange: 'ld.changeInstanceProfile',
+          workSet: 'ld.newWork',
+          instanceSet: 'ld.newInstance',
+          defaultLabel: 'ld.newInstance',
+        },
+        profileSelectionType,
+      }),
+    });
     const labelSelect = formatMessage({
       id: getLabelId({
         labels: {
           workChange: 'ld.modal.chooseResourceProfile.workProfile',
           instanceChange: 'ld.modal.chooseResourceProfile.instanceProfile',
-          defaultSet: 'ld.resourceProfile',
+          defaultLabel: 'ld.resourceProfile',
         },
         profileSelectionType,
       }),
@@ -76,7 +68,7 @@ export const ModalChooseProfile: FC<Props> = memo(
         labels: {
           workChange: 'ld.modal.chooseResourceProfile.setDefaultWorkProfile',
           instanceChange: 'ld.modal.chooseResourceProfile.setDefaultInstanceProfile',
-          defaultSet: 'ld.modal.chooseResourceProfile.setAsDefault',
+          defaultLabel: 'ld.modal.chooseResourceProfile.setAsDefault',
         },
         profileSelectionType,
       }),
@@ -87,7 +79,7 @@ export const ModalChooseProfile: FC<Props> = memo(
       <Modal
         className="modal-choose-profile"
         isOpen={isOpen}
-        title={formatMessage({ id: 'ld.newInstance' })}
+        title={title}
         submitButtonLabel={labelSubmit}
         cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
         onClose={onClose}
@@ -95,9 +87,11 @@ export const ModalChooseProfile: FC<Props> = memo(
         onCancel={onCancel}
       >
         <div className="modal-content" data-testid="modal-choose-profile-content">
-          <p className="modal-description">
-            <FormattedMessage id="ld.modal.chooseResourceProfile.subtitle" />
-          </p>
+          {profileSelectionType.action === 'set' && (
+            <p className="modal-description">
+              <FormattedMessage id="ld.modal.chooseResourceProfile.subtitle" />
+            </p>
+          )}
           <div className="modal-content-controls">
             <div className="modal-content-controls-block">
               <h4 className="modal-content-subheader">{labelSelect}</h4>
@@ -125,9 +119,12 @@ export const ModalChooseProfile: FC<Props> = memo(
             </div>
 
             {profileSelectionType.action === 'change' && (
-              <div>
-                <p>Change profiles warning</p>
-              </div>
+              <WarningMessages
+                profileSelectionType={profileSelectionType}
+                profiles={profiles}
+                selectedProfileId={selectedProfileId}
+                selectedValue={selectedValue}
+              />
             )}
           </div>
         </div>

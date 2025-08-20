@@ -47,6 +47,32 @@
     &-label {
       line-height: 1.5rem;
     }
+
+    &-warning {
+      margin-top: 1rem;
+      font-family: 'Source Sans Pro', sans-serif;
+
+      .warning-title {
+        margin-bottom: 0.5rem;
+        font-weight: 400;
+        font-size: 1.14rem;
+        color: $error;
+      }
+
+      .warning-content {
+        margin-bottom: 0;
+        line-height: 1.4;
+
+        li {
+          margin-bottom: 0.5rem;
+          font-size: 1rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
   }
 
   .modal-controls {
