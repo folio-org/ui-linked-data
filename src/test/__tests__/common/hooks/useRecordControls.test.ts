@@ -295,7 +295,6 @@ describe('useRecordControls', () => {
     const mockRecord = { id: 'record-id', data: 'test data' };
     const mockNewProfileId = '456';
     const mockResponseData = { id: 'updated-record-id', data: 'updated data' };
-    const mockResponse = { json: () => Promise.resolve(mockResponseData) };
 
     beforeEach(() => {
       setInitialGlobalState([
@@ -326,46 +325,17 @@ describe('useRecordControls', () => {
     });
 
     it('successfully changes record profile', async () => {
-      (recordsApi.putRecord as jest.Mock).mockResolvedValue(mockResponse);
+      mockGenerateRecord.mockReturnValue(mockResponseData);
       mockGetProfiles.mockResolvedValue(undefined);
 
       const { result } = renderHook(() => useRecordControls());
       await result.current.changeRecordProfile({ profileId: mockNewProfileId });
 
-      // Verify record generation with the new profile ID
       expect(mockGenerateRecord).toHaveBeenCalledWith({ profileId: mockNewProfileId });
-
-      // Verify API call
-      expect(recordsApi.putRecord).toHaveBeenCalledWith('record-id', { generated: 'record' });
-
-      // Verify state updates
       expect(mockSetRecord).toHaveBeenCalledWith(mockResponseData);
-      expect(mockDispatchUnblockEvent).toHaveBeenCalled();
-      expect(mockSetIsEdited).toHaveBeenCalledWith(false);
-      expect(mockSetLastSavedRecordId).toHaveBeenCalledWith('updated-record-id');
-
-      // Verify navigation
-      expect(mockNavigate).toHaveBeenCalledWith(
-        expect.stringContaining('updated-record-id'),
-        expect.objectContaining({ replace: true }),
-      );
-
-      // Verify profiles are loaded
       expect(mockGetProfiles).toHaveBeenCalledWith({
         record: mockResponseData,
       });
-    });
-
-    it('handles error during profile change', async () => {
-      const error = new Error('Profile change failed');
-      (recordsApi.putRecord as jest.Mock).mockRejectedValue(error);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.changeRecordProfile({ profileId: mockNewProfileId });
-
-      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.cantSaveRd');
-      expect(mockSetRecord).not.toHaveBeenCalled();
-      expect(mockNavigate).not.toHaveBeenCalled();
     });
 
     it('does not proceed if generateRecord returns nothing', async () => {
@@ -376,7 +346,6 @@ describe('useRecordControls', () => {
 
       expect(recordsApi.putRecord).not.toHaveBeenCalled();
       expect(mockSetRecord).not.toHaveBeenCalled();
-      expect(mockNavigate).not.toHaveBeenCalled();
     });
   });
 });

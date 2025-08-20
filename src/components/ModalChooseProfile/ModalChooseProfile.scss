@@ -55,10 +55,16 @@
       .warning-title {
         display: flex;
         flex-direction: row;
+        align-items: center;
         margin-bottom: 0.5rem;
         font-weight: 400;
         font-size: 1.14rem;
         color: $error;
+
+        .icon {
+          height: 14px;
+          width: 14px;
+        }
 
         &-text {
           margin-left: 10px;

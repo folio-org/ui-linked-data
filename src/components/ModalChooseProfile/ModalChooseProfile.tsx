@@ -85,6 +85,7 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
         onClose={onClose}
         onSubmit={handleSubmit}
         onCancel={onCancel}
+        submitButtonDisabled={profileSelectionType.action === 'change'}
       >
         <div className="modal-content" data-testid="modal-choose-profile-content">
           {profileSelectionType.action === 'set' && (
