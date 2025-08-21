@@ -25,7 +25,7 @@ describe('useNavigateToCreatePage', () => {
   const setQueryParams = jest.fn();
   const generatePageURLMock = jest.fn();
 
-  const testResourceTypeURL = 'test-resource-type';
+  const testResourceTypeURL = 'test-resource-type' as ResourceTypeURL;
   const testType = 'testType';
   const testRefId = 'testRefId';
   const testProfileId = 'testProfileId';

@@ -42,7 +42,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
 
   const onClickNewInstance = () => {
     onCreateNewResource({
-      resourceTypeURL: TYPE_URIS.INSTANCE,
+      resourceTypeURL: TYPE_URIS.INSTANCE as ResourceTypeURL,
       queryParams: {
         type,
         refId,
