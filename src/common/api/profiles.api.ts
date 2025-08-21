@@ -5,7 +5,7 @@ import {
 } from '@common/constants/api.constants';
 import baseApi from './base.api';
 
-export const fetchProfile = (profileId = 1) =>
+export const fetchProfile = (profileId: string | number) =>
   baseApi.getJson({
     url: `${PROFILE_API_ENDPOINT}/${profileId}`,
   }) as Promise<Profile>;

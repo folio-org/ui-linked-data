@@ -4,7 +4,9 @@ import { fetchPreferredProfiles, fetchProfiles } from '@common/api/profiles.api'
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { StatusType } from '@common/constants/status.constants';
+import * as BibframeConstants from '@common/constants/bibframe.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
@@ -17,6 +19,12 @@ jest.mock('@common/services/userNotification', () => ({
   },
 }));
 
+enum MockBibframeEntitiesMap {
+  'test-resource-type' = 'test-resource-type',
+}
+const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'BibframeEntitiesMap');
+mockImportedConstant(MockBibframeEntitiesMap);
+
 describe('useProfileSelection', () => {
   const setPreferredProfiles = jest.fn();
   const setAvailableProfiles = jest.fn();
@@ -25,7 +33,7 @@ describe('useProfileSelection', () => {
   const addStatusMessagesItem = jest.fn();
   const callbackMock = jest.fn();
 
-  const resourceTypeURL = 'test-resource-type';
+  const resourceTypeURL = 'test-resource-type' as ResourceTypeURL;
   const profileId = 'test-profile-id';
   const mockProfiles = [
     {
@@ -127,7 +135,9 @@ describe('useProfileSelection', () => {
       expect(setIsLoading).toHaveBeenCalledWith(true);
       expect(fetchPreferredProfiles).toHaveBeenCalledWith(resourceTypeURL);
       expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
-      expect(setAvailableProfiles).toHaveBeenCalledWith(mockProfiles);
+      expect(setAvailableProfiles).toHaveBeenCalled();
+      const callArg = setAvailableProfiles.mock.calls[0][0];
+      expect(typeof callArg).toBe('function');
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });
@@ -139,7 +149,7 @@ describe('useProfileSelection', () => {
           store: useProfileState,
           state: {
             preferredProfiles: null,
-            availableProfiles: mockProfiles,
+            availableProfiles: { 'test-resource-type': mockProfiles },
             setPreferredProfiles,
             setAvailableProfiles,
           },
@@ -243,6 +253,102 @@ describe('useProfileSelection', () => {
 
       expect(fetchPreferredProfiles).not.toHaveBeenCalled();
       expect(callbackMock).toHaveBeenCalledWith(profileId);
+    });
+  });
+
+  describe('openModalForProfileChange', () => {
+    test('loads available profiles and opens modal for profile change', async () => {
+      (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
+
+      const setProfileSelectionType = jest.fn();
+      setInitialGlobalState([
+        {
+          store: useUIState,
+          state: {
+            setIsProfileSelectionModalOpen,
+            setProfileSelectionType,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(setAvailableProfiles).toHaveBeenCalled();
+      const callArg = setAvailableProfiles.mock.calls[0][0];
+      expect(typeof callArg).toBe('function');
+      const prev = {};
+      const updated = callArg(prev);
+      expect(updated).toMatchObject({ 'test-resource-type': mockProfiles });
+      expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
+      expect(setProfileSelectionType).toHaveBeenCalledWith({
+        action: 'change',
+        resourceType: 'test-resource-type',
+      });
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+
+    test('skips loading available profiles if they are already loaded', async () => {
+      const setProfileSelectionType = jest.fn();
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: null,
+            availableProfiles: { 'test-resource-type': mockProfiles },
+            setPreferredProfiles,
+            setAvailableProfiles,
+          },
+        },
+        {
+          store: useUIState,
+          state: {
+            setIsProfileSelectionModalOpen,
+            setProfileSelectionType,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).not.toHaveBeenCalled();
+      expect(setAvailableProfiles).not.toHaveBeenCalled();
+      expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
+      expect(setProfileSelectionType).toHaveBeenCalledWith({
+        action: 'change',
+        resourceType: 'test-resource-type',
+      });
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+
+    test('handles error when loading available profiles', async () => {
+      const error = new Error('Failed to load available profiles');
+      (fetchProfiles as jest.Mock).mockRejectedValue(error);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.openModalForProfileChange({
+          resourceTypeURL,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.errorLoadingProfiles');
+      expect(addStatusMessagesItem).toHaveBeenCalled();
+      expect(setIsLoading).toHaveBeenCalledWith(false);
     });
   });
 });

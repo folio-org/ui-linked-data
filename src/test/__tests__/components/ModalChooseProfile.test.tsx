@@ -7,6 +7,10 @@ const mockProfiles = [
   { id: 'profile_2', name: 'Test Profile 2', resourceType: 'instance' },
   { id: 'profile_3', name: 'Test Profile 3', resourceType: 'work' },
 ];
+const mockProfileSelectionType = {
+  action: 'set',
+  resourceType: 'work',
+} as ProfileSelectionType;
 
 describe('ModalChooseProfile', () => {
   const onCancel = jest.fn();
@@ -25,6 +29,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -51,6 +56,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -65,6 +71,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -82,6 +89,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -107,6 +115,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -127,6 +136,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -142,6 +152,7 @@ describe('ModalChooseProfile', () => {
     render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -157,6 +168,7 @@ describe('ModalChooseProfile', () => {
     const { container } = render(
       <ModalChooseProfile
         isOpen={false}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
@@ -168,20 +180,21 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onSubmit with correct profile id when form is submitted without manual selection', async () => {
-    
     const { rerender } = render(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}
         profiles={[]}
       />,
     );
-    
+
     rerender(
       <ModalChooseProfile
         isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
         onCancel={onCancel}
         onSubmit={onSubmit}
         onClose={onClose}

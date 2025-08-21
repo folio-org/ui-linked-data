@@ -23,7 +23,7 @@ export const PreviewActionsDropdown: FC<Props> = ({ referenceId, ownId, entityTy
 
   const handleClickNewInstance = () => {
     onCreateNewResource({
-      resourceTypeURL: TYPE_URIS.INSTANCE,
+      resourceTypeURL: TYPE_URIS.INSTANCE as ResourceTypeURL,
       queryParams: {
         type: entityType,
         refId: referenceId,

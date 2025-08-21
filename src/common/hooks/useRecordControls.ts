@@ -27,6 +27,7 @@ type SaveRecordProps = {
   asRefToNewRecord?: boolean;
   shouldSetSearchParams?: boolean;
   isNavigatingBack?: boolean;
+  profileId?: string;
 };
 
 type IBaseFetchRecord = {
@@ -85,8 +86,9 @@ export const useRecordControls = () => {
     asRefToNewRecord = false,
     isNavigatingBack = true,
     shouldSetSearchParams = true,
+    profileId,
   }: SaveRecordProps = {}) => {
-    const generatedRecord = generateRecord();
+    const generatedRecord = generateRecord({ profileId });
 
     if (!generatedRecord) return;
 
@@ -278,6 +280,27 @@ export const useRecordControls = () => {
     }
   };
 
+  const changeRecordProfile = async ({ profileId }: { profileId: string | number }) => {
+    const generatedRecord = generateRecord({ profileId: `${profileId}` });
+
+    if (!generatedRecord) return;
+
+    setIsLoading(true);
+
+    try {
+      // TODO: generate a new record that includes both Work and Instance values.
+      setRecord(generatedRecord);
+
+      await getProfiles({
+        record: generatedRecord,
+      });
+    } catch (error: unknown) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     fetchRecord,
     saveRecord,
@@ -288,5 +311,6 @@ export const useRecordControls = () => {
     fetchExternalRecordForPreview,
     tryFetchExternalRecordForEdit,
     getRecordAndInitializeParsing,
+    changeRecordProfile,
   };
 };

@@ -263,5 +263,16 @@
   "ld.resourceProfile": "Resource profile",
   "ld.modal.chooseResourceProfile.subtitle": "Choose a resource profile to get started.",
   "ld.modal.chooseResourceProfile.setAsDefault": "Set as my default",
-  "ld.create.base": "Create"
+  "ld.modal.chooseResourceProfile.workProfile": "Work profile",
+  "ld.modal.chooseResourceProfile.instanceProfile": "Instance profile",
+  "ld.modal.chooseResourceProfile.setDefaultWorkProfile": "My default work profile",
+  "ld.modal.chooseResourceProfile.setDefaultInstanceProfile": "My default instance profile",
+  "ld.modal.chooseResourceProfile.warningTitle": "Warning: You might lose information in the following fields:",
+  "ld.create.base": "Create",
+  "ld.changeInstanceProfile": "Change instance profile",
+  "ld.changeWorkProfile": "Change work profile",
+  "ld.field.urlOfInstance": "URL of instance",
+  "ld.field.bookFormat": "Book format",
+  "ld.field.frequency": "Frequency",
+  "ld.na": "N/A"
 }

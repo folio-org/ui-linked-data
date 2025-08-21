@@ -30,6 +30,7 @@
 * Add characteristic / serial publication type support. Refs [UILD-604].
 * Adjust Profile prefix. Refs [UILD-619].
 * Add ISSN, IAN, and other identifier support. Refs [UILD-608].
+* Add ability to change profiles from Instance Edit view. Refs [UILD-576].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -61,6 +62,7 @@
 [UILD-604]:https://folio-org.atlassian.net/browse/UILD-604
 [UILD-619]:https://folio-org.atlassian.net/browse/UILD-619
 [UILD-608]:https://folio-org.atlassian.net/browse/UILD-608
+[UILD-576]:https://folio-org.atlassian.net/browse/UILD-576
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

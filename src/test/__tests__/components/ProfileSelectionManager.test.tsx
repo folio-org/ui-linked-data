@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { ProfileSelectionManager } from '@components/ProfileSelectionManager';
@@ -7,10 +7,16 @@ import { useNavigationState, useProfileState, useUIState } from '@src/store';
 
 const mockSetIsProfileSelectionModalOpen = jest.fn();
 const mockNavigateToEditPage = jest.fn();
+const mockChangeRecordProfile = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('@common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: () => ({
     navigateToEditPage: mockNavigateToEditPage,
+  }),
+}));
+jest.mock('@common/hooks/useRecordControls', () => ({
+  useRecordControls: () => ({
+    changeRecordProfile: mockChangeRecordProfile,
   }),
 }));
 
@@ -22,15 +28,22 @@ describe('ProfileSelectionManager', () => {
         state: {
           isProfileSelectionModalOpen: true,
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+          profileSelectionType: {
+            action: 'set',
+            resourceType: 'work',
+          },
         },
       },
       {
         store: useProfileState,
         state: {
-          availableProfiles: [
-            { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-            { id: 'profile_2', name: 'Test Profile 2', resourceType: 'instance' },
-          ],
+          availableProfiles: {
+            work: [
+              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+            ],
+            instance: [{ id: 'profile_3', name: 'Test Profile 2', resourceType: 'instance' }],
+          },
         },
       },
       {
@@ -73,7 +86,7 @@ describe('ProfileSelectionManager', () => {
     expect(mockSetIsProfileSelectionModalOpen).toHaveBeenCalledWith(false);
   });
 
-  test('navigates to edit page with correct URL when profile is selected and submitted', () => {
+  test('navigates to edit page with correct URL when profile is selected and action is "set"', () => {
     render(<ProfileSelectionManager />);
 
     const selectElement = screen.getByRole('combobox');
@@ -84,6 +97,51 @@ describe('ProfileSelectionManager', () => {
     expect(mockNavigateToEditPage).toHaveBeenCalledWith(
       expect.stringContaining(`${ROUTES.RESOURCE_CREATE.uri}?sourceId=123&sourceType=test&profileId=profile_2`),
     );
+    expect(mockChangeRecordProfile).not.toHaveBeenCalled();
+  });
+
+  test('does not call changeRecordProfile when profile is selected and action is "change"', async () => {
+    setInitialGlobalState([
+      {
+        store: useUIState,
+        state: {
+          isProfileSelectionModalOpen: true,
+          setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+          profileSelectionType: {
+            action: 'change',
+            resourceType: 'instance',
+          },
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          availableProfiles: {
+            work: [
+              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+            ],
+            instance: [{ id: 'profile_3', name: 'Test Profile 3', resourceType: 'instance' }],
+          },
+        },
+      },
+      {
+        store: useNavigationState,
+        state: {
+          queryParams: { sourceId: '123', sourceType: 'test' },
+        },
+      },
+    ]);
+
+    render(<ProfileSelectionManager />);
+
+    const selectElement = screen.getByRole('combobox');
+    fireEvent.change(selectElement, { target: { value: 'profile_3' } });
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    expect(mockChangeRecordProfile).not.toHaveBeenCalled();
+    expect(mockSetIsProfileSelectionModalOpen).not.toHaveBeenCalledWith(false);
+    expect(mockNavigateToEditPage).not.toHaveBeenCalled();
   });
 
   test('does not render modal when isProfileSelectionModalOpen is false', () => {

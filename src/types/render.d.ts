@@ -96,6 +96,7 @@ type SchemaEntry = {
   cloneIndex?: number;
   twinChildren?: Record<string, string[]>;
   deletable?: boolean;
+  profileId?: string | number | null;
 };
 
 type LinkedEntry = {

@@ -12,13 +12,15 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useMarcData } from '@common/hooks/useMarcData';
 import { useResourceExport } from '@common/hooks/useResourceExport';
+import { useProfileSelection } from '@common/hooks/useProfileSelection';
 import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
-import { useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
+import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
 import ExternalLink16 from '@src/assets/external-link-16.svg?react';
 import Download16 from '@src/assets/download-16.svg?react';
 import Duplicate16 from '@src/assets/duplicate-16.svg?react';
 import Times16 from '@src/assets/times-16.svg?react';
+import Settings from '@src/assets/settings.svg?react';
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {
@@ -35,12 +37,20 @@ export const EditControlPane = () => {
   const { fetchMarcData } = useMarcData(setBasicValue);
   const { formatMessage } = useIntl();
   const { exportInstanceRdf } = useResourceExport();
+  const { openModalForProfileChange } = useProfileSelection();
+  const { selectedRecordBlocks } = useInputsState();
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
   const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
 
   const handleExportInstanceRdf = () => resourceId && exportInstanceRdf(resourceId);
+
+  const handleChangeInstanceProfile = () => {
+    if (!resourceId) return;
+
+    openModalForProfileChange({ resourceTypeURL: selectedRecordBlocks?.block as ResourceTypeURL });
+  };
 
   const items = [
     {
@@ -85,6 +95,14 @@ export const EditControlPane = () => {
           icon: <Download16 />,
           hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
           action: handleExportInstanceRdf,
+        },
+        {
+          id: 'changeInstanceProfile',
+          type: DropdownItemType.basic,
+          labelId: 'ld.changeInstanceProfile',
+          icon: <Settings />,
+          hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
+          action: handleChangeInstanceProfile,
         },
       ],
     },

@@ -147,7 +147,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   const onClickNewInstance = () => {
     onCreateNewResource({
-      resourceTypeURL: TYPE_URIS.INSTANCE,
+      resourceTypeURL: TYPE_URIS.INSTANCE as ResourceTypeURL,
       queryParams: {
         type: ResourceType.instance,
         refId: restOfWork.id,

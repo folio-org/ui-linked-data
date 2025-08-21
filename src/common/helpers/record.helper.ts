@@ -115,3 +115,18 @@ export const getRecordDependencies = (record?: RecordEntry | null) => {
 export const hasAllEmptyValues = (values: UserValueContents[]) => {
   return values.every(({ label }) => label === '' || label === undefined);
 };
+
+export const getRecordProfileId = (record?: RecordEntry<RecursiveRecordSchema> | null) => {
+  const recordData = record?.resource ?? {};
+  let selectedProfileId: string | number | null | undefined;
+
+  if (recordData && Object.keys(recordData).length) {
+    const { block } = getEditingRecordBlocks(recordData as RecordEntry);
+
+    if (block) {
+      selectedProfileId = record?.resource[block]?.profileId as number | undefined;
+    }
+  }
+
+  return selectedProfileId;
+};

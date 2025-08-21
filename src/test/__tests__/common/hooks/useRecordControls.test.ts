@@ -28,6 +28,14 @@ jest.mock('@common/api/records.api', () => ({
   putRecord: jest.fn(),
 }));
 
+const mockDispatchUnblockEvent = jest.fn();
+jest.mock('@common/hooks/useContainerEvents', () => ({
+  useContainerEvents: () => ({
+    dispatchUnblockEvent: mockDispatchUnblockEvent,
+    dispatchNavigateToOriginEventWithFallback: jest.fn(),
+  }),
+}));
+
 const mockGenerateRecord = jest.fn();
 jest.mock('@common/hooks/useRecordGeneration', () => ({
   useRecordGeneration: () => ({
@@ -276,6 +284,68 @@ describe('useRecordControls', () => {
         recordId: 'test-id',
         previewParams,
       });
+    });
+  });
+
+  describe('changeRecordProfile', () => {
+    const mockSetRecord = jest.fn();
+    const mockSetIsEdited = jest.fn();
+    const mockSetLastSavedRecordId = jest.fn();
+    const mockSelectedRecordBlocks = { block: 'test-block' };
+    const mockRecord = { id: 'record-id', data: 'test data' };
+    const mockNewProfileId = '456';
+    const mockResponseData = { id: 'updated-record-id', data: 'updated data' };
+
+    beforeEach(() => {
+      setInitialGlobalState([
+        {
+          store: useStatusStore,
+          state: {
+            setIsRecordEdited: mockSetIsEdited,
+            setLastSavedRecordId: mockSetLastSavedRecordId,
+          },
+        },
+        {
+          store: useInputsStore,
+          state: {
+            record: mockRecord,
+            setRecord: mockSetRecord,
+            selectedRecordBlocks: mockSelectedRecordBlocks,
+          },
+        },
+      ]);
+
+      mockGenerateRecord.mockReturnValue({ generated: 'record' });
+      jest
+        .spyOn(recordHelper, 'getRecordId')
+        .mockReturnValueOnce('record-id')
+        .mockReturnValueOnce('record-id')
+        .mockReturnValueOnce('updated-record-id')
+        .mockReturnValueOnce('updated-record-id');
+    });
+
+    it('successfully changes record profile', async () => {
+      mockGenerateRecord.mockReturnValue(mockResponseData);
+      mockGetProfiles.mockResolvedValue(undefined);
+
+      const { result } = renderHook(() => useRecordControls());
+      await result.current.changeRecordProfile({ profileId: mockNewProfileId });
+
+      expect(mockGenerateRecord).toHaveBeenCalledWith({ profileId: mockNewProfileId });
+      expect(mockSetRecord).toHaveBeenCalledWith(mockResponseData);
+      expect(mockGetProfiles).toHaveBeenCalledWith({
+        record: mockResponseData,
+      });
+    });
+
+    it('does not proceed if generateRecord returns nothing', async () => {
+      mockGenerateRecord.mockReturnValue(undefined);
+
+      const { result } = renderHook(() => useRecordControls());
+      await result.current.changeRecordProfile({ profileId: mockNewProfileId });
+
+      expect(recordsApi.putRecord).not.toHaveBeenCalled();
+      expect(mockSetRecord).not.toHaveBeenCalled();
     });
   });
 });

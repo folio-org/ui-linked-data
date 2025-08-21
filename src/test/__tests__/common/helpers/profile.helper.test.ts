@@ -53,7 +53,7 @@ describe('profile.helper', () => {
     });
 
     test('uses provided profileId when ResourceType is instance', () => {
-      const customProfileId = '42';
+      const customProfileId = 42;
       const result = getProfileConfig({
         resourceType: ResourceType.instance,
         profileId: customProfileId,
@@ -69,7 +69,7 @@ describe('profile.helper', () => {
     });
 
     test('uses provided referenceProfileId', () => {
-      const customProfileId = '42';
+      const customProfileId = 42;
       const referenceProfileId = '123';
       const result = getProfileConfig({
         resourceType: ResourceType.instance,
@@ -78,7 +78,7 @@ describe('profile.helper', () => {
       });
 
       expect(result).toEqual({
-        ids: [Number(customProfileId), Number(referenceProfileId)],
+        ids: [Number(customProfileId), referenceProfileId],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -102,7 +102,7 @@ describe('profile.helper', () => {
     });
 
     test('ignores profileId when ResourceType is not specified', () => {
-      const customProfileId = '42';
+      const customProfileId = 42;
       const result = getProfileConfig({
         profileId: customProfileId,
       });

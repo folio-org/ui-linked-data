@@ -95,12 +95,6 @@ interface ResourceTemplates {
   [key: string]: ResourceTemplate;
 }
 
-// TODO: define type and format for data received from API
-type RecordData = {
-  id?: number | string;
-  label?: string;
-};
-
 type DropdownOptionSelection = {
   hasNoRootWrapper: boolean;
   isSelectedOption: boolean;
@@ -158,3 +152,4 @@ type BF2BFLiteMap = Record<string, Record<string, BF2BFLiteMapEntry>>;
 type ProfileComponent = ProfileEntry | ResourceTemplate | PropertyTemplate;
 
 type ResourceType = keyof typeof import('@common/constants/record.constants').ResourceType;
+type ResourceTypeURL = keyof typeof import('@common/constants/bibframe.constants').BibframeEntitiesMap;

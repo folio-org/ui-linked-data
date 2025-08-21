@@ -11,6 +11,7 @@ describe('RecordGenerator', () => {
   let mockSelectedEntries: string[];
   let mockReferenceIds: { id: string }[];
   let mockRecordSchema: RecordSchema;
+  let mockProfileId: string | number;
 
   beforeEach(() => {
     generator = new RecordGenerator();
@@ -31,6 +32,7 @@ describe('RecordGenerator', () => {
       } as RecordSchemaEntry,
       property_1: {} as RecordSchemaEntry,
     };
+    mockProfileId = 'testProfileId_1';
 
     jest.spyOn(RecordSchemaFactory, 'getRecordSchema').mockReturnValue(mockRecordSchema);
   });
@@ -64,6 +66,7 @@ describe('RecordGenerator', () => {
         userValues: mockUserValues,
         selectedEntries: mockSelectedEntries,
         referenceIds: mockReferenceIds,
+        profileId: mockProfileId,
       });
 
       expect(profileSchemaManagerSpy).toHaveBeenCalled();
@@ -73,6 +76,7 @@ describe('RecordGenerator', () => {
           root: {
             test_1: 'value 1',
             refs: [{ id: 'test-reference-id' }],
+            profileId: mockProfileId,
           },
           property_1: {
             test_2: 'value 2',
