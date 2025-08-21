@@ -58,6 +58,8 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
         labels: {
           workChange: 'ld.modal.chooseResourceProfile.workProfile',
           instanceChange: 'ld.modal.chooseResourceProfile.instanceProfile',
+          workSet: 'ld.modal.chooseResourceProfile.workProfile',
+          instanceSet: 'ld.modal.chooseResourceProfile.instanceProfile',
           defaultLabel: 'ld.resourceProfile',
         },
         profileSelectionType,
@@ -68,6 +70,8 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
         labels: {
           workChange: 'ld.modal.chooseResourceProfile.setDefaultWorkProfile',
           instanceChange: 'ld.modal.chooseResourceProfile.setDefaultInstanceProfile',
+          workSet: 'ld.modal.chooseResourceProfile.setDefaultWorkProfile',
+          instanceSet: 'ld.modal.chooseResourceProfile.setDefaultInstanceProfile',
           defaultLabel: 'ld.modal.chooseResourceProfile.setAsDefault',
         },
         profileSelectionType,
