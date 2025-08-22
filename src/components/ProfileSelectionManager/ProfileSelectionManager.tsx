@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { ROUTES } from '@common/constants/routes.constants';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { getRecordProfileId } from '@common/helpers/record.helper';
@@ -13,6 +14,7 @@ export const ProfileSelectionManager = () => {
   const { queryParams } = useNavigationState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
+  const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>();
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
@@ -31,7 +33,10 @@ export const ProfileSelectionManager = () => {
     }
   };
 
-  const selectedProfileId = getRecordProfileId(record);
+  useEffect(() => {
+    const updatedSelectedProfileId = profileSelectionType.action === 'change' ? getRecordProfileId(record) : null;
+    setSelectedProfileId(updatedSelectedProfileId);
+  }, [profileSelectionType.action]);
 
   return (
     <ModalChooseProfile
