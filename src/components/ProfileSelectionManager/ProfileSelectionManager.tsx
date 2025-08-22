@@ -18,6 +18,7 @@ export const ProfileSelectionManager = () => {
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
+    setSelectedProfileId(null);
   };
 
   const onSubmit = async (profileId: string | number) => {
@@ -34,11 +35,13 @@ export const ProfileSelectionManager = () => {
   };
 
   useEffect(() => {
+    if (!isProfileSelectionModalOpen) return;
+
     const updatedSelectedProfileId = profileSelectionType.action === 'change' ? getRecordProfileId(record) : null;
     setSelectedProfileId(updatedSelectedProfileId);
-  }, [profileSelectionType.action]);
+  }, [isProfileSelectionModalOpen, profileSelectionType.action]);
 
-  return (
+  return isProfileSelectionModalOpen ? (
     <ModalChooseProfile
       isOpen={isProfileSelectionModalOpen}
       profileSelectionType={profileSelectionType}
@@ -48,5 +51,5 @@ export const ProfileSelectionManager = () => {
       profiles={availableProfiles?.[profileSelectionType?.resourceType]}
       selectedProfileId={selectedProfileId}
     />
-  );
+  ) : null;
 };
