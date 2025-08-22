@@ -14,7 +14,7 @@ export const ProfileSelectionManager = () => {
   const { queryParams } = useNavigationState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
-  const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>();
+  const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>(null);
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
@@ -39,7 +39,7 @@ export const ProfileSelectionManager = () => {
 
     const updatedSelectedProfileId = profileSelectionType.action === 'change' ? getRecordProfileId(record) : null;
     setSelectedProfileId(updatedSelectedProfileId);
-  }, [isProfileSelectionModalOpen, profileSelectionType.action]);
+  }, [isProfileSelectionModalOpen, profileSelectionType.action, record]);
 
   return isProfileSelectionModalOpen ? (
     <ModalChooseProfile
