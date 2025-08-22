@@ -100,6 +100,8 @@ export const instanceRecordSchema: RecordSchema = {
       }),
 
       [BFLITE_URIS.BOOK_FORMAT]: createArrayObjectProperty(linkAndTermProperties),
+      
+      [BFLITE_URIS.PUBLICATION_FREQUENCY]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.ADMIN_METADATA]: createArrayObjectProperty({
         [BFLITE_URIS.CREATED_DATE]: stringArrayProperty,

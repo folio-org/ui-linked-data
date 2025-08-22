@@ -80,6 +80,7 @@ export const BFLITE_URIS = {
   MODIFYING_AGENCY: 'http://bibfra.me/vocab/marc/modifyingAgency',
   TRANSCRIBING_AGENCY: 'http://bibfra.me/vocab/marc/transcribingAgency',
   CATALOGING_LANGUAGE: 'http://bibfra.me/vocab/lite/catalogingLanguage',
+  PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/marc/publicationFrequency'
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
