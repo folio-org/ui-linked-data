@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { ROUTES } from '@common/constants/routes.constants';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { getRecordProfileId } from '@common/helpers/record.helper';
@@ -13,9 +14,11 @@ export const ProfileSelectionManager = () => {
   const { queryParams } = useNavigationState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
+  const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>(null);
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
+    setSelectedProfileId(null);
   };
 
   const onSubmit = async (profileId: string | number) => {
@@ -31,9 +34,14 @@ export const ProfileSelectionManager = () => {
     }
   };
 
-  const selectedProfileId = getRecordProfileId(record);
+  useEffect(() => {
+    if (!isProfileSelectionModalOpen) return;
 
-  return (
+    const updatedSelectedProfileId = profileSelectionType.action === 'change' ? getRecordProfileId(record) : null;
+    setSelectedProfileId(updatedSelectedProfileId);
+  }, [isProfileSelectionModalOpen, profileSelectionType.action, record]);
+
+  return isProfileSelectionModalOpen ? (
     <ModalChooseProfile
       isOpen={isProfileSelectionModalOpen}
       profileSelectionType={profileSelectionType}
@@ -43,5 +51,5 @@ export const ProfileSelectionManager = () => {
       profiles={availableProfiles?.[profileSelectionType?.resourceType]}
       selectedProfileId={selectedProfileId}
     />
-  );
+  ) : null;
 };
