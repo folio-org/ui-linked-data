@@ -36,7 +36,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   handleGroupsCollapseExpand,
 }) => {
   const { uuid, displayName = '', type, children, constraints, htmlId } = entry;
-  const isEditable = (entry.constraints && entry.constraints.editable) || typeof entry.constraints === "undefined";
+  const isEditable = !!entry.constraints?.editable || typeof entry.constraints === "undefined";
   const isDisabled = !!disabledFields?.get(uuid) || !isEditable;
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
