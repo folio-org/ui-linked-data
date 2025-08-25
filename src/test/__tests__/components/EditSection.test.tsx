@@ -53,6 +53,14 @@ const userValues = {
       },
     ],
   },
+  uuid13: {
+    uuid: 'uuid13',
+    contents: [
+      {
+        label: 'uuid13-uservalue-label',
+      },
+    ],
+  },
 };
 
 const schema = new Map([
@@ -85,7 +93,7 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10'],
+      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13'],
     },
   ],
   [
@@ -197,6 +205,18 @@ const schema = new Map([
       uuid: 'uuid12',
     },
   ],
+  [
+    'uuid13',
+    {
+      bfid: 'uuid13Bfid',
+      uiBFLite: 'uuid13Uri',
+      displayName: 'uuid13',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid13'],
+      uuid: 'uuid13',
+      constraints: { editable: false },
+    },
+  ],
 ]);
 
 const monograph = {
@@ -279,7 +299,8 @@ describe('EditSection', () => {
   test('calls onchange and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    fireEvent.change(getByTestId('literal-field'), { target: { value: 'sampleValue' } });
+    const section = await getByTestId('field-with-meta-controls-uuid4');
+    fireEvent.change(within(section).getByTestId('literal-field'), { target: { value: 'sampleValue' } });
 
     await waitFor(async () => expect(await findByDisplayValue('sampleValue')).toBeInTheDocument());
   });
@@ -313,5 +334,14 @@ describe('EditSection', () => {
 
       expect(await findAllByText('uuid6')).toHaveLength(1);
     });
+  });
+
+  test('renders read-only literal', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    expect(await findByText('uuid13')).toBeInTheDocument();
+
+    const section = await getByTestId('field-with-meta-controls-uuid13')
+    expect(within(section).getByTestId('literal-field')).toBeDisabled();
   });
 });
