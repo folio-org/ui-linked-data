@@ -1,7 +1,6 @@
 import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
-import { findParentEntryByProperty, hasChildEntry } from './schema.helper';
+import { hasChildEntry } from './schema.helper';
 import { AdvancedFieldType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export const checkRepeatableGroup = ({
   schema,
@@ -31,26 +30,16 @@ export const checkRepeatableGroup = ({
 };
 
 export const checkRepeatableSubcomponent = ({
-  schema,
   entry,
   isDisabled,
 }: {
-  schema: Map<string, SchemaEntry>;
   entry: SchemaEntry;
   isDisabled: boolean;
 }) => {
-  const { type, path, constraints } = entry;
+  const { type, constraints } = entry;
   const isRepeatable =
     !isDisabled &&
     constraints?.repeatable &&
-    // show "Duplicate" button only for Provision Activity's subcomponents
-    // change or remove to display "Duplicate" button for other groups
-    findParentEntryByProperty({
-      schema,
-      path,
-      key: 'uriBFLite',
-      value: BFLITE_URIS.PROVISION_ACTIVITY,
-    }) &&
     // remove this condition after updating the profile
     type === AdvancedFieldType.literal;
 
