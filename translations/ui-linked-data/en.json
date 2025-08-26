@@ -275,6 +275,6 @@
   "ld.field.bookFormat": "Book format",
   "ld.field.frequency": "Frequency",
   "ld.na": "N/A",
-  "ld.error.profileSaveAsPreferred": "Error while setting preferred profile",
-  "ld.error.profileChange": "Error while changing record profile"
+  "ld.error.profileSaveAsPreferred": "Error setting up preferred profile",
+  "ld.error.profileChange": "Error changing recording profile"
 }
