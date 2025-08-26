@@ -36,7 +36,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   const { uuid, displayName, htmlId } = entry;
 
   const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled: disabled });
-  const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ schema, entry, isDisabled: disabled });
+  const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ entry, isDisabled: disabled });
 
   const onClickDuplicateGroup = () => {
     getSchemaWithCopiedEntries(entry, selectedEntries);
