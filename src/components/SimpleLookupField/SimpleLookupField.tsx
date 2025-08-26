@@ -22,6 +22,7 @@ interface Props {
   htmlId?: string;
   parentUri?: string;
   isDisabled?: boolean;
+  maxValues?: number;
   id?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   propertyUri?: string;
@@ -41,6 +42,7 @@ export const SimpleLookupField: FC<Props> = ({
   parentUri,
   parentGroupUri,
   isDisabled = false,
+  maxValues = 0,
   propertyUri,
   parentBlockUri,
 }) => {
@@ -110,6 +112,7 @@ export const SimpleLookupField: FC<Props> = ({
       components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
+      isOptionDisabled={() => maxValues > 0 ? localValue.length >= maxValues : false}
       onMenuOpen={loadOptions}
       // Uncomment if uncontrolled options are required/supported
       // getOptionLabel={getOptionLabel}
