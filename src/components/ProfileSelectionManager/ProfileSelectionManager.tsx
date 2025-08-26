@@ -48,7 +48,7 @@ export const ProfileSelectionManager = () => {
       onCancel={onClose}
       onSubmit={onSubmit}
       onClose={onClose}
-      profiles={availableProfiles?.[profileSelectionType?.resourceType]}
+      profiles={availableProfiles?.[profileSelectionType?.resourceTypeURL]}
       selectedProfileId={selectedProfileId}
     />
   ) : null;

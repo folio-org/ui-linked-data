@@ -1,8 +1,9 @@
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { profileWarningsByName } from '@src/configs';
 
 export const getLabelId = ({
   labels: { workSet, instanceSet, workChange, instanceChange, defaultLabel },
-  profileSelectionType: { action, resourceType },
+  profileSelectionType: { action, resourceTypeURL },
 }: {
   labels: {
     workSet?: string;
@@ -13,12 +14,13 @@ export const getLabelId = ({
   };
   profileSelectionType: ProfileSelectionType;
 }) => {
+  const isWorkResourceType = resourceTypeURL === TYPE_URIS.WORK;
   let labelId;
 
   if (action === 'set') {
-    labelId = resourceType === 'work' ? workSet : instanceSet;
+    labelId = isWorkResourceType ? workSet : instanceSet;
   } else if (action === 'change') {
-    labelId = resourceType === 'work' ? workChange : instanceChange;
+    labelId = isWorkResourceType ? workChange : instanceChange;
   } else {
     labelId = defaultLabel;
   }

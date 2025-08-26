@@ -289,7 +289,7 @@ describe('useProfileSelection', () => {
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setProfileSelectionType).toHaveBeenCalledWith({
         action: 'change',
-        resourceType: 'test-resource-type',
+        resourceTypeURL: 'test-resource-type',
       });
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });
@@ -328,7 +328,7 @@ describe('useProfileSelection', () => {
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setProfileSelectionType).toHaveBeenCalledWith({
         action: 'change',
-        resourceType: 'test-resource-type',
+        resourceTypeURL: 'test-resource-type',
       });
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });

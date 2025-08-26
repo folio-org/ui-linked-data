@@ -7,7 +7,7 @@ export type UIEntries = Set<string>;
 export type ProfileSelectionActionType = 'set' | 'change';
 export type ProfileSelectionType = {
   action: ProfileSelectionActionType;
-  resourceType: ResourceType;
+  resourceTypeURL: ResourceTypeURL;
 };
 
 export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
@@ -22,7 +22,7 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'hasShownAuthorityWarning', boolean> &
   SliceState<'isImportModalOpen', boolean> &
   SliceState<'isProfileSelectionModalOpen', boolean> &
-  SliceState<'profileSelectionType', { action: ProfileSelectionActionType; resourceType: ResourceType }>;
+  SliceState<'profileSelectionType', ProfileSelectionType>;
 
 const STORE_NAME = 'UI';
 
@@ -64,7 +64,7 @@ const sliceConfigs: SliceConfigs = {
     initialValue: false,
   },
   profileSelectionType: {
-    initialValue: 'set',
+    initialValue: {},
   },
 };
 
