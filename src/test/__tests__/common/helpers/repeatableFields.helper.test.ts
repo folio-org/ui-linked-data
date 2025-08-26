@@ -1,4 +1,5 @@
-import { checkRepeatableGroup } from '@common/helpers/repeatableFields.helper';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
 import * as SchemaHelper from '@common/helpers/schema.helper';
 
 describe('repeatableFields.helper', () => {
@@ -83,6 +84,80 @@ describe('repeatableFields.helper', () => {
       const result = checkRepeatableGroup(options);
 
       expect(result).toBeTruthy();
+    });
+  });
+
+  describe('checkRepeatableSubcomponent', () => {
+    test('returns true for repeatable, enabled literal field', () => {
+      const options = {
+        entry: {
+          type: AdvancedFieldType.literal,
+          constraints: {
+            repeatable: true,
+          },
+          path: [''],
+          uuid: '',
+        } as SchemaEntry,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableSubcomponent(options);
+
+      expect(result).toBeTruthy();
+    });
+
+    test('returns false for repeatable, disabled literal field', () => {
+      const options = {
+        entry: {
+          type: AdvancedFieldType.literal,
+          constraints: {
+            repeatable: true,
+          },
+          path: [''],
+          uuid: '',
+        } as SchemaEntry,
+        isDisabled: true,
+      };
+
+      const result = checkRepeatableSubcomponent(options);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false for non-repeatable, enabled literal field', () => {
+      const options = {
+        entry: {
+          type: AdvancedFieldType.literal,
+          constraints: {
+            repeatable: false,
+          },
+          path: [''],
+          uuid: '',
+        } as SchemaEntry,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableSubcomponent(options);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns false for repeatable, enabled non-literal field', () => {
+      const options = {
+        entry: {
+          type: AdvancedFieldType.simple,
+          constraints: {
+            repeatable: true,
+          },
+          path: [''],
+          uuid: '',
+        } as SchemaEntry,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableSubcomponent(options);
+
+      expect(result).toBeFalsy();
     });
   });
 });
