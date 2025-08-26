@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { setPreferredProfile } from '@common/api/profiles.api';
 import { ROUTES } from '@common/constants/routes.constants';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { getRecordProfileId } from '@common/helpers/record.helper';
@@ -15,14 +16,19 @@ export const ProfileSelectionManager = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
   const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>(null);
+  const { action, resourceTypeURL } = profileSelectionType;
 
   const onClose = () => {
     setIsProfileSelectionModalOpen(false);
     setSelectedProfileId(null);
   };
 
-  const onSubmit = async (profileId: string | number) => {
-    if (profileSelectionType.action === 'set') {
+  const onSubmit = async (profileId: string | number, isDefault?: boolean) => {
+    if (isDefault) {
+      await setPreferredProfile(profileId, resourceTypeURL);
+    }
+
+    if (action === 'set') {
       onClose();
 
       const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
@@ -37,9 +43,9 @@ export const ProfileSelectionManager = () => {
   useEffect(() => {
     if (!isProfileSelectionModalOpen) return;
 
-    const updatedSelectedProfileId = profileSelectionType.action === 'change' ? getRecordProfileId(record) : null;
+    const updatedSelectedProfileId = action === 'change' ? getRecordProfileId(record) : null;
     setSelectedProfileId(updatedSelectedProfileId);
-  }, [isProfileSelectionModalOpen, profileSelectionType.action, record]);
+  }, [isProfileSelectionModalOpen, action, record]);
 
   return isProfileSelectionModalOpen ? (
     <ModalChooseProfile
@@ -48,7 +54,7 @@ export const ProfileSelectionManager = () => {
       onCancel={onClose}
       onSubmit={onSubmit}
       onClose={onClose}
-      profiles={availableProfiles?.[profileSelectionType?.resourceTypeURL]}
+      profiles={resourceTypeURL ? availableProfiles?.[resourceTypeURL] : []}
       selectedProfileId={selectedProfileId}
     />
   ) : null;
