@@ -77,8 +77,8 @@ export class RecordGenerator implements IRecordGenerator {
       const processedValue = this.processRootEntry(rootKey, rootProperty);
 
       if (this.isValidValue(processedValue)) {
-        if (rootKey === rootEntryKey && rootProperty.options?.references && this.referenceIds?.length) {
-          this.addReferencesToRootEntry(processedValue, rootProperty.options.references);
+        if (rootKey === rootEntryKey) {
+          this.addReferencesToRootEntry(processedValue, rootProperty);
           this.addProfileId(processedValue as unknown as SchemaEntry);
         }
 
@@ -128,12 +128,14 @@ export class RecordGenerator implements IRecordGenerator {
     return entityKeys.length > 0 ? entityKeys[0] : null;
   }
 
-  private addReferencesToRootEntry(entryNode: SchemaPropertyValue, references: RecordSchemaReferenceDefinition[]) {
-    if (typeof entryNode !== 'object' || entryNode === null) {
+  private addReferencesToRootEntry(entryNode: SchemaPropertyValue, recordSchemaEntry: RecordSchemaEntry) {
+    const hasReferences = recordSchemaEntry.options?.references && this.referenceIds?.length;
+
+    if (typeof entryNode !== 'object' || entryNode === null || !hasReferences) {
       return;
     }
 
-    references.forEach(refDef => {
+    recordSchemaEntry.options?.references?.forEach(refDef => {
       (entryNode as Record<string, SchemaPropertyValue>)[refDef.outputProperty] = this
         .referenceIds as unknown as SchemaPropertyValue;
     });
