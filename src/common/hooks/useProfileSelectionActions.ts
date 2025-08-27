@@ -1,6 +1,6 @@
 import { StatusType } from '@common/constants/status.constants';
 import { ROUTES } from '@common/constants/routes.constants';
-import { setPreferredProfile } from '@common/api/profiles.api';
+import { savePreferredProfile } from '@common/api/profiles.api';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@common/hooks/useRecordControls';
@@ -27,7 +27,7 @@ export const useProfileSelectionActions = ({
     if (!resourceTypeURL) return;
 
     try {
-      await setPreferredProfile(profileId, resourceTypeURL);
+      await savePreferredProfile(profileId, resourceTypeURL);
     } catch (error) {
       console.error('Failed to set preferred profile:', error);
 

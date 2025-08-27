@@ -23,7 +23,7 @@ export const fetchPreferredProfiles = (resourceType?: string) => {
   return baseApi.getJson({ url }) as Promise<ProfileDTO[]>;
 };
 
-export const setPreferredProfile = (id: string | number, resourceType: string) => {
+export const savePreferredProfile = (id: string | number, resourceType: string) => {
   const url = baseApi.generateUrl(PROFILE_PREFERRED_API_ENDPOINT);
   const body = JSON.stringify({ id, resourceType });
 
