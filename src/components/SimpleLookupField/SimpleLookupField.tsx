@@ -22,6 +22,7 @@ interface Props {
   htmlId?: string;
   parentUri?: string;
   isDisabled?: boolean;
+  isMulti?: boolean;
   id?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   propertyUri?: string;
@@ -41,6 +42,7 @@ export const SimpleLookupField: FC<Props> = ({
   parentUri,
   parentGroupUri,
   isDisabled = false,
+  isMulti = true,
   propertyUri,
   parentBlockUri,
 }) => {
@@ -50,13 +52,22 @@ export const SimpleLookupField: FC<Props> = ({
   const { addStatusMessagesItem } = useStatusState();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
-  const [localValue, setLocalValue] = useState<MultiselectOption[]>(
+  const [localValueMulti, setLocalValueMulti] = useState<MultiselectOption[]>(
     value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
       value: { label: basicLabel ?? label, uri },
       label,
       __isNew__: false,
     })) || [],
   );
+
+  const [localValueSingle, setLocalValueSingle] = useState<MultiselectOption | undefined>(
+    value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
+      value: { label: basicLabel ?? label, uri },
+      label,
+      __isNew__: false,
+    }))?.[0],
+  );
+
   const [isLoading, setIsLoading] = useState(false);
 
   const loadOptions = async (): Promise<void> => {
@@ -79,7 +90,7 @@ export const SimpleLookupField: FC<Props> = ({
   // const getOptionLabel = (option: MultiselectOption): string =>
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
-  const handleOnChange = (options: MultiValue<MultiselectOption>) => {
+  const handleOnChangeMulti = (options: MultiValue<MultiselectOption>) => {
     const newValue = options.map<UserValueContents>(({ label, value }) => ({
       label,
       meta: {
@@ -90,8 +101,22 @@ export const SimpleLookupField: FC<Props> = ({
     }));
 
     onChange(uuid, newValue);
-    setLocalValue([...options]);
+    setLocalValueMulti([...options]);
   };
+
+  const handleOnChangeSingle = (option: MultiselectOption) => {
+    const newValue = [{
+      label: option.label,
+      meta: {
+        uri: option.value?.uri,
+        parentUri,
+        basicLabel: option.value?.label,
+      },
+    }];
+
+    onChange(uuid, newValue);
+    setLocalValueSingle(option);
+  }
 
   return (
     <CreatableSelect
@@ -105,7 +130,7 @@ export const SimpleLookupField: FC<Props> = ({
       isClearable
       openMenuOnFocus
       isLoading={isLoading}
-      isMulti
+      isMulti={isMulti}
       menuPlacement={forceDisplayOptionsAtTheTop ? 'top' : 'auto'}
       components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
@@ -115,8 +140,8 @@ export const SimpleLookupField: FC<Props> = ({
       // getOptionLabel={getOptionLabel}
       // Remove the line below once uncontrolled options are required/supported
       isValidNewOption={() => false}
-      onChange={handleOnChange as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
-      value={localValue}
+      onChange={(isMulti ? handleOnChangeMulti : handleOnChangeSingle) as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
+      value={isMulti ? localValueMulti : localValueSingle}
       placeholder={<FormattedMessage id="ld.select" />}
       loadingMessage={LoadingMessage}
       inputId="creatable-select-input"
