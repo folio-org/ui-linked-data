@@ -52,20 +52,31 @@ export const SimpleLookupField: FC<Props> = ({
   const { addStatusMessagesItem } = useStatusState();
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
-  const [localValueMulti, setLocalValueMulti] = useState<MultiselectOption[]>(
-    value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
+  const userValuesToMultiselect = (value: UserValueContents[] | undefined) => {
+    return value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
       value: { label: basicLabel ?? label, uri },
       label,
       __isNew__: false,
-    })) || [],
+    }));
+  };
+
+  const multiselectToUserValues = (option: MultiselectOption) => {
+    return {
+      label: option.label,
+      meta: {
+        uri: option.value?.uri,
+        parentUri,
+        basicLabel: option.value.label,
+      },
+    };
+  };
+
+  const [localValueMulti, setLocalValueMulti] = useState<MultiselectOption[]>(
+    userValuesToMultiselect(value) || [],
   );
 
   const [localValueSingle, setLocalValueSingle] = useState<MultiselectOption | undefined>(
-    value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
-      value: { label: basicLabel ?? label, uri },
-      label,
-      __isNew__: false,
-    }))?.[0],
+    userValuesToMultiselect(value)?.[0],
   );
 
   const [isLoading, setIsLoading] = useState(false);
@@ -91,29 +102,13 @@ export const SimpleLookupField: FC<Props> = ({
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChangeMulti = (options: MultiValue<MultiselectOption>) => {
-    const newValue = options.map<UserValueContents>(({ label, value }) => ({
-      label,
-      meta: {
-        uri: value?.uri,
-        parentUri,
-        basicLabel: value.label,
-      },
-    }));
-
+    const newValue = options.map<UserValueContents>(option => (multiselectToUserValues(option)));
     onChange(uuid, newValue);
     setLocalValueMulti([...options]);
   };
 
   const handleOnChangeSingle = (option: MultiselectOption) => {
-    const newValue = [{
-      label: option.label,
-      meta: {
-        uri: option.value?.uri,
-        parentUri,
-        basicLabel: option.value?.label,
-      },
-    }];
-
+    const newValue = [multiselectToUserValues(option)];
     onChange(uuid, newValue);
     setLocalValueSingle(option);
   }
