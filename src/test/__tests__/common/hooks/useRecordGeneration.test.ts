@@ -10,6 +10,7 @@ describe('useRecordGeneration', () => {
     const schema = 'mockSchema';
     const userValues = 'mockUserValues';
     const selectedEntries: string[] = [];
+    const profileId = "2";
 
     const searchParams = new URLSearchParams('?block=testBlock&reference.key=testKey');
     jest.spyOn(Router, 'useSearchParams').mockReturnValueOnce([searchParams, jest.fn()]);
@@ -42,7 +43,7 @@ describe('useRecordGeneration', () => {
     result.current.generateRecord({});
 
     expect(recordGeneratorService.generate).toHaveBeenCalledWith(
-      { schema, userValues, selectedEntries, referenceIds: undefined },
+      { profileId, schema, userValues, selectedEntries, referenceIds: undefined },
       'work',
     );
   });
