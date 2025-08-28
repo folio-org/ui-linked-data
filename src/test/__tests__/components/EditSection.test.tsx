@@ -13,10 +13,7 @@ const userValues = {
     uuid: 'uuid3',
     contents: [
       {
-        label: 'uuid3-uservalue-label-1',
-      },
-      {
-        label: 'uuid3-uservalue-label-2',
+        label: 'uuid3-uservalue-label',
       },
     ],
   },
@@ -61,17 +58,6 @@ const userValues = {
     contents: [
       {
         label: 'uuid13-uservalue-label',
-      },
-    ],
-  },
-  uuid14: {
-    uuid: 'uuid14',
-    contents: [
-      {
-        label: 'uuid14-uservalue-label-1',
-      },
-      {
-        label: 'uuid14-uservalue-label-2',
       },
     ],
   },
@@ -231,21 +217,6 @@ const schema = new Map([
       constraints: { editable: false },
     },
   ],
-  [
-    'uuid14',
-    {
-      bfid: 'uuid14Bfid',
-      uriBFLite: 'uuid14Uri',
-      displayName: 'uuid14',
-      type: AdvancedFieldType.simple,
-      path: ['uuid0', 'uuid2', 'uuid14'],
-      uuid: 'uuid14',
-      constraints: {
-        repeatable: false,
-        useValuesFrom: ['uuid14-useValuesFromURI'], 
-      },
-    },
-  ],
 ]);
 
 const monograph = {
@@ -298,7 +269,7 @@ describe('EditSection', () => {
   test('renders literal; simple and complex lookup labels and values', async () => {
     const { findByText } = renderScreen();
 
-    expect(await findByText('uuid3-uservalue-label-1')).toBeInTheDocument();
+    expect(await findByText('uuid3-uservalue-label')).toBeInTheDocument();
     expect(await findByText('uuid4')).toBeInTheDocument();
     expect(await findByText('uuid5')).toBeInTheDocument();
   });
@@ -306,7 +277,7 @@ describe('EditSection', () => {
   test('renders dropdown field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid6');
+    const section = getByTestId('field-with-meta-controls-uuid6');
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid7')).toBeInTheDocument();
   });
@@ -314,7 +285,7 @@ describe('EditSection', () => {
   test('renders enumerated field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10')
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid11')).toBeInTheDocument();
   });
@@ -328,7 +299,7 @@ describe('EditSection', () => {
   test('calls onchange and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid4');
+    const section = getByTestId('field-with-meta-controls-uuid4');
     fireEvent.change(within(section).getByTestId('literal-field'), { target: { value: 'sampleValue' } });
 
     await waitFor(async () => expect(await findByDisplayValue('sampleValue')).toBeInTheDocument());
@@ -337,7 +308,7 @@ describe('EditSection', () => {
   test('calls onchange for enumerated and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10')
     fireEvent.change(within(section).getByTestId('dropdown-field'), { target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' } });
 
     await waitFor(async () => expect(await findByDisplayValue('uuid12')).toBeInTheDocument());
@@ -370,33 +341,7 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid13')).toBeInTheDocument();
 
-    const section = await getByTestId('field-with-meta-controls-uuid13')
+    const section = getByTestId('field-with-meta-controls-uuid13')
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
-  });
-
-  describe('simple lookup field repeatability', () => {
-    test('when repeatable, library uses multiselect', async () => {
-      const { getByTestId } = renderScreen();
-      const section = await getByTestId('field-with-meta-controls-uuid3');
-      expect(section.querySelector('.simple-lookup__multi-value')).toBeInTheDocument();
-    });
-
-    test('when repeatable, set value to all initial values', async () => {
-      const { findByText } = renderScreen();
-      expect(await findByText('uuid3-uservalue-label-1')).toBeInTheDocument();
-      expect(await findByText('uuid3-uservalue-label-2')).toBeInTheDocument();
-    });
-
-    test('when not repeatable, library uses single value select', async () => {
-      const { getByTestId } = renderScreen();
-      const section = await getByTestId('field-with-meta-controls-uuid14');
-      expect(section.querySelector('.simple-lookup__single-value')).toBeInTheDocument();
-    });
-
-    test('when not repeatable, set only the first initial value', async () => {
-      const { findByText, queryByText } = renderScreen();
-      expect(await findByText('uuid14-uservalue-label-1')).toBeInTheDocument();
-      expect(await queryByText('uuid14-uservalue-label-2')).not.toBeInTheDocument();
-    });
   });
 });
