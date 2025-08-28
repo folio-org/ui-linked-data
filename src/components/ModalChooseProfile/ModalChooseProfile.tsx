@@ -9,7 +9,7 @@ interface ModalChooseProfileProps {
   isOpen: boolean;
   profileSelectionType: ProfileSelectionType;
   onCancel: VoidFunction;
-  onSubmit: (id: string | number) => void;
+  onSubmit: (id: string | number, isDefault?: boolean) => void;
   onClose: VoidFunction;
   profiles: ProfileDTO[];
   selectedProfileId?: string | number | null;
@@ -38,7 +38,7 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
     };
 
     const handleSubmit = () => {
-      onSubmit(selectedValue);
+      onSubmit(selectedValue, isDefault);
     };
 
     const title = formatMessage({

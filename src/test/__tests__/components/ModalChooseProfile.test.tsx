@@ -9,7 +9,7 @@ const mockProfiles = [
 ];
 const mockProfileSelectionType = {
   action: 'set',
-  resourceType: 'work',
+  resourceTypeURL: 'work' as ResourceTypeURL,
 } as ProfileSelectionType;
 
 describe('ModalChooseProfile', () => {
@@ -128,7 +128,7 @@ describe('ModalChooseProfile', () => {
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_2');
+      expect(onSubmit).toHaveBeenCalledWith('profile_2', false);
     });
   });
 
@@ -205,7 +205,7 @@ describe('ModalChooseProfile', () => {
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_1');
+      expect(onSubmit).toHaveBeenCalledWith('profile_1', false);
       expect(onSubmit).not.toHaveBeenCalledWith('0');
       expect(onSubmit).not.toHaveBeenCalledWith(undefined);
     });

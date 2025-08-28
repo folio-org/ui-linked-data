@@ -1,5 +1,5 @@
 import baseApi from '@common/api/base.api';
-import { fetchProfile } from '@common/api/profiles.api';
+import { fetchProfile, savePreferredProfile } from '@common/api/profiles.api';
 
 describe('profiles.api', () => {
   test('fetchProfile - calls "baseApi.getJson" with profile ID and returns profile data', async () => {
@@ -38,5 +38,54 @@ describe('profiles.api', () => {
       url: '/linked-data/profile/1',
     });
     expect(result).toEqual(testResult);
+  });
+
+  test('savePreferredProfile - calls "baseApi.request" with correct parameters', async () => {
+    const mockUrl = 'test-url';
+    const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
+    const profileId = '123';
+    const resourceType = 'monograph';
+
+    jest.spyOn(baseApi, 'generateUrl').mockReturnValue(mockUrl);
+    jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+    const result = await savePreferredProfile(profileId, resourceType);
+
+    expect(baseApi.generateUrl).toHaveBeenCalledWith('/linked-data/profile/preferred');
+    expect(baseApi.request).toHaveBeenCalledWith({
+      url: mockUrl,
+      requestParams: {
+        method: 'POST',
+        body: JSON.stringify({ id: profileId, resourceType }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      },
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  test('savePreferredProfile - handles numeric profile ID correctly', async () => {
+    const mockUrl = 'test-url';
+    const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
+    const profileId = 123;
+    const resourceType = 'monograph';
+
+    jest.spyOn(baseApi, 'generateUrl').mockReturnValue(mockUrl);
+    jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+    const result = await savePreferredProfile(profileId, resourceType);
+
+    expect(baseApi.request).toHaveBeenCalledWith({
+      url: mockUrl,
+      requestParams: {
+        method: 'POST',
+        body: JSON.stringify({ id: profileId, resourceType }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      },
+    });
+    expect(result).toEqual(mockResponse);
   });
 });
