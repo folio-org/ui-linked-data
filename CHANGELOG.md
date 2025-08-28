@@ -34,6 +34,7 @@
 * Add support for publication frequency. Refs [UILD-618].
 * Add read-only editor field support. Refs [UILD-630].
 * Enable repeatable subcomponents for all groups. Refs [UILD-632].
+* Add profile ID to generated record. Fixes [UILD-637].
 * Add ability to set profile as default. Refs [UILD-574].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -70,6 +71,7 @@
 [UILD-618]:https://folio-org.atlassian.net/browse/UILD-618
 [UILD-630]:https://folio-org.atlassian.net/browse/UILD-630
 [UILD-632]:https://folio-org.atlassian.net/browse/UILD-632
+[UILD-637]:https://folio-org.atlassian.net/browse/UILD-637
 [UILD-574]:https://folio-org.atlassian.net/browse/UILD-574
 
 ## 1.0.5 (2025-04-30)
