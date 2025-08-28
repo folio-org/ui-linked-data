@@ -93,7 +93,7 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14'],
+      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13'],
     },
   ],
   [
