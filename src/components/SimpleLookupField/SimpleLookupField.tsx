@@ -66,7 +66,7 @@ export const SimpleLookupField: FC<Props> = ({
       meta: {
         uri: option.value?.uri,
         parentUri,
-        basicLabel: option.value.label,
+        basicLabel: option.value?.label,
       },
     };
   };
