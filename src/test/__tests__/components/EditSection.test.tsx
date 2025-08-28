@@ -13,7 +13,10 @@ const userValues = {
     uuid: 'uuid3',
     contents: [
       {
-        label: 'uuid3-uservalue-label',
+        label: 'uuid3-uservalue-label-1',
+      },
+      {
+        label: 'uuid3-uservalue-label-2',
       },
     ],
   },
@@ -61,6 +64,17 @@ const userValues = {
       },
     ],
   },
+  uuid14: {
+    uuid: 'uuid14',
+    contents: [
+      {
+        label: 'uuid14-uservalue-label-1',
+      },
+      {
+        label: 'uuid14-uservalue-label-2',
+      },
+    ],
+  },
 };
 
 const schema = new Map([
@@ -93,7 +107,7 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13'],
+      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14'],
     },
   ],
   [
@@ -209,12 +223,27 @@ const schema = new Map([
     'uuid13',
     {
       bfid: 'uuid13Bfid',
-      uiBFLite: 'uuid13Uri',
+      uriBFLite: 'uuid13Uri',
       displayName: 'uuid13',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid13'],
       uuid: 'uuid13',
       constraints: { editable: false },
+    },
+  ],
+  [
+    'uuid14',
+    {
+      bfid: 'uuid14Bfid',
+      uriBFLite: 'uuid14Uri',
+      displayName: 'uuid14',
+      type: AdvancedFieldType.simple,
+      path: ['uuid0', 'uuid2', 'uuid14'],
+      uuid: 'uuid14',
+      constraints: {
+        repeatable: false,
+        useValuesFrom: ['uuid14-useValuesFromURI'], 
+      },
     },
   ],
 ]);
@@ -269,7 +298,7 @@ describe('EditSection', () => {
   test('renders literal; simple and complex lookup labels and values', async () => {
     const { findByText } = renderScreen();
 
-    expect(await findByText('uuid3-uservalue-label')).toBeInTheDocument();
+    expect(await findByText('uuid3-uservalue-label-1')).toBeInTheDocument();
     expect(await findByText('uuid4')).toBeInTheDocument();
     expect(await findByText('uuid5')).toBeInTheDocument();
   });
@@ -343,5 +372,31 @@ describe('EditSection', () => {
 
     const section = await getByTestId('field-with-meta-controls-uuid13')
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
+  });
+
+  describe('simple lookup field repeatability', () => {
+    test('when repeatable, library uses multiselect', async () => {
+      const { getByTestId } = renderScreen();
+      const section = await getByTestId('field-with-meta-controls-uuid3');
+      expect(section.querySelector('.simple-lookup__multi-value')).toBeInTheDocument();
+    });
+
+    test('when repeatable, set value to all initial values', async () => {
+      const { findByText } = renderScreen();
+      expect(await findByText('uuid3-uservalue-label-1')).toBeInTheDocument();
+      expect(await findByText('uuid3-uservalue-label-2')).toBeInTheDocument();
+    });
+
+    test('when not repeatable, library uses single value select', async () => {
+      const { getByTestId } = renderScreen();
+      const section = await getByTestId('field-with-meta-controls-uuid14');
+      expect(section.querySelector('.simple-lookup__single-value')).toBeInTheDocument();
+    });
+
+    test('when not repeatable, set only the first initial value', async () => {
+      const { findByText, queryByText } = renderScreen();
+      expect(await findByText('uuid14-uservalue-label-1')).toBeInTheDocument();
+      expect(await queryByText('uuid14-uservalue-label-2')).not.toBeInTheDocument();
+    });
   });
 });
