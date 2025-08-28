@@ -13,7 +13,7 @@ jest.mock('@common/helpers/profileSelection.helper', () => ({
 describe('WarningMessages', () => {
   const mockProfileSelectionType = {
     action: 'change',
-    resourceType: 'work',
+    resourceTypeURL: 'work' as ResourceTypeURL,
   } as const;
 
   const mockProfiles = [

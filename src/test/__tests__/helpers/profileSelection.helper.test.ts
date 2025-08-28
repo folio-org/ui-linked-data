@@ -1,4 +1,9 @@
 import { getLabelId, getWarningByProfileNames } from '@common/helpers/profileSelection.helper';
+import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import * as BibframeConstants from '@common/constants/bibframe.constants';
+
+const mockBibframeConstants = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
+mockBibframeConstants({ WORK: 'work_URL', INSTANCE: 'instance_URL' });
 
 describe('profileSelection.helper', () => {
   describe('getLabelId', () => {
@@ -10,7 +15,7 @@ describe('profileSelection.helper', () => {
         instanceChange: 'instanceChangeLabel',
         defaultLabel: 'defaultLabel',
       };
-      const profileSelectionType = { action: 'set', resourceType: 'work' } as const;
+      const profileSelectionType = { action: 'set', resourceTypeURL: 'work_URL' as ResourceTypeURL } as const;
 
       const result = getLabelId({ labels, profileSelectionType });
 
@@ -25,7 +30,7 @@ describe('profileSelection.helper', () => {
         instanceChange: 'instanceChangeLabel',
         defaultLabel: 'defaultLabel',
       };
-      const profileSelectionType = { action: 'set', resourceType: 'instance' } as const;
+      const profileSelectionType = { action: 'set', resourceTypeURL: 'instance_URL' as ResourceTypeURL } as const;
 
       const result = getLabelId({ labels, profileSelectionType });
 
@@ -40,7 +45,7 @@ describe('profileSelection.helper', () => {
         instanceChange: 'instanceChangeLabel',
         defaultLabel: 'defaultLabel',
       };
-      const profileSelectionType = { action: 'change', resourceType: 'work' } as const;
+      const profileSelectionType = { action: 'change', resourceTypeURL: 'work_URL' as ResourceTypeURL } as const;
 
       const result = getLabelId({ labels, profileSelectionType });
 
@@ -55,7 +60,7 @@ describe('profileSelection.helper', () => {
         instanceChange: 'instanceChangeLabel',
         defaultLabel: 'defaultLabel',
       };
-      const profileSelectionType = { action: 'change', resourceType: 'instance' } as const;
+      const profileSelectionType = { action: 'change', resourceTypeURL: 'instance_URL' as ResourceTypeURL } as const;
 
       const result = getLabelId({ labels, profileSelectionType });
 
@@ -70,7 +75,10 @@ describe('profileSelection.helper', () => {
         instanceChange: 'instanceChangeLabel',
         defaultLabel: 'defaultLabel',
       };
-      const profileSelectionType = { action: 'unknown' as 'set', resourceType: 'work' } as const;
+      const profileSelectionType = {
+        action: 'unknown' as 'set',
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      } as const;
 
       const result = getLabelId({ labels, profileSelectionType });
 

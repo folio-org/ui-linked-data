@@ -1,5 +1,4 @@
 import { fetchProfiles, fetchPreferredProfiles } from '@common/api/profiles.api';
-import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
@@ -12,16 +11,14 @@ export const useProfileSelection = () => {
 
   // Loads available profiles if they haven't been loaded yet
   const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {
-    const key = BibframeEntitiesMap[resourceTypeURL];
-
-    if (!availableProfiles?.[key]?.length) {
+    if (!availableProfiles?.[resourceTypeURL]?.length) {
       try {
         const result = await fetchProfiles(resourceTypeURL);
 
         setAvailableProfiles(prev => {
           return {
             ...prev,
-            [key]: result,
+            [resourceTypeURL]: result,
           };
         });
       } catch (error) {
@@ -56,11 +53,17 @@ export const useProfileSelection = () => {
     return false;
   };
 
-  const openModal = ({ action, resourceType }: { action: ProfileSelectionActionType; resourceType: ResourceType }) => {
+  const openModal = ({
+    action,
+    resourceTypeURL,
+  }: {
+    action: ProfileSelectionActionType;
+    resourceTypeURL: ResourceTypeURL;
+  }) => {
     setIsProfileSelectionModalOpen(true);
     setProfileSelectionType({
       action,
-      resourceType,
+      resourceTypeURL,
     });
   };
 
@@ -82,7 +85,7 @@ export const useProfileSelection = () => {
 
         // If no matching profile was found, show the modal
         if (!profileProcessed) {
-          openModal({ action: 'set', resourceType: BibframeEntitiesMap[resourceTypeURL] });
+          openModal({ action: 'set', resourceTypeURL });
         }
 
         return;
@@ -90,7 +93,7 @@ export const useProfileSelection = () => {
 
       // No preferred profiles, load available profiles and show modal
       await loadAvailableProfiles(resourceTypeURL);
-      openModal({ action: 'set', resourceType: BibframeEntitiesMap[resourceTypeURL] });
+      openModal({ action: 'set', resourceTypeURL });
     } catch (error) {
       console.error('Failed to check profile and proceed:', error);
 
@@ -105,7 +108,7 @@ export const useProfileSelection = () => {
       setIsLoading(true);
 
       await loadAvailableProfiles(resourceTypeURL);
-      openModal({ action: 'change', resourceType: BibframeEntitiesMap[resourceTypeURL] });
+      openModal({ action: 'change', resourceTypeURL });
     } catch (error) {
       console.error('Failed to load profiles and proceed:', error);
 

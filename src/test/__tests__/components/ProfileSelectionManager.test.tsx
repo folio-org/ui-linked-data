@@ -34,7 +34,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'set',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -43,10 +43,10 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
-            instance: [{ id: 'profile_3', name: 'Test Profile 2', resourceType: 'instance' }],
+            instance: [{ id: 'profile_3', name: 'Test Profile 2', resourceTypeURL: 'instance' }],
           },
         },
       },
@@ -113,7 +113,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'change',
-            resourceType: 'instance',
+            resourceTypeURL: 'instance',
           },
         },
       },
@@ -122,10 +122,10 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
-            instance: [{ id: 'profile_3', name: 'Test Profile 3', resourceType: 'instance' }],
+            instance: [{ id: 'profile_3', name: 'Test Profile 3', resourceTypeURL: 'instance' }],
           },
         },
       },
@@ -173,7 +173,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'set',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -182,8 +182,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
@@ -206,7 +206,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'change',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -215,8 +215,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
@@ -246,7 +246,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'change',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -255,8 +255,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
@@ -292,7 +292,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'set',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -301,8 +301,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
@@ -335,7 +335,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'change',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -344,8 +344,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
@@ -374,7 +374,7 @@ describe('ProfileSelectionManager', () => {
           setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
           profileSelectionType: {
             action: 'change',
-            resourceType: 'work',
+            resourceTypeURL: 'work',
           },
         },
       },
@@ -383,8 +383,8 @@ describe('ProfileSelectionManager', () => {
         state: {
           availableProfiles: {
             work: [
-              { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-              { id: 'profile_2', name: 'Test Profile 2', resourceType: 'work' },
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
             ],
           },
         },
