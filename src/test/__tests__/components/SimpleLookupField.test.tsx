@@ -79,7 +79,7 @@ describe('Simple lookup field', () => {
     test('when not repeatable, set only the first initial value', async () => {
       const { findByText, queryByText } = renderScreen(false);
       expect(await findByText('value-1')).toBeInTheDocument();
-      expect(await queryByText('value-2')).not.toBeInTheDocument();
+      expect(queryByText('value-2')).not.toBeInTheDocument();
     });
 
     test('when not repeatable, library uses single value select', async () => {
@@ -92,8 +92,8 @@ describe('Simple lookup field', () => {
       await user.selectOptions(select, 'value-3');
       await user.keyboard('{enter}');
 
-      expect(await queryByText('value-1')).not.toBeInTheDocument();
-      expect(await queryByText('value-2')).not.toBeInTheDocument();
+      expect(queryByText('value-1')).not.toBeInTheDocument();
+      expect(queryByText('value-2')).not.toBeInTheDocument();
       expect(await findByText('value-3')).toBeInTheDocument();
     });
   });
