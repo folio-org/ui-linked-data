@@ -50,7 +50,7 @@ describe('Simple lookup field', () => {
     );
   };
 
-  describe('simple lookup field repeatability', () => {
+  describe('repeatability', () => {
     beforeEach(() => {
       jest.clearAllMocks();
     });
