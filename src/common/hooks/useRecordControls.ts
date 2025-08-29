@@ -39,7 +39,7 @@ type IBaseFetchRecord = {
 };
 
 type HandleRecordUpdateProps = {
-  generatedRecord?: Record<string, any>;
+  generatedRecord?: RecordEntry;
   recordId: string;
   updatedSelectedRecordBlocks: SelectedRecordBlocks;
   isNavigatingBack?: boolean;
@@ -92,6 +92,82 @@ export const useRecordControls = () => {
     setIsEdited(false);
   };
 
+  // Helper functions to reduce cognitive complexity in handleRecordUpdate
+  const saveRecordToApi = async (recordId: string, generatedRecord: RecordEntry) => {
+    const shouldPostRecord = !recordId || isClone;
+
+    return shouldPostRecord ? await postRecord(generatedRecord) : await putRecord(recordId, generatedRecord);
+  };
+
+  const updateStateAfterSave = (parsedResponse: RecordEntry, asRefToNewRecord: boolean, recordId: string) => {
+    dispatchUnblockEvent();
+
+    if (!asRefToNewRecord) {
+      setRecord(parsedResponse);
+    }
+
+    // Show success message
+    addStatusMessagesItem?.(
+      UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
+    );
+
+    // isEdited state update is not immediately reflected in the <Prompt />
+    // blocker component, forcing <Prompt /> to block the navigation call below
+    // right before isEdited is set to false, disabling <Prompt />
+    flushSync(() => setIsEdited(false));
+  };
+
+  const handleProfileOrNoNavigationChange = async (
+    updatedRecordId: string,
+    parsedResponse: RecordEntry,
+    isProfileChange: boolean,
+  ) => {
+    navigate(generateEditResourceUrl(updatedRecordId), {
+      replace: true,
+      state: location.state,
+    });
+
+    if (isProfileChange) {
+      await getProfiles({
+        record: parsedResponse,
+      });
+    } else {
+      setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
+    }
+
+    return updatedRecordId;
+  };
+
+  const handleBackNavigation = (
+    updatedRecordId: string,
+    parsedResponse: RecordEntry,
+    asRefToNewRecord: boolean,
+    shouldSetSearchParams: boolean,
+  ) => {
+    setRecordStatus({ type: RecordStatus.saveAndClose });
+
+    if (asRefToNewRecord) {
+      const blocksBfliteKey = (
+        searchParams.get(QueryParams.Type) ?? ResourceType.instance
+      )?.toUpperCase() as BibframeEntities;
+
+      const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
+
+      if (shouldSetSearchParams) {
+        setSearchParams({
+          type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
+          ref: String(getRecordId(parsedResponse, selectedBlock)),
+        });
+      }
+
+      return updatedRecordId;
+    } else {
+      navigate(searchResultsUri);
+    }
+
+    return updatedRecordId;
+  };
+
   const handleRecordUpdate = async ({
     generatedRecord,
     recordId,
@@ -106,69 +182,21 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
-      const shouldPostRecord = !recordId || isClone;
-
-      const response = shouldPostRecord
-        ? await postRecord(generatedRecord)
-        : await putRecord(recordId, generatedRecord);
+      const response = await saveRecordToApi(recordId, generatedRecord);
       const parsedResponse = await response.json();
 
-      dispatchUnblockEvent();
-      if (!asRefToNewRecord) {
-        setRecord(parsedResponse);
-      }
-
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
-      );
-
-      // isEdited state update is not immediately reflected in the <Prompt />
-      // blocker component, forcing <Prompt /> to block the navigation call below
-      // right before isEdited is set to false, disabling <Prompt />
-      flushSync(() => setIsEdited(false));
+      updateStateAfterSave(parsedResponse, asRefToNewRecord, recordId);
 
       const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
       setLastSavedRecordId(updatedRecordId);
 
       // Handle different navigation scenarios
       if (isProfileChange || !isNavigatingBack) {
-        navigate(generateEditResourceUrl(updatedRecordId as string), {
-          replace: true,
-          state: location.state,
-        });
-
-        if (isProfileChange) {
-          await getProfiles({
-            record: parsedResponse,
-          });
-        } else {
-          setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
-        }
-
-        return updatedRecordId;
+        return handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
       }
 
       if (isNavigatingBack) {
-        setRecordStatus({ type: RecordStatus.saveAndClose });
-
-        if (asRefToNewRecord) {
-          const blocksBfliteKey = (
-            searchParams.get(QueryParams.Type) ?? ResourceType.instance
-          )?.toUpperCase() as BibframeEntities;
-
-          const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
-
-          if (shouldSetSearchParams) {
-            setSearchParams({
-              type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
-              ref: String(getRecordId(parsedResponse, selectedBlock)),
-            });
-          }
-
-          return updatedRecordId;
-        } else {
-          navigate(searchResultsUri);
-        }
+        return handleBackNavigation(updatedRecordId, parsedResponse, asRefToNewRecord, shouldSetSearchParams);
       }
 
       return updatedRecordId;
@@ -190,7 +218,7 @@ export const useRecordControls = () => {
     const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
     const recordId = getRecordId(record, updatedSelectedRecordBlocks?.block);
 
-    return handleRecordUpdate({
+    return await handleRecordUpdate({
       generatedRecord,
       recordId,
       updatedSelectedRecordBlocks,
@@ -283,7 +311,8 @@ export const useRecordControls = () => {
       });
 
       return recordData;
-    } catch (_err) {
+    } catch (err) {
+      console.error('Error initializing record parsing:', err);
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
       );
@@ -312,7 +341,9 @@ export const useRecordControls = () => {
 
       const { id } = await getGraphIdByExternalId({ recordId });
 
-      id && navigate(generateEditResourceUrl(id), { replace: true });
+      if (id) {
+        navigate(generateEditResourceUrl(id), { replace: true });
+      }
     } catch (err: unknown) {
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(err)));
     } finally {
@@ -325,7 +356,7 @@ export const useRecordControls = () => {
     const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
     const recordId = getRecordId(record, updatedSelectedRecordBlocks?.block);
 
-    return handleRecordUpdate({
+    return await handleRecordUpdate({
       generatedRecord,
       recordId,
       updatedSelectedRecordBlocks,
