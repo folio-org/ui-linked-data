@@ -288,11 +288,27 @@ export const useRecordControls = () => {
     setIsLoading(true);
 
     try {
-      // TODO: generate a new record that includes both Work and Instance values.
-      setRecord(generatedRecord);
+      const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
+      const recordId = getRecordId(record, selectedRecordBlocks?.block);
+
+      const response = await putRecord(recordId as string, generatedRecord);
+      const parsedResponse = await response.json();
+
+      dispatchUnblockEvent();
+      setRecord(parsedResponse);
+
+      flushSync(() => setIsEdited(false));
+
+      const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
+      setLastSavedRecordId(updatedRecordId);
+
+      navigate(generateEditResourceUrl(updatedRecordId as string), {
+        replace: true,
+        state: location.state,
+      });
 
       await getProfiles({
-        record: generatedRecord,
+        record: parsedResponse,
       });
     } catch (error: unknown) {
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
