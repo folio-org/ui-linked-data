@@ -15,12 +15,13 @@ interface Props {
   className?: string;
   classNameHeader?: string;
   submitButtonDisabled?: boolean;
+  submitButtonHidden?: boolean;
   cancelButtonDisabled?: boolean;
   cancelButtonHidden?: boolean;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
-  shouldCloseOnExternalClick? : boolean;
+  shouldCloseOnExternalClick?: boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
   onClose: () => void;
@@ -47,6 +48,7 @@ const Modal: FC<Props> = ({
   onClose,
   children,
   submitButtonDisabled,
+  submitButtonHidden,
   cancelButtonDisabled,
   cancelButtonHidden,
   showCloseIconButton = true,
@@ -110,14 +112,16 @@ const Modal: FC<Props> = ({
                     {cancelButtonLabel}
                   </Button>
                 )}
-                <Button
-                  disabled={submitButtonDisabled}
-                  type={ButtonType.Highlighted}
-                  onClick={onSubmit}
-                  data-testid="modal-button-submit"
-                >
-                  {submitButtonLabel}
-                </Button>
+                {!submitButtonHidden && (
+                  <Button
+                    disabled={submitButtonDisabled}
+                    type={ButtonType.Highlighted}
+                    onClick={onSubmit}
+                    data-testid="modal-button-submit"
+                  >
+                    {submitButtonLabel}
+                  </Button>
+                )}
               </div>
             )}
           </div>
