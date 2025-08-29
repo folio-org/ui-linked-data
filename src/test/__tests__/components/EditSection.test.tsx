@@ -209,7 +209,7 @@ const schema = new Map([
     'uuid13',
     {
       bfid: 'uuid13Bfid',
-      uiBFLite: 'uuid13Uri',
+      uriBFLite: 'uuid13Uri',
       displayName: 'uuid13',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid13'],
@@ -277,7 +277,7 @@ describe('EditSection', () => {
   test('renders dropdown field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid6');
+    const section = getByTestId('field-with-meta-controls-uuid6');
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid7')).toBeInTheDocument();
   });
@@ -285,7 +285,7 @@ describe('EditSection', () => {
   test('renders enumerated field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10')
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid11')).toBeInTheDocument();
   });
@@ -299,7 +299,7 @@ describe('EditSection', () => {
   test('calls onchange and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid4');
+    const section = getByTestId('field-with-meta-controls-uuid4');
     fireEvent.change(within(section).getByTestId('literal-field'), { target: { value: 'sampleValue' } });
 
     await waitFor(async () => expect(await findByDisplayValue('sampleValue')).toBeInTheDocument());
@@ -308,7 +308,7 @@ describe('EditSection', () => {
   test('calls onchange for enumerated and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = await getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10')
     fireEvent.change(within(section).getByTestId('dropdown-field'), { target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' } });
 
     await waitFor(async () => expect(await findByDisplayValue('uuid12')).toBeInTheDocument());
@@ -341,7 +341,7 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid13')).toBeInTheDocument();
 
-    const section = await getByTestId('field-with-meta-controls-uuid13')
+    const section = getByTestId('field-with-meta-controls-uuid13')
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
   });
 });
