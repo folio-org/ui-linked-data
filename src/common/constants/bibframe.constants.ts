@@ -63,3 +63,8 @@ export const ENTRY_COUNT_DELIMITER = '::';
 export const ENTRY_CONTROL_DELIMITER = '--';
 export const TWIN_CHILDREN_KEY_DELIMITER = '$$';
 export const PROFILE_NODE_ID_DELIMITER = ':';
+
+export const INSTANCE_CLONE_DELETE_PROPERTIES = [
+  'http://bibfra.me/vocab/lite/createdDate',
+  'http://bibfra.me/vocab/marc/controlNumber',
+];
