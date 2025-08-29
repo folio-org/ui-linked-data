@@ -45,6 +45,68 @@ describe('repeatableFields.helper', () => {
       expect(result).toBeFalsy();
     });
 
+    test('returns false if entry is not repeatable', () => {
+      const options = {
+        schema,
+        entry: {
+          constraints: {
+            repeatable: false,
+          },
+        } as SchemaEntry,
+        level: 2,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableGroup(options);
+
+      expect(result).toBeFalsy();
+    });
+
+    test('returns true if no constraints', () => {
+      const options = {
+        schema,
+        entry: {} as SchemaEntry,
+        level: 2,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableGroup(options);
+
+      expect(result).toBeTruthy();
+    });
+
+    test('returns true if repeatable not set in constraints', () => {
+      const options = {
+        schema,
+        entry: {
+          constraints: {},
+        } as SchemaEntry,
+        level: 2,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableGroup(options);
+
+      expect(result).toBeTruthy();
+    });
+
+    test('returns true when repeatable constraint is true', () => {
+      const options = {
+        schema,
+        entry: {
+          constraints: {
+            repeatable: true,
+          },
+        } as SchemaEntry,
+        level: 2,
+        isDisabled: false,
+      };
+
+      const result = checkRepeatableGroup(options);
+
+      expect(result).toBeTruthy();
+    });
+
     test('returns true if entry type is not a group', () => {
       const options = {
         schema,

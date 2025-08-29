@@ -36,6 +36,8 @@
 * Enable repeatable subcomponents for all groups. Refs [UILD-632].
 * Add profile ID to generated record. Fixes [UILD-637].
 * Add ability to set profile as default. Refs [UILD-574].
+* Remove buttons when a group is not repeatable. Refs [UILD-629].
+* Update simple field widget to allow for single value selection. Refs [UILD-631].
 * Avoid cloning unique admin metadata when duplicating an instance. Refs [UILD-638].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -74,6 +76,8 @@
 [UILD-632]:https://folio-org.atlassian.net/browse/UILD-632
 [UILD-637]:https://folio-org.atlassian.net/browse/UILD-637
 [UILD-574]:https://folio-org.atlassian.net/browse/UILD-574
+[UILD-629]:https://folio-org.atlassian.net/browse/UILD-629
+[UILD-631]:https://folio-org.atlassian.net/browse/UILD-631
 [UILD-638]:https://folio-org.atlassian.net/browse/UILD-638
 
 ## 1.0.5 (2025-04-30)
