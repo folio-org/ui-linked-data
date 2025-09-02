@@ -189,4 +189,71 @@ describe('record.helper', () => {
       expect(result).toBeUndefined();
     });
   });
+
+  describe('getAdjustedRecordContents', () => {
+    const block = BibframeMappingConstants.BFLITE_URIS.INSTANCE;
+    test('removes expected instance admin metadata', () => {
+      const record = {
+        [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
+          [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
+            {
+              [BibframeMappingConstants.BFLITE_URIS.CONTROL_NUMBER]: [
+                "123456789",
+              ],
+              [BibframeMappingConstants.BFLITE_URIS.CREATED_DATE]: [
+                "2025-08-29",
+              ],
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
+                "agency",
+              ],
+            },
+          ],
+        },
+      } as unknown as RecordEntry<RecursiveRecordSchema>;
+      const expected = {
+        [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
+          [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
+            {
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
+                "agency",
+              ],
+            },
+          ],
+        },
+      };
+
+      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      expect(result.record).toMatchObject(expected);
+    });
+
+    test('does nothing when no admin metadata', () => {
+      const record = {
+        [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
+          [BibframeMappingConstants.BFLITE_URIS.ISSUANCE]: [
+            "issuance",
+          ],
+        },
+      } as unknown as RecordEntry<RecursiveRecordSchema>;
+
+      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      expect(result.record).toMatchObject(record);
+    });
+
+    test('does nothing when admin metadata does not contain unique data', () => {
+      const record = {
+        [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
+          [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
+            {
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
+                "agency",
+              ],
+            },
+          ],
+        },
+      } as unknown as RecordEntry<RecursiveRecordSchema>;
+
+      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      expect(result.record).toMatchObject(record);
+    });
+  });
 });
