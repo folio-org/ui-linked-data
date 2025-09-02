@@ -151,6 +151,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
           parentUri={constraints?.valueDataType?.dataTypeURI}
           value={selectedUserValue?.contents}
           isDisabled={isDisabled}
+          isMulti={constraints?.repeatable}
           propertyUri={entry.uriBFLite}
           parentBlockUri={blockEntry?.uriBFLite}
           parentGroupUri={groupEntry?.uriBFLite}

@@ -13,9 +13,12 @@ export const checkRepeatableGroup = ({
   level?: number;
   isDisabled: boolean;
 }) => {
-  const { type, children } = entry;
+  const { type, children, constraints } = entry;
 
-  let isRepeatableGroup = level === GROUP_BY_LEVEL && !isDisabled;
+  let isRepeatableGroup =
+    level === GROUP_BY_LEVEL &&
+    !isDisabled &&
+    (constraints?.repeatable !== false || typeof constraints === 'undefined');
 
   if (isRepeatableGroup) {
     const isGroupType = type === AdvancedFieldType.group;
@@ -39,7 +42,7 @@ export const checkRepeatableSubcomponent = ({
   const { type, constraints } = entry;
   const isRepeatable =
     !isDisabled &&
-    constraints?.repeatable &&
+    (constraints?.repeatable !== false || typeof constraints === 'undefined' ) &&
     // remove this condition after updating the profile
     type === AdvancedFieldType.literal;
 
