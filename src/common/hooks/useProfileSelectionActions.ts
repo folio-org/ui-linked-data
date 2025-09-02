@@ -5,7 +5,7 @@ import { generatePageURL } from '@common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useNavigationState, useStatusState } from '@src/store';
+import { useLoadingState, useNavigationState, useStatusState } from '@src/store';
 
 interface UseProfileSelectionActionsProps {
   resourceTypeURL?: string;
@@ -20,6 +20,7 @@ export const useProfileSelectionActions = ({
 }: UseProfileSelectionActionsProps) => {
   const { queryParams } = useNavigationState();
   const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
 
@@ -27,6 +28,7 @@ export const useProfileSelectionActions = ({
     if (!resourceTypeURL) return;
 
     try {
+      setIsLoading(true);
       await savePreferredProfile(profileId, resourceTypeURL);
     } catch (error) {
       console.error('Failed to set preferred profile:', error);
@@ -34,6 +36,8 @@ export const useProfileSelectionActions = ({
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 

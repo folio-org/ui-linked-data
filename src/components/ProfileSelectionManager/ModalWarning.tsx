@@ -20,11 +20,9 @@ export const ModalWarning: FC<ModalWarningProps> = ({ isOpen, onClose }) => {
       cancelButtonHidden={true}
       submitButtonHidden={true}
     >
-      <div>
-        <p>
-          <FormattedMessage id="ld.modal.chooseProfileWarning.message" />
-        </p>
-      </div>
+      <p>
+        <FormattedMessage id="ld.modal.chooseProfileWarning.message" />
+      </p>
     </Modal>
   );
 };

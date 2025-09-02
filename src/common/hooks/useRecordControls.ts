@@ -351,12 +351,12 @@ export const useRecordControls = () => {
     }
   };
 
-  const changeRecordProfile = async ({ profileId }: { profileId: string | number }) => {
+  const changeRecordProfile = ({ profileId }: { profileId: string | number }) => {
     const generatedRecord = generateRecord({ profileId: `${profileId}` });
     const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
     const recordId = getRecordId(record, updatedSelectedRecordBlocks?.block);
 
-    return await handleRecordUpdate({
+    return handleRecordUpdate({
       generatedRecord,
       recordId,
       updatedSelectedRecordBlocks,
