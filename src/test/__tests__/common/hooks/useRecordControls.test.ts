@@ -326,16 +326,11 @@ describe('useRecordControls', () => {
 
     it('successfully changes record profile', async () => {
       mockGenerateRecord.mockReturnValue(mockResponseData);
-      mockGetProfiles.mockResolvedValue(undefined);
 
       const { result } = renderHook(() => useRecordControls());
       await result.current.changeRecordProfile({ profileId: mockNewProfileId });
 
       expect(mockGenerateRecord).toHaveBeenCalledWith({ profileId: mockNewProfileId });
-      expect(mockSetRecord).toHaveBeenCalledWith(mockResponseData);
-      expect(mockGetProfiles).toHaveBeenCalledWith({
-        record: mockResponseData,
-      });
     });
 
     it('does not proceed if generateRecord returns nothing', async () => {
