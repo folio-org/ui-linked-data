@@ -10,6 +10,7 @@ import { useIntl } from 'react-intl';
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 interface Props {
+  'data-testid'?: string;
   isOpen: boolean;
   title: string | ReactElement<any>;
   className?: string;
@@ -57,6 +58,7 @@ const Modal: FC<Props> = ({
   titleClassName,
   alignTitleCenter = false,
   ariaModalKind = AriaModalKind.Basic,
+  'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
@@ -85,7 +87,7 @@ const Modal: FC<Props> = ({
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
+          <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
                 <button

@@ -4,6 +4,7 @@ import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { ProfileSelectionManager } from '@components/ProfileSelectionManager';
 import { ROUTES } from '@common/constants/routes.constants';
 import { useInputsState, useNavigationState, useProfileState, useUIState } from '@src/store';
+import { useStatusState } from '@src/store/selectors';
 
 const mockSetIsProfileSelectionModalOpen = jest.fn();
 const mockNavigateToEditPage = jest.fn();
@@ -400,5 +401,85 @@ describe('ProfileSelectionManager', () => {
     rerender(<ProfileSelectionManager />);
 
     expect(screen.getByRole('combobox')).toHaveValue('profile_2');
+  });
+
+  test('renders ModalWarning when isEditedRecordChange is true', () => {
+    setInitialGlobalState([
+      {
+        store: useUIState,
+        state: {
+          isProfileSelectionModalOpen: true,
+          setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+          profileSelectionType: {
+            action: 'change',
+            resourceTypeURL: 'work',
+          },
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          availableProfiles: {
+            work: [
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+            ],
+          },
+        },
+      },
+      {
+        store: useStatusState,
+        state: {
+          isRecordEdited: true,
+        },
+      },
+    ]);
+
+    render(<ProfileSelectionManager />);
+
+  // ModalChooseProfile should not be visible
+  expect(screen.queryByTestId('modal-choose-profile-content')).not.toBeInTheDocument();
+  // ModalWarning should be visible (by test id)
+  expect(screen.getByTestId('modal-profile-warning')).toBeInTheDocument();
+  });
+
+  test('does not render ModalWarning when isEditedRecordChange is false', () => {
+    setInitialGlobalState([
+      {
+        store: useUIState,
+        state: {
+          isProfileSelectionModalOpen: true,
+          setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+          profileSelectionType: {
+            action: 'change',
+            resourceTypeURL: 'work',
+          },
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          availableProfiles: {
+            work: [
+              { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+              { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+            ],
+          },
+        },
+      },
+      {
+        store: useStatusState,
+        state: {
+          isRecordEdited: false,
+        },
+      },
+    ]);
+
+    render(<ProfileSelectionManager />);
+
+  // ModalChooseProfile should be visible
+  expect(screen.getByTestId('modal-choose-profile-content')).toBeInTheDocument();
+  // ModalWarning should not be visible
+  expect(screen.queryByTestId('modal-profile-warning')).not.toBeInTheDocument();
   });
 });

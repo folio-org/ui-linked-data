@@ -29,6 +29,19 @@ describe('Modal', () => {
     expect(screen.getByTestId('modal')).toBeInTheDocument();
   });
 
+  test('renders Modal with custom test id', () => {
+    render(<Modal {...props} data-testid="custom-modal-id" />);
+
+    expect(screen.getByTestId('custom-modal-id')).toBeInTheDocument();
+  });
+
+  test('renders submit button when not hidden', () => {
+    render(<Modal {...props} submitButtonHidden={false} submitButtonLabel="Submit" />);
+
+    expect(screen.getByTestId('modal-button-submit')).toBeInTheDocument();
+    expect(screen.getByTestId('modal-button-submit')).toHaveTextContent('Submit');
+  });
+
   test('renders Modal component without a cancel button', () => {
     const updatedProps = { ...props, cancelButtonHidden: true };
 

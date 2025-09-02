@@ -19,6 +19,7 @@ export const ModalWarning: FC<ModalWarningProps> = ({ isOpen, onClose }) => {
       onClose={onClose}
       cancelButtonHidden={true}
       submitButtonHidden={true}
+      data-testid="modal-profile-warning"
     >
       <p>
         <FormattedMessage id="ld.modal.chooseProfileWarning.message" />
