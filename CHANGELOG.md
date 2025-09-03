@@ -38,6 +38,7 @@
 * Add ability to set profile as default. Refs [UILD-574].
 * Remove buttons when a group is not repeatable. Refs [UILD-629].
 * Update simple field widget to allow for single value selection. Refs [UILD-631].
+* Avoid cloning unique admin metadata when duplicating an instance. Refs [UILD-638].
 * Add profile changing scenarios. Refs [UILD-634].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -78,6 +79,7 @@
 [UILD-574]:https://folio-org.atlassian.net/browse/UILD-574
 [UILD-629]:https://folio-org.atlassian.net/browse/UILD-629
 [UILD-631]:https://folio-org.atlassian.net/browse/UILD-631
+[UILD-638]:https://folio-org.atlassian.net/browse/UILD-638
 [UILD-634]:https://folio-org.atlassian.net/browse/UILD-634
 
 ## 1.0.5 (2025-04-30)
