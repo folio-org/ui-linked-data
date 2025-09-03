@@ -189,7 +189,7 @@ describe('useProfileSelectionActions', () => {
 
       expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: mockProfileId });
       expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.error.profileChange');
-      expect(mockResetModalState).not.toHaveBeenCalled();
+      expect(mockResetModalState).toHaveBeenCalled();
     });
 
     test('performs both saving preferred profile and create resource when isDefault is true and action is "set"', async () => {

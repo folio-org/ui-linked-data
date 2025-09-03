@@ -10,17 +10,19 @@ import { useIntl } from 'react-intl';
 // import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 
 interface Props {
+  'data-testid'?: string;
   isOpen: boolean;
   title: string | ReactElement<any>;
   className?: string;
   classNameHeader?: string;
   submitButtonDisabled?: boolean;
+  submitButtonHidden?: boolean;
   cancelButtonDisabled?: boolean;
   cancelButtonHidden?: boolean;
   submitButtonLabel?: string;
   cancelButtonLabel?: string;
   shouldCloseOnEsc?: boolean;
-  shouldCloseOnExternalClick? : boolean;
+  shouldCloseOnExternalClick?: boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
   onClose: () => void;
@@ -47,6 +49,7 @@ const Modal: FC<Props> = ({
   onClose,
   children,
   submitButtonDisabled,
+  submitButtonHidden,
   cancelButtonDisabled,
   cancelButtonHidden,
   showCloseIconButton = true,
@@ -55,6 +58,7 @@ const Modal: FC<Props> = ({
   titleClassName,
   alignTitleCenter = false,
   ariaModalKind = AriaModalKind.Basic,
+  'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
@@ -83,7 +87,7 @@ const Modal: FC<Props> = ({
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <div className={classNames(['modal', className])} role="dialog" data-testid="modal">
+          <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
                 <button
@@ -110,14 +114,16 @@ const Modal: FC<Props> = ({
                     {cancelButtonLabel}
                   </Button>
                 )}
-                <Button
-                  disabled={submitButtonDisabled}
-                  type={ButtonType.Highlighted}
-                  onClick={onSubmit}
-                  data-testid="modal-button-submit"
-                >
-                  {submitButtonLabel}
-                </Button>
+                {!submitButtonHidden && (
+                  <Button
+                    disabled={submitButtonDisabled}
+                    type={ButtonType.Highlighted}
+                    onClick={onSubmit}
+                    data-testid="modal-button-submit"
+                  >
+                    {submitButtonLabel}
+                  </Button>
+                )}
               </div>
             )}
           </div>

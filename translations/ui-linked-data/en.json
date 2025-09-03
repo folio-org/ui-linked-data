@@ -276,5 +276,6 @@
   "ld.field.frequency": "Frequency",
   "ld.na": "N/A",
   "ld.error.profileSaveAsPreferred": "Error setting up preferred profile",
-  "ld.error.profileChange": "Error changing recording profile"
+  "ld.error.profileChange": "Error changing recording profile",
+  "ld.modal.chooseProfileWarning.message": "You must save any changes before changing the profile."
 }
