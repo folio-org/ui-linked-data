@@ -52,13 +52,13 @@ export const useProfileSelectionActions = ({
       await handleSetProfileAsDefault(profileId);
     }
 
+    resetModalState();
+
     if (action === 'set') {
-      resetModalState();
       handleCreateResource(profileId);
     } else {
       try {
         await changeRecordProfile({ profileId });
-        resetModalState();
       } catch (error) {
         console.error('Failed to change record profile:', error);
 

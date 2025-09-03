@@ -145,7 +145,7 @@ describe('ProfileSelectionManager', () => {
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: 'profile_3' });
-    expect(mockSetIsProfileSelectionModalOpen).not.toHaveBeenCalledWith(false);
+    expect(mockSetIsProfileSelectionModalOpen).toHaveBeenCalledWith(false);
     expect(mockNavigateToEditPage).not.toHaveBeenCalled();
   });
 
