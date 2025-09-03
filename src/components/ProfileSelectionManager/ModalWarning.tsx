@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Modal } from '@components/Modal';
 
 interface ModalWarningProps {
@@ -8,14 +8,11 @@ interface ModalWarningProps {
 }
 
 export const ModalWarning: FC<ModalWarningProps> = ({ isOpen, onClose }) => {
-  const { formatMessage } = useIntl();
-
   return (
     <Modal
       className="modal-profile-warning"
       isOpen={isOpen}
       title={''}
-      submitButtonLabel={formatMessage({ id: 'ld.ok' })}
       onClose={onClose}
       cancelButtonHidden={true}
       submitButtonHidden={true}
