@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
@@ -15,7 +16,7 @@ import { ViewMarcModal } from '@components/ViewMarcModal';
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import './Edit.scss';
 
-const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
+const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing, RecordStatus.close];
 
 export const Edit = () => {
   const { getProfiles } = useConfig();
@@ -27,13 +28,14 @@ export const Edit = () => {
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState();
-  const queryParams = new URLSearchParams(window.location.search);
-  const cloneOfParam = queryParams.get(QueryParams.CloneOf);
-  const typeParam = queryParams.get(QueryParams.Type);
-  const refParam = queryParams.get(QueryParams.Ref);
+  const [searchParams] = useSearchParams();
+  const cloneOfParam = searchParams.get(QueryParams.CloneOf);
+  const typeParam = searchParams.get(QueryParams.Type);
+  const refParam = searchParams.get(QueryParams.Ref);
 
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
+  const prevRecordStatusType = useRef<string | null>(null);
 
   function setEntitesBFIds() {
     const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
@@ -88,11 +90,14 @@ export const Edit = () => {
       if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
 
       const fetchableId = resourceId ?? cloneOfParam;
+      const statusChanged = prevRecordStatusType.current !== recordStatusType;
+      prevRecordStatusType.current = recordStatusType;
 
       if (
         (!cloneOfParam && resourceId && prevResourceId.current === resourceId) ||
         (cloneOfParam && prevCloneOf.current === cloneOfParam) ||
-        (!fetchableId && !refParam)
+        (!fetchableId && !refParam) ||
+        !statusChanged
       ) {
         return;
       }
