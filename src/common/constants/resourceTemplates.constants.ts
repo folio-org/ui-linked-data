@@ -5,9 +5,9 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
     {
       path: [
         BFLITE_URIS.INSTANCE,
-        'http://bibfra.me/vocab/marc/title',
-        'http://bibfra.me/vocab/marc/Title',
-        'http://bibfra.me/vocab/marc/mainTitle',
+        'http://bibfra.me/vocab/library/title',
+        'http://bibfra.me/vocab/library/Title',
+        'http://bibfra.me/vocab/library/mainTitle',
       ],
       template: {
         prefix: 'ld.duplicateInstanceInBrackets',
@@ -18,9 +18,9 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
     {
       path: [
         BFLITE_URIS.WORK,
-        'http://bibfra.me/vocab/marc/title',
-        'http://bibfra.me/vocab/marc/Title',
-        'http://bibfra.me/vocab/marc/mainTitle',
+        'http://bibfra.me/vocab/library/title',
+        'http://bibfra.me/vocab/library/Title',
+        'http://bibfra.me/vocab/library/mainTitle',
       ],
       template: {
         prefix: 'ld.duplicateWorkInBrackets',

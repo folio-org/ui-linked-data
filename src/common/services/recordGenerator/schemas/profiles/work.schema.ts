@@ -36,15 +36,15 @@ export const workRecordSchema: RecordSchema = {
 
       [BFLITE_URIS.TITLE]: createArrayObjectProperty({
         [BFLITE_URIS.TITLE_CONTAINER]: createObjectProperty(standardTitleProperties),
-        [BFLITE_URIS.MARC_VARIANT_TITLE]: createObjectProperty(variantTitleProperties),
-        [BFLITE_URIS.MARC_PARALLEL_TITLE]: createObjectProperty(extendedTitleProperties),
+        [BFLITE_URIS.LIBRARY_VARIANT_TITLE]: createObjectProperty(variantTitleProperties),
+        [BFLITE_URIS.LIBRARY_PARALLEL_TITLE]: createObjectProperty(extendedTitleProperties),
       }),
 
       [BFLITE_URIS.ILLUSTRATIONS]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.GOVERNMENT_PUBLICATION]: createArrayObjectProperty(linkAndTermProperties),
 
-      [BFLITE_URIS.MARC_SUPPLEMENTARY_CONTENT]: createArrayObjectProperty(linkAndTermProperties),
+      [BFLITE_URIS.LIBRARY_SUPPLEMENTARY_CONTENT]: createArrayObjectProperty(linkAndTermProperties),
 
       [BFLITE_URIS.DATE_START]: stringArrayProperty,
 
@@ -73,7 +73,7 @@ export const workRecordSchema: RecordSchema = {
           lc: createObjectProperty({
             [BFLITE_URIS.CODE]: stringArrayProperty,
             [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
-            [BFLITE_URIS.MARC_STATUS]: createStatusProperty(statusProperties),
+            [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
             _assigningSourceReference: assigningSourceProperty,
           }),
           ddc: createObjectProperty({
@@ -99,7 +99,7 @@ export const workRecordSchema: RecordSchema = {
 
       [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
 
-      [BFLITE_URIS.MARC_CHARACTERISTIC]: createArrayObjectProperty(linkAndTermProperties),
+      [BFLITE_URIS.LIBRARY_CHARACTERISTIC]: createArrayObjectProperty(linkAndTermProperties),
     },
   },
 };
