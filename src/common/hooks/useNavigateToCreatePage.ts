@@ -18,22 +18,27 @@ export const useNavigateToCreatePage = () => {
   const navigationStateRef = useRef<SearchParamsState>();
 
   // Creates query parameters object for resource creation
-  const createQueryParams = ({ type, refId }: { type: string; refId: string }) => {
-    if (!type || !refId) return null;
+  const createQueryParams = ({ type, refId }: { type: string; refId?: string | null }) => {
+    if (!type) return null;
 
-    return {
+    const queryParams = {
       [QueryParams.Type]: type,
-      [QueryParams.Ref]: refId,
     } as Record<QueryParams, string>;
+
+    if (refId) {
+      queryParams[QueryParams.Ref] = refId;
+    }
+
+    return queryParams;
   };
 
   // Handles navigation after profile selection
   const handleProfileSelection = (profileId: string | number) => {
-    if (!queryParamsRef.current.type || !queryParamsRef.current.refId) return;
+    if (!queryParamsRef.current.type) return;
 
     const params = createQueryParams({
       type: queryParamsRef.current.type,
-      refId: queryParamsRef.current.refId,
+      refId: queryParamsRef.current.refId ?? null,
     });
 
     if (params) {
@@ -57,10 +62,7 @@ export const useNavigateToCreatePage = () => {
     queryParams: { type?: string | null; refId?: string | null };
     navigationState?: SearchParamsState;
   }) => {
-    const params =
-      queryParams.type && queryParams.refId
-        ? createQueryParams({ type: queryParams.type, refId: queryParams.refId })
-        : null;
+    const params = queryParams.type ? createQueryParams({ type: queryParams.type, refId: queryParams.refId }) : null;
 
     // Store current query parameters and navigation state for later use
     queryParamsRef.current = queryParams;
