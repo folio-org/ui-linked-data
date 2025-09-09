@@ -129,15 +129,15 @@ describe('useNavigateToCreatePage', () => {
       expect(navigateToEditPage).toHaveBeenCalledWith(testURL, testNavigationState);
     });
 
-    test('does not navigate when type or refId are missing', async () => {
+    test('does not navigate when type are missing', async () => {
       const { result } = renderHook(() => useNavigateToCreatePage());
 
       await act(async () => {
         result.current.onCreateNewResource({
           resourceTypeURL: testResourceTypeURL,
           queryParams: {
-            type: testType,
-            refId: null,
+            type: null,
+            refId: testRefId,
           },
         });
       });
@@ -151,7 +151,7 @@ describe('useNavigateToCreatePage', () => {
   });
 
   describe('createQueryParams', () => {
-    test('returns null when type or refId are missing', async () => {
+    test('returns null when type are missing', async () => {
       const { result } = renderHook(() => useNavigateToCreatePage());
 
       await act(async () => {
@@ -159,7 +159,7 @@ describe('useNavigateToCreatePage', () => {
           resourceTypeURL: testResourceTypeURL,
           queryParams: {
             type: null,
-            refId: null,
+            refId: testRefId,
           },
         });
       });
