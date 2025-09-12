@@ -97,6 +97,7 @@ type SchemaEntry = {
   twinChildren?: Record<string, string[]>;
   deletable?: boolean;
   profileId?: string | number | null;
+  marcMapping?: Record<string, string>;
 };
 
 type LinkedEntry = {
