@@ -1,1 +1,1 @@
-export * from './MarcTooltip';
+export { MarcTooltip } from './MarcTooltip';

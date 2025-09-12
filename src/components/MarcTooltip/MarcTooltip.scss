@@ -1,10 +1,6 @@
 @import '@common/styles/common.scss';
 
 .marc-tooltip {
-  &-container {
-    position: relative;
-  }
-
   &-icon {
     path {
       fill: rgba(0, 0, 0, 0.62);
@@ -17,23 +13,6 @@
     &:active path {
       fill: white;
     }
-  }
-
-  &-content {
-    position: absolute;
-    top: 100%;
-    right: -6px;
-    margin-top: 2px;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    padding: 15px;
-    z-index: 100;
-    min-width: 240px;
-    box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.17);
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1rem;
-    line-height: 21px;
   }
 
   &-title {
