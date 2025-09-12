@@ -8,6 +8,7 @@ interface TooltipProps {
   triggerAriaLabel?: string;
   className?: string;
   contentClassName?: string;
+  ['data-testid']?: string;
 }
 
 export const Tooltip: FC<TooltipProps> = ({
@@ -16,6 +17,7 @@ export const Tooltip: FC<TooltipProps> = ({
   triggerAriaLabel,
   className,
   contentClassName,
+  'data-testid': dataTestId,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -58,6 +60,7 @@ export const Tooltip: FC<TooltipProps> = ({
         aria-expanded={isVisible}
         aria-haspopup="dialog"
         onClick={() => setIsVisible(prev => !prev)}
+        data-testid={dataTestId}
       >
         {triggerContent}
       </button>

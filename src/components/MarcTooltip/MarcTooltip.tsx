@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
+import { SchemaControlType } from '@common/constants/uiControls.constants';
+import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
 import { Tooltip } from '@components/Tooltip';
 import InfoIcon from '@src/assets/info.svg?react';
 import './MarcTooltip.scss';
@@ -12,9 +14,10 @@ export interface MarcMapping {
 interface MarcTooltipProps {
   mapping: MarcMapping | undefined;
   className?: string;
+  htmlId?: string;
 }
 
-export const MarcTooltip: FC<MarcTooltipProps> = ({ mapping, className }) => {
+export const MarcTooltip: FC<MarcTooltipProps> = ({ mapping, className, htmlId }) => {
   const { formatMessage } = useIntl();
 
   if (!mapping || Object.keys(mapping).length === 0) {
@@ -42,6 +45,7 @@ export const MarcTooltip: FC<MarcTooltipProps> = ({ mapping, className }) => {
       triggerContent={<InfoIcon className="marc-tooltip-icon" />}
       triggerAriaLabel={formatMessage({ id: 'ld.showMarcFieldEquivalents' })}
       content={tooltipContent}
+      data-testid={getHtmlIdForSchemaControl(SchemaControlType.ShowMarcEquivalents, htmlId)}
     />
   );
 };

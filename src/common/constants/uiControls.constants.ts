@@ -17,6 +17,7 @@ export enum SchemaControlType {
   Duplicate = 'addDuplicate',
   RemoveDuplicate = 'removeDuplicate',
   ChangeComplexFieldValue = 'changeComplexFieldValue',
+  ShowMarcEquivalents = 'showMarcEquivalents'
 }
 
 const BASE_UI_CONTROLS_LIST = [AdvancedFieldType.literal, AdvancedFieldType.simple, AdvancedFieldType.complex];
