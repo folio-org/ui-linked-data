@@ -43,7 +43,9 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
             <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
           <div className="controls-container">
-            {selectedMarcMapping && <MarcTooltip mapping={selectedMarcMapping} className="field-tooltip" />}
+            {selectedMarcMapping && (
+              <MarcTooltip mapping={selectedMarcMapping} htmlId={htmlId} className="field-tooltip" />
+            )}
             {hasDuplicateGroupButton && (
               <DuplicateGroup
                 htmlId={htmlId}
