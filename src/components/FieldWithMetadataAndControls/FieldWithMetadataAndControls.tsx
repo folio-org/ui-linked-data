@@ -16,6 +16,7 @@ type IFieldWithMetadataAndControls = {
   level?: number;
   disabled?: boolean;
   showLabel?: boolean;
+  marcMapping?: Record<string, string>;
   [x: string]: any;
 };
 
@@ -28,6 +29,7 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   level,
   showLabel = true,
   disabled = false,
+  marcMapping,
   ...restProps
 }) => {
   const { schema } = useProfileState();
@@ -72,7 +74,9 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       {isCompact ? (
         <CompactLayout {...commonLayoutProps}>{children}</CompactLayout>
       ) : (
-        <ExtendedLayout {...commonLayoutProps}>{children}</ExtendedLayout>
+        <ExtendedLayout {...commonLayoutProps} marcMapping={marcMapping}>
+          {children}
+        </ExtendedLayout>
       )}
     </div>
   );

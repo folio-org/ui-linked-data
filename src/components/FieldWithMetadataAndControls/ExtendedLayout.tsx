@@ -16,6 +16,7 @@ type IExtendedLayout = {
   hasDuplicateSubcomponentButton?: boolean;
   onClickDuplicateGroup?: VoidFunction;
   onClickDeleteGroup?: VoidFunction;
+  marcMapping?: Record<string, string>;
 };
 
 export const ExtendedLayout: FC<IExtendedLayout> = memo(
@@ -30,8 +31,10 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
     hasDuplicateSubcomponentButton,
     onClickDuplicateGroup,
     onClickDeleteGroup,
+    marcMapping,
   }) => {
-    const { type, deletable, marcMapping } = entry;
+    const { type, deletable, marcMapping: entryMarcMapping } = entry;
+    const selectedMarcMapping = marcMapping ?? entryMarcMapping;
 
     return (
       <>
@@ -40,7 +43,7 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
             <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
           <div className="controls-container">
-            {marcMapping && <MarcTooltip mapping={marcMapping} className="field-tooltip" />}
+            {selectedMarcMapping && <MarcTooltip mapping={selectedMarcMapping} className="field-tooltip" />}
             {hasDuplicateGroupButton && (
               <DuplicateGroup
                 htmlId={htmlId}
