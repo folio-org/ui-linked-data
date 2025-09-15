@@ -2,7 +2,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IMarcMappingGenerator } from './marcMappingGenerator.interface';
 
 export class MarcMappingGeneratorService implements IMarcMappingGenerator {
-  applyMarcMappingToEntries(schema: Map<string, SchemaEntry>): void {
+  applyMarcMappingToEntries(schema: Schema) {
     schema.forEach(entry => {
       if (entry.type === AdvancedFieldType.block) {
         this.processBlockEntry(entry, schema);
@@ -10,7 +10,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     });
   }
 
-  private processBlockEntry(blockEntry: SchemaEntry, schema: Map<string, SchemaEntry>): void {
+  private processBlockEntry(blockEntry: SchemaEntry, schema: Schema) {
     if (!blockEntry.children) return;
 
     blockEntry.children.forEach(childUuid => {
@@ -22,7 +22,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     });
   }
 
-  private processChildEntry(entry: SchemaEntry, schema: Map<string, SchemaEntry>): void {
+  private processChildEntry(entry: SchemaEntry, schema: Schema) {
     // If entry has its own MARC value and no children, add marcMapping to itself
     if (entry.marc && (!entry.children || entry.children.length === 0)) {
       this.addMarcMappingToEntry(entry, { [entry.displayName || '']: entry.marc });
@@ -46,7 +46,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     }
   }
 
-  private collectMarcMappingFromChildren(entry: SchemaEntry, schema: Map<string, SchemaEntry>): Record<string, string> {
+  private collectMarcMappingFromChildren(entry: SchemaEntry, schema: Schema) {
     const marcMapping: Record<string, string> = {};
 
     if (!entry.children) return marcMapping;
@@ -76,11 +76,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     return marcMapping;
   }
 
-  private handleDropdownMarcMapping(
-    dropdownEntry: SchemaEntry,
-    marcMapping: Record<string, string>,
-    schema: Map<string, SchemaEntry>,
-  ): void {
+  private handleDropdownMarcMapping(dropdownEntry: SchemaEntry, marcMapping: Record<string, string>, schema: Schema) {
     if (!dropdownEntry.children) return;
 
     // For dropdown, add marcMapping to the dropdown itself if it has direct MARC children
@@ -110,7 +106,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     });
   }
 
-  private addMarcMappingToEntry(entry: SchemaEntry, marcMapping: Record<string, string>): void {
+  private addMarcMappingToEntry(entry: SchemaEntry, marcMapping: Record<string, string>) {
     if (!entry.marcMapping) {
       entry.marcMapping = {};
     }
