@@ -72,7 +72,9 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       {...restProps}
     >
       {isCompact ? (
-        <CompactLayout {...commonLayoutProps}>{children}</CompactLayout>
+        <CompactLayout {...commonLayoutProps} marcMapping={marcMapping}>
+          {children}
+        </CompactLayout>
       ) : (
         <ExtendedLayout {...commonLayoutProps} marcMapping={marcMapping}>
           {children}

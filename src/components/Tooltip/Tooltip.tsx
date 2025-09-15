@@ -24,18 +24,16 @@ export const Tooltip: FC<TooltipProps> = ({
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Handle click outside to close the tooltip
     const handleClickOutside = (event: MouseEvent) => {
       if (!tooltipRef.current?.contains(event.target as Node) && !buttonRef.current?.contains(event.target as Node)) {
         setIsVisible(false);
       }
     };
 
-    // Handle escape key to close the tooltip
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isVisible) {
         setIsVisible(false);
-        // Return focus to the button when closing with Escape
+
         buttonRef.current?.focus();
       }
     };
