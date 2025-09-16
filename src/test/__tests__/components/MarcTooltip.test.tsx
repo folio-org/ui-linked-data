@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { MarcTooltip, MarcMapping, MarcTooltipProps } from '@components/MarcTooltip/MarcTooltip';
+import { MarcTooltip, MarcMapping, MarcTooltipProps } from '@components/MarcTooltip';
 
 const renderMarcTooltip = (props: MarcTooltipProps) =>
   render(
