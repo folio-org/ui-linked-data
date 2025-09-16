@@ -16,7 +16,7 @@ import { ViewMarcModal } from '@components/ViewMarcModal';
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
 import './Edit.scss';
 
-const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing, RecordStatus.close];
+const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
 
 export const Edit = () => {
   const { getProfiles } = useConfig();
@@ -35,7 +35,6 @@ export const Edit = () => {
 
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
-  const prevRecordStatusType = useRef<string | null>(null);
 
   function setEntitesBFIds() {
     const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
@@ -85,19 +84,17 @@ export const Edit = () => {
     resetHasShownAuthorityWarning();
   }, [resourceId]);
 
+  // TODO: UILD-60, UILD-643 - refactor this after introducing Zustand selectors and React Query
   useEffect(() => {
     async function loadRecord() {
       if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
 
       const fetchableId = resourceId ?? cloneOfParam;
-      const statusChanged = prevRecordStatusType.current !== recordStatusType;
-      prevRecordStatusType.current = recordStatusType;
 
       if (
         (!cloneOfParam && resourceId && prevResourceId.current === resourceId) ||
         (cloneOfParam && prevCloneOf.current === cloneOfParam) ||
-        (!fetchableId && !refParam) ||
-        !statusChanged
+        (!fetchableId && !refParam)
       ) {
         return;
       }
