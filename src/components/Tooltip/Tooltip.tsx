@@ -64,7 +64,13 @@ export const Tooltip: FC<TooltipProps> = ({
       </button>
 
       {isVisible && (
-        <div ref={tooltipRef} className={classNames(['tooltip-content', contentClassName])} tabIndex={-1} role="dialog">
+        <div
+          ref={tooltipRef}
+          className={classNames(['tooltip-content', contentClassName])}
+          tabIndex={-1}
+          role="dialog"
+          data-testid={`${dataTestId}__content`}
+        >
           {content}
         </div>
       )}

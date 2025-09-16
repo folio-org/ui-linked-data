@@ -11,7 +11,7 @@ export interface MarcMapping {
   [fieldName: string]: string;
 }
 
-interface MarcTooltipProps {
+export interface MarcTooltipProps {
   mapping: MarcMapping | undefined;
   className?: string;
   htmlId?: string;
