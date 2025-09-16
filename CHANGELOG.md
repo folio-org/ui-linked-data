@@ -40,6 +40,7 @@
 * Update simple field widget to allow for single value selection. Refs [UILD-631].
 * Avoid cloning unique admin metadata when duplicating an instance. Refs [UILD-638].
 * Add profile changing scenarios. Refs [UILD-634].
+* Add profile selection for Work. Refs [UILD-628].
 * Add tooltips with MARC labels. Refs [UILD-538].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -82,6 +83,7 @@
 [UILD-631]:https://folio-org.atlassian.net/browse/UILD-631
 [UILD-638]:https://folio-org.atlassian.net/browse/UILD-638
 [UILD-634]:https://folio-org.atlassian.net/browse/UILD-634
+[UILD-628]:https://folio-org.atlassian.net/browse/UILD-628
 [UILD-538]:https://folio-org.atlassian.net/browse/UILD-538
 
 ## 1.0.5 (2025-04-30)
