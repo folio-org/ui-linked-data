@@ -260,6 +260,5 @@
     "ld.importTryAgain": "Try again",
     "ld.importTimedout": "Import failed to complete in time",
     "ld.exportInstanceRdf": "Export instance RDF file",
-    "ld.errorExportingRdf": "Could not export instance RDF",
-    "ld.placeholder.processing": "Processing"
+    "ld.errorExportingRdf": "Could not export instance RDF"
 }
