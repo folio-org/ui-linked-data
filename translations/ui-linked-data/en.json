@@ -55,6 +55,7 @@
   "ld.return": "Return",
   "ld.rdSaveSuccess": "Resource created. Expect a short delay before resource is visible in FOLIO.",
   "ld.rdUpdateSuccess": "Resource updated. Expect a short delay before changes are visible in FOLIO.",
+  "ld.rdInstanceSavedMetadataDelayed": "Date of creation and Local resource ID number will show up after some auto-processing.",
   "ld.cantSaveRd": "Cannot save the resource description",
   "ld.cantDeleteRd": "Cannot delete the resource description",
   "ld.rdDeleted": "Resource description deleted",
@@ -277,5 +278,6 @@
   "ld.na": "N/A",
   "ld.error.profileSaveAsPreferred": "Error setting up preferred profile",
   "ld.error.profileChange": "Error changing recording profile",
-  "ld.modal.chooseProfileWarning.message": "You must save any changes before changing the profile."
+  "ld.modal.chooseProfileWarning.message": "You must save any changes before changing the profile.",
+  "ld.placeholder.processing": "Processing"
 }

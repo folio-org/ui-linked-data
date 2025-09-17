@@ -7,7 +7,7 @@ import {
   getGraphIdByExternalId,
   getRecord,
 } from '@common/api/records.api';
-import { BibframeEntities } from '@common/constants/bibframe.constants';
+import { BibframeEntities, TYPE_URIS } from '@common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
 import { UserNotificationFactory } from '@common/services/userNotification';
@@ -110,6 +110,13 @@ export const useRecordControls = () => {
     addStatusMessagesItem?.(
       UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
     );
+
+    // Notify that Instance admin metadata from FOLIO is not available when not present
+    if (!recordId && parsedResponse?.resource?.[TYPE_URIS.INSTANCE]) {
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.info,'ld.rdInstanceSavedMetadataDelayed'),
+      );
+    }
 
     // isEdited state update is not immediately reflected in the <Prompt />
     // blocker component, forcing <Prompt /> to block the navigation call below

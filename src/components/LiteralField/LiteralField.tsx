@@ -7,6 +7,7 @@ interface ILiteralField {
   value?: string;
   isDisabled?: boolean;
   id?: string;
+  placeholder?: string;
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
   'data-testid'?: string;
 }
@@ -16,6 +17,7 @@ export const LiteralField: FC<ILiteralField> = ({
   htmlId,
   value = '',
   id,
+  placeholder,
   isDisabled = false,
   onChange,
   'data-testid': testId = 'literal-field',
@@ -36,6 +38,7 @@ export const LiteralField: FC<ILiteralField> = ({
       onChange={handleOnChange}
       value={localValue}
       disabled={isDisabled}
+      placeholder={placeholder}
       ariaLabelledBy={htmlId}
     />
   );

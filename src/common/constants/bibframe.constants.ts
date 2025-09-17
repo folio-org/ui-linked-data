@@ -68,3 +68,10 @@ export const INSTANCE_CLONE_DELETE_PROPERTIES = [
   'http://bibfra.me/vocab/lite/createdDate',
   'http://bibfra.me/vocab/marc/controlNumber',
 ];
+
+// Properties with values originating from FOLIO that may need
+// a visual placeholder in the editor before those values have
+// been set. Currently an identical set to those properties that
+// should be removed from cloned instances to preserve uniqueness
+// across Instances.
+export const PROPERTIES_FROM_FOLIO = INSTANCE_CLONE_DELETE_PROPERTIES;
