@@ -144,7 +144,7 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!matchingEntry || !recordSchemaProperty) return;
 
-    this.processEntryByType(entryType, childEntry.uriBFLite, childValues, recordSchemaProperty, groupObject);
+    this.processEntryByType(entryType, childEntry.uriBFLite, childValues, recordSchemaProperty, groupObject, !!childEntry?.constraints?.repeatable);
   }
 
   private processEntryByType(
@@ -153,11 +153,12 @@ export class GroupProcessor extends BaseFieldProcessor {
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
+    repeatable: boolean,
   ) {
     if (entryType === AdvancedFieldType.complex) {
       this.processComplexEntry(values, recordSchemaProperty, groupObject);
     } else {
-      this.processSimpleEntry(uriBFLite, entryType, values, recordSchemaProperty, groupObject);
+      this.processSimpleEntry(uriBFLite, entryType, values, recordSchemaProperty, groupObject, repeatable);
     }
   }
 
@@ -184,11 +185,21 @@ export class GroupProcessor extends BaseFieldProcessor {
     values: UserValueContents[],
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
+    repeatable: boolean,
   ) {
     const processedValues = this.processSimpleValues(entryType, values, recordSchemaProperty);
 
     if (processedValues.length > 0) {
-      groupObject[uriBFLite] = Array.isArray(processedValues) ? processedValues : [processedValues];
+      const valuesArray = Array.isArray(processedValues) ? processedValues : [processedValues];
+      if (repeatable && groupObject[uriBFLite]) {
+        if (Array.isArray(groupObject[uriBFLite])) {
+          groupObject[uriBFLite].push(...valuesArray);
+        } else {
+          groupObject[uriBFLite] = [groupObject[uriBFLite], ...valuesArray];
+        }
+      } else {
+        groupObject[uriBFLite] = valuesArray;
+      }
     }
   }
 
