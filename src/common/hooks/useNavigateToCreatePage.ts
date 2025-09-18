@@ -8,7 +8,7 @@ import { useProfileSelection } from './useProfileSelection';
 export const useNavigateToCreatePage = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { checkProfileAndProceed } = useProfileSelection();
-  const { setQueryParams } = useNavigationState();
+  const { setQueryParams } = useNavigationState(['setQueryParams']);
 
   // References to store query parameters and navigation state for later use
   const queryParamsRef = useRef<{ type?: string | null; refId?: string | null }>({

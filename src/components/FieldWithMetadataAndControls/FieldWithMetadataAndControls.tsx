@@ -30,8 +30,8 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   disabled = false,
   ...restProps
 }) => {
-  const { schema } = useProfileState();
-  const { selectedEntries } = useInputsState();
+  const { schema } = useProfileState(['schema']);
+  const { selectedEntries } = useInputsState(['selectedEntries']);
   const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 

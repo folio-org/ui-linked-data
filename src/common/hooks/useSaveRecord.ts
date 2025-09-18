@@ -6,7 +6,7 @@ import { QueryParams } from '@common/constants/routes.constants';
 import { useStatusState } from '@src/store';
 
 export const useSaveRecord = (primary: boolean) => {
-  const { isRecordEdited } = useStatusState();
+  const { isRecordEdited } = useStatusState(['isRecordEdited']);
   const { hasBeenSaved } = useRecordStatus();
   const { saveRecord } = useRecordControls();
   const { isModalOpen, openModal, closeModal } = useModalControls();

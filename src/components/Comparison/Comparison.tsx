@@ -18,9 +18,17 @@ const COMPARED_ELEMENTS_COUNT = 2;
 
 export const Comparison = () => {
   const { formatMessage } = useIntl();
-  const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
-  const { setSelectedInstances, resetSelectedInstances, selectedInstances } = useSearchState();
-  const { resetFullDisplayComponentType } = useUIState();
+  const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState([
+    'previewContent',
+    'setPreviewContent',
+    'resetPreviewContent',
+  ]);
+  const { setSelectedInstances, resetSelectedInstances, selectedInstances } = useSearchState([
+    'setSelectedInstances',
+    'resetSelectedInstances',
+    'selectedInstances',
+  ]);
+  const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
   const { navigateToEditPage } = useNavigateToEditPage();
   const [currentPage, setCurrentPage] = useState(0);
 

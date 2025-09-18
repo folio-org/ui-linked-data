@@ -8,8 +8,8 @@ import './Footer.scss';
 export const Footer = () => {
   const showRecordControls = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const showExternalResourceControls = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { basicValue: marcPreviewData } = useMarcPreviewState();
-  const { record } = useInputsState();
+  const { basicValue: marcPreviewData } = useMarcPreviewState(['basicValue']);
+  const { record } = useInputsState(['record']);
   const isVisible = (showRecordControls || (showExternalResourceControls && record)) && !marcPreviewData;
 
   return (

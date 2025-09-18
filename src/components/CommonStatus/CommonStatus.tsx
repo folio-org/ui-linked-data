@@ -13,7 +13,7 @@ import './CommonStatus.scss';
 const DELETE_TIMEOUT = 10000;
 
 export const CommonStatus: FC = () => {
-  const { statusMessages, setStatusMessages } = useStatusState();
+  const { statusMessages, setStatusMessages } = useStatusState(['statusMessages', 'setStatusMessages']);
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));

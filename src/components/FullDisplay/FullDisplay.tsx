@@ -5,8 +5,8 @@ import { Comparison } from '@components/Comparison';
 import './FullDisplay.scss';
 
 export const FullDisplay = () => {
-  const { previewContent } = useInputsState();
-  const { fullDisplayComponentType } = useUIState();
+  const { previewContent } = useInputsState(['previewContent']);
+  const { fullDisplayComponentType } = useUIState(['fullDisplayComponentType']);
 
   const contents = {
     [FullDisplayType.Basic]: !!previewContent.length && <PreviewContent />,
