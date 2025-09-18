@@ -19,6 +19,10 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const lookupCacheService = useLookupCacheService();
   const commonStatusService = useCommonStatus();
 
+  console.log('====================================');
+  console.log('ServicesProvider render');
+  console.log('====================================');
+
   const entryPropertiesGeneratorService = useMemo(() => new EntryPropertiesGeneratorService(), []);
   const selectedEntriesService = useMemo(() => new SelectedEntriesService([]), []);
   const userValuesService = useMemo(

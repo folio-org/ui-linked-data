@@ -2,7 +2,7 @@ import { fetchProfile } from '@common/api/profiles.api';
 import { useProfileState } from '@src/store';
 
 export const useLoadProfile = () => {
-  const { profiles, setProfiles } = useProfileState();
+  const { profiles, setProfiles } = useProfileState(['profiles', 'setProfiles']);
 
   const loadProfile = async (profileId: string | number) => {
     if (profiles[profileId]) {

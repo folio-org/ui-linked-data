@@ -18,7 +18,7 @@ type InferSliceState<T extends SliceConfigs> = {
     : never;
 }[keyof T];
 
-export function createStoreFactory<U, T extends SliceConfigs>(configs: T, storeName: string) {
+export function createStoreFactory<U extends object, T extends SliceConfigs>(configs: T, storeName: string) {
   type State = InferSliceState<T>;
 
   const storeCreator: StateCreatorTyped<State> = (set, get, api) =>
@@ -36,5 +36,5 @@ export function createStoreFactory<U, T extends SliceConfigs>(configs: T, storeN
       {} as State,
     );
 
-  return generateStore<U>(storeCreator as StateCreatorTyped<U>, storeName);
+  return generateStore<U>(storeCreator as unknown as StateCreatorTyped<U>, storeName);
 }

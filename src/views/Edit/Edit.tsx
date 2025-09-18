@@ -22,12 +22,23 @@ export const Edit = () => {
   const { getProfiles } = useConfig();
   const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
   const resourceId = getResourceIdFromUri();
-  const { resetRecord, resetUserValues, resetSelectedEntries } = useInputsState();
-  const { recordStatus, addStatusMessagesItem } = useStatusState();
-  const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
+  const { resetRecord, resetUserValues, resetSelectedEntries } = useInputsState([
+    'resetRecord',
+    'resetUserValues',
+    'resetSelectedEntries',
+  ]);
+  const { recordStatus, addStatusMessagesItem } = useStatusState(['recordStatus', 'addStatusMessagesItem']);
+  const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState([
+    'basicValue',
+    'resetBasicValue',
+  ]);
   const recordStatusType = recordStatus?.type;
-  const { setIsLoading } = useLoadingState();
-  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState([
+    'setCurrentlyEditedEntityBfid',
+    'setCurrentlyPreviewedEntityBfid',
+    'resetHasShownAuthorityWarning',
+  ]);
   const [searchParams] = useSearchParams();
   const cloneOfParam = searchParams.get(QueryParams.CloneOf);
   const typeParam = searchParams.get(QueryParams.Type);
