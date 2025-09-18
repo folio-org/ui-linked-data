@@ -9,14 +9,14 @@ export const stringArrayProperty = {
 
 // Common property groups
 export const basicTitleProperties = {
-  [BFLITE_URIS.MARC_PART_NAME]: stringArrayProperty,
-  [BFLITE_URIS.MARC_PART_NUMBER]: stringArrayProperty,
+  [BFLITE_URIS.LIBRARY_PART_NAME]: stringArrayProperty,
+  [BFLITE_URIS.LIBRARY_PART_NUMBER]: stringArrayProperty,
   [BFLITE_URIS.MAIN_TITLE]: stringArrayProperty,
 };
 
 export const standardTitleProperties = {
   ...basicTitleProperties,
-  [BFLITE_URIS.MARC_SUB_TITLE]: stringArrayProperty,
+  [BFLITE_URIS.LIBRARY_SUB_TITLE]: stringArrayProperty,
   [BFLITE_URIS.BFLC_NON_SORT_NUM]: stringArrayProperty,
 };
 
@@ -40,7 +40,7 @@ export const providerPlaceProperties = {
 };
 
 export const providerProperties = {
-  [BFLITE_URIS.MARC_DATE]: stringArrayProperty,
+  [BFLITE_URIS.LIBRARY_DATE]: stringArrayProperty,
   [BFLITE_URIS.NAME]: stringArrayProperty,
   [BFLITE_URIS.LITE_PROVIDER_DATE]: stringArrayProperty,
   [BFLITE_URIS.LITE_PLACE]: stringArrayProperty,

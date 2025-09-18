@@ -42,6 +42,7 @@
 * Add profile changing scenarios. Refs [UILD-634].
 * Add profile selection for Work. Refs [UILD-628].
 * Add tooltips with MARC labels. Refs [UILD-538].
+* Update vocabulary term IRIs to replace 'marc' with 'library'. Refs [UILD-603].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -85,6 +86,7 @@
 [UILD-634]:https://folio-org.atlassian.net/browse/UILD-634
 [UILD-628]:https://folio-org.atlassian.net/browse/UILD-628
 [UILD-538]:https://folio-org.atlassian.net/browse/UILD-538
+[UILD-603]:https://folio-org.atlassian.net/browse/UILD-603
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

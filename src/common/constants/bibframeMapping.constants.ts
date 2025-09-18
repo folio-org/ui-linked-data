@@ -6,43 +6,43 @@ export const BFLITE_URIS = {
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
-  CODE: 'http://bibfra.me/vocab/marc/code',
-  TERM: 'http://bibfra.me/vocab/marc/term',
-  SOURCE: 'http://bibfra.me/vocab/marc/source',
-  EDITION: 'http://bibfra.me/vocab/marc/edition',
-  EDITION_TYPE: 'http://bibfra.me/vocab/marc/editionType',
-  TABLE_OF_CONTENTS: 'http://bibfra.me/vocab/marc/tableOfContents',
-  SUMMARY: 'http://bibfra.me/vocab/marc/summary',
+  CODE: 'http://bibfra.me/vocab/library/code',
+  TERM: 'http://bibfra.me/vocab/library/term',
+  SOURCE: 'http://bibfra.me/vocab/library/source',
+  EDITION: 'http://bibfra.me/vocab/library/edition',
+  EDITION_TYPE: 'http://bibfra.me/vocab/library/editionType',
+  TABLE_OF_CONTENTS: 'http://bibfra.me/vocab/library/tableOfContents',
+  SUMMARY: 'http://bibfra.me/vocab/library/summary',
   INSTANTIATES: 'http://bibfra.me/vocab/lite/instantiates',
   EXTENT: 'http://bibfra.me/vocab/lite/extent',
-  APPLIES_TO: 'http://bibfra.me/vocab/marc/materialsSpecified',
+  APPLIES_TO: 'http://bibfra.me/vocab/library/materialsSpecified',
   NOTE: 'http://bibfra.me/vocab/lite/note',
   CREATOR: 'http://bibfra.me/vocab/lite/creator',
   CONTRIBUTOR: 'http://bibfra.me/vocab/lite/contributor',
   PROVIDER_PLACE: 'http://bibfra.me/vocab/lite/providerPlace',
   CLASSIFICATION: 'http://bibfra.me/vocab/lite/classification',
-  PROVISION_ACTIVITY: 'http://bibfra.me/vocab/marc/provisionActivity',
-  TITLE: 'http://bibfra.me/vocab/marc/title',
-  TITLE_CONTAINER: 'http://bibfra.me/vocab/marc/Title',
-  MAIN_TITLE: 'http://bibfra.me/vocab/marc/mainTitle',
-  PRODUCTION: 'http://bibfra.me/vocab/marc/production',
-  PUBLICATION: 'http://bibfra.me/vocab/marc/publication',
-  DISTRIBUTION: 'http://bibfra.me/vocab/marc/distribution',
-  MANUFACTURE: 'http://bibfra.me/vocab/marc/manufacture',
-  COPYRIGHT: 'http://bibfra.me/vocab/marc/copyright',
-  ISSUANCE: 'http://bibfra.me/vocab/marc/issuance',
+  PROVISION_ACTIVITY: 'http://bibfra.me/vocab/library/provisionActivity',
+  TITLE: 'http://bibfra.me/vocab/library/title',
+  TITLE_CONTAINER: 'http://bibfra.me/vocab/library/Title',
+  MAIN_TITLE: 'http://bibfra.me/vocab/library/mainTitle',
+  PRODUCTION: 'http://bibfra.me/vocab/library/production',
+  PUBLICATION: 'http://bibfra.me/vocab/library/publication',
+  DISTRIBUTION: 'http://bibfra.me/vocab/library/distribution',
+  MANUFACTURE: 'http://bibfra.me/vocab/library/manufacture',
+  COPYRIGHT: 'http://bibfra.me/vocab/library/copyright',
+  ISSUANCE: 'http://bibfra.me/vocab/library/issuance',
   LANGUAGE: 'http://bibfra.me/vocab/lite/language',
   LANGUAGES: '_languages',
   DATE: 'http://bibfra.me/vocab/lite/date',
-  MARC_VARIANT_TITLE: 'http://bibfra.me/vocab/marc/VariantTitle',
-  MARC_PARALLEL_TITLE: 'http://bibfra.me/vocab/marc/ParallelTitle',
-  MARC_PART_NAME: 'http://bibfra.me/vocab/marc/partName',
-  MARC_PART_NUMBER: 'http://bibfra.me/vocab/marc/partNumber',
-  MARC_SUB_TITLE: 'http://bibfra.me/vocab/marc/subTitle',
+  LIBRARY_VARIANT_TITLE: 'http://bibfra.me/vocab/library/VariantTitle',
+  LIBRARY_PARALLEL_TITLE: 'http://bibfra.me/vocab/library/ParallelTitle',
+  LIBRARY_PART_NAME: 'http://bibfra.me/vocab/library/partName',
+  LIBRARY_PART_NUMBER: 'http://bibfra.me/vocab/library/partNumber',
+  LIBRARY_SUB_TITLE: 'http://bibfra.me/vocab/library/subTitle',
   BFLC_NON_SORT_NUM: 'http://bibfra.me/vocab/bflc/nonSortNum',
   VARIANT_TYPE: 'http://bibfra.me/vocab/lite/variantType',
-  MARC_STATEMENT_OF_RESPONSIBILITY: 'http://bibfra.me/vocab/marc/statementOfResponsibility',
-  MARC_DATE: 'http://bibfra.me/vocab/marc/date',
+  LIBRARY_STATEMENT_OF_RESPONSIBILITY: 'http://bibfra.me/vocab/library/statementOfResponsibility',
+  LIBRARY_DATE: 'http://bibfra.me/vocab/library/date',
   LITE_PROVIDER_DATE: 'http://bibfra.me/vocab/lite/providerDate',
   LITE_PLACE: 'http://bibfra.me/vocab/lite/place',
   MAP: 'http://library.link/vocab/map',
@@ -51,36 +51,36 @@ export const BFLITE_URIS = {
   IDENTIFIER_ISSN: 'http://library.link/identifier/ISSN',
   IDENTIFIER_IAN: 'http://library.link/identifier/IAN',
   IDENTIFIER_OTHER: 'http://library.link/identifier/UNKNOWN',
-  MARC_STATUS: 'http://bibfra.me/vocab/marc/status',
-  MARC_SUPPLEMENTARY_CONTENT: 'http://bibfra.me/vocab/marc/supplementaryContent',
-  MARC_MEDIA: 'http://bibfra.me/vocab/marc/media',
-  MARC_DIMENSIONS: 'http://bibfra.me/vocab/marc/dimensions',
-  MARC_CARRIER: 'http://bibfra.me/vocab/marc/carrier',
-  MARC_ACCESS_LOCATION: 'http://bibfra.me/vocab/marc/accessLocation',
+  LIBRARY_STATUS: 'http://bibfra.me/vocab/library/status',
+  LIBRARY_SUPPLEMENTARY_CONTENT: 'http://bibfra.me/vocab/library/supplementaryContent',
+  LIBRARY_MEDIA: 'http://bibfra.me/vocab/library/media',
+  LIBRARY_DIMENSIONS: 'http://bibfra.me/vocab/library/dimensions',
+  LIBRARY_CARRIER: 'http://bibfra.me/vocab/library/carrier',
+  LIBRARY_ACCESS_LOCATION: 'http://bibfra.me/vocab/library/accessLocation',
   NOTES: '_notes',
   GEOGRAPHIC_COVERAGE: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage',
-  GOVERNMENT_PUBLICATION: 'http://bibfra.me/vocab/marc/governmentPublication',
+  GOVERNMENT_PUBLICATION: 'http://bibfra.me/vocab/library/governmentPublication',
   DATE_START: 'http://bibfra.me/vocab/lite/dateStart',
-  ORIGIN_PLACE: 'http://bibfra.me/vocab/marc/originPlace',
-  TARGET_AUDIENCE: 'http://bibfra.me/vocab/marc/targetAudience',
+  ORIGIN_PLACE: 'http://bibfra.me/vocab/library/originPlace',
+  TARGET_AUDIENCE: 'http://bibfra.me/vocab/library/targetAudience',
   SUBJECT: 'http://bibfra.me/vocab/lite/subject',
-  ITEM_NUMBER: 'http://bibfra.me/vocab/marc/itemNumber',
-  EDITION_NUMBER: 'http://bibfra.me/vocab/marc/editionNumber',
-  CONTENT: 'http://bibfra.me/vocab/marc/content',
+  ITEM_NUMBER: 'http://bibfra.me/vocab/library/itemNumber',
+  EDITION_NUMBER: 'http://bibfra.me/vocab/library/editionNumber',
+  CONTENT: 'http://bibfra.me/vocab/library/content',
   IS_PART_OF: 'http://bibfra.me/vocab/relation/isPartOf',
-  ISSN: 'http://bibfra.me/vocab/marc/issn',
-  VOLUME: 'http://bibfra.me/vocab/marc/volume',
-  BOOK_FORMAT: 'http://bibfra.me/vocab/marc/bookFormat',
-  ILLUSTRATIONS: 'http://bibfra.me/vocab/marc/illustrations',
-  MARC_CHARACTERISTIC: 'http://bibfra.me/vocab/marc/characteristic',
-  ADMIN_METADATA: 'http://bibfra.me/vocab/marc/adminMetadata',
-  CONTROL_NUMBER: 'http://bibfra.me/vocab/marc/controlNumber',
+  ISSN: 'http://bibfra.me/vocab/library/issn',
+  VOLUME: 'http://bibfra.me/vocab/library/volume',
+  BOOK_FORMAT: 'http://bibfra.me/vocab/library/bookFormat',
+  ILLUSTRATIONS: 'http://bibfra.me/vocab/library/illustrations',
+  LIBRARY_CHARACTERISTIC: 'http://bibfra.me/vocab/library/characteristic',
+  ADMIN_METADATA: 'http://bibfra.me/vocab/library/adminMetadata',
+  CONTROL_NUMBER: 'http://bibfra.me/vocab/library/controlNumber',
   CREATED_DATE: 'http://bibfra.me/vocab/lite/createdDate',
-  CATALOGING_AGENCY: 'http://bibfra.me/vocab/marc/catalogingAgency',
-  MODIFYING_AGENCY: 'http://bibfra.me/vocab/marc/modifyingAgency',
-  TRANSCRIBING_AGENCY: 'http://bibfra.me/vocab/marc/transcribingAgency',
+  CATALOGING_AGENCY: 'http://bibfra.me/vocab/library/catalogingAgency',
+  MODIFYING_AGENCY: 'http://bibfra.me/vocab/library/modifyingAgency',
+  TRANSCRIBING_AGENCY: 'http://bibfra.me/vocab/library/transcribingAgency',
   CATALOGING_LANGUAGE: 'http://bibfra.me/vocab/lite/catalogingLanguage',
-  PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/marc/publicationFrequency'
+  PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/library/publicationFrequency'
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
@@ -91,19 +91,19 @@ export const NON_BF_RECORD_ELEMENTS = {
 
 export const BFLITE_LABELS_MAP = {
   'http://bibfra.me/vocab/lite/providerPlace': BFLITE_URIS.LABEL,
-  'http://bibfra.me/vocab/marc/status': BFLITE_URIS.LABEL,
-  'http://bibfra.me/vocab/marc/media': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/carrier': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/content': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/library/status': BFLITE_URIS.LABEL,
+  'http://bibfra.me/vocab/library/media': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/library/carrier': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/library/content': BFLITE_URIS.TERM,
   'http://bibfra.me/vocab/lite/classification': BFLITE_URIS.SOURCE,
   'http://bibfra.me/vocab/lite/Person': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Family': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Organization': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Meeting': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/Jurisdiction': BFLITE_URIS.NAME,
-  'http://bibfra.me/vocab/marc/governmentPublication': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/targetAudience': BFLITE_URIS.TERM,
-  'http://bibfra.me/vocab/marc/originPlace': BFLITE_URIS.NAME,
+  'http://bibfra.me/vocab/library/governmentPublication': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/library/targetAudience': BFLITE_URIS.TERM,
+  'http://bibfra.me/vocab/library/originPlace': BFLITE_URIS.NAME,
   'http://bibfra.me/vocab/lite/language': BFLITE_URIS.TERM,
 };
 
@@ -143,87 +143,87 @@ export const SIMPLE_LOOKUP_MAPPING = {
     [BFLITE_URIS.NOTE]: {
       uri: 'http://id.loc.gov/ontologies/bibframe/note',
     },
-    'http://bibfra.me/vocab/marc/withNote': {
+    'http://bibfra.me/vocab/library/withNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/with',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/typeOfReport': {
+    'http://bibfra.me/vocab/library/typeOfReport': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/report',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/issuanceNote': {
+    'http://bibfra.me/vocab/library/issuanceNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/issuance',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/computerDataNote': {
+    'http://bibfra.me/vocab/library/computerDataNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/computer',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/additionalPhysicalForm': {
+    'http://bibfra.me/vocab/library/additionalPhysicalForm': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/addphys',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/reproductionNote': {
+    'http://bibfra.me/vocab/library/reproductionNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/repro',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/originalVersionNote': {
+    'http://bibfra.me/vocab/library/originalVersionNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/orig',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/fundingInformation': {
+    'http://bibfra.me/vocab/library/fundingInformation': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/fundinfo',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/relatedParts': {
+    'http://bibfra.me/vocab/library/relatedParts': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/related',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/issuingBody': {
+    'http://bibfra.me/vocab/library/issuingBody': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/issuing',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/locationOfOtherArchivalMaterial': {
+    'http://bibfra.me/vocab/library/locationOfOtherArchivalMaterial': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/finding',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/exhibitionsNote': {
+    'http://bibfra.me/vocab/library/exhibitionsNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/exhibit',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/descriptionSourceNote': {
+    'http://bibfra.me/vocab/library/descriptionSourceNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/descsource',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/bibliographyNote': {
+    'http://bibfra.me/vocab/library/bibliographyNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/biblio',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
-    'http://bibfra.me/vocab/marc/languageNote': {
+    'http://bibfra.me/vocab/library/languageNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/lang',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
-    'http://bibfra.me/vocab/marc/adminhist': {
+    'http://bibfra.me/vocab/library/adminhist': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/adminhist',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/biogdata': {
+    'http://bibfra.me/vocab/library/biogdata': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/biogdata',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/physicalDescription': {
+    'http://bibfra.me/vocab/library/physicalDescription': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/physical',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/accompanyingMaterial': {
+    'http://bibfra.me/vocab/library/accompanyingMaterial': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/accmat',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
     },
-    'http://bibfra.me/vocab/marc/awardsNote': {
+    'http://bibfra.me/vocab/library/awardsNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/award',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.WORK.uri },
     },
-    'http://bibfra.me/vocab/marc/datesOfPublicationNote': {
+    'http://bibfra.me/vocab/library/datesOfPublicationNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/number',
       parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri }
     }
