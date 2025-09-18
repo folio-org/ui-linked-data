@@ -1,3 +1,4 @@
+import { enhanceBoundStore } from './utils/selectors';
 import { useStatusStore } from './stores/status';
 import { useLoadingStateStore } from './stores/loadingState';
 import { useMarcPreviewStore } from './stores/marcPreview';
@@ -9,15 +10,13 @@ import { useSearchStore } from './stores/search';
 import { useComplexLookupStore } from './stores/complexLookup';
 import { useNavigationStore } from './stores/navigation';
 
-// The "createSelectors" function can be utilized here to generate memoized selectors
-// Note: "createSelectors" is currently unoptimized and may result in memory leaks if used as is
-export const useStatusState = useStatusStore;
-export const useLoadingState = useLoadingStateStore;
-export const useMarcPreviewState = useMarcPreviewStore;
-export const useProfileState = useProfileStore;
-export const useInputsState = useInputsStore;
-export const useConfigState = useConfigStore;
-export const useUIState = useUIStore;
-export const useSearchState = useSearchStore;
-export const useComplexLookupState = useComplexLookupStore;
-export const useNavigationState = useNavigationStore;
+export const useStatusState = enhanceBoundStore(useStatusStore);
+export const useLoadingState = enhanceBoundStore(useLoadingStateStore);
+export const useMarcPreviewState = enhanceBoundStore(useMarcPreviewStore);
+export const useProfileState = enhanceBoundStore(useProfileStore);
+export const useInputsState = enhanceBoundStore(useInputsStore);
+export const useConfigState = enhanceBoundStore(useConfigStore);
+export const useUIState = enhanceBoundStore(useUIStore);
+export const useSearchState = enhanceBoundStore(useSearchStore);
+export const useComplexLookupState = enhanceBoundStore(useComplexLookupStore);
+export const useNavigationState = enhanceBoundStore(useNavigationStore);
