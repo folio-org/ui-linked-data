@@ -10,8 +10,15 @@ export const useLoadSearchResults = (
 ) => {
   const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
     useSearchContext();
-  const { setIsLoading } = useLoadingState();
-  const { setQuery, setData, setSearchBy, forceRefresh, setForceRefresh, resetFacetsData } = useSearchState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setQuery, setData, setSearchBy, forceRefresh, setForceRefresh, resetFacetsData } = useSearchState([
+    'setQuery',
+    'setData',
+    'setSearchBy',
+    'forceRefresh',
+    'setForceRefresh',
+    'resetFacetsData',
+  ]);
   const searchParams = new URLSearchParams(window.location.search);
   const queryParam = searchParams.get(SearchQueryParams.Query);
   const searchByParam = searchParams.get(SearchQueryParams.SearchBy);

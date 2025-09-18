@@ -16,8 +16,13 @@ const getReferenceIds = (record: RecordEntry, block: string, referenceKey: strin
 export const useRecordGeneration = () => {
   const [searchParams] = useSearchParams();
   const { recordGeneratorService } = useServicesContext();
-  const { record, userValues, selectedEntries, selectedRecordBlocks } = useInputsState();
-  const { schema } = useProfileState();
+  const { record, userValues, selectedEntries, selectedRecordBlocks } = useInputsState([
+    'record',
+    'userValues',
+    'selectedEntries',
+    'selectedRecordBlocks',
+  ]);
+  const { schema } = useProfileState(['schema']);
 
   const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
   const { block, reference } = updatedSelectedRecordBlocks;
@@ -35,10 +40,11 @@ export const useRecordGeneration = () => {
       | null
       | undefined;
     const profileIdParam = searchParams.get(QueryParams.ProfileId);
-    
+
     // TODO: UILD-628 - Remove using defaultProfileIds after implementing profile selection for Work
-    const selectedProfileId = profileId ?? profileIdParam ?? recordProfileId ?? String(PROFILE_CONFIG.defaultProfileIds[entityType]);
-    
+    const selectedProfileId =
+      profileId ?? profileIdParam ?? recordProfileId ?? String(PROFILE_CONFIG.defaultProfileIds[entityType]);
+
     return recordGeneratorService?.generate(
       { schema, userValues, selectedEntries, referenceIds, profileId: selectedProfileId },
       entityType,

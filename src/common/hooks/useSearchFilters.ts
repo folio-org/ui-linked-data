@@ -3,7 +3,7 @@ import { SearchLimiterNames } from '@common/constants/search.constants';
 import { useSearchState } from '@src/store';
 
 export const useSearchFilters = () => {
-  const { facets, setFacets } = useSearchState();
+  const { facets, setFacets } = useSearchState(['facets', 'setFacets']);
 
   const onChangeLimiters = ({ target: { id, name } }: ChangeEvent<HTMLInputElement>) => {
     setFacets(prev => ({

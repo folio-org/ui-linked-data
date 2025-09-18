@@ -21,8 +21,8 @@ export const useSearch = () => {
     searchByControlOptions,
     getSearchSourceData,
   } = useSearchContext();
-  const { setIsLoading } = useLoadingState();
-  const { resetPreviewContent } = useInputsState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const {
     searchBy,
     setSearchBy,
@@ -40,8 +40,25 @@ export const useSearch = () => {
     facetsBySegments,
     setFacetsBySegments,
     resetFacetsBySegments,
-  } = useSearchState();
-  const { fullDisplayComponentType } = useUIState();
+  } = useSearchState([
+    'searchBy',
+    'setSearchBy',
+    'query',
+    'setQuery',
+    'facets',
+    'setFacets',
+    'message',
+    'setMessage',
+    'data',
+    'setData',
+    'pageMetadata',
+    'setPageMetadata',
+    'setForceRefresh',
+    'facetsBySegments',
+    'setFacetsBySegments',
+    'resetFacetsBySegments',
+  ]);
+  const { fullDisplayComponentType } = useUIState(['fullDisplayComponentType']);
   const { fetchData } = useFetchSearchData();
   const {
     getCurrentPageNumber,
@@ -228,6 +245,6 @@ export const useSearch = () => {
     data,
     fetchData,
     onChangeSegment,
-    handlePageChange
+    handlePageChange,
   };
 };

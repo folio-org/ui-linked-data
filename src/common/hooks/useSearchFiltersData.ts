@@ -9,8 +9,14 @@ const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
 export const useSearchFiltersData = () => {
   const { selectedFacetsGroups, setSelectedFacetsGroups, resetSelectedFacetsGroups, setFacetsData, setSourceData } =
-    useSearchState();
-  const { addStatusMessagesItem } = useStatusState();
+    useSearchState([
+      'selectedFacetsGroups',
+      'setSelectedFacetsGroups',
+      'resetSelectedFacetsGroups',
+      'setFacetsData',
+      'setSourceData',
+    ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   useEffect(() => {
     return resetSelectedFacetsGroups();

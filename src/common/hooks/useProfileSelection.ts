@@ -4,10 +4,18 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const useProfileSelection = () => {
-  const { preferredProfiles, setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState();
-  const { setIsLoading } = useLoadingState();
-  const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { preferredProfiles, setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState([
+    'preferredProfiles',
+    'setPreferredProfiles',
+    'availableProfiles',
+    'setAvailableProfiles',
+  ]);
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState([
+    'setIsProfileSelectionModalOpen',
+    'setProfileSelectionType',
+  ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   // Loads available profiles if they haven't been loaded yet
   const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {

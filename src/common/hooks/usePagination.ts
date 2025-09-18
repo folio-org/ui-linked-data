@@ -6,7 +6,7 @@ import { useSearchState } from '@src/store';
 export const usePagination = (hasSearchParams = true, defaultPageNumber = 0, hasCycledPagination = false) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
-  const { pageMetadata } = useSearchState();
+  const { pageMetadata } = useSearchState(['pageMetadata']);
   const [currentPageNumber, setCurrentPageNumber] = useState(
     offsetSearchParam ? parseInt(offsetSearchParam) : defaultPageNumber,
   );
