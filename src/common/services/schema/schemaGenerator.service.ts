@@ -3,6 +3,7 @@ import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { PROFILE_NODE_ID_DELIMITER } from '@common/constants/bibframe.constants';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
+import type { IMarcMappingGenerator } from './marcMappingGenerator';
 import { ISchemaGenerator } from './schemaGenerator.interface';
 
 interface TransformedNode extends SchemaEntry {
@@ -23,6 +24,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   constructor(
     private readonly selectedEntriesService: ISelectedEntriesService,
     private readonly entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
+    private readonly marcMappingGeneratorService?: IMarcMappingGenerator,
   ) {
     this.profile = [];
     this.schema = new Map();
@@ -43,6 +45,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     this.transformidToUuid(initKey);
     this.profile.forEach(node => this.processNode(node));
     this.entryPropertiesGeneratorService?.applyHtmlIdToEntries(this.schema);
+    this.marcMappingGeneratorService?.applyMarcMappingToEntries(this.schema);
   }
 
   private processNode(node: ProfileNode): void {

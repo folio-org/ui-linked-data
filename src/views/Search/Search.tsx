@@ -7,7 +7,6 @@ import { SearchControlPane } from '@components/SearchControlPane';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
-import { ROUTES } from '@common/constants/routes.constants';
 import { Dropdown } from '@components/Dropdown';
 import { ResourceType } from '@common/constants/record.constants';
 import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
@@ -17,8 +16,10 @@ import Transfer16 from '@src/assets/transfer-16.svg?react';
 import Lightning16 from '@src/assets/lightning-16.svg?react';
 import { filters } from './data/filters';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
+import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
 import { StatusType } from '@common/constants/status.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import './Search.scss';
@@ -33,6 +34,7 @@ export const SearchView = () => {
   const { setFullDisplayComponentType, resetFullDisplayComponentType } = useUIState();
   const { isImportModalOpen, setIsImportModalOpen } = useUIState();
   const { resetPreviewContent } = useInputsState();
+  const { onCreateNewResource } = useNavigateToCreatePage();
 
   useEffect(() => {
     return () => {
@@ -61,10 +63,19 @@ export const SearchView = () => {
     }
   };
 
-  const handleImport = async() => {
+  const handleImport = async () => {
     if (!isImportModalOpen) {
       setIsImportModalOpen(true);
     }
+  };
+
+  const onClickNewWork = () => {
+    onCreateNewResource({
+      resourceTypeURL: TYPE_URIS.WORK as ResourceTypeURL,
+      queryParams: {
+        type: ResourceType.work,
+      },
+    });
   };
 
   const items = useMemo(
@@ -78,9 +89,7 @@ export const SearchView = () => {
             type: DropdownItemType.basic,
             labelId: 'ld.newResource',
             icon: <Plus16 />,
-            action: () => {
-              navigateToEditPage(`${ROUTES.RESOURCE_CREATE.uri}?type=${ResourceType.work}`);
-            },
+            action: onClickNewWork,
           },
           {
             id: 'compare',

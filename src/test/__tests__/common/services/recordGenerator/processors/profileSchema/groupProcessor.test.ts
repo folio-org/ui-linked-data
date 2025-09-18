@@ -372,6 +372,69 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([{ uri_1: ['value 1', 'value 2'] }]);
     });
 
+    it('processes multiple values for the same repeatable child correctly', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1_0', 'child_1_1', 'child_1_2'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1_0: {
+          contents: [{ label: 'value 1' }],
+        },
+        child_1_1: {
+          contents: [{ label: 'value 2' }],
+        },
+        child_1_2: {
+          contents: [{ label: 'value 3' }, { label: 'value 4'}],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockImplementation((uuid => {
+        switch (uuid) {
+          case 'child_1_0':
+            return {
+              uuid: 'child_1_0',
+              type: AdvancedFieldType.literal,
+              uriBFLite: 'uri_1',
+              constraints: {
+                repeatable: true,
+              },
+            } as SchemaEntry;
+          case 'child_1_1':
+            return {
+              uuid: 'child_1_1',
+              type: AdvancedFieldType.literal,
+              uriBFLite: 'uri_1',
+              constraints: {
+                repeatable: true,
+              },
+            } as SchemaEntry;
+          case 'child_1_2':
+          default:
+            return {
+              uuid: 'child_1_2',
+              type: AdvancedFieldType.literal,
+              uriBFLite: 'uri_1',
+              constraints: {
+                repeatable: true,
+              },
+            } as SchemaEntry;
+        }
+      }));
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ uri_1: ['value 1', 'value 2', 'value 3', 'value 4'] }]);
+    });
+
     it('processes multiple children with multiple values correctly', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.group,

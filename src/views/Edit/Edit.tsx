@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { EditSection } from '@components/EditSection';
 import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import { scrollEntity } from '@common/helpers/pageScrolling.helper';
@@ -27,10 +28,10 @@ export const Edit = () => {
   const recordStatusType = recordStatus?.type;
   const { setIsLoading } = useLoadingState();
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid, resetHasShownAuthorityWarning } = useUIState();
-  const queryParams = new URLSearchParams(window.location.search);
-  const cloneOfParam = queryParams.get(QueryParams.CloneOf);
-  const typeParam = queryParams.get(QueryParams.Type);
-  const refParam = queryParams.get(QueryParams.Ref);
+  const [searchParams] = useSearchParams();
+  const cloneOfParam = searchParams.get(QueryParams.CloneOf);
+  const typeParam = searchParams.get(QueryParams.Type);
+  const refParam = searchParams.get(QueryParams.Ref);
 
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
@@ -83,6 +84,7 @@ export const Edit = () => {
     resetHasShownAuthorityWarning();
   }, [resourceId]);
 
+  // TODO: UILD-60, UILD-643 - refactor this after introducing Zustand selectors and React Query
   useEffect(() => {
     async function loadRecord() {
       if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
