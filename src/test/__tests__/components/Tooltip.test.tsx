@@ -4,19 +4,21 @@ import { Tooltip } from '@components/Tooltip';
 describe('Tooltip', () => {
   const triggerContent = <span>Trigger</span>;
   const tooltipContent = <div>Tooltip Content</div>;
-  const ariaLabel = 'Show tooltip';
+  const ariaLabelOpen = 'Show tooltip';
+  const ariaLabelClose = 'Hide tooltip';
 
   test('renders trigger button', () => {
     render(
       <Tooltip
         content={tooltipContent}
         triggerContent={triggerContent}
-        triggerAriaLabel={ariaLabel}
+        triggerOpenAriaLabel={ariaLabelOpen}
+        triggerCloseAriaLabel={ariaLabelClose}
         data-testid="tooltip-trigger"
       />,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     expect(button).toBeInTheDocument();
     expect(button).toHaveAttribute('data-testid', 'tooltip-trigger');
@@ -28,12 +30,13 @@ describe('Tooltip', () => {
       <Tooltip
         content={tooltipContent}
         triggerContent={triggerContent}
-        triggerAriaLabel={ariaLabel}
+        triggerOpenAriaLabel={ariaLabelOpen}
+        triggerCloseAriaLabel={ariaLabelClose}
         data-testid="tooltip-trigger"
       />,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     fireEvent.click(button);
     expect(screen.getByText('Tooltip Content')).toBeInTheDocument();
@@ -45,17 +48,18 @@ describe('Tooltip', () => {
       <Tooltip
         content={tooltipContent}
         triggerContent={triggerContent}
-        triggerAriaLabel={ariaLabel}
+        triggerOpenAriaLabel={ariaLabelOpen}
+        triggerCloseAriaLabel={ariaLabelClose}
         data-testid="tooltip-trigger"
       />,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     fireEvent.click(button);
     expect(screen.getByText('Tooltip Content')).toBeInTheDocument();
 
-    fireEvent.click(button);
+    fireEvent.click(screen.getByRole('button', { name: ariaLabelClose }));
     expect(screen.queryByText('Tooltip Content')).not.toBeInTheDocument();
   });
 
@@ -65,14 +69,15 @@ describe('Tooltip', () => {
         <Tooltip
           content={tooltipContent}
           triggerContent={triggerContent}
-          triggerAriaLabel={ariaLabel}
+          triggerOpenAriaLabel={ariaLabelOpen}
+          triggerCloseAriaLabel={ariaLabelClose}
           data-testid="tooltip-trigger"
         />
         <button data-testid="outside">Outside</button>
       </div>,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     fireEvent.click(button);
     expect(screen.getByText('Tooltip Content')).toBeInTheDocument();
@@ -86,12 +91,13 @@ describe('Tooltip', () => {
       <Tooltip
         content={tooltipContent}
         triggerContent={triggerContent}
-        triggerAriaLabel={ariaLabel}
+        triggerOpenAriaLabel={ariaLabelOpen}
+        triggerCloseAriaLabel={ariaLabelClose}
         data-testid="tooltip-trigger"
       />,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     fireEvent.click(button);
     expect(screen.getByText('Tooltip Content')).toBeInTheDocument();
@@ -105,14 +111,15 @@ describe('Tooltip', () => {
       <Tooltip
         content={tooltipContent}
         triggerContent={triggerContent}
-        triggerAriaLabel={ariaLabel}
+        triggerOpenAriaLabel={ariaLabelOpen}
+        triggerCloseAriaLabel={ariaLabelClose}
         className="custom-trigger"
         contentClassName="custom-content"
         data-testid="tooltip-trigger"
       />,
     );
 
-    const button = screen.getByRole('button', { name: ariaLabel });
+    const button = screen.getByRole('button', { name: ariaLabelOpen });
 
     expect(button.parentElement).toHaveClass('custom-trigger');
     fireEvent.click(button);

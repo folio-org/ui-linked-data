@@ -5,7 +5,8 @@ import './Tooltip.scss';
 interface TooltipProps {
   content: ReactNode;
   triggerContent: ReactNode;
-  triggerAriaLabel?: string;
+  triggerOpenAriaLabel?: string;
+  triggerCloseAriaLabel?: string;
   className?: string;
   contentClassName?: string;
   ['data-testid']?: string;
@@ -14,7 +15,8 @@ interface TooltipProps {
 export const Tooltip: FC<TooltipProps> = ({
   content,
   triggerContent,
-  triggerAriaLabel,
+  triggerOpenAriaLabel,
+  triggerCloseAriaLabel,
   className,
   contentClassName,
   'data-testid': dataTestId,
@@ -54,7 +56,7 @@ export const Tooltip: FC<TooltipProps> = ({
       <button
         ref={buttonRef}
         className="button button-icon"
-        aria-label={triggerAriaLabel}
+        aria-label={isVisible ? triggerCloseAriaLabel : triggerOpenAriaLabel}
         aria-expanded={isVisible}
         aria-haspopup="dialog"
         onClick={() => setIsVisible(prev => !prev)}

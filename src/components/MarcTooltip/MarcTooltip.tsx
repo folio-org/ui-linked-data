@@ -43,7 +43,8 @@ export const MarcTooltip: FC<MarcTooltipProps> = ({ mapping, className, htmlId }
       className={classNames(['marc-tooltip-wrapper', className])}
       contentClassName="marc-tooltip-content"
       triggerContent={<InfoIcon className="marc-tooltip-icon" />}
-      triggerAriaLabel={formatMessage({ id: 'ld.showMarcFieldEquivalents' })}
+      triggerOpenAriaLabel={formatMessage({ id: 'ld.showMarcFieldEquivalents' })}
+      triggerCloseAriaLabel={formatMessage({ id: 'ld.hideMarcFieldEquivalents' })}
       content={tooltipContent}
       data-testid={getHtmlIdForSchemaControl(SchemaControlType.ShowMarcEquivalents, htmlId)}
     />
