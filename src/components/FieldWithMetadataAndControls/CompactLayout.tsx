@@ -1,6 +1,7 @@
 import { FC, ReactNode, memo } from 'react';
 import classNames from 'classnames';
 import { DuplicateGroup } from '@components/DuplicateGroup';
+import { MarcTooltip } from '@components/MarcTooltip';
 
 type ICompactLayout = {
   children: ReactNode;
@@ -12,12 +13,13 @@ type ICompactLayout = {
   htmlId?: string;
   onClickDuplicateGroup?: VoidFunction;
   onClickDeleteGroup?: VoidFunction;
+  marcMapping?: Record<string, string>;
 };
 
 export const CompactLayout: FC<ICompactLayout> = memo(
   ({
     children,
-    entry: { deletable },
+    entry,
     displayName,
     showLabel,
     labelContainerClassName,
@@ -25,7 +27,11 @@ export const CompactLayout: FC<ICompactLayout> = memo(
     hasDuplicateGroupButton,
     onClickDuplicateGroup,
     onClickDeleteGroup,
+    marcMapping,
   }) => {
+    const { deletable, marcMapping: entryMarcMapping } = entry;
+    const selectedMarcMapping = marcMapping ?? entryMarcMapping;
+
     return (
       <>
         {displayName && showLabel && (
@@ -36,6 +42,7 @@ export const CompactLayout: FC<ICompactLayout> = memo(
         <div className="children-container" data-testid={htmlId}>
           {children}
         </div>
+        {selectedMarcMapping && <MarcTooltip mapping={selectedMarcMapping} htmlId={htmlId} className="field-tooltip" />}
         {hasDuplicateGroupButton && (
           <DuplicateGroup
             deleteDisabled={!deletable}

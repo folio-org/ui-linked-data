@@ -34,7 +34,8 @@
     font-size: 0.919rem;
   }
 
-  .duplicate-group {
-    margin-left: 0.5rem;
+  .controls-container {
+    display: flex;
+    align-items: center;
   }
 }
