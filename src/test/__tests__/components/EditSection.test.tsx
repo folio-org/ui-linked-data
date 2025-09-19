@@ -383,7 +383,7 @@ describe('EditSection', () => {
       expect(await findByText('uuid14')).toBeInTheDocument();
 
       const section = getByTestId('field-with-meta-controls-uuid14');
-      expect(within(section).findByPlaceholderText('ld.placeholder.processing')).not.toBeInTheDocument();
+      expect(within(section).queryByPlaceholderText('ld.placeholder.processing')).not.toBeInTheDocument();
     });
 
     test('renders placeholder for certain properties without values at any other time', async () => {
