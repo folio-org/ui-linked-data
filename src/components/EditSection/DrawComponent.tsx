@@ -5,6 +5,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { getPlaceholderForProperty } from '@common/helpers/placeholder.helper';
+import { getIsCreatePage } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DropdownField } from '@components/DropdownField';
@@ -42,6 +43,9 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
   const { formatMessage } = useIntl();
+  const placeholderId = getPlaceholderForProperty(entry.uriBFLite);
+  const isCreating = getIsCreatePage();
+  const placeholder = (placeholderId && !isCreating) ? formatMessage({ id: placeholderId }) : undefined;
 
   if (type === AdvancedFieldType.block) {
     return (
@@ -70,8 +74,6 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   }
 
   if (type === AdvancedFieldType.literal) {
-    const placeholderId = getPlaceholderForProperty(entry.uriBFLite);
-    const placeholder = placeholderId ? formatMessage({ id: placeholderId }) : undefined;
     return (
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
         <LiteralField
