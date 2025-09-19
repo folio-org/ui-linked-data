@@ -42,12 +42,12 @@ export const GROUP_COMPLEX_CUTOFF_LEVEL = 4;
 export const ENTITY_LEVEL = 1;
 
 export const TITLE_CONTAINER_URIS = [
-  'http://bibfra.me/vocab/marc/Title',
-  'http://bibfra.me/vocab/marc/ParralelTitle',
-  'http://bibfra.me/vocab/marc/VariantTitle',
+  'http://bibfra.me/vocab/library/Title',
+  'http://bibfra.me/vocab/library/ParralelTitle',
+  'http://bibfra.me/vocab/library/VariantTitle',
 ];
 
-export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/marc/issuance'];
+export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/library/issuance'];
 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
 
@@ -66,5 +66,5 @@ export const PROFILE_NODE_ID_DELIMITER = ':';
 
 export const INSTANCE_CLONE_DELETE_PROPERTIES = [
   'http://bibfra.me/vocab/lite/createdDate',
-  'http://bibfra.me/vocab/marc/controlNumber',
+  'http://bibfra.me/vocab/library/controlNumber',
 ];

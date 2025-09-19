@@ -62,10 +62,10 @@ describe('record.helper', () => {
     const mockMainTitle = '80085';
     const mockRecord = {
       testInstanceUri: {
-        'http://bibfra.me/vocab/marc/title': [
+        'http://bibfra.me/vocab/library/title': [
           {
-            'http://bibfra.me/vocab/marc/Title': {
-              'http://bibfra.me/vocab/marc/mainTitle': [mockMainTitle],
+            'http://bibfra.me/vocab/library/Title': {
+              'http://bibfra.me/vocab/library/mainTitle': [mockMainTitle],
             },
           },
         ],

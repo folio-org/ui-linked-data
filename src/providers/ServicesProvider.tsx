@@ -4,7 +4,7 @@ import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { UserValuesService } from '@common/services/userValues';
 import { apiClient } from '@common/api/client';
 import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
-import { SchemaGeneratorService, SchemaWithDuplicatesService } from '@common/services/schema';
+import { SchemaGeneratorService, SchemaWithDuplicatesService, MarcMappingGeneratorService } from '@common/services/schema';
 import { RecordNormalizingService } from '@common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
 import { useCommonStatus } from '@common/hooks/useCommonStatus';
@@ -20,6 +20,7 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const commonStatusService = useCommonStatus();
 
   const entryPropertiesGeneratorService = useMemo(() => new EntryPropertiesGeneratorService(), []);
+  const marcMappingGeneratorService = useMemo(() => new MarcMappingGeneratorService(), []);
   const selectedEntriesService = useMemo(() => new SelectedEntriesService([]), []);
   const userValuesService = useMemo(
     () => new UserValuesService({}, apiClient, lookupCacheService),
@@ -41,8 +42,8 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
     [selectedEntriesService, schemaWithDuplicatesService, userValuesService, commonStatusService],
   );
   const schemaGeneratorService = useMemo(
-    () => new SchemaGeneratorService(selectedEntriesService, entryPropertiesGeneratorService),
-    [selectedEntriesService, entryPropertiesGeneratorService],
+    () => new SchemaGeneratorService(selectedEntriesService, entryPropertiesGeneratorService, marcMappingGeneratorService),
+    [selectedEntriesService, entryPropertiesGeneratorService, marcMappingGeneratorService],
   );
   const recordGeneratorService = useMemo(() => new RecordGenerator(), []);
 
