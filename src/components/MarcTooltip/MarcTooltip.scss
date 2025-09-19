@@ -1,6 +1,10 @@
 @import '@common/styles/common.scss';
 
 .marc-tooltip {
+  &-wrapper {
+    margin-left: 10px;
+  }
+
   &-icon {
     path {
       fill: rgba(0, 0, 0, 0.62);
