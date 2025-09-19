@@ -8,7 +8,7 @@ interface UseProfileSelectionStateProps {
 }
 
 export const useProfileSelectionState = ({ isModalOpen, action }: UseProfileSelectionStateProps) => {
-  const { record } = useInputsState();
+  const { record } = useInputsState(['record']);
   const [selectedProfileId, setSelectedProfileId] = useState<string | number | null | undefined>(null);
 
   // Update selected profile ID when modal opens or record/action changes

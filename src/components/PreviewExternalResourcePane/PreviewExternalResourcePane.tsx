@@ -6,7 +6,7 @@ import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useInputsState } from '@src/store';
 
 export const PreviewExternalResourcePane = () => {
-  const { record } = useInputsState();
+  const { record } = useInputsState(['record']);
   const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const { formatMessage } = useIntl();
 

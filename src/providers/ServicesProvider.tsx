@@ -12,16 +12,12 @@ import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPr
 import { RecordGenerator } from '@common/services/recordGenerator';
 
 type ServicesProviderProps = {
-  children: ReactElement<any>;
+  children: ReactElement<unknown>;
 };
 
 export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const lookupCacheService = useLookupCacheService();
   const commonStatusService = useCommonStatus();
-
-  console.log('====================================');
-  console.log('ServicesProvider render');
-  console.log('====================================');
 
   const entryPropertiesGeneratorService = useMemo(() => new EntryPropertiesGeneratorService(), []);
   const selectedEntriesService = useMemo(() => new SelectedEntriesService([]), []);

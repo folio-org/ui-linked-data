@@ -16,8 +16,11 @@ type MarcPreviewComplexLookupProps = {
 export const MarcPreviewComplexLookup: FC<MarcPreviewComplexLookupProps> = ({ onClose }) => {
   const { onAssignRecord } = useSearchContext();
   const { formatMessage } = useIntl();
-  const { isMarcPreviewOpen } = useUIState();
-  const { complexValue: marcPreviewData, metadata: marcPreviewMetadata } = useMarcPreviewState();
+  const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
+  const { complexValue: marcPreviewData, metadata: marcPreviewMetadata } = useMarcPreviewState([
+    'complexValue',
+    'metadata',
+  ]);
   const { checkFailedId } = useComplexLookupValidation();
 
   const renderCloseButton = () => (
