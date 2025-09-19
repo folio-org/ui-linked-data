@@ -93,7 +93,7 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13'],
+      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14'],
     },
   ],
   [
@@ -215,6 +215,17 @@ const schema = new Map([
       path: ['uuid0', 'uuid2', 'uuid13'],
       uuid: 'uuid13',
       constraints: { editable: false },
+    },
+  ],
+  [
+    'uuid14',
+    {
+      bfid: 'uuid14Bfid',
+      uriBFLite: 'http://bibfra.me/vocab/marc/controlNumber',
+      displayName: 'uuid14',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid14'],
+      uuid: 'uuid14',
     },
   ],
 ]);
@@ -343,5 +354,46 @@ describe('EditSection', () => {
 
     const section = getByTestId('field-with-meta-controls-uuid13')
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
+  });
+
+  describe('location-based form placeholder', () => {
+    const originalWindow = { ...window };
+
+    beforeEach(() => {
+      Object.defineProperty(window, 'location', {
+        writable: true,
+        value: {
+          ...originalWindow.location,
+          pathname: '',
+        },
+      });
+    });
+
+    afterEach(() => {
+      Object.defineProperty(window, 'location', {
+        writable: true,
+        value: originalWindow.location,
+      });
+    });
+
+    test('skips placeholder on create page', async () => {
+      const { getByTestId, findByText } = renderScreen();
+      window.location.pathname = '/resources/create';
+
+      expect(await findByText('uuid14')).toBeInTheDocument();
+
+      const section = getByTestId('field-with-meta-controls-uuid14');
+      expect(within(section).findByPlaceholderText('ld.placeholder.processing')).not.toBeInTheDocument();
+    });
+
+    test('renders placeholder for certain properties without values at any other time', async () => {
+      const { getByTestId, findByText } = renderScreen();
+      window.location.pathname = '/resources/1234/edit';
+
+      expect(await findByText('uuid14')).toBeInTheDocument();
+
+      const section = getByTestId('field-with-meta-controls-uuid14');
+      expect(within(section).getByPlaceholderText('ld.placeholder.processing')).toBeInTheDocument();
+    });
   });
 });
