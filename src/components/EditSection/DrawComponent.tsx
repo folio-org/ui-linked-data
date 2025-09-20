@@ -38,7 +38,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   handleGroupsCollapseExpand,
 }) => {
   const { uuid, displayName = '', type, children, constraints, htmlId } = entry;
-  const isEditable = !!entry.constraints?.editable || typeof entry.constraints === "undefined";
+  const isEditable = !!entry.constraints?.editable || typeof entry.constraints === 'undefined';
   const isDisabled = !!disabledFields?.get(uuid) || !isEditable;
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
@@ -99,6 +99,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
       }));
 
     const selectedOption = options?.find(({ id }) => id && selectedEntries.includes(id));
+    const marcMapping = selectedOption?.id ? schema.get(selectedOption?.id)?.marcMapping : undefined;
 
     const handleChange = (option: any) => {
       selectedEntriesService.addNew(selectedOption?.id, option.id);
@@ -120,7 +121,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
     };
 
     return (
-      <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
+      <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact} marcMapping={marcMapping}>
         <DropdownField
           options={options}
           uuid={uuid}

@@ -1,0 +1,25 @@
+@import '@common/styles/common.scss';
+
+.marc-tooltip {
+  &-icon {
+    path {
+      fill: rgba(0, 0, 0, 0.62);
+    }
+
+    &:hover path {
+      fill: $buttonHighlighted;
+    }
+
+    &:active path {
+      fill: white;
+    }
+  }
+
+  &-title {
+    font-weight: 400;
+  }
+
+  &-field {
+    margin-right: 4px;
+  }
+}

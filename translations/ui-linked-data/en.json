@@ -278,5 +278,8 @@
   "ld.error.profileSaveAsPreferred": "Error setting up preferred profile",
   "ld.error.profileChange": "Error changing recording profile",
   "ld.modal.chooseProfileWarning.message": "You must save any changes before changing the profile.",
+  "ld.marcFieldEquivalents": "MARC field equivalents",
+  "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
+  "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents",
   "ld.placeholder.processing": "Information will be shown after processing"
 }
