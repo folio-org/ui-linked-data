@@ -160,7 +160,7 @@ export const useFetchSearchData = () => {
 
         const { content, totalPages, totalRecords, prev, next } = result;
 
-        if (!content.length) return setMessage('ld.searchNoRdsMatch');
+        if (!content?.length) return setMessage('ld.searchNoRdsMatch');
 
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });

@@ -43,6 +43,7 @@
 * Add profile selection for Work. Refs [UILD-628].
 * Add tooltips with MARC labels. Refs [UILD-538].
 * Update vocabulary term IRIs to replace 'marc' with 'library'. Refs [UILD-603].
+* Search results: error is shown when no results found. Fixes [UILD-646].
 * Add store selectors. Refs [UILD-643].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -88,6 +89,7 @@
 [UILD-628]:https://folio-org.atlassian.net/browse/UILD-628
 [UILD-538]:https://folio-org.atlassian.net/browse/UILD-538
 [UILD-603]:https://folio-org.atlassian.net/browse/UILD-603
+[UILD-646]:https://folio-org.atlassian.net/browse/UILD-646
 [UILD-643]:https://folio-org.atlassian.net/browse/UILD-643
 
 ## 1.0.5 (2025-04-30)
