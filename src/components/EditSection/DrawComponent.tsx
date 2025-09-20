@@ -43,9 +43,9 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
   const { formatMessage } = useIntl();
-  const placeholderId = getPlaceholderForProperty(entry.uriBFLite);
   const isCreating = getIsCreatePage();
-  const placeholder = (placeholderId && !isCreating) ? formatMessage({ id: placeholderId }) : undefined;
+  const placeholderId = !isCreating ? getPlaceholderForProperty(entry.uriBFLite) : undefined;
+  const placeholder = placeholderId ? formatMessage({ id: placeholderId }) : undefined;
 
   if (type === AdvancedFieldType.block) {
     return (
