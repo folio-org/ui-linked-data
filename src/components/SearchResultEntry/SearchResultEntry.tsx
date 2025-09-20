@@ -60,12 +60,19 @@ const instancesListHeader: Row = {
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { navigationState, selectedInstances, setSelectedInstances } = useSearchState();
+  const { navigationState, selectedInstances, setSelectedInstances } = useSearchState([
+    'navigationState',
+    'selectedInstances',
+    'setSelectedInstances',
+  ]);
   const [isOpen, setIsOpen] = useState(true);
-  const { setIsLoading } = useLoadingState();
-  const { addStatusMessagesItem } = useStatusState();
-  const { previewContent } = useInputsState();
-  const { resetFullDisplayComponentType, fullDisplayComponentType } = useUIState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const { previewContent } = useInputsState(['previewContent']);
+  const { resetFullDisplayComponentType, fullDisplayComponentType } = useUIState([
+    'resetFullDisplayComponentType',
+    'fullDisplayComponentType',
+  ]);
   const toggleIsOpen = () => setIsOpen(!isOpen);
   const { fetchRecord } = useRecordControls();
   const { onCreateNewResource } = useNavigateToCreatePage();

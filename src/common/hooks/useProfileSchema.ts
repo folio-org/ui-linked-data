@@ -4,10 +4,10 @@ import { useInputsState, useProfileState, useStatusState, useUIState } from '@sr
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
-  const { setCollapsibleEntries } = useUIState();
-  const { setUserValues, setSelectedEntries } = useInputsState();
-  const { setIsRecordEdited: setIsEdited } = useStatusState();
-  const { schema, setSchema } = useProfileState();
+  const { setCollapsibleEntries } = useUIState(['setCollapsibleEntries']);
+  const { setUserValues, setSelectedEntries } = useInputsState(['setUserValues', 'setSelectedEntries']);
+  const { setIsRecordEdited: setIsEdited } = useStatusState(['setIsRecordEdited']);
+  const { schema, setSchema } = useProfileState(['schema', 'setSchema']);
 
   const getSchemaWithCopiedEntries = (entry: SchemaEntry, selectedEntries: string[]) => {
     selectedEntriesService.set(selectedEntries);

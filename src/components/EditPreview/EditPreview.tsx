@@ -12,8 +12,13 @@ import './EditPreview.scss';
 import { useInputsState, useUIState } from '@src/store';
 
 export const EditPreview = memo(() => {
-  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState();
-  const { currentlyPreviewedEntityBfid } = useUIState();
+  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState([
+    'record',
+    'previewContent',
+    'setPreviewContent',
+    'resetPreviewContent',
+  ]);
+  const { currentlyPreviewedEntityBfid } = useUIState(['currentlyPreviewedEntityBfid']);
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();

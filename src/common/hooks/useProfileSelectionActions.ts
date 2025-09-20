@@ -18,9 +18,9 @@ export const useProfileSelectionActions = ({
   action,
   resetModalState,
 }: UseProfileSelectionActionsProps) => {
-  const { queryParams } = useNavigationState();
-  const { addStatusMessagesItem } = useStatusState();
-  const { setIsLoading } = useLoadingState();
+  const { queryParams } = useNavigationState(['queryParams']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { navigateToEditPage } = useNavigateToEditPage();
   const { changeRecordProfile } = useRecordControls();
 

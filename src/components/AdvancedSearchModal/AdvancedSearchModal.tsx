@@ -30,8 +30,11 @@ type Props = {
 export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   const [, setSearchParams] = useSearchParams();
   const { formatMessage } = useIntl();
-  const { isAdvancedSearchOpen: isOpen, setIsAdvancedSearchOpen: setIsOpen } = useUIState();
-  const { setForceRefresh: setForceRefreshSearch } = useSearchState();
+  const { isAdvancedSearchOpen: isOpen, setIsAdvancedSearchOpen: setIsOpen } = useUIState([
+    'isAdvancedSearchOpen',
+    'setIsAdvancedSearchOpen',
+  ]);
+  const { setForceRefresh: setForceRefreshSearch } = useSearchState(['setForceRefresh']);
   const { fetchData } = useFetchSearchData();
   const [rawQuery, setRawQuery] = useState(DEFAULT_ADVANCED_SEARCH_QUERY);
 

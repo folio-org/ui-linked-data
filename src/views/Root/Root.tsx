@@ -12,7 +12,7 @@ import { useLoadingState } from '@src/store';
 
 export const Root = () => {
   const fixedHeightContainerView = useRoutePathPattern(FIXED_HEIGHT_VIEWS);
-  const { isLoading } = useLoadingState();
+  const { isLoading } = useLoadingState(['isLoading']);
 
   return (
     <div data-testid="root" id="app-root">

@@ -50,16 +50,25 @@ type HandleRecordUpdateProps = {
 
 export const useRecordControls = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { setIsLoading } = useLoadingState();
-  const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState();
-  const { setSelectedProfile } = useProfileState();
-  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState([
+    'resetUserValues',
+    'selectedRecordBlocks',
+    'setSelectedRecordBlocks',
+    'record',
+    'setRecord',
+  ]);
+  const { setSelectedProfile } = useProfileState(['setSelectedProfile']);
+  const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState([
+    'setCurrentlyEditedEntityBfid',
+    'setCurrentlyPreviewedEntityBfid',
+  ]);
   const {
     setRecordStatus,
     setLastSavedRecordId,
     setIsRecordEdited: setIsEdited,
     addStatusMessagesItem,
-  } = useStatusState();
+  } = useStatusState(['setRecordStatus', 'setLastSavedRecordId', 'setIsRecordEdited', 'addStatusMessagesItem']);
   const currentRecordId = getRecordId(record);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();

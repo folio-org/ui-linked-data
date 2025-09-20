@@ -25,8 +25,11 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   segmentsConfig,
 }) => {
   const { formatMessage } = useIntl();
-  const { pageMetadata: searchResultsMetadata } = useSearchState();
-  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState();
+  const { pageMetadata: searchResultsMetadata } = useSearchState(['pageMetadata']);
+  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState([
+    'isSearchPaneCollapsed',
+    'setIsSearchPaneCollapsed',
+  ]);
   const { navigationSegment } = useSearchContext();
   const selectedSegment = navigationSegment?.value;
   const isVisibleSubLabel = segmentsConfig

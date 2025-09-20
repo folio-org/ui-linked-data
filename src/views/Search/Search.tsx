@@ -27,13 +27,18 @@ import './Search.scss';
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
-  const { selectedInstances, resetSelectedInstances } = useSearchState();
-  const { setIsLoading } = useLoadingState();
+  const { selectedInstances, resetSelectedInstances } = useSearchState(['selectedInstances', 'resetSelectedInstances']);
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { fetchRecord } = useRecordControls();
-  const { addStatusMessagesItem } = useStatusState();
-  const { setFullDisplayComponentType, resetFullDisplayComponentType } = useUIState();
-  const { isImportModalOpen, setIsImportModalOpen } = useUIState();
-  const { resetPreviewContent } = useInputsState();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const { setFullDisplayComponentType, resetFullDisplayComponentType, isImportModalOpen, setIsImportModalOpen } =
+    useUIState([
+      'setFullDisplayComponentType',
+      'resetFullDisplayComponentType',
+      'isImportModalOpen',
+      'setIsImportModalOpen',
+    ]);
+  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const { onCreateNewResource } = useNavigateToCreatePage();
 
   useEffect(() => {

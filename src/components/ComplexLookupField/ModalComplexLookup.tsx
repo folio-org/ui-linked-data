@@ -49,15 +49,15 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
-    const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState();
+    const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState(['setQuery', 'resetQuery']);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
-    const { setIsMarcPreviewOpen } = useUIState();
+    const { setIsMarcPreviewOpen } = useUIState(['setIsMarcPreviewOpen']);
     const {
       setComplexValue,
       resetComplexValue: resetMarcPreviewValue,
       setMetadata: setMarcMetadata,
       resetMetadata: clearMarcMetadata,
-    } = useMarcPreviewState();
+    } = useMarcPreviewState(['setComplexValue', 'resetComplexValue', 'setMetadata', 'resetMetadata']);
     const { fetchMarcData } = useMarcData(setComplexValue);
 
     useEffect(() => {

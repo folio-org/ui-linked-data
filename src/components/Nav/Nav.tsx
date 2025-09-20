@@ -10,8 +10,8 @@ import './Nav.scss';
 export const Nav = () => {
   const isEditSectionOpen = useRoutePathPattern(RESOURCE_EDIT_CREATE_URLS);
   const isExternalResourceSectionOpen = useRoutePathPattern(EXTERNAL_RESOURCE_URLS);
-  const { basicValue: marcPreviewData } = useMarcPreviewState();
-  const { record } = useInputsState();
+  const { basicValue: marcPreviewData } = useMarcPreviewState(['basicValue']);
+  const { record } = useInputsState(['record']);
   const isVisible = isEditSectionOpen || (isExternalResourceSectionOpen && record);
 
   return (

@@ -49,7 +49,7 @@ export const SimpleLookupField: FC<Props> = ({
   const { getLookupData, loadLookupData } = useSimpleLookupData();
   const loadedOptions = getLookupData()?.[uri] || [];
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri, parentGroupUri);
-  const { addStatusMessagesItem } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
 
   const userValuesToMultiselect = (value: UserValueContents[] | undefined) => {
@@ -71,9 +71,7 @@ export const SimpleLookupField: FC<Props> = ({
     };
   };
 
-  const [localValueMulti, setLocalValueMulti] = useState<MultiselectOption[]>(
-    userValuesToMultiselect(value) || [],
-  );
+  const [localValueMulti, setLocalValueMulti] = useState<MultiselectOption[]>(userValuesToMultiselect(value) || []);
 
   const [localValueSingle, setLocalValueSingle] = useState<MultiselectOption | undefined>(
     userValuesToMultiselect(value)?.[0],
@@ -102,7 +100,7 @@ export const SimpleLookupField: FC<Props> = ({
   //   option.__isNew__ ? `${option.label} (uncontrolled)` : option.label;
 
   const handleOnChangeMulti = (options: MultiValue<MultiselectOption>) => {
-    const newValue = options.map<UserValueContents>(option => (multiselectToUserValues(option)));
+    const newValue = options.map<UserValueContents>(option => multiselectToUserValues(option));
     onChange(uuid, newValue);
     setLocalValueMulti([...options]);
   };
@@ -111,7 +109,7 @@ export const SimpleLookupField: FC<Props> = ({
     const newValue = [multiselectToUserValues(option)];
     onChange(uuid, newValue);
     setLocalValueSingle(option);
-  }
+  };
 
   return (
     <CreatableSelect
@@ -135,7 +133,12 @@ export const SimpleLookupField: FC<Props> = ({
       // getOptionLabel={getOptionLabel}
       // Remove the line below once uncontrolled options are required/supported
       isValidNewOption={() => false}
-      onChange={(isMulti ? handleOnChangeMulti : handleOnChangeSingle) as unknown as (newValue: unknown, actionMeta: ActionMeta<unknown>) => void}
+      onChange={
+        (isMulti ? handleOnChangeMulti : handleOnChangeSingle) as unknown as (
+          newValue: unknown,
+          actionMeta: ActionMeta<unknown>,
+        ) => void
+      }
       value={isMulti ? localValueMulti : localValueSingle}
       placeholder={<FormattedMessage id="ld.select" />}
       loadingMessage={LoadingMessage}

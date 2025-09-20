@@ -4,12 +4,14 @@ import { useSearchState } from '@src/store';
 import './SearchResultList.scss';
 
 export const SearchResultList = () => {
-  const { data } = useSearchState();
+  const { data } = useSearchState(['data']);
   useSearchNavigationState();
 
   return (
     <div className="search-result-list">
-      {data?.map(dataEntry => <SearchResultEntry key={`result-entry-${dataEntry.id}`} {...dataEntry} />)}
+      {data?.map(dataEntry => (
+        <SearchResultEntry key={`result-entry-${dataEntry.id}`} {...dataEntry} />
+      ))}
     </div>
   );
 };

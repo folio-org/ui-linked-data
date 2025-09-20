@@ -53,7 +53,7 @@ export const routes: RouteObject[] = [
 const createRouter = (basename: string) => createBrowserRouter(routes, { basename });
 
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
-  const { setCustomEvents, setHasNavigationOrigin } = useConfigState();
+  const { setCustomEvents, setHasNavigationOrigin } = useConfigState(['setCustomEvents', 'setHasNavigationOrigin']);
   const cachedMessages = useRef({ [DEFAULT_LOCALE]: en });
 
   useEffect(() => {

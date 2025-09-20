@@ -10,7 +10,7 @@ type AsyncIntlProviderProps = {
 };
 
 export const AsyncIntlProvider: FC<AsyncIntlProviderProps> = ({ cachedMessages, children }) => {
-  const { locale } = useConfigState();
+  const { locale } = useConfigState(['locale']);
   const { getMessages } = useLoadI18nMessages(cachedMessages, DEFAULT_LOCALE);
 
   const i18nMessages = getMessages(locale);

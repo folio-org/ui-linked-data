@@ -48,8 +48,17 @@ export const useConfig = () => {
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
   const { userValuesService, selectedEntriesService, schemaGeneratorService } =
     useServicesContext() as Required<ServicesParams>;
-  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState();
-  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState();
+  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
+    'setSelectedProfile',
+    'setInitialSchemaKey',
+    'setSchema',
+  ]);
+  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState([
+    'setUserValues',
+    'setPreviewContent',
+    'setSelectedRecordBlocks',
+    'setSelectedEntries',
+  ]);
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
   const { loadProfile } = useLoadProfile();

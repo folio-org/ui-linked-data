@@ -18,8 +18,8 @@ type IGetProcessedRecordAndSchema = {
 };
 
 export const useProcessedRecordAndSchema = () => {
-  const { addStatusMessagesItem } = useStatusState();
-  const { setRecord } = useInputsState();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const { setRecord } = useInputsState(['setRecord']);
   const { formatMessage } = useIntl();
   const { userValuesService, schemaWithDuplicatesService, recordNormalizingService, recordToSchemaMappingService } =
     useServicesContext() as Required<ServicesParams>;

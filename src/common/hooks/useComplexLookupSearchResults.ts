@@ -12,7 +12,7 @@ export const useComplexLookupSearchResults = ({
   searchResultsFormatter,
 }: ComplexLookupSearchResultsProps) => {
   const { onAssignRecord } = useSearchContext();
-  const { data, sourceData } = useSearchState();
+  const { data, sourceData } = useSearchState(['data', 'sourceData']);
   const { formatMessage } = useIntl();
   const { checkFailedId } = useComplexLookupValidation();
 

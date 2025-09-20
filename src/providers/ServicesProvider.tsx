@@ -12,7 +12,7 @@ import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPr
 import { RecordGenerator } from '@common/services/recordGenerator';
 
 type ServicesProviderProps = {
-  children: ReactElement<any>;
+  children: ReactElement<unknown>;
 };
 
 export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {

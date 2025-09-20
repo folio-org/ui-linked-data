@@ -21,9 +21,16 @@ export const useFetchSearchData = () => {
     buildSearchQuery,
     precedingRecordsCount,
   } = useSearchContext();
-  const { setIsLoading } = useLoadingState();
-  const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState([
+    'setMessage',
+    'resetMessage',
+    'data',
+    'setData',
+    'resetData',
+    'setPageMetadata',
+  ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const getEndpointUrl = ({
     selectedSegment,

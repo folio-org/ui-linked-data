@@ -26,7 +26,7 @@ export const ModalImport = memo(() => {
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const [navigationTarget, setNavigationTarget] = useState('');
-  const { isImportModalOpen, setIsImportModalOpen } = useUIState();
+  const { isImportModalOpen, setIsImportModalOpen } = useUIState(['isImportModalOpen', 'setIsImportModalOpen']);
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
 

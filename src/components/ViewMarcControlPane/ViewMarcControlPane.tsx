@@ -5,9 +5,9 @@ import { getRecordTitle } from '@common/helpers/record.helper';
 import { useInputsState, useLoadingState, useMarcPreviewState } from '@src/store';
 
 export const ViewMarcControlPane = () => {
-  const { isLoading } = useLoadingState();
-  const { resetBasicValue: resetMarcPreviewData } = useMarcPreviewState();
-  const { record } = useInputsState();
+  const { isLoading } = useLoadingState(['isLoading']);
+  const { resetBasicValue: resetMarcPreviewData } = useMarcPreviewState(['resetBasicValue']);
+  const { record } = useInputsState(['record']);
   const { formatMessage } = useIntl();
 
   return (

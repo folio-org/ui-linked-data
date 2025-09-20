@@ -22,7 +22,7 @@ export const create = (<T>() =>
     return store;
   }) as typeof actualCreate;
 
-export const generateStore = <T>(store: StateCreatorTyped<T>, name: string) =>
+export const generateStore = <T extends object>(store: StateCreatorTyped<T>, name: string) =>
   create<T>()(devtools(store, { name: STORE_NAME, store: name, enabled: !IS_PROD_MODE }));
 
 export const resetAllStores = () => {

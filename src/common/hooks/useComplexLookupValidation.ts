@@ -5,7 +5,11 @@ export const useComplexLookupValidation = () => {
     authorityAssignmentCheckFailedIds,
     addAuthorityAssignmentCheckFailedIdsItem,
     resetAuthorityAssignmentCheckFailedIds,
-  } = useComplexLookupState();
+  } = useComplexLookupState([
+    'authorityAssignmentCheckFailedIds',
+    'addAuthorityAssignmentCheckFailedIdsItem',
+    'resetAuthorityAssignmentCheckFailedIds',
+  ]);
 
   const addFailedEntryId = (id: string) => {
     addAuthorityAssignmentCheckFailedIdsItem?.(id);

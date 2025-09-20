@@ -9,7 +9,7 @@ export const useSearchFilterLookupOptions = ({
   hasMappedSourceData?: boolean;
   excludedOptions?: string[];
 }) => {
-  const { sourceData, facetsData } = useSearchState();
+  const { sourceData, facetsData } = useSearchState(['sourceData', 'facetsData']);
   const { formatMessage } = useIntl();
 
   const facetValues = facet && facetsData ? facetsData?.[facet]?.values : undefined;

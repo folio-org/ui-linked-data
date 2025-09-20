@@ -37,9 +37,9 @@ export const Fields: FC<IFields> = memo(
     scrollToEnabled = false,
     groupingDisabled = false,
   }) => {
-    const { currentlyEditedEntityBfid } = useUIState();
-    const { schema } = useProfileState();
-    const { selectedEntries } = useInputsState();
+    const { currentlyEditedEntityBfid } = useUIState(['currentlyEditedEntityBfid']);
+    const { schema } = useProfileState(['schema']);
+    const { selectedEntries } = useInputsState(['selectedEntries']);
 
     const entry = uuid && schema?.get(uuid);
 

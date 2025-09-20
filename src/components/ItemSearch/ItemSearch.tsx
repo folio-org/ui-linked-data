@@ -39,7 +39,7 @@ export const ItemSearch = () => {
     fetchData,
     onChangeSegment,
   } = useSearch();
-  const { isMarcPreviewOpen } = useUIState();
+  const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
 
   useLoadSearchResults(fetchData);
 
