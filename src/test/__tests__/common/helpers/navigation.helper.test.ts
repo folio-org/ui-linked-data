@@ -1,7 +1,7 @@
-import { getResourceIdFromUri, generatePageURL } from '@common/helpers/navigation.helper';
+import { getResourceIdFromUri, generatePageURL, getIsCreatePage } from '@common/helpers/navigation.helper';
 import { QueryParams } from '@common/constants/routes.constants';
 
-describe('getResourceIdFromUri', () => {
+describe('location-based functions', () => {
   const originalWindow = { ...window };
 
   beforeEach(() => {
@@ -21,22 +21,44 @@ describe('getResourceIdFromUri', () => {
     });
   });
 
-  test('returns undefined when pathname is empty', () => {
-    window.location.pathname = '';
+  describe('getResourceIdFromUri', () => {
+    test('returns undefined when pathname is empty', () => {
+      window.location.pathname = '';
 
-    expect(getResourceIdFromUri()).toBeUndefined();
+      expect(getResourceIdFromUri()).toBeUndefined();
+    });
+
+    test('returns undefined when missing edit segment', () => {
+      window.location.pathname = '/resources/123';
+
+      expect(getResourceIdFromUri()).toBeUndefined();
+    });
+
+    test('returns resourceId', () => {
+      window.location.pathname = '/resources/789/edit/';
+
+      expect(getResourceIdFromUri()).toBe('789');
+    });
   });
 
-  test('returns undefined when missing edit segment', () => {
-    window.location.pathname = '/resources/123';
+  describe('getIsCreatePage', () => {
+    test('recognize and return true for create page', () => {
+      window.location.pathname = '/resources/create';
 
-    expect(getResourceIdFromUri()).toBeUndefined();
-  });
+      expect(getIsCreatePage()).toBeTruthy();
+    });
 
-  test('returns resourceId', () => {
-    window.location.pathname = '/resources/789/edit/';
+    test('return false for edit page', () => {
+      window.location.pathname = '/resources/1234/edit';
 
-    expect(getResourceIdFromUri()).toBe('789');
+      expect(getIsCreatePage()).toBeFalsy();
+    });
+
+    test('return false for similar page', () => {
+      window.location.pathname = '/another/create';
+
+      expect(getIsCreatePage()).toBeFalsy();
+    });
   });
 });
 

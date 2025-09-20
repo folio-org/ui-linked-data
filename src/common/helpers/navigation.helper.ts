@@ -26,6 +26,12 @@ export const getResourceIdFromUri = () => {
   return splittedPath[resourceIndex + 1];
 };
 
+export const getIsCreatePage = () => {
+  const { pathname } = window.location;
+
+  return pathname === ROUTES.RESOURCE_CREATE.uri;
+}
+
 export const generatePageURL = ({
   url,
   queryParams,
