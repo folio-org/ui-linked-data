@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { GROUP_COMPLEX_CUTOFF_LEVEL } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
+import { getPlaceholderForProperty } from '@common/helpers/placeholder.helper';
+import { getIsCreatePage } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
 import { ComplexLookupField } from '@components/ComplexLookupField';
 import { DropdownField } from '@components/DropdownField';
@@ -40,6 +42,10 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   const isDisabled = !!disabledFields?.get(uuid) || !isEditable;
   const displayNameWithAltValue = EDIT_ALT_DISPLAY_LABELS[displayName] || displayName;
   const selectedUserValue = userValues[uuid];
+  const { formatMessage } = useIntl();
+  const isCreating = getIsCreatePage();
+  const placeholderId = !isCreating ? getPlaceholderForProperty(entry.uriBFLite) : undefined;
+  const placeholder = placeholderId ? formatMessage({ id: placeholderId }) : undefined;
 
   if (type === AdvancedFieldType.block) {
     return (
@@ -76,6 +82,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
           value={selectedUserValue?.contents[0].label}
           onChange={onChange}
           isDisabled={isDisabled}
+          placeholder={placeholder}
         />
       </FieldWithMetadataAndControls>
     );
