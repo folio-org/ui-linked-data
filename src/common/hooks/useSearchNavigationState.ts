@@ -10,7 +10,7 @@ export const useSearchNavigationState = () => {
   const searchBySearchParam = searchParams.get(SearchQueryParams.SearchBy);
   const offsetSearchParam = searchParams.get(SearchQueryParams.Offset);
 
-  const { setNavigationState } = useSearchState();
+  const { setNavigationState } = useSearchState(['setNavigationState']);
 
   useEffect(() => {
     const generatedState = generateSearchParamsState(

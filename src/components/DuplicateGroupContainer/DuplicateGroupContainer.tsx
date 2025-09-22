@@ -21,7 +21,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
   generateComponent,
   groupClassName,
 }) => {
-  const { collapsedEntries, setCollapsedEntries } = useUIState();
+  const { collapsedEntries, setCollapsedEntries } = useUIState(['collapsedEntries', 'setCollapsedEntries']);
   const twinsAmount = twins.length;
   const visibleTwins = twins.filter(twinUuid => !collapsedEntries.has(twinUuid));
   const isCollapsed = visibleTwins.length === 0;

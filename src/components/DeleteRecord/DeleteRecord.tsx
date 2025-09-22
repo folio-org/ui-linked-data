@@ -11,8 +11,8 @@ import { useRecordStatus } from '@common/hooks/useRecordStatus';
 import { useInputsState, useStatusState } from '@src/store';
 
 const DeleteRecord: FC = () => {
-  const { record } = useInputsState();
-  const { isRecordEdited: isEdited } = useStatusState();
+  const { record } = useInputsState(['record']);
+  const { isRecordEdited: isEdited } = useStatusState(['isRecordEdited']);
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
   const { deleteRecord } = useRecordControls();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();

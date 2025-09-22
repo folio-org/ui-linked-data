@@ -32,8 +32,8 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
   marcMapping,
   ...restProps
 }) => {
-  const { schema } = useProfileState();
-  const { selectedEntries } = useInputsState();
+  const { schema } = useProfileState(['schema']);
+  const { selectedEntries } = useInputsState(['selectedEntries']);
   const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 

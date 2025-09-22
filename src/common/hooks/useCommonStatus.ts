@@ -2,7 +2,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useStatusState } from '@src/store';
 
 export const useCommonStatus = () => {
-  const { addStatusMessagesItem } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   return {
     set: (l10nId: string, type: StatusType) => {

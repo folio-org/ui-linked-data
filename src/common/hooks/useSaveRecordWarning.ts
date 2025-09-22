@@ -7,8 +7,11 @@ const hasSelectedUncontrolledAuthority = (userValues: UserValues) =>
   );
 
 export const useSaveRecordWarning = () => {
-  const { hasShownAuthorityWarning, setHasShownAuthorityWarning } = useUIState();
-  const { userValues, selectedRecordBlocks } = useInputsState();
+  const { hasShownAuthorityWarning, setHasShownAuthorityWarning } = useUIState([
+    'hasShownAuthorityWarning',
+    'setHasShownAuthorityWarning',
+  ]);
+  const { userValues, selectedRecordBlocks } = useInputsState(['userValues', 'selectedRecordBlocks']);
   const isWorkEditPage = selectedRecordBlocks?.block === TYPE_URIS.WORK;
   const shouldDisplayWarningMessage =
     isWorkEditPage && !hasShownAuthorityWarning && hasSelectedUncontrolledAuthority(userValues);

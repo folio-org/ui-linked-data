@@ -22,9 +22,12 @@ export const Fields = ({
   hideEntities,
   forceRenderAllTopLevelEntities,
 }: FieldProps) => {
-  const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState();
-  const { schema: schemaFromState } = useProfileState();
-  const { currentlyPreviewedEntityBfid } = useUIState();
+  const { userValues: userValuesFromState, selectedEntries: selectedEntriesFromState } = useInputsState([
+    'userValues',
+    'selectedEntries',
+  ]);
+  const { schema: schemaFromState } = useProfileState(['schema']);
+  const { currentlyPreviewedEntityBfid } = useUIState(['currentlyPreviewedEntityBfid']);
   const userValues = altUserValues || userValuesFromState;
   const schema = altSchema || schemaFromState;
   const selectedEntries = altSelectedEntries || selectedEntriesFromState;
@@ -98,7 +101,7 @@ export const Fields = ({
         forceRenderAllTopLevelEntities={forceRenderAllTopLevelEntities}
         isGroupable={isGroupable}
         isGroup={isGroup}
-        renderField={(props) => <Fields {...props} />}
+        renderField={props => <Fields {...props} />}
       />
     );
   };

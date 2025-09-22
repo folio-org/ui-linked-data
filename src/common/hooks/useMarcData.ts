@@ -4,8 +4,8 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useStatusState } from '@src/store';
 
 export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
-  const { setIsLoading } = useLoadingState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return undefined;

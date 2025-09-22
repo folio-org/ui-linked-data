@@ -6,7 +6,10 @@ import { useUIState } from '@src/store';
 import './ModalDuplicateImportedResource.scss';
 
 export const ModalDuplicateImportedResource = memo(() => {
-  const { isDuplicateImportedResourceModalOpen, setIsDuplicateImportedResourceModalOpen } = useUIState();
+  const { isDuplicateImportedResourceModalOpen, setIsDuplicateImportedResourceModalOpen } = useUIState([
+    'isDuplicateImportedResourceModalOpen',
+    'setIsDuplicateImportedResourceModalOpen',
+  ]);
   const { formatMessage } = useIntl();
   const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
 

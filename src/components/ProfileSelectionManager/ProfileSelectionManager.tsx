@@ -5,9 +5,13 @@ import { useProfileState, useStatusState, useUIState } from '@src/store';
 import { ModalWarning } from './ModalWarning';
 
 export const ProfileSelectionManager = () => {
-  const { isProfileSelectionModalOpen, setIsProfileSelectionModalOpen, profileSelectionType } = useUIState();
-  const { availableProfiles } = useProfileState();
-  const { isRecordEdited } = useStatusState();
+  const { isProfileSelectionModalOpen, setIsProfileSelectionModalOpen, profileSelectionType } = useUIState([
+    'isProfileSelectionModalOpen',
+    'setIsProfileSelectionModalOpen',
+    'profileSelectionType',
+  ]);
+  const { availableProfiles } = useProfileState(['availableProfiles']);
+  const { isRecordEdited } = useStatusState(['isRecordEdited']);
   const { action, resourceTypeURL } = profileSelectionType;
 
   const { selectedProfileId, setSelectedProfileId } = useProfileSelectionState({

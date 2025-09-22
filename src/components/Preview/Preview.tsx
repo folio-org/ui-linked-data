@@ -25,8 +25,11 @@ export const Preview: FC<IPreview> = ({
   forceRenderAllTopLevelEntities,
   entityRowDisplay,
 }) => {
-  const { userValues: userValuesFromState } = useInputsState();
-  const { schema: schemaFromState, initialSchemaKey: initialSchemaKeyFromState } = useProfileState();
+  const { userValues: userValuesFromState } = useInputsState(['userValues']);
+  const { schema: schemaFromState, initialSchemaKey: initialSchemaKeyFromState } = useProfileState([
+    'schema',
+    'initialSchemaKey',
+  ]);
   const userValues = altUserValues ?? userValuesFromState;
   const schema = altSchema ?? schemaFromState;
   const initialSchemaKey = altInitKey ?? initialSchemaKeyFromState;

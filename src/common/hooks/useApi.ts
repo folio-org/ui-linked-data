@@ -19,8 +19,8 @@ interface ApiResponse<T> {
 }
 
 export function useApi<T>() {
-  const { setIsLoading } = useLoadingState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const [state, setState] = useState<ApiResponse<T>>({
     data: null,
   });

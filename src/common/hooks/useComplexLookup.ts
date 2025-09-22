@@ -33,22 +33,22 @@ export const useComplexLookup = ({
 }) => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
   const [localValue, setLocalValue] = useState<UserValueContents[]>(value || []);
-  const { schema } = useProfileState();
-  const { selectedEntries, setSelectedEntries } = useInputsState();
+  const { schema } = useProfileState(['schema']);
+  const { selectedEntries, setSelectedEntries } = useInputsState(['selectedEntries', 'setSelectedEntries']);
   const {
     complexValue,
     setComplexValue,
     resetComplexValue: resetMarcPreviewData,
     metadata: marcPreviewMetadata,
     resetMetadata: resetMarcPreviewMetadata,
-  } = useMarcPreviewState();
-  const { resetIsMarcPreviewOpen } = useUIState();
+  } = useMarcPreviewState(['complexValue', 'setComplexValue', 'resetComplexValue', 'metadata', 'resetMetadata']);
+  const { resetIsMarcPreviewOpen } = useUIState(['resetIsMarcPreviewOpen']);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { fetchMarcData } = useMarcData(setComplexValue);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
   const { makeRequest } = useApi();
-  const { addStatusMessagesItem } = useStatusState();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { addFailedEntryId, clearFailedEntryIds } = useComplexLookupValidation();
 
   const handleDelete = (id?: string) => {
@@ -154,9 +154,7 @@ export const useComplexLookup = ({
       if (invalidAssignmentReason) {
         messageKey += `.${invalidAssignmentReason.toLowerCase()}`;
       }
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.error, messageKey),
-      );
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, messageKey));
     }
   };
 

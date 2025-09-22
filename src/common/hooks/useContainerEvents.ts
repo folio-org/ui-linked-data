@@ -13,8 +13,8 @@ type IUseContainerEvents =
   | undefined;
 
 export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }: IUseContainerEvents = {}) => {
-  const { hasNavigationOrigin, customEvents } = useConfigState();
-  const { isRecordEdited: isEdited } = useStatusState();
+  const { hasNavigationOrigin, customEvents } = useConfigState(['hasNavigationOrigin', 'customEvents']);
+  const { isRecordEdited: isEdited } = useStatusState(['isRecordEdited']);
   const {
     BLOCK_NAVIGATION,
     UNBLOCK_NAVIGATION,

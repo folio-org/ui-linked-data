@@ -21,9 +21,16 @@ export const useFetchSearchData = () => {
     buildSearchQuery,
     precedingRecordsCount,
   } = useSearchContext();
-  const { setIsLoading } = useLoadingState();
-  const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState([
+    'setMessage',
+    'resetMessage',
+    'data',
+    'setData',
+    'resetData',
+    'setPageMetadata',
+  ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const getEndpointUrl = ({
     selectedSegment,
@@ -153,7 +160,7 @@ export const useFetchSearchData = () => {
 
         const { content, totalPages, totalRecords, prev, next } = result;
 
-        if (!content.length) return setMessage('ld.searchNoRdsMatch');
+        if (!content?.length) return setMessage('ld.searchNoRdsMatch');
 
         setData(content);
         setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });

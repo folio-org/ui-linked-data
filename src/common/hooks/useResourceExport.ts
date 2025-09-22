@@ -5,8 +5,8 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useStatusState } from '@src/store';
 
 export const useResourceExport = () => {
-  const { setIsLoading } = useLoadingState();
-  const { addStatusMessagesItem } = useStatusState();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const exportInstanceRdf = async (resourceId: string) => {
     try {

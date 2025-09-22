@@ -47,10 +47,25 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetFacets: resetControls,
     setFacetsBySegments,
     resetSelectedInstances,
-  } = useSearchState();
+  } = useSearchState([
+    'searchBy',
+    'setSearchBy',
+    'query',
+    'setQuery',
+    'setMessage',
+    'setNavigationState',
+    'resetFacets',
+    'setFacetsBySegments',
+    'resetSelectedInstances',
+  ]);
   const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, setIsAdvancedSearchOpen, resetFullDisplayComponentType } =
-    useUIState();
-  const { resetPreviewContent } = useInputsState();
+    useUIState([
+      'isSearchPaneCollapsed',
+      'setIsSearchPaneCollapsed',
+      'setIsAdvancedSearchOpen',
+      'resetFullDisplayComponentType',
+    ]);
+  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const [searchParams, setSearchParams] = useSearchParams();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);

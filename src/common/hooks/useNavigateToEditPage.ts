@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const useNavigateToEditPage = () => {
   const navigate = useNavigate();
-  const { navigationState } = useSearchState();
+  const { navigationState } = useSearchState(['navigationState']);
 
   const navigateAsDuplicate = (duplicateId: string) => {
     navigate(`${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.CloneOf}=${duplicateId}`, { state: navigationState });

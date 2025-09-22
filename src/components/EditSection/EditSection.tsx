@@ -15,10 +15,23 @@ const USER_INPUT_DELAY = 100;
 
 export const EditSection = memo(() => {
   const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
-  const { initialSchemaKey } = useProfileState();
-  const { userValues, addUserValuesItem, selectedEntries, setSelectedEntries } = useInputsState();
-  const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState();
-  const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState();
+  const { initialSchemaKey } = useProfileState(['initialSchemaKey']);
+  const { userValues, addUserValuesItem, selectedEntries, setSelectedEntries } = useInputsState([
+    'userValues',
+    'addUserValuesItem',
+    'selectedEntries',
+    'setSelectedEntries',
+  ]);
+  const { isRecordEdited: isEdited, setIsRecordEdited: setIsEdited } = useStatusState([
+    'isRecordEdited',
+    'setIsRecordEdited',
+  ]);
+  const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState([
+    'collapsedEntries',
+    'setCollapsedEntries',
+    'collapsibleEntries',
+    'currentlyEditedEntityBfid',
+  ]);
 
   useContainerEvents({ watchEditedState: true });
 

@@ -10,7 +10,7 @@ import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants
 import './FullDisplay.scss';
 
 export const PreviewContent = () => {
-  const { previewContent, setPreviewContent } = useInputsState();
+  const { previewContent, setPreviewContent } = useInputsState(['previewContent', 'setPreviewContent']);
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
 

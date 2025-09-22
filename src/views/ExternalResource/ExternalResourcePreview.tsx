@@ -10,9 +10,9 @@ import { useInputsState, useMarcPreviewState } from '@src/store';
 import './ExternalResourcePreview.scss';
 
 export const ExternalResourcePreview = () => {
-  const { record } = useInputsState();
+  const { record } = useInputsState(['record']);
   const { fetchExternalRecordForPreview } = useRecordControls();
-  const { resetBasicValue } = useMarcPreviewState();
+  const { resetBasicValue } = useMarcPreviewState(['resetBasicValue']);
   const { externalId } = useParams();
 
   useEffect(() => {

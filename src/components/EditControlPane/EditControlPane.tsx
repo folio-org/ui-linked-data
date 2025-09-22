@@ -25,10 +25,10 @@ import './EditControlPane.scss';
 
 export const EditControlPane = () => {
   const isInCreateMode = useRoutePathPattern(RESOURCE_CREATE_URLS);
-  const { isLoading } = useLoadingState();
-  const { currentlyEditedEntityBfid } = useUIState();
-  const { setRecordStatus } = useStatusState();
-  const { setBasicValue } = useMarcPreviewState();
+  const { isLoading } = useLoadingState(['isLoading']);
+  const { currentlyEditedEntityBfid } = useUIState(['currentlyEditedEntityBfid']);
+  const { setRecordStatus } = useStatusState(['setRecordStatus']);
+  const { setBasicValue } = useMarcPreviewState(['setBasicValue']);
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { resourceId } = useParams();
@@ -38,7 +38,7 @@ export const EditControlPane = () => {
   const { formatMessage } = useIntl();
   const { exportInstanceRdf } = useResourceExport();
   const { openModalForProfileChange } = useProfileSelection();
-  const { selectedRecordBlocks } = useInputsState();
+  const { selectedRecordBlocks } = useInputsState(['selectedRecordBlocks']);
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
