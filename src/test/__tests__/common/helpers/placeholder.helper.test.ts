@@ -10,7 +10,7 @@ describe('getPlaceholderForProperty', () => {
   });
 
   test('returns placeholder for created date property', () => {
-    const property = 'http://bibfra.me/vocab/marc/controlNumber';
+    const property = 'http://bibfra.me/vocab/library/controlNumber';
     const result = getPlaceholderForProperty(property);
     expect(result).toEqual(placeholder);
   });

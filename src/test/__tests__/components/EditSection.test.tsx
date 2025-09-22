@@ -221,7 +221,7 @@ const schema = new Map([
     'uuid14',
     {
       bfid: 'uuid14Bfid',
-      uriBFLite: 'http://bibfra.me/vocab/marc/controlNumber',
+      uriBFLite: 'http://bibfra.me/vocab/library/controlNumber',
       displayName: 'uuid14',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid14'],
