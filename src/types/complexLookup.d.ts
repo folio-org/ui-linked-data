@@ -11,6 +11,7 @@ type ComplexLookupLabels = {
   modal: {
     title: Record<string, string>;
     searchResults: string;
+    emptySearch?: string;
   };
 };
 
@@ -72,12 +73,12 @@ type SearchableIndicesMap = {
 type ComplexLookupsConfigEntry = {
   api: ComplexLookupApiEntryConfig;
   segments: {
-    primary: PrimarySegmentsConfig;
+    primary?: PrimarySegmentsConfig;
     defaultValues?: {
       segment: SearchSegmentValue;
       searchBy: SearchableIndexType;
     };
-  };
+  } | null;
   labels: ComplexLookupLabels;
   linkedField?: string;
   searchBy: ComplexLookupSearchBy;

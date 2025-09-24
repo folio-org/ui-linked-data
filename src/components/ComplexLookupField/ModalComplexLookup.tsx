@@ -94,7 +94,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         <SearchControlPane
           label={<FormattedMessage id={labels.modal.searchResults} />}
           renderSubLabel={renderSearchControlsSubLabel}
-          segmentsConfig={segments.primary}
+          segmentsConfig={segments?.primary}
         />
       ),
       [labels.modal.searchResults],
@@ -147,9 +147,9 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultNavigationSegment={segments.defaultValues?.segment ?? SearchSegment.Search}
+            defaultNavigationSegment={segments?.defaultValues?.segment}
             defaultSearchBy={
-              segments.defaultValues?.searchBy ??
+              segments?.defaultValues?.searchBy ??
               (searchBy[SearchSegment.Search]?.[0]?.value as unknown as SearchIdentifiers)
             }
             defaultQuery={value}
@@ -160,13 +160,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
-            isVisibleSegments={true}
+            isVisibleSegments={!!segments}
             hasMultilineSearchInput={true}
             hasMarcPreview={true}
             hasCustomPagination={true}
             searchByControlOptions={searchBy}
             searchableIndicesMap={searchableIndicesMap}
-            labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
+            labelEmptySearch={labels.modal.emptySearch ?? 'ld.chooseFilterOrEnterSearchQuery'}
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}

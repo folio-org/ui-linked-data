@@ -102,4 +102,23 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
     },
   },
+  [ComplexLookupType.Hub]: {
+    ...BASE_AUTHORITY_CONFIG,
+    segments: null,
+    labels: {
+      button: {
+        base: 'ld.add',
+        change: 'ld.change',
+      },
+      modal: {
+        title: {
+          hub: 'ld.hubs.assign',
+        },
+        searchResults: 'ld.hubs',
+        emptySearch: 'ld.hubs.enterSearchQuery',
+      },
+    },
+    searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub,
+    searchableIndicesMap: COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP,
+  },
 };

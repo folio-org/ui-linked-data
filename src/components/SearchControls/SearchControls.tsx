@@ -7,7 +7,7 @@ import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
-import { Select } from '@components/Select';
+import { Select, type SelectValue } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
 import { Textarea } from '@components/Textarea';
 import { Announcement } from '@components/Announcement';
@@ -70,10 +70,18 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
-  const selectOptions =
-    searchByControlOptions && navigationSegment?.value
-      ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
-      : Object.values(SearchIdentifiers);
+
+  let selectOptions;
+
+  if (searchByControlOptions) {
+    if (navigationSegment?.value) {
+      selectOptions = (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value];
+    } else {
+      selectOptions = searchByControlOptions as SelectValue[];
+    }
+  } else {
+    selectOptions = Object.values(SearchIdentifiers);
+  }
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');

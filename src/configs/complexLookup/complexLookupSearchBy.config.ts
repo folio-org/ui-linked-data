@@ -53,7 +53,7 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
       {
         label: 'selectBrowseOption',
         value: '',
-        isDisabled: true
+        isDisabled: true,
       },
       {
         label: 'personalName',
@@ -85,4 +85,14 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
       },
     ],
   },
+  [ComplexLookupType.Hub]: [
+    {
+      label: 'search.hubNameLeftAnchored',
+      value: SearchableIndex.HubNameLeftAnchored,
+    },
+    {
+      label: 'search.hubNameKeyword',
+      value: SearchableIndex.HubNameKeyword,
+    },
+  ],
 };

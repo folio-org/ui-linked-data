@@ -1,6 +1,7 @@
 export enum ComplexLookupType {
   Authorities = 'authorities',
   AuthoritiesSubject = 'authoritiesSubject',
+  Hub = 'hub',
 }
 
 export enum SearchableIndex {
@@ -15,6 +16,8 @@ export enum SearchableIndex {
   Subject = 'subject',
   ChildrenSubjectHeading = 'childrenSubjectHeading',
   Genre = 'genre',
+  HubNameLeftAnchored = 'hubNameLeftAnchored',
+  HubNameKeyword = 'hubNameKeyword',
 }
 
 export enum SearchableIndexQuerySelector {
