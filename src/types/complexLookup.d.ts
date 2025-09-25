@@ -54,16 +54,18 @@ type ComplexLookupApiEntryConfig = {
     limit?: number;
     precedingRecordsCount?: number;
     defaultValue?: string;
+    queryFormat?: 'string' | 'parameters';
   };
   results: {
     containers: {
       [key in SearchSegment]: string;
     };
+    responseType?: 'standard' | 'hub';
   };
 };
 
 type SearchableIndexEntry = {
-  [key in SearchableIndexQuerySelectorType]?: string;
+  [key in SearchableIndexQuerySelectorType]?: string | QueryParameterConfig;
 };
 
 type SearchableIndexEntries = {
@@ -72,6 +74,10 @@ type SearchableIndexEntries = {
 
 type SearchableIndicesMap = {
   [key in SearchSegmentValue]: SearchableIndexEntries;
+};
+
+type HubSearchableIndicesMap = {
+  [key in SearchableIndexType]?: SearchableIndexEntry;
 };
 
 type ComplexLookupsConfigEntry = {
@@ -86,8 +92,10 @@ type ComplexLookupsConfigEntry = {
   labels: ComplexLookupLabels;
   linkedField?: string;
   searchBy: ComplexLookupSearchBy | ComplexLookupSearchByValue;
-  searchableIndicesMap: SearchableIndicesMap;
+  searchableIndicesMap: SearchableIndicesMap | HubSearchableIndicesMap;
   filters?: SearchFilters;
+  buildSearchQuery?: string;
+  responseTransformer?: string;
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
@@ -98,8 +106,20 @@ type ComplexLookupAssignRecordDTO = {
   linkedFieldValue?: string;
 };
 
+type QueryParameterConfig = {
+  paramName: string;
+  additionalParams?: Record<string, string>;
+  format?: 'string' | 'parameters';
+};
+
+type BuildSearchQueryResult = {
+  queryType: 'string' | 'parameters';
+  query: string;
+  urlParams?: Record<string, string>;
+};
+
 type BuildSearchQueryParams = {
-  map: SearchableIndexEntries;
+  map: SearchableIndexEntries | HubSearchableIndicesMap;
   selector?: SearchableIndexQuerySelectorType;
   searchBy: SearchableIndexType;
   value: string;
