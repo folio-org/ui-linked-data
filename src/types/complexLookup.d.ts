@@ -15,12 +15,14 @@ type ComplexLookupLabels = {
   };
 };
 
+type ComplexLookupSearchByValue = {
+  label: string;
+  value: string;
+  isDisabled?: boolean;
+}[];
+
 type ComplexLookupSearchBy = {
-  [key in SearchSegment]: {
-    label: string;
-    value: string;
-    isDisabled?: boolean;
-  }[];
+  [key in SearchSegment]: ComplexLookupSearchByValue;
 };
 
 type SearchSegmentConfig = {
@@ -36,6 +38,7 @@ type PrimarySegmentsConfig = { [key in SearchSegment]: SearchSegmentConfig };
 type ComplexLookupApiEntryConfig = {
   endpoints: {
     base: string;
+    sameOrigin?: boolean;
     source?: string;
     facets?: string;
     bySearchSegment?: {
@@ -50,6 +53,7 @@ type ComplexLookupApiEntryConfig = {
     filter?: string;
     limit?: number;
     precedingRecordsCount?: number;
+    defaultValue?: string;
   };
   results: {
     containers: {
@@ -81,7 +85,7 @@ type ComplexLookupsConfigEntry = {
   } | null;
   labels: ComplexLookupLabels;
   linkedField?: string;
-  searchBy: ComplexLookupSearchBy;
+  searchBy: ComplexLookupSearchBy | ComplexLookupSearchByValue;
   searchableIndicesMap: SearchableIndicesMap;
   filters?: SearchFilters;
 };

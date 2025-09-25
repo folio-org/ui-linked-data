@@ -46,6 +46,7 @@ export const getSearchData = (url?: string, urlParams?: Record<string, string>) 
 export const getSearchResults = async (params: Record<string, string | number>) => {
   const {
     endpointUrl,
+    sameOrigin,
     query,
     offset,
     limit = SEARCH_RESULTS_LIMIT.toString(),
@@ -66,7 +67,11 @@ export const getSearchResults = async (params: Record<string, string | number>) 
     urlParams.precedingRecordsCount = precedingRecordsCount.toString();
   }
 
-  const result = await baseApi.getJson({ url: endpointUrl as string, urlParams });
+  const result = await baseApi.getJson({
+    url: endpointUrl as string,
+    urlParams,
+    sameOrigin: sameOrigin as unknown as boolean,
+  });
 
   return {
     content: result.content ?? result[resultsContainer],

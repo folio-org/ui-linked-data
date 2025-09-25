@@ -141,6 +141,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
             endpointUrl={api.endpoints.base}
+            sameOrigin={api.endpoints.sameOrigin}
             endpointUrlsBySegments={api.endpoints.bySearchSegment}
             primarySegments={segments?.primary}
             searchFilter={api.searchQuery.filter}
@@ -148,10 +149,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             filters={filters}
             hasSearchParams={false}
             defaultNavigationSegment={segments?.defaultValues?.segment}
-            defaultSearchBy={
-              segments?.defaultValues?.searchBy ??
-              (searchBy[SearchSegment.Search]?.[0]?.value as unknown as SearchIdentifiers)
-            }
+            defaultSearchBy={segments?.defaultValues?.searchBy}
             defaultQuery={value}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}

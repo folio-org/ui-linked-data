@@ -40,7 +40,7 @@ async function doRequest({ url, requestParams, headers }: DoRequest) {
     return response;
   } catch (err: any) {
     const selectedError = err?.errors?.[0];
-    
+
     selectedError && console.error(`${selectedError?.type}: ${selectedError?.message}`);
 
     throw err;
@@ -58,7 +58,7 @@ const request = async ({ url, urlParams, requestParams = {}, sameOrigin = true }
     tenant && sameOrigin
       ? {
           'x-okapi-tenant': tenant,
-          ...(token && { 'x-okapi-token': token })
+          ...(token && { 'x-okapi-token': token }),
         }
       : undefined;
 
@@ -75,11 +75,12 @@ const request = async ({ url, urlParams, requestParams = {}, sameOrigin = true }
 const getJson = async ({
   url,
   urlParams,
+  sameOrigin,
   requestParams = {
     method: 'GET',
   },
 }: ReqParams) => {
-  const response = await request({ url, urlParams, requestParams });
+  const response = await request({ url, urlParams, requestParams, sameOrigin });
 
   if (response?.ok) {
     const formatted = await response.json();

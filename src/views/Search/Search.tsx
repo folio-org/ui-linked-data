@@ -143,9 +143,11 @@ export const SearchView = () => {
     <div className="search" data-testid="search" id="ld-search-container">
       <Search
         endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
+        sameOrigin={true}
         filters={filters}
         hasSearchParams={true}
         defaultSearchBy={DEFAULT_SEARCH_BY}
+        defaultNavigationSegment={SearchSegment.Search}
         labelEmptySearch="ld.enterSearchCriteria"
         isVisibleFilters={SEARCH_FILTERS_ENABLED}
         isVisibleFullDisplay={true}
@@ -153,7 +155,6 @@ export const SearchView = () => {
         isVisibleSearchByControl={true}
         renderSearchControlPane={renderSearchControlPane}
         renderResultsList={renderResultsList}
-        defaultNavigationSegment={SearchSegment.Search}
       />
       <ModalImport />
     </div>

@@ -19,6 +19,7 @@ type EndpointUrlsBySegments = {
 
 type SearchParams = {
   endpointUrl: string;
+  sameOrigin?: boolean;
   endpointUrlsBySegments?: EndpointUrlsBySegments;
   primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;

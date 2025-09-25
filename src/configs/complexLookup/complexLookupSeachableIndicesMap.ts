@@ -75,3 +75,12 @@ export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
     },
   },
 };
+
+export const HUB_SEARCHABLE_INDICES_MAP = {
+  [SearchableIndex.HubNameLeftAnchored]: {
+    [SearchableIndexQuerySelector.Query]: `q=${SEARCH_QUERY_VALUE_PARAM}`,
+  },
+  [SearchableIndex.HubNameKeyword]: {
+    [SearchableIndexQuerySelector.Query]: `q=${SEARCH_QUERY_VALUE_PARAM}`,
+  },
+};

@@ -10,6 +10,7 @@ import { useSearchContext } from './useSearchContext';
 export const useFetchSearchData = () => {
   const {
     endpointUrl,
+    sameOrigin,
     searchFilter,
     isSortedResults,
     navigationSegment,
@@ -95,6 +96,7 @@ export const useFetchSearchData = () => {
     return fetchSearchResults
       ? await fetchSearchResults({
           endpointUrl,
+          sameOrigin,
           searchFilter,
           isSortedResults,
           searchBy,

@@ -7,12 +7,13 @@ import {
 import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
-import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP, HUB_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
 
 const BASE_AUTHORITY_CONFIG = {
   api: {
     endpoints: {
       base: '/search/authorities',
+      sameOrigin: true,
       source: '/authority-source-files',
       facets: '/search/authorities/facets',
       bySearchSegment: {
@@ -104,6 +105,20 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
   },
   [ComplexLookupType.Hub]: {
     ...BASE_AUTHORITY_CONFIG,
+    api: {
+      endpoints: {
+        base: 'https://id.loc.gov/resources/hubs/suggest2/',
+        sameOrigin: false,
+      },
+      searchQuery: {
+        limit: 100,
+        precedingRecordsCount: 5,
+        defaultValue: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub[0].value,
+      },
+      results: {
+        containers: {},
+      },
+    },
     segments: null,
     labels: {
       button: {
@@ -119,6 +134,6 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
       },
     },
     searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub,
-    searchableIndicesMap: COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP,
+    searchableIndicesMap: HUB_SEARCHABLE_INDICES_MAP,
   },
 };
