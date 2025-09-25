@@ -114,9 +114,11 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         limit: 100,
         precedingRecordsCount: 5,
         defaultValue: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub[0].value,
+        queryFormat: 'parameters',
       },
       results: {
         containers: {},
+        responseType: 'hub',
       },
     },
     segments: null,
@@ -135,5 +137,7 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
     },
     searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub,
     searchableIndicesMap: HUB_SEARCHABLE_INDICES_MAP,
+    buildSearchQuery: 'hub',
+    responseTransformer: 'hub',
   },
 };

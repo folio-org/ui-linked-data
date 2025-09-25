@@ -37,7 +37,7 @@ type SearchParams = {
   isVisibleSegments?: boolean;
   hasMultilineSearchInput?: boolean;
   searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
-  searchableIndicesMap?: SearchableIndicesMap;
+  searchableIndicesMap?: SearchableIndicesMap | HubSearchableIndicesMap;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;
@@ -46,9 +46,12 @@ type SearchParams = {
   searchResultsLimit?: number;
   precedingRecordsCount?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
-  buildSearchQuery?: (params: BuildSearchQueryParams) => string | undefined;
-  searchResultsContainer?: {
-    [key in SearchSegment]: string;
+  buildSearchQuery?: (params: BuildSearchQueryParams) => string | BuildSearchQueryResult | undefined;
+  searchResults?: {
+    containers?: {
+      [key in SearchSegment]: string;
+    };
+    responseType?: 'standard' | 'hub';
   };
   hasMarcPreview?: boolean;
   hasCustomPagination?: boolean;

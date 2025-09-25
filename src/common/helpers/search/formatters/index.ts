@@ -6,4 +6,5 @@ export const SEARCH_RESULTS_FORMATTER: Record<
 > = {
   default: formatAuthorityItem,
   authorities: formatAuthorityItem,
+  hub: formatAuthorityItem,
 };

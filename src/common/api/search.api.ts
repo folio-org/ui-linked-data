@@ -1,4 +1,5 @@
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
+import { RESPONSE_TRANSFORMERS } from '@common/helpers/search/responseTransformers';
 import baseApi from './base.api';
 
 export type ItemSearchResponse = {
@@ -43,41 +44,64 @@ export const getSearchData = (url?: string, urlParams?: Record<string, string>) 
   return baseApi.getJson({ url, urlParams });
 };
 
-export const getSearchResults = async (params: Record<string, string | number>) => {
+export const getSearchResults = async (params: Record<string, string | number | object>) => {
   const {
     endpointUrl,
     sameOrigin,
     query,
+    queryParams,
     offset,
     limit = SEARCH_RESULTS_LIMIT.toString(),
     resultsContainer,
     precedingRecordsCount,
+    responseType = 'standard',
   } = params;
 
-  const urlParams: Record<string, string> | undefined = {
-    query: query as string,
-    limit: limit?.toString(),
-  };
+  let urlParams: Record<string, string>;
 
-  if (offset) {
-    urlParams.offset = offset?.toString();
-  }
+  if (queryParams && typeof queryParams === 'object' && queryParams !== null) {
+    // Hub-style parameter queries
+    urlParams = {
+      ...(queryParams as Record<string, string>),
+      count:
+        typeof limit === 'string' || typeof limit === 'number' ? limit.toString() : SEARCH_RESULTS_LIMIT.toString(),
+    };
 
-  if (precedingRecordsCount) {
-    urlParams.precedingRecordsCount = precedingRecordsCount.toString();
+    if (offset && typeof offset === 'string') {
+      urlParams.offset = offset;
+    }
+  } else {
+    // Traditional string-based queries (authorities)
+    urlParams = {
+      query: query as string,
+      limit:
+        typeof limit === 'string' || typeof limit === 'number' ? limit.toString() : SEARCH_RESULTS_LIMIT.toString(),
+    };
+
+    if (offset && typeof offset === 'string') {
+      urlParams.offset = offset;
+    }
+
+    if (precedingRecordsCount && typeof precedingRecordsCount === 'number') {
+      urlParams.precedingRecordsCount = precedingRecordsCount.toString();
+    }
   }
 
   const result = await baseApi.getJson({
     url: endpointUrl as string,
     urlParams,
-    sameOrigin: sameOrigin as unknown as boolean,
+    sameOrigin: typeof sameOrigin === 'boolean' ? sameOrigin : true,
   });
 
-  return {
-    content: result.content ?? result[resultsContainer],
-    totalRecords: result.totalRecords,
-    totalPages: result.totalPages ?? Math.ceil(result?.totalRecords / +limit),
-    prev: result.prev,
-    next: result.next,
-  };
+  // Transform response based on API type
+  const transformerKey = (
+    typeof responseType === 'string' ? responseType : 'standard'
+  ) as keyof typeof RESPONSE_TRANSFORMERS;
+  const transformer = RESPONSE_TRANSFORMERS[transformerKey] || RESPONSE_TRANSFORMERS.standard;
+
+  return transformer({
+    result: result as Record<string, unknown>,
+    resultsContainer: resultsContainer as string,
+    limit: typeof limit === 'string' ? +limit : +SEARCH_RESULTS_LIMIT,
+  });
 };
