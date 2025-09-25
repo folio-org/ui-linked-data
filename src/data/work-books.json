@@ -1,0 +1,1373 @@
+{
+  "id": 2,
+  "name": "Books",
+  "resourceType": "http://bibfra.me/vocab/lite/Work",
+  "additionalResourceTypes": ["http://bibfra.me/vocab/library/Books"],
+  "value": [
+    {
+      "type": "block",
+      "displayName": "Work components - Books",
+      "bfid": "lde:Profile:Work",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Work",
+      "children": [
+        "Profile:Work:CreatorOfWork",
+        "Profile:Work:TitleInformation",
+        "Profile:Work:Hub",
+        "Profile:Work:IllustrativeContent",
+        "Profile:Work:GovernmentPublication",
+        "Profile:Work:SupplementaryContent",
+        "Profile:Work:DateOfWork",
+        "Profile:Work:PlaceOfOriginOfTheWork",
+        "Profile:Work:GeographicCoverage",
+        "Profile:Work:IntendedAudience",
+        "Profile:Work:OtherContributors",
+        "Profile:Work:NotesAboutTheWork",
+        "Profile:Work:ContentsNote",
+        "Profile:Work:SummaryNote",
+        "Profile:Work:SubjectOfTheWork",
+        "Profile:Work:ClassificationNumbers",
+        "Profile:Work:ContentType",
+        "Profile:Work:LanguageCode",
+        "Profile:Work:PartOfSeries"
+      ],
+      "id": "Profile:Work"
+    },
+    {
+      "type": "group",
+      "displayName": "Creator of Work",
+      "uriBFLite": "_creatorReference",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution"
+        }
+      },
+      "children": [
+        "Profile:Work:CreatorOfWork:Name",
+        "Profile:Work:CreatorOfWork:Subclass",
+        "Profile:Work:CreatorOfWork:Relationship"
+      ],
+      "id": "Profile:Work:CreatorOfWork"
+    },
+    {
+      "bfid": "lc:RT:bf2:search:name",
+      "type": "complex",
+      "displayName": "Name",
+      "uriBFLite": "_name",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
+        "valueDataType": {}
+      },
+      "layout": {
+        "api": "authorities",
+        "isNew": true,
+        "baseLabelType": "creator"
+      },
+      "linkedEntry": { "dependent": "Profile:Work:CreatorOfWork:Subclass" },
+      "id": "Profile:Work:CreatorOfWork:Name",
+      "marc": "Creator of Work: Main responsibility"
+    },
+    {
+      "type": "dropdown",
+      "displayName": "Subclass",
+      "uriBFLite": "_subclass",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution"
+        }
+      },
+      "children": [
+        "Profile:Work:CreatorOfWork:Subclass:Person",
+        "Profile:Work:CreatorOfWork:Subclass:Family",
+        "Profile:Work:CreatorOfWork:Subclass:CorporateBody",
+        "Profile:Work:CreatorOfWork:Subclass:Jurisdiction",
+        "Profile:Work:CreatorOfWork:Subclass:Conference"
+      ],
+      "layout": { "readOnly": true },
+      "dependsOn": "lc:RT:bf2:search:name",
+      "linkedEntry": { "controlledBy": "Profile:Work:CreatorOfWork:Name" },
+      "id": "Profile:Work:CreatorOfWork:Subclass",
+      "marc": "100, 11X"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Person",
+      "bfid": "lc:RT:bf2:Agent:bfPerson:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Person",
+      "children": [],
+      "id": "Profile:Work:CreatorOfWork:Subclass:Person"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Family",
+      "bfid": "lc:RT:bf2:Agent:bfFamily:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Family",
+      "children": [],
+      "id": "Profile:Work:CreatorOfWork:Subclass:Family"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Corporate Body",
+      "bfid": "lc:RT:bf2:Agent:bfCorp:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Organization",
+      "children": [],
+      "id": "Profile:Work:CreatorOfWork:Subclass:CorporateBody"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Jurisdiction",
+      "bfid": "lc:RT:bf2:Agent:bfJurisdiction:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Jurisdiction",
+      "children": [],
+      "id": "Profile:Work:CreatorOfWork:Subclass:Jurisdiction"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Conference",
+      "bfid": "lc:RT:bf2:Agent:bfConf:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Meeting",
+      "children": [],
+      "id": "Profile:Work:CreatorOfWork:Subclass:Conference"
+    },
+    {
+      "type": "simple",
+      "displayName": "Relationship",
+      "uriBFLite": "roles",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [
+          "http://id.loc.gov/vocabulary/relators",
+          "https://id.loc.gov/vocabulary/rbmsrel"
+        ],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Role"
+        }
+      },
+      "id": "Profile:Work:CreatorOfWork:Relationship",
+      "marc": "100/110 $e $4, 111 $j $4"
+    },
+    {
+      "type": "dropdown",
+      "displayName": "Title Information",
+      "uriBFLite": "http://bibfra.me/vocab/library/title",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:TitleInformation:WorkTitle",
+        "Profile:Work:TitleInformation:VariantTitle",
+        "Profile:Work:TitleInformation:ParallelTitle"
+      ],
+      "id": "Profile:Work:TitleInformation"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Work Title",
+      "bfid": "lc:RT:bf2:WorkTitle",
+      "uriBFLite": "http://bibfra.me/vocab/library/Title",
+      "children": [
+        "Profile:Work:TitleInformation:WorkTitle:NonSortCharacterCount",
+        "Profile:Work:TitleInformation:WorkTitle:PreferredTitleForWork",
+        "Profile:Work:TitleInformation:WorkTitle:PartNumber",
+        "Profile:Work:TitleInformation:WorkTitle:PartName"
+      ],
+      "id": "Profile:Work:TitleInformation:WorkTitle",
+      "marc": "N/A"
+    },
+    {
+      "type": "literal",
+      "displayName": "Non-sort character count",
+      "uriBFLite": "http://bibfra.me/vocab/bflc/nonSortNum",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:WorkTitle:NonSortCharacterCount",
+      "marc": "245 _X"
+    },
+    {
+      "type": "literal",
+      "displayName": "Preferred Title for Work",
+      "uriBFLite": "http://bibfra.me/vocab/library/mainTitle",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": { "dataTypeURI": "" }
+      },
+      "id": "Profile:Work:TitleInformation:WorkTitle:PreferredTitleForWork",
+      "marc": "245 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part number",
+      "uriBFLite": "http://bibfra.me/vocab/library/partNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:WorkTitle:PartNumber",
+      "marc": "245 $n"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part name",
+      "uriBFLite": "http://bibfra.me/vocab/library/partName",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:WorkTitle:PartName",
+      "marc": "245 $p"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Variant Title",
+      "bfid": "lc:RT:bf2:Title:VarTitle",
+      "uriBFLite": "http://bibfra.me/vocab/library/VariantTitle",
+      "children": [
+        "Profile:Work:TitleInformation:VariantTitle:VariantTitle",
+        "Profile:Work:TitleInformation:VariantTitle:PartNumber",
+        "Profile:Work:TitleInformation:VariantTitle:PartName",
+        "Profile:Work:TitleInformation:VariantTitle:OtherTitleInformation",
+        "Profile:Work:TitleInformation:VariantTitle:Date",
+        "Profile:Work:TitleInformation:VariantTitle:VariantTitleType",
+        "Profile:Work:TitleInformation:VariantTitle:Note"
+      ],
+      "id": "Profile:Work:TitleInformation:VariantTitle",
+      "marc": "N/A"
+    },
+    {
+      "type": "literal",
+      "displayName": "Variant Title",
+      "uriBFLite": "http://bibfra.me/vocab/library/mainTitle",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:VariantTitle",
+      "marc": "246 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part number",
+      "uriBFLite": "http://bibfra.me/vocab/library/partNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:PartNumber",
+      "marc": "246 $n"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part name",
+      "uriBFLite": "http://bibfra.me/vocab/library/partName",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:PartName",
+      "marc": "246 $p"
+    },
+    {
+      "type": "literal",
+      "displayName": "Other title information",
+      "uriBFLite": "http://bibfra.me/vocab/library/subTitle",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:OtherTitleInformation",
+      "marc": "246 $b"
+    },
+    {
+      "type": "literal",
+      "displayName": "Date",
+      "uriBFLite": "http://bibfra.me/vocab/lite/date",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:Date",
+      "marc": "246 $f"
+    },
+    {
+      "type": "literal",
+      "displayName": "Variant title type",
+      "uriBFLite": "http://bibfra.me/vocab/library/variantType",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:VariantTitleType",
+      "marc": "246 _X"
+    },
+    {
+      "type": "literal",
+      "displayName": "Note",
+      "uriBFLite": "http://bibfra.me/vocab/lite/note",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:VariantTitle:Note",
+      "marc": "246 $i"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Parallel Title",
+      "bfid": "lc:RT:bf2:ParallelTitle",
+      "uriBFLite": "http://bibfra.me/vocab/library/ParallelTitle",
+      "children": [
+        "Profile:Work:TitleInformation:ParallelTitle:ParallelTitle",
+        "Profile:Work:TitleInformation:ParallelTitle:OtherTitleInformation",
+        "Profile:Work:TitleInformation:ParallelTitle:PartNumber",
+        "Profile:Work:TitleInformation:ParallelTitle:PartName",
+        "Profile:Work:TitleInformation:ParallelTitle:Date",
+        "Profile:Work:TitleInformation:ParallelTitle:Note"
+      ],
+      "id": "Profile:Work:TitleInformation:ParallelTitle",
+      "marc": "N/A"
+    },
+    {
+      "type": "literal",
+      "displayName": "Parallel Title",
+      "uriBFLite": "http://bibfra.me/vocab/library/mainTitle",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:ParallelTitle",
+      "marc": "246 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Other Title Information",
+      "uriBFLite": "http://bibfra.me/vocab/library/subTitle",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:OtherTitleInformation",
+      "marc": "246 $b"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part number",
+      "uriBFLite": "http://bibfra.me/vocab/library/partNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:PartNumber",
+      "marc": "246 $n"
+    },
+    {
+      "type": "literal",
+      "displayName": "Part name",
+      "uriBFLite": "http://bibfra.me/vocab/library/partName",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:PartName",
+      "marc": "246 $p"
+    },
+    {
+      "type": "literal",
+      "displayName": "Date",
+      "uriBFLite": "http://bibfra.me/vocab/lite/date",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:Date",
+      "marc": "246 $f"
+    },
+    {
+      "type": "literal",
+      "displayName": "Note",
+      "uriBFLite": "http://bibfra.me/vocab/lite/note",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:TitleInformation:ParallelTitle:Note",
+      "marc": "246 $i"
+    },
+    {
+      "type": "group",
+      "displayName": "Hub",
+      "uriBFLite": "_hubs",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution"
+        }
+      },
+      "children": [
+        "Profile:Work:Hub:Hub",
+        "Profile:Work:Hub:Relationship"
+      ],
+      "id": "Profile:Work:Hub"
+    },
+    {
+      "type": "complex",
+      "displayName": "Hub",
+      "uriBFLite": "_hub",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
+        "valueDataType": {}
+      },
+      "layout": {
+        "api": "hub",
+        "isNew": true,
+        "baseLabelType": "hub"
+      },
+      "id": "Profile:Work:Hub:Hub"
+    },
+    {
+      "type": "dropdown",
+      "displayName": "Relationship",
+      "uriBFLite": "_relation",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bflc/PrimaryContribution"
+        }
+      },
+      "children": [
+        "Profile:Work:Hub:Relationship:ExpressionOf",
+        "Profile:Work:Hub:Relationship:Subject"
+      ],
+      "id": "Profile:Work:Hub:Relationship"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Expression Of",
+      "uriBFLite": "http://bibfra.me/vocab/lite/expressionOf",
+      "children": [],
+      "id": "Profile:Work:Hub:Relationship:ExpressionOf"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Subject",
+      "uriBFLite": "http://bibfra.me/vocab/lite/subject",
+      "children": [],
+      "id": "Profile:Work:Hub:Relationship:Subject"
+    },
+    {
+      "type": "simple",
+      "displayName": "Illustrative content",
+      "uriBFLite": "http://bibfra.me/vocab/library/illustrations",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/millus"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/illustrativeContent"
+        }
+      },
+      "id": "Profile:Work:IllustrativeContent"
+    },
+    {
+      "type": "simple",
+      "displayName": "Government publication",
+      "uriBFLite": "http://bibfra.me/vocab/library/governmentPublication",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/mgovtpubtype"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bflc/GovernmentPubType"
+        }
+      },
+      "id": "Profile:Work:GovernmentPublication",
+      "marc": "008/28"
+    },
+    {
+      "type": "simple",
+      "displayName": "Supplementary content",
+      "uriBFLite": "http://bibfra.me/vocab/library/supplementaryContent",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/msupplcont"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/SupplementaryContent"
+        }
+      },
+      "id": "Profile:Work:SupplementaryContent"
+    },
+    {
+      "type": "literal",
+      "displayName": "Date of Work",
+      "uriBFLite": "http://bibfra.me/vocab/lite/dateStart",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:DateOfWork",
+      "marc": "046 $k, $l"
+    },
+    {
+      "type": "simple",
+      "displayName": "Place of Origin of the Work",
+      "uriBFLite": "http://bibfra.me/vocab/library/originPlace",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/countries"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Place"
+        }
+      },
+      "id": "Profile:Work:PlaceOfOriginOfTheWork",
+      "marc": "008/15-17"
+    },
+    {
+      "type": "group",
+      "displayName": "Geographic Coverage",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": ["Profile:Work:GeographicCoverage:SearchLCNAFLCSHOrGAC"],
+      "id": "Profile:Work:GeographicCoverage"
+    },
+    {
+      "type": "complex",
+      "displayName": "Search LCNAF, LCSH or GAC",
+      "uriBFLite": "_geographicCoverageReference",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/authorities/geographics"],
+        "valueDataType": { "remark": "", "dataTypeURI": "" }
+      },
+      "id": "Profile:Work:GeographicCoverage:SearchLCNAFLCSHOrGAC",
+      "marc": "522 $a"
+    },
+    {
+      "type": "simple",
+      "displayName": "Intended Audience",
+      "uriBFLite": "http://bibfra.me/vocab/library/targetAudience",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/maudience"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/IntendedAudience"
+        }
+      },
+      "id": "Profile:Work:IntendedAudience",
+      "marc": "008/22"
+    },
+    {
+      "type": "group",
+      "displayName": "Other contributors",
+      "uriBFLite": "_contributorReference",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Contribution"
+        }
+      },
+      "children": [
+        "Profile:Work:OtherContributors:Name",
+        "Profile:Work:OtherContributors:Subclass",
+        "Profile:Work:OtherContributors:Relationship"
+      ],
+      "id": "Profile:Work:OtherContributors"
+    },
+    {
+      "bfid": "lc:RT:bf2:search:name",
+      "type": "complex",
+      "displayName": "Name",
+      "uriBFLite": "_name",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://preprod.id.loc.gov/authorities/names"],
+        "valueDataType": {}
+      },
+      "layout": {
+        "api": "authorities",
+        "isNew": true,
+        "baseLabelType": "contributor"
+      },
+      "linkedEntry": { "dependent": "Profile:Work:OtherContributors:Subclass" },
+      "id": "Profile:Work:OtherContributors:Name",
+      "marc": "700, 710, 71X"
+    },
+    {
+      "type": "dropdown",
+      "displayName": "Subclass",
+      "uriBFLite": "_subclass",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": []
+      },
+      "children": [
+        "Profile:Work:OtherContributors:Subclass:Person",
+        "Profile:Work:OtherContributors:Subclass:Family",
+        "Profile:Work:OtherContributors:Subclass:CorporateBody",
+        "Profile:Work:OtherContributors:Subclass:Jurisdiction",
+        "Profile:Work:OtherContributors:Subclass:Conference"
+      ],
+      "layout": { "readOnly": true },
+      "dependsOn": "lc:RT:bf2:search:name",
+      "linkedEntry": { "controlledBy": "Profile:Work:OtherContributors:Name" },
+      "id": "Profile:Work:OtherContributors:Subclass",
+      "marc": "N/A"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Person",
+      "bfid": "lc:RT:bf2:Agent:bfPerson:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Person",
+      "children": [],
+      "id": "Profile:Work:OtherContributors:Subclass:Person"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Family",
+      "bfid": "lc:RT:bf2:Agent:bfFamily:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Family",
+      "children": [],
+      "id": "Profile:Work:OtherContributors:Subclass:Family"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Corporate Body",
+      "bfid": "lc:RT:bf2:Agent:bfCorp:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Organization",
+      "children": [],
+      "id": "Profile:Work:OtherContributors:Subclass:CorporateBody"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Jurisdiction",
+      "bfid": "lc:RT:bf2:Agent:bfJurisdiction:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Jurisdiction",
+      "children": [],
+      "id": "Profile:Work:OtherContributors:Subclass:Jurisdiction"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Conference",
+      "bfid": "lc:RT:bf2:Agent:bfConf:v2",
+      "uriBFLite": "http://bibfra.me/vocab/lite/Meeting",
+      "children": [],
+      "id": "Profile:Work:OtherContributors:Subclass:Conference"
+    },
+    {
+      "type": "simple",
+      "displayName": "Relationship",
+      "uriBFLite": "roles",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [
+          "http://id.loc.gov/vocabulary/relators",
+          "https://id.loc.gov/vocabulary/rbmsrel"
+        ]
+      },
+      "id": "Profile:Work:OtherContributors:Relationship",
+      "marc": "N/A"
+    },
+    {
+      "type": "group",
+      "displayName": "Notes about the Work",
+      "uriBFLite": "_notes",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:NotesAboutTheWork:Note",
+        "Profile:Work:NotesAboutTheWork:NoteType"
+      ],
+      "id": "Profile:Work:NotesAboutTheWork"
+    },
+    {
+      "type": "literal",
+      "displayName": "Note",
+      "uriBFLite": "value",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:NotesAboutTheWork:Note",
+      "marc": "5XX"
+    },
+    {
+      "type": "simple",
+      "displayName": "Note type",
+      "uriBFLite": "type",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/mnotetype"],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:NotesAboutTheWork:NoteType",
+      "marc": "N/A"
+    },
+    {
+      "type": "literal",
+      "groupName": "Contents",
+      "displayName": "Contents note",
+      "uriBFLite": "http://bibfra.me/vocab/library/tableOfContents",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ContentsNote",
+      "marc": "505 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Summary note",
+      "uriBFLite": "http://bibfra.me/vocab/library/summary",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:SummaryNote",
+      "marc": "520 $a"
+    },
+    {
+      "type": "group",
+      "displayName": "Subject of the Work",
+      "uriBFLite": "http://bibfra.me/vocab/lite/subject",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": ["Profile:Work:SubjectOfTheWork:SearchLCSHLCNAF"],
+      "id": "Profile:Work:SubjectOfTheWork"
+    },
+    {
+      "type": "complex",
+      "displayName": "Search LCSH/LCNAF",
+      "uriBFLite": "label",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [
+          "http://id.loc.gov/authorities/subjects",
+          "http://preprod.id.loc.gov/authorities/names"
+        ],
+        "valueDataType": { "dataTypeURI": "" }
+      },
+      "layout": {
+        "api": "authoritiesSubject",
+        "isNew": true,
+        "baseLabelType": "subject"
+      },
+      "id": "Profile:Work:SubjectOfTheWork:SearchLCSHLCNAF",
+      "marc": "6XX, 61X, 65X"
+    },
+    {
+      "type": "dropdown",
+      "displayName": "Classification numbers",
+      "uriBFLite": "http://bibfra.me/vocab/lite/classification",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification",
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification"
+      ],
+      "deletable": true,
+      "cloneIndex": 0,
+      "id": "Profile:Work:ClassificationNumbers",
+      "marc": "N/A"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Library of Congress Classification",
+      "bfid": "lc:RT:bf2:LCC",
+      "uriBFLite": "lc",
+      "children": [
+        "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:ClassificationNumber",
+        "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:AdditionalCallNumberInformation",
+        "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:AssigningAgency",
+        "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:UsedByAssigningAgency"
+      ],
+      "id": "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification"
+    },
+    {
+      "type": "literal",
+      "displayName": "Classification number",
+      "uriBFLite": "http://bibfra.me/vocab/library/code",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:ClassificationNumber",
+      "marc": "050 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Additional call number information",
+      "uriBFLite": "http://bibfra.me/vocab/library/itemNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:AdditionalCallNumberInformation",
+      "marc": "050 $b"
+    },
+    {
+      "type": "complex",
+      "displayName": "Assigning agency",
+      "uriBFLite": "_assigningSourceReference",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent"
+        }
+      },
+      "id": "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:AssigningAgency",
+      "marc": "050 _0"
+    },
+    {
+      "type": "simple",
+      "displayName": "Used by assigning agency?",
+      "uriBFLite": "http://bibfra.me/vocab/library/status",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/mstatus"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Status"
+        }
+      },
+      "id": "Profile:Work:ClassificationNumbers:LibraryOfCongressClassification:UsedByAssigningAgency",
+      "marc": "050 X_"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Dewey Decimal Classification",
+      "bfid": "lc:RT:bf2:DDC",
+      "uriBFLite": "ddc",
+      "children": [
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:ClassificationNumber",
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:AdditionalCallNumberInformation",
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber",
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyFullOrAbridged",
+        "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:Assigner"
+      ],
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification",
+      "marc": "N/A"
+    },
+    {
+      "type": "literal",
+      "displayName": "Classification number",
+      "uriBFLite": "http://bibfra.me/vocab/library/code",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:ClassificationNumber",
+      "marc": "082 $a"
+    },
+    {
+      "type": "literal",
+      "displayName": "Additional call number information",
+      "uriBFLite": "http://bibfra.me/vocab/library/itemNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:AdditionalCallNumberInformation",
+      "marc": "082 $b"
+    },
+    {
+      "type": "literal",
+      "displayName": "Dewey Edition number",
+      "uriBFLite": "http://bibfra.me/vocab/library/editionNumber",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyEditionNumber",
+      "marc": "082 $2"
+    },
+    {
+      "type": "literal",
+      "displayName": "Dewey full or abridged?",
+      "uriBFLite": "http://bibfra.me/vocab/library/edition",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:DeweyFullOrAbridged",
+      "marc": "082 X_"
+    },
+    {
+      "type": "complex",
+      "displayName": "Assigner",
+      "uriBFLite": "_assigningSourceReference",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/organizations"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Agent"
+        }
+      },
+      "id": "Profile:Work:ClassificationNumbers:DeweyDecimalClassification:Assigner",
+      "marc": "082 _X"
+    },
+    {
+      "type": "simple",
+      "displayName": "Content Type",
+      "uriBFLite": "http://bibfra.me/vocab/library/content",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/contentTypes"],
+        "valueDataType": {
+          "dataTypeURI": "http://id.loc.gov/ontologies/bibframe/Content"
+        }
+      },
+      "id": "Profile:Work:ContentType",
+      "marc": "336 $a ($b)"
+    },
+    {
+      "type": "group",
+      "displayName": "Language code",
+      "uriBFLite": "_languages",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:LanguageCode:Language",
+        "Profile:Work:LanguageCode:Relationship"
+      ],
+      "id": "Profile:Work:LanguageCode",
+      "marc": "008/35-37"
+    },
+    {
+      "type": "simple",
+      "displayName": "Language",
+      "uriBFLite": "_codes",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": ["http://id.loc.gov/vocabulary/languages"],
+        "valueDataType": { "remark": "", "dataTypeURI": "" }
+      },
+      "id": "Profile:Work:LanguageCode:Language"
+    },
+    {
+      "type": "enumerated",
+      "displayName": "Language relationship",
+      "uriBFLite": "_types",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:LanguageCode:Relationship:PrimarySource",
+        "Profile:Work:LanguageCode:Relationship:SummaryOrAbstract",
+        "Profile:Work:LanguageCode:Relationship:SungOrSpokenText",
+        "Profile:Work:LanguageCode:Relationship:Libretto",
+        "Profile:Work:LanguageCode:Relationship:TableOfContents",
+        "Profile:Work:LanguageCode:Relationship:AccompanyingMaterial",
+        "Profile:Work:LanguageCode:Relationship:Original",
+        "Profile:Work:LanguageCode:Relationship:Intertitles",
+        "Profile:Work:LanguageCode:Relationship:Subtitles",
+        "Profile:Work:LanguageCode:Relationship:IntermediateTranslation",
+        "Profile:Work:LanguageCode:Relationship:OriginalAccompanyingMaterials",
+        "Profile:Work:LanguageCode:Relationship:OriginalLibretto",
+        "Profile:Work:LanguageCode:Relationship:Captions",
+        "Profile:Work:LanguageCode:Relationship:AccessibleAudio",
+        "Profile:Work:LanguageCode:Relationship:AccessibleVisualMaterial",
+        "Profile:Work:LanguageCode:Relationship:AccompanyingTranscripts"
+      ],
+      "id": "Profile:Work:LanguageCode:Relationship"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Primary source language",
+      "uriBFLite": "http://bibfra.me/vocab/lite/language",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:PrimarySource"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Summary or abstract",
+      "uriBFLite": "http://bibfra.me/vocab/lite/summaryLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:SummaryOrAbstract"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Sung or spoken text",
+      "uriBFLite": "http://bibfra.me/vocab/lite/sungOrSpokenTextLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:SungOrSpokenText"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Librettos",
+      "uriBFLite": "http://bibfra.me/vocab/lite/librettoLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:Libretto"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Table of contents",
+      "uriBFLite": "http://bibfra.me/vocab/lite/tableOfContentsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:TableOfContents"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Accompanying material other than librettos and transcripts",
+      "uriBFLite": "http://bibfra.me/vocab/lite/accompanyingMaterialLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:AccompanyingMaterial"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Original language",
+      "uriBFLite": "http://bibfra.me/vocab/lite/originalLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:Original"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Intertitles ",
+      "uriBFLite": "http://bibfra.me/vocab/lite/intertitlesLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:Intertitles"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Subtitles",
+      "uriBFLite": "http://bibfra.me/vocab/lite/subtitlesOrCaptionsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:Subtitles"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Intermediate translation",
+      "uriBFLite": "http://bibfra.me/vocab/lite/intermediateTranslationsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:IntermediateTranslation"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Original accompanying materials other than librettos",
+      "uriBFLite": "http://bibfra.me/vocab/lite/originalAccompanyingMaterialsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:OriginalAccompanyingMaterials"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Original libretto",
+      "uriBFLite": "http://bibfra.me/vocab/lite/originalLibrettoLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:OriginalLibretto"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Captions",
+      "uriBFLite": "http://bibfra.me/vocab/lite/captionsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:Captions"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Accessible audio",
+      "uriBFLite": "http://bibfra.me/vocab/lite/accessibleAudioLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:AccessibleAudio"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Accessible visual language (non-textual)",
+      "uriBFLite": "http://bibfra.me/vocab/lite/accessibleVisualMaterialLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:AccessibleVisualMaterial"
+    },
+    {
+      "type": "dropdownOption",
+      "displayName": "Accompanying transcripts for audiovisual material",
+      "uriBFLite": "http://bibfra.me/vocab/lite/accompanyingTranscriptsLanguage",
+      "children": [],
+      "id": "Profile:Work:LanguageCode:Relationship:AccompanyingTranscripts"
+    },
+    {
+      "type": "group",
+      "displayName": "Input transcribed series (Part of)",
+      "uriBFLite": "http://bibfra.me/vocab/relation/isPartOf",
+      "constraints": {
+        "repeatable": true,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "children": [
+        "Profile:Work:PartOfSeries:Title",
+        "Profile:Work:PartOfSeries:ISSN",
+        "Profile:Work:PartOfSeries:SeriesEnumeration"
+      ],
+      "id": "Profile:Work:PartOfSeries"
+    },
+    {
+      "type": "literal",
+      "displayName": "Title",
+      "uriBFLite": "http://bibfra.me/vocab/lite/name",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": true,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:PartOfSeries:Title"
+    },
+    {
+      "type": "literal",
+      "displayName": "ISSN",
+      "uriBFLite": "http://bibfra.me/vocab/library/issn",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": false,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:PartOfSeries:ISSN"
+    },
+    {
+      "type": "literal",
+      "displayName": "Series enumeration",
+      "uriBFLite": "http://bibfra.me/vocab/library/volume",
+      "constraints": {
+        "repeatable": false,
+        "editable": true,
+        "mandatory": false,
+        "defaults": [],
+        "useValuesFrom": [],
+        "valueDataType": {}
+      },
+      "id": "Profile:Work:PartOfSeries:SeriesEnumeration"
+    }
+  ]
+}

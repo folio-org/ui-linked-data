@@ -8,8 +8,9 @@ import { useInputsState, useProfileState } from '@src/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
-import { useLoadProfile } from './useLoadProfile';
+// import { useLoadProfile } from './useLoadProfile';
 import { getMappedResourceType, getProfileConfig } from '@common/helpers/profile.helper';
+import ProfileJSON from '@src/data/work-books.json';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -61,7 +62,7 @@ export const useConfig = () => {
   ]);
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
-  const { loadProfile } = useLoadProfile();
+  // const { loadProfile } = useLoadProfile();
 
   const buildSchema = async ({
     profile,
@@ -151,8 +152,9 @@ export const useConfig = () => {
         referenceProfileId,
       });
 
-      const loadedProfiles = await Promise.all(profile?.ids?.map(profileId => loadProfile(profileId)));
-      const selectedProfile = profile?.rootEntry ? [profile.rootEntry, ...loadedProfiles.flat()] : loadedProfiles[0];
+      // const loadedProfiles = await Promise.all(profile?.ids?.map(profileId => loadProfile(profileId)));
+      // const selectedProfile = profile?.rootEntry ? [profile.rootEntry, ...loadedProfiles.flat()] : loadedProfiles[0];
+      const selectedProfile = [profile.rootEntry, ...ProfileJSON.value] as Profile;
 
       const recordTitle = getRecordTitle(recordData as RecordEntry);
       const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
