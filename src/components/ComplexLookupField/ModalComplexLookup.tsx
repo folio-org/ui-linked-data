@@ -44,6 +44,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       searchableIndicesMap,
       filters = [],
       buildSearchQuery: buildSearchQueryRef,
+      common,
     } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
@@ -160,7 +161,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
             isVisibleSegments={!!segments}
-            hasMultilineSearchInput={true}
+            common={common}
             hasMarcPreview={true}
             hasCustomPagination={true}
             searchByControlOptions={searchBy}

@@ -11,19 +11,19 @@ export const hubTableConfig: SearchResultsTableConfig = {
     hub: {
       label: 'ld.hub',
       position: 1,
-      className: 'cell-fixed cell-fixed-370',
+      className: 'cell-fixed cell-fixed-430',
       formatter: HubLinkFormatter,
     },
     auth: {
       label: 'ld.auth',
       position: 2,
-      className: 'cell-fixed cell-fixed-40',
+      className: 'cell-fixed cell-fixed-170',
       formatter: AuthNotesFormatter,
     },
     rda: {
       label: 'ld.rda',
       position: 3,
-      className: 'cell-fixed cell-fixed-40',
+      className: 'cell-fixed cell-fixed-170',
       formatter: RDANotesFormatter,
     },
   },

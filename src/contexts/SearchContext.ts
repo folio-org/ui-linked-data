@@ -13,7 +13,7 @@ export const SearchContext = createContext<SearchParams>({
   isVisibleAdvancedSearch: true,
   isVisibleSearchByControl: true,
   isVisibleSegments: false,
-  hasMultilineSearchInput: false,
+  common: {},
   searchByControlOptions: {},
   searchableIndicesMap: {} as SearchableIndicesMap,
   labelEmptySearch: '',

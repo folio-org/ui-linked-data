@@ -35,7 +35,9 @@ type SearchParams = {
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
   isVisibleSegments?: boolean;
-  hasMultilineSearchInput?: boolean;
+  common?: {
+    hasMultilineSearchInput?: boolean;
+  };
   searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
   searchableIndicesMap?: SearchableIndicesMap | HubSearchableIndicesMap;
   labelEmptySearch?: string;

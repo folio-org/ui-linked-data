@@ -30,7 +30,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     isVisibleAdvancedSearch,
     isVisibleFilters,
     isVisibleSegments,
-    hasMultilineSearchInput,
+    common,
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
@@ -111,6 +111,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
 
   useEffect(() => () => setIsSearchPaneCollapsed(false), []);
 
+  console.log('====================================');
+  console.log('searchBy', searchBy, selectOptions);
+  console.log('====================================');
+
   return (
     !isSearchPaneCollapsed && (
       <div className="search-pane" role="region" aria-labelledby="search-pane-header-title">
@@ -141,7 +145,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.select' })}
               />
             )}
-            {hasMultilineSearchInput ? (
+            {common?.hasMultilineSearchInput ? (
               <Textarea
                 id="id-search-textarea"
                 className="select-textarea"

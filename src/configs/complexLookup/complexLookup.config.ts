@@ -78,6 +78,9 @@ const BASE_AUTHORITY_CONFIG = {
   searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
   searchableIndicesMap: COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP,
   filters: COMPLEX_LOOKUP_FILTERS_CONFIG.authorities,
+  common: {
+    hasMultilineSearchInput: true,
+  },
 };
 
 export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
@@ -139,5 +142,8 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
     searchableIndicesMap: HUB_SEARCHABLE_INDICES_MAP,
     buildSearchQuery: 'hub',
     responseTransformer: 'hub',
+    common: {
+      hasMultilineSearchInput: false,
+    },
   },
 };

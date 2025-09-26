@@ -96,6 +96,9 @@ type ComplexLookupsConfigEntry = {
   filters?: SearchFilters;
   buildSearchQuery?: string;
   responseTransformer?: string;
+  common: {
+    hasMultilineSearchInput?: boolean;
+  };
 };
 
 type ComplexLookupsConfig = Record<string, ComplexLookupsConfigEntry>;
