@@ -19,6 +19,7 @@ type ComplexLookupSearchByValue = {
   label: string;
   value: string;
   isDisabled?: boolean;
+  placeholder?: string;
 }[];
 
 type ComplexLookupSearchBy = {

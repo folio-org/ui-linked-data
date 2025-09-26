@@ -283,6 +283,7 @@
   "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
   "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents",
   "ld.placeholder.processing": "Information will be shown after processing",
+  "ld.placeholder.startsWith": "starts with",
   "ld.hubs": "Hubs",
   "ld.hubs.assign": "Assign hub",
   "ld.hubs.enterSearchQuery": "Enter a search query to show hubs.",

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
+import { getSearchPlaceholder } from '@common/helpers/search/placeholder.helper';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
 import { Select, type SelectValue } from '@components/Select';
@@ -83,6 +84,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     selectOptions = Object.values(SearchIdentifiers);
   }
 
+  // Find the current placeholder based on searchBy value
+  const currentPlaceholder = getSearchPlaceholder(selectOptions, searchBy);
+  const placeholderText = currentPlaceholder ? formatMessage({ id: currentPlaceholder }) : undefined;
+
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
     setQuery(value);
@@ -99,8 +104,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetPreviewContent();
     resetFullDisplayComponentType();
     resetSelectedInstances();
-    hasSearchParams && setSearchParams({});
-    hasSearchParams && setNavigationState({});
+    if (hasSearchParams) {
+      setSearchParams({});
+      setNavigationState({});
+    }
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
   };
 
@@ -110,10 +117,6 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   }, []);
 
   useEffect(() => () => setIsSearchPaneCollapsed(false), []);
-
-  console.log('====================================');
-  console.log('searchBy', searchBy, selectOptions);
-  console.log('====================================');
 
   return (
     !isSearchPaneCollapsed && (
@@ -153,6 +156,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
                 data-testid="id-search-textarea"
                 fullWidth
+                placeholder={placeholderText}
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
               />
             ) : (
@@ -164,6 +168,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 className="text-input"
                 onPressEnter={submitSearch}
                 data-testid="id-search-input"
+                placeholder={placeholderText}
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
               />
             )}

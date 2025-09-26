@@ -89,10 +89,12 @@ export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
     {
       label: 'search.hubNameLeftAnchored',
       value: SearchableIndex.HubNameLeftAnchored,
+      placeholder: 'ld.placeholder.startsWith',
     },
     {
       label: 'search.hubNameKeyword',
       value: SearchableIndex.HubNameKeyword,
+      placeholder: '',
     },
   ],
 };
