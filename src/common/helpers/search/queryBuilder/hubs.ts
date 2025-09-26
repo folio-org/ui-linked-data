@@ -10,10 +10,9 @@ export const buildHubSearchQuery = ({
   const config = searchableIndex?.[selector];
 
   if (typeof config === 'object' && config !== null) {
-    const paramConfig = config as QueryParameterConfig;
     const urlParams = {
-      [paramConfig.paramName]: value,
-      ...paramConfig.additionalParams,
+      [config.paramName]: value,
+      ...config.additionalParams,
     };
 
     return {

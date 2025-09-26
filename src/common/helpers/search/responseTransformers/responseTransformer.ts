@@ -5,28 +5,21 @@ export type TransformSearchResponseParams = {
   apiType?: 'standard' | 'hub';
 };
 
-export type StandardSearchResponse = {
-  content: unknown[];
-  totalRecords: number;
-  totalPages: number;
-  prev?: string;
-  next?: string;
-};
-
 export const transformSearchResponse = ({
   result,
   resultsContainer,
   limit,
   apiType = 'standard',
-}: TransformSearchResponseParams): StandardSearchResponse => {
+}: TransformSearchResponseParams) => {
   if (apiType === 'hub') {
     // Transform Hub API response to standard format
     const hubResult = result as { hits?: unknown[]; count?: number };
+
     return {
       content: hubResult.hits || [],
       totalRecords: hubResult.count || 0,
       totalPages: Math.ceil((hubResult.count || 0) / limit),
-      prev: undefined, // Hub API doesn't provide prev/next
+      prev: undefined,
       next: undefined,
     };
   }

@@ -111,3 +111,28 @@ type FetchDataParams = {
   selectedSegment?: string;
   baseQuerySelector?: SearchableIndexQuerySelectorType;
 };
+
+type HubSearchResultDTO = {
+  suggestLabel: string;
+  uri: string;
+  aLabel: string;
+  vLabel: string;
+  sLabel: string;
+  code: string;
+  token: string;
+  rank: string;
+  more: {
+    marcKeys: string[];
+    aaps: string[];
+    varianttitles: string[];
+    rdftypes: string[];
+    collections: string[];
+    genres: string[];
+    contenttypes: string[];
+    languages: string[];
+    identifiers: string[];
+    sources: string[];
+    notes: string[];
+    subjects: string[];
+  };
+};

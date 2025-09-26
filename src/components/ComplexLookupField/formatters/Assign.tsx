@@ -11,7 +11,7 @@ export const AssignFormatter = ({
   onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
   checkFailedId: (id: string) => boolean;
 }) => {
-  const isAuthorized = row.authorized.label === AuthRefType.Authorized;
+  const isAuthorized = row?.authorized?.label === AuthRefType.Authorized;
   const isDisabled = checkFailedId(row.__meta.id);
 
   return isAuthorized ? (
