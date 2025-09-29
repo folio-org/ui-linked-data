@@ -17,6 +17,11 @@ export type GetByIdentifier = {
   limit?: string;
 };
 
+// Type aliases for search parameter values
+type LimitValue = string | number | undefined;
+type OffsetValue = string | number | undefined;
+type SearchParamUnion = string | number | object;
+
 export const getByIdentifier = async ({
   endpointUrl,
   searchFilter,
@@ -37,14 +42,68 @@ export const getByIdentifier = async ({
   return await baseApi.getJson({ url: endpointUrl, urlParams });
 };
 
-// TODO: generate search params
 export const getSearchData = (url?: string, urlParams?: Record<string, string>) => {
   if (!url) return;
 
   return baseApi.getJson({ url, urlParams });
 };
 
-export const getSearchResults = async (params: Record<string, string | number | object>) => {
+const normalizeLimitValue = (limit: LimitValue): string => {
+  return typeof limit === 'string' || typeof limit === 'number' ? limit.toString() : SEARCH_RESULTS_LIMIT.toString();
+};
+
+const buildHubUrlParams = (queryParams: Record<string, string>, limit: LimitValue, offset?: OffsetValue) => {
+  const urlParams: Record<string, string> = {
+    ...queryParams,
+    count: normalizeLimitValue(limit),
+  };
+
+  if (offset && (typeof offset === 'string' || typeof offset === 'number')) {
+    urlParams.offset = offset.toString();
+  }
+
+  return urlParams;
+};
+
+const buildTraditionalUrlParams = (
+  query: string,
+  limit: LimitValue,
+  offset?: OffsetValue,
+  precedingRecordsCount?: number,
+) => {
+  const urlParams: Record<string, string> = {
+    query: query,
+    limit: normalizeLimitValue(limit),
+  };
+
+  if (offset && (typeof offset === 'string' || typeof offset === 'number')) {
+    urlParams.offset = offset.toString();
+  }
+
+  if (precedingRecordsCount && typeof precedingRecordsCount === 'number') {
+    urlParams.precedingRecordsCount = precedingRecordsCount.toString();
+  }
+
+  return urlParams;
+};
+
+const isParameterBasedQuery = (queryParams: SearchParamUnion | undefined): queryParams is object => {
+  return queryParams !== undefined && typeof queryParams === 'object' && queryParams !== null;
+};
+
+const getResponseTransformer = (responseType: SearchParamUnion | undefined) => {
+  const transformerKey = (
+    typeof responseType === 'string' ? responseType : 'standard'
+  ) as keyof typeof RESPONSE_TRANSFORMERS;
+
+  return RESPONSE_TRANSFORMERS[transformerKey] || RESPONSE_TRANSFORMERS.standard;
+};
+
+const convertValue = (value: SearchParamUnion) => {
+  return typeof value === 'string' || typeof value === 'number' ? value : undefined;
+};
+
+export const getSearchResults = async (params: Record<string, SearchParamUnion>) => {
   const {
     endpointUrl,
     sameOrigin,
@@ -57,47 +116,22 @@ export const getSearchResults = async (params: Record<string, string | number | 
     responseType = 'standard',
   } = params;
 
-  let urlParams: Record<string, string>;
-
-  if (queryParams && typeof queryParams === 'object' && queryParams !== null) {
-    // Hub-style parameter queries
-    urlParams = {
-      ...(queryParams as Record<string, string>),
-      count:
-        typeof limit === 'string' || typeof limit === 'number' ? limit.toString() : SEARCH_RESULTS_LIMIT.toString(),
-    };
-
-    if (offset && typeof offset === 'string') {
-      urlParams.offset = offset;
-    }
-  } else {
-    // Traditional string-based queries (authorities)
-    urlParams = {
-      query: query as string,
-      limit:
-        typeof limit === 'string' || typeof limit === 'number' ? limit.toString() : SEARCH_RESULTS_LIMIT.toString(),
-    };
-
-    if (offset && typeof offset === 'string') {
-      urlParams.offset = offset;
-    }
-
-    if (precedingRecordsCount && typeof precedingRecordsCount === 'number') {
-      urlParams.precedingRecordsCount = precedingRecordsCount.toString();
-    }
-  }
+  // Build URL parameters based on query type
+  const urlParams = isParameterBasedQuery(queryParams)
+    ? buildHubUrlParams(queryParams as Record<string, string>, convertValue(limit), convertValue(offset))
+    : buildTraditionalUrlParams(
+        query as string,
+        convertValue(limit),
+        convertValue(offset),
+        precedingRecordsCount as number,
+      );
 
   const result = await baseApi.getJson({
     url: endpointUrl as string,
     urlParams,
     sameOrigin: typeof sameOrigin === 'boolean' ? sameOrigin : true,
   });
-
-  // Transform response based on API type
-  const transformerKey = (
-    typeof responseType === 'string' ? responseType : 'standard'
-  ) as keyof typeof RESPONSE_TRANSFORMERS;
-  const transformer = RESPONSE_TRANSFORMERS[transformerKey] || RESPONSE_TRANSFORMERS.standard;
+  const transformer = getResponseTransformer(responseType);
 
   return transformer({
     result: result as Record<string, unknown>,

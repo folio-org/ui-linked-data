@@ -8,5 +8,5 @@ interface AuthFormatterFormatterProps {
 export const AuthNotesFormatter: FC<AuthFormatterFormatterProps> = ({ row }) => {
   const authLabelId = row.rda?.label as string;
 
-  return authLabelId ? <FormattedMessage id={authLabelId} /> : null;
+  return authLabelId ? <FormattedMessage id={authLabelId} /> : '-';
 };

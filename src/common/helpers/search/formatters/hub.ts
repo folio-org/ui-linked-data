@@ -10,7 +10,7 @@ const checkRDANote = (notes: string[]): boolean => {
 
 export const formatHubItem = (hubList: HubSearchResultDTO[]): SearchResultsTableRow[] =>
   hubList?.map(hubEntry => {
-    const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
+    const { aLabel = '', uri = '', token = '', more } = hubEntry;
     const { notes = [] } = more || {};
 
     return {
@@ -20,16 +20,16 @@ export const formatHubItem = (hubList: HubSearchResultDTO[]): SearchResultsTable
         isAnchor: false,
       },
       hub: {
-        label: suggestLabel,
+        label: aLabel,
         uri: uri,
         className: 'hub-title',
       },
       auth: {
-        label: checkAuthNote(notes) ? 'ld.yes' : 'ld.no',
+        label: checkAuthNote(notes) ? 'ld.yes' : undefined,
         className: 'auth-note',
       },
       rda: {
-        label: checkRDANote(notes) ? 'ld.yes' : 'ld.no',
+        label: checkRDANote(notes) ? 'ld.yes' : undefined,
         className: 'rda-note',
       },
     };
