@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-const checkAuthNote = (notes: string[]): boolean => notes.some(note => note.includes('Created from auth.'));
+const checkAuthNote = (notes: string[]) => notes.some(note => note.includes('Created from auth.'));
 
-const checkRDANote = (notes: string[]): boolean => {
+const checkRDANote = (notes: string[]) => {
   const rdaRegex = /040.*\$erda/;
 
   return notes.some(note => rdaRegex.test(note));

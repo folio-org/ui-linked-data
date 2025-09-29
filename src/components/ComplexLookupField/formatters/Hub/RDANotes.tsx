@@ -1,12 +1,10 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { BaseNotesFormatter } from './BaseNotesFormatter';
 
 interface RDANotesFormatterProps {
   row: SearchResultsTableRow;
 }
 
 export const RDANotesFormatter: FC<RDANotesFormatterProps> = ({ row }) => {
-  const rdaLabelId = row.rda?.label as string;
-
-  return rdaLabelId ? <FormattedMessage id={rdaLabelId} /> : '-';
+  return <BaseNotesFormatter row={row} fieldKey="rda" />;
 };
