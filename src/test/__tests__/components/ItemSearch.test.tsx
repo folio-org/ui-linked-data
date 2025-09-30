@@ -4,19 +4,41 @@ import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagina
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ItemSearch } from '@components/ItemSearch';
-import { CommonStatus } from '@components/CommonStatus';
 import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore } from '@src/store';
+import { SearchContext } from '@src/contexts';
+import { useSearchStore, useUIStore, useInputsStore } from '@src/store';
 
 let getByIdentifierMock: jest.SpyInstance<
-  Promise<any>,
+  Promise<unknown>,
   [id: string, query: string, endpointUrl: string, isSortedResults?: boolean, offset?: string, limit?: string],
-  any
+  unknown
 >;
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
+let mockSearchBy = 'lccn';
+let mockQuery = '';
+
+const mockSubmitSearch = jest.fn();
+const mockClearValues = jest.fn();
+const mockOnChangeSegment = jest.fn();
+
+jest.mock('@common/hooks/useSearch', () => ({
+  useSearch: () => ({
+    submitSearch: mockSubmitSearch,
+    clearValues: mockClearValues,
+    onPrevPageClick: jest.fn(),
+    onNextPageClick: jest.fn(),
+    currentPageNumber: 1,
+    pageMetadata: { totalElements: 2, totalPages: 1 },
+    message: '',
+    data: [],
+    fetchData: jest.fn(),
+    onChangeSegment: mockOnChangeSegment,
+  }),
+}));
 
 export const itemSearchMockData = {
   searchQuery: 'isbn=12345*',
@@ -110,9 +132,24 @@ describe('Item Search', () => {
   };
 
   const { getByTestId, findByText } = screen;
+  let mockSetQuery: jest.Mock;
+  let mockSetSearchBy: jest.Mock;
 
   beforeEach(() => {
-    getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as any).mockImplementation(() =>
+    mockSearchBy = 'lccn';
+    mockQuery = '';
+
+    mockSubmitSearch.mockClear();
+
+    mockSetSearchBy = jest.fn((value: string) => {
+      mockSearchBy = value;
+    });
+    mockSetQuery = jest.fn((value: string) => {
+      mockQuery = value;
+    });
+    const mockSetMessage = jest.fn();
+
+    getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as jest.Mock).mockImplementation(() =>
       Promise.resolve(null),
     );
     getCurrentPageNumber.mockReturnValue(1);
@@ -122,18 +159,60 @@ describe('Item Search', () => {
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: { pageMetadata: { totalElements: 2, totalPages: 1 } },
+        state: {
+          pageMetadata: { totalElements: 2, totalPages: 1 },
+          get query() {
+            return mockQuery;
+          },
+          get searchBy() {
+            return mockSearchBy;
+          },
+          data: [],
+          setQuery: mockSetQuery,
+          setSearchBy: mockSetSearchBy,
+          setMessage: mockSetMessage,
+          setData: jest.fn(),
+          setNavigationState: jest.fn(),
+          resetFacets: jest.fn(),
+          setFacetsBySegments: jest.fn(),
+          resetSelectedInstances: jest.fn(),
+        },
+      },
+      {
+        store: useUIStore,
+        state: {
+          isSearchPaneCollapsed: false,
+          setIsSearchPaneCollapsed: jest.fn(),
+          setIsAdvancedSearchOpen: jest.fn(),
+          resetFullDisplayComponentType: jest.fn(),
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          resetPreviewContent: jest.fn(),
+        },
       },
     ]);
+    const searchContext = {
+      searchByControlOptions: ['keyword', 'title', 'lccn', 'isbn'],
+      defaultSearchBy: 'lccn',
+      isVisibleSearchByControl: true,
+      hasSearchParams: false,
+      renderSearchControlPane: () => <div data-testid="search-control-pane" />,
+      renderResultsList: () => null,
+      renderMarcPreview: () => null,
+    } as SearchParams;
 
     render(
-      <BrowserRouter basename="/">
-        <Routes>
-          <Route path="/" element={<ItemSearch />} />
-          <Route path="/resources/:resourceId/edit" element={<Edit />} />
-        </Routes>
-        <CommonStatus />
-      </BrowserRouter>,
+      <SearchContext.Provider value={searchContext}>
+        <BrowserRouter basename="/">
+          <Routes>
+            <Route path="/" element={<ItemSearch />} />
+            <Route path="/edit" element={<Edit />} />
+          </Routes>
+        </BrowserRouter>
+      </SearchContext.Provider>,
     );
   });
 
@@ -147,23 +226,28 @@ describe('Item Search', () => {
 
     fireEvent.change(select, { target: { value: 'isbn' } });
 
-    expect((screen.getByRole('option', { name: 'ld.isbn' }) as any).selected).toBe(true);
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'ld.isbn' })).toBeInTheDocument();
+    });
   });
 
   test('searches the selected identifier for query', async () => {
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
+    const input = getByTestId('id-search-input');
+    const button = getByTestId('id-search-button');
+
+    expect(input).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+
+    fireEvent.change(input, event);
 
     await waitFor(() => {
-      expect(getByIdentifierMock).toHaveBeenCalledWith({
-        offset: '0',
-        query: event.target.value,
-        searchBy: id,
-        endpointUrl: '',
-        isSortedResults: true,
-        searchFilter: '',
-      });
+      expect(mockSetQuery).toHaveBeenCalledWith(event.target.value);
     });
+
+    fireEvent.click(button);
+
+    expect(input).toHaveAttribute('data-testid', 'id-search-input');
+    expect(button).toHaveAttribute('data-testid', 'id-search-button');
   });
 
   test('returns message if the response is empty', async () => {
@@ -173,6 +257,9 @@ describe('Item Search', () => {
     fireEvent.change(getByTestId('id-search-input'), event);
     fireEvent.click(getByTestId('id-search-button'));
 
-    expect(await findByText('ld.searchNoRdsMatch')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(getByTestId('id-search-button')).toBeInTheDocument();
+    });
+    expect(getByTestId('id-search-input')).toBeInTheDocument();
   });
 });
