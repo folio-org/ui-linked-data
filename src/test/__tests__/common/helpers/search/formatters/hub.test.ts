@@ -65,15 +65,15 @@ describe('formatHubItem', () => {
     expect(firstItem.__meta.id).toBe('test_token');
     expect(firstItem.hub.label).toBe('Beta (Computer file)');
     expect(firstItem.hub.uri).toBe('test_uri/test_token');
-    expect(firstItem.auth.hasNote).toBe(true);
-    expect(firstItem.rda.hasNote).toBe(true);
+    expect(firstItem.auth.label).toBe('ld.yes');
+    expect(firstItem.rda.label).toBe('ld.yes');
 
     // Test second item without Auth and RDA notes
     const secondItem = result[1];
     expect(secondItem.__meta.id).toBe('test-hub-id');
     expect(secondItem.hub.label).toBe('Alpha Test');
-    expect(secondItem.auth.hasNote).toBe(false);
-    expect(secondItem.rda.hasNote).toBe(false);
+    expect(secondItem.auth.label).toBe(undefined);
+    expect(secondItem.rda.label).toBe(undefined);
   });
 
   test('handles empty hub list', () => {
@@ -95,7 +95,7 @@ describe('formatHubItem', () => {
 
     const result = formatHubItem(hubWithRDA);
 
-    expect(result[0].rda.hasNote).toBe(true);
+    expect(result[0].rda.label).toBe('ld.yes');
   });
 
   test('detects auth note correctly', () => {
@@ -111,6 +111,6 @@ describe('formatHubItem', () => {
 
     const result = formatHubItem(hubWithAuth);
 
-    expect(result[0].auth.hasNote).toBe(true);
+    expect(result[0].auth.label).toBe('ld.yes');
   });
 });
