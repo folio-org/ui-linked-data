@@ -1,3 +1,5 @@
+import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+
 export interface ComplexLookupConfig {
   vocabLite: {
     labelUri: string;
@@ -15,8 +17,8 @@ export interface ComplexLookupConfig {
 
 export const BASE_COMPLEX_LOOKUP_CONFIG: ComplexLookupConfig = {
   vocabLite: {
-    labelUri: 'http://bibfra.me/vocab/lite/label',
-    linkUri: 'http://bibfra.me/vocab/lite/link',
+    labelUri: BFLITE_URIS.LABEL,
+    linkUri: BFLITE_URIS.LINK,
   },
   fieldPatterns: {
     nestedValueField: '_name',

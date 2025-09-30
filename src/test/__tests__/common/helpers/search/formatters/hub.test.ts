@@ -3,12 +3,12 @@ import { formatHubItem } from '@common/helpers/search/formatters/hub';
 const mockHubData = [
   {
     suggestLabel: 'Beta (Computer file)',
-    uri: 'http://id.loc.gov/resources/hubs/3ce1983b-26c3-19b7-3fc7-e46aa769baa0',
+    uri: 'test_uri/test_token',
     aLabel: 'Beta (Computer file)',
     vLabel: '',
     sLabel: '',
     code: '',
-    token: '3ce1983b-26c3-19b7-3fc7-e46aa769baa0',
+    token: 'test_token',
     rank: '',
     more: {
       marcKeys: ['1300 $aBeta (Computer file)'],
@@ -24,17 +24,13 @@ const mockHubData = [
         'data found: Karlsson, F. BETA-järjestelmä, 1985',
         'data found: t.p. (BETA) p. 54 (substitution grammar interpreter)',
       ],
-      notes: [
-        't.p. (BETA) p. 54 (substitution grammar interpreter)',
-        'Created from auth.',
-        '040 $aDLC$cDLC$erda',
-      ],
+      notes: ['t.p. (BETA) p. 54 (substitution grammar interpreter)', 'Created from auth.', '040 $aDLC$cDLC$erda'],
       subjects: [],
     },
   },
   {
     suggestLabel: 'Alpha Test',
-    uri: 'http://id.loc.gov/resources/hubs/test-hub-id',
+    uri: 'test_hub_id',
     aLabel: 'Alpha Test',
     vLabel: '',
     sLabel: '',
@@ -59,55 +55,62 @@ const mockHubData = [
 ];
 
 describe('formatHubItem', () => {
-  test('should format hub data correctly', () => {
+  test('hub data correctly', () => {
     const result = formatHubItem(mockHubData);
 
     expect(result).toHaveLength(2);
 
     // Test first item with Auth and RDA notes
     const firstItem = result[0];
-    expect(firstItem.__meta.id).toBe('3ce1983b-26c3-19b7-3fc7-e46aa769baa0');
+    expect(firstItem.__meta.id).toBe('test_token');
     expect(firstItem.hub.label).toBe('Beta (Computer file)');
-    expect(firstItem.hub.uri).toBe('http://id.loc.gov/resources/hubs/3ce1983b-26c3-19b7-3fc7-e46aa769baa0');
-    expect(firstItem.auth.hasNote).toBe(true); // Contains "Created from auth."
-    expect(firstItem.rda.hasNote).toBe(true); // Contains "040 $aDLC$cDLC$erda"
+    expect(firstItem.hub.uri).toBe('test_uri/test_token');
+    expect(firstItem.auth.hasNote).toBe(true);
+    expect(firstItem.rda.hasNote).toBe(true);
 
     // Test second item without Auth and RDA notes
     const secondItem = result[1];
     expect(secondItem.__meta.id).toBe('test-hub-id');
     expect(secondItem.hub.label).toBe('Alpha Test');
-    expect(secondItem.auth.hasNote).toBe(false); // No auth note
-    expect(secondItem.rda.hasNote).toBe(false); // No RDA note
+    expect(secondItem.auth.hasNote).toBe(false);
+    expect(secondItem.rda.hasNote).toBe(false);
   });
 
-  test('should handle empty hub list', () => {
+  test('handles empty hub list', () => {
     const result = formatHubItem([]);
+
     expect(result).toEqual([]);
   });
 
-  test('should detect RDA note with regex pattern', () => {
-    const hubWithRDA = [{
-      ...mockHubData[0],
-      more: {
-        ...mockHubData[0].more,
-        notes: ['040 LC $crda', '040 DLC $erda test'],
+  test('detects RDA note with regex pattern', () => {
+    const hubWithRDA = [
+      {
+        ...mockHubData[0],
+        more: {
+          ...mockHubData[0].more,
+          notes: ['040 $aUkCU$beng$erda$cUkCU', '040 DLC $erda test'],
+        },
       },
-    }];
+    ];
 
     const result = formatHubItem(hubWithRDA);
+
     expect(result[0].rda.hasNote).toBe(true);
   });
 
-  test('should detect auth note correctly', () => {
-    const hubWithAuth = [{
-      ...mockHubData[0],
-      more: {
-        ...mockHubData[0].more,
-        notes: ['Some note', 'Created from auth.', 'Another note'],
+  test('detects auth note correctly', () => {
+    const hubWithAuth = [
+      {
+        ...mockHubData[0],
+        more: {
+          ...mockHubData[0].more,
+          notes: ['Some note', 'Created from auth.', 'Another note'],
+        },
       },
-    }];
+    ];
 
     const result = formatHubItem(hubWithAuth);
+
     expect(result[0].auth.hasNote).toBe(true);
   });
 });
