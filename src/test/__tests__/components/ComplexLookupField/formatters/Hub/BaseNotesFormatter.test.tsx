@@ -2,14 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
 import { BaseNotesFormatter } from '@components/ComplexLookupField/formatters/Hub/BaseNotesFormatter';
 
-const mockMessages = {
-  'ld.testAuthLabel': 'Test Auth Label',
-  'ld.testRdaLabel': 'Test RDA Label',
-};
-
 const renderWithIntl = (component: React.ReactElement) => {
   return render(
-    <IntlProvider locale="en" messages={mockMessages}>
+    <IntlProvider locale="en">
       {component}
     </IntlProvider>,
   );
@@ -65,7 +60,7 @@ describe('BaseNotesFormatter', () => {
     test('renders formatted message when auth label exists', () => {
       renderWithIntl(<BaseNotesFormatter row={mockRowWithAuthLabel} fieldKey="auth" />);
 
-      expect(screen.getByText('Test Auth Label')).toBeInTheDocument();
+      expect(screen.getByText('ld.testAuthLabel')).toBeInTheDocument();
     });
 
     test('renders dash when auth label is undefined', () => {
@@ -91,7 +86,7 @@ describe('BaseNotesFormatter', () => {
     test('renders formatted message when rda label exists', () => {
       renderWithIntl(<BaseNotesFormatter row={mockRowWithRdaLabel} fieldKey="rda" />);
 
-      expect(screen.getByText('Test RDA Label')).toBeInTheDocument();
+      expect(screen.getByText('ld.testRdaLabel')).toBeInTheDocument();
     });
 
     test('renders dash when rda label is undefined', () => {

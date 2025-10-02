@@ -46,6 +46,7 @@
 * Search results: error is shown when no results found. Fixes [UILD-646].
 * Add store selectors. Refs [UILD-643].
 * Inform user on how instance admin metadata from FOLIO is supplied after additional processing. Refs [UILD-641].
+* Add Hub entity search. Refs [UILD-647].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -93,6 +94,7 @@
 [UILD-646]:https://folio-org.atlassian.net/browse/UILD-646
 [UILD-643]:https://folio-org.atlassian.net/browse/UILD-643
 [UILD-641]:https://folio-org.atlassian.net/browse/UILD-641
+[UILD-647]:https://folio-org.atlassian.net/browse/UILD-647
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

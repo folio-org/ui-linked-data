@@ -3,23 +3,19 @@ import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { IntlProvider } from 'react-intl';
 import { ItemSearch } from '@components/ItemSearch';
-import * as searchApi from '@common/api/search.api';
 import { Edit } from '@views';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { SearchContext } from '@src/contexts';
 import { useSearchStore, useUIStore, useInputsStore } from '@src/store';
 
-let getByIdentifierMock: jest.SpyInstance<
-  Promise<unknown>,
-  [id: string, query: string, endpointUrl: string, isSortedResults?: boolean, offset?: string, limit?: string],
-  unknown
->;
-
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 let mockSearchBy = 'lccn';
 let mockQuery = '';
+let mockMessage = '';
+let mockData: unknown[] = [];
 
 const mockSubmitSearch = jest.fn();
 const mockClearValues = jest.fn();
@@ -33,8 +29,8 @@ jest.mock('@common/hooks/useSearch', () => ({
     onNextPageClick: jest.fn(),
     currentPageNumber: 1,
     pageMetadata: { totalElements: 2, totalPages: 1 },
-    message: '',
-    data: [],
+    message: mockMessage,
+    data: mockData,
     fetchData: jest.fn(),
     onChangeSegment: mockOnChangeSegment,
   }),
@@ -124,7 +120,6 @@ export const itemSearchMockData = {
 };
 
 describe('Item Search', () => {
-  const id = 'lccn';
   const event = {
     target: {
       value: '1234-1',
@@ -138,6 +133,8 @@ describe('Item Search', () => {
   beforeEach(() => {
     mockSearchBy = 'lccn';
     mockQuery = '';
+    mockMessage = '';
+    mockData = [];
 
     mockSubmitSearch.mockClear();
 
@@ -149,9 +146,6 @@ describe('Item Search', () => {
     });
     const mockSetMessage = jest.fn();
 
-    getByIdentifierMock = (jest.spyOn(searchApi, 'getByIdentifier') as jest.Mock).mockImplementation(() =>
-      Promise.resolve(null),
-    );
     getCurrentPageNumber.mockReturnValue(1);
 
     window.history.pushState({}, '', '/');
@@ -205,14 +199,16 @@ describe('Item Search', () => {
     } as SearchParams;
 
     render(
-      <SearchContext.Provider value={searchContext}>
-        <BrowserRouter basename="/">
-          <Routes>
-            <Route path="/" element={<ItemSearch />} />
-            <Route path="/edit" element={<Edit />} />
-          </Routes>
-        </BrowserRouter>
-      </SearchContext.Provider>,
+      <IntlProvider locale="en">
+        <SearchContext.Provider value={searchContext}>
+          <BrowserRouter basename="/">
+            <Routes>
+              <Route path="/" element={<ItemSearch />} />
+              <Route path="/edit" element={<Edit />} />
+            </Routes>
+          </BrowserRouter>
+        </SearchContext.Provider>
+      </IntlProvider>,
     );
   });
 
@@ -251,15 +247,45 @@ describe('Item Search', () => {
   });
 
   test('returns message if the response is empty', async () => {
-    getByIdentifierMock.mockReturnValueOnce(Promise.resolve({ ...itemSearchMockData, content: [] }));
+    mockMessage = 'ld.searchNoRdsMatch';
+    mockData = null as unknown as unknown[];
 
-    fireEvent.click(getByTestId(id));
-    fireEvent.change(getByTestId('id-search-input'), event);
-    fireEvent.click(getByTestId('id-search-button'));
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          pageMetadata: { totalElements: 0, totalPages: 0 },
+          query: mockQuery,
+          searchBy: mockSearchBy,
+          data: null,
+          message: 'ld.searchNoRdsMatch',
+          setQuery: mockSetQuery,
+          setSearchBy: mockSetSearchBy,
+          setMessage: jest.fn(),
+          setData: jest.fn(),
+          setNavigationState: jest.fn(),
+          resetFacets: jest.fn(),
+          setFacetsBySegments: jest.fn(),
+          resetSelectedInstances: jest.fn(),
+        },
+      },
+      {
+        store: useUIStore,
+        state: {
+          isSearchPaneCollapsed: false,
+          setIsSearchPaneCollapsed: jest.fn(),
+          setIsAdvancedSearchOpen: jest.fn(),
+          resetFullDisplayComponentType: jest.fn(),
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          resetPreviewContent: jest.fn(),
+        },
+      },
+    ]);
 
-    await waitFor(() => {
-      expect(getByTestId('id-search-button')).toBeInTheDocument();
-    });
-    expect(getByTestId('id-search-input')).toBeInTheDocument();
+    expect(await findByText('ld.searchNoRdsMatch')).toBeInTheDocument();
   });
 });

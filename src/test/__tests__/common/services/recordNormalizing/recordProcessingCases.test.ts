@@ -158,7 +158,7 @@ describe('recordProcessingCases', () => {
                 {
                   [linkBFLiteUri]: ['testLanguageLink_1'],
                   [labelBFLiteUri]: ['testLanguageLabel_1'],
-                }
+                },
               ],
               _types: ['testLanguageType_1'],
             },
@@ -167,7 +167,7 @@ describe('recordProcessingCases', () => {
                 {
                   [linkBFLiteUri]: ['testLanguageLink_2'],
                   [labelBFLiteUri]: ['testLanguageLabel_2'],
-                }
+                },
               ],
               _types: ['testLanguageType_2'],
             },
@@ -179,21 +179,20 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [languagesNonBFUri]: [
             {
-               _codes: [
+              _codes: [
                 {
                   [linkBFLiteUri]: ['testLanguageLink_1'],
                   [labelBFLiteUri]: ['testLanguageLabel_1'],
-                }
+                },
               ],
               _types: 'testLanguageType_1',
-
             },
             {
               _codes: [
                 {
                   [linkBFLiteUri]: ['testLanguageLink_2'],
                   [labelBFLiteUri]: ['testLanguageLabel_2'],
-                }
+                },
               ],
               _types: 'testLanguageType_2',
             },
@@ -490,6 +489,199 @@ describe('recordProcessingCases', () => {
       };
 
       RecordProcessingCases.processComplexLookup(record, blockKey, groupKey, nameFieldName);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('processHubsComplexLookup', () => {
+    test('transforms entry with hub data containing LINK and LABEL', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                [linkBFLiteUri]: ['test_hub_uri_1'],
+                [labelBFLiteUri]: ['Hub Label 1'],
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: [''],
+              _relation: 'relation_1',
+              _hub: {
+                value: ['Hub Label 1'],
+                uri: ['test_hub_uri_1'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple entries with different hub data', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                [linkBFLiteUri]: ['test_hub_uri_1'],
+                [labelBFLiteUri]: ['Hub Label 1'],
+              },
+            },
+            {
+              _relation: 'relation_2',
+              _hub: {
+                [linkBFLiteUri]: ['test_hub_uri_2'],
+                [labelBFLiteUri]: ['Hub Label 2'],
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: [''],
+              _relation: 'relation_1',
+              _hub: {
+                value: ['Hub Label 1'],
+                uri: ['test_hub_uri_1'],
+              },
+            },
+            {
+              id: [''],
+              _relation: 'relation_2',
+              _hub: {
+                value: ['Hub Label 2'],
+                uri: ['test_hub_uri_2'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with empty hub data', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                [linkBFLiteUri]: [],
+                [labelBFLiteUri]: [],
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: [''],
+              _relation: 'relation_1',
+              _hub: {
+                value: [],
+                uri: [],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with single string values in hub data', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                [linkBFLiteUri]: 'test_hub_uri_1',
+                [labelBFLiteUri]: 'Hub Label 1',
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: [''],
+              _relation: 'relation_1',
+              _hub: {
+                value: 'Hub Label 1',
+                uri: 'test_hub_uri_1',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms entry with complex relation data', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: {
+                type: 'complex',
+                subtype: 'nested',
+              },
+              _hub: {
+                [linkBFLiteUri]: ['test_hub_uri_1'],
+                [labelBFLiteUri]: ['Hub Label 1'],
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: [''],
+              _relation: {
+                type: 'complex',
+                subtype: 'nested',
+              },
+              _hub: {
+                value: ['Hub Label 1'],
+                uri: ['test_hub_uri_1'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
 
       expect(record).toEqual(testResult);
     });
