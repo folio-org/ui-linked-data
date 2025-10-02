@@ -1,6 +1,10 @@
 import { BASE_COMPLEX_LOOKUP_CONFIG } from './configs';
 import { IUserValueType } from './userValueType.interface';
 
+type ExtractableItem = Record<string, unknown>;
+type FieldValue = string | string[];
+type StringArrayRecord = Record<string, string[]>;
+
 export class ComplexLookupUserValueService implements IUserValueType {
   private readonly config = BASE_COMPLEX_LOOKUP_CONFIG;
 
@@ -14,15 +18,9 @@ export class ComplexLookupUserValueService implements IUserValueType {
   }
 
   private generateContents(data: unknown, id?: string, type?: string) {
-    return Array.isArray(data) ? this.handleArrayData(data, id, type) : this.handleSingleData(data, id, type);
-  }
+    const dataArray = Array.isArray(data) ? data : [data];
 
-  private handleArrayData(data: unknown[], id?: string, type?: string) {
-    return data.map(item => this.createContentItem(item, { defaultId: id, type }));
-  }
-
-  private handleSingleData(data: unknown, id?: string, type?: string) {
-    return [this.createContentItem(data, { defaultId: id, type })];
+    return dataArray.map(item => this.createContentItem(item, { defaultId: id, type }));
   }
 
   private createContentItem(item: unknown, { defaultId, type }: { defaultId?: string; type?: string }) {
@@ -41,46 +39,45 @@ export class ComplexLookupUserValueService implements IUserValueType {
   private getId(item: unknown, defaultId?: string) {
     const extractedId = this.extractVocabLiteId(item);
 
-    if (extractedId) {
-      return extractedId;
-    }
+    if (extractedId) return extractedId;
 
     // Handle configured ID fields - could be string or array
-    const itemObj = item as Record<string, string | string[]>;
+    const itemObj = this.asExtractableItem(item);
 
-    for (const idField of this.config.idFields) {
-      if (itemObj?.[idField]) {
-        const idValue = itemObj[idField];
+    if (!itemObj) return defaultId;
 
-        return Array.isArray(idValue) ? idValue[0] : idValue;
-      }
+    const foundField = this.config.idFields.find(idField => itemObj[idField]);
+
+    if (foundField) {
+      const idValue = itemObj[foundField] as FieldValue;
+
+      return this.getFirstStringValue(idValue);
     }
 
     return defaultId;
   }
 
+  private getFirstNonEmptyArrayValue(obj: StringArrayRecord, fieldNames: string[]) {
+    const foundField = fieldNames.find(fieldName => obj[fieldName] && this.isNonEmptyArray(obj[fieldName]));
+
+    return foundField ? obj[foundField][0] : '';
+  }
+
   private getLabel(item: unknown) {
     const extractedLabel = this.extractVocabLiteLabel(item);
-    if (extractedLabel) {
-      return extractedLabel;
-    }
+
+    if (extractedLabel) return extractedLabel;
 
     // Handle nested value structures (like _name.value)
     const nestedInfo = this.extractNestedValueInfo(item);
+
     if (nestedInfo.label) return nestedInfo.label;
 
     // Fallback for other structures - check configured label fields
-    if (typeof item === 'object' && item !== null) {
-      const objItem = item as Record<string, string[]>;
+    if (this.isValidObject(item)) {
+      const objItem = item as StringArrayRecord;
 
-      // Try each configured fallback field
-      for (const fieldName of this.config.labelFallbacks) {
-        if (objItem[fieldName] && Array.isArray(objItem[fieldName]) && objItem[fieldName].length > 0) {
-          return objItem[fieldName][0];
-        }
-      }
-
-      return '';
+      return this.getFirstNonEmptyArrayValue(objItem, this.config.labelFallbacks);
     }
 
     return String(item);
@@ -88,7 +85,6 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
   private getAdditionalMeta(item: unknown) {
     const meta: Record<string, unknown> = {};
-
     const extractedUri = this.extractVocabLiteLink(item);
 
     if (extractedUri) {
@@ -109,31 +105,30 @@ export class ComplexLookupUserValueService implements IUserValueType {
   }
 
   private extractVocabLiteValue(obj: unknown, propertyUri: string, visited = new WeakSet<object>()): string | null {
-    if (!obj || typeof obj !== 'object') return null;
+    const typedObj = this.asExtractableItem(obj);
 
-    const typedObj = obj as Record<string, unknown>;
+    if (!typedObj) return null;
 
-    if (visited.has(typedObj)) return null; // prevent potential cycles
+    if (visited.has(typedObj)) return null;
 
     visited.add(typedObj);
 
+    // Check current level
     if (propertyUri in typedObj) {
       const value = typedObj[propertyUri];
+      const firstValue = this.getFirstArrayValue(value);
 
-      if (Array.isArray(value) && value.length > 0) {
-        return String(value[0]);
-      }
+      if (firstValue) return firstValue;
     }
 
-    for (const value of Object.values(typedObj)) {
-      if (typeof value === 'object' && value !== null) {
-        const result = this.extractVocabLiteValue(value, propertyUri, visited);
-
+    // Recursively search nested objects
+    return Object.values(typedObj)
+      .filter((value): value is object => this.isValidObject(value))
+      .reduce<string | null>((result, value) => {
         if (result) return result;
-      }
-    }
 
-    return null;
+        return this.extractVocabLiteValue(value, propertyUri, visited);
+      }, null);
   }
 
   private extractVocabLiteLabel(obj: unknown) {
@@ -147,57 +142,60 @@ export class ComplexLookupUserValueService implements IUserValueType {
   private extractVocabLiteId(obj: unknown) {
     const link = this.extractVocabLiteLink(obj);
 
-    if (link) {
-      const linkParts = link.split('/');
-
-      return linkParts[linkParts.length - 1];
-    }
-
-    return null;
+    return link ? link.split('/').pop() || null : null;
   }
 
   private extractAdditionalMeta(item: unknown, meta: Record<string, unknown>) {
-    if (!item || typeof item !== 'object') {
-      return;
-    }
+    if (!item || typeof item !== 'object') return;
 
     const typedItem = item as Record<string, unknown>;
 
-    // Look for configured relation/type fields
-    for (const field of this.config.relationFields) {
+    this.config.relationFields.forEach(field => {
       if (field in typedItem && typeof typedItem[field] === 'string') {
         const cleanFieldName = field.replace(/^_/, '');
 
         meta[cleanFieldName] = typedItem[field];
       }
-    }
+    });
   }
 
   private extractNestedValueInfo(item: unknown) {
-    if (!item || typeof item !== 'object') return {};
+    const typed = this.asExtractableItem(item);
+
+    if (!typed) return {};
 
     const { nestedValueField, valueProperty, preferredProperty } = this.config.fieldPatterns;
-    const typed = item as Record<string, unknown>;
+    const nested = this.asExtractableItem(typed[nestedValueField]);
 
-    if (!(nestedValueField in typed)) return {};
+    if (!nested) return {};
 
-    const nested = typed[nestedValueField];
-
-    if (!nested || typeof nested !== 'object') return {};
-
-    const nestedObj = nested as Record<string, unknown>;
-    const valueArray = nestedObj[valueProperty];
-    const preferred = (nestedObj as Record<string, boolean>)[preferredProperty];
-
-    let label: string | undefined;
-
-    if (Array.isArray(valueArray) && valueArray.length > 0) {
-      label = String(valueArray[0]);
-    }
+    const valueArray = nested[valueProperty];
+    const preferred = nested[preferredProperty] as boolean | undefined;
+    const label = this.getFirstArrayValue(valueArray);
 
     return {
-      ...(label ? { label } : {}),
-      ...(preferred !== undefined ? { preferred } : {}),
+      ...(label && { label }),
+      ...(preferred !== undefined && { preferred }),
     };
+  }
+
+  private isNonEmptyArray(value: unknown): value is unknown[] {
+    return Array.isArray(value) && value.length > 0;
+  }
+
+  private isValidObject(value: unknown): value is ExtractableItem {
+    return value !== null && typeof value === 'object';
+  }
+
+  private getFirstStringValue(value: FieldValue): string {
+    return Array.isArray(value) ? value[0] : value;
+  }
+
+  private getFirstArrayValue(value: unknown): string | undefined {
+    return this.isNonEmptyArray(value) ? String(value[0]) : undefined;
+  }
+
+  private asExtractableItem(value: unknown): ExtractableItem | null {
+    return this.isValidObject(value) ? value : null;
   }
 }
