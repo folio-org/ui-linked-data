@@ -81,6 +81,22 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
   }) as unknown as RecursiveRecordSchema;
 };
 
+export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const generatedValue = {
+      id: [''],
+      _relation: recordEntry._relation,
+    } as unknown as RecursiveRecordSchema;
+
+    generatedValue._hub = {
+      value: recordEntry._hub[BFLITE_URIS.LABEL],
+      uri: recordEntry._hub[BFLITE_URIS.LINK],
+    } as RecursiveRecordSchema;
+
+    return generatedValue;
+  }) as unknown as RecursiveRecordSchema;
+};
+
 export const extractDropdownOption = (
   record: RecordEntry,
   blockKey: string,
