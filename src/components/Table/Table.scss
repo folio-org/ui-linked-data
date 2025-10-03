@@ -1,4 +1,4 @@
-@import '@common/styles/common.scss';
+@use '@common/styles/common.scss' as *;
 
 $table-cell-border: 1px solid rgba(0, 0, 0, 0.1);
 $row-even-bg-color: rgba(0, 0, 0, 0.03);
