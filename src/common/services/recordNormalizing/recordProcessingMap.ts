@@ -7,6 +7,7 @@ import {
   extractDropdownOption,
   processComplexLookup,
   languagesMapping,
+  processHubsComplexLookup,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -57,4 +58,7 @@ export const RECORD_NORMALIZING_CASES = {
   [BFLITE_URIS.SUBJECT]: {
     process: processSubjectComplexLookup,
   },
+  _hubs: {
+    process: processHubsComplexLookup
+  }
 };

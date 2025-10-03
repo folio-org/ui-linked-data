@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Search } from '@components/Search';
 import { SearchResultList } from '@components/SearchResultList';
-import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
 import { SearchControlPane } from '@components/SearchControlPane';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -143,9 +143,11 @@ export const SearchView = () => {
     <div className="search" data-testid="search" id="ld-search-container">
       <Search
         endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
+        sameOrigin={true}
         filters={filters}
         hasSearchParams={true}
         defaultSearchBy={DEFAULT_SEARCH_BY}
+        defaultNavigationSegment={SearchSegment.Search}
         labelEmptySearch="ld.enterSearchCriteria"
         isVisibleFilters={SEARCH_FILTERS_ENABLED}
         isVisibleFullDisplay={true}

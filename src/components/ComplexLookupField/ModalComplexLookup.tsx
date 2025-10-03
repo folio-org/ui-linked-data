@@ -5,7 +5,6 @@ import { getSearchResults } from '@common/api/search.api';
 import { SEARCH_RESULTS_FORMATTER } from '@common/helpers/search/formatters';
 import { SEARCH_QUERY_BUILDER } from '@common/helpers/search/queryBuilder';
 import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { SearchSegment } from '@common/constants/search.constants';
 import { Authority, ComplexLookupType } from '@common/constants/complexLookup.constants';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
 import { useMarcData } from '@common/hooks/useMarcData';
@@ -44,10 +43,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       searchBy,
       searchableIndicesMap,
       filters = [],
+      buildSearchQuery: buildSearchQueryRef,
+      common,
     } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
     const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
-    const buildSearchQuery = SEARCH_QUERY_BUILDER[assignEntityName] || SEARCH_QUERY_BUILDER.default;
+    const buildSearchQuery =
+      SEARCH_QUERY_BUILDER[buildSearchQueryRef || assignEntityName] || SEARCH_QUERY_BUILDER.default;
 
     const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState(['setQuery', 'resetQuery']);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);
@@ -94,7 +96,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         <SearchControlPane
           label={<FormattedMessage id={labels.modal.searchResults} />}
           renderSubLabel={renderSearchControlsSubLabel}
-          segmentsConfig={segments.primary}
+          segmentsConfig={segments?.primary}
         />
       ),
       [labels.modal.searchResults],
@@ -141,17 +143,15 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
           <Search
             endpointUrl={api.endpoints.base}
+            sameOrigin={api.endpoints.sameOrigin}
             endpointUrlsBySegments={api.endpoints.bySearchSegment}
             primarySegments={segments?.primary}
             searchFilter={api.searchQuery.filter}
             isSortedResults={false}
             filters={filters}
             hasSearchParams={false}
-            defaultNavigationSegment={segments.defaultValues?.segment ?? SearchSegment.Search}
-            defaultSearchBy={
-              segments.defaultValues?.searchBy ??
-              (searchBy[SearchSegment.Search]?.[0]?.value as unknown as SearchIdentifiers)
-            }
+            defaultNavigationSegment={segments?.defaultValues?.segment}
+            defaultSearchBy={segments?.defaultValues?.searchBy}
             defaultQuery={value}
             renderSearchControlPane={renderSearchControlPane}
             renderResultsList={renderResultsList}
@@ -160,13 +160,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             isVisibleFullDisplay={false}
             isVisibleAdvancedSearch={false}
             isVisibleSearchByControl={true}
-            isVisibleSegments={true}
-            hasMultilineSearchInput={true}
+            isVisibleSegments={!!segments}
+            common={common}
             hasMarcPreview={true}
             hasCustomPagination={true}
             searchByControlOptions={searchBy}
             searchableIndicesMap={searchableIndicesMap}
-            labelEmptySearch="ld.chooseFilterOrEnterSearchQuery"
+            labelEmptySearch={labels.modal.emptySearch ?? 'ld.chooseFilterOrEnterSearchQuery'}
             classNameEmptyPlaceholder="complex-lookup-search-empty"
             getSearchSourceData={getSourceData}
             getSearchFacetsData={getFacetsData}
@@ -174,7 +174,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
             buildSearchQuery={buildSearchQuery}
             searchResultsLimit={api.searchQuery.limit}
             precedingRecordsCount={api.searchQuery.precedingRecordsCount}
-            searchResultsContainer={api.results.containers}
+            searchResults={api.results}
             onAssignRecord={onAssign}
           />
         </div>

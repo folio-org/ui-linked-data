@@ -19,6 +19,7 @@ type EndpointUrlsBySegments = {
 
 type SearchParams = {
   endpointUrl: string;
+  sameOrigin?: boolean;
   endpointUrlsBySegments?: EndpointUrlsBySegments;
   primarySegments?: PrimarySegmentsConfig;
   searchFilter?: string;
@@ -34,9 +35,11 @@ type SearchParams = {
   isVisibleAdvancedSearch?: boolean;
   isVisibleSearchByControl?: boolean;
   isVisibleSegments?: boolean;
-  hasMultilineSearchInput?: boolean;
+  common?: {
+    hasMultilineSearchInput?: boolean;
+  };
   searchByControlOptions?: (string | SelectValue)[] | ComplexLookupSearchBy;
-  searchableIndicesMap?: SearchableIndicesMap;
+  searchableIndicesMap?: SearchableIndicesMap | HubSearchableIndicesMap;
   labelEmptySearch?: string;
   classNameEmptyPlaceholder?: string;
   navigationSegment?: NavigationSegment;
@@ -45,9 +48,12 @@ type SearchParams = {
   searchResultsLimit?: number;
   precedingRecordsCount?: number;
   fetchSearchResults?: (params: any) => Promise<SearchResults>;
-  buildSearchQuery?: (params: BuildSearchQueryParams) => string | undefined;
-  searchResultsContainer?: {
-    [key in SearchSegment]: string;
+  buildSearchQuery?: (params: BuildSearchQueryParams) => string | BuildSearchQueryResult | undefined;
+  searchResults?: {
+    containers?: {
+      [key in SearchSegment]: string;
+    };
+    responseType?: 'standard' | 'hub';
   };
   hasMarcPreview?: boolean;
   hasCustomPagination?: boolean;
@@ -106,4 +112,29 @@ type FetchDataParams = {
   offset?: number;
   selectedSegment?: string;
   baseQuerySelector?: SearchableIndexQuerySelectorType;
+};
+
+type HubSearchResultDTO = {
+  suggestLabel: string;
+  uri: string;
+  aLabel: string;
+  vLabel: string;
+  sLabel: string;
+  code: string;
+  token: string;
+  rank: string;
+  more: {
+    marcKeys: string[];
+    aaps: string[];
+    varianttitles: string[];
+    rdftypes: string[];
+    collections: string[];
+    genres: string[];
+    contenttypes: string[];
+    languages: string[];
+    identifiers: string[];
+    sources: string[];
+    notes: string[];
+    subjects: string[];
+  };
 };

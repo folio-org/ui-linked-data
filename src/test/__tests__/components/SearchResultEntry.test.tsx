@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { SearchResultEntry } from '@components/SearchResultEntry';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useSearchStore, useUIStore, useInputsStore } from '@src/store';
 import { itemSearchMockData } from './ItemSearch.test';
 
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -16,13 +18,36 @@ const mockProps = itemSearchMockData.content[0];
 
 describe('SearchResultEntry', () => {
   describe('with instances', () => {
-    beforeEach(() =>
+    beforeEach(() => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            data: [],
+            query: '',
+            searchBy: 'keyword',
+            selectedInstances: [],
+            setSelectedInstances: jest.fn(),
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+          },
+        },
+        {
+          store: useInputsStore,
+          state: {},
+        },
+      ]);
+
       render(
         <BrowserRouter>
           <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
         </BrowserRouter>,
-      ),
-    );
+      );
+    });
 
     const { getByText, getByTestId, findByText } = screen;
 
@@ -52,13 +77,36 @@ describe('SearchResultEntry', () => {
   });
 
   describe('without instances', () => {
-    beforeEach(() =>
+    beforeEach(() => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            data: [],
+            query: '',
+            searchBy: 'keyword',
+            selectedInstances: [],
+            setSelectedInstances: jest.fn(),
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+          },
+        },
+        {
+          store: useInputsStore,
+          state: {},
+        },
+      ]);
+
       render(
         <BrowserRouter>
           <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
         </BrowserRouter>,
-      ),
-    );
+      );
+    });
 
     const { getByText } = screen;
 

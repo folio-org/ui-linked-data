@@ -18,7 +18,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
     return data.map(item => ({
       id: this.getId(item, id),
       label: this.getLabel(item),
-      meta: { type },
+      meta: { type, uri: this.getUri(item) },
     }));
   }
 
@@ -28,6 +28,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
       label: this.getSingleLabel(data),
       meta: {
         type,
+        uri: this.getUri(data),
         ...this.getPreferredMeta(data),
       },
     };
@@ -51,5 +52,15 @@ export class ComplexLookupUserValueService implements IUserValueType {
     const isPreferred = (data as Record<string, boolean>)?.isPreferred;
 
     return isPreferred !== undefined ? { isPreferred } : {};
+  }
+
+  private getUri(data: unknown) {
+    const dataWithUri = data as { uri?: string | string[] };
+
+    if (dataWithUri?.uri) {
+      return Array.isArray(dataWithUri.uri) ? dataWithUri.uri[0] : dataWithUri.uri;
+    }
+
+    return undefined;
   }
 }

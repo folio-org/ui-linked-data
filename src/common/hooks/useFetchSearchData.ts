@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { getByIdentifier } from '@common/api/search.api';
+import { getSearchResults } from '@common/api/search.api';
 import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
 import { StatusType } from '@common/constants/status.constants';
@@ -10,13 +10,14 @@ import { useSearchContext } from './useSearchContext';
 export const useFetchSearchData = () => {
   const {
     endpointUrl,
+    sameOrigin,
     searchFilter,
     isSortedResults,
     navigationSegment,
     endpointUrlsBySegments,
     searchResultsLimit,
     fetchSearchResults,
-    searchResultsContainer,
+    searchResults,
     searchableIndicesMap,
     buildSearchQuery,
     precedingRecordsCount,
@@ -54,21 +55,37 @@ export const useFetchSearchData = () => {
     searchBy: SearchableIndexType;
     query: string;
     selectedSegment?: string;
-    searchableIndicesMap?: SearchableIndicesMap;
+    searchableIndicesMap?: SearchableIndicesMap | HubSearchableIndicesMap;
     baseQuerySelector?: SearchableIndexQuerySelector;
   }) => {
-    const selectedSearchableIndices = selectedSegment
-      ? searchableIndicesMap?.[selectedSegment as SearchSegmentValue]
-      : searchableIndicesMap;
+    let mapForQuery: SearchableIndexEntries | HubSearchableIndicesMap | undefined;
 
-    return (
-      buildSearchQuery?.({
-        map: selectedSearchableIndices as SearchableIndexEntries,
-        selector: baseQuerySelector,
-        searchBy,
-        value: query,
-      }) ?? query
-    );
+    if (selectedSegment && searchableIndicesMap && 'search' in searchableIndicesMap) {
+      // Traditional SearchableIndicesMap with segments
+      mapForQuery = searchableIndicesMap[selectedSegment as SearchSegmentValue];
+    } else if (searchableIndicesMap) {
+      // HubSearchableIndicesMap (no segments)
+      mapForQuery = searchableIndicesMap as HubSearchableIndicesMap;
+    }
+
+    const queryResult = buildSearchQuery?.({
+      map: mapForQuery!,
+      selector: baseQuerySelector,
+      searchBy,
+      value: query,
+    });
+
+    // Handle both string and BuildSearchQueryResult formats
+    if (typeof queryResult === 'object' && queryResult && 'queryType' in queryResult) {
+      return queryResult;
+    }
+
+    // Backward compatibility: string result
+    return {
+      queryType: 'string' as const,
+      query: queryResult ?? query,
+      urlParams: undefined,
+    };
   };
 
   const fetchDataFromApi = async ({
@@ -77,42 +94,108 @@ export const useFetchSearchData = () => {
     isSortedResults,
     searchBy,
     query,
+    queryParams,
     offset,
     limit,
     precedingRecordsCount,
     resultsContainer,
+    responseType = 'standard',
   }: {
     endpointUrl: string;
     searchFilter?: string;
     isSortedResults?: boolean;
     searchBy: SearchIdentifiers;
     query: string;
+    queryParams?: Record<string, string>;
     offset?: string;
     limit?: string;
     precedingRecordsCount?: number;
-    resultsContainer: any;
+    resultsContainer: unknown;
+    responseType?: string;
   }) => {
     return fetchSearchResults
       ? await fetchSearchResults({
           endpointUrl,
+          sameOrigin,
           searchFilter,
           isSortedResults,
           searchBy,
           query,
+          queryParams,
           offset,
           limit,
           precedingRecordsCount,
           resultsContainer,
+          responseType,
         })
-      : await getByIdentifier({
+      : await getSearchResults({
           endpointUrl,
-          searchFilter,
-          isSortedResults,
-          searchBy,
           query,
-          offset,
-          limit,
+          ...(queryParams && { queryParams }),
+          ...(offset && { offset }),
+          ...(limit && { limit }),
+          sameOrigin: (sameOrigin ?? true) ? 'true' : 'false',
+          resultsContainer: resultsContainer ?? '',
+          responseType,
         });
+  };
+
+  const buildApiParams = ({
+    selectedNavigationSegment,
+    currentEndpointUrl,
+    queryResult,
+    query,
+    searchBy,
+    offset,
+  }: {
+    selectedNavigationSegment?: string;
+    currentEndpointUrl?: string;
+    queryResult: BuildSearchQueryResult;
+    query: string;
+    searchBy: SearchIdentifiers;
+    offset?: string | number;
+  }) => {
+    const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
+    const responseType = (searchResults as { responseType?: string })?.responseType || 'standard';
+
+    return {
+      endpointUrl: currentEndpointUrl ?? '',
+      searchFilter,
+      isSortedResults,
+      searchBy,
+      offset: offset?.toString(),
+      limit: searchResultsLimit?.toString(),
+      precedingRecordsCount: isBrowseSearch ? precedingRecordsCount : undefined,
+      resultsContainer: (searchResults?.containers as Record<string, unknown>)?.[
+        selectedNavigationSegment as SearchSegmentValue
+      ],
+      responseType,
+      query: queryResult.query || query,
+      ...(queryResult.queryType === 'parameters' && queryResult.urlParams && { queryParams: queryResult.urlParams }),
+    };
+  };
+
+  const handleApiResponse = (result: {
+    content?: unknown[];
+    totalPages?: number;
+    totalRecords?: number;
+    prev?: unknown;
+    next?: unknown;
+  }) => {
+    const { content, totalPages, totalRecords, prev, next } = result;
+
+    if (!content?.length) {
+      return setMessage('ld.searchNoRdsMatch');
+    }
+
+    setData(content as WorkAsSearchResultDTO[]);
+    setPageMetadata({
+      totalPages: totalPages ?? 0,
+      totalElements: totalRecords ?? 0,
+      prev: prev as string | undefined,
+      next: next as string | undefined,
+    });
+    resetMessage();
   };
 
   const fetchData = useCallback(
@@ -125,7 +208,9 @@ export const useFetchSearchData = () => {
     }: FetchDataParams) => {
       const selectedNavigationSegment = selectedSegment ?? navigationSegment?.value;
 
-      data && resetData();
+      if (data) {
+        resetData();
+      }
 
       if (!query) return;
 
@@ -137,34 +222,24 @@ export const useFetchSearchData = () => {
           endpointUrlsBySegments,
           endpointUrl,
         });
-        const generatedQuery = generateQuery({
+        const queryResult = generateQuery({
           searchBy,
           query,
           selectedSegment: selectedNavigationSegment,
           searchableIndicesMap,
           baseQuerySelector,
         });
-        const isBrowseSearch = selectedNavigationSegment === SearchSegment.Browse;
-
-        const result = await fetchDataFromApi({
-          endpointUrl: currentEndpointUrl ?? '',
-          searchFilter,
-          isSortedResults,
+        const apiParams = buildApiParams({
+          selectedNavigationSegment,
+          currentEndpointUrl,
+          queryResult,
+          query,
           searchBy,
-          query: generatedQuery,
-          offset: offset?.toString(),
-          limit: searchResultsLimit?.toString(),
-          precedingRecordsCount: isBrowseSearch ? precedingRecordsCount : undefined,
-          resultsContainer: searchResultsContainer?.[selectedNavigationSegment as SearchSegmentValue],
+          offset,
         });
 
-        const { content, totalPages, totalRecords, prev, next } = result;
-
-        if (!content?.length) return setMessage('ld.searchNoRdsMatch');
-
-        setData(content);
-        setPageMetadata({ totalPages, totalElements: totalRecords, prev, next });
-        resetMessage();
+        const result = await fetchDataFromApi(apiParams);
+        handleApiResponse(result);
       } catch {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       } finally {

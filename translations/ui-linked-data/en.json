@@ -7,6 +7,7 @@
   "ld.searchResource": "Search resources",
   "ld.create": "Create resource",
   "ld.edit": "Edit",
+  "ld.add": "Add",
   "ld.editResource": "Edit resource",
   "ld.main": "Main",
   "ld.and": "AND",
@@ -281,5 +282,14 @@
   "ld.marcFieldEquivalents": "MARC field equivalents",
   "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
   "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents",
-  "ld.placeholder.processing": "Information will be shown after processing"
+  "ld.placeholder.processing": "Information will be shown after processing",
+  "ld.placeholder.startsWith": "starts with",
+  "ld.hubs": "Hubs",
+  "ld.hubs.assign": "Assign hub",
+  "ld.hubs.enterSearchQuery": "Enter a search query to show hubs.",
+  "ld.hub": "Hub",
+  "ld.auth": "Auth",
+  "ld.rda": "RDA",
+  "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
+  "ld.search.hubNameKeyword": "Hub name (Keyword)"
 }

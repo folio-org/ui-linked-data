@@ -5,9 +5,10 @@ import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@common/constants/search.constants';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { useSearchContext } from '@common/hooks/useSearchContext';
+import { getSearchPlaceholder } from '@common/helpers/search/placeholder.helper';
 import { Button, ButtonType } from '@components/Button';
 import { Input } from '@components/Input';
-import { Select } from '@components/Select';
+import { Select, type SelectValue } from '@components/Select';
 import { SearchFilters } from '@components/SearchFilters';
 import { Textarea } from '@components/Textarea';
 import { Announcement } from '@components/Announcement';
@@ -30,7 +31,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     isVisibleAdvancedSearch,
     isVisibleFilters,
     isVisibleSegments,
-    hasMultilineSearchInput,
+    common,
     searchByControlOptions,
     hasSearchParams,
     defaultSearchBy,
@@ -70,10 +71,22 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const searchQueryParam = searchParams.get(SearchQueryParams.Query);
   const isDisabledResetButton = !query && !searchQueryParam;
-  const selectOptions =
-    searchByControlOptions && navigationSegment?.value
-      ? (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value]
-      : Object.values(SearchIdentifiers);
+
+  let selectOptions;
+
+  if (searchByControlOptions) {
+    if (navigationSegment?.value) {
+      selectOptions = (searchByControlOptions as ComplexLookupSearchBy)[navigationSegment.value];
+    } else {
+      selectOptions = searchByControlOptions as SelectValue[];
+    }
+  } else {
+    selectOptions = Object.values(SearchIdentifiers);
+  }
+
+  // Find the current placeholder based on searchBy value
+  const currentPlaceholder = getSearchPlaceholder(selectOptions, searchBy);
+  const placeholderText = currentPlaceholder ? formatMessage({ id: currentPlaceholder }) : undefined;
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setMessage('');
@@ -91,8 +104,10 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     resetPreviewContent();
     resetFullDisplayComponentType();
     resetSelectedInstances();
-    hasSearchParams && setSearchParams({});
-    hasSearchParams && setNavigationState({});
+    if (hasSearchParams) {
+      setSearchParams({});
+      setNavigationState({});
+    }
     setAnnouncementMessage(formatMessage({ id: 'ld.aria.filters.reset.announce' }));
   };
 
@@ -133,7 +148,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.select' })}
               />
             )}
-            {hasMultilineSearchInput ? (
+            {common?.hasMultilineSearchInput ? (
               <Textarea
                 id="id-search-textarea"
                 className="select-textarea"
@@ -141,6 +156,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 onChange={onChangeSearchInput as FormEventHandler<HTMLTextAreaElement>}
                 data-testid="id-search-textarea"
                 fullWidth
+                placeholder={placeholderText}
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
               />
             ) : (
@@ -152,6 +168,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
                 className="text-input"
                 onPressEnter={submitSearch}
                 data-testid="id-search-input"
+                placeholder={placeholderText}
                 ariaLabel={formatMessage({ id: 'ld.aria.filters.textbox' })}
               />
             )}

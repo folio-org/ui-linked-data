@@ -24,13 +24,53 @@ describe('SearchControls', () => {
   describe('SearchFilters component', () => {
     beforeEach(() => {
       (useSearchParams as jest.Mock).mockReturnValue([{ get: jest.fn() }, setSearchParams]);
+
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            searchBy: 'keyword',
+            query: '',
+            setSearchBy: jest.fn(),
+            setQuery: jest.fn(),
+            setMessage: jest.fn(),
+            setNavigationState: jest.fn(),
+            resetFacets: jest.fn(),
+            setFacetsBySegments: jest.fn(),
+            resetSelectedInstances: jest.fn(),
+          },
+        },
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+            setIsSearchPaneCollapsed: jest.fn(),
+            setIsAdvancedSearchOpen: jest.fn(),
+            resetFullDisplayComponentType: jest.fn(),
+          },
+        },
+        {
+          store: useInputsStore,
+          state: {
+            resetPreviewContent: jest.fn(),
+          },
+        },
+      ]);
     });
 
     test('renders SearchFilters component', () => {
       mockedSearchFiltersEnabled(true);
 
+      const mockContextValue = {
+        isVisibleFilters: true,
+        isVisibleSearchByControl: true,
+        searchByControlOptions: ['keyword', 'title'],
+        defaultSearchBy: 'keyword',
+        hasSearchParams: false,
+      };
+
       const { getByTestId } = render(
-        <SearchContext.Provider value={{ isVisibleFilters: true } as unknown as SearchParams}>
+        <SearchContext.Provider value={mockContextValue as unknown as SearchParams}>
           <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
         </SearchContext.Provider>,
       );
@@ -41,8 +81,18 @@ describe('SearchControls', () => {
     test('does not render SearchFilters component', () => {
       mockedSearchFiltersEnabled(false);
 
+      const mockContextValue = {
+        isVisibleFilters: false,
+        isVisibleSearchByControl: true,
+        searchByControlOptions: ['keyword', 'title'],
+        defaultSearchBy: 'keyword',
+        hasSearchParams: false,
+      };
+
       const { queryByTestId } = render(
-        <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />,
+        <SearchContext.Provider value={mockContextValue as unknown as SearchParams}>
+          <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
+        </SearchContext.Provider>,
       );
 
       expect(queryByTestId('search-filters')).not.toBeInTheDocument();
