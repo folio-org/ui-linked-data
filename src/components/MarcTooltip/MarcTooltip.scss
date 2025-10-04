@@ -1,4 +1,4 @@
-@import '@common/styles/common.scss';
+@use '@common/styles/common.scss' as *;
 
 .marc-tooltip {
   &-wrapper {

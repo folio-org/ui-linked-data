@@ -1,42 +1,42 @@
-$base: #fff;
-$blue-50: #e9effa;
-$blue-100: #d8e3f5;
-$blue-200: #d7dfeb;
-$blue-400: #6591d9;
-$blue-500: #3e75cf;
+$base: #fff !default;
+$blue-50: #e9effa !default;
+$blue-100: #d8e3f5 !default;
+$blue-200: #d7dfeb !default;
+$blue-400: #6591d9 !default;
+$blue-500: #3e75cf !default;
 // TODO: naming
-$blue-500-hover: #3465a8;
-$blue-550: #3b5f9a;
-$blue-600: #2d62b7;
-$blue-700: #255096;
-$blue-800: #1d3f75;
-$blue-850: #23385a;
-$blue-2f: #2f609f;
-$gray-200: #d7d8da;
-$gray-300: #d9d9d9;
-$gray-400: #727272;
-$gray-500: #55585d;
-$gray-600: #3d3f42;
-$disabled-input-bg-color: #ebebe4;
-$disabled-input-color: #777;
-$buttonHighlighted: #1960a4;
-$buttonHover: rgba(37, 118, 195, 0.2);
-$buttonFocus: rgba(37, 118, 195, 0.3);
-$error: #990000;
+$blue-500-hover: #3465a8 !default;
+$blue-550: #3b5f9a !default;
+$blue-600: #2d62b7 !default;
+$blue-700: #255096 !default;
+$blue-800: #1d3f75 !default;
+$blue-850: #23385a !default;
+$blue-2f: #2f609f !default;
+$gray-200: #d7d8da !default;
+$gray-300: #d9d9d9 !default;
+$gray-400: #727272 !default;
+$gray-500: #55585d !default;
+$gray-600: #3d3f42 !default;
+$disabled-input-bg-color: #ebebe4 !default;
+$disabled-input-color: #777 !default;
+$buttonHighlighted: #1960a4 !default;
+$buttonHover: rgba(37, 118, 195, 0.2) !default;
+$buttonFocus: rgba(37, 118, 195, 0.3) !default;
+$error: #990000 !default;
 
-$btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37);
+$btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37) !default;
 $highlighted-focusable-outline-box-shadow:
   0 0 0 1px $base,
   0 0 0 3px $blue-500,
-  0 0 0 6px $blue-100;
+  0 0 0 6px $blue-100 !default;
 
 $secondary-focusable-outline-box-shadow:
   0 0 0 1px $blue-500,
-  0 0 0 4px $blue-100;
+  0 0 0 4px $blue-100 !default;
 
-$btn-border-radius: 12px;
-$btn-icon-border-radius: 6px;
-$btn-height: 24px;
+$btn-border-radius: 12px !default;
+$btn-icon-border-radius: 6px !default;
+$btn-height: 24px !default;
 
 @mixin focused-outline-primary {
   &:focus,
