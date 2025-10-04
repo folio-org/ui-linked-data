@@ -279,5 +279,16 @@
     "ld.modal.chooseProfileWarning.message": "U moet alle wijzigingen Opslaan voordat u het profiel wijzigt.",
     "ld.marcFieldEquivalents": "MARC field equivalents",
     "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
-    "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents"
+    "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents",
+    "ld.placeholder.processing": "Information will be shown after processing",
+    "ld.add": "Add",
+    "ld.placeholder.startsWith": "starts with",
+    "ld.hubs": "Hubs",
+    "ld.hubs.assign": "Assign hub",
+    "ld.hubs.enterSearchQuery": "Enter a search query to show hubs.",
+    "ld.hub": "Hub",
+    "ld.auth": "Auth",
+    "ld.rda": "RDA",
+    "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
+    "ld.search.hubNameKeyword": "Hub name (Keyword)"
 }

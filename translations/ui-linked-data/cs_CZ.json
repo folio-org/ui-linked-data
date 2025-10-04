@@ -279,5 +279,16 @@
     "ld.modal.chooseProfileWarning.message": "Před změnou profilu musíte uložit všechny změny.",
     "ld.marcFieldEquivalents": "Ekvivalenty polí MARC",
     "ld.showMarcFieldEquivalents": "Zobrazit ekvivalenty polí MARC",
-    "ld.hideMarcFieldEquivalents": "Skrýt ekvivalenty polí MARC"
+    "ld.hideMarcFieldEquivalents": "Skrýt ekvivalenty polí MARC",
+    "ld.placeholder.processing": "Information will be shown after processing",
+    "ld.add": "Add",
+    "ld.placeholder.startsWith": "starts with",
+    "ld.hubs": "Hubs",
+    "ld.hubs.assign": "Assign hub",
+    "ld.hubs.enterSearchQuery": "Enter a search query to show hubs.",
+    "ld.hub": "Hub",
+    "ld.auth": "Auth",
+    "ld.rda": "RDA",
+    "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
+    "ld.search.hubNameKeyword": "Hub name (Keyword)"
 }

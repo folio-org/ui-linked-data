@@ -277,7 +277,18 @@
     "ld.error.profileSaveAsPreferred": "Помилка налаштування пріоритетного профілю",
     "ld.error.profileChange": "Помилка зміни профілю запису",
     "ld.modal.chooseProfileWarning.message": "Перед зміною профілю необхідно зберегти будь-які зміни.",
-    "ld.marcFieldEquivalents": "MARC field equivalents",
-    "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
-    "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents"
+    "ld.marcFieldEquivalents": "Еквіваленти полів MARC",
+    "ld.showMarcFieldEquivalents": "Показати еквіваленти полів MARC",
+    "ld.hideMarcFieldEquivalents": "Приховати еквіваленти полів MARC",
+    "ld.placeholder.processing": "Інформація буде відображена після обробки",
+    "ld.add": "Add",
+    "ld.placeholder.startsWith": "starts with",
+    "ld.hubs": "Hubs",
+    "ld.hubs.assign": "Assign hub",
+    "ld.hubs.enterSearchQuery": "Enter a search query to show hubs.",
+    "ld.hub": "Hub",
+    "ld.auth": "Auth",
+    "ld.rda": "RDA",
+    "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
+    "ld.search.hubNameKeyword": "Hub name (Keyword)"
 }
