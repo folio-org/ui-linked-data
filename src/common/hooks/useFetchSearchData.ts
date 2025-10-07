@@ -42,7 +42,7 @@ export const useFetchSearchData = () => {
     endpointUrlsBySegments?: EndpointUrlsBySegments;
     endpointUrl: string;
   }) => {
-    return selectedSegment ? endpointUrlsBySegments?.[selectedSegment] : endpointUrl;
+    return selectedSegment && endpointUrlsBySegments ? endpointUrlsBySegments[selectedSegment] : endpointUrl;
   };
 
   const generateQuery = ({
