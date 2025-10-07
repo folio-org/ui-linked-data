@@ -126,7 +126,28 @@ export const useComplexLookup = ({
     }
   };
 
-  const handleAssign = async ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
+  const handleAssign = async (
+    { id, title, linkedFieldValue, uri }: ComplexLookupAssignRecordDTO,
+    hasSimpleFlow = false,
+  ) => {
+    if (hasSimpleFlow) {
+      const newValue = {
+        id,
+        label: title,
+        meta: {
+          type: AdvancedFieldType.complex,
+          uri,
+        },
+      };
+
+      onChange(uuid, [newValue]);
+      setLocalValue([newValue]);
+      reset();
+      closeModal();
+
+      return;
+    }
+
     let srsId;
     let marcData = complexValue;
 
