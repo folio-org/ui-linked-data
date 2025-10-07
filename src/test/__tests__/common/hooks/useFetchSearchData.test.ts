@@ -331,7 +331,7 @@ describe('useFetchSearchData', () => {
 
       expect(mockFetchSearchResults).toHaveBeenCalledWith(
         expect.objectContaining({
-          endpointUrl: '',
+          endpointUrl: '/test/endpoint',
         }),
       );
     });
