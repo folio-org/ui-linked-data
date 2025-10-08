@@ -159,8 +159,8 @@ export const useComplexLookup = ({
         } else {
           handleAssignmentValidationError(id, invalidAssignmentReason);
         }
-      } catch (error) {
-        handleAssignmentError(id, error);
+      } catch {
+        handleAssignmentError(id);
       }
     },
     [
@@ -193,11 +193,8 @@ export const useComplexLookup = ({
   );
 
   const handleAssignmentError = useCallback(
-    (id: string, error: unknown) => {
+    (id: string) => {
       addFailedEntryId(id);
-
-      console.error('Assignment error:', error);
-
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, 'ld.errorAssigningAuthority.general'),
       );
