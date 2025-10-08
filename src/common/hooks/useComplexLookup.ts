@@ -1,17 +1,17 @@
 import { ChangeEvent, useCallback, useState } from 'react';
 import {
   generateEmptyValueUuid,
-  generateValidationRequestBody,
   getLinkedField,
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
+  validateMarcRecord,
+  getMarcDataForAssignment,
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING, Authority } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, useUIState } from '@src/store';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 import { useModalControls } from './useModalControls';
 import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
@@ -78,16 +78,6 @@ export const useComplexLookup = ({
     resetIsMarcPreviewOpen();
   };
 
-  const validateMarcRecord = (marcData: MarcDTO | null) => {
-    const { endpoints, validationTarget } = lookupConfig.api;
-
-    return makeRequest({
-      url: endpoints.validation ?? AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
-      method: 'POST',
-      body: generateValidationRequestBody(marcData, validationTarget?.[authority]),
-    });
-  };
-
   const assignMarcRecord = ({
     id,
     title,
@@ -126,11 +116,8 @@ export const useComplexLookup = ({
     }
   };
 
-  const handleAssign = async (
-    { id, title, linkedFieldValue, uri }: ComplexLookupAssignRecordDTO,
-    hasSimpleFlow = false,
-  ) => {
-    if (hasSimpleFlow) {
+  const handleSimpleAssign = useCallback(
+    ({ id, title, uri }: Pick<ComplexLookupAssignRecordDTO, 'id' | 'title' | 'uri'>) => {
       const newValue = {
         id,
         label: title,
@@ -144,40 +131,90 @@ export const useComplexLookup = ({
       setLocalValue([newValue]);
       reset();
       closeModal();
+    },
+    [uuid, onChange, reset, closeModal],
+  );
 
-      return;
-    }
+  const handleComplexAssign = useCallback(
+    async ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => {
+      try {
+        const { srsId, marcData } = await getMarcDataForAssignment(id, {
+          complexValue,
+          marcPreviewMetadata,
+          fetchMarcData,
+          marcPreviewEndpoint: lookupConfig.api?.endpoints?.marcPreview,
+        });
+        const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(
+          marcData,
+          lookupConfig,
+          authority,
+          makeRequest,
+        );
 
-    let srsId;
-    let marcData = complexValue;
-
-    if (marcPreviewMetadata?.baseId === id) {
-      srsId = marcPreviewMetadata.srsId;
-    } else {
-      const response = await fetchMarcData(id, lookupConfig.api.endpoints.marcPreview);
-
-      if (response) {
-        marcData = response;
-        srsId = marcData?.matchedId;
+        if (validAssignment) {
+          assignMarcRecord({ id, title, srsId, linkedFieldValue });
+          clearFailedEntryIds();
+          reset();
+          closeModal();
+        } else {
+          handleAssignmentValidationError(id, invalidAssignmentReason);
+        }
+      } catch (error) {
+        handleAssignmentError(id, error);
       }
-    }
+    },
+    [
+      complexValue,
+      marcPreviewMetadata,
+      fetchMarcData,
+      lookupConfig,
+      authority,
+      makeRequest,
+      assignMarcRecord,
+      clearFailedEntryIds,
+      reset,
+      closeModal,
+    ],
+  );
 
-    const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(marcData);
-
-    if (validAssignment) {
-      assignMarcRecord({ id, title, srsId, linkedFieldValue });
-      clearFailedEntryIds();
-      reset();
-      closeModal();
-    } else {
+  const handleAssignmentValidationError = useCallback(
+    (id: string, invalidAssignmentReason?: string) => {
       addFailedEntryId(id);
+
       let messageKey = 'ld.errorAssigningAuthority';
+
       if (invalidAssignmentReason) {
         messageKey += `.${invalidAssignmentReason.toLowerCase()}`;
       }
+
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, messageKey));
-    }
-  };
+    },
+    [addFailedEntryId, addStatusMessagesItem],
+  );
+
+  const handleAssignmentError = useCallback(
+    (id: string, error: unknown) => {
+      addFailedEntryId(id);
+
+      console.error('Assignment error:', error);
+
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorAssigningAuthority.general'),
+      );
+    },
+    [addFailedEntryId, addStatusMessagesItem],
+  );
+
+  const handleAssign = useCallback(
+    async (data: ComplexLookupAssignRecordDTO, hasSimpleFlow = false) => {
+      if (hasSimpleFlow) {
+        return handleSimpleAssign(data);
+      }
+
+      return handleComplexAssign(data);
+    },
+    [handleSimpleAssign, handleComplexAssign],
+  );
 
   const handleOnChangeBase = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     const newValue = {

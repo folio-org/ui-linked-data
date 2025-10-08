@@ -4,6 +4,7 @@ import {
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
 } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
 
 export const generateEmptyValueUuid = (uuid: string) => `${uuid}_${EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
 
@@ -81,4 +82,54 @@ export const generateValidationRequestBody = (
     rawMarc: escapedString,
     target,
   };
+};
+
+export const validateMarcRecord = (
+  marcData: MarcDTO | null,
+  lookupConfig: ComplexLookupsConfigEntry,
+  authority: string,
+  makeRequest: (config: {
+    url: string;
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    body?: unknown;
+  }) => Promise<{ validAssignment: boolean; invalidAssignmentReason?: string }>,
+) => {
+  const { endpoints, validationTarget } = lookupConfig.api;
+
+  return makeRequest({
+    url: endpoints.validation ?? AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+    method: 'POST' as const,
+    body: generateValidationRequestBody(marcData, validationTarget?.[authority]),
+  });
+};
+
+export const getMarcDataForAssignment = async (
+  id: string,
+  {
+    complexValue,
+    marcPreviewMetadata,
+    fetchMarcData,
+    marcPreviewEndpoint,
+  }: {
+    complexValue: MarcDTO | null;
+    marcPreviewMetadata: MarcPreviewMetadata | null;
+    fetchMarcData: (recordId?: string, endpointUrl?: string) => Promise<MarcDTO | undefined>;
+    marcPreviewEndpoint?: string;
+  },
+) => {
+  let srsId;
+  let marcData = complexValue;
+
+  if (marcPreviewMetadata?.baseId === id) {
+    srsId = marcPreviewMetadata.srsId;
+  } else {
+    const response = await fetchMarcData(id, marcPreviewEndpoint);
+
+    if (response) {
+      marcData = response;
+      srsId = marcData?.matchedId;
+    }
+  }
+
+  return { srsId, marcData };
 };
