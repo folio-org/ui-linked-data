@@ -1,7 +1,7 @@
 import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ChildEntryWithValues, GeneratedValue, SchemaPropertyValue } from '../../types/value.types';
+import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { ProcessContext } from '../../types/common.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
@@ -144,17 +144,31 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!matchingEntry || !recordSchemaProperty) return;
 
-    this.processEntryByType(entryType, childEntry.uriBFLite, childValues, recordSchemaProperty, groupObject, !!childEntry?.constraints?.repeatable);
+    this.processEntryByType({
+      entryType,
+      uriBFLite: childEntry.uriBFLite,
+      values: childValues,
+      recordSchemaProperty,
+      groupObject,
+      repeatable: !!childEntry?.constraints?.repeatable,
+    });
   }
 
-  private processEntryByType(
-    entryType: AdvancedFieldType,
-    uriBFLite: string,
-    values: UserValueContents[],
-    recordSchemaProperty: RecordSchemaEntry,
-    groupObject: GeneratedValue,
-    repeatable: boolean,
-  ) {
+  private processEntryByType({
+    entryType,
+    uriBFLite,
+    values,
+    recordSchemaProperty,
+    groupObject,
+    repeatable,
+  }: {
+    entryType: AdvancedFieldType;
+    uriBFLite: string;
+    values: UserValueContents[];
+    recordSchemaProperty: RecordSchemaEntry;
+    groupObject: GeneratedValue;
+    repeatable: boolean;
+  }) {
     if (entryType === AdvancedFieldType.complex) {
       this.processComplexEntry(values, recordSchemaProperty, groupObject);
     } else {
@@ -171,11 +185,13 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!valueWithId) return;
 
-    const key = valueWithId.meta?.srsId ? 'srsId' : 'id';
     const processedValue = this.processValueByType(AdvancedFieldType.complex, valueWithId, recordSchemaProperty);
 
     if (processedValue) {
-      groupObject[key] = processedValue;
+      const idKey = valueWithId.meta?.srsId ? 'srsId' : 'id';
+      const selectedKey = recordSchemaProperty.options?.propertyKey ?? idKey;
+
+      groupObject[selectedKey] = processedValue;
     }
   }
 
@@ -210,7 +226,7 @@ export class GroupProcessor extends BaseFieldProcessor {
   ) {
     return values
       .map(value => this.processValueByType(entryType, value, recordSchemaProperty))
-      .filter((value: SchemaPropertyValue) => value !== null)
+      .filter(value => value !== null)
       .flat();
   }
 

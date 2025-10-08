@@ -34,6 +34,19 @@ export const workRecordSchema: RecordSchema = {
     properties: {
       _creatorReference: createArrayObjectProperty(contributorProperties),
 
+      _hubs: createArrayObjectProperty({
+        _relation: stringArrayProperty,
+        _hub: createObjectProperty(
+          {
+            [BFLITE_URIS.LABEL]: stringArrayProperty,
+            [BFLITE_URIS.LINK]: stringArrayProperty,
+          },
+          {
+            propertyKey: '_hub',
+          },
+        ),
+      }),
+
       [BFLITE_URIS.TITLE]: createArrayObjectProperty({
         [BFLITE_URIS.TITLE_CONTAINER]: createObjectProperty(standardTitleProperties),
         [BFLITE_URIS.LIBRARY_VARIANT_TITLE]: createObjectProperty(variantTitleProperties),
