@@ -22,6 +22,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { getByIdentifier } from '@common/api/search.api';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -146,6 +147,7 @@ export const SearchView = () => {
         sameOrigin={true}
         filters={filters}
         hasSearchParams={true}
+        fetchSearchResults={getByIdentifier}
         defaultSearchBy={DEFAULT_SEARCH_BY}
         defaultNavigationSegment={SearchSegment.Search}
         labelEmptySearch="ld.enterSearchCriteria"
