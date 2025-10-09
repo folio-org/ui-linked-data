@@ -18,11 +18,11 @@ export function createArrayObjectProperty(properties: Record<string, RecordSchem
   };
 }
 
-export function createStatusProperty(statusProperties: Record<string, RecordSchemaEntry>) {
+export function createStatusProperty(linkAndLabelProperties: Record<string, RecordSchemaEntry>) {
   return {
     type: RecordSchemaEntryType.array,
     value: RecordSchemaEntryType.object,
-    properties: statusProperties,
+    properties: linkAndLabelProperties,
   };
 }
 

@@ -5,7 +5,7 @@ import {
   standardTitleProperties,
   extendedTitleProperties,
   variantTitleProperties,
-  statusProperties,
+  linkAndLabelProperties,
   linkAndTermProperties,
   contributorProperties,
   nameAndLinkProperties,
@@ -18,6 +18,7 @@ import {
   createNotesProperty,
   createStatusProperty,
   createLanguagesProperty,
+  createStringArrayProperty,
 } from '../common/schemaBuilders';
 
 export const workRecordSchema: RecordSchema = {
@@ -35,16 +36,13 @@ export const workRecordSchema: RecordSchema = {
       _creatorReference: createArrayObjectProperty(contributorProperties),
 
       _hubs: createArrayObjectProperty({
-        _relation: stringArrayProperty,
-        _hub: createObjectProperty(
-          {
-            [BFLITE_URIS.LABEL]: stringArrayProperty,
-            [BFLITE_URIS.LINK]: stringArrayProperty,
-          },
-          {
-            propertyKey: '_hub',
-          },
-        ),
+        _hub: createObjectProperty(linkAndLabelProperties, {
+          propertyKey: '_hub',
+        }),
+        _relation: createStringArrayProperty({
+          linkedProperty: '_hub',
+          defaultValue: BFLITE_URIS.EXPRESSION_OF,
+        }),
       }),
 
       [BFLITE_URIS.TITLE]: createArrayObjectProperty({
@@ -86,7 +84,7 @@ export const workRecordSchema: RecordSchema = {
           lc: createObjectProperty({
             [BFLITE_URIS.CODE]: stringArrayProperty,
             [BFLITE_URIS.ITEM_NUMBER]: stringArrayProperty,
-            [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+            [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
             _assigningSourceReference: assigningSourceProperty,
           }),
           ddc: createObjectProperty({
