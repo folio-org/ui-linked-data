@@ -27,7 +27,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     }
 
     // Default behavior - return ID-based structure as string.
-    // // This is used for Creator, Contributor, etc.
+    // This is used for Creator, Contributor, etc.
     return value.meta?.srsId ?? value.id ?? '';
   }
 

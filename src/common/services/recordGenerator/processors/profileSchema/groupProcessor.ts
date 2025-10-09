@@ -41,10 +41,6 @@ export class GroupProcessor extends BaseFieldProcessor {
       return [];
     }
 
-    console.log('====================================');
-    console.log('childEntriesWithValues', childEntriesWithValues);
-    console.log('====================================');
-
     const groupObject = this.buildGroupObject(childEntriesWithValues);
 
     return this.wrapGroupObjectInArray(groupObject);
