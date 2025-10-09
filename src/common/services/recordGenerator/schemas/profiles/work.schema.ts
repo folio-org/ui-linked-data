@@ -18,7 +18,6 @@ import {
   createNotesProperty,
   createStatusProperty,
   createLanguagesProperty,
-  createStringArrayProperty,
 } from '../common/schemaBuilders';
 
 export const workRecordSchema: RecordSchema = {
@@ -39,10 +38,14 @@ export const workRecordSchema: RecordSchema = {
         _hub: createObjectProperty(linkAndLabelProperties, {
           propertyKey: '_hub',
         }),
-        _relation: createStringArrayProperty({
-          linkedProperty: '_hub',
-          defaultValue: BFLITE_URIS.EXPRESSION_OF,
-        }),
+        _relation: {
+          type: RecordSchemaEntryType.string,
+          value: RecordSchemaEntryType.string,
+          options: {
+            linkedProperty: '_hub',
+            defaultValue: BFLITE_URIS.EXPRESSION_OF,
+          },
+        },
       }),
 
       [BFLITE_URIS.TITLE]: createArrayObjectProperty({

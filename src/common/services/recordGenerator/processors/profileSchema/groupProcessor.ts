@@ -41,6 +41,10 @@ export class GroupProcessor extends BaseFieldProcessor {
       return [];
     }
 
+    console.log('====================================');
+    console.log('childEntriesWithValues', childEntriesWithValues);
+    console.log('====================================');
+
     const groupObject = this.buildGroupObject(childEntriesWithValues);
 
     return this.wrapGroupObjectInArray(groupObject);
@@ -207,6 +211,7 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (processedValues.length > 0) {
       const valuesArray = Array.isArray(processedValues) ? processedValues : [processedValues];
+
       if (repeatable && groupObject[uriBFLite]) {
         if (Array.isArray(groupObject[uriBFLite])) {
           groupObject[uriBFLite].push(...valuesArray);
@@ -214,7 +219,8 @@ export class GroupProcessor extends BaseFieldProcessor {
           groupObject[uriBFLite] = [groupObject[uriBFLite], ...valuesArray];
         }
       } else {
-        groupObject[uriBFLite] = valuesArray;
+        groupObject[uriBFLite] =
+          recordSchemaProperty.type === RecordSchemaEntryType.array ? valuesArray : valuesArray[0];
       }
     }
   }
