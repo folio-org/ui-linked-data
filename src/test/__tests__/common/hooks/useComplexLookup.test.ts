@@ -1,8 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
 import { ChangeEvent } from 'react';
 import { useComplexLookup } from '@common/hooks/useComplexLookup';
-import { useMarcData } from '@common/hooks/useMarcData';
 import { useComplexLookupValidation } from '@common/hooks/useComplexLookupValidation';
+import { useMarcValidation } from '@common/hooks/useMarcValidation';
+import { useMarcAssignment } from '@common/hooks/useMarcAssignment';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@common/constants/complexLookup.constants';
 import {
@@ -16,13 +17,11 @@ import {
   selectedEntriesService as mockSelectedEntriesService,
 } from '@src/test/__mocks__/providers/ServicesProvider.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore } from '@src/store';
-import { useStatusStore } from '@src/store';
-import { useApi } from '@common/hooks/useApi';
+import { useInputsStore, useStatusStore } from '@src/store';
 
 jest.mock('@common/helpers/complexLookup.helper');
-jest.mock('@common/hooks/useMarcData');
-jest.mock('@common/hooks/useApi');
+jest.mock('@common/hooks/useMarcValidation');
+jest.mock('@common/hooks/useMarcAssignment');
 jest.mock('@common/hooks/useComplexLookupValidation');
 
 describe('useComplexLookup', () => {
@@ -31,8 +30,8 @@ describe('useComplexLookup', () => {
   const mockAddStatusMessagesItem = jest.fn();
   const mockSetSelectedEntries = jest.fn();
   const mockClearFailedEntryIds = jest.fn();
-  const mockClearhMarcData = jest.fn();
-  const mockMakeRequest = jest.fn();
+  const mockValidateMarcRecord = jest.fn();
+  const mockGetMarcDataForAssignment = jest.fn();
 
   const mockEntry = {
     uuid: 'testUuid',
@@ -48,31 +47,24 @@ describe('useComplexLookup', () => {
       label: 'testLabel',
       meta: {
         type: AdvancedFieldType.complex,
+        srsId: 'testSrsId',
       },
     },
-  ];
+  ] as UserValueContents[];
+
   const mockLookupConfig = {
     api: {
       endpoints: {
-        marcPreview: '/testEndpoint',
+        validation: 'test-validation-endpoint',
+        marcPreview: 'test-marc-preview-endpoint',
+      },
+      validationTarget: {
+        creator: 'CreatorOfWork',
       },
     },
-  } as ComplexLookupsConfigEntry;
+  } as unknown as ComplexLookupsConfigEntry;
 
   const mockOnChange = jest.fn();
-  let result: any;
-
-  const getRenderedHook = (entry: SchemaEntry = mockEntry) =>
-    renderHook(
-      () =>
-        useComplexLookup({
-          entry,
-          value: mockValue,
-          lookupConfig: mockLookupConfig,
-          onChange: mockOnChange,
-        }),
-      { wrapper: MockServicesProvider },
-    );
 
   beforeEach(() => {
     setInitialGlobalState([
@@ -86,18 +78,17 @@ describe('useComplexLookup', () => {
       {
         store: useStatusStore,
         state: {
-          addStatusMessagesItem: mockAddStatusMessagesItem
-        }
-      }
+          addStatusMessagesItem: mockAddStatusMessagesItem,
+        },
+      },
     ]);
 
-    (useMarcData as jest.Mock).mockReturnValue({
-      fetchMarcData: jest.fn().mockResolvedValue({ matchedId: 'newSrsId' }),
-      clearMarcData: mockClearhMarcData,
+    (useMarcValidation as jest.Mock).mockReturnValue({
+      validateMarcRecord: mockValidateMarcRecord,
     });
 
-    (useApi as jest.Mock).mockReturnValue({
-      makeRequest: mockMakeRequest,
+    (useMarcAssignment as jest.Mock).mockReturnValue({
+      getMarcDataForAssignment: mockGetMarcDataForAssignment,
     });
 
     (useComplexLookupValidation as jest.Mock).mockReturnValue({
@@ -105,33 +96,102 @@ describe('useComplexLookup', () => {
       clearFailedEntryIds: mockClearFailedEntryIds,
     });
 
-    result = getRenderedHook()?.result;
+    mockValidateMarcRecord.mockResolvedValue({
+      validAssignment: true,
+    });
+
+    mockGetMarcDataForAssignment.mockResolvedValue({
+      srsId: 'newSrsId',
+      marcData: { test: 'data' },
+    });
+
+    (generateEmptyValueUuid as jest.Mock).mockReturnValue('empty_uuid');
+    (getLinkedField as jest.Mock).mockReturnValue(undefined);
+    (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['updated_entries']);
+    (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'updated_linked_field' });
   });
 
+  const getRenderedHook = (entry = mockEntry, value?: UserValueContents[]) =>
+    renderHook(
+      () =>
+        useComplexLookup({
+          entry,
+          value,
+          lookupConfig: mockLookupConfig,
+          authority: 'creator',
+          onChange: mockOnChange,
+        }),
+      {
+        wrapper: MockServicesProvider,
+      },
+    );
+
+  let result: { current: ReturnType<typeof useComplexLookup> };
+
   test('initializes correctly', () => {
-    expect(result.current.localValue).toEqual(mockValue);
+    result = getRenderedHook()?.result;
+
+    expect(result.current.localValue).toEqual([]);
     expect(result.current.isModalOpen).toBe(false);
+  });
+
+  test('closeModal - sets isModalOpen to false', () => {
+    result = getRenderedHook()?.result;
+
+    act(() => {
+      result.current.openModal();
+    });
+
+    expect(result.current.isModalOpen).toBe(true);
+
+    act(() => {
+      result.current.closeModal();
+    });
+
+    expect(result.current.isModalOpen).toBe(false);
+    expect(mockClearFailedEntryIds).toHaveBeenCalled();
+  });
+
+  test('handleOnChangeBase - updates state correctly', () => {
+    result = getRenderedHook()?.result;
+
+    const mockEvent = {
+      target: { value: 'test value' },
+    } as ChangeEvent<HTMLInputElement>;
+
+    act(() => {
+      result.current.handleOnChangeBase(mockEvent);
+    });
+
+    const expectedValue = {
+      label: 'test value',
+      meta: {
+        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+      },
+    };
+
+    expect(mockOnChange).toHaveBeenCalledWith('testUuid', [expectedValue]);
+    expect(result.current.localValue).toEqual([expectedValue]);
   });
 
   describe('handleDelete', () => {
     test('updates state correctly and does not call "getUpdatedSelectedEntries" and "setSelectedEntries"', () => {
+      result = getRenderedHook(mockEntry, mockValue)?.result;
+
       act(() => {
         result.current.handleDelete('testId');
       });
 
       expect(mockOnChange).toHaveBeenCalledWith('testUuid', []);
       expect(result.current.localValue).toEqual([]);
-
       expect(getUpdatedSelectedEntries).not.toHaveBeenCalled();
       expect(mockSetSelectedEntries).not.toHaveBeenCalled();
     });
 
     test('updates state correctly and calls getUpdatedSelectedEntries and setSelectedEntries', () => {
       (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
-      (generateEmptyValueUuid as jest.Mock).mockReturnValue('newId_empty');
-      (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId_empty']);
 
-      result = getRenderedHook()?.result;
+      result = getRenderedHook(mockEntry, mockValue)?.result;
 
       act(() => {
         result.current.handleDelete('testId');
@@ -139,132 +199,153 @@ describe('useComplexLookup', () => {
 
       expect(mockOnChange).toHaveBeenCalledWith('testUuid', []);
       expect(result.current.localValue).toEqual([]);
-
       expect(getUpdatedSelectedEntries).toHaveBeenCalledWith({
         selectedEntriesService: mockSelectedEntriesService,
         selectedEntries: mockSelectedEntries,
-        linkedFieldChildren: [],
-        newValue: 'newId_empty',
+        linkedFieldChildren: mockLinkedField.children,
+        newValue: 'empty_uuid',
       });
-      expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId_empty']);
+      expect(mockSetSelectedEntries).toHaveBeenCalledWith(['updated_entries']);
     });
-  });
-
-  test('closeModal - sets isModalOpen to false', () => {
-    act(() => {
-      result.current.closeModal();
-    });
-
-    expect(result.current.isModalOpen).toBe(false);
   });
 
   describe('handleAssign', () => {
-    const mockAssignRecord = {
-      id: 'newId',
-      title: 'newTitle',
-      linkedFieldValue: 'new-linked-field-value',
-    };
-    const testEntries = [
-      {
-        id: 'newId',
-        label: 'newTitle',
-        meta: {
-          srsId: 'newSrsId',
-          type: AdvancedFieldType.complex,
-        },
-      },
-    ];
-
-    test('updates state correctly', async () => {
-      (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
-      (updateLinkedFieldValue as jest.Mock).mockReturnValue({ uuid: 'newLinkedFieldId' });
-      (getUpdatedSelectedEntries as jest.Mock).mockReturnValue(['newId']);
-      mockMakeRequest.mockResolvedValue({ validAssignment: true });
-
+    test('calls handleSimpleAssign when hasSimpleFlow is true', async () => {
       result = getRenderedHook()?.result;
 
       await act(async () => {
-        result.current.handleAssign(mockAssignRecord);
-      });
-
-      expect(mockOnChange).toHaveBeenCalledWith('testUuid', testEntries);
-      expect(result.current.localValue).toEqual(testEntries);
-
-      expect(updateLinkedFieldValue).toHaveBeenCalled();
-      expect(getUpdatedSelectedEntries).toHaveBeenCalledWith({
-        selectedEntriesService: mockSelectedEntriesService,
-        selectedEntries: mockSelectedEntries,
-        linkedFieldChildren: [],
-        newValue: 'newLinkedFieldId',
-      });
-      expect(mockSetSelectedEntries).toHaveBeenCalledWith(['newId']);
-      expect(mockClearFailedEntryIds).toHaveBeenCalled();
-    });
-
-    test('updates state correctly and does not call "setSelectedEntries"', async () => {
-      mockMakeRequest.mockResolvedValue({ validAssignment: true });
-
-      result = getRenderedHook({
-        ...mockEntry,
-        linkedEntry: {
-          dependent: false,
-        },
-      } as unknown as SchemaEntry)?.result;
-
-      await act(async () => {
-        result.current.handleAssign(mockAssignRecord);
-      });
-
-      expect(mockOnChange).toHaveBeenCalledWith('testUuid', testEntries);
-      expect(result.current.localValue).toEqual(testEntries);
-
-      expect(updateLinkedFieldValue).not.toHaveBeenCalled();
-      expect(getUpdatedSelectedEntries).not.toHaveBeenCalled();
-      expect(mockSetSelectedEntries).not.toHaveBeenCalled();
-      expect(mockClearFailedEntryIds).toHaveBeenCalled();
-    });
-
-    test('updates state correctly for invalid authority assignment', async () => {
-      (getLinkedField as jest.Mock).mockReturnValue(mockLinkedField);
-      mockMakeRequest.mockResolvedValue({ validAssignment: false, invalidAssignmentReason: 'NOT_VALID_FOR_TARGET' });
-
-      result = getRenderedHook()?.result;
-
-      await act(async () => {
-        result.current.handleAssign(mockAssignRecord);
-      });
-
-      expect(mockOnChange).not.toHaveBeenCalled();
-      expect(mockAddFailedEntryId).toHaveBeenCalledWith('newId');
-      expect(mockAddStatusMessagesItem).toHaveBeenCalledWith(
-        expect.objectContaining(
+        await result.current.handleAssign(
           {
-            message: "ld.errorAssigningAuthority.not_valid_for_target", 
-            type: "error"
-          }
-        )
-      );
+            id: 'simple_123',
+            title: 'Simple Title',
+            uri: 'http://example.com/simple',
+          },
+          true, // hasSimpleFlow
+        );
+      });
+
+      const expectedValue = {
+        id: 'simple_123',
+        label: 'Simple Title',
+        meta: {
+          type: AdvancedFieldType.complex,
+          uri: 'http://example.com/simple',
+        },
+      };
+
+      expect(mockOnChange).toHaveBeenCalledWith('testUuid', [expectedValue]);
+      expect(mockGetMarcDataForAssignment).not.toHaveBeenCalled();
+    });
+
+    test('calls handleComplexAssign when hasSimpleFlow is false', async () => {
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        await result.current.handleAssign(
+          {
+            id: 'complex_123',
+            title: 'Complex Title',
+            linkedFieldValue: 'creator',
+          },
+          false, // hasSimpleFlow
+        );
+      });
+
+      expect(mockGetMarcDataForAssignment).toHaveBeenCalledWith('complex_123', {
+        complexValue: null,
+        marcPreviewMetadata: null,
+        marcPreviewEndpoint: 'test-marc-preview-endpoint',
+      });
+      expect(mockValidateMarcRecord).toHaveBeenCalledWith({ test: 'data' }, mockLookupConfig, 'creator');
+    });
+
+    test('defaults to handleComplexAssign when hasSimpleFlow is not provided', async () => {
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        await result.current.handleAssign({
+          id: 'complex_123',
+          title: 'Complex Title',
+          linkedFieldValue: 'creator',
+        });
+      });
+
+      expect(mockGetMarcDataForAssignment).toHaveBeenCalled();
+      expect(mockValidateMarcRecord).toHaveBeenCalled();
     });
   });
 
-  test('handleOnChangeBase - updates state correctly', () => {
-    const mockEvent = {
-      target: {
-        value: 'newValue',
-      },
-    };
-    const testEntry = {
-      label: 'newValue',
-      meta: {
-        uri: __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
-      },
-    };
+  describe('handleComplexAssign', () => {
+    beforeEach(() => {
+      mockGetMarcDataForAssignment.mockResolvedValue({
+        srsId: 'test_srs_id',
+        marcData: { some: 'data' },
+      });
 
-    act(() => {
-      result.current.handleOnChangeBase(mockEvent as ChangeEvent<HTMLInputElement>);
+      mockValidateMarcRecord.mockResolvedValue({
+        validAssignment: true,
+      });
     });
 
-    expect(mockOnChange).toHaveBeenCalledWith('testUuid', [testEntry]);
-    expect(result.current.localValue).toEqual([...mockValue, testEntry]);
+    test('updates state correctly for valid complex assignment', async () => {
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        await result.current.handleAssign({
+          id: 'complex_123',
+          title: 'Complex Title',
+          linkedFieldValue: 'creator',
+        });
+      });
+
+      const expectedValue = {
+        id: 'complex_123',
+        label: 'Complex Title',
+        meta: {
+          type: AdvancedFieldType.complex,
+          srsId: 'test_srs_id',
+        },
+      };
+
+      expect(mockOnChange).toHaveBeenCalledWith('testUuid', [expectedValue]);
+      expect(mockClearFailedEntryIds).toHaveBeenCalled();
+    });
+
+    test('handles validation error correctly', async () => {
+      mockValidateMarcRecord.mockResolvedValue({
+        validAssignment: false,
+        invalidAssignmentReason: 'invalid_format',
+      });
+
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        await result.current.handleAssign({
+          id: 'complex_123',
+          title: 'Complex Title',
+          linkedFieldValue: 'creator',
+        });
+      });
+
+      expect(mockAddFailedEntryId).toHaveBeenCalledWith('complex_123');
+      expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+    });
+
+    test('handles assignment error correctly', async () => {
+      mockGetMarcDataForAssignment.mockRejectedValue(new Error('Network error'));
+
+      result = getRenderedHook()?.result;
+
+      await act(async () => {
+        await result.current.handleAssign({
+          id: 'complex_123',
+          title: 'Complex Title',
+          linkedFieldValue: 'creator',
+        });
+      });
+
+      expect(mockAddFailedEntryId).toHaveBeenCalledWith('complex_123');
+      expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+    });
   });
 });

@@ -4,8 +4,6 @@ import {
   getLinkedField,
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
-  validateMarcRecord,
-  getMarcDataForAssignment,
 } from '@common/helpers/complexLookup.helper';
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING, Authority } from '@common/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
@@ -13,10 +11,10 @@ import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, u
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { StatusType } from '@common/constants/status.constants';
 import { useModalControls } from './useModalControls';
-import { useMarcData } from './useMarcData';
 import { useServicesContext } from './useServicesContext';
-import { useApi } from './useApi';
 import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { useMarcValidation } from './useMarcValidation';
+import { useMarcAssignment } from './useMarcAssignment';
 
 export const useComplexLookup = ({
   entry,
@@ -44,10 +42,10 @@ export const useComplexLookup = ({
   } = useMarcPreviewState(['complexValue', 'setComplexValue', 'resetComplexValue', 'metadata', 'resetMetadata']);
   const { resetIsMarcPreviewOpen } = useUIState(['resetIsMarcPreviewOpen']);
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
-  const { fetchMarcData } = useMarcData(setComplexValue);
+  const { validateMarcRecord } = useMarcValidation();
+  const { getMarcDataForAssignment } = useMarcAssignment(setComplexValue);
   const { uuid, linkedEntry } = entry;
   const linkedField = getLinkedField({ schema, linkedEntry });
-  const { makeRequest } = useApi();
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { addFailedEntryId, clearFailedEntryIds } = useComplexLookupValidation();
 
@@ -141,14 +139,12 @@ export const useComplexLookup = ({
         const { srsId, marcData } = await getMarcDataForAssignment(id, {
           complexValue,
           marcPreviewMetadata,
-          fetchMarcData,
           marcPreviewEndpoint: lookupConfig.api?.endpoints?.marcPreview,
         });
         const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(
           marcData,
           lookupConfig,
           authority,
-          makeRequest,
         );
 
         if (validAssignment) {
@@ -164,12 +160,12 @@ export const useComplexLookup = ({
       }
     },
     [
+      getMarcDataForAssignment,
       complexValue,
       marcPreviewMetadata,
-      fetchMarcData,
       lookupConfig,
+      validateMarcRecord,
       authority,
-      makeRequest,
       assignMarcRecord,
       clearFailedEntryIds,
       reset,
