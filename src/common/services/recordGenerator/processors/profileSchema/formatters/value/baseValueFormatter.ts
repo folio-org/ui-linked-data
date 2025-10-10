@@ -28,7 +28,9 @@ export abstract class BaseValueFormatter implements IValueFormatter {
 
     // Default behavior - return ID-based structure as string.
     // This is used for Creator, Contributor, etc.
-    return value.meta?.srsId ?? value.id ?? '';
+    const selectedId = value.meta?.srsId ?? value.id ?? '';
+
+    return Array.isArray(selectedId) ? selectedId[0] : selectedId;
   }
 
   protected buildComplexObject(
