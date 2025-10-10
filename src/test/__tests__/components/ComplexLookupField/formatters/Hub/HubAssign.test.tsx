@@ -39,11 +39,14 @@ describe('HubAssignFormatter', () => {
     const button = screen.getByRole('button');
     button.click();
 
-    expect(mockOnAssign).toHaveBeenCalledWith({
-      id: 'test_id_123',
-      title: 'Test Hub Label',
-      uri: 'test_hub_url',
-    });
+    expect(mockOnAssign).toHaveBeenCalledWith(
+      {
+        id: 'test_id_123',
+        title: 'Test Hub Label',
+        uri: 'test_hub_url',
+      },
+      true,
+    );
   });
 
   test('handles empty label', () => {
@@ -60,11 +63,14 @@ describe('HubAssignFormatter', () => {
     const button = screen.getByRole('button');
     button.click();
 
-    expect(mockOnAssign).toHaveBeenCalledWith({
-      id: 'test_id_123',
-      title: '',
-      uri: 'test_hub_url',
-    });
+    expect(mockOnAssign).toHaveBeenCalledWith(
+      {
+        id: 'test_id_123',
+        title: '',
+        uri: 'test_hub_url',
+      },
+      true,
+    );
   });
 
   test('handles empty URI', () => {
@@ -81,11 +87,14 @@ describe('HubAssignFormatter', () => {
     const button = screen.getByRole('button');
     button.click();
 
-    expect(mockOnAssign).toHaveBeenCalledWith({
-      id: 'test_id_123',
-      title: 'Test Hub Label',
-      uri: '',
-    });
+    expect(mockOnAssign).toHaveBeenCalledWith(
+      {
+        id: 'test_id_123',
+        title: 'Test Hub Label',
+        uri: '',
+      },
+      true,
+    );
   });
 
   test('handles missing hub data', () => {
@@ -104,10 +113,13 @@ describe('HubAssignFormatter', () => {
     const button = screen.getByRole('button');
     button.click();
 
-    expect(mockOnAssign).toHaveBeenCalledWith({
-      id: 'test_id_456',
-      title: '',
-      uri: '',
-    });
+    expect(mockOnAssign).toHaveBeenCalledWith(
+      {
+        id: 'test_id_456',
+        title: '',
+        uri: '',
+      },
+      true,
+    );
   });
 });

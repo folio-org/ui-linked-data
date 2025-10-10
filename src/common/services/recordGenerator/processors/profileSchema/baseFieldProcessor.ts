@@ -1,7 +1,7 @@
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ProcessorResult, SimplePropertyResult, ExtendedPropertyResult } from '../../types/profileSchemaProcessor.types';
 import { ProcessContext } from '../../types/common.types';
 import { IValueFormatter } from './formatters';
 import { ProcessorUtils } from './utils/processorUtils';
@@ -44,13 +44,16 @@ export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {
       case AdvancedFieldType.enumerated:
         return this.valueFormat.formatSimple(value, recordSchemaEntry);
       case AdvancedFieldType.complex:
-        return this.valueFormat.formatComplex(value);
+        return this.valueFormat.formatComplex(value, recordSchemaEntry);
       default:
         return null;
     }
   }
 
-  protected mergeValues(existing: any, childValues: any) {
+  protected mergeValues(
+    existing: string[] | SimplePropertyResult[] | ExtendedPropertyResult[] | ProcessorResult | ProcessorResult[],
+    childValues: string[] | ProcessorResult | SimplePropertyResult[],
+  ) {
     if (ProcessorUtils.canMergeArrays(existing, childValues)) {
       return ProcessorUtils.mergeArrays(existing, childValues);
     }
