@@ -88,7 +88,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     <div role="table" data-testid="table" className={classNames(table, tableFlex, className)}>
       <div role="rowgroup" ref={tableHeadElemRef} className={tableHead}>
         <div role="row" ref={tableHeadRowElemRef} className={tableRow}>
-          {sortedHeaderEntries.map(([key, { label, className, ...rest }]) => (
+          {sortedHeaderEntries.map(([key, { label, className, minWidth: _minWidth, maxWidth: _maxWidth, ...rest }]) => (
             <div
               key={key}
               data-testid={`th-${key}`}
@@ -124,20 +124,28 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
                 onKeyDown={event => handleRowKeyDown(event, row)}
               >
                 {sortedHeaderEntries.map(([key, { className: headerClassName }]) => {
-                  const { label, children, className, ...rest } = row?.[key] || {};
+                  const {
+                    label,
+                    children,
+                    className,
+                    minWidth: _cellMinWidth, // eslint-disable-line @typescript-eslint/no-unused-vars -- Intentionally excluded from rest spread
+                    maxWidth: _cellMaxWidth, // eslint-disable-line @typescript-eslint/no-unused-vars -- Intentionally excluded from rest spread
+                    ...rest
+                  } = row?.[key] || {};
 
                   return (
-                    <div
-                      className={classNames('table-cell', className, headerClassName)}
-                      data-testid={key}
-                      key={key}
-                      role="cell"
-                      {...rest}
-                    >
-                      <div className="table-cell-content">{(children || label) ?? ''}</div>
-                    </div>
-                  );
-                })}
+                      <div
+                        className={classNames('table-cell', className, headerClassName)}
+                        data-testid={key}
+                        key={key}
+                        role="cell"
+                        {...rest}
+                      >
+                        <div className="table-cell-content">{(children || label) ?? ''}</div>
+                      </div>
+                    );
+                  },
+                )}
               </div>
             );
           })}
