@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { MAX_SEARCH_BAR_WIDTH } from '@common/constants/uiElements.constants';
 import { type Table as TableProps, type Row } from './Table';
 import './Table.scss';
 
@@ -17,19 +16,45 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     DOM_ELEMENTS.classNames;
 
   useEffect(() => {
-    const tableHeadElemWidth = tableHeadRowElemRef.current?.getBoundingClientRect()?.width;
+    // Extract column widths from classNames
+    const columnWidths = sortedHeaderEntries.map(([, config]) => {
+      return config.minWidth ?? 100; // Default to 100px
+    });
 
-    if (tableHeadElemWidth) {
-      tableHeadRowElemRef.current?.setAttribute('style', `width: ${tableHeadElemWidth + MAX_SEARCH_BAR_WIDTH}px`);
+    const totalMinWidth = columnWidths.reduce((sum, width) => sum + width, 0);
+
+    // Create grid template: each column can grow but not shrink below minimum
+    const gridTemplate = columnWidths.map(width => `minmax(${width}px, 1fr)`).join(' ');
+
+    // Calculate scrollbar width by comparing container dimensions
+    const scrollbarWidth =
+      (tableBodyContainerElemRef.current?.offsetWidth ?? 0) -
+      (tableBodyContainerElemRef.current?.clientWidth ?? 0);
+
+    // Apply to header container to account for scrollbar
+    if (tableHeadElemRef.current) {
+      tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
     }
 
+    // Apply to header row
+    if (tableHeadRowElemRef.current) {
+      tableHeadRowElemRef.current.style.gridTemplateColumns = gridTemplate;
+      tableHeadRowElemRef.current.style.minWidth = `${totalMinWidth}px`;
+    }
+
+    // Apply to body rows
+    const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll('.table-body > .table-row');
+    bodyRows?.forEach(row => {
+      (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
+      (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
+    });
+
+    // Scroll sync
     const handleScroll = (event: Event) => {
       const { target } = event;
-
       if (!target) return;
 
       const { scrollLeft } = target as HTMLElement;
-
       requestAnimationFrame(() => {
         tableHeadElemRef?.current?.scrollTo({ left: scrollLeft });
       });
@@ -40,7 +65,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     return () => {
       tableBodyContainerElemRef.current?.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [sortedHeaderEntries, data]);
 
   const handleHeaderKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, key: string) => {
     if (event.key === 'Enter') {

@@ -12,6 +12,7 @@ type SearchResultsTableColumn = {
   label: string;
   position: number;
   className?: string;
+  minWidth?: number;
   formatter?: ({
     row,
     formatMessage,
