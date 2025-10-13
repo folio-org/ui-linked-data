@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
 import { type Table as TableProps, type Row } from './Table';
 import './Table.scss';
 
@@ -16,54 +17,52 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     DOM_ELEMENTS.classNames;
 
   useEffect(() => {
-    // Extract column widths from classNames
-    const columnWidths = sortedHeaderEntries.map(([, config]) => {
-      return config.minWidth ?? 100; // Default to 100px
-    });
+    const applyHeaderStyles = (scrollbarWidth: number, gridTemplate: string, totalMinWidth: number) => {
+      if (tableHeadElemRef.current) {
+        tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
+      }
 
-    const totalMinWidth = columnWidths.reduce((sum, width) => sum + width, 0);
+      if (tableHeadRowElemRef.current) {
+        tableHeadRowElemRef.current.style.gridTemplateColumns = gridTemplate;
+        tableHeadRowElemRef.current.style.minWidth = `${totalMinWidth}px`;
+      }
+    };
 
-    // Create grid template: each column can grow but not shrink below minimum
-    const gridTemplate = columnWidths.map(width => `minmax(${width}px, 1fr)`).join(' ');
-
-    // Calculate scrollbar width by comparing container dimensions
-    const scrollbarWidth =
-      (tableBodyContainerElemRef.current?.offsetWidth ?? 0) -
-      (tableBodyContainerElemRef.current?.clientWidth ?? 0);
-
-    // Apply to header container to account for scrollbar
-    if (tableHeadElemRef.current) {
-      tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
-    }
-
-    // Apply to header row
-    if (tableHeadRowElemRef.current) {
-      tableHeadRowElemRef.current.style.gridTemplateColumns = gridTemplate;
-      tableHeadRowElemRef.current.style.minWidth = `${totalMinWidth}px`;
-    }
-
-    // Apply to body rows
-    const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll('.table-body > .table-row');
-    bodyRows?.forEach(row => {
-      (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
-      (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
-    });
-
-    // Scroll sync
-    const handleScroll = (event: Event) => {
-      const { target } = event;
-      if (!target) return;
-
-      const { scrollLeft } = target as HTMLElement;
-      requestAnimationFrame(() => {
-        tableHeadElemRef?.current?.scrollTo({ left: scrollLeft });
+    const applyBodyRowStyles = (gridTemplate: string, totalMinWidth: number) => {
+      const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll('.table-body > .table-row');
+      bodyRows?.forEach(row => {
+        (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
+        (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
       });
     };
 
-    tableBodyContainerElemRef.current?.addEventListener('scroll', handleScroll);
+    const syncHorizontalScroll = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const { scrollLeft } = target;
+      requestAnimationFrame(() => {
+        tableHeadElemRef.current?.scrollTo({ left: scrollLeft });
+      });
+    };
+
+    // Main logic
+    const columnWidths = extractColumnWidths(sortedHeaderEntries);
+    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
+    const scrollbarWidth = getScrollbarWidth(
+      tableBodyContainerElemRef.current?.offsetWidth ?? 0,
+      tableBodyContainerElemRef.current?.clientWidth ?? 0,
+    );
+
+    applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
+    applyBodyRowStyles(gridTemplate, totalMinWidth);
+
+    // Setup scroll synchronization
+    const bodyContainer = tableBodyContainerElemRef.current;
+    bodyContainer?.addEventListener('scroll', syncHorizontalScroll);
 
     return () => {
-      tableBodyContainerElemRef.current?.removeEventListener('scroll', handleScroll);
+      bodyContainer?.removeEventListener('scroll', syncHorizontalScroll);
     };
   }, [sortedHeaderEntries, data]);
 
