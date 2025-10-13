@@ -7,6 +7,7 @@ export const hubTableConfig: SearchResultsTableConfig = {
       position: 0,
       className: 'cell-fixed',
       minWidth: 100,
+      maxWidth: 100,
       formatter: HubAssignFormatter,
     },
     hub: {
@@ -21,6 +22,7 @@ export const hubTableConfig: SearchResultsTableConfig = {
       position: 2,
       className: 'cell-fixed',
       minWidth: 170,
+      maxWidth: 200,
       formatter: AuthNotesFormatter,
     },
     rda: {
@@ -28,6 +30,7 @@ export const hubTableConfig: SearchResultsTableConfig = {
       position: 3,
       className: 'cell-fixed',
       minWidth: 170,
+      maxWidth: 200,
       formatter: RDANotesFormatter,
     },
   },

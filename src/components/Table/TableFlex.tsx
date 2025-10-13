@@ -29,7 +29,8 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     };
 
     const applyBodyRowStyles = (gridTemplate: string, totalMinWidth: number) => {
-      const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll('.table-body > .table-row');
+      const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll(`.${tableBody} > .${tableRow}`);
+
       bodyRows?.forEach(row => {
         (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
         (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
@@ -41,6 +42,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
       if (!target) return;
 
       const { scrollLeft } = target;
+
       requestAnimationFrame(() => {
         tableHeadElemRef.current?.scrollTo({ left: scrollLeft });
       });

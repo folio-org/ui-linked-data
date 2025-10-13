@@ -1,33 +1,37 @@
-type HeaderEntry = [string, { minWidth?: number; [key: string]: unknown }];
+type HeaderEntry = [string, { minWidth?: number; maxWidth?: number; [key: string]: unknown }];
 
-/**
- * Extracts minimum column widths from table header configuration
- * @param headerEntries - Sorted array of [key, config] tuples from table header
- * @param defaultWidth - Default width if not specified (default: 100)
- * @returns Array of column widths in pixels
- */
-export const extractColumnWidths = (headerEntries: HeaderEntry[], defaultWidth = 100): number[] => {
-  return headerEntries.map(([, config]) => config.minWidth ?? defaultWidth);
+type ColumnWidthConfig = { min: number; max?: number };
+
+export const extractColumnWidths = (headerEntries: HeaderEntry[], defaultMinWidth = 100): ColumnWidthConfig[] => {
+  return headerEntries.map(([, config]) => ({
+    min: config.minWidth ?? defaultMinWidth,
+    max: config.maxWidth,
+  }));
 };
 
 /**
- * Calculates CSS Grid template and total minimum width from column widths
- * @param columnWidths - Array of minimum column widths in pixels
- * @returns Object containing gridTemplate string and totalMinWidth
+ * Calculates CSS Grid template and total minimum width from column width configurations
+ * Supports columns with maximum widths (capped) and flexible columns (1fr)
+ * @example
+ * // Flexible column: minmax(100px, 1fr) - grows to fill space
+ * // Fixed column: minmax(100px, 100px) - stays at fixed width
+ * // Capped column: minmax(100px, 250px) - grows up to max
  */
-export const calculateGridTemplate = (columnWidths: number[]) => {
-  const totalMinWidth = columnWidths.reduce((sum, width) => sum + width, 0);
-  const gridTemplate = columnWidths.map(width => `minmax(${width}px, 1fr)`).join(' ');
+export const calculateGridTemplate = (columnWidths: ColumnWidthConfig[]) => {
+  const totalMinWidth = columnWidths.reduce((sum, { min }) => sum + min, 0);
+
+  const gridTemplate = columnWidths
+    .map(({ min, max }) => {
+      // If max is specified, use it; otherwise use 1fr for flexible growth
+      const maxValue = max !== undefined ? `${max}px` : '1fr';
+
+      return `minmax(${min}px, ${maxValue})`;
+    })
+    .join(' ');
 
   return { gridTemplate, totalMinWidth };
 };
 
-/**
- * Calculates scrollbar width from container element dimensions
- * @param offsetWidth - Container's offsetWidth (includes scrollbar)
- * @param clientWidth - Container's clientWidth (excludes scrollbar)
- * @returns Scrollbar width in pixels
- */
 export const getScrollbarWidth = (offsetWidth: number, clientWidth: number): number => {
   return offsetWidth - clientWidth;
 };
