@@ -5,7 +5,7 @@ import {
   standardTitleProperties,
   extendedTitleProperties,
   providerProperties,
-  statusProperties,
+  linkAndLabelProperties,
   linkAndTermProperties,
   codeTermLinkProperties,
   nameAndLinkProperties
@@ -59,23 +59,23 @@ export const instanceRecordSchema: RecordSchema = {
       [BFLITE_URIS.MAP]: createArrayObjectProperty({
         [BFLITE_URIS.IDENTIFIER_LCCN]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
-          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
         }),
         [BFLITE_URIS.IDENTIFIER_ISBN]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
-          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
         }),
         [BFLITE_URIS.IDENTIFIER_ISSN]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
-          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
         }),
         [BFLITE_URIS.IDENTIFIER_IAN]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
-          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
         }),
         [BFLITE_URIS.IDENTIFIER_OTHER]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
-          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(statusProperties),
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
         }),        
       }),
       

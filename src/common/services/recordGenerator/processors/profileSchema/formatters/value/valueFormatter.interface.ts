@@ -5,5 +5,5 @@ export interface IValueFormatter {
 
   formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry): string[] | SimplePropertyResult;
 
-  formatComplex(value: UserValueContents): any;
+  formatComplex(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry): string | Record<string, string[]> | null;
 }
