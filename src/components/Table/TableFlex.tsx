@@ -1,13 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
-import { type Table as TableProps, type Row } from './Table';
+import { type Table as TableProps, type Row, type RowMeta } from './Table';
 import './Table.scss';
 
 export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: TableProps) => {
-  const sortedHeaderEntries = Object.entries(header).sort(
-    ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
+  const sortedHeaderEntries = useMemo(
+    () =>
+      Object.entries(header).sort(
+        ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
+      ),
+    [header],
   );
 
   const tableHeadElemRef = useRef<HTMLDivElement>(null);
@@ -16,7 +20,8 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
   const { table, tableFlex, tableHead, tableHeadCell, tableRow, tableBodyContainer, tableBody } =
     DOM_ELEMENTS.classNames;
 
-  useEffect(() => {
+  // Apply grid layout and styles synchronously before paint
+  useLayoutEffect(() => {
     const applyHeaderStyles = (scrollbarWidth: number, gridTemplate: string, totalMinWidth: number) => {
       if (tableHeadElemRef.current) {
         tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
@@ -37,6 +42,18 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
       });
     };
 
+    const columnWidths = extractColumnWidths(sortedHeaderEntries);
+    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
+    const scrollbarWidth = getScrollbarWidth(
+      tableBodyContainerElemRef.current?.offsetWidth ?? 0,
+      tableBodyContainerElemRef.current?.clientWidth ?? 0,
+    );
+
+    applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
+    applyBodyRowStyles(gridTemplate, totalMinWidth);
+  }, [sortedHeaderEntries, data]);
+
+  useEffect(() => {
     const syncHorizontalScroll = (event: Event) => {
       const target = event.target as HTMLElement | null;
       if (!target) return;
@@ -48,25 +65,13 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
       });
     };
 
-    // Main logic
-    const columnWidths = extractColumnWidths(sortedHeaderEntries);
-    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
-    const scrollbarWidth = getScrollbarWidth(
-      tableBodyContainerElemRef.current?.offsetWidth ?? 0,
-      tableBodyContainerElemRef.current?.clientWidth ?? 0,
-    );
-
-    applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
-    applyBodyRowStyles(gridTemplate, totalMinWidth);
-
-    // Setup scroll synchronization
     const bodyContainer = tableBodyContainerElemRef.current;
     bodyContainer?.addEventListener('scroll', syncHorizontalScroll);
 
     return () => {
       bodyContainer?.removeEventListener('scroll', syncHorizontalScroll);
     };
-  }, [sortedHeaderEntries, data]);
+  }, []);
 
   const handleHeaderKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, key: string) => {
     if (event.key === 'Enter') {
@@ -107,7 +112,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
       <div ref={tableBodyContainerElemRef} className={tableBodyContainer}>
         <div className={tableBody}>
           {data.map((row: Row) => {
-            const rowMeta = row.__meta as Record<string, any>;
+            const rowMeta = row.__meta as RowMeta;
 
             return (
               <div
@@ -117,7 +122,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
                 tabIndex={0}
                 className={classNames(
                   tableRow,
-                  { clickable: onRowClick, 'row-selected': selectedRows?.includes(rowMeta?.id) },
+                  { clickable: onRowClick, 'row-selected': rowMeta?.id && selectedRows?.includes(rowMeta.id) },
                   rowMeta?.className,
                 )}
                 onClick={() => onRowClick?.(row)}
@@ -134,18 +139,17 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
                   } = row?.[key] || {};
 
                   return (
-                      <div
-                        className={classNames('table-cell', className, headerClassName)}
-                        data-testid={key}
-                        key={key}
-                        role="cell"
-                        {...rest}
-                      >
-                        <div className="table-cell-content">{(children || label) ?? ''}</div>
-                      </div>
-                    );
-                  },
-                )}
+                    <div
+                      className={classNames('table-cell', className, headerClassName)}
+                      data-testid={key}
+                      key={key}
+                      role="cell"
+                      {...rest}
+                    >
+                      <div className="table-cell-content">{(children || label) ?? ''}</div>
+                    </div>
+                  );
+                })}
               </div>
             );
           })}

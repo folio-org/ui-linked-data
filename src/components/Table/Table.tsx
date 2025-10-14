@@ -8,7 +8,15 @@ export type Cell = {
   children?: JSX.Element;
   className?: string;
   position?: number;
-  [x: string]: any;
+  [x: string]: unknown;
+};
+
+export type RowMeta = {
+  id?: string;
+  key?: string;
+  className?: string;
+  isAnchor?: boolean;
+  [key: string]: unknown;
 };
 
 export type Row = Record<string, Cell>;
@@ -47,14 +55,14 @@ export const Table = ({ header, data, className, onRowClick, onHeaderCellClick, 
       </thead>
       <tbody>
         {data.map((row: Row) => {
-          const rowMeta = row.__meta as Record<string, any>;
+          const rowMeta = row.__meta as RowMeta;
 
           return (
             <tr
               data-testid="table-row"
               key={rowMeta?.key || rowMeta?.id}
               className={classNames(
-                { clickable: onRowClick, 'row-selected': selectedRows?.includes(rowMeta?.id) },
+                { clickable: onRowClick, 'row-selected': rowMeta?.id && selectedRows?.includes(rowMeta.id) },
                 rowMeta?.className,
               )}
               onClick={() => onRowClick?.(row)}
