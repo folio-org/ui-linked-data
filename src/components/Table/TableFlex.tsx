@@ -1,13 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { MAX_SEARCH_BAR_WIDTH } from '@common/constants/uiElements.constants';
-import { type Table as TableProps, type Row } from './Table';
+import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
+import { type Table as TableProps, type Row, type RowMeta } from './Table';
 import './Table.scss';
 
 export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: TableProps) => {
-  const sortedHeaderEntries = Object.entries(header).sort(
-    ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
+  const sortedHeaderEntries = useMemo(
+    () =>
+      Object.entries(header).sort(
+        ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
+      ),
+    [header],
   );
 
   const tableHeadElemRef = useRef<HTMLDivElement>(null);
@@ -16,29 +20,56 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
   const { table, tableFlex, tableHead, tableHeadCell, tableRow, tableBodyContainer, tableBody } =
     DOM_ELEMENTS.classNames;
 
-  useEffect(() => {
-    const tableHeadElemWidth = tableHeadRowElemRef.current?.getBoundingClientRect()?.width;
+  // Apply grid layout and styles synchronously before paint
+  useLayoutEffect(() => {
+    const applyHeaderStyles = (scrollbarWidth: number, gridTemplate: string, totalMinWidth: number) => {
+      if (tableHeadElemRef.current) {
+        tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
+      }
 
-    if (tableHeadElemWidth) {
-      tableHeadRowElemRef.current?.setAttribute('style', `width: ${tableHeadElemWidth + MAX_SEARCH_BAR_WIDTH}px`);
-    }
+      if (tableHeadRowElemRef.current) {
+        tableHeadRowElemRef.current.style.gridTemplateColumns = gridTemplate;
+        tableHeadRowElemRef.current.style.minWidth = `${totalMinWidth}px`;
+      }
+    };
 
-    const handleScroll = (event: Event) => {
-      const { target } = event;
+    const applyBodyRowStyles = (gridTemplate: string, totalMinWidth: number) => {
+      const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll(`.${tableBody} > .${tableRow}`);
 
-      if (!target) return;
-
-      const { scrollLeft } = target as HTMLElement;
-
-      requestAnimationFrame(() => {
-        tableHeadElemRef?.current?.scrollTo({ left: scrollLeft });
+      bodyRows?.forEach(row => {
+        (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
+        (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
       });
     };
 
-    tableBodyContainerElemRef.current?.addEventListener('scroll', handleScroll);
+    const columnWidths = extractColumnWidths(sortedHeaderEntries);
+    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
+    const scrollbarWidth = getScrollbarWidth(
+      tableBodyContainerElemRef.current?.offsetWidth ?? 0,
+      tableBodyContainerElemRef.current?.clientWidth ?? 0,
+    );
+
+    applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
+    applyBodyRowStyles(gridTemplate, totalMinWidth);
+  }, [sortedHeaderEntries, data]);
+
+  useEffect(() => {
+    const syncHorizontalScroll = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const { scrollLeft } = target;
+
+      requestAnimationFrame(() => {
+        tableHeadElemRef.current?.scrollTo({ left: scrollLeft });
+      });
+    };
+
+    const bodyContainer = tableBodyContainerElemRef.current;
+    bodyContainer?.addEventListener('scroll', syncHorizontalScroll);
 
     return () => {
-      tableBodyContainerElemRef.current?.removeEventListener('scroll', handleScroll);
+      bodyContainer?.removeEventListener('scroll', syncHorizontalScroll);
     };
   }, []);
 
@@ -62,7 +93,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     <div role="table" data-testid="table" className={classNames(table, tableFlex, className)}>
       <div role="rowgroup" ref={tableHeadElemRef} className={tableHead}>
         <div role="row" ref={tableHeadRowElemRef} className={tableRow}>
-          {sortedHeaderEntries.map(([key, { label, className, ...rest }]) => (
+          {sortedHeaderEntries.map(([key, { label, className, minWidth: _minWidth, maxWidth: _maxWidth, ...rest }]) => (
             <div
               key={key}
               data-testid={`th-${key}`}
@@ -81,7 +112,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
       <div ref={tableBodyContainerElemRef} className={tableBodyContainer}>
         <div className={tableBody}>
           {data.map((row: Row) => {
-            const rowMeta = row.__meta as Record<string, any>;
+            const rowMeta = row.__meta as RowMeta;
 
             return (
               <div
@@ -91,14 +122,21 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
                 tabIndex={0}
                 className={classNames(
                   tableRow,
-                  { clickable: onRowClick, 'row-selected': selectedRows?.includes(rowMeta?.id) },
+                  { clickable: onRowClick, 'row-selected': rowMeta?.id && selectedRows?.includes(rowMeta.id) },
                   rowMeta?.className,
                 )}
                 onClick={() => onRowClick?.(row)}
                 onKeyDown={event => handleRowKeyDown(event, row)}
               >
                 {sortedHeaderEntries.map(([key, { className: headerClassName }]) => {
-                  const { label, children, className, ...rest } = row?.[key] || {};
+                  const {
+                    label,
+                    children,
+                    className,
+                    minWidth: _cellMinWidth, // eslint-disable-line @typescript-eslint/no-unused-vars -- Intentionally excluded from rest spread
+                    maxWidth: _cellMaxWidth, // eslint-disable-line @typescript-eslint/no-unused-vars -- Intentionally excluded from rest spread
+                    ...rest
+                  } = row?.[key] || {};
 
                   return (
                     <div

@@ -49,12 +49,15 @@ export const useComplexLookupSearchResults = ({
   const listHeader = useMemo(
     () =>
       Object.keys(tableConfig.columns).reduce((accum, key) => {
-        const { label, position, className } = (tableConfig.columns[key] || {}) as SearchResultsTableColumn;
+        const { label, position, className, minWidth, maxWidth } = (tableConfig.columns[key] ||
+          {}) as SearchResultsTableColumn;
 
         accum[key] = {
           label: label ? formatMessage({ id: label }) : '',
           position: position,
           className: className,
+          minWidth,
+          maxWidth
         };
 
         return accum;

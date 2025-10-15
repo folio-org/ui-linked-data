@@ -18,30 +18,35 @@ describe('authoritiesTableConfig', () => {
       assign: {
         label: '',
         position: 0,
-        className: 'cell-fixed cell-fixed-100',
+        className: 'cell-fixed',
+        minWidth: 100,
         formatter: mockAssignFormatter,
       },
       authorized: {
         label: 'ld.authorizedReference',
         position: 1,
-        className: 'cell-fixed cell-fixed-170',
+        className: 'cell-fixed',
+        minWidth: 170,
         formatter: mockAuthorizedFormatter,
       },
       title: {
         label: 'ld.headingReference',
         position: 2,
-        className: 'cell-fixed cell-fixed-370',
+        className: 'cell-fixed',
+        minWidth: 370,
         formatter: mockTitleFormatter,
       },
       subclass: {
         label: 'ld.typeOfHeading',
         position: 3,
-        className: 'cell-fixed cell-fixed-140',
+        className: 'cell-fixed',
+        minWidth: 140,
       },
       authoritySource: {
         label: 'ld.authoritySource',
         position: 4,
-        className: 'cell-fixed cell-fixed-250',
+        className: 'cell-fixed',
+        minWidth: 250,
       },
     });
   });

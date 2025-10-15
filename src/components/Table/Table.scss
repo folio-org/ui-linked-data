@@ -138,42 +138,6 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
 
     &-fixed {
       justify-content: center;
-
-      &-100 {
-        width: 100px;
-        min-width: 100px;
-        max-width: 100px;
-      }
-
-      &-140 {
-        width: 140px;
-        min-width: 140px;
-        max-width: 140px;
-      }
-
-      &-170 {
-        width: 170px;
-        min-width: 170px;
-        max-width: 170px;
-      }
-
-      &-250 {
-        width: 250px;
-        min-width: 250px;
-        max-width: 250px;
-      }
-
-      &-370 {
-        width: 370px;
-        min-width: 370px;
-        max-width: 370px;
-      }
-
-      &-430 {
-        width: 430px;
-        min-width: 430px;
-        max-width: 430px;
-      }
     }
   }
 }
@@ -186,57 +150,64 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
   overflow: hidden;
 
   .table-head {
-    overflow: hidden;
-
-    .table-row {
-      border-bottom: 5px solid $blue-600;
-      background-color: #fff;
-    }
-
-    &-cell {
-      position: relative;
-      top: 5px;
-      padding-bottom: 5px;
-      padding-right: 0;
-      border-right: 1px solid white;
-      background: transparent;
-
-      &:last-child {
-        border-right: 0;
-      }
-    }
+    overflow-x: hidden; // Header scrolls via JS sync
+    flex-shrink: 0; // Prevent header from shrinking
+    box-sizing: border-box; // Padding for scrollbar doesn't affect layout
+    z-index: 100;
   }
 
   .table-row {
-    display: flex;
-
-    .table-cell {
-      display: flex;
-      justify-content: flex-start;
-      padding-top: 5px;
-      padding-bottom: 5px;
-      border-bottom: none;
-
-      &-content {
-        display: flex;
-        align-items: center;
-      }
-    }
+    display: grid;
+    // Will be set dynamically via JS, but this provides fallback
+    grid-auto-flow: column;
+    min-width: fit-content;
 
     .table-header-contents-wrapper {
       height: 100%;
+      width: 100%;
       font-weight: 700;
       border-bottom: none;
     }
   }
 
-  .table-body {
-    &-container {
-      flex: 1;
-      height: 100%;
-      max-width: 100%;
-      min-width: 100%;
-      overflow: auto;
+  .table-head .table-row {
+    border-bottom: 5px solid $blue-600;
+    background-color: #fff;
+  }
+
+  .table-head-cell {
+    position: relative;
+    top: 5px;
+    padding-bottom: 5px;
+    padding-right: 0;
+    border-right: 1px solid white;
+    background: transparent;
+    display: flex;
+    align-items: flex-end;
+
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  .table-body-container {
+    flex: 1;
+    height: 100%;
+    overflow: auto; // Both horizontal and vertical scroll
+    margin-top: -5px;
+    border-top: 5px solid $blue-600; // Border above the scrollbar
+  }
+
+  .table-cell {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 5px 0.625rem;
+    border-bottom: none;
+
+    &-content {
+      display: flex;
+      align-items: center;
     }
   }
 }
