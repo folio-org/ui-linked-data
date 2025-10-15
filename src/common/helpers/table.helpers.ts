@@ -22,7 +22,6 @@ export const calculateGridTemplate = (columnWidths: ColumnWidthConfig[]) => {
 
   const gridTemplate = columnWidths
     .map(({ min, max }) => {
-      // If max is specified, use it; otherwise use 1fr for flexible growth
       const maxValue = max !== undefined ? `${max}px` : '1fr';
 
       return `minmax(${min}px, ${maxValue})`;

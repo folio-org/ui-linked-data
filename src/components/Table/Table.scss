@@ -153,6 +153,7 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     overflow-x: hidden; // Header scrolls via JS sync
     flex-shrink: 0; // Prevent header from shrinking
     box-sizing: border-box; // Padding for scrollbar doesn't affect layout
+    z-index: 100;
   }
 
   .table-row {
@@ -193,6 +194,8 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     flex: 1;
     height: 100%;
     overflow: auto; // Both horizontal and vertical scroll
+    margin-top: -5px;
+    border-top: 5px solid $blue-600; // Border above the scrollbar
   }
 
   .table-cell {
