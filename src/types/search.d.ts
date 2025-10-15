@@ -58,7 +58,7 @@ type SearchParams = {
   hasMarcPreview?: boolean;
   hasCustomPagination?: boolean;
   renderMarcPreview?: () => JSX.Element | null;
-  onAssignRecord?: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+  onAssignRecord?: ({ id, title, linkedFieldValue, uri }: ComplexLookupAssignRecordDTO) => void;
 };
 
 type FacetsBySegments = {

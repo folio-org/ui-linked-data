@@ -182,7 +182,10 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -212,7 +215,10 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -308,8 +314,14 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
-          uri_2: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          uri_2: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
           uri_3: { type: RecordSchemaEntryType.string },
         },
       } as RecordSchemaEntry;
@@ -357,7 +369,10 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -386,7 +401,7 @@ describe('GroupProcessor', () => {
           contents: [{ label: 'value 2' }],
         },
         child_1_2: {
-          contents: [{ label: 'value 3' }, { label: 'value 4'}],
+          contents: [{ label: 'value 3' }, { label: 'value 4' }],
         },
       } as unknown as UserValues;
       const recordSchemaEntry = {
@@ -397,7 +412,7 @@ describe('GroupProcessor', () => {
         },
       } as RecordSchemaEntry;
 
-      mockProfileSchemaManager.getSchemaEntry.mockImplementation((uuid => {
+      mockProfileSchemaManager.getSchemaEntry.mockImplementation(uuid => {
         switch (uuid) {
           case 'child_1_0':
             return {
@@ -428,7 +443,7 @@ describe('GroupProcessor', () => {
               },
             } as SchemaEntry;
         }
-      }));
+      });
 
       const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
 
@@ -443,18 +458,30 @@ describe('GroupProcessor', () => {
       } as SchemaEntry;
       const userValues = {
         child_1: {
-          contents: [{ label: 'child_1 value 1' }, { label: 'child_1 value 2' }],
+          contents: [
+            { label: 'child_1 value 1', meta: { uri: 'test_uri_1' } },
+            { label: 'child_1 value 2', meta: { uri: 'test_uri_2' } },
+          ],
         },
         child_2: {
-          contents: [{ label: 'child_2 value 1' }, { label: 'child_2 value 2' }],
+          contents: [
+            { label: 'child_2 value 1', meta: { uri: 'test_uri_3' } },
+            { label: 'child_2 value 2', meta: { uri: 'test_uri_4' } },
+          ],
         },
       } as unknown as UserValues;
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
-          uri_2: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          uri_2: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -498,8 +525,14 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
-          uri_2: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          uri_2: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -538,7 +571,10 @@ describe('GroupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          uri_1: { type: RecordSchemaEntryType.string },
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.array,
+          },
         },
       } as RecordSchemaEntry;
 
@@ -605,7 +641,8 @@ describe('GroupProcessor', () => {
         value: RecordSchemaEntryType.object,
         properties: {
           uri_1: {
-            type: RecordSchemaEntryType.string,
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
             options: {
               mappedValues: {
                 mapped_key: { uri: 'test_uri' },
@@ -644,13 +681,17 @@ describe('GroupProcessor', () => {
           value: RecordSchemaEntryType.object,
           properties: {
             default_uri: {
-              type: RecordSchemaEntryType.string,
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
               options: {
                 defaultValue: 'default_value_uri',
                 linkedProperty: 'linked_uri',
               },
             },
-            linked_uri: { type: RecordSchemaEntryType.string },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
           },
         } as RecordSchemaEntry;
         mockGetSchemaEntry();
@@ -702,13 +743,17 @@ describe('GroupProcessor', () => {
           value: RecordSchemaEntryType.object,
           properties: {
             default_uri: {
-              type: RecordSchemaEntryType.string,
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
               options: {
                 defaultValue: 'default_value_uri',
                 linkedProperty: 'linked_uri',
               },
             },
-            linked_uri: { type: RecordSchemaEntryType.string },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
           },
         } as RecordSchemaEntry;
         mockGetSchemaEntry();
@@ -734,12 +779,16 @@ describe('GroupProcessor', () => {
           value: RecordSchemaEntryType.object,
           properties: {
             default_uri: {
-              type: RecordSchemaEntryType.string,
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
               options: {
                 defaultValue: 'default_value_uri',
               },
             },
-            linked_uri: { type: RecordSchemaEntryType.string },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
           },
         } as RecordSchemaEntry;
         mockGetSchemaEntry();

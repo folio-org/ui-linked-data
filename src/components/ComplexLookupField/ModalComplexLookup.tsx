@@ -20,7 +20,7 @@ import './ModalComplexLookup.scss';
 
 interface ModalComplexLookupProps {
   isOpen: boolean;
-  onAssign: ({ id, title, linkedFieldValue }: ComplexLookupAssignRecordDTO) => void;
+  onAssign: ({ id, title, linkedFieldValue, uri }: ComplexLookupAssignRecordDTO) => void;
   onClose: VoidFunction;
   value?: string;
   assignEntityName?: string;

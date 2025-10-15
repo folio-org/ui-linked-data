@@ -1,11 +1,7 @@
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { IValueFormatter } from './valueFormatter.interface';
+import { BaseValueFormatter } from './baseValueFormatter';
 
-export class GroupValueFormatter implements IValueFormatter {
-  formatLiteral(value: UserValueContents) {
-    return value.label ? [value.label] : [];
-  }
-
+export class GroupValueFormatter extends BaseValueFormatter {
   formatSimple(value: UserValueContents, recordSchemaEntry?: RecordSchemaEntry) {
     if (!value.meta?.uri) return [];
 
@@ -25,11 +21,5 @@ export class GroupValueFormatter implements IValueFormatter {
     }
 
     return [value.meta.uri];
-  }
-
-  formatComplex(value: UserValueContents) {
-    const selectedId = value.meta?.srsId ?? value.id ?? '';
-
-    return Array.isArray(selectedId) ? selectedId[0] : selectedId;
   }
 }

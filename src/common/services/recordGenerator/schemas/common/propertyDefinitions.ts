@@ -51,7 +51,7 @@ export const providerProperties = {
   },
 };
 
-export const statusProperties = {
+export const linkAndLabelProperties = {
   [BFLITE_URIS.LABEL]: stringArrayProperty,
   [BFLITE_URIS.LINK]: stringArrayProperty,
 };

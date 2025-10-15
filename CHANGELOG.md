@@ -48,6 +48,7 @@
 * Inform user on how instance admin metadata from FOLIO is supplied after additional processing. Refs [UILD-641].
 * Add Hub entity search. Refs [UILD-647].
 * Fixed SCSS warnings. Refs [UILD-653].
+* Add Hub search assign button behavior. Refs [UILD-648].
 * Adjusted Flex table component to make it responsive to content. Refs [UILD-652].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -98,6 +99,7 @@
 [UILD-641]:https://folio-org.atlassian.net/browse/UILD-641
 [UILD-647]:https://folio-org.atlassian.net/browse/UILD-647
 [UILD-653]:https://folio-org.atlassian.net/browse/UILD-653
+[UILD-648]:https://folio-org.atlassian.net/browse/UILD-648
 [UILD-652]:https://folio-org.atlassian.net/browse/UILD-652
 
 ## 1.0.5 (2025-04-30)

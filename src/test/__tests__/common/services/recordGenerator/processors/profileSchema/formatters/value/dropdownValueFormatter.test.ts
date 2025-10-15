@@ -1,12 +1,7 @@
-import { DropdownValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/dropdownValueFormatter';
 import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-
-jest.mock('@common/constants/bibframeMapping.constants', () => ({
-  BFLITE_URIS: {
-    LINK: 'link_uri',
-    LABEL: 'label_uri',
-  },
-}));
+import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { DropdownValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/dropdownValueFormatter';
+import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
 
 describe('DropdownValueFormatter', () => {
   let formatter: DropdownValueFormatter;
@@ -17,7 +12,7 @@ describe('DropdownValueFormatter', () => {
 
   describe('formatLiteral', () => {
     it('returns label in array when label exists', () => {
-      const value = { label: 'test label' };
+      const value: UserValueContents = { label: 'test label' };
 
       const result = formatter.formatLiteral(value);
 
@@ -25,7 +20,7 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('returns empty array when label is undefined', () => {
-      const value = { label: undefined };
+      const value: UserValueContents = { label: undefined };
 
       const result = formatter.formatLiteral(value);
 
@@ -33,7 +28,15 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('returns empty array when label is null', () => {
-      const value = { label: null as unknown as string };
+      const value: UserValueContents = { label: null as unknown as string };
+
+      const result = formatter.formatLiteral(value);
+
+      expect(result).toEqual([]);
+    });
+
+    it('returns empty array when label is empty string', () => {
+      const value: UserValueContents = { label: '' };
 
       const result = formatter.formatLiteral(value);
 
@@ -42,8 +45,8 @@ describe('DropdownValueFormatter', () => {
   });
 
   describe('formatSimple', () => {
-    it('returns object with uri in LINK property and label in LABEL property when all values exist', () => {
-      const value = {
+    it('returns object with uri in LINK property and basicLabel in LABEL property when all values exist', () => {
+      const value: UserValueContents = {
         label: 'test label',
         meta: {
           uri: 'test_uri',
@@ -60,7 +63,7 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('uses label when basicLabel is not available', () => {
-      const value = {
+      const value: UserValueContents = {
         label: 'test label',
         meta: {
           uri: 'test_uri',
@@ -76,7 +79,7 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('returns empty string in LINK property when uri is not available', () => {
-      const value = {
+      const value: UserValueContents = {
         label: 'test label',
         meta: {},
       };
@@ -90,7 +93,7 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('returns empty string in LABEL property when both basicLabel and label are not available', () => {
-      const value = {
+      const value: UserValueContents = {
         label: undefined,
         meta: {
           uri: 'test_uri',
@@ -106,7 +109,7 @@ describe('DropdownValueFormatter', () => {
     });
 
     it('returns empty strings when meta is undefined', () => {
-      const value = {
+      const value: UserValueContents = {
         label: 'test label',
         meta: undefined,
       };
@@ -118,68 +121,110 @@ describe('DropdownValueFormatter', () => {
         [BFLITE_URIS.LABEL]: ['test label'],
       });
     });
+
+    it('returns object with empty LINK when meta.uri is null', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {
+          uri: null as unknown as string,
+          basicLabel: 'basic label',
+        },
+      };
+
+      const result = formatter.formatSimple(value);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LINK]: [''],
+        [BFLITE_URIS.LABEL]: ['basic label'],
+      });
+    });
+
+    it('prefers basicLabel over label when both are available', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {
+          uri: 'test_uri',
+          basicLabel: 'preferred basic label',
+        },
+      };
+
+      const result = formatter.formatSimple(value);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LINK]: ['test_uri'],
+        [BFLITE_URIS.LABEL]: ['preferred basic label'],
+      });
+    });
   });
 
   describe('formatComplex', () => {
-    it('returns object with srsId when srsId is available', () => {
-      const value = {
-        label: 'test label',
-        id: 'test_id',
-        meta: {
-          srsId: 'test_srs_id',
-        },
-      };
+    describe('when recordSchemaEntry has properties (Hub scenario)', () => {
+      it('returns complex object with LABEL and LINK when value has label and uri', () => {
+        const value: UserValueContents = {
+          label: 'test label',
+          meta: { uri: 'test_uri' },
+        };
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+            [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          },
+        };
 
-      const result = formatter.formatComplex(value);
+        const result = formatter.formatComplex(value, recordSchemaEntry);
 
-      expect(result).toEqual({ srsId: 'test_srs_id' });
+        expect(result).toEqual({
+          [BFLITE_URIS.LABEL]: ['test label'],
+          [BFLITE_URIS.LINK]: ['test_uri'],
+        });
+      });
     });
 
-    it('returns object with id when srsId is not available', () => {
-      const value = {
-        label: 'test label',
-        id: 'test_id',
-      };
+    describe('when recordSchemaEntry has no properties (Creator/Contributor scenario)', () => {
+      it('returns srsId when available', () => {
+        const value = {
+          label: 'test label',
+          meta: { srsId: 'test_srs_id' },
+          id: 'test_id',
+        } as unknown as UserValueContents;
 
-      const result = formatter.formatComplex(value);
+        const result = formatter.formatComplex(value);
 
-      expect(result).toEqual({ id: 'test_id' });
-    });
+        expect(result).toEqual('test_srs_id');
+      });
 
-    it('handles array of srsId values', () => {
-      const value = {
-        label: 'test label',
-        id: 'test_id',
-        meta: {
-          srsId: 'srsId_1',
-        },
-      };
+      it('returns id when srsId is not available', () => {
+        const value = {
+          label: 'test label',
+          id: 'test_id',
+        } as unknown as UserValueContents;
 
-      const result = formatter.formatComplex(value);
+        const result = formatter.formatComplex(value);
 
-      expect(result).toEqual({ srsId: 'srsId_1' });
-    });
+        expect(result).toEqual('test_id');
+      });
 
-    it('handles undefined meta', () => {
-      const value = {
-        label: 'test label',
-        id: 'test_id',
-        meta: undefined,
-      };
+      it('returns empty string when neither srsId nor id is available', () => {
+        const value: UserValueContents = {
+          label: 'test label',
+        };
 
-      const result = formatter.formatComplex(value);
+        const result = formatter.formatComplex(value);
 
-      expect(result).toEqual({ id: 'test_id' });
-    });
+        expect(result).toEqual('');
+      });
 
-    it('handles undefined id', () => {
-      const value = {
-        label: 'test label',
-      };
+      it('returns empty string when meta is undefined', () => {
+        const value: UserValueContents = {
+          label: 'test label',
+          meta: undefined,
+        };
 
-      const result = formatter.formatComplex(value);
+        const result = formatter.formatComplex(value);
 
-      expect(result).toEqual({ id: undefined });
+        expect(result).toEqual('');
+      });
     });
   });
 });
