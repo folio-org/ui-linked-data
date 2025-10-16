@@ -97,7 +97,8 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
-      const comparisonIndex = selectedInstances.findIndex(id => id === row.__meta.id);
+      const rowMeta = row.__meta;
+      const comparisonIndex = selectedInstances.findIndex(id => id === rowMeta?.id);
       const typedTitle = row.title.label as string;
 
       return {
@@ -112,8 +113,8 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
                 )}
               <Button
                 type={ButtonType.Link}
-                onClick={() => handleOpenPreview(row?.__meta?.id)}
-                data-testid={`preview-button__${row.__meta.id}`}
+                onClick={() => handleOpenPreview(rowMeta?.id as string)}
+                data-testid={`preview-button__${rowMeta?.id}`}
                 ariaLabel={formatMessage({ id: 'ld.aria.sections.openResourcePreview' }, { title: typedTitle })}
               >
                 {row.title.label}
@@ -125,8 +126,8 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           children: (
             <Button
               type={ButtonType.Primary}
-              onClick={() => navigateToEditPage(generateEditResourceUrl(row.__meta?.id))}
-              data-testid={`edit-button__${row.__meta.id}`}
+              onClick={() => navigateToEditPage(generateEditResourceUrl(rowMeta?.id))}
+              data-testid={`edit-button__${rowMeta?.id}`}
               className={classNames(['button-nowrap', 'button-capitalize'])}
               ariaLabel={formatMessage({ id: 'ld.aria.sections.editInstance' }, { title: typedTitle })}
             >
@@ -138,10 +139,10 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
           children: (
             <div className="row-select-container">
               <input
-                id={`row-select-ctl-${row.__meta?.key}`}
+                id={`row-select-ctl-${rowMeta?.key}`}
                 type="checkbox"
-                checked={selectedInstances.includes(row.__meta?.id)}
-                onChange={e => toggleInstanceSelect(row.__meta?.id, e.target.checked)}
+                checked={selectedInstances.includes(rowMeta?.id as string)}
+                onChange={e => toggleInstanceSelect(rowMeta?.id as string, e.target.checked)}
                 aria-label={formatMessage({ id: 'ld.aria.table.selectRow' }, { title: typedTitle })}
               />
             </div>

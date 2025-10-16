@@ -8,8 +8,8 @@ describe('TableFlex Component', () => {
   };
 
   const data = [
-    { __meta: { id: 1, key: 'row_1' }, name: { label: 'John Doe' }, age: { label: '30' } },
-    { __meta: { id: 2, key: 'row_2' }, name: { label: 'Jane Doe' }, age: { label: '25' } },
+    { __meta: { id: '1', key: 'row_1' }, name: { label: 'John Doe' }, age: { label: '30' } },
+    { __meta: { id: '2', key: 'row_2' }, name: { label: 'Jane Doe' }, age: { label: '25' } },
   ];
 
   const onRowClick = jest.fn();

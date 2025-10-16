@@ -1,12 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Cell } from '@components/Table';
 import { HeaderCell } from '@components/Table/HeaderCell';
 
 describe('HeaderCell', () => {
   const defaultProps = {
     elementType: 'th' as const,
     cellKey: 'test',
-    header: { test: 'value' } as Cell,
+    header: { test: { label: 'value' } },
     label: 'Test Header',
   };
 
@@ -44,11 +43,11 @@ describe('HeaderCell', () => {
     fireEvent.click(getHeaderCell());
 
     if (onHeaderCellClick) {
-      expect(onHeaderCellClick).toHaveBeenCalledWith({ test: 'value' });
+      expect(onHeaderCellClick).toHaveBeenCalledWith({ test: { label: 'value' } });
     }
   };
 
-  const expectStyling = (props: any, expectedClass: string) => {
+  const expectStyling = (props: Record<string, unknown>, expectedClass: string) => {
     renderHeaderCell(props);
 
     expect(getHeaderCell()).toHaveClass(expectedClass);
