@@ -38,7 +38,13 @@ export const ExtendedLayout: FC<IExtendedLayout> = memo(
 
     return (
       <>
-        <div id={htmlId} className={classNames({ 'extended-layout-meta': hasDuplicateGroupButton || marcMapping })}>
+        <div
+          id={htmlId}
+          className={classNames({
+            'extended-layout-meta': hasDuplicateGroupButton || marcMapping,
+            [`extended-layout-${entry.type}`]: true,
+          })}
+        >
           {displayName && showLabel && (
             <div className={classNames('label', labelContainerClassName)}>{displayName}</div>
           )}
