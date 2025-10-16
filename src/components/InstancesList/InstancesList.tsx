@@ -52,22 +52,25 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
+      const rowMeta = row.__meta;
       const onClickPreview = () =>
         keys?.uri &&
         getRecordAndInitializeParsing({
-          recordId: row.__meta.id,
-          cachedRecord: wrapRecordValuesWithCommonContainer({ [keys?.uri]: row.__meta }),
+          recordId: rowMeta?.id,
+          cachedRecord: wrapRecordValuesWithCommonContainer({
+            [keys?.uri]: rowMeta as unknown as RecordEntry<RecursiveRecordSchema>,
+          }),
           previewParams: { singular: true, noStateUpdate: true },
         });
 
-      const onClickEdit = () => navigateToEditPage(generateEditResourceUrl(row.__meta?.id));
+      const onClickEdit = () => navigateToEditPage(generateEditResourceUrl(rowMeta?.id));
 
       return {
         ...row,
         title: {
           ...row.title,
           children: (
-            <Button type={ButtonType.Link} onClick={onClickPreview} data-testid={`preview-button__${row.__meta.id}`}>
+            <Button type={ButtonType.Link} onClick={onClickPreview} data-testid={`preview-button__${rowMeta?.id}`}>
               {row.title.label}
             </Button>
           ),
@@ -75,7 +78,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
         editCtl: {
           className: 'edit-ctl',
           children: (
-            <Button type={ButtonType.Primary} onClick={onClickEdit} data-testid={`edit-button__${row.__meta.id}`}>
+            <Button type={ButtonType.Primary} onClick={onClickEdit} data-testid={`edit-button__${rowMeta?.id}`}>
               <FormattedMessage id="ld.edit" />
             </Button>
           ),

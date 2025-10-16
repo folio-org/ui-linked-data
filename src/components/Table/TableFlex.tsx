@@ -2,14 +2,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
-import { type Table as TableProps, type Row, type RowMeta } from './Table';
+import { type Table as TableProps, type Row, type Cell } from './Table';
 import './Table.scss';
 
 export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: TableProps) => {
   const sortedHeaderEntries = useMemo(
     () =>
       Object.entries(header).sort(
-        ([_key1, value1], [_key2, value2]) => (value1?.position ?? 0) - (value2?.position ?? 0),
+        ([_key1, value1], [_key2, value2]) => ((value1 as Cell)?.position ?? 0) - ((value2 as Cell)?.position ?? 0),
       ),
     [header],
   );
@@ -93,26 +93,29 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     <div role="table" data-testid="table" className={classNames(table, tableFlex, className)}>
       <div role="rowgroup" ref={tableHeadElemRef} className={tableHead}>
         <div role="row" ref={tableHeadRowElemRef} className={tableRow}>
-          {sortedHeaderEntries.map(([key, { label, className, minWidth: _minWidth, maxWidth: _maxWidth, ...rest }]) => (
-            <div
-              key={key}
-              data-testid={`th-${key}`}
-              role="columnheader"
-              tabIndex={0}
-              className={classNames(tableHeadCell, { clickable: onHeaderCellClick }, className)}
-              onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
-              onKeyDown={event => handleHeaderKeyDown(event, key)}
-              {...rest}
-            >
-              <div className="table-header-contents-wrapper">{label ?? ''}</div>
-            </div>
-          ))}
+          {sortedHeaderEntries.map(([key, value]) => {
+            const { label, className, minWidth: _minWidth, maxWidth: _maxWidth, ...rest } = value as Cell; // eslint-disable-line @typescript-eslint/no-unused-vars -- Intentionally excluded from rest spread
+            return (
+              <div
+                key={key}
+                data-testid={`th-${key}`}
+                role="columnheader"
+                tabIndex={0}
+                className={classNames(tableHeadCell, { clickable: onHeaderCellClick }, className)}
+                onClick={() => onHeaderCellClick?.({ [key]: header[key] })}
+                onKeyDown={event => handleHeaderKeyDown(event, key)}
+                {...rest}
+              >
+                <div className="table-header-contents-wrapper">{label ?? ''}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div ref={tableBodyContainerElemRef} className={tableBodyContainer}>
         <div className={tableBody}>
           {data.map((row: Row) => {
-            const rowMeta = row.__meta as RowMeta;
+            const rowMeta = row.__meta;
 
             return (
               <div
