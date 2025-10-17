@@ -10,7 +10,7 @@ const checkRDANote = (notes: string[]) => {
 
 export const formatHubItem = (hubList: HubSearchResultDTO[]): SearchResultsTableRow[] =>
   hubList?.map(hubEntry => {
-    const { aLabel = '', uri = '', token = '', more } = hubEntry;
+    const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
     const { notes = [] } = more || {};
 
     return {
@@ -20,7 +20,7 @@ export const formatHubItem = (hubList: HubSearchResultDTO[]): SearchResultsTable
         isAnchor: false,
       },
       hub: {
-        label: aLabel,
+        label: suggestLabel,
         uri: uri,
         className: 'hub-title',
       },
