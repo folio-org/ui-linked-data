@@ -113,4 +113,39 @@ describe('formatHubItem', () => {
 
     expect(result[0].auth.label).toBe('ld.yes');
   });
+
+  describe('suggestLabel handling', () => {
+    test('uses suggestLabel when present', () => {
+      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: 'Custom Suggest Label' }]);
+
+      expect(result[0].hub.label).toBe('Custom Suggest Label');
+    });
+
+    test('uses empty string when suggestLabel is empty string', () => {
+      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: '' }]);
+
+      expect(result[0].hub.label).toBe('');
+    });
+
+    test('preserves suggestLabel with special characters', () => {
+      const specialLabel = 'Test <>&"\'@#$%^&*()';
+      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: specialLabel }]);
+
+      expect(result[0].hub.label).toBe(specialLabel);
+    });
+
+    test('handles suggestLabel with only whitespace', () => {
+      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: '   ' }]);
+
+      expect(result[0].hub.label).toBe('   ');
+    });
+
+    test('handles very long suggestLabel', () => {
+      const longLabel = 'A'.repeat(500);
+      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: longLabel }]);
+
+      expect(result[0].hub.label).toBe(longLabel);
+      expect(result[0].hub.label).toHaveLength(500);
+    });
+  });
 });
