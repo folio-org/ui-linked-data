@@ -75,7 +75,9 @@ const BASE_AUTHORITY_CONFIG = {
     },
   },
   // For displaying "Search by" control and "Filters"
-  searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
+  searchBy: {
+    config: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.authorities,
+  },
   searchableIndicesMap: COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP,
   filters: COMPLEX_LOOKUP_FILTERS_CONFIG.authorities,
   common: {
@@ -138,7 +140,10 @@ export const COMPLEX_LOOKUPS_CONFIG: ComplexLookupsConfig = {
         emptySearch: 'ld.hubs.enterSearchQuery',
       },
     },
-    searchBy: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub,
+    searchBy: {
+      config: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub,
+      defaultValue: COMPLEX_LOOKUP_SEARCH_BY_CONFIG.hub[0]?.value,
+    },
     searchableIndicesMap: HUB_SEARCHABLE_INDICES_MAP,
     buildSearchQuery: 'hub',
     responseTransformer: 'hub',

@@ -92,7 +92,10 @@ type ComplexLookupsConfigEntry = {
   } | null;
   labels: ComplexLookupLabels;
   linkedField?: string;
-  searchBy: ComplexLookupSearchBy | ComplexLookupSearchByValue;
+  searchBy: {
+    config: ComplexLookupSearchBy | ComplexLookupSearchByValue;
+    defaultValue?: SearchableIndex;
+  };
   searchableIndicesMap: SearchableIndicesMap | HubSearchableIndicesMap;
   filters?: SearchFilters;
   buildSearchQuery?: string;

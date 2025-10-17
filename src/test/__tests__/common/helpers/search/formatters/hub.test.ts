@@ -2,7 +2,7 @@ import { formatHubItem } from '@common/helpers/search/formatters/hub';
 
 const mockHubData = [
   {
-    suggestLabel: 'Beta (Computer file)',
+    suggestLabel: 'Beta (Computer file) suggest',
     uri: 'test_uri/test_token',
     aLabel: 'Beta (Computer file)',
     vLabel: '',
@@ -29,7 +29,7 @@ const mockHubData = [
     },
   },
   {
-    suggestLabel: 'Alpha Test',
+    suggestLabel: 'Alpha Test suggest',
     uri: 'test_hub_id',
     aLabel: 'Alpha Test',
     vLabel: '',
@@ -63,7 +63,7 @@ describe('formatHubItem', () => {
     // Test first item with Auth and RDA notes
     const firstItem = result[0];
     expect(firstItem.__meta.id).toBe('test_token');
-    expect(firstItem.hub.label).toBe('Beta (Computer file)');
+    expect(firstItem.hub.label).toBe('Beta (Computer file) suggest');
     expect(firstItem.hub.uri).toBe('test_uri/test_token');
     expect(firstItem.auth.label).toBe('ld.yes');
     expect(firstItem.rda.label).toBe('ld.yes');
@@ -71,7 +71,7 @@ describe('formatHubItem', () => {
     // Test second item without Auth and RDA notes
     const secondItem = result[1];
     expect(secondItem.__meta.id).toBe('test-hub-id');
-    expect(secondItem.hub.label).toBe('Alpha Test');
+    expect(secondItem.hub.label).toBe('Alpha Test suggest');
     expect(secondItem.auth.label).toBe(undefined);
     expect(secondItem.rda.label).toBe(undefined);
   });
