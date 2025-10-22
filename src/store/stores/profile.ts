@@ -3,13 +3,13 @@ import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = Profile | null;
 type InitialSchemaKeyType = string | null;
-type ProfilesMetadata = {
+export type AvailableProfiles = {
   [key in ResourceTypeURL]: ProfileDTO[];
 };
-type PreferredProfiles = ProfileDTO[];
+export type PreferredProfiles = ProfileDTO[];
 
 export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
-  SliceState<'availableProfiles', ProfilesMetadata> &
+  SliceState<'availableProfiles', AvailableProfiles> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &

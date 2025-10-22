@@ -201,7 +201,7 @@ export const useRecordControls = () => {
 
       // Handle different navigation scenarios
       if (isProfileChange || !isNavigatingBack) {
-        return handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
+        return await handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
       }
 
       if (isNavigatingBack) {
