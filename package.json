@@ -90,8 +90,12 @@
     }
   },
   "lint-staged": {
+    "*.{ts,tsx}": [
+      "npm run lint:errors-only",
+      "tsc --noEmit"
+    ],
     "*.{ts,tsx,json,scss}": [
-      "npm run build:lib"
+      "prettier --write"
     ]
   }
 }
