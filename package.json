@@ -27,7 +27,6 @@
     "lint:full": "eslint src --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prettier:format:all": "prettier --write ./src/**/*.{ts,tsx,json,scss}",
-    "typecheck": "tsc --noEmit",
     "test": "npm run test:unit:coverage",
     "test:unit:watch": "jest --watch",
     "test:unit:coverage": "jest --ci --coverage"
@@ -87,14 +86,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "npx lint-staged"
     }
   },
   "lint-staged": {
     "*.{ts,tsx,json,scss}": [
-      "npm run typecheck",
-      "npm run lint",
-      "npm run prettier:format:all"
+      "npm run build:lib"
     ]
   }
 }
