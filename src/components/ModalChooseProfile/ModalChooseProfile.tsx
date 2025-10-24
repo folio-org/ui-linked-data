@@ -1,6 +1,6 @@
 import { FC, memo, useState, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { getLabelId } from '@common/helpers/profileSelection.helper';
+import { getLabelId, isProfilePreferred } from '@common/helpers/profileSelection.helper';
 import { Modal } from '@components/Modal';
 import { WarningMessages } from './WarningMessages';
 import './ModalChooseProfile.scss';
@@ -13,13 +13,28 @@ interface ModalChooseProfileProps {
   onClose: VoidFunction;
   profiles: ProfileDTO[];
   selectedProfileId?: string | number | null;
+  preferredProfiles?: ProfileDTO[];
+  resourceTypeURL?: ResourceTypeURL;
 }
 
 export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
-  ({ isOpen, profileSelectionType, onCancel, onSubmit, onClose, profiles, selectedProfileId }) => {
+  ({
+    isOpen,
+    profileSelectionType,
+    onCancel,
+    onSubmit,
+    onClose,
+    profiles,
+    selectedProfileId,
+    preferredProfiles,
+    resourceTypeURL,
+  }) => {
     const { formatMessage } = useIntl();
     const [selectedValue, setSelectedValue] = useState<string | number>(selectedProfileId ?? profiles?.[0]?.id);
-    const [isDefault, setIsDefault] = useState(false);
+
+    const [isDefault, setIsDefault] = useState(() =>
+      isProfilePreferred({ profileId: selectedProfileId ?? profiles?.[0]?.id, preferredProfiles, resourceTypeURL }),
+    );
 
     useEffect(() => {
       if (profiles && profiles.length > 0 && !selectedValue) {
@@ -30,11 +45,15 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
     useEffect(() => {
       if (selectedProfileId) {
         setSelectedValue(selectedProfileId);
+        setIsDefault(isProfilePreferred({ profileId: selectedProfileId, preferredProfiles, resourceTypeURL }));
       }
-    }, [selectedProfileId]);
+    }, [selectedProfileId, preferredProfiles, resourceTypeURL]);
 
     const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      setSelectedValue(event.target.value);
+      const newValue = event.target.value;
+
+      setSelectedValue(newValue);
+      setIsDefault(isProfilePreferred({ profileId: newValue, preferredProfiles, resourceTypeURL }));
     };
 
     const handleSubmit = () => {

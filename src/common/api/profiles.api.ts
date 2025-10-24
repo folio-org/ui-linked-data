@@ -38,3 +38,16 @@ export const savePreferredProfile = (id: string | number, resourceType: string) 
     },
   });
 };
+
+export const deletePreferredProfile = (resourceType?: ResourceTypeURL) => {
+  const url = resourceType
+    ? `${PROFILE_PREFERRED_API_ENDPOINT}?resourceType=${encodeURIComponent(resourceType)}`
+    : PROFILE_PREFERRED_API_ENDPOINT;
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'DELETE',
+    },
+  });
+};
