@@ -13,3 +13,6 @@ export * from './stores/navigation';
 export * from './selectors';
 
 export { resetAllStores } from './utils/storeCreator';
+
+// Types
+export { type AvailableProfiles, type PreferredProfiles } from './stores/profile';

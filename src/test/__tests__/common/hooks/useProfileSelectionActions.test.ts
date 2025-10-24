@@ -2,10 +2,11 @@ import { renderHook, act } from '@testing-library/react';
 import { useProfileSelectionActions } from '@common/hooks/useProfileSelectionActions';
 import { savePreferredProfile } from '@common/api/profiles.api';
 import { generatePageURL } from '@common/helpers/navigation.helper';
+import { getProfileNameById, createUpdatedPreferredProfiles } from '@common/helpers/profileActions.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useNavigationState, useStatusState } from '@src/store';
+import { useNavigationState, useStatusState, useProfileState, useLoadingState } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { StatusType } from '@common/constants/status.constants';
 import { ROUTES } from '@common/constants/routes.constants';
@@ -32,15 +33,31 @@ jest.mock('@common/services/userNotification', () => ({
   },
 }));
 
+jest.mock('@common/helpers/profileActions.helper', () => ({
+  getProfileNameById: jest.fn(),
+  createUpdatedPreferredProfiles: jest.fn(),
+}));
+
 describe('useProfileSelectionActions', () => {
   const mockResetModalState = jest.fn();
   const mockAddStatusMessagesItem = jest.fn();
   const mockNavigateToEditPage = jest.fn();
   const mockChangeRecordProfile = jest.fn();
+  const mockSetIsLoading = jest.fn();
+  const mockSetPreferredProfiles = jest.fn();
   const mockQueryParams = { param: 'value' };
   const mockProfileId = 'profile-123';
   const mockResourceTypeURL = 'test-resource-type';
   const mockGeneratedURL = '/generated-url';
+  const mockProfileName = 'Test Profile';
+  const mockPreferredProfiles = [{ id: 'existing-id', name: 'Existing Profile', resourceType: 'other-type' }];
+  const mockAvailableProfiles = {
+    [mockResourceTypeURL]: [{ id: mockProfileId, name: mockProfileName, resourceType: mockResourceTypeURL }],
+  };
+  const mockUpdatedPreferredProfiles = [
+    ...mockPreferredProfiles,
+    { id: mockProfileId, name: mockProfileName, resourceType: mockResourceTypeURL },
+  ];
 
   beforeEach(() => {
     setInitialGlobalState([
@@ -56,6 +73,20 @@ describe('useProfileSelectionActions', () => {
           addStatusMessagesItem: mockAddStatusMessagesItem,
         },
       },
+      {
+        store: useLoadingState,
+        state: {
+          setIsLoading: mockSetIsLoading,
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          preferredProfiles: mockPreferredProfiles,
+          availableProfiles: mockAvailableProfiles,
+          setPreferredProfiles: mockSetPreferredProfiles,
+        },
+      },
     ]);
 
     (useNavigateToEditPage as jest.Mock).mockReturnValue({
@@ -67,11 +98,10 @@ describe('useProfileSelectionActions', () => {
     });
 
     (generatePageURL as jest.Mock).mockReturnValue(mockGeneratedURL);
-  });
 
-  /* afterEach(() => {
-    jest.resetAllMocks();
-  }); */
+    (getProfileNameById as jest.Mock).mockReturnValue(mockProfileName);
+    (createUpdatedPreferredProfiles as jest.Mock).mockReturnValue(mockUpdatedPreferredProfiles);
+  });
 
   describe('handleSubmit', () => {
     test('saves preferred profile when isDefault is true', async () => {
@@ -92,6 +122,56 @@ describe('useProfileSelectionActions', () => {
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
     });
 
+    test('calls helper functions and updates preferred profiles state when isDefault is true', async () => {
+      (savePreferredProfile as jest.Mock).mockResolvedValue({});
+
+      const { result } = renderHook(() =>
+        useProfileSelectionActions({
+          resourceTypeURL: mockResourceTypeURL,
+          action: 'set',
+          resetModalState: mockResetModalState,
+        }),
+      );
+
+      await act(async () => {
+        await result.current.handleSubmit(mockProfileId, true);
+      });
+
+      expect(getProfileNameById).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        availableProfiles: mockAvailableProfiles,
+      });
+
+      expect(createUpdatedPreferredProfiles).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        profileName: mockProfileName,
+        currentPreferredProfiles: mockPreferredProfiles,
+      });
+
+      expect(mockSetPreferredProfiles).toHaveBeenCalledWith(mockUpdatedPreferredProfiles);
+    });
+
+    test('sets loading state during preferred profile save operation', async () => {
+      (savePreferredProfile as jest.Mock).mockResolvedValue({});
+
+      const { result } = renderHook(() =>
+        useProfileSelectionActions({
+          resourceTypeURL: mockResourceTypeURL,
+          action: 'set',
+          resetModalState: mockResetModalState,
+        }),
+      );
+
+      await act(async () => {
+        await result.current.handleSubmit(mockProfileId, true);
+      });
+
+      expect(mockSetIsLoading).toHaveBeenCalledWith(true);
+      expect(mockSetIsLoading).toHaveBeenCalledWith(false);
+    });
+
     test('skips saving preferred profile when resourceTypeURL is not provided', async () => {
       const { result } = renderHook(() =>
         useProfileSelectionActions({
@@ -105,6 +185,9 @@ describe('useProfileSelectionActions', () => {
       });
 
       expect(savePreferredProfile).not.toHaveBeenCalled();
+      expect(getProfileNameById).not.toHaveBeenCalled();
+      expect(createUpdatedPreferredProfiles).not.toHaveBeenCalled();
+      expect(mockSetPreferredProfiles).not.toHaveBeenCalled();
     });
 
     test('handles error when saving preferred profile fails', async () => {
@@ -128,6 +211,9 @@ describe('useProfileSelectionActions', () => {
         StatusType.error,
         'ld.error.profileSaveAsPreferred',
       );
+      expect(getProfileNameById).not.toHaveBeenCalled();
+      expect(createUpdatedPreferredProfiles).not.toHaveBeenCalled();
+      expect(mockSetPreferredProfiles).not.toHaveBeenCalled();
     });
 
     test('navigates to create resource page when action is "set"', async () => {
@@ -208,6 +294,18 @@ describe('useProfileSelectionActions', () => {
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
+      expect(getProfileNameById).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        availableProfiles: mockAvailableProfiles,
+      });
+      expect(createUpdatedPreferredProfiles).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        profileName: mockProfileName,
+        currentPreferredProfiles: mockPreferredProfiles,
+      });
+      expect(mockSetPreferredProfiles).toHaveBeenCalledWith(mockUpdatedPreferredProfiles);
       expect(generatePageURL).toHaveBeenCalledWith({
         url: ROUTES.RESOURCE_CREATE.uri,
         queryParams: mockQueryParams,
@@ -234,6 +332,18 @@ describe('useProfileSelectionActions', () => {
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
+      expect(getProfileNameById).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        availableProfiles: mockAvailableProfiles,
+      });
+      expect(createUpdatedPreferredProfiles).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        resourceTypeURL: mockResourceTypeURL,
+        profileName: mockProfileName,
+        currentPreferredProfiles: mockPreferredProfiles,
+      });
+      expect(mockSetPreferredProfiles).toHaveBeenCalledWith(mockUpdatedPreferredProfiles);
       expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: mockProfileId });
       expect(mockResetModalState).toHaveBeenCalled();
     });
