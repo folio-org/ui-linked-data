@@ -1,5 +1,5 @@
 import baseApi from '@common/api/base.api';
-import { fetchProfile, savePreferredProfile } from '@common/api/profiles.api';
+import { fetchProfile, savePreferredProfile, deletePreferredProfile } from '@common/api/profiles.api';
 
 describe('profiles.api', () => {
   test('fetchProfile - calls "baseApi.getJson" with profile ID and returns profile data', async () => {
@@ -87,5 +87,57 @@ describe('profiles.api', () => {
       },
     });
     expect(result).toEqual(mockResponse);
+  });
+
+  describe('deletePreferredProfile', () => {
+    test('calls baseApi.request with DELETE method and resource type query parameter', async () => {
+      const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
+      const resourceType = 'work-url' as ResourceTypeURL;
+
+      jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+      const result = await deletePreferredProfile(resourceType);
+
+      expect(baseApi.request).toHaveBeenCalledWith({
+        url: `/linked-data/profile/preferred?resourceType=${encodeURIComponent(resourceType)}`,
+        requestParams: {
+          method: 'DELETE',
+        },
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    test('calls baseApi.request with DELETE method without query parameter when resourceType is undefined', async () => {
+      const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
+
+      jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+      const result = await deletePreferredProfile();
+
+      expect(baseApi.request).toHaveBeenCalledWith({
+        url: '/linked-data/profile/preferred',
+        requestParams: {
+          method: 'DELETE',
+        },
+      });
+      expect(result).toEqual(mockResponse);
+    });
+
+    test('handles Instance resource type correctly', async () => {
+      const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
+      const resourceType = 'instance-url' as ResourceTypeURL;
+
+      jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+      const result = await deletePreferredProfile(resourceType);
+
+      expect(baseApi.request).toHaveBeenCalledWith({
+        url: `/linked-data/profile/preferred?resourceType=${encodeURIComponent(resourceType)}`,
+        requestParams: {
+          method: 'DELETE',
+        },
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 });
