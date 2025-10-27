@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 Running final build verification before push..."
+npm run build:lib
+echo "✅ Build successful! Ready to push to remote..."

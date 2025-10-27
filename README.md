@@ -75,8 +75,9 @@ The following scripts are available:
 - `npm run dev`: Starts the development server.
 - `npm run build`: Generates the build artifacts that can be deployed to a production environment as a standalone application.
 - `npm run build:lib`: Generates the build artifacts that can be deployed to a production environment as an embedded application.
-- `npm run lint:errors-only`: Runs ESLint on TypeScript source code, but only report errors. Does not report on style issues.
+- `npm run lint:check`: Runs ESLint on TypeScript source code, but only report errors. Does not report on style issues.
 - `npm run lint:full`: Runs ESLint on TypeScript source code. Will also report on style issues.
+- `typecheck`: Runs types check on source code.
 - `npm run preview`: Preview a production build locally. Useful for ensuring that a production build operates as expected before deployment.
 - `npm run prettier:format:all`: Formats all applicable files using Prettier.
 - `npm run test:unit`: Runs unit tests using Jest.
