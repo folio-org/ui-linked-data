@@ -46,7 +46,7 @@ export const EditControlPane = () => {
 
   const handleExportInstanceRdf = () => resourceId && exportInstanceRdf(resourceId);
 
-  const handleChangeInstanceProfile = () => {
+  const handleChangeProfile = () => {
     if (!resourceId) return;
 
     openModalForProfileChange({ resourceTypeURL: selectedRecordBlocks?.block as ResourceTypeURL });
@@ -97,12 +97,20 @@ export const EditControlPane = () => {
           action: handleExportInstanceRdf,
         },
         {
+          id: 'changeWorkProfile',
+          type: DropdownItemType.basic,
+          labelId: 'ld.changeWorkProfile',
+          icon: <Settings />,
+          hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
+          action: handleChangeProfile,
+        },
+        {
           id: 'changeInstanceProfile',
           type: DropdownItemType.basic,
           labelId: 'ld.changeInstanceProfile',
           icon: <Settings />,
           hidden: !currentlyEditedEntityBfid.has(PROFILE_BFIDS.INSTANCE),
-          action: handleChangeInstanceProfile,
+          action: handleChangeProfile,
         },
       ],
     },
