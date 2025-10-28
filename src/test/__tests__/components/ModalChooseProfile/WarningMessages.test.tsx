@@ -38,7 +38,7 @@ describe('WarningMessages', () => {
     expect(screen.getByTestId('formatted-message-ld.modal.chooseResourceProfile.warningTitle')).toBeInTheDocument();
     expect(screen.getByTestId('formatted-message-ld.warning.message1')).toBeInTheDocument();
     expect(screen.getByTestId('formatted-message-ld.warning.message2')).toBeInTheDocument();
-    expect(profileSelectionHelper.getWarningByProfileNames).toHaveBeenCalledWith('Monograph', 'Serials');
+    expect(profileSelectionHelper.getWarningByProfileNames).toHaveBeenCalledWith('work', 'Monograph', 'Serials');
   });
 
   it('should not render warnings when there are no warnings', () => {
@@ -133,6 +133,6 @@ describe('WarningMessages', () => {
     expect(screen.getByTestId('formatted-message-ld.warning.message_1')).toBeInTheDocument();
     expect(screen.getByTestId('formatted-message-ld.warning.message_2')).toBeInTheDocument();
     expect(screen.getByTestId('formatted-message-ld.warning.message_3')).toBeInTheDocument();
-    expect(profileSelectionHelper.getWarningByProfileNames).toHaveBeenCalledWith('Monograph', 'Rare Books');
+    expect(profileSelectionHelper.getWarningByProfileNames).toHaveBeenCalledWith('work', 'Monograph', 'Rare Books');
   });
 });

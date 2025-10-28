@@ -21,7 +21,11 @@ export const WarningMessages: FC<WarningMessagesProps> = memo(
         const toProfile = profiles.find(({ id }) => id == selectedValue);
 
         if (fromProfile?.name && toProfile?.name) {
-          const messages = getWarningByProfileNames(fromProfile.name, toProfile.name);
+          const messages = getWarningByProfileNames(
+            profileSelectionType.resourceTypeURL,
+            fromProfile.name,
+            toProfile.name,
+          );
 
           setWarningMessages(messages);
         }
