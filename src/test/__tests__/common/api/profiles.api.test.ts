@@ -107,22 +107,6 @@ describe('profiles.api', () => {
       expect(result).toEqual(mockResponse);
     });
 
-    test('calls baseApi.request with DELETE method without query parameter when resourceType is undefined', async () => {
-      const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
-
-      jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
-
-      const result = await deletePreferredProfile();
-
-      expect(baseApi.request).toHaveBeenCalledWith({
-        url: '/linked-data/profile/preferred',
-        requestParams: {
-          method: 'DELETE',
-        },
-      });
-      expect(result).toEqual(mockResponse);
-    });
-
     test('handles Instance resource type correctly', async () => {
       const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 200 });
       const resourceType = 'instance-url' as ResourceTypeURL;

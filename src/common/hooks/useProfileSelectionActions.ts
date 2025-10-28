@@ -66,7 +66,9 @@ export const useProfileSelectionActions = ({
   const handleDeleteProfileAsDefault = async (resourceTypeURL?: ResourceTypeURL) => {
     try {
       setIsLoading(true);
-      await deletePreferredProfile(resourceTypeURL);
+      if (resourceTypeURL) {
+        await deletePreferredProfile(resourceTypeURL);
+      }
       setPreferredProfiles(preferredProfiles.filter(({ resourceType }) => resourceType !== resourceTypeURL));
     } catch (error) {
       console.error('Failed to set preferred profile:', error);
