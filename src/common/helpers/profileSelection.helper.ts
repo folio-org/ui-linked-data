@@ -35,3 +35,19 @@ export const getWarningByProfileNames = (
 ) => {
   return profileWarningsByName[resourceTypeURL]?.[fromProfileName]?.[toProfileName] || null;
 };
+
+export const isProfilePreferred = ({
+  profileId,
+  preferredProfiles,
+  resourceTypeURL,
+}: {
+  profileId: string | number;
+  preferredProfiles?: ProfileDTO[];
+  resourceTypeURL?: ResourceTypeURL;
+}) => {
+  if (!preferredProfiles || !resourceTypeURL) return false;
+
+  return preferredProfiles.some(
+    ({ id, resourceType }) => id.toString() === profileId.toString() && resourceType === resourceTypeURL,
+  );
+};

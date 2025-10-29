@@ -10,7 +10,7 @@ export const ProfileSelectionManager = () => {
     'setIsProfileSelectionModalOpen',
     'profileSelectionType',
   ]);
-  const { availableProfiles } = useProfileState(['availableProfiles']);
+  const { availableProfiles, preferredProfiles } = useProfileState(['availableProfiles', 'preferredProfiles']);
   const { isRecordEdited } = useStatusState(['isRecordEdited']);
   const { action, resourceTypeURL } = profileSelectionType;
 
@@ -41,6 +41,8 @@ export const ProfileSelectionManager = () => {
         onClose={resetModalState}
         profiles={availableProfilesList}
         selectedProfileId={selectedProfileId}
+        preferredProfiles={preferredProfiles}
+        resourceTypeURL={resourceTypeURL}
       />
       <ModalWarning isOpen={isProfileSelectionModalOpen && isEditedRecordChange} onClose={resetModalState} />
     </>

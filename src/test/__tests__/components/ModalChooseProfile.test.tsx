@@ -3,13 +3,13 @@ import { ModalChooseProfile } from '@components/ModalChooseProfile';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 
 const mockProfiles = [
-  { id: 'profile_1', name: 'Test Profile 1', resourceType: 'work' },
-  { id: 'profile_2', name: 'Test Profile 2', resourceType: 'instance' },
-  { id: 'profile_3', name: 'Test Profile 3', resourceType: 'work' },
+  { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+  { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
+  { id: 'profile_3', name: 'Test Profile 3', resourceType: 'http://bibfra.me/vocab/lite/Work' },
 ];
 const mockProfileSelectionType = {
   action: 'set',
-  resourceTypeURL: 'work' as ResourceTypeURL,
+  resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
 } as ProfileSelectionType;
 
 describe('ModalChooseProfile', () => {
@@ -209,5 +209,126 @@ describe('ModalChooseProfile', () => {
       expect(onSubmit).not.toHaveBeenCalledWith('0');
       expect(onSubmit).not.toHaveBeenCalledWith(undefined);
     });
+  });
+
+  test('checkbox is checked when selected profile is in preferred profiles', () => {
+    const preferredProfiles = [
+      { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+    ];
+
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+        preferredProfiles={preferredProfiles}
+        resourceTypeURL="http://bibfra.me/vocab/lite/Work"
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeChecked();
+  });
+
+  test('checkbox is unchecked when selected profile is not in preferred profiles', () => {
+    const preferredProfiles = [
+      { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
+    ];
+
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+        preferredProfiles={preferredProfiles}
+        resourceTypeURL="http://bibfra.me/vocab/lite/Work"
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
+  });
+
+  test('checkbox state updates when profile selection changes', () => {
+    const preferredProfiles = [
+      { id: 'profile_3', name: 'Test Profile 3', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+    ];
+
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        preferredProfiles={preferredProfiles}
+        resourceTypeURL="http://bibfra.me/vocab/lite/Work"
+      />,
+    );
+
+    const selectElement = screen.getByRole('combobox');
+    const checkbox = screen.getByRole('checkbox');
+
+    // Initially profile_1 is selected and not in preferred profiles
+    expect(selectElement).toHaveValue('profile_1');
+    expect(checkbox).not.toBeChecked();
+
+    // Change to profile_3 which is in preferred profiles
+    fireEvent.change(selectElement, { target: { value: 'profile_3' } });
+    expect(selectElement).toHaveValue('profile_3');
+    expect(checkbox).toBeChecked();
+
+    // Change to profile_2 which is not in preferred profiles for this resourceType
+    fireEvent.change(selectElement, { target: { value: 'profile_2' } });
+    expect(selectElement).toHaveValue('profile_2');
+    expect(checkbox).not.toBeChecked();
+  });
+
+  test('checkbox is unchecked when no preferred profiles provided', () => {
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
+  });
+
+  test('checkbox is unchecked when no resourceTypeURL provided', () => {
+    const preferredProfiles = [
+      { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+    ];
+
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+        preferredProfiles={preferredProfiles}
+      />,
+    );
+
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
   });
 });

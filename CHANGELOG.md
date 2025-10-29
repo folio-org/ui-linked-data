@@ -51,7 +51,7 @@
 * Add Hub search assign button behavior. Refs [UILD-648].
 * Adjusted Flex table component to make it responsive to content. Refs [UILD-652].
 * Fixed shifted Admin metadata tooltip. Refs [UILD-654].
-* Set the default user profile when changing the profile for a Work/Instance. Refs [UILD-645].
+* Set or delete the default user profile when changing the profile for a Work/Instance. Refs [UILD-645].
 * Change work Profile after it is created. Refs [UILD-658].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552

@@ -4,8 +4,7 @@ import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const useProfileSelection = () => {
-  const { preferredProfiles, setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState([
-    'preferredProfiles',
+  const { setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState([
     'setPreferredProfiles',
     'availableProfiles',
     'setAvailableProfiles',
@@ -38,8 +37,8 @@ export const useProfileSelection = () => {
   };
 
   // Loads preferred profiles if they haven't been loaded yet
-  const getPreferredProfiles = async (resourceTypeURL: string) => {
-    return preferredProfiles ?? (await fetchPreferredProfiles(resourceTypeURL));
+  const getPreferredProfiles = async () => {
+    return await fetchPreferredProfiles();
   };
 
   // Processes the case when a preferred profile exists
@@ -48,7 +47,9 @@ export const useProfileSelection = () => {
     resourceTypeURL: string,
     callback: (profileId: string | number) => void,
   ): boolean => {
-    setPreferredProfiles(profiles);
+    if (profiles.length) {
+      setPreferredProfiles(profiles);
+    }
 
     const profile = profiles.find(profile => profile.resourceType === resourceTypeURL);
 
@@ -86,7 +87,7 @@ export const useProfileSelection = () => {
       setIsLoading(true);
 
       // Get preferred profiles
-      const preferredProfilesResult = await getPreferredProfiles(resourceTypeURL);
+      const preferredProfilesResult = await getPreferredProfiles();
 
       if (preferredProfilesResult.length > 0) {
         const profileProcessed = handlePreferredProfileCase(preferredProfilesResult, resourceTypeURL, callback);
@@ -114,6 +115,12 @@ export const useProfileSelection = () => {
   const openModalForProfileChange = async ({ resourceTypeURL }: { resourceTypeURL: ResourceTypeURL }) => {
     try {
       setIsLoading(true);
+
+      const preferredProfilesResult = await getPreferredProfiles();
+
+      if (preferredProfilesResult.length > 0) {
+        setPreferredProfiles(preferredProfilesResult);
+      }
 
       await loadAvailableProfiles(resourceTypeURL);
       openModal({ action: 'change', resourceTypeURL });

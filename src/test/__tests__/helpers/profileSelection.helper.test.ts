@@ -1,4 +1,4 @@
-import { getLabelId, getWarningByProfileNames } from '@common/helpers/profileSelection.helper';
+import { getLabelId, getWarningByProfileNames, isProfilePreferred } from '@common/helpers/profileSelection.helper';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
 import * as BibframeConstants from '@common/constants/bibframe.constants';
 
@@ -178,6 +178,103 @@ describe('profileSelection.helper', () => {
       const result = getWarningByProfileNames('unknown_URL' as ResourceTypeURL, 'Monograph', 'Serials Work');
 
       expect(result).toBeNull();
+    });
+  });
+
+  describe('isProfilePreferred', () => {
+    const mockPreferredProfiles = [
+      { id: '1', name: 'Test Profile 1', resourceType: 'work_URL' },
+      { id: '2', name: 'Test Profile 2', resourceType: 'instance_URL' },
+      { id: 3, name: 'Test Profile 3', resourceType: 'work_URL' },
+    ] as ProfileDTO[];
+
+    it('returns true when profile is in preferred profiles with matching resource type', () => {
+      const result = isProfilePreferred({
+        profileId: '1',
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(true);
+    });
+
+    it('returns true when numeric profile ID matches preferred profile', () => {
+      const result = isProfilePreferred({
+        profileId: 3,
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(true);
+    });
+
+    it('returns false when profile is in preferred profiles but resource type does not match', () => {
+      const result = isProfilePreferred({
+        profileId: '1',
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'instance_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when profile is not in preferred profiles', () => {
+      const result = isProfilePreferred({
+        profileId: '999',
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when preferredProfiles is undefined', () => {
+      const result = isProfilePreferred({
+        profileId: '1',
+        preferredProfiles: undefined,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when resourceTypeURL is undefined', () => {
+      const result = isProfilePreferred({
+        profileId: '1',
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: undefined,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when preferredProfiles is empty array', () => {
+      const result = isProfilePreferred({
+        profileId: '1',
+        preferredProfiles: [],
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('handles string and number ID comparison correctly', () => {
+      const profiles = [{ id: 123, name: 'Test', resourceType: 'work_URL' }] as ProfileDTO[];
+      
+      const resultWithStringId = isProfilePreferred({
+        profileId: '123',
+        preferredProfiles: profiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      const resultWithNumericId = isProfilePreferred({
+        profileId: 123,
+        preferredProfiles: profiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(resultWithStringId).toBe(true);
+      expect(resultWithNumericId).toBe(true);
     });
   });
 });

@@ -1,15 +1,16 @@
 import { StatusType } from '@common/constants/status.constants';
 import { ROUTES } from '@common/constants/routes.constants';
-import { savePreferredProfile } from '@common/api/profiles.api';
+import { deletePreferredProfile, savePreferredProfile } from '@common/api/profiles.api';
 import { generatePageURL } from '@common/helpers/navigation.helper';
 import { getProfileNameById, createUpdatedPreferredProfiles } from '@common/helpers/profileActions.helper';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@src/store';
+import { isProfilePreferred } from '@common/helpers/profileSelection.helper';
 
 interface UseProfileSelectionActionsProps {
-  resourceTypeURL?: string;
+  resourceTypeURL?: ResourceTypeURL;
   action: string;
   resetModalState: () => void;
 }
@@ -62,6 +63,24 @@ export const useProfileSelectionActions = ({
     }
   };
 
+  const handleDeleteProfileAsDefault = async (resourceTypeURL?: ResourceTypeURL) => {
+    try {
+      setIsLoading(true);
+      if (resourceTypeURL) {
+        await deletePreferredProfile(resourceTypeURL);
+      }
+      setPreferredProfiles(preferredProfiles.filter(({ resourceType }) => resourceType !== resourceTypeURL));
+    } catch (error) {
+      console.error('Failed to set preferred profile:', error);
+
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleCreateResource = (profileId: string | number) => {
     const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
     navigateToEditPage(url);
@@ -71,6 +90,8 @@ export const useProfileSelectionActions = ({
     // If "set as default" is checked, save preferred profile
     if (isDefault) {
       await handleSetProfileAsDefault(profileId);
+    } else if (!isDefault && isProfilePreferred({ profileId, preferredProfiles, resourceTypeURL })) {
+      await handleDeleteProfileAsDefault(resourceTypeURL);
     }
 
     resetModalState();
