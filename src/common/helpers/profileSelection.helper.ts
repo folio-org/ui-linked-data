@@ -28,6 +28,10 @@ export const getLabelId = ({
   return labelId;
 };
 
-export const getWarningByProfileNames = (fromProfileName: string, toProfileName: string) => {
-  return profileWarningsByName[fromProfileName]?.[toProfileName] || null;
+export const getWarningByProfileNames = (
+  resourceTypeURL: ResourceTypeURL,
+  fromProfileName: string,
+  toProfileName: string,
+) => {
+  return profileWarningsByName[resourceTypeURL]?.[fromProfileName]?.[toProfileName] || null;
 };

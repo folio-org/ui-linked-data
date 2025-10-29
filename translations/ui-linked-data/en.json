@@ -275,6 +275,7 @@
   "ld.field.urlOfInstance": "URL of instance",
   "ld.field.bookFormat": "Book format",
   "ld.field.frequency": "Frequency",
+  "ld.field.typeOfContinuingResource": "Type of continuing resource",
   "ld.na": "N/A",
   "ld.error.profileSaveAsPreferred": "Error setting up preferred profile",
   "ld.error.profileChange": "Error changing recording profile",
