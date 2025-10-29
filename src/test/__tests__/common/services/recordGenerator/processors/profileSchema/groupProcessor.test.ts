@@ -10,20 +10,31 @@ describe('GroupProcessor', () => {
   let mockProfileSchemaManager: jest.Mocked<ProfileSchemaManager>;
   let selectedEntries: string[];
 
+  const createSchemaEntryMock = (uuid: string, type: AdvancedFieldType, uriBFLite: string): SchemaEntry =>
+    ({
+      uuid,
+      type,
+      uriBFLite,
+    }) as SchemaEntry;
+
   function mockGetSchemaEntry() {
     mockProfileSchemaManager.getSchemaEntry.mockImplementation(uuid => {
       if (uuid === 'child_with_default') {
-        return {
-          uuid: 'child_with_default',
-          type: AdvancedFieldType.simple,
-          uriBFLite: 'default_uri',
-        } as SchemaEntry;
+        return createSchemaEntryMock('child_with_default', AdvancedFieldType.simple, 'default_uri');
       } else if (uuid === 'linked_child') {
-        return {
-          uuid: 'linked_child',
-          type: AdvancedFieldType.literal,
-          uriBFLite: 'linked_uri',
-        } as SchemaEntry;
+        return createSchemaEntryMock('linked_child', AdvancedFieldType.literal, 'linked_uri');
+      }
+
+      return undefined;
+    });
+  }
+
+  function mockGetSchemaEntryWithLinked() {
+    mockProfileSchemaManager.getSchemaEntry.mockImplementation(uuid => {
+      if (uuid === 'child_1') {
+        return createSchemaEntryMock('child_1', AdvancedFieldType.simple, 'uri_1');
+      } else if (uuid === 'linked_child') {
+        return createSchemaEntryMock('linked_child', AdvancedFieldType.literal, 'linked_uri');
       }
 
       return undefined;
@@ -800,6 +811,459 @@ describe('GroupProcessor', () => {
             linked_uri: ['linked value'],
           },
         ]);
+      });
+    });
+
+    describe('getUserValues', () => {
+      it('returns user values directly when there is no linked property', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'test value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.literal,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([{ uri_1: ['test value'] }]);
+      });
+
+      it('returns empty array when entry has no user values and no linked property', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {} as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.literal,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('returns user values when linked property has values', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1', 'linked_child'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'dependent value', meta: { uri: 'dependent_uri' } }],
+          },
+          linked_child: {
+            contents: [{ label: 'linked value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockGetSchemaEntryWithLinked();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            uri_1: ['dependent_uri'],
+            linked_uri: ['linked value'],
+          },
+        ]);
+      });
+
+      it('returns empty array when linked property has no values', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1', 'linked_child'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'dependent value', meta: { uri: 'dependent_uri' } }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockGetSchemaEntryWithLinked();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles missing childEntry gracefully', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'test value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.literal,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([{ uri_1: ['test value'] }]);
+      });
+    });
+
+    describe('getLinkedPropertyDependency', () => {
+      it('returns hasLink false when childEntry is undefined', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+        } as SchemaEntry;
+        const userValues = {} as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {},
+        } as RecordSchemaEntry;
+
+        processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(mockProfileSchemaManager.getSchemaEntry).not.toHaveBeenCalled();
+      });
+
+      it('returns hasLink false when childEntry has no uriBFLite', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {} as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {},
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.literal,
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('returns hasLink true with linked property info when linkedProperty exists', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1', 'linked_child'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value', meta: { uri: 'uri' } }],
+          },
+          linked_child: {
+            contents: [{ label: 'linked' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockGetSchemaEntryWithLinked();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            uri_1: ['uri'],
+            linked_uri: ['linked'],
+          },
+        ]);
+      });
+
+      it('returns hasLink false when linkedProperty is not defined', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.literal,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([{ uri_1: ['value'] }]);
+      });
+    });
+
+    describe('getLinkedEntryValues', () => {
+      it('returns values when linked entry exists in allChildren', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1', 'linked_child'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value', meta: { uri: 'uri' } }],
+          },
+          linked_child: {
+            contents: [{ label: 'linked value 1' }, { label: 'linked value 2' }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockGetSchemaEntryWithLinked();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([
+          {
+            uri_1: ['uri'],
+            linked_uri: ['linked value 1', 'linked value 2'],
+          },
+        ]);
+      });
+
+      it('returns empty array when linked entry is not found', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value', meta: { uri: 'uri' } }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'non_existent_uri',
+              },
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.simple,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('returns empty array when linked entry has no values', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1', 'linked_child'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value', meta: { uri: 'uri' } }],
+          },
+          linked_child: {
+            contents: [],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+            linked_uri: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockGetSchemaEntryWithLinked();
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
+      });
+
+      it('handles undefined allChildren parameter', () => {
+        const profileSchemaEntry = {
+          type: AdvancedFieldType.group,
+          uuid: 'test_uuid',
+          children: ['child_1'],
+        } as SchemaEntry;
+        const userValues = {
+          child_1: {
+            contents: [{ label: 'value', meta: { uri: 'uri' } }],
+          },
+        } as unknown as UserValues;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            uri_1: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: {
+                linkedProperty: 'linked_uri',
+              },
+            },
+          },
+        } as RecordSchemaEntry;
+
+        mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+          uuid: 'child_1',
+          type: AdvancedFieldType.simple,
+          uriBFLite: 'uri_1',
+        } as SchemaEntry);
+
+        const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+        expect(result).toEqual([]);
       });
     });
   });
