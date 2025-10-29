@@ -277,7 +277,19 @@
     "ld.error.profileSaveAsPreferred": "Fout bij het instellen van voorkeurprofiel",
     "ld.error.profileChange": "Fout bij het wijzigen van het opnameprofiel",
     "ld.modal.chooseProfileWarning.message": "U moet alle wijzigingen Opslaan voordat u het profiel wijzigt.",
-    "ld.marcFieldEquivalents": "MARC field equivalents",
-    "ld.showMarcFieldEquivalents": "Show MARC field equivalents",
-    "ld.hideMarcFieldEquivalents": "Hide MARC field equivalents"
+    "ld.marcFieldEquivalents": "MARC veldequivalenten",
+    "ld.showMarcFieldEquivalents": "Toon MARC veldequivalenten",
+    "ld.hideMarcFieldEquivalents": "Verbergen MARC veld equivalenten",
+    "ld.placeholder.processing": "Informatie wordt weergegeven na verwerking",
+    "ld.add": "Toevoegen",
+    "ld.placeholder.startsWith": "begint met",
+    "ld.hubs": "Naven",
+    "ld.hubs.assign": "Toewijzing hub",
+    "ld.hubs.enterSearchQuery": "Voer een Zoekquery in om hubs te tonen.",
+    "ld.hub": "Hub",
+    "ld.auth": "Auth",
+    "ld.rda": "RDA",
+    "ld.search.hubNameLeftAnchored": "Naam hub (Links verankerd)",
+    "ld.search.hubNameKeyword": "Naam hub (Trefwoord)",
+    "ld.field.typeOfContinuingResource": "Type of continuing resource"
 }
