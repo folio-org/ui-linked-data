@@ -67,12 +67,34 @@ export class GroupProcessor extends BaseFieldProcessor {
       return null;
     }
 
-    const childValues = this.getUserValues(childEntry.uuid);
+    const childValues = this.getUserValues({ entryUuid: childEntry.uuid, childEntry, allChildren });
 
     return childValues.length > 0 ? { childEntry, childValues } : this.handleDefaultValue(childEntry, allChildren);
   }
 
-  private getUserValues(entryUuid: string) {
+  private getUserValues({
+    entryUuid,
+    childEntry,
+    allChildren,
+  }: {
+    entryUuid: string;
+    childEntry?: SchemaEntry;
+    allChildren?: string[];
+  }) {
+    const recordSchemaProperty = this.getRecordSchemaProperty(childEntry?.uriBFLite as string);
+    const { linkedProperty } = recordSchemaProperty?.options || {};
+
+    if (linkedProperty) {
+      const linkedEntryUuid = this.findLinkedEntryUuid(linkedProperty, allChildren);
+      const linkedEntryValues = linkedEntryUuid ? this.userValues[linkedEntryUuid]?.contents : [];
+
+      if (linkedEntryValues?.length > 0) {
+        return this.userValues[entryUuid]?.contents || [];
+      } else {
+        return [];
+      }
+    }
+
     return this.userValues[entryUuid]?.contents || [];
   }
 
@@ -101,8 +123,8 @@ export class GroupProcessor extends BaseFieldProcessor {
     linkedProperty: string,
     allChildren?: string[],
   ) {
-    const linkedEntry = this.findLinkedEntry(linkedProperty, allChildren);
-    const linkedEntryValues = linkedEntry ? this.getUserValues(linkedEntry) : [];
+    const linkedEntryUUID = this.findLinkedEntryUuid(linkedProperty, allChildren);
+    const linkedEntryValues = linkedEntryUUID ? this.getUserValues({ entryUuid: linkedEntryUUID }) : [];
 
     return linkedEntryValues.length > 0
       ? {
@@ -112,7 +134,7 @@ export class GroupProcessor extends BaseFieldProcessor {
       : null;
   }
 
-  private findLinkedEntry(linkedProperty: string, allChildren?: string[]) {
+  private findLinkedEntryUuid(linkedProperty: string, allChildren?: string[]) {
     return allChildren?.find(child => {
       const entry = this.profileSchemaManager.getSchemaEntry(child);
 
