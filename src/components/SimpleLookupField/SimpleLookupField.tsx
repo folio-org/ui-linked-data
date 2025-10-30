@@ -141,7 +141,7 @@ export const SimpleLookupField: FC<Props> = ({
       }
       value={isMulti ? localValueMulti : localValueSingle}
       placeholder={<FormattedMessage id="ld.select" />}
-      loadingMessage={LoadingMessage}
+      loadingMessage={() => <LoadingMessage />}
       inputId="creatable-select-input"
       styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({

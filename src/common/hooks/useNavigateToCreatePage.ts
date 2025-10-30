@@ -15,7 +15,7 @@ export const useNavigateToCreatePage = () => {
     type: undefined,
     refId: undefined,
   });
-  const navigationStateRef = useRef<SearchParamsState>();
+  const navigationStateRef = useRef<SearchParamsState | undefined>(undefined);
 
   // Creates query parameters object for resource creation
   const createQueryParams = ({ type, refId }: { type: string; refId?: string | null }) => {
