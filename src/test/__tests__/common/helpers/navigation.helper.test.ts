@@ -2,40 +2,27 @@ import { getResourceIdFromUri, generatePageURL, getIsCreatePage } from '@common/
 import { QueryParams } from '@common/constants/routes.constants';
 
 describe('location-based functions', () => {
-  const originalWindow = { ...window };
-
-  beforeEach(() => {
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: {
-        ...originalWindow.location,
-        pathname: '',
-      },
-    });
-  });
+  const originalLocation = globalThis.location.href;
 
   afterEach(() => {
-    Object.defineProperty(window, 'location', {
-      writable: true,
-      value: originalWindow.location,
-    });
+    globalThis.history.replaceState({}, '', originalLocation);
   });
 
   describe('getResourceIdFromUri', () => {
     test('returns undefined when pathname is empty', () => {
-      window.location.pathname = '';
+      globalThis.history.replaceState({}, '', 'http://localhost/');
 
       expect(getResourceIdFromUri()).toBeUndefined();
     });
 
     test('returns undefined when missing edit segment', () => {
-      window.location.pathname = '/resources/123';
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/123');
 
       expect(getResourceIdFromUri()).toBeUndefined();
     });
 
     test('returns resourceId', () => {
-      window.location.pathname = '/resources/789/edit/';
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/789/edit/');
 
       expect(getResourceIdFromUri()).toBe('789');
     });
@@ -43,19 +30,19 @@ describe('location-based functions', () => {
 
   describe('getIsCreatePage', () => {
     test('recognize and return true for create page', () => {
-      window.location.pathname = '/resources/create';
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/create');
 
       expect(getIsCreatePage()).toBeTruthy();
     });
 
     test('return false for edit page', () => {
-      window.location.pathname = '/resources/1234/edit';
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/1234/edit');
 
       expect(getIsCreatePage()).toBeFalsy();
     });
 
     test('return false for similar page', () => {
-      window.location.pathname = '/another/create';
+      globalThis.history.replaceState({}, '', 'http://localhost/another/create');
 
       expect(getIsCreatePage()).toBeFalsy();
     });

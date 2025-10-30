@@ -357,28 +357,15 @@ describe('EditSection', () => {
   });
 
   describe('location-based form placeholder', () => {
-    const originalWindow = { ...window };
-
-    beforeEach(() => {
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: {
-          ...originalWindow.location,
-          pathname: '',
-        },
-      });
-    });
+    const originalLocation = globalThis.location.href;
 
     afterEach(() => {
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: originalWindow.location,
-      });
+      globalThis.history.replaceState({}, '', originalLocation);
     });
 
     test('skips placeholder on create page', async () => {
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/create');
       const { getByTestId, findByText } = renderScreen();
-      window.location.pathname = '/resources/create';
 
       expect(await findByText('uuid14')).toBeInTheDocument();
 
@@ -387,8 +374,8 @@ describe('EditSection', () => {
     });
 
     test('renders placeholder for certain properties without values at any other time', async () => {
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/1234/edit');
       const { getByTestId, findByText } = renderScreen();
-      window.location.pathname = '/resources/1234/edit';
 
       expect(await findByText('uuid14')).toBeInTheDocument();
 
