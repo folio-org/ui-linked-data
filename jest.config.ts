@@ -6,7 +6,11 @@ export default {
   testMatch: ['<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}'],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.jsx?$': 'ts-jest', // Transform JavaScript files including from node_modules/uuid
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid)/)', // Transform uuid package since it's pure ESM
+  ],
   coverageDirectory: '<rootDir>/artifacts/coverage-jest/',
   moduleNameMapper: {
     '\\.(css|sass|scss)$': 'identity-obj-proxy',
