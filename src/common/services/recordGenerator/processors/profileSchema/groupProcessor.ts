@@ -3,7 +3,7 @@ import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
 import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
-import { ProcessContext } from '../../types/common.types';
+import { LinkedPropertyInfo, ProcessContext } from '../../types/common.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
 
@@ -67,43 +67,45 @@ export class GroupProcessor extends BaseFieldProcessor {
       return null;
     }
 
-    const childValues = this.getUserValues(childEntry.uuid);
+    const childValues = this.getUserValues({ entryUuid: childEntry.uuid, childEntry, allChildren });
 
     return childValues.length > 0 ? { childEntry, childValues } : this.handleDefaultValue(childEntry, allChildren);
   }
 
-  private getUserValues(entryUuid: string) {
-    return this.userValues[entryUuid]?.contents || [];
+  private getUserValues({
+    entryUuid,
+    childEntry,
+    allChildren,
+  }: {
+    entryUuid: string;
+    childEntry?: SchemaEntry;
+    allChildren?: string[];
+  }) {
+    const { hasLink, linkedProperty } = this.getLinkedPropertyDependency(childEntry);
+
+    // If no linked property, return values directly
+    if (!hasLink || !linkedProperty) {
+      return this.userValues[entryUuid]?.contents || [];
+    }
+
+    // Only return values if the linked property has values
+    const linkedEntryValues = this.getLinkedEntryValues(linkedProperty, allChildren);
+
+    return linkedEntryValues.length > 0 ? this.userValues[entryUuid]?.contents || [] : [];
   }
 
-  private handleDefaultValue(childEntry: SchemaEntry, allChildren?: string[]) {
-    if (!childEntry.uriBFLite) {
+  private handleDefaultValue(childEntry: SchemaEntry, allChildren?: string[]): ChildEntryWithValues | null {
+    const { hasLink, linkedProperty, recordSchemaProperty } = this.getLinkedPropertyDependency(childEntry);
+
+    // Early returns for invalid states
+    if (!hasLink || !linkedProperty || !recordSchemaProperty?.options?.defaultValue) {
       return null;
     }
 
-    const recordSchemaProperty = this.getRecordSchemaProperty(childEntry.uriBFLite);
-    const { defaultValue, linkedProperty } = recordSchemaProperty?.options || {};
+    const defaultValue = recordSchemaProperty.options.defaultValue;
+    const linkedEntryValues = this.getLinkedEntryValues(linkedProperty, allChildren);
 
-    if (!defaultValue || !linkedProperty) {
-      return null;
-    }
-
-    return this.createEntryWithDefaultValue(childEntry, defaultValue, linkedProperty, allChildren);
-  }
-
-  private getRecordSchemaProperty(uriBFLite: string) {
-    return this.recordSchemaEntry?.properties?.[uriBFLite];
-  }
-
-  private createEntryWithDefaultValue(
-    childEntry: SchemaEntry,
-    defaultValue: string,
-    linkedProperty: string,
-    allChildren?: string[],
-  ) {
-    const linkedEntry = this.findLinkedEntry(linkedProperty, allChildren);
-    const linkedEntryValues = linkedEntry ? this.getUserValues(linkedEntry) : [];
-
+    // Only create default value entry if linked property has values
     return linkedEntryValues.length > 0
       ? {
           childEntry,
@@ -112,7 +114,32 @@ export class GroupProcessor extends BaseFieldProcessor {
       : null;
   }
 
-  private findLinkedEntry(linkedProperty: string, allChildren?: string[]) {
+  private getRecordSchemaProperty(uriBFLite: string) {
+    return this.recordSchemaEntry?.properties?.[uriBFLite];
+  }
+
+  private getLinkedPropertyDependency(childEntry?: SchemaEntry): LinkedPropertyInfo {
+    if (!childEntry?.uriBFLite) {
+      return { hasLink: false };
+    }
+
+    const recordSchemaProperty = this.getRecordSchemaProperty(childEntry.uriBFLite);
+    const linkedProperty = recordSchemaProperty?.options?.linkedProperty;
+
+    return {
+      hasLink: !!linkedProperty,
+      linkedProperty,
+      recordSchemaProperty,
+    };
+  }
+
+  private getLinkedEntryValues(linkedProperty: string, allChildren?: string[]): UserValueContents[] {
+    const linkedEntryUuid = this.findLinkedEntryUuid(linkedProperty, allChildren);
+
+    return linkedEntryUuid ? this.userValues[linkedEntryUuid]?.contents || [] : [];
+  }
+
+  private findLinkedEntryUuid(linkedProperty: string, allChildren?: string[]) {
     return allChildren?.find(child => {
       const entry = this.profileSchemaManager.getSchemaEntry(child);
 
