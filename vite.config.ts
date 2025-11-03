@@ -17,13 +17,24 @@ export default defineConfig(() => {
   // which is used for the embedded application
   return env.npm_config_type === 'library'
     ? {
-        plugins: [react(), svgr(), cssInjectedByJsPlugin()],
+        plugins: [
+          react({
+            jsxRuntime: 'automatic',
+          }),
+          svgr(),
+          cssInjectedByJsPlugin(),
+        ],
         build: {
           lib: {
             entry: path.resolve(__dirname, 'src/embed.tsx'),
             name: 'linked-data',
             formats: ['es'],
             fileName: format => `linked-data.${format}.js`,
+          },
+          rollupOptions: {
+            output: {
+              inlineDynamicImports: true,
+            },
           },
         },
         envPrefix: 'EDITOR_',
