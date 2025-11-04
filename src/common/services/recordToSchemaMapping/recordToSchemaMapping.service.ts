@@ -8,7 +8,6 @@ import { IUserValues } from '@common/services/userValues/userValues.interface';
 import { getParentEntryUuid } from '@common/helpers/schema.helper';
 import { IRecordToSchemaMappingInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
 
-// TODO: UILD-438 - take into account a selected Profile
 export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private updatedSchema: Schema;
   private schemaArray: SchemaEntry[];
@@ -88,9 +87,9 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     if (!schemaEntries?.length) return;
 
     // generate repeatable fields
-    if (Array.isArray(recordEntry) && recordEntry?.length > 1 && parseInt(recordGroupIndex) !== 0) {
-      const schemaEntry = this.getSchemaEntries(recordKey)[parseInt(recordGroupIndex) - 1];
-      const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaEntry, true) ?? '';
+    if (Array.isArray(recordEntry) && recordEntry?.length > 1 && Number.parseInt(recordGroupIndex) !== 0) {
+      const schemaEntry = this.getSchemaEntries(recordKey)[Number.parseInt(recordGroupIndex) - 1];
+      const newEntryUuid = (await this.repeatableFieldsService?.duplicateEntry(schemaEntry, true)) ?? '';
       this.updatedSchema = this.repeatableFieldsService?.get();
       this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
@@ -368,7 +367,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     if (Array.isArray(recordEntryValue)) {
       for await (const [key, value] of Object.entries(recordEntryValue)) {
         if (this.shouldDuplicateEntry(recordEntryValue, key)) {
-          const { newEntryUuid } = this.createDuplicateEntry(schemaUiElem);
+          const { newEntryUuid } = await this.createDuplicateEntry(schemaUiElem);
           newValueKey = newEntryUuid;
           updatedData = value;
         }
@@ -393,13 +392,13 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   }
 
   private shouldDuplicateEntry(recordEntryValue: string[] | RecordBasic[], key: string): boolean {
-    return recordEntryValue.length > 1 && parseInt(key) !== 0;
+    return recordEntryValue.length > 1 && Number.parseInt(key) !== 0;
   }
 
-  private createDuplicateEntry(schemaUiElem: SchemaEntry): {
+  private async createDuplicateEntry(schemaUiElem: SchemaEntry): Promise<{
     newEntryUuid: string;
-  } {
-    const newEntryUuid = this.repeatableFieldsService?.duplicateEntry(schemaUiElem, true) ?? '';
+  }> {
+    const newEntryUuid = (await this.repeatableFieldsService?.duplicateEntry(schemaUiElem, true)) ?? '';
     this.updatedSchema = this.repeatableFieldsService?.get();
 
     this.schemaArray = Array.from(this.updatedSchema?.values() || []);

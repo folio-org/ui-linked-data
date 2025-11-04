@@ -10,10 +10,10 @@ describe('useProfileSchema', () => {
     children: ['nonExistent', 'testKey-7'],
   };
 
-  test('get schema with copied entries', () => {
+  test('get schema with copied entries', async () => {
     const { result } = renderHook(() => useProfileSchema());
 
-    act(() => result.current.getSchemaWithCopiedEntries(entry, []));
+    await act(async () => await result.current.getSchemaWithCopiedEntries(entry, []));
 
     expect(schemaWithDuplicatesService.duplicateEntry).toHaveBeenCalled();
   });

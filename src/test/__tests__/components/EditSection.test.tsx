@@ -246,7 +246,7 @@ const monograph = {
   },
 };
 
-window.scrollTo = jest.fn();
+globalThis.scrollTo = jest.fn();
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('EditSection', () => {
@@ -296,7 +296,7 @@ describe('EditSection', () => {
   test('renders enumerated field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10');
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid11')).toBeInTheDocument();
   });
@@ -319,8 +319,10 @@ describe('EditSection', () => {
   test('calls onchange for enumerated and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = getByTestId('field-with-meta-controls-uuid10')
-    fireEvent.change(within(section).getByTestId('dropdown-field'), { target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' } });
+    const section = getByTestId('field-with-meta-controls-uuid10');
+    fireEvent.change(within(section).getByTestId('dropdown-field'), {
+      target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' },
+    });
 
     await waitFor(async () => expect(await findByDisplayValue('uuid12')).toBeInTheDocument());
   });
@@ -336,10 +338,12 @@ describe('EditSection', () => {
     });
 
     test('collapses the duplicated group', async () => {
-      const { getByTestId, findAllByText } = renderScreen();
+      const { getByTestId, findAllByText, findByTestId } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
       fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
+
+      await findByTestId('duplicate-group-clone-amount');
 
       fireEvent.click(getByTestId('duplicate-group-clone-amount'));
 
@@ -352,33 +356,33 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid13')).toBeInTheDocument();
 
-    const section = getByTestId('field-with-meta-controls-uuid13')
+    const section = getByTestId('field-with-meta-controls-uuid13');
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
   });
 
   describe('location-based form placeholder', () => {
-    const originalWindow = { ...window };
+    const originalglobalThis = { ...globalThis };
 
     beforeEach(() => {
-      Object.defineProperty(window, 'location', {
+      Object.defineProperty(globalThis, 'location', {
         writable: true,
         value: {
-          ...originalWindow.location,
+          ...originalglobalThis.location,
           pathname: '',
         },
       });
     });
 
     afterEach(() => {
-      Object.defineProperty(window, 'location', {
+      Object.defineProperty(globalThis, 'location', {
         writable: true,
-        value: originalWindow.location,
+        value: originalglobalThis.location,
       });
     });
 
     test('skips placeholder on create page', async () => {
       const { getByTestId, findByText } = renderScreen();
-      window.location.pathname = '/resources/create';
+      globalThis.location.pathname = '/resources/create';
 
       expect(await findByText('uuid14')).toBeInTheDocument();
 
@@ -388,7 +392,7 @@ describe('EditSection', () => {
 
     test('renders placeholder for certain properties without values at any other time', async () => {
       const { getByTestId, findByText } = renderScreen();
-      window.location.pathname = '/resources/1234/edit';
+      globalThis.location.pathname = '/resources/1234/edit';
 
       expect(await findByText('uuid14')).toBeInTheDocument();
 

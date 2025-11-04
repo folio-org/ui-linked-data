@@ -1,3 +1,4 @@
+import { act } from '@testing-library/react';
 import * as uuid from 'uuid';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
@@ -42,7 +43,7 @@ describe('SchemaWithDuplicatesService', () => {
       constraints,
     };
 
-    test('adds a copied entry', () => {
+    test('adds a copied entry', async () => {
       jest
         .spyOn(uuid, 'v4')
         .mockReturnValueOnce('testKey-7')
@@ -112,16 +113,16 @@ describe('SchemaWithDuplicatesService', () => {
         ],
       ]);
 
-      schemaWithDuplicatesService.duplicateEntry(entryData);
+      await act(async () => await schemaWithDuplicatesService.duplicateEntry(entryData));
 
       expect(schemaWithDuplicatesService.get()).toEqual(testResult);
     });
 
-    test('does not add a new entry', () => {
+    test('does not add a new entry', async () => {
       const constraints = { repeatable: false } as Constraints;
       const entryData = { ...entry, constraints };
 
-      schemaWithDuplicatesService.duplicateEntry(entryData);
+      await act(async () => await schemaWithDuplicatesService.duplicateEntry(entryData));
 
       expect(schemaWithDuplicatesService.get()).toEqual(schema);
     });
@@ -232,7 +233,7 @@ describe('SchemaWithDuplicatesService', () => {
       expect(schemaWithDuplicatesService.get()).toEqual(schema);
     });
 
-    test('updates parent twinChildren when duplicating entry with children', () => {
+    test('updates parent twinChildren when duplicating entry with children', async () => {
       jest.spyOn(uuid, 'v4').mockReturnValueOnce('testKey-7').mockReturnValueOnce('testKey-8');
 
       const parentEntry = {
@@ -266,7 +267,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       initServices(testSchema);
 
-      schemaWithDuplicatesService.duplicateEntry(childEntry as SchemaEntry);
+      await act(async () => await schemaWithDuplicatesService.duplicateEntry(childEntry as SchemaEntry));
 
       const updatedParent = schemaWithDuplicatesService.get().get('testKey-1');
       expect(updatedParent?.twinChildren?.['mockUri']).toEqual(['testKey-2', 'testKey-7']);
@@ -356,8 +357,10 @@ describe('SchemaWithDuplicatesService', () => {
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(initialSchema, selectedEntriesService);
     });
 
-    test('skips auto-duplicated entries when duplicating with isAutoDuplication flag', () => {
-      schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, true);
+    test('skips auto-duplicated entries when duplicating with isAutoDuplication flag', async () => {
+      await act(
+        async () => await schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, true),
+      );
 
       const resultSchema = schemaWithDuplicatesService.get();
 
@@ -373,8 +376,10 @@ describe('SchemaWithDuplicatesService', () => {
       expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-1');
     });
 
-    test('preserves all entries when duplicating without isAutoDuplication flag', () => {
-      schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, false);
+    test('preserves all entries when duplicating without isAutoDuplication flag', async () => {
+      await act(
+        async () => await schemaWithDuplicatesService.duplicateEntry(initialSchema.get('parent') as SchemaEntry, false),
+      );
 
       const resultSchema = schemaWithDuplicatesService.get();
 
