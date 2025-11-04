@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { IntlProvider } from 'react-intl';
+import { FC, useMemo } from 'react';
+import { createIntl, createIntlCache, IntlContext } from 'react-intl';
 import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
 import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { useConfigState } from '@src/store';
@@ -15,9 +15,18 @@ export const AsyncIntlProvider: FC<AsyncIntlProviderProps> = ({ cachedMessages, 
 
   const i18nMessages = getMessages(locale);
 
-  return (
-    <IntlProvider messages={i18nMessages || {}} locale={locale} defaultLocale={DEFAULT_LOCALE}>
-      {children}
-    </IntlProvider>
-  );
+  // React 19 compatible approach
+  const intl = useMemo(() => {
+    const cache = createIntlCache();
+    return createIntl(
+      {
+        locale,
+        messages: i18nMessages || {},
+        defaultLocale: DEFAULT_LOCALE,
+      },
+      cache,
+    );
+  }, [locale, i18nMessages]);
+
+  return <IntlContext value={intl}>{children}</IntlContext>;
 };

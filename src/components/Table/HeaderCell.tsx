@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, ReactElement } from 'react';
 import classNames from 'classnames';
 import { Cell, Row } from './Table';
 
@@ -6,7 +6,7 @@ type HeaderCellProps = {
   elementType: 'th' | 'td';
   cellKey: string;
   header: Row;
-  label?: string | JSX.Element;
+  label?: string | ReactElement;
   className?: string;
   onHeaderCellClick?: (c: Record<string, Cell>) => void;
   children?: ReactNode;

@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
@@ -43,8 +43,7 @@ describe('SchemaWithDuplicatesService', () => {
     };
 
     test('adds a copied entry', () => {
-      jest
-        .spyOn(uuid, 'v4')
+      (uuidv4 as jest.Mock)
         .mockReturnValueOnce('testKey-7')
         .mockReturnValueOnce('testKey-8')
         .mockReturnValueOnce('testKey-9')
@@ -233,7 +232,7 @@ describe('SchemaWithDuplicatesService', () => {
     });
 
     test('updates parent twinChildren when duplicating entry with children', () => {
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('testKey-7').mockReturnValueOnce('testKey-8');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('testKey-7').mockReturnValueOnce('testKey-8');
 
       const parentEntry = {
         uuid: 'testKey-1',
@@ -346,8 +345,7 @@ describe('SchemaWithDuplicatesService', () => {
     let selectedEntriesService: ISelectedEntries;
 
     beforeEach(() => {
-      jest
-        .spyOn(uuid, 'v4')
+      (uuidv4 as jest.Mock)
         .mockReturnValueOnce('new-parent')
         .mockReturnValueOnce('new-child-1')
         .mockReturnValueOnce('new-child-2');

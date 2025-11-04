@@ -34,7 +34,7 @@ describe('ComplexLookupSearchResults', () => {
 
     expect(TableFlex as jest.Mock).toHaveBeenCalledWith(
       { header: listHeader, data: formattedData, className: 'results-list' },
-      {},
+      undefined,
     );
   });
 });

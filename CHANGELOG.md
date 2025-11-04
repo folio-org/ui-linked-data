@@ -53,6 +53,7 @@
 * Fixed shifted Admin metadata tooltip. Refs [UILD-654].
 * Set or delete the default user profile when changing the profile for a Work/Instance. Refs [UILD-645].
 * Change work Profile after it is created. Refs [UILD-658].
+* Migrate to React 19 and update dependencies. Refs [UILD-662].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -107,6 +108,7 @@
 [UILD-654]:https://folio-org.atlassian.net/browse/UILD-654
 [UILD-645]:https://folio-org.atlassian.net/browse/UILD-645
 [UILD-658]:https://folio-org.atlassian.net/browse/UILD-658
+[UILD-662]:https://folio-org.atlassian.net/browse/UILD-662
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

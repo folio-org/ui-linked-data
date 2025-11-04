@@ -85,29 +85,25 @@ describe('Edit', () => {
 
   test('calls fetchRecord with correct parameters when cloneOfParam search param is provided', async () => {
     const cloneOfParam = 'testCloneOfParam';
-    Object.defineProperty(window, 'location', {
-      value: {
-        search: `?cloneOf=${cloneOfParam}`,
-        pathname: `/resources/create?cloneOf=${cloneOfParam}`,
-      },
-      writable: true,
-    });
+    const originalLocation = globalThis.location.href;
+    globalThis.history.replaceState({}, '', `http://localhost/resources/create?cloneOf=${cloneOfParam}`);
     jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
 
     await renderComponent(monograph as unknown as ProfileEntry);
 
     expect(fetchRecord).toHaveBeenCalledWith(cloneOfParam);
+    globalThis.history.replaceState({}, '', originalLocation);
   });
 
   describe('setEntitesBFIds function', () => {
+    const originalLocation = globalThis.location.href;
+
     beforeEach(() => {
-      Object.defineProperty(window, 'location', {
-        value: {
-          search: '',
-          pathname: '/resources/create',
-        },
-        writable: true,
-      });
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/create');
+    });
+
+    afterEach(() => {
+      globalThis.history.replaceState({}, '', originalLocation);
     });
 
     test('sets instance as edited and work as previewed entity by default', async () => {
@@ -124,13 +120,7 @@ describe('Edit', () => {
     });
 
     test('sets work as edited and instance as previewed entity when type=work', async () => {
-      Object.defineProperty(window, 'location', {
-        value: {
-          search: '?type=work',
-          pathname: '/resources/create',
-        },
-        writable: true,
-      });
+      globalThis.history.replaceState({}, '', 'http://localhost/resources/create?type=work');
 
       const uiState = useUIStore.getState();
       const spySetCurrentlyEditedEntityBfid = jest.spyOn(uiState, 'setCurrentlyEditedEntityBfid');
