@@ -1,5 +1,5 @@
 import { act } from '@testing-library/react';
-import * as uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
@@ -45,8 +45,7 @@ describe('SchemaWithDuplicatesService', () => {
     };
 
     test('adds a copied entry', async () => {
-      jest
-        .spyOn(uuid, 'v4')
+      (uuidv4 as jest.Mock)
         .mockReturnValueOnce('testKey-7')
         .mockReturnValueOnce('testKey-8')
         .mockReturnValueOnce('testKey-9')
@@ -235,7 +234,7 @@ describe('SchemaWithDuplicatesService', () => {
     });
 
     test('updates parent twinChildren when duplicating entry with children', async () => {
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('testKey-7').mockReturnValueOnce('testKey-8');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('testKey-7').mockReturnValueOnce('testKey-8');
 
       const parentEntry = {
         uuid: 'testKey-1',
@@ -348,8 +347,7 @@ describe('SchemaWithDuplicatesService', () => {
     let selectedEntriesService: ISelectedEntries;
 
     beforeEach(() => {
-      jest
-        .spyOn(uuid, 'v4')
+      (uuidv4 as jest.Mock)
         .mockReturnValueOnce('new-parent')
         .mockReturnValueOnce('new-child-1')
         .mockReturnValueOnce('new-child-2');
@@ -455,7 +453,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         enumeratedSchema,
@@ -526,7 +524,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         enumeratedSchema,
@@ -576,7 +574,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(undefined);
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         enumeratedSchema,
@@ -617,7 +615,7 @@ describe('SchemaWithDuplicatesService', () => {
         ],
       ]) as Schema;
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-literal').mockReturnValueOnce('new-child');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-literal').mockReturnValueOnce('new-child');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         nonEnumeratedSchema,
@@ -672,7 +670,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-literal');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-literal');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         enumeratedSchema,
@@ -729,7 +727,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
 
-      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+      (uuidv4 as jest.Mock).mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
 
       schemaWithDuplicatesService = new SchemaWithDuplicatesService(
         enumeratedSchema,
@@ -795,8 +793,7 @@ describe('SchemaWithDuplicatesService', () => {
 
       (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
 
-      jest
-        .spyOn(uuid, 'v4')
+      (uuidv4 as jest.Mock)
         .mockReturnValueOnce('new-root')
         .mockReturnValueOnce('new-enumerated')
         .mockReturnValueOnce('new-dropdown');
