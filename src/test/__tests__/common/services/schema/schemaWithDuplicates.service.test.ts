@@ -3,6 +3,7 @@ import * as uuid from 'uuid';
 import { SchemaWithDuplicatesService } from '@common/services/schema';
 import { SelectedEntriesService } from '@common/services/selectedEntries';
 import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
+import { IUserValues } from '@common/services/userValues/userValues.interface';
 
 jest.mock('uuid');
 
@@ -395,6 +396,428 @@ describe('SchemaWithDuplicatesService', () => {
       expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toHaveLength(2);
       expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-1');
       expect(resultSchema.get('new-parent')?.twinChildren?.['child-uri']).toContain('new-child-2');
+    });
+  });
+
+  describe('duplicateEntry with enumerated fields and user values', () => {
+    let mockUserValuesService: IUserValues;
+    let selectedEntriesService: ISelectedEntries;
+
+    beforeEach(() => {
+      mockUserValuesService = {
+        getValue: jest.fn(),
+        setValue: jest.fn(),
+        getAllValues: jest.fn(),
+        set: jest.fn(),
+      } as IUserValues;
+
+      selectedEntriesService = new SelectedEntriesService([]);
+    });
+
+    test('duplicates user values for enumerated field with dropdownOption children', async () => {
+      const enumeratedSchema = new Map([
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['dropdown-option-1'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'dropdown-option-1',
+          {
+            uuid: 'dropdown-option-1',
+            path: ['enumerated-parent', 'dropdown-option-1'],
+            uriBFLite: 'dropdown-option-uri',
+            type: 'dropdownOption',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      const originalUserValue = {
+        uuid: 'enumerated-parent',
+        contents: [
+          {
+            label: 'Option Label',
+            meta: {
+              uri: 'http://example.com/option1',
+              type: 'enumerated',
+              basicLabel: 'Option Label',
+            },
+          },
+        ],
+      };
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        enumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(enumeratedSchema.get('enumerated-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.getValue).toHaveBeenCalledWith('enumerated-parent');
+      expect(mockUserValuesService.setValue).toHaveBeenCalledWith({
+        type: 'enumerated',
+        key: 'new-enumerated',
+        value: {
+          data: 'http://example.com/option1',
+        },
+      });
+    });
+
+    test('duplicates user values with multiple URIs for enumerated field', async () => {
+      const enumeratedSchema = new Map([
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['dropdown-option-1'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'dropdown-option-1',
+          {
+            uuid: 'dropdown-option-1',
+            path: ['enumerated-parent', 'dropdown-option-1'],
+            uriBFLite: 'dropdown-option-uri',
+            type: 'dropdownOption',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      const originalUserValue = {
+        uuid: 'enumerated-parent',
+        contents: [
+          {
+            label: 'Option 1',
+            meta: {
+              uri: 'http://example.com/option1',
+              type: 'enumerated',
+            },
+          },
+          {
+            label: 'Option 2',
+            meta: {
+              uri: 'http://example.com/option2',
+              type: 'enumerated',
+            },
+          },
+        ],
+      };
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        enumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(enumeratedSchema.get('enumerated-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.setValue).toHaveBeenCalledWith({
+        type: 'enumerated',
+        key: 'new-enumerated',
+        value: {
+          data: ['http://example.com/option1', 'http://example.com/option2'],
+        },
+      });
+    });
+
+    test('does not duplicate user values when original has no user values', async () => {
+      const enumeratedSchema = new Map([
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['dropdown-option-1'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'dropdown-option-1',
+          {
+            uuid: 'dropdown-option-1',
+            path: ['enumerated-parent', 'dropdown-option-1'],
+            uriBFLite: 'dropdown-option-uri',
+            type: 'dropdownOption',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(undefined);
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        enumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(enumeratedSchema.get('enumerated-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.getValue).toHaveBeenCalledWith('enumerated-parent');
+      expect(mockUserValuesService.setValue).not.toHaveBeenCalled();
+    });
+
+    test('does not duplicate user values for non-enumerated parent', async () => {
+      const nonEnumeratedSchema = new Map([
+        [
+          'literal-parent',
+          {
+            uuid: 'literal-parent',
+            path: ['literal-parent'],
+            uriBFLite: 'literal-uri',
+            type: 'literal',
+            children: ['child-1'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'child-1',
+          {
+            uuid: 'child-1',
+            path: ['literal-parent', 'child-1'],
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-literal').mockReturnValueOnce('new-child');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        nonEnumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(nonEnumeratedSchema.get('literal-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.setValue).not.toHaveBeenCalled();
+    });
+
+    test('does not duplicate user values when child is not dropdownOption', async () => {
+      const enumeratedSchema = new Map([
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['literal-child'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'literal-child',
+          {
+            uuid: 'literal-child',
+            path: ['enumerated-parent', 'literal-child'],
+            type: 'literal',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      const originalUserValue = {
+        uuid: 'enumerated-parent',
+        contents: [
+          {
+            label: 'Option Label',
+            meta: {
+              uri: 'http://example.com/option1',
+            },
+          },
+        ],
+      };
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-literal');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        enumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(enumeratedSchema.get('enumerated-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.getValue).toHaveBeenCalledWith('enumerated-parent');
+      expect(mockUserValuesService.setValue).not.toHaveBeenCalled();
+    });
+
+    test('does not duplicate user values when URIs are empty', async () => {
+      const enumeratedSchema = new Map([
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['dropdown-option-1'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'dropdown-option-1',
+          {
+            uuid: 'dropdown-option-1',
+            path: ['enumerated-parent', 'dropdown-option-1'],
+            uriBFLite: 'dropdown-option-uri',
+            type: 'dropdownOption',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      const originalUserValue = {
+        uuid: 'enumerated-parent',
+        contents: [
+          {
+            label: 'Option Label',
+            meta: {
+              type: 'enumerated',
+            },
+          },
+        ],
+      };
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
+
+      jest.spyOn(uuid, 'v4').mockReturnValueOnce('new-enumerated').mockReturnValueOnce('new-dropdown');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        enumeratedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(
+        async () =>
+          await schemaWithDuplicatesService.duplicateEntry(enumeratedSchema.get('enumerated-parent') as SchemaEntry),
+      );
+
+      expect(mockUserValuesService.getValue).toHaveBeenCalledWith('enumerated-parent');
+      expect(mockUserValuesService.setValue).not.toHaveBeenCalled();
+    });
+
+    test('duplicates nested enumerated fields with user values', async () => {
+      const nestedSchema = new Map([
+        [
+          'root',
+          {
+            uuid: 'root',
+            path: ['root'],
+            children: ['enumerated-parent'],
+            constraints: { repeatable: true },
+          },
+        ],
+        [
+          'enumerated-parent',
+          {
+            uuid: 'enumerated-parent',
+            path: ['root', 'enumerated-parent'],
+            uriBFLite: 'enumerated-uri',
+            type: 'enumerated',
+            children: ['dropdown-option-1'],
+          },
+        ],
+        [
+          'dropdown-option-1',
+          {
+            uuid: 'dropdown-option-1',
+            path: ['root', 'enumerated-parent', 'dropdown-option-1'],
+            uriBFLite: 'dropdown-option-uri',
+            type: 'dropdownOption',
+            children: [],
+          },
+        ],
+      ]) as Schema;
+
+      const originalUserValue = {
+        uuid: 'enumerated-parent',
+        contents: [
+          {
+            label: 'Nested Option',
+            meta: {
+              uri: 'http://example.com/nested-option',
+              type: 'enumerated',
+            },
+          },
+        ],
+      };
+
+      (mockUserValuesService.getValue as jest.Mock).mockReturnValue(originalUserValue);
+
+      jest
+        .spyOn(uuid, 'v4')
+        .mockReturnValueOnce('new-root')
+        .mockReturnValueOnce('new-enumerated')
+        .mockReturnValueOnce('new-dropdown');
+
+      schemaWithDuplicatesService = new SchemaWithDuplicatesService(
+        nestedSchema,
+        selectedEntriesService,
+        undefined,
+        mockUserValuesService,
+      );
+
+      await act(async () => await schemaWithDuplicatesService.duplicateEntry(nestedSchema.get('root') as SchemaEntry));
+
+      expect(mockUserValuesService.getValue).toHaveBeenCalledWith('enumerated-parent');
+      expect(mockUserValuesService.setValue).toHaveBeenCalledWith({
+        type: 'enumerated',
+        key: 'new-enumerated',
+        value: {
+          data: 'http://example.com/nested-option',
+        },
+      });
     });
   });
 });
