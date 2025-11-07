@@ -367,8 +367,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     if (Array.isArray(recordEntryValue)) {
       for await (const [key, value] of Object.entries(recordEntryValue)) {
         if (this.shouldDuplicateEntry(recordEntryValue, key)) {
-          const { newEntryUuid } = await this.createDuplicateEntry(schemaUiElem);
-          newValueKey = newEntryUuid;
+          newValueKey = await this.createDuplicateEntry(schemaUiElem);
           updatedData = value;
         }
 
@@ -395,15 +394,13 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     return recordEntryValue.length > 1 && Number.parseInt(key) !== 0;
   }
 
-  private async createDuplicateEntry(schemaUiElem: SchemaEntry): Promise<{
-    newEntryUuid: string;
-  }> {
+  private async createDuplicateEntry(schemaUiElem: SchemaEntry) {
     const newEntryUuid = (await this.repeatableFieldsService?.duplicateEntry(schemaUiElem, true)) ?? '';
     this.updatedSchema = this.repeatableFieldsService?.get();
 
     this.schemaArray = Array.from(this.updatedSchema?.values() || []);
 
-    return { newEntryUuid };
+    return newEntryUuid;
   }
 
   private async setUserValue({

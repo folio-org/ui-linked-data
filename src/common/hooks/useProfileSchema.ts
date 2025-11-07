@@ -14,7 +14,7 @@ export const useProfileSchema = () => {
   const { setIsRecordEdited: setIsEdited } = useStatusState(['setIsRecordEdited']);
   const { schema, setSchema } = useProfileState(['schema', 'setSchema']);
 
-  const getSchemaWithCopiedEntries = async (entry: SchemaEntry, selectedEntries: string[]) => {
+  const updateSchemaWithCopiedEntries = async (entry: SchemaEntry, selectedEntries: string[]) => {
     selectedEntriesService.set(selectedEntries);
     schemaWithDuplicatesService.set(schema);
     userValuesService.set(userValues);
@@ -29,7 +29,7 @@ export const useProfileSchema = () => {
     setIsEdited(true);
   };
 
-  const getSchemaWithDeletedEntries = (entry: SchemaEntry) => {
+  const updateSchemaWithDeletedEntries = (entry: SchemaEntry) => {
     schemaWithDuplicatesService.set(schema);
     const deletedUuids = schemaWithDuplicatesService.deleteEntry(entry);
 
@@ -40,5 +40,5 @@ export const useProfileSchema = () => {
     setIsEdited(true);
   };
 
-  return { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries };
+  return { updateSchemaWithCopiedEntries, updateSchemaWithDeletedEntries };
 };

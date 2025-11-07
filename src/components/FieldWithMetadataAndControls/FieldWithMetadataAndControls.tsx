@@ -34,18 +34,18 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
 }) => {
   const { schema } = useProfileState(['schema']);
   const { selectedEntries } = useInputsState(['selectedEntries']);
-  const { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries } = useProfileSchema();
+  const { updateSchemaWithCopiedEntries, updateSchemaWithDeletedEntries } = useProfileSchema();
   const { uuid, displayName, htmlId } = entry;
 
   const hasDuplicateGroupButton = checkRepeatableGroup({ schema, entry, level, isDisabled: disabled });
   const hasDuplicateSubcomponentButton = checkRepeatableSubcomponent({ entry, isDisabled: disabled });
 
   const onClickDuplicateGroup = () => {
-    getSchemaWithCopiedEntries(entry, selectedEntries);
+    updateSchemaWithCopiedEntries(entry, selectedEntries);
   };
 
   const onClickDeleteGroup = () => {
-    getSchemaWithDeletedEntries(entry);
+    updateSchemaWithDeletedEntries(entry);
   };
 
   const commonLayoutProps = {
