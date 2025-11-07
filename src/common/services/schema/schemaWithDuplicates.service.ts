@@ -9,12 +9,15 @@ import {
 import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE } from '@common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { IUserValues } from '../userValues/userValues.interface';
 
 export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService {
   constructor(
     private schema: Map<string, SchemaEntry>,
     private readonly selectedEntriesService: ISelectedEntries,
     private readonly entryPropertiesGeneratorService?: IEntryPropertiesGeneratorService,
+    private readonly userValuesService?: IUserValues,
   ) {
     this.set(schema);
   }
@@ -27,14 +30,20 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     this.schema = cloneDeep(schema);
   }
 
-  duplicateEntry(entry: SchemaEntry, isAutoDuplication?: boolean) {
+  async duplicateEntry(entry: SchemaEntry, isAutoDuplication?: boolean) {
     const { path, children, constraints } = entry;
 
     if (!constraints?.repeatable) return;
 
     const updatedEntryUuid = uuidv4();
     const updatedEntry = this.getCopiedEntry(entry, updatedEntryUuid);
-    updatedEntry.children = this.getUpdatedChildren(children, updatedEntry, isAutoDuplication);
+    updatedEntry.children = await this.getUpdatedChildren({
+      children,
+      parentEntry: updatedEntry,
+      isAutoDuplication,
+      originalParentUuid: entry.uuid,
+      copiedParentUuid: updatedEntryUuid,
+    });
 
     const parentEntryUuid = getParentEntryUuid(path);
     const parentEntry = this.schema.get(parentEntryUuid);
@@ -124,23 +133,37 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     return copiedEntry;
   }
 
-  private getUpdatedChildren(children: string[] | undefined, parentEntry?: SchemaEntry, isAutoDuplication?: boolean) {
+  private async getUpdatedChildren({
+    children,
+    parentEntry,
+    isAutoDuplication,
+    originalParentUuid,
+    copiedParentUuid,
+  }: {
+    children: string[] | undefined;
+    parentEntry?: SchemaEntry;
+    isAutoDuplication?: boolean;
+    originalParentUuid?: string;
+    copiedParentUuid?: string;
+  }) {
     const updatedChildren = [] as string[];
     const parentElemPath = parentEntry?.path;
     const newUuids = children?.map(() => uuidv4());
 
-    children?.forEach((entryUuid: string, index: number) => {
+    if (!children) return updatedChildren;
+
+    for (let index = 0; index < children.length; index++) {
+      const entryUuid = children[index];
       const entry = this.schema.get(entryUuid);
 
-      if (!entry) return;
+      if (!entry) continue;
 
       if (isAutoDuplication && this.isAutoDuplicatedEntry(entry)) {
         this.removeEntryReferences(entry, parentEntry);
-
-        return;
+        continue;
       }
 
-      const { children } = entry;
+      const { children: entryChildren } = entry;
       let updatedEntryUuid = newUuids?.[index] ?? uuidv4();
       const isFirstAssociatedEntryElem = parentEntry?.dependsOn && newUuids && index === 0;
 
@@ -154,7 +177,13 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
       const copiedEntry = this.getCopiedEntry(entry, updatedEntryUuid, parentElemPath);
       this.schema.set(updatedEntryUuid, copiedEntry);
 
-      copiedEntry.children = this.getUpdatedChildren(children, copiedEntry, isAutoDuplication);
+      copiedEntry.children = await this.getUpdatedChildren({
+        children: entryChildren,
+        parentEntry: copiedEntry,
+        isAutoDuplication,
+        originalParentUuid: entry.uuid,
+        copiedParentUuid: updatedEntryUuid,
+      });
 
       const { updatedEntry, controlledByEntry } = this.getUpdatedAssociatedEntries({
         initialEntry: copiedEntry,
@@ -167,6 +196,14 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
 
       this.schema.set(updatedEntryUuid, updatedEntry);
 
+      // Handle user values for enumerated parent with dropdownOption children
+      await this.duplicateUserValuesForEnumeratedField({
+        parentEntry,
+        originalChildEntryUuid: entry.uuid,
+        originalParentUuid,
+        copiedParentUuid,
+      });
+
       if (isFirstAssociatedEntryElem) {
         this.selectedEntriesService.addNew(undefined, updatedEntryUuid);
       } else if (!parentEntry?.dependsOn) {
@@ -174,7 +211,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
       }
 
       updatedChildren.push(updatedEntryUuid);
-    });
+    }
 
     return updatedChildren;
   }
@@ -281,5 +318,38 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     }
 
     return { updatedEntry, controlledByEntry };
+  }
+
+  private async duplicateUserValuesForEnumeratedField({
+    parentEntry,
+    originalChildEntryUuid,
+    originalParentUuid,
+    copiedParentUuid,
+  }: {
+    parentEntry?: SchemaEntry;
+    originalChildEntryUuid: string;
+    originalParentUuid?: string;
+    copiedParentUuid?: string;
+  }) {
+    if (!this.userValuesService || !parentEntry || !originalParentUuid || !copiedParentUuid) return;
+
+    if (parentEntry.type !== AdvancedFieldType.enumerated) return;
+
+    const originalUserValue = this.userValuesService.getValue(originalParentUuid);
+    if (!originalUserValue) return;
+
+    const originalChildEntry = this.schema.get(originalChildEntryUuid);
+    if (!originalChildEntry || originalChildEntry.type !== AdvancedFieldType.dropdownOption) return;
+
+    const uris = originalUserValue.contents.map(content => content.meta?.uri).filter(Boolean) as string[];
+    if (uris.length === 0) return;
+
+    await this.userValuesService.setValue({
+      type: AdvancedFieldType.enumerated,
+      key: copiedParentUuid,
+      value: {
+        data: uris.length === 1 ? uris[0] : uris,
+      },
+    });
   }
 }

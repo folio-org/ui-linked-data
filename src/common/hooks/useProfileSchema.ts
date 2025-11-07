@@ -3,25 +3,33 @@ import { deleteFromSetImmutable } from '@common/helpers/common.helper';
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
 
 export const useProfileSchema = () => {
-  const { selectedEntriesService, schemaWithDuplicatesService } = useServicesContext() as Required<ServicesParams>;
+  const { selectedEntriesService, schemaWithDuplicatesService, userValuesService } =
+    useServicesContext() as Required<ServicesParams>;
   const { setCollapsibleEntries } = useUIState(['setCollapsibleEntries']);
-  const { setUserValues, setSelectedEntries } = useInputsState(['setUserValues', 'setSelectedEntries']);
+  const { userValues, setUserValues, setSelectedEntries } = useInputsState([
+    'userValues',
+    'setUserValues',
+    'setSelectedEntries',
+  ]);
   const { setIsRecordEdited: setIsEdited } = useStatusState(['setIsRecordEdited']);
   const { schema, setSchema } = useProfileState(['schema', 'setSchema']);
 
-  const getSchemaWithCopiedEntries = (entry: SchemaEntry, selectedEntries: string[]) => {
+  const updateSchemaWithCopiedEntries = async (entry: SchemaEntry, selectedEntries: string[]) => {
     selectedEntriesService.set(selectedEntries);
     schemaWithDuplicatesService.set(schema);
-    const newUuid = schemaWithDuplicatesService.duplicateEntry(entry);
+    userValuesService.set(userValues);
+
+    const newUuid = await schemaWithDuplicatesService.duplicateEntry(entry);
 
     setSelectedEntries(selectedEntriesService.get());
+    setUserValues(userValuesService.getAllValues());
     setCollapsibleEntries(prev => new Set(newUuid ? [...prev, entry.uuid, newUuid] : [...prev, entry.uuid]));
     setSchema(schemaWithDuplicatesService.get());
 
     setIsEdited(true);
   };
 
-  const getSchemaWithDeletedEntries = (entry: SchemaEntry) => {
+  const updateSchemaWithDeletedEntries = (entry: SchemaEntry) => {
     schemaWithDuplicatesService.set(schema);
     const deletedUuids = schemaWithDuplicatesService.deleteEntry(entry);
 
@@ -32,5 +40,5 @@ export const useProfileSchema = () => {
     setIsEdited(true);
   };
 
-  return { getSchemaWithCopiedEntries, getSchemaWithDeletedEntries };
+  return { updateSchemaWithCopiedEntries, updateSchemaWithDeletedEntries };
 };

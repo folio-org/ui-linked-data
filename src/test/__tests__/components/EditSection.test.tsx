@@ -246,7 +246,7 @@ const monograph = {
   },
 };
 
-window.scrollTo = jest.fn();
+globalThis.scrollTo = jest.fn();
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('EditSection', () => {
@@ -296,7 +296,7 @@ describe('EditSection', () => {
   test('renders enumerated field', async () => {
     const { getByTestId, findByText } = renderScreen();
 
-    const section = getByTestId('field-with-meta-controls-uuid10')
+    const section = getByTestId('field-with-meta-controls-uuid10');
     expect(await within(section).findByText('ld.type')).toBeInTheDocument();
     expect(await findByText('uuid11')).toBeInTheDocument();
   });
@@ -319,8 +319,10 @@ describe('EditSection', () => {
   test('calls onchange for enumerated and sets values', async () => {
     const { getByTestId, findByDisplayValue } = renderScreen();
 
-    const section = getByTestId('field-with-meta-controls-uuid10')
-    fireEvent.change(within(section).getByTestId('dropdown-field'), { target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' } });
+    const section = getByTestId('field-with-meta-controls-uuid10');
+    fireEvent.change(within(section).getByTestId('dropdown-field'), {
+      target: { value: 'http://bibfra.me/vocab/lite/summaryLanguage' },
+    });
 
     await waitFor(async () => expect(await findByDisplayValue('uuid12')).toBeInTheDocument());
   });
@@ -336,10 +338,12 @@ describe('EditSection', () => {
     });
 
     test('collapses the duplicated group', async () => {
-      const { getByTestId, findAllByText } = renderScreen();
+      const { getByTestId, findAllByText, findByTestId } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
       fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
+
+      await findByTestId('duplicate-group-clone-amount');
 
       fireEvent.click(getByTestId('duplicate-group-clone-amount'));
 
@@ -352,7 +356,7 @@ describe('EditSection', () => {
 
     expect(await findByText('uuid13')).toBeInTheDocument();
 
-    const section = getByTestId('field-with-meta-controls-uuid13')
+    const section = getByTestId('field-with-meta-controls-uuid13');
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
   });
 

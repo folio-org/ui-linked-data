@@ -10,10 +10,10 @@ describe('useProfileSchema', () => {
     children: ['nonExistent', 'testKey-7'],
   };
 
-  test('get schema with copied entries', () => {
+  test('get schema with copied entries', async () => {
     const { result } = renderHook(() => useProfileSchema());
 
-    act(() => result.current.getSchemaWithCopiedEntries(entry, []));
+    await act(async () => await result.current.updateSchemaWithCopiedEntries(entry, []));
 
     expect(schemaWithDuplicatesService.duplicateEntry).toHaveBeenCalled();
   });
@@ -21,7 +21,7 @@ describe('useProfileSchema', () => {
   test('get schema with deleted entries', () => {
     const { result } = renderHook(() => useProfileSchema());
 
-    act(() => result.current.getSchemaWithDeletedEntries(entry));
+    act(() => result.current.updateSchemaWithDeletedEntries(entry));
 
     expect(schemaWithDuplicatesService.deleteEntry).toHaveBeenCalled();
   });
