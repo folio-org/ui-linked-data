@@ -19,7 +19,16 @@ export const Values: FC<ValuesProps> = ({
     ? userValues[uuid]?.contents?.map(({ label, meta: { uri, parentUri, basicLabel } = {} } = {}) => {
         if (!label && !basicLabel) return;
 
-        const selectedLabel = basicLabel ?? label;
+        let selectedLabel = basicLabel ?? label;
+
+        if (
+          htmlId &&
+          htmlId?.indexOf('__hubs') >= 0 &&
+          selectedLabel &&
+          selectedLabel?.indexOf('http://bibfra.me/vocab') >= 0
+        ) {
+          selectedLabel = '';
+        }
 
         return (
           selectedLabel && (
