@@ -6,7 +6,7 @@ import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants'
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
 import { getIsCreatePage } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
-import { ComplexLookupField } from '@components/ComplexLookupField';
+import { ComplexLookupField } from '@/features/complexLookup/components/ComplexLookupField';
 import { DropdownField } from '@components/DropdownField';
 import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndControls';
 import { LiteralField } from '@components/LiteralField';

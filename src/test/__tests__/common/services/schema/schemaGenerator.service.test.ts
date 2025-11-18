@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SchemaGeneratorService } from '@common/services/schema';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 
 jest.mock('uuid');
-jest.mock('@common/helpers/complexLookup.helper');
+jest.mock('@/features/complexLookup/utils/complexLookup.helper');
 
 describe('SchemaGeneratorService', () => {
   const mockSelectedEntriesService = {

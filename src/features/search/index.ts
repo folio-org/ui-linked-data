@@ -1,4 +1,5 @@
 // Components
+export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { ItemSearch } from './components/ItemSearch';
 export { Search } from './components/Search';
 export { SearchControlPane } from './components/SearchControlPane';

@@ -1,5 +1,4 @@
 import { FormattedMessage } from 'react-intl';
-import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import { FullDisplay } from '@components/FullDisplay';
@@ -10,6 +9,7 @@ import { useUIState } from '@src/store';
 import { useSearchContext } from '../../providers';
 import { useLoadSearchResults, useSearch } from '../../hooks';
 import { SearchControls } from '../SearchControls';
+import { AdvancedSearchModal } from '../AdvancedSearchModal';
 
 export const ItemSearch = () => {
   const {
