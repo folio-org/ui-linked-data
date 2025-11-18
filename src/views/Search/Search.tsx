@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Search } from '@components/Search';
-import { SearchResultList } from '@components/SearchResultList';
+import { Search, SearchResultList, SearchControlPane } from '@/features/search';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
-import { SearchControlPane } from '@components/SearchControlPane';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';

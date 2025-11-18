@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
-import { useSearchFilterLookupOptions } from '@common/hooks/useSearchFilterLookupOptions';
+import { useSearchFilterLookupOptions } from '@/features/search';
 import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';

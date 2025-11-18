@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useSearchContext } from '@common/hooks/useSearchContext';
 import { MarcPreviewComplexLookup } from '@components/ComplexLookupField/MarcPreviewComplexLookup';
 import { useMarcPreviewStore, useUIStore } from '@src/store';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useSearchContext } from '@/features/search';
 
-jest.mock('@common/hooks/useSearchContext');
+jest.mock('@/features/search/providers');
 jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('@components/MarcContent', () => ({ MarcContent: () => <div>Marc Content</div> }));
 

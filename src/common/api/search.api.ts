@@ -1,5 +1,5 @@
 import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
-import { RESPONSE_TRANSFORMERS } from '@common/helpers/search/responseTransformers';
+import { RESPONSE_TRANSFORMERS } from '@/features/search/utils/responseTransformers';
 import baseApi from './base.api';
 
 export type ItemSearchResponse = {

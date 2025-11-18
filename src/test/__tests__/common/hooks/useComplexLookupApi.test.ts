@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useComplexLookupApi } from '@common/hooks/useComplexLookupApi';
-import { useSearchFiltersData } from '@common/hooks/useSearchFiltersData';
+import { useSearchFiltersData } from '@/features/search/hooks/filters/useSearchFiltersData';
 
-jest.mock('@common/hooks/useSearchFiltersData');
+jest.mock('@/features/search/hooks/filters/useSearchFiltersData');
 
 describe('useComplexLookupApi', () => {
   const api = {

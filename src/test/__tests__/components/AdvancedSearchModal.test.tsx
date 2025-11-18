@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { AdvancedSearchModal } from '@components/AdvancedSearchModal';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
-import * as SearchHelper from '@common/helpers/search.helper';
+import * as SearchHelper from '@/features/search/utils/search.helper';
 import { SearchQueryParams } from '@common/constants/routes.constants';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useUIStore } from '@src/store';
@@ -14,6 +14,8 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: () => [{}, setSearchParams],
 }));
+
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('AdvancedSearchModal', () => {
   beforeAll(() => {

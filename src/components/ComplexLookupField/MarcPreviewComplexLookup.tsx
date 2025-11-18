@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
-import { useSearchContext } from '@common/hooks/useSearchContext';
 import { useComplexLookupValidation } from '@common/hooks/useComplexLookupValidation';
 import { useMarcPreviewState, useUIState } from '@src/store';
-import { SearchControlPane } from '@components/SearchControlPane';
+import { SearchControlPane, useSearchContext } from '@/features/search';
 import { MarcContent } from '@components/MarcContent';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';

@@ -5,6 +5,7 @@ import { TableFlex } from '@components/Table';
 
 jest.mock('@components/Table');
 jest.mock('@common/hooks/useComplexLookupSearchResults');
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const listHeader = ['Column 1', 'Column 2'];
 const formattedData = [

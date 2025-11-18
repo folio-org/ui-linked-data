@@ -4,7 +4,6 @@ import { GROUP_COMPLEX_CUTOFF_LEVEL } from '@common/constants/bibframe.constants
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
 import { findParentEntryByProperty } from '@common/helpers/schema.helper';
-import { getPlaceholderForProperty } from '@common/helpers/placeholder.helper';
 import { getIsCreatePage } from '@common/helpers/navigation.helper';
 import { Button, ButtonType } from '@components/Button';
 import { ComplexLookupField } from '@components/ComplexLookupField';
@@ -13,6 +12,7 @@ import { FieldWithMetadataAndControls } from '@components/FieldWithMetadataAndCo
 import { LiteralField } from '@components/LiteralField';
 import { SimpleLookupField } from '@components/SimpleLookupField';
 import { EditSectionDataProps } from './renderDrawComponent';
+import { getPlaceholderForProperty } from '@/features/search';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;

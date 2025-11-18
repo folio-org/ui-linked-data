@@ -2,6 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@/*": ["src/*"],
+      "@": ["src"],
       "linked-data": ["src/main.tsx"],
       "@common/*": ["src/common/*"],
       "@components/*": ["src/components/*"],

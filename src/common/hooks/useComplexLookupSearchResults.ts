@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { type Row } from '@components/Table';
-import { useSearchContext } from '@common/hooks/useSearchContext';
+import { useSearchContext } from '@/features/search';
 import { ComplexLookupSearchResultsProps } from '@components/ComplexLookupField/ComplexLookupSearchResults';
 import { useSearchState } from '@src/store';
 import { useComplexLookupValidation } from './useComplexLookupValidation';
@@ -57,7 +57,7 @@ export const useComplexLookupSearchResults = ({
           position: position,
           className: className,
           minWidth,
-          maxWidth
+          maxWidth,
         };
 
         return accum;

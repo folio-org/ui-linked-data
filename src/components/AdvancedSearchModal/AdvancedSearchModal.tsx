@@ -9,7 +9,7 @@ import {
   SELECT_OPERATORS,
   SELECT_QUALIFIERS,
 } from '@common/constants/search.constants';
-import { formatRawQuery, generateSearchParamsState } from '@common/helpers/search.helper';
+import { formatRawQuery, generateSearchParamsState } from '@/features/search/utils/search.helper';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
 import { Select } from '@components/Select';
 import { useSearchState, useUIState } from '@src/store';

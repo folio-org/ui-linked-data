@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react';
 import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
-import { useSearchContext } from '@common/hooks/useSearchContext';
 import { getSearchResults } from '@common/api/search.api';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useLoadingStateStore, useSearchStore } from '@src/store';
@@ -8,10 +7,12 @@ import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.co
 import { SearchSegment } from '@common/constants/search.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { useSearchContext } from '@/features/search';
 
-jest.mock('@common/hooks/useSearchContext');
+jest.mock('@/features/search/providers');
 jest.mock('@common/api/search.api');
 jest.mock('@common/services/userNotification');
+jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useFetchSearchData', () => {
   const mockFetchSearchResults = jest.fn();

@@ -5,7 +5,7 @@ import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.co
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useSearchState, useStatusState } from '@src/store';
-import { useSearchContext } from './useSearchContext';
+import { useSearchContext } from '@/features/search';
 
 export const useFetchSearchData = () => {
   const {
