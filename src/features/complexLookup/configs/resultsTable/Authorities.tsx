@@ -1,4 +1,4 @@
-import { AssignFormatter, AuthorizedFormatter, TitleFormatter } from '../formatters';
+import { AssignFormatter, AuthorizedFormatter, TitleFormatter } from '../../formatters';
 
 export const authoritiesTableConfig: SearchResultsTableConfig = {
   columns: {

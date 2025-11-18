@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useMarcAssignment } from '@/features/complexLookup/hooks/useMarcAssignment';
-import { useMarcData } from '@common/hooks/useMarcData';
+import { useMarcData } from '@/common/hooks/useMarcData';
 
-jest.mock('@common/hooks/useMarcData');
+jest.mock('@/common/hooks/useMarcData');
 
 describe('useMarcAssignment', () => {
   const mockFetchMarcData = jest.fn();

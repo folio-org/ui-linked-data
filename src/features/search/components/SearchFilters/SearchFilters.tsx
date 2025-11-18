@@ -1,10 +1,10 @@
 import { Fragment } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { FiltersGroupCheckType } from '@common/constants/search.constants';
+import { FiltersGroupCheckType } from '@/common/constants/search.constants';
 import { useSearchFilters } from '@/features/search/hooks/filters/useSearchFilters';
-import { SimpleLookupFilter } from '@components/SimpleLookupField';
-import { Accordion } from '@components/Accordion';
-import { DateRange } from '@components/DateRange';
+import { SimpleLookupFilter } from '@/components/SimpleLookupField';
+import { Accordion } from '@/components/Accordion';
+import { DateRange } from '@/components/DateRange';
 import { useSearchContext } from '../../providers';
 
 export const SearchFilters = () => {

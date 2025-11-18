@@ -1,6 +1,6 @@
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
-import * as SearchConstants from '@common/constants/search.constants';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
+import * as SearchConstants from '@/common/constants/search.constants';
 import { buildSearchQuery } from './authorities';
 
 describe('buildSearchQuery', () => {

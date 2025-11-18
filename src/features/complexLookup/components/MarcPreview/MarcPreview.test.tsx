@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useMarcPreviewStore, useUIStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { useMarcPreviewStore, useUIStore } from '@/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchContext } from '@/features/search';
 import { MarcPreview } from './MarcPreview';
 
 jest.mock('@/features/search/providers');
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-jest.mock('@components/MarcContent', () => ({ MarcContent: () => <div>Marc Content</div> }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/components/MarcContent', () => ({ MarcContent: () => <div>Marc Content</div> }));
 
 const mockUseSearchContext = useSearchContext as jest.Mock;
 const marcPreviewData = {

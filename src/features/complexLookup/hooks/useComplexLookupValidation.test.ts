@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useComplexLookupValidation } from '@/features/complexLookup/hooks/useComplexLookupValidation';
-import { useComplexLookupStore } from '@src/store/stores/complexLookup';
+import { useComplexLookupStore } from '@/store/stores/complexLookup';
 
 describe('useComplexLookupValidation', () => {
   const mockAddAuthorityAssignmentCheckFailedIdsItem = jest.fn();

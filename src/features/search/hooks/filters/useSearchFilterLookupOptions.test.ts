@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore } from '@src/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore } from '@/store';
 import { useSearchFilterLookupOptions } from './useSearchFilterLookupOptions';
 
 function testUseSearchFilterLookupOptions(

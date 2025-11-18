@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TableFlex, type Row } from '@components/Table';
+import { TableFlex, type Row } from '@/components/Table';
 import { useComplexLookupSearchResults } from '../../hooks/useComplexLookupSearchResults';
 
 export type ComplexLookupSearchResultsProps = {

@@ -3,7 +3,7 @@ import { useSearchFiltersData } from '@/features/search';
 import { useComplexLookupApi } from './useComplexLookupApi';
 
 jest.mock('@/features/search/hooks/filters/useSearchFiltersData');
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useComplexLookupApi', () => {
   const api = {

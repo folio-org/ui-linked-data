@@ -1,4 +1,4 @@
-import { HubAssignFormatter, AuthNotesFormatter, HubLinkFormatter, RDANotesFormatter } from '../formatters';
+import { HubAssignFormatter, HubLinkFormatter, AuthNotesFormatter, RDANotesFormatter } from '../../formatters';
 
 export const hubTableConfig: SearchResultsTableConfig = {
   columns: {

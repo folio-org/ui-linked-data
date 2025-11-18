@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import CloseIcon from '@src/assets/times-16.svg?react';
-import WarningIcon from '@src/assets/exclamation-triangle.svg?react';
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import CloseIcon from '@/assets/times-16.svg?react';
+import WarningIcon from '@/assets/exclamation-triangle.svg?react';
 
 type ComplexLookupSelectedItemProps = {
   id?: string;

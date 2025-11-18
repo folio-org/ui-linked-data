@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import { useMarcValidation } from '@/features/complexLookup/hooks/useMarcValidation';
-import { useApi } from '@common/hooks/useApi';
+import { useApi } from '@/common/hooks/useApi';
 import { generateValidationRequestBody } from '@/features/complexLookup/utils/complexLookup.helper';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@/common/constants/api.constants';
 
-jest.mock('@common/hooks/useApi');
+jest.mock('@/common/hooks/useApi');
 jest.mock('@/features/complexLookup/utils/complexLookup.helper');
 
 describe('useMarcValidation', () => {

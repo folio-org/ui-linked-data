@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useApi } from '../../../common/hooks/useApi';
 import { generateValidationRequestBody } from '@/features/complexLookup/utils/complexLookup.helper';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@/common/constants/api.constants';
 
 export const useMarcValidation = () => {
   const { makeRequest } = useApi<{ validAssignment: boolean; invalidAssignmentReason?: string }>();

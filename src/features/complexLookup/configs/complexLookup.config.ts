@@ -1,13 +1,13 @@
-import { SearchSegment } from '@common/constants/search.constants';
+import { SearchSegment } from '@/common/constants/search.constants';
 import {
   AuthorityValidationTarget,
   ComplexLookupType,
-  SearchableIndex,
-} from '@common/constants/complexLookup.constants';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@common/constants/api.constants';
+} from '@/features/complexLookup/constants/complexLookup.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@/common/constants/api.constants';
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP, HUB_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
 import { COMPLEX_LOOKUP_SEARCH_BY_CONFIG } from './complexLookupSearchBy.config';
-import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP, HUB_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
 
 const BASE_AUTHORITY_CONFIG = {
   api: {

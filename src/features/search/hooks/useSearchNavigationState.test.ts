@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchQueryParams } from '@common/constants/routes.constants';
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import * as SearchHelper from '@/features/search/utils/search.helper';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore } from '@src/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore } from '@/store';
 import { useSearchNavigationState } from './useSearchNavigationState';
 
 jest.mock('react-router-dom', () => ({

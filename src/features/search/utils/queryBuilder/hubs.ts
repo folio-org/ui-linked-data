@@ -1,4 +1,4 @@
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 export const buildHubSearchQuery = ({
   map,

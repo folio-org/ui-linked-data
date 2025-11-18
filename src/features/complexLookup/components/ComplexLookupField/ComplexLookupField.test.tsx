@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore, useProfileStore } from '@src/store';
+import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useInputsStore, useProfileStore } from '@/store';
 import { ComplexLookupField } from './ComplexLookupField';
 
 const mockModalComponent = <div data-testid="complex-lookup-modal" />;
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('@/features/complexLookup/components/ModalComplexLookup', () => ({
   ModalComplexLookup: () => mockModalComponent,
 }));

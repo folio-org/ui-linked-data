@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore, useLoadingStateStore, useSearchStore } from '@src/store';
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
-import { SEARCH_RESULTS_LIMIT, SearchSegment } from '@common/constants/search.constants';
-import { SearchQueryParams } from '@common/constants/routes.constants';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+import { useInputsStore, useLoadingStateStore, useSearchStore } from '@/store';
+import { SEARCH_RESULTS_LIMIT, SearchSegment } from '@/common/constants/search.constants';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { useSearchContext } from '../providers';
 import { useSearch } from './useSearch';
 
@@ -19,7 +19,7 @@ const fetchData = jest.fn();
 
 jest.mock('react-router-dom');
 jest.mock('@/features/search/providers');
-jest.mock('@common/hooks/usePagination', () => ({
+jest.mock('@/common/hooks/usePagination', () => ({
   usePagination: () => ({
     getCurrentPageNumber,
     setCurrentPageNumber,
@@ -27,7 +27,7 @@ jest.mock('@common/hooks/usePagination', () => ({
     onNextPageClick,
   }),
 }));
-jest.mock('@common/hooks/useFetchSearchData', () => ({
+jest.mock('@/features/search/hooks/useFetchSearchData', () => ({
   useFetchSearchData: () => ({
     fetchData,
   }),

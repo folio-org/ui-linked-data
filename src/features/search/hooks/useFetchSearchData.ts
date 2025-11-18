@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { getSearchResults } from '@common/api/search.api';
-import { SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useSearchState, useStatusState } from '@src/store';
+import { getSearchResults } from '@/common/api/search.api';
+import { SearchIdentifiers, SearchSegment } from '@/common/constants/search.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { useLoadingState, useSearchState, useStatusState } from '@/store';
 import { useSearchContext } from '@/features/search';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 export const useFetchSearchData = () => {
   const {

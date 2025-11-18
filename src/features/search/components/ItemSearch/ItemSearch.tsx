@@ -1,11 +1,11 @@
 import { FormattedMessage } from 'react-intl';
-import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { FullDisplay } from '@components/FullDisplay';
-import { Pagination } from '@components/Pagination';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+import { FullDisplay } from '@/components/FullDisplay';
+import { Pagination } from '@/components/Pagination';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
-import { useUIState } from '@src/store';
+import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers';
 import { useLoadSearchResults, useSearch } from '../../hooks';
 import { SearchControls } from '../SearchControls';

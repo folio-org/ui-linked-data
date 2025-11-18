@@ -1,5 +1,5 @@
 import { FC, useMemo, useState, createContext, type ReactElement, useContext } from 'react';
-import { SearchIdentifiers } from '@common/constants/search.constants';
+import { SearchIdentifiers } from '@/common/constants/search.constants';
 
 type SearchProviderProps = {
   value: SearchParams & { defaultNavigationSegment?: string };

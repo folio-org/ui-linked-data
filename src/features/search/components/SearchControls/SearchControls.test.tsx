@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import * as FeatureConstants from '@common/constants/feature.constants';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import * as FeatureConstants from '@/common/constants/feature.constants';
 import { SearchContext, SearchControls } from '@/features/search';
-import { useInputsStore, useSearchStore, useUIStore } from '@src/store';
+import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 
 const setSearchParams = jest.fn();
 const mockSearchFiltersComponent = <div data-testid="search-filters" />;
@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
 jest.mock('@/features/search/components/SearchFilters', () => ({
   SearchFilters: () => mockSearchFiltersComponent,
 }));
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchControls', () => {
   const mockedSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');

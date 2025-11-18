@@ -1,5 +1,5 @@
+import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { buildHubSearchQuery } from './hubs';
-import { SearchableIndexQuerySelector, SearchableIndex } from '@common/constants/complexLookup.constants';
 
 describe('buildHubSearchQuery', () => {
   const mockValue = 'test search value';

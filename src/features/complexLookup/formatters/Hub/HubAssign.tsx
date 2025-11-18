@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
+import { Button, ButtonType } from '@/components/Button';
 
 interface HubAssignFormatterProps {
   row: SearchResultsTableRow;

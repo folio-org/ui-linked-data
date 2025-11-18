@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
-import { AuthRefType } from '@common/constants/search.constants';
-import { Button, ButtonType } from '@components/Button';
+import { AuthRefType } from '@/common/constants/search.constants';
+import { Button, ButtonType } from '@/components/Button';
 
 export const AssignFormatter = ({
   row,

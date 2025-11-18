@@ -1,3 +1,4 @@
+export { useFetchSearchData } from './useFetchSearchData';
 export { useLoadSearchResults } from './useLoadSearchResults';
 export { useSearch } from './useSearch';
 export { useSearchFilterLookupOptions } from './filters/useSearchFilterLookupOptions';

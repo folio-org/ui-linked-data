@@ -3,7 +3,7 @@ import { fireEvent } from '@testing-library/dom';
 import { SearchSegments, useSearchContext } from '@/features/search';
 
 jest.mock('@/features/search/providers');
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchSegments Component', () => {
   const mockSetSelectedNavigationSegment = jest.fn();

@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { SearchResultEntry } from '@/features/search';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore, useUIStore, useInputsStore } from '@src/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore, useUIStore, useInputsStore } from '@/store';
 import { itemSearchMockData } from '../ItemSearch/ItemSearch.test';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockedUsedNavigate = jest.fn();
 

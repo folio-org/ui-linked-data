@@ -1,4 +1,4 @@
-import { useComplexLookupState } from '@src/store';
+import { useComplexLookupState } from '@/store';
 
 export const useComplexLookupValidation = () => {
   const {

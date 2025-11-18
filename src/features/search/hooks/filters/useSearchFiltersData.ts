@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import * as SearchApi from '@common/api/search.api';
-import { useSearchState, useStatusState } from '@src/store';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import * as SearchApi from '@/common/api/search.api';
+import { useSearchState, useStatusState } from '@/store';
 
 const DEFAULT_SEARCH_SOURCE_LIMIT = '50';
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';

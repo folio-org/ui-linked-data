@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { VALUE_DIVIDER } from '@common/constants/complexLookup.constants';
-import { SchemaControlType } from '@common/constants/uiControls.constants';
-import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
-import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
-import { Input } from '@components/Input';
+import { VALUE_DIVIDER } from '@/features/complexLookup/constants/complexLookup.constants';
+import { SchemaControlType } from '@/common/constants/uiControls.constants';
+import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
+import { Input } from '@/components/Input';
+import { COMPLEX_LOOKUPS_CONFIG } from '../../configs';
 import { useComplexLookup } from '../../hooks';
 import { ComplexLookupSelectedItem } from '../ComplexLookupSelectedItem';
 import { ModalComplexLookup } from '../ModalComplexLookup';

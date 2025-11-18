@@ -1,22 +1,22 @@
 import { FC, useState } from 'react';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { WorkDetailsCard } from '@components/WorkDetailsCard';
-import { Row, Table } from '@components/Table';
-import { Button, ButtonType } from '@components/Button';
+import { WorkDetailsCard } from '@/components/WorkDetailsCard';
+import { Row, Table } from '@/components/Table';
+import { Button, ButtonType } from '@/components/Button';
 import { formatItemSearchInstanceListData } from '@/features/search/utils/search.helper';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ResourceType } from '@common/constants/record.constants';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import CommentIcon from '@src/assets/comment-lines-12.svg?react';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
-import { FullDisplayType } from '@common/constants/uiElements.constants';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { ResourceType } from '@/common/constants/record.constants';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import CommentIcon from '@/assets/comment-lines-12.svg?react';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { StatusType } from '@/common/constants/status.constants';
+import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import './SearchResultEntry.scss';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
 type SearchResultEntry = {
   id: string;

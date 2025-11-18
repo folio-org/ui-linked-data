@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { type Row } from '@components/Table';
+import { type Row } from '@/components/Table';
 import { useSearchContext } from '@/features/search';
-import { useSearchState } from '@src/store';
+import { useSearchState } from '@/store';
 import { ComplexLookupSearchResultsProps } from '../components/ComplexLookupSearchResults/ComplexLookupSearchResults';
 import { useComplexLookupValidation } from './useComplexLookupValidation';
 

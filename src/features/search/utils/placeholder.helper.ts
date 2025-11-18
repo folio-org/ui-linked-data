@@ -1,7 +1,7 @@
-import { SearchIdentifiers } from '@common/constants/search.constants';
-import { SearchableIndex } from '@common/constants/complexLookup.constants';
-import { PROPERTIES_FROM_FOLIO } from '@common/constants/bibframe.constants';
-import type { SelectValue } from '@components/Select';
+import { SearchIdentifiers } from '@/common/constants/search.constants';
+import { PROPERTIES_FROM_FOLIO } from '@/common/constants/bibframe.constants';
+import type { SelectValue } from '@/components/Select';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 
 type SearchOption = SearchIdentifiers | SelectValue | ComplexLookupSearchByValue[number];
 

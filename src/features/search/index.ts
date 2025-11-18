@@ -13,6 +13,7 @@ export { SearchContext, SearchProvider, useSearchContext } from './providers';
 
 // Hooks
 export {
+  useFetchSearchData,
   useLoadSearchResults,
   useSearch,
   useSearchFilterLookupOptions,

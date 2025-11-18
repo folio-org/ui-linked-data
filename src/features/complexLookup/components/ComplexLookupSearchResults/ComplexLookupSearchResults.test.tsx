@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { useComplexLookupSearchResults } from '@/features/complexLookup/hooks/useComplexLookupSearchResults';
-import { TableFlex } from '@components/Table';
+import { TableFlex } from '@/components/Table';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 
-jest.mock('@components/Table');
+jest.mock('@/components/Table');
 jest.mock('@/features/complexLookup/hooks/useComplexLookupSearchResults');
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const listHeader = ['Column 1', 'Column 2'];
 const formattedData = [

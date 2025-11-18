@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { useSearchState } from '@src/store';
+import { useSearchState } from '@/store';
 
 export const useSearchFilterLookupOptions = ({
   facet,

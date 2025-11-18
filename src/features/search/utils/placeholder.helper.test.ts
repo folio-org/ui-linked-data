@@ -1,5 +1,5 @@
-import { SearchIdentifiers } from '@common/constants/search.constants';
-import { SearchableIndex } from '@common/constants/complexLookup.constants';
+import { SearchIdentifiers } from '@/common/constants/search.constants';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import { getPlaceholderForProperty, getSearchPlaceholder } from './placeholder.helper';
 
 describe('getSearchPlaceholder', () => {

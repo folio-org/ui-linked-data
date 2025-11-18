@@ -6,7 +6,7 @@ import {
   Format,
   PublishDate,
   SearchLimiterNames,
-} from '@common/constants/search.constants';
+} from '@/common/constants/search.constants';
 
 const setSearchParams = jest.fn();
 
@@ -15,7 +15,7 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [{}, setSearchParams],
 }));
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchFilters', () => {
   const filters = [

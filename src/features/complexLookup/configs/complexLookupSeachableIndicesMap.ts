@@ -1,5 +1,5 @@
-import { SearchableIndex, SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
-import { SEARCH_QUERY_VALUE_PARAM, SearchSegment } from '@common/constants/search.constants';
+import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
+import { SEARCH_QUERY_VALUE_PARAM, SearchSegment } from '@/common/constants/search.constants';
 
 export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
@@ -80,16 +80,16 @@ export const HUB_SEARCHABLE_INDICES_MAP: HubSearchableIndicesMap = {
   [SearchableIndex.HubNameLeftAnchored]: {
     [SearchableIndexQuerySelector.Query]: {
       paramName: 'q',
-      format: 'parameters'
+      format: 'parameters',
     } as QueryParameterConfig,
   },
   [SearchableIndex.HubNameKeyword]: {
     [SearchableIndexQuerySelector.Query]: {
       paramName: 'q',
       additionalParams: {
-        searchtype: 'keyword'
+        searchtype: 'keyword',
       },
-      format: 'parameters'
+      format: 'parameters',
     } as QueryParameterConfig,
   },
 };

@@ -1,11 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-import * as SearchApi from '@common/api/search.api';
-import { useSearchStore, useStatusStore } from '@src/store';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+import * as SearchApi from '@/common/api/search.api';
+import { useSearchStore, useStatusStore } from '@/store';
 import { useSearchFiltersData } from './useSearchFiltersData';
 
-jest.mock('@common/api/search.api');
-jest.mock('@common/services/userNotification');
+jest.mock('@/common/api/search.api');
+jest.mock('@/common/services/userNotification');
 
 describe('useSearchFiltersData', () => {
   const selectedFacetsGroupsState: never[] = [];

@@ -1,10 +1,10 @@
 import { FC, type ReactElement } from 'react';
 import classNames from 'classnames';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { SearchSegment } from '@common/constants/search.constants';
-import { useSearchState, useUIState } from '@src/store';
-import { Button } from '@components/Button';
-import CaretDown from '@src/assets/caret-down.svg?react';
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { SearchSegment } from '@/common/constants/search.constants';
+import { useSearchState, useUIState } from '@/store';
+import { Button } from '@/components/Button';
+import CaretDown from '@/assets/caret-down.svg?react';
 import { useIntl } from 'react-intl';
 import { useSearchContext } from '../../providers';
 import './SearchControlPane.scss';

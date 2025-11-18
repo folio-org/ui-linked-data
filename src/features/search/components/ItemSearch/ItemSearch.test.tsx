@@ -1,15 +1,15 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { getCurrentPageNumber } from '@src/test/__mocks__/common/hooks/usePagination.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getCurrentPageNumber } from '@/test/__mocks__/common/hooks/usePagination.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import { ItemSearch, SearchContext } from '@/features/search';
 import { Edit } from '@views';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore, useUIStore, useInputsStore } from '@src/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore, useUIStore, useInputsStore } from '@/store';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 let mockSearchBy = 'lccn';
 let mockQuery = '';

@@ -1,4 +1,4 @@
-import { AuthRefType } from '@common/constants/search.constants';
+import { AuthRefType } from '@/common/constants/search.constants';
 
 export const AuthorizedFormatter = ({ row }: { row: SearchResultsTableRow }) => {
   const isAuthorized = row.authorized.label === AuthRefType.Authorized;

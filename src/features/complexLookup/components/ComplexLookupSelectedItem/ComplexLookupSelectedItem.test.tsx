@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 import { ComplexLookupSelectedItem } from './ComplexLookupSelectedItem';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('ComplexLookupSelectedItem', () => {
   const defaultProps = {

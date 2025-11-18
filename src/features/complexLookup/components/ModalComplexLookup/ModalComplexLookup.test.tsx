@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { ComplexLookupType } from '@common/constants/complexLookup.constants';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore, useUIStore, useMarcPreviewStore } from '@src/store';
-import { COMPLEX_LOOKUPS_CONFIG } from '@src/configs';
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore, useUIStore, useMarcPreviewStore } from '@/store';
+import { COMPLEX_LOOKUPS_CONFIG } from '../../configs';
 import { ModalComplexLookup } from './ModalComplexLookup';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockGetFacetsData = jest.fn();
 const mockGetSourceData = jest.fn();
@@ -18,13 +18,13 @@ jest.mock('@/features/complexLookup/hooks/useComplexLookupApi', () => ({
 }));
 
 const mockFetchMarcData = jest.fn();
-jest.mock('@common/hooks/useMarcData', () => ({
+jest.mock('@/common/hooks/useMarcData', () => ({
   useMarcData: () => ({
     fetchMarcData: mockFetchMarcData,
   }),
 }));
 
-jest.mock('@components/Modal', () => ({
+jest.mock('@/components/Modal', () => ({
   Modal: ({ children, isOpen }: { children: React.ReactNode; isOpen: boolean }) =>
     isOpen ? <div data-testid="modal">{children}</div> : null,
 }));

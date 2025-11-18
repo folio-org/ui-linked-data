@@ -1,5 +1,6 @@
 type SearchQueryParams = import('@common/constants/routes.constants').SearchQueryParams;
-type ComplexLookupSearchIdentifiers = import('@common/constants/complexLookup.constants').ComplexLookupSearchableIndex;
+type ComplexLookupSearchIdentifiers =
+  import('@/features/complexLookup/constants/complexLookup.constants').ComplexLookupSearchableIndex;
 type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers &
   ComplexLookupSearchIdentifiers;
 type SearchSegmentValue = import('@common/constants/search.constants').SearchSegment;

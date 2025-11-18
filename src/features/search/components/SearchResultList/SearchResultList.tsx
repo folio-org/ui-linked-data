@@ -1,5 +1,5 @@
 import { useSearchNavigationState } from '@/features/search';
-import { useSearchState } from '@src/store';
+import { useSearchState } from '@/store';
 import { SearchResultEntry } from '../SearchResultEntry';
 import './SearchResultList.scss';
 

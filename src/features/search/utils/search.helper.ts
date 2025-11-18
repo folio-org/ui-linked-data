@@ -1,11 +1,11 @@
-import { SearchQueryParams } from '@common/constants/routes.constants';
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import {
   SearchIdentifiers,
   AdvancedSearchQualifiers,
   AdvancedSearchSchema,
   TitleTypes,
-} from '@common/constants/search.constants';
-import { Row } from '@components/Table';
+} from '@/common/constants/search.constants';
+import { Row } from '@/components/Table';
 import { v4 as uuidv4 } from 'uuid';
 
 export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>

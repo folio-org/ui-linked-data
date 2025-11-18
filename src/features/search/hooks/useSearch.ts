@@ -1,15 +1,15 @@
 import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchableIndexQuerySelector } from '@common/constants/complexLookup.constants';
-import { DEFAULT_PAGES_METADATA } from '@common/constants/api.constants';
-import { SEARCH_RESULTS_LIMIT, SearchIdentifiers, SearchSegment } from '@common/constants/search.constants';
+import { DEFAULT_PAGES_METADATA } from '@/common/constants/api.constants';
+import { SEARCH_RESULTS_LIMIT, SearchIdentifiers, SearchSegment } from '@/common/constants/search.constants';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { generateSearchParamsState, normalizeQuery } from '@/features/search/utils/search.helper';
-import { usePagination } from '@common/hooks/usePagination';
-import { useFetchSearchData } from '@common/hooks/useFetchSearchData';
-import { useInputsState, useLoadingState, useSearchState, useUIState } from '@src/store';
-import { FullDisplayType } from '@common/constants/uiElements.constants';
-import { SearchQueryParams } from '@common/constants/routes.constants';
+import { usePagination } from '@/common/hooks/usePagination';
+import { useInputsState, useLoadingState, useSearchState, useUIState } from '@/store';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { useSearchContext } from '../providers';
+import { useFetchSearchData } from './useFetchSearchData';
 
 export const useSearch = () => {
   const {
