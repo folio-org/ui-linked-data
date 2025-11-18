@@ -30,6 +30,11 @@ jobs:
         tsconfig.*,
         jest.config.*,
         vite.config.*,
+        **/__tests__/**,
+        **/*.test.*,
+        **/*.mock.*,
+        src/**/constants/**,
+        **/*.constants.*,
         **/*.md,
         **/*.scss,
         **/*.json
