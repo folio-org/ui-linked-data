@@ -9,7 +9,7 @@ import CaretDown from '@src/assets/caret-down.svg?react';
 import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
 import { Classifications } from '@common/constants/search.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
-import { getTitle } from '@common/helpers/search.helper';
+import { getTitle } from '@/features/search/utils/search.helper';
 import './WorkDetailsCard.scss';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {

@@ -1,0 +1,49 @@
+// TODO: seems that the css leaking from parent affects rem values
+.modal {
+  .advanced-search-container {
+    padding: 40px 0 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .search {
+      &-row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+        align-items: center;
+
+        .cell {
+          &-bold {
+            font-weight: 600;
+          }
+
+          &-operator,
+          &-bold {
+            width: 93px;
+          }
+
+          &-qualifier {
+            width: 120px;
+          }
+
+          &-query {
+            width: 260px;
+          }
+
+          &-identifier {
+            width: 120px;
+          }
+        }
+
+        .text-input {
+          border-radius: 0;
+          border: 1px solid gray;
+          padding: 4px;
+          padding: 4px 5px;
+          height: 27px;
+        }
+      }
+    }
+  }
+}

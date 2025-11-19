@@ -1,7 +1,8 @@
-type SearchableIndexType = import('@common/constants/complexLookup.constants').SearchableIndex;
+type SearchableIndexType = import('@/common/constants/searchableIndex.constants').SearchableIndex;
 type SearchableIndexQuerySelectorType =
-  import('@common/constants/complexLookup.constants').SearchableIndexQuerySelector;
-type AuthorityValidationTargetType = import('@common/constants/complexLookup.constants').AuthorityValidationTarget;
+  import('@/common/constants/searchableIndex.constants').SearchableIndexQuerySelector;
+type AuthorityValidationTargetType =
+  import('@/features/complexLookup/constants/complexLookup.constants').AuthorityValidationTarget;
 
 type ComplexLookupLabels = {
   button: {

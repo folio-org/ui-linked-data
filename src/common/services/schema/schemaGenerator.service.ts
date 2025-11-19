@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { PROFILE_NODE_ID_DELIMITER } from '@common/constants/bibframe.constants';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';

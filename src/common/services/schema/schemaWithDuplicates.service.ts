@@ -6,7 +6,7 @@ import {
   getParentEntryUuid,
   getUdpatedAssociatedEntries,
 } from '@common/helpers/schema.helper';
-import { generateEmptyValueUuid } from '@common/helpers/complexLookup.helper';
+import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import { MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE } from '@common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
