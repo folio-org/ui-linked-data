@@ -30,7 +30,7 @@ jest.mock('@/components/Modal', () => ({
 }));
 
 const mockSearchProps = jest.fn();
-jest.mock('@/features/search/components/Search', () => ({
+jest.mock('@/features/search/ui/components/Search', () => ({
   Search: (props: Record<string, unknown>) => {
     mockSearchProps(props);
     return <div data-testid="search-component">Search Component</div>;

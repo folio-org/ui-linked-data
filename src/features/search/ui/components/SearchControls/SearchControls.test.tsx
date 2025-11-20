@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: jest.fn(),
 }));
-jest.mock('@/features/search/components/SearchFilters', () => ({
+jest.mock('@/features/search/ui/components/SearchFilters', () => ({
   SearchFilters: () => mockSearchFiltersComponent,
 }));
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));

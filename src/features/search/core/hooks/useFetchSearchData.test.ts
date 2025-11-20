@@ -9,7 +9,7 @@ import { useSearchContext } from '@/features/search/ui';
 import { useFetchSearchData } from './useFetchSearchData';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
-jest.mock('@/features/search/providers');
+jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/api/search.api');
 jest.mock('@/common/services/userNotification');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));

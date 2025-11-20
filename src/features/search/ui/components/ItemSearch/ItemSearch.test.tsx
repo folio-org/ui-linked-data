@@ -20,7 +20,7 @@ const mockSubmitSearch = jest.fn();
 const mockClearValues = jest.fn();
 const mockOnChangeSegment = jest.fn();
 
-jest.mock('@/features/search/hooks/useSearch', () => ({
+jest.mock('@/features/search/ui/hooks/useSearch', () => ({
   useSearch: () => ({
     submitSearch: mockSubmitSearch,
     clearValues: mockClearValues,

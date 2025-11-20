@@ -4,7 +4,8 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchContext } from '../providers';
 import { useLoadSearchResults } from './useLoadSearchResults';
 
-jest.mock('@/features/search/providers');
+jest.mock('@/features/search/ui/providers');
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useLoadSearchResults', () => {
   const setData = jest.fn();

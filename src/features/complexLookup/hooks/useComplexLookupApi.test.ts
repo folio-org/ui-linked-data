@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { useSearchFiltersData } from '@/features/search/core';
 import { useComplexLookupApi } from './useComplexLookupApi';
 
-jest.mock('@/features/search/hooks/filters/useSearchFiltersData');
+jest.mock('@/features/search/core/hooks/useSearchFiltersData');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useComplexLookupApi', () => {

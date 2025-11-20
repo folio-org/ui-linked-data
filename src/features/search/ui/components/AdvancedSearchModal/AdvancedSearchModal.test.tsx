@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import * as SearchHelper from '@/features/search/core';
+import * as SearchHelper from '@/features/search/core/utils/search.helper';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useUIStore } from '@/store';

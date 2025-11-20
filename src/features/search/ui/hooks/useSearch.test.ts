@@ -18,7 +18,7 @@ const getCurrentPageNumber = jest.fn().mockReturnValue(0);
 const fetchData = jest.fn();
 
 jest.mock('react-router-dom');
-jest.mock('@/features/search/providers');
+jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/hooks/usePagination', () => ({
   usePagination: () => ({
     getCurrentPageNumber,
@@ -27,7 +27,7 @@ jest.mock('@/common/hooks/usePagination', () => ({
     onNextPageClick,
   }),
 }));
-jest.mock('@/features/search/hooks/useFetchSearchData', () => ({
+jest.mock('@/features/search/core/hooks/useFetchSearchData', () => ({
   useFetchSearchData: () => ({
     fetchData,
   }),

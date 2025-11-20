@@ -4,7 +4,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchContext } from '@/features/search/ui';
 import { MarcPreview } from './MarcPreview';
 
-jest.mock('@/features/search/providers');
+jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('@/components/MarcContent', () => ({ MarcContent: () => <div>Marc Content</div> }));
 
