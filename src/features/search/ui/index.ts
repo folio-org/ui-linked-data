@@ -1,3 +1,6 @@
+// Types
+export * from './types';
+
 // Components
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { ItemSearch } from './components/ItemSearch';
@@ -13,3 +16,6 @@ export { SearchContext, SearchProvider, useSearchContext } from './providers';
 
 // Hooks
 export { useSearch, useLoadSearchResults, useSearchNavigationState, useSearchFilters } from './hooks';
+
+// Config (examples)
+export * from './config';

@@ -1,6 +1,6 @@
-import { SearchConfig, SegmentConfig, SourceConfig } from '../types/searchConfig.types';
+import { SearchTypeConfig, SegmentConfig, SourceConfig } from '../types';
 
-export function selectStrategies(config: SearchConfig, segment?: string, source?: string) {
+export function selectStrategies(config: SearchTypeConfig, segment?: string, source?: string) {
   if (segment && config.segments?.[segment]) {
     const segmentConfig = config.segments[segment];
 
@@ -19,10 +19,10 @@ export function selectStrategies(config: SearchConfig, segment?: string, source?
 }
 
 export function selectActiveConfig(
-  config: SearchConfig,
+  config: SearchTypeConfig,
   segment?: string,
   source?: string,
-): SegmentConfig | SourceConfig | SearchConfig {
+): SegmentConfig | SourceConfig | SearchTypeConfig {
   if (segment && config.segments?.[segment]) {
     const segmentConfig = config.segments[segment];
 
@@ -38,8 +38,4 @@ export function selectActiveConfig(
   }
 
   return config;
-}
-
-export function selectDefaults(config: SearchConfig) {
-  return config.defaults;
 }
