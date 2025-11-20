@@ -1,4 +1,4 @@
-import { useSearchFiltersData } from '../../search/hooks/filters/useSearchFiltersData';
+import { useSearchFiltersData } from '@/features/search/core';
 
 export const useComplexLookupApi = (api: ComplexLookupApiEntryConfig, filters: SearchFilters) => {
   const { getSearchSourceData, getSearchFacetsData } = useSearchFiltersData();

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useMarcPreviewStore, useUIStore } from '@/store';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContext } from '@/features/search';
+import { useSearchContext } from '@/features/search/ui';
 import { MarcPreview } from './MarcPreview';
 
 jest.mock('@/features/search/providers');
