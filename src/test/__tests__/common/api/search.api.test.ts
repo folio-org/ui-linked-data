@@ -1,10 +1,11 @@
-import { getByIdentifier, getSearchData, getSearchResults } from '@common/api/search.api';
-import baseApi from '@common/api/base.api';
-import { RESPONSE_TRANSFORMERS } from '@/features/search/utils/responseTransformers';
-import { SEARCH_RESULTS_LIMIT } from '@common/constants/search.constants';
+import { getByIdentifier, getSearchData, getSearchResults } from '@/common/api/search.api';
+import baseApi from '@/common/api/base.api';
+import { RESPONSE_TRANSFORMERS } from '@/features/search/core';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 
-jest.mock('@common/api/base.api');
-jest.mock('@/features/search/utils/responseTransformers');
+jest.mock('@/common/api/base.api');
+jest.mock('@/features/search/core/strategies/responseTransformers');
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockBaseApi = baseApi as jest.Mocked<typeof baseApi>;
 const mockResponseTransformers = RESPONSE_TRANSFORMERS as jest.Mocked<typeof RESPONSE_TRANSFORMERS>;

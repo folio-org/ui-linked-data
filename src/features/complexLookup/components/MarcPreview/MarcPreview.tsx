@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useMarcPreviewState, useUIState } from '@/store';
-import { SearchControlPane, useSearchContext } from '@/features/search';
+import { SearchControlPane, useSearchContext } from '@/features/search/ui';
 import { MarcContent } from '@/components/MarcContent';
 import { Button, ButtonType } from '@/components/Button';
 import Times16 from '@/assets/times-16.svg?react';

@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContext } from '@/features/search/providers';
+import { useSearchContext } from '@/features/search/ui';
 import { Row } from '@/components/Table';
 import { useSearchStore } from '@/store';
 import { ComplexLookupSearchResultsProps } from '../components/ComplexLookupSearchResults/ComplexLookupSearchResults';
 import { useComplexLookupSearchResults } from './useComplexLookupSearchResults';
 
-jest.mock('@/features/search/providers', () => ({
+jest.mock('@/features/search/ui/providers', () => ({
   useSearchContext: jest.fn(),
 }));
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));

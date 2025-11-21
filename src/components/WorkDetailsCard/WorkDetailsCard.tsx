@@ -2,14 +2,14 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { Button, ButtonType } from '@components/Button';
-import CaretDown from '@src/assets/caret-down.svg?react';
-import Lightbulb from '@src/assets/lightbulb-shining-16.svg?react';
-import { Classifications } from '@common/constants/search.constants';
-import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
-import { getTitle } from '@/features/search/utils/search.helper';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Button, ButtonType } from '@/components/Button';
+import CaretDown from '@/assets/caret-down.svg?react';
+import Lightbulb from '@/assets/lightbulb-shining-16.svg?react';
+import { Classifications } from '@/common/constants/search.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@/common/constants/feature.constants';
+import { getTitle } from '@/features/search/core';
 import './WorkDetailsCard.scss';
 
 type WorkDetailsCard = Omit<WorkAsSearchResultDTO, 'instances'> & {

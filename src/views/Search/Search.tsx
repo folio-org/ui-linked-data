@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Search, SearchResultList, SearchControlPane } from '@/features/search';
+import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
