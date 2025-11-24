@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { SearchResultList, SearchControlPane } from '@/features/search/ui';
-import { SearchControls } from '@/features/search/ui/components/SearchControls';
-import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
+import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
+import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
 import { Dropdown } from '@components/Dropdown';
 import { ResourceType } from '@common/constants/record.constants';
+import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
 import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Transfer16 from '@src/assets/transfer-16.svg?react';
 import Lightning16 from '@src/assets/lightning-16.svg?react';
+import { filters } from './data/filters';
 import { useContainerEvents } from '@common/hooks/useContainerEvents';
 import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
@@ -19,9 +20,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { resourcesConfig } from '@/features/search/core/config/resources.config';
-import { resourcesUIConfig } from '@/features/search/ui/config/resourcesUI.config';
-import { SearchControlsProvider } from '@/features/search/ui/providers';
+import { getByIdentifier } from '@common/api/search.api';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -137,35 +136,26 @@ export const SearchView = () => {
     ),
     [items],
   );
-
   const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return (
-    <div className="search" data-testid="search-compound" id="ld-search-compound-container">
-      {/* New compound components approach */}
-      <SearchControlsProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="custom">
-        {/* Custom layout with compound components */}
-        <SearchControls.Root showFilters={SEARCH_FILTERS_ENABLED} showAdvancedSearch={true}>
-          {/* Search input controls */}
-          <div className="inputs">
-            <SearchControls.SearchBySelect />
-            <SearchControls.QueryInput />
-          </div>
-
-          {/* Submit button */}
-          <SearchControls.SubmitButton />
-
-          {/* Reset button will be rendered by Root in meta-controls */}
-        </SearchControls.Root>
-      </SearchControlsProvider>
-
-      {/* Control pane with actions */}
-      {renderSearchControlPane()}
-
-      {/* Results list (will be integrated with provider in Phase 3) */}
-      {renderResultsList()}
-
-      {/* Import modal */}
+    <div className="search" data-testid="search" id="ld-search-container">
+      <Search
+        endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
+        sameOrigin={true}
+        filters={filters}
+        hasSearchParams={true}
+        fetchSearchResults={getByIdentifier}
+        defaultSearchBy={DEFAULT_SEARCH_BY}
+        defaultNavigationSegment={SearchSegment.Search}
+        labelEmptySearch="ld.enterSearchCriteria"
+        isVisibleFilters={SEARCH_FILTERS_ENABLED}
+        isVisibleFullDisplay={true}
+        isVisibleAdvancedSearch={true}
+        isVisibleSearchByControl={true}
+        renderSearchControlPane={renderSearchControlPane}
+        renderResultsList={renderResultsList}
+      />
       <ModalImport />
     </div>
   );
