@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Button, ButtonType } from '@/components/Button';
 import { Announcement } from '@/components/Announcement';
 import CaretDown from '@/assets/caret-down.svg?react';
+import { useUIState } from '@/store';
 import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
 import { Segments } from './Segments';
 import { QueryInput } from './QueryInput';
@@ -11,6 +12,7 @@ import { SearchBySelect } from './SearchBySelect';
 import { SubmitButton } from './SubmitButton';
 import { ResetButton } from './ResetButton';
 import './Root.scss';
+import { AdvancedSearchModal } from '../AdvancedSearchModal';
 
 interface RootProps {
   children?: ReactNode;
@@ -19,8 +21,6 @@ interface RootProps {
   onCollapsedChange?: (collapsed: boolean) => void;
   showFilters?: boolean;
   filtersComponent?: ReactNode;
-  showAdvancedSearch?: boolean;
-  onAdvancedSearchClick?: () => void;
 }
 
 export const Root: FC<RootProps> = ({
@@ -30,13 +30,15 @@ export const Root: FC<RootProps> = ({
   onCollapsedChange,
   showFilters = false,
   filtersComponent,
-  showAdvancedSearch = false,
-  onAdvancedSearchClick,
 }) => {
   const { formatMessage } = useIntl();
-  const { mode, activeUIConfig } = useSearchControlsContext();
+  const { mode, activeUIConfig, onReset } = useSearchControlsContext();
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
   const [announcementMessage, setAnnouncementMessage] = useState('');
+  const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState([
+    'isAdvancedSearchOpen',
+    'setIsAdvancedSearchOpen',
+  ]);
 
   const handleToggleCollapse = () => {
     const newCollapsed = !isCollapsed;
@@ -50,6 +52,8 @@ export const Root: FC<RootProps> = ({
     if (mode === 'custom' && children) {
       return children;
     }
+
+    const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
 
     // Auto mode: render based on config
     return (
@@ -71,7 +75,11 @@ export const Root: FC<RootProps> = ({
           <ResetButton />
           <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
           {showAdvancedSearch && (
-            <Button type={ButtonType.Link} className="search-button" onClick={onAdvancedSearchClick}>
+            <Button
+              type={ButtonType.Link}
+              className="search-button"
+              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
+            >
               <FormattedMessage id="ld.advanced" />
             </Button>
           )}
@@ -79,6 +87,7 @@ export const Root: FC<RootProps> = ({
 
         {/* Filters */}
         {showFilters && filtersComponent}
+        {isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
       </>
     );
   };

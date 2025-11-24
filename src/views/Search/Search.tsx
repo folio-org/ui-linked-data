@@ -8,7 +8,6 @@ import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
 import { Dropdown } from '@components/Dropdown';
 import { ResourceType } from '@common/constants/record.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
 import Plus16 from '@src/assets/plus-16.svg?react';
 import Transfer16 from '@src/assets/transfer-16.svg?react';
 import Lightning16 from '@src/assets/lightning-16.svg?react';
@@ -142,30 +141,13 @@ export const SearchView = () => {
 
   return (
     <div className="search" data-testid="search-compound" id="ld-search-compound-container">
-      {/* New compound components approach */}
-      <SearchControlsProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="custom">
-        {/* Custom layout with compound components */}
-        <SearchControls.Root showFilters={SEARCH_FILTERS_ENABLED} showAdvancedSearch={true}>
-          {/* Search input controls */}
-          <div className="inputs">
-            <SearchControls.SearchBySelect />
-            <SearchControls.QueryInput />
-          </div>
-
-          {/* Submit button */}
-          <SearchControls.SubmitButton />
-
-          {/* Reset button will be rendered by Root in meta-controls */}
-        </SearchControls.Root>
+      <SearchControlsProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
+        <SearchControls.Root />
       </SearchControlsProvider>
 
-      {/* Control pane with actions */}
       {renderSearchControlPane()}
-
-      {/* Results list (will be integrated with provider in Phase 3) */}
       {renderResultsList()}
 
-      {/* Import modal */}
       <ModalImport />
     </div>
   );
