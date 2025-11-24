@@ -2,11 +2,13 @@ import { FC, ChangeEvent, FormEventHandler } from 'react';
 import { useIntl } from 'react-intl';
 import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
+import { useSearchState } from '@/store';
 import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
 
 export const QueryInput: FC = () => {
   const { formatMessage } = useIntl();
-  const { activeUIConfig, query, onQueryChange, onSubmit } = useSearchControlsContext();
+  const { activeUIConfig, onSubmit } = useSearchControlsContext();
+  const { query, setQuery } = useSearchState(['query', 'setQuery']);
 
   // Guard: Feature disabled
   if (!activeUIConfig.features?.hasQueryInput) {
@@ -14,11 +16,11 @@ export const QueryInput: FC = () => {
   }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    onQueryChange(e.target.value);
+    setQuery(e.target.value);
   };
 
   const handleTextareaChange: FormEventHandler<HTMLTextAreaElement> = e => {
-    onQueryChange(e.currentTarget.value);
+    setQuery(e.currentTarget.value);
   };
 
   const placeholderId = activeUIConfig.ui?.placeholderId;

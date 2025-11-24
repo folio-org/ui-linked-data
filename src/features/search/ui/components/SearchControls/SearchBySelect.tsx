@@ -1,18 +1,19 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
 import { Select, type SelectValue } from '@/components/Select';
+import { useSearchState } from '@/store';
 import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
 
 export const SearchBySelect: FC = () => {
   const { formatMessage } = useIntl();
-  const { config, activeUIConfig, searchBy, onSearchByChange } = useSearchControlsContext();
+  const { config, activeUIConfig } = useSearchControlsContext();
+  const { searchBy, setSearchBy } = useSearchState(['searchBy', 'setSearchBy']);
 
   // Guard: Feature disabled
   if (!activeUIConfig.features?.hasSearchBy) {
     return null;
   }
 
-  // Get searchable indices from config
   const searchableIndices = config.searchBy?.searchableIndices || [];
 
   // Guard: No options
@@ -20,14 +21,13 @@ export const SearchBySelect: FC = () => {
     return null;
   }
 
-  // Convert to SelectValue format
   const options: SelectValue[] = searchableIndices.map(index => ({
     value: index.value,
     label: index.value, // Will be formatted by Select with withIntl
   }));
 
   const handleChange = ({ value }: SelectValue) => {
-    onSearchByChange(value as string);
+    setSearchBy(value);
   };
 
   return (

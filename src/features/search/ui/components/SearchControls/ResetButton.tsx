@@ -2,11 +2,13 @@ import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, ButtonType } from '@/components/Button';
 import XInCircle from '@/assets/x-in-circle.svg?react';
+import { useSearchState } from '@/store';
 import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
 
 export const ResetButton: FC = () => {
   const { formatMessage } = useIntl();
-  const { query, onReset } = useSearchControlsContext();
+  const { onReset } = useSearchControlsContext();
+  const { query } = useSearchState(['query']);
 
   const isDisabled = !query;
 
