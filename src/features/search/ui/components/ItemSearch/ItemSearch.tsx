@@ -8,7 +8,7 @@ import './ItemSearch.scss';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers';
 import { useLoadSearchResults, useSearch } from '../../hooks';
-import { SearchControls } from '../SearchControls';
+import { LegacySearchControls } from '../SearchControls';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
 
 export const ItemSearch = () => {
@@ -50,7 +50,7 @@ export const ItemSearch = () => {
 
   return (
     <div data-testid="id-search" className="item-search">
-      <SearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
+      <LegacySearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
       {!(hasMarcPreview && isMarcPreviewOpen) && (
         <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
           {renderSearchControlPane()}

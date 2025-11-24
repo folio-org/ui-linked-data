@@ -1,13 +1,13 @@
-import { authoritiesUIRegistry } from './authoritiesUI.config';
-import { hubsUIRegistry } from './hubsUI.config';
-import { resourcesUIRegistry } from './resourcesUI.config';
+import { authoritiesUIConfig } from './authoritiesUI.config';
+import { hubsUIConfig } from './hubsUI.config';
+import { resourcesUIConfig } from './resourcesUI.config';
 
 // UI Configuration Registry
 // Maps search types/segments to their UI configurations
 export const searchUIRegistry = {
-  authorities: authoritiesUIRegistry,
-  hubs: hubsUIRegistry,
-  resources: resourcesUIRegistry,
+  authorities: authoritiesUIConfig,
+  hubs: hubsUIConfig,
+  resources: resourcesUIConfig,
 };
 
 // Helper function to get UI config by search type and optional segment
@@ -20,7 +20,7 @@ export function getSearchUIConfig(searchType: string, segment?: string) {
 
   // Try to get segment-specific config
   if (segment && 'segments' in typeConfig && typeConfig.segments) {
-    const segmentConfig = typeConfig.segments[segment as keyof typeof typeConfig.segments];
+    const segmentConfig = typeConfig.segments[segment];
 
     if (segmentConfig) {
       return segmentConfig;
@@ -28,5 +28,5 @@ export function getSearchUIConfig(searchType: string, segment?: string) {
   }
 
   // Fall back to default config
-  return typeConfig.default;
+  return typeConfig;
 }

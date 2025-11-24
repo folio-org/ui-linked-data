@@ -7,7 +7,7 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('returns undefined for non-existent search type', () => {
@@ -17,10 +17,10 @@ describe('searchUIRegistry', () => {
       });
 
       it('returns default config when segment is undefined', () => {
-        const result = getSearchUIConfig('authorities', undefined);
+        const result = getSearchUIConfig('authorities');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
     });
 
@@ -29,28 +29,28 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.segments.browse);
+        expect(result).toBe(searchUIRegistry.authorities.segments?.browse);
       });
 
       it('returns segment search config when segment is "search"', () => {
         const result = getSearchUIConfig('authorities', 'search');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.segments.search);
+        expect(result).toBe(searchUIRegistry.authorities.segments?.search);
       });
 
       it('falls back to default when segment does not exist', () => {
         const result = getSearchUIConfig('authorities', 'nonexistent');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('returns default when search type has no segments', () => {
         const result = getSearchUIConfig('hubs', 'anySegment');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.hubs.default);
+        expect(result).toBe(searchUIRegistry.hubs);
       });
     });
 
@@ -154,13 +154,13 @@ describe('searchUIRegistry', () => {
       it('handles empty string segment', () => {
         const result = getSearchUIConfig('authorities', '');
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('handles null-like values gracefully', () => {
         const result = getSearchUIConfig('authorities', null as unknown as string);
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('handles special characters in search type', () => {
@@ -172,7 +172,7 @@ describe('searchUIRegistry', () => {
       it('handles special characters in segment', () => {
         const result = getSearchUIConfig('authorities', 'br@wse');
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
     });
 

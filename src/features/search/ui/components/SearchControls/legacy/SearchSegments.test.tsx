@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
-import { SearchSegments, useSearchContext } from '@/features/search/ui';
+import { useSearchContext } from '@/features/search/ui';
+import { SearchSegments } from './SearchSegments';
 
 jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));

@@ -1,46 +1,94 @@
-import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
+import type { SearchTypeUIConfig } from '../types';
 
 //Authorities Search UI Configuration
 export const authoritiesUIConfig: SearchTypeUIConfig = {
   ui: {
-    titleId: '',
+    titleId: 'ld.authorities',
     subtitleId: '',
-    placeholderId: '',
+    placeholderId: 'ld.enterSearchCriteria',
+    emptyStateId: 'ld.noResultsFound',
   },
   features: {
+    // Navigation
+    hasSegments: true, // Authorities has segments (search/browse)
+    hasSourceToggle: false, // Will be enabled per-segment
+
+    // Input controls (shared)
     hasSearchBy: true,
-    hasMultilineInput: false,
+    hasQueryInput: true,
+    hasMultilineInput: true,
+    hasSubmitButton: true,
+
+    // Additional features
     hasAdvancedSearch: false,
     isVisiblePaginationCount: true,
     isLoopedPagination: false,
     isVisibleSubLabel: false,
   },
-  searchableIndices: [] as SearchableIndexUI[],
-};
+  searchableIndices: [
+    { value: 'keyword', labelId: 'ld.keyword', placeholder: 'ld.searchByKeyword' },
+    { value: 'personalName', labelId: 'ld.personalName', placeholder: 'ld.searchByPersonalName' },
+    { value: 'corporateName', labelId: 'ld.corporateName', placeholder: 'ld.searchByCorporateName' },
+  ],
 
-// Authorities Browse UI Configuration
-export const authoritiesBrowseUIConfig: SearchTypeUIConfig = {
-  ui: {
-    titleId: '',
-    subtitleId: '',
-    placeholderId: '',
-  },
-  features: {
-    hasSearchBy: true,
-    hasMultilineInput: true,
-    hasAdvancedSearch: false,
-    isVisiblePaginationCount: false, // Browse doesn't show count
-    isLoopedPagination: true, // Browse can loop
-    isVisibleSubLabel: false,
-  },
-  searchableIndices: [] as SearchableIndexUI[],
-};
-
-// Authorities UI Registry
-export const authoritiesUIRegistry = {
-  default: authoritiesUIConfig,
+  // Segment-specific overrides
   segments: {
-    search: authoritiesUIConfig,
-    browse: authoritiesBrowseUIConfig,
+    search: {
+      ui: {
+        // Override placeholder for search segment
+        placeholderId: 'ld.searchAuthorities',
+      },
+      features: {
+        hasSourceToggle: false,
+        hasAdvancedSearch: false,
+      },
+      searchableIndices: [
+        {
+          value: 'keyword',
+          labelId: 'ld.keyword',
+          placeholder: 'ld.searchByKeyword',
+        },
+        {
+          value: 'personalName',
+          labelId: 'ld.personalName',
+          placeholder: 'ld.searchByPersonalName',
+        },
+        {
+          value: 'corporateName',
+          labelId: 'ld.corporateName',
+          placeholder: 'ld.searchByCorporateName',
+        },
+        {
+          value: 'uniformTitle',
+          labelId: 'ld.uniformTitle',
+          placeholder: 'ld.searchByUniformTitle',
+        },
+      ],
+    },
+
+    browse: {
+      ui: {
+        // Override placeholder for browse segment
+        placeholderId: 'ld.browseAuthorities',
+      },
+      features: {
+        // Disable source toggle in browse segment
+        hasSourceToggle: false,
+        hasAdvancedSearch: false,
+        isLoopedPagination: true,
+      },
+      searchableIndices: [
+        {
+          value: 'name',
+          labelId: 'ld.name',
+          placeholder: 'ld.browseByName',
+        },
+        {
+          value: 'title',
+          labelId: 'ld.title',
+          placeholder: 'ld.browseByTitle',
+        },
+      ],
+    },
   },
 };
