@@ -24,7 +24,7 @@ export interface CurrentSearchParams {
   limit: number;
 }
 
-export interface SearchControlsContextValue {
+export interface SearchContextValue {
   // Configuration
   config: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
@@ -43,7 +43,7 @@ export interface SearchControlsContextValue {
   onReset: () => void;
 }
 
-export interface SearchControlsProviderProps {
+export interface SearchProviderProps {
   config: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;

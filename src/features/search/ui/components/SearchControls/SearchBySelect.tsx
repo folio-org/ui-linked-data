@@ -2,11 +2,11 @@ import { FC } from 'react';
 import { useIntl } from 'react-intl';
 import { Select, type SelectValue } from '@/components/Select';
 import { useSearchState } from '@/store';
-import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
+import { useSearchContext } from '../../providers/SearchProvider';
 
 export const SearchBySelect: FC = () => {
   const { formatMessage } = useIntl();
-  const { config, activeUIConfig } = useSearchControlsContext();
+  const { config, activeUIConfig } = useSearchContext();
   const { searchBy, setSearchBy } = useSearchState(['searchBy', 'setSearchBy']);
 
   // Guard: Feature disabled

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import * as FeatureConstants from '@/common/constants/feature.constants';
-import { SearchContext } from '@/features/search/ui';
+import { SearchContextLegacy } from '@/features/search/ui';
 import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 import { SearchControls } from './SearchControls';
 
@@ -71,9 +71,9 @@ describe('SearchControls', () => {
       };
 
       const { getByTestId } = render(
-        <SearchContext.Provider value={mockContextValue as unknown as SearchParams}>
+        <SearchContextLegacy.Provider value={mockContextValue as unknown as SearchParams}>
           <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
-        </SearchContext.Provider>,
+        </SearchContextLegacy.Provider>,
       );
 
       expect(getByTestId('search-filters')).toBeInTheDocument();
@@ -91,9 +91,9 @@ describe('SearchControls', () => {
       };
 
       const { queryByTestId } = render(
-        <SearchContext.Provider value={mockContextValue as unknown as SearchParams}>
+        <SearchContextLegacy.Provider value={mockContextValue as unknown as SearchParams}>
           <SearchControls submitSearch={jest.fn} clearValues={jest.fn} changeSegment={jest.fn} />
-        </SearchContext.Provider>,
+        </SearchContextLegacy.Provider>,
       );
 
       expect(queryByTestId('search-filters')).not.toBeInTheDocument();
@@ -135,9 +135,9 @@ describe('SearchControls', () => {
       ]);
 
       render(
-        <SearchContext.Provider value={{ defaultSearchBy } as unknown as SearchParams}>
+        <SearchContextLegacy.Provider value={{ defaultSearchBy } as unknown as SearchParams}>
           <SearchControls submitSearch={jest.fn} clearValues={mockClearValues} changeSegment={jest.fn} />
-        </SearchContext.Provider>,
+        </SearchContextLegacy.Provider>,
       );
     }
 

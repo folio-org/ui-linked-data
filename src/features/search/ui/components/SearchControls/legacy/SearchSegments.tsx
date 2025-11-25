@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { ButtonGroup } from '@/components/ButtonGroup';
 import { Button, ButtonType } from '@/components/Button';
-import { useSearchContext } from '../../../providers';
+import { useSearchContextLegacy } from '../../../providers';
 import './SearchSegments.scss';
 
 type SearchSegmentsProps = {
@@ -10,7 +10,7 @@ type SearchSegmentsProps = {
 };
 
 export const SearchSegments: FC<SearchSegmentsProps> = ({ onChangeSegment }) => {
-  const { primarySegments, navigationSegment } = useSearchContext();
+  const { primarySegments, navigationSegment } = useSearchContextLegacy();
   const { value: selectedNavigationSegment, set: setSelectedNavigationSegment } =
     navigationSegment as NavigationSegment;
 

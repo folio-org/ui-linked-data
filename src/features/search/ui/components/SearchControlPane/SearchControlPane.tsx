@@ -6,7 +6,7 @@ import { useSearchState, useUIState } from '@/store';
 import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useIntl } from 'react-intl';
-import { useSearchContext } from '../../providers';
+import { useSearchContextLegacy } from '../../providers';
 import './SearchControlPane.scss';
 
 type SearchControlPaneProps = {
@@ -30,7 +30,7 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
     'isSearchPaneCollapsed',
     'setIsSearchPaneCollapsed',
   ]);
-  const { navigationSegment } = useSearchContext();
+  const { navigationSegment } = useSearchContextLegacy();
   const selectedSegment = navigationSegment?.value;
   const isVisibleSubLabel = segmentsConfig
     ? segmentsConfig[selectedSegment as SearchSegment]?.isVisibleSubLabel

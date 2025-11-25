@@ -6,7 +6,7 @@ import { Pagination } from '@/components/Pagination';
 import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 import { useUIState } from '@/store';
-import { useSearchContext } from '../../providers';
+import { useSearchContextLegacy } from '../../providers';
 import { useLoadSearchResults, useSearch } from '../../hooks';
 import { LegacySearchControls } from '../SearchControls';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
@@ -25,7 +25,7 @@ export const ItemSearch = () => {
     searchResultsLimit,
     hasMarcPreview,
     renderMarcPreview,
-  } = useSearchContext();
+  } = useSearchContextLegacy();
   const {
     submitSearch,
     clearValues,

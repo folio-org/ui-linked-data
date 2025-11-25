@@ -3,11 +3,11 @@ import { useIntl } from 'react-intl';
 import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
 import { useSearchState } from '@/store';
-import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
+import { useSearchContext } from '../../providers/SearchProvider';
 
 export const QueryInput: FC = () => {
   const { formatMessage } = useIntl();
-  const { activeUIConfig, onSubmit } = useSearchControlsContext();
+  const { activeUIConfig, onSubmit } = useSearchContext();
   const { query, setQuery } = useSearchState(['query', 'setQuery']);
 
   // Guard: Feature disabled

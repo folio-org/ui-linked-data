@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
+import { LegacySearch, SearchResultList, SearchControlPane } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -140,7 +140,7 @@ export const SearchView = () => {
 
   return (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search
+      <LegacySearch
         endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
         sameOrigin={true}
         filters={filters}

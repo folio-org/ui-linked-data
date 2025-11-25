@@ -3,7 +3,7 @@ export { SearchControls as LegacySearchControls } from './legacy/SearchControls'
 export { SearchSegments } from './legacy/SearchSegments';
 
 // New compound components
-import { Root } from './Root';
+import { SearchControls as Root } from './SearchControls';
 import { Segments } from './Segments';
 import { QueryInput } from './QueryInput';
 import { SearchBySelect } from './SearchBySelect';

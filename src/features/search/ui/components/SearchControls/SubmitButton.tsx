@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonType } from '@/components/Button';
 import { useSearchState } from '@/store';
-import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
+import { useSearchContext } from '../../providers/SearchProvider';
 
 export const SubmitButton: FC = () => {
-  const { activeUIConfig, onSubmit } = useSearchControlsContext();
+  const { activeUIConfig, onSubmit } = useSearchContext();
   const { query } = useSearchState(['query']);
 
   // Guard: Feature disabled

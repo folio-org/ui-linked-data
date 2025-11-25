@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useLoadingStateStore, useSearchStore } from '@/store';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContext } from '../providers';
+import { useSearchContextLegacy } from '../providers';
 import { useLoadSearchResults } from './useLoadSearchResults';
 
 jest.mock('@/features/search/ui/providers');
@@ -41,7 +41,7 @@ describe('useLoadSearchResults', () => {
       },
     ]);
 
-    (useSearchContext as jest.Mock).mockReturnValue(mockSearchContext);
+    (useSearchContextLegacy as jest.Mock).mockReturnValue(mockSearchContext);
   });
 
   afterEach(() => {

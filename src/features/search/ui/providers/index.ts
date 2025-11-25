@@ -1,4 +1,4 @@
 // legacy provider
-export * from './SearchProvider';
+export * from './SearchProvider.legacy';
 
-export * from './SearchControlsProvider';
+export * from './SearchProvider';

@@ -14,7 +14,7 @@ import { useInputsState, useSearchState, useUIState } from '@/store';
 import { SearchSegments } from './SearchSegments';
 import CaretDown from '@/assets/caret-down.svg?react';
 import XInCircle from '@/assets/x-in-circle.svg?react';
-import { useSearchContext } from '../../../providers';
+import { useSearchContextLegacy } from '../../../providers';
 import { SearchFilters } from '../../SearchFilters';
 import './SearchControls.scss';
 
@@ -36,7 +36,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
     hasSearchParams,
     defaultSearchBy,
     navigationSegment,
-  } = useSearchContext();
+  } = useSearchContextLegacy();
 
   const {
     searchBy,

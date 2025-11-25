@@ -1,11 +1,11 @@
 import { FC } from 'react';
-import { SearchProvider } from '../../providers';
+import { LegacySearchProvider } from '../../providers';
 import { ItemSearch } from '../ItemSearch';
 
 type SearchProps = SearchParams & { defaultNavigationSegment?: string };
 
 export const Search: FC<SearchProps> = value => (
-  <SearchProvider value={value}>
+  <LegacySearchProvider value={value}>
     <ItemSearch />
-  </SearchProvider>
+  </LegacySearchProvider>
 );

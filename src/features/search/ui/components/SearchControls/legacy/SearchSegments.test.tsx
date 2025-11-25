@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
-import { useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
 import { SearchSegments } from './SearchSegments';
 
 jest.mock('@/features/search/ui/providers');
@@ -11,7 +11,7 @@ describe('SearchSegments Component', () => {
   const mockOnChangeSegment = jest.fn();
 
   beforeEach(() => {
-    (useSearchContext as jest.Mock).mockReturnValue({
+    (useSearchContextLegacy as jest.Mock).mockReturnValue({
       primarySegments: {
         segment_1: { labelId: 'label_1' },
         segment_2: { labelId: 'label_2' },

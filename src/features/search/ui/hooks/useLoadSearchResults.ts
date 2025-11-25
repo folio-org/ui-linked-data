@@ -3,13 +3,13 @@ import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@/common/constants/search.constants';
 import { removeBackslashes } from '@/features/search/core';
 import { useLoadingState, useSearchState } from '@/store';
-import { useSearchContext } from '../providers';
+import { useSearchContextLegacy } from '../providers';
 
 export const useLoadSearchResults = (
   fetchData: ({ query, searchBy, offset, selectedSegment, baseQuerySelector }: FetchDataParams) => Promise<void>,
 ) => {
   const { hasSearchParams, defaultSearchBy, defaultQuery, getSearchSourceData, getSearchFacetsData } =
-    useSearchContext();
+    useSearchContextLegacy();
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setQuery, setData, setSearchBy, forceRefresh, setForceRefresh, resetFacetsData } = useSearchState([
     'setQuery',

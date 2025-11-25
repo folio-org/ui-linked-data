@@ -1,56 +1,56 @@
 import { FC, useState, ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Announcement } from '@/components/Announcement';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
-import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
+import { useSearchContext } from '../../providers/SearchProvider';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { Segments } from './Segments';
 import { QueryInput } from './QueryInput';
 import { SearchBySelect } from './SearchBySelect';
 import { SubmitButton } from './SubmitButton';
 import { ResetButton } from './ResetButton';
-import './Root.scss';
+import './SearchControls.scss';
 
 interface RootProps {
   children?: ReactNode;
   className?: string;
-  collapsed?: boolean;
-  onCollapsedChange?: (collapsed: boolean) => void;
   showFilters?: boolean;
   filtersComponent?: ReactNode;
+  renderSearchControlPane?: () => ReactNode;
+  renderResultsList?: () => ReactNode;
 }
 
-export const Root: FC<RootProps> = ({
+export const SearchControls: FC<RootProps> = ({
   children,
   className,
-  collapsed = false,
-  onCollapsedChange,
   showFilters = false,
   filtersComponent,
+  renderSearchControlPane,
+  renderResultsList,
 }) => {
   const { formatMessage } = useIntl();
-  const { mode, activeUIConfig, onReset } = useSearchControlsContext();
-  const [isCollapsed, setIsCollapsed] = useState(collapsed);
+  const { mode, activeUIConfig, onReset } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');
-  const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState([
-    'isAdvancedSearchOpen',
-    'setIsAdvancedSearchOpen',
-  ]);
+  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState(
+    ['isSearchPaneCollapsed', 'setIsSearchPaneCollapsed', 'isAdvancedSearchOpen', 'setIsAdvancedSearchOpen'],
+  );
 
   const handleToggleCollapse = () => {
-    const newCollapsed = !isCollapsed;
-    setIsCollapsed(newCollapsed);
-    onCollapsedChange?.(newCollapsed);
+    setIsSearchPaneCollapsed(prev => !prev);
   };
 
   // Determine what to render
   const renderContent = () => {
-    // Custom mode: use provided children
     if (mode === 'custom' && children) {
-      return children;
+      return (
+        <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
+          {children}
+        </div>
+      );
     }
 
     const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
@@ -94,25 +94,30 @@ export const Root: FC<RootProps> = ({
     );
   };
 
-  if (isCollapsed) {
-    return null;
-  }
-
   return (
-    <section className={classNames('search-pane', className)} aria-labelledby="search-pane-header-title">
-      <div className="search-pane-header">
-        <h2 id="search-pane-header-title" className="search-pane-header-title">
-          <FormattedMessage id={showFilters ? 'ld.searchAndFilter' : 'ld.search'} />
-        </h2>
-        <Button
-          className="close-ctl"
-          onClick={handleToggleCollapse}
-          ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}
-        >
-          <CaretDown />
-        </Button>
+    <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
+      {!isSearchPaneCollapsed && (
+        <section className={classNames('search-pane', className)} aria-labelledby="search-pane-header-title">
+          <div className="search-pane-header">
+            <h2 id="search-pane-header-title" className="search-pane-header-title">
+              <FormattedMessage id={showFilters ? 'ld.searchAndFilter' : 'ld.search'} />
+            </h2>
+            <Button
+              className="close-ctl"
+              onClick={handleToggleCollapse}
+              ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}
+            >
+              <CaretDown />
+            </Button>
+          </div>
+          <div className="search-pane-content">{renderContent()}</div>
+        </section>
+      )}
+      <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
+        {renderSearchControlPane?.()}
+
+        <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>{renderResultsList?.()}</div>
       </div>
-      <div className="search-pane-content">{renderContent()}</div>
-    </section>
+    </div>
   );
 };
