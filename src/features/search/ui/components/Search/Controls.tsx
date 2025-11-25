@@ -1,37 +1,23 @@
-import { FC, useState, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Announcement } from '@/components/Announcement';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
-import { Segments } from './Segments';
-import { QueryInput } from './QueryInput';
-import { SearchBySelect } from './SearchBySelect';
-import { SubmitButton } from './SubmitButton';
-import { ResetButton } from './ResetButton';
-import './SearchControls.scss';
+import { SearchControls as SearchControlsCompound } from '../SearchControls';
+import './Controls.scss';
 
-interface RootProps {
+interface ControlsProps {
   children?: ReactNode;
   className?: string;
   showFilters?: boolean;
   filtersComponent?: ReactNode;
-  renderSearchControlPane?: () => ReactNode;
-  renderResultsList?: () => ReactNode;
 }
 
-export const SearchControls: FC<RootProps> = ({
-  children,
-  className,
-  showFilters = false,
-  filtersComponent,
-  renderSearchControlPane,
-  renderResultsList,
-}) => {
+export const Controls: FC<ControlsProps> = ({ children, className, showFilters = false, filtersComponent }) => {
   const { formatMessage } = useIntl();
   const { mode, activeUIConfig, onReset } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');
@@ -46,11 +32,7 @@ export const SearchControls: FC<RootProps> = ({
   // Determine what to render
   const renderContent = () => {
     if (mode === 'custom' && children) {
-      return (
-        <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
-          {children}
-        </div>
-      );
+      return children;
     }
 
     const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
@@ -59,20 +41,20 @@ export const SearchControls: FC<RootProps> = ({
     return (
       <>
         {/* Segments */}
-        {activeUIConfig.features?.hasSegments && <Segments />}
+        {activeUIConfig.features?.hasSegments && <SearchControlsCompound.Segments />}
 
         {/* Input controls */}
         <div className="inputs">
-          {activeUIConfig.features?.hasSearchBy && <SearchBySelect />}
-          {activeUIConfig.features?.hasQueryInput && <QueryInput />}
+          {activeUIConfig.features?.hasSearchBy && <SearchControlsCompound.SearchBySelect />}
+          {activeUIConfig.features?.hasQueryInput && <SearchControlsCompound.QueryInput />}
         </div>
 
         {/* Submit button */}
-        {activeUIConfig.features?.hasSubmitButton && <SubmitButton />}
+        {activeUIConfig.features?.hasSubmitButton && <SearchControlsCompound.SubmitButton />}
 
         {/* Meta controls */}
         <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>
-          <ResetButton />
+          <SearchControlsCompound.ResetButton />
           <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
           {showAdvancedSearch && (
             <Button
@@ -95,7 +77,7 @@ export const SearchControls: FC<RootProps> = ({
   };
 
   return (
-    <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
+    <>
       {!isSearchPaneCollapsed && (
         <section className={classNames('search-pane', className)} aria-labelledby="search-pane-header-title">
           <div className="search-pane-header">
@@ -113,11 +95,6 @@ export const SearchControls: FC<RootProps> = ({
           <div className="search-pane-content">{renderContent()}</div>
         </section>
       )}
-      <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
-        {renderSearchControlPane?.()}
-
-        <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>{renderResultsList?.()}</div>
-      </div>
-    </div>
+    </>
   );
 };

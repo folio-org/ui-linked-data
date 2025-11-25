@@ -1,7 +1,6 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { SearchResultList, SearchControlPane } from '@/features/search/ui';
-import { SearchControls } from '@/features/search/ui/components/SearchControls';
+import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -20,7 +19,7 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { resourcesConfig } from '@/features/search/core/config/resources.config';
 import { resourcesUIConfig } from '@/features/search/ui/config/resourcesUI.config';
-import { SearchProvider } from '@/features/search/ui/providers';
+import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -67,7 +66,7 @@ export const SearchView = () => {
     }
   };
 
-  const handleImport = async () => {
+  const handleImport = () => {
     if (!isImportModalOpen) {
       setIsImportModalOpen(true);
     }
@@ -128,25 +127,21 @@ export const SearchView = () => {
     [navigateToEditPage],
   );
 
-  const renderSearchControlPane = useCallback(
-    () => (
-      <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
-        <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-      </SearchControlPane>
-    ),
-    [items],
-  );
-
-  const renderResultsList = useCallback(() => <SearchResultList />, []);
-
   return (
     <div className="search" data-testid="search" id="ld-search-container">
-      <SearchProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
-        <SearchControls.Root
-          renderSearchControlPane={renderSearchControlPane}
-          renderResultsList={renderResultsList}
-        ></SearchControls.Root>
-      </SearchProvider>
+      <Search.Root config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
+        <Search.Controls />
+
+        <Search.Content>
+          <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
+            <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+          </SearchControlPane>
+
+          <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
+            <SearchResultList />
+          </div>
+        </Search.Content>
+      </Search.Root>
 
       <ModalImport />
     </div>

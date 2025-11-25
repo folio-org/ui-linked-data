@@ -4,8 +4,8 @@ export const resourcesUIConfig: SearchTypeUIConfig = {
   ui: {
     titleId: 'ld.resources',
     subtitleId: '',
-    placeholderId: 'ld.enterSearchCriteria',
-    emptyStateId: 'ld.noResultsFound',
+    placeholderId: '',
+    emptyStateId: 'ld.enterSearchCriteria',
   },
   features: {
     // Navigation

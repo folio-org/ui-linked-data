@@ -4,7 +4,7 @@ export * from './types';
 // Components
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { ItemSearch } from './components/ItemSearch';
-export { LegacySearch } from './components/Search';
+export { LegacySearch, Search } from './components/Search';
 export { SearchControlPane } from './components/SearchControlPane';
 export { SearchControls, SearchSegments } from './components/SearchControls';
 export { SearchFilters } from './components/SearchFilters';
