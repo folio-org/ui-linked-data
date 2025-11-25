@@ -6,13 +6,13 @@ import { Announcement } from '@/components/Announcement';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchControlsContext } from '../../providers/SearchControlsProvider';
+import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { Segments } from './Segments';
 import { QueryInput } from './QueryInput';
 import { SearchBySelect } from './SearchBySelect';
 import { SubmitButton } from './SubmitButton';
 import { ResetButton } from './ResetButton';
 import './Root.scss';
-import { AdvancedSearchModal } from '../AdvancedSearchModal';
 
 interface RootProps {
   children?: ReactNode;
@@ -87,7 +87,9 @@ export const Root: FC<RootProps> = ({
 
         {/* Filters */}
         {showFilters && filtersComponent}
-        {isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
+
+        {/* Advanced Search modal */}
+        {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
       </>
     );
   };

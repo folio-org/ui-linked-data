@@ -5,7 +5,6 @@ import { Loading } from '@components/Loading';
 import { ROUTES } from '@common/constants/routes.constants';
 import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
-import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, LegacySearchView, EditWrapper, ExternalResourcePreview } from '@views';
 import en from '../translations/ui-linked-data/en.json';
@@ -29,7 +28,11 @@ export const routes: RouteObject[] = [
       },
       {
         path: ROUTES.SEARCH.uri,
-        element: IS_NEW_SEARCH_ENABLED ? <Search /> : <LegacySearchView />,
+        element: <LegacySearchView />,
+      },
+      {
+        path: ROUTES.SEARCH_NEW.uri,
+        element: <Search />,
       },
       {
         path: ROUTES.RESOURCE_EDIT.uri,

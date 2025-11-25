@@ -16,6 +16,7 @@ import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
 import { StatusType } from '@common/constants/status.constants';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { resourcesConfig } from '@/features/search/core/config/resources.config';
@@ -140,15 +141,20 @@ export const SearchView = () => {
   const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return (
-    <div className="search" data-testid="search-compound" id="ld-search-compound-container">
-      <SearchControlsProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
-        <SearchControls.Root />
-      </SearchControlsProvider>
+    <div className="search" data-testid="search" id="ld-search-container">
+      <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
+        <SearchControlsProvider config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
+          <SearchControls.Root />
+        </SearchControlsProvider>
 
-      {renderSearchControlPane()}
-      {renderResultsList()}
+        <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
+          {renderSearchControlPane()}
 
-      <ModalImport />
+          <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>{renderResultsList()}</div>
+        </div>
+
+        <ModalImport />
+      </div>
     </div>
   );
 };

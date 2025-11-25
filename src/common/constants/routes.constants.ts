@@ -13,6 +13,10 @@ export const ROUTES = {
     uri: '/search',
     name: 'ld.searchResource',
   },
+  SEARCH_NEW: {
+    uri: '/search-new',
+    name: 'ld.searchResource',
+  },
   RESOURCE_CREATE: {
     uri: `/${ROUTE_PATH.RESOURCES}/${ROUTE_PATH.CREATE}`,
     name: 'ld.create',
@@ -34,13 +38,13 @@ export const RESOURCE_EDIT_CREATE_URLS = [ROUTES.RESOURCE_EDIT.uri, ROUTES.RESOU
 
 export const RESOURCE_CREATE_URLS = [ROUTES.RESOURCE_CREATE.uri];
 
-export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
+export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri, ROUTES.SEARCH_NEW.uri];
 
 export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
   CloneOf = 'cloneOf',
-  ProfileId = 'profileId'
+  ProfileId = 'profileId',
 }
 
 export enum SearchQueryParams {
