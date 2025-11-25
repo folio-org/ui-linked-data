@@ -1,8 +1,7 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import { useSearchState } from '@/store';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useActiveConfig } from '../hooks/useActiveConfig';
-import { useAvailableSources } from '../hooks/useAvailableSources';
+import { getActiveConfig, getAvailableSources } from '../utils';
 import { useSearchControlsHandlers } from '../hooks/useSearchControlsHandlers';
 import { useUrlSync } from '../hooks/useUrlSync';
 
@@ -21,8 +20,8 @@ export const SearchProvider: FC<SearchProviderProps> = ({
     ((navigationState as Record<string, unknown>)?.['segment'] as string | undefined) ||
     initialSegment ||
     config.defaults?.segment;
-  const activeUIConfig = useActiveConfig(uiConfig, currentSegment);
-  const availableSources = useAvailableSources(config, currentSegment);
+  const activeUIConfig = useMemo(() => getActiveConfig(uiConfig, currentSegment), [uiConfig, currentSegment]);
+  const availableSources = useMemo(() => getAvailableSources(config, currentSegment), [config, currentSegment]);
   const handlers = useSearchControlsHandlers({ config, flow });
 
   // Sync URL to store (URL flow only, no-op for value flow)

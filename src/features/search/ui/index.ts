@@ -18,5 +18,8 @@ export { SearchContextLegacy, LegacySearchProvider, useSearchContextLegacy } fro
 // Hooks
 export { useSearch, useLoadSearchResults, useSearchNavigationState, useSearchFilters } from './hooks';
 
+// Utils
+export { getActiveConfig, getAvailableSources } from './utils';
+
 // Config (examples)
 export * from './config';
