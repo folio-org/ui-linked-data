@@ -1,24 +1,23 @@
 import { useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Search, SearchResultList } from '@/features/search/ui';
-import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
-import { ModalImport } from '@components/ModalImport';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
-import { Dropdown } from '@components/Dropdown';
-import { ResourceType } from '@common/constants/record.constants';
-import Plus16 from '@src/assets/plus-16.svg?react';
-import Transfer16 from '@src/assets/transfer-16.svg?react';
-import Lightning16 from '@src/assets/lightning-16.svg?react';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
+import { getSearchUIConfig, Search, SearchResultList } from '@/features/search/ui';
+import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
+import { ModalImport } from '@/components/ModalImport';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { DropdownItemType, FullDisplayType } from '@/common/constants/uiElements.constants';
+import { Dropdown } from '@/components/Dropdown';
+import { ResourceType } from '@/common/constants/record.constants';
+import Plus16 from '@/assets/plus-16.svg?react';
+import Transfer16 from '@/assets/transfer-16.svg?react';
+import Lightning16 from '@/assets/lightning-16.svg?react';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
-import { StatusType } from '@common/constants/status.constants';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { resourcesConfig } from '@/features/search/core/config/resources.config';
-import { resourcesUIConfig } from '@/features/search/ui/config/resourcesUI.config';
+import { StatusType } from '@/common/constants/status.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { getSearchConfig } from '@/features/search/core';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -128,7 +127,12 @@ export const SearchView = () => {
 
   return (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search.Root config={resourcesConfig} uiConfig={resourcesUIConfig} flow="url" mode="auto">
+      <Search.Root
+        config={getSearchConfig('resources')}
+        uiConfig={getSearchUIConfig('resources')}
+        flow="url"
+        mode="auto"
+      >
         <Search.Controls />
 
         <Search.Content>
@@ -138,6 +142,7 @@ export const SearchView = () => {
 
           <Search.ContentContainer>
             <SearchResultList />
+
             <Search.Pagination />
           </Search.ContentContainer>
         </Search.Content>

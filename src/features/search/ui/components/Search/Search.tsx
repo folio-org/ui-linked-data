@@ -6,8 +6,8 @@ import type { SearchTypeUIConfig } from '../../types/ui.types';
 import type { SearchFlow } from '../../types/provider.types';
 
 interface SearchRootProps {
-  config: SearchTypeConfig;
-  uiConfig: SearchTypeUIConfig;
+  config?: SearchTypeConfig;
+  uiConfig?: SearchTypeUIConfig;
   flow: SearchFlow;
   mode?: 'auto' | 'custom';
   initialSegment?: string;
@@ -15,6 +15,10 @@ interface SearchRootProps {
 }
 
 export const Search: FC<SearchRootProps> = ({ config, uiConfig, flow, mode = 'custom', initialSegment, children }) => {
+  if (!config) return null;
+
+  if (!uiConfig) return null;
+
   return (
     <SearchProvider config={config} uiConfig={uiConfig} flow={flow} mode={mode} initialSegment={initialSegment}>
       <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>

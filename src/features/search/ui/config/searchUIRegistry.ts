@@ -11,8 +11,12 @@ export const searchUIRegistry = {
 };
 
 // Helper function to get UI config by search type and optional segment
-export function getSearchUIConfig(searchType: string, segment?: string) {
-  const typeConfig = searchUIRegistry[searchType as keyof typeof searchUIRegistry];
+export function getSearchUIConfig(searchType?: keyof typeof searchUIRegistry, segment?: string) {
+  if (!searchType) {
+    return undefined;
+  }
+
+  const typeConfig = searchUIRegistry[searchType];
 
   if (!typeConfig) {
     return undefined;

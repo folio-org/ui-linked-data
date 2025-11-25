@@ -10,12 +10,6 @@ describe('searchUIRegistry', () => {
         expect(result).toBe(searchUIRegistry.authorities);
       });
 
-      it('returns undefined for non-existent search type', () => {
-        const result = getSearchUIConfig('nonexistent');
-
-        expect(result).toBeUndefined();
-      });
-
       it('returns default config when segment is undefined', () => {
         const result = getSearchUIConfig('authorities');
 
@@ -145,12 +139,6 @@ describe('searchUIRegistry', () => {
     });
 
     describe('edge cases', () => {
-      it('handles empty string search type', () => {
-        const result = getSearchUIConfig('');
-
-        expect(result).toBeUndefined();
-      });
-
       it('handles empty string segment', () => {
         const result = getSearchUIConfig('authorities', '');
 
@@ -161,12 +149,6 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities', null as unknown as string);
 
         expect(result).toBe(searchUIRegistry.authorities);
-      });
-
-      it('handles special characters in search type', () => {
-        const result = getSearchUIConfig('auth@rities');
-
-        expect(result).toBeUndefined();
       });
 
       it('handles special characters in segment', () => {
