@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
+import { Search, SearchResultList } from '@/features/search/ui';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -19,7 +19,6 @@ import { useRecordControls } from '@common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { resourcesConfig } from '@/features/search/core/config/resources.config';
 import { resourcesUIConfig } from '@/features/search/ui/config/resourcesUI.config';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -133,13 +132,14 @@ export const SearchView = () => {
         <Search.Controls />
 
         <Search.Content>
-          <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
+          <Search.ControlPane label={<FormattedMessage id="ld.resources" />}>
             <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-          </SearchControlPane>
+          </Search.ControlPane>
 
-          <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
+          <Search.ContentContainer>
             <SearchResultList />
-          </div>
+            <Search.Pagination />
+          </Search.ContentContainer>
         </Search.Content>
       </Search.Root>
 

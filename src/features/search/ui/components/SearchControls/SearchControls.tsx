@@ -7,17 +7,22 @@ import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
-import { SearchControls as SearchControlsCompound } from '../SearchControls';
-import './Controls.scss';
+import { SearchControls as SearchControlsCompound } from '.';
+import './SearchControls.scss';
 
-interface ControlsProps {
+interface SearchControlsProps {
   children?: ReactNode;
   className?: string;
   showFilters?: boolean;
   filtersComponent?: ReactNode;
 }
 
-export const Controls: FC<ControlsProps> = ({ children, className, showFilters = false, filtersComponent }) => {
+export const SearchControls: FC<SearchControlsProps> = ({
+  children,
+  className,
+  showFilters = false,
+  filtersComponent,
+}) => {
   const { formatMessage } = useIntl();
   const { mode, activeUIConfig, onReset } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');

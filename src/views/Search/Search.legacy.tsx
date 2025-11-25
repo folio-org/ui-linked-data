@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { LegacySearch, SearchResultList, SearchControlPane } from '@/features/search/ui';
+import { LegacySearch, SearchResultList, LegacySearchControlPane } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
 import { ModalImport } from '@components/ModalImport';
 import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
@@ -130,9 +130,9 @@ export const SearchView = () => {
 
   const renderSearchControlPane = useCallback(
     () => (
-      <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
+      <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
         <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-      </SearchControlPane>
+      </LegacySearchControlPane>
     ),
     [items],
   );

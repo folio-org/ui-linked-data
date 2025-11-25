@@ -1,10 +1,10 @@
 import { FC, ReactNode } from 'react';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 
-interface ContentProps {
+interface SearchContentProps {
   children: ReactNode;
 }
 
-export const Content: FC<ContentProps> = ({ children }) => {
+export const SearchContent: FC<SearchContentProps> = ({ children }) => {
   return <div className={DOM_ELEMENTS.classNames.itemSearchContent}>{children}</div>;
 };

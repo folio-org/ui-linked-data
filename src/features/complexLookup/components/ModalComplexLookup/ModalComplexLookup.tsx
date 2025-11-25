@@ -7,7 +7,7 @@ import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { Authority, ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { useMarcData } from '@/common/hooks/useMarcData';
 import { Modal } from '@/components/Modal';
-import { LegacySearch, SearchControlPane } from '@/features/search/ui';
+import { LegacySearch, LegacySearchControlPane } from '@/features/search/ui';
 import { useMarcPreviewState, useSearchState, useUIState } from '@/store';
 import { useComplexLookupApi } from '../../hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG, SEARCH_RESULTS_TABLE_CONFIG } from '../../configs';
@@ -90,7 +90,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
 
     const renderSearchControlPane = useCallback(
       () => (
-        <SearchControlPane
+        <LegacySearchControlPane
           label={<FormattedMessage id={labels.modal.searchResults} />}
           renderSubLabel={renderSearchControlsSubLabel}
           segmentsConfig={segments?.primary}

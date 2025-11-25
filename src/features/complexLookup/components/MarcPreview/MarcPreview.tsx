@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useMarcPreviewState, useUIState } from '@/store';
-import { SearchControlPane, useSearchContextLegacy } from '@/features/search/ui';
+import { LegacySearchControlPane, useSearchContextLegacy } from '@/features/search/ui';
 import { MarcContent } from '@/components/MarcContent';
 import { Button, ButtonType } from '@/components/Button';
 import Times16 from '@/assets/times-16.svg?react';
@@ -57,7 +57,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose }) => {
     <>
       {isMarcPreviewOpen && marcPreviewData ? (
         <div className="marc-preview-container">
-          <SearchControlPane
+          <LegacySearchControlPane
             label={marcPreviewMetadata?.title ?? ''}
             renderSubLabel={renderSubLabel}
             renderCloseButton={renderCloseButton}
@@ -72,7 +72,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose }) => {
                 <FormattedMessage id="ld.assign" />
               </Button>
             </div>
-          </SearchControlPane>
+          </LegacySearchControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />

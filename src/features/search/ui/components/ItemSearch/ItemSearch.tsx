@@ -3,7 +3,7 @@ import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { FullDisplay } from '@/components/FullDisplay';
 import { Pagination } from '@/components/Pagination';
-import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
+import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 import { useUIState } from '@/store';
 import { useSearchContextLegacy } from '../../providers';
@@ -77,7 +77,9 @@ export const ItemSearch = () => {
                 )}
               </>
             )}
-            {!data && !message && <EmptyPlaceholder labelId={labelEmptySearch} className={classNameEmptyPlaceholder} />}
+            {!data && !message && (
+              <SearchEmptyPlaceholder labelId={labelEmptySearch} className={classNameEmptyPlaceholder} />
+            )}
           </div>
         </div>
       )}
