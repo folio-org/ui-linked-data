@@ -23,6 +23,7 @@ export const resourcesUIConfig: SearchTypeUIConfig = {
     isVisiblePaginationCount: true,
     isLoopedPagination: false,
     isVisibleSubLabel: true,
+    isVisibleEmptySearchPlaceholder: true,
   },
   searchableIndices: [
     {

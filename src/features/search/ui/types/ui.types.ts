@@ -23,6 +23,7 @@ export interface SearchUIFeatures {
   isVisiblePaginationCount?: boolean;
   isLoopedPagination?: boolean;
   isVisibleSubLabel?: boolean;
+  isVisibleEmptySearchPlaceholder?: boolean;
 }
 
 // Searchable index with UI properties
