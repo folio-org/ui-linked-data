@@ -5,8 +5,8 @@ import { Button, ButtonType } from '@/components/Button';
 import { Announcement } from '@/components/Announcement';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
-import { SearchControls as SearchControlsCompound } from '.';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
+import { ResetButton } from './ResetButton';
 
 interface MetaControlsProps {
   children?: ReactNode;
@@ -33,7 +33,7 @@ export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
   return (
     <>
       <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>
-        <SearchControlsCompound.ResetButton />
+        <ResetButton />
         <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
         {showAdvancedSearch && (
           <Button

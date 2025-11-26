@@ -7,7 +7,6 @@ export { ItemSearch } from './components/ItemSearch';
 export { LegacySearch, Search } from './components/Search';
 export { LegacySearchControlPane, SearchControlPane } from './components/SearchControlPane';
 export { SearchEmptyPlaceholder } from './components/SearchEmptyPlaceholder';
-export { SearchControls, SearchSegments } from './components/SearchControls';
 export { SearchFilters } from './components/SearchFilters';
 export { SearchResultEntry } from './components/SearchResultEntry';
 export { SearchResultList } from './components/SearchResultList';

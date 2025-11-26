@@ -5,7 +5,10 @@ import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
-import { SearchControls as SearchControlsCompound } from '.';
+import { Segments } from './Segments';
+import { InputsWrapper } from './InputsWrapper';
+import { SubmitButton } from './SubmitButton';
+import { MetaControls } from './MetaControls';
 import './RootControls.scss';
 
 interface RootControlsProps {
@@ -37,16 +40,16 @@ export const RootControls: FC<RootControlsProps> = ({ children, className, showF
     return (
       <>
         {/* Segments */}
-        {activeUIConfig.features?.hasSegments && <SearchControlsCompound.Segments />}
+        {activeUIConfig.features?.hasSegments && <Segments />}
 
         {/* Input controls */}
-        <SearchControlsCompound.InputsWrapper />
+        <InputsWrapper />
 
         {/* Submit button */}
-        {activeUIConfig.features?.hasSubmitButton && <SearchControlsCompound.SubmitButton />}
+        {activeUIConfig.features?.hasSubmitButton && <SubmitButton />}
 
         {/* Meta controls */}
-        <SearchControlsCompound.MetaControls />
+        <MetaControls />
 
         {/* Filters */}
         {showFilters && filtersComponent}

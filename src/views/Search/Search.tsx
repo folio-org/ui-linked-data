@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { getSearchUIConfig, Search } from '@/features/search/ui';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
@@ -135,7 +134,7 @@ export const SearchView = () => {
         </Search.Controls>
 
         <Search.Content>
-          <Search.ControlPane label={<FormattedMessage id="ld.resources" />}>
+          <Search.ControlPane>
             <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
           </Search.ControlPane>
 

@@ -4,8 +4,48 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore } from '@/store';
 
 const mockSetIsSearchPaneCollapsed = jest.fn();
+const mockUseSearchContext = jest.fn();
+
+jest.mock('../../providers/SearchProvider', () => ({
+  useSearchContext: () => mockUseSearchContext(),
+}));
+
+jest.mock('react-intl', () => ({
+  ...jest.requireActual('react-intl'),
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => id,
+  }),
+  FormattedMessage: ({ id, values }: { id: string; values?: Record<string, unknown> }) => {
+    if (values) {
+      let message = id;
+
+      for (const key of Object.keys(values)) {
+        message = message.replace(`{${key}}`, String(values[key]));
+      }
+
+      return <span data-testid={`formatted-message-${id}`}>{message}</span>;
+    }
+
+    return <span data-testid={`formatted-message-${id}`}>{id}</span>;
+  },
+}));
 
 describe('SearchControlPane', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockUseSearchContext.mockReturnValue({
+      activeUIConfig: {
+        ui: {
+          titleId: undefined,
+          subtitleId: undefined,
+        },
+        features: {
+          isVisibleSubLabel: false,
+        },
+      },
+    });
+  });
+
   test('renders with label', () => {
     setInitialGlobalState([
       {
@@ -238,5 +278,84 @@ describe('SearchControlPane', () => {
 
     const titleDiv = container.querySelector('.search-control-pane-title');
     expect(titleDiv).not.toBeInTheDocument();
+  });
+
+  test('uses titleId from context when no label prop is provided', () => {
+    mockUseSearchContext.mockReturnValue({
+      activeUIConfig: {
+        ui: {
+          titleId: 'ld.resources',
+          subtitleId: undefined,
+        },
+        features: {
+          isVisibleSubLabel: false,
+        },
+      },
+    });
+
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          pageMetadata: {
+            totalElements: 25,
+          },
+        },
+      },
+      {
+        store: useUIStore,
+        state: {
+          isSearchPaneCollapsed: false,
+          setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+        },
+      },
+    ]);
+
+    const { container } = render(<SearchControlPane />);
+
+    // Verify that the label section is rendered from context
+    const titleDiv = container.querySelector('.search-control-pane-title');
+    expect(titleDiv).toBeInTheDocument();
+
+    // Verify label content exists
+    const mainLabel = container.querySelector('.search-control-pane-mainLabel');
+    expect(mainLabel).toBeInTheDocument();
+  });
+
+  test('renders subtitle when subtitleId and isVisibleSubLabel are provided in context', () => {
+    mockUseSearchContext.mockReturnValue({
+      activeUIConfig: {
+        ui: {
+          titleId: 'ld.resources',
+          subtitleId: 'ld.recordsFound',
+        },
+        features: {
+          isVisibleSubLabel: true,
+        },
+      },
+    });
+
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          pageMetadata: {
+            totalElements: 42,
+          },
+        },
+      },
+      {
+        store: useUIStore,
+        state: {
+          isSearchPaneCollapsed: false,
+          setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+        },
+      },
+    ]);
+
+    render(<SearchControlPane />);
+
+    const formattedMessage = screen.getByTestId('formatted-message-ld.recordsFound');
+    expect(formattedMessage).toBeInTheDocument();
   });
 });
