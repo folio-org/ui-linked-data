@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { getSearchUIConfig, Search, SearchResultList } from '@/features/search/ui';
+import { getSearchUIConfig, Search } from '@/features/search/ui';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -127,13 +127,12 @@ export const SearchView = () => {
 
   return (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search.Root
-        config={getSearchConfig('resources')}
-        uiConfig={getSearchUIConfig('resources')}
-        flow="url"
-        mode="auto"
-      >
-        <Search.Controls />
+      <Search config={getSearchConfig('resources')} uiConfig={getSearchUIConfig('resources')} flow="url" mode="custom">
+        <Search.Controls>
+          <Search.Controls.InputsWrapper />
+          <Search.Controls.SubmitButton />
+          <Search.Controls.MetaControls />
+        </Search.Controls>
 
         <Search.Content>
           <Search.ControlPane label={<FormattedMessage id="ld.resources" />}>
@@ -141,12 +140,13 @@ export const SearchView = () => {
           </Search.ControlPane>
 
           <Search.ContentContainer>
-            <SearchResultList />
-
-            <Search.Pagination />
+            <Search.Results>
+              <Search.Results.List />
+              <Search.Results.Pagination />
+            </Search.Results>
           </Search.ContentContainer>
         </Search.Content>
-      </Search.Root>
+      </Search>
 
       <ModalImport />
     </div>
