@@ -6,7 +6,7 @@ import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { SearchControls as SearchControlsCompound } from '.';
-import './SearchControls.scss';
+import './RootControls.scss';
 
 interface RootControlsProps {
   children?: ReactNode;

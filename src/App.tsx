@@ -11,6 +11,7 @@ import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
 import { useConfigState } from './store';
+import { IS_NEW_SEARCH_ENABLED } from './common/constants/feature.constants';
 
 type IContainer = {
   routePrefix?: string;
@@ -32,7 +33,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: ROUTES.SEARCH_NEW.uri,
-        element: <Search />,
+        element: IS_NEW_SEARCH_ENABLED ? <Search /> : <LegacySearchView />,
       },
       {
         path: ROUTES.RESOURCE_EDIT.uri,

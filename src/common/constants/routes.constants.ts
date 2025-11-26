@@ -1,3 +1,5 @@
+import { IS_NEW_SEARCH_ENABLED } from './feature.constants';
+
 export const ROUTE_PATH = {
   RESOURCES: 'resources',
   CREATE: 'create',
@@ -14,7 +16,7 @@ export const ROUTES = {
     name: 'ld.searchResource',
   },
   SEARCH_NEW: {
-    uri: '/search-new',
+    uri: IS_NEW_SEARCH_ENABLED ? '/search-new' : '/search',
     name: 'ld.searchResource',
   },
   RESOURCE_CREATE: {
