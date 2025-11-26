@@ -5,7 +5,6 @@ import { useSearchContextLegacy } from '../providers';
 import { useLoadSearchResults } from './useLoadSearchResults';
 
 jest.mock('@/features/search/ui/providers');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useLoadSearchResults', () => {
   const setData = jest.fn();

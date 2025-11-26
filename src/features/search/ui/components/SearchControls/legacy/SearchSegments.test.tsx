@@ -4,7 +4,6 @@ import { useSearchContextLegacy } from '@/features/search/ui';
 import { SearchSegments } from './SearchSegments';
 
 jest.mock('@/features/search/ui/providers');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchSegments Component', () => {
   const mockSetSelectedNavigationSegment = jest.fn();

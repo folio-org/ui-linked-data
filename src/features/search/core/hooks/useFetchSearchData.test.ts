@@ -12,7 +12,6 @@ import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex
 jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/api/search.api');
 jest.mock('@/common/services/userNotification');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useFetchSearchData', () => {
   const mockFetchSearchResults = jest.fn();

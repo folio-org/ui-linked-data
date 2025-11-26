@@ -5,7 +5,6 @@ import { useUIStore } from '@/store';
 
 const mockOnReset = jest.fn();
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
     mode: 'auto',

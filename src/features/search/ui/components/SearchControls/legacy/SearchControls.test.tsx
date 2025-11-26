@@ -17,7 +17,6 @@ jest.mock('react-router-dom', () => ({
 jest.mock('@/features/search/ui/components/SearchFilters', () => ({
   SearchFilters: () => mockSearchFiltersComponent,
 }));
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchControls', () => {
   const mockedSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');

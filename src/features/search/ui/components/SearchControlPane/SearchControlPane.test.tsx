@@ -3,8 +3,6 @@ import { SearchControlPane } from './SearchControlPane';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore } from '@/store';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
 const mockSetIsSearchPaneCollapsed = jest.fn();
 
 describe('SearchControlPane', () => {

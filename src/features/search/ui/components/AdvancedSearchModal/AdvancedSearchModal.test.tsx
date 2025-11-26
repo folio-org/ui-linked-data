@@ -15,8 +15,6 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [{}, setSearchParams],
 }));
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
 describe('AdvancedSearchModal', () => {
   beforeAll(() => {
     createModalContainer();

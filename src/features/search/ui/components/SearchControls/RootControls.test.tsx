@@ -3,7 +3,6 @@ import { RootControls } from './RootControls';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useUIStore } from '@/store';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
     mode: 'auto',

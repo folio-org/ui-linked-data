@@ -9,8 +9,6 @@ import { Edit } from '@views';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore, useInputsStore } from '@/store';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
 let mockSearchBy = 'lccn';
 let mockQuery = '';
 let mockMessage = '';

@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { InputsWrapper } from './InputsWrapper';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
     mode: 'auto',
