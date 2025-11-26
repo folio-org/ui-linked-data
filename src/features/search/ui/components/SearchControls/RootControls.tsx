@@ -1,34 +1,27 @@
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
-import { Button, ButtonType } from '@/components/Button';
-import { Announcement } from '@/components/Announcement';
+import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
-import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { SearchControls as SearchControlsCompound } from '.';
 import './SearchControls.scss';
 
-interface SearchControlsProps {
+interface RootControlsProps {
   children?: ReactNode;
   className?: string;
   showFilters?: boolean;
   filtersComponent?: ReactNode;
 }
 
-export const SearchControls: FC<SearchControlsProps> = ({
-  children,
-  className,
-  showFilters = false,
-  filtersComponent,
-}) => {
+export const RootControls: FC<RootControlsProps> = ({ children, className, showFilters = false, filtersComponent }) => {
   const { formatMessage } = useIntl();
-  const { mode, activeUIConfig, onReset } = useSearchContext();
-  const [announcementMessage, setAnnouncementMessage] = useState('');
-  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed, isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState(
-    ['isSearchPaneCollapsed', 'setIsSearchPaneCollapsed', 'isAdvancedSearchOpen', 'setIsAdvancedSearchOpen'],
-  );
+  const { mode, activeUIConfig } = useSearchContext();
+  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState([
+    'isSearchPaneCollapsed',
+    'setIsSearchPaneCollapsed',
+  ]);
 
   const handleToggleCollapse = () => {
     setIsSearchPaneCollapsed(prev => !prev);
@@ -40,8 +33,6 @@ export const SearchControls: FC<SearchControlsProps> = ({
       return children;
     }
 
-    const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
-
     // Auto mode: render based on config
     return (
       <>
@@ -49,34 +40,16 @@ export const SearchControls: FC<SearchControlsProps> = ({
         {activeUIConfig.features?.hasSegments && <SearchControlsCompound.Segments />}
 
         {/* Input controls */}
-        <div className="inputs">
-          {activeUIConfig.features?.hasSearchBy && <SearchControlsCompound.SearchBySelect />}
-          {activeUIConfig.features?.hasQueryInput && <SearchControlsCompound.QueryInput />}
-        </div>
+        <SearchControlsCompound.InputsWrapper />
 
         {/* Submit button */}
         {activeUIConfig.features?.hasSubmitButton && <SearchControlsCompound.SubmitButton />}
 
         {/* Meta controls */}
-        <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>
-          <SearchControlsCompound.ResetButton />
-          <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
-          {showAdvancedSearch && (
-            <Button
-              type={ButtonType.Link}
-              className="search-button"
-              onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
-            >
-              <FormattedMessage id="ld.advanced" />
-            </Button>
-          )}
-        </div>
+        <SearchControlsCompound.MetaControls />
 
         {/* Filters */}
         {showFilters && filtersComponent}
-
-        {/* Advanced Search modal */}
-        {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
       </>
     );
   };
