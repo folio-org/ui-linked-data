@@ -62,7 +62,7 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
         expect(result).toHaveProperty('ui');
-        expect(result?.ui).toHaveProperty('titleId');
+        expect(result?.ui).toHaveProperty('placeholderId');
         expect(result).toHaveProperty('features');
         expect(result).toHaveProperty('searchableIndices');
       });
@@ -90,18 +90,15 @@ describe('searchUIRegistry', () => {
       it('authorities search has correct feature flags', () => {
         const result = getSearchUIConfig('authorities', 'search');
 
-        expect(result?.features?.hasSearchBy).toBe(true);
+        expect(result?.features?.hasSourceToggle).toBe(false);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
-        expect(result?.features?.isVisiblePaginationCount).toBe(true);
-        expect(result?.features?.isLoopedPagination).toBe(false);
       });
 
       it('authorities browse has different feature flags', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
-        expect(result?.features?.hasSearchBy).toBe(true);
-        expect(result?.features?.hasMultilineInput).toBe(true);
-        expect(result?.features?.isVisiblePaginationCount).toBe(false);
+        expect(result?.features?.hasSourceToggle).toBe(false);
+        expect(result?.features?.hasAdvancedSearch).toBe(false);
         expect(result?.features?.isLoopedPagination).toBe(true);
       });
 
@@ -110,8 +107,8 @@ describe('searchUIRegistry', () => {
 
         expect(result?.features?.hasSearchBy).toBe(true);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
-        expect(result?.features?.isVisiblePaginationCount).toBe(true);
         expect(result?.features?.isVisibleSubLabel).toBe(true);
+        expect(result?.features?.isLoopedPagination).toBe(false);
       });
     });
 
@@ -159,11 +156,13 @@ describe('searchUIRegistry', () => {
     });
 
     describe('consistency checks', () => {
-      it('authorities search and default are the same', () => {
+      it('authorities search returns segment-specific config', () => {
         const defaultConfig = getSearchUIConfig('authorities');
         const searchConfig = getSearchUIConfig('authorities', 'search');
 
-        expect(searchConfig).toBe(defaultConfig);
+        expect(searchConfig).not.toBe(defaultConfig);
+        expect(searchConfig).toHaveProperty('ui');
+        expect(searchConfig?.ui?.placeholderId).toBe('ld.searchAuthorities');
       });
 
       it('authorities browse is different from default', () => {
