@@ -1,6 +1,12 @@
-import { useEffect, useMemo } from 'react';
-import { getSearchUIConfig, Search } from '@/features/search/ui';
-import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
+import { useCallback, useEffect, useMemo } from 'react';
+import {
+  getSearchUIConfig,
+  LegacySearch,
+  LegacySearchControlPane,
+  Search,
+  SearchResultList,
+} from '@/features/search/ui';
+import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { DropdownItemType, FullDisplayType } from '@/common/constants/uiElements.constants';
@@ -17,6 +23,11 @@ import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchConfig } from '@/features/search/core';
+import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
+import { getByIdentifier } from '@/common/api/search.api';
+import { SEARCH_RESOURCE_API_ENDPOINT } from '@/common/constants/api.constants';
+import { filters } from './data/filters';
+import { FormattedMessage } from 'react-intl';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -124,7 +135,17 @@ export const SearchView = () => {
     [navigateToEditPage],
   );
 
-  return (
+  const renderSearchControlPane = useCallback(
+    () => (
+      <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
+        <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+      </LegacySearchControlPane>
+    ),
+    [items],
+  );
+  const renderResultsList = useCallback(() => <SearchResultList />, []);
+
+  return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
       <Search config={getSearchConfig('resources')} uiConfig={getSearchUIConfig('resources')} flow="url" mode="custom">
         <Search.Controls>
@@ -147,6 +168,26 @@ export const SearchView = () => {
         </Search.Content>
       </Search>
 
+      <ModalImport />
+    </div>
+  ) : (
+    <div className="search" data-testid="search" id="ld-search-container">
+      <LegacySearch
+        endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
+        sameOrigin={true}
+        filters={filters}
+        hasSearchParams={true}
+        fetchSearchResults={getByIdentifier}
+        defaultSearchBy={DEFAULT_SEARCH_BY}
+        defaultNavigationSegment={SearchSegment.Search}
+        labelEmptySearch="ld.enterSearchCriteria"
+        isVisibleFilters={SEARCH_FILTERS_ENABLED}
+        isVisibleFullDisplay={true}
+        isVisibleAdvancedSearch={true}
+        isVisibleSearchByControl={true}
+        renderSearchControlPane={renderSearchControlPane}
+        renderResultsList={renderResultsList}
+      />
       <ModalImport />
     </div>
   );

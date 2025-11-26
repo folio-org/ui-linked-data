@@ -6,12 +6,11 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
-import { Root, Search, LegacySearchView, EditWrapper, ExternalResourcePreview } from '@views';
+import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
 import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, ServicesProvider } from './providers';
 import './App.scss';
 import { useConfigState } from './store';
-import { IS_NEW_SEARCH_ENABLED } from './common/constants/feature.constants';
 
 type IContainer = {
   routePrefix?: string;
@@ -29,11 +28,7 @@ export const routes: RouteObject[] = [
       },
       {
         path: ROUTES.SEARCH.uri,
-        element: <LegacySearchView />,
-      },
-      {
-        path: ROUTES.SEARCH_NEW.uri,
-        element: IS_NEW_SEARCH_ENABLED ? <Search /> : <LegacySearchView />,
+        element: <Search />,
       },
       {
         path: ROUTES.RESOURCE_EDIT.uri,
