@@ -1,13 +1,13 @@
 import { renderHook } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
 import { Row } from '@/components/Table';
 import { useSearchStore } from '@/store';
 import { ComplexLookupSearchResultsProps } from '../components/ComplexLookupSearchResults/ComplexLookupSearchResults';
 import { useComplexLookupSearchResults } from './useComplexLookupSearchResults';
 
 jest.mock('@/features/search/ui/providers', () => ({
-  useSearchContext: jest.fn(),
+  useSearchContextLegacy: jest.fn(),
 }));
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
@@ -42,7 +42,7 @@ const searchResultsFormatter = (data: Row[]) => data;
 
 describe('useComplesLookupSearchResults', () => {
   beforeEach(() => {
-    (useSearchContext as jest.Mock).mockReturnValue({
+    (useSearchContextLegacy as jest.Mock).mockReturnValue({
       onAssignRecord: jest.fn(),
     });
 

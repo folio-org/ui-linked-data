@@ -1,40 +1,52 @@
 import { FC, type ReactElement } from 'react';
 import classNames from 'classnames';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { SearchSegment } from '@/common/constants/search.constants';
 import { useSearchState, useUIState } from '@/store';
 import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
-import { useIntl } from 'react-intl';
-import { useSearchContext } from '../../providers';
+import { useSearchContext } from '../../providers/SearchProvider';
 import './SearchControlPane.scss';
 
 type SearchControlPaneProps = {
-  children?: ReactElement<any>;
-  label: string | ReactElement<any>;
-  segmentsConfig?: PrimarySegmentsConfig;
-  renderSubLabel?: (count: number) => ReactElement<any>;
-  renderCloseButton?: () => ReactElement<any>;
+  children?: ReactElement;
+  label?: string | ReactElement;
+  renderSubLabel?: (count: number) => ReactElement;
+  renderCloseButton?: () => ReactElement;
+  showSubLabel?: boolean;
 };
 
 export const SearchControlPane: FC<SearchControlPaneProps> = ({
   children,
-  label,
+  label: labelProp,
   renderSubLabel,
   renderCloseButton,
-  segmentsConfig,
+  showSubLabel,
 }) => {
   const { formatMessage } = useIntl();
+  const { activeUIConfig } = useSearchContext();
   const { pageMetadata: searchResultsMetadata } = useSearchState(['pageMetadata']);
   const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState([
     'isSearchPaneCollapsed',
     'setIsSearchPaneCollapsed',
   ]);
-  const { navigationSegment } = useSearchContext();
-  const selectedSegment = navigationSegment?.value;
-  const isVisibleSubLabel = segmentsConfig
-    ? segmentsConfig[selectedSegment as SearchSegment]?.isVisibleSubLabel
-    : !!renderSubLabel;
+
+  // Use props if provided, otherwise get from context
+  const titleId = activeUIConfig.ui?.titleId;
+  const subtitleId = activeUIConfig.ui?.subtitleId;
+  const isVisibleSubLabel = showSubLabel ?? activeUIConfig.features?.isVisibleSubLabel ?? false;
+
+  // Label: use prop if provided, otherwise use titleId from config
+  const label = labelProp ?? (titleId ? <FormattedMessage id={titleId} /> : null);
+
+  // SubLabel: use renderSubLabel if provided, otherwise use subtitleId from config
+  let subLabel = null;
+
+  if (renderSubLabel) {
+    subLabel = renderSubLabel(searchResultsMetadata?.totalElements);
+  } else if (subtitleId) {
+    subLabel = <FormattedMessage id={subtitleId} values={{ recordsCount: searchResultsMetadata?.totalElements }} />;
+  }
 
   return (
     <div className={classNames(['search-control-pane', IS_EMBEDDED_MODE && 'search-control-pane-embedded'])}>
@@ -48,16 +60,19 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
           <CaretDown className="header-caret" />
         </Button>
       )}
-      <div className="search-control-pane-title">
-        <h2 className="search-control-pane-mainLabel">
-          <span>{label}</span>
-        </h2>
-        {isVisibleSubLabel && !!renderSubLabel && (
-          <div className="search-control-pane-subLabel">
-            <span>{renderSubLabel?.(searchResultsMetadata?.totalElements)}</span>
-          </div>
-        )}
-      </div>
+      {label && (
+        <div className="search-control-pane-title">
+          <h2 className="search-control-pane-mainLabel">
+            <span>{label}</span>
+          </h2>
+
+          {isVisibleSubLabel && subLabel && (
+            <div className="search-control-pane-subLabel">
+              <span>{subLabel}</span>
+            </div>
+          )}
+        </div>
+      )}
       {children}
     </div>
   );

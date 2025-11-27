@@ -16,7 +16,3 @@ export const hubsUIConfig: SearchTypeUIConfig = {
   },
   searchableIndices: [] as SearchableIndexUI[],
 };
-
-export const hubsUIRegistry = {
-  default: hubsUIConfig,
-};

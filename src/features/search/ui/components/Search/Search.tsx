@@ -1,11 +1,29 @@
-import { FC } from 'react';
-import { SearchProvider } from '../../providers';
-import { ItemSearch } from '../ItemSearch';
+import { FC, ReactNode } from 'react';
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+import { SearchProvider } from '../../providers/SearchProvider';
+import type { SearchTypeConfig } from '../../../core/types';
+import type { SearchTypeUIConfig } from '../../types/ui.types';
+import type { SearchFlow } from '../../types/provider.types';
 
-type SearchProps = SearchParams & { defaultNavigationSegment?: string };
+interface SearchRootProps {
+  config?: SearchTypeConfig;
+  uiConfig?: SearchTypeUIConfig;
+  flow: SearchFlow;
+  mode?: 'auto' | 'custom';
+  initialSegment?: string;
+  children: ReactNode;
+}
 
-export const Search: FC<SearchProps> = value => (
-  <SearchProvider value={value}>
-    <ItemSearch />
-  </SearchProvider>
-);
+export const Search: FC<SearchRootProps> = ({ config, uiConfig, flow, mode = 'custom', initialSegment, children }) => {
+  if (!config) return null;
+
+  if (!uiConfig) return null;
+
+  return (
+    <SearchProvider config={config} uiConfig={uiConfig} flow={flow} mode={mode} initialSegment={initialSegment}>
+      <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
+        {children}
+      </div>
+    </SearchProvider>
+  );
+};

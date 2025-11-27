@@ -5,14 +5,13 @@ import { useLoadingStateStore, useSearchStore } from '@/store';
 import { SearchSegment } from '@/common/constants/search.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
 import { useFetchSearchData } from './useFetchSearchData';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/api/search.api');
 jest.mock('@/common/services/userNotification');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useFetchSearchData', () => {
   const mockFetchSearchResults = jest.fn();
@@ -75,7 +74,7 @@ describe('useFetchSearchData', () => {
       },
     ]);
 
-    (useSearchContext as jest.Mock).mockReturnValue(mockSearchContext);
+    (useSearchContextLegacy as jest.Mock).mockReturnValue(mockSearchContext);
     (getSearchResults as jest.Mock).mockResolvedValue(mockApiResponse);
     (UserNotificationFactory.createMessage as jest.Mock).mockReturnValue({
       type: StatusType.error,
@@ -194,7 +193,7 @@ describe('useFetchSearchData', () => {
           hubIndex: { value: 'hub.index', label: 'Hub Index' },
         },
       };
-      (useSearchContext as jest.Mock).mockReturnValue(mockHubSearchContext);
+      (useSearchContextLegacy as jest.Mock).mockReturnValue(mockHubSearchContext);
 
       const { result } = renderHook(() => useFetchSearchData());
 
@@ -240,7 +239,7 @@ describe('useFetchSearchData', () => {
         ...mockSearchContext,
         fetchSearchResults: undefined,
       };
-      (useSearchContext as jest.Mock).mockReturnValue(mockContextWithoutFetch);
+      (useSearchContextLegacy as jest.Mock).mockReturnValue(mockContextWithoutFetch);
 
       const { result } = renderHook(() => useFetchSearchData());
 
@@ -321,7 +320,7 @@ describe('useFetchSearchData', () => {
         endpointUrlsBySegments: undefined,
         endpointUrl: '/test/endpoint',
       };
-      (useSearchContext as jest.Mock).mockReturnValue(mockContextWithoutSegments);
+      (useSearchContextLegacy as jest.Mock).mockReturnValue(mockContextWithoutSegments);
 
       const { result } = renderHook(() => useFetchSearchData());
 

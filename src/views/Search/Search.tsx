@@ -1,26 +1,33 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
-import { Search, SearchResultList, SearchControlPane } from '@/features/search/ui';
-import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@common/constants/search.constants';
-import { ModalImport } from '@components/ModalImport';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { DropdownItemType, FullDisplayType } from '@common/constants/uiElements.constants';
-import { Dropdown } from '@components/Dropdown';
-import { ResourceType } from '@common/constants/record.constants';
-import { SEARCH_RESOURCE_API_ENDPOINT } from '@common/constants/api.constants';
-import { SEARCH_FILTERS_ENABLED } from '@common/constants/feature.constants';
-import Plus16 from '@src/assets/plus-16.svg?react';
-import Transfer16 from '@src/assets/transfer-16.svg?react';
-import Lightning16 from '@src/assets/lightning-16.svg?react';
-import { filters } from './data/filters';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
+import {
+  getSearchUIConfig,
+  LegacySearch,
+  LegacySearchControlPane,
+  Search,
+  SearchResultList,
+} from '@/features/search/ui';
+import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
+import { ModalImport } from '@/components/ModalImport';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { DropdownItemType, FullDisplayType } from '@/common/constants/uiElements.constants';
+import { Dropdown } from '@/components/Dropdown';
+import { ResourceType } from '@/common/constants/record.constants';
+import Plus16 from '@/assets/plus-16.svg?react';
+import Transfer16 from '@/assets/transfer-16.svg?react';
+import Lightning16 from '@/assets/lightning-16.svg?react';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
-import { StatusType } from '@common/constants/status.constants';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { getByIdentifier } from '@common/api/search.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { getSearchConfig } from '@/features/search/core';
+import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
+import { getByIdentifier } from '@/common/api/search.api';
+import { SEARCH_RESOURCE_API_ENDPOINT } from '@/common/constants/api.constants';
+import { filters } from './data/filters';
+import { FormattedMessage } from 'react-intl';
 import './Search.scss';
 
 export const SearchView = () => {
@@ -67,7 +74,7 @@ export const SearchView = () => {
     }
   };
 
-  const handleImport = async () => {
+  const handleImport = () => {
     if (!isImportModalOpen) {
       setIsImportModalOpen(true);
     }
@@ -130,17 +137,42 @@ export const SearchView = () => {
 
   const renderSearchControlPane = useCallback(
     () => (
-      <SearchControlPane label={<FormattedMessage id="ld.resources" />}>
+      <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
         <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-      </SearchControlPane>
+      </LegacySearchControlPane>
     ),
     [items],
   );
   const renderResultsList = useCallback(() => <SearchResultList />, []);
 
-  return (
+  return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search
+      <Search config={getSearchConfig('resources')} uiConfig={getSearchUIConfig('resources')} flow="url" mode="custom">
+        <Search.Controls>
+          <Search.Controls.InputsWrapper />
+          <Search.Controls.SubmitButton />
+          <Search.Controls.MetaControls />
+        </Search.Controls>
+
+        <Search.Content>
+          <Search.ControlPane>
+            <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+          </Search.ControlPane>
+
+          <Search.ContentContainer>
+            <Search.Results>
+              <Search.Results.List />
+              <Search.Results.Pagination />
+            </Search.Results>
+          </Search.ContentContainer>
+        </Search.Content>
+      </Search>
+
+      <ModalImport />
+    </div>
+  ) : (
+    <div className="search" data-testid="search" id="ld-search-container">
+      <LegacySearch
         endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
         sameOrigin={true}
         filters={filters}

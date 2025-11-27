@@ -5,8 +5,6 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore, useInputsStore } from '@/store';
 import { itemSearchMockData } from '../ItemSearch/ItemSearch.test';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
 describe('SearchResultList', () => {
   beforeEach(() => {
     setInitialGlobalState([

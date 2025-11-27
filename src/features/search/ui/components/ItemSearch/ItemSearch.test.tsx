@@ -4,12 +4,10 @@ import { getCurrentPageNumber } from '@/test/__mocks__/common/hooks/usePaginatio
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import { ItemSearch, SearchContext } from '@/features/search/ui';
+import { ItemSearch, SearchContextLegacy } from '@/features/search/ui';
 import { Edit } from '@views';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore, useInputsStore } from '@/store';
-
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 let mockSearchBy = 'lccn';
 let mockQuery = '';
@@ -199,14 +197,14 @@ describe('Item Search', () => {
 
     render(
       <IntlProvider locale="en">
-        <SearchContext.Provider value={searchContext}>
+        <SearchContextLegacy.Provider value={searchContext}>
           <BrowserRouter basename="/">
             <Routes>
               <Route path="/" element={<ItemSearch />} />
               <Route path="/edit" element={<Edit />} />
             </Routes>
           </BrowserRouter>
-        </SearchContext.Provider>
+        </SearchContextLegacy.Provider>
       </IntlProvider>,
     );
   });

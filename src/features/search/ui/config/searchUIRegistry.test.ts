@@ -7,20 +7,14 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
-      });
-
-      it('returns undefined for non-existent search type', () => {
-        const result = getSearchUIConfig('nonexistent');
-
-        expect(result).toBeUndefined();
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('returns default config when segment is undefined', () => {
-        const result = getSearchUIConfig('authorities', undefined);
+        const result = getSearchUIConfig('authorities');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
     });
 
@@ -29,28 +23,28 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.segments.browse);
+        expect(result).toBe(searchUIRegistry.authorities.segments?.browse);
       });
 
       it('returns segment search config when segment is "search"', () => {
         const result = getSearchUIConfig('authorities', 'search');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.segments.search);
+        expect(result).toBe(searchUIRegistry.authorities.segments?.search);
       });
 
       it('falls back to default when segment does not exist', () => {
         const result = getSearchUIConfig('authorities', 'nonexistent');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('returns default when search type has no segments', () => {
         const result = getSearchUIConfig('hubs', 'anySegment');
 
         expect(result).toBeDefined();
-        expect(result).toBe(searchUIRegistry.hubs.default);
+        expect(result).toBe(searchUIRegistry.hubs);
       });
     });
 
@@ -68,7 +62,7 @@ describe('searchUIRegistry', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
         expect(result).toHaveProperty('ui');
-        expect(result?.ui).toHaveProperty('titleId');
+        expect(result?.ui).toHaveProperty('placeholderId');
         expect(result).toHaveProperty('features');
         expect(result).toHaveProperty('searchableIndices');
       });
@@ -96,18 +90,15 @@ describe('searchUIRegistry', () => {
       it('authorities search has correct feature flags', () => {
         const result = getSearchUIConfig('authorities', 'search');
 
-        expect(result?.features?.hasSearchBy).toBe(true);
+        expect(result?.features?.hasSourceToggle).toBe(false);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
-        expect(result?.features?.isVisiblePaginationCount).toBe(true);
-        expect(result?.features?.isLoopedPagination).toBe(false);
       });
 
       it('authorities browse has different feature flags', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
-        expect(result?.features?.hasSearchBy).toBe(true);
-        expect(result?.features?.hasMultilineInput).toBe(true);
-        expect(result?.features?.isVisiblePaginationCount).toBe(false);
+        expect(result?.features?.hasSourceToggle).toBe(false);
+        expect(result?.features?.hasAdvancedSearch).toBe(false);
         expect(result?.features?.isLoopedPagination).toBe(true);
       });
 
@@ -116,8 +107,8 @@ describe('searchUIRegistry', () => {
 
         expect(result?.features?.hasSearchBy).toBe(true);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
-        expect(result?.features?.isVisiblePaginationCount).toBe(true);
         expect(result?.features?.isVisibleSubLabel).toBe(true);
+        expect(result?.features?.isLoopedPagination).toBe(false);
       });
     });
 
@@ -145,43 +136,33 @@ describe('searchUIRegistry', () => {
     });
 
     describe('edge cases', () => {
-      it('handles empty string search type', () => {
-        const result = getSearchUIConfig('');
-
-        expect(result).toBeUndefined();
-      });
-
       it('handles empty string segment', () => {
         const result = getSearchUIConfig('authorities', '');
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('handles null-like values gracefully', () => {
         const result = getSearchUIConfig('authorities', null as unknown as string);
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
-      });
-
-      it('handles special characters in search type', () => {
-        const result = getSearchUIConfig('auth@rities');
-
-        expect(result).toBeUndefined();
+        expect(result).toBe(searchUIRegistry.authorities);
       });
 
       it('handles special characters in segment', () => {
         const result = getSearchUIConfig('authorities', 'br@wse');
 
-        expect(result).toBe(searchUIRegistry.authorities.default);
+        expect(result).toBe(searchUIRegistry.authorities);
       });
     });
 
     describe('consistency checks', () => {
-      it('authorities search and default are the same', () => {
+      it('authorities search returns segment-specific config', () => {
         const defaultConfig = getSearchUIConfig('authorities');
         const searchConfig = getSearchUIConfig('authorities', 'search');
 
-        expect(searchConfig).toBe(defaultConfig);
+        expect(searchConfig).not.toBe(defaultConfig);
+        expect(searchConfig).toHaveProperty('ui');
+        expect(searchConfig?.ui?.placeholderId).toBe('ld.searchAuthorities');
       });
 
       it('authorities browse is different from default', () => {

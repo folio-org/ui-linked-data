@@ -1,0 +1,57 @@
+import type { SearchTypeConfig } from '../../core/types';
+import type { SearchTypeUIConfig } from './ui.types';
+
+/**
+ * Flow types:
+ * - 'url': Search driven by URL params (Search pages) - auto-executes on param changes
+ * - 'value': Search driven by local state (Complex Lookup modals) - manual execution
+ */
+export type SearchFlow = 'url' | 'value';
+
+/**
+ * Rendering modes:
+ * - 'auto': Context automatically renders all controls based on config
+ * - 'custom': Client provides custom layout and uses individual compound components
+ */
+export type RenderMode = 'auto' | 'custom';
+
+export interface CurrentSearchParams {
+  query: string;
+  searchBy: string;
+  segment?: string;
+  source?: string;
+  offset: number;
+  limit: number;
+}
+
+export interface SearchContextValue {
+  // Configuration
+  config: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
+  flow: SearchFlow;
+  mode: RenderMode;
+
+  // Computed values
+  activeUIConfig: SearchTypeUIConfig;
+  availableSources?: Record<string, unknown>;
+
+  // Handlers
+  onSegmentChange: (segment: string) => void;
+  onSourceChange: (source: string) => void;
+  onPageChange: (page: number) => void;
+  onSubmit: () => void;
+  onReset: () => void;
+}
+
+export interface SearchProviderProps {
+  config: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
+  flow: SearchFlow;
+  mode?: RenderMode;
+
+  // Optional initial values (for value flow)
+  initialSegment?: string;
+  initialSource?: string;
+
+  children: React.ReactElement;
+}

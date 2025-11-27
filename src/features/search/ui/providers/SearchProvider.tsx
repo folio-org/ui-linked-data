@@ -1,54 +1,63 @@
-import { FC, useMemo, useState, createContext, type ReactElement, useContext } from 'react';
-import { SearchIdentifiers } from '@/common/constants/search.constants';
+import { FC, useMemo, createContext, useContext } from 'react';
+import { useSearchState } from '@/store';
+import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
+import { getActiveConfig, getAvailableSources } from '../utils';
+import { useSearchControlsHandlers } from '../hooks/useSearchControlsHandlers';
+import { useUrlSync } from '../hooks/useUrlSync';
 
-type SearchProviderProps = {
-  value: SearchParams & { defaultNavigationSegment?: string };
-  children: ReactElement<unknown>;
-};
+export const SearchContext = createContext<SearchContextValue | null>(null);
 
-export const SearchContext = createContext<SearchParams>({
-  endpointUrl: '',
-  primarySegments: {},
-  searchFilter: '',
-  hasSearchParams: true,
-  defaultSearchBy: SearchIdentifiers.LCCN,
-  isSortedResults: true,
-  isVisibleFilters: false,
-  isVisibleFullDisplay: true,
-  isVisibleAdvancedSearch: true,
-  isVisibleSearchByControl: true,
-  isVisibleSegments: false,
-  common: {},
-  searchByControlOptions: {},
-  searchableIndicesMap: {} as SearchableIndicesMap,
-  labelEmptySearch: '',
-  classNameEmptyPlaceholder: '',
-  filters: [],
-  renderResultsList: () => null,
-  renderSearchControlPane: () => null,
-  fetchSearchResults: undefined,
-  navigationSegment: {
-    value: undefined,
-    set: () => null,
-  },
-  hasMarcPreview: false,
-  renderMarcPreview: () => null,
-});
+export const SearchProvider: FC<SearchProviderProps> = ({
+  config,
+  uiConfig,
+  flow,
+  mode = 'custom',
+  initialSegment,
+  children,
+}) => {
+  const { navigationState } = useSearchState(['navigationState']);
+  const currentSegment =
+    ((navigationState as Record<string, unknown>)?.['segment'] as string | undefined) ||
+    initialSegment ||
+    config.defaults?.segment;
+  const activeUIConfig = useMemo(() => getActiveConfig(uiConfig, currentSegment), [uiConfig, currentSegment]);
+  const availableSources = useMemo(() => getAvailableSources(config, currentSegment), [config, currentSegment]);
+  const handlers = useSearchControlsHandlers({ config, flow });
 
-export const SearchProvider: FC<SearchProviderProps> = ({ value, children }) => {
-  const [navigationSegment, setNavigationSegment] = useState(value.defaultNavigationSegment);
+  // Sync URL to store (URL flow only, no-op for value flow)
+  useUrlSync({ flow, config });
 
   const contextValue = useMemo(
-    () => ({
-      ...value,
-      navigationSegment: { value: navigationSegment, set: setNavigationSegment },
+    (): SearchContextValue => ({
+      // Configuration
+      config,
+      uiConfig,
+      flow,
+      mode,
+
+      // Computed values
+      activeUIConfig,
+      availableSources,
+
+      // Handlers
+      onSegmentChange: handlers.onSegmentChange,
+      onSourceChange: handlers.onSourceChange,
+      onPageChange: handlers.onPageChange,
+      onSubmit: handlers.onSubmit,
+      onReset: handlers.onReset,
     }),
-    [navigationSegment, value],
+    [config, uiConfig, flow, mode, activeUIConfig, availableSources, handlers],
   );
 
   return <SearchContext.Provider value={contextValue}>{children}</SearchContext.Provider>;
 };
 
-export const useSearchContext = () => {
-  return useContext(SearchContext);
+export const useSearchContext = (): SearchContextValue => {
+  const context = useContext(SearchContext);
+
+  if (!context) {
+    throw new Error('useSearchContext must be used within SearchProvider');
+  }
+
+  return context;
 };

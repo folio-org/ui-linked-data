@@ -8,7 +8,7 @@ import { usePagination } from '@/common/hooks/usePagination';
 import { useInputsState, useLoadingState, useSearchState, useUIState } from '@/store';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { useSearchContext } from '../providers';
+import { useSearchContextLegacy } from '../providers';
 
 export const useSearch = () => {
   const {
@@ -19,7 +19,7 @@ export const useSearch = () => {
     hasCustomPagination,
     searchByControlOptions,
     getSearchSourceData,
-  } = useSearchContext();
+  } = useSearchContextLegacy();
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const {

@@ -8,15 +8,22 @@ export interface SearchUIConfig {
 
 // UI features (display/interaction concerns)
 export interface SearchUIFeatures {
+  // Navigation features
+  hasSegments?: boolean;
+  hasSourceToggle?: boolean;
+
   // Search input UI
   hasSearchBy?: boolean;
+  hasQueryInput?: boolean;
   hasMultilineInput?: boolean;
   hasAdvancedSearch?: boolean;
+  hasSubmitButton?: boolean;
 
   // Display features
   isVisiblePaginationCount?: boolean;
   isLoopedPagination?: boolean;
   isVisibleSubLabel?: boolean;
+  isVisibleEmptySearchPlaceholder?: boolean;
 }
 
 // Searchable index with UI properties
@@ -26,9 +33,16 @@ export interface SearchableIndexUI {
   placeholder?: string; // UI-specific
 }
 
-// Complete UI configuration for a search type
+export interface SegmentUIConfig {
+  ui?: SearchUIConfig;
+  features?: SearchUIFeatures;
+  searchableIndices?: SearchableIndexUI[];
+}
+
+// UI config for a search type
 export interface SearchTypeUIConfig {
   ui?: SearchUIConfig;
   features?: SearchUIFeatures;
   searchableIndices?: SearchableIndexUI[];
+  segments?: Record<string, SegmentUIConfig>;
 }

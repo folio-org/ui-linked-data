@@ -2,13 +2,12 @@ import { FC, memo, useCallback, useEffect } from 'react';
 import classNames from 'classnames';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { getSearchResults } from '@/common/api/search.api';
-import { SEARCH_RESULTS_FORMATTER } from '@/features/search/core';
-import { SEARCH_QUERY_BUILDER } from '@/features/search/core';
+import { SEARCH_RESULTS_FORMATTER, SEARCH_QUERY_BUILDER } from '@/features/search/core';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { Authority, ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { useMarcData } from '@/common/hooks/useMarcData';
 import { Modal } from '@/components/Modal';
-import { Search, SearchControlPane } from '@/features/search/ui';
+import { LegacySearch, LegacySearchControlPane } from '@/features/search/ui';
 import { useMarcPreviewState, useSearchState, useUIState } from '@/store';
 import { useComplexLookupApi } from '../../hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG, SEARCH_RESULTS_TABLE_CONFIG } from '../../configs';
@@ -91,7 +90,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
 
     const renderSearchControlPane = useCallback(
       () => (
-        <SearchControlPane
+        <LegacySearchControlPane
           label={<FormattedMessage id={labels.modal.searchResults} />}
           renderSubLabel={renderSearchControlsSubLabel}
           segmentsConfig={segments?.primary}
@@ -139,7 +138,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
         ])}
       >
         <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
-          <Search
+          <LegacySearch
             endpointUrl={api.endpoints.base}
             sameOrigin={api.endpoints.sameOrigin}
             endpointUrlsBySegments={api.endpoints.bySearchSegment}

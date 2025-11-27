@@ -5,7 +5,7 @@ import { useInputsStore, useLoadingStateStore, useSearchStore } from '@/store';
 import { SEARCH_RESULTS_LIMIT, SearchSegment } from '@/common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { useSearchContext } from '../providers';
+import { useSearchContextLegacy } from '../providers';
 import { useSearch } from './useSearch';
 
 const selectedNavigationSegment = 'defaultSegment';
@@ -95,20 +95,20 @@ describe('useSearch hook', () => {
         },
       },
     ]);
-    (useSearchContext as jest.Mock).mockReturnValue(mockUseSearchContext);
+    (useSearchContextLegacy as jest.Mock).mockReturnValue(mockUseSearchContext);
     (useSearchParams as jest.Mock).mockReturnValue([null, setSearchParams]);
   });
 
   test('initializes with default values and set up effects', () => {
     renderHook(useSearch);
 
-    expect(useSearchContext).toHaveBeenCalled();
+    expect(useSearchContextLegacy).toHaveBeenCalled();
     expect(fetchData).not.toHaveBeenCalled();
   });
 
   test('submits search and updates states correctly', () => {
     const updatedUseSearchContext = { ...mockUseSearchContext, hasSearchParams: false };
-    (useSearchContext as jest.Mock).mockReturnValue(updatedUseSearchContext);
+    (useSearchContextLegacy as jest.Mock).mockReturnValue(updatedUseSearchContext);
 
     const { result } = renderHook(useSearch);
 
@@ -144,7 +144,7 @@ describe('useSearch hook', () => {
       mockSearchParams.set(SearchQueryParams.SearchBy, 'test-search-by');
 
       (useSearchParams as jest.Mock).mockReturnValue([mockSearchParams, setSearchParams]);
-      (useSearchContext as jest.Mock).mockReturnValue({
+      (useSearchContextLegacy as jest.Mock).mockReturnValue({
         ...mockUseSearchContext,
         hasCustomPagination: false,
       });
@@ -163,7 +163,7 @@ describe('useSearch hook', () => {
     test('handles page change with empty search params', async () => {
       const emptySearchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([emptySearchParams, setSearchParams]);
-      (useSearchContext as jest.Mock).mockReturnValue({
+      (useSearchContextLegacy as jest.Mock).mockReturnValue({
         ...mockUseSearchContext,
         hasCustomPagination: false,
       });
@@ -180,7 +180,7 @@ describe('useSearch hook', () => {
     });
 
     test('handles page change with browse search', async () => {
-      (useSearchContext as jest.Mock).mockReturnValue({
+      (useSearchContextLegacy as jest.Mock).mockReturnValue({
         ...mockUseSearchContext,
         navigationSegment: { value: SearchSegment.Browse },
       });
@@ -197,7 +197,7 @@ describe('useSearch hook', () => {
     });
 
     test('handles initial page (page 0) with browse search', async () => {
-      (useSearchContext as jest.Mock).mockReturnValue({
+      (useSearchContextLegacy as jest.Mock).mockReturnValue({
         ...mockUseSearchContext,
         navigationSegment: { value: SearchSegment.Browse },
       });

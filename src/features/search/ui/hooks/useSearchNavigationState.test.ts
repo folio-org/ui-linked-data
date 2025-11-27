@@ -9,7 +9,6 @@ import { useSearchNavigationState } from './useSearchNavigationState';
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const setNavigationState = jest.fn();
 

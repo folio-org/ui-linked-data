@@ -1,16 +1,16 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
-import { SearchSegments, useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
+import { SearchSegments } from './SearchSegments';
 
 jest.mock('@/features/search/ui/providers');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchSegments Component', () => {
   const mockSetSelectedNavigationSegment = jest.fn();
   const mockOnChangeSegment = jest.fn();
 
   beforeEach(() => {
-    (useSearchContext as jest.Mock).mockReturnValue({
+    (useSearchContextLegacy as jest.Mock).mockReturnValue({
       primarySegments: {
         segment_1: { labelId: 'label_1' },
         segment_2: { labelId: 'label_2' },

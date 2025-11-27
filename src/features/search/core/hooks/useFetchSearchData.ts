@@ -4,7 +4,7 @@ import { SearchIdentifiers, SearchSegment } from '@/common/constants/search.cons
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { useLoadingState, useSearchState, useStatusState } from '@/store';
-import { useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 export const useFetchSearchData = () => {
@@ -21,7 +21,7 @@ export const useFetchSearchData = () => {
     searchableIndicesMap,
     buildSearchQuery,
     precedingRecordsCount,
-  } = useSearchContext();
+  } = useSearchContextLegacy();
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setMessage, resetMessage, data, setData, resetData, setPageMetadata } = useSearchState([
     'setMessage',

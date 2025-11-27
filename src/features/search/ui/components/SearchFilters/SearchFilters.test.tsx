@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { SearchContext, SearchFilters } from '@/features/search/ui';
+import { SearchContextLegacy, SearchFilters } from '@/features/search/ui';
 import {
   FiltersGroupCheckType,
   FiltersType,
@@ -14,8 +14,6 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: () => [{}, setSearchParams],
 }));
-
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('SearchFilters', () => {
   const filters = [
@@ -53,9 +51,9 @@ describe('SearchFilters', () => {
 
   beforeEach(() =>
     render(
-      <SearchContext.Provider value={{ filters } as unknown as SearchParams}>
+      <SearchContextLegacy.Provider value={{ filters } as unknown as SearchParams}>
         <SearchFilters />
-      </SearchContext.Provider>,
+      </SearchContextLegacy.Provider>,
     ),
   );
 

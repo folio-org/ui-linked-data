@@ -3,12 +3,12 @@ import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { FullDisplay } from '@/components/FullDisplay';
 import { Pagination } from '@/components/Pagination';
-import { EmptyPlaceholder } from './SearchEmptyPlaceholder';
+import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 import { useUIState } from '@/store';
-import { useSearchContext } from '../../providers';
+import { useSearchContextLegacy } from '../../providers';
 import { useLoadSearchResults, useSearch } from '../../hooks';
-import { SearchControls } from '../SearchControls';
+import { LegacySearchControls } from '../SearchControls';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
 
 export const ItemSearch = () => {
@@ -25,7 +25,7 @@ export const ItemSearch = () => {
     searchResultsLimit,
     hasMarcPreview,
     renderMarcPreview,
-  } = useSearchContext();
+  } = useSearchContextLegacy();
   const {
     submitSearch,
     clearValues,
@@ -50,7 +50,7 @@ export const ItemSearch = () => {
 
   return (
     <div data-testid="id-search" className="item-search">
-      <SearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
+      <LegacySearchControls submitSearch={submitSearch} clearValues={clearValues} changeSegment={onChangeSegment} />
       {!(hasMarcPreview && isMarcPreviewOpen) && (
         <div className={DOM_ELEMENTS.classNames.itemSearchContent}>
           {renderSearchControlPane()}
@@ -77,7 +77,9 @@ export const ItemSearch = () => {
                 )}
               </>
             )}
-            {!data && !message && <EmptyPlaceholder labelId={labelEmptySearch} className={classNameEmptyPlaceholder} />}
+            {!data && !message && (
+              <SearchEmptyPlaceholder labelId={labelEmptySearch} className={classNameEmptyPlaceholder} />
+            )}
           </div>
         </div>
       )}

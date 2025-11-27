@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { type Row } from '@/components/Table';
-import { useSearchContext } from '@/features/search/ui';
+import { useSearchContextLegacy } from '@/features/search/ui';
 import { useSearchState } from '@/store';
 import { ComplexLookupSearchResultsProps } from '../components/ComplexLookupSearchResults/ComplexLookupSearchResults';
 import { useComplexLookupValidation } from './useComplexLookupValidation';
@@ -11,7 +11,7 @@ export const useComplexLookupSearchResults = ({
   tableConfig,
   searchResultsFormatter,
 }: ComplexLookupSearchResultsProps) => {
-  const { onAssignRecord } = useSearchContext();
+  const { onAssignRecord } = useSearchContextLegacy();
   const { data, sourceData } = useSearchState(['data', 'sourceData']);
   const { formatMessage } = useIntl();
   const { checkFailedId } = useComplexLookupValidation();

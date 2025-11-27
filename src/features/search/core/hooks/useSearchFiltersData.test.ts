@@ -6,7 +6,6 @@ import { useSearchFiltersData } from './useSearchFiltersData';
 
 jest.mock('@/common/api/search.api');
 jest.mock('@/common/services/userNotification');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('useSearchFiltersData', () => {
   const selectedFacetsGroupsState: never[] = [];

@@ -5,10 +5,10 @@ import { useSearchFilters } from '../../hooks';
 import { SimpleLookupFilter } from '@/components/SimpleLookupField';
 import { Accordion } from '@/components/Accordion';
 import { DateRange } from '@/components/DateRange';
-import { useSearchContext } from '../../providers';
+import { useSearchContextLegacy } from '../../providers';
 
 export const SearchFilters = () => {
-  const { filters, getSearchFacetsData } = useSearchContext();
+  const { filters, getSearchFacetsData } = useSearchContextLegacy();
   const { facets, onChangeLimiters, onChangeLimitersMulti, onChange } = useSearchFilters();
   const filtersLastGroupIndex = filters.length - 1;
 

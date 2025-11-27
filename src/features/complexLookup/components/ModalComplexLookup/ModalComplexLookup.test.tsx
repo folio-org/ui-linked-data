@@ -6,8 +6,6 @@ import { useSearchStore, useUIStore, useMarcPreviewStore } from '@/store';
 import { COMPLEX_LOOKUPS_CONFIG } from '../../configs';
 import { ModalComplexLookup } from './ModalComplexLookup';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
 const mockGetFacetsData = jest.fn();
 const mockGetSourceData = jest.fn();
 jest.mock('@/features/complexLookup/hooks/useComplexLookupApi', () => ({
@@ -30,11 +28,12 @@ jest.mock('@/components/Modal', () => ({
 }));
 
 const mockSearchProps = jest.fn();
-jest.mock('@/features/search/ui/components/Search', () => ({
-  Search: (props: Record<string, unknown>) => {
+jest.mock('@/features/search/ui', () => ({
+  LegacySearch: (props: Record<string, unknown>) => {
     mockSearchProps(props);
     return <div data-testid="search-component">Search Component</div>;
   },
+  LegacySearchControlPane: () => <div>SearchControlPane</div>,
 }));
 
 describe('ModalComplexLookup', () => {
