@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchState } from '@/store';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import type { SearchTypeConfig } from '../../core/types';
+import { SearchParam, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 interface SearchRequest {
@@ -51,7 +51,7 @@ export function useSearchQuery({
   // Get current segment from navigation (for comparison, only if hasSegments)
   const { navigationState } = useSearchState(['navigationState']);
   const currentSegment = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.['segment'] as string)
+    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string)
     : undefined;
 
   // Query key - directly from committed params

@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore } from '@/store';
-import type { SearchTypeConfig } from '../../core/types';
+import { SearchParam, type SearchTypeConfig } from '../../core';
 import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 
 jest.mock('react-router-dom', () => ({
@@ -69,8 +69,8 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(new URLSearchParams());
 
-      expect(params.get('segment')).toBe('browse');
-      expect(params.has('offset')).toBe(false);
+      expect(params.get(SearchParam.SEGMENT)).toBe('browse');
+      expect(params.has(SearchParam.OFFSET)).toBe(false);
     });
 
     it('resets pagination offset when changing segment', () => {
@@ -84,8 +84,8 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(existingParams);
 
-      expect(params.has('offset')).toBe(false);
-      expect(params.get('query')).toBe('test');
+      expect(params.has(SearchParam.OFFSET)).toBe(false);
+      expect(params.get(SearchParam.QUERY)).toBe('test');
     });
 
     it('does not update URL in value flow', () => {
@@ -125,8 +125,8 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(new URLSearchParams());
 
-      expect(params.get('source')).toBe('external');
-      expect(params.has('offset')).toBe(false);
+      expect(params.get(SearchParam.SOURCE)).toBe('external');
+      expect(params.has(SearchParam.OFFSET)).toBe(false);
     });
 
     it('resets pagination offset when changing source', () => {
@@ -140,8 +140,8 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(existingParams);
 
-      expect(params.has('offset')).toBe(false);
-      expect(params.get('segment')).toBe('browse');
+      expect(params.has(SearchParam.OFFSET)).toBe(false);
+      expect(params.get(SearchParam.SEGMENT)).toBe('browse');
     });
 
     it('does not update URL in value flow', () => {
@@ -168,7 +168,7 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(new URLSearchParams());
 
-      expect(params.get('offset')).toBe('200'); // page 2 * limit 100
+      expect(params.get(SearchParam.OFFSET)).toBe('200'); // page 2 * limit 100
     });
 
     it('removes offset param when page is 0', () => {
@@ -182,7 +182,7 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(existingParams);
 
-      expect(params.has('offset')).toBe(false);
+      expect(params.has(SearchParam.OFFSET)).toBe(false);
     });
 
     it('calculates offset using config limit', () => {
@@ -196,7 +196,7 @@ describe('useSearchControlsHandlers', () => {
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(new URLSearchParams());
 
-      expect(params.get('offset')).toBe('150'); // page 3 * limit 50
+      expect(params.get(SearchParam.OFFSET)).toBe('150'); // page 3 * limit 50
     });
 
     it('does not update URL in value flow', () => {
@@ -221,10 +221,10 @@ describe('useSearchControlsHandlers', () => {
       expect(setSearchParams).toHaveBeenCalled();
       const params = setSearchParams.mock.calls[0][0];
 
-      expect(params.get('query')).toBe('test query');
-      expect(params.get('searchBy')).toBe('keyword');
-      expect(params.get('segment')).toBe('search');
-      expect(params.get('source')).toBe('local');
+      expect(params.get(SearchParam.QUERY)).toBe('test query');
+      expect(params.get(SearchParam.SEARCH_BY)).toBe('keyword');
+      expect(params.get(SearchParam.SEGMENT)).toBe('search');
+      expect(params.get(SearchParam.SOURCE)).toBe('local');
     });
 
     it('omits empty query from URL params', () => {
@@ -249,7 +249,7 @@ describe('useSearchControlsHandlers', () => {
       });
 
       const params = setSearchParams.mock.calls[0][0];
-      expect(params.has('query')).toBe(false);
+      expect(params.has(SearchParam.QUERY)).toBe(false);
     });
 
     it('omits empty searchBy from URL params', () => {
@@ -274,7 +274,7 @@ describe('useSearchControlsHandlers', () => {
       });
 
       const params = setSearchParams.mock.calls[0][0];
-      expect(params.has('searchBy')).toBe(false);
+      expect(params.has(SearchParam.SEARCH_BY)).toBe(false);
     });
 
     it('omits non-string navigation state values', () => {
@@ -299,8 +299,8 @@ describe('useSearchControlsHandlers', () => {
       });
 
       const params = setSearchParams.mock.calls[0][0];
-      expect(params.has('segment')).toBe(false);
-      expect(params.has('source')).toBe(false);
+      expect(params.has(SearchParam.SEGMENT)).toBe(false);
+      expect(params.has(SearchParam.SOURCE)).toBe(false);
       expect(params.has('other')).toBe(false);
     });
 

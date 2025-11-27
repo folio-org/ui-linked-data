@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSearchState } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
+import { SearchParam } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 export interface CommittedSearchParams {
@@ -30,11 +31,11 @@ export function useCommittedSearchParams({
     if (flow === 'url') {
       // URL flow: URL is the committed state
       return {
-        segment: hasSegments ? (searchParams.get('segment') ?? defaultSegment) : undefined,
-        query: searchParams.get('query') ?? '',
-        searchBy: searchParams.get('searchBy') ?? DEFAULT_SEARCH_BY,
-        source: searchParams.get('source') ?? undefined,
-        offset: Number.parseInt(searchParams.get('offset') ?? '0', 10),
+        segment: hasSegments ? (searchParams.get(SearchParam.SEGMENT) ?? defaultSegment) : undefined,
+        query: searchParams.get(SearchParam.QUERY) ?? '',
+        searchBy: searchParams.get(SearchParam.SEARCH_BY) ?? DEFAULT_SEARCH_BY,
+        source: searchParams.get(SearchParam.SOURCE) ?? undefined,
+        offset: Number.parseInt(searchParams.get(SearchParam.OFFSET) ?? '0', 10),
       };
     }
 

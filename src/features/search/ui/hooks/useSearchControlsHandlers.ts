@@ -2,7 +2,7 @@ import { useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
-import type { SearchTypeConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types';
 
 interface UseSearchControlsHandlersParams {
@@ -64,8 +64,8 @@ export const useSearchControlsHandlers = ({
     const state = useSearchState.getState();
     const { query, searchBy, navigationState, draftBySegment } = state;
     const navState = navigationState as Record<string, unknown>;
-    const currentSegment = navState?.['segment'] as string | undefined;
-    const currentSource = navState?.['source'] as string | undefined;
+    const currentSegment = navState?.[SearchParam.SEGMENT] as string | undefined;
+    const currentSource = navState?.[SearchParam.SOURCE] as string | undefined;
 
     if (!currentSegment) return;
 
@@ -105,13 +105,13 @@ export const useSearchControlsHandlers = ({
       // Update navigation state
       const currentState = useSearchState.getState();
       const updatedState = { ...currentState.navigationState } as Record<string, unknown>;
-      updatedState['segment'] = newSegment;
+      updatedState[SearchParam.SEGMENT] = newSegment;
 
       // Restore source from target draft if exists
       if (targetDraft.source) {
-        updatedState['source'] = targetDraft.source;
+        updatedState[SearchParam.SOURCE] = targetDraft.source;
       } else {
-        delete updatedState['source'];
+        delete updatedState[SearchParam.SOURCE];
       }
 
       setNavigationState(updatedState as SearchParamsState);
@@ -123,15 +123,15 @@ export const useSearchControlsHandlers = ({
       if (flowRef.current === 'url') {
         setSearchParams(() => {
           const params = new URLSearchParams();
-          params.set('segment', newSegment);
+          params.set(SearchParam.SEGMENT, newSegment);
 
           // If restored segment has query, include full search params (auto-search)
           if (hasPreservedQuery) {
-            params.set('query', targetDraft.query);
-            params.set('searchBy', targetDraft.searchBy);
+            params.set(SearchParam.QUERY, targetDraft.query);
+            params.set(SearchParam.SEARCH_BY, targetDraft.searchBy);
 
             if (targetDraft.source) {
-              params.set('source', targetDraft.source);
+              params.set(SearchParam.SOURCE, targetDraft.source);
             }
           }
 
@@ -156,7 +156,7 @@ export const useSearchControlsHandlers = ({
       const currentState = useSearchState.getState();
       const updatedState = { ...currentState.navigationState } as Record<string, unknown>;
 
-      updatedState['source'] = newSource;
+      updatedState[SearchParam.SOURCE] = newSource;
 
       // Source is not immediately synced to URL - only on submit
       setNavigationState(updatedState as SearchParamsState);
@@ -172,16 +172,16 @@ export const useSearchControlsHandlers = ({
           const offset = newPage * (configRef.current.defaults?.limit || 100);
 
           if (offset > 0) {
-            params.set('offset', offset.toString());
+            params.set(SearchParam.OFFSET, offset.toString());
           } else {
-            params.delete('offset');
+            params.delete(SearchParam.OFFSET);
           }
 
           return params;
         });
       }
 
-      // TODO: implement value flow
+      // Value flow pagination: handled via setCommittedValues when implemented
     },
     [setSearchParams],
   );
@@ -191,8 +191,8 @@ export const useSearchControlsHandlers = ({
     const { query, searchBy, navigationState, draftBySegment } = state;
 
     const navState = navigationState as Record<string, unknown>;
-    const segment = (navState?.['segment'] as string) ?? '';
-    const source = navState?.['source'] as string | undefined;
+    const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
+    const source = navState?.[SearchParam.SOURCE] as string | undefined;
 
     // Save current draft on submit
     if (segment) {
@@ -211,19 +211,19 @@ export const useSearchControlsHandlers = ({
       const urlParams = new URLSearchParams();
 
       if (segment) {
-        urlParams.set('segment', segment);
+        urlParams.set(SearchParam.SEGMENT, segment);
       }
 
       if (query) {
-        urlParams.set('query', query);
+        urlParams.set(SearchParam.QUERY, query);
       }
 
       if (searchBy) {
-        urlParams.set('searchBy', searchBy);
+        urlParams.set(SearchParam.SEARCH_BY, searchBy);
       }
 
       if (source) {
-        urlParams.set('source', source);
+        urlParams.set(SearchParam.SOURCE, source);
       }
 
       setSearchParams(urlParams);
@@ -242,13 +242,11 @@ export const useSearchControlsHandlers = ({
   const handleReset = useCallback(() => {
     const state = useSearchState.getState();
     const navState = state.navigationState as Record<string, unknown>;
-    const currentSegment = navState?.['segment'] as string | undefined;
+    const currentSegment = navState?.[SearchParam.SEGMENT] as string | undefined;
 
-    // Clear query and searchBy
     resetQuery();
     resetSearchBy();
 
-    // Clear draft for current segment
     if (currentSegment) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [currentSegment]: _removed, ...rest } = state.draftBySegment;
@@ -260,7 +258,7 @@ export const useSearchControlsHandlers = ({
     const defaultNav = {} as Record<string, unknown>;
 
     if (configRef.current.defaults?.segment) {
-      defaultNav['segment'] = configRef.current.defaults.segment;
+      defaultNav[SearchParam.SEGMENT] = configRef.current.defaults.segment;
     }
 
     setNavigationState(defaultNav as SearchParamsState);
@@ -270,7 +268,7 @@ export const useSearchControlsHandlers = ({
         const params = new URLSearchParams();
 
         if (configRef.current.defaults?.segment) {
-          params.set('segment', configRef.current.defaults.segment);
+          params.set(SearchParam.SEGMENT, configRef.current.defaults.segment);
         }
 
         return params;

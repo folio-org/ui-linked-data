@@ -1,5 +1,6 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import { useSearchState } from '@/store';
+import { SearchParam } from '../../core';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
 import { getActiveConfig, getAvailableSources } from '../utils';
 import { useSearchControlsHandlers, useSearchQuery, useUrlSync } from '../hooks';
@@ -19,7 +20,7 @@ export const SearchProvider: FC<SearchProviderProps> = ({
 
   const { navigationState } = useSearchState(['navigationState']);
   const currentSegment = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.['segment'] as string | undefined) ||
+    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined) ||
       initialSegment ||
       config.defaults?.segment
     : undefined;
