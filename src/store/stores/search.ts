@@ -9,9 +9,35 @@ import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
 type Data = null | WorkAsSearchResultDTO[];
 type SourceData = SourceDataDTO | null;
 
+export interface SegmentDraft {
+  query: string;
+  searchBy: SearchIdentifiers;
+  source?: string;
+}
+
+export type DraftBySegment = Record<string, SegmentDraft>;
+
+export interface CommittedValues {
+  segment?: string;
+  query: string;
+  searchBy: string;
+  source?: string;
+  offset: number;
+}
+
+const DEFAULT_COMMITTED_VALUES: CommittedValues = {
+  segment: undefined,
+  query: '',
+  searchBy: DEFAULT_SEARCH_BY,
+  source: undefined,
+  offset: 0,
+};
+
 export type SearchState = SliceState<'query', string> &
   SliceState<'message', string> &
   SliceState<'searchBy', SearchIdentifiers> &
+  SliceState<'committedValues', CommittedValues> &
+  SliceState<'draftBySegment', DraftBySegment> &
   SliceState<'data', Data> &
   SliceState<'facets', Limiters> &
   SliceState<'navigationState', SearchParamsState> &
@@ -20,7 +46,7 @@ export type SearchState = SliceState<'query', string> &
   SliceState<'facetsBySegments', FacetsBySegments> &
   SliceState<'sourceData', SourceData> &
   SliceState<'selectedFacetsGroups', string[]> &
-  SliceState<'facetsData', FacetsDTO>&
+  SliceState<'facetsData', FacetsDTO> &
   SliceState<'selectedInstances', string[]>;
 
 const STORE_NAME = 'Search';
@@ -34,6 +60,12 @@ const sliceConfigs: SliceConfigs = {
   },
   searchBy: {
     initialValue: DEFAULT_SEARCH_BY,
+  },
+  committedValues: {
+    initialValue: DEFAULT_COMMITTED_VALUES,
+  },
+  draftBySegment: {
+    initialValue: {} as DraftBySegment,
   },
   data: {
     initialValue: null,

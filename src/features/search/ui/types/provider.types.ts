@@ -24,6 +24,15 @@ export interface CurrentSearchParams {
   limit: number;
 }
 
+export interface SearchResults {
+  items: unknown[];
+  totalRecords: number;
+  pageMetadata?: {
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
 export interface SearchContextValue {
   // Configuration
   config: SearchTypeConfig;
@@ -34,6 +43,14 @@ export interface SearchContextValue {
   // Computed values
   activeUIConfig: SearchTypeUIConfig;
   availableSources?: Record<string, unknown>;
+
+  // Search results (from React Query)
+  results: SearchResults | undefined;
+  isLoading: boolean;
+  isFetching: boolean;
+  isError: boolean;
+  error: Error | null;
+  refetch: () => Promise<void>;
 
   // Handlers
   onSegmentChange: (segment: string) => void;
