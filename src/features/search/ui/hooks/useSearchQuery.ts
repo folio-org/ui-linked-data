@@ -45,16 +45,12 @@ export function useSearchQuery({
   enabled = true,
   fetchFn = fetch,
 }: UseSearchQueryParams): UseSearchQueryResult {
-  // Get committed params based on flow
   const committed = useCommittedSearchParams({ flow, defaultSegment, hasSegments });
-
-  // Get current segment from navigation (for comparison, only if hasSegments)
   const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = hasSegments
+  const currentSegmentFromStore = hasSegments
     ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string)
     : undefined;
 
-  // Query key - directly from committed params
   const queryKey = useMemo(
     () =>
       ['search', committed.segment, committed.source, committed.query, committed.searchBy, committed.offset].filter(
@@ -63,7 +59,6 @@ export function useSearchQuery({
     [committed],
   );
 
-  // Query function
   const queryFn = useCallback(async (): Promise<SearchResults> => {
     if (!coreConfig) {
       throw new Error(`No core config for segment: ${committed.segment}`);
@@ -76,9 +71,8 @@ export function useSearchQuery({
       throw new Error(`No request builder for segment: ${committed.segment}`);
     }
 
-    // Build request using strategy
     // TODO: implement strategies
-    const request = strategies.requestBuilder.build({
+    const request = strategies.requestBuilder?.build({
       query: committed.query,
       searchBy: committed.searchBy,
       source: committed.source,
@@ -86,7 +80,6 @@ export function useSearchQuery({
       offset: committed.offset,
     }) as SearchRequest;
 
-    // Execute request
     // TODO: use baseApi.getJson here
     const response = await fetchFn(request.url, request.options);
 
@@ -98,7 +91,7 @@ export function useSearchQuery({
 
     // Transform response using strategy
     if (strategies.responseTransformer) {
-      return strategies.responseTransformer.transform(data) as unknown as SearchResults;
+      return strategies.responseTransformer?.transform(data) as unknown as SearchResults;
     }
 
     return data as unknown as SearchResults;
@@ -106,11 +99,10 @@ export function useSearchQuery({
 
   // Determine if query should be enabled
   const shouldEnable = useMemo(() => {
-    // Skip segment matching if config has no segments
-    const segmentMatches = !hasSegments || committed.segment === currentSegment;
+    const segmentMatches = flow === 'url' || !hasSegments || committed.segment === currentSegmentFromStore;
 
     return enabled && segmentMatches && !!committed.query && !!coreConfig;
-  }, [enabled, hasSegments, committed.segment, currentSegment, committed.query, coreConfig]);
+  }, [enabled, flow, hasSegments, committed.segment, committed.query, currentSegmentFromStore, coreConfig]);
 
   const {
     data,
@@ -134,7 +126,7 @@ export function useSearchQuery({
     isLoading,
     isFetching,
     isError,
-    error: error as Error | null,
+    error,
     refetch,
   };
 }
