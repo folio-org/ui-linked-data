@@ -2,7 +2,7 @@ import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchState } from '@/store';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { SearchParam, type SearchTypeConfig } from '../../core';
+import { SearchParam, selectStrategies, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 interface SearchRequest {
@@ -64,8 +64,7 @@ export function useSearchQuery({
       throw new Error(`No core config for segment: ${committed.segment}`);
     }
 
-    // TODO: select correct strategy from the core config
-    const { strategies } = coreConfig;
+    const strategies = selectStrategies(coreConfig, committed.segment, committed.source);
 
     if (!strategies?.requestBuilder) {
       throw new Error(`No request builder for segment: ${committed.segment}`);
