@@ -61,8 +61,6 @@ describe('searchUIRegistry', () => {
       it('authorities browse config has required properties', () => {
         const result = getSearchUIConfig('authorities', 'browse');
 
-        expect(result).toHaveProperty('ui');
-        expect(result?.ui).toHaveProperty('placeholderId');
         expect(result).toHaveProperty('features');
         expect(result).toHaveProperty('searchableIndices');
       });
@@ -161,8 +159,8 @@ describe('searchUIRegistry', () => {
         const searchConfig = getSearchUIConfig('authorities', 'search');
 
         expect(searchConfig).not.toBe(defaultConfig);
-        expect(searchConfig).toHaveProperty('ui');
-        expect(searchConfig?.ui?.placeholderId).toBe('ld.searchAuthorities');
+        expect(searchConfig).toHaveProperty('features');
+        expect(searchConfig).toHaveProperty('searchableIndices');
       });
 
       it('authorities browse is different from default', () => {
@@ -172,10 +170,9 @@ describe('searchUIRegistry', () => {
         expect(browseConfig).not.toBe(defaultConfig);
       });
 
-      it('segment config is a complete SearchTypeUIConfig', () => {
+      it('segment config has features and searchableIndices', () => {
         const browseConfig = getSearchUIConfig('authorities', 'browse');
 
-        expect(browseConfig).toHaveProperty('ui');
         expect(browseConfig).toHaveProperty('features');
         expect(browseConfig).toHaveProperty('searchableIndices');
       });
@@ -219,9 +216,8 @@ describe('searchUIRegistry', () => {
         const defaultResult = getSearchUIConfig('authorities');
         const browseResult = getSearchUIConfig('authorities', 'browse');
 
-        // Browse is a different config object
         expect(browseResult).not.toBe(defaultResult);
-        expect(browseResult?.ui).toBeDefined();
+        expect(browseResult?.features).toBeDefined();
       });
 
       it('all configs have ui property with string fields', () => {

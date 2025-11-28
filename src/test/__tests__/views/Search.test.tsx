@@ -1,29 +1,43 @@
-import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore, useUIStore } from '@src/store';
-import { Search } from '@views';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { ResourceType } from '@common/constants/record.constants';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { useSearchStore, useUIStore } from '@/store';
+import { Search } from '@/views';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { ResourceType } from '@/common/constants/record.constants';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const onCreateNewResource = jest.fn();
-jest.mock('@common/hooks/useNavigateToCreatePage', () => ({
+jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
   useNavigateToCreatePage: () => ({
     onCreateNewResource,
   }),
 }));
 
-describe('Search', () => {
-  beforeEach(() =>
-    render(
-      <BrowserRouter>
-        <Search />
-      </BrowserRouter>,
-    ),
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const renderWithProviders = (component: React.ReactNode) => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{component}</BrowserRouter>
+    </QueryClientProvider>,
   );
+};
+
+describe('Search', () => {
+  beforeEach(() => {
+    queryClient.clear();
+    renderWithProviders(<Search />);
+  });
 
   test('renders Search component', () => {
     expect(screen.getByTestId('search')).toBeInTheDocument();
@@ -53,11 +67,7 @@ describe('Search', () => {
         },
       ]);
 
-      const { unmount } = render(
-        <BrowserRouter>
-          <Search />
-        </BrowserRouter>,
-      );
+      const { unmount } = renderWithProviders(<Search />);
 
       unmount();
 
