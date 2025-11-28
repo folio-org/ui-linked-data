@@ -89,20 +89,17 @@ export function useSearchQuery({
 
     const data = await response.json();
 
-    // Transform response using strategy
+    // TODO: implement strategies
     if (strategies.responseTransformer) {
       return strategies.responseTransformer?.transform(data) as unknown as SearchResults;
     }
 
     return data as unknown as SearchResults;
-  }, [coreConfig, committed, fetchFn]);
+  }, [coreConfig, committed]);
 
   // Determine if query should be enabled
-  const shouldEnable = useMemo(() => {
-    const segmentMatches = flow === 'url' || !hasSegments || committed.segment === currentSegmentFromStore;
-
-    return enabled && segmentMatches && !!committed.query && !!coreConfig;
-  }, [enabled, flow, hasSegments, committed.segment, committed.query, currentSegmentFromStore, coreConfig]);
+  const segmentMatches = flow === 'url' || !hasSegments || committed.segment === currentSegmentFromStore;
+  const shouldEnable = enabled && segmentMatches && !!committed.query && !!coreConfig;
 
   const {
     data,
