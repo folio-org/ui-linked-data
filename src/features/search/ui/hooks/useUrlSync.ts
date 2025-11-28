@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSearchState } from '@/store';
 import { SearchIdentifiers } from '@/common/constants/search.constants';
-import type { SearchTypeConfig } from '../../core/types';
+import { SearchParam, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 interface UseUrlSyncParams {
@@ -25,13 +25,13 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
     // Only sync for URL flow
     if (flow !== 'url') return;
 
-    const queryFromUrl = searchParams.get('query');
-    const searchByFromUrl = searchParams.get('searchBy');
-    const segmentFromUrl = searchParams.get('segment');
-    const sourceFromUrl = searchParams.get('source');
+    const queryFromUrl = searchParams.get(SearchParam.QUERY);
+    const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
+    const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
+    const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
     const navState = navigationState as Record<string, unknown>;
-    const currentSegment = navState?.['segment'];
-    const currentSource = navState?.['source'];
+    const currentSegment = navState?.[SearchParam.SEGMENT];
+    const currentSource = navState?.[SearchParam.SOURCE];
 
     if (queryFromUrl !== null && queryFromUrl !== query) {
       setQuery(queryFromUrl);
@@ -43,14 +43,14 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
 
     if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {
       const updatedState = { ...navigationState } as Record<string, unknown>;
-      updatedState['segment'] = segmentFromUrl;
+      updatedState[SearchParam.SEGMENT] = segmentFromUrl;
 
       setNavigationState(updatedState as SearchParamsState);
     }
 
     if (sourceFromUrl !== null && sourceFromUrl !== currentSource) {
       const updatedState = { ...navigationState } as Record<string, unknown>;
-      updatedState['source'] = sourceFromUrl;
+      updatedState[SearchParam.SOURCE] = sourceFromUrl;
 
       setNavigationState(updatedState as SearchParamsState);
     }

@@ -8,7 +8,7 @@ import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
 import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
 import en from '../translations/ui-linked-data/en.json';
-import { AsyncIntlProvider, ServicesProvider } from './providers';
+import { AsyncIntlProvider, QueryProvider, ServicesProvider } from './providers';
 import './App.scss';
 import { useConfigState } from './store';
 
@@ -65,9 +65,11 @@ const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
     <Suspense fallback={<Loading hasLabel={false} data-testid="loading" />}>
       <AsyncIntlProvider cachedMessages={cachedMessages.current}>
         <ErrorBoundary>
-          <ServicesProvider>
-            <RouterProvider router={createRouter(routePrefix)} />
-          </ServicesProvider>
+          <QueryProvider>
+            <ServicesProvider>
+              <RouterProvider router={createRouter(routePrefix)} />
+            </ServicesProvider>
+          </QueryProvider>
         </ErrorBoundary>
       </AsyncIntlProvider>
     </Suspense>

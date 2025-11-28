@@ -3,7 +3,7 @@ import type { SearchTypeUIConfig } from '../types';
 //Authorities Search UI Configuration
 export const authoritiesUIConfig: SearchTypeUIConfig = {
   ui: {
-    titleId: 'ld.authorities',
+    titleId: 'ld.marcAuthority',
     subtitleId: '',
     placeholderId: 'ld.enterSearchCriteria',
     emptyStateId: 'ld.noResultsFound',
@@ -34,10 +34,6 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
   // Segment-specific overrides
   segments: {
     search: {
-      ui: {
-        // Override placeholder for search segment
-        placeholderId: 'ld.searchAuthorities',
-      },
       features: {
         hasSourceToggle: false,
         hasAdvancedSearch: false,
@@ -67,10 +63,6 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
     },
 
     browse: {
-      ui: {
-        // Override placeholder for browse segment
-        placeholderId: 'ld.browseAuthorities',
-      },
       features: {
         // Disable source toggle in browse segment
         hasSourceToggle: false,

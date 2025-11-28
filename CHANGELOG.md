@@ -54,6 +54,9 @@
 * Set or delete the default user profile when changing the profile for a Work/Instance. Refs [UILD-645].
 * Change work Profile after it is created. Refs [UILD-658].
 * Migrate to React 19 and update dependencies. Refs [UILD-662].
+* Update code structure and config system for Search feature. Refs [UILD-674].
+* Create compound components for Search. Refs [UILD-675].
+* React Query setup and apply to Search. Refs [UILD-676].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -109,6 +112,9 @@
 [UILD-645]:https://folio-org.atlassian.net/browse/UILD-645
 [UILD-658]:https://folio-org.atlassian.net/browse/UILD-658
 [UILD-662]:https://folio-org.atlassian.net/browse/UILD-662
+[UILD-674]:https://folio-org.atlassian.net/browse/UILD-674
+[UILD-675]:https://folio-org.atlassian.net/browse/UILD-675
+[UILD-676]:https://folio-org.atlassian.net/browse/UILD-676
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
