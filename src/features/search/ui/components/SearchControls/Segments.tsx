@@ -3,13 +3,14 @@ import { FormattedMessage } from 'react-intl';
 import { ButtonGroup } from '@/components/ButtonGroup';
 import { Button, ButtonType } from '@/components/Button';
 import { useSearchState } from '@/store';
+import { SearchParam } from '../../../core';
 import { useSearchContext } from '../../providers/SearchProvider';
 import './Segments.scss';
 
 export const Segments: FC = () => {
   const { config, activeUIConfig, onSegmentChange } = useSearchContext();
   const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = (navigationState as Record<string, unknown>)?.['segment'] as string | undefined;
+  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
 
   // Guard: Feature disabled
   if (!activeUIConfig.features?.hasSegments) {
