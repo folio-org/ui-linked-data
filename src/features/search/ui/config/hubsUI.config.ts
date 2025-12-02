@@ -2,17 +2,39 @@ import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
 
 export const hubsUIConfig: SearchTypeUIConfig = {
   ui: {
-    titleId: '',
+    titleId: 'ld.resources',
     subtitleId: '',
     placeholderId: '',
+    emptyStateId: 'ld.enterSearchCriteria',
   },
   features: {
+    // Navigation
+    hasSegments: false, // Hubs has no segments
+    hasSourceToggle: true,
+
+    // Input controls
     hasSearchBy: true,
+    hasQueryInput: true,
     hasMultilineInput: false,
+    hasSubmitButton: true,
+
+    // Additional features
     hasAdvancedSearch: false,
     isVisiblePaginationCount: true,
     isLoopedPagination: false,
-    isVisibleSubLabel: true,
+    isVisibleSubLabel: false,
+    isVisibleEmptySearchPlaceholder: true,
   },
-  searchableIndices: [] as SearchableIndexUI[],
+  searchableIndices: [
+    {
+      value: 'hubNameLeftAnchored',
+      labelId: 'ld.search.hubNameLeftAnchored',
+      placeholder: 'ld.search.hubNameLeftAnchored',
+    },
+    {
+      value: 'hubNameKeyword',
+      labelId: 'ld.search.hubNameKeyword',
+      placeholder: 'ld.search.hubNameKeyword',
+    },
+  ] as SearchableIndexUI[],
 };
