@@ -9,10 +9,15 @@ export const INVENTORY_API_ENDPOINT = '/linked-data/inventory-instance';
 export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const PROFILE_METADATA_API_ENDPOINT = '/linked-data/profile/metadata';
 export const PROFILE_PREFERRED_API_ENDPOINT = '/linked-data/profile/preferred';
-export const SEARCH_API_ENDPOINT = '/search/linked-data';
-export const SEARCH_RESOURCE_API_ENDPOINT = `${SEARCH_API_ENDPOINT}/works`;
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
+
+export const SEARCH_API_ENDPOINT = {
+  RESOURCES: '/search/linked-data/works',
+  AUTHORITIES_SEARCH: '/search/authorities',
+  AUTHORITIES_BROWSE: '/browse/authorities',
+  HUBS_EXTERNAL: 'https://id.loc.gov/resources/hubs/suggest2/',
+};
 
 export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,

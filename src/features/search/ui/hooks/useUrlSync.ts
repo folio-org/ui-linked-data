@@ -33,7 +33,12 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
     const currentSegment = navState?.[SearchParam.SEGMENT];
     const currentSource = navState?.[SearchParam.SOURCE];
 
-    if (queryFromUrl !== null && queryFromUrl !== query) {
+    // Determine if this is an advanced search (query present but no searchBy)
+    // Advanced search queries should NOT be synced to the input field
+    const isAdvancedSearch = queryFromUrl !== null && searchByFromUrl === null;
+
+    // Only sync query to store if it's NOT an advanced search
+    if (!isAdvancedSearch && queryFromUrl !== null && queryFromUrl !== query) {
       setQuery(queryFromUrl);
     }
 
@@ -55,8 +60,9 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
       setNavigationState(updatedState as SearchParamsState);
     }
 
-    // If URL has no query but store does, clear store
-    if (queryFromUrl === null && query) {
+    // If URL has no query but store does, clear store (only for simple search)
+    // Don't clear if it's transitioning from advanced search
+    if (queryFromUrl === null && query && searchByFromUrl !== null) {
       setQuery('');
     }
   }, [flow, searchParams, setQuery, setSearchBy, navigationState, setNavigationState, config]);

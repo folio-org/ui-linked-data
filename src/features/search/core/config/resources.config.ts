@@ -1,4 +1,7 @@
-import type { RequestBuilder, ResponseTransformer, ResultFormatter, SearchTypeConfig } from '../types';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+import type { SearchTypeConfig } from '../types';
+import { ResourcesRequestBuilder } from '../strategies/requestBuilders';
+import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
 
 /**
  * Resources Search Type Configuration
@@ -10,26 +13,18 @@ export const resourcesConfig: SearchTypeConfig = {
 
   // Base strategies
   strategies: {
-    requestBuilder: {} as RequestBuilder,
-    responseTransformer: {} as ResponseTransformer,
-    resultFormatter: {} as ResultFormatter,
+    requestBuilder: new ResourcesRequestBuilder(),
+    responseTransformer: new ResourcesResponseTransformer(),
+    resultFormatter: undefined,
   },
 
   // SearchBy configuration
   searchBy: {
     searchableIndices: [
-      {
-        value: 'title',
-      },
-      {
-        value: 'contributor',
-      },
-      {
-        value: 'isbn',
-      },
-      {
-        value: 'lccn',
-      },
+      { value: SearchableIndex.Title },
+      { value: SearchableIndex.Contributor },
+      { value: SearchableIndex.ISBN },
+      { value: SearchableIndex.LCCN },
     ],
   },
 

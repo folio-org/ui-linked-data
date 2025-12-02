@@ -1,14 +1,13 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSearchState } from '@/store';
-import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
 import { SearchParam } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 export interface CommittedSearchParams {
   segment?: string;
   query: string;
-  searchBy: string;
+  searchBy?: string; // undefined for advanced search (pre-formatted CQL query)
   source?: string;
   offset: number;
 }
@@ -30,10 +29,13 @@ export function useCommittedSearchParams({
   return useMemo(() => {
     if (flow === 'url') {
       // URL flow: URL is the committed state
+      // Note: searchBy can be undefined for advanced search (pre-formatted CQL query)
+      const urlSearchBy = searchParams.get(SearchParam.SEARCH_BY);
+
       return {
         segment: hasSegments ? (searchParams.get(SearchParam.SEGMENT) ?? defaultSegment) : undefined,
         query: searchParams.get(SearchParam.QUERY) ?? '',
-        searchBy: searchParams.get(SearchParam.SEARCH_BY) ?? DEFAULT_SEARCH_BY,
+        searchBy: urlSearchBy ?? undefined,
         source: searchParams.get(SearchParam.SOURCE) ?? undefined,
         offset: Number.parseInt(searchParams.get(SearchParam.OFFSET) ?? '0', 10),
       };

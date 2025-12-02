@@ -25,7 +25,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchConfig } from '@/features/search/core';
 import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
 import { getByIdentifier } from '@/common/api/search.api';
-import { SEARCH_RESOURCE_API_ENDPOINT } from '@/common/constants/api.constants';
+import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { filters } from './data/filters';
 import { FormattedMessage } from 'react-intl';
 import './Search.scss';
@@ -173,7 +173,7 @@ export const SearchView = () => {
   ) : (
     <div className="search" data-testid="search" id="ld-search-container">
       <LegacySearch
-        endpointUrl={SEARCH_RESOURCE_API_ENDPOINT}
+        endpointUrl={SEARCH_API_ENDPOINT.RESOURCES}
         sameOrigin={true}
         filters={filters}
         hasSearchParams={true}

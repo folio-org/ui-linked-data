@@ -2,6 +2,7 @@ export enum SearchableIndex {
   Keyword = 'keyword',
   Identifier = 'identifier',
   LCCN = 'lccn',
+  ISBN = 'isbn',
   PersonalName = 'personalName',
   CorporateConferenceName = 'corporateConferenceName',
   GeographicName = 'geographicName',
@@ -12,6 +13,8 @@ export enum SearchableIndex {
   Genre = 'genre',
   HubNameLeftAnchored = 'hubNameLeftAnchored',
   HubNameKeyword = 'hubNameKeyword',
+  Title = 'title',
+  Contributor = 'contributor',
 }
 
 export enum SearchableIndexQuerySelector {

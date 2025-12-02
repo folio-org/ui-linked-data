@@ -1,6 +1,10 @@
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { SEARCH_QUERY_VALUE_PARAM } from '@/common/constants/search.constants';
 
+/**
+ * @deprecated Use AuthoritiesSearchRequestBuilder or AuthoritiesBrowseRequestBuilder class instead.
+ * This legacy function is kept for backward compatibility with existing hooks.
+ */
 export const buildSearchQuery = ({
   map,
   selector = SearchableIndexQuerySelector.Query,

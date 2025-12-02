@@ -1,14 +1,9 @@
-export * from './authorities';
-export * from './hubs';
+// New request builder classes
+export * from './BaseRequestBuilder';
+export * from './ResourcesRequestBuilder';
+export * from './AuthoritiesSearchRequestBuilder';
+export * from './AuthoritiesBrowseRequestBuilder';
+export * from './HubsExternalRequestBuilder';
 
-import { buildSearchQuery } from './authorities';
-import { buildHubSearchQuery } from './hubs';
-
-export const SEARCH_QUERY_BUILDER: Record<
-  string,
-  ({ map, selector, searchBy, value }: BuildSearchQueryParams) => string | BuildSearchQueryResult | undefined
-> = {
-  default: buildSearchQuery,
-  authorities: buildSearchQuery,
-  hub: buildHubSearchQuery,
-};
+// Legacy exports (deprecated) - for backward compatibility
+export * from './legacy';
