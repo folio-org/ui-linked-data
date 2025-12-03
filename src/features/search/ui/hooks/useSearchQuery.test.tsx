@@ -77,7 +77,6 @@ describe('useSearchQuery', () => {
       sources: {},
     };
 
-    // Mock baseApi.getJson to return search results
     mockGetJson.mockResolvedValue(mockSearchResults);
 
     // Mock selectStrategies to return our mock strategies

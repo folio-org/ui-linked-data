@@ -17,7 +17,7 @@ import {
 export const authoritiesConfig: SearchTypeConfig = {
   id: 'authorities',
 
-  // Base strategies for all authorities searches (defaults to search mode)
+  // Base strategies for all authorities searches
   strategies: {
     requestBuilder: new AuthoritiesSearchRequestBuilder(COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP),
     responseTransformer: new AuthoritiesSearchResponseTransformer(),
@@ -36,7 +36,7 @@ export const authoritiesConfig: SearchTypeConfig = {
   segments: {
     search: {
       id: 'search',
-      // Inherits strategies from parent (AuthoritiesSearch*)
+      // Inherits strategies from parent
       searchBy: {
         searchableIndices: [
           { value: SearchableIndexEnum.Keyword },

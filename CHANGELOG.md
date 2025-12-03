@@ -57,6 +57,7 @@
 * Update code structure and config system for Search feature. Refs [UILD-674].
 * Create compound components for Search. Refs [UILD-675].
 * React Query setup and apply to Search. Refs [UILD-676].
+* Add request building and response transforming strategies for Search. Refs [UILD-683].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -115,6 +116,7 @@
 [UILD-674]:https://folio-org.atlassian.net/browse/UILD-674
 [UILD-675]:https://folio-org.atlassian.net/browse/UILD-675
 [UILD-676]:https://folio-org.atlassian.net/browse/UILD-676
+[UILD-683]:https://folio-org.atlassian.net/browse/UILD-683
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

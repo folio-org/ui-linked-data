@@ -7,13 +7,13 @@ import { ResourcesResponseTransformer, HubResponseTransformer } from '../strateg
  * Hubs Search Type Configuration
  *
  * Supports two sources:
- * - internal: Local hub registry (uses Resources strategies)
- * - external: External hub services (uses Hub-specific strategies)
+ * - internal: Local hub registry
+ * - external: External hub services
  */
 export const hubsConfig: SearchTypeConfig = {
   id: 'hubs',
 
-  // Base strategies for all hub searches (defaults to internal/resources-like)
+  // Base strategies for all hub searches
   strategies: {
     requestBuilder: new HubsExternalRequestBuilder(),
     responseTransformer: new ResourcesResponseTransformer(),
