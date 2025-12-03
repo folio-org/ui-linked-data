@@ -1,5 +1,5 @@
 import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
-import { buildHubSearchQuery } from './hubs';
+import { buildHubSearchQuery } from './buildHubSearchQuery';
 
 describe('buildHubSearchQuery', () => {
   const mockValue = 'test search value';

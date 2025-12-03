@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
-import type { SearchTypeConfig, RequestBuilder, ResponseTransformer } from '../../core';
+import type { SearchTypeConfig } from '../../core';
 import { useSearchQuery } from './useSearchQuery';
 import type { ReactNode } from 'react';
 
@@ -19,13 +19,21 @@ jest.mock('../../core/utils/configSelectors.helper', () => ({
   selectStrategies: (...args: unknown[]) => mockSelectStrategies(...args),
 }));
 
+// Mock baseApi
+const mockGetJson = jest.fn();
+jest.mock('@/common/api/base.api', () => ({
+  __esModule: true,
+  default: {
+    getJson: (...args: unknown[]) => mockGetJson(...args),
+  },
+}));
+
 describe('useSearchQuery', () => {
   let queryClient: QueryClient;
-  let mockRequestBuilder: RequestBuilder;
-  let mockResponseTransformer: ResponseTransformer;
-  let mockStrategies: { requestBuilder: RequestBuilder; responseTransformer: ResponseTransformer };
+  let mockRequestBuilder: { build: jest.Mock };
+  let mockResponseTransformer: { transform: jest.Mock };
+  let mockStrategies: { requestBuilder: { build: jest.Mock }; responseTransformer: { transform: jest.Mock } };
   let mockConfig: SearchTypeConfig;
-  let mockFetch: jest.Mock;
 
   const mockSearchResults = {
     items: [{ id: '1', title: 'Test Result' }],
@@ -42,8 +50,9 @@ describe('useSearchQuery', () => {
   beforeEach(() => {
     mockRequestBuilder = {
       build: jest.fn().mockReturnValue({
-        url: 'http://test.api/search?q=test',
-        options: { method: 'GET' },
+        url: '/search/test',
+        urlParams: { query: 'test' },
+        sameOrigin: true,
       }),
     };
 
@@ -68,10 +77,8 @@ describe('useSearchQuery', () => {
       sources: {},
     };
 
-    mockFetch = jest.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(mockSearchResults),
-    });
+    // Mock baseApi.getJson to return search results
+    mockGetJson.mockResolvedValue(mockSearchResults);
 
     // Mock selectStrategies to return our mock strategies
     mockSelectStrategies.mockReturnValue(mockStrategies);
@@ -103,6 +110,7 @@ describe('useSearchQuery', () => {
 
   afterEach(() => {
     queryClient.clear();
+    mockGetJson.mockClear();
   });
 
   describe('URL flow', () => {
@@ -117,7 +125,6 @@ describe('useSearchQuery', () => {
             flow: 'url',
             defaultSegment: 'search',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -127,7 +134,7 @@ describe('useSearchQuery', () => {
         expect(result.current.data).toBeDefined();
       });
 
-      expect(mockFetch).toHaveBeenCalled();
+      expect(mockGetJson).toHaveBeenCalled();
       expect(result.current.data).toEqual(mockSearchResults);
     });
 
@@ -142,12 +149,11 @@ describe('useSearchQuery', () => {
             flow: 'url',
             defaultSegment: 'search',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
 
-      expect(mockFetch).not.toHaveBeenCalled();
+      expect(mockGetJson).not.toHaveBeenCalled();
     });
 
     it('does not wait for navigationState sync in URL flow', async () => {
@@ -178,7 +184,6 @@ describe('useSearchQuery', () => {
             flow: 'url',
             defaultSegment: 'search',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -188,7 +193,7 @@ describe('useSearchQuery', () => {
       });
 
       // Should still execute - URL flow doesn't check navigationState
-      expect(mockFetch).toHaveBeenCalled();
+      expect(mockGetJson).toHaveBeenCalled();
     });
 
     it('does not execute when enabled is false', () => {
@@ -201,12 +206,11 @@ describe('useSearchQuery', () => {
             coreConfig: mockConfig,
             flow: 'url',
             enabled: false,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
 
-      expect(mockFetch).not.toHaveBeenCalled();
+      expect(mockGetJson).not.toHaveBeenCalled();
     });
 
     it('does not execute when coreConfig is undefined', () => {
@@ -218,12 +222,11 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: undefined,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
 
-      expect(mockFetch).not.toHaveBeenCalled();
+      expect(mockGetJson).not.toHaveBeenCalled();
     });
   });
 
@@ -255,7 +258,6 @@ describe('useSearchQuery', () => {
             flow: 'value',
             defaultSegment: 'search',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -264,7 +266,7 @@ describe('useSearchQuery', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(mockFetch).toHaveBeenCalled();
+      expect(mockGetJson).toHaveBeenCalled();
     });
 
     it('does not execute query when segment does not match current segment', () => {
@@ -294,12 +296,11 @@ describe('useSearchQuery', () => {
             flow: 'value',
             defaultSegment: 'search',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
 
-      expect(mockFetch).not.toHaveBeenCalled();
+      expect(mockGetJson).not.toHaveBeenCalled();
     });
 
     it('executes query when hasSegments is false regardless of segment', async () => {
@@ -328,7 +329,6 @@ describe('useSearchQuery', () => {
             coreConfig: mockConfig,
             flow: 'value',
             hasSegments: false,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -337,7 +337,7 @@ describe('useSearchQuery', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(mockFetch).toHaveBeenCalled();
+      expect(mockGetJson).toHaveBeenCalled();
     });
   });
 
@@ -358,13 +358,12 @@ describe('useSearchQuery', () => {
             coreConfig: mockConfig,
             flow: 'url',
             hasSegments: true,
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalled();
+        expect(mockGetJson).toHaveBeenCalled();
       });
 
       expect(mockRequestBuilder.build).toHaveBeenCalledWith(
@@ -388,7 +387,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -424,7 +422,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: configWithoutBuilder,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -458,7 +455,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -467,7 +463,7 @@ describe('useSearchQuery', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(transformer.transform).toHaveBeenCalledWith(mockSearchResults);
+      expect(transformer.transform).toHaveBeenCalledWith(mockSearchResults, 100);
       expect(result.current.data).toEqual(transformedResult);
     });
 
@@ -484,7 +480,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -499,10 +494,7 @@ describe('useSearchQuery', () => {
 
   describe('Error handling', () => {
     it('handles fetch errors', async () => {
-      const errorFetch = jest.fn().mockResolvedValue({
-        ok: false,
-        statusText: 'Internal Server Error',
-      });
+      mockGetJson.mockRejectedValue(new Error('Search request failed'));
 
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -512,7 +504,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: errorFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -525,7 +516,7 @@ describe('useSearchQuery', () => {
     });
 
     it('handles network errors', async () => {
-      const networkErrorFetch = jest.fn().mockRejectedValue(new Error('Network error'));
+      mockGetJson.mockRejectedValue(new Error('Network error'));
 
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -535,7 +526,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: networkErrorFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -558,7 +548,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: mockFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -567,18 +556,18 @@ describe('useSearchQuery', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(mockFetch).toHaveBeenCalledTimes(1);
+      expect(mockGetJson).toHaveBeenCalledTimes(1);
 
       await result.current.refetch();
 
-      expect(mockFetch).toHaveBeenCalledTimes(2);
+      expect(mockGetJson).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('Loading states', () => {
     it('returns correct loading states during query execution', async () => {
       let resolvePromise: (value: unknown) => void;
-      const slowFetch = jest.fn().mockReturnValue(
+      mockGetJson.mockReturnValue(
         new Promise(resolve => {
           resolvePromise = resolve;
         }),
@@ -592,7 +581,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            fetchFn: slowFetch,
           }),
         { wrapper: createWrapper() },
       );
@@ -602,10 +590,7 @@ describe('useSearchQuery', () => {
       expect(result.current.isFetching).toBe(true);
 
       // Resolve the promise
-      resolvePromise!({
-        ok: true,
-        json: () => Promise.resolve(mockSearchResults),
-      });
+      resolvePromise!(mockSearchResults);
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false);
