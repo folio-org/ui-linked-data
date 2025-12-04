@@ -24,7 +24,8 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'authorities:search': authoritiesSearchConfig,
   'authorities:browse': authoritiesBrowseConfig,
 
-  // Hubs variants
+  // Hubs - base config defaults to internal
+  hubs: hubsInternalConfig,
   'hubs:internal': hubsInternalConfig,
   'hubs:external': hubsExternalConfig,
 };

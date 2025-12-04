@@ -21,14 +21,14 @@ export const SearchProvider: FC<SearchProviderProps> = ({
     initialSegment ||
     config.id;
 
-  const activeConfig = useMemo(() => resolveCoreConfig(currentSegment) ?? config, [currentSegment, config]);
+  const activeCoreConfig = useMemo(() => resolveCoreConfig(currentSegment) ?? config, [currentSegment, config]);
   const activeUIConfig = useMemo(() => getActiveConfig(uiConfig, currentSegment), [uiConfig, currentSegment]);
-  const handlers = useSearchControlsHandlers({ config: activeConfig, flow });
+  const handlers = useSearchControlsHandlers({ config: activeCoreConfig, flow });
 
   // Sync URL to store (URL flow only, no-op for value flow)
-  useUrlSync({ flow, config: activeConfig });
+  useUrlSync({ flow, config: activeCoreConfig });
 
-  // Search query - uses the resolved atomic config
+  // Search query - resolves effective config from committed segment + source
   const {
     data: results,
     isLoading,
@@ -37,14 +37,14 @@ export const SearchProvider: FC<SearchProviderProps> = ({
     error,
     refetch,
   } = useSearchQuery({
-    coreConfig: activeConfig,
+    fallbackConfig: activeCoreConfig,
     flow,
   });
 
   const contextValue = useMemo(
     (): SearchContextValue => ({
       // Configuration
-      config: activeConfig,
+      config: activeCoreConfig,
       uiConfig,
       flow,
       mode,
@@ -68,7 +68,7 @@ export const SearchProvider: FC<SearchProviderProps> = ({
       onReset: handlers.onReset,
     }),
     [
-      activeConfig,
+      activeCoreConfig,
       uiConfig,
       flow,
       mode,

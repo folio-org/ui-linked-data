@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { selectStrategies, type SearchTypeConfig } from '../../core';
+import { selectStrategies, resolveEffectiveConfig, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 interface SearchResults {
@@ -16,8 +16,11 @@ interface SearchResults {
 }
 
 interface UseSearchQueryParams {
-  /** Atomic config for the current segment */
-  coreConfig?: SearchTypeConfig;
+  /**
+   * Fallback config when no effective config can be resolved.
+   * The actual query uses the effective config resolved from committed segment + source.
+   */
+  fallbackConfig?: SearchTypeConfig;
   flow: SearchFlow;
   enabled?: boolean;
 }
@@ -31,33 +34,77 @@ interface UseSearchQueryResult {
   refetch: () => Promise<void>;
 }
 
-export function useSearchQuery({ coreConfig, flow, enabled = true }: UseSearchQueryParams): UseSearchQueryResult {
+/**
+ * Validates if a searchBy value is valid for the given config.
+ * Returns the validated searchBy or the config's default if invalid.
+ */
+function getValidSearchBy(searchBy: string | undefined, config: SearchTypeConfig): string | undefined {
+  if (!searchBy) {
+    return config.defaults?.searchBy;
+  }
+
+  const validIndices = config.searchBy?.searchableIndices?.map(({ value }) => value) ?? [];
+
+  if (validIndices.length === 0) {
+    return searchBy;
+  }
+
+  if (validIndices.includes(searchBy)) {
+    return searchBy;
+  }
+
+  return config.defaults?.searchBy;
+}
+
+export function useSearchQuery({ fallbackConfig, flow, enabled = true }: UseSearchQueryParams): UseSearchQueryResult {
   const committed = useCommittedSearchParams({ flow });
+
+  // Resolve effective config based on committed segment + source
+  // This ensures the correct strategies are used based on what was actually submitted
+  const effectiveConfig = useMemo(() => {
+    if (!committed.segment) {
+      return fallbackConfig;
+    }
+
+    // For URL flow, always try to resolve from committed params first
+    const resolved = resolveEffectiveConfig(committed.segment, committed.source);
+
+    return resolved ?? fallbackConfig;
+  }, [committed.segment, committed.source, fallbackConfig]);
+
+  // Validate searchBy against the effective config's valid options
+  // If the URL has an invalid searchBy for this segment, use the config's default
+  const effectiveSearchBy = useMemo(() => {
+    if (!effectiveConfig) {
+      return committed.searchBy;
+    }
+
+    return getValidSearchBy(committed.searchBy, effectiveConfig);
+  }, [committed.searchBy, effectiveConfig]);
 
   const queryKey = useMemo(
     () =>
-      ['search', coreConfig?.id, committed.source, committed.query, committed.searchBy, committed.offset].filter(
+      ['search', effectiveConfig?.id, committed.query, effectiveSearchBy, committed.offset].filter(
         value => value !== undefined && value !== '',
       ),
-    [coreConfig?.id, committed],
+    [effectiveConfig?.id, committed.query, effectiveSearchBy, committed.offset],
   );
 
   const queryFn = useCallback(async (): Promise<SearchResults> => {
-    if (!coreConfig) {
-      throw new Error('No core config provided');
+    if (!effectiveConfig) {
+      throw new Error('No effective config resolved');
     }
 
-    const strategies = selectStrategies(coreConfig);
+    const strategies = selectStrategies(effectiveConfig);
 
     if (!strategies?.requestBuilder) {
-      throw new Error(`No request builder for config: ${coreConfig.id}`);
+      throw new Error(`No request builder for config: ${effectiveConfig.id}`);
     }
 
-    const limit = coreConfig.defaults?.limit ?? MAX_LIMIT;
+    const limit = effectiveConfig.defaults?.limit ?? MAX_LIMIT;
     const request = strategies.requestBuilder.build({
       query: committed.query,
-      searchBy: committed.searchBy,
-      source: committed.source,
+      searchBy: effectiveSearchBy,
       limit,
       offset: committed.offset,
     });
@@ -73,10 +120,10 @@ export function useSearchQuery({ coreConfig, flow, enabled = true }: UseSearchQu
     }
 
     return data as unknown as SearchResults;
-  }, [coreConfig, committed]);
+  }, [effectiveConfig, committed.query, effectiveSearchBy, committed.offset]);
 
   // Determine if query should be enabled
-  const shouldEnable = enabled && !!committed.query && !!coreConfig;
+  const shouldEnable = enabled && !!committed.query && !!effectiveConfig;
 
   const {
     data,
