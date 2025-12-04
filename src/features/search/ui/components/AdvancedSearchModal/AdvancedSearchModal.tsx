@@ -9,6 +9,7 @@ import {
   SELECT_OPERATORS,
   SELECT_QUALIFIERS,
 } from '@/common/constants/search.constants';
+import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
 import { formatRawQuery, generateSearchParamsState, useFetchSearchData } from '@/features/search/core';
 import { Select } from '@/components/Select';
 import { useSearchState, useUIState } from '@/store';
@@ -61,12 +62,15 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
 
     const formattedQuery = formatRawQuery(rawQuery);
     setSearchParams(generateSearchParamsState(formattedQuery) as unknown as URLSearchParams);
-    setForceRefreshSearch(true);
 
-    await fetchData({
-      query: formattedQuery,
-      searchBy: undefined,
-    });
+    // Only fetch directly for legacy search - new search is URL-driven via useSearchQuery
+    if (!IS_NEW_SEARCH_ENABLED) {
+      setForceRefreshSearch(true);
+      await fetchData({
+        query: formattedQuery,
+        searchBy: undefined,
+      });
+    }
 
     closeModal();
   };

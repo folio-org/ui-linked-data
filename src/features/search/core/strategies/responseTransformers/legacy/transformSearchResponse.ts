@@ -1,3 +1,7 @@
+/**
+ * @deprecated Use transformer classes (StandardResponseTransformer, HubResponseTransformer, etc.) instead.
+ * This legacy type is kept for backward compatibility with existing hooks.
+ */
 export type TransformSearchResponseParams = {
   result: Record<string, unknown>;
   resultsContainer?: string;
@@ -5,6 +9,10 @@ export type TransformSearchResponseParams = {
   apiType?: 'standard' | 'hub';
 };
 
+/**
+ * @deprecated Use transformer classes (StandardResponseTransformer, HubResponseTransformer, etc.) instead.
+ * This legacy function is kept for backward compatibility with existing hooks.
+ */
 export const transformSearchResponse = ({
   result,
   resultsContainer,

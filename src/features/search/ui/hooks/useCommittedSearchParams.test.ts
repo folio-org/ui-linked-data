@@ -64,7 +64,7 @@ describe('useCommittedSearchParams', () => {
       expect(result.current).toEqual({
         segment: 'search',
         query: '',
-        searchBy: DEFAULT_SEARCH_BY,
+        searchBy: undefined, // undefined when not in URL (supports advanced search)
         source: undefined,
         offset: 0,
       });

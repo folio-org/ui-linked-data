@@ -42,13 +42,22 @@ describe('useUrlSync', () => {
   });
 
   describe('URL flow', () => {
-    it('syncs query from URL to store', () => {
-      const searchParams = new URLSearchParams({ query: 'test query' });
+    it('syncs query from URL to store when searchBy is also present', () => {
+      const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
 
       expect(setQuery).toHaveBeenCalledWith('test query');
+    });
+
+    it('does not sync query when it is advanced search (no searchBy in URL)', () => {
+      const searchParams = new URLSearchParams({ query: 'test query' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+
+      expect(setQuery).not.toHaveBeenCalled();
     });
 
     it('syncs searchBy from URL to store', () => {
@@ -98,7 +107,30 @@ describe('useUrlSync', () => {
       expect(setNavigationState.mock.calls[1][0]).toEqual({ source: 'external' });
     });
 
-    it('clears query when URL has no query but store does', () => {
+    it('clears query when URL has no query but store does and searchBy is present', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'existing query',
+            searchBy: 'keyword',
+            navigationState: {},
+            setQuery,
+            setSearchBy,
+            setNavigationState,
+          },
+        },
+      ]);
+
+      const searchParams = new URLSearchParams({ searchBy: 'keyword' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+
+      expect(setQuery).toHaveBeenCalledWith('');
+    });
+
+    it('does not clear query when URL has no query and no searchBy (transitioning from advanced search)', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -118,7 +150,7 @@ describe('useUrlSync', () => {
 
       renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
 
-      expect(setQuery).toHaveBeenCalledWith('');
+      expect(setQuery).not.toHaveBeenCalled();
     });
 
     it('does not update store when URL value matches store value', () => {
@@ -136,7 +168,7 @@ describe('useUrlSync', () => {
         },
       ]);
 
-      const searchParams = new URLSearchParams({ query: 'test query' });
+      const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
@@ -264,8 +296,8 @@ describe('useUrlSync', () => {
 
   describe('Effect dependencies', () => {
     it('re-runs when searchParams change', () => {
-      const searchParams_1 = new URLSearchParams({ query: 'first' });
-      const searchParams_2 = new URLSearchParams({ query: 'second' });
+      const searchParams_1 = new URLSearchParams({ query: 'first', searchBy: 'keyword' });
+      const searchParams_2 = new URLSearchParams({ query: 'second', searchBy: 'keyword' });
 
       (useSearchParams as jest.Mock).mockReturnValue([searchParams_1]);
       const { rerender } = renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));

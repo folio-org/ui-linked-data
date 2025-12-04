@@ -1,4 +1,4 @@
-import { transformSearchResponse } from './responseTransformer';
+import { transformSearchResponse } from './transformSearchResponse';
 
 describe('transformSearchResponse', () => {
   // Mock data constants

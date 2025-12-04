@@ -1,11 +1,7 @@
-import type {
-  DataCapabilities,
-  RequestBuilder,
-  ResponseTransformer,
-  ResultFormatter,
-  SearchableIndex,
-  SearchTypeConfig,
-} from '../types';
+import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+import type { DataCapabilities, SearchableIndex, SearchTypeConfig } from '../types';
+import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
+import { ResourcesResponseTransformer, HubResponseTransformer } from '../strategies/responseTransformers';
 
 /**
  * Hubs Search Type Configuration
@@ -19,13 +15,16 @@ export const hubsConfig: SearchTypeConfig = {
 
   // Base strategies for all hub searches
   strategies: {
-    requestBuilder: {} as RequestBuilder,
-    responseTransformer: {} as ResponseTransformer,
-    resultFormatter: {} as ResultFormatter,
+    requestBuilder: new HubsExternalRequestBuilder(),
+    responseTransformer: new ResourcesResponseTransformer(),
+    resultFormatter: undefined,
   },
 
   searchBy: {
-    searchableIndices: [] as SearchableIndex[],
+    searchableIndices: [
+      { value: SearchableIndexEnum.HubNameLeftAnchored },
+      { value: SearchableIndexEnum.HubNameKeyword },
+    ] as SearchableIndex[],
   },
 
   capabilities: {} as DataCapabilities,
@@ -34,14 +33,14 @@ export const hubsConfig: SearchTypeConfig = {
   sources: {
     internal: {
       id: 'internal',
-      // Uses base hub strategies
       capabilities: {} as DataCapabilities,
     },
     external: {
       id: 'external',
-      // Override for external API
+      // Override strategies for external API
       strategies: {
-        requestBuilder: {} as RequestBuilder,
+        requestBuilder: new HubsExternalRequestBuilder(),
+        responseTransformer: new HubResponseTransformer(),
       },
       capabilities: {} as DataCapabilities,
     },

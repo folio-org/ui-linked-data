@@ -1,11 +1,11 @@
-import type {
-  DataCapabilities,
-  RequestBuilder,
-  ResponseTransformer,
-  ResultFormatter,
-  SearchableIndex,
-  SearchTypeConfig,
-} from '../types';
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
+import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+import type { DataCapabilities, SearchableIndex, SearchTypeConfig } from '../types';
+import { AuthoritiesSearchRequestBuilder, AuthoritiesBrowseRequestBuilder } from '../strategies/requestBuilders';
+import {
+  AuthoritiesSearchResponseTransformer,
+  AuthoritiesBrowseResponseTransformer,
+} from '../strategies/responseTransformers';
 
 /**
  * Authorities Search Type Configuration
@@ -19,9 +19,9 @@ export const authoritiesConfig: SearchTypeConfig = {
 
   // Base strategies for all authorities searches
   strategies: {
-    requestBuilder: {} as RequestBuilder,
-    responseTransformer: {} as ResponseTransformer,
-    resultFormatter: {} as ResultFormatter,
+    requestBuilder: new AuthoritiesSearchRequestBuilder(COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP),
+    responseTransformer: new AuthoritiesSearchResponseTransformer(),
+    resultFormatter: undefined,
   },
 
   // SearchBy configuration
@@ -38,18 +38,39 @@ export const authoritiesConfig: SearchTypeConfig = {
       id: 'search',
       // Inherits strategies from parent
       searchBy: {
-        searchableIndices: [] as SearchableIndex[],
+        searchableIndices: [
+          { value: SearchableIndexEnum.Keyword },
+          { value: SearchableIndexEnum.Identifier },
+          { value: SearchableIndexEnum.LCCN },
+          { value: SearchableIndexEnum.PersonalName },
+          { value: SearchableIndexEnum.CorporateConferenceName },
+          { value: SearchableIndexEnum.GeographicName },
+          { value: SearchableIndexEnum.NameTitle },
+          { value: SearchableIndexEnum.UniformTitle },
+          { value: SearchableIndexEnum.Subject },
+          { value: SearchableIndexEnum.ChildrenSubjectHeading },
+          { value: SearchableIndexEnum.Genre },
+        ] as SearchableIndex[],
       },
       capabilities: {} as DataCapabilities,
     },
     browse: {
       id: 'browse',
-      // Override request builder for browse mode
+      // Override strategies for browse mode
       strategies: {
-        requestBuilder: {} as RequestBuilder,
+        requestBuilder: new AuthoritiesBrowseRequestBuilder(COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP),
+        responseTransformer: new AuthoritiesBrowseResponseTransformer(),
       },
       searchBy: {
-        searchableIndices: [] as SearchableIndex[],
+        searchableIndices: [
+          { value: SearchableIndexEnum.PersonalName },
+          { value: SearchableIndexEnum.CorporateConferenceName },
+          { value: SearchableIndexEnum.GeographicName },
+          { value: SearchableIndexEnum.NameTitle },
+          { value: SearchableIndexEnum.UniformTitle },
+          { value: SearchableIndexEnum.Subject },
+          { value: SearchableIndexEnum.Genre },
+        ] as SearchableIndex[],
       },
       capabilities: {} as DataCapabilities,
     },

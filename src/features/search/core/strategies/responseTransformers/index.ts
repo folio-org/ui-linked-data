@@ -1,8 +1,9 @@
-export * from './responseTransformer';
+export { BaseResponseTransformer } from './BaseResponseTransformer';
+export { StandardResponseTransformer } from './StandardResponseTransformer';
+export { AuthoritiesSearchResponseTransformer } from './AuthoritiesSearchResponseTransformer';
+export { AuthoritiesBrowseResponseTransformer } from './AuthoritiesBrowseResponseTransformer';
+export { ResourcesResponseTransformer } from './ResourcesResponseTransformer';
+export { HubResponseTransformer } from './HubResponseTransformer';
 
-import { transformSearchResponse, TransformSearchResponseParams } from './responseTransformer';
-
-export const RESPONSE_TRANSFORMERS = {
-  standard: (params: TransformSearchResponseParams) => transformSearchResponse({ ...params, apiType: 'standard' }),
-  hub: (params: TransformSearchResponseParams) => transformSearchResponse({ ...params, apiType: 'hub' }),
-};
+// Legacy exports (deprecated) - for backward compatibility
+export * from './legacy';

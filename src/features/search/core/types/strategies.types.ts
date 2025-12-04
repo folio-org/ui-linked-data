@@ -1,18 +1,63 @@
-export interface RequestBuilder<TParams = Record<string, unknown>> {
-  build(params: TParams): unknown;
+/**
+ * Parameters for building a search request
+ */
+export interface SearchRequestParams {
+  query: string;
+  searchBy?: string; // undefined for advanced search (pre-formatted CQL query)
+  source?: string;
+  limit?: number;
+  offset?: number;
+  precedingRecordsCount?: number;
+  sortBy?: string;
 }
 
-export interface ResponseTransformer<TResponse = Record<string, unknown>, TResult = Record<string, unknown>> {
-  transform(response: TResponse): TResult;
+/**
+ * Output from request builder - maps directly to baseApi.getJson input
+ */
+export interface SearchRequestDescriptor {
+  url: string;
+  urlParams: Record<string, string>;
+  sameOrigin: boolean;
 }
 
-export interface ResultFormatter<TResult = Record<string, unknown>, TFormatted = unknown> {
-  format(result: TResult): TFormatted;
+/**
+ * Normalized search results returned by response transformers
+ */
+export interface NormalizedSearchResult {
+  content: unknown[];
+  totalRecords: number;
+  totalPages: number;
+  prev?: string;
+  next?: string;
 }
 
-// Search strategies container
+/**
+ * Request builder interface - builds requests for baseApi.getJson
+ */
+export interface IRequestBuilder {
+  build(params: SearchRequestParams): SearchRequestDescriptor;
+}
+
+/**
+ * Response transformer interface - transforms API responses to normalized format
+ */
+export interface IResponseTransformer {
+  readonly resultsContainer?: string;
+  transform(response: unknown, limit: number): NormalizedSearchResult;
+}
+
+/**
+ * Result formatter interface - formats normalized results for UI display
+ */
+export interface IResultFormatter<TFormatted = unknown> {
+  format(data: unknown[], sourceData?: unknown): TFormatted[];
+}
+
+/**
+ * Search strategies container - holds strategy instances
+ */
 export interface SearchStrategies {
-  requestBuilder?: RequestBuilder;
-  responseTransformer?: ResponseTransformer;
-  resultFormatter?: ResultFormatter;
+  requestBuilder?: IRequestBuilder;
+  responseTransformer?: IResponseTransformer;
+  resultFormatter?: IResultFormatter;
 }
