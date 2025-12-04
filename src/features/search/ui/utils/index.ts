@@ -1,2 +1,2 @@
 export { getActiveConfig } from './getActiveConfig.helper';
-export { getAvailableSources } from './getAvailableSources.helper';
+export * from './placeholder.helper';

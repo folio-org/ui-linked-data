@@ -34,7 +34,7 @@ export interface SearchResults {
 }
 
 export interface SearchContextValue {
-  // Configuration
+  // Configuration (active atomic config for current segment)
   config: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
@@ -42,7 +42,6 @@ export interface SearchContextValue {
 
   // Computed values
   activeUIConfig: SearchTypeUIConfig;
-  availableSources?: Record<string, unknown>;
 
   // Search results (from React Query)
   results: SearchResults | undefined;
@@ -66,7 +65,7 @@ export interface SearchProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
 
-  // Optional initial values (for value flow)
+  // Optional initial segment (composite key like "authorities:search")
   initialSegment?: string;
   initialSource?: string;
 

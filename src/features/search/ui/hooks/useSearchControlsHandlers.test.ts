@@ -13,12 +13,9 @@ describe('useSearchControlsHandlers', () => {
   const mockConfig: SearchTypeConfig = {
     id: 'test',
     defaults: {
-      segment: 'search',
-      source: 'local',
       searchBy: 'keyword',
       limit: 100,
     },
-    sources: {},
   };
 
   const setNavigationState = jest.fn();
@@ -350,7 +347,6 @@ describe('useSearchControlsHandlers', () => {
     it('resets navigation state to empty object when no defaults', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
-        sources: {},
       };
       const { result } = renderHook(() => useSearchControlsHandlers({ config: configWithoutDefaults, flow: 'url' }));
 

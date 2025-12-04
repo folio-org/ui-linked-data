@@ -6,7 +6,9 @@ import { Search as SearchRoot } from './Search';
 import { SearchContent as Content, SearchContentContainer as ContentContainer } from '../SearchContent';
 import { SearchControlPane as ControlPane } from '../SearchControlPane';
 import { RootControls } from '../SearchControls/RootControls';
-import { Segments } from '../SearchControls/Segments';
+import { Segment } from '../SearchControls/Segment';
+import { SegmentGroup } from '../SearchControls/SegmentGroup';
+import { SegmentContent } from '../SearchControls/SegmentContent';
 import { QueryInput } from '../SearchControls/QueryInput';
 import { SearchBySelect } from '../SearchControls/SearchBySelect';
 import { SubmitButton } from '../SearchControls/SubmitButton';
@@ -16,7 +18,11 @@ import { MetaControls } from '../SearchControls/MetaControls';
 import { SearchResults as Results } from '../SearchResults';
 
 const Controls = Object.assign(RootControls, {
-  Segments,
+  // Props-based segment components
+  Segment,
+  SegmentGroup,
+  SegmentContent,
+  // Input components
   InputsWrapper,
   SubmitButton,
   ResetButton,

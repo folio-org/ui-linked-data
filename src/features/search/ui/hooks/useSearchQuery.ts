@@ -1,10 +1,9 @@
 import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchState } from '@/store';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { SearchParam, selectStrategies, type SearchTypeConfig } from '../../core';
+import { selectStrategies, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
 interface SearchResults {
@@ -17,10 +16,9 @@ interface SearchResults {
 }
 
 interface UseSearchQueryParams {
+  /** Atomic config for the current segment */
   coreConfig?: SearchTypeConfig;
   flow: SearchFlow;
-  defaultSegment?: string;
-  hasSegments?: boolean;
   enabled?: boolean;
 }
 
@@ -33,36 +31,26 @@ interface UseSearchQueryResult {
   refetch: () => Promise<void>;
 }
 
-export function useSearchQuery({
-  coreConfig,
-  flow,
-  defaultSegment,
-  hasSegments = true,
-  enabled = true,
-}: UseSearchQueryParams): UseSearchQueryResult {
-  const committed = useCommittedSearchParams({ flow, defaultSegment, hasSegments });
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegmentFromStore = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string)
-    : undefined;
+export function useSearchQuery({ coreConfig, flow, enabled = true }: UseSearchQueryParams): UseSearchQueryResult {
+  const committed = useCommittedSearchParams({ flow });
 
   const queryKey = useMemo(
     () =>
-      ['search', committed.segment, committed.source, committed.query, committed.searchBy, committed.offset].filter(
+      ['search', coreConfig?.id, committed.source, committed.query, committed.searchBy, committed.offset].filter(
         value => value !== undefined && value !== '',
       ),
-    [committed],
+    [coreConfig?.id, committed],
   );
 
   const queryFn = useCallback(async (): Promise<SearchResults> => {
     if (!coreConfig) {
-      throw new Error(`No core config for segment: ${committed.segment}`);
+      throw new Error('No core config provided');
     }
 
-    const strategies = selectStrategies(coreConfig, committed.segment, committed.source);
+    const strategies = selectStrategies(coreConfig);
 
     if (!strategies?.requestBuilder) {
-      throw new Error(`No request builder for segment: ${committed.segment}`);
+      throw new Error(`No request builder for config: ${coreConfig.id}`);
     }
 
     const limit = coreConfig.defaults?.limit ?? MAX_LIMIT;
@@ -88,8 +76,7 @@ export function useSearchQuery({
   }, [coreConfig, committed]);
 
   // Determine if query should be enabled
-  const segmentMatches = flow === 'url' || !hasSegments || committed.segment === currentSegmentFromStore;
-  const shouldEnable = enabled && segmentMatches && !!committed.query && !!coreConfig;
+  const shouldEnable = enabled && !!committed.query && !!coreConfig;
 
   const {
     data,

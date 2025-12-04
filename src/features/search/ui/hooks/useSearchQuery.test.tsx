@@ -68,13 +68,10 @@ describe('useSearchQuery', () => {
     mockConfig = {
       id: 'test',
       defaults: {
-        segment: 'search',
-        source: 'local',
         searchBy: 'keyword',
         limit: 100,
       },
       strategies: mockStrategies,
-      sources: {},
     };
 
     mockGetJson.mockResolvedValue(mockSearchResults);
@@ -122,8 +119,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -146,8 +141,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -181,8 +174,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -255,8 +246,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'value',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -293,8 +282,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'value',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -327,7 +314,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'value',
-            hasSegments: false,
           }),
         { wrapper: createWrapper() },
       );
@@ -356,7 +342,6 @@ describe('useSearchQuery', () => {
           useSearchQuery({
             coreConfig: mockConfig,
             flow: 'url',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -413,7 +398,6 @@ describe('useSearchQuery', () => {
         id: 'test',
         defaults: { limit: 100 },
         strategies: {},
-        sources: {},
       };
 
       const { result } = renderHook(

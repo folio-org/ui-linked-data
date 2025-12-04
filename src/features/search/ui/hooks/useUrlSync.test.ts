@@ -13,12 +13,9 @@ describe('useUrlSync', () => {
   const mockConfig: SearchTypeConfig = {
     id: 'test',
     defaults: {
-      segment: 'search',
-      source: 'local',
       searchBy: 'keyword',
       limit: 100,
     },
-    sources: {},
   };
 
   const setQuery = jest.fn();

@@ -256,9 +256,10 @@ export const useSearchControlsHandlers = ({
 
     // Reset navigation to defaults
     const defaultNav = {} as Record<string, unknown>;
+    const defaultSegment = configRef.current.id;
 
-    if (configRef.current.defaults?.segment) {
-      defaultNav[SearchParam.SEGMENT] = configRef.current.defaults.segment;
+    if (defaultSegment) {
+      defaultNav[SearchParam.SEGMENT] = defaultSegment;
     }
 
     setNavigationState(defaultNav as SearchParamsState);
@@ -267,8 +268,8 @@ export const useSearchControlsHandlers = ({
       setSearchParams(() => {
         const params = new URLSearchParams();
 
-        if (configRef.current.defaults?.segment) {
-          params.set(SearchParam.SEGMENT, configRef.current.defaults.segment);
+        if (defaultSegment) {
+          params.set(SearchParam.SEGMENT, defaultSegment);
         }
 
         return params;

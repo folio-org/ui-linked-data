@@ -1,0 +1,47 @@
+import { FC, ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Button, ButtonType } from '@/components/Button';
+import { useSearchState } from '@/store';
+import { SearchParam } from '../../../core';
+import { useSearchContext } from '../../providers/SearchProvider';
+
+export interface SegmentProps {
+  path: string;
+  labelId?: string;
+  defaultTo?: string;
+  children?: ReactNode;
+  testId?: string;
+}
+
+export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, testId }) => {
+  const { onSegmentChange } = useSearchContext();
+  const { navigationState } = useSearchState(['navigationState']);
+  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
+
+  // Active if exact match OR prefix match (for parent segments)
+  const isActive = currentSegment === path || currentSegment?.startsWith(`${path}:`);
+  const derivedLabelId = labelId ?? `ld.${path.split(':').pop()}`;
+
+  const handleClick = () => {
+    const targetPath = defaultTo ?? path;
+
+    if (currentSegment === targetPath) return;
+
+    onSegmentChange(targetPath);
+  };
+
+  const derivedTestId = testId ?? `id-search-segment-button-${path}`;
+
+  return (
+    <Button
+      type={isActive ? ButtonType.Highlighted : ButtonType.Primary}
+      aria-selected={currentSegment === path}
+      role="tab"
+      className="search-segment-button"
+      onClick={handleClick}
+      data-testid={derivedTestId}
+    >
+      {children ?? <FormattedMessage id={derivedLabelId} />}
+    </Button>
+  );
+};

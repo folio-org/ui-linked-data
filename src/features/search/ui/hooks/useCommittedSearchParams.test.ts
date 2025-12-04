@@ -40,9 +40,7 @@ describe('useCommittedSearchParams', () => {
       });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'url', defaultSegment: 'search', hasSegments: true }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current).toEqual({
         segment: 'browse',
@@ -57,9 +55,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'url', defaultSegment: 'search', hasSegments: true }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current).toEqual({
         segment: 'search',
@@ -74,9 +70,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams({ segment: 'browse', query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'url', defaultSegment: 'search', hasSegments: false }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current.segment).toBeUndefined();
       expect(result.current.query).toBe('test');
@@ -122,9 +116,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams({ query: 'url query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'value', defaultSegment: 'search', hasSegments: true }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
       expect(result.current).toEqual({
         segment: 'resources',
@@ -151,9 +143,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'value', defaultSegment: 'defaultSeg', hasSegments: true }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
       expect(result.current.segment).toBe('defaultSeg');
     });
@@ -175,9 +165,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'value', defaultSegment: 'search', hasSegments: false }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
       expect(result.current.segment).toBeUndefined();
       expect(result.current.query).toBe('test');
@@ -200,9 +188,7 @@ describe('useCommittedSearchParams', () => {
       });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() =>
-        useCommittedSearchParams({ flow: 'value', defaultSegment: 'search', hasSegments: true }),
-      );
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
       expect(result.current.query).toBe('');
       expect(result.current.searchBy).toBe(DEFAULT_SEARCH_BY);
@@ -281,7 +267,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams({ segment: 'browse' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url', defaultSegment: 'search' }));
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current.segment).toBe('browse');
     });
@@ -290,7 +276,7 @@ describe('useCommittedSearchParams', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url', hasSegments: true }));
+      const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current.segment).toBeUndefined();
     });

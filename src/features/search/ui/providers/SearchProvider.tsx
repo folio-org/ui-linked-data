@@ -1,8 +1,8 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import { useSearchState } from '@/store';
-import { SearchParam } from '../../core';
+import { SearchParam, resolveCoreConfig } from '../../core';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { getActiveConfig, getAvailableSources } from '../utils';
+import { getActiveConfig } from '../utils';
 import { useSearchControlsHandlers, useSearchQuery, useUrlSync } from '../hooks';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
@@ -15,23 +15,20 @@ export const SearchProvider: FC<SearchProviderProps> = ({
   initialSegment,
   children,
 }) => {
-  // Determine if config has segments
-  const hasSegments = !!config.segments && Object.keys(config.segments).length > 0;
-
   const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined) ||
-      initialSegment ||
-      config.defaults?.segment
-    : undefined;
+  const currentSegment =
+    ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined) ||
+    initialSegment ||
+    config.id;
+
+  const activeConfig = useMemo(() => resolveCoreConfig(currentSegment) ?? config, [currentSegment, config]);
   const activeUIConfig = useMemo(() => getActiveConfig(uiConfig, currentSegment), [uiConfig, currentSegment]);
-  const availableSources = useMemo(() => getAvailableSources(config, currentSegment), [config, currentSegment]);
-  const handlers = useSearchControlsHandlers({ config, flow });
+  const handlers = useSearchControlsHandlers({ config: activeConfig, flow });
 
   // Sync URL to store (URL flow only, no-op for value flow)
-  useUrlSync({ flow, config });
+  useUrlSync({ flow, config: activeConfig });
 
-  // Search query - uses committed params based on flow
+  // Search query - uses the resolved atomic config
   const {
     data: results,
     isLoading,
@@ -40,23 +37,20 @@ export const SearchProvider: FC<SearchProviderProps> = ({
     error,
     refetch,
   } = useSearchQuery({
-    coreConfig: config,
+    coreConfig: activeConfig,
     flow,
-    defaultSegment: config.defaults?.segment,
-    hasSegments,
   });
 
   const contextValue = useMemo(
     (): SearchContextValue => ({
       // Configuration
-      config,
+      config: activeConfig,
       uiConfig,
       flow,
       mode,
 
       // Computed values
       activeUIConfig,
-      availableSources,
 
       // Search results
       results,
@@ -74,12 +68,11 @@ export const SearchProvider: FC<SearchProviderProps> = ({
       onReset: handlers.onReset,
     }),
     [
-      config,
+      activeConfig,
       uiConfig,
       flow,
       mode,
       activeUIConfig,
-      availableSources,
       results,
       isLoading,
       isFetching,

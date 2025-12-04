@@ -89,7 +89,7 @@ export const SearchView = () => {
     });
   };
 
-  const items = useMemo(
+  const resourceActions = useMemo(
     () => [
       {
         id: 'actions',
@@ -132,32 +132,61 @@ export const SearchView = () => {
       ],
     }, */
     ],
-    [navigateToEditPage],
+    [navigateToEditPage, selectedInstances.length],
   );
 
   const renderSearchControlPane = useCallback(
     () => (
       <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
-        <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+        <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="search-view-actions-dropdown" />
       </LegacySearchControlPane>
     ),
-    [items],
+    [resourceActions],
   );
   const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search config={getSearchConfig('resources')} uiConfig={getSearchUIConfig('resources')} flow="url" mode="custom">
+      <Search
+        config={getSearchConfig('resources')}
+        uiConfig={getSearchUIConfig('resources')}
+        flow="url"
+        mode="custom"
+        initialSegment="resources"
+      >
         <Search.Controls>
+          {/* Top-level segments */}
+          <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment path="resources" labelId="ld.resources" />
+            <Search.Controls.Segment path="authorities" labelId="ld.marcAuthority" defaultTo="authorities:search" />
+          </Search.Controls.SegmentGroup>
+
+          {/* Nested segments for Authorities */}
+          <Search.Controls.SegmentGroup parentPath="authorities">
+            <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
+            <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
+          </Search.Controls.SegmentGroup>
+
+          {/* Common search controls */}
           <Search.Controls.InputsWrapper />
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
         </Search.Controls>
 
         <Search.Content>
-          <Search.ControlPane>
-            <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-          </Search.ControlPane>
+          {/* Resources-specific actions */}
+          <Search.Controls.SegmentContent segment="resources">
+            <Search.ControlPane>
+              <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="resources-actions-dropdown" />
+            </Search.ControlPane>
+          </Search.Controls.SegmentContent>
+
+          {/* Authorities-specific actions (for both search and browse) */}
+          <Search.Controls.SegmentContent segment="authorities" matchPrefix>
+            <Search.ControlPane>
+              <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="authorities-actions-dropdown" />
+            </Search.ControlPane>
+          </Search.Controls.SegmentContent>
 
           <Search.ContentContainer>
             <Search.Results>
