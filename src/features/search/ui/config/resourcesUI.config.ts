@@ -29,22 +29,18 @@ export const resourcesUIConfig: SearchTypeUIConfig = {
     {
       value: 'title',
       labelId: 'ld.title',
-      placeholder: 'ld.searchByTitle',
     },
     {
       value: 'contributor',
       labelId: 'ld.contributor',
-      placeholder: 'ld.searchByContributor',
     },
     {
       value: 'isbn',
       labelId: 'ld.isbn',
-      placeholder: 'ld.searchByISBN',
     },
     {
       value: 'lccn',
       labelId: 'ld.lccn',
-      placeholder: 'ld.searchByLCCN',
     },
   ],
 };
