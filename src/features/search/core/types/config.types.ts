@@ -35,10 +35,17 @@ export interface DataCapabilities {
  * - "hubs:external" - External hub services
  */
 export interface SearchTypeConfig {
-  id: string;
+  id: string; // 'resources' | 'hubs:internal' | 'hubs:external' | 'authorities:search' | 'authorities:browse'
+  // Default strategies for this search type (can be overridden by segments/sources)
   strategies?: SearchStrategies;
+
+  // Search configuration
   searchBy?: SearchByConfig;
+
+  // Data capabilities
   capabilities?: DataCapabilities;
+
+  // Default values
   defaults?: {
     searchBy?: string;
     query?: string;
