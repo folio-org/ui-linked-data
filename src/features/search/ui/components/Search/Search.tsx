@@ -5,22 +5,63 @@ import type { SearchTypeConfig } from '../../../core/types';
 import type { SearchTypeUIConfig } from '../../types/ui.types';
 import type { SearchFlow } from '../../types/provider.types';
 
-interface SearchRootProps {
-  config?: SearchTypeConfig;
-  uiConfig?: SearchTypeUIConfig;
+interface StaticSearchProps {
+  config: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
+  segments?: never;
+  defaultSegment?: never;
+  defaultSource?: never;
+}
+
+interface DynamicSearchProps {
+  segments: string[];
+  defaultSegment?: string;
+  defaultSource?: string;
+  config?: never;
+  uiConfig?: never;
+}
+
+interface BaseSearchProps {
   flow: SearchFlow;
   mode?: 'auto' | 'custom';
-  initialSegment?: string;
   children: ReactNode;
 }
 
-export const Search: FC<SearchRootProps> = ({ config, uiConfig, flow, mode = 'custom', initialSegment, children }) => {
-  if (!config) return null;
+export type SearchRootProps = BaseSearchProps & (StaticSearchProps | DynamicSearchProps);
 
-  if (!uiConfig) return null;
+function isDynamicMode(props: SearchRootProps): props is BaseSearchProps & DynamicSearchProps {
+  return 'segments' in props && Array.isArray(props.segments);
+}
+
+export const Search: FC<SearchRootProps> = props => {
+  const { flow, mode = 'custom', children } = props;
+
+  // Validate required props based on mode
+  if (isDynamicMode(props)) {
+    if (props.segments.length === 0) {
+      return null;
+    }
+  } else if (!props.config || !props.uiConfig) {
+    return null;
+  }
+
+  const providerProps = isDynamicMode(props)
+    ? {
+        segments: props.segments,
+        defaultSegment: props.defaultSegment,
+        defaultSource: props.defaultSource,
+        flow,
+        mode,
+      }
+    : {
+        config: props.config,
+        uiConfig: props.uiConfig,
+        flow,
+        mode,
+      };
 
   return (
-    <SearchProvider config={config} uiConfig={uiConfig} flow={flow} mode={mode} initialSegment={initialSegment}>
+    <SearchProvider {...providerProps}>
       <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
         {children}
       </div>

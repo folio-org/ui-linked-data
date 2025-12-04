@@ -33,6 +33,16 @@ export interface SearchResults {
   };
 }
 
+/**
+ * Segment configuration for dynamic mode.
+ * Maps segment keys to their core config registry keys.
+ */
+export interface SegmentConfig {
+  coreConfigKey: string;
+  uiConfigKey?: string;
+  defaultSource?: string;
+}
+
 export interface SearchContextValue {
   // Configuration (active atomic config for current segment)
   config: SearchTypeConfig;
@@ -59,15 +69,33 @@ export interface SearchContextValue {
   onReset: () => void;
 }
 
-export interface SearchProviderProps {
+/**
+ * Static mode props - when providing explicit configs
+ */
+interface StaticModeProps {
   config: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
+  segments?: never;
+}
+
+/**
+ * Dynamic mode props - when using registries for multi-segment search
+ */
+interface DynamicModeProps {
+  segments: string[];
+  defaultSegment?: string;
+  defaultSource?: string;
+  config?: never;
+  uiConfig?: never;
+}
+
+/**
+ * Base props shared by both modes
+ */
+interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
-
-  // Optional initial segment (composite key like "authorities:search")
-  initialSegment?: string;
-  initialSource?: string;
-
   children: React.ReactElement;
 }
+
+export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);

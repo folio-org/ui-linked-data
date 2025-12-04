@@ -2,7 +2,7 @@
 export { Search as LegacySearch } from './Search.legacy';
 
 // New compound components
-import { Search as SearchRoot } from './Search';
+import { Search as SearchRoot, type SearchRootProps } from './Search';
 import { SearchContent as Content, SearchContentContainer as ContentContainer } from '../SearchContent';
 import { SearchControlPane as ControlPane } from '../SearchControlPane';
 import { RootControls } from '../SearchControls/RootControls';
@@ -16,6 +16,7 @@ import { ResetButton } from '../SearchControls/ResetButton';
 import { InputsWrapper } from '../SearchControls/InputsWrapper';
 import { MetaControls } from '../SearchControls/MetaControls';
 import { SearchResults as Results } from '../SearchResults';
+import type { FC } from 'react';
 
 const Controls = Object.assign(RootControls, {
   // Props-based segment components
@@ -31,11 +32,23 @@ const Controls = Object.assign(RootControls, {
   MetaControls,
 });
 
+// Type the compound component properly
+type SearchCompoundComponent = FC<SearchRootProps> & {
+  Controls: typeof Controls;
+  Content: typeof Content;
+  ControlPane: typeof ControlPane;
+  ContentContainer: typeof ContentContainer;
+  Results: typeof Results;
+};
+
 // Main compound component
-export const Search = Object.assign(SearchRoot, {
+export const Search: SearchCompoundComponent = Object.assign(SearchRoot, {
   Controls,
   Content,
   ControlPane,
   ContentContainer,
   Results,
 });
+
+// Export the props type for consumers
+export type { SearchRootProps } from './Search';

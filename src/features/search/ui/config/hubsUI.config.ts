@@ -2,7 +2,7 @@ import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
 
 export const hubsUIConfig: SearchTypeUIConfig = {
   ui: {
-    titleId: 'ld.resources',
+    titleId: 'ld.hubs',
     subtitleId: '',
     placeholderId: '',
     emptyStateId: 'ld.enterSearchCriteria',
