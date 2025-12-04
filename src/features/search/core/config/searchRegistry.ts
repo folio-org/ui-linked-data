@@ -10,11 +10,6 @@ import { hubsExternalConfig } from './hubsExternal.config';
  *
  * Central registry of all atomic search configurations.
  * Each config is self-contained with its own strategies, searchBy, and defaults.
- *
- * Keys use composite notation:
- * - Simple types: "resources"
- * - Segment variants: "authorities:search", "authorities:browse"
- * - Source variants: "hubs:internal", "hubs:external"
  */
 export const searchRegistry: Record<string, SearchTypeConfig> = {
   // Resources (simple type)
@@ -30,21 +25,6 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'hubs:external': hubsExternalConfig,
 };
 
-/**
- * Get an atomic search config by composite key.
- *
- * @example
- * getSearchConfig('resources')           // Resources config
- * getSearchConfig('authorities:search')  // Authorities search config
- * getSearchConfig('hubs:external')       // Hubs external config
- */
 export function getSearchConfig(key: string): SearchTypeConfig | undefined {
   return searchRegistry[key];
-}
-
-/**
- * Get all registered search config keys
- */
-export function getSearchConfigKeys(): string[] {
-  return Object.keys(searchRegistry);
 }
