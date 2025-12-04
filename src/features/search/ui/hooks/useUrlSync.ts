@@ -4,6 +4,7 @@ import { useSearchState } from '@/store';
 import { SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
+import { getValidSearchBy } from '../utils';
 
 interface UseUrlSyncParams {
   flow: SearchFlow;
@@ -42,8 +43,13 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
       setQuery(queryFromUrl);
     }
 
-    if (searchByFromUrl !== null && searchByFromUrl !== searchBy) {
-      setSearchBy(searchByFromUrl as SearchIdentifiers);
+    // Validate searchBy against current config before syncing to store
+    if (searchByFromUrl !== null) {
+      const validSearchBy = getValidSearchBy(searchByFromUrl, config);
+
+      if (validSearchBy !== searchBy) {
+        setSearchBy(validSearchBy as SearchIdentifiers);
+      }
     }
 
     if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {

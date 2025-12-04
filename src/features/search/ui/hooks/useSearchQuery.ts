@@ -5,6 +5,7 @@ import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 import { selectStrategies, resolveEffectiveConfig, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
+import { getValidSearchBy } from '../utils';
 
 interface SearchResults {
   items: unknown[];
@@ -32,28 +33,6 @@ interface UseSearchQueryResult {
   isError: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
-}
-
-/**
- * Validates if a searchBy value is valid for the given config.
- * Returns the validated searchBy or the config's default if invalid.
- */
-function getValidSearchBy(searchBy: string | undefined, config: SearchTypeConfig): string | undefined {
-  if (!searchBy) {
-    return config.defaults?.searchBy;
-  }
-
-  const validIndices = config.searchBy?.searchableIndices?.map(({ value }) => value) ?? [];
-
-  if (validIndices.length === 0) {
-    return searchBy;
-  }
-
-  if (validIndices.includes(searchBy)) {
-    return searchBy;
-  }
-
-  return config.defaults?.searchBy;
 }
 
 export function useSearchQuery({ fallbackConfig, flow, enabled = true }: UseSearchQueryParams): UseSearchQueryResult {

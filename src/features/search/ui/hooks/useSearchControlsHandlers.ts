@@ -2,8 +2,9 @@ import { useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, getSearchConfig } from '../../core';
 import type { SearchFlow } from '../types';
+import { getValidSearchBy } from '../utils';
 
 interface UseSearchControlsHandlersParams {
   config: SearchTypeConfig;
@@ -18,11 +19,15 @@ interface SearchControlsHandlers {
   onReset: () => void;
 }
 
-const DEFAULT_DRAFT: SegmentDraft = {
-  query: '',
-  searchBy: DEFAULT_SEARCH_BY as SearchIdentifiers,
-  source: undefined,
-};
+function resolveConfigForSegment(segment: string, source?: string): SearchTypeConfig | undefined {
+  if (source) {
+    const withSource = getSearchConfig(`${segment}:${source}`);
+
+    if (withSource) return withSource;
+  }
+
+  return getSearchConfig(segment);
+}
 
 export const useSearchControlsHandlers = ({
   config,
@@ -79,16 +84,33 @@ export const useSearchControlsHandlers = ({
     });
   }, [setDraftBySegment]);
 
-  // Helper to restore draft for a segment
+  // Helper to restore draft for a segment, with searchBy validation
   const restoreDraft = useCallback(
-    (segment: string): SegmentDraft => {
+    (segment: string, segmentConfig?: SearchTypeConfig): SegmentDraft => {
       const state = useSearchState.getState();
-      const draft = state.draftBySegment[segment] ?? DEFAULT_DRAFT;
+      const draft = state.draftBySegment[segment];
 
-      setQuery(draft.query);
-      setSearchBy(draft.searchBy);
+      if (draft) {
+        // If we have a saved draft, validate its searchBy against the new segment's config
+        const validSearchBy = segmentConfig ? getValidSearchBy(draft.searchBy, segmentConfig) : draft.searchBy;
 
-      return draft;
+        setQuery(draft.query);
+        setSearchBy(validSearchBy);
+
+        return { ...draft, searchBy: validSearchBy };
+      }
+
+      // No draft exists - use defaults from the segment's config
+      const defaultSearchBy = segmentConfig?.defaults?.searchBy ?? DEFAULT_SEARCH_BY;
+
+      setQuery('');
+      setSearchBy(defaultSearchBy as SearchIdentifiers);
+
+      return {
+        query: '',
+        searchBy: defaultSearchBy as SearchIdentifiers,
+        source: undefined,
+      };
     },
     [setQuery, setSearchBy],
   );
@@ -98,9 +120,12 @@ export const useSearchControlsHandlers = ({
       // Save current segment's draft before switching
       saveCurrentDraft();
 
+      // Resolve config for the new segment
+      const newSegmentConfig = getSearchConfig(newSegment);
+
       // Get draft for target segment
-      const targetDraft = useSearchState.getState().draftBySegment[newSegment] ?? DEFAULT_DRAFT;
-      const hasPreservedQuery = !!targetDraft.query;
+      const existingDraft = useSearchState.getState().draftBySegment[newSegment];
+      const hasPreservedQuery = !!existingDraft?.query;
 
       // Update navigation state
       const currentState = useSearchState.getState();
@@ -108,16 +133,16 @@ export const useSearchControlsHandlers = ({
       updatedState[SearchParam.SEGMENT] = newSegment;
 
       // Restore source from target draft if exists
-      if (targetDraft.source) {
-        updatedState[SearchParam.SOURCE] = targetDraft.source;
+      if (existingDraft?.source) {
+        updatedState[SearchParam.SOURCE] = existingDraft.source;
       } else {
         delete updatedState[SearchParam.SOURCE];
       }
 
       setNavigationState(updatedState as SearchParamsState);
 
-      // Restore draft values (query, searchBy)
-      restoreDraft(newSegment);
+      // Restore draft values (query, searchBy) with validation
+      const restoredDraft = restoreDraft(newSegment, newSegmentConfig);
 
       // URL flow: update URL
       if (flowRef.current === 'url') {
@@ -127,11 +152,11 @@ export const useSearchControlsHandlers = ({
 
           // If restored segment has query, include full search params (auto-search)
           if (hasPreservedQuery) {
-            params.set(SearchParam.QUERY, targetDraft.query);
-            params.set(SearchParam.SEARCH_BY, targetDraft.searchBy);
+            params.set(SearchParam.QUERY, restoredDraft.query);
+            params.set(SearchParam.SEARCH_BY, restoredDraft.searchBy);
 
-            if (targetDraft.source) {
-              params.set(SearchParam.SOURCE, targetDraft.source);
+            if (restoredDraft.source) {
+              params.set(SearchParam.SOURCE, restoredDraft.source);
             }
           }
 
@@ -141,9 +166,9 @@ export const useSearchControlsHandlers = ({
         // Value flow: commit if preserved query exists
         setCommittedValues({
           segment: newSegment,
-          query: targetDraft.query,
-          searchBy: targetDraft.searchBy,
-          source: targetDraft.source,
+          query: restoredDraft.query,
+          searchBy: restoredDraft.searchBy,
+          source: restoredDraft.source,
           offset: 0,
         });
       }
@@ -194,13 +219,19 @@ export const useSearchControlsHandlers = ({
     const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
     const source = navState?.[SearchParam.SOURCE] as string | undefined;
 
-    // Save current draft on submit
+    // Resolve the effective config for the current segment + source
+    const effectiveConfig = resolveConfigForSegment(segment, source) ?? configRef.current;
+
+    // Validate searchBy against the effective config
+    const validSearchBy = getValidSearchBy(searchBy, effectiveConfig);
+
+    // Save current draft on submit (with validated searchBy)
     if (segment) {
       setDraftBySegment({
         ...draftBySegment,
         [segment]: {
           query,
-          searchBy,
+          searchBy: validSearchBy as SearchIdentifiers,
           source,
         },
       });
@@ -218,8 +249,8 @@ export const useSearchControlsHandlers = ({
         urlParams.set(SearchParam.QUERY, query);
       }
 
-      if (searchBy) {
-        urlParams.set(SearchParam.SEARCH_BY, searchBy);
+      if (validSearchBy) {
+        urlParams.set(SearchParam.SEARCH_BY, validSearchBy);
       }
 
       if (source) {
@@ -232,7 +263,7 @@ export const useSearchControlsHandlers = ({
       setCommittedValues({
         segment,
         query,
-        searchBy,
+        searchBy: validSearchBy,
         source,
         offset: 0,
       });

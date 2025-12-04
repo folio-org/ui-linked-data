@@ -1,4 +1,5 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
@@ -13,7 +14,7 @@ export const hubsExternalConfig: SearchTypeConfig = {
   id: 'hubs:external',
 
   strategies: {
-    requestBuilder: new HubsExternalRequestBuilder(),
+    requestBuilder: new HubsExternalRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
     resultFormatter: undefined,
   },

@@ -1,4 +1,5 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
@@ -15,7 +16,7 @@ export const hubsInternalConfig: SearchTypeConfig = {
   strategies: {
     // Uses same request builder as external for now
     // Can be replaced with HubsInternalRequestBuilder when implemented
-    requestBuilder: new HubsExternalRequestBuilder(),
+    requestBuilder: new HubsExternalRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new ResourcesResponseTransformer(),
     resultFormatter: undefined,
   },
