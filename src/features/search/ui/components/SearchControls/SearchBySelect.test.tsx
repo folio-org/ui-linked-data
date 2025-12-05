@@ -5,9 +5,6 @@ import { useSearchStore } from '@/store';
 
 const mockConfig = {
   id: 'test',
-  searchBy: {
-    searchableIndices: [{ value: 'keyword' }, { value: 'title' }, { value: 'author' }],
-  },
 };
 
 jest.mock('../../providers/SearchProvider', () => ({
@@ -17,6 +14,11 @@ jest.mock('../../providers/SearchProvider', () => ({
       features: {
         hasSearchBy: true,
       },
+      searchableIndices: [
+        { value: 'keyword', labelId: 'ld.keyword' },
+        { value: 'title', labelId: 'ld.title' },
+        { value: 'author', labelId: 'ld.author' },
+      ],
     },
   }),
 }));

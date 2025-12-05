@@ -1,26 +1,18 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { SearchProvider } from '../../providers/SearchProvider';
-import type { SearchTypeConfig } from '../../../core/types';
-import type { SearchTypeUIConfig } from '../../types/ui.types';
-import type { SearchFlow } from '../../types/provider.types';
+import type { SearchProviderProps } from '../../types/provider.types';
 
-interface SearchRootProps {
-  config?: SearchTypeConfig;
-  uiConfig?: SearchTypeUIConfig;
-  flow: SearchFlow;
-  mode?: 'auto' | 'custom';
-  initialSegment?: string;
-  children: ReactNode;
-}
+export const Search: FC<SearchProviderProps> = props => {
+  const { children } = props;
 
-export const Search: FC<SearchRootProps> = ({ config, uiConfig, flow, mode = 'custom', initialSegment, children }) => {
-  if (!config) return null;
-
-  if (!uiConfig) return null;
+  // Minimal sanity check for dynamic mode
+  if ('segments' in props && Array.isArray(props.segments) && props.segments.length === 0) {
+    return null;
+  }
 
   return (
-    <SearchProvider config={config} uiConfig={uiConfig} flow={flow} mode={mode} initialSegment={initialSegment}>
+    <SearchProvider {...props}>
       <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>
         {children}
       </div>

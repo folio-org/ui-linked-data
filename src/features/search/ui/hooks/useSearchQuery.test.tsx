@@ -13,12 +13,6 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-// Mock the utility module directly where selectStrategies is defined
-const mockSelectStrategies = jest.fn();
-jest.mock('../../core/utils/configSelectors.helper', () => ({
-  selectStrategies: (...args: unknown[]) => mockSelectStrategies(...args),
-}));
-
 // Mock baseApi
 const mockGetJson = jest.fn();
 jest.mock('@/common/api/base.api', () => ({
@@ -68,19 +62,13 @@ describe('useSearchQuery', () => {
     mockConfig = {
       id: 'test',
       defaults: {
-        segment: 'search',
-        source: 'local',
         searchBy: 'keyword',
         limit: 100,
       },
       strategies: mockStrategies,
-      sources: {},
     };
 
     mockGetJson.mockResolvedValue(mockSearchResults);
-
-    // Mock selectStrategies to return our mock strategies
-    mockSelectStrategies.mockReturnValue(mockStrategies);
 
     queryClient = new QueryClient({
       defaultOptions: {
@@ -120,10 +108,8 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -144,10 +130,8 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -179,10 +163,8 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -202,7 +184,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
             enabled: false,
           }),
@@ -212,14 +194,14 @@ describe('useSearchQuery', () => {
       expect(mockGetJson).not.toHaveBeenCalled();
     });
 
-    it('does not execute when coreConfig is undefined', () => {
+    it('does not execute when fallbackCoreConfig is undefined', () => {
       const searchParams = new URLSearchParams({ query: 'test query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: undefined,
+            fallbackCoreConfig: undefined,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -253,10 +235,8 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -291,10 +271,8 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
-            defaultSegment: 'search',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -325,9 +303,8 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
-            hasSegments: false,
           }),
         { wrapper: createWrapper() },
       );
@@ -354,9 +331,8 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
-            hasSegments: true,
           }),
         { wrapper: createWrapper() },
       );
@@ -384,7 +360,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -404,8 +380,6 @@ describe('useSearchQuery', () => {
     });
 
     it('throws error when no request builder for segment', async () => {
-      mockSelectStrategies.mockReturnValue({});
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
@@ -413,13 +387,12 @@ describe('useSearchQuery', () => {
         id: 'test',
         defaults: { limit: 100 },
         strategies: {},
-        sources: {},
       };
 
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: configWithoutBuilder,
+            fallbackCoreConfig: configWithoutBuilder,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -440,19 +413,13 @@ describe('useSearchQuery', () => {
         transform: jest.fn().mockReturnValue(transformedResult),
       };
 
-      // Mock selectStrategies to return transformer
-      mockSelectStrategies.mockReturnValue({
-        requestBuilder: mockRequestBuilder,
-        responseTransformer: transformer,
-      });
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -467,17 +434,13 @@ describe('useSearchQuery', () => {
     });
 
     it('returns raw data when no transformer is provided', async () => {
-      mockSelectStrategies.mockReturnValue({
-        requestBuilder: mockRequestBuilder,
-      });
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -501,7 +464,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -523,7 +486,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -545,7 +508,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -578,7 +541,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            coreConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },

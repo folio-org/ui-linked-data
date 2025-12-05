@@ -13,12 +13,9 @@ describe('useSearchControlsHandlers', () => {
   const mockConfig: SearchTypeConfig = {
     id: 'test',
     defaults: {
-      segment: 'search',
-      source: 'local',
       searchBy: 'keyword',
       limit: 100,
     },
-    sources: {},
   };
 
   const setNavigationState = jest.fn();
@@ -58,7 +55,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('onSegmentChange', () => {
     it('updates navigation state with new segment', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSegmentChange('browse');
@@ -70,7 +67,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('updates URL params with new segment in URL flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSegmentChange('browse');
@@ -85,7 +82,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('resets pagination offset when changing segment', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSegmentChange('browse');
@@ -99,7 +96,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('does not update URL in value flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'value' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
 
       act(() => {
         result.current.onSegmentChange('browse');
@@ -112,7 +109,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('onSourceChange', () => {
     it('updates navigation state with new source', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSourceChange('external');
@@ -125,7 +122,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('does not update URL on source change (only on submit)', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSourceChange('external');
@@ -135,7 +132,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('updates navigation state in value flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'value' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
 
       act(() => {
         result.current.onSourceChange('external');
@@ -148,7 +145,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('onPageChange', () => {
     it('sets offset in URL params for URL flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onPageChange(2);
@@ -163,7 +160,7 @@ describe('useSearchControlsHandlers', () => {
 
     it('removes offset param when page is 0', () => {
       const existingParams = new URLSearchParams({ offset: '100' });
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onPageChange(0);
@@ -175,9 +172,9 @@ describe('useSearchControlsHandlers', () => {
       expect(params.has(SearchParam.OFFSET)).toBe(false);
     });
 
-    it('calculates offset using config limit', () => {
+    it('calculates offset using coreConfig limit', () => {
       const customConfig = { ...mockConfig, defaults: { ...mockConfig.defaults, limit: 50 } };
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: customConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: customConfig, flow: 'url' }));
 
       act(() => {
         result.current.onPageChange(3);
@@ -190,7 +187,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('does not update URL in value flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'value' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
 
       act(() => {
         result.current.onPageChange(1);
@@ -202,7 +199,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('onSubmit', () => {
     it('sets all search params in URL for URL flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSubmit();
@@ -238,7 +235,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSubmit();
@@ -269,7 +266,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSubmit();
@@ -300,7 +297,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onSubmit();
@@ -312,7 +309,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('does not update URL in value flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'value' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
 
       act(() => {
         result.current.onSubmit();
@@ -325,7 +322,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('onReset', () => {
     it('resets query and searchBy', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onReset();
@@ -335,8 +332,8 @@ describe('useSearchControlsHandlers', () => {
       expect(resetSearchBy).toHaveBeenCalled();
     });
 
-    it('resets navigation state to defaults from config', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+    it('resets navigation state to defaults from coreConfig', () => {
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onReset();
@@ -350,9 +347,10 @@ describe('useSearchControlsHandlers', () => {
     it('resets navigation state to empty object when no defaults', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
-        sources: {},
       };
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: configWithoutDefaults, flow: 'url' }));
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: configWithoutDefaults, flow: 'url' }),
+      );
 
       act(() => {
         result.current.onReset();
@@ -362,7 +360,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('clears URL params in URL flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       act(() => {
         result.current.onReset();
@@ -377,7 +375,7 @@ describe('useSearchControlsHandlers', () => {
     });
 
     it('does not update URL in value flow', () => {
-      const { result } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'value' }));
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
 
       act(() => {
         result.current.onReset();
@@ -392,7 +390,7 @@ describe('useSearchControlsHandlers', () => {
 
   describe('Handler stability', () => {
     it('returns stable handler references', () => {
-      const { result, rerender } = renderHook(() => useSearchControlsHandlers({ config: mockConfig, flow: 'url' }));
+      const { result, rerender } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
 
       const firstHandlers = result.current;
       rerender();
@@ -405,15 +403,18 @@ describe('useSearchControlsHandlers', () => {
       expect(firstHandlers.onReset).toBe(secondHandlers.onReset);
     });
 
-    it('uses refs for config and flow to avoid recreating handlers', () => {
-      const { result, rerender } = renderHook(({ config, flow }) => useSearchControlsHandlers({ config, flow }), {
-        initialProps: { config: mockConfig, flow: 'url' as const },
-      });
+    it('uses refs for coreConfig and flow to avoid recreating handlers', () => {
+      const { result, rerender } = renderHook(
+        ({ coreConfig, flow }) => useSearchControlsHandlers({ coreConfig: coreConfig, flow }),
+        {
+          initialProps: { coreConfig: mockConfig, flow: 'url' as const },
+        },
+      );
 
       const firstHandlers = result.current;
 
-      // Rerender with different config object (but same content)
-      rerender({ config: { ...mockConfig }, flow: 'url' as const });
+      // Rerender with different coreConfig object (but same content)
+      rerender({ coreConfig: { ...mockConfig }, flow: 'url' as const });
       const secondHandlers = result.current;
 
       // Handlers should remain stable

@@ -1,11 +1,38 @@
-import type { SearchTypeUIConfig } from '../types';
+import type { SearchTypeUIConfig, SegmentUIConfig } from '../types';
 
-export const getActiveConfig = (uiConfig: SearchTypeUIConfig, currentSegment?: string) => {
+/**
+ * Get the active UI configuration based on the current segment.
+ *
+ * Supports composite keys (e.g., "authorities:search"):
+ * 1. Try exact match first (e.g., "authorities:search")
+ * 2. If no match and composite key, try parent (e.g., "authorities")
+ * 3. Fall back to base uiConfig
+ */
+export const getActiveConfig = (
+  uiConfig: SearchTypeUIConfig,
+  currentSegment?: string,
+): SearchTypeUIConfig & SegmentUIConfig => {
   if (!currentSegment || !uiConfig.segments) {
     return uiConfig;
   }
 
-  const segmentUIConfig = uiConfig.segments[currentSegment];
+  // Try exact match first
+  let segmentUIConfig = uiConfig.segments[currentSegment];
+
+  // If no exact match and composite key, try parent
+  if (!segmentUIConfig && currentSegment.includes(':')) {
+    const parentKey = currentSegment.split(':')[0];
+    segmentUIConfig = uiConfig.segments[parentKey];
+
+    // Also try the child key alone (e.g., "search" for "authorities:search")
+    if (!segmentUIConfig) {
+      const childKey = currentSegment.split(':').pop();
+
+      if (childKey) {
+        segmentUIConfig = uiConfig.segments[childKey];
+      }
+    }
+  }
 
   if (!segmentUIConfig) {
     return uiConfig;
@@ -23,5 +50,7 @@ export const getActiveConfig = (uiConfig: SearchTypeUIConfig, currentSegment?: s
       ...uiConfig.features,
       ...segmentUIConfig.features,
     },
+    // Preserve segment-specific searchableIndices if defined
+    searchableIndices: segmentUIConfig.searchableIndices ?? uiConfig.searchableIndices,
   };
 };

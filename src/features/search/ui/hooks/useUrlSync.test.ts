@@ -13,12 +13,19 @@ describe('useUrlSync', () => {
   const mockConfig: SearchTypeConfig = {
     id: 'test',
     defaults: {
-      segment: 'search',
-      source: 'local',
       searchBy: 'keyword',
       limit: 100,
     },
-    sources: {},
+  };
+
+  const mockUIConfig = {
+    ui: { titleId: 'test' },
+    features: { hasSearchBy: true },
+    searchableIndices: [
+      { value: 'keyword', labelId: 'ld.keyword' },
+      { value: 'title', labelId: 'ld.title' },
+      { value: 'author', labelId: 'ld.author' },
+    ],
   };
 
   const setQuery = jest.fn();
@@ -46,7 +53,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).toHaveBeenCalledWith('test query');
     });
@@ -55,7 +62,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ query: 'test query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).not.toHaveBeenCalled();
     });
@@ -64,7 +71,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ searchBy: 'title' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setSearchBy).toHaveBeenCalledWith('title');
     });
@@ -73,7 +80,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ segment: 'browse' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({ segment: 'browse' });
     });
@@ -82,7 +89,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ source: 'external' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({ source: 'external' });
     });
@@ -96,7 +103,7 @@ describe('useUrlSync', () => {
       });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).toHaveBeenCalledWith('test query');
       expect(setSearchBy).toHaveBeenCalledWith('author');
@@ -125,7 +132,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ searchBy: 'keyword' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).toHaveBeenCalledWith('');
     });
@@ -148,7 +155,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).not.toHaveBeenCalled();
     });
@@ -171,7 +178,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).not.toHaveBeenCalled();
     });
@@ -194,7 +201,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ segment: 'browse' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({
         source: 'local',
@@ -221,7 +228,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ source: 'external' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({
         segment: 'search',
@@ -248,7 +255,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ segment: 'browse' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).not.toHaveBeenCalled();
     });
@@ -271,7 +278,7 @@ describe('useUrlSync', () => {
       const searchParams = new URLSearchParams({ source: 'external' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).not.toHaveBeenCalled();
     });
@@ -286,7 +293,7 @@ describe('useUrlSync', () => {
       });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(() => useUrlSync({ flow: 'value', config: mockConfig }));
+      renderHook(() => useUrlSync({ flow: 'value', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setQuery).not.toHaveBeenCalled();
       expect(setSearchBy).not.toHaveBeenCalled();
@@ -300,7 +307,9 @@ describe('useUrlSync', () => {
       const searchParams_2 = new URLSearchParams({ query: 'second', searchBy: 'keyword' });
 
       (useSearchParams as jest.Mock).mockReturnValue([searchParams_1]);
-      const { rerender } = renderHook(() => useUrlSync({ flow: 'url', config: mockConfig }));
+      const { rerender } = renderHook(() =>
+        useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }),
+      );
 
       expect(setQuery).toHaveBeenCalledWith('first');
       setQuery.mockClear();

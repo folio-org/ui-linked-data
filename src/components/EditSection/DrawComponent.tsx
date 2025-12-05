@@ -12,7 +12,7 @@ import { FieldWithMetadataAndControls } from '@/components/FieldWithMetadataAndC
 import { LiteralField } from '@/components/LiteralField';
 import { SimpleLookupField } from '@/components/SimpleLookupField';
 import { EditSectionDataProps } from './renderDrawComponent';
-import { getPlaceholderForProperty } from '@/features/search/core';
+import { getPlaceholderForProperty } from '@/features/search/ui';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;

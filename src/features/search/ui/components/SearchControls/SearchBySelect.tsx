@@ -6,7 +6,7 @@ import { useSearchContext } from '../../providers/SearchProvider';
 
 export const SearchBySelect: FC = () => {
   const { formatMessage } = useIntl();
-  const { config, activeUIConfig } = useSearchContext();
+  const { activeUIConfig } = useSearchContext();
   const { searchBy, setSearchBy } = useSearchState(['searchBy', 'setSearchBy']);
 
   // Guard: Feature disabled
@@ -14,7 +14,7 @@ export const SearchBySelect: FC = () => {
     return null;
   }
 
-  const searchableIndices = config.searchBy?.searchableIndices || [];
+  const searchableIndices = activeUIConfig.searchableIndices || [];
 
   // Guard: No options
   if (searchableIndices.length === 0) {
@@ -23,7 +23,7 @@ export const SearchBySelect: FC = () => {
 
   const options: SelectValue[] = searchableIndices.map(index => ({
     value: index.value,
-    label: index.value, // Will be formatted by Select with withIntl
+    label: formatMessage({ id: index.labelId }),
   }));
 
   const handleChange = ({ value }: SelectValue) => {
@@ -32,7 +32,6 @@ export const SearchBySelect: FC = () => {
 
   return (
     <Select
-      withIntl
       id="id-search-select"
       data-testid="id-search-select"
       className="select-input"
