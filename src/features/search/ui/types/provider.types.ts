@@ -95,7 +95,7 @@ interface DynamicModeProps {
 interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);

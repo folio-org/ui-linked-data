@@ -2,7 +2,8 @@
 export { Search as LegacySearch } from './Search.legacy';
 
 // New compound components
-import { Search as SearchRoot, type SearchRootProps } from './Search';
+import { Search as SearchRoot } from './Search';
+import type { SearchProviderProps as SearchRootProps } from '../../types/provider.types';
 import { SearchContent as Content, SearchContentContainer as ContentContainer } from '../SearchContent';
 import { SearchControlPane as ControlPane } from '../SearchControlPane';
 import { RootControls } from '../SearchControls/RootControls';
@@ -51,4 +52,4 @@ export const Search: SearchCompoundComponent = Object.assign(SearchRoot, {
 });
 
 // Export the props type for consumers
-export type { SearchRootProps } from './Search';
+export type { SearchProviderProps as SearchRootProps } from '../../types/provider.types';
