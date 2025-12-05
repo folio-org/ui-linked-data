@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getSearchConfig, resolveCoreConfig, type SearchTypeConfig } from '../../core';
+import { getSearchCoreConfig, resolveCoreConfig, type SearchTypeConfig } from '../../core';
 import { resolveUIConfig } from '../config';
 import type { SearchTypeUIConfig } from '../types';
 
@@ -50,7 +50,7 @@ export function useSearchConfigs({
       throw new Error(`No config found for segment: ${currentSegment}`);
     }
 
-    const fallbackCoreConfig = getSearchConfig(fallbackSegment);
+    const fallbackCoreConfig = getSearchCoreConfig(fallbackSegment);
 
     if (!fallbackCoreConfig) {
       throw new Error(`No config found for segment: ${fallbackSegment}`);

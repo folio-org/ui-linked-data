@@ -33,7 +33,7 @@ jest.mock('../../providers/SearchProvider', () => ({
 // Mock the search registry for dynamic mode tests
 jest.mock('../../../core', () => ({
   ...jest.requireActual('../../../core'),
-  getSearchConfig: (key: string) => {
+  getSearchCoreConfig: (key: string) => {
     if (key === 'resources' || key === 'hubs') {
       return { id: key };
     }

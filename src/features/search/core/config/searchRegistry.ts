@@ -25,8 +25,9 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'hubs:external': hubsExternalConfig,
 };
 
-export function getSearchConfig(key: string): SearchTypeConfig | undefined {
-  return searchRegistry[key];
+// Helper function to get a search config by ID
+export function getSearchCoreConfig(searchTypeId: keyof typeof searchRegistry): SearchTypeConfig | undefined {
+  return searchRegistry[searchTypeId];
 }
 
 // Resolve an effective core config given a segment and optional source.
