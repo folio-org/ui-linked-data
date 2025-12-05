@@ -53,6 +53,8 @@ export enum SearchQueryParams {
   Query = 'query',
   SearchBy = 'searchBy',
   Offset = 'offset',
+  Segment = 'segment',
+  Source = 'source',
 }
 
 export enum ForceNavigateToDest {

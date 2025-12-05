@@ -62,9 +62,10 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
 
     if (IS_NEW_SEARCH_ENABLED) {
       const { resetQuery, resetSearchBy, navigationState } = useSearchState.getState();
-      const navState = navigationState as Record<string, unknown>;
+      const navState = navigationState;
       const currentSegment = navState?.segment as string | undefined;
       const currentSource = navState?.source as string | undefined;
+      const currentOffset = navState?.offset as number | undefined;
 
       resetQuery();
       resetSearchBy();
@@ -79,6 +80,10 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
 
       if (currentSource) {
         urlParams.set(SearchParam.SOURCE, currentSource);
+      }
+
+      if (currentOffset) {
+        urlParams.set(SearchParam.OFFSET, currentOffset.toString());
       }
 
       urlParams.set(SearchParam.QUERY, formattedQuery);
