@@ -2,7 +2,7 @@ import { useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig, getSearchConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
 import { getValidSearchBy } from '../utils';
 
@@ -19,15 +19,7 @@ interface SearchControlsHandlers {
   onReset: () => void;
 }
 
-function resolveConfigForSegment(segment: string, source?: string): SearchTypeConfig | undefined {
-  if (source) {
-    const withSource = getSearchConfig(`${segment}:${source}`);
-
-    if (withSource) return withSource;
-  }
-
-  return getSearchConfig(segment);
-}
+// Use `resolveCoreConfig` from core registry
 
 export const useSearchControlsHandlers = ({
   config,
@@ -120,8 +112,8 @@ export const useSearchControlsHandlers = ({
       // Save current segment's draft before switching
       saveCurrentDraft();
 
-      // Resolve config for the new segment
-      const newSegmentConfig = getSearchConfig(newSegment);
+      // Resolve config for the new segment using centralized resolver
+      const newSegmentConfig = resolveCoreConfig(newSegment);
 
       // Get draft for target segment
       const existingDraft = useSearchState.getState().draftBySegment[newSegment];
@@ -220,7 +212,7 @@ export const useSearchControlsHandlers = ({
     const source = navState?.[SearchParam.SOURCE] as string | undefined;
 
     // Resolve the effective config for the current segment + source
-    const effectiveConfig = resolveConfigForSegment(segment, source) ?? configRef.current;
+    const effectiveConfig = resolveCoreConfig(segment, source) ?? configRef.current;
 
     // Validate searchBy against the effective config
     const validSearchBy = getValidSearchBy(searchBy, effectiveConfig);

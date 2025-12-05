@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getSearchConfig, type SearchTypeConfig } from '../../core';
+import { getSearchConfig, resolveCoreConfig, type SearchTypeConfig } from '../../core';
 import { resolveUIConfig } from '../config';
 import type { SearchTypeUIConfig } from '../types';
 
@@ -38,15 +38,8 @@ export function useSearchConfigs({
       return staticConfig;
     }
 
-    // Dynamic mode: resolve from registry
-    // Try segment + source first, then just segment
-    if (currentSource) {
-      const withSource = getSearchConfig(`${currentSegment}:${currentSource}`);
-
-      if (withSource) return withSource;
-    }
-
-    const config = getSearchConfig(currentSegment);
+    // Dynamic mode: resolve using centralized resolver
+    const config = resolveCoreConfig(currentSegment, currentSource);
 
     if (config) return config;
 

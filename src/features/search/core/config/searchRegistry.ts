@@ -19,12 +19,28 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'authorities:search': authoritiesSearchConfig,
   'authorities:browse': authoritiesBrowseConfig,
 
-  // Hubs - base config defaults to internal
-  hubs: hubsInternalConfig,
+  // Hubs - base config defaults to external
+  hubs: hubsExternalConfig,
   'hubs:internal': hubsInternalConfig,
   'hubs:external': hubsExternalConfig,
 };
 
 export function getSearchConfig(key: string): SearchTypeConfig | undefined {
   return searchRegistry[key];
+}
+
+// Resolve an effective core config given a segment and optional source.
+// Priority: `${segment}:${source}` -> `segment` -> undefined
+export function resolveCoreConfig(segment?: string, source?: string): SearchTypeConfig | undefined {
+  if (!segment) return undefined;
+
+  if (source) {
+    const compositeKey = `${segment}:${source}`;
+
+    if (searchRegistry[compositeKey]) return searchRegistry[compositeKey];
+  }
+
+  if (searchRegistry[segment]) return searchRegistry[segment];
+
+  return undefined;
 }

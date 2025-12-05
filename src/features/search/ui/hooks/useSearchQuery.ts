@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { selectStrategies, resolveEffectiveConfig, type SearchTypeConfig } from '../../core';
+import { selectStrategies, resolveCoreConfig, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import { getValidSearchBy } from '../utils';
 
@@ -46,7 +46,7 @@ export function useSearchQuery({ fallbackConfig, flow, enabled = true }: UseSear
     }
 
     // For URL flow, always try to resolve from committed params first
-    const resolved = resolveEffectiveConfig(committed.segment, committed.source);
+    const resolved = resolveCoreConfig(committed.segment, committed.source);
 
     return resolved ?? fallbackConfig;
   }, [committed.segment, committed.source, fallbackConfig]);
