@@ -1,3 +1,4 @@
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
 
 export const hubsUIConfig: SearchTypeUIConfig = {
@@ -27,13 +28,13 @@ export const hubsUIConfig: SearchTypeUIConfig = {
   },
   searchableIndices: [
     {
-      value: 'hubNameLeftAnchored',
       labelId: 'ld.search.hubNameLeftAnchored',
+      value: SearchableIndex.HubNameLeftAnchored,
       placeholder: 'ld.placeholder.startsWith',
     },
     {
-      value: 'hubNameKeyword',
       labelId: 'ld.search.hubNameKeyword',
+      value: SearchableIndex.HubNameKeyword,
     },
   ] as SearchableIndexUI[],
 };
