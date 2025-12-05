@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react';
 import { ButtonGroup } from '@/components/ButtonGroup';
 import { useSearchState } from '@/store';
 import { SearchParam } from '../../../core';
+import { isParentSegmentActive } from '../../utils/segmentUtils';
 import './Segments.scss';
 
 export interface SegmentGroupProps {
@@ -32,10 +33,7 @@ export const SegmentGroup: FC<SegmentGroupProps> = ({ parentPath, className, chi
 
   // Only render if parent path matches (or no parent specified)
   if (parentPath) {
-    // Check if current segment starts with parentPath or equals parentPath
-    const isParentActive = currentSegment === parentPath || currentSegment?.startsWith(`${parentPath}:`);
-
-    if (!isParentActive) {
+    if (!isParentSegmentActive(currentSegment, parentPath)) {
       return null;
     }
   }

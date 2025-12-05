@@ -4,6 +4,7 @@ import { Button, ButtonType } from '@/components/Button';
 import { useSearchState } from '@/store';
 import { SearchParam } from '../../../core';
 import { useSearchContext } from '../../providers/SearchProvider';
+import { isSegmentActive } from '../../utils/segmentUtils';
 
 export interface SegmentProps {
   path: string;
@@ -19,7 +20,7 @@ export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, 
   const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
 
   // Active if exact match OR prefix match (for parent segments)
-  const isActive = currentSegment === path || currentSegment?.startsWith(`${path}:`);
+  const isActive = isSegmentActive(currentSegment, path, true);
   const derivedLabelId = labelId ?? `ld.${path.split(':').pop()}`;
 
   const handleClick = () => {
@@ -35,7 +36,7 @@ export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, 
   return (
     <Button
       type={isActive ? ButtonType.Highlighted : ButtonType.Primary}
-      aria-selected={currentSegment === path}
+      aria-selected={isSegmentActive(currentSegment, path)}
       role="tab"
       className="search-segment-button"
       onClick={handleClick}
