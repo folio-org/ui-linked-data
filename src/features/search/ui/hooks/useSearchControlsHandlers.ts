@@ -250,7 +250,9 @@ export const useSearchControlsHandlers = ({
         urlParams.set(SearchParam.QUERY, query);
       }
 
-      if (validSearchBy) {
+      // Only include searchBy if it exists (for simple search)
+      // Advanced search has query but no searchBy
+      if (validSearchBy && searchBy) {
         urlParams.set(SearchParam.SEARCH_BY, validSearchBy);
       }
 
@@ -275,6 +277,7 @@ export const useSearchControlsHandlers = ({
     const state = useSearchState.getState();
     const navState = state.navigationState as Record<string, unknown>;
     const currentSegment = navState?.[SearchParam.SEGMENT] as string | undefined;
+    const currentSource = navState?.[SearchParam.SOURCE] as string | undefined;
 
     resetQuery();
     resetSearchBy();
@@ -300,8 +303,14 @@ export const useSearchControlsHandlers = ({
       setSearchParams(() => {
         const params = new URLSearchParams();
 
-        if (defaultSegment) {
-          params.set(SearchParam.SEGMENT, defaultSegment);
+        // Preserve segment when clearing
+        if (currentSegment) {
+          params.set(SearchParam.SEGMENT, currentSegment);
+        }
+
+        // Preserve source when clearing
+        if (currentSource) {
+          params.set(SearchParam.SOURCE, currentSource);
         }
 
         return params;

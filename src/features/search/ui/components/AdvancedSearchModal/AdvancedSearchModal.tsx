@@ -10,7 +10,7 @@ import {
   SELECT_QUALIFIERS,
 } from '@/common/constants/search.constants';
 import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
-import { formatRawQuery, generateSearchParamsState, useFetchSearchData } from '@/features/search/core';
+import { formatRawQuery, generateSearchParamsState, SearchParam, useFetchSearchData } from '@/features/search/core';
 import { Select } from '@/components/Select';
 import { useSearchState, useUIState } from '@/store';
 import { AriaModalKind } from '@/common/constants/uiElements.constants';
@@ -58,13 +58,36 @@ export const AdvancedSearchModal: FC<Props> = memo(({ clearValues }) => {
   };
 
   const onDoSearch = async () => {
-    clearValues();
-
     const formattedQuery = formatRawQuery(rawQuery);
-    setSearchParams(generateSearchParamsState(formattedQuery) as unknown as URLSearchParams);
 
-    // Only fetch directly for legacy search - new search is URL-driven via useSearchQuery
-    if (!IS_NEW_SEARCH_ENABLED) {
+    if (IS_NEW_SEARCH_ENABLED) {
+      const { resetQuery, resetSearchBy, navigationState } = useSearchState.getState();
+      const navState = navigationState as Record<string, unknown>;
+      const currentSegment = navState?.segment as string | undefined;
+      const currentSource = navState?.source as string | undefined;
+
+      resetQuery();
+      resetSearchBy();
+
+      // Build URL params with segment preserved
+      // Note: no searchBy param - this identifies it as advanced search
+      const urlParams = new URLSearchParams();
+
+      if (currentSegment) {
+        urlParams.set(SearchParam.SEGMENT, currentSegment);
+      }
+
+      if (currentSource) {
+        urlParams.set(SearchParam.SOURCE, currentSource);
+      }
+
+      urlParams.set(SearchParam.QUERY, formattedQuery);
+
+      setSearchParams(urlParams);
+    } else {
+      // Legacy search
+      clearValues();
+      setSearchParams(generateSearchParamsState(formattedQuery) as unknown as URLSearchParams);
       setForceRefreshSearch(true);
       await fetchData({
         query: formattedQuery,
