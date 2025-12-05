@@ -21,13 +21,6 @@ export const hubsInternalConfig: SearchTypeConfig = {
     resultFormatter: undefined,
   },
 
-  searchBy: {
-    searchableIndices: [
-      { value: SearchableIndexEnum.HubNameLeftAnchored },
-      { value: SearchableIndexEnum.HubNameKeyword },
-    ],
-  },
-
   capabilities: {
     defaultLimit: 100,
     maxLimit: 100,

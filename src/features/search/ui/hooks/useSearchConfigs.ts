@@ -50,13 +50,13 @@ export function useSearchConfigs({
       throw new Error(`No config found for segment: ${currentSegment}`);
     }
 
-    const fallbackConfig = getSearchConfig(fallbackSegment);
+    const fallbackCoreConfig = getSearchConfig(fallbackSegment);
 
-    if (!fallbackConfig) {
+    if (!fallbackCoreConfig) {
       throw new Error(`No config found for segment: ${fallbackSegment}`);
     }
 
-    return fallbackConfig;
+    return fallbackCoreConfig;
   }, [isDynamicMode, staticConfig, currentSegment, currentSource, segments, defaultSegment]);
 
   // Resolve active UI config
@@ -77,13 +77,13 @@ export function useSearchConfigs({
       throw new Error(`No UI config found for segment: ${currentSegment}`);
     }
 
-    const fallbackConfig = resolveUIConfig(fallbackSegment);
+    const fallbackCoreConfig = resolveUIConfig(fallbackSegment);
 
-    if (!fallbackConfig) {
+    if (!fallbackCoreConfig) {
       throw new Error(`No UI config found for segment: ${fallbackSegment}`);
     }
 
-    return fallbackConfig;
+    return fallbackCoreConfig;
   }, [isDynamicMode, staticUIConfig, currentSegment, segments, defaultSegment]);
 
   // Base UI config (parent segment's config for shared features)

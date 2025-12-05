@@ -4,14 +4,16 @@ import { useSearchState } from '@/store';
 import { SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
+import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';
 
 interface UseUrlSyncParams {
   flow: SearchFlow;
-  config: SearchTypeConfig;
+  coreConfig: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
 }
 
-export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
+export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): void => {
   const [searchParams] = useSearchParams();
   const { query, setQuery, searchBy, setSearchBy, navigationState, setNavigationState } = useSearchState([
     'query',
@@ -43,9 +45,9 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
       setQuery(queryFromUrl);
     }
 
-    // Validate searchBy against current config before syncing to store
+    // Validate searchBy against current configs before syncing to store
     if (searchByFromUrl !== null) {
-      const validSearchBy = getValidSearchBy(searchByFromUrl, config);
+      const validSearchBy = getValidSearchBy(searchByFromUrl, uiConfig, coreConfig);
 
       if (validSearchBy !== searchBy) {
         setSearchBy(validSearchBy as SearchIdentifiers);
@@ -71,5 +73,5 @@ export const useUrlSync = ({ flow, config }: UseUrlSyncParams): void => {
     if (queryFromUrl === null && query && searchByFromUrl !== null) {
       setQuery('');
     }
-  }, [flow, searchParams, setQuery, setSearchBy, navigationState, setNavigationState, config]);
+  }, [flow, searchParams, setQuery, setSearchBy, navigationState, setNavigationState, coreConfig, uiConfig]);
 };

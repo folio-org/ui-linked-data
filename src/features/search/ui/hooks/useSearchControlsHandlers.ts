@@ -4,10 +4,12 @@ import { type SegmentDraft, useSearchState } from '@/store';
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
+import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';
+import { resolveUIConfig } from '../config';
 
 interface UseSearchControlsHandlersParams {
-  config: SearchTypeConfig;
+  coreConfig: SearchTypeConfig;
   flow: SearchFlow;
 }
 
@@ -22,19 +24,19 @@ interface SearchControlsHandlers {
 // Use `resolveCoreConfig` from core registry
 
 export const useSearchControlsHandlers = ({
-  config,
+  coreConfig,
   flow,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [, setSearchParams] = useSearchParams();
 
   // Use refs for config/flow to avoid recreating handlers
-  const configRef = useRef(config);
+  const coreConfigRef = useRef(coreConfig);
   const flowRef = useRef(flow);
 
   useEffect(() => {
-    configRef.current = config;
+    coreConfigRef.current = coreConfig;
     flowRef.current = flow;
-  }, [config, flow]);
+  }, [coreConfig, flow]);
 
   const {
     setNavigationState,
@@ -78,13 +80,16 @@ export const useSearchControlsHandlers = ({
 
   // Helper to restore draft for a segment, with searchBy validation
   const restoreDraft = useCallback(
-    (segment: string, segmentConfig?: SearchTypeConfig): SegmentDraft => {
+    (segment: string, segmentConfig?: SearchTypeConfig, segmentUIConfig?: SearchTypeUIConfig): SegmentDraft => {
       const state = useSearchState.getState();
       const draft = state.draftBySegment[segment];
 
       if (draft) {
-        // If we have a saved draft, validate its searchBy against the new segment's config
-        const validSearchBy = segmentConfig ? getValidSearchBy(draft.searchBy, segmentConfig) : draft.searchBy;
+        // If we have a saved draft, validate its searchBy against the new segment's configs
+        const validSearchBy =
+          segmentConfig && segmentUIConfig
+            ? getValidSearchBy(draft.searchBy, segmentUIConfig, segmentConfig)
+            : draft.searchBy;
 
         setQuery(draft.query);
         setSearchBy(validSearchBy);
@@ -112,8 +117,9 @@ export const useSearchControlsHandlers = ({
       // Save current segment's draft before switching
       saveCurrentDraft();
 
-      // Resolve config for the new segment using centralized resolver
+      // Resolve configs for the new segment using centralized resolvers
       const newSegmentConfig = resolveCoreConfig(newSegment);
+      const newSegmentUIConfig = resolveUIConfig(newSegment);
 
       // Get draft for target segment
       const existingDraft = useSearchState.getState().draftBySegment[newSegment];
@@ -134,7 +140,7 @@ export const useSearchControlsHandlers = ({
       setNavigationState(updatedState as SearchParamsState);
 
       // Restore draft values (query, searchBy) with validation
-      const restoredDraft = restoreDraft(newSegment, newSegmentConfig);
+      const restoredDraft = restoreDraft(newSegment, newSegmentConfig, newSegmentUIConfig);
 
       // URL flow: update URL
       if (flowRef.current === 'url') {
@@ -186,7 +192,7 @@ export const useSearchControlsHandlers = ({
       if (flowRef.current === 'url') {
         setSearchParams(prev => {
           const params = new URLSearchParams(prev);
-          const offset = newPage * (configRef.current.defaults?.limit || 100);
+          const offset = newPage * (coreConfigRef.current.defaults?.limit || 100);
 
           if (offset > 0) {
             params.set(SearchParam.OFFSET, offset.toString());
@@ -211,11 +217,14 @@ export const useSearchControlsHandlers = ({
     const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
     const source = navState?.[SearchParam.SOURCE] as string | undefined;
 
-    // Resolve the effective config for the current segment + source
-    const effectiveConfig = resolveCoreConfig(segment, source) ?? configRef.current;
+    // Resolve the effective configs for the current segment + source
+    const effectiveCoreConfig = resolveCoreConfig(segment, source) ?? coreConfigRef.current;
+    const effectiveUIConfig = resolveUIConfig(segment);
 
-    // Validate searchBy against the effective config
-    const validSearchBy = getValidSearchBy(searchBy, effectiveConfig);
+    // Validate searchBy against the effective configs
+    const validSearchBy = effectiveUIConfig
+      ? getValidSearchBy(searchBy, effectiveUIConfig, effectiveCoreConfig)
+      : searchBy;
 
     // Save current draft on submit (with validated searchBy)
     if (segment) {
@@ -223,7 +232,7 @@ export const useSearchControlsHandlers = ({
         ...draftBySegment,
         [segment]: {
           query,
-          searchBy: validSearchBy as SearchIdentifiers,
+          searchBy: validSearchBy,
           source,
         },
       });
@@ -279,7 +288,7 @@ export const useSearchControlsHandlers = ({
 
     // Reset navigation to defaults
     const defaultNav = {} as Record<string, unknown>;
-    const defaultSegment = configRef.current.id;
+    const defaultSegment = coreConfigRef.current.id;
 
     if (defaultSegment) {
       defaultNav[SearchParam.SEGMENT] = defaultSegment;

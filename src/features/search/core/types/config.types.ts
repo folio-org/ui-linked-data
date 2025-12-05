@@ -5,16 +5,6 @@ import { SearchStrategies } from './strategies.types';
  * Business logic only, no UI
  */
 
-// Searchable index (core definition - just the data identifier)
-export interface SearchableIndex {
-  value: string;
-  // Note: UI properties like labelId, placeholder are in SearchableIndexUI
-}
-
-export interface SearchByConfig {
-  searchableIndices: SearchableIndex[];
-}
-
 // Data capabilities (what the API/backend supports)
 export interface DataCapabilities {
   defaultLimit?: number;
@@ -38,9 +28,6 @@ export interface SearchTypeConfig {
   id: string; // 'resources' | 'hubs:internal' | 'hubs:external' | 'authorities:search' | 'authorities:browse'
   // Default strategies for this search type (can be overridden by segments/sources)
   strategies?: SearchStrategies;
-
-  // Search configuration
-  searchBy?: SearchByConfig;
 
   // Data capabilities
   capabilities?: DataCapabilities;

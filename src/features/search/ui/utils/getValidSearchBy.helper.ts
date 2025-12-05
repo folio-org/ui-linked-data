@@ -1,13 +1,18 @@
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
 import type { SearchTypeConfig } from '../../core/types';
+import type { SearchTypeUIConfig } from '../types';
 
 /**
- * Validates if a searchBy value is valid for the given config.
- * Returns the validated searchBy or the config's default if invalid.
+ * Validates if a searchBy value is valid for the given configs.
+ * Returns the validated searchBy or the core config's default if invalid.
  */
-export function getValidSearchBy(searchBy: string | undefined, config: SearchTypeConfig): string {
-  const validIndices = config.searchBy?.searchableIndices?.map(({ value }) => value) ?? [];
-  const defaultSearchBy = config.defaults?.searchBy ?? DEFAULT_SEARCH_BY;
+export function getValidSearchBy(
+  searchBy: string | undefined,
+  uiConfig: SearchTypeUIConfig,
+  coreConfig?: SearchTypeConfig,
+): string {
+  const validIndices = uiConfig.searchableIndices?.map(({ value }) => value) ?? [];
+  const defaultSearchBy = coreConfig?.defaults?.searchBy ?? DEFAULT_SEARCH_BY;
 
   if (!searchBy) {
     return defaultSearchBy;

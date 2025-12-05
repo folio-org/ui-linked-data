@@ -19,22 +19,6 @@ export const authoritiesSearchConfig: SearchTypeConfig = {
     resultFormatter: undefined,
   },
 
-  searchBy: {
-    searchableIndices: [
-      { value: SearchableIndexEnum.Keyword },
-      { value: SearchableIndexEnum.Identifier },
-      { value: SearchableIndexEnum.LCCN },
-      { value: SearchableIndexEnum.PersonalName },
-      { value: SearchableIndexEnum.CorporateConferenceName },
-      { value: SearchableIndexEnum.GeographicName },
-      { value: SearchableIndexEnum.NameTitle },
-      { value: SearchableIndexEnum.UniformTitle },
-      { value: SearchableIndexEnum.Subject },
-      { value: SearchableIndexEnum.ChildrenSubjectHeading },
-      { value: SearchableIndexEnum.Genre },
-    ],
-  },
-
   capabilities: {
     defaultLimit: 100,
     maxLimit: 100,

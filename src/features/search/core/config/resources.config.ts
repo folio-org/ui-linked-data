@@ -1,4 +1,3 @@
-import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchTypeConfig } from '../types';
 import { ResourcesRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
@@ -16,16 +15,6 @@ export const resourcesConfig: SearchTypeConfig = {
     requestBuilder: new ResourcesRequestBuilder(),
     responseTransformer: new ResourcesResponseTransformer(),
     resultFormatter: undefined,
-  },
-
-  // SearchBy configuration
-  searchBy: {
-    searchableIndices: [
-      { value: SearchableIndex.Title },
-      { value: SearchableIndex.Contributor },
-      { value: SearchableIndex.ISBN },
-      { value: SearchableIndex.LCCN },
-    ],
   },
 
   // Data capabilities

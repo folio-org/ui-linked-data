@@ -117,7 +117,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -139,7 +139,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -172,7 +172,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -193,7 +193,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
             enabled: false,
           }),
@@ -203,14 +203,14 @@ describe('useSearchQuery', () => {
       expect(mockGetJson).not.toHaveBeenCalled();
     });
 
-    it('does not execute when fallbackConfig is undefined', () => {
+    it('does not execute when fallbackCoreConfig is undefined', () => {
       const searchParams = new URLSearchParams({ query: 'test query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: undefined,
+            fallbackCoreConfig: undefined,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -244,7 +244,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
           }),
         { wrapper: createWrapper() },
@@ -280,7 +280,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
           }),
         { wrapper: createWrapper() },
@@ -312,7 +312,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'value',
           }),
         { wrapper: createWrapper() },
@@ -340,7 +340,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -369,7 +369,7 @@ describe('useSearchQuery', () => {
       renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -403,7 +403,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: configWithoutBuilder,
+            fallbackCoreConfig: configWithoutBuilder,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -436,7 +436,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -461,7 +461,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -485,7 +485,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -507,7 +507,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -529,7 +529,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },
@@ -562,7 +562,7 @@ describe('useSearchQuery', () => {
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackConfig: mockConfig,
+            fallbackCoreConfig: mockConfig,
             flow: 'url',
           }),
         { wrapper: createWrapper() },

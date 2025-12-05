@@ -42,10 +42,10 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
   });
 
   // Handlers for search controls
-  const handlers = useSearchControlsHandlers({ config: coreConfig, flow });
+  const handlers = useSearchControlsHandlers({ coreConfig, flow });
 
   // Sync URL to store (URL flow only)
-  useUrlSync({ flow, config: coreConfig });
+  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
 
   // Search query
   const {
@@ -56,7 +56,8 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     error,
     refetch,
   } = useSearchQuery({
-    fallbackConfig: coreConfig,
+    fallbackCoreConfig: coreConfig,
+    fallbackUIConfig: activeUIConfig,
     flow,
   });
 
