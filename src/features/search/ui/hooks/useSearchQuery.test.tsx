@@ -13,12 +13,6 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-// Mock the utility module directly where selectStrategies is defined
-const mockSelectStrategies = jest.fn();
-jest.mock('../../core/utils/configSelectors.helper', () => ({
-  selectStrategies: (...args: unknown[]) => mockSelectStrategies(...args),
-}));
-
 // Mock baseApi
 const mockGetJson = jest.fn();
 jest.mock('@/common/api/base.api', () => ({
@@ -75,9 +69,6 @@ describe('useSearchQuery', () => {
     };
 
     mockGetJson.mockResolvedValue(mockSearchResults);
-
-    // Mock selectStrategies to return our mock strategies
-    mockSelectStrategies.mockReturnValue(mockStrategies);
 
     queryClient = new QueryClient({
       defaultOptions: {
@@ -389,8 +380,6 @@ describe('useSearchQuery', () => {
     });
 
     it('throws error when no request builder for segment', async () => {
-      mockSelectStrategies.mockReturnValue({});
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
@@ -424,12 +413,6 @@ describe('useSearchQuery', () => {
         transform: jest.fn().mockReturnValue(transformedResult),
       };
 
-      // Mock selectStrategies to return transformer
-      mockSelectStrategies.mockReturnValue({
-        requestBuilder: mockRequestBuilder,
-        responseTransformer: transformer,
-      });
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
@@ -451,10 +434,6 @@ describe('useSearchQuery', () => {
     });
 
     it('returns raw data when no transformer is provided', async () => {
-      mockSelectStrategies.mockReturnValue({
-        requestBuilder: mockRequestBuilder,
-      });
-
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 

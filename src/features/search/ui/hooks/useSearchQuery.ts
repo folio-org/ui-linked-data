@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { selectStrategies, resolveCoreConfig, type SearchTypeConfig } from '../../core';
+import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types';
 import { getValidSearchBy } from '../utils';
@@ -99,7 +99,7 @@ export function useSearchQuery({
       throw new Error('No effective config resolved');
     }
 
-    const strategies = selectStrategies(effectiveCoreConfig);
+    const strategies = effectiveCoreConfig.strategies;
 
     if (!strategies?.requestBuilder) {
       throw new Error(`No request builder for config: ${effectiveCoreConfig.id}`);
