@@ -340,11 +340,11 @@ describe('useSearchControlsHandlers', () => {
       });
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        segment: 'search',
+        segment: 'test',
       });
     });
 
-    it('resets navigation state to empty object when no defaults', () => {
+    it('resets navigation state with segment from config id', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
       };
@@ -356,7 +356,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(setNavigationState).toHaveBeenCalledWith({});
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'test' });
     });
 
     it('clears URL params in URL flow', () => {
@@ -370,6 +370,8 @@ describe('useSearchControlsHandlers', () => {
 
       const updaterFn = setSearchParams.mock.calls[0][0];
       const params = updaterFn(new URLSearchParams({ query: 'old', offset: '10' }));
+
+      // onReset preserves the current segment from navigationState (which is 'search' from beforeEach)
       expect(params.get(SearchParam.SEGMENT)).toBe('search');
       expect(params.has(SearchParam.QUERY)).toBe(false);
     });

@@ -10,6 +10,10 @@ import { AdvancedSearchModal } from './AdvancedSearchModal';
 const setSearchParams = jest.fn();
 const clearValues = jest.fn();
 
+jest.mock('@/common/constants/feature.constants', () => ({
+  IS_NEW_SEARCH_ENABLED: false,
+}));
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useSearchParams: () => [{}, setSearchParams],

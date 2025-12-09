@@ -9,6 +9,10 @@ import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/feature.constants', () => ({
+  IS_NEW_SEARCH_ENABLED: false,
+  SEARCH_FILTERS_ENABLED: false,
+}));
 
 const onCreateNewResource = jest.fn();
 jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({

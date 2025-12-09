@@ -3,6 +3,10 @@ import { searchUIRegistry } from './searchUIRegistry';
 import { getActiveConfig } from '../utils';
 
 export function getUIRegistryKey(segment: string): keyof typeof searchUIRegistry | undefined {
+  if (!segment || typeof segment !== 'string') {
+    return undefined;
+  }
+
   const parentKey = segment.includes(':') ? segment.split(':')[0] : segment;
 
   if (parentKey in searchUIRegistry) {

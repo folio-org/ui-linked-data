@@ -11,6 +11,11 @@ export const Search: FC<SearchProviderProps> = props => {
     return null;
   }
 
+  // Static mode validation: ensure both coreConfig and uiConfig are provided
+  if ('coreConfig' in props && (!props.coreConfig || !props.uiConfig)) {
+    return null;
+  }
+
   return (
     <SearchProvider {...props}>
       <div data-testid="id-search" className={DOM_ELEMENTS.classNames.itemSearch}>

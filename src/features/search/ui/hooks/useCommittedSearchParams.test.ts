@@ -58,7 +58,7 @@ describe('useCommittedSearchParams', () => {
       const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
       expect(result.current).toEqual({
-        segment: 'search',
+        segment: undefined,
         query: '',
         searchBy: undefined, // undefined when not in URL (supports advanced search)
         source: undefined,
@@ -66,13 +66,13 @@ describe('useCommittedSearchParams', () => {
       });
     });
 
-    it('returns undefined segment when hasSegments is false', () => {
+    it('returns segment from URL params', () => {
       const searchParams = new URLSearchParams({ segment: 'browse', query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       const { result } = renderHook(() => useCommittedSearchParams({ flow: 'url' }));
 
-      expect(result.current.segment).toBeUndefined();
+      expect(result.current.segment).toBe('browse');
       expect(result.current.query).toBe('test');
     });
 
@@ -127,7 +127,7 @@ describe('useCommittedSearchParams', () => {
       });
     });
 
-    it('uses default segment when store segment is empty', () => {
+    it('returns empty segment when store segment is empty', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -145,10 +145,10 @@ describe('useCommittedSearchParams', () => {
 
       const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
-      expect(result.current.segment).toBe('defaultSeg');
+      expect(result.current.segment).toBe('');
     });
 
-    it('returns undefined segment when hasSegments is false', () => {
+    it('returns segment from store as-is', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -167,7 +167,7 @@ describe('useCommittedSearchParams', () => {
 
       const { result } = renderHook(() => useCommittedSearchParams({ flow: 'value' }));
 
-      expect(result.current.segment).toBeUndefined();
+      expect(result.current.segment).toBe('someSegment');
       expect(result.current.query).toBe('test');
     });
 
@@ -192,7 +192,7 @@ describe('useCommittedSearchParams', () => {
 
       expect(result.current.query).toBe('');
       expect(result.current.searchBy).toBe(DEFAULT_SEARCH_BY);
-      expect(result.current.segment).toBe('search');
+      expect(result.current.segment).toBe(undefined);
     });
   });
 

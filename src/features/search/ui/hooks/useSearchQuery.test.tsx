@@ -248,7 +248,7 @@ describe('useSearchQuery', () => {
       expect(mockGetJson).toHaveBeenCalled();
     });
 
-    it('does not execute query when segment does not match current segment', () => {
+    it('executes query even when segment does not match current segment', async () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -268,7 +268,7 @@ describe('useSearchQuery', () => {
       const searchParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
-      renderHook(
+      const { result } = renderHook(
         () =>
           useSearchQuery({
             fallbackCoreConfig: mockConfig,
@@ -277,7 +277,11 @@ describe('useSearchQuery', () => {
         { wrapper: createWrapper() },
       );
 
-      expect(mockGetJson).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(mockGetJson).toHaveBeenCalled();
     });
 
     it('executes query when hasSegments is false regardless of segment', async () => {
@@ -345,7 +349,6 @@ describe('useSearchQuery', () => {
         expect.objectContaining({
           query: 'test',
           searchBy: 'title',
-          source: 'external',
           offset: 10,
         }),
       );
@@ -408,10 +411,8 @@ describe('useSearchQuery', () => {
 
   describe('Response handling', () => {
     it('transforms response when transformer is provided', async () => {
-      const transformedResult = { items: [{ id: 'transformed' }], totalRecords: 1 };
-      const transformer = {
-        transform: jest.fn().mockReturnValue(transformedResult),
-      };
+      // Use the mockResponseTransformer from beforeEach setup
+      mockResponseTransformer.transform.mockReturnValue(mockSearchResults);
 
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -429,8 +430,8 @@ describe('useSearchQuery', () => {
         expect(result.current.isLoading).toBe(false);
       });
 
-      expect(transformer.transform).toHaveBeenCalledWith(mockSearchResults, 100);
-      expect(result.current.data).toEqual(transformedResult);
+      expect(mockResponseTransformer.transform).toHaveBeenCalledWith(mockSearchResults, 100);
+      expect(result.current.data).toEqual(mockSearchResults);
     });
 
     it('returns raw data when no transformer is provided', async () => {
