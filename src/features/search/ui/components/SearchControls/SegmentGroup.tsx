@@ -3,7 +3,7 @@ import { ButtonGroup } from '@/components/ButtonGroup';
 import { useSearchState } from '@/store';
 import { SearchParam } from '../../../core';
 import { isParentSegmentActive } from '../../utils/segmentUtils';
-import './Segments.scss';
+import './SegmentGroup.scss';
 
 export interface SegmentGroupProps {
   parentPath?: string;

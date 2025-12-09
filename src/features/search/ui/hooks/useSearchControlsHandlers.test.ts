@@ -29,7 +29,6 @@ describe('useSearchControlsHandlers', () => {
   const setSearchParams = jest.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
     (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams(), setSearchParams]);
 
     setInitialGlobalState([
