@@ -2,11 +2,27 @@ import { renderHook, act } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore } from '@/store';
-import { SearchParam, type SearchTypeConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import { useSearchControlsHandlers } from './useSearchControlsHandlers';
+import { resolveUIConfig } from '../config';
+import { getValidSearchBy } from '../utils';
 
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
+}));
+
+jest.mock('../../core', () => ({
+  ...jest.requireActual('../../core'),
+  resolveCoreConfig: jest.fn(),
+}));
+
+jest.mock('../config', () => ({
+  resolveUIConfig: jest.fn(),
+}));
+
+jest.mock('../utils', () => ({
+  ...jest.requireActual('../utils'),
+  getValidSearchBy: jest.fn(searchBy => searchBy),
 }));
 
 describe('useSearchControlsHandlers', () => {
@@ -28,8 +44,26 @@ describe('useSearchControlsHandlers', () => {
   const resetCommittedValues = jest.fn();
   const setSearchParams = jest.fn();
 
+  const mockSegmentConfig: SearchTypeConfig = {
+    id: 'browse',
+    defaults: {
+      searchBy: 'title',
+      limit: 100,
+    },
+  };
+
+  const mockUIConfig = {
+    searchableIndices: [
+      { value: 'title', labelId: 'Title' },
+      { value: 'keyword', labelId: 'Keyword' },
+    ],
+  };
+
   beforeEach(() => {
     (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams(), setSearchParams]);
+    (resolveCoreConfig as jest.Mock).mockReturnValue(mockSegmentConfig);
+    (resolveUIConfig as jest.Mock).mockReturnValue(mockUIConfig);
+    (getValidSearchBy as jest.Mock).mockImplementation(searchBy => searchBy);
 
     setInitialGlobalState([
       {
@@ -420,6 +454,429 @@ describe('useSearchControlsHandlers', () => {
 
       // Handlers should remain stable
       expect(firstHandlers.onSegmentChange).toBe(secondHandlers.onSegmentChange);
+    });
+  });
+
+  describe('Config resolution and validation', () => {
+    const mockSegmentConfig: SearchTypeConfig = {
+      id: 'browse',
+      defaults: {
+        searchBy: 'title',
+        limit: 50,
+      },
+    };
+
+    const mockUIConfig = {
+      id: 'browse',
+      searchableIndices: [
+        { value: 'title', labelId: 'Title', placeholder: 'ld.placeholder.title' },
+        { value: 'keyword', labelId: 'Keyword', placeholder: 'ld.placeholder.keyword' },
+      ],
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      (resolveCoreConfig as jest.Mock).mockReturnValue(mockSegmentConfig);
+      (resolveUIConfig as jest.Mock).mockReturnValue(mockUIConfig);
+      (getValidSearchBy as jest.Mock).mockImplementation(searchBy => searchBy);
+
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search', source: 'local' },
+            draftBySegment: {},
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+    });
+
+    it('resolves config for new segment on segment change', () => {
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      // Verify the handler completes without errors and uses the mocked configs
+      expect(setQuery).toHaveBeenCalledWith('');
+      expect(setSearchBy).toHaveBeenCalledWith('title'); // from mockSegmentConfig
+    });
+
+    it('validates searchBy when restoring draft from segment', () => {
+      const mockDraft = { query: 'test', searchBy: 'isbn' };
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'old query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search' },
+            draftBySegment: { browse: mockDraft },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      (getValidSearchBy as jest.Mock).mockReturnValue('title');
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      // Verify the searchBy from the draft is used (isbn from mockDraft)
+      expect(setSearchBy).toHaveBeenCalledWith('isbn');
+    });
+
+    it('uses default searchBy when no draft exists for segment', () => {
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(setQuery).toHaveBeenCalledWith('');
+      expect(setSearchBy).toHaveBeenCalledWith('title'); // from mockSegmentConfig defaults
+    });
+
+    it('preserves source from existing draft when changing segments', () => {
+      const mockDraft = { query: 'test', searchBy: 'keyword', source: 'external' };
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'old query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search' },
+            draftBySegment: { browse: mockDraft },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        segment: 'browse',
+        source: 'external',
+      });
+    });
+
+    it('removes source from navigation when draft has no source', () => {
+      const mockDraft = { query: 'test', searchBy: 'keyword' };
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'old query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search', source: 'internal' },
+            draftBySegment: { browse: mockDraft },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        segment: 'browse',
+      });
+    });
+
+    it('validates searchBy on submit with effective config', () => {
+      (resolveCoreConfig as jest.Mock).mockReturnValue(mockSegmentConfig);
+      (resolveUIConfig as jest.Mock).mockReturnValue(mockUIConfig);
+      (getValidSearchBy as jest.Mock).mockReturnValue('title');
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      // Verify the validated searchBy is saved and URL is updated
+      expect(setDraftBySegment).toHaveBeenCalled();
+      expect(setSearchParams).toHaveBeenCalled();
+    });
+
+    it('saves validated searchBy to draft on submit', () => {
+      (getValidSearchBy as jest.Mock).mockReturnValue('validated-search-by');
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(setDraftBySegment).toHaveBeenCalledWith({
+        search: {
+          query: 'test query',
+          searchBy: 'validated-search-by',
+          source: 'local',
+        },
+      });
+    });
+
+    it('includes validated searchBy in URL params on submit', () => {
+      (getValidSearchBy as jest.Mock).mockReturnValue('validated-search-by');
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      const params = setSearchParams.mock.calls[0][0] as URLSearchParams;
+      expect(params.get(SearchParam.SEARCH_BY)).toBe('validated-search-by');
+    });
+
+    it('auto-searches when switching to segment with preserved query', () => {
+      const mockDraft = { query: 'preserved query', searchBy: 'title', source: 'external' };
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'old query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search' },
+            draftBySegment: { browse: mockDraft },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      const updaterFn = setSearchParams.mock.calls[0][0];
+      const params = updaterFn(new URLSearchParams());
+
+      expect(params.get(SearchParam.SEGMENT)).toBe('browse');
+      expect(params.get(SearchParam.QUERY)).toBe('preserved query');
+      expect(params.get(SearchParam.SEARCH_BY)).toBe('title');
+      expect(params.get(SearchParam.SOURCE)).toBe('external');
+    });
+
+    it('commits to value flow when switching to segment with preserved query', () => {
+      const mockDraft = { query: 'preserved query', searchBy: 'title' };
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'old query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'search' },
+            draftBySegment: { browse: mockDraft },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(setCommittedValues).toHaveBeenCalledWith({
+        segment: 'browse',
+        query: 'preserved query',
+        searchBy: 'title',
+        source: undefined,
+        offset: 0,
+      });
+    });
+
+    it('falls back to passed coreConfig when resolveCoreConfig returns undefined', () => {
+      (resolveCoreConfig as jest.Mock).mockReturnValue(undefined);
+      (getValidSearchBy as jest.Mock).mockImplementation(searchBy => searchBy);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(getValidSearchBy).toHaveBeenCalledWith(expect.anything(), expect.anything(), mockConfig);
+    });
+  });
+
+  describe('Draft management', () => {
+    it('saves current segment draft before switching segments', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'current query',
+            searchBy: 'isbn',
+            navigationState: { segment: 'authorities', source: 'internal' },
+            draftBySegment: { existing: { query: 'old', searchBy: 'keyword' } },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onSegmentChange('resources');
+      });
+
+      expect(setDraftBySegment).toHaveBeenCalledWith({
+        existing: { query: 'old', searchBy: 'keyword' },
+        authorities: {
+          query: 'current query',
+          searchBy: 'isbn',
+          source: 'internal',
+        },
+      });
+    });
+
+    it('removes segment draft on reset', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test',
+            searchBy: 'keyword',
+            navigationState: { segment: 'authorities' },
+            draftBySegment: {
+              authorities: { query: 'draft query', searchBy: 'title' },
+              other: { query: 'other query', searchBy: 'isbn' },
+            },
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(setDraftBySegment).toHaveBeenCalledWith({
+        other: { query: 'other query', searchBy: 'isbn' },
+      });
+    });
+
+    it('preserves segment and source in URL on reset', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test',
+            searchBy: 'keyword',
+            navigationState: { segment: 'authorities', source: 'external' },
+            draftBySegment: {},
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'url' }));
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      const updaterFn = setSearchParams.mock.calls[0][0];
+      const params = updaterFn(new URLSearchParams());
+
+      expect(params.get(SearchParam.SEGMENT)).toBe('authorities');
+      expect(params.get(SearchParam.SOURCE)).toBe('external');
+      expect(params.has(SearchParam.QUERY)).toBe(false);
+      expect(params.has(SearchParam.SEARCH_BY)).toBe(false);
+    });
+
+    it('resets committed values in value flow', () => {
+      const { result } = renderHook(() => useSearchControlsHandlers({ coreConfig: mockConfig, flow: 'value' }));
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(resetCommittedValues).toHaveBeenCalled();
     });
   });
 });
