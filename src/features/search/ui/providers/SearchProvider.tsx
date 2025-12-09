@@ -1,6 +1,7 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment, useSearchConfigs } from '../hooks';
+import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
+import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 
@@ -22,7 +23,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
         defaultSource: props.defaultSource,
       }
     : {
-        staticConfigId: props.config.id,
+        staticCoreConfigId: props.coreConfig.id,
       };
 
   // Resolve current segment and source
@@ -32,14 +33,18 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
   });
 
   // Resolve configs based on segment/source
-  const { coreConfig, activeUIConfig, baseUIConfig } = useSearchConfigs({
-    currentSegment,
-    currentSource,
-    segments: isDynamicMode(props) ? props.segments : undefined,
-    defaultSegment: isDynamicMode(props) ? props.defaultSegment : undefined,
-    staticConfig: isDynamicMode(props) ? undefined : props.config,
-    staticUIConfig: isDynamicMode(props) ? undefined : props.uiConfig,
-  });
+  const { coreConfig, activeUIConfig, baseUIConfig } = useMemo(
+    () =>
+      resolveSearchConfigs({
+        currentSegment,
+        currentSource,
+        segments: isDynamicMode(props) ? props.segments : undefined,
+        defaultSegment: isDynamicMode(props) ? props.defaultSegment : undefined,
+        staticCoreConfig: isDynamicMode(props) ? undefined : props.coreConfig,
+        staticUIConfig: isDynamicMode(props) ? undefined : props.uiConfig,
+      }),
+    [currentSegment, currentSource, props],
+  );
 
   // Handlers for search controls
   const handlers = useSearchControlsHandlers({ coreConfig, flow });

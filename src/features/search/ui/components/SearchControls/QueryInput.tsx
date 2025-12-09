@@ -4,7 +4,7 @@ import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
 import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
-import { getSearchPlaceholder } from '../../utils/getSearchPlaceholder.helper';
+import { getSearchPlaceholder } from '../../utils';
 
 export const QueryInput: FC = () => {
   const { formatMessage } = useIntl();

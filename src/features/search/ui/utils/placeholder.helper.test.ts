@@ -1,8 +1,8 @@
 import { SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
-import { getPlaceholderForProperty, getSearchPlaceholder } from './placeholder.helper';
+import { getPlaceholderForProperty, getSearchPlaceholderLegacy } from './placeholder.helper';
 
-describe('getSearchPlaceholder', () => {
+describe('getSearchPlaceholderLegacy', () => {
   const mockHubOptions = [
     {
       label: 'search.hubNameLeftAnchored',
@@ -19,43 +19,43 @@ describe('getSearchPlaceholder', () => {
   const mockAuthorityOptions = [SearchIdentifiers.TITLE, SearchIdentifiers.CONTRIBUTOR, SearchIdentifiers.ISBN];
 
   test('returns placeholder for Hub Name Left Anchored', () => {
-    const result = getSearchPlaceholder(mockHubOptions, SearchableIndex.HubNameLeftAnchored);
+    const result = getSearchPlaceholderLegacy(mockHubOptions, SearchableIndex.HubNameLeftAnchored);
 
     expect(result).toBe('ld.placeholder.startsWith');
   });
 
   test('returns empty placeholder for Hub Name Keyword', () => {
-    const result = getSearchPlaceholder(mockHubOptions, SearchableIndex.HubNameKeyword);
+    const result = getSearchPlaceholderLegacy(mockHubOptions, SearchableIndex.HubNameKeyword);
 
     expect(result).toBe('');
   });
 
   test('returns first option placeholder when no searchBy is provided', () => {
-    const result = getSearchPlaceholder(mockHubOptions);
+    const result = getSearchPlaceholderLegacy(mockHubOptions);
 
     expect(result).toBe('ld.placeholder.startsWith');
   });
 
   test('returns empty string for authority options (no placeholder property)', () => {
-    const result = getSearchPlaceholder(mockAuthorityOptions, SearchIdentifiers.TITLE);
+    const result = getSearchPlaceholderLegacy(mockAuthorityOptions, SearchIdentifiers.TITLE);
 
     expect(result).toBe('');
   });
 
   test('returns empty string for undefined selectOptions', () => {
-    const result = getSearchPlaceholder(undefined, SearchableIndex.HubNameLeftAnchored);
+    const result = getSearchPlaceholderLegacy(undefined, SearchableIndex.HubNameLeftAnchored);
 
     expect(result).toBe('');
   });
 
   test('returns empty string for empty selectOptions array', () => {
-    const result = getSearchPlaceholder([], SearchableIndex.HubNameLeftAnchored);
+    const result = getSearchPlaceholderLegacy([], SearchableIndex.HubNameLeftAnchored);
 
     expect(result).toBe('');
   });
 
   test('returns empty string when searchBy is not found in options', () => {
-    const result = getSearchPlaceholder(mockHubOptions, SearchIdentifiers.TITLE);
+    const result = getSearchPlaceholderLegacy(mockHubOptions, SearchIdentifiers.TITLE);
 
     expect(result).toBe('');
   });
@@ -70,10 +70,10 @@ describe('getSearchPlaceholder', () => {
       },
     ];
 
-    const result_1 = getSearchPlaceholder(mixedOptions, SearchIdentifiers.TITLE);
+    const result_1 = getSearchPlaceholderLegacy(mixedOptions, SearchIdentifiers.TITLE);
     expect(result_1).toBe('');
 
-    const result_2 = getSearchPlaceholder(mixedOptions, SearchableIndex.HubNameKeyword);
+    const result_2 = getSearchPlaceholderLegacy(mixedOptions, SearchableIndex.HubNameKeyword);
     expect(result_2).toBe('ld.test.placeholder');
   });
 });

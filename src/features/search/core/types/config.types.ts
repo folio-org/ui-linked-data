@@ -14,8 +14,8 @@ export interface DataCapabilities {
 /**
  * Atomic Search Type Configuration
  *
- * Represents a self-contained search configuration with its own strategies,
- * searchBy options, and defaults. No nested segments or sources.
+ * Represents a self-contained search configuration with its own strategies and defaults.
+ * No nested segments or sources.
  *
  * Use composite keys to identify variants:
  * - "resources" - Simple resource search

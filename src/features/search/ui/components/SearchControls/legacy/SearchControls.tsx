@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { getSearchPlaceholder } from '@/features/search/ui';
+import { getSearchPlaceholderLegacy } from '@/features/search/ui';
 import { Button, ButtonType } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Select, type SelectValue } from '@/components/Select';
@@ -85,7 +85,7 @@ export const SearchControls: FC<Props> = ({ submitSearch, changeSegment, clearVa
   }
 
   // Find the current placeholder based on searchBy value
-  const currentPlaceholder = getSearchPlaceholder(selectOptions, searchBy);
+  const currentPlaceholder = getSearchPlaceholderLegacy(selectOptions, searchBy);
   const placeholderText = currentPlaceholder ? formatMessage({ id: currentPlaceholder }) : undefined;
 
   const onChangeSearchInput = ({ target: { value } }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

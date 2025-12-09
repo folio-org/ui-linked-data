@@ -18,7 +18,7 @@ export { SearchContextLegacy, LegacySearchProvider, useSearchContextLegacy } fro
 export { useSearch, useLoadSearchResults, useSearchNavigationState, useSearchFilters } from './hooks';
 
 // Utils
-export { getActiveConfig, getSearchPlaceholder, getPlaceholderForProperty } from './utils';
+export { getActiveConfig, getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProperty } from './utils';
 
 // Config (examples)
 export * from './config';

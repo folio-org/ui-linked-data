@@ -10,7 +10,7 @@ interface UseSearchSegmentParams {
   defaultSegment?: string;
   defaultSource?: string;
   // For static mode: the config id to use as segment
-  staticConfigId?: string;
+  staticCoreConfigId?: string;
 }
 
 interface UseSearchSegmentResult {
@@ -27,7 +27,7 @@ export function useSearchSegment({
   segments,
   defaultSegment,
   defaultSource,
-  staticConfigId,
+  staticCoreConfigId,
 }: UseSearchSegmentParams): UseSearchSegmentResult {
   const [searchParams] = useSearchParams();
   const { navigationState, setNavigationState } = useSearchState(['navigationState', 'setNavigationState']);
@@ -59,8 +59,8 @@ export function useSearchSegment({
       return defaultSegment ?? segments[0];
     }
 
-    return staticConfigId ?? '';
-  }, [isDynamicMode, segments, defaultSegment, staticConfigId]);
+    return staticCoreConfigId ?? '';
+  }, [isDynamicMode, segments, defaultSegment, staticCoreConfigId]);
 
   // Initialize segment/source on mount (value flow only)
   useEffect(() => {

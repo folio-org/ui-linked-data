@@ -68,7 +68,7 @@ describe('Search', () => {
   describe('Static mode (with config and uiConfig)', () => {
     test('renders with required props', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url">
           <div>Search Content</div>
         </Search>,
       );
@@ -79,7 +79,7 @@ describe('Search', () => {
 
     test('renders with mode="custom"', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url" mode="custom">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url" mode="custom">
           <div>Custom Mode Content</div>
         </Search>,
       );
@@ -89,7 +89,7 @@ describe('Search', () => {
 
     test('renders with mode="auto"', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url" mode="auto">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url" mode="auto">
           <div>Auto Mode Content</div>
         </Search>,
       );
@@ -99,7 +99,7 @@ describe('Search', () => {
 
     test('renders with flow="value"', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="value">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="value">
           <div>Value Flow Content</div>
         </Search>,
       );
@@ -109,7 +109,7 @@ describe('Search', () => {
 
     test('returns null when config is not provided', () => {
       const { container } = render(
-        <Search config={undefined as unknown as SearchTypeConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={undefined as unknown as SearchTypeConfig} uiConfig={mockUIConfig} flow="url">
           <div>Should Not Render</div>
         </Search>,
       );
@@ -119,7 +119,7 @@ describe('Search', () => {
 
     test('returns null when uiConfig is not provided', () => {
       const { container } = render(
-        <Search config={mockConfig} uiConfig={undefined as unknown as typeof mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={undefined as unknown as typeof mockUIConfig} flow="url">
           <div>Should Not Render</div>
         </Search>,
       );
@@ -129,7 +129,7 @@ describe('Search', () => {
 
     test('applies correct container className', () => {
       const { container } = render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url">
           <div>Content</div>
         </Search>,
       );
@@ -140,7 +140,7 @@ describe('Search', () => {
 
     test('has correct test id', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url">
           <div>Content</div>
         </Search>,
       );
@@ -150,7 +150,7 @@ describe('Search', () => {
 
     test('renders multiple children', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url">
           <div>Child 1</div>
           <div>Child 2</div>
           <div>Child 3</div>
@@ -164,7 +164,7 @@ describe('Search', () => {
 
     test('defaults to custom mode when mode is not specified', () => {
       render(
-        <Search config={mockConfig} uiConfig={mockUIConfig} flow="url">
+        <Search coreConfig={mockConfig} uiConfig={mockUIConfig} flow="url">
           <div>Default Mode</div>
         </Search>,
       );

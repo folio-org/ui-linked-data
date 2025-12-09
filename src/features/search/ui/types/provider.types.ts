@@ -73,7 +73,7 @@ export interface SearchContextValue {
  * Static mode props - when providing explicit configs
  */
 interface StaticModeProps {
-  config: SearchTypeConfig;
+  coreConfig: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   segments?: never;
 }
