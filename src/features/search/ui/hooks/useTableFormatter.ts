@@ -11,7 +11,7 @@ interface UseTableFormatterProps {
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   checkFailedId?: (id: string) => boolean;
   // Instance-specific props
-  onPreview?: (id: string) => void;
+  onPreview?: (id: string) => Promise<void>;
   onEdit?: (url: string) => void;
   onToggleSelect?: (id: string, checked: boolean) => void;
   selectedInstances?: string[];

@@ -61,7 +61,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
   const toggleInstanceSelect = useCallback(
     (id: string, checked: boolean) =>
-      setSelectedInstances(prev => (checked ? [...prev, id] : prev.filter(i => i !== id))),
+      setSelectedInstances(prev => (checked ? [...prev, id] : prev.filter(prevId => prevId !== id))),
     [setSelectedInstances],
   );
 
