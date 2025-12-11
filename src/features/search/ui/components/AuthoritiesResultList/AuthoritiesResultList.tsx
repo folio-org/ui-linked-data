@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { TableFlex } from '@/components/Table';
 import { useFormattedResults } from '../../hooks/useFormattedResults';
 import { useTableFormatter } from '../../hooks/useTableFormatter';
-import { authoritiesTableConfig } from '../../config/authoritiesTableConfig';
+import { authoritiesTableConfig } from '../../config/results/authoritiesTable.config';
 import './AuthoritiesResultList.scss';
 
 interface AuthoritiesResultListProps {

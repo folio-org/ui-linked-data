@@ -5,7 +5,7 @@ import {
   RDANotesFormatter,
 } from '@/features/search/ui/formatters';
 
-export const hubTableConfig: SearchResultsTableConfig = {
+export const hubsTableConfig: SearchResultsTableConfig = {
   columns: {
     assign: {
       label: '',

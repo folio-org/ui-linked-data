@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { TableFlex } from '@/components/Table';
 import { useFormattedResults } from '../../hooks/useFormattedResults';
 import { useTableFormatter } from '../../hooks/useTableFormatter';
-import { hubsTableConfig } from '../../config/hubsTableConfig';
+import { hubsTableConfig } from '../../config/results/hubsTable.config';
 import './HubsResultList.scss';
 
 interface HubsResultListProps {

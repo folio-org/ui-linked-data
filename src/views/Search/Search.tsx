@@ -29,6 +29,7 @@ import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { filters } from './data/filters';
 import { FormattedMessage } from 'react-intl';
 import './Search.scss';
+import { FullDisplay } from '@/components/FullDisplay';
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -192,6 +193,9 @@ export const SearchView = () => {
             </Search.Results>
           </Search.ContentContainer>
         </Search.Content>
+
+        {/* Preview panel */}
+        <FullDisplay />
       </Search>
 
       <ModalImport />
