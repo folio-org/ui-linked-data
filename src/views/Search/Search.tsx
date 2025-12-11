@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
+import { logger } from '@/common/services/logger';
 import {
   LegacySearch,
   LegacySearchControlPane,
@@ -67,7 +68,7 @@ export const SearchView = () => {
         await fetchRecord(id, {});
       }
     } catch (error) {
-      console.error(error);
+      logger.error('Error fetching records for preview:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {

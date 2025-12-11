@@ -1,5 +1,6 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { logger } from '@/common/services/logger';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { Loading } from '@/components/Loading';
 import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
@@ -31,7 +32,7 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
   // Show error notification when search fails
   useEffect(() => {
     if (isError && error) {
-      console.error('Search error:', error);
+      logger.error('Search error:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }

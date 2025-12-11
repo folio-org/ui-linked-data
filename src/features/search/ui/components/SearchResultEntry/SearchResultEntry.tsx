@@ -1,5 +1,6 @@
 import { FC, useState, useMemo, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { logger } from '@/common/services/logger';
 import { WorkDetailsCard } from '@/components/WorkDetailsCard';
 import { Table } from '@/components/Table';
 import { Button, ButtonType } from '@/components/Button';
@@ -51,7 +52,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
 
       await fetchRecord(id, { singular: true });
     } catch (error) {
-      console.error(error);
+      logger.error('Error fetching record:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {

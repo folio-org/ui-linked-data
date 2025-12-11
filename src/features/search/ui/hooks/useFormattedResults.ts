@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { logger } from '@/common/services/logger';
 import { useSearchContext } from '../providers/SearchProvider';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 
@@ -19,7 +20,7 @@ export function useFormattedResults<T = unknown>(): T[] | undefined {
 
       return allFormattedItems;
     } catch (error) {
-      console.error('Error formatting search results:', error);
+      logger.error('Error formatting search results:', error);
 
       return undefined;
     }

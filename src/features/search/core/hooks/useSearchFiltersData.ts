@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { logger } from '@/common/services/logger';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import * as SearchApi from '@/common/api/search.api';
@@ -41,7 +42,7 @@ export const useSearchFiltersData = () => {
 
       setSourceData(sourceData);
     } catch (error) {
-      console.error(error);
+      logger.error('Error fetching search source data:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
@@ -60,7 +61,7 @@ export const useSearchFiltersData = () => {
 
       setFacetsData(response.facets);
     } catch (error) {
-      console.error(error);
+      logger.error('Error fetching search facets data:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     }
