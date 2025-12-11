@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { AuthRefType } from '@/common/constants/search.constants';
-import { AuthorizedFormatter } from '@/features/complexLookup/formatters';
+import { AuthorizedFormatter } from './AuthorizedFormatter';
 
 describe('AuthorizedFormatter', () => {
   const defaultRow = {

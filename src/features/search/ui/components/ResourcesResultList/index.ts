@@ -1,0 +1,1 @@
+export { ResourcesResultList } from './ResourcesResultList';

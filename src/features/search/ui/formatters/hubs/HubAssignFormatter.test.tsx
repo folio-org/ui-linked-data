@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { HubAssignFormatter } from '@/features/complexLookup/formatters/Hub/HubAssign';
+import { HubAssignFormatter } from './HubAssignFormatter';
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id }: { id: string }) => <span>{id}</span>,

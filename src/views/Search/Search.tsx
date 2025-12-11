@@ -1,5 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { LegacySearch, LegacySearchControlPane, Search, SearchResultList, HubsResultList } from '@/features/search/ui';
+import {
+  LegacySearch,
+  LegacySearchControlPane,
+  Search,
+  ResourcesResultList,
+  HubsResultList,
+} from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -136,7 +142,7 @@ export const SearchView = () => {
     ),
     [resourceActions],
   );
-  const renderResultsList = useCallback(() => <SearchResultList />, []);
+  const renderResultsList = useCallback(() => <ResourcesResultList />, []);
 
   return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
@@ -171,9 +177,9 @@ export const SearchView = () => {
 
           <Search.ContentContainer>
             <Search.Results>
-              {/* Resources segment: custom cards with Work+Instances */}
+              {/* Resources segment: Work cards with instances table */}
               <Search.Controls.SegmentContent segment="resources">
-                <Search.Results.List />
+                <ResourcesResultList />
               </Search.Controls.SegmentContent>
 
               {/* Hubs segment: table with external links */}

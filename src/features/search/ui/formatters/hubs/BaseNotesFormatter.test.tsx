@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
-import { BaseNotesFormatter } from '@/features/complexLookup/formatters/Hub/BaseNotesFormatter';
+import { BaseNotesFormatter } from './BaseNotesFormatter';
 
 const renderWithIntl = (component: React.ReactElement) => {
   return render(<IntlProvider locale="en">{component}</IntlProvider>);

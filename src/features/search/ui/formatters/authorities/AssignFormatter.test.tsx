@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import { AuthRefType } from '@/common/constants/search.constants';
-import { AssignFormatter } from '@/features/complexLookup/formatters';
+import { AssignFormatter } from './AssignFormatter';
 
 describe('AssignFormatter', () => {
   const mockOnAssign = jest.fn();

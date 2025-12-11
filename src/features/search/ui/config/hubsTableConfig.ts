@@ -1,11 +1,6 @@
-import {
-  HubAssignFormatter,
-  HubLinkFormatter,
-  AuthNotesFormatter,
-  RDANotesFormatter,
-} from '@/features/search/ui/formatters';
+import { HubAssignFormatter, HubLinkFormatter, AuthNotesFormatter, RDANotesFormatter } from '../formatters';
 
-export const hubTableConfig: SearchResultsTableConfig = {
+export const hubsTableConfig: SearchResultsTableConfig = {
   columns: {
     assign: {
       label: '',

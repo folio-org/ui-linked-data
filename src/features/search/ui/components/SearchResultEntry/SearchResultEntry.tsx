@@ -1,11 +1,9 @@
-import { FC, useState } from 'react';
-import classNames from 'classnames';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FC, useState, useMemo, useCallback } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { WorkDetailsCard } from '@/components/WorkDetailsCard';
-import { Row, Table } from '@/components/Table';
+import { Table } from '@/components/Table';
 import { Button, ButtonType } from '@/components/Button';
 import { formatItemSearchInstanceListData } from '@/features/search/core';
-import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { ResourceType } from '@/common/constants/record.constants';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import CommentIcon from '@/assets/comment-lines-12.svg?react';
@@ -13,10 +11,11 @@ import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { StatusType } from '@/common/constants/status.constants';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
-import { FullDisplayType } from '@/common/constants/uiElements.constants';
-import './SearchResultEntry.scss';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { useTableFormatter } from '../../hooks/useTableFormatter';
+import { instancesTableConfig } from '../../config/instancesTableConfig';
+import './SearchResultEntry.scss';
 
 type SearchResultEntry = {
   id: string;
@@ -26,39 +25,7 @@ type SearchResultEntry = {
   instances?: InstanceAsSearchResultDTO[];
 };
 
-const instancesListHeader: Row = {
-  selectCtl: {
-    position: 0,
-    className: 'table-head-empty',
-  },
-  title: {
-    label: <FormattedMessage id="ld.title" />,
-    position: 1,
-  },
-  isbn: {
-    label: <FormattedMessage id="ld.isbn" />,
-    position: 2,
-  },
-  lccn: {
-    label: <FormattedMessage id="ld.lccn" />,
-    position: 3,
-  },
-  publisher: {
-    label: <FormattedMessage id="ld.publisher" />,
-    position: 4,
-  },
-  pubDate: {
-    label: <FormattedMessage id="ld.pubDateShort" />,
-    position: 5,
-  },
-  editCtl: {
-    position: 6,
-    className: 'table-head-empty',
-  },
-};
-
 export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfWork }) => {
-  const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { navigationState, selectedInstances, setSelectedInstances } = useSearchState([
     'navigationState',
@@ -92,66 +59,25 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     }
   };
 
-  const toggleInstanceSelect = (id: string, checked: boolean) =>
-    setSelectedInstances(prev => (checked ? [...prev, id] : prev.filter(i => i !== id)));
+  const toggleInstanceSelect = useCallback(
+    (id: string, checked: boolean) =>
+      setSelectedInstances(prev => (checked ? [...prev, id] : prev.filter(i => i !== id))),
+    [setSelectedInstances],
+  );
 
-  const applyActionItems = (rows: Row[]): Row[] =>
-    rows.map(row => {
-      const rowMeta = row.__meta;
-      const comparisonIndex = selectedInstances.indexOf(rowMeta?.id as string);
-      const typedTitle = row.title.label as string;
+  const instancesData = useMemo(() => formatItemSearchInstanceListData(instances || []), [instances]);
 
-      return {
-        ...row,
-        title: {
-          ...row.title,
-          children: (
-            <div className="title-wrapper">
-              {comparisonIndex >= 0 &&
-                (previewContent.length > 1 || fullDisplayComponentType === FullDisplayType.Comparison) && (
-                  <span className="comparison-index">{comparisonIndex + 1}</span>
-                )}
-              <Button
-                type={ButtonType.Link}
-                onClick={() => handleOpenPreview(rowMeta?.id as string)}
-                data-testid={`preview-button__${rowMeta?.id}`}
-                ariaLabel={formatMessage({ id: 'ld.aria.sections.openResourcePreview' }, { title: typedTitle })}
-              >
-                {row.title.label}
-              </Button>
-            </div>
-          ),
-        },
-        editCtl: {
-          children: (
-            <Button
-              type={ButtonType.Primary}
-              onClick={() => navigateToEditPage(generateEditResourceUrl(rowMeta?.id))}
-              data-testid={`edit-button__${rowMeta?.id}`}
-              className={classNames(['button-nowrap', 'button-capitalize'])}
-              ariaLabel={formatMessage({ id: 'ld.aria.sections.editInstance' }, { title: typedTitle })}
-            >
-              <FormattedMessage id="ld.editInstance" />
-            </Button>
-          ),
-        },
-        selectCtl: {
-          children: (
-            <div className="row-select-container">
-              <input
-                id={`row-select-ctl-${rowMeta?.key}`}
-                type="checkbox"
-                checked={selectedInstances.includes(rowMeta?.id as string)}
-                onChange={e => toggleInstanceSelect(rowMeta?.id as string, e.target.checked)}
-                aria-label={formatMessage({ id: 'ld.aria.table.selectRow' }, { title: typedTitle })}
-              />
-            </div>
-          ),
-        },
-      };
-    });
-
-  const formattedInstances = applyActionItems(formatItemSearchInstanceListData(instances || []));
+  const { formattedData, listHeader } = useTableFormatter({
+    data: instancesData,
+    tableConfig: instancesTableConfig,
+    context: 'search',
+    onPreview: handleOpenPreview,
+    onEdit: navigateToEditPage,
+    onToggleSelect: toggleInstanceSelect,
+    selectedInstances,
+    previewContent,
+    fullDisplayComponentType,
+  });
 
   const onClickNewInstance = () => {
     onCreateNewResource({
@@ -174,8 +100,8 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
       />
       {!!instances?.length && isOpen && (
         <Table
-          header={instancesListHeader}
-          data={formattedInstances}
+          header={listHeader}
+          data={formattedData}
           selectedRows={previewContent?.map(({ id }) => id)}
           className="instance-list"
         />

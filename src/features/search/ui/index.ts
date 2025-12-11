@@ -5,6 +5,7 @@ export * from './types';
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { AuthoritiesResultList } from './components/AuthoritiesResultList';
 export { HubsResultList } from './components/HubsResultList';
+export { ResourcesResultList } from './components/ResourcesResultList';
 export { ItemSearch } from './components/ItemSearch';
 export { LegacySearch, Search } from './components/Search';
 export { LegacySearchControlPane, SearchControlPane } from './components/SearchControlPane';
@@ -23,6 +24,7 @@ export {
   useSearchNavigationState,
   useSearchFilters,
   useFormattedResults,
+  useTableFormatter,
 } from './hooks';
 
 // Utils
@@ -30,3 +32,6 @@ export { getActiveConfig, getSearchPlaceholder, getSearchPlaceholderLegacy, getP
 
 // Config (examples)
 export * from './config';
+
+// Formatters
+export * from './formatters';

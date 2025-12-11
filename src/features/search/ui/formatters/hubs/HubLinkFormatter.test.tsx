@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { HubLinkFormatter } from '@/features/complexLookup/formatters/Hub/HubLink';
+import { HubLinkFormatter } from './HubLinkFormatter';
 
 describe('HubLinkFormatter', () => {
   const defaultRow = {

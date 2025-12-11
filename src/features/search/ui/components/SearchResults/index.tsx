@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { SearchResultList as List } from '../SearchResultList';
+import { ResourcesResultList as List } from '../ResourcesResultList';
 import { SearchPagination as Pagination } from '../SearchPagination';
 
 interface SearchResultsProps {

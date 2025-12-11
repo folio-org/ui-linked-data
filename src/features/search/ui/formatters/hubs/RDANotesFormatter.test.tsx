@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { RDANotesFormatter } from '@/features/complexLookup/formatters/Hub/RDANotes';
+import { RDANotesFormatter } from './RDANotesFormatter';
 
 jest.mock('@/features/complexLookup/formatters/Hub/BaseNotesFormatter', () => ({
   BaseNotesFormatter: ({ row, fieldKey }: { row: SearchResultsTableRow; fieldKey: string }) => (
