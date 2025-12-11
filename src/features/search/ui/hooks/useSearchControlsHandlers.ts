@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState } from '@/store';
-import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
@@ -192,7 +192,9 @@ export const useSearchControlsHandlers = ({
       if (flowRef.current === 'url') {
         setSearchParams(prev => {
           const params = new URLSearchParams(prev);
-          const offset = newPage * (coreConfigRef.current.defaults?.limit || 100);
+          // Use UI page size from config (may be 10 for Resources, 100 for Hubs/Authorities)
+          const uiPageSize = coreConfigRef.current.defaults?.uiPageSize || SEARCH_RESULTS_LIMIT;
+          const offset = newPage * uiPageSize;
 
           if (offset > 0) {
             params.set(SearchParam.OFFSET, offset.toString());

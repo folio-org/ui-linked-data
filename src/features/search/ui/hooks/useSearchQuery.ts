@@ -1,6 +1,7 @@
 import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
@@ -120,7 +121,20 @@ export function useSearchQuery({
     });
 
     if (strategies.responseTransformer) {
-      return strategies.responseTransformer.transform(data, limit) as unknown as SearchResults;
+      const normalized = strategies.responseTransformer.transform(data, limit);
+
+      // Use UI page size from config (10 for Resources, 100 for Hubs/Authorities)
+      const uiPageSize = effectiveCoreConfig.defaults?.uiPageSize || SEARCH_RESULTS_LIMIT;
+      const totalPages = Math.ceil(normalized.totalRecords / uiPageSize);
+
+      return {
+        items: normalized.content,
+        totalRecords: normalized.totalRecords,
+        pageMetadata: {
+          totalElements: normalized.totalRecords,
+          totalPages,
+        },
+      };
     }
 
     return data as unknown as SearchResults;

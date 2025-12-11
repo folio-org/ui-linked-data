@@ -1,0 +1,16 @@
+.hubs-result-list {
+  width: 100%;
+
+  .results-table {
+    width: 100%;
+  }
+
+  .hub-link {
+    color: var(--primary-color, #0066cc);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

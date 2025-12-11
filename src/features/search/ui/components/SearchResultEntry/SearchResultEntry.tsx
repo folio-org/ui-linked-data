@@ -98,7 +98,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
       const rowMeta = row.__meta;
-      const comparisonIndex = selectedInstances.findIndex(id => id === rowMeta?.id);
+      const comparisonIndex = selectedInstances.indexOf(rowMeta?.id as string);
       const typedTitle = row.title.label as string;
 
       return {

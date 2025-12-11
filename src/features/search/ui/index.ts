@@ -3,6 +3,8 @@ export * from './types';
 
 // Components
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
+export { AuthoritiesResultList } from './components/AuthoritiesResultList';
+export { HubsResultList } from './components/HubsResultList';
 export { ItemSearch } from './components/ItemSearch';
 export { LegacySearch, Search } from './components/Search';
 export { LegacySearchControlPane, SearchControlPane } from './components/SearchControlPane';
@@ -15,7 +17,13 @@ export { SearchResultList } from './components/SearchResultList';
 export { SearchContextLegacy, LegacySearchProvider, useSearchContextLegacy } from './providers';
 
 // Hooks
-export { useSearch, useLoadSearchResults, useSearchNavigationState, useSearchFilters } from './hooks';
+export {
+  useSearch,
+  useLoadSearchResults,
+  useSearchNavigationState,
+  useSearchFilters,
+  useFormattedResults,
+} from './hooks';
 
 // Utils
 export { getActiveConfig, getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProperty } from './utils';

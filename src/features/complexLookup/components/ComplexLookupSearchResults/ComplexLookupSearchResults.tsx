@@ -5,7 +5,7 @@ import { useComplexLookupSearchResults } from '../../hooks/useComplexLookupSearc
 export type ComplexLookupSearchResultsProps = {
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   tableConfig: SearchResultsTableConfig;
-  searchResultsFormatter: (data: any[], sourceData?: SourceDataDTO) => Row[];
+  searchResultsFormatter: (data: unknown[], sourceData?: SourceDataDTO) => Row[];
 };
 
 export const ComplexLookupSearchResults: FC<ComplexLookupSearchResultsProps> = ({

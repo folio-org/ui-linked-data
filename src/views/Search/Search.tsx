@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { LegacySearch, LegacySearchControlPane, Search, SearchResultList } from '@/features/search/ui';
+import { LegacySearch, LegacySearchControlPane, Search, SearchResultList, HubsResultList } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -171,7 +171,16 @@ export const SearchView = () => {
 
           <Search.ContentContainer>
             <Search.Results>
-              <Search.Results.List />
+              {/* Resources segment: custom cards with Work+Instances */}
+              <Search.Controls.SegmentContent segment="resources">
+                <Search.Results.List />
+              </Search.Controls.SegmentContent>
+
+              {/* Hubs segment: table with external links */}
+              <Search.Controls.SegmentContent segment="hubs">
+                <HubsResultList context="search" />
+              </Search.Controls.SegmentContent>
+
               <Search.Results.Pagination />
             </Search.Results>
           </Search.ContentContainer>
