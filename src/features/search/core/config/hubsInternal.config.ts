@@ -32,6 +32,5 @@ export const hubsInternalConfig: SearchTypeConfig = {
     query: '',
     limit: 100, // API fetches 100 results
     offset: 0,
-    uiPageSize: 100, // UI shows all 100 results per page
   },
 };

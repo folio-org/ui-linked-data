@@ -2,6 +2,7 @@ import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchTypeUIConfig } from '../types';
 
 export const resourcesUIConfig: SearchTypeUIConfig = {
+  limit: 10, // UI shows 10 results per page
   ui: {
     titleId: 'ld.resources',
     subtitleId: '',

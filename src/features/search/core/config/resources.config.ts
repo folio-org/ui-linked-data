@@ -28,8 +28,7 @@ export const resourcesConfig: SearchTypeConfig = {
   defaults: {
     searchBy: 'title',
     query: '',
-    limit: 100, // API fetches 100 results
+    limit: 10, // API fetches 100 results
     offset: 0,
-    uiPageSize: 10, // UI shows 10 results per page
   },
 };

@@ -1,6 +1,5 @@
 import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MAX_LIMIT } from '@/common/constants/api.constants';
 import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
@@ -106,7 +105,7 @@ export function useSearchQuery({
       throw new Error(`No request builder for config: ${effectiveCoreConfig.id}`);
     }
 
-    const limit = effectiveCoreConfig.defaults?.limit ?? MAX_LIMIT;
+    const limit = (effectiveUIConfig?.limit || effectiveCoreConfig.defaults?.limit) ?? SEARCH_RESULTS_LIMIT;
     const request = strategies.requestBuilder.build({
       query: committed.query,
       searchBy: effectiveSearchBy,
@@ -122,10 +121,7 @@ export function useSearchQuery({
 
     if (strategies.responseTransformer) {
       const normalized = strategies.responseTransformer.transform(data, limit);
-
-      // Use UI page size from config (10 for Resources, 100 for Hubs/Authorities)
-      const uiPageSize = effectiveCoreConfig.defaults?.uiPageSize || SEARCH_RESULTS_LIMIT;
-      const totalPages = Math.ceil(normalized.totalRecords / uiPageSize);
+      const totalPages = Math.ceil(normalized.totalRecords / limit);
 
       return {
         items: normalized.content,

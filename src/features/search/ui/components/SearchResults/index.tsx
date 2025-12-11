@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import { ResourcesResultList as List } from '../ResourcesResultList';
 import { SearchPagination as Pagination } from '../SearchPagination';
 
 interface SearchResultsProps {
@@ -11,6 +10,5 @@ const SearchResultsRoot: FC<SearchResultsProps> = ({ children }) => {
 };
 
 export const SearchResults = Object.assign(SearchResultsRoot, {
-  List,
   Pagination,
 });

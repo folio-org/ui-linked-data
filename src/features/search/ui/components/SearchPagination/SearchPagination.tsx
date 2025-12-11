@@ -10,10 +10,10 @@ interface SearchPaginationProps {
 }
 
 export const SearchPagination: FC<SearchPaginationProps> = ({ showCount = true, isLooped = false }) => {
-  const { results, onPageChange, flow, config } = useSearchContext();
+  const { results, onPageChange, flow, config, uiConfig } = useSearchContext();
   const committed = useCommittedSearchParams({ flow });
 
-  const uiPageSize = config.defaults?.uiPageSize || SEARCH_RESULTS_LIMIT;
+  const uiPageSize = uiConfig.limit || config.defaults?.limit || SEARCH_RESULTS_LIMIT;
   const offset = committed.offset || 0;
   const currentPage = Math.floor(offset / uiPageSize);
 

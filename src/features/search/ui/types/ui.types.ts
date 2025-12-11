@@ -37,6 +37,7 @@ export interface SegmentUIConfig {
   ui?: SearchUIConfig;
   features?: SearchUIFeatures;
   searchableIndices?: SearchableIndexUI[];
+  limit?: number;
 }
 
 // UI config for a search type
@@ -44,5 +45,6 @@ export interface SearchTypeUIConfig {
   ui?: SearchUIConfig;
   features?: SearchUIFeatures;
   searchableIndices?: SearchableIndexUI[];
+  limit?: number;
   segments?: Record<string, SegmentUIConfig>;
 }

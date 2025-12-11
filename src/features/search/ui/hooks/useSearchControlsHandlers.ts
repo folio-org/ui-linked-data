@@ -10,6 +10,7 @@ import { resolveUIConfig } from '../config';
 
 interface UseSearchControlsHandlersParams {
   coreConfig: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
 }
 
@@ -25,18 +26,21 @@ interface SearchControlsHandlers {
 
 export const useSearchControlsHandlers = ({
   coreConfig,
+  uiConfig,
   flow,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [, setSearchParams] = useSearchParams();
 
   // Use refs for config/flow to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
+  const uiConfigRef = useRef(uiConfig);
   const flowRef = useRef(flow);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
+    uiConfigRef.current = uiConfig;
     flowRef.current = flow;
-  }, [coreConfig, flow]);
+  }, [coreConfig, uiConfig, flow]);
 
   const {
     setNavigationState,
@@ -192,8 +196,8 @@ export const useSearchControlsHandlers = ({
       if (flowRef.current === 'url') {
         setSearchParams(prev => {
           const params = new URLSearchParams(prev);
-          // Use UI page size from config (may be 10 for Resources, 100 for Hubs/Authorities)
-          const uiPageSize = coreConfigRef.current.defaults?.uiPageSize || SEARCH_RESULTS_LIMIT;
+          // Use UI page size from UI config with fallback to core config limit
+          const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
           const offset = newPage * uiPageSize;
 
           if (offset > 0) {
