@@ -48,12 +48,3 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
     });
   }
 }
-
-// Export standalone function for backward compatibility
-export const formatAuthorityItem = (
-  authoritiesList: AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[],
-  sourceData?: SourceDataDTO,
-): SearchResultsTableRow[] => {
-  const formatter = new AuthoritiesResultFormatter();
-  return formatter.format(authoritiesList, sourceData);
-};

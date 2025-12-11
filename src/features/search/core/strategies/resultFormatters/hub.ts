@@ -47,9 +47,3 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
     });
   }
 }
-
-// Export standalone function for backward compatibility
-export const formatHubItem = (hubList: HubSearchResultDTO[]): SearchResultsTableRow[] => {
-  const formatter = new HubsResultFormatter();
-  return formatter.format(hubList);
-};
