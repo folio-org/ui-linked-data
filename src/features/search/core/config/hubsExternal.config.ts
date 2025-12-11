@@ -3,6 +3,7 @@ import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
+import { HubsResultFormatter } from '../strategies/resultFormatters';
 
 /**
  * Hubs External Configuration (Atomic)
@@ -16,7 +17,7 @@ export const hubsExternalConfig: SearchTypeConfig = {
   strategies: {
     requestBuilder: new HubsExternalRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
-    resultFormatter: undefined,
+    resultFormatter: new HubsResultFormatter(),
   },
 
   capabilities: {
@@ -27,7 +28,8 @@ export const hubsExternalConfig: SearchTypeConfig = {
   defaults: {
     searchBy: SearchableIndexEnum.HubNameLeftAnchored,
     query: '',
-    limit: 100,
+    limit: 100, // API fetches 100 results
     offset: 0,
+    uiPageSize: 100, // UI shows all 100 results per page
   },
 };

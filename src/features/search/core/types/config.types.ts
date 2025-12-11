@@ -36,7 +36,8 @@ export interface SearchTypeConfig {
   defaults?: {
     searchBy?: string;
     query?: string;
-    limit?: number;
+    limit?: number; // API fetch limit (how many results to fetch per request)
     offset?: number;
+    uiPageSize?: number; // UI display limit (how many results to show per page)
   };
 }

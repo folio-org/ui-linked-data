@@ -3,6 +3,7 @@ import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searc
 import type { SearchTypeConfig } from '../types';
 import { AuthoritiesSearchRequestBuilder } from '../strategies/requestBuilders';
 import { AuthoritiesSearchResponseTransformer } from '../strategies/responseTransformers';
+import { AuthoritiesResultFormatter } from '../strategies/resultFormatters';
 
 /**
  * Authorities Search Configuration (Atomic)
@@ -16,7 +17,7 @@ export const authoritiesSearchConfig: SearchTypeConfig = {
   strategies: {
     requestBuilder: new AuthoritiesSearchRequestBuilder(COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP),
     responseTransformer: new AuthoritiesSearchResponseTransformer(),
-    resultFormatter: undefined,
+    resultFormatter: new AuthoritiesResultFormatter(),
   },
 
   capabilities: {
@@ -27,7 +28,8 @@ export const authoritiesSearchConfig: SearchTypeConfig = {
   defaults: {
     searchBy: SearchableIndexEnum.Keyword,
     query: '',
-    limit: 100,
+    limit: 100, // API fetches 100 results
     offset: 0,
+    uiPageSize: 100, // UI shows all 100 results per page
   },
 };
