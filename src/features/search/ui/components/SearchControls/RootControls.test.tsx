@@ -23,10 +23,6 @@ jest.mock('@/assets/caret-down.svg?react', () => ({
   default: () => <div data-testid="caret-icon">Caret</div>,
 }));
 
-jest.mock('./Segments', () => ({
-  Segments: () => <div data-testid="segments">Segments</div>,
-}));
-
 jest.mock('./InputsWrapper', () => ({
   InputsWrapper: () => <div data-testid="inputs-wrapper">Inputs</div>,
 }));
@@ -154,7 +150,7 @@ describe('RootControls', () => {
 
     render(<RootControls />);
 
-    expect(screen.getByTestId('segments')).toBeInTheDocument();
+    // Note: Segments are now provided via children, not rendered in auto mode
     expect(screen.getByTestId('inputs-wrapper')).toBeInTheDocument();
     expect(screen.getByTestId('submit-button')).toBeInTheDocument();
     expect(screen.getByTestId('meta-controls')).toBeInTheDocument();

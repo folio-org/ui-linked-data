@@ -14,15 +14,9 @@ export interface CommittedSearchParams {
 
 interface UseCommittedSearchParamsParams {
   flow: SearchFlow;
-  defaultSegment?: string;
-  hasSegments?: boolean;
 }
 
-export function useCommittedSearchParams({
-  flow,
-  defaultSegment,
-  hasSegments = true,
-}: UseCommittedSearchParamsParams): CommittedSearchParams {
+export function useCommittedSearchParams({ flow }: UseCommittedSearchParamsParams): CommittedSearchParams {
   const [searchParams] = useSearchParams();
   const { committedValues } = useSearchState(['committedValues']);
 
@@ -33,7 +27,7 @@ export function useCommittedSearchParams({
       const urlSearchBy = searchParams.get(SearchParam.SEARCH_BY);
 
       return {
-        segment: hasSegments ? (searchParams.get(SearchParam.SEGMENT) ?? defaultSegment) : undefined,
+        segment: searchParams.get(SearchParam.SEGMENT) ?? undefined,
         query: searchParams.get(SearchParam.QUERY) ?? '',
         searchBy: urlSearchBy ?? undefined,
         source: searchParams.get(SearchParam.SOURCE) ?? undefined,
@@ -43,11 +37,11 @@ export function useCommittedSearchParams({
 
     // Value flow: store committedValues is the committed state
     return {
-      segment: hasSegments ? committedValues.segment || defaultSegment : undefined,
+      segment: committedValues.segment,
       query: committedValues.query,
       searchBy: committedValues.searchBy,
       source: committedValues.source,
       offset: committedValues.offset,
     };
-  }, [flow, searchParams, defaultSegment, hasSegments, committedValues]);
+  }, [flow, searchParams, committedValues]);
 }

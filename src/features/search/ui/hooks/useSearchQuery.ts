@@ -1,11 +1,13 @@
 import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useSearchState } from '@/store';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { SearchParam, selectStrategies, type SearchTypeConfig } from '../../core';
+import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
+import type { SearchTypeUIConfig } from '../types';
+import { getValidSearchBy } from '../utils';
+import { resolveUIConfig } from '../config';
 
 interface SearchResults {
   items: unknown[];
@@ -17,10 +19,13 @@ interface SearchResults {
 }
 
 interface UseSearchQueryParams {
-  coreConfig?: SearchTypeConfig;
+  /**
+   * Fallback config when no effective config can be resolved.
+   * The actual query uses the effective config resolved from committed segment + source.
+   */
+  fallbackCoreConfig?: SearchTypeConfig;
+  fallbackUIConfig?: SearchTypeUIConfig;
   flow: SearchFlow;
-  defaultSegment?: string;
-  hasSegments?: boolean;
   enabled?: boolean;
 }
 
@@ -34,42 +39,76 @@ interface UseSearchQueryResult {
 }
 
 export function useSearchQuery({
-  coreConfig,
+  fallbackCoreConfig,
+  fallbackUIConfig,
   flow,
-  defaultSegment,
-  hasSegments = true,
   enabled = true,
 }: UseSearchQueryParams): UseSearchQueryResult {
-  const committed = useCommittedSearchParams({ flow, defaultSegment, hasSegments });
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegmentFromStore = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string)
-    : undefined;
+  const committed = useCommittedSearchParams({ flow });
+
+  // Resolve effective config based on committed segment + source
+  // This ensures the correct strategies are used based on what was actually submitted
+  const effectiveCoreConfig = useMemo(() => {
+    if (!committed.segment) {
+      return fallbackCoreConfig;
+    }
+
+    // For URL flow, always try to resolve from committed params first
+    const resolved = resolveCoreConfig(committed.segment, committed.source);
+
+    return resolved ?? fallbackCoreConfig;
+  }, [committed.segment, committed.source, fallbackCoreConfig]);
+
+  // Resolve effective UI config
+  const effectiveUIConfig = useMemo(() => {
+    if (!committed.segment) {
+      return fallbackUIConfig;
+    }
+
+    const resolved = resolveUIConfig(committed.segment);
+
+    return resolved ?? fallbackUIConfig;
+  }, [committed.segment, fallbackUIConfig]);
+
+  // Validate searchBy against the effective configs' valid options
+  // If the URL has an invalid searchBy for this segment, use the config's default
+  // For advanced search (query without searchBy), keep it undefined
+  const effectiveSearchBy = useMemo(() => {
+    // Advanced search: query exists but searchBy is undefined - keep it undefined
+    if (committed.query && !committed.searchBy) {
+      return undefined;
+    }
+
+    if (!effectiveCoreConfig || !effectiveUIConfig) {
+      return committed.searchBy;
+    }
+
+    return getValidSearchBy(committed.searchBy, effectiveUIConfig, effectiveCoreConfig);
+  }, [committed.query, committed.searchBy, effectiveCoreConfig, effectiveUIConfig]);
 
   const queryKey = useMemo(
     () =>
-      ['search', committed.segment, committed.source, committed.query, committed.searchBy, committed.offset].filter(
+      ['search', effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset].filter(
         value => value !== undefined && value !== '',
       ),
-    [committed],
+    [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset],
   );
 
   const queryFn = useCallback(async (): Promise<SearchResults> => {
-    if (!coreConfig) {
-      throw new Error(`No core config for segment: ${committed.segment}`);
+    if (!effectiveCoreConfig) {
+      throw new Error('No effective config resolved');
     }
 
-    const strategies = selectStrategies(coreConfig, committed.segment, committed.source);
+    const strategies = effectiveCoreConfig.strategies;
 
     if (!strategies?.requestBuilder) {
-      throw new Error(`No request builder for segment: ${committed.segment}`);
+      throw new Error(`No request builder for config: ${effectiveCoreConfig.id}`);
     }
 
-    const limit = coreConfig.defaults?.limit ?? MAX_LIMIT;
+    const limit = effectiveCoreConfig.defaults?.limit ?? MAX_LIMIT;
     const request = strategies.requestBuilder.build({
       query: committed.query,
-      searchBy: committed.searchBy,
-      source: committed.source,
+      searchBy: effectiveSearchBy,
       limit,
       offset: committed.offset,
     });
@@ -85,11 +124,10 @@ export function useSearchQuery({
     }
 
     return data as unknown as SearchResults;
-  }, [coreConfig, committed]);
+  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset]);
 
   // Determine if query should be enabled
-  const segmentMatches = flow === 'url' || !hasSegments || committed.segment === currentSegmentFromStore;
-  const shouldEnable = enabled && segmentMatches && !!committed.query && !!coreConfig;
+  const shouldEnable = enabled && !!committed.query && !!effectiveCoreConfig;
 
   const {
     data,

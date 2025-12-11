@@ -57,7 +57,7 @@
 * Update code structure and config system for Search feature. Refs [UILD-674].
 * Create compound components for Search. Refs [UILD-675].
 * React Query setup and apply to Search. Refs [UILD-676].
-* Add request building and response transforming strategies for Search. Refs [UILD-683].
+* Add request building and response transforming strategies for Search. Update UI to support segment hierarchy. Refs [UILD-683].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544

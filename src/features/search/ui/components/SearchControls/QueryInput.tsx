@@ -4,11 +4,12 @@ import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
 import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
+import { getSearchPlaceholder } from '../../utils';
 
 export const QueryInput: FC = () => {
   const { formatMessage } = useIntl();
-  const { activeUIConfig, onSubmit } = useSearchContext();
-  const { query, setQuery } = useSearchState(['query', 'setQuery']);
+  const { config, activeUIConfig, onSubmit } = useSearchContext();
+  const { query, setQuery, searchBy } = useSearchState(['query', 'setQuery', 'searchBy']);
 
   // Guard: Feature disabled
   if (!activeUIConfig.features?.hasQueryInput) {
@@ -23,8 +24,12 @@ export const QueryInput: FC = () => {
     setQuery(e.currentTarget.value);
   };
 
-  const placeholderId = activeUIConfig.ui?.placeholderId;
-  const placeholderText = placeholderId ? formatMessage({ id: placeholderId }) : undefined;
+  const placeholderText = getSearchPlaceholder({
+    searchBy,
+    config,
+    uiConfig: activeUIConfig,
+    formatMessage,
+  });
   const ariaLabel = formatMessage({ id: 'ld.aria.filters.textbox' });
 
   // Multiline mode

@@ -5,7 +5,6 @@ import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useUIState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
-import { Segments } from './Segments';
 import { InputsWrapper } from './InputsWrapper';
 import { SubmitButton } from './SubmitButton';
 import { MetaControls } from './MetaControls';
@@ -37,11 +36,9 @@ export const RootControls: FC<RootControlsProps> = ({ children, className, showF
     }
 
     // Auto mode: render based on config
+    // Note: Segments must be provided via children using SegmentGroup/Segment components
     return (
       <>
-        {/* Segments */}
-        {activeUIConfig.features?.hasSegments && <Segments />}
-
         {/* Input controls */}
         <InputsWrapper />
 

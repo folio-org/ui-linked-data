@@ -4,11 +4,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore } from '@/store';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import * as BuildConstants from '@/common/constants/build.constants';
+import * as FeatureConstants from '@/common/constants/feature.constants';
 import { Search } from '@/views';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+const mockIsEmbeddedMode = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');
+const mockIsNewSearchEnabled = getMockedImportedConstant(FeatureConstants, 'IS_NEW_SEARCH_ENABLED');
+const mockSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');
+
+mockIsEmbeddedMode(false);
+mockIsNewSearchEnabled(false);
+mockSearchFiltersEnabled(false);
 
 const onCreateNewResource = jest.fn();
 jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({

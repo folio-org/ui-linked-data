@@ -1,3 +1,4 @@
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchTypeUIConfig } from '../types';
 
 export const resourcesUIConfig: SearchTypeUIConfig = {
@@ -27,24 +28,20 @@ export const resourcesUIConfig: SearchTypeUIConfig = {
   },
   searchableIndices: [
     {
-      value: 'title',
       labelId: 'ld.title',
-      placeholder: 'ld.searchByTitle',
+      value: SearchableIndex.Title,
     },
     {
-      value: 'contributor',
       labelId: 'ld.contributor',
-      placeholder: 'ld.searchByContributor',
+      value: SearchableIndex.Contributor,
     },
     {
-      value: 'isbn',
       labelId: 'ld.isbn',
-      placeholder: 'ld.searchByISBN',
+      value: SearchableIndex.ISBN,
     },
     {
-      value: 'lccn',
       labelId: 'ld.lccn',
-      placeholder: 'ld.searchByLCCN',
+      value: SearchableIndex.LCCN,
     },
   ],
 };

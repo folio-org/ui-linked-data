@@ -1,37 +1,58 @@
 import { FC, useMemo, createContext, useContext } from 'react';
-import { useSearchState } from '@/store';
-import { SearchParam } from '../../core';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { getActiveConfig, getAvailableSources } from '../utils';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync } from '../hooks';
+import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
+import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 
-export const SearchProvider: FC<SearchProviderProps> = ({
-  config,
-  uiConfig,
-  flow,
-  mode = 'custom',
-  initialSegment,
-  children,
-}) => {
-  // Determine if config has segments
-  const hasSegments = !!config.segments && Object.keys(config.segments).length > 0;
+/**
+ * Helper to check if props are for dynamic mode (segments provided)
+ */
+function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps & { segments: string[] } {
+  return 'segments' in props && Array.isArray(props.segments);
+}
 
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = hasSegments
-    ? ((navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined) ||
-      initialSegment ||
-      config.defaults?.segment
-    : undefined;
-  const activeUIConfig = useMemo(() => getActiveConfig(uiConfig, currentSegment), [uiConfig, currentSegment]);
-  const availableSources = useMemo(() => getAvailableSources(config, currentSegment), [config, currentSegment]);
-  const handlers = useSearchControlsHandlers({ config, flow });
+export const SearchProvider: FC<SearchProviderProps> = props => {
+  const { flow, mode = 'custom', children } = props;
 
-  // Sync URL to store (URL flow only, no-op for value flow)
-  useUrlSync({ flow, config });
+  // Extract dynamic/static mode params
+  const dynamicParams = isDynamicMode(props)
+    ? {
+        segments: props.segments,
+        defaultSegment: props.defaultSegment,
+        defaultSource: props.defaultSource,
+      }
+    : {
+        staticCoreConfigId: props.coreConfig.id,
+      };
 
-  // Search query - uses committed params based on flow
+  // Resolve current segment and source
+  const { currentSegment, currentSource } = useSearchSegment({
+    flow,
+    ...dynamicParams,
+  });
+
+  // Resolve configs based on segment/source
+  const { coreConfig, activeUIConfig, baseUIConfig } = useMemo(
+    () =>
+      resolveSearchConfigs({
+        currentSegment,
+        currentSource,
+        segments: isDynamicMode(props) ? props.segments : undefined,
+        defaultSegment: isDynamicMode(props) ? props.defaultSegment : undefined,
+        staticCoreConfig: isDynamicMode(props) ? undefined : props.coreConfig,
+        staticUIConfig: isDynamicMode(props) ? undefined : props.uiConfig,
+      }),
+    [currentSegment, currentSource, props],
+  );
+
+  // Handlers for search controls
+  const handlers = useSearchControlsHandlers({ coreConfig, flow });
+
+  // Sync URL to store (URL flow only)
+  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
+
+  // Search query
   const {
     data: results,
     isLoading,
@@ -40,23 +61,21 @@ export const SearchProvider: FC<SearchProviderProps> = ({
     error,
     refetch,
   } = useSearchQuery({
-    coreConfig: config,
+    fallbackCoreConfig: coreConfig,
+    fallbackUIConfig: activeUIConfig,
     flow,
-    defaultSegment: config.defaults?.segment,
-    hasSegments,
   });
 
   const contextValue = useMemo(
     (): SearchContextValue => ({
       // Configuration
-      config,
-      uiConfig,
+      config: coreConfig,
+      uiConfig: baseUIConfig,
       flow,
       mode,
 
       // Computed values
       activeUIConfig,
-      availableSources,
 
       // Search results
       results,
@@ -74,12 +93,11 @@ export const SearchProvider: FC<SearchProviderProps> = ({
       onReset: handlers.onReset,
     }),
     [
-      config,
-      uiConfig,
+      coreConfig,
+      baseUIConfig,
       flow,
       mode,
       activeUIConfig,
-      availableSources,
       results,
       isLoading,
       isFetching,

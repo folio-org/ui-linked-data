@@ -1,11 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import {
-  getSearchUIConfig,
-  LegacySearch,
-  LegacySearchControlPane,
-  Search,
-  SearchResultList,
-} from '@/features/search/ui';
+import { LegacySearch, LegacySearchControlPane, Search, SearchResultList } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -22,7 +16,6 @@ import { StatusType } from '@/common/constants/status.constants';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { getSearchConfig } from '@/features/search/core';
 import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
 import { getByIdentifier } from '@/common/api/search.api';
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
@@ -89,7 +82,7 @@ export const SearchView = () => {
     });
   };
 
-  const items = useMemo(
+  const resourceActions = useMemo(
     () => [
       {
         id: 'actions',
@@ -132,32 +125,49 @@ export const SearchView = () => {
       ],
     }, */
     ],
-    [navigateToEditPage],
+    [navigateToEditPage, selectedInstances.length],
   );
 
   const renderSearchControlPane = useCallback(
     () => (
       <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
-        <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
+        <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="search-view-actions-dropdown" />
       </LegacySearchControlPane>
     ),
-    [items],
+    [resourceActions],
   );
   const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
-      <Search config={getSearchConfig('resources')} uiConfig={getSearchUIConfig('resources')} flow="url" mode="custom">
+      <Search segments={['resources', 'hubs']} defaultSegment="resources" flow="url" mode="custom">
         <Search.Controls>
+          {/* Top-level segments */}
+          <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment path="resources" labelId="ld.resources" />
+            <Search.Controls.Segment path="hubs" labelId="ld.hubs" />
+          </Search.Controls.SegmentGroup>
+
+          {/* Common search controls */}
           <Search.Controls.InputsWrapper />
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
         </Search.Controls>
 
         <Search.Content>
-          <Search.ControlPane>
-            <Dropdown labelId="ld.actions" items={items} buttonTestId="search-view-actions-dropdown" />
-          </Search.ControlPane>
+          {/* Resources-specific actions */}
+          <Search.Controls.SegmentContent segment="resources">
+            <Search.ControlPane>
+              <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="resources-actions-dropdown" />
+            </Search.ControlPane>
+          </Search.Controls.SegmentContent>
+
+          {/* Hubs-specific actions */}
+          <Search.Controls.SegmentContent segment="hubs">
+            <Search.ControlPane>
+              <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="hubs-actions-dropdown" />
+            </Search.ControlPane>
+          </Search.Controls.SegmentContent>
 
           <Search.ContentContainer>
             <Search.Results>

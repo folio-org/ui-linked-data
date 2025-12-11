@@ -33,8 +33,18 @@ export interface SearchResults {
   };
 }
 
+/**
+ * Segment configuration for dynamic mode.
+ * Maps segment keys to their core config registry keys.
+ */
+export interface SegmentConfig {
+  coreConfigKey: string;
+  uiConfigKey?: string;
+  defaultSource?: string;
+}
+
 export interface SearchContextValue {
-  // Configuration
+  // Configuration (active atomic config for current segment)
   config: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
@@ -42,7 +52,6 @@ export interface SearchContextValue {
 
   // Computed values
   activeUIConfig: SearchTypeUIConfig;
-  availableSources?: Record<string, unknown>;
 
   // Search results (from React Query)
   results: SearchResults | undefined;
@@ -60,15 +69,33 @@ export interface SearchContextValue {
   onReset: () => void;
 }
 
-export interface SearchProviderProps {
-  config: SearchTypeConfig;
+/**
+ * Static mode props - when providing explicit configs
+ */
+interface StaticModeProps {
+  coreConfig: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
+  segments?: never;
+}
+
+/**
+ * Dynamic mode props - when using registries for multi-segment search
+ */
+interface DynamicModeProps {
+  segments: string[];
+  defaultSegment?: string;
+  defaultSource?: string;
+  config?: never;
+  uiConfig?: never;
+}
+
+/**
+ * Base props shared by both modes
+ */
+interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
-
-  // Optional initial values (for value flow)
-  initialSegment?: string;
-  initialSource?: string;
-
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
+
+export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);

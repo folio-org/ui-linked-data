@@ -1,3 +1,4 @@
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchTypeUIConfig } from '../types';
 
 //Authorities Search UI Configuration
@@ -25,11 +26,6 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
     isLoopedPagination: false,
     isVisibleSubLabel: false,
   },
-  searchableIndices: [
-    { value: 'keyword', labelId: 'ld.keyword', placeholder: 'ld.searchByKeyword' },
-    { value: 'personalName', labelId: 'ld.personalName', placeholder: 'ld.searchByPersonalName' },
-    { value: 'corporateName', labelId: 'ld.corporateName', placeholder: 'ld.searchByCorporateName' },
-  ],
 
   // Segment-specific overrides
   segments: {
@@ -40,24 +36,48 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
       },
       searchableIndices: [
         {
-          value: 'keyword',
           labelId: 'ld.keyword',
-          placeholder: 'ld.searchByKeyword',
+          value: SearchableIndex.Keyword,
         },
         {
-          value: 'personalName',
+          labelId: 'ld.identifierAll',
+          value: SearchableIndex.Identifier,
+        },
+        {
+          labelId: 'ld.lccn',
+          value: SearchableIndex.LCCN,
+        },
+        {
           labelId: 'ld.personalName',
-          placeholder: 'ld.searchByPersonalName',
+          value: SearchableIndex.PersonalName,
         },
         {
-          value: 'corporateName',
           labelId: 'ld.corporateName',
-          placeholder: 'ld.searchByCorporateName',
+          value: SearchableIndex.CorporateConferenceName,
         },
         {
-          value: 'uniformTitle',
+          labelId: 'ld.geographicName',
+          value: SearchableIndex.GeographicName,
+        },
+        {
+          labelId: 'ld.nameTitle',
+          value: SearchableIndex.NameTitle,
+        },
+        {
           labelId: 'ld.uniformTitle',
-          placeholder: 'ld.searchByUniformTitle',
+          value: SearchableIndex.UniformTitle,
+        },
+        {
+          labelId: 'ld.subject',
+          value: SearchableIndex.Subject,
+        },
+        {
+          labelId: 'ld.childrensSubjectHeading',
+          value: SearchableIndex.ChildrenSubjectHeading,
+        },
+        {
+          labelId: 'ld.genre',
+          value: SearchableIndex.Genre,
         },
       ],
     },
@@ -71,14 +91,32 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
       },
       searchableIndices: [
         {
-          value: 'name',
-          labelId: 'ld.name',
-          placeholder: 'ld.browseByName',
+          labelId: 'ld.personalName',
+          value: SearchableIndex.PersonalName,
         },
         {
-          value: 'title',
-          labelId: 'ld.title',
-          placeholder: 'ld.browseByTitle',
+          labelId: 'ld.corporateName',
+          value: SearchableIndex.CorporateConferenceName,
+        },
+        {
+          labelId: 'ld.geographicName',
+          value: SearchableIndex.GeographicName,
+        },
+        {
+          labelId: 'ld.nameTitle',
+          value: SearchableIndex.NameTitle,
+        },
+        {
+          labelId: 'ld.uniformTitle',
+          value: SearchableIndex.UniformTitle,
+        },
+        {
+          labelId: 'ld.subject',
+          value: SearchableIndex.Subject,
+        },
+        {
+          labelId: 'ld.genre',
+          value: SearchableIndex.Genre,
         },
       ],
     },

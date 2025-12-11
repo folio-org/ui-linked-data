@@ -1,6 +1,8 @@
 export * from './searchRegistry';
 
-// Compound components configs (examples)
+// Atomic configs
 export { resourcesConfig } from './resources.config';
-export { authoritiesConfig } from './authorities.config';
-export { hubsConfig } from './hubs.config';
+export { authoritiesSearchConfig } from './authoritiesSearch.config';
+export { authoritiesBrowseConfig } from './authoritiesBrowse.config';
+export { hubsInternalConfig } from './hubsInternal.config';
+export { hubsExternalConfig } from './hubsExternal.config';

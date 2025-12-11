@@ -1,4 +1,5 @@
 export * from './searchUIRegistry';
+export * from './resolveUIConfig';
 
 // UI configs (examples)
 export { resourcesUIConfig } from './resourcesUI.config';
