@@ -1,13 +1,15 @@
-import { useFormattedResults } from '@/features/search/ui';
+import { useSearchNavigationState } from '@/features/search/ui';
+import { useSearchState } from '@/store';
 import { SearchResultEntry } from '../SearchResultEntry';
 import './SearchResultList.scss';
 
 export const SearchResultList = () => {
-  const data = useFormattedResults<WorkAsSearchResultDTO>();
+  const { data } = useSearchState(['data']);
+  useSearchNavigationState();
 
   return (
     <div className="search-result-list">
-      {data?.map((dataEntry: WorkAsSearchResultDTO) => (
+      {data?.map(dataEntry => (
         <SearchResultEntry key={`result-entry-${dataEntry.id}`} {...dataEntry} />
       ))}
     </div>

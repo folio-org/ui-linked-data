@@ -5,6 +5,7 @@ import {
   Search,
   ResourcesResultList,
   HubsResultList,
+  SearchResultList,
 } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
@@ -142,7 +143,7 @@ export const SearchView = () => {
     ),
     [resourceActions],
   );
-  const renderResultsList = useCallback(() => <ResourcesResultList />, []);
+  const renderResultsList = useCallback(() => <SearchResultList />, []);
 
   return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
