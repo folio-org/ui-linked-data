@@ -1,15 +1,46 @@
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { SearchPagination } from './SearchPagination';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore } from '@/store';
+import * as SearchProvider from '../../providers/SearchProvider';
+import * as UseCommittedSearchParams from '../../hooks/useCommittedSearchParams';
 
 const mockOnPageChange = jest.fn();
 
-jest.mock('../../providers/SearchProvider', () => ({
-  useSearchContext: () => ({
+const mockUseSearchContext = (overrides = {}) => {
+  jest.spyOn(SearchProvider, 'useSearchContext').mockReturnValue({
     onPageChange: mockOnPageChange,
-  }),
-}));
+    results: { items: [], totalRecords: 25, pageMetadata: { totalElements: 25, totalPages: 3 } },
+    flow: 'url',
+    mode: 'custom' as const,
+    config: { defaults: { limit: 10 } },
+    uiConfig: {},
+    activeUIConfig: {},
+    isLoading: false,
+    isFetching: false,
+    isError: false,
+    error: null,
+    refetch: jest.fn(),
+    onSegmentChange: jest.fn(),
+    onSourceChange: jest.fn(),
+    onSubmit: jest.fn(),
+    onReset: jest.fn(),
+    ...overrides,
+  } as never);
+};
+
+const mockUseCommittedSearchParams = (overrides = {}) => {
+  jest.spyOn(UseCommittedSearchParams, 'useCommittedSearchParams').mockReturnValue({
+    offset: 0,
+    query: '',
+    searchBy: 'keyword',
+    ...overrides,
+  });
+};
+
+jest.mock('../../providers/SearchProvider');
+jest.mock('../../hooks/useCommittedSearchParams');
 
 interface MockPaginationProps {
   currentPage: number;
@@ -31,105 +62,95 @@ jest.mock('@/components/Pagination', () => ({
 }));
 
 describe('SearchPagination', () => {
+  beforeEach(() => {
+    mockOnPageChange.mockClear();
+  });
+
+  const renderWithRouter = (component: React.ReactElement) => {
+    return render(<BrowserRouter>{component}</BrowserRouter>);
+  };
+
   test('renders pagination when data exists', () => {
+    mockUseSearchContext();
+    mockUseCommittedSearchParams();
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 25,
-            totalPages: 3,
-          },
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination />);
+    renderWithRouter(<SearchPagination />);
 
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
     expect(screen.getByText('Page 1 of 3')).toBeInTheDocument();
   });
 
   test('does not render when pageMetadata is null', () => {
+    mockUseSearchContext({ results: { items: [], totalRecords: 0, pageMetadata: null } });
+    mockUseCommittedSearchParams();
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: null,
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    const { container } = render(<SearchPagination />);
+    const { container } = renderWithRouter(<SearchPagination />);
 
     expect(container).toBeEmptyDOMElement();
   });
 
   test('does not render when totalElements is 0', () => {
+    mockUseSearchContext({
+      results: { items: [], totalRecords: 0, pageMetadata: { totalElements: 0, totalPages: 0 } },
+    });
+    mockUseCommittedSearchParams();
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 0,
-            totalPages: 0,
-          },
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    const { container } = render(<SearchPagination />);
+    const { container } = renderWithRouter(<SearchPagination />);
 
     expect(container).toBeEmptyDOMElement();
   });
 
   test('calculates current page from offset correctly', () => {
+    mockUseSearchContext({
+      results: { items: [], totalRecords: 50, pageMetadata: { totalElements: 50, totalPages: 5 } },
+    });
+    mockUseCommittedSearchParams({ offset: 20 }); // 20 / 10 = page 2 (0-indexed)
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 50,
-            totalPages: 5,
-          },
-          navigationState: {
-            offset: 20, // 20 / 10 = page 2 (0-indexed)
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination />);
+    renderWithRouter(<SearchPagination />);
 
     expect(screen.getByText('Page 3 of 5')).toBeInTheDocument();
   });
 
   test('calls onPageChange when next button is clicked', () => {
+    mockUseSearchContext();
+    mockUseCommittedSearchParams({ offset: 0 });
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 25,
-            totalPages: 3,
-          },
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination />);
+    renderWithRouter(<SearchPagination />);
 
     const nextButton = screen.getByText('Next');
     nextButton.click();
@@ -138,22 +159,17 @@ describe('SearchPagination', () => {
   });
 
   test('calls onPageChange when previous button is clicked', () => {
+    mockUseSearchContext();
+    mockUseCommittedSearchParams({ offset: 10 });
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 25,
-            totalPages: 3,
-          },
-          navigationState: {
-            offset: 10,
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination />);
+    renderWithRouter(<SearchPagination />);
 
     const prevButton = screen.getByText('Previous');
     prevButton.click();
@@ -162,43 +178,33 @@ describe('SearchPagination', () => {
   });
 
   test('renders with custom showCount prop', () => {
+    mockUseSearchContext();
+    mockUseCommittedSearchParams();
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 25,
-            totalPages: 3,
-          },
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination showCount={false} />);
+    renderWithRouter(<SearchPagination showCount={false} />);
 
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
   });
 
   test('renders with custom isLooped prop', () => {
+    mockUseSearchContext();
+    mockUseCommittedSearchParams();
+
     setInitialGlobalState([
       {
         store: useSearchStore,
-        state: {
-          pageMetadata: {
-            totalElements: 25,
-            totalPages: 3,
-          },
-          navigationState: {
-            offset: 0,
-          },
-        },
+        state: {},
       },
     ]);
 
-    render(<SearchPagination isLooped={true} />);
+    renderWithRouter(<SearchPagination isLooped={true} />);
 
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
   });

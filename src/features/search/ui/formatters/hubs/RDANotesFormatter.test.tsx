@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { RDANotesFormatter } from './RDANotesFormatter';
 
-jest.mock('@/features/complexLookup/formatters/Hub/BaseNotesFormatter', () => ({
+jest.mock('./BaseNotesFormatter', () => ({
   BaseNotesFormatter: ({ row, fieldKey }: { row: SearchResultsTableRow; fieldKey: string }) => (
     <div data-testid="base-notes-formatter" data-field-key={fieldKey}>
       {JSON.stringify(row)}
