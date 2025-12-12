@@ -34,7 +34,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
   const creatorName = contributors?.find(({ isCreator }) => isCreator)?.name;
   const langCode = languages?.find(value => value);
   const classificationNumber = classifications?.find(
-    ({ number, source }) => number && (source === Classifications.DDC || source === Classifications.LC),
+    ({ number, type }) => number && (type === Classifications.DDC || type === Classifications.LC),
   )?.number;
 
   return (

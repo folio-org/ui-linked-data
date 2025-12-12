@@ -51,7 +51,7 @@ type WorkAsSearchResultDTO = {
   contributors?: ContributorDTO[];
   languages?: string[];
   subjects?: string[];
-  classifications?: { number?: string; source?: string }[];
+  classifications?: { number?: string; type?: string }[];
   instances?: InstanceAsSearchResultDTO[];
 };
 
