@@ -1,7 +1,9 @@
-import { formatAuthorityItem } from './authorities';
+import { AuthoritiesResultFormatter } from './authorities';
 
-describe('formatAuthorityItem', () => {
-  const authoritiesList = [
+describe('AuthoritiesResultFormatter', () => {
+  let formatter: AuthoritiesResultFormatter;
+
+  const mockAuthoritiesList = [
     {
       authority: {
         id: '1',
@@ -14,8 +16,12 @@ describe('formatAuthorityItem', () => {
     },
   ];
 
+  beforeEach(() => {
+    formatter = new AuthoritiesResultFormatter();
+  });
+
   it('returns an empty array when authoritiesList is empty', () => {
-    const result = formatAuthorityItem([]);
+    const result = formatter.format([]);
 
     expect(result).toEqual([]);
   });
@@ -46,13 +52,13 @@ describe('formatAuthorityItem', () => {
       },
     ];
 
-    const result = formatAuthorityItem(authoritiesList as unknown as AuthorityAsBrowseResultDTO[]);
+    const result = formatter.format(mockAuthoritiesList as unknown as AuthorityAsBrowseResultDTO[]);
 
     expect(result).toEqual(testResult);
   });
 
   it('formats authority items correctly when authority is not present', () => {
-    const authoritiesList = [
+    const authoritiesListWithoutAuthority = [
       {
         id: '2',
         authRefType: 'testType_2',
@@ -87,7 +93,7 @@ describe('formatAuthorityItem', () => {
       },
     ];
 
-    const result = formatAuthorityItem(authoritiesList);
+    const result = formatter.format(authoritiesListWithoutAuthority);
 
     expect(result).toEqual(testResult);
   });
@@ -119,8 +125,8 @@ describe('formatAuthorityItem', () => {
       },
     ];
 
-    const result = formatAuthorityItem(
-      authoritiesList as unknown as AuthorityAsBrowseResultDTO[],
+    const result = formatter.format(
+      mockAuthoritiesList as unknown as AuthorityAsBrowseResultDTO[],
       sourceData as SourceDataDTO,
     );
 
@@ -128,7 +134,7 @@ describe('formatAuthorityItem', () => {
   });
 
   it('uses sourceFileId as source label when sourceData does not match', () => {
-    const authoritiesList = [
+    const authoritiesListWithDifferentSource = [
       {
         authority: {
           id: '3',
@@ -166,8 +172,8 @@ describe('formatAuthorityItem', () => {
       },
     ];
 
-    const result = formatAuthorityItem(
-      authoritiesList as unknown as AuthorityAsBrowseResultDTO[],
+    const result = formatter.format(
+      authoritiesListWithDifferentSource as unknown as AuthorityAsBrowseResultDTO[],
       sourceData as SourceDataDTO,
     );
 

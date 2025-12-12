@@ -1,0 +1,1 @@
+export { AuthoritiesResultList } from './AuthoritiesResultList';

@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { Pagination as PaginationComponent } from '@/components/Pagination';
-import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
+import { useCommittedSearchParams } from '../../hooks/useCommittedSearchParams';
 
 interface SearchPaginationProps {
   showCount?: boolean;
@@ -10,13 +10,14 @@ interface SearchPaginationProps {
 }
 
 export const SearchPagination: FC<SearchPaginationProps> = ({ showCount = true, isLooped = false }) => {
-  const { pageMetadata, navigationState } = useSearchState(['pageMetadata', 'navigationState']);
-  const { onPageChange } = useSearchContext();
+  const { results, onPageChange, flow, config, uiConfig } = useSearchContext();
+  const committed = useCommittedSearchParams({ flow });
 
-  const offset = (navigationState?.offset as number) || 0;
-  const currentPage = Math.floor(offset / SEARCH_RESULTS_LIMIT);
+  const uiPageSize = uiConfig.limit || config.defaults?.limit || SEARCH_RESULTS_LIMIT;
+  const offset = committed.offset || 0;
+  const currentPage = Math.floor(offset / uiPageSize);
 
-  if (!pageMetadata || pageMetadata.totalElements === 0) {
+  if (!results?.pageMetadata || results.pageMetadata.totalElements === 0) {
     return null;
   }
 
@@ -31,9 +32,9 @@ export const SearchPagination: FC<SearchPaginationProps> = ({ showCount = true, 
   return (
     <PaginationComponent
       currentPage={currentPage}
-      totalPages={pageMetadata.totalPages}
-      pageSize={SEARCH_RESULTS_LIMIT}
-      totalResultsCount={pageMetadata.totalElements}
+      totalPages={results.pageMetadata.totalPages}
+      pageSize={uiPageSize}
+      totalResultsCount={results.pageMetadata.totalElements}
       showCount={showCount}
       onPrevPageClick={handlePrevPageClick}
       onNextPageClick={handleNextPageClick}

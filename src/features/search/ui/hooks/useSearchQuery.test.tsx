@@ -31,6 +31,10 @@ describe('useSearchQuery', () => {
 
   const mockSearchResults = {
     items: [{ id: '1', title: 'Test Result' }],
+    pageMetadata: {
+      totalElements: 1,
+      totalPages: 1,
+    },
     totalRecords: 1,
   };
 
@@ -51,7 +55,10 @@ describe('useSearchQuery', () => {
     };
 
     mockResponseTransformer = {
-      transform: jest.fn().mockImplementation(data => data),
+      transform: jest.fn().mockReturnValue({
+        content: mockSearchResults.items,
+        totalRecords: mockSearchResults.totalRecords,
+      }),
     };
 
     mockStrategies = {
@@ -411,8 +418,10 @@ describe('useSearchQuery', () => {
 
   describe('Response handling', () => {
     it('transforms response when transformer is provided', async () => {
-      // Use the mockResponseTransformer from beforeEach setup
-      mockResponseTransformer.transform.mockReturnValue(mockSearchResults);
+      mockResponseTransformer.transform.mockReturnValue({
+        content: mockSearchResults.items,
+        totalRecords: mockSearchResults.totalRecords,
+      });
 
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -435,13 +444,24 @@ describe('useSearchQuery', () => {
     });
 
     it('returns raw data when no transformer is provided', async () => {
+      const configWithoutTransformer: SearchTypeConfig = {
+        id: 'test',
+        defaults: {
+          searchBy: 'keyword',
+          limit: 100,
+        },
+        strategies: {
+          requestBuilder: mockRequestBuilder,
+        },
+      };
+
       const searchParams = new URLSearchParams({ query: 'test' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       const { result } = renderHook(
         () =>
           useSearchQuery({
-            fallbackCoreConfig: mockConfig,
+            fallbackCoreConfig: configWithoutTransformer,
             flow: 'url',
           }),
         { wrapper: createWrapper() },

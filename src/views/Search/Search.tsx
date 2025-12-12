@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { LegacySearch, LegacySearchControlPane, Search, SearchResultList } from '@/features/search/ui';
+import { logger } from '@/common/services/logger';
+import {
+  LegacySearch,
+  LegacySearchControlPane,
+  Search,
+  ResourcesResultList,
+  HubsResultList,
+  LegacySearchResultList,
+} from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -22,6 +30,7 @@ import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { filters } from './data/filters';
 import { FormattedMessage } from 'react-intl';
 import './Search.scss';
+import { FullDisplay } from '@/components/FullDisplay';
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -59,7 +68,7 @@ export const SearchView = () => {
         await fetchRecord(id, {});
       }
     } catch (error) {
-      console.error(error);
+      logger.error('Error fetching records for preview:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
     } finally {
@@ -136,7 +145,7 @@ export const SearchView = () => {
     ),
     [resourceActions],
   );
-  const renderResultsList = useCallback(() => <SearchResultList />, []);
+  const renderResultsList = useCallback(() => <LegacySearchResultList />, []);
 
   return IS_NEW_SEARCH_ENABLED ? (
     <div className="search" data-testid="search" id="ld-search-container">
@@ -170,12 +179,26 @@ export const SearchView = () => {
           </Search.Controls.SegmentContent>
 
           <Search.ContentContainer>
-            <Search.Results>
-              <Search.Results.List />
-              <Search.Results.Pagination />
-            </Search.Results>
+            {/* Resources segment: Work cards with instances table */}
+            <Search.Controls.SegmentContent segment="resources">
+              <Search.Results>
+                <ResourcesResultList />
+                <Search.Results.Pagination />
+              </Search.Results>
+            </Search.Controls.SegmentContent>
+
+            {/* Hubs segment: table with external links */}
+            <Search.Controls.SegmentContent segment="hubs">
+              <Search.Results className="hubs-result-list">
+                <HubsResultList context="search" />
+                <Search.Results.Pagination />
+              </Search.Results>
+            </Search.Controls.SegmentContent>
           </Search.ContentContainer>
         </Search.Content>
+
+        {/* Preview panel */}
+        <FullDisplay />
       </Search>
 
       <ModalImport />

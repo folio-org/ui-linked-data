@@ -7,3 +7,5 @@ export { useUrlSync } from './useUrlSync';
 export { useCommittedSearchParams } from './useCommittedSearchParams';
 export { useSearchQuery } from './useSearchQuery';
 export { useSearchSegment } from './useSearchSegment';
+export { useFormattedResults } from './useFormattedResults';
+export { useTableFormatter } from './useTableFormatter';

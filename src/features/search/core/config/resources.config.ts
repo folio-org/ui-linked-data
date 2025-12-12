@@ -1,6 +1,7 @@
 import type { SearchTypeConfig } from '../types';
 import { ResourcesRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
+import { ResourcesResultFormatter } from '../strategies/resultFormatters';
 
 /**
  * Resources Search Type Configuration
@@ -14,7 +15,7 @@ export const resourcesConfig: SearchTypeConfig = {
   strategies: {
     requestBuilder: new ResourcesRequestBuilder(),
     responseTransformer: new ResourcesResponseTransformer(),
-    resultFormatter: undefined,
+    resultFormatter: new ResourcesResultFormatter(),
   },
 
   // Data capabilities
@@ -27,7 +28,7 @@ export const resourcesConfig: SearchTypeConfig = {
   defaults: {
     searchBy: 'title',
     query: '',
-    limit: 100,
+    limit: 10, // API fetches 10 results
     offset: 0,
   },
 };

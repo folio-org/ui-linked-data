@@ -30,7 +30,7 @@ const tableConfig = {
     name: {
       label: 'name.label',
       position: 1,
-      formatter: ({ row }: any) => row.name.label,
+      formatter: ({ row }: { row: Row }) => row.name.label,
     },
     description: {
       label: 'description.label',
@@ -38,7 +38,7 @@ const tableConfig = {
     },
   },
 };
-const searchResultsFormatter = (data: Row[]) => data;
+const searchResultsFormatter = (data: unknown[]) => data as Row[];
 
 describe('useComplesLookupSearchResults', () => {
   beforeEach(() => {

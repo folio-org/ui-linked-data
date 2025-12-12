@@ -2,6 +2,7 @@ import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
 
 export const hubsUIConfig: SearchTypeUIConfig = {
+  limit: 100, // UI shows all 100 results per page
   ui: {
     titleId: 'ld.hubs',
     subtitleId: '',

@@ -1,8 +1,12 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
+import { logger } from '@/common/services/logger';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+import { Loading } from '@/components/Loading';
 import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
-import { useSearchState } from '@/store';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { StatusType } from '@/common/constants/status.constants';
+import { useStatusState } from '@/store';
 import './SearchContentContainer.scss';
 import { useSearchContext } from '../../providers';
 
@@ -17,12 +21,22 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
   message,
   emptyPlaceholderClassName,
 }) => {
-  const { uiConfig } = useSearchContext();
+  const { uiConfig, results, isLoading, isFetching, isError, error } = useSearchContext();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const isVisibleEmptySearchPlaceholder = uiConfig.features?.isVisibleEmptySearchPlaceholder;
   const emptyPlaceholderLabel = uiConfig.ui?.emptyStateId;
-  const { data } = useSearchState(['data']);
-  const hasData = !!data;
-  const showEmpty = !hasData && !message && isVisibleEmptySearchPlaceholder;
+  const hasData = !!results?.items && results.items.length > 0;
+  const showEmpty = !hasData && !message && isVisibleEmptySearchPlaceholder && !isLoading && !isFetching;
+  const showLoading = isLoading || isFetching;
+
+  // Show error notification when search fails
+  useEffect(() => {
+    if (isError && error) {
+      logger.error('Search error:', error);
+
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+    }
+  }, [isError, error]);
 
   return (
     <div className={DOM_ELEMENTS.classNames.itemSearchContentContainer}>
@@ -31,7 +45,8 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
           <FormattedMessage id={message} />
         </div>
       )}
-      {hasData && children}
+      {showLoading && <Loading />}
+      {!showLoading && hasData && children}
       {showEmpty && <SearchEmptyPlaceholder labelId={emptyPlaceholderLabel} className={emptyPlaceholderClassName} />}
     </div>
   );
