@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { SearchResultEntry } from '@/features/search/ui';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
 import { useSearchStore, useUIStore, useInputsStore } from '@/store';
-import { itemSearchMockData } from '../ItemSearch/ItemSearch.test';
+import { SearchResultEntry } from './SearchResultEntry';
 
 const mockedUsedNavigate = jest.fn();
 

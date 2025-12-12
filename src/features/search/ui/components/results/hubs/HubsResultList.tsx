@@ -1,9 +1,8 @@
 import { FC } from 'react';
 import { TableFlex } from '@/components/Table';
-import { useFormattedResults } from '../../hooks/useFormattedResults';
-import { useTableFormatter } from '../../hooks/useTableFormatter';
-import { hubsTableConfig } from '../../config/results/hubsTable.config';
-import './HubsResultList.scss';
+import { useFormattedResults } from '../../../hooks/useFormattedResults';
+import { useTableFormatter } from '../../../hooks/useTableFormatter';
+import { hubsTableConfig } from '../../../config/results/hubsTable.config';
 
 interface HubsResultListProps {
   context?: 'search' | 'complexLookup';
@@ -21,9 +20,5 @@ export const HubsResultList: FC<HubsResultListProps> = ({ context = 'search', on
     checkFailedId,
   });
 
-  return (
-    <div className="hubs-result-list">
-      <TableFlex header={listHeader} data={formattedData} className="results-table" />
-    </div>
-  );
+  return <TableFlex header={listHeader} data={formattedData} className="results-table" />;
 };

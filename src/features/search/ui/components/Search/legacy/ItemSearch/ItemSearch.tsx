@@ -3,13 +3,13 @@ import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { FullDisplay } from '@/components/FullDisplay';
 import { Pagination } from '@/components/Pagination';
-import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
+import { SearchEmptyPlaceholder } from '../../../SearchEmptyPlaceholder';
 import './ItemSearch.scss';
 import { useUIState } from '@/store';
-import { useSearchContextLegacy } from '../../providers';
-import { useLoadSearchResults, useSearch } from '../../hooks';
-import { LegacySearchControls } from '../SearchControls';
-import { AdvancedSearchModal } from '../AdvancedSearchModal';
+import { useSearchContextLegacy } from '../../../../providers';
+import { useLoadSearchResults, useSearch } from '../../../../hooks';
+import { LegacySearchControls } from '../../../SearchControls';
+import { AdvancedSearchModal } from '../../../AdvancedSearchModal';
 
 export const ItemSearch = () => {
   const {

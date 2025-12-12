@@ -1,6 +1,6 @@
 import { useSearchNavigationState } from '@/features/search/ui';
 import { useSearchState } from '@/store';
-import { SearchResultEntry } from '../SearchResultEntry';
+import { SearchResultEntry } from './SearchResultEntry';
 import './SearchResultList.scss';
 
 export const SearchResultList = () => {
@@ -9,7 +9,7 @@ export const SearchResultList = () => {
 
   return (
     <div className="search-result-list">
-      {data?.map(dataEntry => (
+      {data?.map((dataEntry: WorkAsSearchResultDTO) => (
         <SearchResultEntry key={`result-entry-${dataEntry.id}`} {...dataEntry} />
       ))}
     </div>

@@ -14,8 +14,8 @@ import { StatusType } from '@/common/constants/status.constants';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-import { useTableFormatter } from '../../hooks/useTableFormatter';
-import { instancesTableConfig } from '../../config/results/instancesTable.config';
+import { useTableFormatter } from '@/features/search/ui/hooks';
+import { instancesTableConfig } from '@/features/search/ui/config';
 import './SearchResultEntry.scss';
 
 type SearchResultEntry = {

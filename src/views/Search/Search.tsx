@@ -179,19 +179,21 @@ export const SearchView = () => {
           </Search.Controls.SegmentContent>
 
           <Search.ContentContainer>
-            <Search.Results>
-              {/* Resources segment: Work cards with instances table */}
-              <Search.Controls.SegmentContent segment="resources">
+            {/* Resources segment: Work cards with instances table */}
+            <Search.Controls.SegmentContent segment="resources">
+              <Search.Results className="resources-result-list">
                 <ResourcesResultList />
-              </Search.Controls.SegmentContent>
+                <Search.Results.Pagination />
+              </Search.Results>
+            </Search.Controls.SegmentContent>
 
-              {/* Hubs segment: table with external links */}
-              <Search.Controls.SegmentContent segment="hubs">
+            {/* Hubs segment: table with external links */}
+            <Search.Controls.SegmentContent segment="hubs">
+              <Search.Results className="hubs-result-list">
                 <HubsResultList context="search" />
-              </Search.Controls.SegmentContent>
-
-              <Search.Results.Pagination />
-            </Search.Results>
+                <Search.Results.Pagination />
+              </Search.Results>
+            </Search.Controls.SegmentContent>
           </Search.ContentContainer>
         </Search.Content>
 

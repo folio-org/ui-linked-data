@@ -1,13 +1,5 @@
-import { FC, ReactNode } from 'react';
 import { SearchPagination as Pagination } from '../SearchPagination';
-
-interface SearchResultsProps {
-  children?: ReactNode;
-}
-
-const SearchResultsRoot: FC<SearchResultsProps> = ({ children }) => {
-  return <>{children}</>;
-};
+import { SearchResultsRoot } from './SearchResultsRoot';
 
 export const SearchResults = Object.assign(SearchResultsRoot, {
   Pagination,
