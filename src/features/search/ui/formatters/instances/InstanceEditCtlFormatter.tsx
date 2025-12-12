@@ -17,7 +17,7 @@ export const InstanceEditCtlFormatter = ({ row, formatMessage, onEdit }: EditCtl
   return (
     <Button
       type={ButtonType.Primary}
-      onClick={() => onEdit(generateEditResourceUrl(rowMeta?.id))}
+      onClick={() => onEdit(generateEditResourceUrl(rowMeta?.id as string))}
       data-testid={`edit-button__${rowMeta?.id}`}
       className={classNames(['button-nowrap', 'button-capitalize'])}
       ariaLabel={formatMessage({ id: 'ld.aria.sections.editInstance' }, { title: typedTitle })}
