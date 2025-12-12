@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { SearchResultList } from '@/features/search/ui';
+import { LegacySearchResultList } from '@/features/search/ui';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore, useInputsStore } from '@/store';
-import { itemSearchMockData } from '../../Search/legacy/ItemSearch/ItemSearch.test';
+import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
 
 describe('SearchResultList', () => {
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('SearchResultList', () => {
 
     render(
       <BrowserRouter>
-        <SearchResultList />
+        <LegacySearchResultList />
       </BrowserRouter>,
     );
   });

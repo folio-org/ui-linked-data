@@ -5,7 +5,7 @@ export * from './types';
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { AuthoritiesResultList } from './components/results/authorities';
 export { HubsResultList } from './components/results/hubs';
-export { SearchResultList, ResourcesResultList } from './components/results/resources';
+export { LegacySearchResultList, ResourcesResultList } from './components/results/resources';
 export { ItemSearch } from './components/Search/legacy/ItemSearch';
 export { LegacySearch, Search } from './components/Search';
 export { LegacySearchControlPane, SearchControlPane } from './components/SearchControlPane';

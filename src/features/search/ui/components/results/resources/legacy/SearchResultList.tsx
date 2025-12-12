@@ -1,9 +1,9 @@
 import { useSearchNavigationState } from '@/features/search/ui';
 import { useSearchState } from '@/store';
-import { SearchResultEntry } from './SearchResultEntry';
+import { SearchResultEntry } from '../SearchResultEntry';
 import './SearchResultList.scss';
 
-export const SearchResultList = () => {
+export const LegacySearchResultList = () => {
   const { data } = useSearchState(['data']);
   useSearchNavigationState();
 
