@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { LegacySearchResultList } from '@/features/search/ui';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useUIStore, useInputsStore } from '@/store';
+import { useSearchStore, useUIStore } from '@/store';
 import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
 
 describe('SearchResultList', () => {
@@ -22,10 +22,6 @@ describe('SearchResultList', () => {
         state: {
           isSearchPaneCollapsed: false,
         },
-      },
-      {
-        store: useInputsStore,
-        state: {},
       },
     ]);
 

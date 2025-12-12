@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { SearchContentContainer } from './SearchContentContainer';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore } from '@/store';
 import * as SearchProvider from '../../providers';
 
 const mockUseSearchContext = (overrides = {}) => {
@@ -53,13 +51,6 @@ describe('SearchContentContainer', () => {
       results: { items: [{ id: '1', title: 'Test' }], totalRecords: 1 },
     });
 
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
-
     render(
       <SearchContentContainer>
         <div>Search Results</div>
@@ -72,13 +63,6 @@ describe('SearchContentContainer', () => {
   test('renders empty placeholder when no data and no message', () => {
     mockUseSearchContext({ results: undefined });
 
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
-
     render(<SearchContentContainer />);
 
     const placeholder = screen.getByTestId('empty-placeholder');
@@ -89,13 +73,6 @@ describe('SearchContentContainer', () => {
   test('renders message when provided', () => {
     mockUseSearchContext({ results: undefined });
 
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
-
     render(<SearchContentContainer message="ld.noResults" />);
 
     expect(screen.getByText('ld.noResults')).toBeInTheDocument();
@@ -104,13 +81,6 @@ describe('SearchContentContainer', () => {
   test('does not render empty placeholder when message is shown', () => {
     mockUseSearchContext({ results: undefined });
 
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
-
     render(<SearchContentContainer message="ld.noResults" />);
 
     expect(screen.queryByTestId('empty-placeholder')).not.toBeInTheDocument();
@@ -118,13 +88,6 @@ describe('SearchContentContainer', () => {
 
   test('applies custom className to empty placeholder', () => {
     mockUseSearchContext({ results: undefined });
-
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
 
     render(<SearchContentContainer emptyPlaceholderClassName="custom-empty-class" />);
 
@@ -136,13 +99,6 @@ describe('SearchContentContainer', () => {
     mockUseSearchContext({
       results: { items: [{ id: '1' }], totalRecords: 1 },
     });
-
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
 
     const { container } = render(
       <SearchContentContainer>
@@ -157,13 +113,6 @@ describe('SearchContentContainer', () => {
   test('does not render children when no data', () => {
     mockUseSearchContext({ results: undefined });
 
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
-
     render(
       <SearchContentContainer>
         <div>Should Not Render</div>
@@ -177,13 +126,6 @@ describe('SearchContentContainer', () => {
     mockUseSearchContext({
       results: { items: [], totalRecords: 0 },
     });
-
-    setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {},
-      },
-    ]);
 
     render(
       <SearchContentContainer>

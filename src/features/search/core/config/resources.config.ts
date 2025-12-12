@@ -28,7 +28,7 @@ export const resourcesConfig: SearchTypeConfig = {
   defaults: {
     searchBy: 'title',
     query: '',
-    limit: 10, // API fetches 100 results
+    limit: 10, // API fetches 10 results
     offset: 0,
   },
 };

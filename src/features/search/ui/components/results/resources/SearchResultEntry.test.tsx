@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
-import { useSearchStore, useUIStore, useInputsStore } from '@/store';
+import { useSearchStore, useUIStore } from '@/store';
 import { SearchResultEntry } from './SearchResultEntry';
 
 const mockedUsedNavigate = jest.fn();
@@ -33,10 +33,6 @@ describe('SearchResultEntry', () => {
           state: {
             isSearchPaneCollapsed: false,
           },
-        },
-        {
-          store: useInputsStore,
-          state: {},
         },
       ]);
 
@@ -92,10 +88,6 @@ describe('SearchResultEntry', () => {
           state: {
             isSearchPaneCollapsed: false,
           },
-        },
-        {
-          store: useInputsStore,
-          state: {},
         },
       ]);
 
