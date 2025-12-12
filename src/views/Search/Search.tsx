@@ -181,7 +181,7 @@ export const SearchView = () => {
           <Search.ContentContainer>
             {/* Resources segment: Work cards with instances table */}
             <Search.Controls.SegmentContent segment="resources">
-              <Search.Results className="resources-result-list">
+              <Search.Results>
                 <ResourcesResultList />
                 <Search.Results.Pagination />
               </Search.Results>

@@ -44,7 +44,8 @@ describe('ResourcesResultList', () => {
 
     const { container } = render(<ResourcesResultList />);
 
-    expect(container.firstChild).toBeNull();
+    expect(container.querySelector('.search-result-list')).toBeInTheDocument();
+    expect(container.querySelector('.search-result-list')?.children.length).toBe(0);
   });
 
   test('renders nothing when data is empty array', () => {
@@ -52,7 +53,8 @@ describe('ResourcesResultList', () => {
 
     const { container } = render(<ResourcesResultList />);
 
-    expect(container.firstChild).toBeNull();
+    expect(container.querySelector('.search-result-list')).toBeInTheDocument();
+    expect(container.querySelector('.search-result-list')?.children.length).toBe(0);
   });
 
   test('renders correct number of entries for multiple items', () => {

@@ -1,43 +1,5 @@
 .search-results-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 1rem);
   flex: 1;
-  min-height: 0; // Allows flex children to scroll
-
-  // Ensure results section can grow/shrink
-  > *:not(.pagination) {
-    flex: 1;
-    min-height: 0;
-  }
-
-  // Keep pagination at bottom
-  .pagination {
-    flex-shrink: 0;
-  }
-
-  // Domain-specific result list styles
-  &.authorities-result-list,
-  &.hubs-result-list {
-    width: 100%;
-
-    .results-table {
-      width: 100%;
-    }
-  }
-
-  &.hubs-result-list {
-    .hub-link {
-      color: var(--primary-color, #0066cc);
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  &.resources-result-list {
-    min-width: 70rem;
-  }
 }
