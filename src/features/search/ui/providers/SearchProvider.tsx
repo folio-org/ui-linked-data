@@ -47,7 +47,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
   );
 
   // Handlers for search controls
-  const handlers = useSearchControlsHandlers({ coreConfig, flow });
+  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow });
 
   // Sync URL to store (URL flow only)
   useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });

@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState } from '@/store';
-import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
@@ -10,6 +10,7 @@ import { resolveUIConfig } from '../config';
 
 interface UseSearchControlsHandlersParams {
   coreConfig: SearchTypeConfig;
+  uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
 }
 
@@ -25,18 +26,21 @@ interface SearchControlsHandlers {
 
 export const useSearchControlsHandlers = ({
   coreConfig,
+  uiConfig,
   flow,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [, setSearchParams] = useSearchParams();
 
   // Use refs for config/flow to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
+  const uiConfigRef = useRef(uiConfig);
   const flowRef = useRef(flow);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
+    uiConfigRef.current = uiConfig;
     flowRef.current = flow;
-  }, [coreConfig, flow]);
+  }, [coreConfig, uiConfig, flow]);
 
   const {
     setNavigationState,
@@ -192,7 +196,9 @@ export const useSearchControlsHandlers = ({
       if (flowRef.current === 'url') {
         setSearchParams(prev => {
           const params = new URLSearchParams(prev);
-          const offset = newPage * (coreConfigRef.current.defaults?.limit || 100);
+          // Use UI page size from UI config with fallback to core config limit
+          const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
+          const offset = newPage * uiPageSize;
 
           if (offset > 0) {
             params.set(SearchParam.OFFSET, offset.toString());

@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MAX_LIMIT } from '@/common/constants/api.constants';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
@@ -105,7 +105,7 @@ export function useSearchQuery({
       throw new Error(`No request builder for config: ${effectiveCoreConfig.id}`);
     }
 
-    const limit = effectiveCoreConfig.defaults?.limit ?? MAX_LIMIT;
+    const limit = (effectiveUIConfig?.limit || effectiveCoreConfig.defaults?.limit) ?? SEARCH_RESULTS_LIMIT;
     const request = strategies.requestBuilder.build({
       query: committed.query,
       searchBy: effectiveSearchBy,
@@ -120,7 +120,17 @@ export function useSearchQuery({
     });
 
     if (strategies.responseTransformer) {
-      return strategies.responseTransformer.transform(data, limit) as unknown as SearchResults;
+      const normalized = strategies.responseTransformer.transform(data, limit);
+      const totalPages = Math.ceil(normalized.totalRecords / limit);
+
+      return {
+        items: normalized.content,
+        totalRecords: normalized.totalRecords,
+        pageMetadata: {
+          totalElements: normalized.totalRecords,
+          totalPages,
+        },
+      };
     }
 
     return data as unknown as SearchResults;

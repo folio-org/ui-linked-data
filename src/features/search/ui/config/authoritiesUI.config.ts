@@ -30,6 +30,7 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
   // Segment-specific overrides
   segments: {
     search: {
+      limit: 100, // UI shows all 100 results per page
       features: {
         hasSourceToggle: false,
         hasAdvancedSearch: false,
@@ -83,6 +84,7 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
     },
 
     browse: {
+      limit: 100, // UI shows all 100 results per page
       features: {
         // Disable source toggle in browse segment
         hasSourceToggle: false,

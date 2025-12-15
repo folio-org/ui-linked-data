@@ -1,18 +1,15 @@
 export * from './authorities';
 export * from './hub';
+export * from './resources';
 
-import { formatAuthorityItem } from './authorities';
-import { formatHubItem } from './hub';
+import { AuthoritiesResultFormatter } from './authorities';
+import { HubsResultFormatter } from './hub';
+import { ResourcesResultFormatter } from './resources';
 
-type SearchResultData = AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[] | HubSearchResultDTO[];
-
-export const SEARCH_RESULTS_FORMATTER: Record<
-  string,
-  (data: SearchResultData, sourceData?: SourceDataDTO) => SearchResultsTableRow[]
-> = {
-  default: (data: SearchResultData, sourceData?: SourceDataDTO) =>
-    formatAuthorityItem(data as AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[], sourceData),
-  authorities: (data: SearchResultData, sourceData?: SourceDataDTO) =>
-    formatAuthorityItem(data as AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[], sourceData),
-  hub: (data: SearchResultData) => formatHubItem(data as HubSearchResultDTO[]),
+// Registry for backward compatibility with complex lookup
+export const SEARCH_RESULTS_FORMATTER = {
+  default: new AuthoritiesResultFormatter(),
+  authorities: new AuthoritiesResultFormatter(),
+  hub: new HubsResultFormatter(),
+  resources: new ResourcesResultFormatter(),
 };

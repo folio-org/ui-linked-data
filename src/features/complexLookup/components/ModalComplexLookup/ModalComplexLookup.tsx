@@ -13,6 +13,7 @@ import { useComplexLookupApi } from '../../hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG, SEARCH_RESULTS_TABLE_CONFIG } from '../../configs';
 import { ComplexLookupSearchResults } from '../ComplexLookupSearchResults';
 import { MarcPreview } from '../MarcPreview';
+import type { Row } from '@/components/Table';
 import './ModalComplexLookup.scss';
 
 interface ModalComplexLookupProps {
@@ -44,9 +45,13 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       common,
     } = COMPLEX_LOOKUPS_CONFIG[assignEntityName];
     const tableConfig = SEARCH_RESULTS_TABLE_CONFIG[assignEntityName] || SEARCH_RESULTS_TABLE_CONFIG.default;
-    const searchResultsFormatter = SEARCH_RESULTS_FORMATTER[assignEntityName] || SEARCH_RESULTS_FORMATTER.default;
     const buildSearchQuery =
       SEARCH_QUERY_BUILDER[buildSearchQueryRef || assignEntityName] || SEARCH_QUERY_BUILDER.default;
+    const formatterInstance =
+      SEARCH_RESULTS_FORMATTER[assignEntityName as keyof typeof SEARCH_RESULTS_FORMATTER] ||
+      SEARCH_RESULTS_FORMATTER.default;
+    const searchResultsFormatter = (data: unknown[], _sourceData?: SourceDataDTO) =>
+      formatterInstance.format(data) as Row[];
 
     const { setQuery: setSearchQuery, resetQuery: clearSearchQuery } = useSearchState(['setQuery', 'resetQuery']);
     const { getFacetsData, getSourceData } = useComplexLookupApi(api, filters);

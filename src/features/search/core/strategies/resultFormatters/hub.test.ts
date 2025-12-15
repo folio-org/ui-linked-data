@@ -1,4 +1,4 @@
-import { formatHubItem } from './hub';
+import { HubsResultFormatter } from './hub';
 
 const mockHubData = [
   {
@@ -54,9 +54,15 @@ const mockHubData = [
   },
 ];
 
-describe('formatHubItem', () => {
+describe('HubsResultFormatter', () => {
+  let formatter: HubsResultFormatter;
+
+  beforeEach(() => {
+    formatter = new HubsResultFormatter();
+  });
+
   test('hub data correctly', () => {
-    const result = formatHubItem(mockHubData);
+    const result = formatter.format(mockHubData);
 
     expect(result).toHaveLength(2);
 
@@ -77,7 +83,7 @@ describe('formatHubItem', () => {
   });
 
   test('handles empty hub list', () => {
-    const result = formatHubItem([]);
+    const result = formatter.format([]);
 
     expect(result).toEqual([]);
   });
@@ -93,7 +99,7 @@ describe('formatHubItem', () => {
       },
     ];
 
-    const result = formatHubItem(hubWithRDA);
+    const result = formatter.format(hubWithRDA);
 
     expect(result[0].rda.label).toBe('ld.yes');
   });
@@ -109,40 +115,40 @@ describe('formatHubItem', () => {
       },
     ];
 
-    const result = formatHubItem(hubWithAuth);
+    const result = formatter.format(hubWithAuth);
 
     expect(result[0].auth.label).toBe('ld.yes');
   });
 
   describe('suggestLabel handling', () => {
     test('uses suggestLabel when present', () => {
-      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: 'Custom Suggest Label' }]);
+      const result = formatter.format([{ ...mockHubData[0], suggestLabel: 'Custom Suggest Label' }]);
 
       expect(result[0].hub.label).toBe('Custom Suggest Label');
     });
 
     test('uses empty string when suggestLabel is empty string', () => {
-      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: '' }]);
+      const result = formatter.format([{ ...mockHubData[0], suggestLabel: '' }]);
 
       expect(result[0].hub.label).toBe('');
     });
 
     test('preserves suggestLabel with special characters', () => {
       const specialLabel = 'Test <>&"\'@#$%^&*()';
-      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: specialLabel }]);
+      const result = formatter.format([{ ...mockHubData[0], suggestLabel: specialLabel }]);
 
       expect(result[0].hub.label).toBe(specialLabel);
     });
 
     test('handles suggestLabel with only whitespace', () => {
-      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: '   ' }]);
+      const result = formatter.format([{ ...mockHubData[0], suggestLabel: '   ' }]);
 
       expect(result[0].hub.label).toBe('   ');
     });
 
     test('handles very long suggestLabel', () => {
       const longLabel = 'A'.repeat(500);
-      const result = formatHubItem([{ ...mockHubData[0], suggestLabel: longLabel }]);
+      const result = formatter.format([{ ...mockHubData[0], suggestLabel: longLabel }]);
 
       expect(result[0].hub.label).toBe(longLabel);
       expect(result[0].hub.label).toHaveLength(500);
@@ -151,7 +157,7 @@ describe('formatHubItem', () => {
 
   describe('uri handling', () => {
     test('uses uri when present', () => {
-      const result = formatHubItem([{ ...mockHubData[0], uri: 'custom/uri/path' }]);
+      const result = formatter.format([{ ...mockHubData[0], uri: 'custom/uri/path' }]);
 
       expect(result[0].hub.uri).toBe('custom/uri/path');
     });
@@ -160,20 +166,20 @@ describe('formatHubItem', () => {
       const hubWithoutUri: Partial<HubSearchResultDTO> = { ...mockHubData[0] };
       delete hubWithoutUri.uri;
 
-      const result = formatHubItem([hubWithoutUri as HubSearchResultDTO]);
+      const result = formatter.format([hubWithoutUri as HubSearchResultDTO]);
 
       expect(result[0].hub.uri).toBe('');
     });
 
     test('uses empty string when uri is empty string', () => {
-      const result = formatHubItem([{ ...mockHubData[0], uri: '' }]);
+      const result = formatter.format([{ ...mockHubData[0], uri: '' }]);
 
       expect(result[0].hub.uri).toBe('');
     });
 
     test('handles uri with special characters', () => {
       const specialUri = 'http://example.com/test?param=value&other=123#anchor';
-      const result = formatHubItem([{ ...mockHubData[0], uri: specialUri }]);
+      const result = formatter.format([{ ...mockHubData[0], uri: specialUri }]);
 
       expect(result[0].hub.uri).toBe(specialUri);
     });
@@ -181,7 +187,7 @@ describe('formatHubItem', () => {
 
   describe('token handling', () => {
     test('uses token as __meta.id when present', () => {
-      const result = formatHubItem([{ ...mockHubData[0], token: 'custom-token-123' }]);
+      const result = formatter.format([{ ...mockHubData[0], token: 'custom-token-123' }]);
 
       expect(result[0].__meta.id).toBe('custom-token-123');
     });
@@ -190,20 +196,20 @@ describe('formatHubItem', () => {
       const hubWithoutToken: Partial<HubSearchResultDTO> = { ...mockHubData[0] };
       delete hubWithoutToken.token;
 
-      const result = formatHubItem([hubWithoutToken as HubSearchResultDTO]);
+      const result = formatter.format([hubWithoutToken as HubSearchResultDTO]);
 
       expect(result[0].__meta.id).toBe('');
     });
 
     test('uses empty string when token is empty string', () => {
-      const result = formatHubItem([{ ...mockHubData[0], token: '' }]);
+      const result = formatter.format([{ ...mockHubData[0], token: '' }]);
 
       expect(result[0].__meta.id).toBe('');
     });
 
     test('handles token with special characters', () => {
       const specialToken = 'token-with_special.chars@123';
-      const result = formatHubItem([{ ...mockHubData[0], token: specialToken }]);
+      const result = formatter.format([{ ...mockHubData[0], token: specialToken }]);
 
       expect(result[0].__meta.id).toBe(specialToken);
     });
@@ -216,7 +222,7 @@ describe('formatHubItem', () => {
         more: { ...mockHubData[0].more, notes: [] },
       };
 
-      const result = formatHubItem([hubWithEmptyNotes]);
+      const result = formatter.format([hubWithEmptyNotes]);
 
       expect(result[0].auth.label).toBeUndefined();
       expect(result[0].rda.label).toBeUndefined();
@@ -228,7 +234,7 @@ describe('formatHubItem', () => {
         more: { ...mockHubData[0].more, notes: undefined as unknown as string[] },
       };
 
-      const result = formatHubItem([hubWithoutNotes]);
+      const result = formatter.format([hubWithoutNotes]);
 
       expect(result[0].auth.label).toBeUndefined();
       expect(result[0].rda.label).toBeUndefined();
@@ -240,7 +246,7 @@ describe('formatHubItem', () => {
         more: undefined as unknown as HubSearchResultDTO['more'],
       };
 
-      const result = formatHubItem([hubWithoutMore]);
+      const result = formatter.format([hubWithoutMore]);
 
       expect(result[0].auth.label).toBeUndefined();
       expect(result[0].rda.label).toBeUndefined();
@@ -255,7 +261,7 @@ describe('formatHubItem', () => {
         },
       };
 
-      const result = formatHubItem([hubWithAuthInMiddle]);
+      const result = formatter.format([hubWithAuthInMiddle]);
 
       expect(result[0].auth.label).toBe('ld.yes');
     });
@@ -274,7 +280,7 @@ describe('formatHubItem', () => {
           more: { ...mockHubData[0].more, notes },
         };
 
-        const result = formatHubItem([hubWithRDA]);
+        const result = formatter.format([hubWithRDA]);
 
         expect(result[0].rda.label).toBe('ld.yes');
       }
@@ -289,7 +295,7 @@ describe('formatHubItem', () => {
           more: { ...mockHubData[0].more, notes },
         };
 
-        const result = formatHubItem([hubWithoutRDA]);
+        const result = formatter.format([hubWithoutRDA]);
 
         expect(result[0].rda.label).toBeUndefined();
       }
@@ -304,7 +310,7 @@ describe('formatHubItem', () => {
         },
       };
 
-      const result = formatHubItem([hubWithBoth]);
+      const result = formatter.format([hubWithBoth]);
 
       expect(result[0].auth.label).toBe('ld.yes');
       expect(result[0].rda.label).toBe('ld.yes');
@@ -320,7 +326,7 @@ describe('formatHubItem', () => {
         },
       };
 
-      const result = formatHubItem([hubWithLongNote]);
+      const result = formatter.format([hubWithLongNote]);
 
       expect(result[0].auth.label).toBe('ld.yes');
     });
