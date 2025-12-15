@@ -291,5 +291,7 @@
     "ld.rda": "RDA",
     "ld.search.hubNameLeftAnchored": "Nome do hub (ancorado à esquerda)",
     "ld.search.hubNameKeyword": "Nome do hub (palavra-chave)",
-    "ld.field.typeOfContinuingResource": "Tipo de recurso contínuo"
+    "ld.field.typeOfContinuingResource": "Tipo de recurso contínuo",
+    "ld.exportInstanceRdf": "Exportar arquivo RDF da instância",
+    "ld.required_series_title": "Por favor, adicione um título a cada série para salvar."
 }
