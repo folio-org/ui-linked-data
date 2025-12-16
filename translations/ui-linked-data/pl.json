@@ -208,7 +208,7 @@
     "ld.aria.externalResourcePreview.close": "Zamknij stronę podglądu zasobu zewnętrznego",
     "ld.aria.marcAuthorityPreview.close": "Zamknij podgląd Kartoteki Haseł Wzorcowych",
     "ld.aria.marcPreview.close": "Zamknij okno podglądu MARC",
-    "ld.aria.complexLookup.marcPreview.close": "Close lookup MARC preview section",
+    "ld.aria.complexLookup.marcPreview.close": "Zamknij podgląd MARC",
     "ld.aria.edit.removeComplexLookupFieldValue": "Usuń złożoną wartość pola wyszukiwania",
     "ld.errorMakingApiRequest": "Błąd podczas tworzenia żądania API",
     "ld.compareResources": "Porównaj zasoby",
@@ -291,5 +291,7 @@
     "ld.rda": "RDA",
     "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
     "ld.search.hubNameKeyword": "Hub name (Keyword)",
-    "ld.field.typeOfContinuingResource": "Type of continuing resource"
+    "ld.field.typeOfContinuingResource": "Type of continuing resource",
+    "ld.exportInstanceRdf": "Export instance RDF file",
+    "ld.required_series_title": "Please add a title to each series in order to save."
 }

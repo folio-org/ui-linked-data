@@ -291,5 +291,7 @@
     "ld.rda": "RDA",
     "ld.search.hubNameLeftAnchored": "Naam hub (Links verankerd)",
     "ld.search.hubNameKeyword": "Naam hub (Trefwoord)",
-    "ld.field.typeOfContinuingResource": "Type doorlopende bron"
+    "ld.field.typeOfContinuingResource": "Type doorlopende bron",
+    "ld.exportInstanceRdf": "Export instance RDF file",
+    "ld.required_series_title": "Please add a title to each series in order to save."
 }
