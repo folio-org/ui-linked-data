@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react';
-import classNames from 'classnames';
 import './SearchResultsRoot.scss';
 
 interface SearchResultsProps {
@@ -8,5 +7,5 @@ interface SearchResultsProps {
 }
 
 export const SearchResultsRoot: FC<SearchResultsProps> = ({ children, className }) => {
-  return <div className={classNames(['search-results-container', className])}>{children}</div>;
+  return className ? <div className={className}>{children}</div> : <>{children}</>;
 };

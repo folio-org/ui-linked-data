@@ -72,7 +72,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
   const handleDelete = (id?: string) => {
     if (!id) return;
 
-    const newValue = localValue.filter(v => v.id !== id);
+    const newValue = localValue.filter(value => value.id !== id);
 
     setLocalValue(newValue);
     onChange(entry.uuid, newValue);
@@ -90,7 +90,12 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
     return (
       <Input
         id={id}
-        value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
+        value={
+          localValue
+            ?.filter(({ label }) => label)
+            .map(({ label }) => label)
+            .join(VALUE_DIVIDER) ?? ''
+        }
         disabled={true}
         data-testid="complex-lookup-input"
         ariaLabelledBy={htmlId}
@@ -104,15 +109,17 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       {/* Display selected items */}
       {!!localValue.length && (
         <div className="complex-lookup-value" data-testid="complex-lookup-value">
-          {localValue?.map(({ id, label, meta }) => (
-            <ComplexLookupSelectedItem
-              key={id}
-              id={id}
-              label={label}
-              handleDelete={handleDelete}
-              noWarningValue={meta?.isPreferred}
-            />
-          ))}
+          {localValue
+            ?.filter(value => value)
+            .map(item => (
+              <ComplexLookupSelectedItem
+                key={item.id}
+                id={item.id}
+                label={item.label}
+                handleDelete={handleDelete}
+                noWarningValue={item.meta?.isPreferred}
+              />
+            ))}
         </div>
       )}
 

@@ -45,6 +45,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={<FormattedMessage id={titleId} />}
+      titleClassName="modal-complex-lookup-title"
       className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
       classNameHeader={classNames([
         'modal-complex-lookup-header',
@@ -52,45 +53,45 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
       ])}
       showModalControls={false}
     >
-      <Search
-        segments={['authorities:search', 'authorities:browse']}
-        defaultSegment={`authorities:${initialSegment}`}
-        flow="value"
-        mode="custom"
-      >
-        <Search.Controls>
-          {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
-          <Search.Controls.SegmentGroup>
-            <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
-            <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
-          </Search.Controls.SegmentGroup>
+      <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
+        <Search
+          segments={['authorities:search', 'authorities:browse']}
+          defaultSegment={`authorities:${initialSegment}`}
+          flow="value"
+          mode="custom"
+        >
+          <Search.Controls>
+            {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
+            <Search.Controls.SegmentGroup>
+              <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
+              <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
+            </Search.Controls.SegmentGroup>
 
-          <Search.Controls.InputsWrapper />
-          <Search.Controls.SubmitButton />
-          <Search.Controls.ResetButton />
-        </Search.Controls>
+            <Search.Controls.InputsWrapper />
+            <Search.Controls.SubmitButton />
+            <Search.Controls.MetaControls />
+          </Search.Controls>
 
-        <Search.Content>
-          {!isMarcPreviewOpen && (
-            <>
-              <Search.ControlPane>
-                <FormattedMessage id="ld.marcAuthority" />
-              </Search.ControlPane>
+          <Search.Content>
+            {!isMarcPreviewOpen && (
+              <>
+                <Search.ControlPane label={<FormattedMessage id="ld.marcAuthority" />} />
 
-              <Search.ContentContainer>
-                <Search.Results>
-                  {/* Existing component already supports complexLookup context! */}
-                  <AuthoritiesResultList context="complexLookup" onAssign={onAssign} />
-                  <Search.Results.Pagination />
-                </Search.Results>
-              </Search.ContentContainer>
-            </>
-          )}
+                <Search.ContentContainer>
+                  <Search.Results>
+                    {/* Existing component already supports complexLookup context! */}
+                    <AuthoritiesResultList context="complexLookup" onAssign={onAssign} />
+                    <Search.Results.Pagination />
+                  </Search.Results>
+                </Search.ContentContainer>
+              </>
+            )}
 
-          {/* MARC Preview (authorities-specific feature) */}
-          {isMarcPreviewOpen && <MarcPreview onClose={onClose} />}
-        </Search.Content>
-      </Search>
+            {/* MARC Preview (authorities-specific feature) */}
+            {isMarcPreviewOpen && <MarcPreview onClose={onClose} />}
+          </Search.Content>
+        </Search>
+      </div>
     </Modal>
   );
 };

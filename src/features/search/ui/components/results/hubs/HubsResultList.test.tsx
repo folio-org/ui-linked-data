@@ -60,7 +60,7 @@ describe('HubsResultList', () => {
     render(<HubsResultList />);
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
-    expect(screen.getByTestId('table-flex')).toHaveClass('results-table');
+    expect(screen.getByTestId('table-flex')).toHaveClass('results-list');
   });
 
   test('renders with empty data when useFormattedResults returns undefined', () => {

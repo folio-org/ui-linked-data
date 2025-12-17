@@ -32,6 +32,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
       isOpen={isOpen}
       onClose={onClose}
       title={<FormattedMessage id="ld.hubs.assign" />}
+      titleClassName="modal-complex-lookup-title"
       className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
       classNameHeader={classNames([
         'modal-complex-lookup-header',
@@ -39,27 +40,27 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
       ])}
       showModalControls={false}
     >
-      <Search segments={['hubs']} defaultSegment="hubs" defaultSource="external" flow="value" mode="custom">
-        <Search.Controls>
-          <Search.Controls.InputsWrapper />
-          <Search.Controls.SubmitButton />
-          <Search.Controls.ResetButton />
-        </Search.Controls>
+      <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
+        <Search segments={['hubs']} defaultSegment="hubs" defaultSource="external" flow="value" mode="custom">
+          <Search.Controls>
+            <Search.Controls.InputsWrapper />
+            <Search.Controls.SubmitButton />
+            <Search.Controls.MetaControls />
+          </Search.Controls>
 
-        <Search.Content>
-          <Search.ControlPane>
-            <FormattedMessage id="ld.hubs" />
-          </Search.ControlPane>
+          <Search.Content>
+            <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} />
 
-          <Search.ContentContainer>
-            <Search.Results>
-              {/* Existing component already supports complexLookup context! */}
-              <HubsResultList context="complexLookup" onAssign={onAssign} />
-              <Search.Results.Pagination />
-            </Search.Results>
-          </Search.ContentContainer>
-        </Search.Content>
-      </Search>
+            <Search.ContentContainer>
+              <Search.Results>
+                {/* Existing component already supports complexLookup context! */}
+                <HubsResultList context="complexLookup" onAssign={onAssign} />
+                <Search.Results.Pagination />
+              </Search.Results>
+            </Search.ContentContainer>
+          </Search.Content>
+        </Search>
+      </div>
     </Modal>
   );
 };
