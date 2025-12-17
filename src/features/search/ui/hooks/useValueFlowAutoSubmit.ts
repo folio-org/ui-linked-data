@@ -10,7 +10,7 @@ interface UseValueFlowAutoSubmitParams {
 /**
  * Hook to auto-submit search in value flow when committedValues has a query.
  */
-export const useValueFlowAutoSubmit = ({ flow, onSubmit }: UseValueFlowAutoSubmitParams): void => {
+export const useValueFlowAutoSubmit = ({ flow, onSubmit }: UseValueFlowAutoSubmitParams) => {
   const { committedValues } = useSearchState(['committedValues']);
   const hasAutoSubmitted = useRef(false);
 

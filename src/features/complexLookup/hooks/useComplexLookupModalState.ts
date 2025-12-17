@@ -18,7 +18,7 @@ export function useComplexLookupModalState({
   initialQuery,
   defaultSegment,
   defaultSource,
-}: UseComplexLookupModalStateParams): void {
+}: UseComplexLookupModalStateParams) {
   const {
     setQuery,
     resetQuery,
@@ -27,6 +27,8 @@ export function useComplexLookupModalState({
     setCommittedValues,
     setDraftBySegment,
     resetDraftBySegment,
+    resetNavigationState,
+    resetCommittedValues,
   } = useSearchState([
     'setQuery',
     'resetQuery',
@@ -35,14 +37,12 @@ export function useComplexLookupModalState({
     'setCommittedValues',
     'setDraftBySegment',
     'resetDraftBySegment',
+    'resetNavigationState',
+    'resetCommittedValues',
   ]);
 
   useEffect(() => {
     if (isOpen) {
-      // Clear all search state from any previous modal
-      resetQuery();
-      resetSearchBy();
-
       // Set navigation state with the default segment to ensure correct tab is selected
       setNavigationState({
         segment: defaultSegment,
@@ -75,6 +75,13 @@ export function useComplexLookupModalState({
         // Clear drafts when no initial query
         resetDraftBySegment();
       }
+    } else {
+      // Clean up all search state when modal closes
+      resetQuery();
+      resetSearchBy();
+      resetNavigationState();
+      resetCommittedValues();
+      resetDraftBySegment();
     }
   }, [isOpen, initialQuery, defaultSegment, defaultSource]);
 }
