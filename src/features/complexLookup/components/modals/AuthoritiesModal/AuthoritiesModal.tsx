@@ -1,0 +1,96 @@
+import { FC, useEffect } from 'react';
+import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
+import { Modal } from '@/components/Modal';
+import { Search } from '@/features/search/ui/components/Search';
+import { AuthoritiesResultList } from '@/features/search/ui/components/results/authorities/AuthoritiesResultList';
+import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+import { useUIState, useSearchState } from '@/store';
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+
+interface AuthoritiesModalProps {
+  isOpen: boolean;
+  onClose: VoidFunction;
+  initialQuery?: string;
+  initialSegment?: 'search' | 'browse';
+  baseLabelType?: string;
+  onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+}
+
+/**
+ * AuthoritiesModal - Modal wrapper for Authority lookup using new Search feature.
+ */
+export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
+  isOpen,
+  onClose,
+  initialQuery,
+  initialSegment = 'browse',
+  baseLabelType = 'creator',
+  onAssign,
+}) => {
+  const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
+  const { setQuery } = useSearchState(['setQuery']);
+
+  const titleId = baseLabelType === 'subject' ? 'ld.selectMarcAuthority.subject' : 'ld.selectMarcAuthority';
+
+  // Set initial query when modal opens
+  useEffect(() => {
+    if (isOpen && initialQuery) {
+      setQuery(initialQuery);
+    }
+  }, [isOpen, initialQuery, setQuery]);
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={<FormattedMessage id={titleId} />}
+      className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
+      classNameHeader={classNames([
+        'modal-complex-lookup-header',
+        IS_EMBEDDED_MODE && 'modal-complex-lookup-header-embedded',
+      ])}
+      showModalControls={false}
+    >
+      <Search
+        segments={['authorities:search', 'authorities:browse']}
+        defaultSegment={`authorities:${initialSegment}`}
+        flow="value"
+        mode="custom"
+      >
+        <Search.Controls>
+          {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
+          <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
+            <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
+          </Search.Controls.SegmentGroup>
+
+          <Search.Controls.InputsWrapper />
+          <Search.Controls.SubmitButton />
+          <Search.Controls.ResetButton />
+        </Search.Controls>
+
+        <Search.Content>
+          {!isMarcPreviewOpen && (
+            <>
+              <Search.ControlPane>
+                <FormattedMessage id="ld.marcAuthority" />
+              </Search.ControlPane>
+
+              <Search.ContentContainer>
+                <Search.Results>
+                  {/* Existing component already supports complexLookup context! */}
+                  <AuthoritiesResultList context="complexLookup" onAssign={onAssign} />
+                  <Search.Results.Pagination />
+                </Search.Results>
+              </Search.ContentContainer>
+            </>
+          )}
+
+          {/* MARC Preview (authorities-specific feature) */}
+          {isMarcPreviewOpen && <MarcPreview onClose={onClose} />}
+        </Search.Content>
+      </Search>
+    </Modal>
+  );
+};
