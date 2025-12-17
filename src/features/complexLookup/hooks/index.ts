@@ -4,3 +4,4 @@ export { useComplexLookupSearchResults } from './useComplexLookupSearchResults';
 export { useComplexLookupValidation } from './useComplexLookupValidation';
 export { useMarcAssignment } from './useMarcAssignment';
 export { useMarcValidation } from './useMarcValidation';
+export { useComplexLookupModalState } from './useComplexLookupModalState';

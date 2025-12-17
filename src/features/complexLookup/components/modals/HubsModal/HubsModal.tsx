@@ -1,10 +1,10 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Modal } from '@/components/Modal';
 import { Search } from '@/features/search/ui/components/Search';
-import { HubsResultList } from '@/features/search/ui/components/results/hubs/HubsResultList';
-import { useSearchState } from '@/store';
+import { HubsResultList } from '@/features/search/ui';
+import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 
 interface HubsModalProps {
@@ -18,14 +18,13 @@ interface HubsModalProps {
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, onAssign }) => {
-  const { setQuery } = useSearchState(['setQuery']);
-
-  // Set initial query when modal opens
-  useEffect(() => {
-    if (isOpen && initialQuery) {
-      setQuery(initialQuery);
-    }
-  }, [isOpen, initialQuery, setQuery]);
+  // Reset search state and set initial query when modal opens
+  useComplexLookupModalState({
+    isOpen,
+    initialQuery,
+    defaultSegment: 'hubs',
+    defaultSource: 'external',
+  });
 
   return (
     <Modal

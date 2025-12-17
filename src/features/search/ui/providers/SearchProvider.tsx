@@ -1,6 +1,12 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
+import {
+  useSearchControlsHandlers,
+  useSearchQuery,
+  useUrlSync,
+  useSearchSegment,
+  useValueFlowAutoSubmit,
+} from '../hooks';
 import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
@@ -51,6 +57,9 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
   // Sync URL to store (URL flow only)
   useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
+
+  // Auto-submit for value flow when committedValues has query (similar to URL flow)
+  useValueFlowAutoSubmit({ flow, onSubmit: handlers.onSubmit });
 
   // Search query
   const {

@@ -135,14 +135,12 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       {/* Render modal using registry-based component */}
       {ModalComponent && (
         <ModalComponent
-          {...{
-            isOpen: isModalOpen,
-            onClose: handleCloseModal,
-            onAssign: handleAssign,
-            initialQuery: localValue?.[0]?.label,
-            ...modalDefaultProps,
-            baseLabelType: layout?.baseLabelType,
-          }}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onAssign={handleAssign}
+          initialQuery={localValue?.[0]?.label}
+          baseLabelType={layout?.baseLabelType}
+          {...modalDefaultProps}
         />
       )}
     </div>

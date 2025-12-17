@@ -1,11 +1,12 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Modal } from '@/components/Modal';
 import { Search } from '@/features/search/ui/components/Search';
-import { AuthoritiesResultList } from '@/features/search/ui/components/results/authorities/AuthoritiesResultList';
+import { AuthoritiesResultList } from '@/features/search/ui';
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
-import { useUIState, useSearchState } from '@/store';
+import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { useUIState } from '@/store';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 
 interface AuthoritiesModalProps {
@@ -29,16 +30,15 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   onAssign,
 }) => {
   const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
-  const { setQuery } = useSearchState(['setQuery']);
 
   const titleId = baseLabelType === 'subject' ? 'ld.selectMarcAuthority.subject' : 'ld.selectMarcAuthority';
 
-  // Set initial query when modal opens
-  useEffect(() => {
-    if (isOpen && initialQuery) {
-      setQuery(initialQuery);
-    }
-  }, [isOpen, initialQuery, setQuery]);
+  // Reset search state and set initial query when modal opens
+  useComplexLookupModalState({
+    isOpen,
+    initialQuery,
+    defaultSegment: `authorities:${initialSegment}`,
+  });
 
   return (
     <Modal

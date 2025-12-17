@@ -164,8 +164,9 @@ export const useSearchControlsHandlers = ({
 
           return params;
         });
-      } else if (hasPreservedQuery) {
-        // Value flow: commit if preserved query exists
+      } else {
+        // Value flow: always update committedValues when changing segments
+        // This ensures results are cleared when switching to a segment with no query
         setCommittedValues({
           segment: newSegment,
           query: restoredDraft.query,
