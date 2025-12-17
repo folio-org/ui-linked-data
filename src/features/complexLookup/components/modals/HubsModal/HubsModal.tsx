@@ -48,7 +48,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
           </Search.Controls>
 
           <Search.Content>
-            <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} />
+            <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} showSubLabel={true} />
 
             <Search.ContentContainer>
               <Search.Results>

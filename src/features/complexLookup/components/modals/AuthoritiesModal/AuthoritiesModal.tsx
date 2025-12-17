@@ -75,7 +75,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
           <Search.Content>
             {!isMarcPreviewOpen && (
               <>
-                <Search.ControlPane label={<FormattedMessage id="ld.marcAuthority" />} />
+                <Search.ControlPane label={<FormattedMessage id="ld.marcAuthority" />} showSubLabel={true} />
 
                 <Search.ContentContainer>
                   <Search.Results>

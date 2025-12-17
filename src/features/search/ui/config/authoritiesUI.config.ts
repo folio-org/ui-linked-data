@@ -5,9 +5,9 @@ import type { SearchTypeUIConfig } from '../types';
 export const authoritiesUIConfig: SearchTypeUIConfig = {
   ui: {
     titleId: 'ld.marcAuthority',
-    subtitleId: '',
+    subtitleId: 'ld.recordsFound',
     placeholderId: 'ld.enterSearchCriteria',
-    emptyStateId: 'ld.noResultsFound',
+    emptyStateId: 'ld.chooseFilterOrEnterSearchQuery',
   },
   features: {
     // Navigation
@@ -24,7 +24,8 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
     hasAdvancedSearch: false,
     isVisiblePaginationCount: true,
     isLoopedPagination: false,
-    isVisibleSubLabel: false,
+    isVisibleSubLabel: true,
+    isVisibleEmptySearchPlaceholder: true,
   },
 
   // Segment-specific overrides
@@ -34,6 +35,8 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
       features: {
         hasSourceToggle: false,
         hasAdvancedSearch: false,
+        isVisiblePaginationCount: true,
+        isVisibleEmptySearchPlaceholder: true,
       },
       searchableIndices: [
         {
@@ -90,6 +93,8 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
         hasSourceToggle: false,
         hasAdvancedSearch: false,
         isLoopedPagination: true,
+        isVisibleSubLabel: false,
+        isVisibleEmptySearchPlaceholder: true,
       },
       searchableIndices: [
         {

@@ -9,6 +9,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { useStatusState } from '@/store';
 import './SearchContentContainer.scss';
 import { useSearchContext } from '../../providers';
+import { useCommittedSearchParams } from '../../hooks';
 
 interface SearchContentContainerProps {
   children?: ReactNode;
@@ -21,12 +22,15 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
   message,
   emptyPlaceholderClassName,
 }) => {
-  const { uiConfig, results, isLoading, isFetching, isError, error } = useSearchContext();
+  const { uiConfig, results, isLoading, isFetching, isError, error, flow } = useSearchContext();
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const committed = useCommittedSearchParams({ flow });
   const isVisibleEmptySearchPlaceholder = uiConfig.features?.isVisibleEmptySearchPlaceholder;
   const emptyPlaceholderLabel = uiConfig.ui?.emptyStateId;
   const hasData = !!results?.items && results.items.length > 0;
-  const showEmpty = !hasData && !message && isVisibleEmptySearchPlaceholder && !isLoading && !isFetching;
+  const hasQuery = flow === 'value' ? !!committed.query : true; // For value flow, check if there's a committed query
+  const showEmpty = (!hasData || !hasQuery) && !message && isVisibleEmptySearchPlaceholder && !isLoading && !isFetching;
+  const showResults = hasData && hasQuery;
   const showLoading = isLoading || isFetching;
 
   // Show error notification when search fails
@@ -46,7 +50,7 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
         </div>
       )}
       {showLoading && <Loading />}
-      {!showLoading && hasData && children}
+      {!showLoading && showResults && children}
       {showEmpty && <SearchEmptyPlaceholder labelId={emptyPlaceholderLabel} className={emptyPlaceholderClassName} />}
     </div>
   );

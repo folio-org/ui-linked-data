@@ -2,7 +2,7 @@ import { FC, type ReactElement } from 'react';
 import classNames from 'classnames';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { useSearchState, useUIState } from '@/store';
+import { useUIState } from '@/store';
 import { Button } from '@/components/Button';
 import CaretDown from '@/assets/caret-down.svg?react';
 import { useSearchContext } from '../../providers/SearchProvider';
@@ -24,8 +24,7 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   showSubLabel,
 }) => {
   const { formatMessage } = useIntl();
-  const { activeUIConfig } = useSearchContext();
-  const { pageMetadata: searchResultsMetadata } = useSearchState(['pageMetadata']);
+  const { activeUIConfig, results } = useSearchContext();
   const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState([
     'isSearchPaneCollapsed',
     'setIsSearchPaneCollapsed',
@@ -36,6 +35,9 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   const subtitleId = activeUIConfig.ui?.subtitleId;
   const isVisibleSubLabel = showSubLabel ?? activeUIConfig.features?.isVisibleSubLabel ?? false;
 
+  // Get total count from search results
+  const totalElements = results?.totalRecords ?? 0;
+
   // Label: use prop if provided, otherwise use titleId from config
   const label = labelProp ?? (titleId ? <FormattedMessage id={titleId} /> : null);
 
@@ -43,9 +45,9 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   let subLabel = null;
 
   if (renderSubLabel) {
-    subLabel = renderSubLabel(searchResultsMetadata?.totalElements);
+    subLabel = renderSubLabel(totalElements);
   } else if (subtitleId) {
-    subLabel = <FormattedMessage id={subtitleId} values={{ recordsCount: searchResultsMetadata?.totalElements }} />;
+    subLabel = <FormattedMessage id={subtitleId} values={{ recordsCount: totalElements }} />;
   }
 
   return (

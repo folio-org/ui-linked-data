@@ -5,7 +5,7 @@ export const hubsUIConfig: SearchTypeUIConfig = {
   limit: 100, // UI shows all 100 results per page
   ui: {
     titleId: 'ld.hubs',
-    subtitleId: '',
+    subtitleId: 'ld.recordsFound',
     placeholderId: '',
     emptyStateId: 'ld.enterSearchCriteria',
   },
@@ -24,7 +24,7 @@ export const hubsUIConfig: SearchTypeUIConfig = {
     hasAdvancedSearch: false,
     isVisiblePaginationCount: true,
     isLoopedPagination: false,
-    isVisibleSubLabel: false,
+    isVisibleSubLabel: true,
     isVisibleEmptySearchPlaceholder: true,
   },
   searchableIndices: [
