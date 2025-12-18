@@ -291,5 +291,7 @@
     "ld.rda": "RDA",
     "ld.search.hubNameLeftAnchored": "Název centra (ukotveno vlevo)",
     "ld.search.hubNameKeyword": "Název centra (klíčové slovo)",
-    "ld.field.typeOfContinuingResource": "Typ pokračujícího zdroje"
+    "ld.field.typeOfContinuingResource": "Typ pokračujícího zdroje",
+    "ld.exportInstanceRdf": "Export instance RDF file",
+    "ld.required_series_title": "Please add a title to each series in order to save."
 }
