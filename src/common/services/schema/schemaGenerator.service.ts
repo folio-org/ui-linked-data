@@ -5,6 +5,7 @@ import { PROFILE_NODE_ID_DELIMITER } from '@common/constants/bibframe.constants'
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import type { IMarcMappingGenerator } from './marcMappingGenerator';
 import { ISchemaGenerator } from './schemaGenerator.interface';
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 
 interface TransformedNode extends SchemaEntry {
   emptyOptionUuid?: string;
@@ -31,10 +32,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     private readonly marcMappingGeneratorService?: IMarcMappingGenerator,
   ) {
     this.profile = [];
-    this.settings = {
-      active: false,
-      missingFromSettings: [],
-    };
+    this.settings = DEFAULT_INACTIVE_SETTINGS;
     this.schema = new Map();
     this.idToUuid = new Map();
     this.blockChildren = [];
@@ -105,8 +103,6 @@ export class SchemaGeneratorService implements ISchemaGenerator {
       path: this.getPathForNode(node.id),
       children: this.transformChildren(node.type, node.children),
       linkedEntry: this.transformLinkedEntry(node.linkedEntry),
-      // TODO: only derive settings for these if it's for the BLOCK comopnent's children
-      //       otherwise visible is true and drift is false
       editorVisible: this.getEditorVisibility(node.id),
       profileSettingsDrift: this.hasProfileSettingsDrift(node.id),
     };
