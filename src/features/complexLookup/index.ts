@@ -1,12 +1,11 @@
 // Legacy Components
-export { ComplexLookupField as LegacyComplexLookupField } from './components/ComplexLookupField';
 export { ComplexLookupSearchResults } from './components/ComplexLookupSearchResults';
 export { ComplexLookupSelectedItem } from './components/ComplexLookupSelectedItem';
 export { MarcPreview } from './components/MarcPreview';
 export { ModalComplexLookup } from './components/ModalComplexLookup';
 
-// New Search-based Components
-export { ComplexLookupField } from './components/NewComplexLookupField';
+// Search-based Components
+export { LegacyComplexLookupField, ComplexLookupField } from './components/ComplexLookupField';
 
 // Modal Registry
 export { getModalConfig, getButtonLabel, COMPLEX_LOOKUP_MODAL_REGISTRY } from './configs/modalRegistry';
