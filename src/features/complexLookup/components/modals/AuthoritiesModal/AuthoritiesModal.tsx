@@ -5,9 +5,10 @@ import { Modal } from '@/components/Modal';
 import { Search } from '@/features/search/ui/components/Search';
 import { AuthoritiesResultList } from '@/features/search/ui';
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
-import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState, useAuthoritiesMarcPreview } from '@/features/complexLookup/hooks';
 import { useUIState } from '@/store';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface AuthoritiesModalProps {
   initialQuery?: string;
   initialSegment?: 'search' | 'browse';
   baseLabelType?: string;
+  marcPreviewEndpoint?: string;
   onAssign: (record: ComplexLookupAssignRecordDTO) => void;
 }
 
@@ -27,9 +29,10 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   initialQuery,
   initialSegment = 'browse',
   baseLabelType = 'creator',
+  marcPreviewEndpoint = MARC_PREVIEW_ENDPOINT.AUTHORITY,
   onAssign,
 }) => {
-  const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
+  const { isMarcPreviewOpen, setIsMarcPreviewOpen } = useUIState(['isMarcPreviewOpen', 'setIsMarcPreviewOpen']);
 
   const titleId = baseLabelType === 'subject' ? 'ld.selectMarcAuthority.subject' : 'ld.selectMarcAuthority';
 
@@ -39,6 +42,18 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     initialQuery,
     defaultSegment: `authorities:${initialSegment}`,
   });
+
+  // Handle MARC preview loading and state management
+  const { loadMarcData } = useAuthoritiesMarcPreview({
+    endpointUrl: marcPreviewEndpoint,
+    isMarcPreviewOpen,
+  });
+
+  // Wrapper to handle opening the preview modal
+  const handleTitleClick = (id: string, title?: string, headingType?: string) => {
+    loadMarcData(id, title, headingType);
+    setIsMarcPreviewOpen(true);
+  };
 
   return (
     <Modal
@@ -79,8 +94,11 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
 
                 <Search.ContentContainer>
                   <Search.Results>
-                    {/* Existing component already supports complexLookup context! */}
-                    <AuthoritiesResultList context="complexLookup" onAssign={onAssign} />
+                    <AuthoritiesResultList
+                      context="complexLookup"
+                      onAssign={onAssign}
+                      onTitleClick={handleTitleClick}
+                    />
                     <Search.Results.Pagination />
                   </Search.Results>
                 </Search.ContentContainer>

@@ -2,6 +2,7 @@ import { ComponentType } from 'react';
 import { ComplexLookupType } from '../constants/complexLookup.constants';
 import { HubsModal } from '../components/modals/HubsModal';
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
+import { MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
 
 export interface ModalConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,6 +14,7 @@ export interface ModalConfig {
       change: string;
     };
   };
+  marcPreviewEndpoint?: string;
 }
 
 export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfig> = {
@@ -38,6 +40,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         change: 'ld.change',
       },
     },
+    marcPreviewEndpoint: MARC_PREVIEW_ENDPOINT.AUTHORITY,
   },
 
   [ComplexLookupType.AuthoritiesSubject]: {
@@ -52,6 +55,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         change: 'ld.change',
       },
     },
+    marcPreviewEndpoint: MARC_PREVIEW_ENDPOINT.AUTHORITY,
   },
 } as const;
 

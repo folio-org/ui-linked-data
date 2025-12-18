@@ -3,7 +3,7 @@ import {
   AuthorityValidationTarget,
   ComplexLookupType,
 } from '@/features/complexLookup/constants/complexLookup.constants';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@/common/constants/api.constants';
+import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT, MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
 import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP, HUB_SEARCHABLE_INDICES_MAP } from './complexLookupSeachableIndicesMap';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import { COMPLEX_LOOKUP_FILTERS_CONFIG } from './complexLookupFilters.config';
@@ -20,7 +20,7 @@ const BASE_AUTHORITY_CONFIG = {
         [SearchSegment.Search]: '/search/authorities',
         [SearchSegment.Browse]: '/browse/authorities',
       },
-      marcPreview: '/source-storage/records/:recordId/formatted?idType=AUTHORITY',
+      marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
       validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
     },
     validationTarget: {

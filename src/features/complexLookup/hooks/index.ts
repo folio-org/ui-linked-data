@@ -5,3 +5,5 @@ export { useComplexLookupValidation } from './useComplexLookupValidation';
 export { useMarcAssignment } from './useMarcAssignment';
 export { useMarcValidation } from './useMarcValidation';
 export { useComplexLookupModalState } from './useComplexLookupModalState';
+export { useMarcQuery } from './useMarcQuery';
+export { useAuthoritiesMarcPreview } from './useAuthoritiesMarcPreview';
