@@ -1,6 +1,6 @@
 import { FC, type ReactElement } from 'react';
 import classNames from 'classnames';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { useUIState } from '@/store';
 import { Button } from '@/components/Button';
@@ -47,7 +47,12 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   if (renderSubLabel) {
     subLabel = renderSubLabel(totalElements);
   } else if (subtitleId) {
-    subLabel = <FormattedMessage id={subtitleId} values={{ recordsCount: totalElements }} />;
+    subLabel = (
+      <FormattedMessage
+        id={subtitleId}
+        values={{ recordsCount: <FormattedNumber value={totalElements} data-testid="records-found-count" /> }}
+      />
+    );
   }
 
   return (

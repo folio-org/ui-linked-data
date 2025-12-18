@@ -10,6 +10,7 @@ interface UseAuthoritiesMarcPreviewParams {
 interface UseAuthoritiesMarcPreviewResult {
   loadMarcData: (id: string, title?: string, headingType?: string) => void;
   resetPreview: () => void;
+  isLoading: boolean;
 }
 
 /**
@@ -30,7 +31,7 @@ export function useAuthoritiesMarcPreview({
   } | null>(null);
 
   // Use React Query to fetch MARC data
-  const { data: marcData } = useMarcQuery({
+  const { data: marcData, isLoading } = useMarcQuery({
     recordId: selectedRecordId,
     endpointUrl,
     enabled: !!selectedRecordId && isMarcPreviewOpen,
@@ -64,5 +65,5 @@ export function useAuthoritiesMarcPreview({
     setPendingMarcMetadata(null);
   }, []);
 
-  return { loadMarcData, resetPreview };
+  return { loadMarcData, resetPreview, isLoading };
 }

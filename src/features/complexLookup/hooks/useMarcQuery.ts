@@ -28,25 +28,38 @@ export function useMarcQuery({ recordId, endpointUrl, enabled = true }: UseMarcQ
 
   const queryKey = ['marc', recordId, endpointUrl];
 
-  const queryFn = useCallback(async (): Promise<MarcDTO | undefined> => {
-    if (!recordId) {
-      return undefined;
-    }
+  const queryFn = useCallback(
+    async ({ signal }: { signal: AbortSignal }): Promise<MarcDTO | undefined> => {
+      if (!recordId) {
+        return undefined;
+      }
 
-    const url = baseApi.generateUrl(endpointUrl, {
-      name: ':recordId',
-      value: recordId,
-    });
+      const url = baseApi.generateUrl(endpointUrl, {
+        name: ':recordId',
+        value: recordId,
+      });
 
-    try {
-      const data = await baseApi.getJson({ url });
+      try {
+        const data = await baseApi.getJson({
+          url,
+          requestParams: {
+            method: 'GET',
+            signal, // Pass signal for request cancellation
+          },
+        });
 
-      return data as MarcDTO;
-    } catch (error) {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
-      throw error;
-    }
-  }, [recordId, endpointUrl, addStatusMessagesItem]);
+        return data as MarcDTO;
+      } catch (error) {
+        // Don't show error for cancelled requests
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw error;
+        }
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
+        throw error;
+      }
+    },
+    [recordId, endpointUrl, addStatusMessagesItem],
+  );
 
   // Only enable query when recordId is provided and enabled flag is true
   const shouldEnable = enabled && !!recordId;

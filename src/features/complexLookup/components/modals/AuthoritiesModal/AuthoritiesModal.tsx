@@ -5,6 +5,7 @@ import { Modal } from '@/components/Modal';
 import { Search } from '@/features/search/ui/components/Search';
 import { AuthoritiesResultList } from '@/features/search/ui';
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+import { Loading } from '@/components/Loading';
 import { useComplexLookupModalState, useAuthoritiesMarcPreview } from '@/features/complexLookup/hooks';
 import { useUIState } from '@/store';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
@@ -44,7 +45,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   });
 
   // Handle MARC preview loading and state management
-  const { loadMarcData, resetPreview } = useAuthoritiesMarcPreview({
+  const { loadMarcData, resetPreview, isLoading } = useAuthoritiesMarcPreview({
     endpointUrl: marcPreviewEndpoint,
     isMarcPreviewOpen,
   });
@@ -107,13 +108,18 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
 
             {/* MARC Preview */}
             {isMarcPreviewOpen && (
-              <MarcPreview
-                onClose={() => {
-                  // Close only the MARC preview: reset preview state and hide the preview
-                  resetPreview();
-                  setIsMarcPreviewOpen(false);
-                }}
-              />
+              <>
+                {isLoading && <Loading />}
+                {!isLoading && (
+                  <MarcPreview
+                    onClose={() => {
+                      // Close only the MARC preview: reset preview state and hide the preview
+                      resetPreview();
+                      setIsMarcPreviewOpen(false);
+                    }}
+                  />
+                )}
+              </>
             )}
           </Search.Content>
         </Search>
