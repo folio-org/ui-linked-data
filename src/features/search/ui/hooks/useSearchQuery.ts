@@ -4,19 +4,10 @@ import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
-import type { SearchFlow } from '../types/provider.types';
+import type { SearchFlow, SearchResults } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types';
 import { getValidSearchBy } from '../utils';
 import { resolveUIConfig } from '../config';
-
-interface SearchResults {
-  items: unknown[];
-  totalRecords: number;
-  pageMetadata?: {
-    totalElements: number;
-    totalPages: number;
-  };
-}
 
 interface UseSearchQueryParams {
   /**
@@ -88,10 +79,15 @@ export function useSearchQuery({
 
   const queryKey = useMemo(
     () =>
-      ['search', effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset].filter(
-        value => value !== undefined && value !== '',
-      ),
-    [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset],
+      [
+        'search',
+        effectiveCoreConfig?.id,
+        committed.query,
+        effectiveSearchBy,
+        committed.offset,
+        committed.selector,
+      ].filter(value => value !== undefined && value !== ''),
+    [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset, committed.selector],
   );
 
   const queryFn = useCallback(async (): Promise<SearchResults> => {
@@ -111,6 +107,7 @@ export function useSearchQuery({
       searchBy: effectiveSearchBy,
       limit,
       offset: committed.offset,
+      selector: committed.selector,
     });
 
     const data = await baseApi.getJson({
@@ -129,12 +126,14 @@ export function useSearchQuery({
         pageMetadata: {
           totalElements: normalized.totalRecords,
           totalPages,
+          prev: normalized.prev, // Browse pagination anchor
+          next: normalized.next, // Browse pagination anchor
         },
       };
     }
 
     return data as unknown as SearchResults;
-  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset]);
+  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset, committed.selector]);
 
   // Determine if query should be enabled
   const shouldEnable = enabled && !!committed.query && !!effectiveCoreConfig;

@@ -8,6 +8,7 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
     subtitleId: 'ld.recordsFound',
     placeholderId: 'ld.enterSearchCriteria',
     emptyStateId: 'ld.chooseFilterOrEnterSearchQuery',
+    noResultsId: 'ld.searchNoRdsMatch',
   },
   features: {
     // Navigation

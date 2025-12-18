@@ -1,6 +1,6 @@
-import { useCallback, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { type SegmentDraft, useSearchState } from '@/store';
+import { useCallback, useRef, useEffect, type RefObject } from 'react';
+import { useSearchParams, type SetURLSearchParams } from 'react-router-dom';
+import { type SegmentDraft, useSearchState, type CommittedValues } from '@/store';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
@@ -12,6 +12,14 @@ interface UseSearchControlsHandlersParams {
   coreConfig: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
+  results?: {
+    pageMetadata?: {
+      totalElements: number;
+      totalPages: number;
+      prev?: string;
+      next?: string;
+    };
+  };
 }
 
 interface SearchControlsHandlers {
@@ -22,25 +30,93 @@ interface SearchControlsHandlers {
   onReset: () => void;
 }
 
+// Helper functions for pagination
+function handleUrlFlowPageChange(
+  newPage: number,
+  setSearchParams: SetURLSearchParams,
+  uiConfigRef: RefObject<SearchTypeUIConfig>,
+  coreConfigRef: RefObject<SearchTypeConfig>,
+) {
+  setSearchParams(prev => {
+    const params = new URLSearchParams(prev);
+    const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
+    const offset = newPage * uiPageSize;
+
+    if (offset > 0) {
+      params.set(SearchParam.OFFSET, offset.toString());
+    } else {
+      params.delete(SearchParam.OFFSET);
+    }
+
+    return params;
+  });
+}
+
+function handleValueFlowPageChange(
+  newPage: number,
+  resultsRef: RefObject<{ pageMetadata?: { prev?: string; next?: string } } | undefined>,
+  coreConfigRef: RefObject<SearchTypeConfig>,
+  uiConfigRef: RefObject<SearchTypeUIConfig>,
+  setCommittedValues: (values: CommittedValues) => void,
+) {
+  const state = useSearchState.getState();
+  const { committedValues, draftBySegment, navigationState } = state;
+  const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
+  const currentPage = Math.floor((committedValues.offset || 0) / uiPageSize);
+  const isBrowse = coreConfigRef.current.id?.includes(':browse');
+  const isInitialPage = newPage === 0;
+
+  if (isBrowse && !isInitialPage && resultsRef.current?.pageMetadata) {
+    // Browse pagination: use prev/next anchors
+    const isNextPage = newPage > currentPage;
+    const anchor = isNextPage ? resultsRef.current.pageMetadata.next : resultsRef.current.pageMetadata.prev;
+    const selector = isNextPage ? 'next' : 'prev';
+
+    if (anchor) {
+      setCommittedValues({
+        ...committedValues,
+        query: anchor,
+        selector,
+        offset: newPage * uiPageSize,
+      });
+    }
+  } else {
+    // Search/Hubs pagination or initial browse page: use original query from draft
+    const currentSegment = navigationState.segment || committedValues.segment;
+    const draft = currentSegment ? draftBySegment[currentSegment] : undefined;
+    const originalQuery = draft?.query || committedValues.query;
+
+    setCommittedValues({
+      ...committedValues,
+      query: originalQuery,
+      offset: newPage * uiPageSize,
+      selector: 'query',
+    });
+  }
+}
+
 // Use `resolveCoreConfig` from core registry
 
 export const useSearchControlsHandlers = ({
   coreConfig,
   uiConfig,
   flow,
+  results,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [, setSearchParams] = useSearchParams();
 
-  // Use refs for config/flow to avoid recreating handlers
+  // Use refs for config/flow/results to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
   const uiConfigRef = useRef(uiConfig);
   const flowRef = useRef(flow);
+  const resultsRef = useRef(results);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
     uiConfigRef.current = uiConfig;
     flowRef.current = flow;
-  }, [coreConfig, uiConfig, flow]);
+    resultsRef.current = results;
+  }, [coreConfig, uiConfig, flow, results]);
 
   const {
     setNavigationState,
@@ -195,25 +271,12 @@ export const useSearchControlsHandlers = ({
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (flowRef.current === 'url') {
-        setSearchParams(prev => {
-          const params = new URLSearchParams(prev);
-          // Use UI page size from UI config with fallback to core config limit
-          const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
-          const offset = newPage * uiPageSize;
-
-          if (offset > 0) {
-            params.set(SearchParam.OFFSET, offset.toString());
-          } else {
-            params.delete(SearchParam.OFFSET);
-          }
-
-          return params;
-        });
+        handleUrlFlowPageChange(newPage, setSearchParams, uiConfigRef, coreConfigRef);
+      } else {
+        handleValueFlowPageChange(newPage, resultsRef, coreConfigRef, uiConfigRef, setCommittedValues);
       }
-
-      // Value flow pagination: handled via setCommittedValues when implemented
     },
-    [setSearchParams],
+    [setSearchParams, setCommittedValues],
   );
 
   const handleSubmit = useCallback(() => {

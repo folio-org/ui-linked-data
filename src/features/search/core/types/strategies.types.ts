@@ -9,6 +9,7 @@ export interface SearchRequestParams {
   offset?: number;
   precedingRecordsCount?: number;
   sortBy?: string;
+  selector?: 'query' | 'prev' | 'next'; // Browse pagination selector
 }
 
 /**

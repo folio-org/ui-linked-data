@@ -8,6 +8,7 @@ export const hubsUIConfig: SearchTypeUIConfig = {
     subtitleId: 'ld.recordsFound',
     placeholderId: '',
     emptyStateId: 'ld.enterSearchCriteria',
+    noResultsId: 'ld.searchNoRdsMatch',
   },
   features: {
     // Navigation
