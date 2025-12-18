@@ -9,6 +9,7 @@ interface UseAuthoritiesMarcPreviewParams {
 
 interface UseAuthoritiesMarcPreviewResult {
   loadMarcData: (id: string, title?: string, headingType?: string) => void;
+  resetPreview: () => void;
 }
 
 /**
@@ -58,5 +59,10 @@ export function useAuthoritiesMarcPreview({
     }
   }, []);
 
-  return { loadMarcData };
+  const resetPreview = useCallback(() => {
+    setSelectedRecordId(undefined);
+    setPendingMarcMetadata(null);
+  }, []);
+
+  return { loadMarcData, resetPreview };
 }

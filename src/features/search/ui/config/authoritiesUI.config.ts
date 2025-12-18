@@ -94,6 +94,7 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
         hasSourceToggle: false,
         hasAdvancedSearch: false,
         isLoopedPagination: true,
+        isVisiblePaginationCount: false,
         isVisibleSubLabel: false,
         isVisibleEmptySearchPlaceholder: true,
       },

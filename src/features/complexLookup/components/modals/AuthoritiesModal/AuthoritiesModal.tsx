@@ -44,7 +44,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   });
 
   // Handle MARC preview loading and state management
-  const { loadMarcData } = useAuthoritiesMarcPreview({
+  const { loadMarcData, resetPreview } = useAuthoritiesMarcPreview({
     endpointUrl: marcPreviewEndpoint,
     isMarcPreviewOpen,
   });
@@ -105,8 +105,16 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
               </>
             )}
 
-            {/* MARC Preview (authorities-specific feature) */}
-            {isMarcPreviewOpen && <MarcPreview onClose={onClose} />}
+            {/* MARC Preview */}
+            {isMarcPreviewOpen && (
+              <MarcPreview
+                onClose={() => {
+                  // Close only the MARC preview: reset preview state and hide the preview
+                  resetPreview();
+                  setIsMarcPreviewOpen(false);
+                }}
+              />
+            )}
           </Search.Content>
         </Search>
       </div>
