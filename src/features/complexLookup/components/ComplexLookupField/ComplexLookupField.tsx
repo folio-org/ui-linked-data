@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * NewComplexLookupField - New implementation using modal registry and new Search architecture.
+ * ComplexLookupField - New implementation using modal registry and new Search architecture.
  * Modals are accessed only through the registry manager for centralized configuration.
  */
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
@@ -27,7 +27,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
 
   // Extract lookup type from schema
   const lookupType = layout?.api as ComplexLookupType;
-  const isNewLayout = layout?.isNew ?? true;
+  const isNewLayout = layout?.isNew ?? false;
 
   // Get modal configuration from registry
   const modalConfig = useMemo(() => {
@@ -109,17 +109,15 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       {/* Display selected items */}
       {!!localValue.length && (
         <div className="complex-lookup-value" data-testid="complex-lookup-value">
-          {localValue
-            ?.filter(value => value)
-            .map(item => (
-              <ComplexLookupSelectedItem
-                key={item.id}
-                id={item.id}
-                label={item.label}
-                handleDelete={handleDelete}
-                noWarningValue={item.meta?.isPreferred}
-              />
-            ))}
+          {localValue.map(item => (
+            <ComplexLookupSelectedItem
+              key={item.id}
+              id={item.id}
+              label={item.label}
+              handleDelete={handleDelete}
+              noWarningValue={item.meta?.isPreferred}
+            />
+          ))}
         </div>
       )}
 
@@ -139,7 +137,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
           onClose={handleCloseModal}
           onAssign={handleAssign}
           initialQuery={localValue?.[0]?.label}
-          baseLabelType={layout?.baseLabelType}
           {...modalDefaultProps}
         />
       )}

@@ -47,7 +47,6 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     component: AuthoritiesModal,
     defaultProps: {
       initialSegment: 'browse' as const,
-      baseLabelType: 'subject',
     },
     labels: {
       button: {

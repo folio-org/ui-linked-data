@@ -16,7 +16,6 @@ interface AuthoritiesModalProps {
   onClose: VoidFunction;
   initialQuery?: string;
   initialSegment?: 'search' | 'browse';
-  baseLabelType?: string;
   marcPreviewEndpoint?: string;
   onAssign: (record: ComplexLookupAssignRecordDTO) => void;
 }
@@ -29,13 +28,10 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   onClose,
   initialQuery,
   initialSegment = 'browse',
-  baseLabelType = 'creator',
   marcPreviewEndpoint = MARC_PREVIEW_ENDPOINT.AUTHORITY,
   onAssign,
 }) => {
   const { isMarcPreviewOpen, setIsMarcPreviewOpen } = useUIState(['isMarcPreviewOpen', 'setIsMarcPreviewOpen']);
-
-  const titleId = baseLabelType === 'subject' ? 'ld.selectMarcAuthority.subject' : 'ld.selectMarcAuthority';
 
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
@@ -60,7 +56,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={<FormattedMessage id={titleId} />}
+      title={<FormattedMessage id="ld.selectMarcAuthority" />}
       titleClassName="modal-complex-lookup-title"
       className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
       classNameHeader={classNames([
