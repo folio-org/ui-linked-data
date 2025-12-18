@@ -13,7 +13,8 @@ export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
-  SliceState<'schema', Map<string, SchemaEntry>>;
+  SliceState<'schema', Map<string, SchemaEntry>> &
+  SliceState<'profileSettings', Record<string, ProfileSettingsWithDrift>>;
 
 const STORE_NAME = 'Profile';
 
@@ -35,6 +36,9 @@ const sliceConfigs: SliceConfigs = {
   },
   schema: {
     initialValue: new Map(),
+  },
+  profileSettings: {
+    initialValue: {},
   },
 };
 
