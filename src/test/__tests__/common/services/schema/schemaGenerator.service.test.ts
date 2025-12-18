@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { SchemaGeneratorService } from '@common/services/schema';
 import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 
 jest.mock('uuid');
@@ -26,10 +27,10 @@ describe('SchemaGeneratorService', () => {
   });
 
   describe('init', () => {
-    it('initializes with empty profile', () => {
+    it('initializes with empty profile and inactive settings', () => {
       const profile = [] as Profile;
 
-      service.init(profile);
+      service.init(profile, DEFAULT_INACTIVE_SETTINGS);
 
       expect(service.get().size).toBe(0);
     });
@@ -41,10 +42,10 @@ describe('SchemaGeneratorService', () => {
           type: AdvancedFieldType.literal,
         },
       ] as Profile;
-      service.init(initialProfile);
+      service.init(initialProfile, DEFAULT_INACTIVE_SETTINGS);
 
       const newProfile = [] as Profile;
-      service.init(newProfile);
+      service.init(newProfile, DEFAULT_INACTIVE_SETTINGS);
 
       expect(service.get().size).toBe(0);
     });
@@ -67,7 +68,7 @@ describe('SchemaGeneratorService', () => {
     ] as Profile;
 
     beforeEach(() => {
-      service.init(testProfile);
+      service.init(testProfile, DEFAULT_INACTIVE_SETTINGS);
     });
 
     it('generates schema with transformed nodes', () => {
@@ -115,7 +116,7 @@ describe('SchemaGeneratorService', () => {
         },
       ] as Profile;
 
-      service.init(nestedProfile);
+      service.init(nestedProfile, DEFAULT_INACTIVE_SETTINGS);
       service.generate('init-key');
 
       const schema = service.get();
@@ -138,7 +139,7 @@ describe('SchemaGeneratorService', () => {
         },
       ] as Profile;
 
-      service.init(profile);
+      service.init(profile, DEFAULT_INACTIVE_SETTINGS);
       service.generate('init-key');
 
       const schema = service.get();

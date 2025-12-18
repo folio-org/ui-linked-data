@@ -15,11 +15,15 @@ interface NodeOptions {
   path: string[];
   children?: string[];
   linkedEntry?: LinkedEntry;
+  editorVisible: boolean;
+  profileSettingsDrift: boolean;
 }
 export class SchemaGeneratorService implements ISchemaGenerator {
   private profile: Profile;
+  private settings: ProfileSettingsWithDrift;
   private schema: Map<string, SchemaEntry>;
   private idToUuid: Map<string, string>;
+  private blockChildren: string[];
 
   constructor(
     private readonly selectedEntriesService: ISelectedEntriesService,
@@ -27,14 +31,21 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     private readonly marcMappingGeneratorService?: IMarcMappingGenerator,
   ) {
     this.profile = [];
+    this.settings = {
+      active: false,
+      missingFromSettings: [],
+    };
     this.schema = new Map();
     this.idToUuid = new Map();
+    this.blockChildren = [];
   }
 
-  init(profile: Profile) {
+  init(profile: Profile, settings: ProfileSettingsWithDrift) {
     this.profile = profile;
+    this.settings = settings;
     this.schema = new Map();
     this.idToUuid = new Map();
+    this.blockChildren = [];
   }
 
   get() {
@@ -92,8 +103,12 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     const nodeOptions: NodeOptions = {
       uuid,
       path: this.getPathForNode(node.id),
-      children: this.transformChildren(node.children),
+      children: this.transformChildren(node.type, node.children),
       linkedEntry: this.transformLinkedEntry(node.linkedEntry),
+      // TODO: only derive settings for these if it's for the BLOCK comopnent's children
+      //       otherwise visible is true and drift is false
+      editorVisible: this.getEditorVisibility(node.id),
+      profileSettingsDrift: this.hasProfileSettingsDrift(node.id),
     };
 
     return {
@@ -128,10 +143,14 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     };
   }
 
-  private transformChildren(children?: string[]) {
+  private transformChildren(type: string, children?: string[]) {
     if (!children) return undefined;
 
-    return children.map(childId => this.idToUuid.get(childId) ?? childId);
+    if (type === AdvancedFieldType.block && this.settings.active) {
+      return this.transformBlockChildrenOrdering(children);
+    }
+
+    return children.map(childId => this.transformLinkedId(childId));
   }
 
   private transformLinkedEntry(linkedEntry?: LinkedEntry) {
@@ -144,6 +163,9 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     };
   }
 
+  private transformLinkedId(id: undefined): undefined;
+  private transformLinkedId(id: string): string;
+  private transformLinkedId(id: string | undefined): string | undefined;
   private transformLinkedId(id?: string) {
     if (!id) return undefined;
 
@@ -175,5 +197,37 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     }
 
     return path;
+  }
+
+  private getEditorVisibility(nodeId: string) {
+    if (!this.settings.active || !this.blockChildren.includes(nodeId)) {
+      return true;
+    }
+
+    const setting = this.settings.children?.find(child => child.id === nodeId);
+    return setting ? setting.visible : true;
+  }
+
+  private hasProfileSettingsDrift(nodeId: string) {
+    if (!this.settings.active || !this.blockChildren.includes(nodeId)) {
+      return false;
+    }
+
+    return this.settings.missingFromSettings.includes(nodeId);
+  }
+
+  private transformBlockChildrenOrdering(children: string[]) {
+    const orderedChildren: string[] = [];
+
+    this.blockChildren = children;
+    this.settings.children?.forEach(setting => {
+      const found = children.find(child => child === setting.id);
+      if (found) {
+        const entry = this.transformLinkedId(setting.id);
+        entry && orderedChildren.push(entry);
+      }
+    });
+
+    return [...orderedChildren, ...this.settings.missingFromSettings.map(childId => this.transformLinkedId(childId))];
   }
 }

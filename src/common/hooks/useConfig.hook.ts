@@ -9,6 +9,7 @@ import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook'
 import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
 import { useLoadProfile } from './useLoadProfile';
+import { useLoadProfileSettings } from './useLoadProfileSettings';
 import { getMappedResourceType, getProfileConfig } from '@common/helpers/profile.helper';
 
 export type PreviewParams = {
@@ -36,6 +37,7 @@ type IExtractProfileParams = {
 
 type IBuildSchema = {
   profile: Profile;
+  settings: ProfileSettingsWithDrift;
   record: Record<string, unknown> | Array<unknown>;
   editingRecordBlocks?: SelectedRecordBlocks;
   asClone?: boolean;
@@ -62,9 +64,11 @@ export const useConfig = () => {
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
   const { loadProfile } = useLoadProfile();
+  const { loadProfileSettings } = useLoadProfileSettings();
 
   const buildSchema = async ({
     profile,
+    settings,
     record,
     editingRecordBlocks,
     asClone = false,
@@ -76,7 +80,7 @@ export const useConfig = () => {
     userValuesService.set(userValues);
     selectedEntriesService.set([]);
 
-    schemaGeneratorService.init(profile as unknown as Profile);
+    schemaGeneratorService.init(profile as unknown as Profile, settings);
     schemaGeneratorService.generate(initKey);
 
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
@@ -163,8 +167,11 @@ export const useConfig = () => {
           setSelectedProfile(selectedProfile);
         }
 
+        const profileSettings = await loadProfileSettings(profile?.ids?.[0], selectedProfile);
+
         const { updatedSchema, initKey } = await buildSchema({
           profile: selectedProfile,
+          settings: profileSettings,
           record: recordData,
           editingRecordBlocks,
           asClone,
