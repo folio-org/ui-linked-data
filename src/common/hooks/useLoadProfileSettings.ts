@@ -1,7 +1,7 @@
-import { DEFAULT_INACTIVE_SETTINGS } from '../constants/profileSettings.constants';
+import { DEFAULT_INACTIVE_SETTINGS } from '@common/constants/profileSettings.constants';
 import { fetchProfileSettings } from '@common/api/profiles.api';
+import { detectDrift } from '@common/helpers/profileSettingsDrift.helper';
 import { useProfileState } from '@src/store';
-import { detectDrift } from '../helpers/profileSettingsDrift.helper';
 
 export const useLoadProfileSettings = () => {
   const { profileSettings, setProfileSettings } = useProfileState(['profileSettings', 'setProfileSettings']);
