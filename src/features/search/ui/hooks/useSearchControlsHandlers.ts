@@ -245,18 +245,23 @@ export const useSearchControlsHandlers = ({
           return params;
         });
       } else {
-        // Value flow: always update committedValues when changing segments
-        // This ensures results are cleared when switching to a segment with no query
-        setCommittedValues({
-          segment: newSegment,
-          query: restoredDraft.query,
-          searchBy: restoredDraft.searchBy,
-          source: restoredDraft.source,
-          offset: 0,
-        });
+        // Value flow: only update committedValues if there's a query to preserve
+        // Otherwise reset to clear results when switching to empty segment
+        if (hasPreservedQuery) {
+          setCommittedValues({
+            segment: newSegment,
+            query: restoredDraft.query,
+            searchBy: restoredDraft.searchBy,
+            source: restoredDraft.source,
+            offset: 0,
+          });
+        } else {
+          // No query - reset committedValues to prevent empty searches
+          resetCommittedValues();
+        }
       }
     },
-    [saveCurrentDraft, restoreDraft, setNavigationState, setSearchParams, setCommittedValues],
+    [saveCurrentDraft, restoreDraft, setNavigationState, setSearchParams, setCommittedValues, resetCommittedValues],
   );
 
   const handleSourceChange = useCallback(
@@ -396,7 +401,7 @@ export const useSearchControlsHandlers = ({
       // Value flow: reset committed search
       resetCommittedValues();
     }
-  }, [resetQuery, resetSearchBy, setDraftBySegment, setNavigationState, setSearchParams, setCommittedValues]);
+  }, [resetQuery, resetSearchBy, setDraftBySegment, setNavigationState, setSearchParams, resetCommittedValues]);
 
   return {
     onSegmentChange: handleSegmentChange,

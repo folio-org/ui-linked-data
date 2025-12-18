@@ -29,10 +29,17 @@ export const SearchContentContainer: FC<SearchContentContainerProps> = ({
   const emptyPlaceholderLabel = uiConfig.ui?.emptyStateId;
   const noResultsLabel = uiConfig.ui?.noResultsId;
   const hasData = !!results?.items && results.items.length > 0;
-  const hasQuery = flow === 'value' ? !!committed.query : true; // For value flow, check if there's a committed query
-  const showEmpty = !hasQuery && !message && isVisibleEmptySearchPlaceholder && !isLoading && !isFetching; // Only show empty when no query
-  const showNoResults = hasQuery && !hasData && !message && !isLoading && !isFetching; // Show no results when query exists but no data
-  const showResults = hasData && hasQuery;
+
+  // Check if there's a valid committed query (works for both flows)
+  const hasQuery = !!committed.query && committed.query.trim() !== '';
+
+  // Show empty placeholder when no query is committed
+  const showEmpty = !hasQuery && !message && isVisibleEmptySearchPlaceholder && !isLoading && !isFetching;
+
+  // Show no results when query exists but returned empty data
+  const showNoResults = hasQuery && !hasData && !message && !isLoading && !isFetching;
+
+  const showResults = hasData;
   const showLoading = isLoading || isFetching;
 
   // Show error notification when search fails

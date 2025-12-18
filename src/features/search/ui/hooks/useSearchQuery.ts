@@ -90,7 +90,12 @@ export function useSearchQuery({
     [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset, committed.selector],
   );
 
-  const queryFn = useCallback(async (): Promise<SearchResults> => {
+  const queryFn = useCallback(async (): Promise<SearchResults | undefined> => {
+    // Guard: Don't execute if query is empty or only whitespace
+    if (!committed.query || committed.query.trim() === '') {
+      return undefined;
+    }
+
     if (!effectiveCoreConfig) {
       throw new Error('No effective config resolved');
     }
@@ -136,7 +141,8 @@ export function useSearchQuery({
   }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset, committed.selector]);
 
   // Determine if query should be enabled
-  const shouldEnable = enabled && !!committed.query && !!effectiveCoreConfig;
+  // Only enable when we have a non-empty query string AND a valid config
+  const shouldEnable = enabled && !!committed.query && committed.query.trim() !== '' && !!effectiveCoreConfig;
 
   const {
     data,
@@ -145,15 +151,18 @@ export function useSearchQuery({
     isError,
     error,
     refetch: queryRefetch,
-  } = useQuery<SearchResults>({
+  } = useQuery<SearchResults | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
   });
 
   const refetch = useCallback(async () => {
-    await queryRefetch();
-  }, [queryRefetch]);
+    // Only refetch if we have a valid query
+    if (committed.query && committed.query.trim() !== '') {
+      await queryRefetch();
+    }
+  }, [queryRefetch, committed.query]);
 
   return {
     data,
