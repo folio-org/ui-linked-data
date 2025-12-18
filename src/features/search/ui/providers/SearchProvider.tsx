@@ -66,8 +66,8 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     flow,
   });
 
-  // Handlers for search controls (after results so we can pass pageMetadata for browse pagination)
-  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow, results });
+  // Handlers for search controls (after results so we can pass pageMetadata for browse pagination and refetch)
+  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow, results, refetch });
 
   // Sync URL to store (URL flow only)
   useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });

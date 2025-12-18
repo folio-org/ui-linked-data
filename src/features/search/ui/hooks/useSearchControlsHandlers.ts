@@ -20,6 +20,7 @@ interface UseSearchControlsHandlersParams {
       next?: string;
     };
   };
+  refetch?: () => Promise<void>;
 }
 
 interface SearchControlsHandlers {
@@ -102,21 +103,24 @@ export const useSearchControlsHandlers = ({
   uiConfig,
   flow,
   results,
+  refetch,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [, setSearchParams] = useSearchParams();
 
-  // Use refs for config/flow/results to avoid recreating handlers
+  // Use refs for config/flow/results/refetch to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
   const uiConfigRef = useRef(uiConfig);
   const flowRef = useRef(flow);
   const resultsRef = useRef(results);
+  const refetchRef = useRef(refetch);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
     uiConfigRef.current = uiConfig;
     flowRef.current = flow;
     resultsRef.current = results;
-  }, [coreConfig, uiConfig, flow, results]);
+    refetchRef.current = refetch;
+  }, [coreConfig, uiConfig, flow, results, refetch]);
 
   const {
     setNavigationState,
@@ -341,6 +345,9 @@ export const useSearchControlsHandlers = ({
         offset: 0,
       });
     }
+
+    // Force refetch for both flows to ensure fresh data on every submit
+    refetchRef.current?.();
   }, [setDraftBySegment, setSearchParams, setCommittedValues]);
 
   const handleReset = useCallback(() => {
