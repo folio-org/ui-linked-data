@@ -1,11 +1,11 @@
-import { FC, useState, useEffect, useMemo } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { VALUE_DIVIDER, ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { SchemaControlType } from '@/common/constants/uiControls.constants';
 import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
-import { logger } from '@/common/services/logger';
 import { Input } from '@/components/Input';
-import { getModalConfig, getButtonLabel } from '../../configs/modalRegistry';
+import { useComplexLookupField } from '../../hooks';
+import { formatComplexLookupDisplayValue } from '../../utils';
 import { ComplexLookupSelectedItem } from '../ComplexLookupSelectedItem';
 import './ComplexLookupField.scss';
 
@@ -22,80 +22,34 @@ interface Props {
  */
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
   const { layout, htmlId } = entry;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [localValue, setLocalValue] = useState<UserValueContents[]>(value ?? []);
-
-  // Extract lookup type from schema
-  const lookupType = layout?.api as ComplexLookupType;
+  const lookupType = layout?.api as ComplexLookupType | undefined;
   const isNewLayout = layout?.isNew ?? false;
 
-  // Get modal configuration from registry
-  const modalConfig = useMemo(() => {
-    if (!lookupType) return null;
-
-    try {
-      return getModalConfig(lookupType);
-    } catch (error) {
-      logger.error('Failed to load modal config:', error);
-
-      return null;
-    }
-  }, [lookupType]);
+  const {
+    localValue,
+    isModalOpen,
+    modalConfig,
+    buttonLabelId,
+    handleOpenModal,
+    handleCloseModal,
+    handleAssign,
+    handleDelete,
+  } = useComplexLookupField({
+    value,
+    lookupType,
+    uuid: entry.uuid,
+    onChange,
+  });
 
   const ModalComponent = modalConfig?.component;
   const modalDefaultProps = modalConfig?.defaultProps || {};
-
-  // Sync local value with prop value
-  useEffect(() => {
-    setLocalValue(value ?? []);
-  }, [value]);
-
-  // Modal handlers
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
-
-  const handleAssign = (record: ComplexLookupAssignRecordDTO) => {
-    // Update field value with assigned record
-    const newValue = [
-      {
-        id: record.id,
-        label: record.title,
-        meta: {},
-      },
-    ];
-
-    setLocalValue(newValue);
-    onChange(entry.uuid, newValue);
-    handleCloseModal();
-  };
-
-  const handleDelete = (id?: string) => {
-    if (!id) return;
-
-    const newValue = localValue.filter(value => value.id !== id);
-
-    setLocalValue(newValue);
-    onChange(entry.uuid, newValue);
-  };
-
-  // Get button label using registry
-  const getButtonLabelId = () => {
-    if (!lookupType) return 'ld.add';
-
-    return getButtonLabel(lookupType, !!localValue?.length);
-  };
 
   // Old layout - read-only input (kept for backward compatibility)
   if (!isNewLayout) {
     return (
       <Input
         id={id}
-        value={
-          localValue
-            ?.filter(({ label }) => label)
-            .map(({ label }) => label)
-            .join(VALUE_DIVIDER) ?? ''
-        }
+        value={formatComplexLookupDisplayValue(localValue)}
         disabled={true}
         data-testid="complex-lookup-input"
         ariaLabelledBy={htmlId}
@@ -109,13 +63,13 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       {/* Display selected items */}
       {!!localValue.length && (
         <div className="complex-lookup-value" data-testid="complex-lookup-value">
-          {localValue.map(item => (
+          {localValue.map(({ id, label, meta }) => (
             <ComplexLookupSelectedItem
-              key={item.id}
-              id={item.id}
-              label={item.label}
+              key={id}
+              id={id}
+              label={label}
               handleDelete={handleDelete}
-              noWarningValue={item.meta?.isPreferred}
+              noWarningValue={meta?.isPreferred}
             />
           ))}
         </div>
@@ -127,7 +81,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
         className="complex-lookup-select-button button-passive"
         onClick={handleOpenModal}
       >
-        <FormattedMessage id={getButtonLabelId()} />
+        <FormattedMessage id={buttonLabelId} />
       </button>
 
       {/* Render modal using registry-based component */}

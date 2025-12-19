@@ -7,3 +7,4 @@ export { useMarcValidation } from './useMarcValidation';
 export { useComplexLookupModalState } from './useComplexLookupModalState';
 export { useMarcQuery } from './useMarcQuery';
 export { useAuthoritiesMarcPreview } from './useAuthoritiesMarcPreview';
+export { useComplexLookupField } from './useComplexLookupField';
