@@ -5,6 +5,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { fetchProfileSettings } from '@/common/api/profiles.api';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
 import { useStatusState } from '@/store';
+import { logger } from '@/common/services/logger';
 
 export const useLoadProfileSettings = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
@@ -51,6 +52,7 @@ export const useLoadProfileSettings = () => {
       });
       return settings;
     } catch (error) {
+      logger.error('Error fetching profile settings:', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadProfileSettings'));
       return DEFAULT_INACTIVE_SETTINGS;
     }
