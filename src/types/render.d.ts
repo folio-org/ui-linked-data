@@ -99,6 +99,8 @@ type SchemaEntry = {
   profileId?: string | number | null;
   marc?: string;
   marcMapping?: Record<string, string>;
+  editorVisible?: boolean;
+  profileSettingsDrift?: boolean;
 };
 
 type LinkedEntry = {

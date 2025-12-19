@@ -1,3 +1,4 @@
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';

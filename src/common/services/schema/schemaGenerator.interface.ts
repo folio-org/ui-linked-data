@@ -1,5 +1,5 @@
 export interface ISchemaGenerator {
-  init: (profile: Profile) => void;
+  init: (profile: Profile, settings: ProfileSettingsWithDrift) => void;
 
   get: () => Schema;
 

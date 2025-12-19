@@ -1,3 +1,5 @@
+@use '@common/styles/common.scss' as *;
+
 .field-with-meta-controls-container {
   display: flex;
   align-items: center;
@@ -39,4 +41,13 @@
     display: flex;
     align-items: center;
   }
+}
+
+.edit-section-group:has(.field-hidden-by-settings) {
+  display: none;
+}
+
+// UILD-685: placeholder, further refine display of fields added by profile/settings drift
+.edit-section-passive .edit-section-group:has(.field-visible-by-drift) {
+  background-color: $gray-300;
 }

@@ -65,6 +65,8 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       className={classNames(
         'field-with-meta-controls-container',
         { 'field-with-meta-controls-container-extended': !isCompact && hasDuplicateGroupButton },
+        { 'field-hidden-by-settings': !entry.editorVisible },
+        { 'field-visible-by-drift': entry.profileSettingsDrift },
         className,
       )}
       id={uuid}

@@ -1,4 +1,5 @@
 import '@src/test/__mocks__/components/Loading.mock';
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { useRoutePathPattern } from '@src/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

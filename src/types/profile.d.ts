@@ -26,3 +26,20 @@ type ProfileDTO = {
   name: string;
   resourceType: string;
 };
+
+type ProfileSettingsChildProperties = {
+  id: string;
+  visible: boolean;
+  order?: number;
+};
+
+type ProfileSettings = {
+  active: boolean;
+  children?: ProfileSettingsChildProperties[];
+};
+
+type ProfileSettingsDrift = {
+  missingFromSettings: string[];
+}
+
+type ProfileSettingsWithDrift = ProfileSettings & ProfileSettingsDrift;

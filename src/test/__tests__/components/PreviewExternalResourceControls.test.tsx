@@ -1,3 +1,4 @@
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
