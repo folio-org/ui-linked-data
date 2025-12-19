@@ -1,10 +1,14 @@
-import { DEFAULT_INACTIVE_SETTINGS } from '@common/constants/profileSettings.constants';
-import { fetchProfileSettings } from '@common/api/profiles.api';
-import { detectDrift } from '@common/helpers/profileSettingsDrift.helper';
-import { useProfileState } from '@src/store';
+import { useQueryClient } from '@tanstack/react-query';
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { fetchProfileSettings } from '@/common/api/profiles.api';
+import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
+import { useStatusState } from '@/store';
 
 export const useLoadProfileSettings = () => {
-  const { profileSettings, setProfileSettings } = useProfileState(['profileSettings', 'setProfileSettings']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const queryClient = useQueryClient();
 
   const sortProfileSettingsChildren = (settings: ProfileSettings) => {
     settings.children?.sort((a, b) => {
@@ -29,20 +33,27 @@ export const useLoadProfileSettings = () => {
   };
 
   const loadProfileSettings = async (profileId: string | number | undefined, profile: Profile) => {
-    if (profileId === undefined) {
+    const queryKey = ['profileSettings', profileId];
+    const queryFn = async () => {
+      if (profileId === undefined) {
+        return DEFAULT_INACTIVE_SETTINGS;
+      }
+      const settings = await fetchProfileSettings(profileId);
+      sortProfileSettingsChildren(settings);
+      return detectDrift(profile, settings);
+    };
+
+    try {
+      const settings = await queryClient.ensureQueryData({
+        queryKey,
+        queryFn,
+        staleTime: Infinity,
+      });
+      return settings;
+    } catch (error) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadProfileSettings'));
       return DEFAULT_INACTIVE_SETTINGS;
     }
-
-    if (profileSettings[profileId]) {
-      return profileSettings[profileId];
-    }
-
-    const settings = await fetchProfileSettings(profileId);
-    sortProfileSettingsChildren(settings);
-    const settingsWithDrift = detectDrift(profile, settings);
-    setProfileSettings(prev => ({ ...prev, [profileId]: settingsWithDrift }));
-
-    return settingsWithDrift;
   };
 
   return {

@@ -1,11 +1,13 @@
 import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useLoadProfileSettings } from '@common/hooks/useLoadProfileSettings';
 import { fetchProfileSettings } from '@common/api/profiles.api';
-import { useProfileStore } from '@src/store';
 import { detectDrift } from '@common/helpers/profileSettingsDrift.helper';
 import { DEFAULT_INACTIVE_SETTINGS } from '@common/constants/profileSettings.constants';
+import { useStatusState } from '@src/store';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfileSettings: jest.fn(),
@@ -15,58 +17,52 @@ jest.mock('@common/helpers/profileSettingsDrift.helper', () => ({
 }));
 
 describe('useLoadProfileSettings', () => {
-  const setProfileSettings = jest.fn();
+  const addStatusMessagesItem = jest.fn();
+  let queryClient: QueryClient;
+
+  const createWrapper = () => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    const Wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    return Wrapper;
+  };
 
   beforeEach(() => {
     setInitialGlobalState([
       {
-        store: useProfileStore,
+        store: useStatusState,
         state: {
-          profileSettings: {},
-          setProfileSettings,
+          addStatusMessagesItem,
         },
       },
     ]);
+  });
+
+  afterEach(() => {
+    queryClient?.clear();
   });
 
   describe('loadProfileSettings', () => {
     test('returns default settings when no profile ID defined', async () => {
       const profile = [] as Profile;
 
-      const { result } = renderHook(useLoadProfileSettings);
+      const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
       const settings = await result.current.loadProfileSettings(undefined, profile);
 
       expect(settings).toBe(DEFAULT_INACTIVE_SETTINGS);
       expect(fetchProfileSettings).not.toHaveBeenCalled();
-      expect(setProfileSettings).not.toHaveBeenCalled();
     });
 
-    test('returns cached settings when it exists', async () => {
-      const cachedSettings = {
-        active: true,
-        children: [],
-        missingFromSettings: [],
-      };
-      const profile = [] as Profile;
-      setInitialGlobalState([
-        {
-          store: useProfileStore,
-          state: {
-            profileSettings: { 1: cachedSettings },
-            setProfileSettings,
-          },
-        },
-      ]);
-
-      const { result } = renderHook(useLoadProfileSettings);
-      const settings = await result.current.loadProfileSettings(1, profile);
-
-      expect(settings).toBe(cachedSettings);
-      expect(fetchProfileSettings).not.toHaveBeenCalled();
-      expect(setProfileSettings).not.toHaveBeenCalled();
-    });
-
-    test('fetches and caches profile settings when it does not exist', async () => {
+    test('fetches profile settings', async () => {
       const newProfileSettings = {
         active: true,
         children: [],
@@ -79,29 +75,23 @@ describe('useLoadProfileSettings', () => {
       };
       (detectDrift as jest.Mock).mockReturnValue(newProfileSettingsWithDrift);
 
-      const { result } = renderHook(useLoadProfileSettings);
+      const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
       const settings = await result.current.loadProfileSettings(1, profile);
 
       expect(settings).toBe(newProfileSettingsWithDrift);
       expect(fetchProfileSettings).toHaveBeenCalledWith(1);
-      expect(setProfileSettings).toHaveBeenCalledWith(expect.any(Function));
-
-      // Verify the profile settings are updated correctly
-      const setProfileSettingsCallback = setProfileSettings.mock.calls[0][0];
-      const newState = await setProfileSettingsCallback({});
-      expect(newState).toEqual({ 1: newProfileSettingsWithDrift });
     });
 
-    test('handles error from fetchProfileSettings', async () => {
-      const error = new Error('Failed to fetch profile settings');
+    test('error in fetchProfileSettings returns default settings', async () => {
       const profile = [] as Profile;
-      (fetchProfileSettings as jest.Mock).mockRejectedValue(error);
+      (fetchProfileSettings as jest.Mock).mockRejectedValue('error');
 
-      const { result } = renderHook(useLoadProfileSettings);
+      const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
+      const settings = await result.current.loadProfileSettings(1, profile);
 
-      await expect(result.current.loadProfileSettings(1, profile)).rejects.toThrow('Failed to fetch profile settings');
+      expect(settings).toBe(DEFAULT_INACTIVE_SETTINGS);
       expect(fetchProfileSettings).toHaveBeenCalledWith(1);
-      expect(setProfileSettings).not.toHaveBeenCalled();
+      expect(addStatusMessagesItem).toHaveBeenCalled();
     });
 
     describe('settings sorting', () => {
@@ -218,7 +208,7 @@ describe('useLoadProfileSettings', () => {
         (fetchProfileSettings as jest.Mock).mockResolvedValue(settingsInput);
         (detectDrift as jest.Mock).mockReturnValue(settingsWithDrift);
 
-        const { result } = renderHook(useLoadProfileSettings);
+        const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
         const settings = await result.current.loadProfileSettings(1, profile);
         expect(settings.children).toEqual(expected);
       });

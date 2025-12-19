@@ -63,7 +63,6 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
   const setSearchParams = jest.fn();
-  const setProfileSettings = jest.fn();
 
   const mockProfileConfig = {
     ids: [],
@@ -90,8 +89,6 @@ describe('useConfig', () => {
           setSchema,
           initialSchemaKey: '',
           setInitialSchemaKey,
-          profileSettings: {},
-          setProfileSettings,
         },
       },
       {
