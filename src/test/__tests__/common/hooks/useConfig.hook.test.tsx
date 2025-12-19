@@ -2,6 +2,8 @@ import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
+import { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useConfig } from '@common/hooks/useConfig.hook';
 import { fetchProfile, fetchProfileSettings } from '@common/api/profiles.api';
 import { useInputsStore, useProfileStore } from '@src/store';
@@ -63,6 +65,23 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
   const setSearchParams = jest.fn();
+  let queryClient: QueryClient;
+
+  const createWrapper = () => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    const Wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    return Wrapper;
+  };
 
   const mockProfileConfig = {
     ids: [],
@@ -109,6 +128,10 @@ describe('useConfig', () => {
     (fetchProfileSettings as jest.Mock).mockReturnValue(mockProfileSettings);
   });
 
+  afterEach(() => {
+    queryClient?.clear();
+  });
+
   describe('getProfiles', () => {
     const record = {
       resource: {},
@@ -124,7 +147,7 @@ describe('useConfig', () => {
         ids: ['1'],
       });
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({ record, recordId: '' });
 
       expect(fetchProfile).toHaveBeenCalled();
@@ -140,7 +163,7 @@ describe('useConfig', () => {
         ids: ['1'],
       });
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({
         record,
         recordId: '',
@@ -163,7 +186,7 @@ describe('useConfig', () => {
 
       (fetchProfile as jest.Mock).mockResolvedValueOnce(mockProfileResult1).mockResolvedValueOnce(mockProfileResult2);
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({
         record,
         recordId: '',

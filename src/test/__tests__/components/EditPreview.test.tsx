@@ -1,3 +1,4 @@
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { act, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
