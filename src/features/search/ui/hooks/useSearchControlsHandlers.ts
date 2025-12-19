@@ -244,21 +244,18 @@ export const useSearchControlsHandlers = ({
 
           return params;
         });
-      } else {
+      } else if (hasPreservedQuery) {
         // Value flow: only update committedValues if there's a query to preserve
-        // Otherwise reset to clear results when switching to empty segment
-        if (hasPreservedQuery) {
-          setCommittedValues({
-            segment: newSegment,
-            query: restoredDraft.query,
-            searchBy: restoredDraft.searchBy,
-            source: restoredDraft.source,
-            offset: 0,
-          });
-        } else {
-          // No query - reset committedValues to prevent empty searches
-          resetCommittedValues();
-        }
+        setCommittedValues({
+          segment: newSegment,
+          query: restoredDraft.query,
+          searchBy: restoredDraft.searchBy,
+          source: restoredDraft.source,
+          offset: 0,
+        });
+      } else {
+        // Value flow: reset to clear results when switching to empty segment
+        resetCommittedValues();
       }
     },
     [saveCurrentDraft, restoreDraft, setNavigationState, setSearchParams, setCommittedValues, resetCommittedValues],
