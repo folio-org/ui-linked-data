@@ -15,7 +15,6 @@ import { useAuthoritiesAssignment } from '@/features/complexLookup/hooks/useAuth
 import { useUIState, useMarcPreviewState } from '@/store';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
-import { SOURCE_API_ENDPOINT, FACETS_API_ENDPOINT } from '@/common/constants/api.constants';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;
@@ -50,6 +49,8 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   // Determine if complex validation flow is needed
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
   const marcPreviewEndpoint = modalConfig?.api?.endpoints?.marcPreview;
+  const sourceEndpoint = modalConfig?.api?.endpoints?.source;
+  const facetsEndpoint = modalConfig?.api?.endpoints?.facets;
 
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
@@ -60,9 +61,8 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
 
   // Load source/facets on segment toggle and initial load
   const authoritiesData = useAuthoritiesSegmentData({
-    sourceEndpoint: SOURCE_API_ENDPOINT.AUTHORITY,
-    facetsEndpoint: FACETS_API_ENDPOINT.AUTHORITY,
-    sourceKey: 'authorities',
+    sourceEndpoint,
+    facetsEndpoint,
     facet: 'sourceFileId',
     autoLoadOnMount: true,
     isOpen,
@@ -152,12 +152,12 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
               <Search.Controls.Segment
                 path="authorities:search"
                 labelId="ld.search"
-                onBeforeChange={authoritiesData.onSegmentEnter}
+                onAfterChange={authoritiesData.onSegmentEnter}
               />
               <Search.Controls.Segment
                 path="authorities:browse"
                 labelId="ld.browse"
-                onBeforeChange={authoritiesData.onSegmentEnter}
+                onAfterChange={authoritiesData.onSegmentEnter}
               />
             </Search.Controls.SegmentGroup>
 

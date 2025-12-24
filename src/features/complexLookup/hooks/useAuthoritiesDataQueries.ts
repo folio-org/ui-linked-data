@@ -4,24 +4,28 @@ import baseApi from '@/common/api/base.api';
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
 interface AuthoritiesDataQueriesConfig {
-  sourceEndpoint: string;
-  facetsEndpoint: string;
+  sourceEndpoint?: string;
+  facetsEndpoint?: string;
   facet?: string;
 }
 
 /**
  * Hook that encapsulates React Query data fetching for authorities source and facets.
  */
-export function useAuthoritiesDataQueries(config: AuthoritiesDataQueriesConfig) {
+export function useAuthoritiesDataQueries({ sourceEndpoint, facetsEndpoint, facet }: AuthoritiesDataQueriesConfig) {
   const {
     data: sourceData,
     isLoading: isSourceLoading,
     refetch: refetchSource,
   } = useQuery({
-    queryKey: ['authorities-source', config.sourceEndpoint],
+    queryKey: ['authorities-source', sourceEndpoint],
     queryFn: async () => {
+      if (!sourceEndpoint) {
+        throw new Error('Source endpoint is required');
+      }
+
       const data = await baseApi.getJson({
-        url: config.sourceEndpoint,
+        url: sourceEndpoint,
         sameOrigin: true,
       });
 
@@ -37,16 +41,20 @@ export function useAuthoritiesDataQueries(config: AuthoritiesDataQueriesConfig) 
     isLoading: isFacetsLoading,
     refetch: refetchFacets,
   } = useQuery({
-    queryKey: ['authorities-facets', config.facetsEndpoint, config.facet],
+    queryKey: ['authorities-facets', facetsEndpoint, facet],
     queryFn: async () => {
+      if (!facetsEndpoint) {
+        throw new Error('Facets endpoint is required');
+      }
+
       const urlParams: Record<string, string> = { query: DEFAULT_SEARCH_FACETS_QUERY };
 
-      if (config.facet) {
-        urlParams.facet = config.facet;
+      if (facet) {
+        urlParams.facet = facet;
       }
 
       const data = await baseApi.getJson({
-        url: config.facetsEndpoint,
+        url: facetsEndpoint,
         urlParams,
         sameOrigin: true,
       });
