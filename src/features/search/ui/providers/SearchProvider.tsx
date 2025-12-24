@@ -8,6 +8,7 @@ import {
   useValueFlowAutoSubmit,
 } from '../hooks';
 import { resolveSearchConfigs } from '../utils';
+import { useLoadingState } from '@/store';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 
@@ -20,6 +21,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
   const { flow, mode = 'custom', children } = props;
+  const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
   const dynamicParams = isDynamicMode(props)
@@ -90,7 +92,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
       // Search results
       results,
-      isLoading,
+      isLoading: isLoading || isGlobalLoading,
       isFetching,
       isError,
       error,
@@ -111,6 +113,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       activeUIConfig,
       results,
       isLoading,
+      isGlobalLoading,
       isFetching,
       isError,
       error,
