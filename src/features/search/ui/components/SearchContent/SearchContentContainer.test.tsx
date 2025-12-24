@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { SearchContentContainer } from './SearchContentContainer';
 import * as SearchProvider from '../../providers';
+import * as SearchHooks from '../../hooks';
 
 const mockUseSearchContext = (overrides = {}) => {
   jest.spyOn(SearchProvider, 'useSearchContext').mockReturnValue({
@@ -31,6 +33,13 @@ const mockUseSearchContext = (overrides = {}) => {
   } as never);
 };
 
+const mockUseCommittedSearchParams = (query = '') => {
+  jest.spyOn(SearchHooks, 'useCommittedSearchParams').mockReturnValue({
+    query,
+    offset: 0,
+  } as never);
+};
+
 jest.mock('../../providers');
 
 jest.mock('../SearchEmptyPlaceholder', () => ({
@@ -44,17 +53,21 @@ jest.mock('../SearchEmptyPlaceholder', () => ({
 describe('SearchContentContainer', () => {
   beforeEach(() => {
     mockUseSearchContext();
+    mockUseCommittedSearchParams();
   });
 
   test('renders children when data exists', () => {
     mockUseSearchContext({
       results: { items: [{ id: '1', title: 'Test' }], totalRecords: 1 },
     });
+    mockUseCommittedSearchParams('test query');
 
     render(
-      <SearchContentContainer>
-        <div>Search Results</div>
-      </SearchContentContainer>,
+      <MemoryRouter>
+        <SearchContentContainer>
+          <div>Search Results</div>
+        </SearchContentContainer>
+      </MemoryRouter>,
     );
 
     expect(screen.getByText('Search Results')).toBeInTheDocument();
@@ -62,8 +75,13 @@ describe('SearchContentContainer', () => {
 
   test('renders empty placeholder when no data and no message', () => {
     mockUseSearchContext({ results: undefined });
+    mockUseCommittedSearchParams('');
 
-    render(<SearchContentContainer />);
+    render(
+      <MemoryRouter>
+        <SearchContentContainer />
+      </MemoryRouter>,
+    );
 
     const placeholder = screen.getByTestId('empty-placeholder');
     expect(placeholder).toBeInTheDocument();
@@ -72,24 +90,39 @@ describe('SearchContentContainer', () => {
 
   test('renders message when provided', () => {
     mockUseSearchContext({ results: undefined });
+    mockUseCommittedSearchParams('');
 
-    render(<SearchContentContainer message="ld.noResults" />);
+    render(
+      <MemoryRouter>
+        <SearchContentContainer message="ld.noResults" />
+      </MemoryRouter>,
+    );
 
     expect(screen.getByText('ld.noResults')).toBeInTheDocument();
   });
 
   test('does not render empty placeholder when message is shown', () => {
     mockUseSearchContext({ results: undefined });
+    mockUseCommittedSearchParams('');
 
-    render(<SearchContentContainer message="ld.noResults" />);
+    render(
+      <MemoryRouter>
+        <SearchContentContainer message="ld.noResults" />
+      </MemoryRouter>,
+    );
 
     expect(screen.queryByTestId('empty-placeholder')).not.toBeInTheDocument();
   });
 
   test('applies custom className to empty placeholder', () => {
     mockUseSearchContext({ results: undefined });
+    mockUseCommittedSearchParams('');
 
-    render(<SearchContentContainer emptyPlaceholderClassName="custom-empty-class" />);
+    render(
+      <MemoryRouter>
+        <SearchContentContainer emptyPlaceholderClassName="custom-empty-class" />
+      </MemoryRouter>,
+    );
 
     const placeholder = screen.getByTestId('empty-placeholder');
     expect(placeholder).toHaveClass('custom-empty-class');
@@ -99,11 +132,14 @@ describe('SearchContentContainer', () => {
     mockUseSearchContext({
       results: { items: [{ id: '1' }], totalRecords: 1 },
     });
+    mockUseCommittedSearchParams('test query');
 
     const { container } = render(
-      <SearchContentContainer>
-        <div>Content</div>
-      </SearchContentContainer>,
+      <MemoryRouter>
+        <SearchContentContainer>
+          <div>Content</div>
+        </SearchContentContainer>
+      </MemoryRouter>,
     );
 
     const contentContainer = container.querySelector('.item-search-content-container');
@@ -112,11 +148,14 @@ describe('SearchContentContainer', () => {
 
   test('does not render children when no data', () => {
     mockUseSearchContext({ results: undefined });
+    mockUseCommittedSearchParams('');
 
     render(
-      <SearchContentContainer>
-        <div>Should Not Render</div>
-      </SearchContentContainer>,
+      <MemoryRouter>
+        <SearchContentContainer>
+          <div>Should Not Render</div>
+        </SearchContentContainer>
+      </MemoryRouter>,
     );
 
     expect(screen.queryByText('Should Not Render')).not.toBeInTheDocument();
@@ -126,11 +165,14 @@ describe('SearchContentContainer', () => {
     mockUseSearchContext({
       results: { items: [], totalRecords: 0 },
     });
+    mockUseCommittedSearchParams('');
 
     render(
-      <SearchContentContainer>
-        <div>Should Not Render</div>
-      </SearchContentContainer>,
+      <MemoryRouter>
+        <SearchContentContainer>
+          <div>Should Not Render</div>
+        </SearchContentContainer>
+      </MemoryRouter>,
     );
 
     const placeholder = screen.getByTestId('empty-placeholder');

@@ -181,7 +181,7 @@ export const SearchView = () => {
           <Search.ContentContainer>
             {/* Resources segment: Work cards with instances table */}
             <Search.Controls.SegmentContent segment="resources">
-              <Search.Results>
+              <Search.Results className="search-results-container">
                 <ResourcesResultList />
                 <Search.Results.Pagination />
               </Search.Results>
@@ -189,7 +189,7 @@ export const SearchView = () => {
 
             {/* Hubs segment: table with external links */}
             <Search.Controls.SegmentContent segment="hubs">
-              <Search.Results className="hubs-result-list">
+              <Search.Results className="search-results-container hubs-result-list">
                 <HubsResultList context="search" />
                 <Search.Results.Pagination />
               </Search.Results>

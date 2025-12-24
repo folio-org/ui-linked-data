@@ -1,0 +1,125 @@
+import { FC } from 'react';
+import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
+import { Modal } from '@/components/Modal';
+import { Search } from '@/features/search/ui/components/Search';
+import { AuthoritiesResultList } from '@/features/search/ui';
+import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+import { Loading } from '@/components/Loading';
+import { useComplexLookupModalState, useAuthoritiesMarcPreview } from '@/features/complexLookup/hooks';
+import { useUIState } from '@/store';
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
+
+interface AuthoritiesModalProps {
+  isOpen: boolean;
+  onClose: VoidFunction;
+  initialQuery?: string;
+  initialSegment?: 'search' | 'browse';
+  marcPreviewEndpoint?: string;
+  onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+}
+
+/**
+ * AuthoritiesModal - Modal wrapper for Authority lookup using new Search feature.
+ */
+export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
+  isOpen,
+  onClose,
+  initialQuery,
+  initialSegment = 'browse',
+  marcPreviewEndpoint = MARC_PREVIEW_ENDPOINT.AUTHORITY,
+  onAssign,
+}) => {
+  const { isMarcPreviewOpen, setIsMarcPreviewOpen } = useUIState(['isMarcPreviewOpen', 'setIsMarcPreviewOpen']);
+
+  // Reset search state and set initial query when modal opens
+  useComplexLookupModalState({
+    isOpen,
+    initialQuery,
+    defaultSegment: `authorities:${initialSegment}`,
+  });
+
+  // Handle MARC preview loading and state management
+  const { loadMarcData, resetPreview, isLoading } = useAuthoritiesMarcPreview({
+    endpointUrl: marcPreviewEndpoint,
+    isMarcPreviewOpen,
+  });
+
+  // Wrapper to handle opening the preview modal
+  const handleTitleClick = (id: string, title?: string, headingType?: string) => {
+    loadMarcData(id, title, headingType);
+    setIsMarcPreviewOpen(true);
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={<FormattedMessage id="ld.selectMarcAuthority" />}
+      titleClassName="modal-complex-lookup-title"
+      className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
+      classNameHeader={classNames([
+        'modal-complex-lookup-header',
+        IS_EMBEDDED_MODE && 'modal-complex-lookup-header-embedded',
+      ])}
+      showModalControls={false}
+    >
+      <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
+        <Search
+          segments={['authorities:search', 'authorities:browse']}
+          defaultSegment={`authorities:${initialSegment}`}
+          flow="value"
+          mode="custom"
+        >
+          <Search.Controls>
+            {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
+            <Search.Controls.SegmentGroup>
+              <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
+              <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
+            </Search.Controls.SegmentGroup>
+
+            <Search.Controls.InputsWrapper />
+            <Search.Controls.SubmitButton />
+            <Search.Controls.MetaControls />
+          </Search.Controls>
+
+          <Search.Content>
+            {!isMarcPreviewOpen && (
+              <>
+                <Search.ControlPane label={<FormattedMessage id="ld.marcAuthority" />} />
+
+                <Search.ContentContainer>
+                  <Search.Results>
+                    <AuthoritiesResultList
+                      context="complexLookup"
+                      onAssign={onAssign}
+                      onTitleClick={handleTitleClick}
+                    />
+                    <Search.Results.Pagination />
+                  </Search.Results>
+                </Search.ContentContainer>
+              </>
+            )}
+
+            {/* MARC Preview */}
+            {isMarcPreviewOpen && (
+              <>
+                {isLoading && <Loading />}
+                {!isLoading && (
+                  <MarcPreview
+                    onClose={() => {
+                      // Close only the MARC preview: reset preview state and hide the preview
+                      resetPreview();
+                      setIsMarcPreviewOpen(false);
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </Search.Content>
+        </Search>
+      </div>
+    </Modal>
+  );
+};

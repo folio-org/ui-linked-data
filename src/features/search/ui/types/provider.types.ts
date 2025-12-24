@@ -30,6 +30,8 @@ export interface SearchResults {
   pageMetadata?: {
     totalElements: number;
     totalPages: number;
+    prev?: string; // Browse pagination: anchor value for previous page
+    next?: string; // Browse pagination: anchor value for next page
   };
 }
 

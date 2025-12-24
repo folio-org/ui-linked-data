@@ -105,7 +105,7 @@ describe('searchUIRegistry', () => {
 
         expect(result?.features?.hasSearchBy).toBe(true);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
-        expect(result?.features?.isVisibleSubLabel).toBe(false);
+        expect(result?.features?.isVisibleSubLabel).toBe(true);
         expect(result?.features?.isLoopedPagination).toBe(false);
       });
     });

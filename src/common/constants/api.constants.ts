@@ -19,6 +19,10 @@ export const SEARCH_API_ENDPOINT = {
   HUBS_EXTERNAL: 'https://id.loc.gov/resources/hubs/suggest2/',
 };
 
+export const MARC_PREVIEW_ENDPOINT = {
+  AUTHORITY: '/source-storage/records/:recordId/formatted?idType=AUTHORITY',
+};
+
 export const DEFAULT_PAGES_METADATA = {
   totalElements: 0,
   totalPages: 0,

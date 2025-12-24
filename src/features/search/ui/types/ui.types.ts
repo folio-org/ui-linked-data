@@ -4,6 +4,7 @@ export interface SearchUIConfig {
   subtitleId?: string;
   placeholderId?: string;
   emptyStateId?: string;
+  noResultsId?: string;
 }
 
 // UI features (display/interaction concerns)

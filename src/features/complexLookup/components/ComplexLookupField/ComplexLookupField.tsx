@@ -1,13 +1,12 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { VALUE_DIVIDER } from '@/features/complexLookup/constants/complexLookup.constants';
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { SchemaControlType } from '@/common/constants/uiControls.constants';
 import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
 import { Input } from '@/components/Input';
-import { COMPLEX_LOOKUPS_CONFIG } from '../../configs';
-import { useComplexLookup } from '../../hooks';
+import { useComplexLookupField } from '../../hooks';
+import { formatComplexLookupDisplayValue } from '../../utils';
 import { ComplexLookupSelectedItem } from '../ComplexLookupSelectedItem';
-import { ModalComplexLookup } from '../ModalComplexLookup';
 import './ComplexLookupField.scss';
 
 interface Props {
@@ -17,65 +16,84 @@ interface Props {
   onChange: (uuid: string, contents: Array<UserValueContents>) => void;
 }
 
+/**
+ * ComplexLookupField - New implementation using modal registry and new Search architecture.
+ * Modals are accessed only through the registry manager for centralized configuration.
+ */
 export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, onChange }) => {
   const { layout, htmlId } = entry;
-  const lookupConfig = COMPLEX_LOOKUPS_CONFIG[layout?.api as string];
-  const buttonConfigLabel = lookupConfig?.labels?.button;
+  const lookupType = layout?.api as ComplexLookupType | undefined;
+  const isNewLayout = layout?.isNew ?? false;
 
-  const { localValue, isModalOpen, openModal, closeModal, handleDelete, handleAssign, handleOnChangeBase } =
-    useComplexLookup({
-      entry,
-      value,
-      lookupConfig,
-      authority: layout?.baseLabelType,
-      onChange,
-    });
+  const {
+    localValue,
+    isModalOpen,
+    modalConfig,
+    buttonLabelId,
+    handleOpenModal,
+    handleCloseModal,
+    handleAssign,
+    handleDelete,
+  } = useComplexLookupField({
+    value,
+    lookupType,
+    uuid: entry.uuid,
+    onChange,
+  });
 
+  const ModalComponent = modalConfig?.component;
+  const modalDefaultProps = modalConfig?.defaultProps || {};
+
+  // Old layout - read-only input (kept for backward compatibility)
+  if (!isNewLayout) {
+    return (
+      <Input
+        id={id}
+        value={formatComplexLookupDisplayValue(localValue)}
+        disabled={true}
+        data-testid="complex-lookup-input"
+        ariaLabelledBy={htmlId}
+      />
+    );
+  }
+
+  // New layout - interactive with modal
   return (
-    <>
-      {layout?.isNew ? (
-        <div id={id} className="complex-lookup">
-          {!!localValue.length && (
-            <div className="complex-lookup-value" data-testid="complex-lookup-value">
-              {localValue?.map(({ id, label, meta }) => (
-                <ComplexLookupSelectedItem
-                  key={id}
-                  id={id}
-                  label={label}
-                  handleDelete={handleDelete}
-                  noWarningValue={meta?.isPreferred}
-                />
-              ))}
-            </div>
-          )}
-
-          <button
-            data-testid={getHtmlIdForSchemaControl(SchemaControlType.ChangeComplexFieldValue, id)}
-            className="complex-lookup-select-button button-passive"
-            onClick={openModal}
-          >
-            <FormattedMessage id={localValue?.length ? buttonConfigLabel?.change : buttonConfigLabel?.base} />
-          </button>
-
-          <ModalComplexLookup
-            value={localValue?.[0]?.label}
-            isOpen={isModalOpen}
-            onClose={closeModal}
-            onAssign={handleAssign}
-            assignEntityName={layout.api}
-            baseLabelType={layout.baseLabelType}
-          />
+    <div id={id} className="complex-lookup">
+      {/* Display selected items */}
+      {!!localValue.length && (
+        <div className="complex-lookup-value" data-testid="complex-lookup-value">
+          {localValue.map(({ id, label, meta }) => (
+            <ComplexLookupSelectedItem
+              key={id}
+              id={id}
+              label={label}
+              handleDelete={handleDelete}
+              noWarningValue={meta?.isPreferred}
+            />
+          ))}
         </div>
-      ) : (
-        <Input
-          id={id}
-          onChange={handleOnChangeBase}
-          value={localValue?.map(({ label }) => label).join(VALUE_DIVIDER) ?? ''}
-          disabled={true}
-          data-testid="complex-lookup-input"
-          ariaLabelledBy={htmlId}
+      )}
+
+      {/* Button to open modal */}
+      <button
+        data-testid={getHtmlIdForSchemaControl(SchemaControlType.ChangeComplexFieldValue, id)}
+        className="complex-lookup-select-button button-passive"
+        onClick={handleOpenModal}
+      >
+        <FormattedMessage id={buttonLabelId} />
+      </button>
+
+      {/* Render modal using registry-based component */}
+      {ModalComponent && (
+        <ModalComponent
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onAssign={handleAssign}
+          initialQuery={localValue?.[0]?.label}
+          {...modalDefaultProps}
         />
       )}
-    </>
+    </div>
   );
 };

@@ -1,6 +1,12 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
+import {
+  useSearchControlsHandlers,
+  useSearchQuery,
+  useUrlSync,
+  useSearchSegment,
+  useValueFlowAutoSubmit,
+} from '../hooks';
 import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
@@ -46,12 +52,6 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     [currentSegment, currentSource, props],
   );
 
-  // Handlers for search controls
-  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow });
-
-  // Sync URL to store (URL flow only)
-  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
-
   // Search query
   const {
     data: results,
@@ -65,6 +65,15 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     fallbackUIConfig: activeUIConfig,
     flow,
   });
+
+  // Handlers for search controls (after results so we can pass pageMetadata for browse pagination and refetch)
+  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow, results, refetch });
+
+  // Sync URL to store (URL flow only)
+  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
+
+  // Auto-submit for value flow when committedValues has query (similar to URL flow)
+  useValueFlowAutoSubmit({ flow, onSubmit: handlers.onSubmit });
 
   const contextValue = useMemo(
     (): SearchContextValue => ({

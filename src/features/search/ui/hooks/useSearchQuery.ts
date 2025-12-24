@@ -4,19 +4,10 @@ import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import baseApi from '@/common/api/base.api';
 import { useCommittedSearchParams } from './useCommittedSearchParams';
 import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
-import type { SearchFlow } from '../types/provider.types';
+import type { SearchFlow, SearchResults } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types';
 import { getValidSearchBy } from '../utils';
 import { resolveUIConfig } from '../config';
-
-interface SearchResults {
-  items: unknown[];
-  totalRecords: number;
-  pageMetadata?: {
-    totalElements: number;
-    totalPages: number;
-  };
-}
 
 interface UseSearchQueryParams {
   /**
@@ -88,13 +79,23 @@ export function useSearchQuery({
 
   const queryKey = useMemo(
     () =>
-      ['search', effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset].filter(
-        value => value !== undefined && value !== '',
-      ),
-    [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset],
+      [
+        'search',
+        effectiveCoreConfig?.id,
+        committed.query,
+        effectiveSearchBy,
+        committed.offset,
+        committed.selector,
+      ].filter(value => value !== undefined && value !== ''),
+    [effectiveCoreConfig?.id, committed.query, effectiveSearchBy, committed.offset, committed.selector],
   );
 
-  const queryFn = useCallback(async (): Promise<SearchResults> => {
+  const queryFn = useCallback(async (): Promise<SearchResults | undefined> => {
+    // Guard: Don't execute if query is empty or only whitespace
+    if (!committed.query || committed.query.trim() === '') {
+      return undefined;
+    }
+
     if (!effectiveCoreConfig) {
       throw new Error('No effective config resolved');
     }
@@ -111,6 +112,7 @@ export function useSearchQuery({
       searchBy: effectiveSearchBy,
       limit,
       offset: committed.offset,
+      selector: committed.selector,
     });
 
     const data = await baseApi.getJson({
@@ -129,15 +131,18 @@ export function useSearchQuery({
         pageMetadata: {
           totalElements: normalized.totalRecords,
           totalPages,
+          prev: normalized.prev, // Browse pagination anchor
+          next: normalized.next, // Browse pagination anchor
         },
       };
     }
 
     return data as unknown as SearchResults;
-  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset]);
+  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset, committed.selector]);
 
   // Determine if query should be enabled
-  const shouldEnable = enabled && !!committed.query && !!effectiveCoreConfig;
+  // Only enable when we have a non-empty query string AND a valid config
+  const shouldEnable = enabled && !!committed.query && committed.query.trim() !== '' && !!effectiveCoreConfig;
 
   const {
     data,
@@ -146,15 +151,18 @@ export function useSearchQuery({
     isError,
     error,
     refetch: queryRefetch,
-  } = useQuery<SearchResults>({
+  } = useQuery<SearchResults | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
   });
 
   const refetch = useCallback(async () => {
-    await queryRefetch();
-  }, [queryRefetch]);
+    // Only refetch if we have a valid query
+    if (committed.query && committed.query.trim() !== '') {
+      await queryRefetch();
+    }
+  }, [queryRefetch, committed.query]);
 
   return {
     data,
