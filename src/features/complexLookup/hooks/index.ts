@@ -9,3 +9,5 @@ export { useMarcQuery } from './useMarcQuery';
 export { useAuthoritiesMarcPreview } from './useAuthoritiesMarcPreview';
 export { useComplexLookupField } from './useComplexLookupField';
 export { useAuthoritiesAssignment } from './useAuthoritiesAssignment';
+export { useAuthoritiesSegmentData } from './useAuthoritiesSegmentData';
+export { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
