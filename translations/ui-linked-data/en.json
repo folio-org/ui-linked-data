@@ -226,7 +226,6 @@
   "ld.errorMakingApiRequest": "Error making API request",
   "ld.errorAssigningAuthority": "Error assigning authority",
   "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type matching the edited authority field (e.g. LCNAF authority for the Creator field)",
-  "ld.errorAssigningAuthority.no_lccn": "Only Library of Congress authorities can be assigned for now. This is temporary until additional source types are supported.",
   "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
   "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
   "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?",
