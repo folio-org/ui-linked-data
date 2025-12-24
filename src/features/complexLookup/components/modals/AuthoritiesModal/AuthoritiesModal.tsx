@@ -6,11 +6,16 @@ import { Search } from '@/features/search/ui/components/Search';
 import { AuthoritiesResultList } from '@/features/search/ui';
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
 import { Loading } from '@/components/Loading';
-import { useComplexLookupModalState, useAuthoritiesMarcPreview } from '@/features/complexLookup/hooks';
+import {
+  useComplexLookupModalState,
+  useAuthoritiesMarcPreview,
+  useAuthoritiesSegmentData,
+} from '@/features/complexLookup/hooks';
 import { useAuthoritiesAssignment } from '@/features/complexLookup/hooks/useAuthoritiesAssignment';
 import { useUIState, useMarcPreviewState } from '@/store';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
+import { SOURCE_API_ENDPOINT, FACETS_API_ENDPOINT } from '@/common/constants/api.constants';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;
@@ -51,6 +56,16 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     isOpen,
     initialQuery,
     defaultSegment: `authorities:${initialSegment}`,
+  });
+
+  // Load source/facets on segment toggle and initial load
+  const authoritiesData = useAuthoritiesSegmentData({
+    sourceEndpoint: SOURCE_API_ENDPOINT.AUTHORITY,
+    facetsEndpoint: FACETS_API_ENDPOINT.AUTHORITY,
+    sourceKey: 'authorities',
+    facet: 'sourceFileId',
+    autoLoadOnMount: true,
+    isOpen,
   });
 
   // Handle MARC preview loading and state management
@@ -134,8 +149,16 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
           <Search.Controls>
             {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
             <Search.Controls.SegmentGroup>
-              <Search.Controls.Segment path="authorities:search" labelId="ld.search" />
-              <Search.Controls.Segment path="authorities:browse" labelId="ld.browse" />
+              <Search.Controls.Segment
+                path="authorities:search"
+                labelId="ld.search"
+                onBeforeChange={authoritiesData.onSegmentEnter}
+              />
+              <Search.Controls.Segment
+                path="authorities:browse"
+                labelId="ld.browse"
+                onBeforeChange={authoritiesData.onSegmentEnter}
+              />
             </Search.Controls.SegmentGroup>
 
             <Search.Controls.InputsWrapper />
