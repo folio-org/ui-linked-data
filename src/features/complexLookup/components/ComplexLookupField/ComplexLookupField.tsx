@@ -43,6 +43,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
 
   const ModalComponent = modalConfig?.component;
   const modalDefaultProps = modalConfig?.defaultProps || {};
+  const assignmentFlow = modalConfig?.assignmentFlow || 'simple';
 
   // Old layout - read-only input (kept for backward compatibility)
   if (!isNewLayout) {
@@ -56,6 +57,29 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       />
     );
   }
+
+  // Prepare modal props based on assignment flow
+  const getModalProps = () => {
+    const baseProps = {
+      isOpen: isModalOpen,
+      onClose: handleCloseModal,
+      onAssign: handleAssign,
+      initialQuery: localValue?.[0]?.label,
+      ...modalDefaultProps,
+    };
+
+    // Complex flow - pass additional config for validation
+    if (assignmentFlow === 'complex' && modalConfig) {
+      return {
+        ...baseProps,
+        entry,
+        authority: layout?.baseLabelType || 'creator',
+        modalConfig,
+      };
+    }
+
+    return baseProps;
+  };
 
   // New layout - interactive with modal
   return (
@@ -84,16 +108,8 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
         <FormattedMessage id={buttonLabelId} />
       </button>
 
-      {/* Render modal using registry-based component */}
-      {ModalComponent && (
-        <ModalComponent
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onAssign={handleAssign}
-          initialQuery={localValue?.[0]?.label}
-          {...modalDefaultProps}
-        />
-      )}
+      {/* Render modal with appropriate props */}
+      {ModalComponent && <ModalComponent {...getModalProps()} />}
     </div>
   );
 };

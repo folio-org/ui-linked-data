@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { useMarcPreviewStore, useUIStore } from '@/store';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchContextLegacy } from '@/features/search/ui';
-import { MarcPreview } from './MarcPreview';
+import { MarcPreviewLegacy } from './MarcPreview';
 
 jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -44,7 +44,7 @@ describe('MarcPreviewComplexLookup', () => {
       },
     ]);
 
-    return render(<MarcPreview onClose={onClose} />);
+    return render(<MarcPreviewLegacy onClose={onClose} />);
   };
 
   it('renders the component when isMarcPreviewOpen is true and marcPreviewData is available', () => {

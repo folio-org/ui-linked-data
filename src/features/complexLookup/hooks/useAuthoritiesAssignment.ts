@@ -1,0 +1,179 @@
+import { useCallback, useState } from 'react';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { useInputsState, useMarcPreviewState, useStatusState, useProfileState } from '@/store';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { StatusType } from '@/common/constants/status.constants';
+import { getLinkedField, getUpdatedSelectedEntries, updateLinkedFieldValue } from '../utils/complexLookup.helper';
+import { useMarcValidation } from './useMarcValidation';
+import { useMarcAssignment } from './useMarcAssignment';
+import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { ModalConfig } from '../configs/modalRegistry';
+
+interface UseAuthoritiesAssignmentParams {
+  entry: SchemaEntry;
+  authority: string;
+  modalConfig: ModalConfig;
+  onAssignSuccess: (value: UserValueContents) => void;
+  enabled?: boolean;
+}
+
+interface UseAuthoritiesAssignmentResult {
+  handleAssign: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
+  isAssigning: boolean;
+  checkFailedId: (id?: string) => boolean;
+}
+
+export function useAuthoritiesAssignment({
+  entry,
+  authority,
+  modalConfig,
+  onAssignSuccess,
+  enabled = true,
+}: UseAuthoritiesAssignmentParams): UseAuthoritiesAssignmentResult {
+  const [isAssigning, setIsAssigning] = useState(false);
+
+  const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
+  const { schema } = useProfileState(['schema']);
+  const { selectedEntries, setSelectedEntries } = useInputsState(['selectedEntries', 'setSelectedEntries']);
+  const {
+    complexValue: marcPreviewData,
+    setComplexValue: setMarcPreviewData,
+    metadata: marcPreviewMetadata,
+    resetComplexValue: resetMarcPreviewData,
+    resetMetadata: resetMarcPreviewMetadata,
+  } = useMarcPreviewState(['complexValue', 'setComplexValue', 'metadata', 'resetComplexValue', 'resetMetadata']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const { validateMarcRecord } = useMarcValidation();
+  const { getMarcDataForAssignment } = useMarcAssignment(setMarcPreviewData);
+  const { addFailedEntryId, clearFailedEntryIds, checkFailedId } = useComplexLookupValidation();
+  const { linkedEntry } = entry;
+  const linkedField = getLinkedField({ schema, linkedEntry });
+
+  const updateLinkedDropdown = useCallback(
+    (linkedFieldValue: string) => {
+      if (!linkedField || !selectedEntriesService) return;
+
+      const updatedValue = updateLinkedFieldValue({
+        schema,
+        linkedField,
+        linkedFieldValue,
+        modalConfig,
+      });
+
+      if (!updatedValue) return;
+
+      const updatedSelectedEntries = getUpdatedSelectedEntries({
+        selectedEntriesService,
+        selectedEntries,
+        linkedFieldChildren: linkedField.children,
+        newValue: updatedValue.uuid,
+      });
+
+      setSelectedEntries(updatedSelectedEntries);
+    },
+    [schema, linkedField, modalConfig, selectedEntriesService, selectedEntries, setSelectedEntries],
+  );
+
+  const handleValidationError = useCallback(
+    (id: string, invalidAssignmentReason?: string) => {
+      addFailedEntryId(id);
+
+      let messageKey = 'ld.errorAssigningAuthority';
+
+      if (invalidAssignmentReason) {
+        messageKey += `.${invalidAssignmentReason.toLowerCase()}`;
+      }
+
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, messageKey));
+    },
+    [addFailedEntryId, addStatusMessagesItem],
+  );
+
+  const handleAssignmentError = useCallback(
+    (id: string) => {
+      addFailedEntryId(id);
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorAssigningAuthority.general'),
+      );
+    },
+    [addFailedEntryId, addStatusMessagesItem],
+  );
+
+  const handleAssign = useCallback(
+    async (record: ComplexLookupAssignRecordDTO) => {
+      if (!enabled) {
+        return;
+      }
+
+      const { id, title, linkedFieldValue } = record;
+
+      if (isAssigning) return;
+
+      setIsAssigning(true);
+
+      try {
+        const { srsId, marcData } = await getMarcDataForAssignment(id, {
+          complexValue: marcPreviewData,
+          marcPreviewMetadata,
+          marcPreviewEndpoint: modalConfig.api?.endpoints?.marcPreview,
+        });
+        const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(marcData, modalConfig, authority);
+
+        if (!validAssignment) {
+          handleValidationError(id, invalidAssignmentReason);
+          setIsAssigning(false);
+          return;
+        }
+
+        const assignedValue: UserValueContents = {
+          id,
+          label: title,
+          meta: {
+            type: AdvancedFieldType.complex,
+            srsId,
+          },
+        };
+
+        if (linkedEntry?.dependent && linkedFieldValue && linkedField && selectedEntriesService) {
+          updateLinkedDropdown(linkedFieldValue);
+        }
+
+        clearFailedEntryIds();
+        resetMarcPreviewData();
+        resetMarcPreviewMetadata();
+        onAssignSuccess(assignedValue);
+      } catch {
+        handleAssignmentError(id);
+      } finally {
+        setIsAssigning(false);
+      }
+    },
+    [
+      enabled,
+      isAssigning,
+      getMarcDataForAssignment,
+      validateMarcRecord,
+      marcPreviewData,
+      marcPreviewMetadata,
+      modalConfig,
+      authority,
+      linkedEntry,
+      linkedField,
+      selectedEntriesService,
+      clearFailedEntryIds,
+      resetMarcPreviewData,
+      resetMarcPreviewMetadata,
+      onAssignSuccess,
+      updateLinkedDropdown,
+      handleValidationError,
+      handleAssignmentError,
+    ],
+  );
+
+  return {
+    handleAssign,
+    isAssigning,
+    checkFailedId,
+  };
+}

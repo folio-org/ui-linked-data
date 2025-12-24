@@ -8,3 +8,4 @@ export { useComplexLookupModalState } from './useComplexLookupModalState';
 export { useMarcQuery } from './useMarcQuery';
 export { useAuthoritiesMarcPreview } from './useAuthoritiesMarcPreview';
 export { useComplexLookupField } from './useComplexLookupField';
+export { useAuthoritiesAssignment } from './useAuthoritiesAssignment';
