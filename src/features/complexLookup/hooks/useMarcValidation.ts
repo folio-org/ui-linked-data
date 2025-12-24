@@ -11,7 +11,7 @@ export const useMarcValidation = () => {
     async (
       marcData: MarcDTO | null,
       config: ModalConfig | ComplexLookupsConfigEntry,
-      authority: string,
+      lookupContext: string,
     ): Promise<{ validAssignment: boolean; invalidAssignmentReason?: string }> => {
       // Extract API config - works for both modern ModalConfig and legacy ComplexLookupsConfigEntry
       const apiConfig = 'component' in config ? (config as { api?: ModalApiConfig }).api : config.api;
@@ -19,7 +19,7 @@ export const useMarcValidation = () => {
       return makeRequest({
         url: apiConfig?.endpoints?.validation ?? AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
         method: 'POST',
-        body: generateValidationRequestBody(marcData, apiConfig?.validationTarget?.[authority]),
+        body: generateValidationRequestBody(marcData, apiConfig?.validationTarget?.[lookupContext]),
       });
     },
     [makeRequest],
