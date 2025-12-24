@@ -4,9 +4,8 @@ import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
 import { logger } from '@/common/services/logger';
 
 interface AuthoritiesSegmentDataConfig {
-  sourceEndpoint: string;
-  facetsEndpoint: string;
-  sourceKey: string;
+  sourceEndpoint?: string;
+  facetsEndpoint?: string;
   facet?: string;
   autoLoadOnMount?: boolean;
   isOpen?: boolean;
@@ -16,7 +15,13 @@ interface AuthoritiesSegmentDataConfig {
  * Hook to manage Authorities-specific data loading on segment changes.
  * Orchestrates when and how data is fetched using useAuthoritiesDataQueries.
  */
-export function useAuthoritiesSegmentData(config: AuthoritiesSegmentDataConfig) {
+export function useAuthoritiesSegmentData({
+  sourceEndpoint,
+  facetsEndpoint,
+  facet,
+  autoLoadOnMount,
+  isOpen,
+}: AuthoritiesSegmentDataConfig) {
   const { setSourceData } = useSearchState(['setSourceData']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const hasLoadedInitialData = useRef(false);
@@ -27,9 +32,9 @@ export function useAuthoritiesSegmentData(config: AuthoritiesSegmentDataConfig) 
     refetchFacets,
     isLoading: isQueriesLoading,
   } = useAuthoritiesDataQueries({
-    sourceEndpoint: config.sourceEndpoint,
-    facetsEndpoint: config.facetsEndpoint,
-    facet: config.facet,
+    sourceEndpoint,
+    facetsEndpoint,
+    facet,
   });
 
   const onSegmentEnter = useCallback(async () => {
@@ -54,7 +59,7 @@ export function useAuthoritiesSegmentData(config: AuthoritiesSegmentDataConfig) 
 
   // Auto-load data when modal opens if configured.
   useEffect(() => {
-    if (config.autoLoadOnMount && config.isOpen && !hasLoadedInitialData.current) {
+    if (autoLoadOnMount && isOpen && !hasLoadedInitialData.current) {
       hasLoadedInitialData.current = true;
 
       onSegmentEnter().catch(error => {
@@ -63,10 +68,10 @@ export function useAuthoritiesSegmentData(config: AuthoritiesSegmentDataConfig) 
     }
 
     // Reset flag when modal closes
-    if (!config.isOpen) {
+    if (!isOpen) {
       hasLoadedInitialData.current = false;
     }
-  }, [config.autoLoadOnMount, config.isOpen, onSegmentEnter]);
+  }, [autoLoadOnMount, isOpen, onSegmentEnter]);
 
   return {
     sourceData,

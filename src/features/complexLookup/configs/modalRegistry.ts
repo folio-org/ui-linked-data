@@ -2,7 +2,12 @@ import { ComponentType } from 'react';
 import { ComplexLookupType, AuthorityValidationTarget } from '../constants/complexLookup.constants';
 import { HubsModal } from '../components/modals/HubsModal';
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
-import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT, MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
+import {
+  AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+  FACETS_API_ENDPOINT,
+  MARC_PREVIEW_ENDPOINT,
+  SOURCE_API_ENDPOINT,
+} from '@/common/constants/api.constants';
 
 export type AssignmentFlow = 'simple' | 'complex';
 
@@ -10,6 +15,8 @@ export interface ModalApiConfig {
   endpoints: {
     marcPreview?: string;
     validation?: string;
+    source?: string;
+    facets?: string;
   };
   validationTarget?: Record<string, AuthorityValidationTarget>;
 }
@@ -58,6 +65,8 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
       endpoints: {
         marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
         validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+        source: SOURCE_API_ENDPOINT.AUTHORITY,
+        facets: FACETS_API_ENDPOINT.AUTHORITY,
       },
       validationTarget: {
         creator: AuthorityValidationTarget.CreatorOfWork,
@@ -82,6 +91,8 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
       endpoints: {
         marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
         validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+        source: SOURCE_API_ENDPOINT.AUTHORITY,
+        facets: FACETS_API_ENDPOINT.AUTHORITY,
       },
       validationTarget: {
         subject: AuthorityValidationTarget.SubjectOfWork,
