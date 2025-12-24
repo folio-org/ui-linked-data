@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useMarcPreviewState, useUIState } from '@/store';
-import { LegacySearchControlPane } from '@/features/search/ui';
+import { ControlPane } from '@/features/search/ui';
 import { MarcContent } from '@/components/MarcContent';
 import { Button, ButtonType } from '@/components/Button';
 import Times16 from '@/assets/times-16.svg?react';
@@ -24,7 +24,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
   const renderCloseButton = () => (
     <Button
       ariaLabel={formatMessage({ id: 'ld.aria.complexLookup.marcPreview.close' })}
-      data-testid="nav-preview-close-button"
+      data-testid="nav-close-button"
       type={ButtonType.Icon}
       onClick={onClose}
       className="nav-close"
@@ -33,7 +33,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
     </Button>
   );
 
-  const renderSubLabel = () => (
+  const subLabel = (
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
       <span className="marc-preview-sub-label-date">
@@ -59,9 +59,10 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
     <>
       {isMarcPreviewOpen && marcPreviewData ? (
         <div className="marc-preview-container">
-          <LegacySearchControlPane
+          <ControlPane
             label={marcPreviewMetadata?.title ?? ''}
-            renderSubLabel={renderSubLabel}
+            subLabel={subLabel}
+            showSubLabel={true}
             renderCloseButton={renderCloseButton}
           >
             {onAssign && (
@@ -69,7 +70,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
                 <Button
                   type={ButtonType.Highlighted}
                   onClick={handleAssignClick}
-                  ariaLabel={formatMessage({ id: 'ld.aria.marcAuthorityPreview.assign' })}
+                  ariaLabel={formatMessage({ id: 'ld.assign' })}
                   disabled={isDisabledButton}
                   data-testid="marc-preview-assign-button"
                 >
@@ -77,7 +78,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
                 </Button>
               </div>
             )}
-          </LegacySearchControlPane>
+          </ControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />
