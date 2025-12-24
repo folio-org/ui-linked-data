@@ -1,12 +1,7 @@
 import { FC, type ReactElement } from 'react';
-import classNames from 'classnames';
-import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
-import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { useUIState } from '@/store';
-import { Button } from '@/components/Button';
-import CaretDown from '@/assets/caret-down.svg?react';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { useSearchContext } from '../../providers/SearchProvider';
-import './SearchControlPane.scss';
+import { ControlPane } from './ControlPane';
 
 type SearchControlPaneProps = {
   children?: ReactElement;
@@ -23,12 +18,7 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   renderCloseButton,
   showSubLabel,
 }) => {
-  const { formatMessage } = useIntl();
   const { activeUIConfig, results } = useSearchContext();
-  const { isSearchPaneCollapsed, setIsSearchPaneCollapsed } = useUIState([
-    'isSearchPaneCollapsed',
-    'setIsSearchPaneCollapsed',
-  ]);
 
   // Use props if provided, otherwise get from context
   const titleId = activeUIConfig.ui?.titleId;
@@ -56,31 +46,13 @@ export const SearchControlPane: FC<SearchControlPaneProps> = ({
   }
 
   return (
-    <div className={classNames(['search-control-pane', IS_EMBEDDED_MODE && 'search-control-pane-embedded'])}>
-      {renderCloseButton?.()}
-      {isSearchPaneCollapsed && (
-        <Button
-          onClick={() => setIsSearchPaneCollapsed(false)}
-          className="open-ctl"
-          ariaLabel={formatMessage({ id: 'ld.aria.searchPane.open' })}
-        >
-          <CaretDown className="header-caret" />
-        </Button>
-      )}
-      {label && (
-        <div className="search-control-pane-title">
-          <h2 className="search-control-pane-mainLabel">
-            <span>{label}</span>
-          </h2>
-
-          {isVisibleSubLabel && subLabel && (
-            <div className="search-control-pane-subLabel">
-              <span>{subLabel}</span>
-            </div>
-          )}
-        </div>
-      )}
+    <ControlPane
+      label={label ?? undefined}
+      subLabel={subLabel ?? undefined}
+      showSubLabel={isVisibleSubLabel}
+      renderCloseButton={renderCloseButton}
+    >
       {children}
-    </div>
+    </ControlPane>
   );
 };

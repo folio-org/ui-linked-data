@@ -8,7 +8,7 @@ export { HubsResultList } from './components/results/hubs';
 export { LegacySearchResultList, ResourcesResultList } from './components/results/resources';
 export { ItemSearch } from './components/Search/legacy/ItemSearch';
 export { LegacySearch, Search } from './components/Search';
-export { LegacySearchControlPane, SearchControlPane } from './components/SearchControlPane';
+export { LegacySearchControlPane, SearchControlPane, ControlPane } from './components/SearchControlPane';
 export { SearchEmptyPlaceholder } from './components/SearchEmptyPlaceholder';
 export { SearchFilters } from './components/SearchFilters';
 
