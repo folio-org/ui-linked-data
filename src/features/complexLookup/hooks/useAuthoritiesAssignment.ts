@@ -12,7 +12,7 @@ import { ModalConfig } from '../configs/modalRegistry';
 
 interface UseAuthoritiesAssignmentParams {
   entry: SchemaEntry;
-  authority: string;
+  lookupContext: string;
   modalConfig: ModalConfig;
   onAssignSuccess: (value: UserValueContents) => void;
   enabled?: boolean;
@@ -26,7 +26,7 @@ interface UseAuthoritiesAssignmentResult {
 
 export function useAuthoritiesAssignment({
   entry,
-  authority,
+  lookupContext,
   modalConfig,
   onAssignSuccess,
   enabled = true,
@@ -118,7 +118,11 @@ export function useAuthoritiesAssignment({
           marcPreviewMetadata,
           marcPreviewEndpoint: modalConfig.api?.endpoints?.marcPreview,
         });
-        const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(marcData, modalConfig, authority);
+        const { validAssignment, invalidAssignmentReason } = await validateMarcRecord(
+          marcData,
+          modalConfig,
+          lookupContext,
+        );
 
         if (!validAssignment) {
           handleValidationError(id, invalidAssignmentReason);
@@ -157,7 +161,7 @@ export function useAuthoritiesAssignment({
       marcPreviewData,
       marcPreviewMetadata,
       modalConfig,
-      authority,
+      lookupContext,
       linkedEntry,
       linkedField,
       selectedEntriesService,

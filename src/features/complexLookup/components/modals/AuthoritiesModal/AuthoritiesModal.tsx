@@ -18,7 +18,7 @@ interface AuthoritiesModalProps {
   initialQuery?: string;
   initialSegment?: 'search' | 'browse';
   entry?: SchemaEntry;
-  authority?: string;
+  lookupContext?: string;
   modalConfig?: ModalConfig;
   onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
 }
@@ -32,7 +32,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   initialQuery,
   initialSegment = 'browse',
   entry,
-  authority,
+  lookupContext,
   modalConfig,
   onAssign,
 }) => {
@@ -43,7 +43,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   ]);
 
   // Determine if complex validation flow is needed
-  const hasComplexFlow = !!(entry && authority && modalConfig);
+  const hasComplexFlow = !!(entry && lookupContext && modalConfig);
   const marcPreviewEndpoint = modalConfig?.api?.endpoints?.marcPreview;
 
   // Reset search state and set initial query when modal opens
@@ -62,7 +62,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   // Complex assignment validation hook
   const assignmentHook = useAuthoritiesAssignment({
     entry: entry || ({} as SchemaEntry),
-    authority: authority || '',
+    lookupContext: lookupContext || '',
     modalConfig: modalConfig || ({} as ModalConfig),
     onAssignSuccess: value => {
       resetPreview();

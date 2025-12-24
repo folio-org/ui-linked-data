@@ -73,7 +73,7 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       return {
         ...baseProps,
         entry,
-        authority: layout?.baseLabelType || 'creator',
+        lookupContext: layout?.baseLabelType || 'creator',
         modalConfig,
       };
     }
