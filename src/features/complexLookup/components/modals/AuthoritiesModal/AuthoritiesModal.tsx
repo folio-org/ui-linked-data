@@ -46,7 +46,6 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     'resetMetadata',
   ]);
 
-  // Determine if complex validation flow is needed
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
   const marcPreviewEndpoint = modalConfig?.api?.endpoints?.marcPreview;
   const sourceEndpoint = modalConfig?.api?.endpoints?.source;
