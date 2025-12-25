@@ -6,3 +6,4 @@ export {
   type ResolvedSearchConfigs,
 } from './searchConfigResolver';
 export { getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProperty } from './placeholder.helper';
+export { buildSearchUrlParams, haveSearchValuesChanged } from './searchSubmitHelpers';
