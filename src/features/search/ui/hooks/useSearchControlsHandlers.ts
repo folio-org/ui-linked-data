@@ -2,7 +2,7 @@ import { useCallback, useRef, useEffect, type RefObject } from 'react';
 import { useSearchParams, type SetURLSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState, type CommittedValues } from '@/store';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, resolveCoreConfig, normalizeQuery } from '../../core';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy, buildSearchUrlParams, haveSearchValuesChanged } from '../utils';
@@ -291,6 +291,9 @@ export const useSearchControlsHandlers = ({
     const state = useSearchState.getState();
     const { query, searchBy, navigationState, draftBySegment, committedValues } = state;
 
+    // Normalize query: escape special characters for CQL compatibility
+    const normalizedQuery = normalizeQuery(query) ?? '';
+
     const navState = navigationState as Record<string, unknown>;
     // If navigationState lacks a segment (possible on very early submit),
     // fall back to the current core config id so default segment is included
@@ -312,7 +315,7 @@ export const useSearchControlsHandlers = ({
       setDraftBySegment({
         ...draftBySegment,
         [segment]: {
-          query,
+          query: normalizedQuery,
           searchBy: validSearchBy,
           source,
         },
@@ -329,7 +332,7 @@ export const useSearchControlsHandlers = ({
               searchBy: searchParams.get(SearchParam.SEARCH_BY),
               source: searchParams.get(SearchParam.SOURCE),
             },
-            { segment, query, searchBy: validSearchBy, source },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
           )
         : haveSearchValuesChanged(
             {
@@ -338,12 +341,12 @@ export const useSearchControlsHandlers = ({
               searchBy: committedValues.searchBy,
               source: committedValues.source,
             },
-            { segment, query, searchBy: validSearchBy, source },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
           );
 
     if (flowRef.current === 'url') {
       // URL flow: update URL params
-      const urlParams = buildSearchUrlParams(segment, query, validSearchBy, source);
+      const urlParams = buildSearchUrlParams(segment, normalizedQuery, validSearchBy, source);
       setSearchParams(urlParams);
 
       // If params didn't change, force refetch
@@ -354,7 +357,7 @@ export const useSearchControlsHandlers = ({
       // Value flow: update committedValues if changed, otherwise force refetch
       setCommittedValues({
         segment,
-        query,
+        query: normalizedQuery,
         searchBy: validSearchBy,
         source,
         offset: 0,

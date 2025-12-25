@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSearchState } from '@/store';
 import { SearchIdentifiers } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, removeBackslashes } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';
@@ -40,7 +40,8 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
 
     // Only sync query to store if it's NOT an advanced search
     if (!isAdvancedSearch && queryFromUrl !== null && queryFromUrl !== query) {
-      setQuery(queryFromUrl);
+      const unescapedQuery = removeBackslashes(queryFromUrl);
+      setQuery(unescapedQuery);
     }
 
     // Validate searchBy against current configs before syncing to store
