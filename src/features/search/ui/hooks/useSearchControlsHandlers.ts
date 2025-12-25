@@ -287,7 +287,7 @@ export const useSearchControlsHandlers = ({
 
   const handleSubmit = useCallback(() => {
     const state = useSearchState.getState();
-    const { query, searchBy, navigationState, draftBySegment } = state;
+    const { query, searchBy, navigationState, draftBySegment, committedValues } = state;
 
     const navState = navigationState as Record<string, unknown>;
     const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
@@ -314,6 +314,13 @@ export const useSearchControlsHandlers = ({
       });
     }
 
+    // Check if search parameters actually changed
+    const valuesChanged =
+      committedValues.segment !== segment ||
+      committedValues.query !== query ||
+      committedValues.searchBy !== validSearchBy ||
+      committedValues.source !== source;
+
     if (flowRef.current === 'url') {
       // URL flow: URL becomes the "committed" state
       const urlParams = new URLSearchParams();
@@ -337,8 +344,9 @@ export const useSearchControlsHandlers = ({
       }
 
       setSearchParams(urlParams);
-    } else {
-      // Value flow: commit to store
+    } else if (valuesChanged) {
+      // Value flow: only update committedValues if something changed
+      // Otherwise, manually refetch to support multiple clicks with same query
       setCommittedValues({
         segment,
         query,
@@ -346,10 +354,10 @@ export const useSearchControlsHandlers = ({
         source,
         offset: 0,
       });
+    } else {
+      // Same query - force refetch to allow multiple searches with same parameters
+      refetchRef.current?.();
     }
-
-    // Force refetch for both flows to ensure fresh data on every submit
-    refetchRef.current?.();
   }, [setDraftBySegment, setSearchParams, setCommittedValues]);
 
   const handleReset = useCallback(() => {
