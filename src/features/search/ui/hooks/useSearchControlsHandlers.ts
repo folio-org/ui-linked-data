@@ -105,7 +105,7 @@ export const useSearchControlsHandlers = ({
   results,
   refetch,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Use refs for config/flow/results/refetch to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
@@ -113,6 +113,7 @@ export const useSearchControlsHandlers = ({
   const flowRef = useRef(flow);
   const resultsRef = useRef(results);
   const refetchRef = useRef(refetch);
+  const searchParamsRef = useRef(searchParams);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
@@ -120,7 +121,8 @@ export const useSearchControlsHandlers = ({
     flowRef.current = flow;
     resultsRef.current = results;
     refetchRef.current = refetch;
-  }, [coreConfig, uiConfig, flow, results, refetch]);
+    searchParamsRef.current = searchParams;
+  }, [coreConfig, uiConfig, flow, results, refetch, searchParams]);
 
   const {
     setNavigationState,
@@ -317,14 +319,18 @@ export const useSearchControlsHandlers = ({
       });
     }
 
-    // Check if search parameters actually changed
-    const valuesChanged =
-      committedValues.segment !== segment ||
-      committedValues.query !== query ||
-      committedValues.searchBy !== validSearchBy ||
-      committedValues.source !== source;
-
     if (flowRef.current === 'url') {
+      // URL flow: compare against actual current URL params (use fresh searchParams, not ref)
+      const urlSegment = searchParams.get(SearchParam.SEGMENT);
+      const urlQuery = searchParams.get(SearchParam.QUERY);
+      const urlSearchBy = searchParams.get(SearchParam.SEARCH_BY);
+      const urlSource = searchParams.get(SearchParam.SOURCE);
+
+      // Normalize null to undefined for consistent comparison
+      const normalizedUrlSource = urlSource ?? undefined;
+      const urlParamsChanged =
+        urlSegment !== segment || urlQuery !== query || urlSearchBy !== validSearchBy || normalizedUrlSource !== source;
+
       // URL flow: URL becomes the "committed" state
       const urlParams = new URLSearchParams();
 
@@ -347,19 +353,33 @@ export const useSearchControlsHandlers = ({
       }
 
       setSearchParams(urlParams);
-    } else if (valuesChanged) {
-      // Value flow: only update committedValues if something changed
-      // Otherwise, manually refetch to support multiple clicks with same query
-      setCommittedValues({
-        segment,
-        query,
-        searchBy: validSearchBy,
-        source,
-        offset: 0,
-      });
+
+      // If params didn't actually change, URL won't update and React Query won't refetch
+      // Force refetch to support multiple searches with same parameters
+      if (!urlParamsChanged) {
+        refetchRef.current?.();
+      }
     } else {
-      // Same query - force refetch to allow multiple searches with same parameters
-      refetchRef.current?.();
+      // Value flow: compare against store committedValues
+      const valuesChanged =
+        committedValues.segment !== segment ||
+        committedValues.query !== query ||
+        committedValues.searchBy !== validSearchBy ||
+        committedValues.source !== source;
+
+      if (valuesChanged) {
+        // Value flow: only update committedValues if something changed
+        setCommittedValues({
+          segment,
+          query,
+          searchBy: validSearchBy,
+          source,
+          offset: 0,
+        });
+      } else {
+        // Same query - force refetch to allow multiple searches with same parameters
+        refetchRef.current?.();
+      }
     }
   }, [setDraftBySegment, setSearchParams, setCommittedValues]);
 
