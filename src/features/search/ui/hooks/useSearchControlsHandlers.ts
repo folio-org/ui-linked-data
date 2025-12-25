@@ -5,7 +5,7 @@ import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/sear
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
-import { getValidSearchBy } from '../utils';
+import { getValidSearchBy, buildSearchUrlParams, haveSearchValuesChanged } from '../utils';
 import { resolveUIConfig } from '../config';
 
 interface UseSearchControlsHandlersParams {
@@ -319,69 +319,50 @@ export const useSearchControlsHandlers = ({
       });
     }
 
+    // Determine if search values have changed
+    const valuesChanged =
+      flowRef.current === 'url'
+        ? haveSearchValuesChanged(
+            {
+              segment: searchParams.get(SearchParam.SEGMENT),
+              query: searchParams.get(SearchParam.QUERY),
+              searchBy: searchParams.get(SearchParam.SEARCH_BY),
+              source: searchParams.get(SearchParam.SOURCE),
+            },
+            { segment, query, searchBy: validSearchBy, source },
+          )
+        : haveSearchValuesChanged(
+            {
+              segment: committedValues.segment,
+              query: committedValues.query,
+              searchBy: committedValues.searchBy,
+              source: committedValues.source,
+            },
+            { segment, query, searchBy: validSearchBy, source },
+          );
+
     if (flowRef.current === 'url') {
-      // URL flow: compare against actual current URL params (use fresh searchParams, not ref)
-      const urlSegment = searchParams.get(SearchParam.SEGMENT);
-      const urlQuery = searchParams.get(SearchParam.QUERY);
-      const urlSearchBy = searchParams.get(SearchParam.SEARCH_BY);
-      const urlSource = searchParams.get(SearchParam.SOURCE);
-
-      // Normalize null to undefined for consistent comparison
-      const normalizedUrlSource = urlSource ?? undefined;
-      const urlParamsChanged =
-        urlSegment !== segment || urlQuery !== query || urlSearchBy !== validSearchBy || normalizedUrlSource !== source;
-
-      // URL flow: URL becomes the "committed" state
-      const urlParams = new URLSearchParams();
-
-      if (segment) {
-        urlParams.set(SearchParam.SEGMENT, segment);
-      }
-
-      if (query) {
-        urlParams.set(SearchParam.QUERY, query);
-      }
-
-      // Only include searchBy if it exists (for simple search)
-      // Advanced search has query but no searchBy
-      if (validSearchBy && searchBy) {
-        urlParams.set(SearchParam.SEARCH_BY, validSearchBy);
-      }
-
-      if (source) {
-        urlParams.set(SearchParam.SOURCE, source);
-      }
-
+      // URL flow: update URL params
+      const urlParams = buildSearchUrlParams(segment, query, validSearchBy, source);
       setSearchParams(urlParams);
 
-      // If params didn't actually change, URL won't update and React Query won't refetch
-      // Force refetch to support multiple searches with same parameters
-      if (!urlParamsChanged) {
+      // If params didn't change, force refetch
+      if (!valuesChanged) {
         refetchRef.current?.();
       }
+    } else if (valuesChanged) {
+      // Value flow: update committedValues if changed, otherwise force refetch
+      setCommittedValues({
+        segment,
+        query,
+        searchBy: validSearchBy,
+        source,
+        offset: 0,
+      });
     } else {
-      // Value flow: compare against store committedValues
-      const valuesChanged =
-        committedValues.segment !== segment ||
-        committedValues.query !== query ||
-        committedValues.searchBy !== validSearchBy ||
-        committedValues.source !== source;
-
-      if (valuesChanged) {
-        // Value flow: only update committedValues if something changed
-        setCommittedValues({
-          segment,
-          query,
-          searchBy: validSearchBy,
-          source,
-          offset: 0,
-        });
-      } else {
-        // Same query - force refetch to allow multiple searches with same parameters
-        refetchRef.current?.();
-      }
+      refetchRef.current?.();
     }
-  }, [setDraftBySegment, setSearchParams, setCommittedValues]);
+  }, [searchParams, setDraftBySegment, setSearchParams, setCommittedValues]);
 
   const handleReset = useCallback(() => {
     const state = useSearchState.getState();
