@@ -1,12 +1,27 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AuthoritiesModal } from './AuthoritiesModal';
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
+import {
+  useUIState,
+  useMarcPreviewState,
+  useProfileState,
+  useInputsState,
+  useStatusState,
+  useLoadingState,
+  useComplexLookupState,
+} from '@/store';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useUIState } from '@/store';
 
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesMarcPreview: jest.fn(),
+  useAuthoritiesSegmentData: jest.fn(),
+  useAuthoritiesAssignment: jest.fn(),
+}));
+
+jest.mock('@/common/hooks/useServicesContext', () => ({
+  useServicesContext: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -91,17 +106,15 @@ describe('AuthoritiesModal', () => {
   const mockOnClose = jest.fn();
   const mockOnAssign = jest.fn();
   const mockSetIsMarcPreviewOpen = jest.fn();
+  const mockResetComplexValue = jest.fn();
+  const mockResetMetadata = jest.fn();
   const mockLoadMarcData = jest.fn();
   const mockResetPreview = jest.fn();
+  const mockOnSegmentEnter = jest.fn();
+  const mockRefetchSource = jest.fn();
+  const mockRefetchFacets = jest.fn();
 
   beforeEach(() => {
-    (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
-    (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
-      loadMarcData: mockLoadMarcData,
-      resetPreview: mockResetPreview,
-      isLoading: false,
-    });
-
     setInitialGlobalState([
       {
         store: useUIState,
@@ -110,7 +123,69 @@ describe('AuthoritiesModal', () => {
           setIsMarcPreviewOpen: mockSetIsMarcPreviewOpen,
         },
       },
+      {
+        store: useMarcPreviewState,
+        state: {
+          resetComplexValue: mockResetComplexValue,
+          resetMetadata: mockResetMetadata,
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          schema: {},
+        },
+      },
+      {
+        store: useInputsState,
+        state: {
+          selectedEntries: [],
+          setSelectedEntries: jest.fn(),
+        },
+      },
+      {
+        store: useStatusState,
+        state: {
+          addStatusMessagesItem: jest.fn(),
+        },
+      },
+      {
+        store: useLoadingState,
+        state: {
+          setIsLoading: jest.fn(),
+        },
+      },
+      {
+        store: useComplexLookupState,
+        state: {
+          authorityAssignmentCheckFailedIds: [],
+          addAuthorityAssignmentCheckFailedIdsItem: jest.fn(),
+          resetAuthorityAssignmentCheckFailedIds: jest.fn(),
+        },
+      },
     ]);
+
+    (useServicesContext as jest.Mock).mockReturnValue({
+      selectedEntriesService: {},
+    });
+    (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
+    (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
+      loadMarcData: mockLoadMarcData,
+      resetPreview: mockResetPreview,
+      isLoading: false,
+    });
+    (ComplexLookupHooks.useAuthoritiesSegmentData as jest.Mock).mockReturnValue({
+      sourceData: null,
+      facetsData: null,
+      isLoading: false,
+      onSegmentEnter: mockOnSegmentEnter,
+      refetchSource: mockRefetchSource,
+      refetchFacets: mockRefetchFacets,
+    });
+    (ComplexLookupHooks.useAuthoritiesAssignment as jest.Mock).mockReturnValue({
+      validateAndAssign: jest.fn(),
+      isValidating: false,
+    });
   });
 
   describe('Modal visibility', () => {
@@ -170,25 +245,6 @@ describe('AuthoritiesModal', () => {
         expect.objectContaining({
           endpointUrl: expect.any(String),
           isMarcPreviewOpen: false,
-        }),
-      );
-    });
-
-    it('uses custom marcPreviewEndpoint when provided', () => {
-      const customEndpoint = '/custom/endpoint';
-
-      render(
-        <AuthoritiesModal
-          isOpen={true}
-          onClose={mockOnClose}
-          onAssign={mockOnAssign}
-          marcPreviewEndpoint={customEndpoint}
-        />,
-      );
-
-      expect(ComplexLookupHooks.useAuthoritiesMarcPreview).toHaveBeenCalledWith(
-        expect.objectContaining({
-          endpointUrl: customEndpoint,
         }),
       );
     });

@@ -1,5 +1,4 @@
 import { ComplexLookupType } from '../constants/complexLookup.constants';
-import { MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
 import { getModalConfig, getButtonLabel, COMPLEX_LOOKUP_MODAL_REGISTRY } from './modalRegistry';
 import { HubsModal } from '../components/modals/HubsModal';
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
@@ -27,7 +26,6 @@ describe('modalRegistry', () => {
       expect(config.component).toBe(AuthoritiesModal);
       expect(config.defaultProps).toEqual({ initialSegment: 'browse' });
       expect(config.labels.button.base).toBe('ld.assignAuthority');
-      expect(config.marcPreviewEndpoint).toBe(MARC_PREVIEW_ENDPOINT.AUTHORITY);
     });
   });
 
