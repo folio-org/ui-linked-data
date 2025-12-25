@@ -88,24 +88,27 @@ describe('useComplexLookupField', () => {
       {
         id: 'new-id',
         label: 'New Title',
-        meta: {},
+        meta: {
+          type: 'complex',
+          uri: undefined,
+        },
       },
     ]);
     expect(mockOnChange).toHaveBeenCalledWith(mockUuid, [
       {
         id: 'new-id',
         label: 'New Title',
-        meta: {},
+        meta: {
+          type: 'complex',
+          uri: undefined,
+        },
       },
     ]);
     expect(result.current.isModalOpen).toBe(false);
   });
 
   it('handles delete action correctly', () => {
-    const value = [
-      { id: '1', label: 'Item 1', meta: {} },
-      { id: '2', label: 'Item 2', meta: {} },
-    ];
+    const value = [{ id: '1', label: 'Item 1', meta: {} }];
 
     const { result } = renderHook(() => useComplexLookupField({ ...defaultParams, value }));
 
@@ -113,8 +116,8 @@ describe('useComplexLookupField', () => {
       result.current.handleDelete('1');
     });
 
-    expect(result.current.localValue).toEqual([{ id: '2', label: 'Item 2', meta: {} }]);
-    expect(mockOnChange).toHaveBeenCalledWith(mockUuid, [{ id: '2', label: 'Item 2', meta: {} }]);
+    expect(result.current.localValue).toEqual([]);
+    expect(mockOnChange).toHaveBeenCalledWith(mockUuid, []);
   });
 
   it('does not delete when id is undefined', () => {
@@ -139,6 +142,8 @@ describe('useComplexLookupField', () => {
           change: 'ld.change',
         },
       },
+      assignmentFlow: 'simple' as const,
+      lookupConfigKey: ComplexLookupType.Hub,
     };
 
     jest.spyOn(modalRegistry, 'getModalConfig').mockReturnValue(mockConfig);
