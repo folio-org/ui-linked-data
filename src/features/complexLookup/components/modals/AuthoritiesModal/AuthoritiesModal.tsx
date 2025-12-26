@@ -73,17 +73,23 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     isMarcPreviewOpen,
   });
 
-  // Complex assignment validation hook
-  const assignmentHook = useAuthoritiesAssignment({
-    entry: entry || ({} as SchemaEntry),
-    lookupContext: lookupContext || '',
-    modalConfig: modalConfig || ({} as ModalConfig),
-    onAssignSuccess: value => {
+  // Cleanup and close handler after successful assignment
+  const handleSuccessfulAssignment = useCallback(
+    (value: UserValueContents | ComplexLookupAssignRecordDTO) => {
       resetPreview();
       setIsMarcPreviewOpen(false);
       onAssign(value);
       onClose();
     },
+    [resetPreview, setIsMarcPreviewOpen, onAssign, onClose],
+  );
+
+  // Complex assignment validation hook
+  const assignmentHook = useAuthoritiesAssignment({
+    entry: entry || ({} as SchemaEntry),
+    lookupContext: lookupContext || '',
+    modalConfig: modalConfig || ({} as ModalConfig),
+    onAssignSuccess: handleSuccessfulAssignment,
     enabled: hasComplexFlow,
   });
 
@@ -102,14 +108,11 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
         // Complex flow with validation
         await assignmentHook.handleAssign(record);
       } else {
-        // Simple flow - direct assignment, then cleanup
-        resetPreview();
-        setIsMarcPreviewOpen(false);
-        onAssign(record);
-        onClose();
+        // Simple flow
+        handleSuccessfulAssignment(record);
       }
     },
-    [hasComplexFlow, assignmentHook, resetPreview, setIsMarcPreviewOpen, onAssign, onClose],
+    [hasComplexFlow, assignmentHook, handleSuccessfulAssignment],
   );
 
   const handleCloseMarcPreview = useCallback(() => {
