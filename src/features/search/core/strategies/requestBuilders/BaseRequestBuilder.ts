@@ -1,5 +1,6 @@
 import { SEARCH_QUERY_VALUE_PARAM } from '@/common/constants/search.constants';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
+import { normalizeQuery } from '../../utils';
 import type { IRequestBuilder, SearchRequestParams, SearchRequestDescriptor } from '../../types';
 
 export abstract class BaseRequestBuilder implements IRequestBuilder {
@@ -14,7 +15,9 @@ export abstract class BaseRequestBuilder implements IRequestBuilder {
   abstract build(params: SearchRequestParams): SearchRequestDescriptor;
 
   protected buildCqlFromTemplate(template: string, value: string): string {
-    return template.replaceAll(SEARCH_QUERY_VALUE_PARAM, value);
+    const escapedValue = normalizeQuery(value) ?? '';
+
+    return template.replaceAll(SEARCH_QUERY_VALUE_PARAM, escapedValue);
   }
 
   protected buildPaginationParams(limit?: number, offset?: number, defaultLimit = MAX_LIMIT): Record<string, string> {

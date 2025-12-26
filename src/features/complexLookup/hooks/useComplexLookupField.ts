@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { logger } from '@/common/services/logger';
 import { getModalConfig, getButtonLabel } from '../configs/modalRegistry';
 
@@ -17,7 +18,7 @@ interface UseComplexLookupFieldReturn {
   buttonLabelId: string;
   handleOpenModal: () => void;
   handleCloseModal: () => void;
-  handleAssign: (record: ComplexLookupAssignRecordDTO) => void;
+  handleAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
   handleDelete: (id?: string) => void;
 }
 
@@ -62,18 +63,26 @@ export function useComplexLookupField({
   }, []);
 
   const handleAssign = useCallback(
-    (record: ComplexLookupAssignRecordDTO) => {
-      // Update field value with assigned record
-      const newValue = [
-        {
+    (valueOrRecord: UserValueContents | ComplexLookupAssignRecordDTO) => {
+      let newValue: UserValueContents;
+
+      if ('meta' in valueOrRecord && valueOrRecord.meta !== undefined) {
+        newValue = valueOrRecord;
+      } else {
+        const record = valueOrRecord as ComplexLookupAssignRecordDTO;
+
+        newValue = {
           id: record.id,
           label: record.title,
-          meta: {},
-        },
-      ];
+          meta: {
+            type: AdvancedFieldType.complex,
+            uri: record.uri,
+          },
+        };
+      }
 
-      setLocalValue(newValue);
-      onChange(uuid, newValue);
+      setLocalValue([newValue]);
+      onChange(uuid, [newValue]);
       setIsModalOpen(false);
     },
     [uuid, onChange],
@@ -83,12 +92,10 @@ export function useComplexLookupField({
     (id?: string) => {
       if (!id) return;
 
-      const newValue = localValue.filter(value => value.id !== id);
-
-      setLocalValue(newValue);
-      onChange(uuid, newValue);
+      setLocalValue([]);
+      onChange(uuid, []);
     },
-    [localValue, uuid, onChange],
+    [uuid, onChange],
   );
 
   // Get button label using registry

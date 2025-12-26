@@ -4,7 +4,6 @@ export { useSearchNavigationState } from './useSearchNavigationState';
 export { useSearchFilters } from './useSearchFilters';
 export { useSearchControlsHandlers } from './useSearchControlsHandlers';
 export { useUrlSync } from './useUrlSync';
-export { useValueFlowAutoSubmit } from './useValueFlowAutoSubmit';
 export { useCommittedSearchParams } from './useCommittedSearchParams';
 export { useSearchQuery } from './useSearchQuery';
 export { useSearchSegment } from './useSearchSegment';

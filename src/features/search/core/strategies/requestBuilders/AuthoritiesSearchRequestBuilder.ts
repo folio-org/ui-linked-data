@@ -1,5 +1,6 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
+import { normalizeQuery } from '../../utils';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
 export class AuthoritiesSearchRequestBuilder extends BaseRequestBuilder {
@@ -33,7 +34,8 @@ export class AuthoritiesSearchRequestBuilder extends BaseRequestBuilder {
       return this.buildCqlFromTemplate(template, value);
     }
 
-    // Fallback to simple CQL
-    return `(${searchBy} all "${value}")`;
+    const escapedValue = normalizeQuery(value) ?? '';
+
+    return `(${searchBy} all "${escapedValue}")`;
   }
 }

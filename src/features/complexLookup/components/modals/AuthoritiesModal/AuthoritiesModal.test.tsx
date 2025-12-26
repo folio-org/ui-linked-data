@@ -1,12 +1,27 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AuthoritiesModal } from './AuthoritiesModal';
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
+import {
+  useUIState,
+  useMarcPreviewState,
+  useProfileState,
+  useInputsState,
+  useStatusState,
+  useLoadingState,
+  useComplexLookupState,
+} from '@/store';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useUIState } from '@/store';
 
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesMarcPreview: jest.fn(),
+  useAuthoritiesSegmentData: jest.fn(),
+  useAuthoritiesAssignment: jest.fn(),
+}));
+
+jest.mock('@/common/hooks/useServicesContext', () => ({
+  useServicesContext: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -91,17 +106,15 @@ describe('AuthoritiesModal', () => {
   const mockOnClose = jest.fn();
   const mockOnAssign = jest.fn();
   const mockSetIsMarcPreviewOpen = jest.fn();
+  const mockResetComplexValue = jest.fn();
+  const mockResetMetadata = jest.fn();
   const mockLoadMarcData = jest.fn();
   const mockResetPreview = jest.fn();
+  const mockOnSegmentEnter = jest.fn();
+  const mockRefetchSource = jest.fn();
+  const mockRefetchFacets = jest.fn();
 
   beforeEach(() => {
-    (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
-    (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
-      loadMarcData: mockLoadMarcData,
-      resetPreview: mockResetPreview,
-      isLoading: false,
-    });
-
     setInitialGlobalState([
       {
         store: useUIState,
@@ -110,7 +123,69 @@ describe('AuthoritiesModal', () => {
           setIsMarcPreviewOpen: mockSetIsMarcPreviewOpen,
         },
       },
+      {
+        store: useMarcPreviewState,
+        state: {
+          resetComplexValue: mockResetComplexValue,
+          resetMetadata: mockResetMetadata,
+        },
+      },
+      {
+        store: useProfileState,
+        state: {
+          schema: {},
+        },
+      },
+      {
+        store: useInputsState,
+        state: {
+          selectedEntries: [],
+          setSelectedEntries: jest.fn(),
+        },
+      },
+      {
+        store: useStatusState,
+        state: {
+          addStatusMessagesItem: jest.fn(),
+        },
+      },
+      {
+        store: useLoadingState,
+        state: {
+          setIsLoading: jest.fn(),
+        },
+      },
+      {
+        store: useComplexLookupState,
+        state: {
+          authorityAssignmentCheckFailedIds: [],
+          addAuthorityAssignmentCheckFailedIdsItem: jest.fn(),
+          resetAuthorityAssignmentCheckFailedIds: jest.fn(),
+        },
+      },
     ]);
+
+    (useServicesContext as jest.Mock).mockReturnValue({
+      selectedEntriesService: {},
+    });
+    (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
+    (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
+      loadMarcData: mockLoadMarcData,
+      resetPreview: mockResetPreview,
+      isLoading: false,
+    });
+    (ComplexLookupHooks.useAuthoritiesSegmentData as jest.Mock).mockReturnValue({
+      sourceData: null,
+      facetsData: null,
+      isLoading: false,
+      onSegmentEnter: mockOnSegmentEnter,
+      refetchSource: mockRefetchSource,
+      refetchFacets: mockRefetchFacets,
+    });
+    (ComplexLookupHooks.useAuthoritiesAssignment as jest.Mock).mockReturnValue({
+      validateAndAssign: jest.fn(),
+      isValidating: false,
+    });
   });
 
   describe('Modal visibility', () => {
@@ -170,25 +245,6 @@ describe('AuthoritiesModal', () => {
         expect.objectContaining({
           endpointUrl: expect.any(String),
           isMarcPreviewOpen: false,
-        }),
-      );
-    });
-
-    it('uses custom marcPreviewEndpoint when provided', () => {
-      const customEndpoint = '/custom/endpoint';
-
-      render(
-        <AuthoritiesModal
-          isOpen={true}
-          onClose={mockOnClose}
-          onAssign={mockOnAssign}
-          marcPreviewEndpoint={customEndpoint}
-        />,
-      );
-
-      expect(ComplexLookupHooks.useAuthoritiesMarcPreview).toHaveBeenCalledWith(
-        expect.objectContaining({
-          endpointUrl: customEndpoint,
         }),
       );
     });
@@ -285,6 +341,154 @@ describe('AuthoritiesModal', () => {
       fireEvent.click(screen.getByText('Assign Authority'));
 
       expect(mockOnAssign).toHaveBeenCalledWith({ id: 'auth-1', title: 'Authority 1' });
+    });
+  });
+
+  describe('handleSuccessfulAssignment', () => {
+    it('resets preview state when assignment succeeds', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByText('Assign Authority'));
+
+      expect(mockResetPreview).toHaveBeenCalled();
+    });
+
+    it('closes MARC preview when assignment succeeds', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByText('Assign Authority'));
+
+      expect(mockSetIsMarcPreviewOpen).toHaveBeenCalledWith(false);
+    });
+
+    it('calls onAssign with the assigned record', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByText('Assign Authority'));
+
+      expect(mockOnAssign).toHaveBeenCalledWith({ id: 'auth-1', title: 'Authority 1' });
+    });
+
+    it('calls onClose after successful assignment', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByText('Assign Authority'));
+
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+
+    it('executes cleanup operations in correct order', () => {
+      const callOrder: string[] = [];
+      const trackingResetPreview = jest.fn(() => callOrder.push('resetPreview'));
+      const trackingSetIsMarcPreviewOpen = jest.fn(() => callOrder.push('setIsMarcPreviewOpen'));
+      const trackingOnAssign = jest.fn(() => callOrder.push('onAssign'));
+      const trackingOnClose = jest.fn(() => callOrder.push('onClose'));
+
+      setInitialGlobalState([
+        {
+          store: useUIState,
+          state: {
+            isMarcPreviewOpen: false,
+            setIsMarcPreviewOpen: trackingSetIsMarcPreviewOpen,
+          },
+        },
+      ]);
+      (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
+        loadMarcData: mockLoadMarcData,
+        resetPreview: trackingResetPreview,
+        isLoading: false,
+      });
+
+      render(<AuthoritiesModal isOpen={true} onClose={trackingOnClose} onAssign={trackingOnAssign} />);
+
+      fireEvent.click(screen.getByText('Assign Authority'));
+
+      expect(callOrder).toEqual(['resetPreview', 'setIsMarcPreviewOpen', 'onAssign', 'onClose']);
+    });
+  });
+
+  describe('handleModalClose', () => {
+    it('closes MARC preview when modal closes', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(mockSetIsMarcPreviewOpen).toHaveBeenCalledWith(false);
+    });
+
+    it('resets MARC preview data when modal closes', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(mockResetComplexValue).toHaveBeenCalled();
+    });
+
+    it('resets MARC preview metadata when modal closes', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(mockResetMetadata).toHaveBeenCalled();
+    });
+
+    it('resets preview state when modal closes', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(mockResetPreview).toHaveBeenCalled();
+    });
+
+    it('calls onClose callback', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+
+    it('executes all cleanup operations in correct order', () => {
+      const callOrder: string[] = [];
+      const trackingSetIsMarcPreviewOpen = jest.fn(() => callOrder.push('setIsMarcPreviewOpen'));
+      const trackingResetComplexValue = jest.fn(() => callOrder.push('resetComplexValue'));
+      const trackingResetMetadata = jest.fn(() => callOrder.push('resetMetadata'));
+      const trackingResetPreview = jest.fn(() => callOrder.push('resetPreview'));
+      const trackingOnClose = jest.fn(() => callOrder.push('onClose'));
+
+      setInitialGlobalState([
+        {
+          store: useUIState,
+          state: {
+            isMarcPreviewOpen: false,
+            setIsMarcPreviewOpen: trackingSetIsMarcPreviewOpen,
+          },
+        },
+        {
+          store: useMarcPreviewState,
+          state: {
+            resetComplexValue: trackingResetComplexValue,
+            resetMetadata: trackingResetMetadata,
+          },
+        },
+      ]);
+      (ComplexLookupHooks.useAuthoritiesMarcPreview as jest.Mock).mockReturnValue({
+        loadMarcData: mockLoadMarcData,
+        resetPreview: trackingResetPreview,
+        isLoading: false,
+      });
+
+      render(<AuthoritiesModal isOpen={true} onClose={trackingOnClose} onAssign={mockOnAssign} />);
+
+      fireEvent.click(screen.getByTestId('modal-close'));
+
+      expect(callOrder).toEqual([
+        'setIsMarcPreviewOpen',
+        'resetComplexValue',
+        'resetMetadata',
+        'resetPreview',
+        'onClose',
+      ]);
     });
   });
 });

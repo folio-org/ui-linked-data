@@ -20,14 +20,18 @@ export const updateLinkedFieldValue = ({
   schema,
   linkedField,
   linkedFieldValue,
+  modalConfig,
   lookupConfig,
 }: {
   schema: Map<string, SchemaEntry>;
   linkedField?: SchemaEntry;
   linkedFieldValue?: string;
-  lookupConfig: ComplexLookupsConfigEntry;
+  modalConfig?: { linkedField?: string };
+  lookupConfig?: ComplexLookupsConfigEntry;
 }) => {
-  const linkedFieldTyped = lookupConfig.linkedField as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
+  // Support both modern (modalConfig) and legacy (lookupConfig) configurations
+  const linkedFieldName = modalConfig?.linkedField || lookupConfig?.linkedField;
+  const linkedFieldTyped = linkedFieldName as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
   const linkedFieldValueTyped =
     linkedFieldValue as keyof (typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING)[typeof linkedFieldTyped];
   const linkedFieldValueUri =
