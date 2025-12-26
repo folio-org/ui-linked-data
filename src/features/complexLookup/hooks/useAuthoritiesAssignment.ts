@@ -75,27 +75,14 @@ export function useAuthoritiesAssignment({
     [schema, linkedField, modalConfig, selectedEntriesService, selectedEntries, setSelectedEntries],
   );
 
-  const handleValidationError = useCallback(
+  const handleAssignmentError = useCallback(
     (id: string, invalidAssignmentReason?: string) => {
       addFailedEntryId(id);
 
-      let messageKey = 'ld.errorAssigningAuthority';
-
-      if (invalidAssignmentReason) {
-        messageKey += `.${invalidAssignmentReason.toLowerCase()}`;
-      }
+      const reason = invalidAssignmentReason?.toLowerCase() || 'general';
+      const messageKey = `ld.errorAssigningAuthority.${reason}`;
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, messageKey));
-    },
-    [addFailedEntryId, addStatusMessagesItem],
-  );
-
-  const handleAssignmentError = useCallback(
-    (id: string) => {
-      addFailedEntryId(id);
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.errorAssigningAuthority.general'),
-      );
     },
     [addFailedEntryId, addStatusMessagesItem],
   );
@@ -125,7 +112,7 @@ export function useAuthoritiesAssignment({
         );
 
         if (!validAssignment) {
-          handleValidationError(id, invalidAssignmentReason);
+          handleAssignmentError(id, invalidAssignmentReason);
           setIsAssigning(false);
           return;
         }
@@ -170,7 +157,6 @@ export function useAuthoritiesAssignment({
       resetMarcPreviewMetadata,
       onAssignSuccess,
       updateLinkedDropdown,
-      handleValidationError,
       handleAssignmentError,
     ],
   );
