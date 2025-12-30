@@ -2,7 +2,7 @@ import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
-export class HubsExternalRequestBuilder extends BaseRequestBuilder {
+export class HubsLoCRequestBuilder extends BaseRequestBuilder {
   private readonly searchableIndicesMap?: HubSearchableIndicesMap;
 
   constructor(searchableIndicesMap?: HubSearchableIndicesMap) {

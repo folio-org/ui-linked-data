@@ -1,7 +1,7 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
 import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
-import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
+import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
 import { HubsResultFormatter } from '../strategies/resultFormatters';
 
@@ -9,15 +9,15 @@ import { HubsResultFormatter } from '../strategies/resultFormatters';
  * Hubs Internal Configuration (Atomic)
  *
  * Search in local hub registry.
- * Composite key: "hubs:internal"
+ * Composite key: "hubs:local"
  */
-export const hubsInternalConfig: SearchTypeConfig = {
-  id: 'hubs:internal',
+export const hubsLocalConfig: SearchTypeConfig = {
+  id: 'hubs:local',
 
   strategies: {
     // Uses same request builder as external for now
     // Can be replaced with HubsInternalRequestBuilder when implemented
-    requestBuilder: new HubsExternalRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
+    requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new ResourcesResponseTransformer(),
     resultFormatter: new HubsResultFormatter(),
   },

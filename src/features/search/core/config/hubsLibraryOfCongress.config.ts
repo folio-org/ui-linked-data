@@ -1,7 +1,7 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
 import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
-import { HubsExternalRequestBuilder } from '../strategies/requestBuilders';
+import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
 import { HubsResultFormatter } from '../strategies/resultFormatters';
 
@@ -9,13 +9,13 @@ import { HubsResultFormatter } from '../strategies/resultFormatters';
  * Hubs External Configuration (Atomic)
  *
  * Search in external hub services.
- * Composite key: "hubs:external"
+ * Composite key: "hubs:libraryOfCongress"
  */
-export const hubsExternalConfig: SearchTypeConfig = {
-  id: 'hubs:external',
+export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
+  id: 'hubs:libraryOfCongress',
 
   strategies: {
-    requestBuilder: new HubsExternalRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
+    requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
     resultFormatter: new HubsResultFormatter(),
   },

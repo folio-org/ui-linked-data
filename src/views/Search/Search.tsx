@@ -7,6 +7,7 @@ import {
   ResourcesResultList,
   HubsResultList,
   LegacySearchResultList,
+  type SourceOption,
 } from '@/features/search/ui';
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
@@ -31,6 +32,17 @@ import { filters } from './data/filters';
 import { FormattedMessage } from 'react-intl';
 import './Search.scss';
 import { FullDisplay } from '@/components/FullDisplay';
+
+const SOURCE_OPTIONS: SourceOption[] = [
+  {
+    value: 'libraryOfCongress',
+    labelId: 'ld.source.libraryOfCongress',
+  },
+  {
+    value: 'local',
+    labelId: 'ld.source.local',
+  },
+];
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
@@ -164,7 +176,7 @@ export const SearchView = () => {
 
           {/* Source selector - only visible for hubs segment */}
           <Search.Controls.SegmentContent segment="hubs">
-            <Search.Controls.SourceSelector />
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
           </Search.Controls.SegmentContent>
         </Search.Controls>
 

@@ -4,28 +4,17 @@ import { Accordion } from '@/components/Accordion';
 import { SearchParam } from '@/features/search/core';
 import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers';
+import { SourceOption } from '../../types';
 import './RootControls.scss';
 
-export type SourceOption = {
-  value: string;
-  labelId: string;
-};
-
 export type SourceSelectorProps = {
-  options?: SourceOption[];
-  defaultValue?: string;
+  options: SourceOption[];
+  defaultValue: string;
   accordionId?: string;
   accordionTitleId?: string;
   groupId?: string;
   defaultState?: boolean;
 };
-
-const DEFAULT_SOURCE_OPTIONS: SourceOption[] = [
-  { value: 'external', labelId: 'ld.source.libraryOfCongress' },
-  { value: 'internal', labelId: 'ld.source.local' },
-];
-
-const FALLBACK_SOURCE = 'external';
 
 export const SourceSelector: FC<SourceSelectorProps> = ({
   options,
@@ -38,8 +27,7 @@ export const SourceSelector: FC<SourceSelectorProps> = ({
   const { onSourceChange } = useSearchContext();
   const { navigationState } = useSearchState(['navigationState']);
 
-  const resolvedOptions = options && options.length > 0 ? options : DEFAULT_SOURCE_OPTIONS;
-  const fallbackValue = defaultValue ?? resolvedOptions[0]?.value ?? FALLBACK_SOURCE;
+  const fallbackValue = defaultValue ?? options?.[0]?.value;
   const radioName = `${accordionId}-option`;
   const navigationStateSource = (navigationState as Record<string, unknown>)?.[SearchParam.SOURCE] as
     | string
@@ -60,7 +48,7 @@ export const SourceSelector: FC<SourceSelectorProps> = ({
       groupId={groupId}
     >
       <div className="source-selector">
-        {resolvedOptions.map(option => (
+        {options?.map(option => (
           <label key={option.value} htmlFor={`${radioName}-${option.value}`}>
             <input
               id={`${radioName}-${option.value}`}
