@@ -1,7 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { ButtonGroup } from '@/components/ButtonGroup';
-import { useSearchState } from '@/store';
-import { SearchParam } from '../../../core';
+import { useSearchContext } from '../../providers/SearchProvider';
 import { isParentSegmentActive } from '../../utils/segmentUtils';
 import './SegmentGroup.scss';
 
@@ -28,8 +27,7 @@ export interface SegmentGroupProps {
  * </SegmentGroup>
  */
 export const SegmentGroup: FC<SegmentGroupProps> = ({ parentPath, className, children }) => {
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
+  const { currentSegment } = useSearchContext();
 
   // Only render if parent path matches (or no parent specified)
   if (parentPath) {

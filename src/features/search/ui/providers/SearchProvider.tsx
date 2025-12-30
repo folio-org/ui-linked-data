@@ -85,6 +85,8 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
       // Computed values
       activeUIConfig,
+      currentSegment,
+      currentSource,
 
       // Search results
       results,
