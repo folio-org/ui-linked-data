@@ -161,6 +161,11 @@ export const SearchView = () => {
           <Search.Controls.InputsWrapper />
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
+
+          {/* Source selector - only visible for hubs segment */}
+          <Search.Controls.SegmentContent segment="hubs">
+            <Search.Controls.SourceSelector />
+          </Search.Controls.SegmentContent>
         </Search.Controls>
 
         <Search.Content>

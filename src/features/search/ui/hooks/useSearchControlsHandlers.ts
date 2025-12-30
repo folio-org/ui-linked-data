@@ -387,9 +387,9 @@ export const useSearchControlsHandlers = ({
           params.set(SearchParam.SEGMENT, currentSegment);
         }
 
-        // Preserve source when clearing
+        // Delete source when clearing
         if (currentSource) {
-          params.set(SearchParam.SOURCE, currentSource);
+          params.delete(SearchParam.SOURCE);
         }
 
         return params;

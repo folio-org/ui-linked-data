@@ -32,7 +32,8 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
     const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
     const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
-    const navState = navigationState as Record<string, unknown>;
+    const searchState = useSearchState.getState();
+    const navState = searchState.navigationState as Record<string, unknown>;
     const currentSegment = navState?.[SearchParam.SEGMENT];
     const currentSource = navState?.[SearchParam.SOURCE];
 
@@ -73,5 +74,5 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     if (queryFromUrl === null && query && searchByFromUrl !== null) {
       setQuery('');
     }
-  }, [flow, searchParams, setQuery, setSearchBy, navigationState, setNavigationState, coreConfig, uiConfig]);
+  }, [flow, searchParams, setQuery, setSearchBy, setNavigationState, coreConfig, uiConfig]);
 };

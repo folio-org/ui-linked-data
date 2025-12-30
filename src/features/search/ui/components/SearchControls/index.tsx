@@ -13,6 +13,7 @@ export { ResetButton } from './ResetButton';
 export { InputsWrapper } from './InputsWrapper';
 export { MetaControls } from './MetaControls';
 export { RootControls } from './RootControls';
+export { SourceSelector } from './SourceSelector';
 
 // Types
 export type { SegmentProps } from './Segment';
