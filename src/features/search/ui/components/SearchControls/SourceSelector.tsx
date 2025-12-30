@@ -1,13 +1,10 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Accordion } from '@/components/Accordion';
-import { useSearchContext } from '../../providers/SearchProvider';
-import { useSearchParams } from 'react-router-dom';
-import { SearchParam } from '../../../core';
+import { SearchParam } from '@/features/search/core';
 import { useSearchState } from '@/store';
+import { useSearchContext } from '../../providers';
 import './RootControls.scss';
-
-type SourceValue = string;
 
 export type SourceOption = {
   value: string;
@@ -38,39 +35,20 @@ export const SourceSelector: FC<SourceSelectorProps> = ({
   groupId = 'source',
   defaultState = true,
 }) => {
-  const { onSourceChange, flow } = useSearchContext();
-  const [searchParams] = useSearchParams();
+  const { onSourceChange } = useSearchContext();
   const { navigationState } = useSearchState(['navigationState']);
 
   const resolvedOptions = options && options.length > 0 ? options : DEFAULT_SOURCE_OPTIONS;
   const fallbackValue = defaultValue ?? resolvedOptions[0]?.value ?? FALLBACK_SOURCE;
   const radioName = `${accordionId}-option`;
+  const navigationStateSource = (navigationState as Record<string, unknown>)?.[SearchParam.SOURCE] as
+    | string
+    | undefined;
+  const sourceValue = navigationStateSource ?? fallbackValue;
 
-  const getInitial = (): SourceValue => {
-    if (flow === 'url') {
-      const paramValue = searchParams.get(SearchParam.SOURCE);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newVal = event.target.value;
 
-      return (paramValue as SourceValue) ?? fallbackValue;
-    }
-
-    const navigationStateSource = (navigationState as Record<string, unknown>)?.[SearchParam.SOURCE] as
-      | SourceValue
-      | undefined;
-
-    return navigationStateSource ?? fallbackValue;
-  };
-
-  const [value, setValue] = useState<SourceValue>(getInitial);
-
-  useEffect(() => {
-    // Notify context about initial value (ensures navigation state is in sync)
-    onSourceChange?.(value);
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVal = e.target.value;
-
-    setValue(newVal);
     onSourceChange?.(newVal);
   };
 
@@ -89,7 +67,7 @@ export const SourceSelector: FC<SourceSelectorProps> = ({
               type="radio"
               name={radioName}
               value={option.value}
-              checked={value === option.value}
+              checked={sourceValue === option.value}
               onChange={handleChange}
             />
             <FormattedMessage id={option.labelId} />
