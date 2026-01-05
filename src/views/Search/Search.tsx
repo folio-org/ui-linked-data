@@ -169,8 +169,19 @@ export const SearchView = () => {
             <Search.Controls.Segment path="hubs" labelId="ld.hubs" />
           </Search.Controls.SegmentGroup>
 
+          {/* Basic InputsWrapper - only visible for resources segment */}
+          <Search.Controls.SegmentContent segment="resources">
+            <Search.Controls.InputsWrapper />
+          </Search.Controls.SegmentContent>
+
+          {/* InputsWrapper with QueryInput - only visible for hubs segment */}
+          <Search.Controls.SegmentContent segment="hubs">
+            <Search.Controls.InputsWrapper>
+              <Search.Controls.QueryInput placeholder="" />
+            </Search.Controls.InputsWrapper>
+          </Search.Controls.SegmentContent>
+
           {/* Common search controls */}
-          <Search.Controls.InputsWrapper />
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls isCentered={false} />
 
