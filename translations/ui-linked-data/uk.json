@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "Цей опис містить один або більше неконтрольованих авторитетних термінів. Бажаєте зберегти зміни?",
     "ld.errorAssigningAuthority": "Помилка призначення авторитетних даних",
     "ld.errorAssigningAuthority.not_valid_for_target": "Виберіть, будь ласка, авторитетні дані з типом ресурсу, що відповідає відредагованому полю авторитетних даних (наприклад, авторитетні дані LCNAF для поля \"Творець\").",
-    "ld.errorAssigningAuthority.no_lccn": "Наразі можна призначати лише авторитетні дані Бібліотеки Конгресу. Це тимчасове явище, згодом буде підтримуватися додаткова кількість типів джерел.",
     "ld.errorAssigningAuthority.unsupported_marc": "Вибрані авторитетні дані не мають мапування з Пов'язаними даними та ще не можуть бути призначені. Це тимчасова проблема, оскільки мапування MARC триває.",
     "ld.required_primary_main_title": "Щоб зберегти додайте головну назву, будь ласка.",
     "ld.lccn_does_not_match_pattern": "Увімкнено перевірку шаблону LCCN: надайте LCCN, який відповідає стандартній структурі.",
@@ -293,5 +292,7 @@
     "ld.search.hubNameKeyword": "Hub name (Keyword)",
     "ld.field.typeOfContinuingResource": "Type of continuing resource",
     "ld.exportInstanceRdf": "Export instance RDF file",
-    "ld.required_series_title": "Please add a title to each series in order to save."
+    "ld.required_series_title": "Please add a title to each series in order to save.",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }
