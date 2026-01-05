@@ -1,0 +1,14 @@
+@use '@/common/styles/common.scss' as *;
+
+.search-source-selector {
+  padding: 12px 0 16px;
+  border-bottom: 1px solid $gray-200;
+
+  label {
+    margin-bottom: 4px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

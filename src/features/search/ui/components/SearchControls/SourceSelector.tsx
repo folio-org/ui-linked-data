@@ -5,7 +5,7 @@ import { SearchParam } from '@/features/search/core';
 import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers';
 import { SourceOption } from '../../types';
-import './RootControls.scss';
+import './SourceSelector.scss';
 
 export type SourceSelectorProps = {
   options: SourceOption[];
@@ -41,28 +41,30 @@ export const SourceSelector: FC<SourceSelectorProps> = ({
   };
 
   return (
-    <Accordion
-      id={accordionId}
-      title={<FormattedMessage id={accordionTitleId} />}
-      defaultState={defaultState}
-      groupId={groupId}
-    >
-      <div className="source-selector">
-        {options?.map(option => (
-          <label key={option.value} htmlFor={`${radioName}-${option.value}`}>
-            <input
-              id={`${radioName}-${option.value}`}
-              type="radio"
-              name={radioName}
-              value={option.value}
-              checked={sourceValue === option.value}
-              onChange={handleChange}
-            />
-            <FormattedMessage id={option.labelId} />
-          </label>
-        ))}
-      </div>
-    </Accordion>
+    <div className="search-source-selector">
+      <Accordion
+        id={accordionId}
+        title={<FormattedMessage id={accordionTitleId} />}
+        defaultState={defaultState}
+        groupId={groupId}
+      >
+        <div className="search-source-selector-content">
+          {options?.map(option => (
+            <label key={option.value} htmlFor={`${radioName}-${option.value}`}>
+              <input
+                id={`${radioName}-${option.value}`}
+                type="radio"
+                name={radioName}
+                value={option.value}
+                checked={sourceValue === option.value}
+                onChange={handleChange}
+              />
+              <FormattedMessage id={option.labelId} />
+            </label>
+          ))}
+        </div>
+      </Accordion>
+    </div>
   );
 };
 
