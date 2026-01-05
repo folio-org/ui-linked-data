@@ -1,8 +1,6 @@
 import { FC, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonType } from '@/components/Button';
-import { useSearchState } from '@/store';
-import { SearchParam } from '../../../core';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { isSegmentActive } from '../../utils/segmentUtils';
 
@@ -15,9 +13,7 @@ export interface SegmentProps {
 }
 
 export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, testId }) => {
-  const { onSegmentChange } = useSearchContext();
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
+  const { onSegmentChange, currentSegment } = useSearchContext();
 
   // Active if exact match OR prefix match (for parent segments)
   const isActive = isSegmentActive(currentSegment, path, true);

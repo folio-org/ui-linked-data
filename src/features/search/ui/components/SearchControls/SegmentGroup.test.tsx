@@ -4,10 +4,23 @@ import { SearchParam } from '@/features/search/core';
 import { useSearchStore } from '@/store';
 import { SegmentGroup } from './SegmentGroup';
 
+let mockCurrentSegment = '';
+
+jest.mock('../../providers/SearchProvider', () => ({
+  useSearchContext: () => ({
+    currentSegment: mockCurrentSegment,
+  }),
+}));
+
 describe('SegmentGroup', () => {
   const setNavigationState = jest.fn();
 
+  beforeEach(() => {
+    mockCurrentSegment = '';
+  });
+
   it('renders children when no parentPath specified', () => {
+    mockCurrentSegment = '';
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -27,6 +40,7 @@ describe('SegmentGroup', () => {
   });
 
   it('renders children when current segment matches parent path', () => {
+    mockCurrentSegment = 'authorities';
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -49,6 +63,7 @@ describe('SegmentGroup', () => {
   });
 
   it('renders children when current segment is a child of parent path', () => {
+    mockCurrentSegment = 'authorities:search';
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -71,6 +86,7 @@ describe('SegmentGroup', () => {
   });
 
   it('does not render when current segment does not match parent path', () => {
+    mockCurrentSegment = 'resources';
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -92,6 +108,7 @@ describe('SegmentGroup', () => {
   });
 
   it('applies custom className when provided', () => {
+    mockCurrentSegment = '';
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -110,6 +127,7 @@ describe('SegmentGroup', () => {
   });
 
   it('applies default className when no custom className provided', () => {
+    mockCurrentSegment = '';
     setInitialGlobalState([
       {
         store: useSearchStore,

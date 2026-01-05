@@ -6,7 +6,11 @@ import { useSearchState } from '@/store';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { getSearchPlaceholder } from '../../utils';
 
-export const QueryInput: FC = () => {
+interface QueryInputProps {
+  placeholder?: string;
+}
+
+export const QueryInput: FC<QueryInputProps> = ({ placeholder }) => {
   const { formatMessage } = useIntl();
   const { config, activeUIConfig, onSubmit } = useSearchContext();
   const { query, setQuery, searchBy } = useSearchState(['query', 'setQuery', 'searchBy']);
@@ -24,12 +28,14 @@ export const QueryInput: FC = () => {
     setQuery(e.currentTarget.value);
   };
 
-  const placeholderText = getSearchPlaceholder({
-    searchBy,
-    config,
-    uiConfig: activeUIConfig,
-    formatMessage,
-  });
+  const placeholderText =
+    placeholder ??
+    getSearchPlaceholder({
+      searchBy,
+      config,
+      uiConfig: activeUIConfig,
+      formatMessage,
+    });
   const ariaLabel = formatMessage({ id: 'ld.aria.filters.textbox' });
 
   // Multiline mode

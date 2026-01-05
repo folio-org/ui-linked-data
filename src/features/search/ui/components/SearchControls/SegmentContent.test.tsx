@@ -4,11 +4,24 @@ import { SearchParam } from '@/features/search/core';
 import { useSearchStore } from '@/store';
 import { SegmentContent } from './SegmentContent';
 
+let mockCurrentSegment = '';
+
+jest.mock('../../providers/SearchProvider', () => ({
+  useSearchContext: () => ({
+    currentSegment: mockCurrentSegment,
+  }),
+}));
+
 describe('SegmentContent', () => {
   const setNavigationState = jest.fn();
 
+  beforeEach(() => {
+    mockCurrentSegment = '';
+  });
+
   describe('exact match (matchPrefix=false)', () => {
     it('renders children when current segment matches exactly', () => {
+      mockCurrentSegment = 'resources';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -29,6 +42,7 @@ describe('SegmentContent', () => {
     });
 
     it('does not render when segment does not match exactly', () => {
+      mockCurrentSegment = 'authorities';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -49,6 +63,7 @@ describe('SegmentContent', () => {
     });
 
     it('does not render for prefix match when matchPrefix is false', () => {
+      mockCurrentSegment = 'authorities:search';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -71,6 +86,7 @@ describe('SegmentContent', () => {
 
   describe('prefix match (matchPrefix=true)', () => {
     it('renders children when current segment matches exactly', () => {
+      mockCurrentSegment = 'authorities';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -91,6 +107,7 @@ describe('SegmentContent', () => {
     });
 
     it('renders children when current segment has matching prefix', () => {
+      mockCurrentSegment = 'authorities:search';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -111,6 +128,7 @@ describe('SegmentContent', () => {
     });
 
     it('renders for nested prefix matches', () => {
+      mockCurrentSegment = 'authorities:search:advanced';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -131,6 +149,7 @@ describe('SegmentContent', () => {
     });
 
     it('does not render when prefix does not match', () => {
+      mockCurrentSegment = 'resources:search';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -153,6 +172,7 @@ describe('SegmentContent', () => {
 
   describe('no current segment', () => {
     it('does not render when navigationState has no segment', () => {
+      mockCurrentSegment = '';
       setInitialGlobalState([
         {
           store: useSearchStore,

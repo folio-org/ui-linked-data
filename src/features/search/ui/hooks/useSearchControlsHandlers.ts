@@ -290,8 +290,11 @@ export const useSearchControlsHandlers = ({
     const { query, searchBy, navigationState, draftBySegment } = state;
 
     const navState = navigationState as Record<string, unknown>;
-    const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
-    const source = navState?.[SearchParam.SOURCE] as string | undefined;
+    // If navigationState lacks a segment (possible on very early submit),
+    // fall back to the current core config id so default segment is included
+    // in the URL for URL flow.
+    const segment = (navState?.[SearchParam.SEGMENT] as string) ?? coreConfigRef.current?.id ?? '';
+    const source = (navState?.[SearchParam.SOURCE] as string) ?? undefined;
 
     // Resolve the effective configs for the current segment + source
     const effectiveCoreConfig = resolveCoreConfig(segment, source) ?? coreConfigRef.current;
@@ -387,9 +390,9 @@ export const useSearchControlsHandlers = ({
           params.set(SearchParam.SEGMENT, currentSegment);
         }
 
-        // Preserve source when clearing
+        // Delete source when clearing
         if (currentSource) {
-          params.set(SearchParam.SOURCE, currentSource);
+          params.delete(SearchParam.SOURCE);
         }
 
         return params;

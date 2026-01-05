@@ -1,9 +1,9 @@
-import { HubsExternalRequestBuilder } from './HubsExternalRequestBuilder';
+import { HubsLoCRequestBuilder } from './HubsLoCRequestBuilder';
 import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
-describe('HubsExternalRequestBuilder', () => {
+describe('HubsLoCRequestBuilder', () => {
   describe('without searchable indices map', () => {
-    const builder = new HubsExternalRequestBuilder();
+    const builder = new HubsLoCRequestBuilder();
 
     it('builds request with default fallback query params', () => {
       const result = builder.build({
@@ -62,7 +62,7 @@ describe('HubsExternalRequestBuilder', () => {
     };
 
     it('uses config from searchable indices map', () => {
-      const builder = new HubsExternalRequestBuilder(mockMap);
+      const builder = new HubsLoCRequestBuilder(mockMap);
       const result = builder.build({
         query: 'test hub',
         searchBy: SearchableIndex.HubNameKeyword,
@@ -75,7 +75,7 @@ describe('HubsExternalRequestBuilder', () => {
     });
 
     it('falls back to default when searchBy not in map', () => {
-      const builder = new HubsExternalRequestBuilder(mockMap);
+      const builder = new HubsLoCRequestBuilder(mockMap);
       const result = builder.build({
         query: 'test',
         searchBy: 'unknownField',
@@ -88,7 +88,7 @@ describe('HubsExternalRequestBuilder', () => {
 
   describe('uses count instead of limit', () => {
     it('uses count parameter for pagination', () => {
-      const builder = new HubsExternalRequestBuilder();
+      const builder = new HubsLoCRequestBuilder();
       const result = builder.build({
         query: 'test',
         limit: 25,

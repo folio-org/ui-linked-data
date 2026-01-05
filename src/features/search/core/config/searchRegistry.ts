@@ -2,8 +2,8 @@ import type { SearchTypeConfig } from '../types';
 import { resourcesConfig } from './resources.config';
 import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { authoritiesBrowseConfig } from './authoritiesBrowse.config';
-import { hubsInternalConfig } from './hubsInternal.config';
-import { hubsExternalConfig } from './hubsExternal.config';
+import { hubsLocalConfig } from './hubsLocal.config';
+import { hubsLibraryOfCongressConfig } from './hubsLibraryOfCongress.config';
 
 /**
  * Atomic Search Registry
@@ -20,9 +20,9 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'authorities:browse': authoritiesBrowseConfig,
 
   // Hubs - base config defaults to external
-  hubs: hubsExternalConfig,
-  'hubs:internal': hubsInternalConfig,
-  'hubs:external': hubsExternalConfig,
+  hubs: hubsLibraryOfCongressConfig,
+  'hubs:local': hubsLocalConfig,
+  'hubs:libraryOfCongress': hubsLibraryOfCongressConfig,
 };
 
 // Helper function to get a search config by ID

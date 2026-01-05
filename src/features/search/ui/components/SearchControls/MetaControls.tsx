@@ -9,10 +9,11 @@ import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { ResetButton } from './ResetButton';
 
 interface MetaControlsProps {
+  isCentered?: boolean;
   children?: ReactNode;
 }
 
-export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
+export const MetaControls: FC<MetaControlsProps> = ({ isCentered = true, children }) => {
   const { mode, activeUIConfig, onReset } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState([
@@ -21,18 +22,17 @@ export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
   ]);
 
   const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
+  const className = classNames(['meta-controls', !showAdvancedSearch && isCentered && 'meta-controls-centered']);
 
   // Custom mode: render provided children
   if (mode === 'custom' && children) {
-    return (
-      <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>{children}</div>
-    );
+    return <div className={className}>{children}</div>;
   }
 
   // Auto mode: render based on config
   return (
     <>
-      <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>
+      <div className={className}>
         <ResetButton />
         <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
         {showAdvancedSearch && (

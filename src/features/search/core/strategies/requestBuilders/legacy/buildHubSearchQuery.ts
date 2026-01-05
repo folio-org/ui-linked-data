@@ -1,7 +1,7 @@
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 /**
- * @deprecated Use HubsExternalRequestBuilder class instead.
+ * @deprecated Use HubsLoCRequestBuilder class instead.
  * This legacy function is kept for backward compatibility with existing hooks.
  */
 export const buildHubSearchQuery = ({

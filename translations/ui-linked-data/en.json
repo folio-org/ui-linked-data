@@ -293,5 +293,7 @@
   "ld.search.hubNameLeftAnchored": "Hub name (Left anchored)",
   "ld.search.hubNameKeyword": "Hub name (Keyword)",
   "ld.exportInstanceRdf": "Export instance RDF file",
-  "ld.required_series_title": "Please add a title to each series in order to save."
+  "ld.required_series_title": "Please add a title to each series in order to save.",
+  "ld.source.libraryOfCongress": "Library of Congress",
+  "ld.source.local": "Local"
 }

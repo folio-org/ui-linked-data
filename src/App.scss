@@ -148,7 +148,7 @@ h6 {
       height: 1em;
       border: 0.11em solid gray;
       border-radius: 50%;
-      transform: translateY(0.2em);
+      transform: translateY(0);
       display: grid;
       place-content: center;
       cursor: pointer;
@@ -156,12 +156,12 @@ h6 {
 
       &::before {
         content: '';
-        width: 0.45em;
-        height: 0.45em;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        box-shadow: inset 10em 10em black;
+        background-color: black;
       }
 
       &:checked::before {
