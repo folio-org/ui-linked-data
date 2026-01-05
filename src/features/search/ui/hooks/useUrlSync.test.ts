@@ -107,11 +107,9 @@ describe('useUrlSync', () => {
 
       expect(setQuery).toHaveBeenCalledWith('test query');
       expect(setSearchBy).toHaveBeenCalledWith('author');
-      // The hook updates segment and source in separate sequential calls
-      // Because they're updating in the same effect, they both see empty navigationState
-      expect(setNavigationState).toHaveBeenCalledTimes(2);
-      expect(setNavigationState.mock.calls[0][0]).toEqual({ segment: 'browse' });
-      expect(setNavigationState.mock.calls[1][0]).toEqual({ source: 'external' });
+      // The hook updates segment and source in a single call with updatedState
+      expect(setNavigationState).toHaveBeenCalledTimes(1);
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'browse', source: 'external' });
     });
 
     it('clears query when URL has no query but store does and searchBy is present', () => {
@@ -237,7 +235,7 @@ describe('useUrlSync', () => {
       });
     });
 
-    it('does not update segment if URL value matches current segment', () => {
+    it('updates segment if URL value matches current segment', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -257,10 +255,10 @@ describe('useUrlSync', () => {
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
-      expect(setNavigationState).not.toHaveBeenCalled();
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'browse' });
     });
 
-    it('does not update source if URL value matches current source', () => {
+    it('updates source if URL value matches current source', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -280,7 +278,7 @@ describe('useUrlSync', () => {
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
-      expect(setNavigationState).not.toHaveBeenCalled();
+      expect(setNavigationState).toHaveBeenCalledWith({ source: 'external' });
     });
   });
 
