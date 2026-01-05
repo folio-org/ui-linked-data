@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "Esta descrição inclui uma ou mais autoridades não controladas. \n Deseja salvar as alterações?",
     "ld.errorAssigningAuthority": "Erro ao atribuir autoridade",
     "ld.errorAssigningAuthority.not_valid_for_target": "Selecione uma autoridade com um tipo de recurso que corresponda ao campo de autoridade editado (por exemplo, autoridade LCNAF para o campo Criador)",
-    "ld.errorAssigningAuthority.no_lccn": "Somente autoridades da Biblioteca do Congresso podem ser atribuídas por enquanto. Isso é temporário até que tipos de fontes adicionais sejam suportados.",
     "ld.errorAssigningAuthority.unsupported_marc": "A autoridade selecionada não está mapeada para Dados Vinculados e ainda não pode ser atribuída. Isso é temporário, uma vez que o mapeamento MARC está em andamento.",
     "ld.required_primary_main_title": "Por favor, adicione o título principal para salvar.",
     "ld.lccn_does_not_match_pattern": "Validação do padrão LCCN ativada: Forneça um LCCN que esteja em conformidade com a estrutura padrão.",
@@ -293,5 +292,7 @@
     "ld.search.hubNameKeyword": "Nome do hub (palavra-chave)",
     "ld.field.typeOfContinuingResource": "Tipo de recurso contínuo",
     "ld.exportInstanceRdf": "Exportar arquivo RDF da instância",
-    "ld.required_series_title": "Por favor, adicione um título a cada série para salvar."
+    "ld.required_series_title": "Por favor, adicione um título a cada série para salvar.",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }

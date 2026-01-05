@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?",
     "ld.errorAssigningAuthority": "Error assigning authority",
     "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type matching the edited authority field (e.g. LCNAF authority for the Creator field)",
-    "ld.errorAssigningAuthority.no_lccn": "Only Library of Congress authorities can be assigned for now. This is temporary until additional source types are supported.",
     "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
     "ld.required_primary_main_title": "Please add the main title in order to save.",
     "ld.lccn_does_not_match_pattern": "LCCN Pattern validation enabled: Please provide an LCCN that complies with standard structure.",
@@ -293,5 +292,7 @@
     "ld.search.hubNameKeyword": "Hub name (Keyword)",
     "ld.field.typeOfContinuingResource": "Type of continuing resource",
     "ld.exportInstanceRdf": "Export instance RDF file",
-    "ld.required_series_title": "Please add a title to each series in order to save."
+    "ld.required_series_title": "Please add a title to each series in order to save.",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }

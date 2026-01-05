@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "此描述包含一个或多个非受控规范。是否保存更改？",
     "ld.errorAssigningAuthority": "分配规范错误",
     "ld.errorAssigningAuthority.not_valid_for_target": "请选择资源类型与编辑的规范字段匹配的规范（例如，创建者字段的 LCNAF 规范）",
-    "ld.errorAssigningAuthority.no_lccn": "目前只能指定美国国会图书馆规范。这是暂时的，直到支持其他来源类型为止。",
     "ld.errorAssigningAuthority.unsupported_marc": "所选的规范未映射到关联数据，因此尚无法分配。这是暂时的，因为 MARC 映射正在进行中。",
     "ld.required_primary_main_title": "请添加主要题名以便保存。",
     "ld.lccn_does_not_match_pattern": "LCCN 模式验证已启用：请提供符合标准结构的 LCCN。",
@@ -293,5 +292,7 @@
     "ld.search.hubNameKeyword": "Hub名称（关键词）",
     "ld.field.typeOfContinuingResource": "连续性资源类型",
     "ld.exportInstanceRdf": "导出实例 RDF 文件",
-    "ld.required_series_title": "请为每个丛编添加题名以便保存。"
+    "ld.required_series_title": "请为每个丛编添加题名以便保存。",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }
