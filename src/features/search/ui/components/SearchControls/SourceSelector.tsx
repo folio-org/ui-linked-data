@@ -9,7 +9,7 @@ import './SourceSelector.scss';
 
 export type SourceSelectorProps = {
   options: SourceOption[];
-  defaultValue: string;
+  defaultValue?: string;
   accordionId?: string;
   accordionTitleId?: string;
   groupId?: string;
