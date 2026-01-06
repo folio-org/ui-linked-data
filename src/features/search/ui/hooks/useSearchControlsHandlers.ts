@@ -2,10 +2,10 @@ import { useCallback, useRef, useEffect, type RefObject } from 'react';
 import { useSearchParams, type SetURLSearchParams } from 'react-router-dom';
 import { type SegmentDraft, useSearchState, type CommittedValues } from '@/store';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
+import { SearchParam, type SearchTypeConfig, resolveCoreConfig, normalizeQuery } from '../../core';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
-import { getValidSearchBy } from '../utils';
+import { getValidSearchBy, buildSearchUrlParams, haveSearchValuesChanged } from '../utils';
 import { resolveUIConfig } from '../config';
 
 interface UseSearchControlsHandlersParams {
@@ -105,7 +105,7 @@ export const useSearchControlsHandlers = ({
   results,
   refetch,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Use refs for config/flow/results/refetch to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
@@ -113,6 +113,7 @@ export const useSearchControlsHandlers = ({
   const flowRef = useRef(flow);
   const resultsRef = useRef(results);
   const refetchRef = useRef(refetch);
+  const searchParamsRef = useRef(searchParams);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
@@ -120,7 +121,8 @@ export const useSearchControlsHandlers = ({
     flowRef.current = flow;
     resultsRef.current = results;
     refetchRef.current = refetch;
-  }, [coreConfig, uiConfig, flow, results, refetch]);
+    searchParamsRef.current = searchParams;
+  }, [coreConfig, uiConfig, flow, results, refetch, searchParams]);
 
   const {
     setNavigationState,
@@ -287,7 +289,10 @@ export const useSearchControlsHandlers = ({
 
   const handleSubmit = useCallback(() => {
     const state = useSearchState.getState();
-    const { query, searchBy, navigationState, draftBySegment } = state;
+    const { query, searchBy, navigationState, draftBySegment, committedValues } = state;
+
+    // Normalize query: escape special characters for CQL compatibility
+    const normalizedQuery = normalizeQuery(query) ?? '';
 
     const navState = navigationState as Record<string, unknown>;
     // If navigationState lacks a segment (possible on very early submit),
@@ -310,50 +315,57 @@ export const useSearchControlsHandlers = ({
       setDraftBySegment({
         ...draftBySegment,
         [segment]: {
-          query,
+          query: normalizedQuery,
           searchBy: validSearchBy,
           source,
         },
       });
     }
 
+    // Determine if search values have changed
+    const valuesChanged =
+      flowRef.current === 'url'
+        ? haveSearchValuesChanged(
+            {
+              segment: searchParams.get(SearchParam.SEGMENT),
+              query: searchParams.get(SearchParam.QUERY),
+              searchBy: searchParams.get(SearchParam.SEARCH_BY),
+              source: searchParams.get(SearchParam.SOURCE),
+            },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
+          )
+        : haveSearchValuesChanged(
+            {
+              segment: committedValues.segment,
+              query: committedValues.query,
+              searchBy: committedValues.searchBy,
+              source: committedValues.source,
+            },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
+          );
+
     if (flowRef.current === 'url') {
-      // URL flow: URL becomes the "committed" state
-      const urlParams = new URLSearchParams();
-
-      if (segment) {
-        urlParams.set(SearchParam.SEGMENT, segment);
-      }
-
-      if (query) {
-        urlParams.set(SearchParam.QUERY, query);
-      }
-
-      // Only include searchBy if it exists (for simple search)
-      // Advanced search has query but no searchBy
-      if (validSearchBy && searchBy) {
-        urlParams.set(SearchParam.SEARCH_BY, validSearchBy);
-      }
-
-      if (source) {
-        urlParams.set(SearchParam.SOURCE, source);
-      }
-
+      // URL flow: update URL params
+      const urlParams = buildSearchUrlParams(segment, normalizedQuery, validSearchBy, source);
       setSearchParams(urlParams);
-    } else {
-      // Value flow: commit to store
+
+      // If params didn't change, force refetch
+      if (!valuesChanged) {
+        refetchRef.current?.();
+      }
+    } else if (valuesChanged) {
+      // Value flow: update committedValues if changed, otherwise force refetch
       setCommittedValues({
         segment,
-        query,
+        query: normalizedQuery,
         searchBy: validSearchBy,
         source,
         offset: 0,
       });
+    } else {
+      refetchRef.current?.();
     }
-
-    // Force refetch for both flows to ensure fresh data on every submit
-    refetchRef.current?.();
-  }, [setDraftBySegment, setSearchParams, setCommittedValues]);
+  }, [searchParams, setDraftBySegment, setSearchParams, setCommittedValues]);
 
   const handleReset = useCallback(() => {
     const state = useSearchState.getState();

@@ -1,8 +1,25 @@
 import { ComponentType } from 'react';
-import { ComplexLookupType } from '../constants/complexLookup.constants';
+import { ComplexLookupType, AuthorityValidationTarget } from '../constants/complexLookup.constants';
 import { HubsModal } from '../components/modals/HubsModal';
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
-import { MARC_PREVIEW_ENDPOINT } from '@/common/constants/api.constants';
+import {
+  AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+  FACETS_API_ENDPOINT,
+  MARC_PREVIEW_ENDPOINT,
+  SOURCE_API_ENDPOINT,
+} from '@/common/constants/api.constants';
+
+export type AssignmentFlow = 'simple' | 'complex';
+
+export interface ModalApiConfig {
+  endpoints: {
+    marcPreview?: string;
+    validation?: string;
+    source?: string;
+    facets?: string;
+  };
+  validationTarget?: Record<string, AuthorityValidationTarget>;
+}
 
 export interface ModalConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,7 +31,9 @@ export interface ModalConfig {
       change: string;
     };
   };
-  marcPreviewEndpoint?: string;
+  assignmentFlow: AssignmentFlow;
+  api?: ModalApiConfig;
+  linkedField?: string;
 }
 
 export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfig> = {
@@ -27,6 +46,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         change: 'ld.change',
       },
     },
+    assignmentFlow: 'simple',
   },
 
   [ComplexLookupType.Authorities]: {
@@ -40,7 +60,19 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         change: 'ld.change',
       },
     },
-    marcPreviewEndpoint: MARC_PREVIEW_ENDPOINT.AUTHORITY,
+    assignmentFlow: 'complex',
+    api: {
+      endpoints: {
+        marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
+        validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+        source: SOURCE_API_ENDPOINT.AUTHORITY,
+        facets: FACETS_API_ENDPOINT.AUTHORITY,
+      },
+      validationTarget: {
+        creator: AuthorityValidationTarget.CreatorOfWork,
+      },
+    },
+    linkedField: 'subclass',
   },
 
   [ComplexLookupType.AuthoritiesSubject]: {
@@ -54,7 +86,19 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         change: 'ld.change',
       },
     },
-    marcPreviewEndpoint: MARC_PREVIEW_ENDPOINT.AUTHORITY,
+    assignmentFlow: 'complex',
+    api: {
+      endpoints: {
+        marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
+        validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+        source: SOURCE_API_ENDPOINT.AUTHORITY,
+        facets: FACETS_API_ENDPOINT.AUTHORITY,
+      },
+      validationTarget: {
+        subject: AuthorityValidationTarget.SubjectOfWork,
+      },
+    },
+    linkedField: 'subclass',
   },
 } as const;
 

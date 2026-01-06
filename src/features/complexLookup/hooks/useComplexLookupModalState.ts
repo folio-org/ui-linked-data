@@ -50,7 +50,7 @@ export function useComplexLookupModalState({
       });
 
       // Set committed values with initial query if provided
-      // This ensures useValueFlowAutoSubmit can detect and auto-execute the search
+      // This triggers useSearchQuery to auto-execute the search via its enabled flag
       setCommittedValues({
         segment: defaultSegment,
         query: initialQuery || '',

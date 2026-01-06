@@ -1,42 +1,61 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { useMarcPreviewStore, useUIStore } from '@/store';
+import { IntlProvider } from 'react-intl';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContextLegacy } from '@/features/search/ui';
+import { useMarcPreviewStore, useUIStore } from '@/store';
 import { MarcPreview } from './MarcPreview';
 
-jest.mock('@/features/search/ui/providers');
-jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-jest.mock('@/components/MarcContent', () => ({ MarcContent: () => <div>Marc Content</div> }));
+jest.mock('@/components/MarcContent', () => ({
+  MarcContent: () => <div data-testid="marc-content">Marc Content</div>,
+}));
 
-const mockUseSearchContext = useSearchContextLegacy as jest.Mock;
+jest.mock('@/features/search/ui', () => ({
+  ControlPane: ({
+    label,
+    subLabel,
+    children,
+    renderCloseButton,
+  }: {
+    label: string;
+    subLabel: React.ReactNode;
+    children: React.ReactNode;
+    renderCloseButton: () => React.ReactNode;
+  }) => (
+    <div data-testid="control-pane">
+      <div data-testid="label">{label}</div>
+      <div data-testid="sub-label">{subLabel}</div>
+      {renderCloseButton()}
+      {children}
+    </div>
+  ),
+}));
+
 const marcPreviewData = {
   metadata: {
     updatedDate: '2024-01-01',
   },
 } as MarcDTO;
+
 const marcPreviewMetadata = {
-  title: 'Test Title',
-  headingType: 'Test Heading',
-  baseId: 'testBaseId_1',
+  title: 'Test Authority Title',
+  headingType: 'Personal Name',
+  baseId: 'test-base-id-123',
 } as MarcPreviewMetadata;
 
-describe('MarcPreviewComplexLookup', () => {
-  const onClose = jest.fn();
-  const onAssignRecord = jest.fn();
-
-  beforeEach(() => {
-    mockUseSearchContext.mockReturnValue({ onAssignRecord });
-  });
+describe('MarcPreview', () => {
+  const mockOnClose = jest.fn();
+  const mockOnAssign = jest.fn();
+  const mockCheckFailedId = jest.fn();
 
   const renderComponent = (
     isMarcPreviewOpen: boolean,
-    marcPreviewData: MarcDTO,
-    marcPreviewMetadata: MarcPreviewMetadata,
+    marcData: MarcDTO | null,
+    metadata: MarcPreviewMetadata | null,
+    props: Partial<React.ComponentProps<typeof MarcPreview>> = {},
   ) => {
     setInitialGlobalState([
       {
         store: useMarcPreviewStore,
-        state: { complexValue: marcPreviewData, metadata: marcPreviewMetadata },
+        state: { complexValue: marcData, metadata },
       },
       {
         store: useUIStore,
@@ -44,39 +63,123 @@ describe('MarcPreviewComplexLookup', () => {
       },
     ]);
 
-    return render(<MarcPreview onClose={onClose} />);
+    return render(
+      <IntlProvider locale="en">
+        <MarcPreview onClose={mockOnClose} {...props} />
+      </IntlProvider>,
+    );
   };
 
-  it('renders the component when isMarcPreviewOpen is true and marcPreviewData is available', () => {
-    renderComponent(true, marcPreviewData, marcPreviewMetadata);
+  describe('rendering', () => {
+    test('renders component when isMarcPreviewOpen is true and marcPreviewData exists', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata);
 
-    expect(screen.getByText('Test Title')).toBeInTheDocument();
-    expect(screen.getByText('Marc Content')).toBeInTheDocument();
+      expect(screen.getByTestId('control-pane')).toBeInTheDocument();
+      expect(screen.getByTestId('label')).toHaveTextContent('Test Authority Title');
+      expect(screen.getByText('Marc Content')).toBeInTheDocument();
+    });
+
+    test('does not render when isMarcPreviewOpen is false', () => {
+      renderComponent(false, marcPreviewData, marcPreviewMetadata);
+
+      expect(screen.queryByTestId('control-pane')).not.toBeInTheDocument();
+    });
+
+    test('does not render when marcPreviewData is null', () => {
+      renderComponent(true, null, marcPreviewMetadata);
+
+      expect(screen.queryByTestId('control-pane')).not.toBeInTheDocument();
+    });
+
+    test('displays metadata information in sub-label', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata);
+
+      const subLabel = screen.getByTestId('sub-label');
+      expect(subLabel).toHaveTextContent('Personal Name');
+      expect(subLabel).toHaveTextContent('ld.lastUpdated');
+    });
+
+    test('renders assign button when onAssign prop is provided', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata, { onAssign: mockOnAssign });
+
+      expect(screen.getByTestId('marc-preview-assign-button')).toBeInTheDocument();
+    });
+
+    test('does not render assign button when onAssign prop is not provided', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata);
+
+      expect(screen.queryByTestId('marc-preview-assign-button')).not.toBeInTheDocument();
+    });
   });
 
-  it('does not render the component when isMarcPreviewOpen is false', () => {
-    renderComponent(false, marcPreviewData, marcPreviewMetadata);
+  describe('interactions', () => {
+    test('calls onClose when close button is clicked', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata);
 
-    expect(screen.queryByText('Test Title')).not.toBeInTheDocument();
+      const closeButton = screen.getByTestId('nav-close-button');
+      fireEvent.click(closeButton);
+
+      expect(mockOnClose).toHaveBeenCalledTimes(1);
+    });
+
+    test('calls onAssign with correct data when assign button is clicked', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata, { onAssign: mockOnAssign });
+
+      const assignButton = screen.getByTestId('marc-preview-assign-button');
+      fireEvent.click(assignButton);
+
+      expect(mockOnAssign).toHaveBeenCalledWith({
+        id: 'test-base-id-123',
+        title: 'Test Authority Title',
+        linkedFieldValue: 'Personal Name',
+      });
+    });
+
+    test('does not call onAssign when baseId is missing', () => {
+      const metadataWithoutBaseId = {
+        ...marcPreviewMetadata,
+        baseId: undefined,
+      } as unknown as MarcPreviewMetadata;
+
+      renderComponent(true, marcPreviewData, metadataWithoutBaseId, { onAssign: mockOnAssign });
+
+      const assignButton = screen.getByTestId('marc-preview-assign-button');
+      fireEvent.click(assignButton);
+
+      expect(mockOnAssign).not.toHaveBeenCalled();
+    });
   });
 
-  it('calls onClose when close button is clicked', () => {
-    renderComponent(true, marcPreviewData, marcPreviewMetadata);
+  describe('assign button state', () => {
+    test('disables assign button when checkFailedId returns true', () => {
+      mockCheckFailedId.mockReturnValue(true);
 
-    fireEvent.click(screen.getByTestId('nav-close-button'));
+      renderComponent(true, marcPreviewData, marcPreviewMetadata, {
+        onAssign: mockOnAssign,
+        checkFailedId: mockCheckFailedId,
+      });
 
-    expect(onClose).toHaveBeenCalled();
-  });
+      const assignButton = screen.getByTestId('marc-preview-assign-button');
+      expect(assignButton).toBeDisabled();
+    });
 
-  it('calls onAssignRecord when assign button is clicked', () => {
-    renderComponent(true, marcPreviewData, marcPreviewMetadata);
+    test('enables assign button when checkFailedId returns false', () => {
+      mockCheckFailedId.mockReturnValue(false);
 
-    fireEvent.click(screen.getByText('ld.assign'));
+      renderComponent(true, marcPreviewData, marcPreviewMetadata, {
+        onAssign: mockOnAssign,
+        checkFailedId: mockCheckFailedId,
+      });
 
-    expect(onAssignRecord).toHaveBeenCalledWith({
-      id: 'testBaseId_1',
-      title: 'Test Title',
-      linkedFieldValue: 'Test Heading',
+      const assignButton = screen.getByTestId('marc-preview-assign-button');
+      expect(assignButton).not.toBeDisabled();
+    });
+
+    test('enables assign button when checkFailedId is not provided', () => {
+      renderComponent(true, marcPreviewData, marcPreviewMetadata, { onAssign: mockOnAssign });
+
+      const assignButton = screen.getByTestId('marc-preview-assign-button');
+      expect(assignButton).not.toBeDisabled();
     });
   });
 });

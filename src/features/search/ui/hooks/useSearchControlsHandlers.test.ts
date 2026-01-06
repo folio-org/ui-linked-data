@@ -11,19 +11,28 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-jest.mock('../../core', () => ({
-  ...jest.requireActual('../../core'),
-  resolveCoreConfig: jest.fn(),
-}));
+jest.mock('../../core', () => {
+  const actual = jest.requireActual('../../core');
+
+  return {
+    ...actual,
+    normalizeQuery: jest.requireActual('../../core/utils/search.helper').normalizeQuery,
+    resolveCoreConfig: jest.fn(),
+  };
+});
 
 jest.mock('../config', () => ({
   resolveUIConfig: jest.fn(),
 }));
 
-jest.mock('../utils', () => ({
-  ...jest.requireActual('../utils'),
-  getValidSearchBy: jest.fn(searchBy => searchBy),
-}));
+jest.mock('../utils', () => {
+  const actual = jest.requireActual('../utils');
+
+  return {
+    ...actual,
+    getValidSearchBy: jest.fn(searchBy => searchBy),
+  };
+});
 
 describe('useSearchControlsHandlers', () => {
   const mockConfig: SearchTypeConfig = {

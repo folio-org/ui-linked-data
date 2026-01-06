@@ -1,13 +1,8 @@
 import { FC, useMemo, createContext, useContext } from 'react';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import {
-  useSearchControlsHandlers,
-  useSearchQuery,
-  useUrlSync,
-  useSearchSegment,
-  useValueFlowAutoSubmit,
-} from '../hooks';
+import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
 import { resolveSearchConfigs } from '../utils';
+import { useLoadingState } from '@/store';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 
@@ -20,6 +15,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
   const { flow, mode = 'custom', children } = props;
+  const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
   const dynamicParams = isDynamicMode(props)
@@ -72,9 +68,6 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
   // Sync URL to store (URL flow only)
   useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
 
-  // Auto-submit for value flow when committedValues has query (similar to URL flow)
-  useValueFlowAutoSubmit({ flow, onSubmit: handlers.onSubmit });
-
   const contextValue = useMemo(
     (): SearchContextValue => ({
       // Configuration
@@ -90,7 +83,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
       // Search results
       results,
-      isLoading,
+      isLoading: isLoading || isGlobalLoading,
       isFetching,
       isError,
       error,
@@ -111,6 +104,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       activeUIConfig,
       results,
       isLoading,
+      isGlobalLoading,
       isFetching,
       isError,
       error,
