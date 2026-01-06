@@ -6,7 +6,7 @@ import { ResourcesResponseTransformer } from '../strategies/responseTransformers
 import { HubsResultFormatter } from '../strategies/resultFormatters';
 
 /**
- * Hubs Internal Configuration (Atomic)
+ * Hubs Local Configuration for Search page (Atomic)
  *
  * Search in local hub registry.
  * Composite key: "hubs:local"
@@ -28,7 +28,7 @@ export const hubsLocalConfig: SearchTypeConfig = {
   },
 
   defaults: {
-    searchBy: SearchableIndexEnum.HubNameLeftAnchored,
+    searchBy: SearchableIndexEnum.HubNameKeyword,
     query: '',
     limit: 100, // API fetches 100 results
     offset: 0,

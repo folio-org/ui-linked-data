@@ -2,21 +2,23 @@ import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searc
 import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
-import { HubResponseTransformer } from '../strategies/responseTransformers';
+import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
 import { HubsResultFormatter } from '../strategies/resultFormatters';
 
 /**
- * Hubs Library Of Congress Configuration for Search page (Atomic)
+ * Hubs Local Configuration for Complex lookups (Atomic)
  *
- * Search in Library Of Congress hub services.
- * Composite key: "hubs:libraryOfCongress"
+ * Search in local hub registry.
+ * Composite key: "hubs:local"
  */
-export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
-  id: 'hubs:libraryOfCongress',
+export const hubsLookupLocalConfig: SearchTypeConfig = {
+  id: 'hubs:local',
 
   strategies: {
+    // Uses same request builder as external for now
+    // Can be replaced with HubsInternalRequestBuilder when implemented
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
-    responseTransformer: new HubResponseTransformer(),
+    responseTransformer: new ResourcesResponseTransformer(),
     resultFormatter: new HubsResultFormatter(),
   },
 
@@ -26,7 +28,7 @@ export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
   },
 
   defaults: {
-    searchBy: SearchableIndexEnum.HubNameKeyword,
+    searchBy: SearchableIndexEnum.HubNameLeftAnchored,
     query: '',
     limit: 100, // API fetches 100 results
     offset: 0,

@@ -6,12 +6,12 @@ import { HubResponseTransformer } from '../strategies/responseTransformers';
 import { HubsResultFormatter } from '../strategies/resultFormatters';
 
 /**
- * Hubs Library Of Congress Configuration for Search page (Atomic)
+ * Hubs Library Of Congress Configuration for Complex lookups (Atomic)
  *
  * Search in Library Of Congress hub services.
  * Composite key: "hubs:libraryOfCongress"
  */
-export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
+export const hubsLookupLibraryOfCongressConfig: SearchTypeConfig = {
   id: 'hubs:libraryOfCongress',
 
   strategies: {
@@ -26,7 +26,7 @@ export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
   },
 
   defaults: {
-    searchBy: SearchableIndexEnum.HubNameKeyword,
+    searchBy: SearchableIndexEnum.HubNameLeftAnchored,
     query: '',
     limit: 100, // API fetches 100 results
     offset: 0,
