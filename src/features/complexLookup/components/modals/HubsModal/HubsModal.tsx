@@ -22,8 +22,8 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
   useComplexLookupModalState({
     isOpen,
     initialQuery,
-    defaultSegment: 'hubs',
-    defaultSource: 'external',
+    defaultSegment: 'hubsLookup',
+    defaultSource: 'libraryOfCongress',
   });
 
   return (
@@ -40,7 +40,13 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
       showModalControls={false}
     >
       <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
-        <Search segments={['hubs']} defaultSegment="hubs" defaultSource="external" flow="value" mode="custom">
+        <Search
+          segments={['hubsLookup']}
+          defaultSegment="hubsLookup"
+          defaultSource="libraryOfCongress"
+          flow="value"
+          mode="custom"
+        >
           <Search.Controls>
             <Search.Controls.InputsWrapper />
             <Search.Controls.SubmitButton />
