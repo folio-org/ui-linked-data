@@ -5,7 +5,7 @@ import {
   LegacySearchControlPane,
   Search,
   ResourcesResultList,
-  HubsSearchResultList,
+  HubsResultList,
   LegacySearchResultList,
   type SourceOption,
 } from '@/features/search/ui';
@@ -103,26 +103,9 @@ export const SearchView = () => {
     });
   };
 
-  // Hub action handlers
-  const handleHubEdit = useCallback(
-    (id: string) => {
-      logger.info('Editing local hub:', id);
-      navigateToEditPage(id);
-    },
-    [navigateToEditPage],
-  );
-
-  const handleHubImport = useCallback(
-    (id: string, uri: string) => {
-      logger.info('Importing external hub:', { id, uri });
-      // NOTE: Hub import logic will be implemented in future iteration
-      // This could open an import modal or initiate an import workflow
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.info, 'Hub import functionality coming soon'),
-      );
-    },
-    [addStatusMessagesItem],
-  );
+  // TODO: implement Hub action handlers
+  const handleHubEdit = () => {};
+  const handleHubImport = () => {};
 
   const resourceActions = useMemo(
     () => [
@@ -239,7 +222,7 @@ export const SearchView = () => {
             {/* Hubs segment: table with external links */}
             <Search.Controls.SegmentContent segment="hubs">
               <Search.Results className="search-results-container hubs-result-list">
-                <HubsSearchResultList onEdit={handleHubEdit} onImport={handleHubImport} />
+                <HubsResultList onEdit={handleHubEdit} onImport={handleHubImport} />
                 <Search.Results.Pagination />
               </Search.Results>
             </Search.Controls.SegmentContent>

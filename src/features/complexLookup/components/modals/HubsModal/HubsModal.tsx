@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Modal } from '@/components/Modal';
 import { Search } from '@/features/search/ui/components/Search';
-import { HubsResultList } from '@/features/search/ui';
+import { HubsLookupResultList } from '@/features/search/ui';
 import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 
@@ -59,7 +59,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
             <Search.ContentContainer>
               <Search.Results>
                 {/* Existing component already supports complexLookup context! */}
-                <HubsResultList context="complexLookup" onAssign={onAssign} />
+                <HubsLookupResultList context="complexLookup" onAssign={onAssign} />
                 <Search.Results.Pagination />
               </Search.Results>
             </Search.ContentContainer>

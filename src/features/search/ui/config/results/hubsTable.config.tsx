@@ -1,42 +1,29 @@
-import {
-  HubAssignFormatter,
-  HubLinkFormatter,
-  AuthNotesFormatter,
-  RDANotesFormatter,
-} from '@/features/search/ui/formatters';
+import { HubLinkFormatter, HubSourceFormatter, HubActionFormatter } from '@/features/search/ui/formatters';
 
 export const hubsTableConfig: SearchResultsTableConfig = {
   columns: {
-    assign: {
-      label: '',
-      position: 0,
-      className: 'cell-fixed',
-      minWidth: 100,
-      maxWidth: 100,
-      formatter: HubAssignFormatter,
-    },
     hub: {
       label: 'ld.hub',
-      position: 1,
+      position: 0,
       className: 'cell-fixed',
-      minWidth: 430,
+      minWidth: 500,
       formatter: HubLinkFormatter,
     },
-    auth: {
-      label: 'ld.auth',
+    source: {
+      label: 'ld.source',
+      position: 1,
+      className: 'cell-fixed',
+      minWidth: 200,
+      maxWidth: 250,
+      formatter: HubSourceFormatter,
+    },
+    action: {
+      label: 'ld.action',
       position: 2,
       className: 'cell-fixed',
-      minWidth: 170,
-      maxWidth: 200,
-      formatter: AuthNotesFormatter,
-    },
-    rda: {
-      label: 'ld.rda',
-      position: 3,
-      className: 'cell-fixed',
-      minWidth: 170,
-      maxWidth: 200,
-      formatter: RDANotesFormatter,
+      minWidth: 150,
+      maxWidth: 150,
+      formatter: HubActionFormatter,
     },
   },
 };
