@@ -296,5 +296,6 @@
   "ld.exportInstanceRdf": "Export instance RDF file",
   "ld.required_series_title": "Please add a title to each series in order to save.",
   "ld.source.libraryOfCongress": "Library of Congress",
+  "ld.source.libraryOfCongressLocal": "Library of Congress, Local",
   "ld.source.local": "Local"
 }

@@ -6,11 +6,12 @@ interface HubSourceFormatterProps {
 }
 
 export const HubSourceFormatter: FC<HubSourceFormatterProps> = ({ row }) => {
-  const source = row.source?.label as string | undefined;
+  const isLocal = row.__meta?.isLocal === true;
+  const sourceKey = isLocal ? 'ld.source.libraryOfCongressLocal' : 'ld.source.libraryOfCongress';
 
   return (
     <span className="hub-source" data-testid={`hub-source-${row.__meta.id}`}>
-      <FormattedMessage id={source || 'ld.source.libraryOfCongress'} />
+      <FormattedMessage id={sourceKey} />
     </span>
   );
 };
