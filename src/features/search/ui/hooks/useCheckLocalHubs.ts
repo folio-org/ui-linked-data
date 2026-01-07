@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import baseApi from '@/common/api/base.api';
+import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 
 interface LocalHubCheckResponse {
   content?: Array<{
@@ -10,7 +11,6 @@ interface LocalHubCheckResponse {
 
 interface UseCheckLocalHubsReturn {
   localHubIds: Set<string>;
-  isLoading: boolean;
   isError: boolean;
   error: Error | null;
 }
@@ -21,7 +21,7 @@ interface UseCheckLocalHubsReturn {
 export function useCheckLocalHubs(tokens: string[]): UseCheckLocalHubsReturn {
   const sortedTokens = [...tokens].sort((a, b) => a.localeCompare(b));
 
-  const { data, isLoading, isError, error } = useQuery<Set<string>, Error>({
+  const { data, isError, error } = useQuery<Set<string>, Error>({
     queryKey: ['localHubs', sortedTokens],
     queryFn: async () => {
       if (!tokens || tokens.length === 0) {
@@ -32,7 +32,7 @@ export function useCheckLocalHubs(tokens: string[]): UseCheckLocalHubsReturn {
       const query = queryParts.join(' or ');
 
       const response = (await baseApi.getJson({
-        url: `/search/linked-data/hubs?query=${encodeURIComponent(query)}`,
+        url: `${SEARCH_API_ENDPOINT.HUBS_LOCAL}?query=${encodeURIComponent(query)}`,
       })) as LocalHubCheckResponse;
 
       // Extract originalIds of locally available hubs
@@ -49,7 +49,6 @@ export function useCheckLocalHubs(tokens: string[]): UseCheckLocalHubsReturn {
 
   return {
     localHubIds: data ?? new Set<string>(),
-    isLoading,
     isError,
     error,
   };

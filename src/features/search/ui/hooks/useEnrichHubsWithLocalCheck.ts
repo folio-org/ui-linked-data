@@ -15,7 +15,7 @@ export function useEnrichHubsWithLocalCheck(
   }, [data]);
 
   // Check local availability using React Query
-  const { localHubIds, isLoading } = useCheckLocalHubs(tokens);
+  const { localHubIds } = useCheckLocalHubs(tokens);
 
   // Enrich data with isLocal flag
   const enrichedData = useMemo(() => {
@@ -29,11 +29,10 @@ export function useEnrichHubsWithLocalCheck(
         __meta: {
           ...row.__meta,
           isLocal: isLocalValue,
-          isCheckingLocal: isLoading,
         },
       } as SearchResultsTableRow;
     });
-  }, [data, localHubIds, isLoading]);
+  }, [data, localHubIds]);
 
   return enrichedData;
 }
