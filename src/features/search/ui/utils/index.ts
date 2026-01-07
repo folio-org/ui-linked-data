@@ -9,3 +9,4 @@ export { getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProp
 export { buildSearchUrlParams, haveSearchValuesChanged } from './searchSubmitHelpers';
 export { applyColumnFormatters, buildTableHeader, extractRowIds } from './tableFormatters.util';
 export { enrichRowsWithLocalAvailability, buildHubLocalCheckQuery, extractOriginalIds } from './hubEnrichment.util';
+export { getHubSources, formatSourceList } from './hubSources.util';

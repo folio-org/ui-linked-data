@@ -3,7 +3,7 @@ import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
-import { HubsResultFormatter } from '../strategies/resultFormatters';
+import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
 
 /**
  * Hubs Local Configuration for Complex lookups (Atomic)
@@ -19,7 +19,7 @@ export const hubsLookupLocalConfig: SearchTypeConfig = {
     // Can be replaced with HubsInternalRequestBuilder when implemented
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new ResourcesResponseTransformer(),
-    resultFormatter: new HubsResultFormatter(),
+    resultFormatter: new HubsLookupResultFormatter(),
   },
 
   capabilities: {

@@ -1,17 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { IResultFormatter } from '../../types';
 
-const checkAuthNote = (notes: string[]) => notes.some(note => note.includes('Created from auth.'));
-
-const checkRDANote = (notes: string[]) => {
-  const rdaRegex = /040.*\$erda/;
-
-  return notes.some(note => rdaRegex.test(note));
-};
-
 /**
- * Formats Hub data for search results
- * Output: Flat table rows with link metadata
+ * Formats Hub data for Search page results
+ *
+ * Note: Source enrichment (Library of Congress vs Library of Congress, Local)
+ * happens later via useEnrichHubsWithLocalCheck hook
  */
 export class HubsResultFormatter implements IResultFormatter<SearchResultsTableRow> {
   format(data: unknown[]): SearchResultsTableRow[] {
@@ -21,8 +15,7 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
 
   private formatHubs(hubList: HubSearchResultDTO[]): SearchResultsTableRow[] {
     return hubList?.map(hubEntry => {
-      const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
-      const { notes = [] } = more || {};
+      const { suggestLabel = '', uri = '', token = '' } = hubEntry;
 
       return {
         __meta: {
@@ -35,13 +28,9 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
           uri: uri,
           className: 'hub-title',
         },
-        auth: {
-          label: checkAuthNote(notes) ? 'ld.yes' : undefined,
-          className: 'auth-note',
-        },
-        rda: {
-          label: checkRDANote(notes) ? 'ld.yes' : undefined,
-          className: 'rda-note',
+        source: {
+          label: 'ld.source.libraryOfCongress', // Base source, enriched later with local info
+          className: 'hub-source',
         },
       };
     });

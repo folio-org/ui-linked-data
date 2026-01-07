@@ -3,10 +3,10 @@ import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
-import { HubsResultFormatter } from '../strategies/resultFormatters';
+import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
 
 /**
- * Hubs Library Of Congress Configuration for Complex lookups (Atomic)
+ * Hubs Library Of Congress Configuration for Complex Lookup modal (Atomic)
  *
  * Search in Library Of Congress hub services.
  * Composite key: "hubs:libraryOfCongress"
@@ -17,7 +17,7 @@ export const hubsLookupLibraryOfCongressConfig: SearchTypeConfig = {
   strategies: {
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
-    resultFormatter: new HubsResultFormatter(),
+    resultFormatter: new HubsLookupResultFormatter(),
   },
 
   capabilities: {

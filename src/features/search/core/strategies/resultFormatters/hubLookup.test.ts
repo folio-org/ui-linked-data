@@ -1,4 +1,4 @@
-import { HubsResultFormatter } from './hub';
+import { HubsLookupResultFormatter } from './hubLookup';
 
 const mockHubData = [
   {
@@ -54,11 +54,11 @@ const mockHubData = [
   },
 ];
 
-describe('HubsResultFormatter', () => {
-  let formatter: HubsResultFormatter;
+describe('HubsLookupResultFormatter', () => {
+  let formatter: HubsLookupResultFormatter;
 
   beforeEach(() => {
-    formatter = new HubsResultFormatter();
+    formatter = new HubsLookupResultFormatter();
   });
 
   test('hub data correctly', () => {
