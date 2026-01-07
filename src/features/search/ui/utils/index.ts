@@ -7,3 +7,5 @@ export {
 } from './searchConfigResolver';
 export { getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProperty } from './placeholder.helper';
 export { buildSearchUrlParams, haveSearchValuesChanged } from './searchSubmitHelpers';
+export { applyColumnFormatters, buildTableHeader, extractRowIds } from './tableFormatters.util';
+export { enrichRowsWithLocalAvailability, buildHubLocalCheckQuery, extractOriginalIds } from './hubEnrichment.util';

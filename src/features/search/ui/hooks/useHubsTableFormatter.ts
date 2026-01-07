@@ -1,9 +1,9 @@
-import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { type Row } from '@/components/Table';
 import { useFormattedResults } from './useFormattedResults';
 import { useEnrichHubsWithLocalCheck } from './useEnrichHubsWithLocalCheck';
 import { hubsTableConfig } from '../config/results/hubsTable.config';
+import { applyColumnFormatters, buildTableHeader } from '../utils/tableFormatters.util';
 
 interface UseHubsTableFormatterProps {
   onEdit?: (id: string) => void;
@@ -16,7 +16,7 @@ export interface UseHubsTableFormatterReturn {
 }
 
 /**
- * Еable formatter hook for Hub Search Results
+ * Table formatter hook for Hub Search Results
  */
 export function useHubsTableFormatter({ onEdit, onImport }: UseHubsTableFormatterProps): UseHubsTableFormatterReturn {
   const { formatMessage } = useIntl();
@@ -24,53 +24,13 @@ export function useHubsTableFormatter({ onEdit, onImport }: UseHubsTableFormatte
   const rawData = useFormattedResults<SearchResultsTableRow>();
   const enrichedData = useEnrichHubsWithLocalCheck(rawData);
 
-  const applyFormatters = useCallback(
-    (rows: SearchResultsTableRow[]): Row[] => {
-      return rows.map(row => {
-        const formattedRow: Row = { ...row };
+  const applyFormatters = (rows: SearchResultsTableRow[]): Row[] => {
+    return applyColumnFormatters(rows, hubsTableConfig.columns, { formatMessage, onEdit, onImport });
+  };
 
-        // Apply formatter for each column in the config
-        Object.entries(hubsTableConfig.columns).forEach(([key, column]) => {
-          formattedRow[key] = {
-            ...row[key],
-            children: column.formatter
-              ? column.formatter({
-                  row,
-                  formatMessage,
-                  onEdit,
-                  onImport,
-                })
-              : row[key]?.label,
-          };
-        });
+  const formattedData = applyFormatters(enrichedData || []);
 
-        return formattedRow;
-      });
-    },
-    [formatMessage, onEdit, onImport],
-  );
-
-  const formattedData = useMemo(() => applyFormatters(enrichedData || []), [applyFormatters, enrichedData]);
-
-  const listHeader = useMemo(
-    () =>
-      Object.keys(hubsTableConfig.columns).reduce((accum, key) => {
-        const { label, position, className, minWidth, maxWidth } = hubsTableConfig.columns[
-          key
-        ] as SearchResultsTableColumn;
-
-        accum[key] = {
-          label: label ? formatMessage({ id: label }) : '',
-          position,
-          className,
-          minWidth,
-          maxWidth,
-        };
-
-        return accum;
-      }, {} as Row),
-    [formatMessage],
-  );
+  const listHeader = buildTableHeader(hubsTableConfig.columns, formatMessage);
 
   return {
     formattedData,

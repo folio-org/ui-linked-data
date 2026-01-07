@@ -1,38 +1,23 @@
 import { useMemo } from 'react';
 import { useCheckLocalHubs } from './useCheckLocalHubs';
+import { extractRowIds } from '../utils/tableFormatters.util';
+import { enrichRowsWithLocalAvailability } from '../utils/hubEnrichment.util';
 
 /**
  * Hook to enrich hub search results with local availability information
+ * Adds "isLocal" flag to each row's "__meta" object.
  */
 export function useEnrichHubsWithLocalCheck(
   data: SearchResultsTableRow[] | undefined,
 ): SearchResultsTableRow[] | undefined {
-  // Extract tokens from data
-  const tokens = useMemo(() => {
-    if (!data || data.length === 0) return [];
-
-    return data.map(row => row.__meta?.id).filter(Boolean) as string[];
-  }, [data]);
+  // Extract tokens from data using utility
+  const tokens = useMemo(() => extractRowIds(data), [data]);
 
   // Check local availability using React Query
   const { localHubIds } = useCheckLocalHubs(tokens);
 
-  // Enrich data with isLocal flag
-  const enrichedData = useMemo(() => {
-    if (!data) return undefined;
-
-    return data.map(row => {
-      const isLocalValue = localHubIds.has(row.__meta?.id || '');
-
-      return {
-        ...row,
-        __meta: {
-          ...row.__meta,
-          isLocal: isLocalValue,
-        },
-      } as SearchResultsTableRow;
-    });
-  }, [data, localHubIds]);
+  // Enrich data with isLocal flag using utility
+  const enrichedData = useMemo(() => enrichRowsWithLocalAvailability(data, localHubIds), [data, localHubIds]);
 
   return enrichedData;
 }
