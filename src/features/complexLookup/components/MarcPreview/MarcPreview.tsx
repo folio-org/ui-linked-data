@@ -1,26 +1,25 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { useMarcPreviewState, useUIState } from '@/store';
-import { LegacySearchControlPane, useSearchContextLegacy } from '@/features/search/ui';
+import { ControlPane } from '@/features/search/ui';
 import { MarcContent } from '@/components/MarcContent';
 import { Button, ButtonType } from '@/components/Button';
 import Times16 from '@/assets/times-16.svg?react';
-import { useComplexLookupValidation } from '../../hooks/useComplexLookupValidation';
 import './MarcPreview.scss';
 
-type MarcPreviewProps = {
+interface MarcPreviewProps {
   onClose: VoidFunction;
-};
+  onAssign?: (record: ComplexLookupAssignRecordDTO) => void | Promise<void>;
+  checkFailedId?: (id?: string) => boolean;
+}
 
-export const MarcPreview: FC<MarcPreviewProps> = ({ onClose }) => {
-  const { onAssignRecord } = useSearchContextLegacy();
+export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFailedId }) => {
   const { formatMessage } = useIntl();
   const { isMarcPreviewOpen } = useUIState(['isMarcPreviewOpen']);
   const { complexValue: marcPreviewData, metadata: marcPreviewMetadata } = useMarcPreviewState([
     'complexValue',
     'metadata',
   ]);
-  const { checkFailedId } = useComplexLookupValidation();
 
   const renderCloseButton = () => (
     <Button
@@ -34,45 +33,52 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose }) => {
     </Button>
   );
 
-  const renderSubLabel = () => (
+  const subLabel = (
     <>
       {marcPreviewMetadata?.headingType} • <FormattedMessage id="ld.lastUpdated" />:
       <span className="marc-preview-sub-label-date">
-        <FormattedDate value={marcPreviewData?.metadata.updatedDate ?? new Date('now')} />
+        <FormattedDate value={marcPreviewData?.metadata.updatedDate ?? new Date()} />
       </span>
     </>
   );
 
-  const onClickAssignButton = () => {
-    onAssignRecord?.({
-      id: marcPreviewMetadata?.baseId ?? '',
-      title: marcPreviewMetadata?.title ?? '',
-      linkedFieldValue: marcPreviewMetadata?.headingType ?? '',
+  const handleAssignClick = () => {
+    if (!onAssign || !marcPreviewMetadata?.baseId) return;
+
+    // Call shared assignment handler with metadata from preview
+    onAssign({
+      id: marcPreviewMetadata.baseId,
+      title: marcPreviewMetadata.title ?? '',
+      linkedFieldValue: marcPreviewMetadata.headingType ?? '',
     });
   };
 
-  const isDisabledButton = checkFailedId(marcPreviewMetadata?.baseId);
+  const isDisabledButton = checkFailedId?.(marcPreviewMetadata?.baseId) ?? false;
 
   return (
     <>
       {isMarcPreviewOpen && marcPreviewData ? (
         <div className="marc-preview-container">
-          <LegacySearchControlPane
+          <ControlPane
             label={marcPreviewMetadata?.title ?? ''}
-            renderSubLabel={renderSubLabel}
+            subLabel={subLabel}
+            showSubLabel={true}
             renderCloseButton={renderCloseButton}
           >
-            <div>
-              <Button
-                type={ButtonType.Highlighted}
-                onClick={onClickAssignButton}
-                ariaLabel={formatMessage({ id: 'ld.aria.marcAuthorityPreview.close' })}
-                disabled={isDisabledButton}
-              >
-                <FormattedMessage id="ld.assign" />
-              </Button>
-            </div>
-          </LegacySearchControlPane>
+            {onAssign && (
+              <div>
+                <Button
+                  type={ButtonType.Highlighted}
+                  onClick={handleAssignClick}
+                  ariaLabel={formatMessage({ id: 'ld.assign' })}
+                  disabled={isDisabledButton}
+                  data-testid="marc-preview-assign-button"
+                >
+                  <FormattedMessage id="ld.assign" />
+                </Button>
+              </div>
+            )}
+          </ControlPane>
           <div className="marc-preview-content">
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />

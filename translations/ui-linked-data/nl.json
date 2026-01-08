@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "Deze beschrijving bevat een of meer ongecontroleerde Authorities.\n Wilt u wijzigingen opslaan?",
     "ld.errorAssigningAuthority": "Fout bij het toewijzen van autoriteit",
     "ld.errorAssigningAuthority.not_valid_for_target": "Selecteer een autoriteit met een type bron dat overeenkomt met het bewerkte veld van de autoriteit (bijv. LCNAF autoriteit voor het veld Creator)",
-    "ld.errorAssigningAuthority.no_lccn": "Op dit moment kunnen alleen Authoriteiten van de Library of Congress worden toegewezen. Dit is tijdelijk totdat aanvullende brontypen worden ondersteund.",
     "ld.errorAssigningAuthority.unsupported_marc": "De geselecteerde autoriteit is niet gekoppeld aan Linked Data en kan nog niet worden toegewezen. Dit is tijdelijk, aangezien de MARC mapping bezig is.",
     "ld.required_primary_main_title": "Voeg de hoofdtitel toe om op te slaan.",
     "ld.lccn_does_not_match_pattern": "LCCN Patroonvalidatie ingeschakeld: Geef een LCCN op die voldoet aan de standaardstructuur.",
@@ -292,6 +291,8 @@
     "ld.search.hubNameLeftAnchored": "Naam hub (Links verankerd)",
     "ld.search.hubNameKeyword": "Naam hub (Trefwoord)",
     "ld.field.typeOfContinuingResource": "Type doorlopende bron",
-    "ld.exportInstanceRdf": "Export instance RDF file",
-    "ld.required_series_title": "Please add a title to each series in order to save."
+    "ld.exportInstanceRdf": "Instance RDF-bestand exporteren",
+    "ld.required_series_title": "Voeg een titel toe aan elke serie om deze op te slaan.",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }

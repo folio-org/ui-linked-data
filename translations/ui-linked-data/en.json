@@ -92,6 +92,7 @@
   "ld.work": "Work",
   "ld.instances": "Instances",
   "ld.instance": "Instance",
+  "ld.workInstances": "Work/Instances",
   "ld.year": "Year",
   "ld.noInstancesAvailable": "No instances available.",
   "ld.noInstancesAdded": "No instances added",
@@ -226,7 +227,6 @@
   "ld.errorMakingApiRequest": "Error making API request",
   "ld.errorAssigningAuthority": "Error assigning authority",
   "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type matching the edited authority field (e.g. LCNAF authority for the Creator field)",
-  "ld.errorAssigningAuthority.no_lccn": "Only Library of Congress authorities can be assigned for now. This is temporary until additional source types are supported.",
   "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
   "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
   "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?",
@@ -295,5 +295,7 @@
   "ld.search.hubNameKeyword": "Hub name (Keyword)",
   "ld.exportInstanceRdf": "Export instance RDF file",
   "ld.required_series_title": "Please add a title to each series in order to save.",
+  "ld.source.libraryOfCongress": "Library of Congress",
+  "ld.source.local": "Local",
   "ld.cantLoadProfileSettings": "Cannot load custom profile settings, using profile defaults"
 }

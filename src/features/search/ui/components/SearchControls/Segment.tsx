@@ -1,10 +1,9 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Button, ButtonType } from '@/components/Button';
-import { useSearchState } from '@/store';
-import { SearchParam } from '../../../core';
 import { useSearchContext } from '../../providers/SearchProvider';
 import { isSegmentActive } from '../../utils/segmentUtils';
+import { logger } from '@/common/services/logger';
 
 export interface SegmentProps {
   path: string;
@@ -12,23 +11,48 @@ export interface SegmentProps {
   defaultTo?: string;
   children?: ReactNode;
   testId?: string;
+  onBeforeChange?: (segment: string) => Promise<void> | void;
+  onAfterChange?: (segment: string) => Promise<void> | void;
 }
 
-export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, testId }) => {
-  const { onSegmentChange } = useSearchContext();
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
-
+export const Segment: FC<SegmentProps> = ({
+  path,
+  labelId,
+  defaultTo,
+  children,
+  testId,
+  onBeforeChange,
+  onAfterChange,
+}) => {
+  const { onSegmentChange, currentSegment } = useSearchContext();
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   // Active if exact match OR prefix match (for parent segments)
   const isActive = isSegmentActive(currentSegment, path, true);
   const derivedLabelId = labelId ?? `ld.${path.split(':').pop()}`;
 
-  const handleClick = () => {
+  const handleClick = async () => {
     const targetPath = defaultTo ?? path;
 
-    if (currentSegment === targetPath) return;
+    if (currentSegment === targetPath || isProcessing) return;
 
-    onSegmentChange(targetPath);
+    try {
+      setIsProcessing(true);
+
+      if (onBeforeChange) {
+        await onBeforeChange(targetPath);
+      }
+
+      onSegmentChange(targetPath);
+
+      if (onAfterChange) {
+        await onAfterChange(targetPath);
+      }
+    } catch (error) {
+      logger.error('Segment change error:', error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const derivedTestId = testId ?? `id-search-segment-button-${path}`;
@@ -41,6 +65,7 @@ export const Segment: FC<SegmentProps> = ({ path, labelId, defaultTo, children, 
       className="search-segment-button"
       onClick={handleClick}
       data-testid={derivedTestId}
+      disabled={isProcessing}
     >
       {children ?? <FormattedMessage id={derivedLabelId} />}
     </Button>

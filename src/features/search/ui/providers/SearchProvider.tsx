@@ -2,6 +2,7 @@ import { FC, useMemo, createContext, useContext } from 'react';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
 import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
 import { resolveSearchConfigs } from '../utils';
+import { useLoadingState } from '@/store';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 
@@ -14,6 +15,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
   const { flow, mode = 'custom', children } = props;
+  const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
   const dynamicParams = isDynamicMode(props)
@@ -46,12 +48,6 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     [currentSegment, currentSource, props],
   );
 
-  // Handlers for search controls
-  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow });
-
-  // Sync URL to store (URL flow only)
-  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
-
   // Search query
   const {
     data: results,
@@ -66,6 +62,12 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     flow,
   });
 
+  // Handlers for search controls (after results so we can pass pageMetadata for browse pagination and refetch)
+  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow, results, refetch });
+
+  // Sync URL to store (URL flow only)
+  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
+
   const contextValue = useMemo(
     (): SearchContextValue => ({
       // Configuration
@@ -76,10 +78,12 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
       // Computed values
       activeUIConfig,
+      currentSegment,
+      currentSource,
 
       // Search results
       results,
-      isLoading,
+      isLoading: isLoading || isGlobalLoading,
       isFetching,
       isError,
       error,
@@ -100,6 +104,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       activeUIConfig,
       results,
       isLoading,
+      isGlobalLoading,
       isFetching,
       isError,
       error,

@@ -12,7 +12,7 @@ import { useMarcPreviewState, useSearchState, useUIState } from '@/store';
 import { useComplexLookupApi } from '../../hooks/useComplexLookupApi';
 import { COMPLEX_LOOKUPS_CONFIG, SEARCH_RESULTS_TABLE_CONFIG } from '../../configs';
 import { ComplexLookupSearchResults } from '../ComplexLookupSearchResults';
-import { MarcPreview } from '../MarcPreview';
+import { MarcPreviewLegacy } from '../MarcPreview';
 import type { Row } from '@/components/Table';
 import './ModalComplexLookup.scss';
 
@@ -127,7 +127,7 @@ export const ModalComplexLookup: FC<ModalComplexLookupProps> = memo(
       [loadMarcData, tableConfig, searchResultsFormatter],
     );
 
-    const renderMarcPreview = useCallback(() => <MarcPreview onClose={onCloseMarcPreview} />, []);
+    const renderMarcPreview = useCallback(() => <MarcPreviewLegacy onClose={onCloseMarcPreview} />, []);
 
     return (
       <Modal

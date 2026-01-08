@@ -10,6 +10,7 @@ export interface CommittedSearchParams {
   searchBy?: string; // undefined for advanced search (pre-formatted CQL query)
   source?: string;
   offset: number;
+  selector?: 'query' | 'prev' | 'next'; // Browse pagination selector
 }
 
 interface UseCommittedSearchParamsParams {
@@ -42,6 +43,7 @@ export function useCommittedSearchParams({ flow }: UseCommittedSearchParamsParam
       searchBy: committedValues.searchBy,
       source: committedValues.source,
       offset: committedValues.offset,
+      selector: committedValues.selector,
     };
   }, [flow, searchParams, committedValues]);
 }

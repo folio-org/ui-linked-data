@@ -20,5 +20,9 @@ export const HubsResultList: FC<HubsResultListProps> = ({ context = 'search', on
     checkFailedId,
   });
 
-  return <TableFlex header={listHeader} data={formattedData} className="results-table" />;
+  return (
+    <div className="search-result-list">
+      <TableFlex header={listHeader} data={formattedData} className="results-list" />
+    </div>
+  );
 };

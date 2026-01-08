@@ -4,4 +4,5 @@ export {
   updateLinkedFieldValue,
   getUpdatedSelectedEntries,
   generateValidationRequestBody,
+  formatComplexLookupDisplayValue,
 } from './complexLookup.helper';

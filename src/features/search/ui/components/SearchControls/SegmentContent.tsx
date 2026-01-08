@@ -1,6 +1,5 @@
 import { FC, ReactNode } from 'react';
-import { useSearchState } from '@/store';
-import { SearchParam } from '../../../core';
+import { useSearchContext } from '../../providers/SearchProvider';
 import { isSegmentActive } from '../../utils/segmentUtils';
 
 export interface SegmentContentProps {
@@ -24,9 +23,7 @@ export interface SegmentContentProps {
  * </SegmentContent>
  */
 export const SegmentContent: FC<SegmentContentProps> = ({ segment, matchPrefix = false, children }) => {
-  const { navigationState } = useSearchState(['navigationState']);
-  const currentSegment = (navigationState as Record<string, unknown>)?.[SearchParam.SEGMENT] as string | undefined;
-
+  const { currentSegment } = useSearchContext();
   const isActive = isSegmentActive(currentSegment, segment, Boolean(matchPrefix));
 
   if (!isActive) return null;

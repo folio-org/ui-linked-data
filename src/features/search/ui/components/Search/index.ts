@@ -16,6 +16,7 @@ import { SubmitButton } from '../SearchControls/SubmitButton';
 import { ResetButton } from '../SearchControls/ResetButton';
 import { InputsWrapper } from '../SearchControls/InputsWrapper';
 import { MetaControls } from '../SearchControls/MetaControls';
+import { SourceSelector } from '../SearchControls/SourceSelector';
 import { SearchResults as Results } from '../SearchResults';
 import type { FC } from 'react';
 
@@ -31,6 +32,7 @@ const Controls = Object.assign(RootControls, {
   QueryInput,
   SearchBySelect,
   MetaControls,
+  SourceSelector,
 });
 
 // Type the compound component properly

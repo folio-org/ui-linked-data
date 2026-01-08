@@ -1,0 +1,1 @@
+export { AuthoritiesModal } from './AuthoritiesModal';

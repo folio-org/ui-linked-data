@@ -150,6 +150,21 @@ describe('SearchControlPane', () => {
   });
 
   test('renders sublabel when showSubLabel is true and renderSubLabel is provided', () => {
+    mockUseSearchContext.mockReturnValue({
+      activeUIConfig: {
+        ui: {
+          titleId: undefined,
+          subtitleId: undefined,
+        },
+        features: {
+          isVisibleSubLabel: false,
+        },
+      },
+      results: {
+        totalRecords: 25,
+      },
+    });
+
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -332,6 +347,9 @@ describe('SearchControlPane', () => {
         features: {
           isVisibleSubLabel: true,
         },
+      },
+      results: {
+        totalRecords: 42,
       },
     });
 

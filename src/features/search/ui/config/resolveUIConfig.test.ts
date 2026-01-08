@@ -112,7 +112,7 @@ describe('resolveUIConfig', () => {
   });
 
   it('handles hubs with internal segment', () => {
-    const result = resolveUIConfig('hubs:internal');
+    const result = resolveUIConfig('hubs:local');
 
     expect(result).toBeDefined();
   });

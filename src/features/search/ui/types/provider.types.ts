@@ -30,6 +30,8 @@ export interface SearchResults {
   pageMetadata?: {
     totalElements: number;
     totalPages: number;
+    prev?: string; // Browse pagination: anchor value for previous page
+    next?: string; // Browse pagination: anchor value for next page
   };
 }
 
@@ -52,6 +54,9 @@ export interface SearchContextValue {
 
   // Computed values
   activeUIConfig: SearchTypeUIConfig;
+  // Current navigation params derived by provider (reflects URL or defaults)
+  currentSegment: string;
+  currentSource?: string;
 
   // Search results (from React Query)
   results: SearchResults | undefined;

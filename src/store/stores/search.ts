@@ -23,6 +23,7 @@ export interface CommittedValues {
   searchBy: string;
   source?: string;
   offset: number;
+  selector?: 'query' | 'prev' | 'next'; // Browse pagination selector
 }
 
 const DEFAULT_COMMITTED_VALUES: CommittedValues = {
@@ -31,6 +32,7 @@ const DEFAULT_COMMITTED_VALUES: CommittedValues = {
   searchBy: DEFAULT_SEARCH_BY,
   source: undefined,
   offset: 0,
+  selector: 'query',
 };
 
 export type SearchState = SliceState<'query', string> &

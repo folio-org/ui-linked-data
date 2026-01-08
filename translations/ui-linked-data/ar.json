@@ -225,7 +225,6 @@
     "ld.modal.uncontrolledAuthoritiesWarning.body": "يتضمن هذا الوصف استناد واحدة أو أكثر غير محكم. هل تريد حفظ التغييرات؟",
     "ld.errorAssigningAuthority": "خطأ في تعيين الاستناد",
     "ld.errorAssigningAuthority.not_valid_for_target": "يرجى تحديد استناد بنوع مورد مطابق لحقل الاستناد الذي تم تحريره (على سبيل المثال: استناد ملف استناد الاسم الخاص بمكتبة الكونجرس لحقل المنشئ)",
-    "ld.errorAssigningAuthority.no_lccn": "يمكن تعيين استنادات مكتبة الكونجرس فقط في الوقت الحالي. هذا أمر مؤقت حتى يتم دعم أنواع المصادر الإضافية.",
     "ld.errorAssigningAuthority.unsupported_marc": "لم يتم تخطيط الاستناد المحدد إلى البيانات المرتبطة، ولا يمكن تخطيطه بعد. هذا أمر مؤقت، حيث أن تخطيط مارك قيد التنفيذ.",
     "ld.required_primary_main_title": "يرجى إضافة العنوان الرئيسي للحفظ.",
     "ld.lccn_does_not_match_pattern": "تم تفعيل التحقق من صحة نمط رقم تحكم مكتبة الكونجرس: يرجى تقديم رقم تحكم مكتبة الكونجرس يتوافق مع البنية القياسية.",
@@ -293,5 +292,7 @@
     "ld.search.hubNameKeyword": "Hub name (Keyword)",
     "ld.field.typeOfContinuingResource": "Type of continuing resource",
     "ld.exportInstanceRdf": "Export instance RDF file",
-    "ld.required_series_title": "Please add a title to each series in order to save."
+    "ld.required_series_title": "Please add a title to each series in order to save.",
+    "ld.source.libraryOfCongress": "Library of Congress",
+    "ld.source.local": "Local"
 }
