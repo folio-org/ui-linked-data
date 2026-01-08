@@ -1,4 +1,4 @@
-import { hubLocalCheckService } from '../../../ui/services';
+import { hubLocalCheckService } from '../../services';
 import type { IResultEnricher } from '../../types';
 
 /**

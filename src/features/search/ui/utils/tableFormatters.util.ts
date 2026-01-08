@@ -43,9 +43,3 @@ export function buildTableHeader(
 
   return header;
 }
-
-export function extractRowIds(data: SearchResultsTableRow[] | undefined): string[] {
-  if (!data || data.length === 0) return [];
-
-  return data.map(row => row.__meta?.id).filter(Boolean) as string[];
-}
