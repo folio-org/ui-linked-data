@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 interface HubSourceFormatterProps {
   row: SearchResultsTableRow;
@@ -8,9 +9,11 @@ interface HubSourceFormatterProps {
  * Formatter for hub source column
  */
 export const HubSourceFormatter: FC<HubSourceFormatterProps> = ({ row }) => {
+  const { label } = row.source;
+
   return (
     <span className="hub-source" data-testid={`hub-source-${row.__meta.id}`}>
-      {row.source.label}
+      {typeof label === 'string' ? <FormattedMessage id={label} /> : label}
     </span>
   );
 };

@@ -7,14 +7,14 @@ import type { IResultEnricher } from '../../types';
  */
 export class HubsLocalAvailabilityEnricher implements IResultEnricher {
   async enrich<T>(rawData: T[]): Promise<T[]> {
-    if (!rawData || rawData.length === 0) {
+    if (!rawData?.length) {
       return rawData;
     }
 
     const hubData = rawData as HubSearchResultDTO[];
     const tokens = hubData.map(hub => hub.token).filter(Boolean);
 
-    if (tokens.length === 0) {
+    if (!tokens.length) {
       return rawData;
     }
 
