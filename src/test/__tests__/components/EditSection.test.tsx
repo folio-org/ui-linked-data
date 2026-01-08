@@ -93,7 +93,7 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14'],
+      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14', 'uuid15'],
     },
   ],
   [
@@ -228,6 +228,17 @@ const schema = new Map([
       uuid: 'uuid14',
     },
   ],
+  [
+    'uuid15',
+    {
+      bfid: 'uuid15Bfid',
+      displayName: 'uuid15',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid15'],
+      uuid: 'uuid15',
+      editorVisible: false,
+    },
+  ],
 ]);
 
 const monograph = {
@@ -358,6 +369,15 @@ describe('EditSection', () => {
 
     const section = getByTestId('field-with-meta-controls-uuid13');
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
+  });
+
+  test('renders but does not display field hidden by settings', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    expect(await findByText('uuid15')).toBeInTheDocument();
+
+    const section = getByTestId('field-with-meta-controls-uuid15');
+    expect(section).toHaveClass('field-hidden-by-settings');
   });
 
   describe('location-based form placeholder', () => {

@@ -61,6 +61,7 @@
 * Add results formatting strategies for Search. Update UI to support search results for different types of search. Refs [UILD-683].
 * Update Complex lookups to use the new Search feature. Refs [UILD-686].
 * Add Hub tab to landing page. Refs [UILD-687].
+* Add custom workspace profile settings application. Refs [UILD-684].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -122,6 +123,7 @@
 [UILD-683]:https://folio-org.atlassian.net/browse/UILD-683
 [UILD-686]:https://folio-org.atlassian.net/browse/UILD-686
 [UILD-687]:https://folio-org.atlassian.net/browse/UILD-687
+[UILD-684]:https://folio-org.atlassian.net/browse/UILD-684
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
