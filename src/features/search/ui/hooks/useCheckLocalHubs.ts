@@ -5,6 +5,7 @@ interface UseCheckLocalHubsReturn {
   localHubIds: Set<string>;
   isError: boolean;
   error: Error | null;
+  isLoading: boolean;
 }
 
 /**
@@ -13,7 +14,7 @@ interface UseCheckLocalHubsReturn {
 export function useCheckLocalHubs(tokens: string[]): UseCheckLocalHubsReturn {
   const sortedTokens = [...tokens].sort((a, b) => a.localeCompare(b));
 
-  const { data, isError, error } = useQuery<Set<string>, Error>({
+  const { data, isError, error, isLoading } = useQuery<Set<string>, Error>({
     queryKey: ['localHubs', sortedTokens],
     queryFn: () => hubLocalCheckService.checkLocalAvailability(tokens),
     enabled: tokens.length > 0,
@@ -25,5 +26,6 @@ export function useCheckLocalHubs(tokens: string[]): UseCheckLocalHubsReturn {
     localHubIds: data ?? new Set<string>(),
     isError,
     error,
+    isLoading,
   };
 }
