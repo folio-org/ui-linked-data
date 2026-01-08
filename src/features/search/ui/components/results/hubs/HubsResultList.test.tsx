@@ -67,7 +67,6 @@ describe('HubsResultList', () => {
     const mockDataWithItems: useHubsTableFormatterModule.UseHubsTableFormatterReturn = {
       formattedData: [] as Row[],
       listHeader: {} as Row,
-      isLoading: false,
     };
 
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockDataWithItems);
