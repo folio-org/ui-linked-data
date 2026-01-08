@@ -1,3 +1,5 @@
+import { SEARCH_CHECK_QUERY_PARAM, SEARCH_OPERATOR } from '@/common/constants/search.constants';
+
 export function enrichRowsWithLocalAvailability(
   data: SearchResultsTableRow[] | undefined,
   localHubIds: Set<string>,
@@ -18,9 +20,9 @@ export function enrichRowsWithLocalAvailability(
 }
 
 export function buildHubLocalCheckQuery(tokens: string[]): string {
-  const queryParts = tokens.map(token => `originalId="${token}"`);
+  const queryParts = tokens.map(token => `${SEARCH_CHECK_QUERY_PARAM.ORIGINAL_ID}="${token}"`);
 
-  return queryParts.join(' or ');
+  return queryParts.join(` ${SEARCH_OPERATOR.OR} `);
 }
 
 export function extractOriginalIds(content?: Array<{ id?: string; originalId?: string }>): Set<string> {
@@ -28,5 +30,5 @@ export function extractOriginalIds(content?: Array<{ id?: string; originalId?: s
     return new Set<string>();
   }
 
-  return new Set<string>(content.map(item => item.originalId).filter(Boolean) as string[]);
+  return new Set<string>(content.map(({ originalId }) => originalId).filter(Boolean) as string[]);
 }
