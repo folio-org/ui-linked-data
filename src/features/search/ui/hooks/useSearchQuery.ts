@@ -144,28 +144,77 @@ export function useSearchQuery({
   // Only enable when we have a non-empty query string AND a valid config
   const shouldEnable = enabled && !!committed.query && committed.query.trim() !== '' && !!effectiveCoreConfig;
 
+  // Main search query
   const {
-    data,
-    isLoading,
-    isFetching,
-    isError,
-    error,
-    refetch: queryRefetch,
+    data: rawSearchResults,
+    isLoading: isSearchLoading,
+    isFetching: isSearchFetching,
+    isError: isSearchError,
+    error: searchError,
+    refetch: refetchSearch,
   } = useQuery<SearchResults | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
   });
 
+  // Check if enrichment is needed
+  const hasEnricher = !!effectiveCoreConfig?.strategies?.resultEnricher;
+  const hasFormatter = !!effectiveCoreConfig?.strategies?.resultFormatter;
+  const needsEnrichment = hasEnricher && !!rawSearchResults?.items;
+
+  // Enrichment query (dependent on main query)
+  const {
+    data: enrichedResults,
+    isLoading: isEnrichmentLoading,
+    isFetching: isEnrichmentFetching,
+    isError: isEnrichmentError,
+    error: enrichmentError,
+    refetch: refetchEnrichment,
+  } = useQuery<SearchResults | undefined>({
+    queryKey: [...queryKey, 'enriched'],
+    queryFn: async (): Promise<SearchResults | undefined> => {
+      if (!rawSearchResults || !effectiveCoreConfig?.strategies?.resultEnricher) {
+        return rawSearchResults;
+      }
+
+      let processedItems = rawSearchResults.items;
+
+      if (hasFormatter && effectiveCoreConfig.strategies.resultFormatter) {
+        processedItems = effectiveCoreConfig.strategies.resultFormatter.format(rawSearchResults.items);
+      }
+
+      const enriched = await effectiveCoreConfig.strategies.resultEnricher.enrich(processedItems);
+
+      return {
+        ...rawSearchResults,
+        items: enriched,
+      };
+    },
+    enabled: needsEnrichment,
+    staleTime: Infinity,
+  });
+
+  // Determine which results to return
+  const finalResults = hasEnricher ? enrichedResults : rawSearchResults;
+
+  // Aggregate loading states
+  const isLoading = isSearchLoading || (needsEnrichment && isEnrichmentLoading);
+  const isFetching = isSearchFetching || (needsEnrichment && isEnrichmentFetching);
+  const isError = isSearchError || isEnrichmentError;
+  const error = searchError || enrichmentError;
+
+  // Unified refetch
   const refetch = useCallback(async () => {
     // Only refetch if we have a valid query
     if (committed.query && committed.query.trim() !== '') {
-      await queryRefetch();
+      await refetchSearch();
+      await refetchEnrichment();
     }
-  }, [queryRefetch, committed.query]);
+  }, [refetchSearch, committed.query]);
 
   return {
-    data,
+    data: finalResults,
     isLoading,
     isFetching,
     isError,

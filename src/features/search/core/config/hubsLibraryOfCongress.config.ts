@@ -4,6 +4,7 @@ import type { SearchTypeConfig } from '../types';
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
 import { HubsResultFormatter } from '../strategies/resultFormatters';
+import { HubsLocalAvailabilityEnricher } from '../strategies/resultEnrichers';
 
 /**
  * Hubs Library Of Congress Configuration for Search page (Atomic)
@@ -18,6 +19,7 @@ export const hubsLibraryOfCongressConfig: SearchTypeConfig = {
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
     resultFormatter: new HubsResultFormatter(),
+    resultEnricher: new HubsLocalAvailabilityEnricher(),
   },
 
   capabilities: {

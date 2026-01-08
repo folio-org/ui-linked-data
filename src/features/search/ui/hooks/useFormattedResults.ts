@@ -11,19 +11,25 @@ export function useFormattedResults<T = unknown>(): T[] | undefined {
   const committed = useCommittedSearchParams({ flow });
 
   const formattedData = useMemo(() => {
-    if (!results?.items || !config?.strategies?.resultFormatter) {
+    if (!results?.items) {
       return undefined;
     }
 
-    try {
-      const allFormattedItems = config.strategies.resultFormatter.format(results.items) as T[];
-
-      return allFormattedItems;
-    } catch (error) {
-      logger.error('Error formatting search results:', error);
-
-      return undefined;
+    // If config has resultEnricher, items are already formatted and enriched
+    if (config?.strategies?.resultEnricher) {
+      return results.items as T[];
     }
+
+    if (config?.strategies?.resultFormatter) {
+      try {
+        return config.strategies.resultFormatter.format(results.items) as T[];
+      } catch (error) {
+        logger.error('Error formatting search results:', error);
+        return undefined;
+      }
+    }
+
+    return undefined;
   }, [results?.items, config, committed.offset, flow]);
 
   return formattedData;
