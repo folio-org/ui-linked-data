@@ -15,11 +15,6 @@ export function useFormattedResults<T = unknown>(): T[] | undefined {
       return undefined;
     }
 
-    // If config has resultEnricher, items are already formatted and enriched
-    if (config?.strategies?.resultEnricher) {
-      return results.items as T[];
-    }
-
     if (config?.strategies?.resultFormatter) {
       try {
         return config.strategies.resultFormatter.format(results.items) as T[];

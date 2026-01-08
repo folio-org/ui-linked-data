@@ -3,9 +3,6 @@ import { IResultFormatter } from '../../types';
 
 /**
  * Formats Hub data for Search page results
- *
- * Note: Source enrichment (Library of Congress vs Library of Congress, Local)
- * happens later via useEnrichHubsWithLocalCheck hook
  */
 export class HubsResultFormatter implements IResultFormatter<SearchResultsTableRow> {
   format(data: unknown[]): SearchResultsTableRow[] {
@@ -16,12 +13,17 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
   private formatHubs(hubList: HubSearchResultDTO[]): SearchResultsTableRow[] {
     return hubList?.map(hubEntry => {
       const { suggestLabel = '', uri = '', token = '' } = hubEntry;
+      const isLocal = 'isLocal' in hubEntry ? (hubEntry as HubSearchResultDTO & { isLocal: boolean }).isLocal : false;
+
+      // Determine source based on isLocal flag (set by enricher if configured)
+      const sourceLabel = isLocal ? 'ld.source.libraryOfCongress.local' : 'ld.source.libraryOfCongress';
 
       return {
         __meta: {
           id: token,
           key: uuidv4(),
           isAnchor: false,
+          isLocal,
         },
         hub: {
           label: suggestLabel,
@@ -29,7 +31,7 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
           className: 'hub-title',
         },
         source: {
-          label: 'ld.source.libraryOfCongress', // Base source, enriched later with local info
+          label: sourceLabel,
           className: 'hub-source',
         },
       };

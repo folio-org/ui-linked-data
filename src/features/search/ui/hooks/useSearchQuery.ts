@@ -125,8 +125,14 @@ export function useSearchQuery({
       const normalized = strategies.responseTransformer.transform(data, limit);
       const totalPages = Math.ceil(normalized.totalRecords / limit);
 
+      let items = normalized.content;
+
+      if (strategies.resultEnricher) {
+        items = await strategies.resultEnricher.enrich(items);
+      }
+
       return {
-        items: normalized.content,
+        items,
         totalRecords: normalized.totalRecords,
         pageMetadata: {
           totalElements: normalized.totalRecords,
@@ -138,83 +144,43 @@ export function useSearchQuery({
     }
 
     return data as unknown as SearchResults;
-  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset, committed.selector]);
+  }, [
+    effectiveCoreConfig,
+    committed.query,
+    effectiveSearchBy,
+    committed.offset,
+    committed.selector,
+    effectiveUIConfig,
+  ]);
 
   // Determine if query should be enabled
   // Only enable when we have a non-empty query string AND a valid config
   const shouldEnable = enabled && !!committed.query && committed.query.trim() !== '' && !!effectiveCoreConfig;
 
-  // Main search query
+  // Main search query (includes enrichment if configured)
   const {
-    data: rawSearchResults,
-    isLoading: isSearchLoading,
-    isFetching: isSearchFetching,
-    isError: isSearchError,
-    error: searchError,
-    refetch: refetchSearch,
+    data,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+    refetch: refetchQuery,
   } = useQuery<SearchResults | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
   });
 
-  // Check if enrichment is needed
-  const hasEnricher = !!effectiveCoreConfig?.strategies?.resultEnricher;
-  const hasFormatter = !!effectiveCoreConfig?.strategies?.resultFormatter;
-  const needsEnrichment = hasEnricher && !!rawSearchResults?.items;
-
-  // Enrichment query (dependent on main query)
-  const {
-    data: enrichedResults,
-    isLoading: isEnrichmentLoading,
-    isFetching: isEnrichmentFetching,
-    isError: isEnrichmentError,
-    error: enrichmentError,
-    refetch: refetchEnrichment,
-  } = useQuery<SearchResults | undefined>({
-    queryKey: [...queryKey, 'enriched'],
-    queryFn: async (): Promise<SearchResults | undefined> => {
-      if (!rawSearchResults || !effectiveCoreConfig?.strategies?.resultEnricher) {
-        return rawSearchResults;
-      }
-
-      let processedItems = rawSearchResults.items;
-
-      if (hasFormatter && effectiveCoreConfig.strategies.resultFormatter) {
-        processedItems = effectiveCoreConfig.strategies.resultFormatter.format(rawSearchResults.items);
-      }
-
-      const enriched = await effectiveCoreConfig.strategies.resultEnricher.enrich(processedItems);
-
-      return {
-        ...rawSearchResults,
-        items: enriched,
-      };
-    },
-    enabled: needsEnrichment,
-    staleTime: Infinity,
-  });
-
-  // Determine which results to return
-  const finalResults = hasEnricher ? enrichedResults : rawSearchResults;
-
-  // Aggregate loading states
-  const isLoading = isSearchLoading || (needsEnrichment && isEnrichmentLoading);
-  const isFetching = isSearchFetching || (needsEnrichment && isEnrichmentFetching);
-  const isError = isSearchError || isEnrichmentError;
-  const error = searchError || enrichmentError;
-
   // Unified refetch
   const refetch = useCallback(async () => {
     // Only refetch if we have a valid query
     if (committed.query && committed.query.trim() !== '') {
-      await refetchSearch();
-      await refetchEnrichment();
+      await refetchQuery();
     }
-  }, [refetchSearch, committed.query]);
+  }, [refetchQuery, committed.query]);
 
   return {
-    data: finalResults,
+    data,
     isLoading,
     isFetching,
     isError,

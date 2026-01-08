@@ -1,27 +1,30 @@
 import { hubLocalCheckService } from '../../../ui/services';
-import { extractRowIds, enrichRowsWithLocalAvailability } from '../../../ui/utils';
 import type { IResultEnricher } from '../../types';
 
 /**
- * Enricher for Hub search results from Library of Congress
- * Checks which external hubs are available locally and adds "isLocal" flag
+ * Enriches Hub search results from Library of Congress with local availability data
+ * Adds "isLocal" flag to raw hub entries before they are formatted
  */
 export class HubsLocalAvailabilityEnricher implements IResultEnricher {
-  async enrich<T>(formattedResults: T[]): Promise<T[]> {
-    if (!formattedResults || formattedResults.length === 0) {
-      return formattedResults;
+  async enrich<T>(rawData: T[]): Promise<T[]> {
+    if (!rawData || rawData.length === 0) {
+      return rawData;
     }
 
-    const tokens = extractRowIds(formattedResults as SearchResultsTableRow[]);
+    const hubData = rawData as HubSearchResultDTO[];
+    const tokens = hubData.map(hub => hub.token).filter(Boolean);
 
     if (tokens.length === 0) {
-      return formattedResults;
+      return rawData;
     }
 
     const localHubIds = await hubLocalCheckService.checkLocalAvailability(tokens);
 
-    const enriched = enrichRowsWithLocalAvailability(formattedResults as SearchResultsTableRow[], localHubIds);
+    const enrichedData = hubData.map(hub => ({
+      ...hub,
+      isLocal: localHubIds.has(hub.token),
+    }));
 
-    return (enriched || formattedResults) as T[];
+    return enrichedData as T[];
   }
 }
