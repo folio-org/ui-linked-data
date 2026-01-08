@@ -3,6 +3,7 @@ import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.co
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { fetchProfileSettings } from '@/common/api/profiles.api';
+import { sortProfileSettingsChildren } from '@/common/helpers/profileSettingsSort.helper';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
 import { useStatusState } from '@/store';
 import { logger } from '@/common/services/logger';
@@ -10,28 +11,6 @@ import { logger } from '@/common/services/logger';
 export const useLoadProfileSettings = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const queryClient = useQueryClient();
-
-  const sortProfileSettingsChildren = (settings: ProfileSettings) => {
-    settings.children?.sort((a, b) => {
-      if (a.visible && !b.visible) {
-        return -1;
-      } else if (!a.visible && b.visible) {
-        return 1;
-      } else if (!a.visible && !b.visible) {
-        return 0;
-      } else if (a.order !== undefined && b.order === undefined) {
-        // .order shouldn't be undefined if both are visible,
-        // but handle those cases anyways.
-        return -1;
-      } else if (a.order === undefined && b.order !== undefined) {
-        return 1;
-      } else if (a.order === undefined && b.order === undefined) {
-        return 0;
-      } else {
-        return a.order! - b.order!;
-      }
-    });
-  };
 
   const loadProfileSettings = async (profileId: string | number | undefined, profile: Profile) => {
     const queryKey = ['profileSettings', profileId];
