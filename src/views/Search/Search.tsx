@@ -169,7 +169,7 @@ export const SearchView = () => {
         <Search.Controls>
           {/* Top-level segments */}
           <Search.Controls.SegmentGroup>
-            <Search.Controls.Segment path="resources" labelId="ld.resources" />
+            <Search.Controls.Segment path="resources" labelId="ld.workInstances" />
             <Search.Controls.Segment path="hubs" labelId="ld.hubs" />
           </Search.Controls.SegmentGroup>
 

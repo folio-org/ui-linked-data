@@ -1,3 +1,4 @@
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { LegacySearchResultList } from '@/features/search/ui';

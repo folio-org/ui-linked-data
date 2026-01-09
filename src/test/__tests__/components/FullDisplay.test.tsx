@@ -1,5 +1,6 @@
 import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import '@src/test/__mocks__/common/hooks/useConfig.mock';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
@@ -31,7 +32,11 @@ jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {
     return (
-      <div id={id}>{Object.entries(values ?? {})?.map(([k, v]) => <Fragment key={k}>{v as ReactNode}</Fragment>)}</div>
+      <div id={id}>
+        {Object.entries(values ?? {})?.map(([k, v]) => (
+          <Fragment key={k}>{v as ReactNode}</Fragment>
+        ))}
+      </div>
     );
   },
   useIntl: () => ({

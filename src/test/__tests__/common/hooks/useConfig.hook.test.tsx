@@ -2,8 +2,10 @@ import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
+import { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useConfig } from '@common/hooks/useConfig.hook';
-import { fetchProfile } from '@common/api/profiles.api';
+import { fetchProfile, fetchProfileSettings } from '@common/api/profiles.api';
 import { useInputsStore, useProfileStore } from '@src/store';
 import { getProfileConfig } from '@common/helpers/profile.helper';
 
@@ -26,6 +28,7 @@ jest.mock('@common/hooks/useCommonStatus', () => ({
 }));
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
+  fetchProfileSettings: jest.fn(),
 }));
 jest.mock('@common/api/client', () => ({
   apiClient: jest.fn(),
@@ -62,10 +65,32 @@ describe('useConfig', () => {
   const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
   const setSearchParams = jest.fn();
+  let queryClient: QueryClient;
+
+  const createWrapper = () => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    const Wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    );
+
+    return Wrapper;
+  };
 
   const mockProfileConfig = {
     ids: [],
     rootEntry: { id: 'root' },
+  };
+
+  const mockProfileSettings = {
+    active: false,
+    children: [],
   };
 
   beforeEach(() => {
@@ -100,6 +125,11 @@ describe('useConfig', () => {
     ]);
 
     (getProfileConfig as jest.Mock).mockReturnValue(mockProfileConfig);
+    (fetchProfileSettings as jest.Mock).mockReturnValue(mockProfileSettings);
+  });
+
+  afterEach(() => {
+    queryClient?.clear();
   });
 
   describe('getProfiles', () => {
@@ -117,7 +147,7 @@ describe('useConfig', () => {
         ids: ['1'],
       });
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({ record, recordId: '' });
 
       expect(fetchProfile).toHaveBeenCalled();
@@ -125,7 +155,7 @@ describe('useConfig', () => {
     });
 
     test('loads single profile when no rootEntry is provided', async () => {
-      const mockProfileResult = { id: 'SingleProfile' };
+      const mockProfileResult = [{ id: 'SingleProfile' }] as Profile;
       (fetchProfile as jest.Mock).mockResolvedValue(mockProfileResult);
       const mockQueryParams = new URLSearchParams();
       (useSearchParams as jest.Mock).mockReturnValue([mockQueryParams, setSearchParams]);
@@ -133,7 +163,7 @@ describe('useConfig', () => {
         ids: ['1'],
       });
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({
         record,
         recordId: '',
@@ -156,7 +186,7 @@ describe('useConfig', () => {
 
       (fetchProfile as jest.Mock).mockResolvedValueOnce(mockProfileResult1).mockResolvedValueOnce(mockProfileResult2);
 
-      const { result } = renderHook(useConfig);
+      const { result } = renderHook(useConfig, { wrapper: createWrapper() });
       await result.current.getProfiles({
         record,
         recordId: '',
