@@ -33,7 +33,7 @@ export const HubActionFormatter: FC<HubActionFormatterProps> = ({ row, onEdit, o
       data-testid={`hub-import-${hubId}`}
       className="hub-action-button"
     >
-      <FormattedMessage id="ld.import" />
+      <FormattedMessage id="ld.import.edit" />
     </Button>
   );
 };
