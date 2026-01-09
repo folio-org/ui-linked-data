@@ -103,6 +103,10 @@ export const SearchView = () => {
     });
   };
 
+  // TODO: implement Hub action handlers
+  const handleHubEdit = () => {};
+  const handleHubImport = () => {};
+
   const resourceActions = useMemo(
     () => [
       {
@@ -218,7 +222,7 @@ export const SearchView = () => {
             {/* Hubs segment: table with external links */}
             <Search.Controls.SegmentContent segment="hubs">
               <Search.Results className="search-results-container hubs-result-list">
-                <HubsResultList context="search" />
+                <HubsResultList onEdit={handleHubEdit} onImport={handleHubImport} />
                 <Search.Results.Pagination />
               </Search.Results>
             </Search.Controls.SegmentContent>

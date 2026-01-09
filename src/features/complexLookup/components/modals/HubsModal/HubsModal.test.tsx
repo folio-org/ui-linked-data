@@ -51,14 +51,14 @@ jest.mock('@/features/search/ui/components/Search', () => {
 });
 
 jest.mock('@/features/search/ui', () => ({
-  HubsResultList: ({
+  HubsLookupResultList: ({
     context,
     onAssign,
   }: {
     context: string;
     onAssign: (record: ComplexLookupAssignRecordDTO) => void;
   }) => (
-    <div data-testid="hubs-result-list">
+    <div data-testid="hubs-lookup-result-list">
       <span>{context}</span>
       <button onClick={() => onAssign({ id: 'hub-1', title: 'Hub 1' })}>Assign Hub</button>
     </div>
@@ -97,8 +97,8 @@ describe('HubsModal', () => {
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
         initialQuery: 'Test Hub',
-        defaultSegment: 'hubs',
-        defaultSource: 'external',
+        defaultSegment: 'hubsLookup',
+        defaultSource: 'libraryOfCongress',
       });
     });
 
@@ -108,8 +108,8 @@ describe('HubsModal', () => {
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
         initialQuery: undefined,
-        defaultSegment: 'hubs',
-        defaultSource: 'external',
+        defaultSegment: 'hubsLookup',
+        defaultSource: 'libraryOfCongress',
       });
     });
 
@@ -136,15 +136,15 @@ describe('HubsModal', () => {
       expect(screen.getByTestId('complex-lookup-search-contents')).toBeInTheDocument();
     });
 
-    it('renders HubsResultList with complexLookup context', () => {
+    it('renders HubsLookupResultList with complexLookup context', () => {
       render(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
-      const resultList = screen.getByTestId('hubs-result-list');
+      const resultList = screen.getByTestId('hubs-lookup-result-list');
       expect(resultList).toBeInTheDocument();
       expect(resultList).toHaveTextContent('complexLookup');
     });
 
-    it('passes onAssign to HubsResultList', () => {
+    it('passes onAssign to HubsLookupResultList', () => {
       render(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       const assignButton = screen.getByText('Assign Hub');

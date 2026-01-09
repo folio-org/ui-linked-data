@@ -71,7 +71,7 @@ describe('searchUIRegistry', () => {
         expect(result).toHaveProperty('ui');
         expect(result?.ui).toHaveProperty('titleId');
         expect(result).toHaveProperty('features');
-        expect(result).toHaveProperty('searchableIndices');
+        expect(result).toHaveProperty('limit');
       });
 
       it('resources config has required properties', () => {
@@ -103,10 +103,11 @@ describe('searchUIRegistry', () => {
       it('hubs has correct feature flags', () => {
         const result = getSearchUIConfig('hubs');
 
-        expect(result?.features?.hasSearchBy).toBe(true);
+        expect(result?.features?.hasSearchBy).toBe(false);
         expect(result?.features?.hasAdvancedSearch).toBe(false);
         expect(result?.features?.isVisibleSubLabel).toBe(true);
         expect(result?.features?.isLoopedPagination).toBe(false);
+        expect(result?.features?.hasSourceToggle).toBe(true);
       });
     });
 
@@ -125,11 +126,11 @@ describe('searchUIRegistry', () => {
         expect(Array.isArray(result?.searchableIndices)).toBe(true);
       });
 
-      it('hubs has searchableIndices array', () => {
+      it('hubs config has limit property', () => {
         const result = getSearchUIConfig('hubs');
 
-        expect(result?.searchableIndices).toBeDefined();
-        expect(Array.isArray(result?.searchableIndices)).toBe(true);
+        expect(result?.limit).toBeDefined();
+        expect(typeof result?.limit).toBe('number');
       });
     });
 
@@ -185,15 +186,16 @@ describe('searchUIRegistry', () => {
         if (result) {
           expect(typeof result.ui?.titleId).toBe('string');
           expect(typeof result.features?.hasSearchBy).toBe('boolean');
-          // searchableIndices exist in segment-specific configs, not at the top level
-          expect(result).toBeDefined();
+          expect(result.features).toBeDefined();
+          expect(result.ui).toBeDefined();
         }
       });
 
-      it('searchable indices have correct structure', () => {
-        const result = getSearchUIConfig('authorities');
+      it('searchable indices have correct structure in segments', () => {
+        const result = getSearchUIConfig('authorities', 'search');
 
         if (result?.searchableIndices) {
+          expect(Array.isArray(result.searchableIndices)).toBe(true);
           for (const index of result.searchableIndices) {
             expect(index).toHaveProperty('value');
             expect(index).toHaveProperty('labelId');

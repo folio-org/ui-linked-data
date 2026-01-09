@@ -156,3 +156,11 @@ export enum AuthRefType {
 }
 
 export const SEARCH_QUERY_VALUE_PARAM = ':value';
+
+export const SEARCH_OPERATOR = {
+  OR: 'or',
+};
+
+export const SEARCH_CHECK_QUERY_PARAM = {
+  ORIGINAL_ID: 'originalId',
+};

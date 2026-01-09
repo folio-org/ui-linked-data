@@ -55,10 +55,19 @@ export interface IResultFormatter<TFormatted = unknown> {
 }
 
 /**
+ * Result enricher interface - enriches formatted results with additional data
+ * Executes after formatting, allows async operations like API calls
+ */
+export interface IResultEnricher {
+  enrich<T>(formattedResults: T[]): Promise<T[]>;
+}
+
+/**
  * Search strategies container - holds strategy instances
  */
 export interface SearchStrategies {
   requestBuilder?: IRequestBuilder;
   responseTransformer?: IResponseTransformer;
   resultFormatter?: IResultFormatter;
+  resultEnricher?: IResultEnricher;
 }

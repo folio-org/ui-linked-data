@@ -1,148 +1,78 @@
 import { render, screen } from '@testing-library/react';
 import { HubsResultList } from './HubsResultList';
-import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
-import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
+import * as useHubsTableFormatterModule from '../../../hooks/useHubsTableFormatter';
+import { Row } from '@/components/Table';
 
-jest.mock('../../../hooks/useFormattedResults');
-jest.mock('../../../hooks/useTableFormatter');
-interface MockTableFlexProps {
-  header: unknown;
-  data: unknown;
-  className?: string;
-}
-
+// Mock dependencies
+jest.mock('../../../hooks/useHubsTableFormatter');
 jest.mock('@/components/Table', () => ({
-  TableFlex: ({ header, data, className }: MockTableFlexProps) => (
-    <div data-testid="table-flex" className={className}>
-      <div data-testid="table-header">{JSON.stringify(header)}</div>
-      <div data-testid="table-data">{JSON.stringify(data)}</div>
-    </div>
-  ),
+  TableFlex: () => <div data-testid="table-flex">Table</div>,
 }));
 
-const mockUseFormattedResults = useFormattedResultsHook.useFormattedResults as jest.Mock;
-const mockUseTableFormatter = useTableFormatterHook.useTableFormatter as jest.Mock;
-
 describe('HubsResultList', () => {
-  const mockData: SearchResultsTableRow[] = [
-    {
-      title: { label: 'Test Hub 1' },
-      __meta: { id: '1', key: '1' },
-    },
-    {
-      title: { label: 'Test Hub 2' },
-      __meta: { id: '2', key: '2' },
-    },
-  ];
-
-  const mockFormattedData = [
-    {
-      title: { label: 'Test Hub 1', children: <span>Test Hub 1</span> },
-      __meta: { id: '1', key: '1' },
-    },
-  ];
-
-  const mockListHeader = {
-    title: { label: 'Title', position: 1 },
-  };
+  const mockOnEdit = jest.fn();
+  const mockOnImport = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  test('renders TableFlex with formatted data', () => {
-    mockUseFormattedResults.mockReturnValue(mockData);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: mockFormattedData,
-      listHeader: mockListHeader,
-    });
+  const mockFormatterReturn = {
+    formattedData: [],
+    listHeader: {},
+    isLoading: false,
+  };
 
-    render(<HubsResultList />);
+  test('renders table component', () => {
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
+
+    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+
+    expect(screen.getByTestId('hubs-search-result-list')).toBeInTheDocument();
+    expect(screen.getByTestId('table-flex')).toBeInTheDocument();
+  });
+
+  test('passes onEdit and onImport to formatter hook', () => {
+    const formatterSpy = jest
+      .spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter')
+      .mockReturnValue(mockFormatterReturn);
+
+    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+
+    expect(formatterSpy).toHaveBeenCalledWith({
+      onEdit: mockOnEdit,
+      onImport: mockOnImport,
+    });
+  });
+
+  test('handles undefined callbacks gracefully', () => {
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
+
+    const { container } = render(<HubsResultList />);
+
+    expect(container.querySelector('.hubs-search-result-list')).toBeInTheDocument();
+  });
+
+  test('applies correct CSS classes', () => {
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
+
+    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+
+    const container = screen.getByTestId('hubs-search-result-list');
+    expect(container).toHaveClass('search-result-list');
+    expect(container).toHaveClass('hubs-search-result-list');
+  });
+
+  test('renders formatted data from hook', () => {
+    const mockDataWithItems: useHubsTableFormatterModule.UseHubsTableFormatterReturn = {
+      formattedData: [] as Row[],
+      listHeader: {} as Row,
+    };
+
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockDataWithItems);
+
+    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
-    expect(screen.getByTestId('table-flex')).toHaveClass('results-list');
-  });
-
-  test('renders with empty data when useFormattedResults returns undefined', () => {
-    mockUseFormattedResults.mockReturnValue(undefined);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: [],
-      listHeader: mockListHeader,
-    });
-
-    render(<HubsResultList />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: [],
-      }),
-    );
-  });
-
-  test('passes correct context to useTableFormatter in search mode', () => {
-    mockUseFormattedResults.mockReturnValue(mockData);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: mockFormattedData,
-      listHeader: mockListHeader,
-    });
-
-    render(<HubsResultList context="search" />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        context: 'search',
-      }),
-    );
-  });
-
-  test('passes correct context to useTableFormatter in complexLookup mode', () => {
-    mockUseFormattedResults.mockReturnValue(mockData);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: mockFormattedData,
-      listHeader: mockListHeader,
-    });
-
-    const onAssign = jest.fn();
-    render(<HubsResultList context="complexLookup" onAssign={onAssign} />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        context: 'complexLookup',
-        onAssign,
-      }),
-    );
-  });
-
-  test('passes checkFailedId callback to useTableFormatter', () => {
-    mockUseFormattedResults.mockReturnValue(mockData);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: mockFormattedData,
-      listHeader: mockListHeader,
-    });
-
-    const checkFailedId = jest.fn();
-    render(<HubsResultList checkFailedId={checkFailedId} />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        checkFailedId,
-      }),
-    );
-  });
-
-  test('uses default empty array when data is null', () => {
-    mockUseFormattedResults.mockReturnValue(null);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: [],
-      listHeader: mockListHeader,
-    });
-
-    render(<HubsResultList />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: [],
-      }),
-    );
   });
 });

@@ -3,7 +3,9 @@ import { resourcesConfig } from './resources.config';
 import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { authoritiesBrowseConfig } from './authoritiesBrowse.config';
 import { hubsLocalConfig } from './hubsLocal.config';
+import { hubsLookupLocalConfig } from './hubsLookupLocal.config';
 import { hubsLibraryOfCongressConfig } from './hubsLibraryOfCongress.config';
+import { hubsLookupLibraryOfCongressConfig } from './hubsLookupLibraryOfCongress.config';
 
 /**
  * Atomic Search Registry
@@ -19,10 +21,15 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'authorities:search': authoritiesSearchConfig,
   'authorities:browse': authoritiesBrowseConfig,
 
-  // Hubs - base config defaults to external
+  // Hubs - base config defaults to LoC
   hubs: hubsLibraryOfCongressConfig,
   'hubs:local': hubsLocalConfig,
   'hubs:libraryOfCongress': hubsLibraryOfCongressConfig,
+
+  // Hubs - configs for complex lookups
+  hubsLookup: hubsLookupLibraryOfCongressConfig,
+  'hubsLookup:local': hubsLookupLocalConfig,
+  'hubsLookup:libraryOfCongress': hubsLookupLibraryOfCongressConfig,
 };
 
 // Helper function to get a search config by ID

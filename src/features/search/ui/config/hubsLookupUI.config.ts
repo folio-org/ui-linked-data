@@ -1,6 +1,7 @@
-import type { SearchTypeUIConfig } from '../types';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
 
-export const hubsUIConfig: SearchTypeUIConfig = {
+export const hubsLookupUIConfig: SearchTypeUIConfig = {
   limit: 100, // UI shows all 100 results per page
   ui: {
     titleId: 'ld.hubs',
@@ -15,7 +16,7 @@ export const hubsUIConfig: SearchTypeUIConfig = {
     hasSourceToggle: true,
 
     // Input controls
-    hasSearchBy: false,
+    hasSearchBy: true,
     hasQueryInput: true,
     hasMultilineInput: false,
     hasSubmitButton: true,
@@ -27,4 +28,15 @@ export const hubsUIConfig: SearchTypeUIConfig = {
     isVisibleSubLabel: true,
     isVisibleEmptySearchPlaceholder: true,
   },
+  searchableIndices: [
+    {
+      labelId: 'ld.search.hubNameLeftAnchored',
+      value: SearchableIndex.HubNameLeftAnchored,
+      placeholder: 'ld.placeholder.startsWith',
+    },
+    {
+      labelId: 'ld.search.hubNameKeyword',
+      value: SearchableIndex.HubNameKeyword,
+    },
+  ] as SearchableIndexUI[],
 };

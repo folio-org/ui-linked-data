@@ -1,4 +1,5 @@
 import { authoritiesUIConfig } from './authoritiesUI.config';
+import { hubsLookupUIConfig } from './hubsLookupUI.config';
 import { hubsUIConfig } from './hubsUI.config';
 import { resourcesUIConfig } from './resourcesUI.config';
 
@@ -7,6 +8,7 @@ import { resourcesUIConfig } from './resourcesUI.config';
 export const searchUIRegistry = {
   authorities: authoritiesUIConfig,
   hubs: hubsUIConfig,
+  hubsLookup: hubsLookupUIConfig,
   resources: resourcesUIConfig,
 };
 

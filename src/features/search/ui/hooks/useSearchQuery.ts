@@ -125,8 +125,14 @@ export function useSearchQuery({
       const normalized = strategies.responseTransformer.transform(data, limit);
       const totalPages = Math.ceil(normalized.totalRecords / limit);
 
+      let items = normalized.content;
+
+      if (strategies.resultEnricher) {
+        items = await strategies.resultEnricher.enrich(items);
+      }
+
       return {
-        items: normalized.content,
+        items,
         totalRecords: normalized.totalRecords,
         pageMetadata: {
           totalElements: normalized.totalRecords,
@@ -138,31 +144,40 @@ export function useSearchQuery({
     }
 
     return data as unknown as SearchResults;
-  }, [effectiveCoreConfig, committed.query, effectiveSearchBy, committed.offset, committed.selector]);
+  }, [
+    effectiveCoreConfig,
+    committed.query,
+    effectiveSearchBy,
+    committed.offset,
+    committed.selector,
+    effectiveUIConfig,
+  ]);
 
   // Determine if query should be enabled
   // Only enable when we have a non-empty query string AND a valid config
   const shouldEnable = enabled && !!committed.query && committed.query.trim() !== '' && !!effectiveCoreConfig;
 
+  // Main search query (includes enrichment if configured)
   const {
     data,
     isLoading,
     isFetching,
     isError,
     error,
-    refetch: queryRefetch,
+    refetch: refetchQuery,
   } = useQuery<SearchResults | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
   });
 
+  // Unified refetch
   const refetch = useCallback(async () => {
     // Only refetch if we have a valid query
     if (committed.query && committed.query.trim() !== '') {
-      await queryRefetch();
+      await refetchQuery();
     }
-  }, [queryRefetch, committed.query]);
+  }, [refetchQuery, committed.query]);
 
   return {
     data,

@@ -40,6 +40,6 @@ type ProfileSettings = {
 
 type ProfileSettingsDrift = {
   missingFromSettings: string[];
-}
+};
 
 type ProfileSettingsWithDrift = ProfileSettings & ProfileSettingsDrift;
