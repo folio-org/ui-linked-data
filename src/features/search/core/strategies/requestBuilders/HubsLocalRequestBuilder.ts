@@ -3,11 +3,7 @@ import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
-/**
- * Request builder for internal/local Hub searches
- * Targets: /search/linked-data/hubs
- */
-export class HubsInternalRequestBuilder extends BaseRequestBuilder {
+export class HubsLocalRequestBuilder extends BaseRequestBuilder {
   private readonly searchableIndicesMap?: HubSearchableIndicesMap;
 
   constructor(searchableIndicesMap?: HubSearchableIndicesMap) {
