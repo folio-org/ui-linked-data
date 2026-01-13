@@ -1,9 +1,9 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
-import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
+import { HUB_LOCAL_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import type { SearchTypeConfig } from '../types';
-import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
+import { HubsInternalRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
-import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
+import { HubsLocalResultFormatter } from '../strategies/resultFormatters';
 
 /**
  * Hubs Local Configuration for Search page (Atomic)
@@ -15,11 +15,9 @@ export const hubsLocalConfig: SearchTypeConfig = {
   id: 'hubs:local',
 
   strategies: {
-    // Uses same request builder as external for now
-    // Can be replaced with HubsInternalRequestBuilder when implemented
-    requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
+    requestBuilder: new HubsInternalRequestBuilder(HUB_LOCAL_SEARCHABLE_INDICES_MAP),
     responseTransformer: new ResourcesResponseTransformer(),
-    resultFormatter: new HubsLookupResultFormatter(),
+    resultFormatter: new HubsLocalResultFormatter(),
   },
 
   capabilities: {
