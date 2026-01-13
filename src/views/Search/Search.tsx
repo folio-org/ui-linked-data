@@ -12,12 +12,14 @@ import {
 import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useNavigateToManageProfileSettings } from '@/common/hooks/useNavigateToManageProfileSettings';
 import { DropdownItemType, FullDisplayType } from '@/common/constants/uiElements.constants';
 import { Dropdown } from '@/components/Dropdown';
 import { ResourceType } from '@/common/constants/record.constants';
 import Plus16 from '@/assets/plus-16.svg?react';
 import Transfer16 from '@/assets/transfer-16.svg?react';
 import Lightning16 from '@/assets/lightning-16.svg?react';
+import Settings from '@/assets/settings.svg?react';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
@@ -46,6 +48,7 @@ const SOURCE_OPTIONS: SourceOption[] = [
 
 export const SearchView = () => {
   const { navigateToEditPage } = useNavigateToEditPage();
+  const { navigateToManageProfileSettings } = useNavigateToManageProfileSettings();
   const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
   const { selectedInstances, resetSelectedInstances } = useSearchState(['selectedInstances', 'resetSelectedInstances']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
@@ -131,9 +134,16 @@ export const SearchView = () => {
             icon: <Lightning16 />,
             action: handleImport,
           },
+          {
+            id: 'manageProfileSettings',
+            type: DropdownItemType.basic,
+            labelId: 'ld.manageProfileSettings',
+            icon: <Settings />,
+            action: navigateToManageProfileSettings,
+          },
         ],
       },
-      // Example of the dropdown option with a custom component instead of the standart button
+      // Example of the dropdown option with a custom component instead of the standard button
       /* {
       id: 'sortBy',
       labelId: 'ld.newResource',

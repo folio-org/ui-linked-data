@@ -1,0 +1,13 @@
+.profile-settings {
+  flex: 1;
+
+  .nav .heading {
+    margin: 0 15px;
+  }
+
+  .default-settings, .settings-option {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+  }
+}

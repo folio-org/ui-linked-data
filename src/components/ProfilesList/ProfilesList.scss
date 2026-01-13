@@ -1,0 +1,36 @@
+@use '@common/styles/common.scss' as *;
+
+.profiles-list {
+  min-width: 300px;
+  max-width: 300px;
+  height: 100%;
+  border-right: 1px solid $gray-200;
+
+  .nav .heading, .profiles {
+    margin: 0 15px;
+  }
+
+  .profiles {
+    .resource-title {
+      padding: 4px 0;
+    }
+
+    .profile {
+      padding: 4px 8px;
+      background-color: $gray-50;
+      text-decoration: none;
+    }
+
+    .profile.selected {
+      background-color: $gray-600;
+
+      .button {
+        color: $base;
+      }
+
+      .button-link {
+        text-decoration: none;
+      }
+    }
+  }
+}

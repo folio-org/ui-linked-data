@@ -9,6 +9,7 @@ import { useUIStore } from './stores/ui';
 import { useSearchStore } from './stores/search';
 import { useComplexLookupStore } from './stores/complexLookup';
 import { useNavigationStore } from './stores/navigation';
+import { useManageProfileSettingsStore } from './stores/manageProfileSettings';
 
 export const useStatusState = enhanceBoundStore(useStatusStore);
 export const useLoadingState = enhanceBoundStore(useLoadingStateStore);
@@ -20,3 +21,4 @@ export const useUIState = enhanceBoundStore(useUIStore);
 export const useSearchState = enhanceBoundStore(useSearchStore);
 export const useComplexLookupState = enhanceBoundStore(useComplexLookupStore);
 export const useNavigationState = enhanceBoundStore(useNavigationStore);
+export const useManageProfileSettingsState = enhanceBoundStore(useManageProfileSettingsStore);
