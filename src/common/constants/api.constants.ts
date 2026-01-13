@@ -18,6 +18,7 @@ export const SEARCH_API_ENDPOINT = {
   AUTHORITIES_SEARCH: '/search/authorities',
   AUTHORITIES_BROWSE: '/browse/authorities',
   HUBS_EXTERNAL: 'https://id.loc.gov/resources/hubs/suggest2/',
+  HUBS_LOCAL: '/search/linked-data/hubs',
 };
 
 export const MARC_PREVIEW_ENDPOINT = {

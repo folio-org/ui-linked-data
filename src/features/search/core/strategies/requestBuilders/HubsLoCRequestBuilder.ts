@@ -1,4 +1,5 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
@@ -12,7 +13,7 @@ export class HubsLoCRequestBuilder extends BaseRequestBuilder {
   }
 
   build(params: SearchRequestParams): SearchRequestDescriptor {
-    const { query, searchBy = 'hubNameKeyword', limit, offset } = params;
+    const { query, searchBy = SearchableIndex.HubNameKeyword, limit, offset } = params;
     const queryParams = this.buildQueryParams(searchBy, query);
 
     return {
