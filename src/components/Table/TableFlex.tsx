@@ -1,7 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
+import {
+  calculateGridTemplate,
+  extractColumnWidths,
+  getScrollbarWidth,
+  measureContentWidths,
+} from '@common/helpers/table.helpers';
 import { type Table as TableProps, type Row, type Cell } from './Table';
 import './Table.scss';
 
@@ -17,10 +22,36 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
   const tableHeadElemRef = useRef<HTMLDivElement>(null);
   const tableHeadRowElemRef = useRef<HTMLDivElement>(null);
   const tableBodyContainerElemRef = useRef<HTMLDivElement>(null);
+  const [measuredWidths, setMeasuredWidths] = useState<(number | undefined)[]>([]);
   const { table, tableFlex, tableHead, tableHeadCell, tableRow, tableBodyContainer, tableBody } =
     DOM_ELEMENTS.classNames;
 
-  // Apply grid layout and styles synchronously before paint
+  // Check if any column needs content-based measurement
+  const hasContentFitColumns = useMemo(
+    () => sortedHeaderEntries.some(([, config]) => (config as Cell).maxWidth === 'max-content'),
+    [sortedHeaderEntries],
+  );
+
+  // Phase 1: Initial render with temporary widths, then measure content
+  useLayoutEffect(() => {
+    if (!hasContentFitColumns) return;
+
+    const columnWidths = extractColumnWidths(sortedHeaderEntries);
+    const measured = measureContentWidths(
+      columnWidths,
+      tableHeadRowElemRef.current,
+      tableBodyContainerElemRef.current,
+      `.${tableHeadCell}`,
+    );
+
+    // Only update if measurements changed
+    const hasChanges = measured.some((w, i) => w !== measuredWidths[i]);
+    if (hasChanges) {
+      setMeasuredWidths(measured);
+    }
+  }, [sortedHeaderEntries, data, hasContentFitColumns, measuredWidths]);
+
+  // Phase 2: Apply grid layout and styles synchronously before paint
   useLayoutEffect(() => {
     const applyHeaderStyles = (scrollbarWidth: number, gridTemplate: string, totalMinWidth: number) => {
       if (tableHeadElemRef.current) {
@@ -43,7 +74,10 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
     };
 
     const columnWidths = extractColumnWidths(sortedHeaderEntries);
-    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
+    const { gridTemplate, totalMinWidth } = calculateGridTemplate(
+      columnWidths,
+      hasContentFitColumns ? measuredWidths : undefined,
+    );
     const scrollbarWidth = getScrollbarWidth(
       tableBodyContainerElemRef.current?.offsetWidth ?? 0,
       tableBodyContainerElemRef.current?.clientWidth ?? 0,
@@ -51,7 +85,7 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
 
     applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
     applyBodyRowStyles(gridTemplate, totalMinWidth);
-  }, [sortedHeaderEntries, data]);
+  }, [sortedHeaderEntries, data, measuredWidths, hasContentFitColumns]);
 
   useEffect(() => {
     const syncHorizontalScroll = (event: Event) => {

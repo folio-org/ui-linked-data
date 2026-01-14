@@ -1,4 +1,9 @@
-import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
+import {
+  calculateGridTemplate,
+  extractColumnWidths,
+  getScrollbarWidth,
+  measureContentWidths,
+} from '@common/helpers/table.helpers';
 
 describe('table.helpers', () => {
   describe('extractColumnWidths', () => {
@@ -138,6 +143,34 @@ describe('table.helpers', () => {
       expect(result.gridTemplate).toBe('minmax(50px, 50px) minmax(300px, 1fr) minmax(75px, 100px) minmax(125px, 1fr)');
       expect(result.totalMinWidth).toBe(550);
     });
+
+    it('should handle string maxWidth values like max-content', () => {
+      const columnWidths = [{ min: 100 }, { min: 200, max: 250 }, { min: 100, max: 'max-content' as const }];
+
+      const result = calculateGridTemplate(columnWidths);
+
+      expect(result.gridTemplate).toBe('minmax(100px, 1fr) minmax(200px, 250px) minmax(100px, max-content)');
+      expect(result.totalMinWidth).toBe(400);
+    });
+
+    it('should use measured widths for max-content columns when provided', () => {
+      const columnWidths = [{ min: 100 }, { min: 200, max: 250 }, { min: 100, max: 'max-content' as const }];
+      const measuredWidths = [undefined, undefined, 150];
+
+      const result = calculateGridTemplate(columnWidths, measuredWidths);
+
+      expect(result.gridTemplate).toBe('minmax(100px, 1fr) minmax(200px, 250px) minmax(100px, 150px)');
+      expect(result.totalMinWidth).toBe(400);
+    });
+
+    it('should fall back to max-content when no measured width is provided', () => {
+      const columnWidths = [{ min: 100, max: 'max-content' as const }];
+      const measuredWidths: (number | undefined)[] = [undefined];
+
+      const result = calculateGridTemplate(columnWidths, measuredWidths);
+
+      expect(result.gridTemplate).toBe('minmax(100px, max-content)');
+    });
   });
 
   describe('getScrollbarWidth', () => {
@@ -163,6 +196,59 @@ describe('table.helpers', () => {
       const result = getScrollbarWidth(0, 0);
 
       expect(result).toBe(0);
+    });
+  });
+
+  describe('measureContentWidths', () => {
+    it('should return undefined for columns without max-content', () => {
+      const columnWidths = [{ min: 100 }, { min: 200, max: 250 }];
+
+      const result = measureContentWidths(columnWidths, null, null, '.table-head-cell');
+
+      expect(result).toEqual([undefined, undefined]);
+    });
+
+    it('should return measurements for max-content columns', () => {
+      // Create mock DOM elements
+      const headerRow = document.createElement('div');
+      const headerCell = document.createElement('div');
+      headerCell.className = 'table-head-cell';
+      const headerContent = document.createElement('div');
+      headerContent.className = 'table-header-contents-wrapper';
+      Object.defineProperty(headerContent, 'scrollWidth', { value: 80 });
+      headerCell.appendChild(headerContent);
+      headerRow.appendChild(headerCell);
+
+      const bodyContainer = document.createElement('div');
+      const tableBody = document.createElement('div');
+      tableBody.className = 'table-body';
+      const bodyRow = document.createElement('div');
+      bodyRow.className = 'table-row';
+      const bodyCell = document.createElement('div');
+      bodyCell.className = 'table-cell';
+      const cellContent = document.createElement('div');
+      cellContent.className = 'table-cell-content';
+      Object.defineProperty(cellContent, 'scrollWidth', { value: 100 });
+      bodyCell.appendChild(cellContent);
+      bodyRow.appendChild(bodyCell);
+      tableBody.appendChild(bodyRow);
+      bodyContainer.appendChild(tableBody);
+
+      const columnWidths = [{ min: 50, max: 'max-content' as const }];
+
+      const result = measureContentWidths(columnWidths, headerRow, bodyContainer, '.table-head-cell');
+
+      // Should return the max width + 20px padding
+      expect(result).toEqual([120]);
+    });
+
+    it('should handle empty elements', () => {
+      const columnWidths = [{ min: 100, max: 'max-content' as const }];
+
+      const result = measureContentWidths(columnWidths, null, null, '.table-head-cell');
+
+      // Should return 20 (just padding since no content found)
+      expect(result).toEqual([20]);
     });
   });
 });
