@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState, type RefObject } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
 import {
   calculateGridTemplate,
@@ -19,16 +19,17 @@ interface TableRefs {
 interface UseTableGridLayoutProps {
   sortedHeaderEntries: HeaderEntry[];
   refs: TableRefs;
-  dataDependency?: unknown;
+  dataLength: number;
 }
 
 /**
  * Hook for managing CSS Grid layout in TableFlex component
  * Handles content-based column width measurement and grid template application
  */
-export const useTableGridLayout = ({ sortedHeaderEntries, refs, dataDependency }: UseTableGridLayoutProps) => {
+export const useTableGridLayout = ({ sortedHeaderEntries, refs, dataLength }: UseTableGridLayoutProps) => {
   const { tableHeadRef, tableHeadRowRef, tableBodyContainerRef } = refs;
   const [measuredWidths, setMeasuredWidths] = useState<(number | undefined)[]>([]);
+  const prevMeasurementsRef = useRef<string>('');
 
   const { tableBody, tableRow, tableHeadCell } = DOM_ELEMENTS.classNames;
 
@@ -42,6 +43,13 @@ export const useTableGridLayout = ({ sortedHeaderEntries, refs, dataDependency }
   useLayoutEffect(() => {
     if (!hasContentFitColumns) return;
 
+    const currentDataKey = `${dataLength}-${sortedHeaderEntries.map(([entry]) => entry).join(',')}`;
+
+    // Only measure if data changed or never measured
+    if (currentDataKey === prevMeasurementsRef.current) {
+      return;
+    }
+
     const columnWidths = extractColumnWidths(sortedHeaderEntries);
     const measured = measureContentWidths(
       columnWidths,
@@ -50,20 +58,9 @@ export const useTableGridLayout = ({ sortedHeaderEntries, refs, dataDependency }
       `.${tableHeadCell}`,
     );
 
-    const hasChanges = measured.some((width, idx) => width !== measuredWidths[idx]);
-
-    if (hasChanges) {
-      setMeasuredWidths(measured);
-    }
-  }, [
-    sortedHeaderEntries,
-    dataDependency,
-    hasContentFitColumns,
-    measuredWidths,
-    tableHeadRowRef,
-    tableBodyContainerRef,
-    tableHeadCell,
-  ]);
+    prevMeasurementsRef.current = currentDataKey;
+    setMeasuredWidths(measured);
+  }, [sortedHeaderEntries, dataLength, hasContentFitColumns, tableHeadRowRef, tableBodyContainerRef, tableHeadCell]);
 
   // Phase 2: Apply grid layout and styles synchronously before paint
   useLayoutEffect(() => {
@@ -101,7 +98,7 @@ export const useTableGridLayout = ({ sortedHeaderEntries, refs, dataDependency }
     applyBodyRowStyles(gridTemplate, totalMinWidth);
   }, [
     sortedHeaderEntries,
-    dataDependency,
+    dataLength,
     measuredWidths,
     hasContentFitColumns,
     tableHeadRef,

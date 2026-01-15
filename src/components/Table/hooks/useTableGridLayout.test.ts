@@ -20,6 +20,7 @@ describe('useTableGridLayout', () => {
       tableHeadRowRef: mockTableHeadRowRef,
       tableBodyContainerRef: mockTableBodyContainerRef,
     },
+    dataLength: 2,
   };
 
   const mockExtractColumnWidths = tableHelpers.extractColumnWidths as jest.Mock;

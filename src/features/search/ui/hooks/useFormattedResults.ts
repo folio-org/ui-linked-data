@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
 import { logger } from '@/common/services/logger';
 import { useSearchContext } from '../providers/SearchProvider';
-import { useCommittedSearchParams } from './useCommittedSearchParams';
 
 /**
  * Hook to get formatted search results using the active config's resultFormatter
  */
 export function useFormattedResults<T = unknown>(): T[] | undefined {
-  const { results, config, flow } = useSearchContext();
-  const committed = useCommittedSearchParams({ flow });
+  const { results, config } = useSearchContext();
 
   const formattedData = useMemo(() => {
     if (!results?.items) {
@@ -25,7 +23,7 @@ export function useFormattedResults<T = unknown>(): T[] | undefined {
     }
 
     return undefined;
-  }, [results?.items, config, committed.offset, flow]);
+  }, [results?.items, config?.strategies?.resultFormatter]);
 
   return formattedData;
 }

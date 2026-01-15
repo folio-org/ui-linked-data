@@ -23,7 +23,7 @@ describe('ComplexLookupSearchResults', () => {
       listHeader,
       formattedData,
     });
-    (TableFlex as jest.Mock).mockReturnValue(<div>Mock TableFlex</div>);
+    (TableFlex as unknown as jest.Mock).mockReturnValue(<div>Mock TableFlex</div>);
 
     render(
       <ComplexLookupSearchResults
@@ -33,7 +33,7 @@ describe('ComplexLookupSearchResults', () => {
       />,
     );
 
-    expect(TableFlex as jest.Mock).toHaveBeenCalledWith(
+    expect(TableFlex as unknown as jest.Mock).toHaveBeenCalledWith(
       { header: listHeader, data: formattedData, className: 'results-list' },
       undefined,
     );

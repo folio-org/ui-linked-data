@@ -67,8 +67,17 @@ export const measureContentWidths = (
     const headerCells = headerRowElement?.querySelectorAll(cellSelector);
     if (headerCells?.[index]) {
       const contentWrapper = headerCells[index].querySelector('.table-header-contents-wrapper');
-      const width = contentWrapper?.scrollWidth ?? (headerCells[index] as HTMLElement).scrollWidth;
-      maxWidth = Math.max(maxWidth, width);
+      if (contentWrapper) {
+        // Clone and measure in an isolated context to get intrinsic size
+        const clone = contentWrapper.cloneNode(true) as HTMLElement;
+        clone.style.display = 'inline-block';
+        clone.style.position = 'absolute';
+        clone.style.visibility = 'hidden';
+        clone.style.width = 'auto';
+        document.body.appendChild(clone);
+        maxWidth = Math.max(maxWidth, clone.offsetWidth);
+        document.body.removeChild(clone);
+      }
     }
 
     // Measure all body cells in this column
@@ -77,12 +86,25 @@ export const measureContentWidths = (
       const cells = row.querySelectorAll('.table-cell');
       if (cells[index]) {
         const contentWrapper = cells[index].querySelector('.table-cell-content');
-        const width = contentWrapper?.scrollWidth ?? (cells[index] as HTMLElement).scrollWidth;
-        maxWidth = Math.max(maxWidth, width);
+        if (contentWrapper) {
+          // Clone the first child (e.g., button) to measure its intrinsic size
+          const firstChild = contentWrapper.firstElementChild as HTMLElement;
+          if (firstChild) {
+            const clone = firstChild.cloneNode(true) as HTMLElement;
+            clone.style.display = 'inline-block';
+            clone.style.position = 'absolute';
+            clone.style.visibility = 'hidden';
+            clone.style.width = 'auto';
+            document.body.appendChild(clone);
+            const width = clone.offsetWidth;
+            document.body.removeChild(clone);
+            maxWidth = Math.max(maxWidth, width);
+          }
+        }
       }
     });
 
-    // Add padding for cell content
-    return maxWidth + 20; // 10px padding on each side
+    // Add padding for cell content (10px on each side)
+    return maxWidth + 20;
   });
 };

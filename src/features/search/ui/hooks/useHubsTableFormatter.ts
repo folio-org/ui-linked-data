@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { type Row } from '@/components/Table';
 import { useFormattedResults } from './useFormattedResults';
@@ -21,12 +22,15 @@ export function useHubsTableFormatter({ onEdit, onImport }: UseHubsTableFormatte
   const { formatMessage } = useIntl();
   const formattedResults = useFormattedResults<SearchResultsTableRow>();
 
-  const applyFormatters = (rows: SearchResultsTableRow[]): Row[] => {
-    return applyColumnFormatters(rows, hubsTableConfig.columns, { formatMessage, onEdit, onImport });
-  };
+  const formattedData = useMemo(() => {
+    if (!formattedResults) return [];
 
-  const formattedData = applyFormatters(formattedResults || []);
-  const listHeader = buildTableHeader(hubsTableConfig.columns, formatMessage);
+    return applyColumnFormatters(formattedResults, hubsTableConfig.columns, { formatMessage, onEdit, onImport });
+  }, [formattedResults, formatMessage, onEdit, onImport]);
+
+  const listHeader = useMemo(() => {
+    return buildTableHeader(hubsTableConfig.columns, formatMessage);
+  }, [formatMessage]);
 
   return {
     formattedData,
