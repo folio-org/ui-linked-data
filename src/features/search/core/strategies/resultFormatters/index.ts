@@ -1,6 +1,7 @@
 export * from './authorities';
 export * from './hubLookup';
 export * from './hub';
+export * from './hubLocal';
 export * from './resources';
 
 import { AuthoritiesResultFormatter } from './authorities';

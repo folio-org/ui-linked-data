@@ -9,10 +9,10 @@ import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
  * Hubs Library Of Congress Configuration for Complex Lookup modal (Atomic)
  *
  * Search in Library Of Congress hub services.
- * Composite key: "hubs:libraryOfCongress"
+ * Composite key: "hubsLookup:libraryOfCongress"
  */
 export const hubsLookupLibraryOfCongressConfig: SearchTypeConfig = {
-  id: 'hubs:libraryOfCongress',
+  id: 'hubsLookup:libraryOfCongress',
 
   strategies: {
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),

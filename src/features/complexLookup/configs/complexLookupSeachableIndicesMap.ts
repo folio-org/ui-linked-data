@@ -93,3 +93,16 @@ export const HUB_SEARCHABLE_INDICES_MAP: HubSearchableIndicesMap = {
     } as QueryParameterConfig,
   },
 };
+
+export const HUB_LOCAL_SEARCHABLE_INDICES_MAP: HubSearchableIndicesMap = {
+  [SearchableIndex.HubNameLeftAnchored]: {
+    [SearchableIndexQuerySelector.Query]: {
+      paramName: 'label',
+    } as QueryParameterConfig,
+  },
+  [SearchableIndex.HubNameKeyword]: {
+    [SearchableIndexQuerySelector.Query]: {
+      paramName: 'label',
+    } as QueryParameterConfig,
+  },
+};
