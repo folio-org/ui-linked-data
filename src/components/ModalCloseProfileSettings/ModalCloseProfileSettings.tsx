@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/common/constants/routes.constants';
 import { useManageProfileSettingsState, useUIState } from '@/store';
 import { Modal } from '@/components/Modal';
+import './ModalCloseProfileSettings.scss';
 
 export const ModalCloseProfileSettings = () => {
   const { formatMessage } = useIntl();
@@ -48,6 +49,7 @@ export const ModalCloseProfileSettings = () => {
 
   return (
     <Modal
+      className="modal-close-profile-settings"
       isOpen={isManageProfileSettingsUnsavedModalOpen}
       onClose={handleClose}
       onCancel={handleCancel}
@@ -58,12 +60,14 @@ export const ModalCloseProfileSettings = () => {
       cancelButtonLabel={formatMessage({ id: 'ld.continueWithoutSaving' })}
       submitButtonLabel={formatMessage({ id: 'ld.saveAndContinue' })}
     >
-      <p>
-        <FormattedMessage id="ld.unsavedProfilePrompt" />
-      </p>
-      <p>
-        <FormattedMessage id="ld.unsavedProfileNote" />
-      </p>
+      <div className="modal-content">
+        <p>
+          <FormattedMessage id="ld.unsavedProfilePrompt" />
+        </p>
+        <p>
+          <FormattedMessage id="ld.unsavedProfileNote" />
+        </p>
+      </div>
     </Modal>
   );
 };
