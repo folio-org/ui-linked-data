@@ -43,6 +43,18 @@ export const createResourceActionsConfig = ({
         icon: <Lightning16 />,
         action: handleImport,
       },
+      // Example of the dropdown option with a custom component instead of the standart button
+      /* {
+      id: 'sortBy',
+      labelId: 'ld.newResource',
+      data: [
+        {
+          id: 'sortBy',
+          type: DropdownItemType.customComponent,
+          renderComponent: (key: string | number) => <div key={key}>Custom</div>,
+        },
+      ],
+    }, */
     ],
   },
 ];
