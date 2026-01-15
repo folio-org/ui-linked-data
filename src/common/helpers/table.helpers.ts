@@ -46,9 +46,29 @@ export const getScrollbarWidth = (offsetWidth: number, clientWidth: number): num
 };
 
 /**
+ * Measures an element's width.
+ * Temporarily sets width to max-content, measures, and restores original styles.
+ */
+const measureElementWidth = (element: HTMLElement): number => {
+  const savedCssText = element.style.cssText;
+
+  element.style.width = 'max-content';
+  element.style.minWidth = '0';
+  element.style.maxWidth = 'none';
+
+  const width = element.getBoundingClientRect().width;
+
+  element.style.cssText = savedCssText;
+
+  return width;
+};
+
+/**
  * Measures the actual content width of specified columns
  * Returns an array of widths for columns that need content-based sizing
  */
+
+const RESULTS_SAMPLE_COUNT = 50;
 export const measureContentWidths = (
   columnWidths: ColumnWidthConfig[],
   headerRowElement: HTMLElement | null,
@@ -63,46 +83,27 @@ export const measureContentWidths = (
 
     let maxWidth = 0;
 
-    // Measure header cell
+    // Measure header cell content
     const headerCells = headerRowElement?.querySelectorAll(cellSelector);
-    if (headerCells?.[index]) {
-      const contentWrapper = headerCells[index].querySelector('.table-header-contents-wrapper');
-      if (contentWrapper) {
-        // Clone and measure in an isolated context to get intrinsic size
-        const clone = contentWrapper.cloneNode(true) as HTMLElement;
-        clone.style.display = 'inline-block';
-        clone.style.position = 'absolute';
-        clone.style.visibility = 'hidden';
-        clone.style.width = 'auto';
-        document.body.appendChild(clone);
-        maxWidth = Math.max(maxWidth, clone.offsetWidth);
-        document.body.removeChild(clone);
-      }
+    const headerWrapper = headerCells?.[index]?.querySelector('.table-header-contents-wrapper') as HTMLElement | null;
+
+    if (headerWrapper) {
+      maxWidth = Math.max(maxWidth, measureElementWidth(headerWrapper));
     }
 
-    // Measure all body cells in this column
+    // Measure body cells - sample first rows for performance
     const bodyRows = bodyContainerElement?.querySelectorAll('.table-body > .table-row');
-    bodyRows?.forEach(row => {
-      const cells = row.querySelectorAll('.table-cell');
-      if (cells[index]) {
-        const contentWrapper = cells[index].querySelector('.table-cell-content');
-        if (contentWrapper) {
-          // Clone the first child (e.g., button) to measure its intrinsic size
-          const firstChild = contentWrapper.firstElementChild as HTMLElement;
-          if (firstChild) {
-            const clone = firstChild.cloneNode(true) as HTMLElement;
-            clone.style.display = 'inline-block';
-            clone.style.position = 'absolute';
-            clone.style.visibility = 'hidden';
-            clone.style.width = 'auto';
-            document.body.appendChild(clone);
-            const width = clone.offsetWidth;
-            document.body.removeChild(clone);
-            maxWidth = Math.max(maxWidth, width);
-          }
-        }
+    const sampleSize = Math.min(bodyRows?.length ?? 0, RESULTS_SAMPLE_COUNT);
+
+    for (let i = 0; i < sampleSize; i++) {
+      const row = bodyRows?.[i];
+      const cells = row?.querySelectorAll('.table-cell');
+      const content = cells?.[index]?.querySelector('.table-cell-content') as HTMLElement | null;
+
+      if (content?.firstElementChild) {
+        maxWidth = Math.max(maxWidth, measureElementWidth(content.firstElementChild as HTMLElement));
       }
-    });
+    }
 
     // Add padding for cell content (10px on each side)
     return maxWidth + 20;
