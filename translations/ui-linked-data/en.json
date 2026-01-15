@@ -302,5 +302,8 @@
   "ld.source.local": "Local",
   "ld.cantLoadProfileSettings": "Cannot load custom profile settings, using profile defaults",
   "ld.manageProfileSettings": "Manage profile settings",
-  "ld.profiles": "Profiles"
+  "ld.profiles": "Profiles",
+  "ld.unsavedProfileChanges": "Unsaved profile changes",
+  "ld.unsavedProfilePrompt": "Would you like to save your changes before proceeding?",
+  "ld.unsavedProfileNote": "Note: Only the selected components will be visible for resources using this profile. Components not in the selected section will be hidden."
 }

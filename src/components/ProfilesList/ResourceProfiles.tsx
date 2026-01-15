@@ -1,22 +1,18 @@
-import { FC } from "react";
-import { FormattedMessage } from "react-intl";
-import { ResourceProfile } from "./ResourceProfile";
+import { FC } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { ResourceProfile } from './ResourceProfile';
+import { useManageProfileSettingsState } from '@/store';
 
 type ResourceProfilesProps = {
   labelId: string;
   profiles: ProfileDTO[];
-  selectedProfile: ProfileDTO | undefined;
-  setSelectedProfile: (profile: ProfileDTO) => void;
-}
+};
 
-export const ResourceProfiles: FC<ResourceProfilesProps> = ({
-  labelId,
-  profiles,
-  selectedProfile,
-  setSelectedProfile,
-}) => {
+export const ResourceProfiles: FC<ResourceProfilesProps> = ({ labelId, profiles }) => {
+  const { selectedProfile } = useManageProfileSettingsState(['selectedProfile']);
+
   const isSelectedProfile = (id: number) => {
-    return selectedProfile !== undefined && selectedProfile.id === id;
+    return selectedProfile && selectedProfile.id === id;
   };
 
   return (
@@ -26,13 +22,12 @@ export const ResourceProfiles: FC<ResourceProfilesProps> = ({
         &nbsp;
         <FormattedMessage id="ld.profiles" />
       </div>
-      {profiles && profiles.map(profile => {
-        return <ResourceProfile
-                key={profile.id}
-                profile={profile}
-                selected={isSelectedProfile(profile.id as number)}
-                setSelectedProfile={setSelectedProfile}/>;
-      })}
+      {profiles &&
+        profiles.map(profile => {
+          return (
+            <ResourceProfile key={profile.id} profile={profile} selected={isSelectedProfile(profile.id as number)} />
+          );
+        })}
     </>
   );
 };

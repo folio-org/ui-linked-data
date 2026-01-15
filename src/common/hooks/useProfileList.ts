@@ -1,12 +1,9 @@
 import { fetchProfiles } from '@common/api/profiles.api';
 import { useProfileState } from '@/store';
-import { TYPE_URIS } from '../constants/bibframe.constants';
+import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 export const useProfileList = () => {
-  const { availableProfiles, setAvailableProfiles } = useProfileState([
-    'availableProfiles',
-    'setAvailableProfiles',
-  ]);
+  const { availableProfiles, setAvailableProfiles } = useProfileState(['availableProfiles', 'setAvailableProfiles']);
 
   // Loads available profiles if they haven't been loaded yet
   const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {

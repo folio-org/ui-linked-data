@@ -8,39 +8,32 @@ import { useManageProfileSettingsState } from '@/store';
 
 export const ManageProfileSettingsControls = memo(() => {
   const navigate = useNavigate();
-  const { 
-    profileSettings,
-    isTypeDefaultProfile,
-   } = useManageProfileSettingsState([
-    "profileSettings",
-    "isTypeDefaultProfile",
-  ]);
+  const { isModified } = useManageProfileSettingsState(['isModified']);
 
   // placeholders
   const handleButtonClick = () => {};
   const handleButtonClickAndClose = () => {
     navigate(ROUTES.SEARCH.uri);
   };
-  const isButtonDisabled = false;
 
   return (
     <div className="manage-profile-settings-controls">
       <Button
-        data-testid='save-and-close'
+        data-testid="save-and-close"
         type={ButtonType.Primary}
         onClick={handleButtonClickAndClose}
-        disabled={isButtonDisabled}
+        disabled={!isModified}
       >
-        <FormattedMessage id='ld.saveAndClose' />
+        <FormattedMessage id="ld.saveAndClose" />
       </Button>
 
       <Button
-        data-testid='save-and-keep-editing'
+        data-testid="save-and-keep-editing"
         type={ButtonType.Highlighted}
         onClick={handleButtonClick}
-        disabled={isButtonDisabled}
+        disabled={!isModified}
       >
-        <FormattedMessage id='ld.saveAndKeepEditing' />
+        <FormattedMessage id="ld.saveAndKeepEditing" />
       </Button>
     </div>
   );

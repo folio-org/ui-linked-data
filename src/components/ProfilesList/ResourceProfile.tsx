@@ -1,24 +1,33 @@
-import { FC } from "react";
-import classNames from "classnames";
-import { Button, ButtonType } from "../Button";
+import { FC } from 'react';
+import classNames from 'classnames';
+import { useManageProfileSettingsState, useUIState } from '@/store';
+import { Button, ButtonType } from '@/components/Button';
 
 type ResourceProfileProps = {
   profile: ProfileDTO;
   selected: boolean;
-  setSelectedProfile: (profile: ProfileDTO) => void;
 };
 
-export const ResourceProfile: FC<ResourceProfileProps> = ({
-  profile,
-  selected,
-  setSelectedProfile,
-}) => {
+export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected }) => {
+  const { setNextSelectedProfile, setSelectedProfile, isModified } = useManageProfileSettingsState([
+    'setNextSelectedProfile',
+    'setSelectedProfile',
+    'isModified',
+  ]);
+  const { setIsManageProfileSettingsUnsavedModalOpen } = useUIState(['setIsManageProfileSettingsUnsavedModalOpen']);
+
+  const handleClick = () => {
+    if (isModified) {
+      setNextSelectedProfile(profile);
+      setIsManageProfileSettingsUnsavedModalOpen(true);
+    } else {
+      setSelectedProfile(profile);
+    }
+  };
+
   return (
     <div className={classNames('profile', selected ? 'selected' : '')}>
-      <Button
-        type={ButtonType.Link}
-        onClick={() => { setSelectedProfile(profile)}}
-        label={profile.name}/>
+      <Button type={ButtonType.Link} onClick={handleClick} label={profile.name} />
     </div>
-  ); 
+  );
 };
