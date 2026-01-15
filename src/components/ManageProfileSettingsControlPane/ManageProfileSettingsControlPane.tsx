@@ -4,6 +4,7 @@ import { ROUTES } from '@/common/constants/routes.constants';
 import { useUIState, useManageProfileSettingsState } from '@/store';
 import { Button, ButtonType } from '@components/Button';
 import Times16 from '@src/assets/times-16.svg?react';
+import './ManageProfileSettingsControlPane.scss';
 
 export const ManageProfileSettingsControlPane = () => {
   const { formatMessage } = useIntl();

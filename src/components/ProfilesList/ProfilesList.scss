@@ -6,8 +6,9 @@
   height: 100%;
   border-right: 1px solid $gray-200;
 
-  .nav .heading, .profiles {
-    margin: 0 15px;
+  .nav .heading,
+  .profiles {
+    padding: 0 15px;
   }
 
   .profiles {
@@ -17,7 +18,7 @@
 
     .profile {
       padding: 4px 8px;
-      background-color: $gray-50;
+      background-color: $title-bar-bg-color;
       text-decoration: none;
     }
 
