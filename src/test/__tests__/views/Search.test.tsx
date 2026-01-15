@@ -26,6 +26,13 @@ jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
   }),
 }));
 
+const navigateToManageProfileSettings = jest.fn();
+jest.mock('@/common/hooks/useNavigateToManageProfileSettings', () => ({
+  useNavigateToManageProfileSettings: () => ({
+    navigateToManageProfileSettings,
+  }),
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -99,6 +106,16 @@ describe('Search', () => {
           type: ResourceType.work,
         },
       });
+    });
+
+    test('calls navigateToManageProfileSettings when "Manage profile settings" option is clicked', () => {
+      // Click the Actions dropdown button
+      fireEvent.click(screen.getByTestId('search-view-actions-dropdown'));
+
+      // Click the "Manage profile settings" option
+      fireEvent.click(screen.getByTestId('search-view-actions-dropdown__option-ld.manageProfileSettings'));
+
+      expect(navigateToManageProfileSettings).toHaveBeenCalled();
     });
   });
 });

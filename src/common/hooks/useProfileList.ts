@@ -19,7 +19,6 @@ export const useProfileList = () => {
         });
       } catch (error) {
         console.error('Failed to load available profiles:', error);
-        // Re-throw to be handled by 'checkProfileAndProceed'
         throw error;
       }
     }
