@@ -6,7 +6,7 @@ import Lightning16 from '@/assets/lightning-16.svg?react';
 
 export interface ResourceActionsParams {
   onClickNewWork: () => void;
-  handlePreviewMultiple: () => void;
+  handlePreviewMultiple: () => void | Promise<void>;
   handleImport: () => void;
   selectedInstancesCount: number;
 }
