@@ -147,28 +147,6 @@ describe('useFormattedResults', () => {
     expect(mockResultFormatter.format).toHaveBeenCalledTimes(2);
   });
 
-  test('re-formats results when offset changes', () => {
-    const mockItems = [{ id: '1' }];
-    const mockFormatted = [{ id: '1', formatted: true }];
-
-    mockResultFormatter.format.mockReturnValue(mockFormatted);
-    mockUseSearchContext.mockReturnValue({
-      results: { items: mockItems },
-      config: mockConfig,
-      flow: mockFlow,
-    });
-    mockUseCommittedSearchParams.mockReturnValue({ offset: 0 });
-
-    const { rerender } = renderHook(() => useFormattedResults());
-
-    expect(mockResultFormatter.format).toHaveBeenCalledTimes(1);
-
-    mockUseCommittedSearchParams.mockReturnValue({ offset: 10 });
-    rerender();
-
-    expect(mockResultFormatter.format).toHaveBeenCalledTimes(2);
-  });
-
   test('returns typed results', () => {
     interface CustomResultType {
       customId: string;

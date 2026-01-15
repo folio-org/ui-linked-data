@@ -19,5 +19,3 @@ export const HubsResultList: FC<HubsResultListProps> = memo(({ onEdit, onImport 
     </div>
   );
 });
-
-HubsResultList.displayName = 'HubsResultList';
