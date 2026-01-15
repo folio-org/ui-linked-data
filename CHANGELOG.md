@@ -62,7 +62,7 @@
 * Update Complex lookups to use the new Search feature. Refs [UILD-686].
 * Add Hub tab to landing page. Refs [UILD-687].
 * Add custom workspace profile settings application. Refs [UILD-684].
-* Add Hub search behavior for LoC source. Refs [UILD-688].
+* Add Hub search behavior for LoC source; fix search results table. Refs [UILD-688].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544

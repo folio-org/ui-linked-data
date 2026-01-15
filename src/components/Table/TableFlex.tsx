@@ -1,8 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import classNames from 'classnames';
 import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { calculateGridTemplate, extractColumnWidths, getScrollbarWidth } from '@common/helpers/table.helpers';
 import { type Table as TableProps, type Row, type Cell } from './Table';
+import { useTableGridLayout } from './hooks/useTableGridLayout';
 import './Table.scss';
 
 export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellClick, selectedRows }: TableProps) => {
@@ -17,41 +17,20 @@ export const TableFlex = ({ header, data, className, onRowClick, onHeaderCellCli
   const tableHeadElemRef = useRef<HTMLDivElement>(null);
   const tableHeadRowElemRef = useRef<HTMLDivElement>(null);
   const tableBodyContainerElemRef = useRef<HTMLDivElement>(null);
+
   const { table, tableFlex, tableHead, tableHeadCell, tableRow, tableBodyContainer, tableBody } =
     DOM_ELEMENTS.classNames;
 
-  // Apply grid layout and styles synchronously before paint
-  useLayoutEffect(() => {
-    const applyHeaderStyles = (scrollbarWidth: number, gridTemplate: string, totalMinWidth: number) => {
-      if (tableHeadElemRef.current) {
-        tableHeadElemRef.current.style.paddingRight = `${scrollbarWidth}px`;
-      }
-
-      if (tableHeadRowElemRef.current) {
-        tableHeadRowElemRef.current.style.gridTemplateColumns = gridTemplate;
-        tableHeadRowElemRef.current.style.minWidth = `${totalMinWidth}px`;
-      }
-    };
-
-    const applyBodyRowStyles = (gridTemplate: string, totalMinWidth: number) => {
-      const bodyRows = tableBodyContainerElemRef.current?.querySelectorAll(`.${tableBody} > .${tableRow}`);
-
-      bodyRows?.forEach(row => {
-        (row as HTMLElement).style.gridTemplateColumns = gridTemplate;
-        (row as HTMLElement).style.minWidth = `${totalMinWidth}px`;
-      });
-    };
-
-    const columnWidths = extractColumnWidths(sortedHeaderEntries);
-    const { gridTemplate, totalMinWidth } = calculateGridTemplate(columnWidths);
-    const scrollbarWidth = getScrollbarWidth(
-      tableBodyContainerElemRef.current?.offsetWidth ?? 0,
-      tableBodyContainerElemRef.current?.clientWidth ?? 0,
-    );
-
-    applyHeaderStyles(scrollbarWidth, gridTemplate, totalMinWidth);
-    applyBodyRowStyles(gridTemplate, totalMinWidth);
-  }, [sortedHeaderEntries, data]);
+  // Use the grid layout hook for column width calculation and style application
+  useTableGridLayout({
+    sortedHeaderEntries,
+    refs: {
+      tableHeadRef: tableHeadElemRef,
+      tableHeadRowRef: tableHeadRowElemRef,
+      tableBodyContainerRef: tableBodyContainerElemRef,
+    },
+    dataDependency: data,
+  });
 
   useEffect(() => {
     const syncHorizontalScroll = (event: Event) => {
