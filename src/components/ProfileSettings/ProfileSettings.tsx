@@ -22,12 +22,12 @@ export const ProfileSettings = () => {
   ]);
 
   useEffect(() => {
-    // load type default, profile settings
+    // TODO load type default, profile settings
   }, [setIsTypeDefaultProfile, setProfileSettings]);
 
   const handleDefaultChange = () => {
     setIsModified(true);
-    setIsTypeDefaultProfile(!isTypeDefaultProfile);
+    setIsTypeDefaultProfile(prev => !prev);
   };
 
   return selectedProfile ? (
@@ -45,24 +45,40 @@ export const ProfileSettings = () => {
       </div>
 
       <div className="default-settings">
-        <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} />
-        <div>
-          &nbsp; Set as my default&nbsp;
+        <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} id="type-default" />
+        <label htmlFor="type-default">
+          <FormattedMessage id="ld.modal.chooseResourceProfile.setAsDefault" />{' '}
           <FormattedMessage
             id={'ld.' + BibframeEntitiesMap[selectedProfile.resourceType as keyof typeof BibframeEntitiesMap]}
-          />
-          &nbsp;profile
-        </div>
+          />{' '}
+          <FormattedMessage id="ld.profile" />
+        </label>
       </div>
 
       <hr />
 
       <div className="settings-option">
-        <input type="radio" checked={!profileSettings.active} />
-        <div>&nbsp;Profile default</div>
-
-        <input type="radio" checked={profileSettings.active} />
-        <div>&nbsp;Custom</div>
+        <input
+          id="settings-active-default"
+          name="settings-active"
+          type="radio"
+          value="default"
+          checked={!profileSettings.active}
+        />{' '}
+        <label htmlFor="settings-active-default">
+          <FormattedMessage id="ld.profileDefault" />
+        </label>
+        <span className="empty-block" />
+        <input
+          id="settings-active-custom"
+          name="settings-active"
+          type="radio"
+          value="custom"
+          checked={profileSettings.active}
+        />{' '}
+        <label htmlFor="settings-active-custom">
+          <FormattedMessage id="ld.custom" />
+        </label>
       </div>
     </div>
   ) : (

@@ -31,6 +31,7 @@ export const ModalCloseProfileSettings = () => {
   };
 
   const handleClose = () => {
+    setIsClosingNext(false);
     setIsManageProfileSettingsUnsavedModalOpen(false);
   };
 
