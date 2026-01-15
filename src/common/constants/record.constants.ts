@@ -1,6 +1,7 @@
 export enum ResourceType {
   work = 'work',
   instance = 'instance',
+  hub = 'hub',
 }
 
 export enum RecordStatus {

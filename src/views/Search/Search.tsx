@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { logger } from '@/common/services/logger';
+import { useCallback, useMemo } from 'react';
 import {
   LegacySearch,
   LegacySearchControlPane,
@@ -9,26 +8,16 @@ import {
   LegacySearchResultList,
   type SourceOption,
 } from '@/features/search/ui';
-import { DEFAULT_SEARCH_BY, MIN_AMT_OF_INSTANCES_TO_COMPARE, SearchSegment } from '@/common/constants/search.constants';
+import { DEFAULT_SEARCH_BY, SearchSegment } from '@/common/constants/search.constants';
 import { ModalImport } from '@/components/ModalImport';
-import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { DropdownItemType, FullDisplayType } from '@/common/constants/uiElements.constants';
 import { Dropdown } from '@/components/Dropdown';
-import { ResourceType } from '@/common/constants/record.constants';
-import Plus16 from '@/assets/plus-16.svg?react';
-import Transfer16 from '@/assets/transfer-16.svg?react';
-import Lightning16 from '@/assets/lightning-16.svg?react';
-import { useContainerEvents } from '@/common/hooks/useContainerEvents';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
-import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
-import { StatusType } from '@/common/constants/status.constants';
-import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@/common/services/userNotification';
+import { useSearchState } from '@src/store';
 import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
 import { getByIdentifier } from '@/common/api/search.api';
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { filters } from './data/filters';
+import { useSearchActions, useSearchCleanup } from './hooks';
+import { createResourceActionsConfig, createHubActionsConfig } from './config';
 import { FormattedMessage } from 'react-intl';
 import './Search.scss';
 import { FullDisplay } from '@/components/FullDisplay';
@@ -45,112 +34,30 @@ const SOURCE_OPTIONS: SourceOption[] = [
 ];
 
 export const SearchView = () => {
-  const { navigateToEditPage } = useNavigateToEditPage();
-  const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
-  const { selectedInstances, resetSelectedInstances } = useSearchState(['selectedInstances', 'resetSelectedInstances']);
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
-  const { fetchRecord } = useRecordControls();
-  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { setFullDisplayComponentType, resetFullDisplayComponentType, isImportModalOpen, setIsImportModalOpen } =
-    useUIState([
-      'setFullDisplayComponentType',
-      'resetFullDisplayComponentType',
-      'isImportModalOpen',
-      'setIsImportModalOpen',
-    ]);
-  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
-  const { onCreateNewResource } = useNavigateToCreatePage();
+  const { selectedInstances } = useSearchState(['selectedInstances']);
 
-  useEffect(() => {
-    return () => {
-      resetFullDisplayComponentType();
-      resetSelectedInstances();
-    };
-  }, []);
+  const { handlePreviewMultiple, handleImport, onClickNewWork, onClickNewHub, handleHubEdit, handleHubImport } =
+    useSearchActions();
 
-  dispatchDropNavigateToOriginEvent();
-
-  const handlePreviewMultiple = async () => {
-    try {
-      setIsLoading(true);
-      resetPreviewContent();
-      setFullDisplayComponentType(FullDisplayType.Comparison);
-
-      for (const id of selectedInstances.toReversed()) {
-        await fetchRecord(id, {});
-      }
-    } catch (error) {
-      logger.error('Error fetching records for preview:', error);
-
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleImport = () => {
-    if (!isImportModalOpen) {
-      setIsImportModalOpen(true);
-    }
-  };
-
-  const onClickNewWork = () => {
-    onCreateNewResource({
-      resourceTypeURL: TYPE_URIS.WORK as ResourceTypeURL,
-      queryParams: {
-        type: ResourceType.work,
-      },
-    });
-  };
-
-  // TODO: implement Hub action handlers
-  const handleHubEdit = () => {};
-  const handleHubImport = () => {};
+  useSearchCleanup();
 
   const resourceActions = useMemo(
-    () => [
-      {
-        id: 'actions',
-        labelId: 'ld.actions',
-        data: [
-          {
-            id: 'newResource',
-            type: DropdownItemType.basic,
-            labelId: 'ld.newResource',
-            icon: <Plus16 />,
-            action: onClickNewWork,
-          },
-          {
-            id: 'compare',
-            type: DropdownItemType.basic,
-            labelId: 'ld.compareSelected',
-            icon: <Transfer16 />,
-            hidden: selectedInstances.length < MIN_AMT_OF_INSTANCES_TO_COMPARE,
-            action: handlePreviewMultiple,
-          },
-          {
-            id: 'import',
-            type: DropdownItemType.basic,
-            labelId: 'ld.importInstances',
-            icon: <Lightning16 />,
-            action: handleImport,
-          },
-        ],
-      },
-      // Example of the dropdown option with a custom component instead of the standart button
-      /* {
-      id: 'sortBy',
-      labelId: 'ld.newResource',
-      data: [
-        {
-          id: 'sortBy',
-          type: DropdownItemType.customComponent,
-          renderComponent: (key: string | number) => <div key={key}>Custom</div>,
-        },
-      ],
-    }, */
-    ],
-    [navigateToEditPage, selectedInstances.length],
+    () =>
+      createResourceActionsConfig({
+        onClickNewWork,
+        handlePreviewMultiple,
+        handleImport,
+        selectedInstancesCount: selectedInstances.length,
+      }),
+    [onClickNewWork, handlePreviewMultiple, handleImport, selectedInstances.length],
+  );
+
+  const hubActions = useMemo(
+    () =>
+      createHubActionsConfig({
+        onClickNewHub,
+      }),
+    [onClickNewHub],
   );
 
   const renderSearchControlPane = useCallback(
@@ -206,7 +113,7 @@ export const SearchView = () => {
           {/* Hubs-specific actions */}
           <Search.Controls.SegmentContent segment="hubs">
             <Search.ControlPane>
-              <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="hubs-actions-dropdown" />
+              <Dropdown labelId="ld.actions" items={hubActions} buttonTestId="hubs-actions-dropdown" />
             </Search.ControlPane>
           </Search.Controls.SegmentContent>
 
