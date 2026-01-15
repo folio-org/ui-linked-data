@@ -63,11 +63,16 @@ const measureElementWidth = (element: HTMLElement): number => {
   return width;
 };
 
+const getHorizontalPadding = (element: HTMLElement): number => {
+  const styles = getComputedStyle(element);
+
+  return Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
+};
+
 /**
  * Measures the actual content width of specified columns
  * Returns an array of widths for columns that need content-based sizing
  */
-
 const RESULTS_SAMPLE_COUNT = 50;
 export const measureContentWidths = (
   columnWidths: ColumnWidthConfig[],
@@ -82,6 +87,7 @@ export const measureContentWidths = (
     }
 
     let maxWidth = 0;
+    let cellPadding = 0;
 
     // Measure header cell content
     const headerCells = headerRowElement?.querySelectorAll(cellSelector);
@@ -98,14 +104,19 @@ export const measureContentWidths = (
     for (let i = 0; i < sampleSize; i++) {
       const row = bodyRows?.[i];
       const cells = row?.querySelectorAll('.table-cell');
-      const content = cells?.[index]?.querySelector('.table-cell-content') as HTMLElement | null;
+      const cell = cells?.[index] as HTMLElement | null;
+      const content = cell?.querySelector('.table-cell-content') as HTMLElement | null;
 
       if (content?.firstElementChild) {
         maxWidth = Math.max(maxWidth, measureElementWidth(content.firstElementChild as HTMLElement));
+
+        // Get padding from the table-cell element
+        if (cellPadding === 0 && cell) {
+          cellPadding = getHorizontalPadding(cell);
+        }
       }
     }
 
-    // Add padding for cell content (10px on each side)
-    return maxWidth + 20;
+    return maxWidth + cellPadding;
   });
 };
