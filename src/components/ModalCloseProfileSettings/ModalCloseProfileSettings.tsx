@@ -1,17 +1,19 @@
+import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/common/constants/routes.constants';
-import { useManageProfileSettingsState, useUIState } from '@/store';
+import { useManageProfileSettingsState } from '@/store';
 import { Modal } from '@/components/Modal';
 import './ModalCloseProfileSettings.scss';
 
-export const ModalCloseProfileSettings = () => {
+type ModalCloseProfileSettingsProps = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+
+export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ isOpen, setIsOpen }) => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
-  const { isManageProfileSettingsUnsavedModalOpen, setIsManageProfileSettingsUnsavedModalOpen } = useUIState([
-    'isManageProfileSettingsUnsavedModalOpen',
-    'setIsManageProfileSettingsUnsavedModalOpen',
-  ]);
   const { isClosingNext, setIsClosingNext, nextSelectedProfile, setSelectedProfile, setIsModified } =
     useManageProfileSettingsState([
       'isClosingNext',
@@ -33,24 +35,25 @@ export const ModalCloseProfileSettings = () => {
 
   const handleClose = () => {
     setIsClosingNext(false);
-    setIsManageProfileSettingsUnsavedModalOpen(false);
+    setIsOpen(false);
   };
 
   const handleCancel = () => {
-    setIsManageProfileSettingsUnsavedModalOpen(false);
+    setIsOpen(false);
     doNext();
   };
 
   const handleSubmit = () => {
-    setIsManageProfileSettingsUnsavedModalOpen(false);
-    // TODO handle save API calls
+    setIsOpen(false);
+    // TODO: handle save API calls
     doNext();
   };
 
   return (
     <Modal
+      data-testid="modal-close-profile-settings"
       className="modal-close-profile-settings"
-      isOpen={isManageProfileSettingsUnsavedModalOpen}
+      isOpen={isOpen}
       onClose={handleClose}
       onCancel={handleCancel}
       onSubmit={handleSubmit}

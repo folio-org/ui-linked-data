@@ -1,0 +1,87 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { useManageProfileSettingsState } from '@/store';
+import { ModalCloseProfileSettings } from '@/components/ModalCloseProfileSettings';
+import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+const mockedUsedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
+describe('ModalCloseProfileSettings', () => {
+  const mockedSetSelectedProfile = jest.fn();
+  const renderComponent = () => {
+    return render(
+      <MemoryRouter>
+        <ModalCloseProfileSettings isOpen={true} setIsOpen={() => {}} />
+      </MemoryRouter>,
+    );
+  };
+
+  beforeAll(() => {
+    createModalContainer();
+  });
+
+  it('renders modal component', () => {
+    renderComponent();
+
+    expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+  });
+
+  it('when closing view, continue without saving sets up view close', async () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: true,
+          nextSelectedProfile: null,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-cancel'));
+
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalled();
+    });
+  });
+
+  it.skip('when closing view, save and continue saves and sets up view close', () => {
+    // TODO: saving not implemented, add test when save exists
+  });
+
+  it('when changing profiles, continue without saving sets up next profile selection', async () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: false,
+          nextSelectedProfile: {
+            id: 'test-profile',
+            name: 'Test Profile',
+            resourceTypeURL: 'test-resource',
+          },
+          setSelectedProfile: mockedSetSelectedProfile,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-cancel'));
+
+    await waitFor(() => {
+      expect(mockedSetSelectedProfile).toHaveBeenCalled();
+    });
+  });
+
+  it.skip('when changing profiles, save and continue saves and sets up next profile selection', () => {
+    // TODO: saving not implemented, add test when save exists
+  });
+});
