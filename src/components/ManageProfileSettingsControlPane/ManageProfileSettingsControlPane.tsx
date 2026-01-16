@@ -22,7 +22,7 @@ export const ManageProfileSettingsControlPane = () => {
   };
 
   return (
-    <div className="nav-block nav-block-fixed-height">
+    <div data-testid="manage-profile-settings-control-pane" className="nav-block nav-block-fixed-height">
       <nav>
         <Button
           data-testid="nav-close-button"
