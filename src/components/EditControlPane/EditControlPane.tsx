@@ -42,9 +42,17 @@ export const EditControlPane = () => {
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
 
-  const handleDuplicate = () => resourceId && navigateAsDuplicate(resourceId);
+  const handleDuplicate = () => {
+    if (resourceId) {
+      navigateAsDuplicate(resourceId);
+    }
+  };
 
-  const handleExportInstanceRdf = () => resourceId && exportInstanceRdf(resourceId);
+  const handleExportInstanceRdf = () => {
+    if (resourceId) {
+      exportInstanceRdf(resourceId);
+    }
+  };
 
   const handleChangeProfile = () => {
     if (!resourceId) return;
