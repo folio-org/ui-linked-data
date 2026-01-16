@@ -22,7 +22,7 @@ export const ProfileSettings = () => {
   ]);
 
   useEffect(() => {
-    // TODO load type default, profile settings
+    // TODO: load type default, profile settings
   }, [setIsTypeDefaultProfile, setProfileSettings]);
 
   const handleDefaultChange = () => {
@@ -31,7 +31,7 @@ export const ProfileSettings = () => {
   };
 
   return selectedProfile ? (
-    <div className="profile-settings">
+    <div data-testid="profile-settings" className="profile-settings">
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <div className="heading">
