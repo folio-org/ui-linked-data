@@ -22,7 +22,9 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'hasShownAuthorityWarning', boolean> &
   SliceState<'isImportModalOpen', boolean> &
   SliceState<'isProfileSelectionModalOpen', boolean> &
-  SliceState<'profileSelectionType', ProfileSelectionType>;
+  SliceState<'profileSelectionType', ProfileSelectionType> &
+  SliceState<'isManageProfileSettingsUnsavedModalOpen', boolean> &
+  SliceState<'isManageProfileSettingsUnusedFieldsModalOpen', boolean>;
 
 const STORE_NAME = 'UI';
 
@@ -65,6 +67,12 @@ const sliceConfigs: SliceConfigs = {
   },
   profileSelectionType: {
     initialValue: {},
+  },
+  isManageProfileSettingsUnsavedModalOpen: {
+    initialValue: false,
+  },
+  isManageProfileSettingsUnusedFieldsModalOpen: {
+    initialValue: false,
   },
 };
 

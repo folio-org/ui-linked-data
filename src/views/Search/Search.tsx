@@ -36,8 +36,15 @@ const SOURCE_OPTIONS: SourceOption[] = [
 export const SearchView = () => {
   const { selectedInstances } = useSearchState(['selectedInstances']);
 
-  const { handlePreviewMultiple, handleImport, onClickNewWork, onClickNewHub, handleHubEdit, handleHubImport } =
-    useSearchActions();
+  const {
+    handlePreviewMultiple,
+    handleImport,
+    onClickNewWork,
+    onClickNewHub,
+    handleHubEdit,
+    handleHubImport,
+    navigateToManageProfileSettings,
+  } = useSearchActions();
 
   useSearchCleanup();
 
@@ -47,6 +54,7 @@ export const SearchView = () => {
         onClickNewWork,
         handlePreviewMultiple,
         handleImport,
+        navigateToManageProfileSettings,
         selectedInstancesCount: selectedInstances.length,
       }),
     [onClickNewWork, handlePreviewMultiple, handleImport, selectedInstances.length],

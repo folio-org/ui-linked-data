@@ -11,6 +11,7 @@ export enum ButtonType {
   Passive = 'passive',
   Ghost = 'ghost',
   Icon = 'icon',
+  ListItem = 'list-item',
 }
 
 type Button = {

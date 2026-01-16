@@ -1,0 +1,20 @@
+.profile-settings {
+  flex: 1;
+
+  .nav .heading {
+    padding: 0 15px;
+  }
+
+  .default-settings,
+  .settings-option {
+    padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .settings-option .empty-block {
+    margin: 0 1rem;
+  }
+}

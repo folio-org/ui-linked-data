@@ -14,10 +14,18 @@ import { useSearchActions } from './useSearchActions';
 const mockIsHubsCreateEnabled = getMockedImportedConstant(FeatureConstants, 'IS_HUBS_CREATE_ENABLED');
 const mockOnCreateNewResource = jest.fn();
 const mockFetchRecord = jest.fn();
+const mockUseNavigate = jest.fn();
+const mockNavigateToManageProfileSettings = jest.fn();
 
 jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
   useNavigateToCreatePage: () => ({
     onCreateNewResource: mockOnCreateNewResource,
+  }),
+}));
+
+jest.mock('@/common/hooks/useNavigateToManageProfileSettings', () => ({
+  useNavigateToManageProfileSettings: () => ({
+    navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
   }),
 }));
 
@@ -37,6 +45,11 @@ jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn(),
   },
+}));
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockUseNavigate,
 }));
 
 describe('useSearchActions', () => {
@@ -206,6 +219,16 @@ describe('useSearchActions', () => {
 
       expect(result.current.handleHubImport).toBeInstanceOf(Function);
       expect(result.current.handleHubImport()).toBeUndefined();
+    });
+  });
+
+  describe('navigateToManageProfileSettings', () => {
+    test('Navigates to manage profile settings view', () => {
+      const { result } = renderHook(() => useSearchActions());
+
+      result.current.navigateToManageProfileSettings();
+
+      expect(mockNavigateToManageProfileSettings).toHaveBeenCalled();
     });
   });
 });
