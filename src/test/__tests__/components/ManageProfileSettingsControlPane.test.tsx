@@ -6,7 +6,22 @@ import { useManageProfileSettingsState, useUIState } from '@/store';
 
 describe('ManageProfileSettingsControlPane', () => {
   const setIsManageProfileSettingsUnsavedModalOpen = jest.fn();
-  const renderComponent = () => {
+  const renderComponent = (isModified: boolean) => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isModified: isModified,
+        },
+      },
+      {
+        store: useUIState,
+        state: {
+          setIsManageProfileSettingsUnsavedModalOpen,
+        },
+      },
+    ]);
+
     return render(
       <MemoryRouter>
         <ManageProfileSettingsControlPane />
@@ -15,27 +30,13 @@ describe('ManageProfileSettingsControlPane', () => {
   };
 
   it('renders the pane', () => {
-    renderComponent();
+    renderComponent(false);
 
     expect(screen.getByTestId('manage-profile-settings-control-pane')).toBeInTheDocument();
   });
 
   it('close with modifications sets conditions to open confirm modal', () => {
-    setInitialGlobalState([
-      {
-        store: useManageProfileSettingsState,
-        state: {
-          isModified: true,
-        },
-      },
-      {
-        store: useUIState,
-        state: {
-          setIsManageProfileSettingsUnsavedModalOpen,
-        },
-      },
-    ]);
-    renderComponent();
+    renderComponent(true);
 
     fireEvent.click(screen.getByTestId('nav-close-button'));
 
@@ -43,21 +44,7 @@ describe('ManageProfileSettingsControlPane', () => {
   });
 
   it('close with no modifications navigates away', () => {
-    setInitialGlobalState([
-      {
-        store: useManageProfileSettingsState,
-        state: {
-          isModified: false,
-        },
-      },
-      {
-        store: useUIState,
-        state: {
-          setIsManageProfileSettingsUnsavedModalOpen,
-        },
-      },
-    ]);
-    renderComponent();
+    renderComponent(false);
 
     fireEvent.click(screen.getByTestId('nav-close-button'));
 
