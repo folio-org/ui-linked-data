@@ -5,15 +5,15 @@ import { ModalCloseProfileSettings } from '@/components/ModalCloseProfileSetting
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
-const mockedUsedNavigate = jest.fn();
+const mockUseNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockedUsedNavigate,
+  useNavigate: () => mockUseNavigate,
 }));
 
 describe('ModalCloseProfileSettings', () => {
-  const mockedSetSelectedProfile = jest.fn();
+  const mockSetSelectedProfile = jest.fn();
   const renderComponent = () => {
     return render(
       <MemoryRouter>
@@ -48,7 +48,7 @@ describe('ModalCloseProfileSettings', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
 
     await waitFor(() => {
-      expect(mockedUsedNavigate).toHaveBeenCalled();
+      expect(mockUseNavigate).toHaveBeenCalled();
     });
   });
 
@@ -67,7 +67,7 @@ describe('ModalCloseProfileSettings', () => {
             name: 'Test Profile',
             resourceTypeURL: 'test-resource',
           },
-          setSelectedProfile: mockedSetSelectedProfile,
+          setSelectedProfile: mockSetSelectedProfile,
         },
       },
     ]);
@@ -77,7 +77,7 @@ describe('ModalCloseProfileSettings', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
 
     await waitFor(() => {
-      expect(mockedSetSelectedProfile).toHaveBeenCalled();
+      expect(mockSetSelectedProfile).toHaveBeenCalled();
     });
   });
 

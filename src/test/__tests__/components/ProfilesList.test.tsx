@@ -12,8 +12,8 @@ jest.mock('@common/api/profiles.api', () => ({
 }));
 
 describe('ProfilesList', () => {
-  const mockedSetIsManageProfileSettingsUnsavedModalOpen = jest.fn();
-  const mockedAddStatusMessagesItem = jest.fn();
+  const mockSetIsManageProfileSettingsUnsavedModalOpen = jest.fn();
+  const mockAddStatusMessagesItem = jest.fn();
 
   const renderComponent = (presetProfiles: boolean, isModified: boolean, fetchProfileError: boolean) => {
     setInitialGlobalState([
@@ -50,13 +50,13 @@ describe('ProfilesList', () => {
       {
         store: useUIState,
         state: {
-          setIsManageProfileSettingsUnsavedModalOpen: mockedSetIsManageProfileSettingsUnsavedModalOpen,
+          setIsManageProfileSettingsUnsavedModalOpen: mockSetIsManageProfileSettingsUnsavedModalOpen,
         },
       },
       {
         store: useStatusStore,
         state: {
-          addStatusMessagesItem: mockedAddStatusMessagesItem,
+          addStatusMessagesItem: mockAddStatusMessagesItem,
         },
       },
     ]);
@@ -99,7 +99,7 @@ describe('ProfilesList', () => {
     renderComponent(false, false, true);
 
     await waitFor(() => {
-      expect(mockedAddStatusMessagesItem).toHaveBeenCalledWith(
+      expect(mockAddStatusMessagesItem).toHaveBeenCalledWith(
         expect.objectContaining({
           type: StatusType.error,
         }),
@@ -114,7 +114,7 @@ describe('ProfilesList', () => {
     fireEvent.click(instanceProfile);
 
     expect(instanceProfile.parentElement).toHaveClass('selected');
-    expect(mockedSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
+    expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
   });
 
   it('selecting a profile opens a confirmation modal if modified', () => {
@@ -125,6 +125,6 @@ describe('ProfilesList', () => {
 
     const workProfile = screen.getByRole('button', { name: 'One Work Profile' });
     expect(workProfile.parentElement).toHaveClass('selected');
-    expect(mockedSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
+    expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
   });
 });

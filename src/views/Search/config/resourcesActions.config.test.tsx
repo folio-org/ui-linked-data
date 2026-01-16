@@ -20,7 +20,7 @@ describe('createResourceActionsConfig', () => {
     expect(config).toHaveLength(1);
     expect(config[0].id).toBe('actions');
     expect(config[0].labelId).toBe('ld.actions');
-    expect(config[0].data).toHaveLength(3);
+    expect(config[0].data).toHaveLength(4);
   });
 
   test('Creates newResource action with correct properties', () => {
