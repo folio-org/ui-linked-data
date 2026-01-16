@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BibframeEntitiesMap, TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { useManageProfileSettingsState, useProfileState } from '@src/store';
 import { useProfileList } from '@/common/hooks/useProfileList';
 import { ResourceProfiles } from './ResourceProfiles';
@@ -19,13 +19,18 @@ export const ProfilesList = () => {
   }, [loadAllAvailableProfiles]);
 
   useEffect(() => {
-    if (availableProfiles && availableProfiles[TYPE_URIS.WORK as ResourceTypeURL] && !selectedProfile) {
-      setSelectedProfile(availableProfiles[TYPE_URIS.WORK as ResourceTypeURL][0]);
+    if (availableProfiles && !selectedProfile && Object.keys(availableProfiles).length > 0) {
+      for (const resourceType in availableProfiles) {
+        if (availableProfiles[resourceType as ResourceTypeURL] && availableProfiles[resourceType as ResourceTypeURL].length > 0) {
+          setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
+          break;
+        }
+      }
     }
   }, [availableProfiles]);
 
   return availableProfiles ? (
-    <div className="profiles-list">
+    <div data-testid="profiles-list" className="profiles-list">
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <div className="heading">
