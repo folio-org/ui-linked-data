@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
-import { useManageProfileSettingsState, useProfileState } from '@src/store';
+import { StatusType } from '@common/constants/status.constants';
+import { useManageProfileSettingsState, useProfileState, useStatusState } from '@src/store';
 import { useProfileList } from '@/common/hooks/useProfileList';
+import { UserNotificationFactory } from '@common/services/userNotification';
 import { ResourceProfiles } from './ResourceProfiles';
 import './ProfilesList.scss';
 
@@ -13,15 +15,27 @@ export const ProfilesList = () => {
     'selectedProfile',
     'setSelectedProfile',
   ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   useEffect(() => {
-    loadAllAvailableProfiles();
+    const initialize = async () => {
+      try {
+        await loadAllAvailableProfiles();
+      } catch {
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfiles'));
+      }
+    };
+
+    initialize();
   }, [loadAllAvailableProfiles]);
 
   useEffect(() => {
     if (availableProfiles && !selectedProfile && Object.keys(availableProfiles).length > 0) {
       for (const resourceType in availableProfiles) {
-        if (availableProfiles[resourceType as ResourceTypeURL] && availableProfiles[resourceType as ResourceTypeURL].length > 0) {
+        if (
+          availableProfiles[resourceType as ResourceTypeURL] &&
+          availableProfiles[resourceType as ResourceTypeURL].length > 0
+        ) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
           break;
         }

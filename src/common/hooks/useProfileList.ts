@@ -25,9 +25,9 @@ export const useProfileList = () => {
   };
 
   const loadAllAvailableProfiles = async () => {
-    Object.values(TYPE_URIS).forEach(type => {
-      loadAvailableProfiles(type as ResourceTypeURL);
-    });
+    for (const type of Object.values(TYPE_URIS)) {
+      await loadAvailableProfiles(type as ResourceTypeURL);
+    }
   };
 
   return {
