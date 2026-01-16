@@ -215,7 +215,7 @@ describe('table.helpers', () => {
       headerCell.className = 'table-head-cell';
       const headerContent = document.createElement('div');
       headerContent.className = 'table-header-contents-wrapper';
-      Object.defineProperty(headerContent, 'scrollWidth', { value: 80 });
+      headerContent.getBoundingClientRect = jest.fn(() => ({ width: 80 }) as DOMRect);
       headerCell.appendChild(headerContent);
       headerRow.appendChild(headerCell);
 
@@ -226,9 +226,16 @@ describe('table.helpers', () => {
       bodyRow.className = 'table-row';
       const bodyCell = document.createElement('div');
       bodyCell.className = 'table-cell';
+      jest.spyOn(globalThis, 'getComputedStyle').mockReturnValue({
+        paddingLeft: '10px',
+        paddingRight: '10px',
+      } as CSSStyleDeclaration);
+
       const cellContent = document.createElement('div');
       cellContent.className = 'table-cell-content';
-      Object.defineProperty(cellContent, 'scrollWidth', { value: 100 });
+      const button = document.createElement('button');
+      button.getBoundingClientRect = jest.fn(() => ({ width: 100 }) as DOMRect);
+      cellContent.appendChild(button);
       bodyCell.appendChild(cellContent);
       bodyRow.appendChild(bodyCell);
       tableBody.appendChild(bodyRow);
@@ -238,8 +245,10 @@ describe('table.helpers', () => {
 
       const result = measureContentWidths(columnWidths, headerRow, bodyContainer, '.table-head-cell');
 
-      // Should return the max width + 20px padding
+      // Should return the max width (100) + 20px padding (10 + 10)
       expect(result).toEqual([120]);
+
+      jest.restoreAllMocks();
     });
 
     it('should handle empty elements', () => {
@@ -247,8 +256,8 @@ describe('table.helpers', () => {
 
       const result = measureContentWidths(columnWidths, null, null, '.table-head-cell');
 
-      // Should return 20 (just padding since no content found)
-      expect(result).toEqual([20]);
+      // Should return 0 since no content found and no padding element
+      expect(result).toEqual([0]);
     });
   });
 });

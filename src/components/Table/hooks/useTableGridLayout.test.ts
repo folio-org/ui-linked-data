@@ -20,6 +20,7 @@ describe('useTableGridLayout', () => {
       tableHeadRowRef: mockTableHeadRowRef,
       tableBodyContainerRef: mockTableBodyContainerRef,
     },
+    dataLength: 2,
   };
 
   const mockExtractColumnWidths = tableHelpers.extractColumnWidths as jest.Mock;
@@ -104,7 +105,7 @@ describe('useTableGridLayout', () => {
 
       rerender({ ...propsWithContentFit, dataDependency: [{ id: 'row_2' }] });
 
-      expect(mockMeasureContentWidths.mock.calls.length).toBeGreaterThan(initialCallCount);
+      expect(mockMeasureContentWidths.mock.calls.length).toBe(initialCallCount);
     });
 
     it('does not update state when measured widths have not changed', () => {
@@ -285,11 +286,11 @@ describe('useTableGridLayout', () => {
 
       const { rerender } = renderHook(props => useTableGridLayout(props), { initialProps: propsWithDependency });
 
-      const callCount1 = mockCalculateGridTemplate.mock.calls.length;
+      const callCount = mockCalculateGridTemplate.mock.calls.length;
 
       rerender({ ...defaultProps, dataDependency: [{ id: 'row_1' }] as unknown[] });
 
-      expect(mockCalculateGridTemplate.mock.calls.length).toBeGreaterThan(callCount1);
+      expect(mockCalculateGridTemplate.mock.calls.length).toBe(callCount);
 
       mockTableBodyContainerRef.current = null;
     });

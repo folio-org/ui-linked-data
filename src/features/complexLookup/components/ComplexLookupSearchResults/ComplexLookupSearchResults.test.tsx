@@ -3,7 +3,9 @@ import { useComplexLookupSearchResults } from '@/features/complexLookup/hooks/us
 import { TableFlex } from '@/components/Table';
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 
-jest.mock('@/components/Table');
+jest.mock('@/components/Table', () => ({
+  TableFlex: jest.fn(() => <div>Mock TableFlex</div>),
+}));
 jest.mock('@/features/complexLookup/hooks/useComplexLookupSearchResults');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
@@ -23,7 +25,6 @@ describe('ComplexLookupSearchResults', () => {
       listHeader,
       formattedData,
     });
-    (TableFlex as jest.Mock).mockReturnValue(<div>Mock TableFlex</div>);
 
     render(
       <ComplexLookupSearchResults
@@ -33,7 +34,7 @@ describe('ComplexLookupSearchResults', () => {
       />,
     );
 
-    expect(TableFlex as jest.Mock).toHaveBeenCalledWith(
+    expect(TableFlex).toHaveBeenCalledWith(
       { header: listHeader, data: formattedData, className: 'results-list' },
       undefined,
     );
