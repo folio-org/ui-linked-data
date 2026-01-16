@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { TableFlex } from '@/components/Table';
 import { useHubsTableFormatter } from '../../../hooks/useHubsTableFormatter';
 
@@ -7,7 +7,7 @@ interface HubsResultListProps {
   onImport?: (id: string, uri: string) => void;
 }
 
-export const HubsResultList: FC<HubsResultListProps> = ({ onEdit, onImport }) => {
+export const HubsResultList: FC<HubsResultListProps> = memo(({ onEdit, onImport }) => {
   const { formattedData, listHeader } = useHubsTableFormatter({
     onEdit,
     onImport,
@@ -18,4 +18,4 @@ export const HubsResultList: FC<HubsResultListProps> = ({ onEdit, onImport }) =>
       <TableFlex header={listHeader} data={formattedData} className="results-list" />
     </div>
   );
-};
+});

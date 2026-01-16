@@ -1,4 +1,4 @@
-import { FC, Suspense, useEffect, useRef } from 'react';
+import { FC, Suspense, useEffect, useMemo, useRef } from 'react';
 import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ErrorBoundary } from '@components/ErrorBoundary';
 import { Loading } from '@components/Loading';
@@ -59,6 +59,7 @@ const createRouter = (basename: string) => createBrowserRouter(routes, { basenam
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
   const { setCustomEvents, setHasNavigationOrigin } = useConfigState(['setCustomEvents', 'setHasNavigationOrigin']);
   const cachedMessages = useRef({ [DEFAULT_LOCALE]: en });
+  const router = useMemo(() => createRouter(routePrefix), [routePrefix]);
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
@@ -71,7 +72,7 @@ const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
         <ErrorBoundary>
           <QueryProvider>
             <ServicesProvider>
-              <RouterProvider router={createRouter(routePrefix)} />
+              <RouterProvider router={router} />
             </ServicesProvider>
           </QueryProvider>
         </ErrorBoundary>

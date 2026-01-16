@@ -115,6 +115,7 @@
   "ld.saveAndKeepEditing": "Save & keep editing",
   "ld.recordMappingToSchema": "Cannot apply a record to the schema",
   "ld.newResource": "New resource",
+  "ld.newHub": "New hub",
   "ld.addInstance": "Add instance",
   "ld.compareSelected": "Compare selected",
   "ld.newInstance": "New instance",

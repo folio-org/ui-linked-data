@@ -3,6 +3,7 @@ import { ResourceType } from './record.constants';
 export const BFLITE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
   WORK: 'http://bibfra.me/vocab/lite/Work',
+  HUB: 'http://bibfra.me/vocab/lite/Hub',
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
@@ -81,7 +82,7 @@ export const BFLITE_URIS = {
   TRANSCRIBING_AGENCY: 'http://bibfra.me/vocab/library/transcribingAgency',
   CATALOGING_LANGUAGE: 'http://bibfra.me/vocab/lite/catalogingLanguage',
   PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/library/publicationFrequency',
-  EXPRESSION_OF: 'http://bibfra.me/vocab/lite/expressionOf'
+  EXPRESSION_OF: 'http://bibfra.me/vocab/lite/expressionOf',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
@@ -226,8 +227,8 @@ export const SIMPLE_LOOKUP_MAPPING = {
     },
     'http://bibfra.me/vocab/library/datesOfPublicationNote': {
       uri: 'http://id.loc.gov/vocabulary/mnotetype/number',
-      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri }
-    }
+      parentBlock: { bfLiteUri: BLOCKS_BFLITE.INSTANCE.uri },
+    },
   },
   _contributions: {
     'http://bibfra.me/vocab/relation/abridger': { uri: 'http://id.loc.gov/vocabulary/relators/abr' },

@@ -22,7 +22,7 @@ export const hubsTableConfig: SearchResultsTableConfig = {
       position: 2,
       className: 'cell-fixed',
       minWidth: 100,
-      maxWidth: 100,
+      maxWidth: 'max-content',
       formatter: HubActionFormatter,
     },
   },

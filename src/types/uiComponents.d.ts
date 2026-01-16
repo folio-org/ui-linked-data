@@ -11,7 +11,7 @@ type DropdownItem = {
   isDisabled?: boolean;
   labelId?: string;
   icon?: ReactElement<unknown>;
-  action?: VoidFunction;
+  action?: () => void | Promise<void>;
   hidden?: boolean;
   renderComponent?: (key: string | number) => ReactElement<unknown>;
 };
