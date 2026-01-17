@@ -294,5 +294,11 @@
     "ld.exportInstanceRdf": "Exportar archivo RDF de instancia",
     "ld.required_series_title": "Please add a title to each series in order to save.",
     "ld.source.libraryOfCongress": "Library of Congress",
-    "ld.source.local": "Local"
+    "ld.source.local": "Local",
+    "ld.workInstances": "Work/Instances",
+    "ld.cantLoadProfileSettings": "Cannot load custom profile settings, using profile defaults",
+    "ld.import.edit": "Import/Edit",
+    "ld.action": "Action",
+    "ld.source.libraryOfCongress.local": "Library of Congress, Local",
+    "ld.newHub": "New hub"
 }

@@ -294,5 +294,11 @@
     "ld.exportInstanceRdf": "导出实例 RDF 文件",
     "ld.required_series_title": "请为每个丛编添加题名以便保存。",
     "ld.source.libraryOfCongress": "Library of Congress",
-    "ld.source.local": "Local"
+    "ld.source.local": "Local",
+    "ld.workInstances": "Work/Instances",
+    "ld.cantLoadProfileSettings": "Cannot load custom profile settings, using profile defaults",
+    "ld.import.edit": "Import/Edit",
+    "ld.action": "Action",
+    "ld.source.libraryOfCongress.local": "Library of Congress, Local",
+    "ld.newHub": "New hub"
 }
