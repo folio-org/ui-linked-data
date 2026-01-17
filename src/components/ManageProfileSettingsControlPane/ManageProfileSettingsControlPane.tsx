@@ -13,11 +13,11 @@ export const ManageProfileSettingsControlPane = () => {
   const navigate = useNavigate();
 
   const handleClose = () => {
-    if (!isModified) {
-      navigate(ROUTES.SEARCH.uri);
-    } else {
+    if (isModified) {
       setIsClosingNext(true);
       setIsManageProfileSettingsUnsavedModalOpen(true);
+    } else {
+      navigate(ROUTES.SEARCH.uri);
     }
   };
 

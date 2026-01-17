@@ -12,7 +12,7 @@ export const ResourceProfiles: FC<ResourceProfilesProps> = ({ labelId, profiles 
   const { selectedProfile } = useManageProfileSettingsState(['selectedProfile']);
 
   const isSelectedProfile = (id: number) => {
-    return selectedProfile && selectedProfile.id === id;
+    return selectedProfile?.id === id;
   };
 
   return (
@@ -22,12 +22,11 @@ export const ResourceProfiles: FC<ResourceProfilesProps> = ({ labelId, profiles 
         &nbsp;
         <FormattedMessage id="ld.profiles" />
       </div>
-      {profiles &&
-        profiles.map(profile => {
-          return (
-            <ResourceProfile key={profile.id} profile={profile} selected={isSelectedProfile(profile.id as number)} />
-          );
-        })}
+      {profiles?.map(profile => {
+        return (
+          <ResourceProfile key={profile.id} profile={profile} selected={isSelectedProfile(profile.id as number)} />
+        );
+      })}
     </>
   );
 };
