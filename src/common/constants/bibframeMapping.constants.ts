@@ -133,6 +133,12 @@ export const BLOCKS_BFLITE = {
       name: ResourceType.instance,
     },
   },
+  HUB: {
+    uri: BFLITE_URIS.HUB,
+    referenceKey: '',
+    resourceType: ResourceType.hub,
+    reference: undefined,
+  },
 };
 
 export const REF_TO_NAME = {

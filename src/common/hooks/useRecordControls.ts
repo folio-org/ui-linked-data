@@ -160,11 +160,13 @@ export const useRecordControls = () => {
         searchParams.get(QueryParams.Type) ?? ResourceType.instance
       )?.toUpperCase() as BibframeEntities;
 
-      const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
+      const blockConfig = BLOCKS_BFLITE[blocksBfliteKey];
+      const selectedBlock = blockConfig?.uri;
 
-      if (shouldSetSearchParams) {
+      // Only set search params if this resource type has a reference (e.g., Work/Instance)
+      if (shouldSetSearchParams && blockConfig?.reference) {
         setSearchParams({
-          type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
+          type: blockConfig.reference.name,
           ref: String(getRecordId(parsedResponse, selectedBlock)),
         });
       }
@@ -271,7 +273,14 @@ export const useRecordControls = () => {
   const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
     try {
       const record = await getRecord({ recordId });
-      const uriSelector = BLOCKS_BFLITE[entityId]?.reference?.uri;
+      const blockConfig = BLOCKS_BFLITE[entityId];
+
+      // If this entity type doesn't have a reference (like Hub), return early
+      if (!blockConfig?.reference) {
+        return { resource: record?.resource };
+      }
+
+      const uriSelector = blockConfig.reference.uri;
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
@@ -284,13 +293,13 @@ export const useRecordControls = () => {
 
       const selectedContents = {
         ...contents,
-        [BLOCKS_BFLITE[entityId]?.reference?.key]: undefined,
+        [blockConfig.reference.key]: undefined,
       };
 
       return {
         resource: {
-          [BLOCKS_BFLITE[entityId]?.uri]: {
-            [BLOCKS_BFLITE[entityId]?.reference?.key]: [selectedContents],
+          [blockConfig.uri]: {
+            [blockConfig.reference.key]: [selectedContents],
           },
         },
       };

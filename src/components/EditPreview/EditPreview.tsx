@@ -8,6 +8,7 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { getRecordDependencies } from '@common/helpers/record.helper';
 import { memo, useEffect } from 'react';
 import { TitledPreview } from '@components/Preview/TitledPreview';
+import { hasPreview, mapToResourceType } from '@src/configs/resourceTypes';
 import './EditPreview.scss';
 import { useInputsState, useUIState } from '@src/store';
 
@@ -22,9 +23,13 @@ export const EditPreview = memo(() => {
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
-  const isPositionedSecond =
-    currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
   const typeParam = queryParams.get(QueryParams.Type);
+
+  const resourceType = mapToResourceType(typeParam);
+  const shouldShowPreview = hasPreview(resourceType);
+
+  const isPositionedSecond =
+    currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.size <= 1;
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
   const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
@@ -41,6 +46,10 @@ export const EditPreview = memo(() => {
       useInputsState.setState(initialInputsState, true);
     }
   }, [isCreateWorkPageOpened]);
+
+  if (!shouldShowPreview) {
+    return null;
+  }
 
   return (
     <div

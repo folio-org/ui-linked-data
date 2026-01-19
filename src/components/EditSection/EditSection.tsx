@@ -1,13 +1,15 @@
 import { memo, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { debounce } from 'lodash';
 import classNames from 'classnames';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { EDIT_SECTION_CONTAINER_ID } from '@common/constants/uiElements.constants';
-import { Fields } from '@components/Fields';
-import { Prompt } from '@components/Prompt';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useServicesContext } from '@common/hooks/useServicesContext';
-import { useInputsState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { EDIT_SECTION_CONTAINER_ID } from '@/common/constants/uiElements.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { Fields } from '@/components/Fields';
+import { Prompt } from '@/components/Prompt';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
+import { mapToResourceType, getEditSectionPassiveClass, hasReference } from '@/configs/resourceTypes';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 
@@ -26,12 +28,18 @@ export const EditSection = memo(() => {
     'isRecordEdited',
     'setIsRecordEdited',
   ]);
-  const { collapsedEntries, setCollapsedEntries, collapsibleEntries, currentlyEditedEntityBfid } = useUIState([
+  const { collapsedEntries, setCollapsedEntries, collapsibleEntries } = useUIState([
     'collapsedEntries',
     'setCollapsedEntries',
     'collapsibleEntries',
-    'currentlyEditedEntityBfid',
   ]);
+
+  const [searchParams] = useSearchParams();
+  const typeParam = searchParams.get(QueryParams.Type);
+  const resourceType = mapToResourceType(typeParam);
+
+  // Get the passive class from registry - only apply if this type has a reference (dual-panel layout)
+  const passiveClass = hasReference(resourceType) ? getEditSectionPassiveClass(resourceType) : undefined;
 
   useContainerEvents({ watchEditedState: true });
 
@@ -70,12 +78,7 @@ export const EditSection = memo(() => {
   });
 
   return (
-    <div
-      id={EDIT_SECTION_CONTAINER_ID}
-      className={classNames('edit-section', {
-        'edit-section-passive': currentlyEditedEntityBfid.has(PROFILE_BFIDS.WORK),
-      })}
-    >
+    <div id={EDIT_SECTION_CONTAINER_ID} className={classNames('edit-section', passiveClass)}>
       <Prompt when={isEdited} />
       <Fields
         drawComponent={drawComponent}

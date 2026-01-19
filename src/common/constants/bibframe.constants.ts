@@ -1,6 +1,7 @@
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   'lde:Profile:Work': 'Work',
   'lde:Profile:Instance': 'Instance',
+  'lde:Profile:Hub': 'Hub',
 };
 
 export enum BibframeEntitiesMap {
@@ -11,11 +12,13 @@ export enum BibframeEntitiesMap {
 export const PROFILE_BFIDS = {
   WORK: 'lde:Profile:Work',
   INSTANCE: 'lde:Profile:Instance',
+  HUB: 'lde:Profile:Hub',
 };
 
 export enum BibframeEntities {
   INSTANCE = 'INSTANCE',
   WORK = 'WORK',
+  HUB = 'HUB',
 }
 
 export const TYPE_URIS = {
