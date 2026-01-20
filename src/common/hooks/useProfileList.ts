@@ -1,6 +1,7 @@
 import { fetchProfiles } from '@common/api/profiles.api';
 import { useProfileState } from '@/store';
 import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { logger } from '@common/services/logger';
 
 export const useProfileList = () => {
   const { availableProfiles, setAvailableProfiles } = useProfileState(['availableProfiles', 'setAvailableProfiles']);
@@ -18,7 +19,7 @@ export const useProfileList = () => {
           };
         });
       } catch (error) {
-        console.error('Failed to load available profiles:', error);
+        logger.error('Failed to load available profiles:', error);
         throw error;
       }
     }

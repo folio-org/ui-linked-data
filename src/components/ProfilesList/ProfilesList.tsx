@@ -33,8 +33,7 @@ export const ProfilesList = () => {
     if (availableProfiles && !selectedProfile && Object.keys(availableProfiles).length > 0) {
       for (const resourceType in availableProfiles) {
         if (
-          availableProfiles[resourceType as ResourceTypeURL] &&
-          availableProfiles[resourceType as ResourceTypeURL].length > 0
+          availableProfiles[resourceType as ResourceTypeURL]?.length > 0
         ) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
           break;
