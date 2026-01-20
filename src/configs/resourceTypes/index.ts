@@ -15,14 +15,14 @@ export type { ResourceTypeInput } from './resourceType.helpers';
 export {
   getResourceTypeConfig,
   hasPreview,
-  hasInstancesList,
-  supportsCloning,
-  supportsMarcPreview,
   hasReference,
   getReference,
   getDefaultProfileId,
   getProfileBfid,
   getEditSectionPassiveClass,
+  getEditPageLayout,
+  getPreviewPosition,
+  hasSplitLayout,
   createRootEntry,
   mapToResourceType,
 } from './resourceType.helpers';

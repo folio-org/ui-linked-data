@@ -14,13 +14,7 @@ import { EditPreview } from '@/components/EditPreview';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { ViewMarcModal } from '@/components/ViewMarcModal';
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
-import {
-  mapToResourceType,
-  hasPreview as checkHasPreview,
-  getProfileBfid,
-  hasReference,
-  getReference,
-} from '@/configs/resourceTypes';
+import { mapToResourceType, hasSplitLayout, getProfileBfid, hasReference, getReference } from '@/configs/resourceTypes';
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -56,7 +50,7 @@ export const Edit = () => {
 
   // Get resource type from URL parameter using registry
   const resourceType = mapToResourceType(typeParam);
-  const showPreviewSection = checkHasPreview(resourceType);
+  const showPreviewSection = hasSplitLayout(resourceType);
 
   function setEntitesBFIds() {
     const editedEntityBfId = getProfileBfid(resourceType);

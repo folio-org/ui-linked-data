@@ -11,10 +11,7 @@ export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.wor
     dependencies: [ResourceType.work],
     ui: {
       hasPreview: true,
-      hasInstancesList: false,
       editSectionPassiveClass: undefined,
-      supportsCloning: true,
-      supportsMarcPreview: true,
       editPageLayout: 'split',
       previewPosition: 'left',
     },
@@ -34,12 +31,9 @@ export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.wor
     dependencies: [ResourceType.instance],
     ui: {
       hasPreview: true,
-      hasInstancesList: true,
       editSectionPassiveClass: 'edit-section-passive',
-      supportsCloning: true,
-      supportsMarcPreview: true,
       editPageLayout: 'split',
-      previewPosition: 'left',
+      previewPosition: 'right',
     },
     reference: {
       key: '_instanceReference',

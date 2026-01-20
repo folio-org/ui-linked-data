@@ -21,18 +21,6 @@ export const hasPreview = (type: ResourceTypeInput): boolean => {
   return getResourceTypeConfig(type).ui.hasPreview;
 };
 
-export const hasInstancesList = (type: ResourceTypeInput): boolean => {
-  return getResourceTypeConfig(type).ui.hasInstancesList;
-};
-
-export const supportsCloning = (type: ResourceTypeInput): boolean => {
-  return getResourceTypeConfig(type).ui.supportsCloning;
-};
-
-export const supportsMarcPreview = (type: ResourceTypeInput): boolean => {
-  return getResourceTypeConfig(type).ui.supportsMarcPreview;
-};
-
 export const hasReference = (type: ResourceTypeInput): boolean => {
   return !!getResourceTypeConfig(type).reference;
 };
@@ -51,6 +39,18 @@ export const getProfileBfid = (type: ResourceTypeInput): string => {
 
 export const getEditSectionPassiveClass = (type: ResourceTypeInput): string | undefined => {
   return getResourceTypeConfig(type).ui.editSectionPassiveClass;
+};
+
+export const getEditPageLayout = (type: ResourceTypeInput): 'single' | 'split' => {
+  return getResourceTypeConfig(type).ui.editPageLayout ?? 'single';
+};
+
+export const getPreviewPosition = (type: ResourceTypeInput): 'left' | 'right' | undefined => {
+  return getResourceTypeConfig(type).ui.previewPosition;
+};
+
+export const hasSplitLayout = (type: ResourceTypeInput): boolean => {
+  return getEditPageLayout(type) === 'split';
 };
 
 /**

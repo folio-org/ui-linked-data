@@ -2,7 +2,6 @@ import { ResourceType } from '@/common/constants/record.constants';
 import {
   getResourceTypeConfig,
   hasPreview,
-  hasInstancesList,
   hasReference,
   getReference,
   getDefaultProfileId,
@@ -53,16 +52,6 @@ describe('resourceType.helpers', () => {
 
     it('Returns true for instance type', () => {
       expect(hasPreview(ResourceType.instance)).toBe(true);
-    });
-  });
-
-  describe('hasInstancesList', () => {
-    it('Returns true for work type', () => {
-      expect(hasInstancesList(ResourceType.work)).toBe(true);
-    });
-
-    it('Returns false for instance type', () => {
-      expect(hasInstancesList(ResourceType.instance)).toBe(false);
     });
   });
 

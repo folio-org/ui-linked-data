@@ -1,4 +1,3 @@
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryParams, RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
@@ -8,7 +7,7 @@ import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import { getRecordDependencies } from '@common/helpers/record.helper';
 import { memo, useEffect } from 'react';
 import { TitledPreview } from '@components/Preview/TitledPreview';
-import { hasPreview, mapToResourceType } from '@src/configs/resourceTypes';
+import { hasSplitLayout, mapToResourceType, getPreviewPosition } from '@src/configs/resourceTypes';
 import './EditPreview.scss';
 import { useInputsState, useUIState } from '@src/store';
 
@@ -26,10 +25,10 @@ export const EditPreview = memo(() => {
   const typeParam = queryParams.get(QueryParams.Type);
 
   const resourceType = mapToResourceType(typeParam);
-  const shouldShowPreview = hasPreview(resourceType);
+  const shouldShowPreview = hasSplitLayout(resourceType);
+  const previewPosition = getPreviewPosition(resourceType);
 
-  const isPositionedSecond =
-    currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.size <= 1;
+  const isPositionedSecond = previewPosition === 'right' && currentlyPreviewedEntityBfid.size <= 1;
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
   const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;

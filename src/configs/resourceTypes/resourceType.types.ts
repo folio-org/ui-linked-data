@@ -2,10 +2,7 @@ import { ResourceType } from '@/common/constants/record.constants';
 
 export interface ResourceTypeUIConfig {
   hasPreview: boolean;
-  hasInstancesList: boolean;
   editSectionPassiveClass?: string;
-  supportsCloning: boolean;
-  supportsMarcPreview: boolean;
   editPageLayout?: 'single' | 'split';
   previewPosition?: 'left' | 'right';
 }
