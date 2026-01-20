@@ -29,11 +29,3 @@ export const getProfileConfig = ({ resourceType, profileId, referenceProfileId }
     rootEntry: createRootEntry(mappedType) as ProfileNode,
   };
 };
-
-/**
- * Map a string value to ResourceType enum.
- * @deprecated Use mapToResourceType from resourceTypes config instead
- */
-export const getMappedResourceType = (resourceTypeValue: string | null): ResourceType => {
-  return mapToResourceType(resourceTypeValue);
-};
