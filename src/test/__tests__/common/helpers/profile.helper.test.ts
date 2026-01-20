@@ -1,17 +1,19 @@
 import { ResourceType } from '@common/constants/record.constants';
 import { getProfileConfig, getMappedResourceType } from '@common/helpers/profile.helper';
 
-jest.mock('@src/configs', () => ({
-  PROFILE_CONFIG: {
-    defaultProfileIds: {
-      work: 1,
-      instance: 2,
-    },
-    rootEntry: {
-      id: 'root',
-      type: 'root',
-    },
+jest.mock('@/configs/resourceTypes', () => ({
+  mapToResourceType: (value: string | null) => {
+    if (value === 'work') return 'work';
+    return 'instance';
   },
+  getResourceTypeConfig: (type: string) => ({
+    defaultProfileId: type === 'work' ? 1 : 2,
+    profileChildren: ['Profile:Work', 'Profile:Instance'],
+  }),
+  createRootEntry: () => ({
+    id: 'root',
+    type: 'root',
+  }),
 }));
 
 describe('profile.helper', () => {
@@ -40,11 +42,11 @@ describe('profile.helper', () => {
       });
     });
 
-    test('returns profile configuration when ResourceType is not work or instance', () => {
+    test('Falls back to instance default when ResourceType is not specified', () => {
       const result = getProfileConfig({});
 
       expect(result).toEqual({
-        ids: [],
+        ids: [2],
         rootEntry: {
           id: 'root',
           type: 'root',
@@ -101,14 +103,14 @@ describe('profile.helper', () => {
       });
     });
 
-    test('ignores profileId when ResourceType is not specified', () => {
+    test('Uses profileId with instance fallback when ResourceType is not specified', () => {
       const customProfileId = 42;
       const result = getProfileConfig({
         profileId: customProfileId,
       });
 
       expect(result).toEqual({
-        ids: [],
+        ids: [customProfileId],
         rootEntry: {
           id: 'root',
           type: 'root',

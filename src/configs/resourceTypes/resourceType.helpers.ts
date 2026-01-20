@@ -1,6 +1,8 @@
-import { ResourceType } from '@common/constants/record.constants';
+import { ResourceType } from '@/common/constants/record.constants';
 import { RESOURCE_TYPE_REGISTRY } from './resourceType.config';
 import type { ResourceTypeDefinition, ResourceTypeReference } from './resourceType.types';
+
+// TODO: Move these helpers to /src/features/... once the Edit resource feature structure is finalized.
 
 export type ResourceTypeInput = ResourceType | string | null | undefined;
 
