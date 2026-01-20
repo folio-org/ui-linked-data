@@ -25,4 +25,6 @@ export {
   hasSplitLayout,
   createRootEntry,
   mapToResourceType,
+  mapUriToResourceType,
+  resolveResourceType,
 } from './resourceType.helpers';

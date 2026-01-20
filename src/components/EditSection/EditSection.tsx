@@ -9,7 +9,7 @@ import { Prompt } from '@/components/Prompt';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
-import { mapToResourceType, getEditSectionPassiveClass, hasReference } from '@/configs/resourceTypes';
+import { getEditSectionPassiveClass, hasReference, resolveResourceType } from '@/configs/resourceTypes';
 import { renderDrawComponent } from './renderDrawComponent';
 import './EditSection.scss';
 
@@ -33,10 +33,14 @@ export const EditSection = memo(() => {
     'setCollapsedEntries',
     'collapsibleEntries',
   ]);
+  const { selectedRecordBlocks } = useInputsState(['selectedRecordBlocks']);
 
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get(QueryParams.Type);
-  const resourceType = mapToResourceType(typeParam);
+
+  // Resolve resource type: from loaded record (Edit) or URL param (Create)
+  const blockUri = selectedRecordBlocks?.block;
+  const resourceType = resolveResourceType(blockUri, typeParam);
 
   // Get the passive class from registry - only apply if this type has a reference (dual-panel layout)
   const passiveClass = hasReference(resourceType) ? getEditSectionPassiveClass(resourceType) : undefined;

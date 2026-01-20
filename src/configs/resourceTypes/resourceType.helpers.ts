@@ -91,3 +91,37 @@ export const mapToResourceType = (value: string | null | undefined): ResourceTyp
 
   return RESOURCE_TYPE_MAP[normalized] ?? ResourceType.instance;
 };
+
+/**
+ * Map derived from registry URIs - maps URI to ResourceType.
+ * Built automatically from RESOURCE_TYPE_REGISTRY.
+ */
+const URI_TO_RESOURCE_TYPE_MAP: Record<string, ResourceType> = Object.values(RESOURCE_TYPE_REGISTRY).reduce(
+  (acc, config) => {
+    acc[config.uri] = config.type;
+
+    return acc;
+  },
+  {} as Record<string, ResourceType>,
+);
+
+/**
+ * Maps a BIBFRAME URI (e.g., 'http://bibfra.me/vocab/lite/Work') to a ResourceType.
+ * Used for Edit page where the resource type is determined from the loaded record.
+ */
+export const mapUriToResourceType = (uri: string | null | undefined): ResourceType | undefined => {
+  if (!uri) return undefined;
+
+  return URI_TO_RESOURCE_TYPE_MAP[uri];
+};
+
+export const resolveResourceType = (
+  blockUri: string | null | undefined,
+  typeParam: string | null | undefined,
+): ResourceType => {
+  const fromUri = mapUriToResourceType(blockUri);
+
+  if (fromUri) return fromUri;
+
+  return mapToResourceType(typeParam);
+};
