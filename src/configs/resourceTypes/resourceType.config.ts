@@ -1,10 +1,11 @@
 import { ResourceType } from '@/common/constants/record.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { type ResourceTypeRegistry } from './resourceType.types';
 
 export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.work | ResourceType.instance> = {
   [ResourceType.instance]: {
     type: ResourceType.instance,
-    uri: 'http://bibfra.me/vocab/lite/Instance',
+    uri: BFLITE_URIS.INSTANCE,
     profileBfid: 'lde:Profile:Instance',
     defaultProfileId: 3,
     profileChildren: ['Profile:Work', 'Profile:Instance'],
@@ -17,14 +18,14 @@ export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.wor
     },
     reference: {
       key: '_workReference',
-      uri: 'http://bibfra.me/vocab/lite/Work',
+      uri: BFLITE_URIS.WORK,
       targetType: ResourceType.work,
     },
   },
 
   [ResourceType.work]: {
     type: ResourceType.work,
-    uri: 'http://bibfra.me/vocab/lite/Work',
+    uri: BFLITE_URIS.WORK,
     profileBfid: 'lde:Profile:Work',
     defaultProfileId: 2,
     profileChildren: ['Profile:Work', 'Profile:Instance'],
@@ -37,7 +38,7 @@ export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.wor
     },
     reference: {
       key: '_instanceReference',
-      uri: 'http://bibfra.me/vocab/lite/Instance',
+      uri: BFLITE_URIS.INSTANCE,
       targetType: ResourceType.instance,
     },
   },
