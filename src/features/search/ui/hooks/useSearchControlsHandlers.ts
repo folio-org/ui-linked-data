@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect, type RefObject } from 'react';
 import { useSearchParams, type SetURLSearchParams } from 'react-router-dom';
-import { type SegmentDraft, useSearchState, type CommittedValues } from '@/store';
+import { type SegmentDraft, useSearchState, type CommittedValues, useUIState, useInputsState } from '@/store';
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig, normalizeQuery } from '../../core';
 import type { SearchFlow } from '../types';
@@ -143,6 +143,11 @@ export const useSearchControlsHandlers = ({
     'setCommittedValues',
     'resetCommittedValues',
   ]);
+  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
+  const { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid } = useUIState([
+    'resetFullDisplayComponentType',
+    'resetCurrentlyPreviewedEntityBfid',
+  ]);
 
   // Helper to save current segment's draft
   const saveCurrentDraft = useCallback(() => {
@@ -202,6 +207,11 @@ export const useSearchControlsHandlers = ({
     (newSegment: string) => {
       // Save current segment's draft before switching
       saveCurrentDraft();
+
+      // Reset preview
+      resetPreviewContent();
+      resetFullDisplayComponentType();
+      resetCurrentlyPreviewedEntityBfid();
 
       // Resolve configs for the new segment using centralized resolvers
       const newSegmentConfig = resolveCoreConfig(newSegment);
@@ -375,6 +385,10 @@ export const useSearchControlsHandlers = ({
 
     resetQuery();
     resetSearchBy();
+    // Reset preview
+    resetPreviewContent();
+    resetFullDisplayComponentType();
+    resetCurrentlyPreviewedEntityBfid();
 
     if (currentSegment) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
