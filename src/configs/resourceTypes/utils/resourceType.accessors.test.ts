@@ -5,12 +5,14 @@ import {
   hasReference,
   getReference,
   getDefaultProfileId,
+  getProfileBfid,
   getEditSectionPassiveClass,
-  createRootEntry,
-  mapToResourceType,
-} from '@/configs/resourceTypes';
+  getEditPageLayout,
+  getPreviewPosition,
+  hasSplitLayout,
+} from './resourceType.accessors';
 
-describe('resourceType.helpers', () => {
+describe('resourceType.accessors', () => {
   describe('getResourceTypeConfig', () => {
     it('Returns config for work type', () => {
       const result = getResourceTypeConfig(ResourceType.work);
@@ -107,71 +109,49 @@ describe('resourceType.helpers', () => {
     });
   });
 
-  describe('createRootEntry', () => {
-    it('Creates root entry for work type', () => {
-      const result = createRootEntry(ResourceType.work);
-
-      expect(result).toEqual({
-        type: 'profile',
-        displayName: 'Profile',
-        bfid: 'lde:Profile',
-        children: ['Profile:Work', 'Profile:Instance'],
-        id: 'Profile',
-      });
+  describe('getEditPageLayout', () => {
+    it('Returns split layout for work type', () => {
+      expect(getEditPageLayout(ResourceType.work)).toBe('split');
     });
 
-    it('Creates root entry for instance type', () => {
-      const result = createRootEntry(ResourceType.instance);
+    it('Returns split layout for instance type', () => {
+      expect(getEditPageLayout(ResourceType.instance)).toBe('split');
+    });
 
-      expect(result).toEqual({
-        type: 'profile',
-        displayName: 'Profile',
-        bfid: 'lde:Profile',
-        children: ['Profile:Work', 'Profile:Instance'],
-        id: 'Profile',
-      });
+    it('Returns single as default when not specified', () => {
+      const result = getEditPageLayout(null);
+
+      expect(result).toBe('split');
     });
   });
 
-  describe('mapToResourceType', () => {
-    it('Maps "work" string to ResourceType.work', () => {
-      expect(mapToResourceType('work')).toBe(ResourceType.work);
+  describe('getPreviewPosition', () => {
+    it('Returns right for work type', () => {
+      expect(getPreviewPosition(ResourceType.work)).toBe('right');
     });
 
-    it('Maps "instance" string to ResourceType.instance', () => {
-      expect(mapToResourceType('instance')).toBe(ResourceType.instance);
+    it('Returns left for instance type', () => {
+      expect(getPreviewPosition(ResourceType.instance)).toBe('left');
+    });
+  });
+
+  describe('hasSplitLayout', () => {
+    it('Returns true for work type with split layout', () => {
+      expect(hasSplitLayout(ResourceType.work)).toBe(true);
     });
 
-    it('Maps uppercase "WORK" to ResourceType.work', () => {
-      expect(mapToResourceType('WORK')).toBe(ResourceType.work);
+    it('Returns true for instance type with split layout', () => {
+      expect(hasSplitLayout(ResourceType.instance)).toBe(true);
+    });
+  });
+
+  describe('getProfileBfid', () => {
+    it('Returns correct BFID for work type', () => {
+      expect(getProfileBfid(ResourceType.work)).toBe('lde:Profile:Work');
     });
 
-    it('Maps mixed case "Instance" to ResourceType.instance', () => {
-      expect(mapToResourceType('Instance')).toBe(ResourceType.instance);
-    });
-
-    it('Trims whitespace and maps correctly', () => {
-      expect(mapToResourceType('  work  ')).toBe(ResourceType.work);
-    });
-
-    it('Falls back to instance for null', () => {
-      expect(mapToResourceType(null)).toBe(ResourceType.instance);
-    });
-
-    it('Falls back to instance for undefined', () => {
-      expect(mapToResourceType(undefined)).toBe(ResourceType.instance);
-    });
-
-    it('Falls back to instance for empty string', () => {
-      expect(mapToResourceType('')).toBe(ResourceType.instance);
-    });
-
-    it('Falls back to instance for unknown value', () => {
-      expect(mapToResourceType('unknown_type')).toBe(ResourceType.instance);
-    });
-
-    it('Maps "hub" string to ResourceType.hub', () => {
-      expect(mapToResourceType('hub')).toBe(ResourceType.hub);
+    it('Returns correct BFID for instance type', () => {
+      expect(getProfileBfid(ResourceType.instance)).toBe('lde:Profile:Instance');
     });
   });
 });
