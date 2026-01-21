@@ -1,0 +1,33 @@
+@use '@common/styles/common.scss' as *;
+
+.modal-close-profile-settings {
+  min-width: 475px;
+  padding: 0;
+
+  .modal-header,
+  .modal-content,
+  .modal-controls-spread {
+    padding: 1.125rem;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid $gray-300;
+
+    .title {
+      width: 100%;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  .modal-content {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1rem;
+  }
+
+  .modal-controls-spread {
+    border-top: 1px solid $gray-300;
+  }
+}

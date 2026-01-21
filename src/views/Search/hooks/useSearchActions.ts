@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { logger } from '@/common/services/logger';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useNavigateToManageProfileSettings } from '@/features/manageProfileSettings/hooks/useNavigateToManageProfileSettings';
 import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
 import { StatusType } from '@/common/constants/status.constants';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
@@ -25,6 +26,7 @@ export const useSearchActions = () => {
   ]);
   const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const { onCreateNewResource } = useNavigateToCreatePage();
+  const { navigateToManageProfileSettings } = useNavigateToManageProfileSettings();
 
   /**
    * Handles previewing multiple selected instances for comparison
@@ -102,5 +104,6 @@ export const useSearchActions = () => {
     onClickNewHub,
     handleHubEdit,
     handleHubImport,
+    navigateToManageProfileSettings,
   };
 };

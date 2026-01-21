@@ -3,11 +3,13 @@ import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.const
 import Plus16 from '@/assets/plus-16.svg?react';
 import Transfer16 from '@/assets/transfer-16.svg?react';
 import Lightning16 from '@/assets/lightning-16.svg?react';
+import Settings from '@/assets/settings.svg?react';
 
 export interface ResourceActionsParams {
   onClickNewWork: () => void;
   handlePreviewMultiple: () => void | Promise<void>;
   handleImport: () => void;
+  navigateToManageProfileSettings: () => void;
   selectedInstancesCount: number;
 }
 
@@ -15,6 +17,7 @@ export const createResourceActionsConfig = ({
   onClickNewWork,
   handlePreviewMultiple,
   handleImport,
+  navigateToManageProfileSettings,
   selectedInstancesCount,
 }: ResourceActionsParams) => [
   {
@@ -43,7 +46,14 @@ export const createResourceActionsConfig = ({
         icon: <Lightning16 />,
         action: handleImport,
       },
-      // Example of the dropdown option with a custom component instead of the standart button
+      {
+        id: 'manageProfileSettings',
+        type: DropdownItemType.basic,
+        labelId: 'ld.manageProfileSettings',
+        icon: <Settings />,
+        action: navigateToManageProfileSettings,
+      },
+      // Example of the dropdown option with a custom component instead of the standard button
       /* {
       id: 'sortBy',
       labelId: 'ld.newResource',

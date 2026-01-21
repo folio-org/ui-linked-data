@@ -1,40 +1,18 @@
-import { fetchProfiles, fetchPreferredProfiles } from '@common/api/profiles.api';
+import { fetchPreferredProfiles } from '@common/api/profiles.api';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 
 export const useProfileSelection = () => {
-  const { setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState([
-    'setPreferredProfiles',
-    'availableProfiles',
-    'setAvailableProfiles',
-  ]);
+  const { setPreferredProfiles } = useProfileState(['setPreferredProfiles']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState([
     'setIsProfileSelectionModalOpen',
     'setProfileSelectionType',
   ]);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-
-  // Loads available profiles if they haven't been loaded yet
-  const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {
-    if (!availableProfiles?.[resourceTypeURL]?.length) {
-      try {
-        const result = await fetchProfiles(resourceTypeURL);
-
-        setAvailableProfiles(prev => {
-          return {
-            ...prev,
-            [resourceTypeURL]: result,
-          };
-        });
-      } catch (error) {
-        console.error('Failed to load available profiles:', error);
-        // Re-throw to be handled by 'checkProfileAndProceed'
-        throw error;
-      }
-    }
-  };
+  const { loadAvailableProfiles } = useProfileList();
 
   // Loads preferred profiles if they haven't been loaded yet
   const getPreferredProfiles = async () => {
