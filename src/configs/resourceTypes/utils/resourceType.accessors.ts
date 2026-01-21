@@ -1,0 +1,55 @@
+import { ResourceType } from '@/common/constants/record.constants';
+import { RESOURCE_TYPE_REGISTRY } from '../resourceType.config';
+import type { ResourceTypeDefinition, ResourceTypeReference } from '../resourceType.types';
+
+export type ResourceTypeInput = ResourceType | string | null | undefined;
+
+/**
+ * Get the full configuration for a resource type.
+ * Falls back to instance type if the type is not found in the registry.
+ */
+export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefinition => {
+  const normalizedType = type as ResourceType;
+
+  if (normalizedType && normalizedType in RESOURCE_TYPE_REGISTRY) {
+    return RESOURCE_TYPE_REGISTRY[normalizedType as keyof typeof RESOURCE_TYPE_REGISTRY];
+  }
+
+  return RESOURCE_TYPE_REGISTRY[ResourceType.instance];
+};
+
+export const hasPreview = (type: ResourceTypeInput): boolean => {
+  return getResourceTypeConfig(type).ui.hasPreview;
+};
+
+export const hasReference = (type: ResourceTypeInput): boolean => {
+  return !!getResourceTypeConfig(type).reference;
+};
+
+export const getReference = (type: ResourceTypeInput): ResourceTypeReference | undefined => {
+  return getResourceTypeConfig(type).reference;
+};
+
+export const getDefaultProfileId = (type: ResourceTypeInput): number => {
+  return getResourceTypeConfig(type).defaultProfileId;
+};
+
+export const getProfileBfid = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).profileBfid;
+};
+
+export const getEditSectionPassiveClass = (type: ResourceTypeInput): string | undefined => {
+  return getResourceTypeConfig(type).ui.editSectionPassiveClass;
+};
+
+export const getEditPageLayout = (type: ResourceTypeInput): 'single' | 'split' => {
+  return getResourceTypeConfig(type).ui.editPageLayout ?? 'single';
+};
+
+export const getPreviewPosition = (type: ResourceTypeInput): 'left' | 'right' | undefined => {
+  return getResourceTypeConfig(type).ui.previewPosition;
+};
+
+export const hasSplitLayout = (type: ResourceTypeInput): boolean => {
+  return getEditPageLayout(type) === 'split';
+};
