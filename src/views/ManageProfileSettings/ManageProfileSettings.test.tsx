@@ -1,17 +1,17 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { fetchProfiles } from '@common/api/profiles.api';
-import { ManageProfileSettings } from '@/views';
+import { ManageProfileSettings } from './ManageProfileSettings';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
 }));
 
-const renderComponent = () => {    
+const renderComponent = () => {
   return render(
     <BrowserRouter>
-      <ManageProfileSettings/>
-    </BrowserRouter>
+      <ManageProfileSettings />
+    </BrowserRouter>,
   );
 };
 

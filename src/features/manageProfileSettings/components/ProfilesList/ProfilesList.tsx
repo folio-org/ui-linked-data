@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { useManageProfileSettingsState, useProfileState, useStatusState } from '@src/store';
-import { useProfileList } from '@/common/hooks/useProfileList';
+import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { ResourceProfiles } from './ResourceProfiles';
 import './ProfilesList.scss';
@@ -32,9 +32,7 @@ export const ProfilesList = () => {
   useEffect(() => {
     if (availableProfiles && !selectedProfile && Object.keys(availableProfiles).length > 0) {
       for (const resourceType in availableProfiles) {
-        if (
-          availableProfiles[resourceType as ResourceTypeURL]?.length > 0
-        ) {
+        if (availableProfiles[resourceType as ResourceTypeURL]?.length > 0) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
           break;
         }

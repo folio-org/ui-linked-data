@@ -1,10 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
-import { useProfileList } from '@common/hooks/useProfileList';
 import { fetchProfiles } from '@common/api/profiles.api';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
 import { useProfileState } from '@src/store';
 import * as BibframeConstants from '@common/constants/bibframe.constants';
 import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { useProfileList } from './useProfileList';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
@@ -49,7 +49,7 @@ describe('useProfileList', () => {
   });
 
   describe('loadAvailableProfiles', () => {
-    it('handles empty profiles list',  async () => {
+    it('handles empty profiles list', async () => {
       (fetchProfiles as jest.Mock).mockResolvedValue([]);
 
       const { result } = renderHook(() => useProfileList());
@@ -73,7 +73,7 @@ describe('useProfileList', () => {
       expect(setAvailableProfiles).toHaveBeenCalled();
     });
 
-    it('skips fetching resource type profiles if previously fetched',  async () => {
+    it('skips fetching resource type profiles if previously fetched', async () => {
       setInitialGlobalState([
         {
           store: useProfileState,
@@ -97,14 +97,13 @@ describe('useProfileList', () => {
       expect(setAvailableProfiles).not.toHaveBeenCalled();
     });
 
-    it('throws on fetch error',  async () => {
+    it('throws on fetch error', async () => {
       const error = new Error('Failed to load profiles');
       (fetchProfiles as jest.Mock).mockRejectedValue(error);
 
       const { result } = renderHook(() => useProfileList());
       await act(async () => {
-        expect(result.current.loadAvailableProfiles(resourceTypeURL))
-          .rejects.toThrow('Failed to load profiles');
+        expect(result.current.loadAvailableProfiles(resourceTypeURL)).rejects.toThrow('Failed to load profiles');
       });
 
       expect(fetchProfiles).toHaveBeenCalled();

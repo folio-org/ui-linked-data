@@ -2,12 +2,10 @@ import { fetchPreferredProfiles } from '@common/api/profiles.api';
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
-import { useProfileList } from './useProfileList';
+import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 
 export const useProfileSelection = () => {
-  const { setPreferredProfiles } = useProfileState([
-    'setPreferredProfiles',
-  ]);
+  const { setPreferredProfiles } = useProfileState(['setPreferredProfiles']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState([
     'setIsProfileSelectionModalOpen',

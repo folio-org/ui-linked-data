@@ -23,7 +23,7 @@ jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
   }),
 }));
 
-jest.mock('@/common/hooks/useNavigateToManageProfileSettings', () => ({
+jest.mock('@/features/manageProfileSettings/hooks/useNavigateToManageProfileSettings', () => ({
   useNavigateToManageProfileSettings: () => ({
     navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
   }),

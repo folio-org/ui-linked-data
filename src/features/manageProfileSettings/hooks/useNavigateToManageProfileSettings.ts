@@ -5,7 +5,6 @@ export const useNavigateToManageProfileSettings = () => {
   const navigate = useNavigate();
 
   return {
-    navigateToManageProfileSettings: () =>
-      navigate(ROUTES.MANAGE_PROFILE_SETTINGS.uri),
+    navigateToManageProfileSettings: () => navigate(ROUTES.MANAGE_PROFILE_SETTINGS.uri),
   };
 };

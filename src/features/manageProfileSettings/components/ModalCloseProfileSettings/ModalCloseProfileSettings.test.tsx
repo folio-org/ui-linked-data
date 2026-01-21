@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useManageProfileSettingsState } from '@/store';
-import { ModalCloseProfileSettings } from '@/components/ModalCloseProfileSettings';
 import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
 import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { ModalCloseProfileSettings } from './ModalCloseProfileSettings';
 
 const mockUseNavigate = jest.fn();
 

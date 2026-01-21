@@ -1,1 +1,0 @@
-export { ManageProfileSettingsControlPane } from './ManageProfileSettingsControlPane';

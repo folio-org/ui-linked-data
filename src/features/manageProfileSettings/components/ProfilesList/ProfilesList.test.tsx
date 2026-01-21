@@ -3,9 +3,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { useManageProfileSettingsState, useProfileState, useStatusStore, useUIState } from '@/store';
-import { ProfilesList } from '@/components/ProfilesList';
 import { fetchProfiles } from '@/common/api/profiles.api';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { ProfilesList } from './ProfilesList';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),

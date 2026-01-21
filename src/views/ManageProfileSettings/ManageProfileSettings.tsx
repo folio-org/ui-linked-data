@@ -1,7 +1,7 @@
 import { useUIState } from '@/store';
-import { ProfilesList } from '@/components/ProfilesList';
-import { ProfileSettings } from '@/components/ProfileSettings';
-import { ModalCloseProfileSettings } from '@/components/ModalCloseProfileSettings';
+import { ProfilesList } from '@/features/manageProfileSettings/components/ProfilesList';
+import { ProfileSettings } from '@/features/manageProfileSettings/components/ProfileSettings';
+import { ModalCloseProfileSettings } from '@/features/manageProfileSettings/components/ModalCloseProfileSettings';
 import './ManageProfileSettings.scss';
 //TODO: add ModalSaveUnusedProfileFields
 
