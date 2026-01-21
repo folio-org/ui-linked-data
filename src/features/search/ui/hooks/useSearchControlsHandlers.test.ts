@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore } from '@/store';
+import { useSearchStore, useInputsState, useUIState } from '@/store';
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 import { resolveUIConfig } from '../config';
@@ -52,6 +52,9 @@ describe('useSearchControlsHandlers', () => {
   const setCommittedValues = jest.fn();
   const resetCommittedValues = jest.fn();
   const setSearchParams = jest.fn();
+  const resetPreviewContent = jest.fn();
+  const resetFullDisplayComponentType = jest.fn();
+  const resetCurrentlyPreviewedEntityBfid = jest.fn();
 
   const mockSegmentConfig: SearchTypeConfig = {
     id: 'browse',
@@ -90,6 +93,19 @@ describe('useSearchControlsHandlers', () => {
           setDraftBySegment,
           setCommittedValues,
           resetCommittedValues,
+        },
+      },
+      {
+        store: useInputsState,
+        state: {
+          resetPreviewContent,
+        },
+      },
+      {
+        store: useUIState,
+        state: {
+          resetFullDisplayComponentType,
+          resetCurrentlyPreviewedEntityBfid,
         },
       },
     ]);
@@ -154,6 +170,20 @@ describe('useSearchControlsHandlers', () => {
 
       expect(setNavigationState).toHaveBeenCalled();
       expect(setSearchParams).not.toHaveBeenCalled();
+    });
+
+    it('resets preview and comparison state when changing segment', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
   });
 
@@ -469,6 +499,20 @@ describe('useSearchControlsHandlers', () => {
       expect(resetSearchBy).toHaveBeenCalled();
       expect(setNavigationState).toHaveBeenCalled();
       expect(setSearchParams).not.toHaveBeenCalled();
+    });
+
+    it('resets preview and comparison state when resetting', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
   });
 
