@@ -8,6 +8,7 @@ export * from './stores/config';
 export * from './stores/ui';
 export * from './stores/search';
 export * from './stores/navigation';
+export * from './stores/manageProfileSettings';
 
 // Selector hooks
 export * from './selectors';

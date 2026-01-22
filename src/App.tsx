@@ -6,7 +6,7 @@ import { ROUTES } from '@common/constants/routes.constants';
 import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
 import { OKAPI_CONFIG } from '@common/constants/api.constants';
 import { localStorageService } from '@common/services/storage';
-import { Root, Search, EditWrapper, ExternalResourcePreview } from '@views';
+import { Root, Search, EditWrapper, ExternalResourcePreview, ManageProfileSettings } from '@views';
 import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, QueryProvider, ServicesProvider } from './providers';
 import './App.scss';
@@ -41,6 +41,10 @@ export const routes: RouteObject[] = [
       {
         path: ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri,
         element: <ExternalResourcePreview />,
+      },
+      {
+        path: ROUTES.MANAGE_PROFILE_SETTINGS.uri,
+        element: <ManageProfileSettings />,
       },
       {
         path: '*',

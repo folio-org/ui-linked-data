@@ -6,19 +6,21 @@ describe('createResourceActionsConfig', () => {
   const mockOnClickNewWork = jest.fn();
   const mockHandlePreviewMultiple = jest.fn();
   const mockHandleImport = jest.fn();
+  const mockNavigateToManageProfileSettings = jest.fn();
 
   test('Creates resource actions configuration with all actions', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
 
     expect(config).toHaveLength(1);
     expect(config[0].id).toBe('actions');
     expect(config[0].labelId).toBe('ld.actions');
-    expect(config[0].data).toHaveLength(3);
+    expect(config[0].data).toHaveLength(4);
   });
 
   test('Creates newResource action with correct properties', () => {
@@ -26,6 +28,7 @@ describe('createResourceActionsConfig', () => {
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
 
@@ -43,6 +46,7 @@ describe('createResourceActionsConfig', () => {
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
 
@@ -61,6 +65,7 @@ describe('createResourceActionsConfig', () => {
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: MIN_AMT_OF_INSTANCES_TO_COMPARE - 1,
     });
 
@@ -74,6 +79,7 @@ describe('createResourceActionsConfig', () => {
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: MIN_AMT_OF_INSTANCES_TO_COMPARE,
     });
 
@@ -87,6 +93,7 @@ describe('createResourceActionsConfig', () => {
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
       handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
 
@@ -97,5 +104,23 @@ describe('createResourceActionsConfig', () => {
     expect(importAction.labelId).toBe('ld.importInstances');
     expect(importAction.action).toBe(mockHandleImport);
     expect(importAction.icon).toBeDefined();
+  });
+
+  test('Creates manage profile settings action with correct properties', () => {
+    const config = createResourceActionsConfig({
+      onClickNewWork: mockOnClickNewWork,
+      handlePreviewMultiple: mockHandlePreviewMultiple,
+      handleImport: mockHandleImport,
+      navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
+      selectedInstancesCount: 3,
+    });
+
+    const manageProfileSettingsAction = config[0].data[3];
+
+    expect(manageProfileSettingsAction.id).toBe('manageProfileSettings');
+    expect(manageProfileSettingsAction.type).toBe(DropdownItemType.basic);
+    expect(manageProfileSettingsAction.labelId).toBe('ld.manageProfileSettings');
+    expect(manageProfileSettingsAction.action).toBe(mockNavigateToManageProfileSettings);
+    expect(manageProfileSettingsAction.icon).toBeDefined();
   });
 });
