@@ -309,5 +309,10 @@
   "ld.unsavedProfilePrompt": "Would you like to save your changes before proceeding?",
   "ld.unsavedProfileNote": "Note: Only the selected components will be visible for resources using this profile. Components not in the selected section will be hidden.",
   "ld.profileDefault": "Profile default",
-  "ld.custom": "Custom"
+  "ld.custom": "Custom",
+  "ld.unusedComponents": "Unused components",
+  "ld.unusedComponents.description": "Drag or use drag menu to move items to selected components.",
+  "ld.unusedComponents.allUsed": "All components in use",
+  "ld.selectedComponents": "Selected components",
+  "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order."
 }

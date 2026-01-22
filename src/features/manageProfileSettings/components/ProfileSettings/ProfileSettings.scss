@@ -5,16 +5,12 @@
     padding: 0 15px;
   }
 
-  .default-settings,
-  .settings-option {
-    padding: 15px;
+  .settings-sorting {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    gap: 0.25rem;
-  }
 
-  .settings-option .empty-block {
-    margin: 0 1rem;
+    .title {
+      padding-right: 4px;
+    }
   }
 }
