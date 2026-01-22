@@ -78,8 +78,16 @@ export const useProfileSelection = () => {
         return;
       }
 
-      // No preferred profiles, load available profiles and show modal
-      await loadAvailableProfiles(resourceTypeURL);
+      // No preferred profiles, load available profiles
+      const loadedProfiles = await loadAvailableProfiles(resourceTypeURL);
+
+      // Check if only one profile is available - auto-select it
+      if (loadedProfiles.length === 1) {
+        callback(loadedProfiles[0].id);
+        return;
+      }
+
+      // Multiple profiles available - show modal
       openModal({ action: 'set', resourceTypeURL });
     } catch (error) {
       console.error('Failed to check profile and proceed:', error);

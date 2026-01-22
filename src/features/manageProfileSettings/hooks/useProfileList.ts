@@ -23,6 +23,8 @@ export const useProfileList = () => {
         throw error;
       }
     }
+
+    return availableProfiles[resourceTypeURL];
   };
 
   const loadAllAvailableProfiles = async () => {

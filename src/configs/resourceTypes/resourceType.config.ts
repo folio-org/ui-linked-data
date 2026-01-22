@@ -2,7 +2,7 @@ import { ResourceType } from '@/common/constants/record.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { type ResourceTypeRegistry } from './resourceType.types';
 
-export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.work | ResourceType.instance> = {
+export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.instance]: {
     type: ResourceType.instance,
     uri: BFLITE_URIS.INSTANCE,
@@ -40,6 +40,19 @@ export const RESOURCE_TYPE_REGISTRY: Pick<ResourceTypeRegistry, ResourceType.wor
       key: '_instanceReference',
       uri: BFLITE_URIS.INSTANCE,
       targetType: ResourceType.instance,
+    },
+  },
+
+  [ResourceType.hub]: {
+    type: ResourceType.hub,
+    uri: BFLITE_URIS.HUB,
+    profileBfid: 'lde:Profile:Hub',
+    defaultProfileId: 7,
+    profileChildren: ['Profile:Hub'],
+    dependencies: [],
+    ui: {
+      hasPreview: false,
+      editPageLayout: 'single',
     },
   },
 };
