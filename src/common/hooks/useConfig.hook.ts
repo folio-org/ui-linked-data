@@ -1,16 +1,17 @@
 import { useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import { QueryParams } from '@common/constants/routes.constants';
-import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
-import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@common/helpers/record.helper';
-import { useInputsState, useProfileState } from '@src/store';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
+import { useInputsState, useProfileState } from '@/store';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
 import { useServicesContext } from './useServicesContext';
-import { getReferenceIdsRaw } from '@common/helpers/recordFormatting.helper';
+import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
 import { useLoadProfile } from './useLoadProfile';
 import { useLoadProfileSettings } from './useLoadProfileSettings';
-import { getMappedResourceType, getProfileConfig } from '@common/helpers/profile.helper';
+import { getProfileConfig } from '@/common/helpers/profile.helper';
+import { mapToResourceType } from '@/configs/resourceTypes';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -116,7 +117,7 @@ export const useConfig = () => {
       const referenceProfileId = (recordData[block]?.[reference as string] as unknown as RecursiveRecordSchema[])?.[0]
         ?.profileId as string;
       const resourceTypeValue = BibframeEntitiesMap[block];
-      const mappedResourceType = getMappedResourceType(resourceTypeValue);
+      const mappedResourceType = mapToResourceType(resourceTypeValue);
 
       return {
         profileId,
@@ -127,7 +128,7 @@ export const useConfig = () => {
 
     return {
       profileId: profileIdParam,
-      resourceType: getMappedResourceType(typeParam),
+      resourceType: mapToResourceType(typeParam),
     };
   };
 

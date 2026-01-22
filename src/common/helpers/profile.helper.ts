@@ -1,34 +1,31 @@
-import { ResourceType } from '@common/constants/record.constants';
-import { PROFILE_CONFIG } from '@src/configs';
+import { ResourceType } from '@/common/constants/record.constants';
+import { getResourceTypeConfig, createRootEntry, mapToResourceType } from '@/configs/resourceTypes';
 
-export const getProfileConfig = ({
-  resourceType,
-  profileId,
-  referenceProfileId,
-}: {
-  resourceType?: ResourceType;
+interface GetProfileConfigParams {
+  resourceType?: ResourceType | string | null;
   profileId?: string | number | null;
   referenceProfileId?: string;
-}) => {
-  const { defaultProfileIds, rootEntry } = PROFILE_CONFIG;
-  let ids: (string | number)[] = [];
+}
+
+/**
+ * Get profile configuration for a resource type.
+ * Uses the Resource Type Registry for all configuration.
+ */
+export const getProfileConfig = ({ resourceType, profileId, referenceProfileId }: GetProfileConfigParams) => {
+  const mappedType = mapToResourceType(resourceType as string);
+  const config = getResourceTypeConfig(mappedType);
+
+  // Determine profile IDs to load
   const isValidProfileId = typeof profileId === 'number' || typeof profileId === 'string';
+  const ids: (string | number)[] = isValidProfileId ? [profileId] : [config.defaultProfileId];
 
-  if (resourceType === ResourceType.work) {
-    ids = isValidProfileId ? [profileId] : [defaultProfileIds.work];
-  } else if (resourceType === ResourceType.instance) {
-    ids = isValidProfileId ? [profileId] : [defaultProfileIds.instance];
-  } else {
-    ids = [];
-  }
-
+  // Add reference profile ID if provided (for Work/Instance dual-profile loading)
   if (referenceProfileId) {
     ids.push(referenceProfileId);
   }
 
-  return { ids, rootEntry: rootEntry as ProfileNode };
-};
-
-export const getMappedResourceType = (resourceTypeValue: string | null) => {
-  return resourceTypeValue === 'work' ? ResourceType.work : ResourceType.instance;
+  return {
+    ids,
+    rootEntry: createRootEntry(mappedType) as ProfileNode,
+  };
 };

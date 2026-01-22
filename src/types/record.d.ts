@@ -29,7 +29,7 @@ type RecordBlocksBFLite = Record<
   string,
   {
     uri: string;
-    reference: RecordReference;
+    reference?: RecordReference;
   }
 >;
 

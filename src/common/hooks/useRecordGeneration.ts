@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
 import { ResourceType } from '@common/constants/record.constants';
 import { QueryParams } from '@common/constants/routes.constants';
-import { PROFILE_CONFIG } from '@src/configs';
+import { getDefaultProfileId } from '@src/configs/resourceTypes';
 
 const getReferenceIds = (record: RecordEntry, block: string, referenceKey: string) => {
   const typedReferenceBlock = record.resource?.[block]?.[referenceKey] as unknown as Record<string, RecordEntry>[];
@@ -42,8 +42,7 @@ export const useRecordGeneration = () => {
     const profileIdParam = searchParams.get(QueryParams.ProfileId);
 
     // TODO: UILD-628 - Remove using defaultProfileIds after implementing profile selection for Work
-    const selectedProfileId =
-      profileId ?? profileIdParam ?? recordProfileId ?? String(PROFILE_CONFIG.defaultProfileIds[entityType]);
+    const selectedProfileId = profileId ?? profileIdParam ?? recordProfileId ?? String(getDefaultProfileId(entityType));
 
     return recordGeneratorService?.generate(
       { schema, userValues, selectedEntries, referenceIds, profileId: selectedProfileId },

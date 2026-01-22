@@ -1,30 +1,36 @@
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
 import classNames from 'classnames';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { QueryParams, RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
-import { ResourceType } from '@common/constants/record.constants';
-import { InstancesList } from '@components/InstancesList';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
-import { getRecordDependencies } from '@common/helpers/record.helper';
+import { QueryParams, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
+import { ResourceType } from '@/common/constants/record.constants';
+import { InstancesList } from '@/components/InstancesList';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { memo, useEffect } from 'react';
-import { TitledPreview } from '@components/Preview/TitledPreview';
+import { TitledPreview } from '@/components/Preview/TitledPreview';
+import { hasSplitLayout, getPreviewPosition, resolveResourceType } from '@/configs/resourceTypes';
+import { useInputsState } from '@/store';
 import './EditPreview.scss';
-import { useInputsState, useUIState } from '@src/store';
 
 export const EditPreview = memo(() => {
-  const { record, previewContent, setPreviewContent, resetPreviewContent } = useInputsState([
+  const { record, previewContent, selectedRecordBlocks, setPreviewContent, resetPreviewContent } = useInputsState([
     'record',
     'previewContent',
+    'selectedRecordBlocks',
     'setPreviewContent',
     'resetPreviewContent',
   ]);
-  const { currentlyPreviewedEntityBfid } = useUIState(['currentlyPreviewedEntityBfid']);
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
-  const isPositionedSecond =
-    currentlyPreviewedEntityBfid.has(PROFILE_BFIDS.INSTANCE) && currentlyPreviewedEntityBfid.values.length <= 1;
   const typeParam = queryParams.get(QueryParams.Type);
+
+  // Resolve resource type: from loaded record (Edit) or URL param (Create)
+  const blockUri = selectedRecordBlocks?.block;
+  const resourceType = resolveResourceType(blockUri, typeParam);
+  const shouldShowPreview = hasSplitLayout(resourceType);
+  const previewPosition = getPreviewPosition(resourceType);
+
+  const isPositionedSecond = previewPosition === 'right';
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
   const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
@@ -41,6 +47,10 @@ export const EditPreview = memo(() => {
       useInputsState.setState(initialInputsState, true);
     }
   }, [isCreateWorkPageOpened]);
+
+  if (!shouldShowPreview) {
+    return null;
+  }
 
   return (
     <div
