@@ -26,10 +26,10 @@ export const ProfileSelectionManager = () => {
 
   const { handleSubmit } = useProfileSelectionActions({ resourceTypeURL, action, resetModalState });
 
+  if (!isProfileSelectionModalOpen) return null;
+
   const availableProfilesList = resourceTypeURL ? availableProfiles?.[resourceTypeURL] || [] : [];
   const isEditedRecordChange = profileSelectionType.action === 'change' && isRecordEdited;
-
-  if (!isProfileSelectionModalOpen) return null;
 
   return (
     <>
