@@ -65,12 +65,14 @@ describe('useProfileList', () => {
       (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
 
       const { result } = renderHook(() => useProfileList());
+      let returnedProfiles;
       await act(async () => {
-        await result.current.loadAvailableProfiles(resourceTypeURL);
+        returnedProfiles = await result.current.loadAvailableProfiles(resourceTypeURL);
       });
 
       expect(fetchProfiles).toHaveBeenCalled();
       expect(setAvailableProfiles).toHaveBeenCalled();
+      expect(returnedProfiles).toEqual(mockProfiles);
     });
 
     it('skips fetching resource type profiles if previously fetched', async () => {
@@ -89,12 +91,14 @@ describe('useProfileList', () => {
       (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
 
       const { result } = renderHook(() => useProfileList());
+      let returnedProfiles;
       await act(async () => {
-        await result.current.loadAvailableProfiles(resourceTypeURL);
+        returnedProfiles = await result.current.loadAvailableProfiles(resourceTypeURL);
       });
 
       expect(fetchProfiles).not.toHaveBeenCalled();
       expect(setAvailableProfiles).not.toHaveBeenCalled();
+      expect(returnedProfiles).toEqual(mockProfiles);
     });
 
     it('throws on fetch error', async () => {

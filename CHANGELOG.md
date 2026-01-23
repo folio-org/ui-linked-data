@@ -65,7 +65,7 @@
 * Add Hub search behavior for LoC source; fix search results table. Refs [UILD-688].
 * Add Hubs actions menu. Refs [UILD-693].
 * Add initial workspace profile settings editing. Refs [UILD-685].
-* Refactor Edit page to support multiple resource types. Refs [UILD-694]. 
+* Refactor Edit page to support multiple resource types. Add Hub create page. Refs [UILD-694]. 
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544

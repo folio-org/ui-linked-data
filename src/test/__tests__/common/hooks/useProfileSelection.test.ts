@@ -142,6 +142,33 @@ describe('useProfileSelection', () => {
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });
 
+    test('auto-selects profile when only one available profile exists', async () => {
+      const singleProfile = [
+        {
+          id: 'single-profile-id',
+          name: 'Single Profile',
+          resourceType: resourceTypeURL,
+        },
+      ];
+      (fetchPreferredProfiles as jest.Mock).mockResolvedValue([]);
+      (fetchProfiles as jest.Mock).mockResolvedValue(singleProfile);
+
+      const { result } = renderHook(() => useProfileSelection());
+      await act(async () => {
+        await result.current.checkProfileAndProceed({
+          resourceTypeURL,
+          callback: callbackMock,
+        });
+      });
+
+      expect(setIsLoading).toHaveBeenCalledWith(true);
+      expect(fetchPreferredProfiles).toHaveBeenCalledWith();
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(callbackMock).toHaveBeenCalledWith('single-profile-id');
+      expect(setIsProfileSelectionModalOpen).not.toHaveBeenCalled();
+      expect(setIsLoading).toHaveBeenCalledWith(false);
+    });
+
     test('skips loading available profiles if they are already loaded', async () => {
       (fetchPreferredProfiles as jest.Mock).mockResolvedValue([]);
       setInitialGlobalState([
