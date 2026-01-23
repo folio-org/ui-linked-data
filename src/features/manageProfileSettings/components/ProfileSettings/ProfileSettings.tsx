@@ -1,12 +1,14 @@
+import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useManageProfileSettingsState, useLoadingState } from '@/store';
+import { useManageProfileSettingsState, useLoadingState, useStatusState } from '@/store';
 import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { StatusType } from '@/common/constants/status.constants';
 import { useLoadProfile } from '@/common/hooks/useLoadProfile';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
 import './ProfileSettings.scss';
-import { useEffect } from 'react';
 
 export const ProfileSettings = () => {
   const { setIsLoading } = useLoadingState();
@@ -16,6 +18,7 @@ export const ProfileSettings = () => {
     'selectedProfile',
     'setProfileSettings',
   ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   useEffect(() => {
     if (selectedProfile) {
@@ -24,9 +27,10 @@ export const ProfileSettings = () => {
           setIsLoading(true);
           const profile = await loadProfile(selectedProfile.id);
           setProfileSettings(await loadProfileSettings(selectedProfile.id, profile));
-        } catch (error) {
-          console.error(error);
-          // TODO: display error
+        } catch {
+          addStatusMessagesItem?.(
+            UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),
+          );
         } finally {
           setIsLoading(false);
         }

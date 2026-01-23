@@ -2,7 +2,7 @@ import { FC, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useManageProfileSettingsState, useProfileState } from '@/store';
 import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
-import { getResourceTypeConfig, getResourceTypeFromURL } from '@/configs/resourceTypes';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 import './DefaultProfileOption.scss';
 
 type DefaultProfileOptionProps = {
@@ -28,7 +28,7 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
     return (
       <>
         {formatMessage({
-          id: getResourceTypeConfig(getResourceTypeFromURL(selectedProfile.resourceType)).labelId,
+          id: getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType)),
         })}
       </>
     );
