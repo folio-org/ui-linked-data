@@ -1,8 +1,8 @@
 import { FC, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { useManageProfileSettingsState, useProfileState } from '@/store';
 import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
+import { getResourceTypeURLConfig } from '@/configs/resourceTypes';
 import './DefaultProfileOption.scss';
 
 type DefaultProfileOptionProps = {
@@ -42,9 +42,7 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
       <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} id="type-default" />
       <label htmlFor="type-default">
         <FormattedMessage id="ld.modal.chooseResourceProfile.setAsDefault" />{' '}
-        <FormattedMessage
-          id={'ld.' + BibframeEntitiesMap[selectedProfile.resourceType as keyof typeof BibframeEntitiesMap]}
-        />{' '}
+        <FormattedMessage id={getResourceTypeURLConfig(selectedProfile.resourceType).labelId} />{' '}
         <FormattedMessage id="ld.profile" />
       </label>
     </div>

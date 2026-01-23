@@ -7,7 +7,6 @@ export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
 export enum BibframeEntitiesMap {
   'http://bibfra.me/vocab/lite/Work' = 'work',
   'http://bibfra.me/vocab/lite/Instance' = 'instance',
-  'http://bibfra.me/vocab/lite/Hub' = 'hub',
 }
 
 export const PROFILE_BFIDS = {

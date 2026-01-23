@@ -18,7 +18,7 @@ export const ResourceProfiles: FC<ResourceProfilesProps> = ({ labelId, profiles 
   return (
     <>
       <div className="resource-title">
-        <FormattedMessage id={'ld.' + labelId} />
+        <FormattedMessage id={labelId} />
         &nbsp;
         <FormattedMessage id="ld.profiles" />
       </div>

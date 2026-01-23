@@ -3,7 +3,6 @@ export const PROFILE_CONFIG = {
   defaultProfileIds: {
     work: 2,
     instance: 3,
-    hub: 7,
   },
   rootEntry: {
     type: 'profile',

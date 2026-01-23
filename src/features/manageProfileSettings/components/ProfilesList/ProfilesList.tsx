@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@common/constants/status.constants';
 import { useManageProfileSettingsState, useProfileState, useStatusState, useLoadingState } from '@src/store';
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 import { UserNotificationFactory } from '@common/services/userNotification';
+import { getProfileLabelId, getResourceTypeConfig, RESOURCE_TYPE_REGISTRY } from '@/configs/resourceTypes';
 import { ResourceProfiles } from './ResourceProfiles';
 import './ProfilesList.scss';
 
@@ -55,12 +55,12 @@ export const ProfilesList = () => {
         </div>
       </div>
       <div className="profiles">
-        {Object.keys(BibframeEntitiesMap).map(type => {
+        {Object.keys(RESOURCE_TYPE_REGISTRY).map(type => {
           return (
             <ResourceProfiles
               key={type}
-              labelId={BibframeEntitiesMap[type as ResourceTypeURL]}
-              profiles={availableProfiles[type as ResourceTypeURL]}
+              labelId={getProfileLabelId(type)}
+              profiles={availableProfiles[getResourceTypeConfig(type).uri as ResourceTypeURL]}
             />
           );
         })}
