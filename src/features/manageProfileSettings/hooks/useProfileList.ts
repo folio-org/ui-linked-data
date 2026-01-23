@@ -18,11 +18,15 @@ export const useProfileList = () => {
             [resourceTypeURL]: result,
           };
         });
+
+        return result;
       } catch (error) {
         logger.error('Failed to load available profiles:', error);
         throw error;
       }
     }
+
+    return availableProfiles?.[resourceTypeURL];
   };
 
   const loadAllAvailableProfiles = async () => {
