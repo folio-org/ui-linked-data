@@ -82,7 +82,7 @@ export const useProfileSelection = () => {
       const loadedProfiles = await loadAvailableProfiles(resourceTypeURL);
 
       // Check if only one profile is available - auto-select it
-      if (loadedProfiles.length === 1) {
+      if (loadedProfiles?.length === 1) {
         callback(loadedProfiles[0].id);
         return;
       }

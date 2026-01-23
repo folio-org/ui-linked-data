@@ -7,11 +7,8 @@ import { StatusType } from '@/common/constants/status.constants';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import * as FeatureConstants from '@/common/constants/feature.constants';
 import { useSearchActions } from './useSearchActions';
 
-const mockIsHubsCreateEnabled = getMockedImportedConstant(FeatureConstants, 'IS_HUBS_CREATE_ENABLED');
 const mockOnCreateNewResource = jest.fn();
 const mockFetchRecord = jest.fn();
 const mockUseNavigate = jest.fn();
@@ -178,9 +175,7 @@ describe('useSearchActions', () => {
   });
 
   describe('onClickNewHub', () => {
-    test('Navigates to create new Hub resource when enabled', () => {
-      mockIsHubsCreateEnabled(true);
-
+    test('Navigates to create new Hub resource', () => {
       const { result } = renderHook(() => useSearchActions());
 
       result.current.onClickNewHub();
@@ -191,16 +186,6 @@ describe('useSearchActions', () => {
           type: ResourceType.hub,
         },
       });
-    });
-
-    test('Does not navigate when hubs create is disabled', () => {
-      mockIsHubsCreateEnabled(false);
-
-      const { result } = renderHook(() => useSearchActions());
-
-      result.current.onClickNewHub();
-
-      expect(mockOnCreateNewResource).not.toHaveBeenCalled();
     });
   });
 

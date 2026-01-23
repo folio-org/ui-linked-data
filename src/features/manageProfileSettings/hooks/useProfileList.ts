@@ -24,7 +24,7 @@ export const useProfileList = () => {
       }
     }
 
-    return availableProfiles[resourceTypeURL];
+    return availableProfiles?.[resourceTypeURL];
   };
 
   const loadAllAvailableProfiles = async () => {

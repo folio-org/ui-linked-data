@@ -9,7 +9,6 @@ import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import { ResourceType } from '@/common/constants/record.constants';
-import { IS_HUBS_CREATE_ENABLED } from '@/common/constants/feature.constants';
 
 /**
  * Custom hook that encapsulates all search-related action handlers
@@ -81,8 +80,6 @@ export const useSearchActions = () => {
    * Navigates to create a new Hub resource
    */
   const onClickNewHub = useCallback(() => {
-    if (!IS_HUBS_CREATE_ENABLED) return;
-
     onCreateNewResource({
       resourceTypeURL: TYPE_URIS.HUB as ResourceTypeURL,
       queryParams: {
