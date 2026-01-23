@@ -1,11 +1,10 @@
 import { StatusType } from '@common/constants/status.constants';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { useLoadingState, useStatusState, useUIState } from '@src/store';
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 import { usePreferredProfiles } from '@/features/manageProfileSettings/hooks/usePreferredProfiles';
 
 export const useProfileSelection = () => {
-  const { preferredProfiles } = useProfileState(['preferredProfiles']);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState([
     'setIsProfileSelectionModalOpen',
@@ -17,10 +16,11 @@ export const useProfileSelection = () => {
 
   // Processes the case when a preferred profile exists
   const handlePreferredProfileCase = (
+    profiles: ProfileDTO[],
     resourceTypeURL: string,
     callback: (profileId: string | number) => void,
   ): boolean => {
-    const profile = preferredProfileForType(resourceTypeURL);
+    const profile = preferredProfileForType(resourceTypeURL, profiles);
 
     if (profile) {
       callback(profile.id);
@@ -56,10 +56,10 @@ export const useProfileSelection = () => {
       setIsLoading(true);
 
       // Get preferred profiles
-      await loadPreferredProfiles();
+      const preferredProfiles = await loadPreferredProfiles();
 
-      if (preferredProfiles) {
-        const profileProcessed = handlePreferredProfileCase(resourceTypeURL, callback);
+      if (preferredProfiles?.length) {
+        const profileProcessed = handlePreferredProfileCase(preferredProfiles, resourceTypeURL, callback);
 
         // If no matching profile was found, show the modal
         if (!profileProcessed) {

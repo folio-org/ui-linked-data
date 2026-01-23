@@ -14,7 +14,7 @@ export type { ResourceTypeInput } from './utils/resourceType.accessors';
 
 export {
   getResourceTypeConfig,
-  getResourceTypeURLConfig,
+  getResourceTypeFromURL,
   hasPreview,
   hasReference,
   getReference,

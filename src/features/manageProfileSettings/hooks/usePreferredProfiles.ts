@@ -7,15 +7,24 @@ export const usePreferredProfiles = () => {
   // Loads preferred profiles if they haven't been loaded yet
   const loadPreferredProfiles = async () => {
     if (!preferredProfiles) {
-      setPreferredProfiles(await fetchPreferredProfiles());
+      const profiles = await fetchPreferredProfiles();
+      setPreferredProfiles(profiles);
+      return profiles;
     }
+    return preferredProfiles;
   };
 
-  const preferredProfileForType = (resourceTypeURL: string) => {
-    if (preferredProfiles) {
-      return preferredProfiles.find(profile => profile.resourceType === resourceTypeURL);
+  const preferredProfileForType = (resourceTypeURL: string, profiles?: ProfileDTO[]) => {
+    if (profiles) {
+      return findProfileByType(resourceTypeURL, profiles);
+    } else if (preferredProfiles) {
+      return findProfileByType(resourceTypeURL, preferredProfiles);
     }
     return null;
+  };
+
+  const findProfileByType = (resourceTypeURL: string, profiles: ProfileDTO[]) => {
+    return profiles.find(profile => profile.resourceType === resourceTypeURL);
   };
 
   return {

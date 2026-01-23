@@ -21,21 +21,21 @@ export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefi
 };
 
 /**
- * Get the full configuration for a resource type URL.
+ * Get the ResourceType from a type URL.
  * Falls back to instance type if the type URL is not found in the registry.
  */
-export const getResourceTypeURLConfig = (typeURL: ResourceTypeURLInput): ResourceTypeDefinition => {
+export const getResourceTypeFromURL = (typeURL: ResourceTypeURLInput): ResourceType => {
   const normalizedTypeURL = typeURL as ResourceTypeURL;
 
   if (normalizedTypeURL) {
     for (const type in RESOURCE_TYPE_REGISTRY) {
       if (RESOURCE_TYPE_REGISTRY[type as ResourceType].uri === normalizedTypeURL) {
-        return RESOURCE_TYPE_REGISTRY[type as ResourceType];
+        return type as ResourceType;
       }
     }
   }
 
-  return RESOURCE_TYPE_REGISTRY[ResourceType.instance];
+  return ResourceType.instance;
 };
 
 export const hasPreview = (type: ResourceTypeInput): boolean => {

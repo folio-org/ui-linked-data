@@ -1,16 +1,34 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { fetchProfiles } from '@common/api/profiles.api';
+import { IntlProvider } from 'react-intl';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { fetchPreferredProfiles, fetchProfile, fetchProfiles } from '@common/api/profiles.api';
 import { ManageProfileSettings } from './ManageProfileSettings';
 
 jest.mock('@common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
+  fetchPreferredProfiles: jest.fn(),
+  fetchProfile: jest.fn(),
+  fetchProfileSettings: jest.fn(),
 }));
 
 const renderComponent = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
   return render(
     <BrowserRouter>
-      <ManageProfileSettings />
+      <IntlProvider locale="en">
+        <QueryClientProvider client={queryClient}>
+          <ManageProfileSettings />
+        </QueryClientProvider>
+      </IntlProvider>
     </BrowserRouter>,
   );
 };
@@ -20,17 +38,26 @@ describe('ManageProfileSettings', () => {
     {
       id: 'one-profile',
       name: 'One Profile',
-      resourceTypeURL: 'test-resource',
+      resourceTypeURL: BFLITE_URIS.INSTANCE,
     },
     {
       id: 'two-profile',
       name: 'Two Profile',
-      resourceTypeURL: 'test-resource',
+      resourceTypeURL: BFLITE_URIS.INSTANCE,
+    },
+  ];
+  const mockPreferredProfiles = [
+    {
+      id: 'one-profile',
+      name: 'One Profile',
+      resourceTypeURL: BFLITE_URIS.INSTANCE,
     },
   ];
 
   beforeEach(() => {
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
+    (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
+    (fetchProfile as jest.Mock).mockResolvedValue({});
     renderComponent();
   });
 
