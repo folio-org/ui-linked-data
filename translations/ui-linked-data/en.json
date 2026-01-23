@@ -314,5 +314,6 @@
   "ld.unusedComponents.description": "Drag or use drag menu to move items to selected components.",
   "ld.unusedComponents.allUsed": "All components in use",
   "ld.selectedComponents": "Selected components",
-  "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order."
+  "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order.",
+  "ld.setDefaultTypeProfile": "Set as my default {type} profile"
 }

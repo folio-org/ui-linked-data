@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useManageProfileSettingsState, useProfileState } from '@/store';
 import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
 import { getResourceTypeURLConfig } from '@/configs/resourceTypes';
@@ -17,6 +17,7 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
   ]);
   const { preferredProfiles } = useProfileState(['preferredProfiles']);
   const { loadPreferredProfiles, preferredProfileForType } = usePreferredProfiles();
+  const { formatMessage } = useIntl();
 
   const handleDefaultChange = () => {
     setIsModified(true);
@@ -41,9 +42,10 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
     <div className="default-settings">
       <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} id="type-default" />
       <label htmlFor="type-default">
-        <FormattedMessage id="ld.modal.chooseResourceProfile.setAsDefault" />{' '}
-        <FormattedMessage id={getResourceTypeURLConfig(selectedProfile.resourceType).labelId} />{' '}
-        <FormattedMessage id="ld.profile" />
+        <FormattedMessage
+          id="ld.setDefaultTypeProfile"
+          values={{ type: formatMessage({ id: getResourceTypeURLConfig(selectedProfile.resourceType).labelId }) }}
+        />
       </label>
     </div>
   );
