@@ -18,6 +18,7 @@ export const CustomProfileToggle = () => {
     <div className="settings-option">
       <input
         id="settings-active-default"
+        data-testid="settings-active-default"
         name="settings-active"
         type="radio"
         checked={!profileSettings.active}
@@ -29,6 +30,7 @@ export const CustomProfileToggle = () => {
       <span className="empty-block" />
       <input
         id="settings-active-custom"
+        data-testid="settings-active-custom"
         name="settings-active"
         type="radio"
         checked={profileSettings.active}

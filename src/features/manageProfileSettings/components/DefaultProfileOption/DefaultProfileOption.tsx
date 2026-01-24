@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useManageProfileSettingsState, useProfileState } from '@/store';
+import { useManageProfileSettingsState } from '@/store';
 import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
 import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 import './DefaultProfileOption.scss';
@@ -15,7 +15,6 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
     'setIsTypeDefaultProfile',
     'setIsModified',
   ]);
-  const { preferredProfiles } = useProfileState(['preferredProfiles']);
   const { loadPreferredProfiles, preferredProfileForType } = usePreferredProfiles();
   const { formatMessage } = useIntl();
 
@@ -36,9 +35,9 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
 
   useEffect(() => {
     const initialize = async () => {
-      await loadPreferredProfiles();
-      if (preferredProfiles) {
-        const preferred = preferredProfileForType(selectedProfile.resourceType);
+      const preferredProfiles = await loadPreferredProfiles();
+      if (preferredProfiles?.length) {
+        const preferred = preferredProfileForType(selectedProfile.resourceType, preferredProfiles);
         setIsTypeDefaultProfile(!!preferred && preferred.id === selectedProfile.id);
       } else {
         setIsTypeDefaultProfile(false);
@@ -50,8 +49,14 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
 
   return (
     <div className="default-settings">
-      <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} id="type-default" />
-      <label htmlFor="type-default">
+      <input
+        type="checkbox"
+        checked={isTypeDefaultProfile}
+        onChange={handleDefaultChange}
+        id="type-default-setting"
+        data-testid="type-default-setting"
+      />
+      <label htmlFor="type-default-setting">
         <FormattedMessage id="ld.setDefaultTypeProfile" values={{ type: getTypeLabel() }} />
       </label>
     </div>

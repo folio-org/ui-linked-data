@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useManageProfileSettingsState, useLoadingState, useStatusState } from '@/store';
-import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { StatusType } from '@/common/constants/status.constants';
 import { useLoadProfile } from '@/common/hooks/useLoadProfile';
@@ -45,10 +45,8 @@ export const ProfileSettings = () => {
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <div className="heading">
-            <FormattedMessage
-              id={'ld.' + BibframeEntitiesMap[selectedProfile.resourceType as keyof typeof BibframeEntitiesMap]}
-            />
-            : {selectedProfile.name}
+            <FormattedMessage id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType))} />:{' '}
+            {selectedProfile.name}
           </div>
           <span className="empty-block" />
         </div>

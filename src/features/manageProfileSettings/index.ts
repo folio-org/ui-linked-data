@@ -6,4 +6,4 @@ export { ModalCloseProfileSettings } from './components/ModalCloseProfileSetting
 export { ProfileSettings } from './components/ProfileSettings';
 export { ProfilesList } from './components/ProfilesList';
 
-export { useProfileList, useNavigateToManageProfileSettings } from './hooks';
+export { useProfileList, usePreferredProfiles, useNavigateToManageProfileSettings } from './hooks';
