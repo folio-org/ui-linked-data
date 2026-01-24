@@ -63,9 +63,7 @@ export const ProfileSettings = () => {
       <div className="settings-sorting">
         <div className="unused-settings">
           <h4>
-            <span className="title">
-              <FormattedMessage id="ld.unusedComponents" />
-            </span>
+            <span className="title"><FormattedMessage id="ld.unusedComponents" /></span>
             (0)
           </h4>
           <p>
@@ -77,9 +75,7 @@ export const ProfileSettings = () => {
         </div>
         <div className="active-settings">
           <h4>
-            <span className="title">
-              <FormattedMessage id="ld.selectedComponents" />
-            </span>
+            <span className="title"><FormattedMessage id="ld.selectedComponents" /></span>
             (0)
           </h4>
           <p>
