@@ -52,19 +52,19 @@ describe('resourceType.accessors', () => {
 
   describe('getResourceTypeFromURL', () => {
     it('Returns work type for work type URL', () => {
-      const result = getResourceTypeFromURL(BFLITE_URIS.WORK);
+      const result = getResourceTypeFromURL(BFLITE_URIS.WORK as ResourceTypeURL);
 
       expect(result).toBe(ResourceType.work);
     });
 
     it('Returns instance type for instance type URL', () => {
-      const result = getResourceTypeFromURL(BFLITE_URIS.INSTANCE);
+      const result = getResourceTypeFromURL(BFLITE_URIS.INSTANCE as ResourceTypeURL);
 
       expect(result).toBe(ResourceType.instance);
     });
 
     it('Returns hub type for hub type URL', () => {
-      const result = getResourceTypeFromURL(BFLITE_URIS.HUB);
+      const result = getResourceTypeFromURL(BFLITE_URIS.HUB as ResourceTypeURL);
 
       expect(result).toBe(ResourceType.hub);
     });
@@ -82,7 +82,7 @@ describe('resourceType.accessors', () => {
     });
 
     it('Falls back to instance for unknown string', () => {
-      const result = getResourceTypeFromURL('unknown_type');
+      const result = getResourceTypeFromURL('unknown_type' as ResourceTypeURL);
 
       expect(result).toBe(ResourceType.instance);
     });

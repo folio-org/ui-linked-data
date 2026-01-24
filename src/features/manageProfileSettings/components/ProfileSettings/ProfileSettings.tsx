@@ -45,8 +45,10 @@ export const ProfileSettings = () => {
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <div className="heading">
-            <FormattedMessage id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType))} />:{' '}
-            {selectedProfile.name}
+            <FormattedMessage
+              id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType as ResourceTypeURL))}
+            />
+            : {selectedProfile.name}
           </div>
           <span className="empty-block" />
         </div>

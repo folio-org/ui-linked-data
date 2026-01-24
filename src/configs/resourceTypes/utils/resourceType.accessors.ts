@@ -4,7 +4,7 @@ import type { ResourceTypeDefinition, ResourceTypeReference } from '../resourceT
 
 export type ResourceTypeInput = ResourceType | string | null | undefined;
 
-export type ResourceTypeURLInput = ResourceTypeURL | string | null | undefined;
+export type ResourceTypeURLInput = ResourceTypeURL | null | undefined;
 
 /**
  * Get the full configuration for a resource type.
@@ -25,11 +25,9 @@ export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefi
  * Falls back to instance type if the type URL is not found in the registry.
  */
 export const getResourceTypeFromURL = (typeURL: ResourceTypeURLInput): ResourceType => {
-  const normalizedTypeURL = typeURL as ResourceTypeURL;
-
-  if (normalizedTypeURL) {
+  if (typeURL) {
     for (const type in RESOURCE_TYPE_REGISTRY) {
-      if (RESOURCE_TYPE_REGISTRY[type as ResourceType].uri === normalizedTypeURL) {
+      if (RESOURCE_TYPE_REGISTRY[type as ResourceType].uri === typeURL) {
         return type as ResourceType;
       }
     }
