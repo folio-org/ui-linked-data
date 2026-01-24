@@ -25,11 +25,11 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
 
   const getTypeLabel = () => {
     return (
-      <>
+      <span key="type-label">
         {formatMessage({
           id: getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType)),
         })}
-      </>
+      </span>
     );
   };
 
