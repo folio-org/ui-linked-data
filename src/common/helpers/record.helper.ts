@@ -29,8 +29,23 @@ export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, 
 };
 
 export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = true) => {
-  const recordContents = record?.resource ?? record;
+  if (!record) {
+    return [getProfileBfid(undefined)];
+  }
+
+  const recordContents = record.resource ?? record;
+
+  if (!recordContents || typeof recordContents !== 'object' || !Object.keys(recordContents).length) {
+    // Fallback for empty records (e.g., during Create mode before data is loaded)
+    return [getProfileBfid(undefined)];
+  }
+
   const { block } = getEditingRecordBlocks(recordContents as RecordEntry);
+
+  if (!block) {
+    return [getProfileBfid(undefined)];
+  }
+
   const resourceType = mapUriToResourceType(block);
 
   // For editable mode, return the main entity's profile BFID
