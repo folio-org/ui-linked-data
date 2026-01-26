@@ -1,14 +1,19 @@
 import { cloneDeep } from 'lodash';
 import {
-  PROFILE_BFIDS,
   TITLE_CONTAINER_URIS,
   TYPE_URIS,
   INSTANCE_CLONE_DELETE_PROPERTIES,
-} from '@common/constants/bibframe.constants';
-import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@common/constants/bibframeMapping.constants';
-import { QueryParams } from '@common/constants/routes.constants';
-import { getReference, getUri } from '@/configs/resourceTypes';
-import { mapToResourceType } from '@/configs/resourceTypes/utils/resourceType.mappers';
+} from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@/common/constants/bibframeMapping.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import {
+  getReference,
+  getUri,
+  getProfileBfid,
+  hasReference,
+  mapToResourceType,
+  mapUriToResourceType,
+} from '@/configs/resourceTypes';
 
 type IGetAdjustedRecordContents = {
   record: RecordEntry;
@@ -24,11 +29,17 @@ export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, 
 };
 
 export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = true) => {
-  const isInstance = record?.resource[TYPE_URIS.INSTANCE];
-  const workAsPrimary = editable ? [PROFILE_BFIDS.WORK] : [PROFILE_BFIDS.INSTANCE];
-  const instanceAsPrimary = editable ? [PROFILE_BFIDS.INSTANCE] : [PROFILE_BFIDS.WORK];
+  const recordContents = record?.resource ?? record;
+  const { block } = getEditingRecordBlocks(recordContents as RecordEntry);
+  const resourceType = mapUriToResourceType(block);
 
-  return isInstance ? instanceAsPrimary : workAsPrimary;
+  // For editable mode, return the main entity's profile BFID
+  // For preview mode (!editable), return the reference target's profile BFID if it exists
+  if (editable || !hasReference(resourceType)) {
+    return [getProfileBfid(resourceType)];
+  }
+
+  return [getProfileBfid(getReference(resourceType)?.targetType)];
 };
 
 export const getEditingRecordBlocks = (record: RecordEntry) => {
