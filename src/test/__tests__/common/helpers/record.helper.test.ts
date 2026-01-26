@@ -2,6 +2,8 @@ import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/
 import * as RecordHelper from '@common/helpers/record.helper';
 import * as BibframeConstants from '@src/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@src/common/constants/bibframeMapping.constants';
+import { ResourceType } from '@/common/constants/record.constants';
+import * as ResourceTypeMappers from '@/configs/resourceTypes/utils/resourceType.mappers';
 
 describe('record.helper', () => {
   const mockBlocksBFLiteConstant = getMockedImportedConstant(BibframeMappingConstants, 'BLOCKS_BFLITE');
@@ -197,15 +199,9 @@ describe('record.helper', () => {
         [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
           [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
             {
-              [BibframeMappingConstants.BFLITE_URIS.CONTROL_NUMBER]: [
-                "123456789",
-              ],
-              [BibframeMappingConstants.BFLITE_URIS.CREATED_DATE]: [
-                "2025-08-29",
-              ],
-              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
-                "agency",
-              ],
+              [BibframeMappingConstants.BFLITE_URIS.CONTROL_NUMBER]: ['123456789'],
+              [BibframeMappingConstants.BFLITE_URIS.CREATED_DATE]: ['2025-08-29'],
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: ['agency'],
             },
           ],
         },
@@ -214,28 +210,24 @@ describe('record.helper', () => {
         [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
           [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
             {
-              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
-                "agency",
-              ],
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: ['agency'],
             },
           ],
         },
       };
 
-      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      const result = RecordHelper.getAdjustedRecordContents({ record, block, asClone: true });
       expect(result.record).toMatchObject(expected);
     });
 
     test('does nothing when no admin metadata', () => {
       const record = {
         [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
-          [BibframeMappingConstants.BFLITE_URIS.ISSUANCE]: [
-            "issuance",
-          ],
+          [BibframeMappingConstants.BFLITE_URIS.ISSUANCE]: ['issuance'],
         },
       } as unknown as RecordEntry<RecursiveRecordSchema>;
 
-      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      const result = RecordHelper.getAdjustedRecordContents({ record, block, asClone: true });
       expect(result.record).toMatchObject(record);
     });
 
@@ -244,16 +236,180 @@ describe('record.helper', () => {
         [BibframeMappingConstants.BFLITE_URIS.INSTANCE]: {
           [BibframeMappingConstants.BFLITE_URIS.ADMIN_METADATA]: [
             {
-              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: [
-                "agency",
-              ],
+              [BibframeMappingConstants.BFLITE_URIS.CATALOGING_AGENCY]: ['agency'],
             },
           ],
         },
       } as unknown as RecordEntry<RecursiveRecordSchema>;
 
-      const result = RecordHelper.getAdjustedRecordContents({record, block, asClone: true});
+      const result = RecordHelper.getAdjustedRecordContents({ record, block, asClone: true });
       expect(result.record).toMatchObject(record);
+    });
+  });
+
+  describe('getPrimaryEntitiesFromRecord', () => {
+    const testWorkUri = 'testWorkUri';
+    const testHubUri = 'testHubUri';
+    const mockBfliteUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+
+    beforeEach(() => {
+      mockBfliteUrisConstant({
+        WORK: testWorkUri,
+        INSTANCE: testInstanceUri,
+        HUB: testHubUri,
+      });
+
+      jest.spyOn(ResourceTypeMappers, 'mapUriToResourceType').mockImplementation(uri => {
+        if (uri === testWorkUri) return ResourceType.work;
+        if (uri === testInstanceUri) return ResourceType.instance;
+        if (uri === testHubUri) return ResourceType.hub;
+        return undefined;
+      });
+    });
+
+    test('Returns fallback profile BFID for null record', () => {
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(null as unknown as RecordEntry);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns fallback profile BFID for undefined record', () => {
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(undefined as unknown as RecordEntry);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns fallback profile BFID for empty record contents', () => {
+      const record = { resource: {} } as RecordEntry;
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns fallback profile BFID when no block found', () => {
+      const record = { resource: { someField: 'value' } } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: undefined,
+        reference: undefined,
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns instance profile BFID for instance record in editable mode', () => {
+      const record = {
+        resource: {
+          [testInstanceUri]: {
+            id: 'instance_1',
+          },
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testInstanceUri,
+        reference: { key: '_workReference', uri: testWorkUri },
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record, true);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns work profile BFID for work record in editable mode', () => {
+      const record = {
+        resource: {
+          [testWorkUri]: {
+            id: 'work_1',
+          },
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testWorkUri,
+        reference: { key: '_instanceReference', uri: testInstanceUri },
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record, true);
+
+      expect(result).toEqual(['lde:Profile:Work']);
+    });
+
+    test('Returns reference target profile BFID for instance record in preview mode', () => {
+      const record = {
+        resource: {
+          [testInstanceUri]: {
+            id: 'instance_1',
+          },
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testInstanceUri,
+        reference: { key: '_workReference', uri: testWorkUri },
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record, false);
+
+      expect(result).toEqual(['lde:Profile:Work']);
+    });
+
+    test('Returns reference target profile BFID for work record in preview mode', () => {
+      const record = {
+        resource: {
+          [testWorkUri]: {
+            id: 'work_1',
+          },
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testWorkUri,
+        reference: { key: '_instanceReference', uri: testInstanceUri },
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record, false);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
+    });
+
+    test('Returns main entity profile BFID when no reference exists in preview mode', () => {
+      const record = {
+        resource: {
+          [testHubUri]: {
+            id: 'hub_1',
+          },
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testHubUri,
+        reference: undefined,
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record, false);
+
+      expect(result).toEqual(['lde:Profile:Hub']);
+    });
+
+    test('Handles record without resource wrapper', () => {
+      const record = {
+        [testInstanceUri]: {
+          id: 'instance_1',
+        },
+      } as unknown as RecordEntry;
+
+      jest.spyOn(RecordHelper, 'getEditingRecordBlocks').mockReturnValue({
+        block: testInstanceUri,
+        reference: { key: '_workReference', uri: testWorkUri },
+      });
+
+      const result = RecordHelper.getPrimaryEntitiesFromRecord(record);
+
+      expect(result).toEqual(['lde:Profile:Instance']);
     });
   });
 });

@@ -10,9 +10,9 @@ describe('useRecordGeneration', () => {
     const schema = 'mockSchema';
     const userValues = 'mockUserValues';
     const selectedEntries: string[] = [];
-    const profileId = "2";
+    const profileId = '2';
 
-    const searchParams = new URLSearchParams('?block=testBlock&reference.key=testKey');
+    const searchParams = new URLSearchParams('?type=work');
     jest.spyOn(Router, 'useSearchParams').mockReturnValueOnce([searchParams, jest.fn()]);
 
     setInitialGlobalState([
@@ -27,13 +27,6 @@ describe('useRecordGeneration', () => {
         state: {
           userValues,
           selectedEntries,
-          record: {
-            resource: {
-              testBlock: {
-                testKey: [{ id: 'testId' }],
-              },
-            },
-          },
         },
       },
     ]);
