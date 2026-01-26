@@ -18,6 +18,7 @@ export {
   hasPreview,
   hasReference,
   getReference,
+  getUri,
   getDefaultProfileId,
   getProfileBfid,
   getEditSectionPassiveClass,

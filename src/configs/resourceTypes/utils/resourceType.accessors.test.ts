@@ -5,6 +5,7 @@ import {
   hasPreview,
   hasReference,
   getReference,
+  getUri,
   getDefaultProfileId,
   getProfileBfid,
   getEditSectionPassiveClass,
@@ -207,6 +208,44 @@ describe('resourceType.accessors', () => {
 
     it('Returns correct label ID for hub type', () => {
       expect(getProfileLabelId(ResourceType.hub)).toBe('ld.hub');
+    });
+  });
+
+  describe('getUri', () => {
+    it('Gets URI for work type', () => {
+      const result = getUri(ResourceType.work);
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Work');
+    });
+
+    it('Gets URI for instance type', () => {
+      const result = getUri(ResourceType.instance);
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Instance');
+    });
+
+    it('Gets URI for hub type', () => {
+      const result = getUri(ResourceType.hub);
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Hub');
+    });
+
+    it('Falls back to instance URI for null', () => {
+      const result = getUri(null);
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Instance');
+    });
+
+    it('Falls back to instance URI for undefined', () => {
+      const result = getUri(undefined);
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Instance');
+    });
+
+    it('Falls back to instance URI for unknown type', () => {
+      const result = getUri('unknown_type');
+
+      expect(result).toBe('http://bibfra.me/vocab/lite/Instance');
     });
   });
 });

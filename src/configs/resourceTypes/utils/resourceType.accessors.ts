@@ -14,7 +14,7 @@ export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefi
   const normalizedType = type as ResourceType;
 
   if (normalizedType && normalizedType in RESOURCE_TYPE_REGISTRY) {
-    return RESOURCE_TYPE_REGISTRY[normalizedType as keyof typeof RESOURCE_TYPE_REGISTRY];
+    return RESOURCE_TYPE_REGISTRY[normalizedType];
   }
 
   return RESOURCE_TYPE_REGISTRY[ResourceType.instance];
@@ -46,6 +46,10 @@ export const hasReference = (type: ResourceTypeInput): boolean => {
 
 export const getReference = (type: ResourceTypeInput): ResourceTypeReference | undefined => {
   return getResourceTypeConfig(type).reference;
+};
+
+export const getUri = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).uri;
 };
 
 export const getDefaultProfileId = (type: ResourceTypeInput): number => {
