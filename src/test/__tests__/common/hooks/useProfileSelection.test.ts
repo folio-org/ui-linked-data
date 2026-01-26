@@ -26,7 +26,6 @@ const mockImportedConstant = getMockedImportedConstant(BibframeConstants, 'Bibfr
 mockImportedConstant(MockBibframeEntitiesMap);
 
 describe('useProfileSelection', () => {
-  const setPreferredProfiles = jest.fn();
   const setAvailableProfiles = jest.fn();
   const setIsLoading = jest.fn();
   const setIsProfileSelectionModalOpen = jest.fn();
@@ -55,7 +54,6 @@ describe('useProfileSelection', () => {
         state: {
           preferredProfiles: null,
           availableProfiles: null,
-          setPreferredProfiles,
           setAvailableProfiles,
         },
       },
@@ -94,7 +92,6 @@ describe('useProfileSelection', () => {
 
       expect(setIsLoading).toHaveBeenCalledWith(true);
       expect(fetchPreferredProfiles).toHaveBeenCalledWith();
-      expect(setPreferredProfiles).toHaveBeenCalledWith(mockProfiles);
       expect(callbackMock).toHaveBeenCalledWith(profileId);
       expect(setIsProfileSelectionModalOpen).not.toHaveBeenCalled();
       expect(setIsLoading).toHaveBeenCalledWith(false);
@@ -114,7 +111,6 @@ describe('useProfileSelection', () => {
 
       expect(setIsLoading).toHaveBeenCalledWith(true);
       expect(fetchPreferredProfiles).toHaveBeenCalledWith();
-      expect(setPreferredProfiles).toHaveBeenCalledWith(nonMatchingProfiles);
       expect(callbackMock).not.toHaveBeenCalled();
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setIsLoading).toHaveBeenCalledWith(false);
@@ -177,7 +173,6 @@ describe('useProfileSelection', () => {
           state: {
             preferredProfiles: null,
             availableProfiles: { 'test-resource-type': mockProfiles },
-            setPreferredProfiles,
             setAvailableProfiles,
           },
         },
@@ -264,7 +259,6 @@ describe('useProfileSelection', () => {
           state: {
             preferredProfiles: mockProfiles,
             availableProfiles: null,
-            setPreferredProfiles,
             setAvailableProfiles,
           },
         },
@@ -281,7 +275,7 @@ describe('useProfileSelection', () => {
         });
       });
 
-      expect(fetchPreferredProfiles).toHaveBeenCalledWith();
+      expect(fetchPreferredProfiles).not.toHaveBeenCalled();
       expect(callbackMock).toHaveBeenCalledWith(profileId);
     });
   });
@@ -298,7 +292,6 @@ describe('useProfileSelection', () => {
           state: {
             preferredProfiles: null,
             availableProfiles: null,
-            setPreferredProfiles,
             setAvailableProfiles,
           },
         },
@@ -356,7 +349,6 @@ describe('useProfileSelection', () => {
           state: {
             preferredProfiles: null,
             availableProfiles: { 'test-resource-type': mockProfiles },
-            setPreferredProfiles,
             setAvailableProfiles,
           },
         },
@@ -412,7 +404,6 @@ describe('useProfileSelection', () => {
           state: {
             preferredProfiles: null,
             availableProfiles: null,
-            setPreferredProfiles,
             setAvailableProfiles,
           },
         },

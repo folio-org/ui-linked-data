@@ -22,6 +22,7 @@ export interface ResourceTypeDefinition {
   dependencies: ResourceType[];
   ui: ResourceTypeUIConfig;
   reference?: ResourceTypeReference;
+  labelId: string;
 }
 
 export type ResourceTypeRegistry = Record<ResourceType, ResourceTypeDefinition>;

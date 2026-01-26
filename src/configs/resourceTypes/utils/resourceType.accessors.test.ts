@@ -1,6 +1,7 @@
 import { ResourceType } from '@/common/constants/record.constants';
 import {
   getResourceTypeConfig,
+  getResourceTypeFromURL,
   hasPreview,
   hasReference,
   getReference,
@@ -11,7 +12,9 @@ import {
   getEditPageLayout,
   getPreviewPosition,
   hasSplitLayout,
+  getProfileLabelId,
 } from './resourceType.accessors';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 
 describe('resourceType.accessors', () => {
   describe('getResourceTypeConfig', () => {
@@ -45,6 +48,44 @@ describe('resourceType.accessors', () => {
       const result = getResourceTypeConfig('unknown_type');
 
       expect(result.type).toBe(ResourceType.instance);
+    });
+  });
+
+  describe('getResourceTypeFromURL', () => {
+    it('Returns work type for work type URL', () => {
+      const result = getResourceTypeFromURL(BFLITE_URIS.WORK as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.work);
+    });
+
+    it('Returns instance type for instance type URL', () => {
+      const result = getResourceTypeFromURL(BFLITE_URIS.INSTANCE as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.instance);
+    });
+
+    it('Returns hub type for hub type URL', () => {
+      const result = getResourceTypeFromURL(BFLITE_URIS.HUB as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.hub);
+    });
+
+    it('Falls back to instance for null', () => {
+      const result = getResourceTypeFromURL(null);
+
+      expect(result).toBe(ResourceType.instance);
+    });
+
+    it('Falls back to instance for undefined', () => {
+      const result = getResourceTypeFromURL(undefined);
+
+      expect(result).toBe(ResourceType.instance);
+    });
+
+    it('Falls back to instance for unknown string', () => {
+      const result = getResourceTypeFromURL('unknown_type' as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.instance);
     });
   });
 
@@ -153,6 +194,20 @@ describe('resourceType.accessors', () => {
 
     it('Returns correct BFID for instance type', () => {
       expect(getProfileBfid(ResourceType.instance)).toBe('lde:Profile:Instance');
+    });
+  });
+
+  describe('getProfileLabelId', () => {
+    it('Returns correct label ID for work type', () => {
+      expect(getProfileLabelId(ResourceType.work)).toBe('ld.work');
+    });
+
+    it('Returns correct label ID for instance type', () => {
+      expect(getProfileLabelId(ResourceType.instance)).toBe('ld.instance');
+    });
+
+    it('Returns correct label ID for hub type', () => {
+      expect(getProfileLabelId(ResourceType.hub)).toBe('ld.hub');
     });
   });
 

@@ -1,34 +1,44 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useManageProfileSettingsState } from '@/store';
-import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { useManageProfileSettingsState, useLoadingState, useStatusState } from '@/store';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { StatusType } from '@/common/constants/status.constants';
+import { useLoadProfile } from '@/common/hooks/useLoadProfile';
+import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
+import { CustomProfileToggle } from '../CustomProfileToggle';
+import { DefaultProfileOption } from '../DefaultProfileOption';
 import './ProfileSettings.scss';
 
 export const ProfileSettings = () => {
-  const {
-    selectedProfile,
-    profileSettings,
-    setProfileSettings,
-    isTypeDefaultProfile,
-    setIsTypeDefaultProfile,
-    setIsModified,
-  } = useManageProfileSettingsState([
+  const { setIsLoading } = useLoadingState();
+  const { loadProfile } = useLoadProfile();
+  const { loadProfileSettings } = useLoadProfileSettings();
+  const { selectedProfile, setProfileSettings } = useManageProfileSettingsState([
     'selectedProfile',
-    'profileSettings',
     'setProfileSettings',
-    'isTypeDefaultProfile',
-    'setIsTypeDefaultProfile',
-    'setIsModified',
   ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   useEffect(() => {
-    // TODO: load type default, profile settings
-  }, [setIsTypeDefaultProfile, setProfileSettings]);
+    if (selectedProfile) {
+      const initialize = async () => {
+        try {
+          setIsLoading(true);
+          const profile = await loadProfile(selectedProfile.id);
+          setProfileSettings(await loadProfileSettings(selectedProfile.id, profile));
+        } catch {
+          addStatusMessagesItem?.(
+            UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),
+          );
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-  const handleDefaultChange = () => {
-    setIsModified(true);
-    setIsTypeDefaultProfile(prev => !prev);
-  };
+      initialize();
+    }
+  }, [selectedProfile]);
 
   return selectedProfile ? (
     <div data-testid="profile-settings" className="profile-settings">
@@ -36,7 +46,7 @@ export const ProfileSettings = () => {
         <div className="nav-block nav-block-fixed-height">
           <div className="heading">
             <FormattedMessage
-              id={'ld.' + BibframeEntitiesMap[selectedProfile.resourceType as keyof typeof BibframeEntitiesMap]}
+              id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType as ResourceTypeURL))}
             />
             : {selectedProfile.name}
           </div>
@@ -44,41 +54,35 @@ export const ProfileSettings = () => {
         </div>
       </div>
 
-      <div className="default-settings">
-        <input type="checkbox" checked={isTypeDefaultProfile} onChange={handleDefaultChange} id="type-default" />
-        <label htmlFor="type-default">
-          <FormattedMessage id="ld.modal.chooseResourceProfile.setAsDefault" />{' '}
-          <FormattedMessage
-            id={'ld.' + BibframeEntitiesMap[selectedProfile.resourceType as keyof typeof BibframeEntitiesMap]}
-          />{' '}
-          <FormattedMessage id="ld.profile" />
-        </label>
-      </div>
+      <DefaultProfileOption selectedProfile={selectedProfile} />
 
       <hr />
 
-      <div className="settings-option">
-        <input
-          id="settings-active-default"
-          name="settings-active"
-          type="radio"
-          value="default"
-          checked={!profileSettings.active}
-        />{' '}
-        <label htmlFor="settings-active-default">
-          <FormattedMessage id="ld.profileDefault" />
-        </label>
-        <span className="empty-block" />
-        <input
-          id="settings-active-custom"
-          name="settings-active"
-          type="radio"
-          value="custom"
-          checked={profileSettings.active}
-        />{' '}
-        <label htmlFor="settings-active-custom">
-          <FormattedMessage id="ld.custom" />
-        </label>
+      <CustomProfileToggle />
+
+      <div className="settings-sorting">
+        <div className="unused-settings">
+          <h4>
+            <span className="title"><FormattedMessage id="ld.unusedComponents" /></span>
+            (0)
+          </h4>
+          <p>
+            <FormattedMessage id="ld.unusedComponents.description" />
+          </p>
+          <div>
+            <FormattedMessage id="ld.unusedComponents.allUsed" />
+          </div>
+        </div>
+        <div className="active-settings">
+          <h4>
+            <span className="title"><FormattedMessage id="ld.selectedComponents" /></span>
+            (0)
+          </h4>
+          <p>
+            <FormattedMessage id="ld.selectedComponents.description" />
+          </p>
+          <div></div>
+        </div>
       </div>
     </div>
   ) : (

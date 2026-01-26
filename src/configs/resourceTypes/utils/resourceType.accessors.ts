@@ -4,6 +4,8 @@ import type { ResourceTypeDefinition, ResourceTypeReference } from '../resourceT
 
 export type ResourceTypeInput = ResourceType | string | null | undefined;
 
+export type ResourceTypeURLInput = ResourceTypeURL | null | undefined;
+
 /**
  * Get the full configuration for a resource type.
  * Falls back to instance type if the type is not found in the registry.
@@ -16,6 +18,22 @@ export const getResourceTypeConfig = (type: ResourceTypeInput): ResourceTypeDefi
   }
 
   return RESOURCE_TYPE_REGISTRY[ResourceType.instance];
+};
+
+/**
+ * Get the ResourceType from a type URL.
+ * Falls back to instance type if the type URL is not found in the registry.
+ */
+export const getResourceTypeFromURL = (typeURL: ResourceTypeURLInput): ResourceType => {
+  if (typeURL) {
+    for (const type in RESOURCE_TYPE_REGISTRY) {
+      if (RESOURCE_TYPE_REGISTRY[type as ResourceType].uri === typeURL) {
+        return type as ResourceType;
+      }
+    }
+  }
+
+  return ResourceType.instance;
 };
 
 export const hasPreview = (type: ResourceTypeInput): boolean => {
@@ -56,4 +74,8 @@ export const getPreviewPosition = (type: ResourceTypeInput): 'left' | 'right' | 
 
 export const hasSplitLayout = (type: ResourceTypeInput): boolean => {
   return getEditPageLayout(type) === 'split';
+};
+
+export const getProfileLabelId = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).labelId;
 };

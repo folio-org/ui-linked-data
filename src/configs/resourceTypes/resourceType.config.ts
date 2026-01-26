@@ -21,6 +21,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       uri: BFLITE_URIS.WORK,
       targetType: ResourceType.work,
     },
+    labelId: 'ld.instance',
   },
 
   [ResourceType.work]: {
@@ -41,6 +42,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       uri: BFLITE_URIS.INSTANCE,
       targetType: ResourceType.instance,
     },
+    labelId: 'ld.work',
   },
 
   [ResourceType.hub]: {
@@ -54,5 +56,6 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       hasPreview: false,
       editPageLayout: 'single',
     },
+    labelId: 'ld.hub',
   },
 };

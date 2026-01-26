@@ -14,6 +14,7 @@ export type { ResourceTypeInput } from './utils/resourceType.accessors';
 
 export {
   getResourceTypeConfig,
+  getResourceTypeFromURL,
   hasPreview,
   hasReference,
   getReference,
@@ -24,6 +25,7 @@ export {
   getEditPageLayout,
   getPreviewPosition,
   hasSplitLayout,
+  getProfileLabelId,
 } from './utils/resourceType.accessors';
 
 export { createRootEntry } from './utils/resourceType.profile';
