@@ -7,6 +7,7 @@ import {
   extractDropdownOption,
   processComplexLookup,
   languagesMapping,
+  hubLanguagesMapping,
   processHubsComplexLookup,
 } from './recordProcessingCases';
 
@@ -49,7 +50,10 @@ export const RECORD_NORMALIZING_CASES = {
     process: processContributorComplexLookup,
   },
   _languages: {
-    process: languagesMapping
+    process: languagesMapping,
+  },
+  [BFLITE_URIS.LANGUAGE]: {
+    process: hubLanguagesMapping,
   },
   [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -59,6 +63,6 @@ export const RECORD_NORMALIZING_CASES = {
     process: processSubjectComplexLookup,
   },
   _hubs: {
-    process: processHubsComplexLookup
-  }
+    process: processHubsComplexLookup,
+  },
 };

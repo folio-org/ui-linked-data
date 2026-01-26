@@ -97,6 +97,18 @@ export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, 
   }) as unknown as RecursiveRecordSchema;
 };
 
+export const hubLanguagesMapping = (record: RecordEntry, blockKey: string, key: string) => {
+  if (!record[blockKey][key]) return;
+
+  const languageData = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][BFLITE_URIS.LANGUAGES] = languageData.map(langEntry => ({
+    [key]: langEntry,
+  })) as unknown as RecursiveRecordSchema;
+
+  delete record[blockKey][key];
+};
+
 export const extractDropdownOption = (
   record: RecordEntry,
   blockKey: string,

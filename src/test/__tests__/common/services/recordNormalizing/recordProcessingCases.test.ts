@@ -206,6 +206,117 @@ describe('recordProcessingCases', () => {
     });
   });
 
+  describe('hubLanguagesMapping', () => {
+    const languageBFLiteUri = 'languageBFLiteUri';
+    const termBFLiteUri = 'termBFLiteUri';
+    const codeBFLiteUri = 'codeBFLiteUri';
+
+    beforeEach(() => {
+      mockedBFLiteUris({
+        LINK: linkBFLiteUri,
+        LABEL: labelBFLiteUri,
+        LANGUAGES: languagesNonBFUri,
+        LANGUAGE: languageBFLiteUri,
+        TERM: termBFLiteUri,
+        CODE: codeBFLiteUri,
+      });
+    });
+
+    test('wraps Hub language data into _languages structure', () => {
+      const record = {
+        [blockKey]: {
+          [languageBFLiteUri]: [
+            {
+              id: 'lang_id_1',
+              [linkBFLiteUri]: ['testLanguageLink_1'],
+              [termBFLiteUri]: ['testLanguageTerm_1'],
+              [codeBFLiteUri]: ['testLanguageCode_1'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_1',
+                [linkBFLiteUri]: ['testLanguageLink_1'],
+                [termBFLiteUri]: ['testLanguageTerm_1'],
+                [codeBFLiteUri]: ['testLanguageCode_1'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('wraps multiple Hub language entries into _languages structure', () => {
+      const record = {
+        [blockKey]: {
+          [languageBFLiteUri]: [
+            {
+              id: 'lang_id_1',
+              [linkBFLiteUri]: ['testLanguageLink_1'],
+              [termBFLiteUri]: ['testLanguageTerm_1'],
+            },
+            {
+              id: 'lang_id_2',
+              [linkBFLiteUri]: ['testLanguageLink_2'],
+              [termBFLiteUri]: ['testLanguageTerm_2'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_1',
+                [linkBFLiteUri]: ['testLanguageLink_1'],
+                [termBFLiteUri]: ['testLanguageTerm_1'],
+              },
+            },
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_2',
+                [linkBFLiteUri]: ['testLanguageLink_2'],
+                [termBFLiteUri]: ['testLanguageTerm_2'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does nothing when language data is not present', () => {
+      const record = {
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      } as unknown as RecordEntry;
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual({
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      });
+    });
+  });
+
   describe('extractValue', () => {
     test('updates a record with extracted value', () => {
       const source = 'testFieldName';
