@@ -32,6 +32,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
     const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
     const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
+    const offsetFromUrl = searchParams.get(SearchParam.OFFSET);
     const currentSegment = navigationState?.[SearchParam.SEGMENT];
 
     // Determine if this is an advanced search (query present but no searchBy)
@@ -53,13 +54,27 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
       }
     }
 
+    // Build complete navigation state from URL for preservation when navigating to edit pages
     const updatedState = { ...navigationState } as Record<string, unknown>;
+
+    if (queryFromUrl !== null) {
+      updatedState[SearchParam.QUERY] = queryFromUrl;
+    }
+
+    if (searchByFromUrl !== null) {
+      updatedState[SearchParam.SEARCH_BY] = searchByFromUrl;
+    }
+
     if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {
       updatedState[SearchParam.SEGMENT] = segmentFromUrl;
     }
 
     if (sourceFromUrl !== null) {
       updatedState[SearchParam.SOURCE] = sourceFromUrl;
+    }
+
+    if (offsetFromUrl !== null) {
+      updatedState[SearchParam.OFFSET] = offsetFromUrl;
     }
 
     setNavigationState(updatedState as SearchParamsState);

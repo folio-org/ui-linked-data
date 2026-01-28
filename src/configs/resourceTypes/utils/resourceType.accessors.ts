@@ -79,3 +79,7 @@ export const hasSplitLayout = (type: ResourceTypeInput): boolean => {
 export const getProfileLabelId = (type: ResourceTypeInput): string => {
   return getResourceTypeConfig(type).labelId;
 };
+
+export const getSearchSegment = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).search.segment;
+};

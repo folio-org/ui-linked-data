@@ -86,7 +86,13 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
   return `(${queryWithFormatting})`;
 };
 
-export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null, offset = 0) => {
+export const generateSearchParamsState = (
+  query: string | null,
+  searchBy?: SearchIdentifiers | null,
+  offset = 0,
+  segment?: string | null,
+  source?: string | null,
+) => {
   const searchParamsState = {
     [SearchQueryParams.Query]: query,
     [SearchQueryParams.Offset]: offset,
@@ -94,6 +100,14 @@ export const generateSearchParamsState = (query: string | null, searchBy?: Searc
 
   if (searchBy) {
     searchParamsState[SearchQueryParams.SearchBy] = searchBy;
+  }
+
+  if (segment) {
+    searchParamsState[SearchQueryParams.Segment] = segment;
+  }
+
+  if (source) {
+    searchParamsState[SearchQueryParams.Source] = source;
   }
 
   return searchParamsState;

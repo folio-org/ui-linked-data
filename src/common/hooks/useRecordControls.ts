@@ -18,10 +18,12 @@ import { RecordStatus, ResourceType } from '@common/constants/record.constants';
 import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
 import { ExternalResourceIdType } from '@common/constants/api.constants';
 import { getFriendlyErrorMessage } from '@common/helpers/api.helper';
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
 import { useRecordGeneration } from './useRecordGeneration';
 import { useBackToSearchUri } from './useBackToSearchUri';
 import { useContainerEvents } from './useContainerEvents';
+import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -78,6 +80,19 @@ export const useRecordControls = () => {
   const [queryParams] = useSearchParams();
   const isClone = queryParams.get(QueryParams.CloneOf);
   const { generateRecord } = useRecordGeneration();
+
+  const ensureSegmentInUri = (uri: string) => {
+    if (uri.includes(`${SearchQueryParams.Segment}=`)) {
+      return uri;
+    }
+
+    const typeParam = searchParams.get(QueryParams.Type);
+    const resourceType = mapToResourceType(typeParam);
+    const segment = getSearchSegment(resourceType);
+    const separator = uri.includes('?') ? '&' : '?';
+
+    return `${uri}${separator}${SearchQueryParams.Segment}=${segment}`;
+  };
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     const recordData = await getRecordAndInitializeParsing({ recordId });
@@ -173,7 +188,7 @@ export const useRecordControls = () => {
 
       return updatedRecordId;
     } else {
-      navigate(searchResultsUri);
+      navigate(ensureSegmentInUri(searchResultsUri));
     }
 
     return updatedRecordId;
@@ -251,7 +266,7 @@ export const useRecordControls = () => {
   const discardRecord = (clearState = true) => {
     if (clearState) clearRecordState();
 
-    dispatchNavigateToOriginEventWithFallback(searchResultsUri);
+    dispatchNavigateToOriginEventWithFallback(ensureSegmentInUri(searchResultsUri));
   };
 
   const deleteRecord = async () => {
