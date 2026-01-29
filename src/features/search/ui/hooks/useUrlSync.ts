@@ -15,12 +15,11 @@ interface UseUrlSyncParams {
 
 export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): void => {
   const [searchParams] = useSearchParams();
-  const { query, setQuery, searchBy, setSearchBy, navigationState, setNavigationState } = useSearchState([
+  const { query, setQuery, searchBy, setSearchBy, setNavigationState } = useSearchState([
     'query',
     'setQuery',
     'searchBy',
     'setSearchBy',
-    'navigationState',
     'setNavigationState',
   ]);
 
@@ -33,7 +32,6 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
     const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
     const offsetFromUrl = searchParams.get(SearchParam.OFFSET);
-    const currentSegment = navigationState?.[SearchParam.SEGMENT];
 
     // Determine if this is an advanced search (query present but no searchBy)
     // Advanced search queries should NOT be synced to the input field
@@ -55,7 +53,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     }
 
     // Build complete navigation state from URL for preservation when navigating to edit pages
-    const updatedState = { ...navigationState } as Record<string, unknown>;
+    const updatedState = {} as Record<string, unknown>;
 
     if (queryFromUrl !== null) {
       updatedState[SearchParam.QUERY] = queryFromUrl;
@@ -65,7 +63,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
       updatedState[SearchParam.SEARCH_BY] = searchByFromUrl;
     }
 
-    if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {
+    if (segmentFromUrl !== null) {
       updatedState[SearchParam.SEGMENT] = segmentFromUrl;
     }
 
