@@ -8,6 +8,7 @@ import { useComplexLookupField } from '../../hooks';
 import { formatComplexLookupDisplayValue } from '../../utils';
 import { ComplexLookupSelectedItem } from '../ComplexLookupSelectedItem';
 import './ComplexLookupField.scss';
+import './ComplexLookupModal.scss';
 
 interface Props {
   entry: SchemaEntry;

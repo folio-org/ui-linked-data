@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import { SearchProvider } from '../../providers/SearchProvider';
 import type { SearchProviderProps } from '../../types/provider.types';
+import './ItemSearch.scss';
 
 export const Search: FC<SearchProviderProps> = props => {
   const { children } = props;
