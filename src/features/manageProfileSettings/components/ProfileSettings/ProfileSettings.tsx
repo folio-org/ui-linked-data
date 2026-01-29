@@ -8,14 +8,16 @@ import { useLoadProfile } from '@/common/hooks/useLoadProfile';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
+import { ProfileSettingsEditor } from '../ProfileSettingsEditor';
 import './ProfileSettings.scss';
 
 export const ProfileSettings = () => {
   const { setIsLoading } = useLoadingState();
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
-  const { selectedProfile, setProfileSettings } = useManageProfileSettingsState([
+  const { selectedProfile, setFullProfile, setProfileSettings } = useManageProfileSettingsState([
     'selectedProfile',
+    'setFullProfile',
     'setProfileSettings',
   ]);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
@@ -26,6 +28,7 @@ export const ProfileSettings = () => {
         try {
           setIsLoading(true);
           const profile = await loadProfile(selectedProfile.id);
+          setFullProfile(profile);
           setProfileSettings(await loadProfileSettings(selectedProfile.id, profile));
         } catch {
           addStatusMessagesItem?.(
@@ -60,30 +63,7 @@ export const ProfileSettings = () => {
 
       <CustomProfileToggle />
 
-      <div className="settings-sorting">
-        <div className="unused-settings">
-          <h4>
-            <span className="title"><FormattedMessage id="ld.unusedComponents" /></span>
-            (0)
-          </h4>
-          <p>
-            <FormattedMessage id="ld.unusedComponents.description" />
-          </p>
-          <div>
-            <FormattedMessage id="ld.unusedComponents.allUsed" />
-          </div>
-        </div>
-        <div className="active-settings">
-          <h4>
-            <span className="title"><FormattedMessage id="ld.selectedComponents" /></span>
-            (0)
-          </h4>
-          <p>
-            <FormattedMessage id="ld.selectedComponents.description" />
-          </p>
-          <div></div>
-        </div>
-      </div>
+      <ProfileSettingsEditor />
     </div>
   ) : (
     ''

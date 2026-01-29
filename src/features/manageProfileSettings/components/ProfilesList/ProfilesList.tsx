@@ -4,7 +4,7 @@ import { StatusType } from '@common/constants/status.constants';
 import { useManageProfileSettingsState, useProfileState, useStatusState, useLoadingState } from '@src/store';
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 import { UserNotificationFactory } from '@common/services/userNotification';
-import { getProfileLabelId, getResourceTypeConfig, RESOURCE_TYPE_REGISTRY } from '@/configs/resourceTypes';
+import { getProfileLabelId, getUri, RESOURCE_TYPE_REGISTRY } from '@/configs/resourceTypes';
 import { ResourceProfiles } from './ResourceProfiles';
 import './ProfilesList.scss';
 
@@ -60,7 +60,7 @@ export const ProfilesList = () => {
             <ResourceProfiles
               key={type}
               labelId={getProfileLabelId(type)}
-              profiles={availableProfiles[getResourceTypeConfig(type).uri as ResourceTypeURL]}
+              profiles={availableProfiles[getUri(type) as ResourceTypeURL]}
             />
           );
         })}

@@ -1,0 +1,110 @@
+@use '@common/styles/common.scss' as *;
+
+.components-editor {
+  display: flex;
+  gap: 16px;
+  flex-direction: row;
+  padding: 0 15px;
+
+  .title {
+    padding-right: 4px;
+  }
+
+  .component {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    margin: 0 0 8px;
+
+    .name {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100%;
+
+      .grab {
+        margin-right: 8px;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          cursor: grab;
+        }
+      }
+    }
+
+    .adjust {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      gap: 6px;
+
+      .blank {
+        width: 16px;
+      }
+    }
+  }
+
+  .unused-components {
+    .components {
+      min-height: 1em;
+      height: 100%;
+      background-color: $gray-100;
+      padding: 8px;
+
+      .empty-list {
+        min-height: 1em;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+      }
+
+      .component {
+        background-color: $base;
+        border-radius: $btn-icon-border-radius;
+        border: 1px solid $gray-300;
+      }
+
+      &.over-list {
+        opacity: 50%;
+        border: 1px dashed $gray-600;
+      }
+    }
+  }
+
+  .selected-components {
+    .component {
+      background-color: $gray-100;
+    }
+  }
+
+  .dragging {
+    .component {
+      border-radius: $btn-icon-border-radius;
+      border: 1px solid $gray-400;
+      border-left: 12px solid $gray-400;
+      box-shadow: $btn-hover-drop-shadow;
+    }
+
+    &.unused {
+      .component {
+        background-color: $base;
+      }
+    }
+
+    &.selected {
+      .component {
+        background-color: $gray-100;
+      }
+    }
+  }
+
+  .drag-overlay {
+    pointer-events: none;
+  }
+}
