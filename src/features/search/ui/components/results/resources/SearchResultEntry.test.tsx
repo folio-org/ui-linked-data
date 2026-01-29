@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useSearchStore, useUIStore } from '@/store';
 import { SearchResultEntry } from './SearchResultEntry';
@@ -96,7 +97,27 @@ export const itemSearchMockData = {
 
 const mockProps = itemSearchMockData.content[0];
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const renderWithProviders = (component: React.ReactNode) => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{component}</BrowserRouter>
+    </QueryClientProvider>,
+  );
+};
+
 describe('SearchResultEntry', () => {
+  beforeEach(() => {
+    queryClient.clear();
+  });
+
   describe('with instances', () => {
     beforeEach(() => {
       setInitialGlobalState([
@@ -118,11 +139,7 @@ describe('SearchResultEntry', () => {
         },
       ]);
 
-      render(
-        <BrowserRouter>
-          <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
-      );
+      renderWithProviders(<SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />);
     });
 
     const { getByText, getByTestId, findByText } = screen;
@@ -173,10 +190,8 @@ describe('SearchResultEntry', () => {
         },
       ]);
 
-      render(
-        <BrowserRouter>
-          <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
+      renderWithProviders(
+        <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />,
       );
     });
 

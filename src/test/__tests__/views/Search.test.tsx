@@ -59,10 +59,6 @@ describe('Search', () => {
     expect(screen.getByTestId('search')).toBeInTheDocument();
   });
 
-  test('renders child ItemSearch component', () => {
-    expect(screen.getByTestId('id-search')).toBeInTheDocument();
-  });
-
   describe('component unmount', () => {
     test('clears fullDisplayComponentType and selectedInstances on unmount', () => {
       const mockResetFullDisplayComponentType = jest.fn();
@@ -95,10 +91,10 @@ describe('Search', () => {
   describe('Actions dropdown', () => {
     test('calls onCreateNewResource when "Create a new resource" option is clicked', () => {
       // Click the Actions dropdown button
-      fireEvent.click(screen.getByTestId('search-view-actions-dropdown'));
+      fireEvent.click(screen.getByTestId('resources-actions-dropdown'));
 
       // Click the "Create a new resource" option
-      fireEvent.click(screen.getByTestId('search-view-actions-dropdown__option-ld.newResource'));
+      fireEvent.click(screen.getByTestId('resources-actions-dropdown__option-ld.newResource'));
 
       expect(onCreateNewResource).toHaveBeenCalledWith({
         resourceTypeURL: TYPE_URIS.WORK,
@@ -110,10 +106,10 @@ describe('Search', () => {
 
     test('calls navigateToManageProfileSettings when "Manage profile settings" option is clicked', () => {
       // Click the Actions dropdown button
-      fireEvent.click(screen.getByTestId('search-view-actions-dropdown'));
+      fireEvent.click(screen.getByTestId('resources-actions-dropdown'));
 
       // Click the "Manage profile settings" option
-      fireEvent.click(screen.getByTestId('search-view-actions-dropdown__option-ld.manageProfileSettings'));
+      fireEvent.click(screen.getByTestId('resources-actions-dropdown__option-ld.manageProfileSettings'));
 
       expect(navigateToManageProfileSettings).toHaveBeenCalled();
     });

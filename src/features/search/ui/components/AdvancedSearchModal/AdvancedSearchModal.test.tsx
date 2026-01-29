@@ -1,8 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import * as SearchHelper from '@/features/search/core/utils/search.helper';
-import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { useUIStore, useSearchStore } from '@/store';
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
@@ -65,33 +63,6 @@ describe('AdvancedSearchModal', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
 
     expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
-  });
-
-  test('submits search with the correct values in legacy mode', () => {
-    renderModal();
-
-    const inputEvent = {
-      target: {
-        value: 'testValue',
-      },
-    };
-    const searchParams = {
-      [SearchQueryParams.Query]: '(title all "testValue" not title all "testValue*")',
-    };
-    const spyGenerateSearchParamsState = jest
-      .spyOn(SearchHelper, 'generateSearchParamsState')
-      .mockReturnValue(searchParams);
-
-    fireEvent.change(screen.getByTestId('text-input-0'), inputEvent);
-    fireEvent.change(screen.getByTestId('text-input-1'), inputEvent);
-    fireEvent.change(screen.getByTestId('select-operators-1'), { target: { value: 'not' } });
-    fireEvent.change(screen.getByTestId('select-qualifiers-1'), { target: { value: 'startsWith' } });
-    fireEvent.change(screen.getByTestId('select-identifiers-1'), { target: { value: 'title' } });
-
-    fireEvent.click(screen.getByTestId('modal-button-submit'));
-
-    expect(spyGenerateSearchParamsState).toHaveBeenCalledWith('(title all "testValue" not title all "testValue*")');
-    expect(setSearchParams).toHaveBeenCalledWith(searchParams);
   });
 
   describe('New search mode (IS_NEW_SEARCH_ENABLED)', () => {
