@@ -58,6 +58,48 @@ describe('useUrlSync', () => {
       expect(setQuery).toHaveBeenCalledWith('test query');
     });
 
+    it('syncs all params from URL to navigationState', () => {
+      const searchParams = new URLSearchParams({
+        query: 'test query',
+        searchBy: 'title',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'title',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+    });
+
+    it('syncs query to navigationState', () => {
+      const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'keyword',
+      });
+    });
+
+    it('syncs offset to navigationState', () => {
+      const searchParams = new URLSearchParams({ offset: '40' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({ offset: '40' });
+    });
+
     it('does not sync query when it is advanced search (no searchBy in URL)', () => {
       const searchParams = new URLSearchParams({ query: 'test query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -107,9 +149,14 @@ describe('useUrlSync', () => {
 
       expect(setQuery).toHaveBeenCalledWith('test query');
       expect(setSearchBy).toHaveBeenCalledWith('author');
-      // The hook updates segment and source in a single call with updatedState
+      // The hook updates all params to navigationState in a single call
       expect(setNavigationState).toHaveBeenCalledTimes(1);
-      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'browse', source: 'external' });
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'author',
+        segment: 'browse',
+        source: 'external',
+      });
     });
 
     it('clears query when URL has no query but store does and searchBy is present', () => {

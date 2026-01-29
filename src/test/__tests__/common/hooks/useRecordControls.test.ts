@@ -343,4 +343,23 @@ describe('useRecordControls', () => {
       expect(mockSetRecord).not.toHaveBeenCalled();
     });
   });
+
+  describe('discardRecord', () => {
+    it('discards record and navigates away', () => {
+      setInitialGlobalState([
+        {
+          store: useInputsStore,
+          state: {
+            record: null,
+            selectedRecordBlocks: null,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useRecordControls());
+      result.current.discardRecord();
+
+      expect(mockDispatchUnblockEvent).toHaveBeenCalled();
+    });
+  });
 });
