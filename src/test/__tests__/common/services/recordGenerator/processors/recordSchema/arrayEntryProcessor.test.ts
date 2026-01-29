@@ -1,13 +1,13 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { ArrayEntryProcessor } from '@common/services/recordGenerator/processors/recordSchema/arrayEntryProcessor';
-import { ProfileSchemaProcessorManager } from '@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
-import { ValueProcessor } from '@common/services/recordGenerator/processors/value/valueProcessor';
-import { ValueOptions } from '@common/services/recordGenerator/types/value.types';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { ProfileSchemaProcessorManager } from '@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { ArrayEntryProcessor } from '@/common/services/recordGenerator/processors/recordSchema/arrayEntryProcessor';
+import { ValueProcessor } from '@/common/services/recordGenerator/processors/value/valueProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
+import { ValueOptions } from '@/common/services/recordGenerator/types/value.types';
 
-jest.mock('@common/services/recordGenerator/processors/value/valueProcessor');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/processors/value/valueProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
 
 describe('ArrayEntryProcessor', () => {
   let processor: ArrayEntryProcessor;

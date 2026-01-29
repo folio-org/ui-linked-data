@@ -1,6 +1,6 @@
-import { ValueProcessor } from '@common/services/recordGenerator/processors/value/valueProcessor';
-import { ValueOptions } from '@common/services/recordGenerator/types/value.types';
-import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
+import { ValueProcessor } from '@/common/services/recordGenerator/processors/value/valueProcessor';
+import { UserValueContents } from '@/common/services/recordGenerator/processors/value/valueProcessor.interface';
+import { ValueOptions } from '@/common/services/recordGenerator/types/value.types';
 
 describe('ValueProcessor', () => {
   let processor: ValueProcessor;

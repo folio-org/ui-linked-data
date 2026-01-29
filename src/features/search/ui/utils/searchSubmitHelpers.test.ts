@@ -1,5 +1,5 @@
-import { buildSearchUrlParams, haveSearchValuesChanged } from './searchSubmitHelpers';
 import { SearchParam } from '../../core';
+import { buildSearchUrlParams, haveSearchValuesChanged } from './searchSubmitHelpers';
 
 describe('searchSubmitHelpers', () => {
   describe('buildSearchUrlParams', () => {

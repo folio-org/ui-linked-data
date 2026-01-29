@@ -1,8 +1,10 @@
 import { renderHook } from '@testing-library/react';
-import { useSaveRecordWarning } from '@common/hooks/useSaveRecordWarning';
-import { useUIStore, useInputsStore } from '@src/store';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { useSaveRecordWarning } from '@/common/hooks/useSaveRecordWarning';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useUIStore } from '@/store';
 
 describe('useSaveRecordWarning', () => {
   const mockSetHasShownAuthorityWarning = jest.fn();

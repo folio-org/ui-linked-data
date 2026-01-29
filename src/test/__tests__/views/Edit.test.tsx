@@ -1,16 +1,19 @@
-import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { getProfiles } from '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fetchRecord, clearRecordState } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { act, render, screen } from '@testing-library/react';
 import * as Router from 'react-router-dom';
-import * as BibframeConstants from '@src/common/constants/bibframe.constants';
-import * as NavigationHelper from '@common/helpers/navigation.helper';
-import { Edit } from '@views';
-import { useProfileStore } from '@src/store/stores/profile';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useUIStore } from '@src/store';
-import { PROFILE_BFIDS } from '@src/common/constants/bibframe.constants';
+
+import { act, render, screen } from '@testing-library/react';
+
+import * as BibframeConstants from '@/common/constants/bibframe.constants';
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import * as NavigationHelper from '@/common/helpers/navigation.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getProfiles } from '@/test/__mocks__/common/hooks/useConfig.mock';
+import { clearRecordState, fetchRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { Edit } from '@/views';
+
+import { useUIStore } from '@/store';
+import { useProfileStore } from '@/store/stores/profile';
 
 const monograph = {
   id: 'id',
@@ -39,7 +42,7 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('Edit', () => {
   const testInstanceUri = 'testInstanceUri';

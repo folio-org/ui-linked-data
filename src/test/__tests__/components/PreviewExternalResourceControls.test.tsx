@@ -1,13 +1,15 @@
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
+import * as ReactRouterDom from 'react-router-dom';
+
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
-import * as ReactRouterDom from 'react-router-dom';
-import * as RecordsApi from '@common/api/records.api';
+
+import * as RecordsApi from '@/common/api/records.api';
+import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
 
 const navigate = jest.fn();
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

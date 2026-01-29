@@ -1,6 +1,7 @@
-import { GROUP_BY_LEVEL } from '@common/constants/bibframe.constants';
+import { GROUP_BY_LEVEL } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType, UI_CONTROLS_LIST } from '@/common/constants/uiControls.constants';
+
 import { hasChildEntry } from './schema.helper';
-import { AdvancedFieldType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
 
 export const checkRepeatableGroup = ({
   schema,
@@ -32,17 +33,11 @@ export const checkRepeatableGroup = ({
   return isRepeatableGroup;
 };
 
-export const checkRepeatableSubcomponent = ({
-  entry,
-  isDisabled,
-}: {
-  entry: SchemaEntry;
-  isDisabled: boolean;
-}) => {
+export const checkRepeatableSubcomponent = ({ entry, isDisabled }: { entry: SchemaEntry; isDisabled: boolean }) => {
   const { type, constraints } = entry;
   const isRepeatable =
     !isDisabled &&
-    (constraints?.repeatable !== false || typeof constraints === 'undefined' ) &&
+    (constraints?.repeatable !== false || typeof constraints === 'undefined') &&
     // remove this condition after updating the profile
     type === AdvancedFieldType.literal;
 

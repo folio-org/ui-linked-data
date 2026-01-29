@@ -1,10 +1,14 @@
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { LegacySearchResultList } from '@/features/search/ui';
+
+import { render, screen } from '@testing-library/react';
+
+import '@/test/__mocks__/common/hooks/useConfig.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useUIStore } from '@/store';
+
+import { LegacySearchResultList } from '@/features/search/ui';
 import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
+
+import { useSearchStore, useUIStore } from '@/store';
 
 describe('SearchResultList', () => {
   beforeEach(() => {

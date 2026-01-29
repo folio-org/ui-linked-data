@@ -1,10 +1,13 @@
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { Prompt } from '@components/Prompt';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useConfigStore } from '@src/store';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { Prompt } from '@/components/Prompt';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useConfigStore } from '@/store';
 
 const mockedUseBlocker = {
   reset: jest.fn(),
@@ -19,7 +22,7 @@ const removeEventListener = jest.fn();
 
 const mockedContainer = document.createElement('div');
 
-jest.mock('@common/hooks/useModalControls', () => ({
+jest.mock('@/common/hooks/useModalControls', () => ({
   useModalControls: () => ({
     isModalOpen: true,
     setIsModalOpen,
@@ -37,10 +40,10 @@ jest.mock('react-router-dom', () => ({
   },
 }));
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
-jest.mock('@common/helpers/dom.helper', () => ({
-  ...jest.requireActual('@common/helpers/dom.helper'),
+jest.mock('@/common/helpers/dom.helper', () => ({
+  ...jest.requireActual('@/common/helpers/dom.helper'),
   getWrapperAsWebComponent: () => ({
     dispatchEvent,
     addEventListener,

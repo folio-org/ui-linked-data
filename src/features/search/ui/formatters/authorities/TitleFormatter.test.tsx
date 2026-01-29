@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+
 import { TitleFormatter } from './TitleFormatter';
 
 describe('TitleFormatter', () => {

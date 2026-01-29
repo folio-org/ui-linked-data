@@ -1,6 +1,6 @@
-export * from './transformSearchResponse';
+import { TransformSearchResponseParams, transformSearchResponse } from './transformSearchResponse';
 
-import { transformSearchResponse, TransformSearchResponseParams } from './transformSearchResponse';
+export * from './transformSearchResponse';
 
 /**
  * @deprecated Use transformer classes (StandardResponseTransformer, HubResponseTransformer, etc.) instead.

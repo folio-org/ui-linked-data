@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
-import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { ModalDeleteRecord } from '@/components/ModalDeleteRecord';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 describe('ModalCloseRecord', () => {
   const toggleIsOpen = jest.fn();

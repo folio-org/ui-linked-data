@@ -1,11 +1,14 @@
-import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { fireEvent, render } from '@testing-library/react';
-import { setInitialGlobalState, StoreWithState } from '@src/test/__mocks__/store';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { Comparison } from '@components/Comparison';
 import { ReactNode } from 'react';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
-import { useInputsStore, useSearchStore, useUIStore } from '@src/store';
+
+import { fireEvent, render } from '@testing-library/react';
+
+import { Comparison } from '@/components/Comparison';
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { StoreWithState, setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {

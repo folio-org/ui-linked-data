@@ -1,11 +1,14 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { renderHook } from '@testing-library/react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { dispatchEventWrapper } from '@common/helpers/dom.helper';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import * as domHelper from '@common/helpers/dom.helper';
-import { useConfigStore, useStatusStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { ROUTES } from '@common/constants/routes.constants';
+
+import { ROUTES } from '@/common/constants/routes.constants';
+import { dispatchEventWrapper } from '@/common/helpers/dom.helper';
+import * as domHelper from '@/common/helpers/dom.helper';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useConfigStore, useStatusStore } from '@/store';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -13,7 +16,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(),
 }));
 
-jest.mock('@common/helpers/dom.helper', () => ({
+jest.mock('@/common/helpers/dom.helper', () => ({
   dispatchEventWrapper: jest.fn(),
 }));
 
@@ -22,7 +25,7 @@ const mockEvents = {
   BLOCK_NAVIGATION: 'mockBlock',
   UNBLOCK_NAVIGATION: 'mockUnblock',
 };
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('useContainerEvents', () => {
   const renderUseContainerEventsHook = (isRecordEdited: boolean) => {

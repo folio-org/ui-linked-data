@@ -1,4 +1,5 @@
-import { getHtmlIdForEntry } from '@common/helpers/schema.helper';
+import { getHtmlIdForEntry } from '@/common/helpers/schema.helper';
+
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 
 export class EntryPropertiesGeneratorService implements IEntryPropertiesGeneratorService {

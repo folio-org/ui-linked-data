@@ -1,8 +1,11 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { logger } from '@/common/services/logger';
-import { getModalConfig, getButtonLabel } from '../configs/modalRegistry';
+
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
+import { getButtonLabel, getModalConfig } from '../configs/modalRegistry';
 
 interface UseComplexLookupFieldParams {
   value?: UserValueContents[];

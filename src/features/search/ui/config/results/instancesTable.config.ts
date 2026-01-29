@@ -1,4 +1,4 @@
-import { InstanceTitleFormatter, InstanceEditCtlFormatter, InstanceSelectCtlFormatter } from '../../formatters';
+import { InstanceEditCtlFormatter, InstanceSelectCtlFormatter, InstanceTitleFormatter } from '../../formatters';
 
 export const instancesTableConfig: SearchResultsTableConfig = {
   columns: {

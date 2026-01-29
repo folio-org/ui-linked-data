@@ -1,9 +1,11 @@
-import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ITitledPreview, TitledPreview } from '@components/Preview/TitledPreview';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+import { fireEvent, render } from '@testing-library/react';
+
+import { ITitledPreview, TitledPreview } from '@/components/Preview/TitledPreview';
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('TitledPreview', () => {
   const defaultProps = {

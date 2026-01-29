@@ -1,7 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { SchemaGeneratorService } from '@common/services/schema';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { DEFAULT_INACTIVE_SETTINGS } from '@common/constants/profileSettings.constants';
+
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { SchemaGeneratorService } from '@/common/services/schema';
+
 import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 
 jest.mock('uuid');

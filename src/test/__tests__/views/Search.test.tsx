@@ -1,15 +1,18 @@
-import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useUIStore } from '@/store';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import * as BuildConstants from '@/common/constants/build.constants';
 import * as FeatureConstants from '@/common/constants/feature.constants';
-import { Search } from '@/views';
-import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { Search } from '@/views';
+
+import { useSearchStore, useUIStore } from '@/store';
 
 const mockIsEmbeddedMode = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');
 const mockIsNewSearchEnabled = getMockedImportedConstant(FeatureConstants, 'IS_NEW_SEARCH_ENABLED');

@@ -1,5 +1,6 @@
-import { useStatusState } from '@src/store';
 import { useParams } from 'react-router-dom';
+
+import { useStatusState } from '@/store';
 
 export const useRecordStatus = () => {
   const { lastSavedRecordId } = useStatusState(['lastSavedRecordId']);

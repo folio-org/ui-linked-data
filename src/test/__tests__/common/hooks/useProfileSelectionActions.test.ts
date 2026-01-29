@@ -1,40 +1,42 @@
-import { renderHook, act } from '@testing-library/react';
-import { useProfileSelectionActions } from '@common/hooks/useProfileSelectionActions';
-import { savePreferredProfile, deletePreferredProfile } from '@common/api/profiles.api';
-import { generatePageURL } from '@common/helpers/navigation.helper';
-import { getProfileNameById, createUpdatedPreferredProfiles } from '@common/helpers/profileActions.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useNavigationState, useStatusState, useProfileState, useLoadingState } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { StatusType } from '@common/constants/status.constants';
-import { ROUTES } from '@common/constants/routes.constants';
+import { act, renderHook } from '@testing-library/react';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { deletePreferredProfile, savePreferredProfile } from '@/common/api/profiles.api';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { generatePageURL } from '@/common/helpers/navigation.helper';
+import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useProfileSelectionActions } from '@/common/hooks/useProfileSelectionActions';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
+
+jest.mock('@/common/api/profiles.api', () => ({
   savePreferredProfile: jest.fn(),
   deletePreferredProfile: jest.fn(),
 }));
 
-jest.mock('@common/helpers/navigation.helper', () => ({
+jest.mock('@/common/helpers/navigation.helper', () => ({
   generatePageURL: jest.fn(),
 }));
 
-jest.mock('@common/hooks/useNavigateToEditPage', () => ({
+jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: jest.fn(),
 }));
 
-jest.mock('@common/hooks/useRecordControls', () => ({
+jest.mock('@/common/hooks/useRecordControls', () => ({
   useRecordControls: jest.fn(),
 }));
 
-jest.mock('@common/services/userNotification', () => ({
+jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn().mockReturnValue('mocked-message'),
   },
 }));
 
-jest.mock('@common/helpers/profileActions.helper', () => ({
+jest.mock('@/common/helpers/profileActions.helper', () => ({
   getProfileNameById: jest.fn(),
   createUpdatedPreferredProfiles: jest.fn(),
 }));

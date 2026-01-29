@@ -1,8 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { Search } from './Search';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore } from '@/store';
+
 import { SearchTypeConfig } from '@/features/search/core/types';
+
+import { useSearchStore } from '@/store';
+
+import { Search } from './Search';
 
 const mockConfig = {
   id: 'resources',

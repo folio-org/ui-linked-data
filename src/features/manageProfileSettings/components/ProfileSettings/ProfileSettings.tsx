@@ -1,13 +1,17 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useManageProfileSettingsState, useLoadingState, useStatusState } from '@/store';
-import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
-import { UserNotificationFactory } from '@/common/services/userNotification';
+
 import { StatusType } from '@/common/constants/status.constants';
 import { useLoadProfile } from '@/common/hooks/useLoadProfile';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
+
+import { useLoadingState, useManageProfileSettingsState, useStatusState } from '@/store';
+
 import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
+
 import './ProfileSettings.scss';
 
 export const ProfileSettings = () => {
@@ -63,7 +67,9 @@ export const ProfileSettings = () => {
       <div className="settings-sorting">
         <div className="unused-settings">
           <h4>
-            <span className="title"><FormattedMessage id="ld.unusedComponents" /></span>
+            <span className="title">
+              <FormattedMessage id="ld.unusedComponents" />
+            </span>
             (0)
           </h4>
           <p>
@@ -75,7 +81,9 @@ export const ProfileSettings = () => {
         </div>
         <div className="active-settings">
           <h4>
-            <span className="title"><FormattedMessage id="ld.selectedComponents" /></span>
+            <span className="title">
+              <FormattedMessage id="ld.selectedComponents" />
+            </span>
             (0)
           </h4>
           <p>

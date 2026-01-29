@@ -1,7 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useManageProfileSettingsState, useUIState } from '@/store';
+
 import { ManageProfileSettingsControlPane } from './ManageProfileSettingsControlPane';
 
 describe('ManageProfileSettingsControlPane', () => {

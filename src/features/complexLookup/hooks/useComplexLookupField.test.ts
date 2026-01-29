@@ -1,7 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
-import { useComplexLookupField } from './useComplexLookupField';
+import { act, renderHook } from '@testing-library/react';
+
 import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
 import * as modalRegistry from '../configs/modalRegistry';
+import { useComplexLookupField } from './useComplexLookupField';
 
 jest.mock('@/common/services/logger', () => ({
   logger: {

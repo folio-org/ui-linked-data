@@ -1,11 +1,11 @@
-import { getLabelId, getWarningByProfileNames, isProfilePreferred } from '@common/helpers/profileSelection.helper';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as BibframeConstants from '@common/constants/bibframe.constants';
+import * as BibframeConstants from '@/common/constants/bibframe.constants';
+import { getLabelId, getWarningByProfileNames, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 const mockBibframeConstants = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
 mockBibframeConstants({ WORK: 'work_URL', INSTANCE: 'instance_URL' });
 
-jest.mock('@src/configs', () => ({
+jest.mock('@/configs', () => ({
   profileWarningsByName: {
     work_URL: {
       'Serials Work': {
@@ -260,7 +260,7 @@ describe('profileSelection.helper', () => {
 
     it('handles string and number ID comparison correctly', () => {
       const profiles = [{ id: 123, name: 'Test', resourceType: 'work_URL' }] as ProfileDTO[];
-      
+
       const resultWithStringId = isProfilePreferred({
         profileId: '123',
         preferredProfiles: profiles,

@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { ServicesContext } from '@src/contexts';
+
+import { ServicesContext } from '@/contexts';
 
 export const useServicesContext = () => {
   return useContext(ServicesContext);

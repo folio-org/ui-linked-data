@@ -1,5 +1,6 @@
-import { ResourceType } from '@/common/constants/record.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ResourceType } from '@/common/constants/record.constants';
+
 import { type ResourceTypeRegistry } from './resourceType.types';
 
 export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {

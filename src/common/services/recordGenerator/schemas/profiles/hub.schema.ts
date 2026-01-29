@@ -1,10 +1,11 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+
 import {
   contributorProperties,
+  linkAndTermProperties,
   standardTitleProperties,
   variantTitleProperties,
-  linkAndTermProperties,
 } from '../common/propertyDefinitions';
 import { createArrayObjectProperty, createObjectProperty } from '../common/schemaBuilders';
 

@@ -1,8 +1,8 @@
-import * as PageScrollingHelper from '@common/helpers/pageScrolling.helper';
-import * as BuildConstants from '@common/constants/build.constants';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import * as BuildConstants from '@/common/constants/build.constants';
+import * as PageScrollingHelper from '@/common/helpers/pageScrolling.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('pageScrolling.helper', () => {
   const mockIsEmbeddedModeConstant = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');

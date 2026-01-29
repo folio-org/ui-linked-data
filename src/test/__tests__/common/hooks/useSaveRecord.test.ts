@@ -1,8 +1,11 @@
-import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { useSaveRecord } from '@common/hooks/useSaveRecord';
-import { useStatusStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+import { renderHook } from '@testing-library/react';
+
+import { useSaveRecord } from '@/common/hooks/useSaveRecord';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useStatusStore } from '@/store';
 
 const mockSaveRecord = jest.fn();
 const mockOpenModal = jest.fn();
@@ -12,19 +15,19 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-jest.mock('@common/hooks/useRecordStatus', () => ({
+jest.mock('@/common/hooks/useRecordStatus', () => ({
   useRecordStatus: () => ({
     hasBeenSaved: false,
   }),
 }));
 
-jest.mock('@common/hooks/useRecordControls', () => ({
+jest.mock('@/common/hooks/useRecordControls', () => ({
   useRecordControls: () => ({
     saveRecord: mockSaveRecord,
   }),
 }));
 
-jest.mock('@common/hooks/useModalControls', () => ({
+jest.mock('@/common/hooks/useModalControls', () => ({
   useModalControls: () => ({
     isModalOpen: false,
     openModal: mockOpenModal,

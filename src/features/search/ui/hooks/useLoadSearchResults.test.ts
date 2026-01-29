@@ -1,6 +1,9 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useLoadingStateStore, useSearchStore } from '@/store';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useLoadingStateStore, useSearchStore } from '@/store';
+
 import { useSearchContextLegacy } from '../providers';
 import { useLoadSearchResults } from './useLoadSearchResults';
 

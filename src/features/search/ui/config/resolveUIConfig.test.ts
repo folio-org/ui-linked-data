@@ -1,4 +1,5 @@
 import type { SearchTypeUIConfig } from '../types';
+import { getDefaultUISegment, getUIRegistryKey, resolveUIConfig } from './resolveUIConfig';
 
 const mockSearchUIRegistry = {
   authorities: {
@@ -23,8 +24,6 @@ const mockSearchUIRegistry = {
 jest.mock('./searchUIRegistry', () => ({
   searchUIRegistry: mockSearchUIRegistry,
 }));
-
-import { resolveUIConfig, getUIRegistryKey, getDefaultUISegment } from './resolveUIConfig';
 
 describe('getUIRegistryKey', () => {
   it('returns the segment itself when it exists in registry', () => {

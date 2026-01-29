@@ -1,5 +1,6 @@
-import { Input } from '@components/Input';
 import { FormattedMessage } from 'react-intl';
+
+import { Input } from '@/components/Input';
 
 export const ImportModeUrl = () => {
   return (

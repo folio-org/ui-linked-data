@@ -1,21 +1,28 @@
 import { ChangeEvent, FC, FormEventHandler, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useSearchParams } from 'react-router-dom';
+
 import classNames from 'classnames';
-import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@/common/constants/search.constants';
+
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { getSearchPlaceholderLegacy } from '@/features/search/ui';
+import { DEFAULT_FACET_BY_SEGMENT, SearchIdentifiers } from '@/common/constants/search.constants';
+import { Announcement } from '@/components/Announcement';
 import { Button, ButtonType } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Select, type SelectValue } from '@/components/Select';
 import { Textarea } from '@/components/Textarea';
-import { Announcement } from '@/components/Announcement';
+
+import { getSearchPlaceholderLegacy } from '@/features/search/ui';
+
 import { useInputsState, useSearchState, useUIState } from '@/store';
-import { SearchSegments } from './SearchSegments';
+
 import CaretDown from '@/assets/caret-down.svg?react';
 import XInCircle from '@/assets/x-in-circle.svg?react';
+
 import { useSearchContextLegacy } from '../../../providers';
 import { SearchFilters } from '../../SearchFilters';
+import { SearchSegments } from './SearchSegments';
+
 import './SearchControls.scss';
 
 type Props = {

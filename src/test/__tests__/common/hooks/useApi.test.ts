@@ -1,13 +1,15 @@
 import { act, renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import BaseApi from '@common/api/base.api';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { useApi } from '@common/hooks/useApi';
-import { useLoadingState, useStatusState } from '@src/store';
 
-jest.mock('@common/api/base.api');
-jest.mock('@common/services/userNotification', () => ({
+import BaseApi from '@/common/api/base.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { useApi } from '@/common/hooks/useApi';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useLoadingState, useStatusState } from '@/store';
+
+jest.mock('@/common/api/base.api');
+jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn(),
   },

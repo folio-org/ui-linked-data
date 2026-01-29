@@ -1,6 +1,14 @@
-import { renderHook, act } from '@testing-library/react';
 import { ChangeEvent } from 'react';
+
+import { act, renderHook } from '@testing-library/react';
+
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import {
+  MockServicesProvider,
+  selectedEntriesService as mockSelectedEntriesService,
+} from '@/test/__mocks__/providers/ServicesProvider.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { __MOCK_URI_CHANGE_WHEN_IMPLEMENTING } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   generateEmptyValueUuid,
@@ -8,12 +16,9 @@ import {
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
 } from '@/features/complexLookup/utils/complexLookup.helper';
-import {
-  MockServicesProvider,
-  selectedEntriesService as mockSelectedEntriesService,
-} from '@/test/__mocks__/providers/ServicesProvider.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useInputsStore, useStatusStore } from '@/store';
+
 import { useComplexLookup } from './useComplexLookup';
 import { useComplexLookupValidation } from './useComplexLookupValidation';
 import { useMarcAssignment } from './useMarcAssignment';

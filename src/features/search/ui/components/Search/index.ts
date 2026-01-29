@@ -1,24 +1,25 @@
-// Legacy
-export { Search as LegacySearch } from './legacy/Search.legacy';
-
 // New compound components
-import { Search as SearchRoot } from './Search';
+import type { FC } from 'react';
+
 import type { SearchProviderProps as SearchRootProps } from '../../types/provider.types';
 import { SearchContent as Content, SearchContentContainer as ContentContainer } from '../SearchContent';
 import { SearchControlPane as ControlPane } from '../SearchControlPane';
-import { RootControls } from '../SearchControls/RootControls';
-import { Segment } from '../SearchControls/Segment';
-import { SegmentGroup } from '../SearchControls/SegmentGroup';
-import { SegmentContent } from '../SearchControls/SegmentContent';
-import { QueryInput } from '../SearchControls/QueryInput';
-import { SearchBySelect } from '../SearchControls/SearchBySelect';
-import { SubmitButton } from '../SearchControls/SubmitButton';
-import { ResetButton } from '../SearchControls/ResetButton';
 import { InputsWrapper } from '../SearchControls/InputsWrapper';
 import { MetaControls } from '../SearchControls/MetaControls';
+import { QueryInput } from '../SearchControls/QueryInput';
+import { ResetButton } from '../SearchControls/ResetButton';
+import { RootControls } from '../SearchControls/RootControls';
+import { SearchBySelect } from '../SearchControls/SearchBySelect';
+import { Segment } from '../SearchControls/Segment';
+import { SegmentContent } from '../SearchControls/SegmentContent';
+import { SegmentGroup } from '../SearchControls/SegmentGroup';
 import { SourceSelector } from '../SearchControls/SourceSelector';
+import { SubmitButton } from '../SearchControls/SubmitButton';
 import { SearchResults as Results } from '../SearchResults';
-import type { FC } from 'react';
+import { Search as SearchRoot } from './Search';
+
+// Legacy
+export { Search as LegacySearch } from './legacy/Search.legacy';
 
 const Controls = Object.assign(RootControls, {
   // Props-based segment components

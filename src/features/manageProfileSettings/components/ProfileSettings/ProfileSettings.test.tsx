@@ -1,13 +1,17 @@
-import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useLoadingState, useManageProfileSettingsState, useStatusStore } from '@/store';
-import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
-import { ProfileSettings } from './ProfileSettings';
-import { StatusType } from '@/common/constants/status.constants';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+
+import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useLoadingState, useManageProfileSettingsState, useStatusStore } from '@/store';
+
+import { ProfileSettings } from './ProfileSettings';
+
+jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),

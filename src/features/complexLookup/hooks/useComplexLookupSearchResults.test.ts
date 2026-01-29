@@ -1,8 +1,12 @@
 import { renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchContextLegacy } from '@/features/search/ui';
+
 import { Row } from '@/components/Table';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useSearchContextLegacy } from '@/features/search/ui';
+
 import { useSearchStore } from '@/store';
+
 import { ComplexLookupSearchResultsProps } from '../components/ComplexLookupSearchResults/ComplexLookupSearchResults';
 import { useComplexLookupSearchResults } from './useComplexLookupSearchResults';
 

@@ -1,12 +1,14 @@
 import { FC } from 'react';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
-import { Dropdown } from '@components/Dropdown';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import Edit16 from '@src/assets/edit-16.svg?react';
-import Duplicate16 from '@src/assets/duplicate-16.svg?react';
-import Plus16 from '@src/assets/plus-16.svg?react';
+
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Dropdown } from '@/components/Dropdown';
+
+import Duplicate16 from '@/assets/duplicate-16.svg?react';
+import Edit16 from '@/assets/edit-16.svg?react';
+import Plus16 from '@/assets/plus-16.svg?react';
 
 type Props = {
   referenceId?: string | null;

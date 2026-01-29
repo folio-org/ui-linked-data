@@ -1,8 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAuthoritiesSegmentData } from './useAuthoritiesSegmentData';
-import { useSearchState, useLoadingState } from '@/store';
-import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useLoadingState, useSearchState } from '@/store';
+
+import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
+import { useAuthoritiesSegmentData } from './useAuthoritiesSegmentData';
 
 jest.mock('@/common/api/base.api');
 jest.mock('./useAuthoritiesDataQueries');

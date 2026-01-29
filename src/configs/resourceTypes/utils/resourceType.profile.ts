@@ -1,4 +1,4 @@
-import { getResourceTypeConfig, type ResourceTypeInput } from './resourceType.accessors';
+import { type ResourceTypeInput, getResourceTypeConfig } from './resourceType.accessors';
 
 /**
  * Create the root entry for a resource type's profile.

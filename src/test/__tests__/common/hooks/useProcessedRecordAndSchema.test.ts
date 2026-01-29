@@ -1,8 +1,10 @@
-import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { useProcessedRecordAndSchema } from '@common/hooks/useProcessedRecordAndSchema.hook';
 import { act, renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore, useStatusStore } from '@src/store';
+
+import { useProcessedRecordAndSchema } from '@/common/hooks/useProcessedRecordAndSchema.hook';
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useStatusStore } from '@/store';
 
 describe('useProcessedRecordAndSchema', () => {
   const mockSetRecord = jest.fn();

@@ -1,6 +1,9 @@
 import { renderHook } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
 import { useComplexLookupModalState } from './useComplexLookupModalState';
 
 describe('useComplexLookupModalState', () => {

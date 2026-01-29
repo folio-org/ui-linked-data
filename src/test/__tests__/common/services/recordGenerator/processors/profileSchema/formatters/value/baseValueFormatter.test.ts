@@ -1,7 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { BaseValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/baseValueFormatter';
-import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { BaseValueFormatter } from '@/common/services/recordGenerator/processors/profileSchema/formatters/value/baseValueFormatter';
+import { UserValueContents } from '@/common/services/recordGenerator/processors/value/valueProcessor.interface';
 
 class TestValueFormatter extends BaseValueFormatter {
   formatSimple(value: UserValueContents) {

@@ -1,10 +1,13 @@
-import { renderHook, act } from '@testing-library/react';
-import { useProfileState } from '@/store';
-import { fetchPreferredProfiles } from '@common/api/profiles.api';
+import { act, renderHook } from '@testing-library/react';
+
+import { fetchPreferredProfiles } from '@/common/api/profiles.api';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useProfileState } from '@/store';
+
 import { usePreferredProfiles } from './usePreferredProfiles';
 
-jest.mock('@common/api/profiles.api', () => ({
+jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
 }));
 

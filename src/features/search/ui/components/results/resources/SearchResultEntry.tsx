@@ -1,21 +1,26 @@
-import { FC, useState, useMemo, useCallback } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { logger } from '@/common/services/logger';
-import { WorkDetailsCard } from '@/components/WorkDetailsCard';
-import { Table } from '@/components/Table';
-import { Button, ButtonType } from '@/components/Button';
-import { formatItemSearchInstanceListData } from '@/features/search/core';
-import { ResourceType } from '@/common/constants/record.constants';
-import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import CommentIcon from '@/assets/comment-lines-12.svg?react';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@/common/services/userNotification';
-import { StatusType } from '@/common/constants/status.constants';
-import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-import { useTableFormatter } from '@/features/search/ui/hooks';
+import { ResourceType } from '@/common/constants/record.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { Button, ButtonType } from '@/components/Button';
+import { Table } from '@/components/Table';
+import { WorkDetailsCard } from '@/components/WorkDetailsCard';
+
+import { formatItemSearchInstanceListData } from '@/features/search/core';
 import { instancesTableConfig } from '@/features/search/ui/config';
+import { useTableFormatter } from '@/features/search/ui/hooks';
+
+import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
+
+import CommentIcon from '@/assets/comment-lines-12.svg?react';
+
 import './SearchResultEntry.scss';
 
 type SearchResultEntry = {

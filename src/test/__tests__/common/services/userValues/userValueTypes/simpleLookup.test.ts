@@ -1,11 +1,12 @@
 import { waitFor } from '@testing-library/react';
-import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
-import { SimpleLookupUserValueService } from '@common/services/userValues/userValueTypes';
-import { IUserValueType } from '@common/services/userValues/userValueTypes/userValueType.interface';
-import * as BibframeConstants from '@common/constants/bibframeMapping.constants';
-import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as CommonHelper from '@common/helpers/common.helper';
+
+import * as BibframeConstants from '@/common/constants/bibframeMapping.constants';
+import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@/common/constants/uiControls.constants';
+import * as CommonHelper from '@/common/helpers/common.helper';
+import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
+import { SimpleLookupUserValueService } from '@/common/services/userValues/userValueTypes';
+import { IUserValueType } from '@/common/services/userValues/userValueTypes/userValueType.interface';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 const mockBfliteUris = getMockedImportedConstant(BibframeConstants, 'BFLITE_URIS');
 mockBfliteUris({
@@ -42,7 +43,7 @@ mockDefaultGroupValues({
   },
 });
 
-jest.mock('@common/helpers/lookupOptions.helper', () => ({
+jest.mock('@/common/helpers/lookupOptions.helper', () => ({
   filterLookupOptionsByMappedValue: jest.fn(),
   formatLookupOptions: jest.fn(),
 }));

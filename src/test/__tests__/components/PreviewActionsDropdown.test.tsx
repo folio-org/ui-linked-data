@@ -1,7 +1,9 @@
-import { onCreateNewResource } from '@src/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
-import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { PreviewActionsDropdown } from '@components/PreviewActionsDropdown';
+
+import { fireEvent, render } from '@testing-library/react';
+
+import { PreviewActionsDropdown } from '@/components/PreviewActionsDropdown';
+import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
 
 describe('PreviewActionsDropdown', () => {
   const entityType = 'mockEntityType';

@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { MetaControls } from './MetaControls';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useUIStore } from '@/store';
+
+import { MetaControls } from './MetaControls';
 
 const mockOnReset = jest.fn();
 

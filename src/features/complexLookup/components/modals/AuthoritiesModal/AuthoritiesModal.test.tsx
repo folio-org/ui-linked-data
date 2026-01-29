@@ -1,17 +1,21 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { AuthoritiesModal } from './AuthoritiesModal';
-import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
-import {
-  useUIState,
-  useMarcPreviewState,
-  useProfileState,
-  useInputsState,
-  useStatusState,
-  useLoadingState,
-  useComplexLookupState,
-} from '@/store';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
+
+import {
+  useComplexLookupState,
+  useInputsState,
+  useLoadingState,
+  useMarcPreviewState,
+  useProfileState,
+  useStatusState,
+  useUIState,
+} from '@/store';
+
+import { AuthoritiesModal } from './AuthoritiesModal';
 
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),

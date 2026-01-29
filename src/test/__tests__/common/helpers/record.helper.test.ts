@@ -1,9 +1,9 @@
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as RecordHelper from '@common/helpers/record.helper';
-import * as BibframeConstants from '@src/common/constants/bibframe.constants';
-import * as BibframeMappingConstants from '@src/common/constants/bibframeMapping.constants';
+import * as BibframeConstants from '@/common/constants/bibframe.constants';
+import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
 import { ResourceType } from '@/common/constants/record.constants';
+import * as RecordHelper from '@/common/helpers/record.helper';
 import * as ResourceTypeMappers from '@/configs/resourceTypes/utils/resourceType.mappers';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 describe('record.helper', () => {
   const mockBlocksBFLiteConstant = getMockedImportedConstant(BibframeMappingConstants, 'BLOCKS_BFLITE');

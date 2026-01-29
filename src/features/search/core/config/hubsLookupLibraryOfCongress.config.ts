@@ -1,9 +1,11 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+
 import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
-import type { SearchTypeConfig } from '../types';
+
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
 import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
+import type { SearchTypeConfig } from '../types';
 
 /**
  * Hubs Library Of Congress Configuration for Complex Lookup modal (Atomic)

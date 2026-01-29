@@ -1,12 +1,14 @@
-import { openModal } from '@src/test/__mocks__/common/hooks/useModalControls.mock';
-import { checkButtonDisabledState } from '@src/test/__mocks__/common/helpers/recordControls.helper.mock';
-import '@src/test/__mocks__/common/hooks/useRoutePathPattern.mock';
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/components/Modal.mock';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { DeleteRecord } from '@components/DeleteRecord';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore } from '@src/store';
+
+import { DeleteRecord } from '@/components/DeleteRecord';
+import { checkButtonDisabledState } from '@/test/__mocks__/common/helpers/recordControls.helper.mock';
+import { openModal } from '@/test/__mocks__/common/hooks/useModalControls.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/common/hooks/useRoutePathPattern.mock';
+import '@/test/__mocks__/components/Modal.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore } from '@/store';
 
 describe('DeleteRecord', () => {
   const mockedRecord = {

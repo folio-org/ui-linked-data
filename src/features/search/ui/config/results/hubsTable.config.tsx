@@ -1,4 +1,4 @@
-import { HubLinkFormatter, HubSourceFormatter, HubActionFormatter } from '@/features/search/ui/formatters';
+import { HubActionFormatter, HubLinkFormatter, HubSourceFormatter } from '@/features/search/ui/formatters';
 
 export const hubsTableConfig: SearchResultsTableConfig = {
   columns: {

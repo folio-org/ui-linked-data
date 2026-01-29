@@ -1,7 +1,10 @@
 import { FC } from 'react';
+
 import classNames from 'classnames';
-import { useManageProfileSettingsState, useUIState } from '@/store';
+
 import { Button, ButtonType } from '@/components/Button';
+
+import { useManageProfileSettingsState, useUIState } from '@/store';
 
 type ResourceProfileProps = {
   profile: ProfileDTO;

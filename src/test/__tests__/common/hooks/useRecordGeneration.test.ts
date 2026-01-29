@@ -1,9 +1,12 @@
-import { recordGeneratorService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
 import * as Router from 'react-router-dom';
+
 import { renderHook } from '@testing-library/react';
-import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore, useProfileStore } from '@src/store';
+
+import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
+import { recordGeneratorService } from '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useProfileStore } from '@/store';
 
 describe('useRecordGeneration', () => {
   it('generates a record using new service', () => {

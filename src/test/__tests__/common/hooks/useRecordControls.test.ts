@@ -1,19 +1,21 @@
 import { renderHook } from '@testing-library/react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import * as recordsApi from '@common/api/records.api';
-import * as recordHelper from '@common/helpers/record.helper';
-import { RecordStatus } from '@common/constants/record.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { BibframeEntities } from '@common/constants/bibframe.constants';
-import { ExternalResourceIdType } from '@common/constants/api.constants';
-import { ROUTES } from '@common/constants/routes.constants';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { PreviewParams } from '@common/hooks/useConfig.hook';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useInputsStore, useStatusStore } from '@src/store';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+import * as recordsApi from '@/common/api/records.api';
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { BibframeEntities } from '@/common/constants/bibframe.constants';
+import { RecordStatus } from '@/common/constants/record.constants';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import * as recordHelper from '@/common/helpers/record.helper';
+import { PreviewParams } from '@/common/hooks/useConfig.hook';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useStatusStore } from '@/store';
+
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -22,14 +24,14 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [new URLSearchParams(), jest.fn()],
 }));
 
-jest.mock('@common/api/records.api', () => ({
+jest.mock('@/common/api/records.api', () => ({
   getRecord: jest.fn(),
   postRecord: jest.fn(),
   putRecord: jest.fn(),
 }));
 
 const mockDispatchUnblockEvent = jest.fn();
-jest.mock('@common/hooks/useContainerEvents', () => ({
+jest.mock('@/common/hooks/useContainerEvents', () => ({
   useContainerEvents: () => ({
     dispatchUnblockEvent: mockDispatchUnblockEvent,
     dispatchNavigateToOriginEventWithFallback: jest.fn(),
@@ -37,20 +39,20 @@ jest.mock('@common/hooks/useContainerEvents', () => ({
 }));
 
 const mockGenerateRecord = jest.fn();
-jest.mock('@common/hooks/useRecordGeneration', () => ({
+jest.mock('@/common/hooks/useRecordGeneration', () => ({
   useRecordGeneration: () => ({
     generateRecord: mockGenerateRecord,
   }),
 }));
 
 const mockGetProfiles = jest.fn();
-jest.mock('@common/hooks/useConfig.hook', () => ({
+jest.mock('@/common/hooks/useConfig.hook', () => ({
   useConfig: () => ({
     getProfiles: mockGetProfiles,
   }),
 }));
 
-jest.mock('@common/services/userNotification', () => ({
+jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn(),
   },

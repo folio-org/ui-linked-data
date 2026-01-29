@@ -1,19 +1,23 @@
 import { FC, memo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '@/components/Modal';
-import { Input } from '@/components/Input';
+import { useSearchParams } from 'react-router-dom';
+
+import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
 import {
   DEFAULT_ADVANCED_SEARCH_QUERY,
   SELECT_IDENTIFIERS,
   SELECT_OPERATORS,
   SELECT_QUALIFIERS,
 } from '@/common/constants/search.constants';
-import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
-import { formatRawQuery, generateSearchParamsState, SearchParam, useFetchSearchData } from '@/features/search/core';
-import { Select } from '@/components/Select';
-import { useSearchState, useUIState } from '@/store';
 import { AriaModalKind } from '@/common/constants/uiElements.constants';
+import { Input } from '@/components/Input';
+import { Modal } from '@/components/Modal';
+import { Select } from '@/components/Select';
+
+import { SearchParam, formatRawQuery, generateSearchParamsState, useFetchSearchData } from '@/features/search/core';
+
+import { useSearchState, useUIState } from '@/store';
+
 import './AdvancedSearchModal.scss';
 
 enum AdvancedSearchInputs {

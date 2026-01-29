@@ -1,10 +1,11 @@
-import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   FiltersGroupCheckType,
   FiltersType,
-  SearchLimiterNamesAuthority,
   References,
+  SearchLimiterNamesAuthority,
 } from '@/common/constants/search.constants';
+
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 
 // TODO: UILD-439 - add the required identifiers when the way to filter the options list is approved
 const EXCLUDED_AUTHORITY_SOURCE_OPTIONS = [] as string[];

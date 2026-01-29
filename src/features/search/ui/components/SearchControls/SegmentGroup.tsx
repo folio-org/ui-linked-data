@@ -1,7 +1,10 @@
 import { FC, ReactNode } from 'react';
+
 import { ButtonGroup } from '@/components/ButtonGroup';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { isParentSegmentActive } from '../../utils/segmentUtils';
+
 import './SegmentGroup.scss';
 
 export interface SegmentGroupProps {

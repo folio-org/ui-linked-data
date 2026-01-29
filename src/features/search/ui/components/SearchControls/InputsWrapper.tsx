@@ -1,7 +1,8 @@
 import { FC, ReactNode } from 'react';
+
 import { useSearchContext } from '../../providers/SearchProvider';
-import { SearchBySelect } from './SearchBySelect';
 import { QueryInput } from './QueryInput';
+import { SearchBySelect } from './SearchBySelect';
 
 interface InputsWrapperProps {
   children?: ReactNode;

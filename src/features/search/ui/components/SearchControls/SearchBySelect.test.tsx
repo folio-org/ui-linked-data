@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { SearchBySelect } from './SearchBySelect';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
+import { SearchBySelect } from './SearchBySelect';
 
 const mockConfig = {
   id: 'test',

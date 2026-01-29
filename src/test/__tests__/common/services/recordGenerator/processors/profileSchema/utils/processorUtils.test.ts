@@ -1,13 +1,13 @@
-import { ProcessorUtils } from '@common/services/recordGenerator/processors/profileSchema/utils/processorUtils';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ProcessorUtils } from '@/common/services/recordGenerator/processors/profileSchema/utils/processorUtils';
+import { UserValueContents } from '@/common/services/recordGenerator/processors/value/valueProcessor.interface';
 import {
+  ExtendedPropertyResult,
   ProcessorResult,
   SimplePropertyResult,
-  ExtendedPropertyResult,
-} from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
-import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+} from '@/common/services/recordGenerator/types/profileSchemaProcessor.types';
 
-jest.mock('@common/constants/bibframeMapping.constants', () => ({
+jest.mock('@/common/constants/bibframeMapping.constants', () => ({
   BFLITE_URIS: {
     LINK: 'link',
     LABEL: 'label',

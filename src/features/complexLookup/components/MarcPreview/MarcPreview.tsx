@@ -1,10 +1,15 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
-import { useMarcPreviewState, useUIState } from '@/store';
-import { ControlPane } from '@/features/search/ui';
-import { MarcContent } from '@/components/MarcContent';
+
 import { Button, ButtonType } from '@/components/Button';
+import { MarcContent } from '@/components/MarcContent';
+
+import { ControlPane } from '@/features/search/ui';
+
+import { useMarcPreviewState, useUIState } from '@/store';
+
 import Times16 from '@/assets/times-16.svg?react';
+
 import './MarcPreview.scss';
 
 interface MarcPreviewProps {

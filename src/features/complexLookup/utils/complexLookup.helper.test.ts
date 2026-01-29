@@ -1,14 +1,15 @@
-import {
-  generateEmptyValueUuid,
-  getLinkedField,
-  updateLinkedFieldValue,
-  getUpdatedSelectedEntries,
-  generateValidationRequestBody,
-} from '@/features/complexLookup/utils/complexLookup.helper';
-import * as ComplexLookupConstants from '@/features/complexLookup/constants/complexLookup.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import * as ComplexLookupConstants from '@/features/complexLookup/constants/complexLookup.constants';
 import { AuthorityValidationTarget } from '@/features/complexLookup/constants/complexLookup.constants';
+import {
+  generateEmptyValueUuid,
+  generateValidationRequestBody,
+  getLinkedField,
+  getUpdatedSelectedEntries,
+  updateLinkedFieldValue,
+} from '@/features/complexLookup/utils/complexLookup.helper';
 
 const mockImportedConstant = getMockedImportedConstant(ComplexLookupConstants, 'COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING');
 mockImportedConstant({

@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { ResetButton } from './ResetButton';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
+import { ResetButton } from './ResetButton';
 
 const mockOnReset = jest.fn();
 

@@ -1,27 +1,30 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+
 import {
-  postRecord,
-  putRecord,
   deleteRecord as deleteRecordRequest,
   getGraphIdByExternalId,
   getRecord,
-} from '@common/api/records.api';
-import { BibframeEntities } from '@common/constants/bibframe.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
-import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
-import { RecordStatus, ResourceType } from '@common/constants/record.constants';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ExternalResourceIdType } from '@common/constants/api.constants';
-import { getFriendlyErrorMessage } from '@common/helpers/api.helper';
-import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
-import { useRecordGeneration } from './useRecordGeneration';
+  postRecord,
+  putRecord,
+} from '@/common/api/records.api';
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { BibframeEntities } from '@/common/constants/bibframe.constants';
+import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
+import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@/common/helpers/record.helper';
+import { PreviewParams, useConfig } from '@/common/hooks/useConfig.hook';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
+
 import { useBackToSearchUri } from './useBackToSearchUri';
 import { useContainerEvents } from './useContainerEvents';
+import { useRecordGeneration } from './useRecordGeneration';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;

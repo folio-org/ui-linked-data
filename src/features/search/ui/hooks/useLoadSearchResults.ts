@@ -1,8 +1,12 @@
 import { useEffect, useRef } from 'react';
+
 import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchIdentifiers } from '@/common/constants/search.constants';
+
 import { removeBackslashes } from '@/features/search/core';
+
 import { useLoadingState, useSearchState } from '@/store';
+
 import { useSearchContextLegacy } from '../providers';
 
 export const useLoadSearchResults = (

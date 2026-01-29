@@ -1,7 +1,10 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react';
+
 import baseApi from '@/common/api/base.api';
+
 import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
 
 jest.mock('@/common/api/base.api');

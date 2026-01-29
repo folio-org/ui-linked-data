@@ -1,11 +1,13 @@
-import { useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+import { type RefObject, useLayoutEffect, useMemo, useRef, useState } from 'react';
+
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import {
   calculateGridTemplate,
   extractColumnWidths,
   getScrollbarWidth,
   measureContentWidths,
-} from '@common/helpers/table.helpers';
+} from '@/common/helpers/table.helpers';
+
 import { type Cell } from '../Table';
 
 type HeaderEntry = [string, Cell];

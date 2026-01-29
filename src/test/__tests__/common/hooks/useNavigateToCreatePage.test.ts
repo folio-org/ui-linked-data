@@ -1,21 +1,23 @@
-import { renderHook, act } from '@testing-library/react';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useProfileSelection } from '@common/hooks/useProfileSelection';
-import { useNavigationState } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
-import * as navigationHelper from '@common/helpers/navigation.helper';
+import { act, renderHook } from '@testing-library/react';
 
-jest.mock('@common/hooks/useNavigateToEditPage', () => ({
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
+import * as navigationHelper from '@/common/helpers/navigation.helper';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useProfileSelection } from '@/common/hooks/useProfileSelection';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useNavigationState } from '@/store';
+
+jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: jest.fn(),
 }));
 
-jest.mock('@common/hooks/useProfileSelection', () => ({
+jest.mock('@/common/hooks/useProfileSelection', () => ({
   useProfileSelection: jest.fn(),
 }));
 
-jest.mock('@common/helpers/navigation.helper', () => ({
+jest.mock('@/common/helpers/navigation.helper', () => ({
   generatePageURL: jest.fn(),
 }));
 

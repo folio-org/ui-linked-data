@@ -1,13 +1,17 @@
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { IntlProvider } from 'react-intl';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
 import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { getCurrentPageNumber } from '@/test/__mocks__/common/hooks/usePagination.mock';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { IntlProvider } from 'react-intl';
-import { ItemSearch, SearchContextLegacy } from '@/features/search/ui';
-import { Edit } from '@views';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useUIStore, useInputsStore } from '@/store';
+import { Edit } from '@/views';
+
+import { ItemSearch, SearchContextLegacy } from '@/features/search/ui';
+
+import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 
 let mockSearchBy = 'lccn';
 let mockQuery = '';

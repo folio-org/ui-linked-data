@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { SaveRecord } from '@components/SaveRecord';
-import { CloseRecord } from '@components/CloseRecord';
+
+import { CloseRecord } from '@/components/CloseRecord';
+import { SaveRecord } from '@/components/SaveRecord';
+
 import './RecordControls.scss';
 
 export const RecordControls = memo(() => {

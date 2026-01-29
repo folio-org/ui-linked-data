@@ -1,10 +1,15 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import { Accordion } from '@/components/Accordion';
+
 import { SearchParam } from '@/features/search/core';
+
 import { useSearchState } from '@/store';
+
 import { useSearchContext } from '../../providers';
 import { SourceOption } from '../../types';
+
 import './SourceSelector.scss';
 
 export type SourceSelectorProps = {

@@ -1,10 +1,14 @@
-import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
-import { useInputsStore, useLoadingStateStore, useSearchStore } from '@/store';
+
+import { renderHook } from '@testing-library/react';
+
+import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { SEARCH_RESULTS_LIMIT, SearchSegment } from '@/common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
-import { SearchQueryParams } from '@/common/constants/routes.constants';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useLoadingStateStore, useSearchStore } from '@/store';
+
 import { useSearchContextLegacy } from '../providers';
 import { useSearch } from './useSearch';
 

@@ -1,7 +1,9 @@
-import { renderHook, act } from '@testing-library/react';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-import { usePagination } from '@common/hooks/usePagination';
-import { useSearchStore } from '@src/store';
+import { act, renderHook } from '@testing-library/react';
+
+import { usePagination } from '@/common/hooks/usePagination';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
+import { useSearchStore } from '@/store';
 
 const setSearchParams = jest.fn();
 

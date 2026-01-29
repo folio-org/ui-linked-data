@@ -1,7 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { useMarcPreviewStore, useUIStore } from '@/store';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchContextLegacy } from '@/features/search/ui';
+
+import { useMarcPreviewStore, useUIStore } from '@/store';
+
 import { MarcPreviewLegacy } from './MarcPreview';
 
 jest.mock('@/features/search/ui/providers');

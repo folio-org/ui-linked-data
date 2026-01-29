@@ -1,4 +1,5 @@
 import { ResourceType } from '@/common/constants/record.constants';
+
 import { RESOURCE_TYPE_REGISTRY } from '../resourceType.config';
 
 /**

@@ -1,7 +1,7 @@
-import { ComplexLookupType } from '../constants/complexLookup.constants';
-import { getModalConfig, getButtonLabel, COMPLEX_LOOKUP_MODAL_REGISTRY } from './modalRegistry';
-import { HubsModal } from '../components/modals/HubsModal';
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
+import { HubsModal } from '../components/modals/HubsModal';
+import { ComplexLookupType } from '../constants/complexLookup.constants';
+import { COMPLEX_LOOKUP_MODAL_REGISTRY, getButtonLabel, getModalConfig } from './modalRegistry';
 
 describe('modalRegistry', () => {
   describe('COMPLEX_LOOKUP_MODAL_REGISTRY', () => {

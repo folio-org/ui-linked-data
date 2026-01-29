@@ -1,10 +1,12 @@
-import { renderHook, act } from '@testing-library/react';
-import { useProfileSelectionState } from '@common/hooks/useProfileSelectionState';
-import { getRecordProfileId } from '@common/helpers/record.helper';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsState } from '@src/store';
+import { act, renderHook } from '@testing-library/react';
 
-jest.mock('@common/helpers/record.helper', () => ({
+import { getRecordProfileId } from '@/common/helpers/record.helper';
+import { useProfileSelectionState } from '@/common/hooks/useProfileSelectionState';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsState } from '@/store';
+
+jest.mock('@/common/helpers/record.helper', () => ({
   getRecordProfileId: jest.fn(),
 }));
 

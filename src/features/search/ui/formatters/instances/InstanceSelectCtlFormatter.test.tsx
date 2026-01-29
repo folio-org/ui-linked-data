@@ -1,6 +1,8 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { InstanceSelectCtlFormatter } from './InstanceSelectCtlFormatter';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import type { Row } from '@/components/Table';
+
+import { InstanceSelectCtlFormatter } from './InstanceSelectCtlFormatter';
 
 describe('InstanceSelectCtlFormatter', () => {
   const formatMessage = jest.fn((descriptor, values) => {

@@ -1,23 +1,24 @@
-import { SIMPLE_LOOKUP_MAPPING, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { BFLITE_URIS, SIMPLE_LOOKUP_MAPPING } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+
 import {
-  stringArrayProperty,
-  standardTitleProperties,
+  assigningSourceProperty,
+  contributorProperties,
   extendedTitleProperties,
-  variantTitleProperties,
   linkAndLabelProperties,
   linkAndTermProperties,
-  contributorProperties,
   nameAndLinkProperties,
-  assigningSourceProperty,
   seriesProperties,
+  standardTitleProperties,
+  stringArrayProperty,
+  variantTitleProperties,
 } from '../common/propertyDefinitions';
 import {
-  createObjectProperty,
   createArrayObjectProperty,
-  createNotesProperty,
-  createStatusProperty,
   createLanguagesProperty,
+  createNotesProperty,
+  createObjectProperty,
+  createStatusProperty,
 } from '../common/schemaBuilders';
 
 export const workRecordSchema: RecordSchema = {

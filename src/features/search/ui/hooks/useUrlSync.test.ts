@@ -1,7 +1,11 @@
-import { renderHook } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
+
+import { renderHook } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
 import type { SearchTypeConfig } from '../../core/types';
 import { useUrlSync } from './useUrlSync';
 

@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { SearchControlPane } from './SearchControlPane';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore, useUIStore } from '@/store';
+
+import { SearchControlPane } from './SearchControlPane';
 
 const mockSetIsSearchPaneCollapsed = jest.fn();
 const mockUseSearchContext = jest.fn();

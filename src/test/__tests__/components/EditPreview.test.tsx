@@ -1,12 +1,15 @@
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { act, render, screen } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { EditPreview } from '@components/EditPreview';
-import { useInputsStore, useUIStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+import { act, render, screen } from '@testing-library/react';
+
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { EditPreview } from '@/components/EditPreview';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useInputsStore, useUIStore } from '@/store';
+
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 const navigate = jest.fn();
 

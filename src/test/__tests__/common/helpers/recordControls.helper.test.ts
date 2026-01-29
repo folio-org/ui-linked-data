@@ -1,4 +1,4 @@
-import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
+import { checkButtonDisabledState } from '@/common/helpers/recordControls.helper';
 
 describe('recordControls.helper', () => {
   test('check button disabled state', () => {

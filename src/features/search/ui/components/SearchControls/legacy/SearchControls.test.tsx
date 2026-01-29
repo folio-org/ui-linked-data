@@ -1,10 +1,15 @@
-import { fireEvent, render, screen } from '@testing-library/react';
 import { useSearchParams } from 'react-router-dom';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import * as FeatureConstants from '@/common/constants/feature.constants';
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import * as FeatureConstants from '@/common/constants/feature.constants';
+
 import { SearchContextLegacy } from '@/features/search/ui';
+
 import { useInputsStore, useSearchStore, useUIStore } from '@/store';
+
 import { SearchControls } from './SearchControls';
 
 const setSearchParams = jest.fn();

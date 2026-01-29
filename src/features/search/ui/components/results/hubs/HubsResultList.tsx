@@ -1,5 +1,7 @@
 import { FC, memo } from 'react';
+
 import { TableFlex } from '@/components/Table';
+
 import { useHubsTableFormatter } from '../../../hooks/useHubsTableFormatter';
 
 interface HubsResultListProps {

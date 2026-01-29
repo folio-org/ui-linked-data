@@ -1,7 +1,11 @@
-import { act, renderHook } from '@testing-library/react';
 import { ChangeEvent, ReactNode } from 'react';
+
+import { act, renderHook } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
 import { useSearchFilters } from './useSearchFilters';
 
 describe('useSearchFilters', () => {

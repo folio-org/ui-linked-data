@@ -1,6 +1,7 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ModalCloseRecord } from '@components/ModalCloseRecord';
-import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { ModalCloseRecord } from '@/components/ModalCloseRecord';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 describe('ModalCloseRecord', () => {
   const onCancel = jest.fn();
@@ -12,14 +13,7 @@ describe('ModalCloseRecord', () => {
   });
 
   beforeEach(() => {
-    render(
-      <ModalCloseRecord
-        isOpen={true}
-        onCancel={onCancel}
-        onSubmit={onSubmit}
-        onClose={onClose}
-      />,
-    );
+    render(<ModalCloseRecord isOpen={true} onCancel={onCancel} onSubmit={onSubmit} onClose={onClose} />);
   });
 
   test('renders modal component', () => {

@@ -1,8 +1,12 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useManageProfileSettingsState } from '@/store';
-import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
 import { ModalCloseProfileSettings } from './ModalCloseProfileSettings';
 
 const mockUseNavigate = jest.fn();

@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { QueryInput } from './QueryInput';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchStore } from '@/store';
+
+import { QueryInput } from './QueryInput';
 
 const mockOnSubmit = jest.fn();
 

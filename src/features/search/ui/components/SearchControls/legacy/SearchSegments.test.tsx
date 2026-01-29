@@ -1,6 +1,8 @@
-import { render } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
+import { render } from '@testing-library/react';
+
 import { useSearchContextLegacy } from '@/features/search/ui';
+
 import { SearchSegments } from './SearchSegments';
 
 jest.mock('@/features/search/ui/providers');

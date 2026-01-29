@@ -1,13 +1,16 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { FullDisplay } from '@components/FullDisplay';
-import { Edit } from '@views';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore } from '@src/store';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
+import { FullDisplay } from '@/components/FullDisplay';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+import { Edit } from '@/views';
+
+import { useInputsStore } from '@/store';
 
 const mockPreviewContent = [
   {
@@ -27,7 +30,7 @@ const mockPreviewContent = [
   },
 ];
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {

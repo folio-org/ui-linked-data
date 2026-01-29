@@ -1,8 +1,11 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ButtonGroup } from '@/components/ButtonGroup';
+
 import { Button, ButtonType } from '@/components/Button';
+import { ButtonGroup } from '@/components/ButtonGroup';
+
 import { useSearchContextLegacy } from '../../../providers';
+
 import './SearchSegments.scss';
 
 type SearchSegmentsProps = {

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchQueryParams } from '@common/constants/routes.constants';
-import { useSearchState } from '@src/store';
+
+import { SearchQueryParams } from '@/common/constants/routes.constants';
+
+import { useSearchState } from '@/store';
 
 export const usePagination = (hasSearchParams = true, defaultPageNumber = 0, hasCycledPagination = false) => {
   const [searchParams, setSearchParams] = useSearchParams();

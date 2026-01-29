@@ -1,5 +1,7 @@
 import { render } from '@testing-library/react';
+
 import { AuthRefType } from '@/common/constants/search.constants';
+
 import { AuthorizedFormatter } from './AuthorizedFormatter';
 
 describe('AuthorizedFormatter', () => {

@@ -1,7 +1,7 @@
-import * as LookupOptionsHelper from '@common/helpers/lookupOptions.helper';
-import * as LookupConstants from '@common/constants/lookup.constants';
-import * as BibframeConstants from '@common/constants/bibframeMapping.constants';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import * as BibframeConstants from '@/common/constants/bibframeMapping.constants';
+import * as LookupConstants from '@/common/constants/lookup.constants';
+import * as LookupOptionsHelper from '@/common/helpers/lookupOptions.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 const {
   generateLabelWithCode,

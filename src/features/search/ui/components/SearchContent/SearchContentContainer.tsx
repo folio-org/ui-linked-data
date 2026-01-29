@@ -1,15 +1,19 @@
 import { FC, ReactNode, useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { logger } from '@/common/services/logger';
+
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
-import { Loading } from '@/components/Loading';
-import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
-import { UserNotificationFactory } from '@/common/services/userNotification';
 import { StatusType } from '@/common/constants/status.constants';
+import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { Loading } from '@/components/Loading';
+
 import { useStatusState } from '@/store';
-import './SearchContentContainer.scss';
-import { useSearchContext } from '../../providers';
+
 import { useCommittedSearchParams } from '../../hooks';
+import { useSearchContext } from '../../providers';
+import { SearchEmptyPlaceholder } from '../SearchEmptyPlaceholder';
+
+import './SearchContentContainer.scss';
 
 interface SearchContentContainerProps {
   children?: ReactNode;

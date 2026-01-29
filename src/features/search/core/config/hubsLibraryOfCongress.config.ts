@@ -1,10 +1,12 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+
 import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
-import type { SearchTypeConfig } from '../types';
+
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
-import { HubsResultFormatter } from '../strategies/resultFormatters';
 import { HubsLocalAvailabilityEnricher } from '../strategies/resultEnrichers';
+import { HubsResultFormatter } from '../strategies/resultFormatters';
+import type { SearchTypeConfig } from '../types';
 
 /**
  * Hubs Library Of Congress Configuration for Search page (Atomic)
