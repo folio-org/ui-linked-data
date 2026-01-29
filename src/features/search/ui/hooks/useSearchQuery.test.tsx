@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import type { ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -5,7 +7,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchStore } from '@/store';
 

@@ -1,9 +1,9 @@
+import { discardRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/components/Modal.mock';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { CloseRecord } from '@/components/CloseRecord';
-import { discardRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@/test/__mocks__/components/Modal.mock';
 
 describe('CloseRecord', () => {
   beforeEach(() => render(<CloseRecord />));

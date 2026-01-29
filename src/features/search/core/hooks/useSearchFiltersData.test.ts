@@ -1,7 +1,8 @@
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import * as SearchApi from '@/common/api/search.api';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchStore, useStatusStore } from '@/store';
 

@@ -1,3 +1,7 @@
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -6,9 +10,6 @@ import { userEvent } from '@testing-library/user-event';
 import * as importApi from '@/common/api/import.api';
 import { ImportModes } from '@/common/constants/import.constants';
 import { ModalImport } from '@/components/ModalImport';
-import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useUIStore } from '@/store';
 

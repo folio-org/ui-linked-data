@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import { deletePreferredProfile, savePreferredProfile } from '@/common/api/profiles.api';
@@ -9,7 +11,6 @@ import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { useProfileSelectionActions } from '@/common/hooks/useProfileSelectionActions';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
 

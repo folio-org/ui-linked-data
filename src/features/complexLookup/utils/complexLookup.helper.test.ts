@@ -1,5 +1,6 @@
-import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 import * as ComplexLookupConstants from '@/features/complexLookup/constants/complexLookup.constants';
 import { AuthorityValidationTarget } from '@/features/complexLookup/constants/complexLookup.constants';

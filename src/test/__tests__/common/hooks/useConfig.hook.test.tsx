@@ -1,3 +1,6 @@
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -7,8 +10,6 @@ import { renderHook } from '@testing-library/react';
 import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import { useConfig } from '@/common/hooks/useConfig.hook';
-import '@/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useProfileStore } from '@/store';
 

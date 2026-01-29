@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
@@ -6,7 +8,6 @@ import { StatusType } from '@/common/constants/status.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useLoadingStateStore, useSearchStore, useStatusStore, useUIStore } from '@/store';
 

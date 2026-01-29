@@ -1,9 +1,9 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
-
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { LegacySearchResultList } from '@/features/search/ui';
 import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';

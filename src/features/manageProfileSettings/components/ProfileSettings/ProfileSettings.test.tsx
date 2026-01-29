@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -5,7 +7,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useLoadingState, useManageProfileSettingsState, useStatusStore } from '@/store';
 

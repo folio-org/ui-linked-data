@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,7 +8,6 @@ import { renderHook, waitFor } from '@testing-library/react';
 import baseApi from '@/common/api/base.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useStatusStore } from '@/store';
 

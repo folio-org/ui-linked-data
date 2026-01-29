@@ -1,3 +1,7 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,9 +11,6 @@ import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import * as BuildConstants from '@/common/constants/build.constants';
 import * as FeatureConstants from '@/common/constants/feature.constants';
 import { ResourceType } from '@/common/constants/record.constants';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { Search } from '@/views';
 
 import { useSearchStore, useUIStore } from '@/store';

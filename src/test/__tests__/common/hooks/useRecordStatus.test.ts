@@ -1,9 +1,10 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
 import { useRecordStatus } from '@/common/hooks/useRecordStatus';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useStatusStore } from '@/store';
 

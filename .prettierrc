@@ -10,9 +10,11 @@
   "quoteProps": "as-needed",
   "plugins": ["@trivago/prettier-plugin-sort-imports"],
   "importOrder": [
+    "^@/test/__mocks__",
     "^react",
     "<THIRD_PARTY_MODULES>",
-    "^@/(?!(features|store|assets)(/|$))",
+    "^@/(?!(test|features|store|assets)(/|$))",
+    "^@/test/(?!__mocks__)",
     "^@/features",
     "^@/store",
     "^@/assets",

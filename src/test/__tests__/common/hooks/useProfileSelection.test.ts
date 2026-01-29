@@ -1,3 +1,6 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import { fetchPreferredProfiles, fetchProfiles } from '@/common/api/profiles.api';
@@ -5,8 +8,6 @@ import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { useProfileSelection } from '@/common/hooks/useProfileSelection';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 

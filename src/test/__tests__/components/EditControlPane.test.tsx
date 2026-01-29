@@ -1,3 +1,6 @@
+import { navigateAsDuplicate } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router';
 
 import { fireEvent, render } from '@testing-library/react';
@@ -7,8 +10,6 @@ import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 import * as useProfileSelectionHook from '@/common/hooks/useProfileSelection';
 import { EditControlPane } from '@/components/EditControlPane';
-import { navigateAsDuplicate } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsState, useUIStore } from '@/store';
 

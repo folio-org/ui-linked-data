@@ -1,3 +1,6 @@
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,8 +10,6 @@ import { fetchProfileSettings } from '@/common/api/profiles.api';
 import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
-import '@/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useStatusState } from '@/store';
 

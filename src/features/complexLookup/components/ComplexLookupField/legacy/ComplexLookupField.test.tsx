@@ -1,7 +1,7 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-
 import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { useInputsStore, useProfileStore } from '@/store';
 

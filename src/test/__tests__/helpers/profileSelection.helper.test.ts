@@ -1,6 +1,7 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { getLabelId, getWarningByProfileNames, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 const mockBibframeConstants = getMockedImportedConstant(BibframeConstants, 'TYPE_URIS');
 mockBibframeConstants({ WORK: 'work_URL', INSTANCE: 'instance_URL' });

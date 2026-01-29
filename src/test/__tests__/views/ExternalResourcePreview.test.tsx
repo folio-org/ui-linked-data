@@ -1,10 +1,11 @@
+import { fetchExternalRecordForPreview } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { Fragment, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { fetchExternalRecordForPreview } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { ExternalResourcePreview } from '@/views';
 
 import { useInputsStore } from '@/store';

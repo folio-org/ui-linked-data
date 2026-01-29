@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -5,7 +7,6 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { fetchProfiles } from '@/common/api/profiles.api';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useManageProfileSettingsState, useProfileState, useStatusStore, useUIState } from '@/store';
 

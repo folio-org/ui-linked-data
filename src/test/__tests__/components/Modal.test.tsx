@@ -1,7 +1,8 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+
 import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import { Modal } from '@/components/Modal';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 describe('Modal', () => {
   const props = {

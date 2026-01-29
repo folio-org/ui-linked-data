@@ -1,7 +1,8 @@
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import { usePagination } from '@/common/hooks/usePagination';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchStore } from '@/store';
 

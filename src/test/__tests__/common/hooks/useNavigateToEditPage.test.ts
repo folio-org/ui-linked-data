@@ -1,9 +1,10 @@
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
 import { useNavigate } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchStore } from '@/store';
 

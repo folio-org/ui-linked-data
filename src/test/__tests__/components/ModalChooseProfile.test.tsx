@@ -1,7 +1,8 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { ModalChooseProfile } from '@/components/ModalChooseProfile';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 const mockProfiles = [
   { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },

@@ -1,9 +1,10 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ROUTES } from '@/common/constants/routes.constants';
 import { ProfileSelectionManager } from '@/components/ProfileSelectionManager';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsState, useNavigationState, useProfileState, useUIState } from '@/store';
 import { useStatusState } from '@/store/selectors';

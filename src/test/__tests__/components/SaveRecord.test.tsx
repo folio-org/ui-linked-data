@@ -1,10 +1,11 @@
+import { saveRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { SaveRecord } from '@/components/SaveRecord';
-import { saveRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useStatusStore } from '@/store';
 

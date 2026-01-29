@@ -1,11 +1,12 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { Prompt } from '@/components/Prompt';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useConfigStore } from '@/store';
 

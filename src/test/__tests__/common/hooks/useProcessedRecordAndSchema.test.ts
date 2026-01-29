@@ -1,8 +1,9 @@
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import { useProcessedRecordAndSchema } from '@/common/hooks/useProcessedRecordAndSchema.hook';
-import '@/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useStatusStore } from '@/store';
 

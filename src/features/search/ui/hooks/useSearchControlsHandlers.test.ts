@@ -1,8 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchParams } from 'react-router-dom';
 
 import { act, renderHook } from '@testing-library/react';
-
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsState, useSearchStore, useUIState } from '@/store';
 

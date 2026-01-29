@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { useUIStore } from '@/store';
 

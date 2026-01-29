@@ -1,13 +1,14 @@
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { FullDisplay } from '@/components/FullDisplay';
-import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { Edit } from '@/views';
 
 import { useInputsStore } from '@/store';

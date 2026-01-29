@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
 
 import * as recordsApi from '@/common/api/records.api';
@@ -11,7 +13,6 @@ import { PreviewParams } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useStatusStore } from '@/store';
 

@@ -1,11 +1,12 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-import { render, screen } from '@testing-library/react';
-
 import '@/test/__mocks__/common/hooks/useConfig.mock';
 import { useRoutePathPattern } from '@/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import '@/test/__mocks__/components/Loading.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import { render, screen } from '@testing-library/react';
+
 import { Root } from '@/views';
 
 import { useLoadingStateStore } from '@/store';

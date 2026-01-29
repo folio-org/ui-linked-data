@@ -1,8 +1,9 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { StatusType } from '@/common/constants/status.constants';
 import { CommonStatus } from '@/components/CommonStatus';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useStatusStore } from '@/store';
 

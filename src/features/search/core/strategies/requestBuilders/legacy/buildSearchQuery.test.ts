@@ -1,6 +1,7 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
 import * as SearchConstants from '@/common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 import { buildSearchQuery } from './buildSearchQuery';
 

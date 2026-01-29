@@ -1,7 +1,8 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { ModalCloseRecord } from '@/components/ModalCloseRecord';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 describe('ModalCloseRecord', () => {
   const onCancel = jest.fn();

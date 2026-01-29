@@ -1,9 +1,10 @@
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
 
 import { fetchProfile } from '@/common/api/profiles.api';
 import { useLoadProfile } from '@/common/hooks/useLoadProfile';
-import '@/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useProfileStore } from '@/store';
 

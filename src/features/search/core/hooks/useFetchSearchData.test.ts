@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
 
 import { getSearchResults } from '@/common/api/search.api';
@@ -5,7 +7,6 @@ import { SearchSegment } from '@/common/constants/search.constants';
 import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchContextLegacy } from '@/features/search/ui';
 

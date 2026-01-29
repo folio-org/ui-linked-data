@@ -1,8 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { IntlProvider } from 'react-intl';
 
 import { fireEvent, render, screen } from '@testing-library/react';
-
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useUIStore } from '@/store';
 

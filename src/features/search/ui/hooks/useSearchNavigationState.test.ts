@@ -1,9 +1,10 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import * as SearchHelper from '@/features/search/core/utils/search.helper';
 

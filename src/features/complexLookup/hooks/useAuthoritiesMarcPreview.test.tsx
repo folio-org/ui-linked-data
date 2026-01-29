@@ -1,9 +1,9 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
-
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useMarcPreviewStore } from '@/store';
 

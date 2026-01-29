@@ -1,11 +1,12 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { act, render, screen } from '@testing-library/react';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { EditPreview } from '@/components/EditPreview';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useUIStore } from '@/store';
 

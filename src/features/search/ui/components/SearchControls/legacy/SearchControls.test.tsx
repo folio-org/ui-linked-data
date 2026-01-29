@@ -1,10 +1,11 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useSearchParams } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import * as FeatureConstants from '@/common/constants/feature.constants';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { SearchContextLegacy } from '@/features/search/ui';
 

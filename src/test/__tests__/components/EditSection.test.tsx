@@ -1,3 +1,7 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
@@ -5,9 +9,6 @@ import { fireEvent, render, waitFor, within } from '@testing-library/react';
 import { routes } from '@/App';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { ServicesProvider } from '@/providers';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 

@@ -1,7 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
 
 import { Row } from '@/components/Table';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchContextLegacy } from '@/features/search/ui';
 

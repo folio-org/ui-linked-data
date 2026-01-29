@@ -1,10 +1,11 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { fetchPreferredProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useManageProfileSettingsState, useProfileState } from '@/store';
 

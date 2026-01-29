@@ -1,3 +1,5 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+
 import * as ReactRouterDom from 'react-router-dom';
 
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
@@ -5,7 +7,6 @@ import { act, render } from '@testing-library/react';
 
 import * as RecordsApi from '@/common/api/records.api';
 import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
 
 const navigate = jest.fn();
 

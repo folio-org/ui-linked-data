@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react';
-
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { render, screen } from '@testing-library/react';
 
 import { SearchParam } from '@/features/search/core';
 

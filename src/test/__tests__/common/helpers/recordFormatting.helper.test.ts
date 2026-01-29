@@ -1,7 +1,8 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
 import * as RecordFormattingHelper from '@/common/helpers/recordFormatting.helper';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 describe('recordFormatting', () => {
   const testInstanceUri = 'testInstanceUri';

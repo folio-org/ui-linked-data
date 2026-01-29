@@ -1,7 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { useServicesContext } from '@/common/hooks/useServicesContext';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
 

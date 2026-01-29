@@ -1,8 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ChangeEvent, ReactNode } from 'react';
 
 import { act, renderHook } from '@testing-library/react';
-
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useSearchStore } from '@/store';
 

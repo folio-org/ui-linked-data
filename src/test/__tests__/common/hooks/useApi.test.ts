@@ -1,10 +1,11 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import BaseApi from '@/common/api/base.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { useApi } from '@/common/hooks/useApi';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useLoadingState, useStatusState } from '@/store';
 

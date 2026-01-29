@@ -1,7 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { render } from '@testing-library/react';
 
 import { ViewMarcModal } from '@/components/ViewMarcModal';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useMarcPreviewStore } from '@/store';
 

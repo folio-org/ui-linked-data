@@ -1,3 +1,9 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getProfiles } from '@/test/__mocks__/common/hooks/useConfig.mock';
+import { clearRecordState, fetchRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import * as Router from 'react-router-dom';
 
 import { act, render, screen } from '@testing-library/react';
@@ -5,11 +11,6 @@ import { act, render, screen } from '@testing-library/react';
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import * as NavigationHelper from '@/common/helpers/navigation.helper';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { getProfiles } from '@/test/__mocks__/common/hooks/useConfig.mock';
-import { clearRecordState, fetchRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { Edit } from '@/views';
 
 import { useUIStore } from '@/store';

@@ -1,12 +1,13 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import * as FeatureConstants from '@/common/constants/feature.constants';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import * as SearchHelper from '@/features/search/core/utils/search.helper';
 

@@ -1,9 +1,9 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-
-import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useManageProfileSettingsState } from '@/store';
 

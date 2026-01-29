@@ -1,3 +1,6 @@
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { StoreWithState, setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
@@ -5,8 +8,6 @@ import { Fragment } from 'react/jsx-runtime';
 import { fireEvent, render } from '@testing-library/react';
 
 import { Comparison } from '@/components/Comparison';
-import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { StoreWithState, setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 

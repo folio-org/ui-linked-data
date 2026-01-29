@@ -1,12 +1,13 @@
+import {
+  MockServicesProvider,
+  lookupCacheService as mockLookupCacheService,
+} from '@/test/__mocks__/providers/ServicesProvider.mock';
+
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 import * as ApiHelper from '@/common/helpers/api.helper';
 import * as LookupOptionsHelper from '@/common/helpers/lookupOptions.helper';
 import { useSimpleLookupData } from '@/common/hooks/useSimpleLookupData';
-import {
-  MockServicesProvider,
-  lookupCacheService as mockLookupCacheService,
-} from '@/test/__mocks__/providers/ServicesProvider.mock';
 
 const lookupData: Record<string, MultiselectOption[]> = {
   testKey_1: [

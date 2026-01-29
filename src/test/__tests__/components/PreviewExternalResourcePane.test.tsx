@@ -1,8 +1,9 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 
 import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore } from '@/store';
 

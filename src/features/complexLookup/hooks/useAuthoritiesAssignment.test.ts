@@ -1,8 +1,9 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useInputsStore, useMarcPreviewStore, useProfileStore, useStatusStore } from '@/store';
 

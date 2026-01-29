@@ -1,10 +1,11 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
 import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { RecordToSchemaMappingService } from '@/common/services/recordToSchemaMapping';
 import { SchemaWithDuplicatesService } from '@/common/services/schema';
 import { ISelectedEntries } from '@/common/services/selectedEntries/selectedEntries.interface';
 import { IUserValues } from '@/common/services/userValues/userValues.interface';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents } from './data/record.data';
 import { getLabelEntry, schema } from './data/schema.data';

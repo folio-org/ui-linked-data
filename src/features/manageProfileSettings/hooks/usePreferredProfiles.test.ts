@@ -1,7 +1,8 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { act, renderHook } from '@testing-library/react';
 
 import { fetchPreferredProfiles } from '@/common/api/profiles.api';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useProfileState } from '@/store';
 

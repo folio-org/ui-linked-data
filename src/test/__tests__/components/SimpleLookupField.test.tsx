@@ -1,10 +1,11 @@
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
+
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { SimpleLookupField } from '@/components/SimpleLookupField';
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 

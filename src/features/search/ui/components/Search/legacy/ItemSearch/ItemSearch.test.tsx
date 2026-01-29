@@ -1,12 +1,13 @@
+import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
+import { getCurrentPageNumber } from '@/test/__mocks__/common/hooks/usePagination.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import { getCurrentPageNumber } from '@/test/__mocks__/common/hooks/usePagination.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { Edit } from '@/views';
 
 import { ItemSearch, SearchContextLegacy } from '@/features/search/ui';

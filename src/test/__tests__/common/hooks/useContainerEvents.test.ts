@@ -1,3 +1,5 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
@@ -6,7 +8,6 @@ import { ROUTES } from '@/common/constants/routes.constants';
 import { dispatchEventWrapper } from '@/common/helpers/dom.helper';
 import * as domHelper from '@/common/helpers/dom.helper';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
-import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { useConfigStore, useStatusStore } from '@/store';
 

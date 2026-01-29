@@ -1,8 +1,9 @@
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
 import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import * as SchemaHelper from '@/common/helpers/schema.helper';
 import { checkEmptyChildren, generateTwinChildrenKey } from '@/common/helpers/schema.helper';
-import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
 describe('schema.helper', () => {
   const { getLookupLabelKey, hasChildEntry, findParentEntryByProperty, getHtmlIdForEntry } = SchemaHelper;

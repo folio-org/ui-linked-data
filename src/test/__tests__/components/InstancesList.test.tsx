@@ -1,12 +1,13 @@
+import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { getRecordAndInitializeParsing } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
 
 import * as RecordFormatter from '@/common/helpers/recordFormatting.helper';
 import { InstancesList } from '@/components/InstancesList';
-import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
-import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { getRecordAndInitializeParsing } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
