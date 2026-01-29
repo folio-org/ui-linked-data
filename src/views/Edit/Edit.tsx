@@ -77,7 +77,7 @@ export const Edit = () => {
     scrollEntity({ top: 0, behavior: 'instant' });
 
     async function init() {
-      if (resourceId ?? cloneOfParam) {
+      if (resourceId ?? cloneOfParam ?? refParam) {
         return;
       }
 
