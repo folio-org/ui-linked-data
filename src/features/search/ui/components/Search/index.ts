@@ -1,6 +1,3 @@
-// Legacy
-export { Search as LegacySearch } from './legacy/Search.legacy';
-
 // New compound components
 import { Search as SearchRoot } from './Search';
 import type { SearchProviderProps as SearchRootProps } from '../../types/provider.types';

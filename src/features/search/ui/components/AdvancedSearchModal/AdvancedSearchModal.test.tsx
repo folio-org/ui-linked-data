@@ -10,7 +10,6 @@ import * as FeatureConstants from '@/common/constants/feature.constants';
 import { AdvancedSearchModal } from './AdvancedSearchModal';
 
 const setSearchParams = jest.fn();
-const clearValues = jest.fn();
 
 const mockIsNewSearchEnabled = getMockedImportedConstant(FeatureConstants, 'IS_NEW_SEARCH_ENABLED');
 
@@ -54,7 +53,7 @@ describe('AdvancedSearchModal', () => {
         router={createMemoryRouter([
           {
             path: '/',
-            element: <AdvancedSearchModal clearValues={clearValues} />,
+            element: <AdvancedSearchModal />,
           },
         ])}
       />,
@@ -179,7 +178,7 @@ describe('AdvancedSearchModal', () => {
           router={createMemoryRouter([
             {
               path: '/',
-              element: <AdvancedSearchModal clearValues={clearValues} />,
+              element: <AdvancedSearchModal />,
             },
           ])}
         />,

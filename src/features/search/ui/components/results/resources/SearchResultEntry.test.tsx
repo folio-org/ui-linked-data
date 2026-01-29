@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
 import { useSearchStore, useUIStore } from '@/store';
 import { SearchResultEntry } from './SearchResultEntry';
 
@@ -11,6 +10,89 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate,
 }));
+
+export const itemSearchMockData = {
+  searchQuery: 'isbn=12345*',
+  content: [
+    {
+      id: 'workId',
+      titles: [
+        {
+          value: 'Work Title Value',
+          type: 'Main',
+        },
+        {
+          value: 'Work Sub Title Value',
+          type: 'Sub',
+        },
+        {
+          value: 'Work Parallel Title Value',
+          type: 'Main Parallel',
+        },
+      ],
+      contributors: [
+        {
+          name: 'John Doe',
+          type: 'Person',
+          isCreator: true,
+        },
+      ],
+      languages: ['eng'],
+      classifications: [
+        {
+          number: '1234',
+          source: 'ddc',
+        },
+      ],
+      publications: [
+        {
+          name: 'name Name',
+          date: '2022',
+        },
+      ],
+      subjects: ['Subject'],
+      instances: [
+        {
+          id: 'instanceId',
+          titles: [
+            {
+              value: 'Instance Title Value',
+              type: 'Main',
+            },
+            {
+              value: 'Instance Sub Title Value',
+              type: 'Sub',
+            },
+            {
+              value: 'Instance Parallel Title Value',
+              type: 'Sub Parallel',
+            },
+          ],
+          identifiers: [
+            {
+              value: '12345678901234567',
+              type: 'ISBN',
+            },
+          ],
+          contributors: [
+            {
+              name: 'John Doe',
+              type: 'Person',
+              isCreator: true,
+            },
+          ],
+          publications: [
+            {
+              name: 'name Name',
+              date: '2022',
+            },
+          ],
+          editionStatements: ['Edition 1'],
+        },
+      ],
+    },
+  ],
+};
 
 const mockProps = itemSearchMockData.content[0];
 

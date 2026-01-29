@@ -14,7 +14,7 @@ interface MetaControlsProps {
 }
 
 export const MetaControls: FC<MetaControlsProps> = ({ isCentered = true, children }) => {
-  const { mode, activeUIConfig, onReset } = useSearchContext();
+  const { mode, activeUIConfig } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState([
     'isAdvancedSearchOpen',
@@ -47,7 +47,7 @@ export const MetaControls: FC<MetaControlsProps> = ({ isCentered = true, childre
       </div>
 
       {/* Advanced Search modal */}
-      {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
+      {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal />}
     </>
   );
 };

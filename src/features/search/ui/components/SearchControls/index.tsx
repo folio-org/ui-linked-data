@@ -1,7 +1,3 @@
-// Legacy components
-export { SearchControls as LegacySearchControls } from './legacy/SearchControls';
-export { SearchSegments } from './legacy/SearchSegments';
-
 // New components
 export { Segment } from './Segment';
 export { SegmentGroup } from './SegmentGroup';
