@@ -15,12 +15,11 @@ interface UseUrlSyncParams {
 
 export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): void => {
   const [searchParams] = useSearchParams();
-  const { query, setQuery, searchBy, setSearchBy, navigationState, setNavigationState } = useSearchState([
+  const { query, setQuery, searchBy, setSearchBy, setNavigationState } = useSearchState([
     'query',
     'setQuery',
     'searchBy',
     'setSearchBy',
-    'navigationState',
     'setNavigationState',
   ]);
 
@@ -32,7 +31,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
     const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
     const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
-    const currentSegment = navigationState?.[SearchParam.SEGMENT];
+    const offsetFromUrl = searchParams.get(SearchParam.OFFSET);
 
     // Determine if this is an advanced search (query present but no searchBy)
     // Advanced search queries should NOT be synced to the input field
@@ -53,13 +52,27 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
       }
     }
 
-    const updatedState = { ...navigationState } as Record<string, unknown>;
-    if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {
+    // Build complete navigation state from URL for preservation when navigating to edit pages
+    const updatedState = {} as Record<string, unknown>;
+
+    if (queryFromUrl !== null) {
+      updatedState[SearchParam.QUERY] = queryFromUrl;
+    }
+
+    if (searchByFromUrl !== null) {
+      updatedState[SearchParam.SEARCH_BY] = searchByFromUrl;
+    }
+
+    if (segmentFromUrl !== null) {
       updatedState[SearchParam.SEGMENT] = segmentFromUrl;
     }
 
     if (sourceFromUrl !== null) {
       updatedState[SearchParam.SOURCE] = sourceFromUrl;
+    }
+
+    if (offsetFromUrl !== null) {
+      updatedState[SearchParam.OFFSET] = offsetFromUrl;
     }
 
     setNavigationState(updatedState as SearchParamsState);

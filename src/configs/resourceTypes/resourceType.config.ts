@@ -22,6 +22,9 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       targetType: ResourceType.work,
     },
     labelId: 'ld.instance',
+    search: {
+      segment: 'resources',
+    },
   },
 
   [ResourceType.work]: {
@@ -43,6 +46,9 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       targetType: ResourceType.instance,
     },
     labelId: 'ld.work',
+    search: {
+      segment: 'resources',
+    },
   },
 
   [ResourceType.hub]: {
@@ -57,5 +63,8 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       editPageLayout: 'single',
     },
     labelId: 'ld.hub',
+    search: {
+      segment: 'hubs',
+    },
   },
 };
