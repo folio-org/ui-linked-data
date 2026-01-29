@@ -3,6 +3,14 @@ import { HubsModal } from '../components/modals/HubsModal';
 import { ComplexLookupType } from '../constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_MODAL_REGISTRY, getButtonLabel, getModalConfig } from './modalRegistry';
 
+jest.mock('../components/modals/AuthoritiesModal', () => ({
+  AuthoritiesModal: jest.fn(() => null),
+}));
+
+jest.mock('../components/modals/HubsModal', () => ({
+  HubsModal: jest.fn(() => null),
+}));
+
 describe('modalRegistry', () => {
   describe('COMPLEX_LOOKUP_MODAL_REGISTRY', () => {
     it('has configurations for all lookup types', () => {
