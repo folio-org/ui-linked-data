@@ -5,7 +5,7 @@ import { SearchIdentifiers } from '@/common/constants/search.constants';
 
 import { useSearchState } from '@/store';
 
-import { SearchParam, type SearchTypeConfig, removeBackslashes } from '../../core';
+import { SearchParam, type SearchTypeConfig, extractSearchParamsFromUrl, removeBackslashes } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';
@@ -32,9 +32,6 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
 
     const queryFromUrl = searchParams.get(SearchParam.QUERY);
     const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
-    const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
-    const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
-    const offsetFromUrl = searchParams.get(SearchParam.OFFSET);
 
     // Determine if this is an advanced search (query present but no searchBy)
     // Advanced search queries should NOT be synced to the input field
@@ -56,27 +53,8 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     }
 
     // Build complete navigation state from URL for preservation when navigating to edit pages
-    const updatedState = {} as Record<string, unknown>;
-
-    if (queryFromUrl !== null) {
-      updatedState[SearchParam.QUERY] = queryFromUrl;
-    }
-
-    if (searchByFromUrl !== null) {
-      updatedState[SearchParam.SEARCH_BY] = searchByFromUrl;
-    }
-
-    if (segmentFromUrl !== null) {
-      updatedState[SearchParam.SEGMENT] = segmentFromUrl;
-    }
-
-    if (sourceFromUrl !== null) {
-      updatedState[SearchParam.SOURCE] = sourceFromUrl;
-    }
-
-    if (offsetFromUrl !== null) {
-      updatedState[SearchParam.OFFSET] = offsetFromUrl;
-    }
+    // Use shared helper to extract all params and avoid duplication
+    const updatedState = extractSearchParamsFromUrl(searchParams);
 
     setNavigationState(updatedState as SearchParamsState);
 

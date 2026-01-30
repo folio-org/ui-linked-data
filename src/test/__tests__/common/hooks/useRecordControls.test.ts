@@ -19,10 +19,12 @@ import { useInputsStore, useStatusStore } from '@/store';
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockNavigate = jest.fn();
+const mockDispatchNavigateToOriginEventWithFallback = jest.fn();
+
 jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
   useLocation: () => ({ state: {} }),
-  useSearchParams: () => [new URLSearchParams(), jest.fn()],
+  useSearchParams: () => [new URLSearchParams('type=hub'), jest.fn()],
 }));
 
 jest.mock('@/common/api/records.api', () => ({
@@ -35,7 +37,7 @@ const mockDispatchUnblockEvent = jest.fn();
 jest.mock('@/common/hooks/useContainerEvents', () => ({
   useContainerEvents: () => ({
     dispatchUnblockEvent: mockDispatchUnblockEvent,
-    dispatchNavigateToOriginEventWithFallback: jest.fn(),
+    dispatchNavigateToOriginEventWithFallback: mockDispatchNavigateToOriginEventWithFallback,
   }),
 }));
 
@@ -348,7 +350,7 @@ describe('useRecordControls', () => {
   });
 
   describe('discardRecord', () => {
-    it('discards record and navigates away', () => {
+    it('discards record and navigates away with segment parameter', () => {
       setInitialGlobalState([
         {
           store: useInputsStore,
@@ -363,6 +365,9 @@ describe('useRecordControls', () => {
       result.current.discardRecord();
 
       expect(mockDispatchUnblockEvent).toHaveBeenCalled();
+      expect(mockDispatchNavigateToOriginEventWithFallback).toHaveBeenCalledWith(
+        expect.stringContaining('segment=hubs'),
+      );
     });
   });
 });

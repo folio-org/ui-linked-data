@@ -1,6 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { QueryParams, ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
+
+import { extractSearchParamsFromUrl } from '@/features/search/core/utils/search.helper';
 
 import { useSearchState } from '@/store';
 
@@ -9,41 +11,15 @@ export const useNavigateToEditPage = () => {
   const { navigationState } = useSearchState(['navigationState']);
   const [searchParams] = useSearchParams();
 
-  // Build navigation state from current URL if navigationState is incomplete
+  // Build navigation state from current URL if navigationState is empty
   const getNavigationState = () => {
-    if (navigationState?.[SearchQueryParams.Query]) {
+    const hasNavigationState = navigationState && Object.keys(navigationState).length > 0;
+
+    if (hasNavigationState) {
       return navigationState;
     }
 
-    const state: Record<string, string> = {};
-
-    const query = searchParams.get(SearchQueryParams.Query);
-    const searchBy = searchParams.get(SearchQueryParams.SearchBy);
-    const segment = searchParams.get(SearchQueryParams.Segment);
-    const source = searchParams.get(SearchQueryParams.Source);
-    const offset = searchParams.get(SearchQueryParams.Offset);
-
-    if (query) {
-      state[SearchQueryParams.Query] = query;
-    }
-
-    if (searchBy) {
-      state[SearchQueryParams.SearchBy] = searchBy;
-    }
-
-    if (segment) {
-      state[SearchQueryParams.Segment] = segment;
-    }
-
-    if (source) {
-      state[SearchQueryParams.Source] = source;
-    }
-
-    if (offset) {
-      state[SearchQueryParams.Offset] = offset;
-    }
-
-    return state;
+    return extractSearchParamsFromUrl(searchParams);
   };
 
   const navigateAsDuplicate = (duplicateId: string) => {

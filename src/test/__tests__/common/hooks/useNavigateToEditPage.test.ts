@@ -144,6 +144,34 @@ describe('useNavigateToEditPage', () => {
     });
   });
 
+  it('prefers navigationState over URL when navigationState has only segment', () => {
+    const uri = '/edit/102';
+    const navigationState = {
+      [SearchQueryParams.Segment]: 'hubs',
+    };
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { navigationState: navigationState as SearchParamsState },
+      },
+    ]);
+
+    const searchParams = new URLSearchParams({
+      [SearchQueryParams.Query]: 'url query',
+      [SearchQueryParams.Segment]: 'resources',
+    });
+    (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage(uri);
+
+    expect(mockNavigate).toHaveBeenCalledWith(uri, {
+      state: { ...navigationState, isNavigatedFromLDE: true },
+    });
+  });
+
   it('navigates as duplicate with navigation state', () => {
     const duplicateId = 'dup-123';
     const navigationState = {
