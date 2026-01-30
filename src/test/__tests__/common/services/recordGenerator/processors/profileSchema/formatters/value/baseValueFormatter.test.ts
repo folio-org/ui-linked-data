@@ -110,6 +110,42 @@ describe('BaseValueFormatter', () => {
           [BFLITE_URIS.LINK]: ['test_uri'],
         });
       });
+
+      it('returns complex object with only LABEL when value has label but no uri', () => {
+        const value: UserValueContents = {
+          label: 'test label',
+        };
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+            [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual({
+          [BFLITE_URIS.LABEL]: ['test label'],
+        });
+      });
+
+      it('returns empty object when value has no label', () => {
+        const value: UserValueContents = {
+          meta: { uri: 'test_uri' },
+        };
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+            [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual('');
+      });
     });
 
     describe('when recordSchemaEntry has no properties (Creator/Contributor scenario)', () => {
