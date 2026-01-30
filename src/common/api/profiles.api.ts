@@ -3,7 +3,8 @@ import {
   PROFILE_METADATA_API_ENDPOINT,
   PROFILE_PREFERRED_API_ENDPOINT,
   PROFILE_SETTINGS_API_ENDPOINT,
-} from '@common/constants/api.constants';
+} from '@/common/constants/api.constants';
+
 import baseApi from './base.api';
 
 export const fetchProfile = (profileId: string | number) =>

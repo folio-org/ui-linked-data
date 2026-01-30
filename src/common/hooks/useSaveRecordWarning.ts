@@ -1,5 +1,6 @@
-import { useUIState, useInputsState } from '@src/store';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+
+import { useInputsState, useUIState } from '@/store';
 
 const hasSelectedUncontrolledAuthority = (userValues: UserValues) =>
   Object.values(userValues).some((value: UserValue) =>

@@ -1,5 +1,7 @@
-import { render, screen } from '@testing-library/react';
 import { IntlProvider } from 'react-intl';
+
+import { render, screen } from '@testing-library/react';
+
 import { BaseNotesFormatter } from './BaseNotesFormatter';
 
 const renderWithIntl = (component: React.ReactElement) => {

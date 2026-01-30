@@ -1,14 +1,17 @@
 import { useCallback, useState } from 'react';
+
+import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
-import { useInputsState, useMarcPreviewState, useStatusState, useProfileState } from '@/store';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { StatusType } from '@/common/constants/status.constants';
-import { getLinkedField, getUpdatedSelectedEntries, updateLinkedFieldValue } from '../utils/complexLookup.helper';
-import { useMarcValidation } from './useMarcValidation';
-import { useMarcAssignment } from './useMarcAssignment';
-import { useComplexLookupValidation } from './useComplexLookupValidation';
+
+import { useInputsState, useMarcPreviewState, useProfileState, useStatusState } from '@/store';
+
 import { ModalConfig } from '../configs/modalRegistry';
+import { getLinkedField, getUpdatedSelectedEntries, updateLinkedFieldValue } from '../utils/complexLookup.helper';
+import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { useMarcAssignment } from './useMarcAssignment';
+import { useMarcValidation } from './useMarcValidation';
 
 interface UseAuthoritiesAssignmentParams {
   entry: SchemaEntry;

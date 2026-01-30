@@ -1,11 +1,17 @@
 import { FC } from 'react';
 import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
-import { useMarcPreviewState, useUIState } from '@/store';
-import { LegacySearchControlPane, useSearchContextLegacy } from '@/features/search/ui';
-import { MarcContent } from '@/components/MarcContent';
+
 import { Button, ButtonType } from '@/components/Button';
+import { MarcContent } from '@/components/MarcContent';
+
+import { LegacySearchControlPane, useSearchContextLegacy } from '@/features/search/ui';
+
+import { useMarcPreviewState, useUIState } from '@/store';
+
 import Times16 from '@/assets/times-16.svg?react';
+
 import { useComplexLookupValidation } from '../../../hooks/useComplexLookupValidation';
+
 import '../MarcPreview.scss';
 
 type MarcPreviewProps = {

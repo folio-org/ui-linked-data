@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '@components/Modal';
+
+import { Modal } from '@/components/Modal';
+
 import './ModalUncontrolledAuthorities.scss';
 
 type ModalUncontrolledAuthoritiesProps = {

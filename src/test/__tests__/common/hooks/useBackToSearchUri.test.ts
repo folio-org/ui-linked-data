@@ -1,7 +1,9 @@
+import { Location, useLocation } from 'react-router-dom';
+
 import { renderHook } from '@testing-library/react';
-import { useLocation, Location } from 'react-router-dom';
-import { SearchQueryParams, ROUTES } from '@common/constants/routes.constants';
-import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
+
+import { ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
+import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 
 jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(),

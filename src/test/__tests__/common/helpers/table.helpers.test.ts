@@ -3,7 +3,7 @@ import {
   extractColumnWidths,
   getScrollbarWidth,
   measureContentWidths,
-} from '@common/helpers/table.helpers';
+} from '@/common/helpers/table.helpers';
 
 describe('table.helpers', () => {
   describe('extractColumnWidths', () => {

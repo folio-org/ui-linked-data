@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { LegacySearchProvider } from '../../../providers';
 import { ItemSearch } from './ItemSearch';
 

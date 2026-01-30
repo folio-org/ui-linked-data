@@ -1,8 +1,13 @@
-import { render, screen } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
-import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useUIStore, useMarcPreviewStore } from '@/store';
+
+import { IntlProvider } from 'react-intl';
+
+import { render, screen } from '@testing-library/react';
+
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
+import { useMarcPreviewStore, useSearchStore, useUIStore } from '@/store';
+
 import { COMPLEX_LOOKUPS_CONFIG } from '../../configs';
 import { ModalComplexLookup } from './ModalComplexLookup';
 

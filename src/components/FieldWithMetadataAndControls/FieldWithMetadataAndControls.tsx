@@ -1,10 +1,15 @@
 import { FC, ReactNode } from 'react';
+
 import classNames from 'classnames';
-import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
-import { useProfileSchema } from '@common/hooks/useProfileSchema';
-import { useInputsState, useProfileState } from '@src/store';
+
+import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@/common/helpers/repeatableFields.helper';
+import { useProfileSchema } from '@/common/hooks/useProfileSchema';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
+
 import './FieldWithMetadataAndControls.scss';
 
 type IFieldWithMetadataAndControls = {

@@ -1,7 +1,7 @@
 import {
+  AuthNotesFormatter,
   HubAssignFormatter,
   HubLinkFormatter,
-  AuthNotesFormatter,
   RDANotesFormatter,
 } from '@/features/search/ui/formatters';
 

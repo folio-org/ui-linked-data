@@ -1,13 +1,15 @@
 import { ComponentType } from 'react';
-import { ComplexLookupType, AuthorityValidationTarget } from '../constants/complexLookup.constants';
-import { HubsModal } from '../components/modals/HubsModal';
-import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
+
 import {
   AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
   FACETS_API_ENDPOINT,
   MARC_PREVIEW_ENDPOINT,
   SOURCE_API_ENDPOINT,
 } from '@/common/constants/api.constants';
+
+import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
+import { HubsModal } from '../components/modals/HubsModal';
+import { AuthorityValidationTarget, ComplexLookupType } from '../constants/complexLookup.constants';
 
 export type AssignmentFlow = 'simple' | 'complex';
 

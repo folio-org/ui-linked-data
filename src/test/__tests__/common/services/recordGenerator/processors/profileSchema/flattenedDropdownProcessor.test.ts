@@ -1,12 +1,12 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { FlattenedDropdownProcessor } from '@common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
-import { ProfileSchemaProcessorManager } from '@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { FlattenedDropdownProcessor } from '@/common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor';
+import { ProfileSchemaProcessorManager } from '@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
-jest.mock('@common/constants/bibframeMapping.constants', () => ({
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
+jest.mock('@/common/constants/bibframeMapping.constants', () => ({
   BFLITE_URIS: {
     SOURCE: 'source_uri',
     LINK: 'link_uri',

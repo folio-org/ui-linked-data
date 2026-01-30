@@ -1,15 +1,19 @@
 import { FormattedMessage } from 'react-intl';
-import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { FullDisplay } from '@/components/FullDisplay';
 import { Pagination } from '@/components/Pagination';
-import { SearchEmptyPlaceholder } from '../../../SearchEmptyPlaceholder';
-import './ItemSearch.scss';
+
 import { useUIState } from '@/store';
-import { useSearchContextLegacy } from '../../../../providers';
+
 import { useLoadSearchResults, useSearch } from '../../../../hooks';
-import { LegacySearchControls } from '../../../SearchControls';
+import { useSearchContextLegacy } from '../../../../providers';
 import { AdvancedSearchModal } from '../../../AdvancedSearchModal';
+import { LegacySearchControls } from '../../../SearchControls';
+import { SearchEmptyPlaceholder } from '../../../SearchEmptyPlaceholder';
+
+import './ItemSearch.scss';
 
 export const ItemSearch = () => {
   const {

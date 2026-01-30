@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { SearchContextLegacy, SearchFilters } from '@/features/search/ui';
+
 import {
   FiltersGroupCheckType,
   FiltersType,
@@ -7,6 +7,8 @@ import {
   PublishDate,
   SearchLimiterNames,
 } from '@/common/constants/search.constants';
+
+import { SearchContextLegacy, SearchFilters } from '@/features/search/ui';
 
 const setSearchParams = jest.fn();
 

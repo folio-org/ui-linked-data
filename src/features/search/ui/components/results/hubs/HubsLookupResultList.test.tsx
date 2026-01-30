@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { HubsLookupResultList } from './HubsLookupResultList';
+
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
 import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
+import { HubsLookupResultList } from './HubsLookupResultList';
 
 jest.mock('../../../hooks/useFormattedResults');
 jest.mock('../../../hooks/useTableFormatter');

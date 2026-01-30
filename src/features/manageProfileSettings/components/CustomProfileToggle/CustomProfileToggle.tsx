@@ -1,5 +1,7 @@
-import { useManageProfileSettingsState } from '@/store';
 import { FormattedMessage } from 'react-intl';
+
+import { useManageProfileSettingsState } from '@/store';
+
 import './CustomProfileToggle.scss';
 
 export const CustomProfileToggle = () => {

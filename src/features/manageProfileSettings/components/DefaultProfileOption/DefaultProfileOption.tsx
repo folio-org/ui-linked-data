@@ -1,8 +1,12 @@
 import { FC, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useManageProfileSettingsState } from '@/store';
-import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
+
 import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
+
+import { useManageProfileSettingsState } from '@/store';
+
+import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
+
 import './DefaultProfileOption.scss';
 
 type DefaultProfileOptionProps = {

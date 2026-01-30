@@ -1,8 +1,10 @@
 import { IntlShape } from 'react-intl';
-import { SearchIdentifiers } from '@/common/constants/search.constants';
+
 import { PROPERTIES_FROM_FOLIO } from '@/common/constants/bibframe.constants';
-import type { SelectValue } from '@/components/Select';
+import { SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+import type { SelectValue } from '@/components/Select';
+
 import { SearchTypeConfig } from '../../core';
 import { SearchTypeUIConfig } from '../types';
 

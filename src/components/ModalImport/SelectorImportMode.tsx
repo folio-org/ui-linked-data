@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ImportModes } from '@common/constants/import.constants';
-import { Select } from '@components/Select';
+
+import { ImportModes } from '@/common/constants/import.constants';
+import { Select } from '@/components/Select';
+
 import { ImportModeFile } from './ImportModeFile';
 import { ImportModeUrl } from './ImportModeUrl';
 

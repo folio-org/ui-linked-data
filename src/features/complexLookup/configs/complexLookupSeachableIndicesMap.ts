@@ -1,5 +1,5 @@
-import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { SEARCH_QUERY_VALUE_PARAM, SearchSegment } from '@/common/constants/search.constants';
+import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {

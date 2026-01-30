@@ -1,8 +1,10 @@
-import { Button, ButtonType } from '@components/Button';
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
+
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { Button, ButtonType } from '@/components/Button';
+
 import './PreviewExternalResourceControls.scss';
 
 export const PreviewExternalResourceControls = () => {

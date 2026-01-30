@@ -1,5 +1,7 @@
-import { FC, useState, useEffect, useRef, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useRef, useState } from 'react';
+
 import classNames from 'classnames';
+
 import './Tooltip.scss';
 
 interface TooltipProps {

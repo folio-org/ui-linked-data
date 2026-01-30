@@ -1,17 +1,21 @@
-import { FormattedMessage, useIntl } from 'react-intl';
-import { Pagination } from '@components/Pagination';
 import { useState } from 'react';
-import { useInputsState, useSearchState, useUIState } from '@src/store';
-import { Button, ButtonType } from '@components/Button';
-import Times16 from '@src/assets/times-16.svg?react';
-import TimesCircle12 from '@src/assets/times-circle-12.svg?react';
-import Transfer16 from '@src/assets/transfer-16.svg?react';
-import GeneralSearch from '@src/assets/general-search.svg?react';
-import { Preview } from '@components/Preview';
-import { PreviewActionsDropdown } from '@components/PreviewActionsDropdown';
-import { ResourceType } from '@common/constants/record.constants';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
+import { FormattedMessage, useIntl } from 'react-intl';
+
+import { ResourceType } from '@/common/constants/record.constants';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Button, ButtonType } from '@/components/Button';
+import { Pagination } from '@/components/Pagination';
+import { Preview } from '@/components/Preview';
+import { PreviewActionsDropdown } from '@/components/PreviewActionsDropdown';
+
+import { useInputsState, useSearchState, useUIState } from '@/store';
+
+import GeneralSearch from '@/assets/general-search.svg?react';
+import Times16 from '@/assets/times-16.svg?react';
+import TimesCircle12 from '@/assets/times-circle-12.svg?react';
+import Transfer16 from '@/assets/transfer-16.svg?react';
+
 import './Comparison.scss';
 
 const COMPARED_ELEMENTS_COUNT = 2;

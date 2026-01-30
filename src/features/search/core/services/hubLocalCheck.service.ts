@@ -1,5 +1,6 @@
 import baseApi from '@/common/api/base.api';
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
+
 import { buildHubLocalCheckQuery, extractOriginalIds } from '../utils';
 
 interface LocalHubCheckResponse {

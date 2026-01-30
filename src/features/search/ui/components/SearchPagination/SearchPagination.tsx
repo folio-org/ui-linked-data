@@ -1,8 +1,10 @@
 import { FC } from 'react';
+
 import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
 import { Pagination as PaginationComponent } from '@/components/Pagination';
-import { useSearchContext } from '../../providers/SearchProvider';
+
 import { useCommittedSearchParams } from '../../hooks/useCommittedSearchParams';
+import { useSearchContext } from '../../providers/SearchProvider';
 
 interface SearchPaginationProps {
   showCount?: boolean;

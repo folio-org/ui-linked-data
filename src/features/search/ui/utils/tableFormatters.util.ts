@@ -1,5 +1,6 @@
 import { type IntlShape } from 'react-intl';
-import { type Row, type Cell } from '@/components/Table';
+
+import { type Cell, type Row } from '@/components/Table';
 
 export function applyColumnFormatters(
   rows: SearchResultsTableRow[],

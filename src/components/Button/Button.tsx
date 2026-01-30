@@ -1,6 +1,8 @@
 import { FC, MouseEventHandler, ReactNode } from 'react';
-import './Button.scss';
+
 import classNames from 'classnames';
+
+import './Button.scss';
 
 export enum ButtonType {
   Highlighted = 'highlighted',

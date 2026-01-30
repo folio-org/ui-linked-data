@@ -48,5 +48,5 @@ export const mockInstanceTemplateMetadata = [
     template: {
       prefix: 'unreachableMockPrefix',
     },
-  }
+  },
 ];

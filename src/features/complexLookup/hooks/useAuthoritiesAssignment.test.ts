@@ -1,13 +1,17 @@
-import { renderHook, waitFor } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useInputsStore, useMarcPreviewStore, useStatusStore, useProfileStore } from '@/store';
-import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { StatusType } from '@/common/constants/status.constants';
-import { useAuthoritiesAssignment } from './useAuthoritiesAssignment';
-import { useMarcValidation } from './useMarcValidation';
-import { useMarcAssignment } from './useMarcAssignment';
-import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
+import { useInputsStore, useMarcPreviewStore, useProfileStore, useStatusStore } from '@/store';
+
 import { ModalConfig } from '../configs/modalRegistry';
+import { useAuthoritiesAssignment } from './useAuthoritiesAssignment';
+import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { useMarcAssignment } from './useMarcAssignment';
+import { useMarcValidation } from './useMarcValidation';
 
 jest.mock('./useMarcValidation');
 jest.mock('./useMarcAssignment');

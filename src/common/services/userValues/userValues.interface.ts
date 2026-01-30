@@ -1,13 +1,5 @@
 export interface IUserValues {
-  setValue: ({
-    type,
-    key,
-    value,
-  }: {
-    type: AdvancedFieldType;
-    key: string;
-    value: UserValueDTO;
-  }) => Promise<void>;
+  setValue: ({ type, key, value }: { type: AdvancedFieldType; key: string; value: UserValueDTO }) => Promise<void>;
 
   set: (userValues: UserValues) => void;
 

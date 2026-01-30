@@ -1,12 +1,16 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fireEvent, render, waitFor, within } from '@testing-library/react';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ServicesProvider } from '@src/providers';
-import { routes } from '@src/App';
-import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
+
+import { fireEvent, render, waitFor, within } from '@testing-library/react';
+
+import { routes } from '@/App';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { ServicesProvider } from '@/providers';
+
+import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 
 const userValues = {
   uuid3: {
@@ -258,7 +262,7 @@ const monograph = {
 };
 
 globalThis.scrollTo = jest.fn();
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('EditSection', () => {
   const renderScreen = () => {

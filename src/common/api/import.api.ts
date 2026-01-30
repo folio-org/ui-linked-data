@@ -1,4 +1,5 @@
-import { IMPORT_JSON_FILE_API_ENDPOINT } from '@common/constants/api.constants';
+import { IMPORT_JSON_FILE_API_ENDPOINT } from '@/common/constants/api.constants';
+
 import baseApi from './base.api';
 
 export const importFile = async (files: File[]) => {

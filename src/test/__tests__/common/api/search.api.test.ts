@@ -1,7 +1,8 @@
-import { getByIdentifier, getSearchData, getSearchResults } from '@/common/api/search.api';
 import baseApi from '@/common/api/base.api';
-import { RESPONSE_TRANSFORMERS } from '@/features/search/core';
+import { getByIdentifier, getSearchData, getSearchResults } from '@/common/api/search.api';
 import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+
+import { RESPONSE_TRANSFORMERS } from '@/features/search/core';
 
 jest.mock('@/common/api/base.api');
 jest.mock('@/features/search/core/strategies/responseTransformers');

@@ -1,7 +1,9 @@
-import { ModalChooseProfile } from '@components/ModalChooseProfile';
-import { useProfileSelectionActions } from '@common/hooks/useProfileSelectionActions';
-import { useProfileSelectionState } from '@common/hooks/useProfileSelectionState';
-import { useProfileState, useStatusState, useUIState } from '@src/store';
+import { useProfileSelectionActions } from '@/common/hooks/useProfileSelectionActions';
+import { useProfileSelectionState } from '@/common/hooks/useProfileSelectionState';
+import { ModalChooseProfile } from '@/components/ModalChooseProfile';
+
+import { useProfileState, useStatusState, useUIState } from '@/store';
+
 import { ModalWarning } from './ModalWarning';
 
 export const ProfileSelectionManager = () => {

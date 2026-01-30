@@ -1,5 +1,6 @@
-import { Accordion } from '@components/Accordion';
 import { fireEvent, render } from '@testing-library/react';
+
+import { Accordion } from '@/components/Accordion';
 
 const mockContent = 'mock-content';
 

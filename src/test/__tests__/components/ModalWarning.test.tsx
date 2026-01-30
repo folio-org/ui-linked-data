@@ -1,6 +1,8 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { ModalWarning } from '@components/ProfileSelectionManager/ModalWarning';
-import { createModalContainer } from '@src/test/__mocks__/common/misc/createModalContainer.mock';
+
+import { ModalWarning } from '@/components/ProfileSelectionManager/ModalWarning';
 
 describe('ModalWarning', () => {
   const props = {

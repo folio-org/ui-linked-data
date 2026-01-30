@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useSearchState, useLoadingState } from '@/store';
-import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
+
 import { logger } from '@/common/services/logger';
+
+import { useLoadingState, useSearchState } from '@/store';
+
+import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
 
 interface AuthoritiesSegmentDataConfig {
   sourceEndpoint?: string;

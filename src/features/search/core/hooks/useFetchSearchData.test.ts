@@ -1,13 +1,18 @@
-import { renderHook } from '@testing-library/react';
-import { getSearchResults } from '@/common/api/search.api';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useLoadingStateStore, useSearchStore } from '@/store';
+
+import { renderHook } from '@testing-library/react';
+
+import { getSearchResults } from '@/common/api/search.api';
 import { SearchSegment } from '@/common/constants/search.constants';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
 import { useSearchContextLegacy } from '@/features/search/ui';
+
+import { useLoadingStateStore, useSearchStore } from '@/store';
+
 import { useFetchSearchData } from './useFetchSearchData';
-import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 jest.mock('@/features/search/ui/providers');
 jest.mock('@/common/api/search.api');

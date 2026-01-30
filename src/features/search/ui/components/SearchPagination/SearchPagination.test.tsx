@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { SearchPagination } from './SearchPagination';
-import * as SearchProvider from '../../providers/SearchProvider';
+
+import { render, screen } from '@testing-library/react';
+
 import * as UseCommittedSearchParams from '../../hooks/useCommittedSearchParams';
+import * as SearchProvider from '../../providers/SearchProvider';
+import { SearchPagination } from './SearchPagination';
 
 const mockOnPageChange = jest.fn();
 

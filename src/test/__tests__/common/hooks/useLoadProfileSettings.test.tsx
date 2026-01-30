@@ -1,18 +1,22 @@
-import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { renderHook } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useLoadProfileSettings } from '@common/hooks/useLoadProfileSettings';
-import { fetchProfileSettings } from '@common/api/profiles.api';
-import { detectDrift } from '@common/helpers/profileSettingsDrift.helper';
-import { DEFAULT_INACTIVE_SETTINGS } from '@common/constants/profileSettings.constants';
-import { useStatusState } from '@src/store';
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { ReactNode } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook } from '@testing-library/react';
+
+import { fetchProfileSettings } from '@/common/api/profiles.api';
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
+import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
+
+import { useStatusState } from '@/store';
+
+jest.mock('@/common/api/profiles.api', () => ({
   fetchProfileSettings: jest.fn(),
 }));
-jest.mock('@common/helpers/profileSettingsDrift.helper', () => ({
+jest.mock('@/common/helpers/profileSettingsDrift.helper', () => ({
   detectDrift: jest.fn(),
 }));
 

@@ -1,16 +1,21 @@
 import { memo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { debounce } from 'lodash';
+
 import classNames from 'classnames';
-import { EDIT_SECTION_CONTAINER_ID } from '@/common/constants/uiElements.constants';
+import { debounce } from 'lodash';
+
 import { QueryParams } from '@/common/constants/routes.constants';
-import { Fields } from '@/components/Fields';
-import { Prompt } from '@/components/Prompt';
+import { EDIT_SECTION_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
-import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
+import { Fields } from '@/components/Fields';
+import { Prompt } from '@/components/Prompt';
 import { getEditSectionPassiveClass, hasReference, resolveResourceType } from '@/configs/resourceTypes';
+
+import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
+
 import { renderDrawComponent } from './renderDrawComponent';
+
 import './EditSection.scss';
 
 const USER_INPUT_DELAY = 100;

@@ -1,4 +1,5 @@
-import { FC, useMemo, useState, createContext, type ReactElement, useContext } from 'react';
+import { FC, type ReactElement, createContext, useContext, useMemo, useState } from 'react';
+
 import { SearchIdentifiers } from '@/common/constants/search.constants';
 
 type SearchProviderProps = {

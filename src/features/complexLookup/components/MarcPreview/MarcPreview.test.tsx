@@ -1,7 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { IntlProvider } from 'react-intl';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { useMarcPreviewStore, useUIStore } from '@/store';
+
 import { MarcPreview } from './MarcPreview';
 
 jest.mock('@/components/MarcContent', () => ({

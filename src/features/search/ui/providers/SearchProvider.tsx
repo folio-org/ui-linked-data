@@ -1,8 +1,10 @@
-import { FC, useMemo, createContext, useContext } from 'react';
-import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
-import { resolveSearchConfigs } from '../utils';
+import { FC, createContext, useContext, useMemo } from 'react';
+
 import { useLoadingState } from '@/store';
+
+import { useSearchControlsHandlers, useSearchQuery, useSearchSegment, useUrlSync } from '../hooks';
+import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
+import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
 

@@ -1,8 +1,10 @@
 import { renderHook } from '@testing-library/react';
-import { useFormattedResults } from './useFormattedResults';
+
+import { logger } from '@/common/services/logger';
+
 import * as SearchProvider from '../providers/SearchProvider';
 import * as useCommittedSearchParamsHook from './useCommittedSearchParams';
-import { logger } from '@/common/services/logger';
+import { useFormattedResults } from './useFormattedResults';
 
 jest.mock('../providers/SearchProvider');
 jest.mock('./useCommittedSearchParams');

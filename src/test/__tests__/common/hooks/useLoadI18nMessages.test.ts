@@ -1,7 +1,7 @@
-import { loadI18nMessages } from '@common/helpers/locales.helper';
-import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
+import { loadI18nMessages } from '@/common/helpers/locales.helper';
+import { useLoadI18nMessages } from '@/common/hooks/useLoadI18nMessages';
 
-jest.mock('@common/helpers/locales.helper');
+jest.mock('@/common/helpers/locales.helper');
 
 describe('useLoadI18nMessages', () => {
   const locale = 'en';

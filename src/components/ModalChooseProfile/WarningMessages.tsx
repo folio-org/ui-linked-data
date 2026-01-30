@@ -1,7 +1,10 @@
-import { FC, memo, useState, useEffect } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { getWarningByProfileNames } from '@common/helpers/profileSelection.helper';
-import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
+
+import { getWarningByProfileNames } from '@/common/helpers/profileSelection.helper';
+
+import ErrorIcon from '@/assets/exclamation-circle.svg?react';
+
 import './ModalChooseProfile.scss';
 
 interface WarningMessagesProps {

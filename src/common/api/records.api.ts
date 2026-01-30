@@ -4,9 +4,10 @@ import {
   GET_RESOURCE_BY_TYPE_URIS,
   INVENTORY_API_ENDPOINT,
   MAX_LIMIT,
-} from '@common/constants/api.constants';
+} from '@/common/constants/api.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+
 import baseApi from './base.api';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SingleRecord = {
   recordId: string;
@@ -63,7 +64,7 @@ export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { 
 
 const instanceRdfUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/rdf`;
 
-export const getRdfRecord = ( recordId: string ) => {
+export const getRdfRecord = (recordId: string) => {
   const url = baseApi.generateUrl(instanceRdfUrl, {
     name: ':recordId',
     value: recordId,

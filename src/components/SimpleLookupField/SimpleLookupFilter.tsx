@@ -1,15 +1,19 @@
 import { FC, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
+import { ActionMeta, GroupBase, MultiValue, StylesConfig, createFilter } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
-import { useSearchFilterLookupOptions } from '@/features/search/core';
+
 import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
+import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
+
+import { useSearchFilterLookupOptions } from '@/features/search/core';
+
+import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
-import { ClearIndicator } from './ClearIndicator';
 import { OptionMultiline } from './OptionMultiline';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
+
 import './SimpleLookupField.scss';
 
 type SimpleLookupFilterProps = {

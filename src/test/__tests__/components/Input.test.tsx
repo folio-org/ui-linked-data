@@ -1,5 +1,6 @@
-import { Input } from '@components/Input';
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import { Input } from '@/components/Input';
 
 describe('Input', () => {
   const placeholder = 'test placeholder';
@@ -11,7 +12,13 @@ describe('Input', () => {
 
   beforeEach(() => {
     render(
-      <Input placeholder={placeholder} value={value} data-testid={testId} onChange={onChange} onPressEnter={onPressEnter} />,
+      <Input
+        placeholder={placeholder}
+        value={value}
+        data-testid={testId}
+        onChange={onChange}
+        onPressEnter={onPressEnter}
+      />,
     );
 
     inputElement = screen.getByTestId(testId);

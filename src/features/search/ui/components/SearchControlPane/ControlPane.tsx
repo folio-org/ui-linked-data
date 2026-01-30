@@ -1,10 +1,15 @@
 import { FC, type ReactElement } from 'react';
-import classNames from 'classnames';
 import { useIntl } from 'react-intl';
+
+import classNames from 'classnames';
+
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { useUIState } from '@/store';
 import { Button } from '@/components/Button';
+
+import { useUIState } from '@/store';
+
 import CaretDown from '@/assets/caret-down.svg?react';
+
 import './SearchControlPane.scss';
 
 type ControlPaneProps = {

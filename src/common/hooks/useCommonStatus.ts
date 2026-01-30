@@ -1,5 +1,6 @@
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useStatusState } from '@src/store';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useStatusState } from '@/store';
 
 export const useCommonStatus = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);

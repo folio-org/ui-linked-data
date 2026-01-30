@@ -1,4 +1,5 @@
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
+
 import Plus16 from '@/assets/plus-16.svg?react';
 
 export interface HubActionsParams {

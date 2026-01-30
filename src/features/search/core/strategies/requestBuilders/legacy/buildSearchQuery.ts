@@ -1,5 +1,5 @@
-import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { SEARCH_QUERY_VALUE_PARAM } from '@/common/constants/search.constants';
+import { SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 /**
  * @deprecated Use AuthoritiesSearchRequestBuilder or AuthoritiesBrowseRequestBuilder class instead.

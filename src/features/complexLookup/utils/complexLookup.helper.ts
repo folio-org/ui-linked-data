@@ -1,10 +1,11 @@
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import {
   AuthorityValidationTarget,
   COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
   VALUE_DIVIDER,
 } from '@/features/complexLookup/constants/complexLookup.constants';
-import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 export const generateEmptyValueUuid = (uuid: string) => `${uuid}_${EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
 

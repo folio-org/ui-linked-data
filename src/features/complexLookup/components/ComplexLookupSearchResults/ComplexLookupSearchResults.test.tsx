@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react';
-import { useComplexLookupSearchResults } from '@/features/complexLookup/hooks/useComplexLookupSearchResults';
+
 import { TableFlex } from '@/components/Table';
+
+import { useComplexLookupSearchResults } from '@/features/complexLookup/hooks/useComplexLookupSearchResults';
+
 import { ComplexLookupSearchResults } from './ComplexLookupSearchResults';
 
 jest.mock('@/components/Table', () => ({

@@ -1,8 +1,11 @@
-import { FC, memo, useState, useEffect } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { getLabelId, isProfilePreferred } from '@common/helpers/profileSelection.helper';
-import { Modal } from '@components/Modal';
+
+import { getLabelId, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
+import { Modal } from '@/components/Modal';
+
 import { WarningMessages } from './WarningMessages';
+
 import './ModalChooseProfile.scss';
 
 interface ModalChooseProfileProps {

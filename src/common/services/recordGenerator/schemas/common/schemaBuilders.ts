@@ -1,5 +1,5 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
 
 export function createObjectProperty(properties: Record<string, RecordSchemaEntry>, options = {}) {
   return {

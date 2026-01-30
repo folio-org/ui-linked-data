@@ -1,16 +1,19 @@
 import { cloneDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
+
+import { MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import {
   generateTwinChildrenKey,
   getParentEntryUuid,
   getUdpatedAssociatedEntries,
-} from '@common/helpers/schema.helper';
+} from '@/common/helpers/schema.helper';
+
 import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
-import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
-import { MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE } from '@common/constants/bibframe.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+
+import { ISelectedEntries } from '../selectedEntries/selectedEntries.interface';
 import { IUserValues } from '../userValues/userValues.interface';
+import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 
 export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService {
   constructor(

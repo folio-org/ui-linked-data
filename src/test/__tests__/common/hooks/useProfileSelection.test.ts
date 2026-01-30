@@ -1,19 +1,22 @@
-import { renderHook, act } from '@testing-library/react';
-import { useProfileSelection } from '@common/hooks/useProfileSelection';
-import { fetchPreferredProfiles, fetchProfiles } from '@common/api/profiles.api';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
-import { StatusType } from '@common/constants/status.constants';
-import * as BibframeConstants from '@common/constants/bibframe.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { act, renderHook } from '@testing-library/react';
+
+import { fetchPreferredProfiles, fetchProfiles } from '@/common/api/profiles.api';
+import * as BibframeConstants from '@/common/constants/bibframe.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { useProfileSelection } from '@/common/hooks/useProfileSelection';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
+
+jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
   fetchProfiles: jest.fn(),
 }));
 
-jest.mock('@common/services/userNotification', () => ({
+jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn().mockReturnValue('mocked-message'),
   },

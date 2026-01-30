@@ -1,4 +1,4 @@
-import { alphabeticSortLabel } from '@common/helpers/common.helper';
+import { alphabeticSortLabel } from '@/common/helpers/common.helper';
 
 describe('common.helper', () => {
   describe('alphabeticSortLabel', () => {

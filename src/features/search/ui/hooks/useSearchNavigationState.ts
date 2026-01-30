@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { SearchQueryParams } from '@/common/constants/routes.constants';
+
 import { generateSearchParamsState } from '@/features/search/core';
+
 import { useSearchState } from '@/store';
 
 export const useSearchNavigationState = () => {

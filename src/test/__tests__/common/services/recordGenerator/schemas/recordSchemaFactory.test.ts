@@ -1,6 +1,6 @@
-import { RecordSchemaFactory } from '@common/services/recordGenerator/schemas/recordSchemaFactory';
+import { RecordSchemaFactory } from '@/common/services/recordGenerator/schemas/recordSchemaFactory';
 
-jest.mock('@common/services/recordGenerator/schemas/profiles', () => ({
+jest.mock('@/common/services/recordGenerator/schemas/profiles', () => ({
   profileRecordSchemas: {
     instance: { test: 'schema' },
   },

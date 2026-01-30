@@ -1,7 +1,8 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { ProcessContext } from '../../types/common.types';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 
 export class FlattenedDropdownProcessor extends BaseDropdownProcessor {
