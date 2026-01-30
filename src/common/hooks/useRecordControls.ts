@@ -12,13 +12,14 @@ import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
-import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
+import { QueryParams, ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@/common/helpers/record.helper';
 import { PreviewParams, useConfig } from '@/common/hooks/useConfig.hook';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -81,6 +82,19 @@ export const useRecordControls = () => {
   const [queryParams] = useSearchParams();
   const isClone = queryParams.get(QueryParams.CloneOf);
   const { generateRecord } = useRecordGeneration();
+
+  const ensureSegmentInUri = (uri: string) => {
+    if (uri.includes(`${SearchQueryParams.Segment}=`)) {
+      return uri;
+    }
+
+    const typeParam = searchParams.get(QueryParams.Type);
+    const resourceType = mapToResourceType(typeParam);
+    const segment = getSearchSegment(resourceType);
+    const separator = uri.includes('?') ? '&' : '?';
+
+    return `${uri}${separator}${SearchQueryParams.Segment}=${segment}`;
+  };
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
     const recordData = await getRecordAndInitializeParsing({ recordId });
@@ -176,7 +190,7 @@ export const useRecordControls = () => {
 
       return updatedRecordId;
     } else {
-      navigate(searchResultsUri);
+      navigate(ensureSegmentInUri(searchResultsUri));
     }
 
     return updatedRecordId;
@@ -254,7 +268,7 @@ export const useRecordControls = () => {
   const discardRecord = (clearState = true) => {
     if (clearState) clearRecordState();
 
-    dispatchNavigateToOriginEventWithFallback(searchResultsUri);
+    dispatchNavigateToOriginEventWithFallback(ensureSegmentInUri(searchResultsUri));
   };
 
   const deleteRecord = async () => {

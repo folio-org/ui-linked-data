@@ -5,7 +5,7 @@ import { SearchIdentifiers } from '@/common/constants/search.constants';
 
 import { useSearchState } from '@/store';
 
-import { SearchParam, type SearchTypeConfig, removeBackslashes } from '../../core';
+import { SearchParam, type SearchTypeConfig, extractSearchParamsFromUrl, removeBackslashes } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';
@@ -18,12 +18,11 @@ interface UseUrlSyncParams {
 
 export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): void => {
   const [searchParams] = useSearchParams();
-  const { query, setQuery, searchBy, setSearchBy, navigationState, setNavigationState } = useSearchState([
+  const { query, setQuery, searchBy, setSearchBy, setNavigationState } = useSearchState([
     'query',
     'setQuery',
     'searchBy',
     'setSearchBy',
-    'navigationState',
     'setNavigationState',
   ]);
 
@@ -33,9 +32,6 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
 
     const queryFromUrl = searchParams.get(SearchParam.QUERY);
     const searchByFromUrl = searchParams.get(SearchParam.SEARCH_BY);
-    const segmentFromUrl = searchParams.get(SearchParam.SEGMENT);
-    const sourceFromUrl = searchParams.get(SearchParam.SOURCE);
-    const currentSegment = navigationState?.[SearchParam.SEGMENT];
 
     // Determine if this is an advanced search (query present but no searchBy)
     // Advanced search queries should NOT be synced to the input field
@@ -56,14 +52,9 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
       }
     }
 
-    const updatedState = { ...navigationState } as Record<string, unknown>;
-    if (segmentFromUrl !== null && segmentFromUrl !== currentSegment) {
-      updatedState[SearchParam.SEGMENT] = segmentFromUrl;
-    }
-
-    if (sourceFromUrl !== null) {
-      updatedState[SearchParam.SOURCE] = sourceFromUrl;
-    }
+    // Build complete navigation state from URL for preservation when navigating to edit pages
+    // Use shared helper to extract all params and avoid duplication
+    const updatedState = extractSearchParamsFromUrl(searchParams);
 
     setNavigationState(updatedState as SearchParamsState);
 

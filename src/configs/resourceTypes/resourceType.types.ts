@@ -13,6 +13,10 @@ export interface ResourceTypeReference {
   targetType: ResourceType;
 }
 
+export interface ResourceTypeSearchConfig {
+  segment: string;
+}
+
 export interface ResourceTypeDefinition {
   type: ResourceType;
   uri: string;
@@ -23,6 +27,7 @@ export interface ResourceTypeDefinition {
   ui: ResourceTypeUIConfig;
   reference?: ResourceTypeReference;
   labelId: string;
+  search: ResourceTypeSearchConfig;
 }
 
 export type ResourceTypeRegistry = Record<ResourceType, ResourceTypeDefinition>;

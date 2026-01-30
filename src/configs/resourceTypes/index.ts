@@ -26,6 +26,7 @@ export {
   getPreviewPosition,
   hasSplitLayout,
   getProfileLabelId,
+  getSearchSegment,
 } from './utils/resourceType.accessors';
 
 export { createRootEntry } from './utils/resourceType.profile';
