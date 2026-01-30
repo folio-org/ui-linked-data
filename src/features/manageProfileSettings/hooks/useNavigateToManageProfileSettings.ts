@@ -1,5 +1,6 @@
-import { ROUTES } from '@common/constants/routes.constants';
 import { useNavigate } from 'react-router-dom';
+
+import { ROUTES } from '@/common/constants/routes.constants';
 
 export const useNavigateToManageProfileSettings = () => {
   const navigate = useNavigate();

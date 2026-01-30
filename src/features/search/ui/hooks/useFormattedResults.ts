@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
+
 import { logger } from '@/common/services/logger';
+
 import { useSearchContext } from '../providers/SearchProvider';
 
 /**

@@ -1,12 +1,12 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
 import {
-  createObjectProperty,
   createArrayObjectProperty,
-  createStatusProperty,
   createNotesProperty,
+  createObjectProperty,
+  createStatusProperty,
   createStringArrayProperty,
-} from '@common/services/recordGenerator/schemas/common/schemaBuilders';
+} from '@/common/services/recordGenerator/schemas/common/schemaBuilders';
 
 describe('SchemaBuilders', () => {
   describe('createObjectProperty', () => {

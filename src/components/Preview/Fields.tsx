@@ -1,14 +1,16 @@
-import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { checkEmptyChildren, getParentEntryUuid } from '@common/helpers/schema.helper';
-import { getPreviewFieldsConditions } from '@common/helpers/preview.helper';
-import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { useInputsState, useProfileState, useUIState } from '@src/store';
+import { ENTITY_LEVEL } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { getPreviewFieldsConditions } from '@/common/helpers/preview.helper';
+import { checkEmptyChildren, getParentEntryUuid } from '@/common/helpers/schema.helper';
+import { ConditionalWrapper } from '@/components/ConditionalWrapper';
+
+import { useInputsState, useProfileState, useUIState } from '@/store';
+
+import { ChildFields } from './ChildFields';
 import { Labels } from './Labels';
 import { Values } from './Values';
-import { ChildFields } from './ChildFields';
-import { getPreviewWrapper } from './preview.wrappers';
 import { FieldProps } from './preview.types';
+import { getPreviewWrapper } from './preview.wrappers';
 
 export const Fields = ({
   base,

@@ -1,5 +1,6 @@
-import { getProfileNameById, createUpdatedPreferredProfiles } from '@common/helpers/profileActions.helper';
-import { AvailableProfiles } from '@src/store';
+import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
+
+import { AvailableProfiles } from '@/store';
 
 describe('profileActions.helper', () => {
   describe('getProfileNameById', () => {

@@ -1,8 +1,7 @@
 // TODO: UILD-60 - caching, abort controllers
-
-import { EDITOR_API_BASE_PATH, OKAPI_CONFIG } from '@common/constants/api.constants';
-import { getEnvVariable } from '@common/helpers/env.helper';
-import { localStorageService } from '@common/services/storage';
+import { EDITOR_API_BASE_PATH, OKAPI_CONFIG } from '@/common/constants/api.constants';
+import { getEnvVariable } from '@/common/helpers/env.helper';
+import { localStorageService } from '@/common/services/storage';
 
 type ReqParams = {
   url: string;

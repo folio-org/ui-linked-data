@@ -1,20 +1,21 @@
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ResourceType } from '@/common/constants/record.constants';
+
 import {
+  getDefaultProfileId,
+  getEditPageLayout,
+  getEditSectionPassiveClass,
+  getPreviewPosition,
+  getProfileBfid,
+  getProfileLabelId,
+  getReference,
   getResourceTypeConfig,
   getResourceTypeFromURL,
+  getUri,
   hasPreview,
   hasReference,
-  getReference,
-  getUri,
-  getDefaultProfileId,
-  getProfileBfid,
-  getEditSectionPassiveClass,
-  getEditPageLayout,
-  getPreviewPosition,
   hasSplitLayout,
-  getProfileLabelId,
 } from './resourceType.accessors';
-import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 
 describe('resourceType.accessors', () => {
   describe('getResourceTypeConfig', () => {

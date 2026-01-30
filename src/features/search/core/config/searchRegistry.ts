@@ -1,11 +1,11 @@
 import type { SearchTypeConfig } from '../types';
-import { resourcesConfig } from './resources.config';
-import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { authoritiesBrowseConfig } from './authoritiesBrowse.config';
-import { hubsLocalConfig } from './hubsLocal.config';
-import { hubsLookupLocalConfig } from './hubsLookupLocal.config';
+import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { hubsLibraryOfCongressConfig } from './hubsLibraryOfCongress.config';
+import { hubsLocalConfig } from './hubsLocal.config';
 import { hubsLookupLibraryOfCongressConfig } from './hubsLookupLibraryOfCongress.config';
+import { hubsLookupLocalConfig } from './hubsLookupLocal.config';
+import { resourcesConfig } from './resources.config';
 
 /**
  * Atomic Search Registry

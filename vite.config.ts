@@ -1,16 +1,12 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
 import path from 'path';
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import { env } from 'process';
+import { defineConfig } from 'vite';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(() => {
   const alias = {
-    '@src': path.resolve(__dirname, './src'),
-    '@common': path.resolve(__dirname, './src/common'),
-    '@components': path.resolve(__dirname, './src/components'),
-    '@views': path.resolve(__dirname, './src/views'),
     '@': path.resolve(__dirname, './src'),
   };
 

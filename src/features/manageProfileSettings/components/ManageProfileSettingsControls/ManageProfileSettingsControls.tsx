@@ -1,9 +1,12 @@
 import { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+
 import { ROUTES } from '@/common/constants/routes.constants';
-import { Button, ButtonType } from '@components/Button';
+import { Button, ButtonType } from '@/components/Button';
+
 import { useManageProfileSettingsState } from '@/store';
+
 import './ManageProfileSettingsControls.scss';
 
 export const ManageProfileSettingsControls = memo(() => {

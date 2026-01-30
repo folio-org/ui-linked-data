@@ -1,8 +1,12 @@
-import { renderHook } from '@testing-library/react';
+import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
 import { useNavigate } from 'react-router-dom';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@src/test/__mocks__/store';
-import { useSearchStore } from '@src/store';
+
+import { renderHook } from '@testing-library/react';
+
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+
+import { useSearchStore } from '@/store';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),

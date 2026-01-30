@@ -1,5 +1,5 @@
-import { HubsLocalAvailabilityEnricher } from './HubsLocalAvailabilityEnricher';
 import { hubLocalCheckService } from '../../services';
+import { HubsLocalAvailabilityEnricher } from './HubsLocalAvailabilityEnricher';
 
 jest.mock('../../services', () => ({
   hubLocalCheckService: {

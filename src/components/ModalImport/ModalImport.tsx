@@ -1,21 +1,25 @@
 import { memo, useState } from 'react';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { useIntl } from 'react-intl';
+
+import { importFile } from '@/common/api/import.api';
 import {
-  ImportModes,
   HOLD_LOADING_SCREEN_MS,
-  LOADING_TIMEOUT_MS,
   IMPORT_FILE_LOG_MEDIA_TYPE,
   IMPORT_FILE_LOG_NAME_SUFFIX,
-} from '@common/constants/import.constants';
-import { initiateUserAgentDownload } from '@common/helpers/download.helper';
-import { Modal } from '@components/Modal';
-import { useIntl } from 'react-intl';
-import { useUIState } from '@src/store';
-import { importFile } from '@common/api/import.api';
+  ImportModes,
+  LOADING_TIMEOUT_MS,
+} from '@/common/constants/import.constants';
+import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Modal } from '@/components/Modal';
+
+import { useUIState } from '@/store';
+
+import { Completed } from './Completed';
 import { SelectorImportMode } from './SelectorImportMode';
 import { Submitted } from './Submitted';
-import { Completed } from './Completed';
+
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {

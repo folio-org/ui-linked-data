@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+
 import { HubLinkFormatter } from './HubLinkFormatter';
 
 describe('HubLinkFormatter', () => {

@@ -1,26 +1,30 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Dropdown } from '@components/Dropdown';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
-import { RESOURCE_CREATE_URLS } from '@common/constants/routes.constants';
-import { RESOURCE_TEMPLATE_IDS, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { RecordStatus } from '@common/constants/record.constants';
-import { IS_DISABLED_FOR_ALPHA } from '@common/constants/feature.constants';
-import { Button, ButtonType } from '@components/Button';
-import { useBackToSearchUri } from '@common/hooks/useBackToSearchUri';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useMarcData } from '@common/hooks/useMarcData';
-import { useResourceExport } from '@common/hooks/useResourceExport';
-import { useProfileSelection } from '@common/hooks/useProfileSelection';
-import { getEditActionPrefix } from '@common/helpers/bibframe.helper';
-import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
-import EyeOpen16 from '@src/assets/eye-open-16.svg?react';
-import ExternalLink16 from '@src/assets/external-link-16.svg?react';
-import Download16 from '@src/assets/download-16.svg?react';
-import Duplicate16 from '@src/assets/duplicate-16.svg?react';
-import Times16 from '@src/assets/times-16.svg?react';
-import Settings from '@src/assets/settings.svg?react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+
+import { PROFILE_BFIDS, RESOURCE_TEMPLATE_IDS } from '@/common/constants/bibframe.constants';
+import { IS_DISABLED_FOR_ALPHA } from '@/common/constants/feature.constants';
+import { RecordStatus } from '@/common/constants/record.constants';
+import { RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+import { getEditActionPrefix } from '@/common/helpers/bibframe.helper';
+import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
+import { useMarcData } from '@/common/hooks/useMarcData';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useProfileSelection } from '@/common/hooks/useProfileSelection';
+import { useResourceExport } from '@/common/hooks/useResourceExport';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { Button, ButtonType } from '@/components/Button';
+import { Dropdown } from '@/components/Dropdown';
+
+import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
+
+import Download16 from '@/assets/download-16.svg?react';
+import Duplicate16 from '@/assets/duplicate-16.svg?react';
+import ExternalLink16 from '@/assets/external-link-16.svg?react';
+import EyeOpen16 from '@/assets/eye-open-16.svg?react';
+import Settings from '@/assets/settings.svg?react';
+import Times16 from '@/assets/times-16.svg?react';
+
 import './EditControlPane.scss';
 
 export const EditControlPane = () => {

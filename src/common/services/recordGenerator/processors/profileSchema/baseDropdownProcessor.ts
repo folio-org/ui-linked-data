@@ -1,12 +1,13 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { hasAllEmptyValues } from '@common/helpers/record.helper';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { hasAllEmptyValues } from '@/common/helpers/record.helper';
+
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
 import { ProcessContext } from '../../types/common.types';
+import { ProcessorResult, SimplePropertyResult } from '../../types/profileSchemaProcessor.types';
+import { BaseFieldProcessor } from './baseFieldProcessor';
+import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
 import { IProfileSchemaProcessorManager } from './profileSchemaProcessorManager.interface';
 import { ProcessorUtils } from './utils/processorUtils';
-import { DropdownValueFormatter } from './formatters/value/dropdownValueFormatter';
-import { BaseFieldProcessor } from './baseFieldProcessor';
 
 export abstract class BaseDropdownProcessor extends BaseFieldProcessor {
   constructor(

@@ -1,14 +1,16 @@
-import { render } from '@testing-library/react';
 import React from 'react';
-import { ChildFields } from '@components/Preview/ChildFields';
-import { checkShouldGroupWrap } from '@common/helpers/preview.helper';
-import { ChildFieldsProps } from '@components/Preview/preview.types';
 
-jest.mock('@common/helpers/preview.helper', () => ({
+import { render } from '@testing-library/react';
+
+import { checkShouldGroupWrap } from '@/common/helpers/preview.helper';
+import { ChildFields } from '@/components/Preview/ChildFields';
+import { ChildFieldsProps } from '@/components/Preview/preview.types';
+
+jest.mock('@/common/helpers/preview.helper', () => ({
   checkShouldGroupWrap: jest.fn(),
 }));
 
-jest.mock('@components/Preview/preview.wrappers', () => ({
+jest.mock('@/components/Preview/preview.wrappers', () => ({
   getValueGroupWrapper: jest.fn(() => (children: React.ReactNode) => children),
 }));
 

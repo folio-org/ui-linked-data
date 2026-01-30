@@ -1,19 +1,20 @@
-import { FC, useMemo, type ReactElement } from 'react';
-import { ServicesContext } from '@src/contexts';
-import { SelectedEntriesService } from '@common/services/selectedEntries';
-import { UserValuesService } from '@common/services/userValues';
-import { apiClient } from '@common/api/client';
-import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
+import { FC, type ReactElement, useMemo } from 'react';
+
+import { apiClient } from '@/common/api/client';
+import { useCommonStatus } from '@/common/hooks/useCommonStatus';
+import { useLookupCacheService } from '@/common/hooks/useLookupCache.hook';
+import { RecordGenerator } from '@/common/services/recordGenerator';
+import { RecordNormalizingService } from '@/common/services/recordNormalizing';
+import { RecordToSchemaMappingService } from '@/common/services/recordToSchemaMapping';
 import {
+  MarcMappingGeneratorService,
   SchemaGeneratorService,
   SchemaWithDuplicatesService,
-  MarcMappingGeneratorService,
-} from '@common/services/schema';
-import { RecordNormalizingService } from '@common/services/recordNormalizing';
-import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
-import { useCommonStatus } from '@common/hooks/useCommonStatus';
-import { EntryPropertiesGeneratorService } from '@common/services/schema/entryPropertiesGenerator.service';
-import { RecordGenerator } from '@common/services/recordGenerator';
+} from '@/common/services/schema';
+import { EntryPropertiesGeneratorService } from '@/common/services/schema/entryPropertiesGenerator.service';
+import { SelectedEntriesService } from '@/common/services/selectedEntries';
+import { UserValuesService } from '@/common/services/userValues';
+import { ServicesContext } from '@/contexts';
 
 type ServicesProviderProps = {
   children: ReactElement<unknown>;

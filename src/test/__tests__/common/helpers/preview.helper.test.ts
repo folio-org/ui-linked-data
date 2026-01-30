@@ -1,6 +1,6 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { checkShouldGroupWrap, getPreviewFieldsConditions } from '@common/helpers/preview.helper';
+import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { checkShouldGroupWrap, getPreviewFieldsConditions } from '@/common/helpers/preview.helper';
 
 describe('preview.helper', () => {
   describe('checkShouldGroupWrap', () => {

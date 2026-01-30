@@ -1,8 +1,11 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
-import Times16 from '@src/assets/times-16.svg?react';
-import { getRecordTitle } from '@common/helpers/record.helper';
-import { useInputsState, useLoadingState, useMarcPreviewState } from '@src/store';
+
+import { getRecordTitle } from '@/common/helpers/record.helper';
+import { Button, ButtonType } from '@/components/Button';
+
+import { useInputsState, useLoadingState, useMarcPreviewState } from '@/store';
+
+import Times16 from '@/assets/times-16.svg?react';
 
 export const ViewMarcControlPane = () => {
   const { isLoading } = useLoadingState(['isLoading']);

@@ -1,9 +1,10 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
-import { ModalUncontrolledAuthorities } from '@components/ModalUncontrolledAuthorities';
-import { useSaveRecordWarning } from '@common/hooks/useSaveRecordWarning';
-import { useSaveRecord } from '@common/hooks/useSaveRecord';
+
+import { useSaveRecord } from '@/common/hooks/useSaveRecord';
+import { useSaveRecordWarning } from '@/common/hooks/useSaveRecordWarning';
+import { Button, ButtonType } from '@/components/Button';
+import { ModalUncontrolledAuthorities } from '@/components/ModalUncontrolledAuthorities';
 
 type SaveRecordProps = {
   primary?: boolean;

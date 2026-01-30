@@ -1,5 +1,5 @@
-import baseApi from '@common/api/base.api';
-import { getGraphIdByExternalId } from '@common/api/records.api';
+import baseApi from '@/common/api/base.api';
+import { getGraphIdByExternalId } from '@/common/api/records.api';
 
 describe('records.api', () => {
   describe('getGraphIdByExternalId', () => {

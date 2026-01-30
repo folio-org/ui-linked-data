@@ -1,11 +1,16 @@
 import { FC, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button } from '@components/Button';
-import { IFields } from '@components/Fields';
-import ArrowChevronUp from '@src/assets/arrow-chevron-up.svg?react';
-import { deleteFromSetImmutable } from '@common/helpers/common.helper';
-import { useUIState } from '@src/store';
+
+import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
+import { Button } from '@/components/Button';
+import { IFields } from '@/components/Fields';
+
+import { useUIState } from '@/store';
+
+import ArrowChevronUp from '@/assets/arrow-chevron-up.svg?react';
+
 import './DuplicateGroupContainer.scss';
 
 interface IDuplicateGroupContainer {

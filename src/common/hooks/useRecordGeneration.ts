@@ -1,11 +1,14 @@
-import { useInputsState, useProfileState } from '@src/store';
-import { useServicesContext } from './useServicesContext';
-import { getSelectedRecordBlocks } from '@common/helpers/record.helper';
 import { useSearchParams } from 'react-router-dom';
-import { BibframeEntitiesMap } from '@common/constants/bibframe.constants';
-import { ResourceType } from '@common/constants/record.constants';
-import { QueryParams } from '@common/constants/routes.constants';
-import { getDefaultProfileId } from '@src/configs/resourceTypes';
+
+import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { ResourceType } from '@/common/constants/record.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { getSelectedRecordBlocks } from '@/common/helpers/record.helper';
+import { getDefaultProfileId } from '@/configs/resourceTypes';
+
+import { useInputsState, useProfileState } from '@/store';
+
+import { useServicesContext } from './useServicesContext';
 
 const getReferenceIds = (record: RecordEntry, block: string, referenceKey: string) => {
   const typedReferenceBlock = record.resource?.[block]?.[referenceKey] as unknown as Record<string, RecordEntry>[];

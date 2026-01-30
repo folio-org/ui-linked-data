@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
-import { Loading } from '@components/Loading';
+
+import { Loading } from '@/components/Loading';
 
 describe('Loading', () => {
   test('renders Loading component', () => {

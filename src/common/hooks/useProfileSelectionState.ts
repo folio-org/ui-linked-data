@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { getRecordProfileId } from '@common/helpers/record.helper';
-import { useInputsState } from '@src/store';
+
+import { getRecordProfileId } from '@/common/helpers/record.helper';
+
+import { useInputsState } from '@/store';
 
 interface UseProfileSelectionStateProps {
   isModalOpen: boolean;

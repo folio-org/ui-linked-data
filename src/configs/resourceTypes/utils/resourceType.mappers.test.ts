@@ -1,4 +1,5 @@
 import { ResourceType } from '@/common/constants/record.constants';
+
 import { mapToResourceType, mapUriToResourceType, resolveResourceType } from './resourceType.mappers';
 
 describe('resourceType.mappers', () => {

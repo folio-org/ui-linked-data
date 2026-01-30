@@ -1,12 +1,17 @@
 import { useMemo } from 'react';
-import { Search, ResourcesResultList, HubsResultList, type SourceOption } from '@/features/search/ui';
-import { ModalImport } from '@/components/ModalImport';
+
 import { Dropdown } from '@/components/Dropdown';
-import { useSearchState } from '@/store';
-import { useSearchActions, useSearchCleanup } from './hooks';
-import { createResourceActionsConfig, createHubActionsConfig } from './config';
-import './Search.scss';
 import { FullDisplay } from '@/components/FullDisplay';
+import { ModalImport } from '@/components/ModalImport';
+
+import { HubsResultList, ResourcesResultList, Search, type SourceOption } from '@/features/search/ui';
+
+import { useSearchState } from '@/store';
+
+import { createHubActionsConfig, createResourceActionsConfig } from './config';
+import { useSearchActions, useSearchCleanup } from './hooks';
+
+import './Search.scss';
 
 const SOURCE_OPTIONS: SourceOption[] = [
   {

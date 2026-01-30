@@ -1,5 +1,5 @@
-import { ApiErrorCodes } from '@common/constants/api.constants';
-import { checkHasErrorOfCodeType } from '@common/helpers/api.helper';
+import { ApiErrorCodes } from '@/common/constants/api.constants';
+import { checkHasErrorOfCodeType } from '@/common/helpers/api.helper';
 
 describe('api.helper', () => {
   describe('checkHasErrorOfCodeType', () => {

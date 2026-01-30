@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Modal } from '@/components/Modal';
-import { Search } from '@/features/search/ui/components/Search';
-import { HubsLookupResultList } from '@/features/search/ui';
-import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { Modal } from '@/components/Modal';
+
+import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { HubsLookupResultList } from '@/features/search/ui';
+import { Search } from '@/features/search/ui/components/Search';
 
 interface HubsModalProps {
   isOpen: boolean;

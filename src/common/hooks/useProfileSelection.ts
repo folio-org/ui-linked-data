@@ -1,8 +1,10 @@
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useStatusState, useUIState } from '@src/store';
-import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
 import { usePreferredProfiles } from '@/features/manageProfileSettings/hooks/usePreferredProfiles';
+import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
+
+import { useLoadingState, useStatusState, useUIState } from '@/store';
 
 export const useProfileSelection = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);

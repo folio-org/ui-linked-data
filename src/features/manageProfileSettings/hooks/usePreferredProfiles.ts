@@ -1,5 +1,6 @@
-import { useProfileState } from '@/store';
 import { fetchPreferredProfiles } from '@/common/api/profiles.api';
+
+import { useProfileState } from '@/store';
 
 export const usePreferredProfiles = () => {
   const { preferredProfiles, setPreferredProfiles } = useProfileState(['preferredProfiles', 'setPreferredProfiles']);

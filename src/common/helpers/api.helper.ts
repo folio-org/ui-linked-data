@@ -1,5 +1,5 @@
-import { getLookupDict } from '@common/api/lookup.api';
-import { ApiErrorCodes } from '@common/constants/api.constants';
+import { getLookupDict } from '@/common/api/lookup.api';
+import { ApiErrorCodes } from '@/common/constants/api.constants';
 
 export const loadSimpleLookup = async (
   uris: string | string[],
@@ -39,4 +39,4 @@ export const getFriendlyErrorMessage = (err: unknown) => {
   const errorCode = apiError.errors[0].code as keyof typeof ApiErrorCodes;
 
   return `ld.${ApiErrorCodes[errorCode] ?? errorCode}`;
-}
+};

@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { DateRange } from '@components/DateRange';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { DateRange } from '@/components/DateRange';
 
 describe('DateRange Component', () => {
   it('renders without crashing', () => {

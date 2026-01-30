@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+
 import './SearchResultsRoot.scss';
 
 interface SearchResultsProps {

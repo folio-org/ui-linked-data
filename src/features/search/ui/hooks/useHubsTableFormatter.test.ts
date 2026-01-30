@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import { useHubsTableFormatter } from './useHubsTableFormatter';
+
 import { useFormattedResults } from './useFormattedResults';
+import { useHubsTableFormatter } from './useHubsTableFormatter';
 
 jest.mock('react-intl', () => ({
   useIntl: () => ({

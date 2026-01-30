@@ -1,7 +1,11 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { IntlProvider } from 'react-intl';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { IntlProvider } from 'react-intl';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { useUIStore } from '@/store';
+
 import { ControlPane } from './ControlPane';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));

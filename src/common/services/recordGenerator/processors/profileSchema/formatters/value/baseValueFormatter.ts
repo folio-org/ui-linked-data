@@ -1,6 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { SimplePropertyResult } from '@/common/services/recordGenerator/types/profileSchemaProcessor.types';
+
 import { IValueFormatter } from './valueFormatter.interface';
-import { SimplePropertyResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 export abstract class BaseValueFormatter implements IValueFormatter {
   formatLiteral(value: UserValueContents): string[] {

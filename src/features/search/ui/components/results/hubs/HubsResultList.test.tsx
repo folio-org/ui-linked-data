@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { HubsResultList } from './HubsResultList';
-import * as useHubsTableFormatterModule from '../../../hooks/useHubsTableFormatter';
+
 import { Row } from '@/components/Table';
+
+import * as useHubsTableFormatterModule from '../../../hooks/useHubsTableFormatter';
+import { HubsResultList } from './HubsResultList';
 
 // Mock dependencies
 jest.mock('../../../hooks/useHubsTableFormatter');

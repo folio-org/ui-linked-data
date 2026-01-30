@@ -1,6 +1,8 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { useSearchState } from '@/store';
+
 import { SearchParam } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 

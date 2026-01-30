@@ -1,13 +1,18 @@
 import { FC, useEffect } from 'react';
-import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import { StatusType } from '@common/constants/status.constants';
-import { Button, ButtonType } from '@components/Button';
-import { useStatusState } from '@src/store';
-import CloseIcon from '@src/assets/times-16.svg?react';
-import CheckCircleIcon from '@src/assets/check-circle.svg?react';
-import WarningIcon from '@src/assets/exclamation-triangle.svg?react';
-import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
+
+import classNames from 'classnames';
+
+import { StatusType } from '@/common/constants/status.constants';
+import { Button, ButtonType } from '@/components/Button';
+
+import { useStatusState } from '@/store';
+
+import CheckCircleIcon from '@/assets/check-circle.svg?react';
+import ErrorIcon from '@/assets/exclamation-circle.svg?react';
+import WarningIcon from '@/assets/exclamation-triangle.svg?react';
+import CloseIcon from '@/assets/times-16.svg?react';
+
 import './CommonStatus.scss';
 
 const DELETE_TIMEOUT = 10000;

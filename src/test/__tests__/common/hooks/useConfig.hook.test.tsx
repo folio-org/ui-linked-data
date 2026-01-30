@@ -1,13 +1,17 @@
-import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { useSearchParams } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { renderHook } from '@testing-library/react';
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { ReactNode } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useConfig } from '@common/hooks/useConfig.hook';
-import { fetchProfile, fetchProfileSettings } from '@common/api/profiles.api';
-import { useInputsStore, useProfileStore } from '@src/store';
-import { getProfileConfig } from '@common/helpers/profile.helper';
+import { renderHook } from '@testing-library/react';
+
+import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
+import { getProfileConfig } from '@/common/helpers/profile.helper';
+import { useConfig } from '@/common/hooks/useConfig.hook';
+
+import { useInputsStore, useProfileStore } from '@/store';
 
 const lookupCacheService = jest.fn();
 const commonStatusService = jest.fn();
@@ -15,36 +19,36 @@ const commonStatusService = jest.fn();
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
-jest.mock('@common/helpers/profile.helper', () => ({
-  ...jest.requireActual('@common/helpers/profile.helper'),
+jest.mock('@/common/helpers/profile.helper', () => ({
+  ...jest.requireActual('@/common/helpers/profile.helper'),
   getProfileConfig: jest.fn(),
 }));
-jest.mock('@common/services/schema');
-jest.mock('@common/hooks/useLookupCache.hook', () => ({
+jest.mock('@/common/services/schema');
+jest.mock('@/common/hooks/useLookupCache.hook', () => ({
   useLookupCacheService: () => lookupCacheService,
 }));
-jest.mock('@common/hooks/useCommonStatus', () => ({
+jest.mock('@/common/hooks/useCommonStatus', () => ({
   useCommonStatus: () => commonStatusService,
 }));
-jest.mock('@common/api/profiles.api', () => ({
+jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
 }));
-jest.mock('@common/api/client', () => ({
+jest.mock('@/common/api/client', () => ({
   apiClient: jest.fn(),
 }));
-jest.mock('@common/services/userValues', () => ({
+jest.mock('@/common/services/userValues', () => ({
   UserValuesService: jest.fn(),
 }));
-jest.mock('@common/helpers/record.helper', () => ({
-  ...jest.requireActual('@common/helpers/record.helper'),
+jest.mock('@/common/helpers/record.helper', () => ({
+  ...jest.requireActual('@/common/helpers/record.helper'),
   getRecordTitle: jest.fn(),
   getPrimaryEntitiesFromRecord: jest.fn(),
 }));
-jest.mock('@common/helpers/recordFormatting.helper', () => ({
+jest.mock('@/common/helpers/recordFormatting.helper', () => ({
   getReferenceIdsRaw: jest.fn().mockReturnValue([]),
 }));
-jest.mock('@common/hooks/useProcessedRecordAndSchema.hook', () => ({
+jest.mock('@/common/hooks/useProcessedRecordAndSchema.hook', () => ({
   useProcessedRecordAndSchema: () => ({
     getProcessedRecordAndSchema: jest.fn().mockResolvedValue({
       updatedSchema: {},

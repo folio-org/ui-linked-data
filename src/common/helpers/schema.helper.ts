@@ -1,15 +1,15 @@
-import { AdvancedFieldType, SchemaControlType, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
-import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 import {
-  BF_URI_DELIMITER,
   BFID_DELIMITER,
+  BF_URI_DELIMITER,
   ENTRY_CONTROL_DELIMITER,
   ENTRY_COUNT_DELIMITER,
   ENTRY_DELIMITER,
   EXTRA_BFID_DELIMITER,
   PREV_ENTRY_PATH_INDEX,
   TWIN_CHILDREN_KEY_DELIMITER,
-} from '@common/constants/bibframe.constants';
+} from '@/common/constants/bibframe.constants';
+import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { AdvancedFieldType, SchemaControlType, UI_CONTROLS_LIST } from '@/common/constants/uiControls.constants';
 
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;

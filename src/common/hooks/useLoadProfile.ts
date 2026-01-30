@@ -1,5 +1,6 @@
-import { fetchProfile } from '@common/api/profiles.api';
-import { useProfileState } from '@src/store';
+import { fetchProfile } from '@/common/api/profiles.api';
+
+import { useProfileState } from '@/store';
 
 export const useLoadProfile = () => {
   const { profiles, setProfiles } = useProfileState(['profiles', 'setProfiles']);

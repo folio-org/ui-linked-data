@@ -1,5 +1,5 @@
 import { ResourceType } from '@/common/constants/record.constants';
-import { getResourceTypeConfig, createRootEntry, mapToResourceType } from '@/configs/resourceTypes';
+import { createRootEntry, getResourceTypeConfig, mapToResourceType } from '@/configs/resourceTypes';
 
 interface GetProfileConfigParams {
   resourceType?: ResourceType | string | null;

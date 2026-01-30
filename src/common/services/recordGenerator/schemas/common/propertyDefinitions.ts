@@ -1,5 +1,5 @@
-import { BFLITE_URIS, SIMPLE_LOOKUP_MAPPING } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { BFLITE_URIS, SIMPLE_LOOKUP_MAPPING } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
 
 // Basic property types
 export const stringArrayProperty = {

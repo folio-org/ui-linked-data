@@ -1,8 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useUIStore, useSearchStore } from '@/store';
+
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { useSearchStore, useUIStore } from '@/store';
+
 import { AdvancedSearchModal } from './AdvancedSearchModal';
 
 const setSearchParams = jest.fn();

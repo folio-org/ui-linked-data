@@ -1,4 +1,5 @@
 import { SEARCH_CHECK_QUERY_PARAM, SEARCH_OPERATOR } from '@/common/constants/search.constants';
+
 import { buildHubLocalCheckQuery, extractOriginalIds } from './hubEnrichment.util';
 
 describe('hubEnrichment.util', () => {

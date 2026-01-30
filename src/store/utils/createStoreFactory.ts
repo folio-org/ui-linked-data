@@ -1,5 +1,5 @@
-import { createBaseSlice, type SliceState } from './slice';
-import { generateStore, type StateCreatorTyped } from './storeCreator';
+import { type SliceState, createBaseSlice } from './slice';
+import { type StateCreatorTyped, generateStore } from './storeCreator';
 
 type SliceConfig<Value = unknown, SingleItemType = unknown> = {
   initialValue: Value;

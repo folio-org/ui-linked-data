@@ -1,11 +1,11 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { DropdownProcessor } from '@common/services/recordGenerator/processors/profileSchema/dropdownProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
-import { ProfileSchemaProcessorManager } from '@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { DropdownProcessor } from '@/common/services/recordGenerator/processors/profileSchema/dropdownProcessor';
+import { ProfileSchemaProcessorManager } from '@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
 
 describe('DropdownProcessor', () => {
   let processor: DropdownProcessor;

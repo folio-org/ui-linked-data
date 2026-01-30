@@ -1,4 +1,4 @@
-import { loadSimpleLookup } from '@common/helpers/api.helper';
+import { loadSimpleLookup } from '@/common/helpers/api.helper';
 
 export const apiClient = {
   loadSimpleLookupData: loadSimpleLookup,

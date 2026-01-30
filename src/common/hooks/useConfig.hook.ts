@@ -1,17 +1,21 @@
 import { useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { v4 as uuidv4 } from 'uuid';
-import { QueryParams } from '@/common/constants/routes.constants';
+
 import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { getProfileConfig } from '@/common/helpers/profile.helper';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
-import { useInputsState, useProfileState } from '@/store';
-import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
-import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
+import { mapToResourceType } from '@/configs/resourceTypes';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { useLoadProfile } from './useLoadProfile';
 import { useLoadProfileSettings } from './useLoadProfileSettings';
-import { getProfileConfig } from '@/common/helpers/profile.helper';
-import { mapToResourceType } from '@/configs/resourceTypes';
+import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
+import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { GroupBase } from 'react-select';
 import Select from 'react-select/dist/declarations/src/Select';
+
 import {
-  EDIT_SECTION_CONTAINER_ID,
   CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG,
-} from '@common/constants/uiElements.constants';
+  EDIT_SECTION_CONTAINER_ID,
+} from '@/common/constants/uiElements.constants';
 
 export const useSimpleLookupObserver = () => {
   const simpleLookupRef = useRef<Select<unknown, boolean, GroupBase<unknown>>>(null);

@@ -1,6 +1,7 @@
-import { loadSimpleLookup } from '@common/helpers/api.helper';
-import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
+import { loadSimpleLookup } from '@/common/helpers/api.helper';
+import { alphabeticSortLabel } from '@/common/helpers/common.helper';
+import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
+
 import { useServicesContext } from './useServicesContext';
 
 export const useSimpleLookupData = () => {

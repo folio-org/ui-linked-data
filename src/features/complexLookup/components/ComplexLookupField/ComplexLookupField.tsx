@@ -1,12 +1,16 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
 import { SchemaControlType } from '@/common/constants/uiControls.constants';
 import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
 import { Input } from '@/components/Input';
+
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
 import { useComplexLookupField } from '../../hooks';
 import { formatComplexLookupDisplayValue } from '../../utils';
 import { ComplexLookupSelectedItem } from '../ComplexLookupSelectedItem';
+
 import './ComplexLookupField.scss';
 import './ComplexLookupModal.scss';
 

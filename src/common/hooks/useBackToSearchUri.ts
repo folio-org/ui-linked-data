@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { SearchQueryParams, ROUTES } from '@common/constants/routes.constants';
+
+import { ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
 
 export const useBackToSearchUri = () => {
   const location = useLocation();

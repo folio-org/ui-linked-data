@@ -1,9 +1,9 @@
-type SearchQueryParams = import('@common/constants/routes.constants').SearchQueryParams;
+type SearchQueryParams = import('@/common/constants/routes.constants').SearchQueryParams;
 type ComplexLookupSearchIdentifiers =
   import('@/features/complexLookup/constants/complexLookup.constants').ComplexLookupSearchableIndex;
-type SearchIdentifiers = import('@common/constants/search.constants').SearchIdentifiers &
+type SearchIdentifiers = import('@/common/constants/search.constants').SearchIdentifiers &
   ComplexLookupSearchIdentifiers;
-type SearchSegmentValue = import('@common/constants/search.constants').SearchSegment;
+type SearchSegmentValue = import('@/common/constants/search.constants').SearchSegment;
 
 type SearchParamsState = {
   [key in SearchQueryParams]?: string | number | SearchIdentifiers;

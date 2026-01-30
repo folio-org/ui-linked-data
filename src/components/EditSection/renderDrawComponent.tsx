@@ -1,4 +1,5 @@
-import { type SelectedEntriesState } from '@src/store';
+import { type SelectedEntriesState } from '@/store';
+
 import { DrawComponent, IDrawComponent } from './DrawComponent';
 
 export type EditSectionDataProps = {

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import { BaseNotesFormatter } from './BaseNotesFormatter';
 
 interface RDANotesFormatterProps {

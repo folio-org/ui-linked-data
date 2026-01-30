@@ -1,4 +1,5 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+
 import { BaseValueFormatter } from './baseValueFormatter';
 
 export class GroupValueFormatter extends BaseValueFormatter {

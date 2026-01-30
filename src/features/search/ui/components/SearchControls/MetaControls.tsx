@@ -1,9 +1,13 @@
 import { FC, ReactNode, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button, ButtonType } from '@/components/Button';
+
 import { Announcement } from '@/components/Announcement';
+import { Button, ButtonType } from '@/components/Button';
+
 import { useUIState } from '@/store';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { ResetButton } from './ResetButton';

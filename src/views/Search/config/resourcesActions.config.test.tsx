@@ -1,5 +1,6 @@
-import { DropdownItemType } from '@/common/constants/uiElements.constants';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+
 import { createResourceActionsConfig } from './resourcesActions.config';
 
 describe('createResourceActionsConfig', () => {

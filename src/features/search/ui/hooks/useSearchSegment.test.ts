@@ -1,7 +1,11 @@
-import { renderHook } from '@testing-library/react';
-import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useSearchParams } from 'react-router-dom';
+
+import { renderHook } from '@testing-library/react';
+
 import { useSearchStore } from '@/store';
+
 import { SearchParam } from '../../core';
 import { useSearchSegment } from './useSearchSegment';
 

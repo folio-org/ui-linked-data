@@ -1,4 +1,4 @@
-import { createBaseSlice, SliceState } from '@src/store/utils/slice';
+import { SliceState, createBaseSlice } from '@/store/utils/slice';
 
 describe('createBaseSlice', () => {
   type KeyBasic = 'testKey';

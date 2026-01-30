@@ -1,6 +1,7 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
-import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
+
+import type { SearchRequestDescriptor, SearchRequestParams } from '../../types';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
 export class HubsLoCRequestBuilder extends BaseRequestBuilder {
