@@ -6,6 +6,6 @@ type DraggingComponentProps = {
   component: ProfileSettingComponent;
 };
 
-export const DraggingComponent: FC<DraggingComponentProps> = ({ component }) => {
-  return <BaseComponent type={ComponentType.dragging} component={component} />;
+export const DraggingComponent: FC<DraggingComponentProps> = props => {
+  return <BaseComponent type={ComponentType.dragging} {...props} />;
 };

@@ -4,7 +4,10 @@
   min-width: 300px;
   max-width: 300px;
   height: 100%;
-  border-right: 1px solid $gray-200;
+
+  .nav {
+    background-color: $gray-100 !important;
+  }
 
   .nav .heading,
   .profiles {

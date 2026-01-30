@@ -40,11 +40,14 @@
       display: flex;
       align-items: center;
       justify-content: right;
-      gap: 6px;
 
       .blank {
-        width: 16px;
+        width: 24px;
       }
+    }
+
+    &.dragging {
+      opacity: 0.4;
     }
   }
 
@@ -70,8 +73,8 @@
         border: 1px solid $gray-300;
       }
 
-      &.over-list {
-        opacity: 50%;
+      &.over {
+        opacity: 0.5;
         border: 1px dashed $gray-600;
       }
     }

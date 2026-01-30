@@ -6,8 +6,10 @@ type SelectedComponentProps = {
   size: number;
   index: number;
   component: ProfileSettingComponent;
+  upFn?: () => void;
+  downFn?: () => void;
 };
 
-export const SelectedComponent: FC<SelectedComponentProps> = ({ size, index, component }) => {
-  return <BaseComponent type={ComponentType.selected} component={component} size={size} index={index} />;
+export const SelectedComponent: FC<SelectedComponentProps> = props => {
+  return <BaseComponent type={ComponentType.selected} {...props} />;
 };

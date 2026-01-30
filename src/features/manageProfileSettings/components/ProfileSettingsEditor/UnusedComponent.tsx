@@ -6,6 +6,6 @@ type UnusedComponentProps = {
   component: ProfileSettingComponent;
 };
 
-export const UnusedComponent: FC<UnusedComponentProps> = ({ component }) => {
-  return <BaseComponent type={ComponentType.unused} component={component} />;
+export const UnusedComponent: FC<UnusedComponentProps> = props => {
+  return <BaseComponent type={ComponentType.unused} {...props} />;
 };

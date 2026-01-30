@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import {
@@ -8,6 +8,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import {
+  Active,
   DndContext,
   DragEndEvent,
   DragOverEvent,
@@ -15,9 +16,8 @@ import {
   DragStartEvent,
   KeyboardSensor,
   MeasuringStrategy,
+  Over,
   PointerSensor,
-  closestCorners,
-  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -27,6 +27,7 @@ import { ComponentType } from './BaseComponent';
 import { UnusedComponent } from './UnusedComponent';
 import { SelectedComponent } from './SelectedComponent';
 import { DraggingComponent } from './DraggingComponent';
+import { DroppableList } from './DroppableList';
 import './ProfileSettingsEditor.scss';
 
 export type ProfileSettingComponent = {
@@ -35,11 +36,15 @@ export type ProfileSettingComponent = {
 };
 
 export const ProfileSettingsEditor = () => {
+  const unusedEmptyId = 'unused-container';
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
   const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
   const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
+  const [draggingUnused, setDraggingUnused] = useState([] as ProfileSettingComponent[]);
+  const [draggingSelected, setDraggingSelected] = useState([] as ProfileSettingComponent[]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [startingList, setStartingList] = useState<ComponentType | null>(null);
+  const [startingStyle, setStartingStyle] = useState<ComponentType | null>(null);
 
   const { fullProfile, profileSettings, setProfileSettings, setIsModified } = useManageProfileSettingsState([
     'fullProfile',
@@ -48,22 +53,34 @@ export const ProfileSettingsEditor = () => {
     'setIsModified',
   ]);
 
-  const unusedListPlaceholder = useDroppable({
-    id: 'unused-placeholder',
-  });
-  const unusedEnd = useDroppable({
-    id: 'unused-end',
-  });
-  const selectedEnd = useDroppable({
-    id: 'selected-end',
-  });
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  useEffect(() => {
+    if (fullProfile && profileSettings) {
+      const profileChildren = getProfileChildren(fullProfile);
+      setProfileComponents(profileChildren);
+      if (profileSettings.active && profileSettings.children !== undefined && profileSettings.children.length > 0) {
+        const visibleSettingsChildren = getSettingsChildren(fullProfile, profileSettings);
+        setSelectedComponents(visibleSettingsChildren);
+        setUnusedComponents(childrenDifference(profileChildren, visibleSettingsChildren));
+      } else {
+        setSelectedComponents(profileChildren);
+        setUnusedComponents([]);
+      }
+    }
+  }, [fullProfile, profileSettings]);
+
+  const listFromId = (id: string) => {
+    if (id === unusedEmptyId) {
+      return ComponentType.unused;
+    }
+    return id;
+  };
 
   const componentFromId = (id: string, profile: Profile): ProfileSettingComponent => {
     return {
@@ -105,12 +122,20 @@ export const ProfileSettingsEditor = () => {
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
     setStartingList(event.active.data.current?.sortable.containerId);
+    setStartingStyle(event.active.data.current?.sortable.containerId);
+    setDraggingUnused([...unusedComponents]);
+    setDraggingSelected([...selectedComponents]);
     document.body.style.cursor = 'grabbing';
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
     setStartingList(null);
+    setStartingStyle(null);
+    setUnusedComponents([...draggingUnused]);
+    setSelectedComponents([...draggingSelected]);
+    setDraggingUnused([]);
+    setDraggingSelected([]);
     document.body.style.cursor = 'default';
   };
 
@@ -128,41 +153,7 @@ export const ProfileSettingsEditor = () => {
           const newIndex = prev.findIndex(p => p.id === over.id);
           return arrayMove(prev, oldIndex, newIndex);
         });
-      } else if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
-        // moving from unused to selected
-        let toMove: ProfileSettingComponent;
-        setUnusedComponents(prev => {
-          const oldIndex = prev.findIndex(p => p.id === active.id);
-          if (oldIndex >= 0) {
-            toMove = prev.splice(oldIndex, 1)[0];
-          }
-          return prev;
-        });
-        setSelectedComponents(prev => {
-          if (toMove !== undefined) {
-            const newIndex = prev.findIndex(p => p.id === over.id);
-            return [...prev.slice(0, newIndex), toMove, ...prev.slice(newIndex)];
-          }
-          return prev;
-        });
-      } else if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
-        // moving from selected to unused
-        let toMove: ProfileSettingComponent;
-        setSelectedComponents(prev => {
-          const oldIndex = prev.findIndex(p => p.id === active.id);
-          if (oldIndex >= 0) {
-            toMove = prev.splice(oldIndex, 1)[0];
-          }
-          return prev;
-        });
-        setUnusedComponents(prev => {
-          if (toMove !== undefined) {
-            const newIndex = prev.findIndex(p => p.id === over.id);
-            return [...prev.slice(0, newIndex), toMove, ...prev.slice(newIndex)];
-          }
-          return prev;
-        });
-      } else {
+      } else if (startingList === ComponentType.unused && targetList === ComponentType.unused) {
         // moving within unused list
         setUnusedComponents(prev => {
           const oldIndex = prev.findIndex(p => p.id === active.id);
@@ -170,31 +161,85 @@ export const ProfileSettingsEditor = () => {
           return arrayMove(prev, oldIndex, newIndex);
         });
       }
+      // movement between lists is covered by onDragOver
     }
 
     setActiveId(null);
     setStartingList(null);
+    setStartingStyle(null);
+    setDraggingUnused([]);
+    setDraggingSelected([]);
     document.body.style.cursor = 'default';
   };
 
-  useEffect(() => {
-    if (fullProfile && profileSettings) {
-      const profileChildren = getProfileChildren(fullProfile);
-      setProfileComponents(profileChildren);
-      if (profileSettings.active && profileSettings.children !== undefined && profileSettings.children.length > 0) {
-        const visibleSettingsChildren = getSettingsChildren(fullProfile, profileSettings);
-        setSelectedComponents(visibleSettingsChildren);
-        setUnusedComponents(childrenDifference(profileChildren, visibleSettingsChildren));
-      } else {
-        setSelectedComponents(profileChildren);
-        setUnusedComponents([]);
+  const moveBetweenLists = (
+    sourceFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
+    destinationFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
+    active: Active,
+    over: Over,
+  ) => {
+    let toMove: ProfileSettingComponent;
+    sourceFn(prev => {
+      const oldIndex = prev.findIndex(p => p.id === active.id);
+      if (oldIndex >= 0) {
+        toMove = prev.splice(oldIndex, 1)[0];
       }
-    }
-  }, [fullProfile, profileSettings]);
+      return prev;
+    });
+    destinationFn(prev => {
+      if (toMove !== undefined) {
+        if (prev.length === 0) {
+          return [toMove];
+        } else {
+          const newIndex = prev.findIndex(p => p.id === over.id);
+          return [...prev.slice(0, newIndex), toMove, ...prev.slice(newIndex)];
+        }
+      }
+      return prev;
+    });
+  };
+
+  const moveUnusedToSelected = (active: Active, over: Over) => {
+    moveBetweenLists(setUnusedComponents, setSelectedComponents, active, over);
+  };
+
+  const moveSelectedToUnused = (active: Active, over: Over) => {
+    moveBetweenLists(setSelectedComponents, setUnusedComponents, active, over);
+  };
 
   const handleDragOver = (event: DragOverEvent) => {
-    //console.log(event);
-    //console.log(event.over);
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const targetId = over.data.current !== undefined ? over.data.current.sortable.containerId : over.id;
+      const targetList = listFromId(targetId);
+      if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
+        // move from unused to selected
+        moveUnusedToSelected(active, over);
+        setStartingList(ComponentType.selected);
+      } else if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
+        // move from selected to unused
+        moveSelectedToUnused(active, over);
+        setStartingList(ComponentType.unused);
+      }
+    }
+  };
+
+  const makeMove = (index: number, increment: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
+    return () => {
+      setIsModified(true);
+      setter(prev => {
+        return arrayMove(prev, index, index + increment);
+      });
+    };
+  };
+
+  const makeMoveUp = (index: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
+    return makeMove(index, -1, setter);
+  };
+
+  const makeMoveDown = (index: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
+    return makeMove(index, 1, setter);
   };
 
   return (
@@ -202,7 +247,6 @@ export const ProfileSettingsEditor = () => {
       <DndContext
         sensors={sensors}
         measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-        collisionDetection={closestCorners}
         onDragStart={handleDragStart}
         onDragCancel={handleDragCancel}
         onDragOver={handleDragOver}
@@ -218,11 +262,7 @@ export const ProfileSettingsEditor = () => {
           <p>
             <FormattedMessage id="ld.unusedComponents.description" />
           </p>
-          <div
-            ref={unusedListPlaceholder.setNodeRef}
-            id="unused-placeholder"
-            className={classNames('components', unusedListPlaceholder.isOver ? 'over-list' : '')}
-          >
+          <DroppableList id={unusedEmptyId} className="components">
             <SortableContext id="unused" items={unusedComponents} strategy={verticalListSortingStrategy}>
               {unusedComponents.length === 0 || !profileSettings.active ? (
                 <div className="empty-list">
@@ -234,7 +274,7 @@ export const ProfileSettingsEditor = () => {
                 })
               )}
             </SortableContext>
-          </div>
+          </DroppableList>
         </div>
 
         <div className="selected-components">
@@ -257,6 +297,8 @@ export const ProfileSettingsEditor = () => {
                         size={selectedComponents.length}
                         index={idx + 1}
                         component={component}
+                        upFn={makeMoveUp(idx, setSelectedComponents)}
+                        downFn={makeMoveDown(idx, setSelectedComponents)}
                       />
                     );
                   })
@@ -276,7 +318,7 @@ export const ProfileSettingsEditor = () => {
 
         <DragOverlay className="drag-overlay">
           {activeId ? (
-            <div className={classNames('dragging', startingList)}>
+            <div className={classNames('dragging', startingStyle)}>
               <DraggingComponent component={componentFromId(activeId, fullProfile)} />
             </div>
           ) : null}

@@ -1,7 +1,14 @@
+@use '@common/styles/common.scss' as *;
+
 .profile-settings {
   flex: 1;
+  border-left: 1px solid $gray-200;
 
-  .nav .heading {
-    padding: 0 15px;
+  .nav {
+    background-color: $gray-100 !important;
+
+    .heading {
+      padding: 0 15px;
+    }
   }
 }
