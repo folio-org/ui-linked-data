@@ -70,6 +70,7 @@
 * Add workspace profile settings components. Refs [UILD-696].
 * Fix incorrect display of panels on the Edit page. Refs [UILD-708].
 * Organize imports order in the code. Refs [UILD-722].
+* Remove legacy search code. Refs [UILD-721].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -140,6 +141,7 @@
 [UILD-696]:https://folio-org.atlassian.net/browse/UILD-696
 [UILD-708]:https://folio-org.atlassian.net/browse/UILD-708
 [UILD-722]:https://folio-org.atlassian.net/browse/UILD-722
+[UILD-721]:https://folio-org.atlassian.net/browse/UILD-721
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
