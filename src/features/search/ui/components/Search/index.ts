@@ -1,4 +1,3 @@
-// New compound components
 import type { FC } from 'react';
 
 import type { SearchProviderProps as SearchRootProps } from '../../types/provider.types';
@@ -17,9 +16,6 @@ import { SourceSelector } from '../SearchControls/SourceSelector';
 import { SubmitButton } from '../SearchControls/SubmitButton';
 import { SearchResults as Results } from '../SearchResults';
 import { Search as SearchRoot } from './Search';
-
-// Legacy
-export { Search as LegacySearch } from './legacy/Search.legacy';
 
 const Controls = Object.assign(RootControls, {
   // Props-based segment components

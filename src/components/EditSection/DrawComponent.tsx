@@ -2,7 +2,6 @@ import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { GROUP_COMPLEX_CUTOFF_LEVEL } from '@/common/constants/bibframe.constants';
-import { IS_NEW_SEARCH_ENABLED } from '@/common/constants/feature.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 import { getIsCreatePage } from '@/common/helpers/navigation.helper';
@@ -13,7 +12,7 @@ import { FieldWithMetadataAndControls } from '@/components/FieldWithMetadataAndC
 import { LiteralField } from '@/components/LiteralField';
 import { SimpleLookupField } from '@/components/SimpleLookupField';
 
-import { ComplexLookupField, LegacyComplexLookupField } from '@/features/complexLookup';
+import { ComplexLookupField } from '@/features/complexLookup';
 import { getPlaceholderForProperty } from '@/features/search/ui';
 
 import { EditSectionDataProps } from './renderDrawComponent';
@@ -173,11 +172,9 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
   }
 
   if (type === AdvancedFieldType.complex) {
-    const ComplexLookupComponent = IS_NEW_SEARCH_ENABLED ? ComplexLookupField : LegacyComplexLookupField;
-
     return (
       <FieldWithMetadataAndControls entry={entry} level={level} isCompact={isCompact}>
-        <ComplexLookupComponent entry={entry} onChange={onChange} value={selectedUserValue?.contents} />
+        <ComplexLookupField entry={entry} onChange={onChange} value={selectedUserValue?.contents} />
       </FieldWithMetadataAndControls>
     );
   }

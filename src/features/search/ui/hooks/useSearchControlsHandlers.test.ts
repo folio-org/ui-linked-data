@@ -636,7 +636,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      (getValidSearchBy as jest.Mock).mockReturnValue('title');
+      (getValidSearchBy as jest.Mock).mockReturnValue('isbn');
 
       const { result } = renderHook(() =>
         useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
