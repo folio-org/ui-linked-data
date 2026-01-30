@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
 import { AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT } from '@/common/constants/api.constants';
+import { useApi } from '@/common/hooks/useApi';
 
 import { generateValidationRequestBody } from '@/features/complexLookup/utils/complexLookup.helper';
 
-import { useApi } from '../../../common/hooks/useApi';
 import { ModalApiConfig, ModalConfig } from '../configs/modalRegistry';
 
 export const useMarcValidation = () => {
