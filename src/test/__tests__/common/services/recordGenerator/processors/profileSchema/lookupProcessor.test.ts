@@ -1,6 +1,6 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { LookupProcessor } from '@common/services/recordGenerator/processors/profileSchema/lookupProcessor';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { LookupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/lookupProcessor';
 
 describe('LookupProcessor', () => {
   let processor: LookupProcessor;

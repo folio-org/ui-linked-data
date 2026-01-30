@@ -1,8 +1,8 @@
+import { buildHubSearchQuery } from './buildHubSearchQuery';
+import { buildSearchQuery } from './buildSearchQuery';
+
 export * from './buildSearchQuery';
 export * from './buildHubSearchQuery';
-
-import { buildSearchQuery } from './buildSearchQuery';
-import { buildHubSearchQuery } from './buildHubSearchQuery';
 
 /**
  * @deprecated Use request builder classes (ResourcesRequestBuilder, AuthoritiesSearchRequestBuilder, etc.) instead.

@@ -1,1 +1,1 @@
-export { ExternalResourceLoader } from "./ExternalResourceLoader";
+export { ExternalResourceLoader } from './ExternalResourceLoader';

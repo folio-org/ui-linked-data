@@ -1,5 +1,6 @@
-import { HubsLoCRequestBuilder } from './HubsLoCRequestBuilder';
 import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
+
+import { HubsLoCRequestBuilder } from './HubsLoCRequestBuilder';
 
 describe('HubsLoCRequestBuilder', () => {
   describe('without searchable indices map', () => {

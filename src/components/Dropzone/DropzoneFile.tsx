@@ -1,7 +1,10 @@
 import { FC } from 'react';
-import { Button } from '@components/Button';
-import Report16 from '@src/assets/report-16.svg?react';
-import Trash16 from '@src/assets/trash-16.svg?react';
+
+import { Button } from '@/components/Button';
+
+import Report16 from '@/assets/report-16.svg?react';
+import Trash16 from '@/assets/trash-16.svg?react';
+
 import './DropzoneFile.scss';
 
 interface Props {

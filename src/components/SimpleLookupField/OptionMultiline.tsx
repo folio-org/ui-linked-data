@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { components, OptionProps } from 'react-select';
+import { OptionProps, components } from 'react-select';
+
 import './SimpleLookupField.scss';
 
 export const OptionMultiline: FC<OptionProps> = props => {
@@ -7,8 +8,8 @@ export const OptionMultiline: FC<OptionProps> = props => {
 
   return (
     <components.Option {...props}>
-      <div className='select-option-label'>{label}</div>
-      <div className='select-option-sebLabel'>{subLabel}</div>
+      <div className="select-option-label">{label}</div>
+      <div className="select-option-sebLabel">{subLabel}</div>
     </components.Option>
   );
 };

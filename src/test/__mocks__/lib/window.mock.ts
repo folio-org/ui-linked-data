@@ -7,7 +7,7 @@ const intersectionObserverMock = function () {
     observe,
     unobserve,
     disconnect,
-  }
-}
+  };
+};
 
 window.IntersectionObserver = intersectionObserverMock as any;

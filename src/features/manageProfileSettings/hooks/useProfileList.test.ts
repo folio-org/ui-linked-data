@@ -1,12 +1,16 @@
-import { renderHook, act } from '@testing-library/react';
-import { fetchProfiles } from '@common/api/profiles.api';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useProfileState } from '@src/store';
-import * as BibframeConstants from '@common/constants/bibframe.constants';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { act, renderHook } from '@testing-library/react';
+
+import { fetchProfiles } from '@/common/api/profiles.api';
+import * as BibframeConstants from '@/common/constants/bibframe.constants';
+
+import { useProfileState } from '@/store';
+
 import { useProfileList } from './useProfileList';
 
-jest.mock('@common/api/profiles.api', () => ({
+jest.mock('@/common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
 }));
 

@@ -1,6 +1,8 @@
-import { ROUTES, QueryParams, SearchQueryParams } from '@common/constants/routes.constants';
-import { useSearchState } from '@src/store';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { QueryParams, ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
+
+import { useSearchState } from '@/store';
 
 export const useNavigateToEditPage = () => {
   const navigate = useNavigate();

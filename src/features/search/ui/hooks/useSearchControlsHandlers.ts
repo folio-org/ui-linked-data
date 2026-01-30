@@ -1,12 +1,15 @@
-import { useCallback, useRef, useEffect, type RefObject } from 'react';
-import { useSearchParams, type SetURLSearchParams } from 'react-router-dom';
-import { type SegmentDraft, useSearchState, type CommittedValues, useUIState, useInputsState } from '@/store';
+import { type RefObject, useCallback, useEffect, useRef } from 'react';
+import { type SetURLSearchParams, useSearchParams } from 'react-router-dom';
+
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig, resolveCoreConfig, normalizeQuery } from '../../core';
+
+import { type CommittedValues, type SegmentDraft, useInputsState, useSearchState, useUIState } from '@/store';
+
+import { SearchParam, type SearchTypeConfig, normalizeQuery, resolveCoreConfig } from '../../core';
+import { resolveUIConfig } from '../config';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
-import { getValidSearchBy, buildSearchUrlParams, haveSearchValuesChanged } from '../utils';
-import { resolveUIConfig } from '../config';
+import { buildSearchUrlParams, getValidSearchBy, haveSearchValuesChanged } from '../utils';
 
 interface UseSearchControlsHandlersParams {
   coreConfig: SearchTypeConfig;

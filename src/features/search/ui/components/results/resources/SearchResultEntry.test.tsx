@@ -1,8 +1,12 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { itemSearchMockData } from '@/features/search/ui/components/Search/legacy/ItemSearch/ItemSearch.test';
+
+import { BrowserRouter } from 'react-router-dom';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { useSearchStore, useUIStore } from '@/store';
+
 import { SearchResultEntry } from './SearchResultEntry';
 
 const mockedUsedNavigate = jest.fn();
@@ -12,9 +16,112 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate,
 }));
 
+export const itemSearchMockData = {
+  searchQuery: 'isbn=12345*',
+  content: [
+    {
+      id: 'workId',
+      titles: [
+        {
+          value: 'Work Title Value',
+          type: 'Main',
+        },
+        {
+          value: 'Work Sub Title Value',
+          type: 'Sub',
+        },
+        {
+          value: 'Work Parallel Title Value',
+          type: 'Main Parallel',
+        },
+      ],
+      contributors: [
+        {
+          name: 'John Doe',
+          type: 'Person',
+          isCreator: true,
+        },
+      ],
+      languages: ['eng'],
+      classifications: [
+        {
+          number: '1234',
+          source: 'ddc',
+        },
+      ],
+      publications: [
+        {
+          name: 'name Name',
+          date: '2022',
+        },
+      ],
+      subjects: ['Subject'],
+      instances: [
+        {
+          id: 'instanceId',
+          titles: [
+            {
+              value: 'Instance Title Value',
+              type: 'Main',
+            },
+            {
+              value: 'Instance Sub Title Value',
+              type: 'Sub',
+            },
+            {
+              value: 'Instance Parallel Title Value',
+              type: 'Sub Parallel',
+            },
+          ],
+          identifiers: [
+            {
+              value: '12345678901234567',
+              type: 'ISBN',
+            },
+          ],
+          contributors: [
+            {
+              name: 'John Doe',
+              type: 'Person',
+              isCreator: true,
+            },
+          ],
+          publications: [
+            {
+              name: 'name Name',
+              date: '2022',
+            },
+          ],
+          editionStatements: ['Edition 1'],
+        },
+      ],
+    },
+  ],
+};
+
 const mockProps = itemSearchMockData.content[0];
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
+const renderWithProviders = (component: React.ReactNode) => {
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>{component}</BrowserRouter>
+    </QueryClientProvider>,
+  );
+};
+
 describe('SearchResultEntry', () => {
+  beforeEach(() => {
+    queryClient.clear();
+  });
+
   describe('with instances', () => {
     beforeEach(() => {
       setInitialGlobalState([
@@ -36,11 +143,7 @@ describe('SearchResultEntry', () => {
         },
       ]);
 
-      render(
-        <BrowserRouter>
-          <SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
-      );
+      renderWithProviders(<SearchResultEntry {...(mockProps as unknown as WorkAsSearchResultDTO)} />);
     });
 
     const { getByText, getByTestId, findByText } = screen;
@@ -91,10 +194,8 @@ describe('SearchResultEntry', () => {
         },
       ]);
 
-      render(
-        <BrowserRouter>
-          <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />
-        </BrowserRouter>,
+      renderWithProviders(
+        <SearchResultEntry {...({ ...mockProps, instances: [] } as unknown as WorkAsSearchResultDTO)} />,
       );
     });
 

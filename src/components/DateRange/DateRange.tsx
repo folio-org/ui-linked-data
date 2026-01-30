@@ -1,7 +1,9 @@
 import { FC, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
-import { DatePicker } from '@components/DatePicker';
+
+import { Button, ButtonType } from '@/components/Button';
+import { DatePicker } from '@/components/DatePicker';
+
 import './DateRange.scss';
 
 // TODO: UILD-439 - make the placeholder reusable depending on the locale

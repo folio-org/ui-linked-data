@@ -1,7 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { DropdownValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/dropdownValueFormatter';
-import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { DropdownValueFormatter } from '@/common/services/recordGenerator/processors/profileSchema/formatters/value/dropdownValueFormatter';
+import { UserValueContents } from '@/common/services/recordGenerator/processors/value/valueProcessor.interface';
 
 describe('DropdownValueFormatter', () => {
   let formatter: DropdownValueFormatter;

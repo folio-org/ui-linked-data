@@ -1,30 +1,27 @@
 import type { SearchTypeUIConfig } from '../types';
-
-const mockSearchUIRegistry = {
-  authorities: {
-    ui: { titleId: 'authorities.title' },
-    segments: {
-      search: { ui: { titleId: 'search.title' } },
-      browse: { ui: { titleId: 'browse.title' } },
-    },
-  },
-  resources: {
-    ui: { titleId: 'resources.title' },
-  },
-  hubs: {
-    ui: { titleId: 'hubs.title' },
-    segments: {
-      internal: { ui: { titleId: 'internal.title' } },
-      external: { ui: { titleId: 'external.title' } },
-    },
-  },
-};
+import { getDefaultUISegment, getUIRegistryKey, resolveUIConfig } from './resolveUIConfig';
 
 jest.mock('./searchUIRegistry', () => ({
-  searchUIRegistry: mockSearchUIRegistry,
+  searchUIRegistry: {
+    authorities: {
+      ui: { titleId: 'authorities.title' },
+      segments: {
+        search: { ui: { titleId: 'search.title' } },
+        browse: { ui: { titleId: 'browse.title' } },
+      },
+    },
+    resources: {
+      ui: { titleId: 'resources.title' },
+    },
+    hubs: {
+      ui: { titleId: 'hubs.title' },
+      segments: {
+        internal: { ui: { titleId: 'internal.title' } },
+        external: { ui: { titleId: 'external.title' } },
+      },
+    },
+  },
 }));
-
-import { resolveUIConfig, getUIRegistryKey, getDefaultUISegment } from './resolveUIConfig';
 
 describe('getUIRegistryKey', () => {
   it('returns the segment itself when it exists in registry', () => {

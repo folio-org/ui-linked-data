@@ -1,4 +1,4 @@
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
 type ProfileWarningMap = {
   [resourceTypeURL in ResourceTypeURL]: {

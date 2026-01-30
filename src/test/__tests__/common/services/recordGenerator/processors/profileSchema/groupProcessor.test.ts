@@ -1,9 +1,9 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GroupProcessor } from '@common/services/recordGenerator/processors/profileSchema/groupProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { GroupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/groupProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
 
 describe('GroupProcessor', () => {
   let processor: GroupProcessor;

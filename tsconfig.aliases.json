@@ -3,12 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@": ["src"],
-      "linked-data": ["src/main.tsx"],
-      "@common/*": ["src/common/*"],
-      "@components/*": ["src/components/*"],
-      "@views": ["src/views"],
-      "@src/*": ["src/*"]
+      "linked-data": ["src/main.tsx"]
     }
   }
 }

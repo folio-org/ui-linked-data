@@ -1,4 +1,5 @@
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
+
 import { createHubActionsConfig } from './hubsActions.config';
 
 describe('createHubActionsConfig', () => {

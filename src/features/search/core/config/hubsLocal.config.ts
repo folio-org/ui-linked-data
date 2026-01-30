@@ -1,9 +1,11 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
+
 import { HUB_LOCAL_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
-import type { SearchTypeConfig } from '../types';
+
 import { HubsLocalRequestBuilder } from '../strategies/requestBuilders';
 import { HubLocalResponseTransformer } from '../strategies/responseTransformers';
 import { HubsLocalResultFormatter } from '../strategies/resultFormatters';
+import type { SearchTypeConfig } from '../types';
 
 /**
  * Hubs Local Configuration for Search page (Atomic)

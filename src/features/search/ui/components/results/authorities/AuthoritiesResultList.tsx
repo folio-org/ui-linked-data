@@ -1,8 +1,10 @@
 import { FC } from 'react';
+
 import { TableFlex } from '@/components/Table';
+
+import { authoritiesTableConfig } from '../../../config/results/authoritiesTable.config';
 import { useFormattedResults } from '../../../hooks/useFormattedResults';
 import { useTableFormatter } from '../../../hooks/useTableFormatter';
-import { authoritiesTableConfig } from '../../../config/results/authoritiesTable.config';
 
 interface AuthoritiesResultListProps {
   context?: 'search' | 'complexLookup';

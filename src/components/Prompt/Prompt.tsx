@@ -1,15 +1,18 @@
 import { FC, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
-import { useModalControls } from '@common/hooks/useModalControls';
-import { ModalCloseRecord } from '@components/ModalCloseRecord';
-import { ForceNavigateToDest, QueryParams } from '@common/constants/routes.constants';
-import { ModalSwitchToNewRecord } from '@components/ModalSwitchToNewRecord';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { RecordStatus } from '@common/constants/record.constants';
-import { getForceNavigateToDest } from '@common/helpers/navigation.helper';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useStatusState } from '@src/store';
+
+import { RecordStatus } from '@/common/constants/record.constants';
+import { ForceNavigateToDest, QueryParams } from '@/common/constants/routes.constants';
+import { getForceNavigateToDest } from '@/common/helpers/navigation.helper';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useModalControls } from '@/common/hooks/useModalControls';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { ModalCloseRecord } from '@/components/ModalCloseRecord';
+import { ModalSwitchToNewRecord } from '@/components/ModalSwitchToNewRecord';
+
+import { useStatusState } from '@/store';
+
 import './Prompt.scss';
 
 interface Props {

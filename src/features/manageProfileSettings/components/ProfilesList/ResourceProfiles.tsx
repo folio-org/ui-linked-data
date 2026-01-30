@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ResourceProfile } from './ResourceProfile';
+
 import { useManageProfileSettingsState } from '@/store';
+
+import { ResourceProfile } from './ResourceProfile';
 
 type ResourceProfilesProps = {
   labelId: string;

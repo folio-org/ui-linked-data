@@ -1,8 +1,12 @@
-import { renderHook } from '@testing-library/react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { renderHook } from '@testing-library/react';
+
 import { SearchQueryParams } from '@/common/constants/routes.constants';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+
 import { useSearchStore } from '@/store';
 
 jest.mock('react-router-dom', () => ({

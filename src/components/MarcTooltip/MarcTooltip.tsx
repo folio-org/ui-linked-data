@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+
 import classNames from 'classnames';
-import { SchemaControlType } from '@common/constants/uiControls.constants';
-import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
-import { Tooltip } from '@components/Tooltip';
-import InfoIcon from '@src/assets/info.svg?react';
+
+import { SchemaControlType } from '@/common/constants/uiControls.constants';
+import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
+import { Tooltip } from '@/components/Tooltip';
+
+import InfoIcon from '@/assets/info.svg?react';
+
 import './MarcTooltip.scss';
 
 export interface MarcMapping {

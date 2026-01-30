@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
+
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
-import { useSearchState, useUIState } from '@src/store';
+
+import { useSearchState, useUIState } from '@/store';
 
 /**
  * Custom hook that handles search component lifecycle and cleanup operations

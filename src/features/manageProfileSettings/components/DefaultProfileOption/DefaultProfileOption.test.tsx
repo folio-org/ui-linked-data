@@ -1,12 +1,17 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { useManageProfileSettingsState, useProfileState } from '@/store';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { DefaultProfileOption } from './DefaultProfileOption';
+
+import { MemoryRouter } from 'react-router-dom';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
 import { fetchPreferredProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { useManageProfileSettingsState, useProfileState } from '@/store';
+
+import { DefaultProfileOption } from './DefaultProfileOption';
+
+jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
 }));
 

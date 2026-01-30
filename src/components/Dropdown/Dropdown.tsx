@@ -1,8 +1,12 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import classNames from 'classnames';
 import { FormattedMessage } from 'react-intl';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
-import Caret from '@src/assets/dropdown-caret.svg?react';
+
+import classNames from 'classnames';
+
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+
+import Caret from '@/assets/dropdown-caret.svg?react';
+
 import './Dropdown.scss';
 
 type DropdownProps = {
@@ -169,7 +173,9 @@ export const Dropdown: FC<DropdownProps> = ({
                         <button
                           type="button"
                           key={id}
-                          ref={elem => {optionsRef.current[index] = elem}}
+                          ref={elem => {
+                            optionsRef.current[index] = elem;
+                          }}
                           role="menuitem"
                           disabled={isDisabled}
                           aria-disabled={isDisabled}

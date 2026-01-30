@@ -1,7 +1,9 @@
 // TODO: UILD-674 - revisit this module.
 // It should be refactored in terms of using features/search/core features.
 import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+
 import { RESPONSE_TRANSFORMERS } from '@/features/search/core';
+
 import baseApi from './base.api';
 
 export type ItemSearchResponse = {

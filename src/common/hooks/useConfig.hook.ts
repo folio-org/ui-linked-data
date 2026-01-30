@@ -1,17 +1,21 @@
 import { useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { v4 as uuidv4 } from 'uuid';
-import { QueryParams } from '@/common/constants/routes.constants';
+
 import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { getProfileConfig } from '@/common/helpers/profile.helper';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
-import { useInputsState, useProfileState } from '@/store';
-import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
-import { useServicesContext } from './useServicesContext';
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
+import { mapToResourceType } from '@/configs/resourceTypes';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { useLoadProfile } from './useLoadProfile';
 import { useLoadProfileSettings } from './useLoadProfileSettings';
-import { getProfileConfig } from '@/common/helpers/profile.helper';
-import { mapToResourceType } from '@/configs/resourceTypes';
+import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
+import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {
   noStateUpdate?: boolean;
@@ -64,6 +68,7 @@ export const useConfig = () => {
   ]);
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
+  const processingPromise = useRef<Promise<void> | null>(null);
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
 
@@ -132,17 +137,12 @@ export const useConfig = () => {
     };
   };
 
-  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<unknown> => {
-    if (isProcessingProfiles.current && (record || recordId)) return;
-
+  const processProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<void> => {
     try {
       const recordData = record?.resource || {};
       isProcessingProfiles.current = true;
-      let editingRecordBlocks;
-
-      if (recordData && Object.keys(recordData).length) {
-        editingRecordBlocks = getEditingRecordBlocks(recordData as RecordEntry);
-      }
+      const editingRecordBlocks =
+        recordData && Object.keys(recordData).length ? getEditingRecordBlocks(recordData as RecordEntry) : undefined;
 
       const { profileId, referenceProfileId, resourceType } = extractProfileParams({
         recordData,
@@ -197,7 +197,26 @@ export const useConfig = () => {
       }
     } finally {
       isProcessingProfiles.current = false;
+      processingPromise.current = null;
     }
+  };
+
+  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<void> => {
+    // If processing is already running and caller provided a record/recordId,
+    // wait for the current processing to finish instead of returning immediately.
+    if (isProcessingProfiles.current && (record || recordId)) {
+      if (processingPromise.current) {
+        await processingPromise.current;
+      }
+
+      return;
+    }
+
+    // If there's no processingPromise active, start one and store it,
+    // so other callers can await the same promise instead of racing.
+    processingPromise.current ??= processProfiles({ record, recordId, previewParams, asClone });
+
+    return processingPromise.current;
   };
 
   return { getProfiles };

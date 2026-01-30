@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import { useSearchState } from '@/store';
 
 interface UseComplexLookupModalStateParams {

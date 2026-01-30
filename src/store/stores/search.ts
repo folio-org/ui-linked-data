@@ -2,9 +2,10 @@ import {
   DEFAULT_FACET_BY_SEGMENT,
   DEFAULT_SEARCH_BY,
   DEFAULT_SEARCH_LIMITERS,
-} from '@common/constants/search.constants';
+} from '@/common/constants/search.constants';
+
+import { SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
-import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
 
 type Data = null | WorkAsSearchResultDTO[];
 type SourceData = SourceDataDTO | null;

@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+
 import baseApi from '@/common/api/base.api';
 
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';

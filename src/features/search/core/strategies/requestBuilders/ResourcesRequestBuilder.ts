@@ -1,5 +1,6 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
-import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
+
+import type { SearchRequestDescriptor, SearchRequestParams } from '../../types';
 import { normalizeQuery } from '../../utils';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 

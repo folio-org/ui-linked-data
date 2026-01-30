@@ -1,4 +1,4 @@
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
 describe('ProfileSchemaManager', () => {
   let manager: ProfileSchemaManager;

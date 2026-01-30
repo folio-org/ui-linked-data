@@ -1,5 +1,6 @@
 import { FC, type ReactElement } from 'react';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { ControlPane } from './ControlPane';
 

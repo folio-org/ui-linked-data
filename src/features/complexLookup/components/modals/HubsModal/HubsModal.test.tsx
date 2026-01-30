@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { HubsModal } from './HubsModal';
+
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
+
+import { HubsModal } from './HubsModal';
 
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),

@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { ComplexLookupField } from './ComplexLookupField';
-import * as ComplexLookupHooks from '../../hooks';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
+
+import * as ComplexLookupHooks from '../../hooks';
+import { ComplexLookupField } from './ComplexLookupField';
 
 jest.mock('../../hooks', () => ({
   useComplexLookupField: jest.fn(),

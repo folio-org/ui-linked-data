@@ -1,9 +1,10 @@
-import { DropdownItemType } from '@/common/constants/uiElements.constants';
 import { MIN_AMT_OF_INSTANCES_TO_COMPARE } from '@/common/constants/search.constants';
-import Plus16 from '@/assets/plus-16.svg?react';
-import Transfer16 from '@/assets/transfer-16.svg?react';
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+
 import Lightning16 from '@/assets/lightning-16.svg?react';
+import Plus16 from '@/assets/plus-16.svg?react';
 import Settings from '@/assets/settings.svg?react';
+import Transfer16 from '@/assets/transfer-16.svg?react';
 
 export interface ResourceActionsParams {
   onClickNewWork: () => void;

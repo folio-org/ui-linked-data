@@ -1,5 +1,5 @@
+import { SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
-import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
 
 export type ComplexLookupState = SliceState<'authorityAssignmentCheckFailedIds', string[], string>;
 

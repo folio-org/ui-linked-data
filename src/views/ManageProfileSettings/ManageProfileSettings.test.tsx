@@ -1,12 +1,15 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
+import { BrowserRouter } from 'react-router-dom';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+
+import { fetchPreferredProfiles, fetchProfile, fetchProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
-import { fetchPreferredProfiles, fetchProfile, fetchProfiles } from '@common/api/profiles.api';
+
 import { ManageProfileSettings } from './ManageProfileSettings';
 
-jest.mock('@common/api/profiles.api', () => ({
+jest.mock('@/common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
   fetchPreferredProfiles: jest.fn(),
   fetchProfile: jest.fn(),

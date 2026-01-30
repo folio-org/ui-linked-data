@@ -1,17 +1,17 @@
-import { ProfileSchemaProcessorManager } from '@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GroupProcessor } from '@common/services/recordGenerator/processors/profileSchema/groupProcessor';
-import { FlattenedDropdownProcessor } from '@common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor';
-import { DropdownProcessor } from '@common/services/recordGenerator/processors/profileSchema/dropdownProcessor';
-import { UnwrappedDropdownOptionProcessor } from '@common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor';
-import { LookupProcessor } from '@common/services/recordGenerator/processors/profileSchema/lookupProcessor';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { DropdownProcessor } from '@/common/services/recordGenerator/processors/profileSchema/dropdownProcessor';
+import { FlattenedDropdownProcessor } from '@/common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor';
+import { GroupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/groupProcessor';
+import { LookupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/lookupProcessor';
+import { ProfileSchemaProcessorManager } from '@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { UnwrappedDropdownOptionProcessor } from '@/common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/processors/profileSchema/groupProcessor');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/dropdownProcessor');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/lookupProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/groupProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/flattenedDropdownProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/dropdownProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/lookupProcessor');
 
 describe('ProfileSchemaProcessorManager', () => {
   let manager: ProfileSchemaProcessorManager;

@@ -1,11 +1,14 @@
-import '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { renderHook } from '@testing-library/react';
-import { useLoadProfile } from '@common/hooks/useLoadProfile';
-import { fetchProfile } from '@common/api/profiles.api';
-import { useProfileStore } from '@src/store';
+import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-jest.mock('@common/api/profiles.api', () => ({
+import { renderHook } from '@testing-library/react';
+
+import { fetchProfile } from '@/common/api/profiles.api';
+import { useLoadProfile } from '@/common/hooks/useLoadProfile';
+
+import { useProfileStore } from '@/store';
+
+jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
 }));
 
@@ -67,7 +70,7 @@ describe('useLoadProfile', () => {
       (fetchProfile as jest.Mock).mockRejectedValue(error);
 
       const { result } = renderHook(useLoadProfile);
-      
+
       await expect(result.current.loadProfile(1)).rejects.toThrow('Failed to fetch profile');
       expect(fetchProfile).toHaveBeenCalledWith(1);
       expect(setProfiles).not.toHaveBeenCalled();

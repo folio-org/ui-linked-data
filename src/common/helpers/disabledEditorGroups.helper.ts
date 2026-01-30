@@ -1,5 +1,5 @@
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 const DISABLED_FIELD_TYPES = [
   AdvancedFieldType.literal,

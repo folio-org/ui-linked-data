@@ -1,12 +1,14 @@
 import { cloneDeep } from 'lodash';
-import { AdvancedFieldType as AdvancedFieldTypeEnum, UI_CONTROLS_LIST } from '@common/constants/uiControls.constants';
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { GRANDPARENT_ENTRY_PATH_INDEX } from '@common/constants/bibframe.constants';
-import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
-import { IUserValues } from '@common/services/userValues/userValues.interface';
-import { getParentEntryUuid } from '@common/helpers/schema.helper';
-import { IRecordToSchemaMappingInit, IRecordToSchemaMapping } from './recordToSchemaMapping.interface';
+
+import { GRANDPARENT_ENTRY_PATH_INDEX } from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { AdvancedFieldType as AdvancedFieldTypeEnum, UI_CONTROLS_LIST } from '@/common/constants/uiControls.constants';
+import { getParentEntryUuid } from '@/common/helpers/schema.helper';
+import { ISelectedEntries } from '@/common/services/selectedEntries/selectedEntries.interface';
+import { IUserValues } from '@/common/services/userValues/userValues.interface';
+
+import { IRecordToSchemaMapping, IRecordToSchemaMappingInit } from './recordToSchemaMapping.interface';
 
 export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
   private updatedSchema: Schema;

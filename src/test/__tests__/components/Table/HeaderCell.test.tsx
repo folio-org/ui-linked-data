@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { HeaderCell } from '@components/Table/HeaderCell';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { HeaderCell } from '@/components/Table/HeaderCell';
 
 describe('HeaderCell', () => {
   const defaultProps = {

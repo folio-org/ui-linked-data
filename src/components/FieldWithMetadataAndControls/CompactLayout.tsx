@@ -1,7 +1,9 @@
 import { FC, ReactNode, memo } from 'react';
+
 import classNames from 'classnames';
-import { DuplicateGroup } from '@components/DuplicateGroup';
-import { MarcTooltip } from '@components/MarcTooltip';
+
+import { DuplicateGroup } from '@/components/DuplicateGroup';
+import { MarcTooltip } from '@/components/MarcTooltip';
 
 type ICompactLayout = {
   children: ReactNode;

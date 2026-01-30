@@ -1,26 +1,17 @@
-import { useCallback, useMemo } from 'react';
-import {
-  LegacySearch,
-  LegacySearchControlPane,
-  Search,
-  ResourcesResultList,
-  HubsResultList,
-  LegacySearchResultList,
-  type SourceOption,
-} from '@/features/search/ui';
-import { DEFAULT_SEARCH_BY, SearchSegment } from '@/common/constants/search.constants';
-import { ModalImport } from '@/components/ModalImport';
+import { useMemo } from 'react';
+
 import { Dropdown } from '@/components/Dropdown';
-import { useSearchState } from '@src/store';
-import { IS_NEW_SEARCH_ENABLED, SEARCH_FILTERS_ENABLED } from '@/common/constants/feature.constants';
-import { getByIdentifier } from '@/common/api/search.api';
-import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
-import { filters } from './data/filters';
-import { useSearchActions, useSearchCleanup } from './hooks';
-import { createResourceActionsConfig, createHubActionsConfig } from './config';
-import { FormattedMessage } from 'react-intl';
-import './Search.scss';
 import { FullDisplay } from '@/components/FullDisplay';
+import { ModalImport } from '@/components/ModalImport';
+
+import { HubsResultList, ResourcesResultList, Search, type SourceOption } from '@/features/search/ui';
+
+import { useSearchState } from '@/store';
+
+import { createHubActionsConfig, createResourceActionsConfig } from './config';
+import { useSearchActions, useSearchCleanup } from './hooks';
+
+import './Search.scss';
 
 const SOURCE_OPTIONS: SourceOption[] = [
   {
@@ -68,17 +59,7 @@ export const SearchView = () => {
     [onClickNewHub],
   );
 
-  const renderSearchControlPane = useCallback(
-    () => (
-      <LegacySearchControlPane label={<FormattedMessage id="ld.resources" />}>
-        <Dropdown labelId="ld.actions" items={resourceActions} buttonTestId="search-view-actions-dropdown" />
-      </LegacySearchControlPane>
-    ),
-    [resourceActions],
-  );
-  const renderResultsList = useCallback(() => <LegacySearchResultList />, []);
-
-  return IS_NEW_SEARCH_ENABLED ? (
+  return (
     <div className="search" data-testid="search" id="ld-search-container">
       <Search segments={['resources', 'hubs']} defaultSegment="resources" flow="url" mode="custom">
         <Search.Controls>
@@ -148,26 +129,6 @@ export const SearchView = () => {
         <FullDisplay />
       </Search>
 
-      <ModalImport />
-    </div>
-  ) : (
-    <div className="search" data-testid="search" id="ld-search-container">
-      <LegacySearch
-        endpointUrl={SEARCH_API_ENDPOINT.RESOURCES}
-        sameOrigin={true}
-        filters={filters}
-        hasSearchParams={true}
-        fetchSearchResults={getByIdentifier}
-        defaultSearchBy={DEFAULT_SEARCH_BY}
-        defaultNavigationSegment={SearchSegment.Search}
-        labelEmptySearch="ld.enterSearchCriteria"
-        isVisibleFilters={SEARCH_FILTERS_ENABLED}
-        isVisibleFullDisplay={true}
-        isVisibleAdvancedSearch={true}
-        isVisibleSearchByControl={true}
-        renderSearchControlPane={renderSearchControlPane}
-        renderResultsList={renderResultsList}
-      />
       <ModalImport />
     </div>
   );

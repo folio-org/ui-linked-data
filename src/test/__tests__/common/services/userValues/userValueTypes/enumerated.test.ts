@@ -1,6 +1,6 @@
-import { EnumeratedUserValueService } from '@common/services/userValues/userValueTypes';
-import { IUserValueType } from '@common/services/userValues/userValueTypes/userValueType.interface';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { EnumeratedUserValueService } from '@/common/services/userValues/userValueTypes';
+import { IUserValueType } from '@/common/services/userValues/userValueTypes/userValueType.interface';
 
 describe('EnumeratedUserValueService', () => {
   let enumeratedUserValueService: IUserValueType;

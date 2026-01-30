@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSearchState } from '@/store';
+
 import { SearchIdentifiers } from '@/common/constants/search.constants';
+
+import { useSearchState } from '@/store';
+
 import { SearchParam, type SearchTypeConfig, removeBackslashes } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types/ui.types';

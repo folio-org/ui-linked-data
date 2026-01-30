@@ -1,12 +1,13 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { SearchQueryParams } from '@/common/constants/routes.constants';
 import {
-  SearchIdentifiers,
   AdvancedSearchQualifiers,
   AdvancedSearchSchema,
+  SearchIdentifiers,
   TitleTypes,
 } from '@/common/constants/search.constants';
 import { Row } from '@/components/Table';
-import { v4 as uuidv4 } from 'uuid';
 
 export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;

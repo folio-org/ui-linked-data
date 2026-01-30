@@ -1,5 +1,6 @@
-import { FullDisplayType } from '@common/constants/uiElements.constants';
-import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
+
+import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
 export type UIEntries = Set<string>;

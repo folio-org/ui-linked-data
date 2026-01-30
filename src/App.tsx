@@ -1,16 +1,19 @@
 import { FC, Suspense, useEffect, useMemo, useRef } from 'react';
 import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { ErrorBoundary } from '@components/ErrorBoundary';
-import { Loading } from '@components/Loading';
-import { ROUTES } from '@common/constants/routes.constants';
-import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
-import { OKAPI_CONFIG } from '@common/constants/api.constants';
-import { localStorageService } from '@common/services/storage';
-import { Root, Search, EditWrapper, ExternalResourcePreview, ManageProfileSettings } from '@views';
+
+import { OKAPI_CONFIG } from '@/common/constants/api.constants';
+import { DEFAULT_LOCALE } from '@/common/constants/i18n.constants';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { localStorageService } from '@/common/services/storage';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { Loading } from '@/components/Loading';
+import { EditWrapper, ExternalResourcePreview, ManageProfileSettings, Root, Search } from '@/views';
+
 import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, QueryProvider, ServicesProvider } from './providers';
-import './App.scss';
 import { useConfigState } from './store';
+
+import './App.scss';
 
 type IContainer = {
   routePrefix?: string;

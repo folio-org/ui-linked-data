@@ -1,14 +1,15 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+
 import {
-  wrapWithContainer,
-  extractValue,
-  wrapSimpleLookupData,
-  notesMapping,
   extractDropdownOption,
-  processComplexLookup,
-  languagesMapping,
+  extractValue,
   hubLanguagesMapping,
+  languagesMapping,
+  notesMapping,
+  processComplexLookup,
   processHubsComplexLookup,
+  wrapSimpleLookupData,
+  wrapWithContainer,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>

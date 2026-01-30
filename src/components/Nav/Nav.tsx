@@ -1,15 +1,18 @@
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
 import {
   EXTERNAL_RESOURCE_URLS,
-  RESOURCE_EDIT_CREATE_URLS,
   MANAGE_PROFILE_SETTINGS_URLS,
-} from '@common/constants/routes.constants';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
-import { EditControlPane } from '@components/EditControlPane';
-import { ViewMarcControlPane } from '@components/ViewMarcControlPane';
-import { PreviewExternalResourcePane } from '@components/PreviewExternalResourcePane';
+  RESOURCE_EDIT_CREATE_URLS,
+} from '@/common/constants/routes.constants';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { EditControlPane } from '@/components/EditControlPane';
+import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
+import { ViewMarcControlPane } from '@/components/ViewMarcControlPane';
+
 import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
-import { useInputsState, useMarcPreviewState } from '@src/store';
+
+import { useInputsState, useMarcPreviewState } from '@/store';
+
 import './Nav.scss';
 
 export const Nav = () => {

@@ -1,9 +1,10 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
-import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { LinkedPropertyInfo, ProcessContext } from '../../types/common.types';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
 

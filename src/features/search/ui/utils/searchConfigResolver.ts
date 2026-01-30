@@ -1,4 +1,4 @@
-import { getSearchCoreConfig, resolveCoreConfig, type SearchTypeConfig } from '../../core';
+import { type SearchTypeConfig, getSearchCoreConfig, resolveCoreConfig } from '../../core';
 import { resolveUIConfig } from '../config';
 import type { SearchTypeUIConfig } from '../types';
 

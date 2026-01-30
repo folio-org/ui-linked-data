@@ -1,4 +1,4 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 
 type SimplePropertyKeys = typeof BFLITE_URIS.LINK | typeof BFLITE_URIS.LABEL;
 type ExtendedPropertyKeys = SimplePropertyKeys | typeof BFLITE_URIS.NAME | typeof BFLITE_URIS.CODE;

@@ -1,20 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { EditSection } from '@/components/EditSection';
+
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
-import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
+import { RecordStatus } from '@/common/constants/record.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
 import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
+import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { useConfig } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { useResetRecordStatus } from '@/common/hooks/useResetRecordStatus';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { StatusType } from '@/common/constants/status.constants';
-import { RecordStatus } from '@/common/constants/record.constants';
 import { EditPreview } from '@/components/EditPreview';
-import { QueryParams } from '@/common/constants/routes.constants';
+import { EditSection } from '@/components/EditSection';
 import { ViewMarcModal } from '@/components/ViewMarcModal';
+import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
+
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
-import { mapToResourceType, hasSplitLayout, getProfileBfid, hasReference, getReference } from '@/configs/resourceTypes';
+
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -77,7 +80,7 @@ export const Edit = () => {
     scrollEntity({ top: 0, behavior: 'instant' });
 
     async function init() {
-      if (resourceId ?? cloneOfParam) {
+      if (resourceId ?? cloneOfParam ?? refParam) {
         return;
       }
 

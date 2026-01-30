@@ -1,6 +1,8 @@
-import '@src/test/__mocks__/lib/react-select.mock';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { DropdownField } from '@components/DropdownField';
+import '@/test/__mocks__/lib/react-select.mock';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { DropdownField } from '@/components/DropdownField';
 
 // TODO: enable/update unit tests once the edit section
 // field components are stable

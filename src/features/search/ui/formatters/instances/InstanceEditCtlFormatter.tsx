@@ -1,7 +1,9 @@
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button, ButtonType } from '@/components/Button';
+
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { Button, ButtonType } from '@/components/Button';
 import type { Row } from '@/components/Table';
 
 interface EditCtlFormatterProps {

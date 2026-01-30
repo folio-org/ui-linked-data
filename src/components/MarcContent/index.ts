@@ -1,1 +1,1 @@
-export { MarcContent } from "./MarcContent";
+export { MarcContent } from './MarcContent';

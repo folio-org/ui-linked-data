@@ -1,8 +1,12 @@
 import { memo, useEffect, useMemo, useRef } from 'react';
+
 import classNames from 'classnames';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
-import { type Table as TableProps, type Row, type Cell } from './Table';
+
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+
+import { type Cell, type Row, type Table as TableProps } from './Table';
 import { useTableGridLayout } from './hooks/useTableGridLayout';
+
 import './Table.scss';
 
 export const TableFlex = memo(

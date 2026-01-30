@@ -1,13 +1,16 @@
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
 import {
   EXTERNAL_RESOURCE_URLS,
-  RESOURCE_EDIT_CREATE_URLS,
   MANAGE_PROFILE_SETTINGS_URLS,
-} from '@common/constants/routes.constants';
-import { RecordControls } from '@components/RecordControls';
-import { PreviewExternalResourceControls } from '@components/PreviewExternalResourceControls';
+  RESOURCE_EDIT_CREATE_URLS,
+} from '@/common/constants/routes.constants';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
+import { RecordControls } from '@/components/RecordControls';
+
 import { ManageProfileSettingsControls } from '@/features/manageProfileSettings/components/ManageProfileSettingsControls/ManageProfileSettingsControls';
-import { useInputsState, useMarcPreviewState } from '@src/store';
+
+import { useInputsState, useMarcPreviewState } from '@/store';
+
 import './Footer.scss';
 
 export const Footer = () => {

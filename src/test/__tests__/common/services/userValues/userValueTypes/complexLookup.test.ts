@@ -1,4 +1,4 @@
-import { ComplexLookupUserValueService } from '@common/services/userValues/userValueTypes';
+import { ComplexLookupUserValueService } from '@/common/services/userValues/userValueTypes';
 
 describe('ComplexLookupUserValueService', () => {
   test('generates user value', () => {

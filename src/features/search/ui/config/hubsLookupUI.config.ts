@@ -1,5 +1,6 @@
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
-import type { SearchableIndexUI, SearchTypeUIConfig } from '../types';
+
+import type { SearchTypeUIConfig, SearchableIndexUI } from '../types';
 
 export const hubsLookupUIConfig: SearchTypeUIConfig = {
   limit: 100, // UI shows all 100 results per page

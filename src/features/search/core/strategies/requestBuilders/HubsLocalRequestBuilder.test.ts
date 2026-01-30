@@ -1,5 +1,6 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+
 import { HubsLocalRequestBuilder } from './HubsLocalRequestBuilder';
 
 describe('HubsLocalRequestBuilder', () => {

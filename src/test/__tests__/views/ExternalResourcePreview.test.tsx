@@ -1,12 +1,16 @@
-import { useInputsStore } from '@src/store';
-import { fetchExternalRecordForPreview } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { render, screen } from '@testing-library/react';
-import { ExternalResourcePreview } from '@views';
+import { fetchExternalRecordForPreview } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { Fragment, ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+import { render, screen } from '@testing-library/react';
+
+import { ExternalResourcePreview } from '@/views';
+
+import { useInputsStore } from '@/store';
+
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {

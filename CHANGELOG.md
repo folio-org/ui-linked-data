@@ -68,6 +68,9 @@
 * Refactor Edit page to support multiple resource types. Add Hub create page. Refs [UILD-694].
 * Persist Hub when save button is clicked. Refs [UILD-699].
 * Add workspace profile settings components. Refs [UILD-696].
+* Fix incorrect display of panels on the Edit page. Refs [UILD-708].
+* Organize imports order in the code. Refs [UILD-722].
+* Remove legacy search code. Refs [UILD-721].
 * Preserve search results state. Refs [UILD-702].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -137,6 +140,9 @@
 [UILD-694]:https://folio-org.atlassian.net/browse/UILD-694
 [UILD-699]:https://folio-org.atlassian.net/browse/UILD-699
 [UILD-696]:https://folio-org.atlassian.net/browse/UILD-696
+[UILD-708]:https://folio-org.atlassian.net/browse/UILD-708
+[UILD-722]:https://folio-org.atlassian.net/browse/UILD-722
+[UILD-721]:https://folio-org.atlassian.net/browse/UILD-721
 [UILD-702]:https://folio-org.atlassian.net/browse/UILD-702
 
 ## 1.0.5 (2025-04-30)

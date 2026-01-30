@@ -1,6 +1,6 @@
-import * as BibframeHelper from '@src/common/helpers/bibframe.helper';
-import { QueryParams, ROUTES } from '@src/common/constants/routes.constants';
-import { RecordEditActions } from '@src/common/constants/record.constants';
+import { RecordEditActions } from '@/common/constants/record.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
+import * as BibframeHelper from '@/common/helpers/bibframe.helper';
 
 describe('bibframe.helper', () => {
   describe('getEditActionPrefix', () => {

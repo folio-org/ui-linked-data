@@ -2,10 +2,10 @@ import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { ProcessContext } from '../../types/common.types';
 import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
 import { IValueProcessor } from '../value/valueProcessor.interface';
-import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
-import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { ArrayEntryProcessor } from './arrayEntryProcessor';
 import { ObjectEntryProcessor } from './objectEntryProcessor';
+import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
+import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 import { SimpleEntryProcessor } from './simpleEntryProcessor';
 
 export class RecordSchemaEntryManager implements IRecordSchemaEntryManager {

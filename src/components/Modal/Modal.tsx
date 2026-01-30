@@ -1,13 +1,18 @@
-import { FC, ReactNode, memo, useEffect, type ReactElement } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import classNames from 'classnames';
-import { AriaModalKind, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
-import Times16 from '@src/assets/times-16.svg?react';
-import { Button, ButtonType } from '@components/Button';
-import './Modal.scss';
 import { useIntl } from 'react-intl';
+
+import classNames from 'classnames';
+
+import { AriaModalKind, MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
+import { Button, ButtonType } from '@/components/Button';
+
+import Times16 from '@/assets/times-16.svg?react';
+
+import './Modal.scss';
+
 // TODO: UILD-147 - Uncomment for using with Shadow DOM
-// import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
+// import { WEB_COMPONENT_NAME } from '@/common/constants/web-component';
 
 interface Props {
   'data-testid'?: string;

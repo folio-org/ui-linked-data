@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Modal } from '@components/Modal';
+
+import { Modal } from '@/components/Modal';
 
 interface ModalWarningProps {
   isOpen: boolean;

@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { v4 as uuidv4 } from 'uuid';
-import { LiteralField } from '@components/LiteralField';
+
+import { LiteralField } from '@/components/LiteralField';
 
 const uuid = uuidv4();
 const onChangeFn = jest.fn();
@@ -20,7 +21,7 @@ describe('Literal Field', () => {
     };
 
     renderComponent();
-    fireEvent.change(getByTestId("literal-field"), event);
+    fireEvent.change(getByTestId('literal-field'), event);
 
     expect(onChangeFn).toHaveBeenCalledWith(uuid, [{ label: event.target.value }]);
   });
