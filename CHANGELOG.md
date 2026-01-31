@@ -72,6 +72,7 @@
 * Organize imports order in the code. Refs [UILD-722].
 * Remove legacy search code. Refs [UILD-721].
 * Bump react-router-dom from ^6.28.1 to ^6.30.3 fixing CVE-2025-68470. Refs [UILD-724].
+* Enhance record generation with custom hubs. Fixes [UILD-673]
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -144,6 +145,7 @@
 [UILD-722]:https://folio-org.atlassian.net/browse/UILD-722
 [UILD-721]:https://folio-org.atlassian.net/browse/UILD-721
 [UILD-724]:https://folio-org.atlassian.net/browse/UILD-724
+[UILD-673]:https://folio-org.atlassian.net/browse/UILD-673
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

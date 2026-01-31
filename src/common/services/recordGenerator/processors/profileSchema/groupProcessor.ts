@@ -209,18 +209,19 @@ export class GroupProcessor extends BaseFieldProcessor {
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
   ) {
-    const valueWithId = values.find(value => value.meta?.srsId ?? value.id);
+    const valueToProcess = values.find(value => value.meta?.srsId ?? value.id) ?? values[0];
 
-    if (!valueWithId) return;
+    if (!valueToProcess) return;
 
-    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueWithId, recordSchemaProperty);
+    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueToProcess, recordSchemaProperty);
 
-    if (processedValue) {
-      const idKey = valueWithId.meta?.srsId ? 'srsId' : 'id';
-      const selectedKey = recordSchemaProperty.options?.propertyKey ?? idKey;
+    if (!processedValue) return;
 
-      groupObject[selectedKey] = processedValue;
-    }
+    const selectedKey = this.determinePropertyKey(recordSchemaProperty, valueToProcess);
+
+    if (!selectedKey) return;
+
+    groupObject[selectedKey] = processedValue;
   }
 
   private processSimpleEntry(
@@ -270,5 +271,19 @@ export class GroupProcessor extends BaseFieldProcessor {
 
   private validateEntryType(type?: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
+  }
+
+  private determinePropertyKey(
+    recordSchemaProperty: RecordSchemaEntry,
+    valueToProcess: UserValueContents,
+  ): string | undefined {
+    if (recordSchemaProperty.options?.propertyKey) {
+      return recordSchemaProperty.options.propertyKey;
+    }
+
+    if (valueToProcess.meta?.srsId) return 'srsId';
+    if (valueToProcess.id) return 'id';
+
+    return undefined;
   }
 }
