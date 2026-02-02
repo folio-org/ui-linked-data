@@ -9,6 +9,38 @@ import {
 } from '@/common/constants/search.constants';
 import { Row } from '@/components/Table';
 
+export const extractSearchParamsFromUrl = (searchParams: URLSearchParams): Record<string, string> => {
+  const state: Record<string, string> = {};
+
+  const query = searchParams.get(SearchQueryParams.Query);
+  const searchBy = searchParams.get(SearchQueryParams.SearchBy);
+  const segment = searchParams.get(SearchQueryParams.Segment);
+  const source = searchParams.get(SearchQueryParams.Source);
+  const offset = searchParams.get(SearchQueryParams.Offset);
+
+  if (query !== null) {
+    state[SearchQueryParams.Query] = query;
+  }
+
+  if (searchBy !== null) {
+    state[SearchQueryParams.SearchBy] = searchBy;
+  }
+
+  if (segment !== null) {
+    state[SearchQueryParams.Segment] = segment;
+  }
+
+  if (source !== null) {
+    state[SearchQueryParams.Source] = source;
+  }
+
+  if (offset !== null) {
+    state[SearchQueryParams.Offset] = offset;
+  }
+
+  return state;
+};
+
 export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
 
@@ -87,7 +119,13 @@ export const formatRawQuery = (rawQuery: AdvancedSearchSchema) => {
   return `(${queryWithFormatting})`;
 };
 
-export const generateSearchParamsState = (query: string | null, searchBy?: SearchIdentifiers | null, offset = 0) => {
+export const generateSearchParamsState = (
+  query: string | null,
+  searchBy?: SearchIdentifiers | null,
+  offset = 0,
+  segment?: string | null,
+  source?: string | null,
+) => {
   const searchParamsState = {
     [SearchQueryParams.Query]: query,
     [SearchQueryParams.Offset]: offset,
@@ -95,6 +133,14 @@ export const generateSearchParamsState = (query: string | null, searchBy?: Searc
 
   if (searchBy) {
     searchParamsState[SearchQueryParams.SearchBy] = searchBy;
+  }
+
+  if (segment) {
+    searchParamsState[SearchQueryParams.Segment] = segment;
+  }
+
+  if (source) {
+    searchParamsState[SearchQueryParams.Source] = source;
   }
 
   return searchParamsState;
