@@ -40,7 +40,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   ): Record<string, string[]> {
     const result: Record<string, string[]> = {};
 
-    if (!value.label || !value.meta?.uri) {
+    if (!value.label) {
       return result;
     }
 
@@ -50,7 +50,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     }
 
     const linkProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LINK);
-    if (linkProperty) {
+    if (linkProperty && value.meta?.uri) {
       result[linkProperty] = [value.meta.uri];
     }
 
