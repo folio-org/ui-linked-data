@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/react';
 
 import { Row } from '@/components/Table';
 
-import * as useHubsTableFormatterModule from '../../../hooks/useHubsTableFormatter';
+import * as useHubsTableFormatterModule from '@/features/search/ui/hooks/useHubsTableFormatter';
+
 import { HubsResultList } from './HubsResultList';
 
 // Mock dependencies
@@ -11,12 +12,22 @@ jest.mock('@/components/Table', () => ({
   TableFlex: () => <div data-testid="table-flex">Table</div>,
 }));
 
-describe('HubsResultList', () => {
-  const mockOnEdit = jest.fn();
-  const mockOnImport = jest.fn();
+const mockNavigateToEditPage = jest.fn();
+const mockGenerateEditResourceUrl = jest.fn();
 
+jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
+  useNavigateToEditPage: () => ({
+    navigateToEditPage: mockNavigateToEditPage,
+  }),
+}));
+
+jest.mock('@/common/helpers/navigation.helper', () => ({
+  generateEditResourceUrl: (id: string) => mockGenerateEditResourceUrl(id),
+}));
+
+describe('HubsResultList', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    mockGenerateEditResourceUrl.mockImplementation((id: string) => `/resources/${id}/edit`);
   });
 
   const mockFormatterReturn = {
@@ -28,37 +39,46 @@ describe('HubsResultList', () => {
   test('renders table component', () => {
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+    render(<HubsResultList />);
 
     expect(screen.getByTestId('hubs-search-result-list')).toBeInTheDocument();
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
   });
 
-  test('passes onEdit and onImport to formatter hook', () => {
+  test('passes handleEdit and handleImport to formatter hook', () => {
     const formatterSpy = jest
       .spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter')
       .mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+    render(<HubsResultList />);
 
     expect(formatterSpy).toHaveBeenCalledWith({
-      onEdit: mockOnEdit,
-      onImport: mockOnImport,
+      onEdit: expect.any(Function),
+      onImport: expect.any(Function),
     });
   });
 
-  test('handles undefined callbacks gracefully', () => {
-    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
+  test('handleEdit navigates to edit page with correct URL', () => {
+    let capturedOnEdit: ((id: string) => void) | undefined;
 
-    const { container } = render(<HubsResultList />);
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockImplementation(({ onEdit }) => {
+      capturedOnEdit = onEdit;
 
-    expect(container.querySelector('.hubs-search-result-list')).toBeInTheDocument();
+      return mockFormatterReturn;
+    });
+
+    render(<HubsResultList />);
+
+    capturedOnEdit?.('hub-123');
+
+    expect(mockGenerateEditResourceUrl).toHaveBeenCalledWith('hub-123');
+    expect(mockNavigateToEditPage).toHaveBeenCalledWith('/resources/hub-123/edit');
   });
 
   test('applies correct CSS classes', () => {
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+    render(<HubsResultList />);
 
     const container = screen.getByTestId('hubs-search-result-list');
     expect(container).toHaveClass('search-result-list');
@@ -73,7 +93,7 @@ describe('HubsResultList', () => {
 
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockDataWithItems);
 
-    render(<HubsResultList onEdit={mockOnEdit} onImport={mockOnImport} />);
+    render(<HubsResultList />);
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
   });
