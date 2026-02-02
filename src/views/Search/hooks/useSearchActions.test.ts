@@ -193,24 +193,6 @@ describe('useSearchActions', () => {
     });
   });
 
-  describe('handleHubEdit', () => {
-    test('Returns empty function', () => {
-      const { result } = renderHook(() => useSearchActions());
-
-      expect(result.current.handleHubEdit).toBeInstanceOf(Function);
-      expect(result.current.handleHubEdit()).toBeUndefined();
-    });
-  });
-
-  describe('handleHubImport', () => {
-    test('Returns empty function', () => {
-      const { result } = renderHook(() => useSearchActions());
-
-      expect(result.current.handleHubImport).toBeInstanceOf(Function);
-      expect(result.current.handleHubImport()).toBeUndefined();
-    });
-  });
-
   describe('navigateToManageProfileSettings', () => {
     test('Navigates to manage profile settings view', () => {
       const { result } = renderHook(() => useSearchActions());
