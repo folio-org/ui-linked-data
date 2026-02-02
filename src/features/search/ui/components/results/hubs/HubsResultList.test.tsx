@@ -7,7 +7,7 @@ import * as useHubsTableFormatterModule from '@/features/search/ui/hooks/useHubs
 import { HubsResultList } from './HubsResultList';
 
 // Mock dependencies
-jest.mock('../../../hooks/useHubsTableFormatter');
+jest.mock('@/features/search/ui/hooks/useHubsTableFormatter');
 jest.mock('@/components/Table', () => ({
   TableFlex: () => <div data-testid="table-flex">Table</div>,
 }));
