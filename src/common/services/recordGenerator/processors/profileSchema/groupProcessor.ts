@@ -213,15 +213,51 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!valueToProcess) return;
 
-    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueToProcess, recordSchemaProperty);
+    const effectiveSchemaProperty = this.applyConditionalProperties(recordSchemaProperty, valueToProcess);
+    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueToProcess, effectiveSchemaProperty);
 
     if (!processedValue) return;
 
-    const selectedKey = this.determinePropertyKey(recordSchemaProperty, valueToProcess);
+    const selectedKey = this.determinePropertyKey(effectiveSchemaProperty, valueToProcess);
 
     if (!selectedKey) return;
 
     groupObject[selectedKey] = processedValue;
+  }
+
+  private applyConditionalProperties(
+    recordSchemaProperty: RecordSchemaEntry,
+    value: UserValueContents,
+  ): RecordSchemaEntry {
+    const { conditionalProperties, defaultSourceType } = recordSchemaProperty.options || {};
+
+    if (!conditionalProperties || !recordSchemaProperty.properties) {
+      return recordSchemaProperty;
+    }
+
+    const sourceType = value.meta?.sourceType ?? defaultSourceType;
+
+    if (!sourceType) {
+      return recordSchemaProperty;
+    }
+
+    const activePropertyKeys = conditionalProperties[sourceType];
+
+    if (!activePropertyKeys) {
+      console.warn(`Unknown sourceType: ${sourceType}, using all properties`);
+
+      return recordSchemaProperty;
+    }
+
+    // Filter properties to only include active ones
+    const filteredProperties = Object.fromEntries(
+      Object.entries(recordSchemaProperty.properties).filter(([key]) => activePropertyKeys.includes(key)),
+    );
+
+    return {
+      ...recordSchemaProperty,
+      properties: filteredProperties,
+    };
   }
 
   private processSimpleEntry(

@@ -80,6 +80,7 @@ export function useComplexLookupField({
           meta: {
             type: AdvancedFieldType.complex,
             uri: record.uri,
+            sourceType: record.sourceType,
           },
         };
       }

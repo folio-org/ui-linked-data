@@ -36,9 +36,36 @@ export const workRecordSchema: RecordSchema = {
       _creatorReference: createArrayObjectProperty(contributorProperties),
 
       _hubs: createArrayObjectProperty({
-        _hub: createObjectProperty(linkAndLabelProperties, {
-          propertyKey: '_hub',
-        }),
+        _hub: {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            // LoC source properties
+            [BFLITE_URIS.LABEL]: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: { valueSource: 'label' },
+            },
+            [BFLITE_URIS.LINK]: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: { valueSource: 'meta.uri' },
+            },
+            // Local source properties
+            id: {
+              type: RecordSchemaEntryType.array,
+              value: RecordSchemaEntryType.string,
+              options: { valueSource: 'id' },
+            },
+          },
+          options: {
+            propertyKey: '_hub',
+            defaultSourceType: 'libraryOfCongress',
+            conditionalProperties: {
+              libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+              local: ['id', BFLITE_URIS.LABEL],
+            },
+          },
+        },
         _relation: {
           type: RecordSchemaEntryType.string,
           value: RecordSchemaEntryType.string,

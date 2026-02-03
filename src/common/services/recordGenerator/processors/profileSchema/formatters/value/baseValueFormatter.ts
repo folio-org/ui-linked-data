@@ -40,20 +40,53 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   ): Record<string, string[]> {
     const result: Record<string, string[]> = {};
 
-    if (!value.label) {
-      return result;
-    }
+    Object.entries(properties).forEach(([propertyKey, propertySchema]) => {
+      const mappedValue = this.getValueFromSource(value, propertySchema.options?.valueSource, propertyKey);
 
-    const labelProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LABEL);
-    if (labelProperty) {
-      result[labelProperty] = [value.label];
-    }
-
-    const linkProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LINK);
-    if (linkProperty && value.meta?.uri) {
-      result[linkProperty] = [value.meta.uri];
-    }
+      if (mappedValue !== null && mappedValue !== undefined && mappedValue !== '') {
+        result[propertyKey] = Array.isArray(mappedValue) ? mappedValue : [mappedValue];
+      }
+    });
 
     return result;
+  }
+
+  private getValueFromSource(
+    value: UserValueContents,
+    valueSource: string | undefined,
+    propertyKey: string,
+  ): string | string[] | null {
+    if (valueSource) {
+      return this.resolveValuePath(value, valueSource);
+    }
+
+    // Fallback: existing heuristic-based mapping for backward compatibility
+    return this.baseValueMapping(value, propertyKey);
+  }
+
+  private resolveValuePath(value: UserValueContents, path: string): string | null {
+    // Simple path resolver for dot notation (e.g., 'meta.uri')
+    const parts = path.split('.');
+    let current: unknown = value;
+
+    for (const part of parts) {
+      if (current === null || current === undefined) return null;
+
+      current = (current as Record<string, unknown>)[part];
+    }
+
+    return typeof current === 'string' ? current : null;
+  }
+
+  private baseValueMapping(value: UserValueContents, propertyKey: string): string | null {
+    if (propertyKey === BFLITE_URIS.LABEL) {
+      return value.label ?? null;
+    }
+
+    if (propertyKey === BFLITE_URIS.LINK) {
+      return value.meta?.uri ?? null;
+    }
+
+    return null;
   }
 }
