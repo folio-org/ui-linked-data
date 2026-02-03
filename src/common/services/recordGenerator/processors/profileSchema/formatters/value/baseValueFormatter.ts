@@ -40,6 +40,10 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   ): Record<string, string[]> {
     const result: Record<string, string[]> = {};
 
+    if (!value.label) {
+      return result;
+    }
+
     Object.entries(properties).forEach(([propertyKey, propertySchema]) => {
       const mappedValue = this.getValueFromSource(value, propertySchema.options?.valueSource, propertyKey);
 
