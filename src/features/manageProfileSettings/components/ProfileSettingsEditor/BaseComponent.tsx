@@ -1,11 +1,15 @@
 import { FC } from 'react';
-import classNames from 'classnames';
+
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import DragDrop from '@src/assets/drag-drop-16.svg?react';
-import ArrowUp from '@src/assets/arrow-up-16.svg?react';
-import ArrowDown from '@src/assets/arrow-down-16.svg?react';
+import classNames from 'classnames';
+
 import { Button, ButtonType } from '@/components/Button';
+
+import ArrowDown from '@/assets/arrow-down-16.svg?react';
+import ArrowUp from '@/assets/arrow-up-16.svg?react';
+import DragDrop from '@/assets/drag-drop-16.svg?react';
+
 import { type ProfileSettingComponent } from './ProfileSettingsEditor';
 
 export enum ComponentType {
@@ -34,7 +38,13 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   };
 
   return (
-    <div className={classNames('component', isDragging ? 'dragging' : '')} style={style} ref={setNodeRef} {...attributes} {...listeners}>
+    <div
+      className={classNames('component', isDragging ? 'dragging' : '')}
+      style={style}
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+    >
       <div className="name">
         <div className="grab">
           <DragDrop />

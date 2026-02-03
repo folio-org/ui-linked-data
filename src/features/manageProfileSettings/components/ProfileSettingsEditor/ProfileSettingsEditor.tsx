@@ -1,12 +1,7 @@
-import { useState, useEffect, Dispatch, SetStateAction, PointerEvent, KeyboardEvent } from 'react';
+import { Dispatch, KeyboardEvent, PointerEvent, SetStateAction, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import classNames from 'classnames';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+
+import { useAnnouncement } from '@dnd-kit/accessibility';
 import {
   Active,
   Announcements,
@@ -22,14 +17,24 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useAnnouncement } from '@dnd-kit/accessibility';
-import { useManageProfileSettingsState } from '@/store';
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import classNames from 'classnames';
+
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
+import { useManageProfileSettingsState } from '@/store';
+
 import { ComponentType } from './BaseComponent';
-import { UnusedComponent } from './UnusedComponent';
-import { SelectedComponent } from './SelectedComponent';
 import { DraggingComponent } from './DraggingComponent';
 import { DroppableList } from './DroppableList';
+import { SelectedComponent } from './SelectedComponent';
+import { UnusedComponent } from './UnusedComponent';
+
 import './ProfileSettingsEditor.scss';
 
 const filterEvent = (element: HTMLElement | null) => {
@@ -86,7 +91,8 @@ export const ProfileSettingsEditor = () => {
   const [startingList, setStartingList] = useState<ComponentType | null>(null);
   const [startingStyle, setStartingStyle] = useState<ComponentType | null>(null);
 
-  const { fullProfile, profileSettings, setProfileSettings, setIsModified } = useManageProfileSettingsState([
+  // setProfileSettings,
+  const { fullProfile, profileSettings, setIsModified } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
     'setProfileSettings',
