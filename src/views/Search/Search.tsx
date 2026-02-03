@@ -16,15 +16,8 @@ import './Search.scss';
 export const SearchView = () => {
   const { selectedInstances } = useSearchState(['selectedInstances']);
 
-  const {
-    handlePreviewMultiple,
-    handleImport,
-    onClickNewWork,
-    onClickNewHub,
-    handleHubEdit,
-    handleHubImport,
-    navigateToManageProfileSettings,
-  } = useSearchActions();
+  const { handlePreviewMultiple, handleImport, onClickNewWork, onClickNewHub, navigateToManageProfileSettings } =
+    useSearchActions();
 
   useSearchCleanup();
 
@@ -107,7 +100,7 @@ export const SearchView = () => {
             {/* Hubs segment: table with external links */}
             <Search.Controls.SegmentContent segment="hubs">
               <Search.Results className="search-results-container hubs-result-list">
-                <HubsResultList onEdit={handleHubEdit} onImport={handleHubImport} />
+                <HubsResultList />
                 <Search.Results.Pagination />
               </Search.Results>
             </Search.Controls.SegmentContent>

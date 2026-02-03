@@ -91,19 +91,11 @@ export const useSearchActions = () => {
     });
   }, [onCreateNewResource]);
 
-  // TODO: UILD-694 - implement Hub edit functionality
-  const handleHubEdit = useCallback(() => {}, []);
-
-  // TODO: UILD-694 - implement Hub import functionality
-  const handleHubImport = useCallback(() => {}, []);
-
   return {
     handlePreviewMultiple,
     handleImport,
     onClickNewWork,
     onClickNewHub,
-    handleHubEdit,
-    handleHubImport,
     navigateToManageProfileSettings,
   };
 };
