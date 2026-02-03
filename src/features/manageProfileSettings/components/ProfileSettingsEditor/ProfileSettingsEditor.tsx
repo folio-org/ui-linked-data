@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction, PointerEvent, KeyboardEvent } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 import {
   arrayMove,
@@ -9,6 +9,7 @@ import {
 } from '@dnd-kit/sortable';
 import {
   Active,
+  Announcements,
   DndContext,
   DragEndEvent,
   DragOverEvent,
@@ -21,6 +22,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
+import { useAnnouncement } from '@dnd-kit/accessibility';
 import { useManageProfileSettingsState } from '@/store';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { ComponentType } from './BaseComponent';
@@ -50,21 +52,21 @@ class FilteredPointerSensor extends PointerSensor {
       },
     },
   ];
-};
+}
 
 class FilteredKeyboardSensor extends KeyboardSensor {
   static activators = [
     {
       eventName: 'onKeyDown' as const,
       handler: ({ nativeEvent: event }: KeyboardEvent<Element>) => {
-        if (event.key === " " || event.key === "Enter") {
+        if (event.key === ' ' || event.key === 'Enter') {
           return filterEvent(event.target as HTMLElement);
         }
         return false;
       },
     },
   ];
-};
+}
 
 export type ProfileSettingComponent = {
   id: string;
@@ -73,6 +75,8 @@ export type ProfileSettingComponent = {
 
 export const ProfileSettingsEditor = () => {
   const unusedEmptyId = 'unused-container';
+  const { formatMessage } = useIntl();
+  const { announce } = useAnnouncement();
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
   const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
   const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
@@ -261,22 +265,80 @@ export const ProfileSettingsEditor = () => {
     }
   };
 
-  const makeMove = (index: number, increment: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
+  const makeMove = (index: number, increment: number, name: string) => {
     return () => {
       setIsModified(true);
-      setter(prev => {
+      setSelectedComponents(prev => {
+        announce(
+          formatMessage(
+            { id: 'ld.profileSettings.announce.reorderedSelected' },
+            {
+              name: name,
+              order: index + increment,
+            },
+          ),
+        );
         return arrayMove(prev, index, index + increment);
       });
     };
   };
 
-  const makeMoveUp = (index: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
-    return makeMove(index, -1, setter);
+  const makeMoveUp = (index: number, name: string) => {
+    return makeMove(index, -1, name);
   };
 
-  const makeMoveDown = (index: number, setter: Dispatch<SetState<ProfileSettingComponent[]>>) => {
-    return makeMove(index, 1, setter);
+  const makeMoveDown = (index: number, name: string) => {
+    return makeMove(index, 1, name);
   };
+
+  const announcements = {
+    onDragStart: () => {
+      return undefined;
+    },
+    onDragCancel: () => {
+      return undefined;
+    },
+    onDragOver: () => {
+      return undefined;
+    },
+    onDragEnd: ({ active, over }: { active: Active; over: Over | null }) => {
+      let announce;
+      if (over) {
+        const activeComponent = componentFromId(active.id as string, fullProfile);
+        const targetId = over.data.current !== undefined ? over.data.current.sortable.containerId : over.id;
+        const targetList = listFromId(targetId);
+        if (startingStyle === ComponentType.selected && targetList === ComponentType.unused) {
+          // move from selected to unused
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.movedToUnused' },
+            {
+              name: activeComponent.name,
+            },
+          );
+        } else if (startingStyle === ComponentType.selected && targetList === ComponentType.selected) {
+          // move from selected to selected
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.reorderedSelected' },
+            {
+              name: activeComponent.name,
+              order: selectedComponents.findIndex(p => p.id === over.id) + 1,
+            },
+          );
+        } else if (startingStyle === ComponentType.unused && targetList === ComponentType.selected) {
+          // move from unused to selected
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.movedToSelected' },
+            {
+              name: activeComponent.name,
+              order: selectedComponents.findIndex(p => p.id === over.id) + 1,
+            },
+          );
+        }
+      }
+      // ignore everything else
+      return announce;
+    },
+  } as Announcements;
 
   return (
     <div className="components-editor-wrapper">
@@ -288,6 +350,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
+          accessibility={{ announcements: announcements }}
         >
           <div className="unused-components" aria-labelledby="unused-title">
             <h4>
@@ -334,8 +397,8 @@ export const ProfileSettingsEditor = () => {
                           size={selectedComponents.length}
                           index={idx + 1}
                           component={component}
-                          upFn={makeMoveUp(idx, setSelectedComponents)}
-                          downFn={makeMoveDown(idx, setSelectedComponents)}
+                          upFn={makeMoveUp(idx, component.name)}
+                          downFn={makeMoveDown(idx, component.name)}
                         />
                       );
                     })
