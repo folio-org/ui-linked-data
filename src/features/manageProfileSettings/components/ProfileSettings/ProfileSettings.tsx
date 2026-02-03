@@ -47,12 +47,12 @@ export const ProfileSettings = () => {
     <div data-testid="profile-settings" className="profile-settings">
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
-          <div className="heading">
+          <h3 className="heading">
             <FormattedMessage
               id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType as ResourceTypeURL))}
             />
             : {selectedProfile.name}
-          </div>
+          </h3>
           <span className="empty-block" />
         </div>
       </div>

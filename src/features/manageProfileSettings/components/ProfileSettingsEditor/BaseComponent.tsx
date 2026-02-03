@@ -34,16 +34,16 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   };
 
   return (
-    <div className={classNames('component', isDragging ? 'dragging' : '')} style={style} ref={setNodeRef}>
+    <div className={classNames('component', isDragging ? 'dragging' : '')} style={style} ref={setNodeRef} {...attributes} {...listeners}>
       <div className="name">
-        <div className="grab" {...attributes} {...listeners}>
+        <div className="grab">
           <DragDrop />
         </div>
         {type === ComponentType.selected && !isDragging ? index + '. ' : ''}
         {component.name}
       </div>
       {type === ComponentType.selected && !isDragging ? (
-        <div className="adjust">
+        <div className="adjust" data-no-dnd="true">
           {index !== 1 && (
             <Button type={ButtonType.Icon} onClick={upFn}>
               <ArrowUp />

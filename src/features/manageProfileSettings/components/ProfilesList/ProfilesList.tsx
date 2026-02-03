@@ -48,9 +48,9 @@ export const ProfilesList = () => {
     <div data-testid="profiles-list" className="profiles-list">
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
-          <div className="heading">
+          <h3 className="heading">
             <FormattedMessage id="ld.profiles" />
-          </div>
+          </h3>
           <span className="empty-block" />
         </div>
       </div>

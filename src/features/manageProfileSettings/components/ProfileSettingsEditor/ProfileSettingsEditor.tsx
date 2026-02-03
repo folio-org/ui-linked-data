@@ -1,4 +1,4 @@
-import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction, PointerEvent, KeyboardEvent } from 'react';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import {
@@ -30,6 +30,42 @@ import { DraggingComponent } from './DraggingComponent';
 import { DroppableList } from './DroppableList';
 import './ProfileSettingsEditor.scss';
 
+const filterEvent = (element: HTMLElement | null) => {
+  let current = element;
+  while (current) {
+    if (current.dataset && current.dataset.noDnd) {
+      return false;
+    }
+    current = current.parentElement;
+  }
+  return true;
+};
+
+class FilteredPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: 'onPointerDown' as const,
+      handler: ({ nativeEvent: event }: PointerEvent) => {
+        return filterEvent(event.target as HTMLElement);
+      },
+    },
+  ];
+};
+
+class FilteredKeyboardSensor extends KeyboardSensor {
+  static activators = [
+    {
+      eventName: 'onKeyDown' as const,
+      handler: ({ nativeEvent: event }: KeyboardEvent<Element>) => {
+        if (event.key === " " || event.key === "Enter") {
+          return filterEvent(event.target as HTMLElement);
+        }
+        return false;
+      },
+    },
+  ];
+};
+
 export type ProfileSettingComponent = {
   id: string;
   name: string;
@@ -54,8 +90,8 @@ export const ProfileSettingsEditor = () => {
   ]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
+    useSensor(FilteredPointerSensor),
+    useSensor(FilteredKeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
@@ -243,87 +279,89 @@ export const ProfileSettingsEditor = () => {
   };
 
   return (
-    <div className="components-editor">
-      <DndContext
-        sensors={sensors}
-        measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
-        onDragStart={handleDragStart}
-        onDragCancel={handleDragCancel}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="unused-components">
-          <h4>
-            <span className="title">
-              <FormattedMessage id="ld.unusedComponents" />
-            </span>
-            ({unusedComponents.length})
-          </h4>
-          <p>
-            <FormattedMessage id="ld.unusedComponents.description" />
-          </p>
-          <DroppableList id={unusedEmptyId} className="components">
-            <SortableContext id="unused" items={unusedComponents} strategy={verticalListSortingStrategy}>
-              {unusedComponents.length === 0 || !profileSettings.active ? (
-                <div className="empty-list">
-                  <FormattedMessage id="ld.unusedComponents.allUsed" />
-                </div>
-              ) : (
-                unusedComponents.map(component => {
-                  return <UnusedComponent key={component.id} component={component} />;
-                })
-              )}
-            </SortableContext>
-          </DroppableList>
-        </div>
-
-        <div className="selected-components">
-          <h4>
-            <span className="title">
-              <FormattedMessage id="ld.selectedComponents" />
-            </span>
-            ({selectedComponents.length})
-          </h4>
-          <p>
-            <FormattedMessage id="ld.selectedComponents.description" />
-          </p>
-          <SortableContext id="selected" items={selectedComponents} strategy={verticalListSortingStrategy}>
-            <div className="components">
-              {profileSettings.active === true
-                ? selectedComponents.map((component, idx) => {
-                    return (
-                      <SelectedComponent
-                        key={component.id}
-                        size={selectedComponents.length}
-                        index={idx + 1}
-                        component={component}
-                        upFn={makeMoveUp(idx, setSelectedComponents)}
-                        downFn={makeMoveDown(idx, setSelectedComponents)}
-                      />
-                    );
+    <div className="components-editor-wrapper">
+      <div className="components-editor">
+        <DndContext
+          sensors={sensors}
+          measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+          onDragStart={handleDragStart}
+          onDragCancel={handleDragCancel}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="unused-components" aria-labelledby="unused-title">
+            <h4>
+              <span id="unused-title" className="title">
+                <FormattedMessage id="ld.unusedComponents" />
+              </span>
+              ({unusedComponents.length})
+            </h4>
+            <div className="description">
+              <FormattedMessage id="ld.unusedComponents.description" />
+            </div>
+            <DroppableList id={unusedEmptyId} className="components">
+              <SortableContext id="unused" items={unusedComponents} strategy={verticalListSortingStrategy}>
+                {unusedComponents.length === 0 || !profileSettings.active ? (
+                  <div className="empty-list">
+                    <FormattedMessage id="ld.unusedComponents.allUsed" />
+                  </div>
+                ) : (
+                  unusedComponents.map(component => {
+                    return <UnusedComponent key={component.id} component={component} />;
                   })
-                : profileComponents.map((component, idx) => {
-                    return (
-                      <SelectedComponent
-                        key={component.id}
-                        size={selectedComponents.length}
-                        index={idx + 1}
-                        component={component}
-                      />
-                    );
-                  })}
-            </div>
-          </SortableContext>
-        </div>
+                )}
+              </SortableContext>
+            </DroppableList>
+          </div>
 
-        <DragOverlay className="drag-overlay">
-          {activeId ? (
-            <div className={classNames('dragging', startingStyle)}>
-              <DraggingComponent component={componentFromId(activeId, fullProfile)} />
+          <div className="selected-components" aria-labelledby="selected-title">
+            <h4>
+              <span id="selected-title" className="title">
+                <FormattedMessage id="ld.selectedComponents" />
+              </span>
+              ({selectedComponents.length})
+            </h4>
+            <div className="description">
+              <FormattedMessage id="ld.selectedComponents.description" />
             </div>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+            <SortableContext id="selected" items={selectedComponents} strategy={verticalListSortingStrategy}>
+              <div className="components">
+                {profileSettings.active === true
+                  ? selectedComponents.map((component, idx) => {
+                      return (
+                        <SelectedComponent
+                          key={component.id}
+                          size={selectedComponents.length}
+                          index={idx + 1}
+                          component={component}
+                          upFn={makeMoveUp(idx, setSelectedComponents)}
+                          downFn={makeMoveDown(idx, setSelectedComponents)}
+                        />
+                      );
+                    })
+                  : profileComponents.map((component, idx) => {
+                      return (
+                        <SelectedComponent
+                          key={component.id}
+                          size={selectedComponents.length}
+                          index={idx + 1}
+                          component={component}
+                        />
+                      );
+                    })}
+              </div>
+            </SortableContext>
+          </div>
+
+          <DragOverlay className="drag-overlay">
+            {activeId ? (
+              <div className={classNames('dragging', startingStyle)}>
+                <DraggingComponent component={componentFromId(activeId, fullProfile)} />
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      </div>
     </div>
   );
 };

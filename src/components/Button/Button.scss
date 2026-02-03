@@ -223,8 +223,15 @@
     &:focus,
     &:focus-visible {
       border: 1px solid rgba(0, 0, 0, 0.5);
-      background-color: $buttonFocus;
-      box-shadow: 0 0 0 3px $buttonFocus;
+      background-color: $buttonHover;
+      box-shadow: $listButton-drop-shadow;
+    }
+
+    &:active:not(:disabled)::before {
+      content: "•";
+      font-size: 14px;
+      margin: 0 0 0 -14px;
+      padding: 0;
     }
   }
 
