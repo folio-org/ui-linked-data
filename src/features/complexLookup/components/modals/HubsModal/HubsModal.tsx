@@ -7,7 +7,7 @@ import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { Modal } from '@/components/Modal';
 
 import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
-import { HubsLookupResultList } from '@/features/search/ui';
+import { HubsLookupResultList, SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
 interface HubsModalProps {
@@ -54,6 +54,8 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
             <Search.Controls.InputsWrapper />
             <Search.Controls.SubmitButton />
             <Search.Controls.MetaControls />
+
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
           </Search.Controls>
 
           <Search.Content>
