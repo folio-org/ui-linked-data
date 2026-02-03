@@ -1,8 +1,10 @@
 import { FC, useMemo } from 'react';
-import { createIntl, createIntlCache, IntlContext } from 'react-intl';
-import { useLoadI18nMessages } from '@common/hooks/useLoadI18nMessages';
-import { DEFAULT_LOCALE } from '@common/constants/i18n.constants';
-import { useConfigState } from '@src/store';
+import { IntlContext, createIntl, createIntlCache } from 'react-intl';
+
+import { DEFAULT_LOCALE } from '@/common/constants/i18n.constants';
+import { useLoadI18nMessages } from '@/common/hooks/useLoadI18nMessages';
+
+import { useConfigState } from '@/store';
 
 type AsyncIntlProviderProps = {
   cachedMessages: I18nMessages;

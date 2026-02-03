@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { SearchContent } from './SearchContent';
+
 import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+
+import { SearchContent } from './SearchContent';
 
 describe('SearchContent', () => {
   test('renders children within the component', () => {

@@ -46,7 +46,7 @@ export const schemaGeneratorService = {
   generate: jest.fn(),
 } as ISchemaGeneratorService;
 
-jest.mock('@common/hooks/useServicesContext.ts', () => ({
+jest.mock('@/common/hooks/useServicesContext.ts', () => ({
   useServicesContext: () => ({
     userValuesService,
     selectedEntriesService,

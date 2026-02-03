@@ -1,19 +1,23 @@
 import { FC, useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
-import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
-import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
-import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
+import { ActionMeta, GroupBase, MultiValue, StylesConfig, createFilter } from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+
+import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { filterLookupOptionsByParentBlock } from '@/common/helpers/lookupOptions.helper';
+import { useSimpleLookupData } from '@/common/hooks/useSimpleLookupData';
+import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useStatusState } from '@/store';
+
+import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
-import { ClearIndicator } from './ClearIndicator';
 import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
+
 import './SimpleLookupField.scss';
-import { useStatusState } from '@src/store';
 
 interface Props {
   uri: string;

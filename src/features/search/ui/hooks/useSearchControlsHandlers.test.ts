@@ -1,11 +1,15 @@
-import { renderHook, act } from '@testing-library/react';
-import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore, useInputsState, useUIState } from '@/store';
+
+import { useSearchParams } from 'react-router-dom';
+
+import { act, renderHook } from '@testing-library/react';
+
+import { useInputsState, useSearchStore, useUIState } from '@/store';
+
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
-import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 import { resolveUIConfig } from '../config';
 import { getValidSearchBy } from '../utils';
+import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
@@ -632,7 +636,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      (getValidSearchBy as jest.Mock).mockReturnValue('title');
+      (getValidSearchBy as jest.Mock).mockReturnValue('isbn');
 
       const { result } = renderHook(() =>
         useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),

@@ -68,6 +68,13 @@
 * Refactor Edit page to support multiple resource types. Add Hub create page. Refs [UILD-694].
 * Persist Hub when save button is clicked. Refs [UILD-699].
 * Add workspace profile settings components. Refs [UILD-696].
+* Fix incorrect display of panels on the Edit page. Refs [UILD-708].
+* Organize imports order in the code. Refs [UILD-722].
+* Remove legacy search code. Refs [UILD-721].
+* Bump react-router-dom from ^6.28.1 to ^6.30.3 fixing CVE-2025-68470. Refs [UILD-724].
+* Enhance record generation with custom hubs. Fixes [UILD-673]
+* Preserve search results state. Refs [UILD-702].
+* Add navigation to Hub edit page. Refs [UILD-704].
 * Add drag and drop profile settings editing. Refs [UILD-697].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -137,10 +144,15 @@
 [UILD-694]:https://folio-org.atlassian.net/browse/UILD-694
 [UILD-699]:https://folio-org.atlassian.net/browse/UILD-699
 [UILD-696]:https://folio-org.atlassian.net/browse/UILD-696
+[UILD-708]:https://folio-org.atlassian.net/browse/UILD-708
+[UILD-722]:https://folio-org.atlassian.net/browse/UILD-722
+[UILD-721]:https://folio-org.atlassian.net/browse/UILD-721
+[UILD-673]:https://folio-org.atlassian.net/browse/UILD-673
+[UILD-702]:https://folio-org.atlassian.net/browse/UILD-702
+[UILD-704]:https://folio-org.atlassian.net/browse/UILD-704
 [UILD-697]:https://folio-org.atlassian.net/browse/UILD-697
 
 ## 1.0.5 (2025-04-30)
-* Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
 
 [UILD-553]:https://folio-org.atlassian.net/browse/UILD-553

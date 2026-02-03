@@ -1,11 +1,12 @@
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as RecordProcessingCases from '@common/services/recordNormalizing/recordProcessingCases';
-import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as SchemaHelper from '@common/helpers/schema.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
+import * as SchemaHelper from '@/common/helpers/schema.helper';
+import * as RecordProcessingCases from '@/common/services/recordNormalizing/recordProcessingCases';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
 
-jest.mock('@common/helpers/schema.helper', () => ({
+jest.mock('@/common/helpers/schema.helper', () => ({
   getLookupLabelKey: jest.fn(),
 }));
 

@@ -1,4 +1,4 @@
-import { type AvailableProfiles } from '@src/store';
+import { type AvailableProfiles } from '@/store';
 
 export const getProfileNameById = ({
   profileId,

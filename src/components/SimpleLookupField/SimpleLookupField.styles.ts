@@ -1,5 +1,6 @@
 import { CSSObjectWithLabel, GroupBase, OptionProps } from 'react-select';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
+
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 
 export const SimpleLookupFieldStyles = {
   container: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({

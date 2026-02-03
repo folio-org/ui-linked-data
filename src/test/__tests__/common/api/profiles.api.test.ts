@@ -1,5 +1,5 @@
-import baseApi from '@common/api/base.api';
-import { fetchProfile, savePreferredProfile, deletePreferredProfile } from '@common/api/profiles.api';
+import baseApi from '@/common/api/base.api';
+import { deletePreferredProfile, fetchProfile, savePreferredProfile } from '@/common/api/profiles.api';
 
 describe('profiles.api', () => {
   test('fetchProfile - calls "baseApi.getJson" with profile ID and returns profile data', async () => {

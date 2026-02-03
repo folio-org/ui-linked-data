@@ -1,13 +1,17 @@
-import { navigateAsDuplicate } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { EditControlPane } from '@components/EditControlPane';
-import { fireEvent, render } from '@testing-library/react';
+import { navigateAsDuplicate } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router';
-import * as recordsApi from '@common/api/records.api';
-import * as useProfileSelectionHook from '@common/hooks/useProfileSelection';
-import { ROUTES } from '@common/constants/routes.constants';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsState, useUIStore } from '@src/store';
+
+import { fireEvent, render } from '@testing-library/react';
+
+import * as recordsApi from '@/common/api/records.api';
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { ROUTES } from '@/common/constants/routes.constants';
+import * as useProfileSelectionHook from '@/common/hooks/useProfileSelection';
+import { EditControlPane } from '@/components/EditControlPane';
+
+import { useInputsState, useUIStore } from '@/store';
 
 const renderWrapper = (withDropdown = true, customState?: Parameters<typeof setInitialGlobalState>[0]) => {
   const path = withDropdown ? ROUTES.RESOURCE_EDIT.uri : ROUTES.RESOURCE_CREATE.uri;

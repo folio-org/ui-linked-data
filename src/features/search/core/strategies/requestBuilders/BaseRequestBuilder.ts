@@ -1,7 +1,8 @@
-import { SEARCH_QUERY_VALUE_PARAM } from '@/common/constants/search.constants';
 import { MAX_LIMIT } from '@/common/constants/api.constants';
+import { SEARCH_QUERY_VALUE_PARAM } from '@/common/constants/search.constants';
+
+import type { IRequestBuilder, SearchRequestDescriptor, SearchRequestParams } from '../../types';
 import { normalizeQuery } from '../../utils';
-import type { IRequestBuilder, SearchRequestParams, SearchRequestDescriptor } from '../../types';
 
 export abstract class BaseRequestBuilder implements IRequestBuilder {
   protected readonly baseUrl: string;

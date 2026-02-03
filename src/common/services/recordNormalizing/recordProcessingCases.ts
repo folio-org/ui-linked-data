@@ -1,5 +1,5 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { getLookupLabelKey } from '@common/helpers/schema.helper';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { getLookupLabelKey } from '@/common/helpers/schema.helper';
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
   (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {

@@ -1,5 +1,5 @@
-import { IUserValueType } from './userValueType.interface';
 import { UserValueType } from './userValueType';
+import { IUserValueType } from './userValueType.interface';
 
 export class EnumeratedUserValueService extends UserValueType implements IUserValueType {
   private contents?: UserValueContents[];
@@ -31,13 +31,7 @@ export class EnumeratedUserValueService extends UserValueType implements IUserVa
     return this.value;
   }
 
-  private generateContentItem({
-    itemUri,
-    type,
-  }: {
-    itemUri?: string;
-    type?: AdvancedFieldType;
-  }) {
+  private generateContentItem({ itemUri, type }: { itemUri?: string; type?: AdvancedFieldType }) {
     const contentItem = {
       label: itemUri,
       meta: {

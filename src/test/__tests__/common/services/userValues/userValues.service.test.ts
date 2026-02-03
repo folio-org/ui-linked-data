@@ -1,9 +1,9 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
-import { UserValuesService } from '@common/services/userValues';
-import { IUserValues } from '@common/services/userValues/userValues.interface';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@/common/constants/uiControls.constants';
+import { UserValuesService } from '@/common/services/userValues';
+import { IUserValues } from '@/common/services/userValues/userValues.interface';
 
-jest.mock('@common/services/userValues/userValueTypes/simpleLookup.ts', () => ({
+jest.mock('@/common/services/userValues/userValueTypes/simpleLookup.ts', () => ({
   SimpleLookupUserValueService: class SimpleLookupUserValueService {
     private generatedValue?: UserValue;
 

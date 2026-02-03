@@ -1,7 +1,8 @@
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import { RecordNormalizingService } from '@common/services/recordNormalizing';
-import * as BfMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as RecordProcessingMap from '@common/services/recordNormalizing/recordProcessingMap';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import * as BfMappingConstants from '@/common/constants/bibframeMapping.constants';
+import { RecordNormalizingService } from '@/common/services/recordNormalizing';
+import * as RecordProcessingMap from '@/common/services/recordNormalizing/recordProcessingMap';
 
 describe('RecordNormalizingService', () => {
   const testInstanceBlock = 'testInstanceBlock';

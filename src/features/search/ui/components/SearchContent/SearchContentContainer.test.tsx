@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { SearchContentContainer } from './SearchContentContainer';
-import * as SearchProvider from '../../providers';
+
+import { render, screen } from '@testing-library/react';
+
 import * as SearchHooks from '../../hooks';
+import * as SearchProvider from '../../providers';
+import { SearchContentContainer } from './SearchContentContainer';
 
 const mockUseSearchContext = (overrides = {}) => {
   jest.spyOn(SearchProvider, 'useSearchContext').mockReturnValue({

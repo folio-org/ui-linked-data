@@ -1,5 +1,5 @@
-import { ResourceType } from '@common/constants/record.constants';
-import { getProfileConfig } from '@common/helpers/profile.helper';
+import { ResourceType } from '@/common/constants/record.constants';
+import { getProfileConfig } from '@/common/helpers/profile.helper';
 
 jest.mock('@/configs/resourceTypes', () => ({
   mapToResourceType: (value: string | null) => {

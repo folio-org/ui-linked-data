@@ -1,9 +1,11 @@
 import { FC, ReactNode, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import { logger } from '@/common/services/logger';
 import { Button, ButtonType } from '@/components/Button';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { isSegmentActive } from '../../utils/segmentUtils';
-import { logger } from '@/common/services/logger';
 
 export interface SegmentProps {
   path: string;
@@ -26,7 +28,7 @@ export const Segment: FC<SegmentProps> = ({
 }) => {
   const { onSegmentChange, currentSegment } = useSearchContext();
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   // Active if exact match OR prefix match (for parent segments)
   const isActive = isSegmentActive(currentSegment, path, true);
   const derivedLabelId = labelId ?? `ld.${path.split(':').pop()}`;

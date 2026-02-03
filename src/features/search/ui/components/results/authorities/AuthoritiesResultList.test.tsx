@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { AuthoritiesResultList } from './AuthoritiesResultList';
+
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
 import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
+import { AuthoritiesResultList } from './AuthoritiesResultList';
 
 jest.mock('../../../hooks/useFormattedResults');
 jest.mock('../../../hooks/useTableFormatter');

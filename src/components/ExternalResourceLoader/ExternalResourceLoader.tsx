@@ -1,5 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
+
 import './ExternalResourceLoader.scss';
 
 export const ExternalResourceLoader = () => {

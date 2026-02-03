@@ -1,14 +1,16 @@
-import { FormattedMessage } from 'react-intl';
 import { FC } from 'react';
-import { Row, Table } from '@components/Table';
-import { Button, ButtonType } from '@components/Button';
-import { formatDependeciesTable } from '@common/helpers/recordFormatting.helper';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useNavigateToCreatePage } from '@common/hooks/useNavigateToCreatePage';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { wrapRecordValuesWithCommonContainer } from '@common/helpers/record.helper';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { FormattedMessage } from 'react-intl';
+
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { wrapRecordValuesWithCommonContainer } from '@/common/helpers/record.helper';
+import { formatDependeciesTable } from '@/common/helpers/recordFormatting.helper';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { Button, ButtonType } from '@/components/Button';
+import { Row, Table } from '@/components/Table';
+
 import './InstancesList.scss';
 
 type IInstancesList = {

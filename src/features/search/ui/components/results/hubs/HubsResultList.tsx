@@ -1,16 +1,24 @@
 import { FC, memo } from 'react';
+
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { TableFlex } from '@/components/Table';
-import { useHubsTableFormatter } from '../../../hooks/useHubsTableFormatter';
 
-interface HubsResultListProps {
-  onEdit?: (id: string) => void;
-  onImport?: (id: string, uri: string) => void;
-}
+import { useHubsTableFormatter } from '@/features/search/ui/hooks/useHubsTableFormatter';
 
-export const HubsResultList: FC<HubsResultListProps> = memo(({ onEdit, onImport }) => {
+export const HubsResultList: FC = memo(() => {
+  const { navigateToEditPage } = useNavigateToEditPage();
+
+  const handleEdit = (id: string) => {
+    navigateToEditPage(generateEditResourceUrl(id));
+  };
+
+  // TODO: implement Hub import functionality
+  const handleImport = (_id: string, _uri: string) => {};
+
   const { formattedData, listHeader } = useHubsTableFormatter({
-    onEdit,
-    onImport,
+    onEdit: handleEdit,
+    onImport: handleImport,
   });
 
   return (

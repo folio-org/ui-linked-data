@@ -1,20 +1,24 @@
 import { FC, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Modal } from '@/components/Modal';
-import { Search } from '@/features/search/ui/components/Search';
-import { AuthoritiesResultList } from '@/features/search/ui';
-import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { Loading } from '@/components/Loading';
+import { Modal } from '@/components/Modal';
+
+import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
-  useComplexLookupModalState,
   useAuthoritiesMarcPreview,
   useAuthoritiesSegmentData,
+  useComplexLookupModalState,
 } from '@/features/complexLookup/hooks';
 import { useAuthoritiesAssignment } from '@/features/complexLookup/hooks/useAuthoritiesAssignment';
-import { useUIState, useMarcPreviewState } from '@/store';
-import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
+import { AuthoritiesResultList } from '@/features/search/ui';
+import { Search } from '@/features/search/ui/components/Search';
+
+import { useMarcPreviewState, useUIState } from '@/store';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;

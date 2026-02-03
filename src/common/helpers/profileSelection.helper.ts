@@ -1,5 +1,5 @@
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { profileWarningsByName } from '@src/configs';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { profileWarningsByName } from '@/configs';
 
 export const getLabelId = ({
   labels: { workSet, instanceSet, workChange, instanceChange, defaultLabel },

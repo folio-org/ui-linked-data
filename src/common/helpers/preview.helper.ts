@@ -1,6 +1,6 @@
-import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { AdvancedFieldType, NOT_PREVIEWABLE_TYPES } from '@common/constants/uiControls.constants';
-import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
+import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType, NOT_PREVIEWABLE_TYPES } from '@/common/constants/uiControls.constants';
+import { PREVIEW_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 
 export const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
   const { children, type } = entry;

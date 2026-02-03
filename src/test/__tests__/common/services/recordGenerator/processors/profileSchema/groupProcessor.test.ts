@@ -1,9 +1,10 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GroupProcessor } from '@common/services/recordGenerator/processors/profileSchema/groupProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { GroupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/groupProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
 
 describe('GroupProcessor', () => {
   let processor: GroupProcessor;
@@ -283,6 +284,157 @@ describe('GroupProcessor', () => {
       const userValues = {
         child_1: {
           contents: [{ label: 'test label', id: 'test_id', meta: { id: 'test_id' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ id: 'test_id' }]);
+    });
+
+    it('processes complex type child with propertyKey option correctly', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Hub', meta: { uri: 'http://test.uri' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+              [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+            },
+            options: {
+              propertyKey: '_hub',
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          _hub: {
+            [BFLITE_URIS.LABEL]: ['Test Hub'],
+            [BFLITE_URIS.LINK]: ['http://test.uri'],
+          },
+        },
+      ]);
+    });
+
+    it('processes complex type child with propertyKey but no link correctly', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Hub' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+              [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+            },
+            options: {
+              propertyKey: '_hub',
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          _hub: {
+            [BFLITE_URIS.LABEL]: ['Test Hub'],
+          },
+        },
+      ]);
+    });
+
+    it('skips complex type child without propertyKey when no id or srsId exists', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'test label' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([]);
+    });
+
+    it('processes complex type child prioritizing value with id over value without id', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'value without id' }, { label: 'value with id', id: 'test_id', meta: { id: 'test_id' } }],
         },
       } as unknown as UserValues;
       const recordSchemaEntry = {

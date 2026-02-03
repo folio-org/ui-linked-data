@@ -1,7 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { BaseValueFormatter } from '@common/services/recordGenerator/processors/profileSchema/formatters/value/baseValueFormatter';
-import { UserValueContents } from '@common/services/recordGenerator/processors/value/valueProcessor.interface';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { BaseValueFormatter } from '@/common/services/recordGenerator/processors/profileSchema/formatters/value/baseValueFormatter';
+import { UserValueContents } from '@/common/services/recordGenerator/processors/value/valueProcessor.interface';
 
 class TestValueFormatter extends BaseValueFormatter {
   formatSimple(value: UserValueContents) {
@@ -109,6 +109,42 @@ describe('BaseValueFormatter', () => {
         expect(result).toEqual({
           [BFLITE_URIS.LINK]: ['test_uri'],
         });
+      });
+
+      it('returns complex object with only LABEL when value has label but no uri', () => {
+        const value: UserValueContents = {
+          label: 'test label',
+        };
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+            [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual({
+          [BFLITE_URIS.LABEL]: ['test label'],
+        });
+      });
+
+      it('returns empty object when value has no label', () => {
+        const value: UserValueContents = {
+          meta: { uri: 'test_uri' },
+        };
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+            [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual('');
       });
     });
 

@@ -1,4 +1,5 @@
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+
 import type { SearchTypeUIConfig } from '../types';
 
 //Authorities Search UI Configuration

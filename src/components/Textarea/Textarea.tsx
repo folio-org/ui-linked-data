@@ -1,5 +1,7 @@
 import { FC, HTMLProps } from 'react';
+
 import classNames from 'classnames';
+
 import './Textarea.scss';
 
 type TextareaProps = HTMLProps<HTMLTextAreaElement> & {

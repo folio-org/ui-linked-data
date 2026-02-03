@@ -1,6 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { SimplePropertyResult } from '@/common/services/recordGenerator/types/profileSchemaProcessor.types';
+
 import { IValueFormatter } from './valueFormatter.interface';
-import { SimplePropertyResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 export abstract class BaseValueFormatter implements IValueFormatter {
   formatLiteral(value: UserValueContents): string[] {
@@ -39,7 +40,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   ): Record<string, string[]> {
     const result: Record<string, string[]> = {};
 
-    if (!value.label || !value.meta?.uri) {
+    if (!value.label) {
       return result;
     }
 
@@ -49,7 +50,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     }
 
     const linkProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LINK);
-    if (linkProperty) {
+    if (linkProperty && value.meta?.uri) {
       result[linkProperty] = [value.meta.uri];
     }
 

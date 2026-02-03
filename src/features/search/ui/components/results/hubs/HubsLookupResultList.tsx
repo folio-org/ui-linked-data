@@ -1,8 +1,10 @@
 import { FC } from 'react';
+
 import { TableFlex } from '@/components/Table';
+
+import { hubsLookupTableConfig } from '../../../config/results/hubsLookupTable.config';
 import { useFormattedResults } from '../../../hooks/useFormattedResults';
 import { useTableFormatter } from '../../../hooks/useTableFormatter';
-import { hubsLookupTableConfig } from '../../../config/results/hubsLookupTable.config';
 
 interface HubsLookupResultListProps {
   context?: 'search' | 'complexLookup';

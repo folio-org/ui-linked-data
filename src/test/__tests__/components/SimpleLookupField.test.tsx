@@ -1,13 +1,15 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
+
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MockServicesProvider } from '@src/test/__mocks__/providers/ServicesProvider.mock';
-import { SimpleLookupField } from '@components/SimpleLookupField';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+import { SimpleLookupField } from '@/components/SimpleLookupField';
 
-jest.mock('@common/hooks/useSimpleLookupData', () => ({
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+
+jest.mock('@/common/hooks/useSimpleLookupData', () => ({
   useSimpleLookupData: () => ({
     getLookupData: jest.fn().mockReturnValue({
       lookupUri: [
@@ -20,7 +22,7 @@ jest.mock('@common/hooks/useSimpleLookupData', () => ({
         {
           label: 'value-3',
         },
-      ]
+      ],
     }),
     loadLookupData: jest.fn(),
   }),
@@ -39,14 +41,8 @@ describe('Simple lookup field', () => {
 
     return render(
       <MockServicesProvider>
-        <SimpleLookupField
-          uri='lookupUri'
-          uuid='uuid1'
-          onChange={() => {}}
-          value={initialValue}
-          isMulti={isMulti}
-          />
-      </MockServicesProvider>
+        <SimpleLookupField uri="lookupUri" uuid="uuid1" onChange={() => {}} value={initialValue} isMulti={isMulti} />
+      </MockServicesProvider>,
     );
   };
 

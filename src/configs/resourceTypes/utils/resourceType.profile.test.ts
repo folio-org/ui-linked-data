@@ -1,4 +1,5 @@
 import { ResourceType } from '@/common/constants/record.constants';
+
 import { createRootEntry } from './resourceType.profile';
 
 describe('resourceType.profile', () => {

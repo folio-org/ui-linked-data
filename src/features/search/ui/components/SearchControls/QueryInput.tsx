@@ -1,8 +1,11 @@
-import { FC, ChangeEvent, FormEventHandler } from 'react';
+import { ChangeEvent, FC, FormEventHandler } from 'react';
 import { useIntl } from 'react-intl';
+
 import { Input } from '@/components/Input';
 import { Textarea } from '@/components/Textarea';
+
 import { useSearchState } from '@/store';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { getSearchPlaceholder } from '../../utils';
 

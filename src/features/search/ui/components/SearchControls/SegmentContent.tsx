@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { isSegmentActive } from '../../utils/segmentUtils';
 

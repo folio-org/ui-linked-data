@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import { Select } from '@components/Select';
+
+import { Select } from '@/components/Select';
 
 interface IDropdownField {
   options: ReactSelectOption[];

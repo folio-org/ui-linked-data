@@ -1,15 +1,16 @@
 import { cloneDeep } from 'lodash';
+
 import {
+  INSTANCE_CLONE_DELETE_PROPERTIES,
   TITLE_CONTAINER_URIS,
   TYPE_URIS,
-  INSTANCE_CLONE_DELETE_PROPERTIES,
 } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@/common/constants/bibframeMapping.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
 import {
+  getProfileBfid,
   getReference,
   getUri,
-  getProfileBfid,
   hasReference,
   mapToResourceType,
   mapUriToResourceType,

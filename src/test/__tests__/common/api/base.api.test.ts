@@ -1,11 +1,12 @@
-import baseApi from '@common/api/base.api';
-import { localStorageService } from '@common/services/storage';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as ApiConstants from '@common/constants/api.constants';
-import * as EnvHelper from '@common/helpers/env.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 
-jest.mock('@common/services/storage');
-jest.mock('@common/helpers/env.helper', () => ({
+import baseApi from '@/common/api/base.api';
+import * as ApiConstants from '@/common/constants/api.constants';
+import * as EnvHelper from '@/common/helpers/env.helper';
+import { localStorageService } from '@/common/services/storage';
+
+jest.mock('@/common/services/storage');
+jest.mock('@/common/helpers/env.helper', () => ({
   getEnvVariable: jest.fn(),
 }));
 

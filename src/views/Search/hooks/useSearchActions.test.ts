@@ -1,12 +1,16 @@
-import { renderHook, waitFor } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useInputsStore, useLoadingStateStore, useSearchStore, useStatusStore, useUIStore } from '@/store';
-import { logger } from '@/common/services/logger';
-import { UserNotificationFactory } from '@/common/services/userNotification';
-import { StatusType } from '@/common/constants/status.constants';
+
+import { renderHook, waitFor } from '@testing-library/react';
+
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
+import { StatusType } from '@/common/constants/status.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useInputsStore, useLoadingStateStore, useSearchStore, useStatusStore, useUIStore } from '@/store';
+
 import { useSearchActions } from './useSearchActions';
 
 const mockOnCreateNewResource = jest.fn();
@@ -186,24 +190,6 @@ describe('useSearchActions', () => {
           type: ResourceType.hub,
         },
       });
-    });
-  });
-
-  describe('handleHubEdit', () => {
-    test('Returns empty function', () => {
-      const { result } = renderHook(() => useSearchActions());
-
-      expect(result.current.handleHubEdit).toBeInstanceOf(Function);
-      expect(result.current.handleHubEdit()).toBeUndefined();
-    });
-  });
-
-  describe('handleHubImport', () => {
-    test('Returns empty function', () => {
-      const { result } = renderHook(() => useSearchActions());
-
-      expect(result.current.handleHubImport).toBeInstanceOf(Function);
-      expect(result.current.handleHubImport()).toBeUndefined();
     });
   });
 

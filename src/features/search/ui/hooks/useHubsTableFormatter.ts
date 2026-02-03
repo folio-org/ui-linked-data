@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useIntl } from 'react-intl';
+
 import { type Row } from '@/components/Table';
-import { useFormattedResults } from './useFormattedResults';
+
 import { hubsTableConfig } from '../config/results/hubsTable.config';
 import { applyColumnFormatters, buildTableHeader } from '../utils/tableFormatters.util';
+import { useFormattedResults } from './useFormattedResults';
 
 interface UseHubsTableFormatterProps {
   onEdit?: (id: string) => void;

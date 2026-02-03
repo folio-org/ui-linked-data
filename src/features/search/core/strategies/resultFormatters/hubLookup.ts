@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+
 import { IResultFormatter } from '../../types';
 
 const checkAuthNote = (notes: string[]) => notes.some(note => note.includes('Created from auth.'));

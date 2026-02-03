@@ -1,3 +1,3 @@
-jest.mock('@components/Modal', () => ({
+jest.mock('@/components/Modal', () => ({
   Modal: () => <div data-testid="modal-component" />,
 }));

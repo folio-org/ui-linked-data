@@ -1,11 +1,16 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { StatusType } from '@common/constants/status.constants';
-import { useManageProfileSettingsState, useProfileState, useStatusState, useLoadingState } from '@src/store';
+
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getUri } from '@/configs/resourceTypes';
+
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { getProfileLabelId, getUri, RESOURCE_TYPE_REGISTRY } from '@/configs/resourceTypes';
+
+import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
+
 import { ResourceProfiles } from './ResourceProfiles';
+
 import './ProfilesList.scss';
 
 export const ProfilesList = () => {

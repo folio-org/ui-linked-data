@@ -1,7 +1,8 @@
-import { fetchProfiles } from '@common/api/profiles.api';
+import { fetchProfiles } from '@/common/api/profiles.api';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { logger } from '@/common/services/logger';
+
 import { useProfileState } from '@/store';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { logger } from '@common/services/logger';
 
 export const useProfileList = () => {
   const { availableProfiles, setAvailableProfiles } = useProfileState(['availableProfiles', 'setAvailableProfiles']);

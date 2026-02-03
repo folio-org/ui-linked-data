@@ -1,14 +1,18 @@
-import classNames from 'classnames';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { QueryParams, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
-import { ResourceType } from '@/common/constants/record.constants';
-import { InstancesList } from '@/components/InstancesList';
-import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { memo, useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+
+import classNames from 'classnames';
+
+import { ResourceType } from '@/common/constants/record.constants';
+import { QueryParams, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
+import { getRecordDependencies } from '@/common/helpers/record.helper';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { InstancesList } from '@/components/InstancesList';
 import { TitledPreview } from '@/components/Preview/TitledPreview';
-import { hasSplitLayout, getPreviewPosition, resolveResourceType } from '@/configs/resourceTypes';
+import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
+
 import { useInputsState } from '@/store';
+
 import './EditPreview.scss';
 
 export const EditPreview = memo(() => {

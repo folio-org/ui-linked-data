@@ -1,6 +1,8 @@
-import { renderHook } from '@testing-library/react';
 import * as Router from 'react-router-dom';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
+
+import { renderHook } from '@testing-library/react';
+
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

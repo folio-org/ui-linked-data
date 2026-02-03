@@ -1,8 +1,8 @@
 import * as CoreRegistry from '../../core/config/searchRegistry';
-import * as UIRegistry from '../config/resolveUIConfig';
-import * as GetActiveConfig from '../utils/getActiveConfig.helper';
 import type { SearchTypeConfig } from '../../core/types';
+import * as UIRegistry from '../config/resolveUIConfig';
 import type { SearchTypeUIConfig } from '../types';
+import * as GetActiveConfig from '../utils/getActiveConfig.helper';
 import { resolveSearchConfigs } from './searchConfigResolver';
 
 jest.mock('../../core/config/searchRegistry');

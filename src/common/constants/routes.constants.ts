@@ -1,5 +1,3 @@
-import { IS_NEW_SEARCH_ENABLED } from './feature.constants';
-
 export const ROUTE_PATH = {
   RESOURCES: 'resources',
   CREATE: 'create',
@@ -13,10 +11,6 @@ export const ROUTES = {
   },
   SEARCH: {
     uri: '/search',
-    name: 'ld.searchResource',
-  },
-  SEARCH_NEW: {
-    uri: IS_NEW_SEARCH_ENABLED ? '/search-new' : '/search',
     name: 'ld.searchResource',
   },
   RESOURCE_CREATE: {
@@ -46,7 +40,7 @@ export const RESOURCE_CREATE_URLS = [ROUTES.RESOURCE_CREATE.uri];
 
 export const MANAGE_PROFILE_SETTINGS_URLS = [ROUTES.MANAGE_PROFILE_SETTINGS.uri];
 
-export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri, ROUTES.SEARCH_NEW.uri];
+export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
 
 export enum QueryParams {
   Type = 'type',

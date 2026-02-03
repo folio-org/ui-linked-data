@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+
 import { StatusType } from '../../../constants/status.constants';
 
 export interface INotification {

@@ -1,8 +1,12 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+
 import { Button, ButtonType } from '@/components/Button';
-import XInCircle from '@/assets/x-in-circle.svg?react';
+
 import { useSearchState } from '@/store';
+
+import XInCircle from '@/assets/x-in-circle.svg?react';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 
 export const ResetButton: FC = () => {

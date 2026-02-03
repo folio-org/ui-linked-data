@@ -1,9 +1,12 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+
 import { ROUTES } from '@/common/constants/routes.constants';
-import { useManageProfileSettingsState } from '@/store';
 import { Modal } from '@/components/Modal';
+
+import { useManageProfileSettingsState } from '@/store';
+
 import './ModalCloseProfileSettings.scss';
 
 type ModalCloseProfileSettingsProps = {

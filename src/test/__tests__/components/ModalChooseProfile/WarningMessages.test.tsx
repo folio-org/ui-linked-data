@@ -1,12 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { WarningMessages } from '@components/ModalChooseProfile/WarningMessages';
-import * as profileSelectionHelper from '@common/helpers/profileSelection.helper';
+
+import * as profileSelectionHelper from '@/common/helpers/profileSelection.helper';
+import { WarningMessages } from '@/components/ModalChooseProfile/WarningMessages';
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id }: { id: string }) => <span data-testid={`formatted-message-${id}`}>{id}</span>,
 }));
 
-jest.mock('@common/helpers/profileSelection.helper', () => ({
+jest.mock('@/common/helpers/profileSelection.helper', () => ({
   getWarningByProfileNames: jest.fn(),
 }));
 

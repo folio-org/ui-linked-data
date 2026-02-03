@@ -1,9 +1,9 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { SimpleEntryProcessor } from '@common/services/recordGenerator/processors/recordSchema/simpleEntryProcessor';
-import { ValueProcessor } from '@common/services/recordGenerator/processors/value/valueProcessor';
-import { ValueOptions } from '@common/services/recordGenerator/types/value.types';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { SimpleEntryProcessor } from '@/common/services/recordGenerator/processors/recordSchema/simpleEntryProcessor';
+import { ValueProcessor } from '@/common/services/recordGenerator/processors/value/valueProcessor';
+import { ValueOptions } from '@/common/services/recordGenerator/types/value.types';
 
-jest.mock('@common/services/recordGenerator/processors/value/valueProcessor');
+jest.mock('@/common/services/recordGenerator/processors/value/valueProcessor');
 
 describe('SimpleEntryProcessor', () => {
   let processor: SimpleEntryProcessor;

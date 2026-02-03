@@ -1,5 +1,5 @@
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import * as DisabledEditorGroups from '@common/helpers/disabledEditorGroups.helper';
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import * as DisabledEditorGroups from '@/common/helpers/disabledEditorGroups.helper';
 
 describe('disabledEditorGroups.helper', () => {
   describe('getComplexLookups', () => {

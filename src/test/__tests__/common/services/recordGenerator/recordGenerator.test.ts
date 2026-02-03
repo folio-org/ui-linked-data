@@ -1,8 +1,8 @@
-import { RecordGenerator } from '@common/services/recordGenerator';
-import { RecordSchemaFactory } from '@common/services/recordGenerator/schemas';
-import { ValueResult } from '@common/services/recordGenerator/types/value.types';
+import { RecordGenerator } from '@/common/services/recordGenerator';
+import { RecordSchemaFactory } from '@/common/services/recordGenerator/schemas';
+import { ValueResult } from '@/common/services/recordGenerator/types/value.types';
 
-jest.mock('@common/services/recordGenerator/schemas/recordSchemaFactory');
+jest.mock('@/common/services/recordGenerator/schemas/recordSchemaFactory');
 
 describe('RecordGenerator', () => {
   let generator: RecordGenerator;
@@ -212,19 +212,13 @@ describe('RecordGenerator', () => {
         root: {
           options: {
             isRootEntry: true,
-            references: [
-              { outputProperty: 'refs_1' },
-              { outputProperty: 'refs_2' }
-            ],
+            references: [{ outputProperty: 'refs_1' }, { outputProperty: 'refs_2' }],
           },
         } as RecordSchemaEntry,
       };
       jest.spyOn(RecordSchemaFactory, 'getRecordSchema').mockReturnValue(mockMultiRefSchema);
 
-      const multiRefIds = [
-        { id: 'ref-id-1' },
-        { id: 'ref-id-2' }
-      ];
+      const multiRefIds = [{ id: 'ref-id-1' }, { id: 'ref-id-2' }];
 
       jest
         .spyOn(generator['profileSchemaManager'], 'findSchemaEntriesByUriBFLite')

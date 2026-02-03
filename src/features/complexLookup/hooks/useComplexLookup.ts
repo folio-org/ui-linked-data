@@ -1,23 +1,27 @@
 import { ChangeEvent, useCallback, useState } from 'react';
+
+import { StatusType } from '@/common/constants/status.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { useModalControls } from '@/common/hooks/useModalControls';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import {
+  Authority,
+  __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
+} from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   generateEmptyValueUuid,
   getLinkedField,
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
 } from '@/features/complexLookup/utils/complexLookup.helper';
-import {
-  __MOCK_URI_CHANGE_WHEN_IMPLEMENTING,
-  Authority,
-} from '@/features/complexLookup/constants/complexLookup.constants';
-import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { useInputsState, useMarcPreviewState, useProfileState, useStatusState, useUIState } from '@/store';
-import { UserNotificationFactory } from '@/common/services/userNotification';
-import { StatusType } from '@/common/constants/status.constants';
-import { useServicesContext } from '@/common/hooks/useServicesContext';
-import { useModalControls } from '@/common/hooks/useModalControls';
-import { useMarcValidation } from './useMarcValidation';
-import { useMarcAssignment } from './useMarcAssignment';
+
 import { useComplexLookupValidation } from './useComplexLookupValidation';
+import { useMarcAssignment } from './useMarcAssignment';
+import { useMarcValidation } from './useMarcValidation';
 
 export const useComplexLookup = ({
   entry,

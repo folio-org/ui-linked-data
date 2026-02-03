@@ -1,7 +1,8 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GeneratedValue, ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
-import { ProcessContext } from '../../types/common.types';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
+import { ProcessContext } from '../../types/common.types';
+import { GeneratedValue, SchemaPropertyValue, ValueOptions, ValueResult } from '../../types/value.types';
 import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryManager } from './recordSchemaEntryManager.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';

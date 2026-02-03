@@ -1,7 +1,11 @@
-import { act, renderHook } from '@testing-library/react';
 import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+
+import { act, renderHook } from '@testing-library/react';
+
 import * as SearchApi from '@/common/api/search.api';
+
 import { useSearchStore, useStatusStore } from '@/store';
+
 import { useSearchFiltersData } from './useSearchFiltersData';
 
 jest.mock('@/common/api/search.api');

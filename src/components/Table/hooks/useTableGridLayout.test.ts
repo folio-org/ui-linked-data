@@ -1,9 +1,12 @@
-import { renderHook } from '@testing-library/react';
-import { useTableGridLayout } from './useTableGridLayout';
-import * as tableHelpers from '@common/helpers/table.helpers';
 import { type RefObject } from 'react';
 
-jest.mock('@common/helpers/table.helpers');
+import { renderHook } from '@testing-library/react';
+
+import * as tableHelpers from '@/common/helpers/table.helpers';
+
+import { useTableGridLayout } from './useTableGridLayout';
+
+jest.mock('@/common/helpers/table.helpers');
 
 describe('useTableGridLayout', () => {
   const mockTableHeadRef: RefObject<HTMLDivElement | null> = { current: null };

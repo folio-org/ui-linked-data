@@ -1,4 +1,5 @@
 import { ResourceType } from '@/common/constants/record.constants';
+
 import { RESOURCE_TYPE_REGISTRY } from '../resourceType.config';
 import type { ResourceTypeDefinition, ResourceTypeReference } from '../resourceType.types';
 
@@ -78,4 +79,8 @@ export const hasSplitLayout = (type: ResourceTypeInput): boolean => {
 
 export const getProfileLabelId = (type: ResourceTypeInput): string => {
   return getResourceTypeConfig(type).labelId;
+};
+
+export const getSearchSegment = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).search.segment;
 };

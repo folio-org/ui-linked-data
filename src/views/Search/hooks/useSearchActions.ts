@@ -1,14 +1,17 @@
 import { useCallback } from 'react';
-import { logger } from '@/common/services/logger';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
-import { useNavigateToManageProfileSettings } from '@/features/manageProfileSettings/hooks/useNavigateToManageProfileSettings';
-import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@src/store';
-import { StatusType } from '@/common/constants/status.constants';
+
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@/common/services/userNotification';
-import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import { ResourceType } from '@/common/constants/record.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useNavigateToManageProfileSettings } from '@/features/manageProfileSettings/hooks/useNavigateToManageProfileSettings';
+
+import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
 
 /**
  * Custom hook that encapsulates all search-related action handlers
@@ -88,19 +91,11 @@ export const useSearchActions = () => {
     });
   }, [onCreateNewResource]);
 
-  // TODO: UILD-694 - implement Hub edit functionality
-  const handleHubEdit = useCallback(() => {}, []);
-
-  // TODO: UILD-694 - implement Hub import functionality
-  const handleHubImport = useCallback(() => {}, []);
-
   return {
     handlePreviewMultiple,
     handleImport,
     onClickNewWork,
     onClickNewHub,
-    handleHubEdit,
-    handleHubImport,
     navigateToManageProfileSettings,
   };
 };

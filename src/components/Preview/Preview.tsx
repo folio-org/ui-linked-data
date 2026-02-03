@@ -1,7 +1,11 @@
 import { FC } from 'react';
+
 import classNames from 'classnames';
-import { useInputsState, useProfileState } from '@src/store';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { Fields } from './Fields';
+
 import './Preview.scss';
 
 type IPreview = {

@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .button {
   display: flex;
@@ -228,7 +228,7 @@
     }
 
     &:active:not(:disabled)::before {
-      content: "•";
+      content: '•';
       font-size: 14px;
       margin: 0 0 0 -14px;
       padding: 0;

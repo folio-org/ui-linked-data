@@ -1,4 +1,4 @@
-import { BFLITE_TYPES_MAP } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_TYPES_MAP } from '@/common/constants/bibframeMapping.constants';
 import {
   AUTHORITATIVE_LABEL_URI,
   BLANK_NODE_TRAIT,
@@ -6,7 +6,7 @@ import {
   ID_KEY,
   SCHEMA_LABEL_URI,
   VALUE_KEY,
-} from '@common/constants/lookup.constants';
+} from '@/common/constants/lookup.constants';
 
 export const generateLabelWithCode = (label: string, optionUri: string) => {
   const processedOptionUri = optionUri.split(CODE_SEPARATOR);

@@ -1,13 +1,16 @@
-import { useMemo, useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
-import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+
 import baseApi from '@/common/api/base.api';
-import { useCommittedSearchParams } from './useCommittedSearchParams';
-import { resolveCoreConfig, type SearchTypeConfig } from '../../core';
-import type { SearchFlow, SearchResults } from '../types/provider.types';
-import type { SearchTypeUIConfig } from '../types';
-import { getValidSearchBy } from '../utils';
+import { SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
+
+import { type SearchTypeConfig, resolveCoreConfig } from '../../core';
 import { resolveUIConfig } from '../config';
+import type { SearchTypeUIConfig } from '../types';
+import type { SearchFlow, SearchResults } from '../types/provider.types';
+import { getValidSearchBy } from '../utils';
+import { useCommittedSearchParams } from './useCommittedSearchParams';
 
 interface UseSearchQueryParams {
   /**

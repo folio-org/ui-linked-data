@@ -1,9 +1,13 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+
 import { ROUTES } from '@/common/constants/routes.constants';
-import { useUIState, useManageProfileSettingsState } from '@/store';
-import { Button, ButtonType } from '@components/Button';
-import Times16 from '@src/assets/times-16.svg?react';
+import { Button, ButtonType } from '@/components/Button';
+
+import { useManageProfileSettingsState, useUIState } from '@/store';
+
+import Times16 from '@/assets/times-16.svg?react';
+
 import './ManageProfileSettingsControlPane.scss';
 
 export const ManageProfileSettingsControlPane = () => {

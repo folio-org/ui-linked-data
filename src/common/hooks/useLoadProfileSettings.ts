@@ -1,12 +1,14 @@
 import { useQueryClient } from '@tanstack/react-query';
+
+import { fetchProfileSettings } from '@/common/api/profiles.api';
 import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { UserNotificationFactory } from '@/common/services/userNotification';
-import { fetchProfileSettings } from '@/common/api/profiles.api';
-import { sortProfileSettingsChildren } from '@/common/helpers/profileSettingsSort.helper';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
-import { useStatusState } from '@/store';
+import { sortProfileSettingsChildren } from '@/common/helpers/profileSettingsSort.helper';
 import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useStatusState } from '@/store';
 
 export const useLoadProfileSettings = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
