@@ -43,3 +43,8 @@ type ProfileSettingsDrift = {
 };
 
 type ProfileSettingsWithDrift = ProfileSettings & ProfileSettingsDrift;
+
+type ProfileSettingComponent = {
+  id: string;
+  name: string;
+};

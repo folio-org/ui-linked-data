@@ -10,8 +10,6 @@ import ArrowDown from '@/assets/arrow-down-16.svg?react';
 import ArrowUp from '@/assets/arrow-up-16.svg?react';
 import DragDrop from '@/assets/drag-drop-16.svg?react';
 
-import { type ProfileSettingComponent } from './ProfileSettingsEditor';
-
 export enum ComponentType {
   unused = 'unused',
   selected = 'selected',

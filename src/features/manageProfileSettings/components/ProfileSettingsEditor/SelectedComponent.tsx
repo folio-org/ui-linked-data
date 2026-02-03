@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { type ProfileSettingComponent } from './ProfileSettingsEditor';
-import { ComponentType, BaseComponent } from './BaseComponent';
+
+import { BaseComponent, ComponentType } from './BaseComponent';
 
 type SelectedComponentProps = {
   size: number;
