@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 
@@ -8,10 +8,11 @@ import { useSearchState } from '@/store';
 
 export const useNavigateToEditPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { navigationState } = useSearchState(['navigationState']);
   const [searchParams] = useSearchParams();
 
-  // Build navigation state from current URL if navigationState is empty
+  // Build navigation state from store, URL, or location state (in priority order)
   const getNavigationState = () => {
     const hasNavigationState = navigationState && Object.keys(navigationState).length > 0;
 
@@ -19,7 +20,26 @@ export const useNavigateToEditPage = () => {
       return navigationState;
     }
 
-    return extractSearchParamsFromUrl(searchParams);
+    const urlState = extractSearchParamsFromUrl(searchParams);
+    const hasUrlState = urlState && Object.keys(urlState).length > 0;
+
+    if (hasUrlState) {
+      return urlState;
+    }
+
+    // Fallback to location.state (preserves state when navigating between Edit pages)
+    const locationState = location.state as (SearchParamsState & { isNavigatedFromLDE?: boolean }) | null;
+
+    if (locationState && Object.keys(locationState).length > 0) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { isNavigatedFromLDE, ...searchState } = locationState;
+
+      if (Object.keys(searchState).length > 0) {
+        return searchState;
+      }
+    }
+
+    return {};
   };
 
   const navigateAsDuplicate = (duplicateId: string) => {
