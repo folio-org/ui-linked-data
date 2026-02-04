@@ -2,13 +2,14 @@ import {
   AuthNotesFormatter,
   HubAssignFormatter,
   HubLinkFormatter,
+  HubSourceFormatter,
   RDANotesFormatter,
 } from '@/features/search/ui/formatters';
 
 export const hubsLookupTableConfig: SearchResultsTableConfig = {
   columns: {
     assign: {
-      label: '',
+      label: 'ld.action',
       position: 0,
       className: 'cell-fixed',
       minWidth: 100,
@@ -21,6 +22,14 @@ export const hubsLookupTableConfig: SearchResultsTableConfig = {
       className: 'cell-fixed',
       minWidth: 430,
       formatter: HubLinkFormatter,
+    },
+    source: {
+      label: 'ld.source',
+      position: 1,
+      className: 'cell-fixed',
+      minWidth: 200,
+      maxWidth: 250,
+      formatter: HubSourceFormatter,
     },
     auth: {
       label: 'ld.auth',
