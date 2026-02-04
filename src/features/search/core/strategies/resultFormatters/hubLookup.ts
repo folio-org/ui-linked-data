@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { IResultFormatter } from '../../types';
+import { getIsLocalFlag, getSourceLabel } from '../../utils';
 
 const checkAuthNote = (notes: string[]) => notes.some(note => note.includes('Created from auth.'));
 
@@ -23,10 +24,8 @@ export class HubsLookupResultFormatter implements IResultFormatter<SearchResults
     return hubList?.map(hubEntry => {
       const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
       const { notes = [] } = more || {};
-      const isLocal = 'isLocal' in hubEntry ? (hubEntry as HubSearchResultDTO & { isLocal: boolean }).isLocal : false;
-
-      // Determine source based on isLocal flag (set by enricher if configured)
-      const sourceLabel = isLocal ? 'ld.source.libraryOfCongress.local' : 'ld.source.libraryOfCongress';
+      const isLocal = getIsLocalFlag(hubEntry);
+      const sourceLabel = getSourceLabel(isLocal);
 
       return {
         __meta: {

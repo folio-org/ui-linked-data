@@ -13,3 +13,11 @@ export function extractOriginalIds(content?: Array<{ id?: string; originalId?: s
 
   return new Set<string>(content.map(({ originalId }) => originalId).filter(Boolean) as string[]);
 }
+
+export function getIsLocalFlag(hubEntry: HubSearchResultDTO): boolean {
+  return 'isLocal' in hubEntry ? (hubEntry as HubSearchResultDTO & { isLocal: boolean }).isLocal : false;
+}
+
+export function getSourceLabel(isLocal: boolean): string {
+  return isLocal ? 'ld.source.libraryOfCongress.local' : 'ld.source.libraryOfCongress';
+}
