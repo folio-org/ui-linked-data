@@ -2,10 +2,12 @@ import { Dispatch, SetStateAction } from 'react';
 
 import { Active, Over } from '@dnd-kit/core';
 
-export const useMoveBetweenLists = (
-  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
-  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
-) => {
+interface UseMoveBetweenListsParams {
+  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
+  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
+}
+
+export const useMoveBetweenLists = ({ setUnused, setSelected }: UseMoveBetweenListsParams) => {
   const moveBetweenLists = (
     sourceFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
     destinationFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,

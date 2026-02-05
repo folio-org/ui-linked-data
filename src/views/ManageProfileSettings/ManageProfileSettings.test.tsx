@@ -4,8 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { fetchPreferredProfiles, fetchProfile, fetchProfiles } from '@/common/api/profiles.api';
+import { fetchPreferredProfiles, fetchProfile, fetchProfileSettings, fetchProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 import { ManageProfileSettings } from './ManageProfileSettings';
 
@@ -56,11 +57,35 @@ describe('ManageProfileSettings', () => {
       resourceTypeURL: BFLITE_URIS.INSTANCE,
     },
   ];
+  const mockProfile = [
+    {
+      id: 'one-profile',
+      displayName: 'Test Profile',
+      type: AdvancedFieldType.block,
+      children: ['test:child'],
+    },
+    {
+      id: 'test:child',
+      type: AdvancedFieldType.literal,
+      displayName: 'Child',
+    },
+  ];
+  const mockProfileSettings = {
+    active: true,
+    children: [
+      {
+        id: 'test:child',
+        visible: true,
+        order: 1,
+      },
+    ],
+  };
 
   beforeEach(() => {
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
-    (fetchProfile as jest.Mock).mockResolvedValue({});
+    (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
+    (fetchProfileSettings as jest.Mock).mockResolvedValue(mockProfileSettings);
     renderComponent();
   });
 

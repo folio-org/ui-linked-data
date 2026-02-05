@@ -82,9 +82,14 @@ export const ProfileSettingsEditor = () => {
     }),
   );
 
-  const { makeMoveUp, makeMoveDown } = useNudge(setSelectedComponents);
+  const { makeMoveUp, makeMoveDown } = useNudge({ setSelected: setSelectedComponents });
 
-  const { announcements } = useSettingsAnnouncements(fullProfile, startingStyle, selectedComponents, listFromId);
+  const { announcements } = useSettingsAnnouncements({
+    profile: fullProfile,
+    startingList: startingStyle,
+    components: selectedComponents,
+    listFromId,
+  });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers(
     startingList,

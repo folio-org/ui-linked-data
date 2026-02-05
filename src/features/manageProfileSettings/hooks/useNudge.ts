@@ -6,7 +6,11 @@ import { arrayMove } from '@dnd-kit/sortable';
 
 import { useManageProfileSettingsState } from '@/store';
 
-export const useNudge = (setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>) => {
+interface UseNudgeParams {
+  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
+}
+
+export const useNudge = ({ setSelected }: UseNudgeParams) => {
   const { formatMessage } = useIntl();
   const { announce } = useAnnouncement();
   const { setIsModified } = useManageProfileSettingsState(['setIsModified']);

@@ -5,12 +5,19 @@ import { Active, Announcements, Over } from '@dnd-kit/core';
 import { ComponentType } from '../components/ProfileSettingsEditor/BaseComponent';
 import { componentFromId } from '../utils/children';
 
-export const useSettingsAnnouncements = (
-  profile: Profile,
-  startingList: ComponentType | null,
-  components: ProfileSettingComponent[],
-  listFromId: (id: string) => string,
-) => {
+interface UseSettingsAnnouncementsParams {
+  profile: Profile;
+  startingList: ComponentType | null;
+  components: ProfileSettingComponent[];
+  listFromId: (id: string) => string;
+}
+
+export const useSettingsAnnouncements = ({
+  profile,
+  startingList,
+  components,
+  listFromId,
+}: UseSettingsAnnouncementsParams) => {
   const { formatMessage } = useIntl();
 
   const announcements = {

@@ -30,7 +30,7 @@ export const useDragHandlers = (
 ) => {
   const { setIsModified } = useManageProfileSettingsState(['setIsModified']);
 
-  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists(setUnused, setSelected);
+  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({ setUnused, setSelected });
 
   const handleDragStart = (event: DragStartEvent) => {
     updateState(
