@@ -1,4 +1,3 @@
-export { useSearchNavigationState } from './useSearchNavigationState';
 export { useSearchFilters } from './useSearchFilters';
 export { useSearchControlsHandlers } from './useSearchControlsHandlers';
 export { useUrlSync } from './useUrlSync';
