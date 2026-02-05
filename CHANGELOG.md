@@ -76,6 +76,7 @@
 * Preserve search results state. Refs [UILD-702].
 * Add navigation to Hub edit page. Refs [UILD-704].
 * Add the Hubs source to the complex lookups. Refs [UILD-710].
+* Implement API schema change for Hub. Refs [UILD-723].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -151,6 +152,7 @@
 [UILD-702]:https://folio-org.atlassian.net/browse/UILD-702
 [UILD-704]:https://folio-org.atlassian.net/browse/UILD-704
 [UILD-710]:https://folio-org.atlassian.net/browse/UILD-710
+[UILD-723]:https://folio-org.atlassian.net/browse/UILD-723
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

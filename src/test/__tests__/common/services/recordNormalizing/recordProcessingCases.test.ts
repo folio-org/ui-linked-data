@@ -607,15 +607,15 @@ describe('recordProcessingCases', () => {
   });
 
   describe('processHubsComplexLookup', () => {
-    test('transforms entry with hub data containing LINK and LABEL', () => {
+    test('transforms entry with hub data containing rdfLink and label as strings', () => {
       const record = {
         [blockKey]: {
           [groupKey]: [
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
           ],
@@ -625,7 +625,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: ['Hub Label 1'],
@@ -648,15 +648,15 @@ describe('recordProcessingCases', () => {
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
             {
               _relation: 'relation_2',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_2'],
-                [labelBFLiteUri]: ['Hub Label 2'],
+                rdfLink: 'test_hub_uri_2',
+                label: 'Hub Label 2',
               },
             },
           ],
@@ -666,7 +666,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: ['Hub Label 1'],
@@ -674,7 +674,7 @@ describe('recordProcessingCases', () => {
               },
             },
             {
-              id: [''],
+              id: [],
               _relation: 'relation_2',
               _hub: {
                 value: ['Hub Label 2'],
@@ -697,8 +697,8 @@ describe('recordProcessingCases', () => {
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: [],
-                [labelBFLiteUri]: [],
+                rdfLink: undefined,
+                label: undefined,
               },
             },
           ],
@@ -708,7 +708,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: [],
@@ -724,15 +724,15 @@ describe('recordProcessingCases', () => {
       expect(record).toEqual(testResult);
     });
 
-    test('transforms entry with single string values in hub data', () => {
+    test('transforms entry with id and label for local source', () => {
       const record = {
         [blockKey]: {
           [groupKey]: [
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: 'test_hub_uri_1',
-                [labelBFLiteUri]: 'Hub Label 1',
+                id: 'local_id_123',
+                label: 'Local Hub Label',
               },
             },
           ],
@@ -742,11 +742,11 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: ['local_id_123'],
               _relation: 'relation_1',
               _hub: {
-                value: 'Hub Label 1',
-                uri: 'test_hub_uri_1',
+                value: ['Local Hub Label'],
+                uri: [],
               },
             },
           ],
@@ -768,8 +768,8 @@ describe('recordProcessingCases', () => {
                 subtype: 'nested',
               },
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
           ],
@@ -779,7 +779,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: {
                 type: 'complex',
                 subtype: 'nested',
