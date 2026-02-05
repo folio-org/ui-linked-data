@@ -630,6 +630,7 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],
@@ -671,6 +672,7 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
               },
             },
             {
@@ -679,6 +681,7 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Hub Label 2'],
                 uri: ['test_hub_uri_2'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],
@@ -747,6 +750,8 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Local Hub Label'],
                 uri: [],
+                id: ['local_id_123'],
+                sourceType: 'local',
               },
             },
           ],
@@ -787,6 +792,44 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms existing LoC hub with id (saved hub) - preserves id inside _hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                id: 'backend_generated_id_123',
+                rdfLink: 'http://id.loc.gov/resources/hubs/abc123',
+                label: 'Existing LoC Hub',
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['backend_generated_id_123'],
+              _relation: 'relation_1',
+              _hub: {
+                value: ['Existing LoC Hub'],
+                uri: ['http://id.loc.gov/resources/hubs/abc123'],
+                id: ['backend_generated_id_123'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],

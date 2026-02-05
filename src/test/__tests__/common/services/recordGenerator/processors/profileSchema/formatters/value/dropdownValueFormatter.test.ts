@@ -175,8 +175,8 @@ describe('DropdownValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LABEL]: 'test label',
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
     });

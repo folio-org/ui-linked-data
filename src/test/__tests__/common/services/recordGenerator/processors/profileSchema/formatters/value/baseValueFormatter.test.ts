@@ -68,8 +68,8 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LABEL]: 'test label',
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
 
@@ -88,7 +88,7 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
+          [BFLITE_URIS.LABEL]: 'test label',
         });
       });
 
@@ -107,7 +107,7 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
 
@@ -126,7 +126,7 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
+          [BFLITE_URIS.LABEL]: 'test label',
         });
       });
 
@@ -275,9 +275,9 @@ describe('BaseValueFormatter', () => {
       const result = formatter['buildComplexObject'](value, properties);
 
       expect(result).toEqual({
-        'custom-id': ['test-id'],
-        'custom-uri': ['http://test.uri'],
-        'custom-label': ['Basic Label'],
+        'custom-id': 'test-id',
+        'custom-uri': 'http://test.uri',
+        'custom-label': 'Basic Label',
       });
     });
 
@@ -298,8 +298,8 @@ describe('BaseValueFormatter', () => {
       const result = formatter['buildComplexObject'](value, properties);
 
       expect(result).toEqual({
-        [BFLITE_URIS.LABEL]: ['Test Label'],
-        [BFLITE_URIS.LINK]: ['http://test.uri'],
+        [BFLITE_URIS.LABEL]: 'Test Label',
+        [BFLITE_URIS.LINK]: 'http://test.uri',
       });
     });
 
@@ -320,7 +320,7 @@ describe('BaseValueFormatter', () => {
       const result = formatter['buildComplexObject'](value, properties);
 
       expect(result).toEqual({
-        [BFLITE_URIS.LABEL]: ['Test Label'],
+        [BFLITE_URIS.LABEL]: 'Test Label',
       });
     });
 

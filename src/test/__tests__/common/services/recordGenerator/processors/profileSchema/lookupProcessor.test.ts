@@ -444,15 +444,17 @@ describe('LookupProcessor', () => {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
         properties: {
-          arrayLabel: {
+          term: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          arrayLink: {
+          link: {
             type: RecordSchemaEntryType.array,
             value: RecordSchemaEntryType.string,
           },
-          stringLabel: { type: RecordSchemaEntryType.string },
+          value: {
+            type: RecordSchemaEntryType.string,
+          },
         },
       } as RecordSchemaEntry;
       const profileSchemaEntry = {
@@ -477,9 +479,9 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          arrayLabel: ['Basic Label'],
-          arrayLink: ['http://example.com/resource/1'],
-          stringLabel: 'test value',
+          term: ['Basic Label'],
+          link: ['http://example.com/resource/1'],
+          value: 'test value',
         },
       ]);
     });
