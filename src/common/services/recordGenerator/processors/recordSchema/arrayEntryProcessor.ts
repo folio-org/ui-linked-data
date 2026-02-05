@@ -1,4 +1,5 @@
 import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
 
 import { ProcessContext } from '../../types/common.types';
 import { SchemaPropertyValue, ValueOptions, ValueResult } from '../../types/value.types';
@@ -71,7 +72,7 @@ export class ArrayEntryProcessor implements IRecordSchemaEntryProcessor {
     }
 
     const { property: containerProperty, type = 'array' } = container;
-    const arrayValues = Array.isArray(result.value) ? result.value : [result.value];
+    const arrayValues = ensureArray(result.value as SchemaPropertyValue | SchemaPropertyValue[]);
     const wrappedValues = arrayValues.map((value: SchemaPropertyValue) => ({
       [containerProperty]: type === 'array' ? [value] : value,
     }));

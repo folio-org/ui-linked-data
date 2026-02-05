@@ -1,4 +1,5 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
 import { SimplePropertyResult } from '@/common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 import { IValueFormatter } from './valueFormatter.interface';
@@ -52,7 +53,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
         const isArrayType = propertySchema.type === 'array';
 
         if (isArrayType) {
-          result[propertyKey] = Array.isArray(mappedValue) ? mappedValue : [mappedValue];
+          result[propertyKey] = ensureArray(mappedValue);
         } else {
           result[propertyKey] = Array.isArray(mappedValue) ? mappedValue[0] : mappedValue;
         }

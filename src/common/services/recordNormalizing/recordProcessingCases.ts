@@ -1,4 +1,5 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
 import { getLookupLabelKey } from '@/common/helpers/schema.helper';
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
@@ -84,13 +85,6 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
 export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
     const hub = recordEntry._hub as Record<string, string | string[]>;
-
-    // Helper to ensure array format (handles both string and array inputs)
-    const ensureArray = (value: string | string[] | undefined): string[] => {
-      if (!value) return [];
-
-      return Array.isArray(value) ? value : [value];
-    };
 
     const generatedValue = {
       id: ensureArray(hub.id),

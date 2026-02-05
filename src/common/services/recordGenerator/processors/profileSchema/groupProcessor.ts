@@ -1,5 +1,6 @@
 import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
 
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
 import { LinkedPropertyInfo, ProcessContext } from '../../types/common.types';
@@ -271,7 +272,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     const processedValues = this.processSimpleValues(entryType, values, recordSchemaProperty);
 
     if (processedValues.length > 0) {
-      const valuesArray = Array.isArray(processedValues) ? processedValues : [processedValues];
+      const valuesArray = ensureArray(processedValues);
 
       if (repeatable && groupObject[uriBFLite]) {
         if (Array.isArray(groupObject[uriBFLite])) {
