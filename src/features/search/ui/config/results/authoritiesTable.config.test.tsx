@@ -1,7 +1,7 @@
 import { AssignFormatter, AuthorizedFormatter, TitleFormatter } from '../../formatters';
 import { authoritiesTableConfig } from './authoritiesTable.config';
 
-jest.mock('@/features/complexLookup/formatters', () => ({
+jest.mock('@/features/search/ui/formatters', () => ({
   AssignFormatter: jest.fn(),
   AuthorizedFormatter: jest.fn(),
   TitleFormatter: jest.fn(),
