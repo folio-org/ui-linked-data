@@ -61,6 +61,8 @@ export const workRecordSchema: RecordSchema = {
               libraryOfCongress: ['label', 'rdfLink'],
               local: ['id', 'label'],
             },
+            // Always include 'id' if present (for existing hubs that have been saved)
+            alwaysIncludeIfPresent: ['id'],
           },
         },
         _relation: {

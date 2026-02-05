@@ -230,7 +230,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     recordSchemaProperty: RecordSchemaEntry,
     value: UserValueContents,
   ): RecordSchemaEntry {
-    const { conditionalProperties, defaultSourceType } = recordSchemaProperty.options || {};
+    const { conditionalProperties, defaultSourceType, alwaysIncludeIfPresent } = recordSchemaProperty.options || {};
 
     if (!conditionalProperties || !recordSchemaProperty.properties) {
       return recordSchemaProperty;
@@ -250,15 +250,75 @@ export class GroupProcessor extends BaseFieldProcessor {
       return recordSchemaProperty;
     }
 
-    // Filter properties to only include active ones
+    // Build final property keys: start with active ones from conditionalProperties
+    const finalPropertyKeys = this.buildFinalPropertyKeys(
+      activePropertyKeys,
+      alwaysIncludeIfPresent,
+      value,
+      recordSchemaProperty.properties,
+    );
+
+    // Filter properties to only include final ones
     const filteredProperties = Object.fromEntries(
-      Object.entries(recordSchemaProperty.properties).filter(([key]) => activePropertyKeys.includes(key)),
+      Object.entries(recordSchemaProperty.properties).filter(([key]) => finalPropertyKeys.includes(key)),
     );
 
     return {
       ...recordSchemaProperty,
       properties: filteredProperties,
     };
+  }
+
+  private buildFinalPropertyKeys(
+    activePropertyKeys: string[],
+    alwaysIncludeIfPresent: string[] | undefined,
+    value: UserValueContents,
+    properties: Record<string, RecordSchemaEntry>,
+  ): string[] {
+    if (!alwaysIncludeIfPresent || alwaysIncludeIfPresent.length === 0) {
+      return activePropertyKeys;
+    }
+
+    const additionalKeys = alwaysIncludeIfPresent.filter(propKey => {
+      // Skip if already in activePropertyKeys
+      if (activePropertyKeys.includes(propKey)) {
+        return false;
+      }
+
+      // Check if property exists in schema and has a value
+      const propSchema = properties[propKey];
+
+      if (!propSchema) {
+        return false;
+      }
+
+      // Check if the value has data for this property using valueSource
+      const valueSource = propSchema.options?.valueSource;
+      if (valueSource) {
+        const resolvedValue = this.resolveValuePath(value, valueSource);
+
+        return resolvedValue !== null && resolvedValue !== undefined && resolvedValue !== '';
+      }
+
+      return false;
+    });
+
+    return [...activePropertyKeys, ...additionalKeys];
+  }
+
+  private resolveValuePath(value: UserValueContents, path: string): unknown {
+    const parts = path.split('.');
+    let current: unknown = value;
+
+    for (const part of parts) {
+      if (current === null || current === undefined) {
+        return null;
+      }
+
+      current = (current as Record<string, unknown>)[part];
+    }
+
+    return current;
   }
 
   private processSimpleEntry(

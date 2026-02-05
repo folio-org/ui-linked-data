@@ -26,6 +26,8 @@ interface RecordSchemaEntry {
     conditionalProperties?: Record<string, string[]>;
     // Default source type when not specified in value
     defaultSourceType?: string;
+    // Properties that should always be included if they have a value, regardless of conditionalProperties
+    alwaysIncludeIfPresent?: string[];
   };
 }
 
