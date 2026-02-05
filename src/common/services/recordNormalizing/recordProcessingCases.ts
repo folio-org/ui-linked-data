@@ -83,14 +83,23 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
 
 export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const hub = recordEntry._hub as Record<string, string | string[]>;
+
+    // Helper to ensure array format (handles both string and array inputs)
+    const ensureArray = (value: string | string[] | undefined): string[] => {
+      if (!value) return [];
+
+      return Array.isArray(value) ? value : [value];
+    };
+
     const generatedValue = {
-      id: [''],
+      id: ensureArray(hub.id),
       _relation: recordEntry._relation,
     } as unknown as RecursiveRecordSchema;
 
     generatedValue._hub = {
-      value: recordEntry._hub[BFLITE_URIS.LABEL],
-      uri: recordEntry._hub[BFLITE_URIS.LINK],
+      value: ensureArray(hub.label),
+      uri: ensureArray(hub.rdfLink),
     } as RecursiveRecordSchema;
 
     return generatedValue;

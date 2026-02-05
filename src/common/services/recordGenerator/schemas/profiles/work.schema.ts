@@ -40,20 +40,17 @@ export const workRecordSchema: RecordSchema = {
           type: RecordSchemaEntryType.object,
           properties: {
             // LoC source properties
-            [BFLITE_URIS.LABEL]: {
-              type: RecordSchemaEntryType.array,
-              value: RecordSchemaEntryType.string,
+            label: {
+              type: RecordSchemaEntryType.string,
               options: { valueSource: 'label' },
             },
-            [BFLITE_URIS.LINK]: {
-              type: RecordSchemaEntryType.array,
-              value: RecordSchemaEntryType.string,
+            rdfLink: {
+              type: RecordSchemaEntryType.string,
               options: { valueSource: 'meta.uri' },
             },
             // Local source properties
             id: {
-              type: RecordSchemaEntryType.array,
-              value: RecordSchemaEntryType.string,
+              type: RecordSchemaEntryType.string,
               options: { valueSource: 'id' },
             },
           },
@@ -61,8 +58,8 @@ export const workRecordSchema: RecordSchema = {
             propertyKey: '_hub',
             defaultSourceType: 'libraryOfCongress',
             conditionalProperties: {
-              libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
-              local: ['id', BFLITE_URIS.LABEL],
+              libraryOfCongress: ['label', 'rdfLink'],
+              local: ['id', 'label'],
             },
           },
         },

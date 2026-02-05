@@ -16,7 +16,7 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   formatComplex(
     value: UserValueContents,
     recordSchemaEntry?: RecordSchemaEntry,
-  ): string | Record<string, string[]> | null {
+  ): string | Record<string, string | string[]> | null {
     // If recordSchemaEntry has properties, try to generate complex object structure.
     // This is used for Hubs.
     if (recordSchemaEntry?.properties && Object.keys(recordSchemaEntry.properties).length > 0) {
@@ -37,8 +37,8 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   protected buildComplexObject(
     value: UserValueContents,
     properties: Record<string, RecordSchemaEntry>,
-  ): Record<string, string[]> {
-    const result: Record<string, string[]> = {};
+  ): Record<string, string | string[]> {
+    const result: Record<string, string | string[]> = {};
 
     if (!value.label) {
       return result;
@@ -48,7 +48,14 @@ export abstract class BaseValueFormatter implements IValueFormatter {
       const mappedValue = this.getValueFromSource(value, propertySchema.options?.valueSource, propertyKey);
 
       if (mappedValue !== null && mappedValue !== undefined && mappedValue !== '') {
-        result[propertyKey] = Array.isArray(mappedValue) ? mappedValue : [mappedValue];
+        // Use the schema type: array or string
+        const isArrayType = propertySchema.type === 'array';
+
+        if (isArrayType) {
+          result[propertyKey] = Array.isArray(mappedValue) ? mappedValue : [mappedValue];
+        } else {
+          result[propertyKey] = Array.isArray(mappedValue) ? mappedValue[0] : mappedValue;
+        }
       }
     });
 
