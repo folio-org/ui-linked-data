@@ -29,11 +29,34 @@ export class LookupProcessor implements IProfileSchemaProcessor {
       const result: GeneratedValue = {};
 
       Object.keys(recordSchemaEntry.properties || {}).forEach(key => {
-        this.mapEntryValue({ result, key, meta, label, id });
+        const propertySchema = recordSchemaEntry.properties?.[key];
+
+        // Handle nested object properties
+        if (propertySchema?.type === RecordSchemaEntryType.object && propertySchema.properties) {
+          result[key] = this.processNestedObject(propertySchema, { id, meta, label });
+        } else {
+          this.mapEntryValue({ result, key, meta, label, id, propertySchema });
+        }
       });
 
       return result;
     });
+  }
+
+  private processNestedObject(
+    propertySchema: RecordSchemaEntry,
+    value: { id?: string; meta?: UserValueContents['meta']; label?: string },
+  ): GeneratedValue {
+    const nestedResult: GeneratedValue = {};
+    const { id, meta, label } = value;
+
+    Object.keys(propertySchema.properties || {}).forEach(key => {
+      const childPropertySchema = propertySchema.properties?.[key];
+
+      this.mapEntryValue({ result: nestedResult, key, meta, label, id, propertySchema: childPropertySchema });
+    });
+
+    return nestedResult;
   }
 
   private mapEntryValue({
@@ -42,25 +65,41 @@ export class LookupProcessor implements IProfileSchemaProcessor {
     meta,
     label,
     id,
+    propertySchema,
   }: {
     result: GeneratedValue;
     key: string;
     meta?: UserValueContents['meta'];
     label?: string;
     id?: string;
+    propertySchema?: RecordSchemaEntry;
   }) {
+    // Determine if the property should be an array based on schema type
+    const isArrayType = propertySchema?.type === RecordSchemaEntryType.array;
+    let value: string | undefined;
+
+    // Extract the raw value based on property key patterns
     if (meta?.uri && key.includes('link')) {
-      result[key] = [meta.uri];
+      value = meta.uri;
     } else if (meta?.basicLabel && (key.includes('term') || key.includes('label') || key.includes('name'))) {
-      result[key] = [meta.basicLabel];
+      value = meta.basicLabel;
     } else if (key.includes('code')) {
-      result[key] = [meta?.uri?.split('/').pop() ?? label ?? ''];
+      value = meta?.uri?.split('/').pop() ?? label ?? '';
     } else if (key.includes('srsId')) {
       const selectedKey = meta?.srsId ? 'srsId' : 'id';
 
       result[selectedKey] = meta?.srsId ?? id;
+
+      return;
     } else {
-      result[key] = label ? [label] : [];
+      value = label;
+    }
+
+    // Format the value according to schema type (array or string)
+    if (value) {
+      result[key] = isArrayType ? [value] : value;
+    } else {
+      result[key] = isArrayType ? [] : '';
     }
   }
 }

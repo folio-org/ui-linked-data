@@ -4,7 +4,7 @@ import { Dropdown } from '@/components/Dropdown';
 import { FullDisplay } from '@/components/FullDisplay';
 import { ModalImport } from '@/components/ModalImport';
 
-import { HubsResultList, ResourcesResultList, Search, type SourceOption } from '@/features/search/ui';
+import { HubsResultList, ResourcesResultList, SOURCE_OPTIONS, Search } from '@/features/search/ui';
 
 import { useSearchState } from '@/store';
 
@@ -12,17 +12,6 @@ import { createHubActionsConfig, createResourceActionsConfig } from './config';
 import { useSearchActions, useSearchCleanup } from './hooks';
 
 import './Search.scss';
-
-const SOURCE_OPTIONS: SourceOption[] = [
-  {
-    value: 'libraryOfCongress',
-    labelId: 'ld.source.libraryOfCongress',
-  },
-  {
-    value: 'local',
-    labelId: 'ld.source.local',
-  },
-];
 
 export const SearchView = () => {
   const { selectedInstances } = useSearchState(['selectedInstances']);

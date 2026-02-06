@@ -16,19 +16,20 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
   private handleArrayData(data: unknown[], id?: string, type?: string) {
     return data.map(item => ({
-      id: this.getId(item, id),
+      id: this.getInternalId(item) ?? this.getId(item, id),
       label: this.getLabel(item),
-      meta: { type, uri: this.getUri(item) },
+      meta: { type, uri: this.getUri(item), sourceType: this.getSourceType(item) },
     }));
   }
 
   private handleSingleData(data: unknown, id?: string, type?: string) {
     const contentItem: WithRequired<UserValueContents, 'meta'> = {
-      id,
+      id: this.getInternalId(data) ?? id,
       label: this.getSingleLabel(data),
       meta: {
         type,
         uri: this.getUri(data),
+        sourceType: this.getSourceType(data),
         ...this.getPreferredMeta(data),
       },
     };
@@ -59,6 +60,20 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
     if (dataWithUri?.uri) {
       return Array.isArray(dataWithUri.uri) ? dataWithUri.uri[0] : dataWithUri.uri;
+    }
+
+    return undefined;
+  }
+
+  private getSourceType(data: unknown) {
+    return (data as { sourceType?: string })?.sourceType;
+  }
+
+  private getInternalId(data: unknown) {
+    const dataWithId = data as { id?: string | string[] };
+
+    if (dataWithId?.id) {
+      return Array.isArray(dataWithId.id) ? dataWithId.id[0] : dataWithId.id;
     }
 
     return undefined;

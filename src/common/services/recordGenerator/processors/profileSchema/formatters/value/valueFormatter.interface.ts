@@ -8,5 +8,5 @@ export interface IValueFormatter {
   formatComplex(
     value: UserValueContents,
     recordSchemaEntry?: RecordSchemaEntry,
-  ): string | Record<string, string[]> | null;
+  ): string | Record<string, string | string[]> | null;
 }

@@ -9,6 +9,7 @@ type UserValueContents = {
     basicLabel?: string;
     srsId?: string;
     isPreferred?: boolean;
+    sourceType?: string;
   };
 };
 

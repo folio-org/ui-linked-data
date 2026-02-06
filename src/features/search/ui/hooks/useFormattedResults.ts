@@ -5,19 +5,23 @@ import { logger } from '@/common/services/logger';
 import { useSearchContext } from '../providers/SearchProvider';
 
 /**
- * Hook to get formatted search results using the active config's resultFormatter
+ * Hook to get formatted search results using the active core config's resultFormatter.
+ * Uses activeCoreConfig (based on committed source) to ensure results remain stable
+ * when user toggles source selector without submitting a new search.
  */
 export function useFormattedResults<T = unknown>(): T[] | undefined {
-  const { results, config } = useSearchContext();
+  const { results, activeCoreConfig, config } = useSearchContext();
+
+  const formatterConfig = activeCoreConfig ?? config;
 
   const formattedData = useMemo(() => {
     if (!results?.items) {
       return undefined;
     }
 
-    if (config?.strategies?.resultFormatter) {
+    if (formatterConfig?.strategies?.resultFormatter) {
       try {
-        return config.strategies.resultFormatter.format(results.items) as T[];
+        return formatterConfig.strategies.resultFormatter.format(results.items) as T[];
       } catch (error) {
         logger.error('Error formatting search results:', error);
         return undefined;
@@ -25,7 +29,7 @@ export function useFormattedResults<T = unknown>(): T[] | undefined {
     }
 
     return undefined;
-  }, [results?.items, config?.strategies?.resultFormatter]);
+  }, [results?.items, formatterConfig?.strategies?.resultFormatter]);
 
   return formattedData;
 }

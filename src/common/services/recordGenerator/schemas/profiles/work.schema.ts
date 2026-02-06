@@ -36,9 +36,35 @@ export const workRecordSchema: RecordSchema = {
       _creatorReference: createArrayObjectProperty(contributorProperties),
 
       _hubs: createArrayObjectProperty({
-        _hub: createObjectProperty(linkAndLabelProperties, {
-          propertyKey: '_hub',
-        }),
+        _hub: {
+          type: RecordSchemaEntryType.object,
+          properties: {
+            // LoC source properties
+            label: {
+              type: RecordSchemaEntryType.string,
+              options: { valueSource: 'label' },
+            },
+            rdfLink: {
+              type: RecordSchemaEntryType.string,
+              options: { valueSource: 'meta.uri' },
+            },
+            // Local source properties
+            id: {
+              type: RecordSchemaEntryType.string,
+              options: { valueSource: 'id' },
+            },
+          },
+          options: {
+            propertyKey: '_hub',
+            defaultSourceType: 'libraryOfCongress',
+            conditionalProperties: {
+              libraryOfCongress: ['label', 'rdfLink'],
+              local: ['id', 'label'],
+            },
+            // Always include 'id' if present (for existing hubs that have been saved)
+            alwaysIncludeIfPresent: ['id'],
+          },
+        },
         _relation: {
           type: RecordSchemaEntryType.string,
           value: RecordSchemaEntryType.string,

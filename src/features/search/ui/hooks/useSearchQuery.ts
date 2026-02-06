@@ -30,6 +30,7 @@ interface UseSearchQueryResult {
   isError: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
+  activeCoreConfig: SearchTypeConfig | undefined;
 }
 
 export function useSearchQuery({
@@ -189,5 +190,6 @@ export function useSearchQuery({
     isError,
     error,
     refetch,
+    activeCoreConfig: effectiveCoreConfig,
   };
 }

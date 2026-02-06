@@ -45,6 +45,7 @@ describe('HubAssignFormatter', () => {
         id: 'test_id_123',
         title: 'Test Hub Label',
         uri: 'test_hub_url',
+        sourceType: 'libraryOfCongress',
       },
       true,
     );
@@ -69,6 +70,7 @@ describe('HubAssignFormatter', () => {
         id: 'test_id_123',
         title: '',
         uri: 'test_hub_url',
+        sourceType: 'libraryOfCongress',
       },
       true,
     );
@@ -93,6 +95,7 @@ describe('HubAssignFormatter', () => {
         id: 'test_id_123',
         title: 'Test Hub Label',
         uri: '',
+        sourceType: 'libraryOfCongress',
       },
       true,
     );
@@ -119,6 +122,7 @@ describe('HubAssignFormatter', () => {
         id: 'test_id_456',
         title: '',
         uri: '',
+        sourceType: 'libraryOfCongress',
       },
       true,
     );

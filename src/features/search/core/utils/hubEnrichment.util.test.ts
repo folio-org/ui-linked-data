@@ -1,6 +1,6 @@
 import { SEARCH_CHECK_QUERY_PARAM, SEARCH_OPERATOR } from '@/common/constants/search.constants';
 
-import { buildHubLocalCheckQuery, extractOriginalIds } from './hubEnrichment.util';
+import { buildHubLocalCheckQuery, extractOriginalIds, getIsLocalFlag, getSourceLabel } from './hubEnrichment.util';
 
 describe('hubEnrichment.util', () => {
   describe('buildHubLocalCheckQuery', () => {
@@ -101,6 +101,58 @@ describe('hubEnrichment.util', () => {
       const result = extractOriginalIds(content);
 
       expect(result).toEqual(new Set(['original_2']));
+    });
+  });
+
+  describe('getIsLocalFlag', () => {
+    it('returns true when isLocal is true', () => {
+      const hubEntry = { isLocal: true } as HubSearchResultDTO & { isLocal: boolean };
+
+      const result = getIsLocalFlag(hubEntry);
+
+      expect(result).toBe(true);
+    });
+
+    it('returns false when isLocal is false', () => {
+      const hubEntry = { isLocal: false } as HubSearchResultDTO & { isLocal: boolean };
+
+      const result = getIsLocalFlag(hubEntry);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when isLocal property is not present', () => {
+      const hubEntry = {} as HubSearchResultDTO;
+
+      const result = getIsLocalFlag(hubEntry);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when hubEntry has other properties but no isLocal', () => {
+      const hubEntry = {
+        suggestLabel: 'Test Label',
+        uri: 'http://example.com',
+        token: 'token_1',
+      } as HubSearchResultDTO;
+
+      const result = getIsLocalFlag(hubEntry);
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('getSourceLabel', () => {
+    it('returns local source label when isLocal is true', () => {
+      const result = getSourceLabel(true);
+
+      expect(result).toBe('ld.source.libraryOfCongress.local');
+    });
+
+    it('returns default source label when isLocal is false', () => {
+      const result = getSourceLabel(false);
+
+      expect(result).toBe('ld.source.libraryOfCongress');
     });
   });
 });

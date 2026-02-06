@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { IResultFormatter } from '../../types';
+import { getIsLocalFlag, getSourceLabel } from '../../utils';
 
 /**
  * Formats Hub data for Search page results
@@ -14,10 +15,8 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
   private formatHubs(hubList: HubSearchResultDTO[]): SearchResultsTableRow[] {
     return hubList?.map(hubEntry => {
       const { suggestLabel = '', uri = '', token = '' } = hubEntry;
-      const isLocal = 'isLocal' in hubEntry ? (hubEntry as HubSearchResultDTO & { isLocal: boolean }).isLocal : false;
-
-      // Determine source based on isLocal flag (set by enricher if configured)
-      const sourceLabel = isLocal ? 'ld.source.libraryOfCongress.local' : 'ld.source.libraryOfCongress';
+      const isLocal = getIsLocalFlag(hubEntry);
+      const sourceLabel = getSourceLabel(isLocal);
 
       return {
         __meta: {

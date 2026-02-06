@@ -57,6 +57,8 @@ export interface SearchContextValue {
   // Current navigation params derived by provider (reflects URL or defaults)
   currentSegment: string;
   currentSource?: string;
+  // Active core config used for the current results (based on committed source)
+  activeCoreConfig?: SearchTypeConfig;
 
   // Search results (from React Query)
   results: SearchResults | undefined;

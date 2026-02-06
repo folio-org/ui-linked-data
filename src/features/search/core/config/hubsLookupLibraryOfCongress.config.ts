@@ -4,6 +4,7 @@ import { HUB_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 
 import { HubsLoCRequestBuilder } from '../strategies/requestBuilders';
 import { HubResponseTransformer } from '../strategies/responseTransformers';
+import { HubsLocalAvailabilityEnricher } from '../strategies/resultEnrichers';
 import { HubsLookupResultFormatter } from '../strategies/resultFormatters';
 import type { SearchTypeConfig } from '../types';
 
@@ -20,6 +21,7 @@ export const hubsLookupLibraryOfCongressConfig: SearchTypeConfig = {
     requestBuilder: new HubsLoCRequestBuilder(HUB_SEARCHABLE_INDICES_MAP),
     responseTransformer: new HubResponseTransformer(),
     resultFormatter: new HubsLookupResultFormatter(),
+    resultEnricher: new HubsLocalAvailabilityEnricher(),
   },
 
   capabilities: {

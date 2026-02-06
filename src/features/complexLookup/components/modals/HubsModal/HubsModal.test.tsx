@@ -39,6 +39,7 @@ jest.mock('@/features/search/ui/components/Search', () => {
         InputsWrapper: () => <div />,
         SubmitButton: () => <div />,
         MetaControls: () => <div />,
+        SourceSelector: () => <div />,
       }),
       Content: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
       ContentContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -65,6 +66,7 @@ jest.mock('@/features/search/ui', () => ({
       <button onClick={() => onAssign({ id: 'hub-1', title: 'Hub 1' })}>Assign Hub</button>
     </div>
   ),
+  SOURCE_OPTIONS: [],
 }));
 
 describe('HubsModal', () => {
