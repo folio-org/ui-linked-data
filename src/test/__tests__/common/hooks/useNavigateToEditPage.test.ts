@@ -1,6 +1,6 @@
 import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
 
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
@@ -12,6 +12,7 @@ import { useSearchStore } from '@/store';
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
   useSearchParams: jest.fn(),
+  useLocation: jest.fn(),
 }));
 
 describe('useNavigateToEditPage', () => {
@@ -19,6 +20,7 @@ describe('useNavigateToEditPage', () => {
 
   beforeEach(() => {
     (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
+    (useLocation as jest.Mock).mockReturnValue({ state: null });
     setInitialGlobalState([
       {
         store: useSearchStore,
@@ -192,5 +194,123 @@ describe('useNavigateToEditPage', () => {
     navigateAsDuplicate(duplicateId);
 
     expect(mockNavigate).toHaveBeenCalledWith('/resources/create?cloneOf=dup-123', { state: navigationState });
+  });
+
+  it('falls back to location.state when navigationState and URL params are empty', () => {
+    const uri = '/edit/location-state-test';
+    const locationState = {
+      [SearchQueryParams.Query]: 'location query',
+      [SearchQueryParams.SearchBy]: 'contributor',
+      [SearchQueryParams.Segment]: 'resources',
+      isNavigatedFromLDE: true,
+    };
+
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { navigationState: {} },
+      },
+    ]);
+    (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
+    (useLocation as jest.Mock).mockReturnValue({ state: locationState });
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage(uri);
+
+    expect(mockNavigate).toHaveBeenCalledWith(uri, {
+      state: {
+        [SearchQueryParams.Query]: 'location query',
+        [SearchQueryParams.SearchBy]: 'contributor',
+        [SearchQueryParams.Segment]: 'resources',
+        isNavigatedFromLDE: true,
+      },
+    });
+  });
+
+  it('prefers URL params over location.state when URL params exist', () => {
+    const uri = '/edit/url-over-location';
+    const locationState = {
+      [SearchQueryParams.Query]: 'location query',
+      [SearchQueryParams.Segment]: 'hubs',
+    };
+
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { navigationState: {} },
+      },
+    ]);
+    const searchParams = new URLSearchParams({
+      [SearchQueryParams.Query]: 'url query',
+      [SearchQueryParams.Segment]: 'resources',
+    });
+    (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+    (useLocation as jest.Mock).mockReturnValue({ state: locationState });
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage(uri);
+
+    expect(mockNavigate).toHaveBeenCalledWith(uri, {
+      state: {
+        [SearchQueryParams.Query]: 'url query',
+        [SearchQueryParams.Segment]: 'resources',
+        isNavigatedFromLDE: true,
+      },
+    });
+  });
+
+  it('returns empty state when all sources are empty', () => {
+    const uri = '/edit/empty-state';
+
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { navigationState: {} },
+      },
+    ]);
+    (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
+    (useLocation as jest.Mock).mockReturnValue({ state: null });
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage(uri);
+
+    expect(mockNavigate).toHaveBeenCalledWith(uri, {
+      state: {
+        isNavigatedFromLDE: true,
+      },
+    });
+  });
+
+  it('ignores location.state with only isNavigatedFromLDE flag', () => {
+    const uri = '/edit/only-flag';
+    const locationState = {
+      isNavigatedFromLDE: true,
+    };
+
+    setUpdatedGlobalState([
+      {
+        store: useSearchStore,
+        updatedState: { navigationState: {} },
+      },
+    ]);
+    (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
+    (useLocation as jest.Mock).mockReturnValue({ state: locationState });
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage(uri);
+
+    expect(mockNavigate).toHaveBeenCalledWith(uri, {
+      state: {
+        isNavigatedFromLDE: true,
+      },
+    });
   });
 });
