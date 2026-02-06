@@ -485,5 +485,155 @@ describe('LookupProcessor', () => {
         },
       ]);
     });
+
+    it('does not set link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: { type: RecordSchemaEntryType.string },
+          term: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          term: 'Basic Label',
+        },
+      ]);
+    });
+
+    it('does not set link property when meta is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: { type: RecordSchemaEntryType.string },
+          value: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          value: 'test value',
+        },
+      ]);
+    });
+
+    it('handles array-type link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          term: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          term: ['Basic Label'],
+        },
+      ]);
+    });
+
+    it('handles nested object with link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          nested: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              link: { type: RecordSchemaEntryType.string },
+              label: { type: RecordSchemaEntryType.string },
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          nested: {
+            label: 'Basic Label',
+          },
+        },
+      ]);
+    });
   });
 });

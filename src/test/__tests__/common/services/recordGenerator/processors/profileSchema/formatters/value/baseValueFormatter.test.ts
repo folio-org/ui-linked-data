@@ -250,6 +250,58 @@ describe('BaseValueFormatter', () => {
     });
   });
 
+  describe('buildLinkLabelObject', () => {
+    it('returns object with label key and value', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+      });
+    });
+
+    it('includes LINK when uri is provided', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label', 'test_uri');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
+    });
+
+    it('does not include LINK when uri is undefined', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+      });
+    });
+
+    it('does not include LINK when uri is null', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label', null);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+      });
+    });
+
+    it('does not include LINK when uri is empty string', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term', '');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+      });
+    });
+
+    it('works with TERM as label key', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term', 'test_uri');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
+    });
+  });
+
   describe('buildComplexObject', () => {
     it('builds object using valueSource option when specified', () => {
       const value: UserValueContents = {

@@ -173,6 +173,90 @@ describe('GroupValueFormatter', () => {
         [BFLITE_URIS.LINK]: ['test_uri'],
       });
     });
+
+    it('does not include LINK when includeTerm is true but uri is undefined', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {},
+      };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: true,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test label'],
+      });
+    });
+
+    it('does not include LINK when includeTerm is true but uri is null', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {
+          uri: null as unknown as string,
+        },
+      };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: true,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test label'],
+      });
+    });
+
+    it('does not include LINK when includeTerm is true but uri is empty string', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {
+          uri: '',
+        },
+      };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: true,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test label'],
+      });
+    });
+
+    it('uses basicLabel when available with includeTerm', () => {
+      const value: UserValueContents = {
+        label: 'test label',
+        meta: {
+          uri: 'test_uri',
+          basicLabel: 'basic label',
+        },
+      };
+      const recordSchemaEntry = {
+        type: 'string' as RecordSchemaEntryType,
+        options: {
+          includeTerm: true,
+        },
+      };
+
+      const result = formatter.formatSimple(value, recordSchemaEntry);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['basic label'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
+    });
   });
   describe('formatComplex', () => {
     it('returns srsId when available', () => {
