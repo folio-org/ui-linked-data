@@ -28,7 +28,7 @@ export const ComponentList: FC<ComponentListProps> = ({
   const Container = droppable ? DroppableList : 'div';
 
   return (
-    <div data-testid="component-list" className={`${type}-components`} aria-labelledby={`${type}-title`}>
+    <div data-testid={`${type}-component-list`} className={`${type}-components`} aria-labelledby={`${type}-title`}>
       <h4>
         <span id={`${type}-title`} className="title">
           <FormattedMessage id={titleId} />

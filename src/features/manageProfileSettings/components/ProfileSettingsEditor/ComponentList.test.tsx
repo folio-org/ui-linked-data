@@ -22,7 +22,7 @@ describe('ComponentList', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByTestId('component-list')).toBeInTheDocument();
+    expect(screen.getByTestId('unused-component-list')).toBeInTheDocument();
     expect(screen.getByText('unused-title-id')).toBeInTheDocument();
   });
 
@@ -42,7 +42,7 @@ describe('ComponentList', () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByTestId('component-list')).toBeInTheDocument();
+    expect(screen.getByTestId('selected-component-list')).toBeInTheDocument();
     expect(screen.getByText('selected-title-id')).toBeInTheDocument();
   });
 });
