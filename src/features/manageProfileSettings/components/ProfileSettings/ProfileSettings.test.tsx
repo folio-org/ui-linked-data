@@ -98,7 +98,7 @@ describe('ProfileSettings', () => {
 
   it('shows an error when loading profile settings fails', async () => {
     const error = new Error('Failed to load profile settings');
-    (fetchProfile as jest.Mock).mockResolvedValue({});
+    (fetchProfile as jest.Mock).mockResolvedValue([]);
     (fetchProfileSettings as jest.Mock).mockRejectedValue(error);
 
     renderComponent(true);

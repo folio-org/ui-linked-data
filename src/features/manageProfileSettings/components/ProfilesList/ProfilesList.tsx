@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getResourceTypeConfig } from '@/configs/resourceTypes';
+import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getUri } from '@/configs/resourceTypes';
 
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 
@@ -53,9 +53,9 @@ export const ProfilesList = () => {
     <div data-testid="profiles-list" className="profiles-list">
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
-          <div className="heading">
+          <h3 className="heading">
             <FormattedMessage id="ld.profiles" />
-          </div>
+          </h3>
           <span className="empty-block" />
         </div>
       </div>
@@ -65,7 +65,7 @@ export const ProfilesList = () => {
             <ResourceProfiles
               key={type}
               labelId={getProfileLabelId(type)}
-              profiles={availableProfiles[getResourceTypeConfig(type).uri as ResourceTypeURL]}
+              profiles={availableProfiles[getUri(type) as ResourceTypeURL]}
             />
           );
         })}

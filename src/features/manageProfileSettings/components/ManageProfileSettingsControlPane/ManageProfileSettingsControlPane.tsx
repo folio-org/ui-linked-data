@@ -38,9 +38,9 @@ export const ManageProfileSettingsControlPane = () => {
           <Times16 />
         </Button>
       </nav>
-      <div className="heading">
+      <h2 className="heading">
         <FormattedMessage id="ld.manageProfileSettings" />
-      </div>
+      </h2>
       <span className="empty-block" />
     </div>
   );

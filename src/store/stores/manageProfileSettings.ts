@@ -3,8 +3,9 @@ import { type SliceState } from '../utils/slice';
 
 export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDTO> &
   SliceState<'nextSelectedProfile', ProfileDTO> &
+  SliceState<'fullProfile', Profile> &
   SliceState<'isClosingNext', boolean> &
-  SliceState<'profileSettings', ProfileSettings> &
+  SliceState<'profileSettings', ProfileSettingsWithDrift> &
   SliceState<'isTypeDefaultProfile', boolean> &
   SliceState<'isModified', boolean>;
 
@@ -15,6 +16,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: null,
   },
   nextSelectedProfile: {
+    initialValue: null,
+  },
+  fullProfile: {
     initialValue: null,
   },
   isClosingNext: {
