@@ -34,7 +34,7 @@ export const useSettingsAnnouncements = ({
       let announce;
       if (over) {
         const activeComponent = componentFromId(active.id as string, profile);
-        const targetId = over.data.current !== undefined ? over.data.current.sortable.containerId : over.id;
+        const targetId = over.data.current ? over.data.current.sortable.containerId : over.id;
         const targetList = listFromId(targetId);
         if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
           // move from selected to unused

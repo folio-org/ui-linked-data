@@ -73,7 +73,7 @@ export const useDragHandlers = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const targetId = over.data.current !== undefined ? over.data.current.sortable.containerId : over.id;
+      const targetId = over.data.current ? over.data.current.sortable.containerId : over.id;
       const targetList = listFromId(targetId);
       if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
         // move from unused to selected

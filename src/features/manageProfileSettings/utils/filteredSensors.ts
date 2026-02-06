@@ -18,7 +18,7 @@ type LimitedKeyboardEvent = {
 const filterEvent = (element: HTMLElement | null) => {
   let current = element;
   while (current) {
-    if (current.dataset && current.dataset.noDnd) {
+    if (current.dataset?.noDnd) {
       return false;
     }
     current = current.parentElement;
@@ -27,7 +27,7 @@ const filterEvent = (element: HTMLElement | null) => {
 };
 
 export class FilteredPointerSensor extends PointerSensor {
-  static activators = [
+  static readonly activators = [
     {
       eventName: 'onPointerDown' as const,
       handler: ({ nativeEvent: event }: LimitedPointerEvent) => {
@@ -38,7 +38,7 @@ export class FilteredPointerSensor extends PointerSensor {
 }
 
 export class FilteredKeyboardSensor extends KeyboardSensor {
-  static activators = [
+  static readonly activators = [
     {
       eventName: 'onKeyDown' as const,
       handler: ({ nativeEvent: event }: LimitedKeyboardEvent) => {
