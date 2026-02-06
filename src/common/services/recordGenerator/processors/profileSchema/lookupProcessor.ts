@@ -79,7 +79,9 @@ export class LookupProcessor implements IProfileSchemaProcessor {
     let value: string | undefined;
 
     // Extract the raw value based on property key patterns
-    if (meta?.uri && key.includes('link')) {
+    if (key.includes('link')) {
+      if (!meta?.uri) return;
+
       value = meta.uri;
     } else if (meta?.basicLabel && (key.includes('term') || key.includes('label') || key.includes('name'))) {
       value = meta.basicLabel;
