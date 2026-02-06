@@ -53,12 +53,12 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
       {type === ComponentType.selected && !isDragging ? (
         <div className="adjust" data-no-dnd="true">
           {index !== 1 && (
-            <Button type={ButtonType.Icon} onClick={upFn}>
+            <Button data-testid="nudge-up" type={ButtonType.Icon} onClick={upFn}>
               <ArrowUp />
             </Button>
           )}
           {index !== size && (
-            <Button type={ButtonType.Icon} onClick={downFn}>
+            <Button data-testid="nudge-down" type={ButtonType.Icon} onClick={downFn}>
               <ArrowDown />
             </Button>
           )}

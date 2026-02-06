@@ -24,6 +24,16 @@ import { UnusedComponent } from './UnusedComponent';
 
 import './ProfileSettingsEditor.scss';
 
+interface UpdateStateParams {
+  activeId: string | null;
+  startingList: ComponentType | null;
+  unused: ProfileSettingComponent[] | null;
+  selected: ProfileSettingComponent[] | null;
+  draggingUnused: ProfileSettingComponent[];
+  draggingSelected: ProfileSettingComponent[];
+  cursorStyle: string;
+}
+
 export const ProfileSettingsEditor = () => {
   const unusedEmptyId = 'unused-container';
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
@@ -52,27 +62,63 @@ export const ProfileSettingsEditor = () => {
     return id;
   };
 
-  const updateState = (
-    activeId: string | null,
-    startingList: ComponentType | null,
-    unused: ProfileSettingComponent[] | null,
-    selected: ProfileSettingComponent[] | null,
-    draggingUnused: ProfileSettingComponent[],
-    draggingSelected: ProfileSettingComponent[],
-    cursorStyle: string,
-  ) => {
+  const updateState = ({
+    activeId,
+    startingList,
+    unused,
+    selected,
+    draggingUnused,
+    draggingSelected,
+    cursorStyle,
+  }: UpdateStateParams) => {
     setActiveId(activeId);
     setStartingList(startingList);
     setStartingStyle(startingList);
-    if (unused?.length) {
+    if (unused) {
       setUnusedComponents([...unused]);
     }
-    if (selected?.length) {
+    if (selected) {
       setSelectedComponents([...selected]);
     }
     setDraggingUnused([...draggingUnused]);
     setDraggingSelected([...draggingSelected]);
     document.body.style.cursor = cursorStyle;
+  };
+
+  const startDrag = (activeId: string, startingList: ComponentType | null) => {
+    updateState({
+      activeId,
+      startingList,
+      unused: null,
+      selected: null,
+      draggingUnused,
+      draggingSelected,
+      cursorStyle: 'grabbing',
+    });
+  };
+
+  const cancelDrag = () => {
+    updateState({
+      activeId: null,
+      startingList: null,
+      unused: draggingUnused,
+      selected: draggingSelected,
+      draggingUnused: [],
+      draggingSelected: [],
+      cursorStyle: 'default',
+    });
+  };
+
+  const endDrag = () => {
+    updateState({
+      activeId: null,
+      startingList: null,
+      unused: null,
+      selected: null,
+      draggingUnused: [],
+      draggingSelected: [],
+      cursorStyle: 'default',
+    });
   };
 
   const sensors = useSensors(
@@ -91,18 +137,16 @@ export const ProfileSettingsEditor = () => {
     listFromId,
   });
 
-  const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers(
+  const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
     startingList,
-    unusedComponents,
-    selectedComponents,
-    draggingUnused,
-    draggingSelected,
-    setStartingList,
-    updateState,
+    cancelDrag,
+    endDrag,
     listFromId,
-    setUnusedComponents,
-    setSelectedComponents,
-  );
+    setSelected: setSelectedComponents,
+    setStartingList,
+    setUnused: setUnusedComponents,
+    startDrag,
+  });
 
   useEffect(() => {
     if (fullProfile && profileSettings) {
@@ -120,7 +164,7 @@ export const ProfileSettingsEditor = () => {
   }, [fullProfile, profileSettings]);
 
   return (
-    <div className="components-editor-wrapper">
+    <div data-testid="profile-settings-editor" className="components-editor-wrapper">
       <div className="components-editor">
         <DndContext
           sensors={sensors}

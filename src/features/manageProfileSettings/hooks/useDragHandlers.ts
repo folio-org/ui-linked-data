@@ -8,44 +8,37 @@ import { useManageProfileSettingsState } from '@/store';
 import { ComponentType } from '../components/ProfileSettingsEditor/BaseComponent';
 import { useMoveBetweenLists } from './useMoveBetweenLists';
 
-export const useDragHandlers = (
-  startingList: ComponentType | null,
-  unused: ProfileSettingComponent[],
-  selected: ProfileSettingComponent[],
-  draggingUnused: ProfileSettingComponent[],
-  draggingSelected: ProfileSettingComponent[],
-  setStartingList: Dispatch<SetStateAction<ComponentType | null>>,
-  updateState: (
-    activeId: string | null,
-    startingList: ComponentType | null,
-    unused: ProfileSettingComponent[] | null,
-    selected: ProfileSettingComponent[] | null,
-    draggingUnused: ProfileSettingComponent[],
-    draggingSelected: ProfileSettingComponent[],
-    cursorStyle: string,
-  ) => void,
-  listFromId: (id: string) => string,
-  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
-  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
-) => {
+interface UseDragHandlersParams {
+  startingList: ComponentType | null;
+  cancelDrag: () => void;
+  endDrag: () => void;
+  listFromId: (id: string) => string;
+  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
+  setStartingList: Dispatch<SetStateAction<ComponentType | null>>;
+  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
+  startDrag: (activeId: string, startingList: ComponentType | null) => void;
+}
+
+export const useDragHandlers = ({
+  startingList,
+  cancelDrag,
+  endDrag,
+  listFromId,
+  setSelected,
+  setStartingList,
+  setUnused,
+  startDrag,
+}: UseDragHandlersParams) => {
   const { setIsModified } = useManageProfileSettingsState(['setIsModified']);
 
   const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({ setUnused, setSelected });
 
   const handleDragStart = (event: DragStartEvent) => {
-    updateState(
-      event.active.id as string,
-      event.active.data.current?.sortable.containerId,
-      null,
-      null,
-      unused,
-      selected,
-      'grabbing',
-    );
+    startDrag(event.active.id as string, event.active.data.current?.sortable.containerId);
   };
 
   const handleDragCancel = () => {
-    updateState(null, null, draggingUnused, draggingSelected, [], [], 'default');
+    cancelDrag();
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -73,7 +66,7 @@ export const useDragHandlers = (
       // movement between lists is covered by onDragOver
     }
 
-    updateState(null, null, null, null, [], [], 'default');
+    endDrag();
   };
 
   const handleDragOver = (event: DragOverEvent) => {
