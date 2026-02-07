@@ -63,6 +63,18 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     return result;
   }
 
+  protected buildLinkLabelObject(labelKey: string, label: string, uri?: string | null): Record<string, string[]> {
+    const result: Record<string, string[]> = {
+      [labelKey]: [label],
+    };
+
+    if (uri) {
+      result[BFLITE_URIS.LINK] = [uri];
+    }
+
+    return result;
+  }
+
   private getValueFromSource(
     value: UserValueContents,
     valueSource: string | undefined,
