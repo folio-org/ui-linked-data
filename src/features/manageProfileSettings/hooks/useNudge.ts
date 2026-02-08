@@ -24,7 +24,7 @@ export const useNudge = ({ setSelected }: UseNudgeParams) => {
             { id: 'ld.profileSettings.announce.reorderedSelected' },
             {
               name: name,
-              order: index + increment,
+              order: index + increment + 1,
             },
           ),
         );

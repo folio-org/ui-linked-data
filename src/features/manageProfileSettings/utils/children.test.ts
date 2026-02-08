@@ -1,6 +1,8 @@
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
-import { childrenDifference, componentFromId, getProfileChildren, getSettingsChildren } from './children';
+import { ComponentType } from '../components/ProfileSettingsEditor/BaseComponent';
+import { UNUSED_EMPTY_ID } from '../constants';
+import { childrenDifference, componentFromId, getProfileChildren, getSettingsChildren, listFromId } from './children';
 
 describe('children', () => {
   const profile = [
@@ -48,19 +50,39 @@ describe('children', () => {
     missingFromSettings: [],
   } as ProfileSettingsWithDrift;
 
+  describe('listFromId', () => {
+    it('generates selected list name from selected container ID', () => {
+      const list = listFromId('selected');
+
+      expect(list).toEqual(ComponentType.selected);
+    });
+
+    it('generates unused list name from unused container ID', () => {
+      const list = listFromId('unused');
+
+      expect(list).toEqual(ComponentType.unused);
+    });
+
+    it('generates unused list name from empty unusedcontainer ID', () => {
+      const list = listFromId(UNUSED_EMPTY_ID);
+
+      expect(list).toEqual(ComponentType.unused);
+    });
+  });
+
   describe('componentFromId', () => {
     it('generates a component from an ID', () => {
       const component = componentFromId('test:childA', profile);
 
-      expect(component.id).toBe('test:childA');
-      expect(component.name).toBe('A');
+      expect(component).toBeDefined();
+      expect(component?.id).toBe('test:childA');
+      expect(component?.name).toBe('A');
     });
 
     it('generates a component with a blank label for an unrecognized ID', () => {
       const component = componentFromId('test:unknown', profile);
 
-      expect(component.id).toBe('test:unknown');
-      expect(component.name).toBe('');
+      expect(component).not.toBeDefined();
     });
   });
 
@@ -142,6 +164,35 @@ describe('children', () => {
       } as ProfileSettingsWithDrift);
 
       expect(children.length).toBe(0);
+    });
+
+    it('generates a partial list when some profile settings are not in the profile', () => {
+      const children = getSettingsChildren(profile, {
+        active: true,
+        children: [
+          {
+            id: 'test:childA',
+            visible: true,
+            order: 1,
+          },
+          {
+            id: 'test:childB',
+            visible: true,
+            order: 2,
+          },
+          {
+            id: 'test:childD',
+            visible: true,
+            order: 3,
+          },
+        ],
+        missingFromSettings: [],
+      } as ProfileSettingsWithDrift);
+
+      expect(children.length).toBe(2);
+      expect(children).toContainEqual({ id: 'test:childA', name: 'A' });
+      expect(children).toContainEqual({ id: 'test:childB', name: 'B' });
+      expect(children).not.toContainEqual({ id: 'test:childD', name: 'D' });
     });
   });
 

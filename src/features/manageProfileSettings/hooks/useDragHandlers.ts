@@ -6,13 +6,13 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { useManageProfileSettingsState } from '@/store';
 
 import { ComponentType } from '../components/ProfileSettingsEditor/BaseComponent';
+import { listFromId } from '../utils/children';
 import { useMoveBetweenLists } from './useMoveBetweenLists';
 
 interface UseDragHandlersParams {
   startingList: ComponentType | null;
   cancelDrag: () => void;
   endDrag: () => void;
-  listFromId: (id: string) => string;
   setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
   setStartingList: Dispatch<SetStateAction<ComponentType | null>>;
   setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
@@ -23,7 +23,6 @@ export const useDragHandlers = ({
   startingList,
   cancelDrag,
   endDrag,
-  listFromId,
   setSelected,
   setStartingList,
   setUnused,
@@ -73,7 +72,7 @@ export const useDragHandlers = ({
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const targetId = over.data.current ? over.data.current.sortable.containerId : over.id;
+      const targetId = over.data.current?.sortable?.containerId ?? over.id;
       const targetList = listFromId(targetId);
       if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
         // move from unused to selected

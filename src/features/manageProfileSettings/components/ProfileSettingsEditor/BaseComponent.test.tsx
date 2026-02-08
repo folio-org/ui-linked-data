@@ -1,5 +1,8 @@
+import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { DndContext } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 import { render, screen } from '@testing-library/react';
 
 import { DraggingComponent } from './DraggingComponent';
@@ -13,22 +16,24 @@ describe('BaseComponent', () => {
     name,
   };
 
-  it('renders UnusedComponent', () => {
-    render(
+  const renderComponent = (node: ReactNode) => {
+    return render(
       <MemoryRouter>
-        <UnusedComponent component={mockComponent} />
+        <DndContext>
+          <SortableContext items={[mockComponent]}>{node}</SortableContext>
+        </DndContext>
       </MemoryRouter>,
     );
+  };
+
+  it('renders UnusedComponent', () => {
+    renderComponent(<UnusedComponent component={mockComponent} />);
 
     expect(screen.getByText(name)).toBeInTheDocument();
   });
 
   it('renders SelectedComponent with both nudge buttons', () => {
-    render(
-      <MemoryRouter>
-        <SelectedComponent component={mockComponent} size={3} index={2} />
-      </MemoryRouter>,
-    );
+    renderComponent(<SelectedComponent component={mockComponent} size={3} index={2} />);
 
     expect(screen.getByText('2. ' + name)).toBeInTheDocument();
     expect(screen.getByTestId('nudge-up')).toBeInTheDocument();
@@ -36,11 +41,7 @@ describe('BaseComponent', () => {
   });
 
   it('renders SelectedComponent with only nudge down button', () => {
-    render(
-      <MemoryRouter>
-        <SelectedComponent component={mockComponent} size={3} index={1} />
-      </MemoryRouter>,
-    );
+    renderComponent(<SelectedComponent component={mockComponent} size={3} index={1} />);
 
     expect(screen.getByText('1. ' + name)).toBeInTheDocument();
     expect(screen.queryByTestId('nudge-up')).not.toBeInTheDocument();
@@ -48,11 +49,7 @@ describe('BaseComponent', () => {
   });
 
   it('renders SelectedComponent with only nudge up button', () => {
-    render(
-      <MemoryRouter>
-        <SelectedComponent component={mockComponent} size={3} index={3} />
-      </MemoryRouter>,
-    );
+    render(<SelectedComponent component={mockComponent} size={3} index={3} />);
 
     expect(screen.getByText('3. ' + name)).toBeInTheDocument();
     expect(screen.getByTestId('nudge-up')).toBeInTheDocument();
@@ -60,11 +57,7 @@ describe('BaseComponent', () => {
   });
 
   it('renders DraggingComponent', () => {
-    render(
-      <MemoryRouter>
-        <DraggingComponent component={mockComponent} />
-      </MemoryRouter>,
-    );
+    renderComponent(<DraggingComponent component={mockComponent} />);
 
     expect(screen.getByText(name)).toBeInTheDocument();
   });

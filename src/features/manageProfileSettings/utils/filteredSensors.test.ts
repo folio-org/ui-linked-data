@@ -118,7 +118,7 @@ describe('filteredSensors', () => {
       expect(result).toBe(false);
     });
 
-    it('returns true for any other key on the child of a data-no-dnd element', () => {
+    it('returns false for any other key on the child of a data-no-dnd element', () => {
       const target = makeTarget(true);
       const button = target.querySelector('#btn');
       const activator = FilteredKeyboardSensor.activators[0];

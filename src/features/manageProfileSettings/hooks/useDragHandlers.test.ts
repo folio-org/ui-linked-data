@@ -16,12 +16,6 @@ jest.mock('./useMoveBetweenLists', () => ({
 }));
 
 describe('useDragHandlers', () => {
-  const listFromIdSelected = () => {
-    return ComponentType.selected;
-  };
-  const listFromIdUnused = () => {
-    return ComponentType.unused;
-  };
   const mockCancelDrag = jest.fn();
   const mockStartDrag = jest.fn();
   const mockEndDrag = jest.fn();
@@ -75,7 +69,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdSelected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -96,7 +89,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdSelected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -115,7 +107,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdSelected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -136,7 +127,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        listFromId: listFromIdUnused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -157,7 +147,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        listFromId: listFromIdSelected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -179,7 +168,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdUnused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -201,7 +189,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdUnused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -223,7 +210,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        listFromId: listFromIdSelected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -244,7 +230,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdUnused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -265,7 +250,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        listFromId: listFromIdUnused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,

@@ -7,7 +7,14 @@ import classNames from 'classnames';
 
 import { useManageProfileSettingsState } from '@/store';
 
-import { useDragHandlers, useNudge, useSettingsAnnouncements } from '../../hooks';
+import { UNUSED_EMPTY_ID } from '../../constants';
+import {
+  type UpdateStateParams,
+  useDragHandlers,
+  useDragStateUpdate,
+  useNudge,
+  useSettingsAnnouncements,
+} from '../../hooks';
 import {
   FilteredKeyboardSensor,
   FilteredPointerSensor,
@@ -24,18 +31,7 @@ import { UnusedComponent } from './UnusedComponent';
 
 import './ProfileSettingsEditor.scss';
 
-interface UpdateStateParams {
-  activeId: string | null;
-  startingList: ComponentType | null;
-  unused: ProfileSettingComponent[] | null;
-  selected: ProfileSettingComponent[] | null;
-  draggingUnused: ProfileSettingComponent[];
-  draggingSelected: ProfileSettingComponent[];
-  cursorStyle: string;
-}
-
 export const ProfileSettingsEditor = () => {
-  const unusedEmptyId = 'unused-container';
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
   const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
   const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
@@ -48,19 +44,12 @@ export const ProfileSettingsEditor = () => {
   const {
     fullProfile,
     profileSettings,
-    // setProfileSettings,
+    // setProfileSettings, // TODO: UILD-698 save values
   } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
-    // 'setProfileSettings',
+    // 'setProfileSettings', // TODO: UILD-698
   ]);
-
-  const listFromId = (id: string) => {
-    if (id === unusedEmptyId) {
-      return ComponentType.unused;
-    }
-    return id;
-  };
 
   const updateState = ({
     activeId,
@@ -85,41 +74,13 @@ export const ProfileSettingsEditor = () => {
     document.body.style.cursor = cursorStyle;
   };
 
-  const startDrag = (activeId: string, startingList: ComponentType | null) => {
-    updateState({
-      activeId,
-      startingList,
-      unused: null,
-      selected: null,
-      draggingUnused,
-      draggingSelected,
-      cursorStyle: 'grabbing',
-    });
-  };
-
-  const cancelDrag = () => {
-    updateState({
-      activeId: null,
-      startingList: null,
-      unused: draggingUnused,
-      selected: draggingSelected,
-      draggingUnused: [],
-      draggingSelected: [],
-      cursorStyle: 'default',
-    });
-  };
-
-  const endDrag = () => {
-    updateState({
-      activeId: null,
-      startingList: null,
-      unused: null,
-      selected: null,
-      draggingUnused: [],
-      draggingSelected: [],
-      cursorStyle: 'default',
-    });
-  };
+  const { startDrag, cancelDrag, endDrag } = useDragStateUpdate({
+    unusedComponents,
+    selectedComponents,
+    draggingUnused,
+    draggingSelected,
+    updateState,
+  });
 
   const sensors = useSensors(
     useSensor(FilteredPointerSensor),
@@ -131,17 +92,15 @@ export const ProfileSettingsEditor = () => {
   const { makeMoveUp, makeMoveDown } = useNudge({ setSelected: setSelectedComponents });
 
   const { announcements } = useSettingsAnnouncements({
-    profile: fullProfile,
+    profile: fullProfile as Profile,
     startingList: startingStyle,
     components: selectedComponents,
-    listFromId,
   });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
     startingList,
     cancelDrag,
     endDrag,
-    listFromId,
     setSelected: setSelectedComponents,
     setStartingList,
     setUnused: setUnusedComponents,
@@ -152,7 +111,7 @@ export const ProfileSettingsEditor = () => {
     if (fullProfile && profileSettings) {
       const profileChildren = getProfileChildren(fullProfile);
       setProfileComponents(profileChildren);
-      if (profileSettings.active && profileSettings.children !== undefined && profileSettings.children.length > 0) {
+      if (profileSettings.active && !!profileSettings.children?.length) {
         const visibleSettingsChildren = getSettingsChildren(fullProfile, profileSettings);
         setSelectedComponents(visibleSettingsChildren);
         setUnusedComponents(childrenDifference(profileChildren, visibleSettingsChildren));
@@ -162,6 +121,12 @@ export const ProfileSettingsEditor = () => {
       }
     }
   }, [fullProfile, profileSettings]);
+
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  });
 
   return (
     <div data-testid="profile-settings-editor" className="components-editor-wrapper">
@@ -173,7 +138,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-          accessibility={{ announcements: announcements }}
+          accessibility={{ announcements }}
         >
           <ComponentList
             components={unusedComponents}
@@ -181,7 +146,7 @@ export const ProfileSettingsEditor = () => {
             titleId="ld.unusedComponents"
             descriptionId="ld.unusedComponents.description"
             droppable={true}
-            containerId={unusedEmptyId}
+            containerId={UNUSED_EMPTY_ID}
           >
             {unusedComponents.length === 0 || !profileSettings.active ? (
               <div className="empty-list">
@@ -232,7 +197,7 @@ export const ProfileSettingsEditor = () => {
           <DragOverlay className="drag-overlay">
             {activeId ? (
               <div className={classNames('dragging', startingStyle)}>
-                <DraggingComponent component={componentFromId(activeId, fullProfile)} />
+                <DraggingComponent component={componentFromId(activeId, fullProfile as Profile)!} />
               </div>
             ) : null}
           </DragOverlay>

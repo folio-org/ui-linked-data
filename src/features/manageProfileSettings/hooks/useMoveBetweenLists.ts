@@ -17,10 +17,11 @@ export const useMoveBetweenLists = ({ setUnused, setSelected }: UseMoveBetweenLi
     let toMove: ProfileSettingComponent;
     sourceFn(prev => {
       const oldIndex = prev.findIndex(p => p.id === active.id);
+      const next = [...prev];
       if (oldIndex >= 0) {
-        toMove = prev.splice(oldIndex, 1)[0];
+        toMove = next.splice(oldIndex, 1)[0];
       }
-      return prev;
+      return next;
     });
     destinationFn(prev => {
       if (toMove !== undefined) {
@@ -28,6 +29,9 @@ export const useMoveBetweenLists = ({ setUnused, setSelected }: UseMoveBetweenLi
           return [toMove];
         } else {
           const newIndex = prev.findIndex(p => p.id === over.id);
+          if (newIndex === -1) {
+            return [...prev, toMove];
+          }
           return [...prev.slice(0, newIndex), toMove, ...prev.slice(newIndex)];
         }
       }

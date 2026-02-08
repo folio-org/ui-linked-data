@@ -1,5 +1,6 @@
 import { MemoryRouter } from 'react-router-dom';
 
+import { DndContext } from '@dnd-kit/core';
 import { render, screen } from '@testing-library/react';
 
 import { ComponentType } from './BaseComponent';
@@ -9,16 +10,18 @@ describe('ComponentList', () => {
   it('renders unused list', () => {
     render(
       <MemoryRouter>
-        <ComponentList
-          type={ComponentType.unused}
-          components={[]}
-          titleId="unused-title-id"
-          descriptionId="unused-description-id"
-          droppable={true}
-          containerId="unused"
-        >
-          <div>children</div>
-        </ComponentList>
+        <DndContext>
+          <ComponentList
+            type={ComponentType.unused}
+            components={[]}
+            titleId="unused-title-id"
+            descriptionId="unused-description-id"
+            droppable={true}
+            containerId="unused"
+          >
+            <div>children</div>
+          </ComponentList>
+        </DndContext>
       </MemoryRouter>,
     );
 

@@ -10,7 +10,7 @@ describe('useSettingsAnnouncements', () => {
   const profile = [
     {
       id: 'test:profile',
-      displayNane: 'Test Profile',
+      displayName: 'Test Profile',
       type: AdvancedFieldType.block,
       children: ['test:childA', 'test:childB'],
     },
@@ -26,65 +26,66 @@ describe('useSettingsAnnouncements', () => {
     },
   ] as Profile;
 
-  const active = {
-    id: 'test:childA',
-    rect: {
-      current: {
-        initial: null,
-        translated: null,
-      },
-    },
-  } as Active;
-
-  const over = {
-    id: 'test:childB',
-    rect: {
-      width: 0,
-      height: 0,
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    disabled: false,
-    data: {},
-  } as Over;
-
-  const overWithData = {
-    id: 'test:childB',
-    rect: {
-      width: 0,
-      height: 0,
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
-    disabled: false,
-    data: {
-      current: {
-        sortable: {
-          containerId: ComponentType.selected,
+  const makeActive = (id: string) => {
+    return {
+      id,
+      rect: {
+        current: {
+          initial: null,
+          translated: null,
         },
       },
-    },
-  } as Over;
+    } as Active;
+  };
 
-  const listFromId = () => {
-    return ComponentType.selected;
+  const makeOver = (id: string) => {
+    return {
+      id,
+      rect: {
+        width: 0,
+        height: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
+      disabled: false,
+      data: {},
+    } as Over;
+  };
+
+  const makeOverWithData = (id: string, containerId: string) => {
+    return {
+      id,
+      rect: {
+        width: 0,
+        height: 0,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
+      disabled: false,
+      data: {
+        current: {
+          sortable: {
+            containerId,
+          },
+        },
+      },
+    } as Over;
   };
 
   const plainArgs = {
     profile,
     startingList: ComponentType.unused,
     components: [],
-    listFromId,
   };
 
   it('does not announce for drag start', () => {
     const { result } = renderHook(() => useSettingsAnnouncements(plainArgs));
 
-    const announce = result.current.announcements.onDragStart({ active });
+    const announce = result.current.announcements.onDragStart({ active: makeActive('test:childA') });
 
     expect(announce).toBeUndefined();
   });
@@ -92,7 +93,10 @@ describe('useSettingsAnnouncements', () => {
   it('does not announce for drag over', () => {
     const { result } = renderHook(() => useSettingsAnnouncements(plainArgs));
 
-    const announce = result.current.announcements.onDragOver({ active, over });
+    const announce = result.current.announcements.onDragOver({
+      active: makeActive('test:childA'),
+      over: makeOver('test:childB'),
+    });
 
     expect(announce).toBeUndefined();
   });
@@ -100,7 +104,10 @@ describe('useSettingsAnnouncements', () => {
   it('does not announce for drag cancel', () => {
     const { result } = renderHook(() => useSettingsAnnouncements(plainArgs));
 
-    const announce = result.current.announcements.onDragCancel({ active, over });
+    const announce = result.current.announcements.onDragCancel({
+      active: makeActive('test:childA'),
+      over: makeOver('test:childB'),
+    });
 
     expect(announce).toBeUndefined();
   });
@@ -116,13 +123,13 @@ describe('useSettingsAnnouncements', () => {
             name: 'B',
           },
         ],
-        listFromId: () => {
-          return ComponentType.selected;
-        },
       }),
     );
 
-    const announce = result.current.announcements.onDragEnd({ active, over });
+    const announce = result.current.announcements.onDragEnd({
+      active: makeActive('test:childA'),
+      over: makeOverWithData('test:childB', ComponentType.selected),
+    });
 
     expect(announce).toBe('ld.profileSettings.announce.movedToSelected');
   });
@@ -138,13 +145,13 @@ describe('useSettingsAnnouncements', () => {
             name: 'B',
           },
         ],
-        listFromId: () => {
-          return ComponentType.selected;
-        },
       }),
     );
 
-    const announce = result.current.announcements.onDragEnd({ active, over: overWithData });
+    const announce = result.current.announcements.onDragEnd({
+      active: makeActive('test:childA'),
+      over: makeOverWithData('test:childB', ComponentType.selected),
+    });
 
     expect(announce).toBe('ld.profileSettings.announce.movedToSelected');
   });
@@ -160,13 +167,13 @@ describe('useSettingsAnnouncements', () => {
             name: 'B',
           },
         ],
-        listFromId: () => {
-          return ComponentType.selected;
-        },
       }),
     );
 
-    const announce = result.current.announcements.onDragEnd({ active, over });
+    const announce = result.current.announcements.onDragEnd({
+      active: makeActive('test:childA'),
+      over: makeOverWithData('test:childB', ComponentType.selected),
+    });
 
     expect(announce).toBe('ld.profileSettings.announce.reorderedSelected');
   });
@@ -182,13 +189,13 @@ describe('useSettingsAnnouncements', () => {
             name: 'B',
           },
         ],
-        listFromId: () => {
-          return ComponentType.unused;
-        },
       }),
     );
 
-    const announce = result.current.announcements.onDragEnd({ active, over });
+    const announce = result.current.announcements.onDragEnd({
+      active: makeActive('test:childA'),
+      over: makeOverWithData('test:childB', ComponentType.unused),
+    });
 
     expect(announce).toBe('ld.profileSettings.announce.movedToUnused');
   });
@@ -196,7 +203,7 @@ describe('useSettingsAnnouncements', () => {
   it('does not announce for drag ending on unknown region', () => {
     const { result } = renderHook(() => useSettingsAnnouncements(plainArgs));
 
-    const announce = result.current.announcements.onDragEnd({ active, over: null });
+    const announce = result.current.announcements.onDragEnd({ active: makeActive('test:childA'), over: null });
 
     expect(announce).toBeUndefined();
   });

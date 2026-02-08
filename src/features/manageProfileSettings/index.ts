@@ -7,7 +7,9 @@ export { ProfileSettings } from './components/ProfileSettings';
 export { ProfilesList } from './components/ProfilesList';
 
 export {
+  type UpdateStateParams,
   useDragHandlers,
+  useDragStateUpdate,
   useMoveBetweenLists,
   useNavigateToManageProfileSettings,
   useNudge,
@@ -23,3 +25,5 @@ export {
   FilteredKeyboardSensor,
   FilteredPointerSensor,
 } from './utils';
+
+export * from './constants';

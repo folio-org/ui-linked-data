@@ -1,4 +1,5 @@
 export { useDragHandlers } from './useDragHandlers';
+export { type UpdateStateParams, useDragStateUpdate } from './useDragStateUpdate';
 export { useMoveBetweenLists } from './useMoveBetweenLists';
 export { useNavigateToManageProfileSettings } from './useNavigateToManageProfileSettings';
 export { useNudge } from './useNudge';

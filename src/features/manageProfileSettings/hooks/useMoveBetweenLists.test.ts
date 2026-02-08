@@ -99,6 +99,27 @@ describe('useMoveBetweenLists', () => {
     expect(selected.result.current[0].length).toBe(0);
   });
 
+  it('move selected to end of populated unused container', () => {
+    const unused = renderHook(() => useState([...mockUnused]));
+    const selected = renderHook(() => useState([...mockSelected]));
+    const { result } = renderHook(() =>
+      useMoveBetweenLists({
+        setUnused: unused.result.current[1],
+        setSelected: selected.result.current[1],
+      }),
+    );
+    const { moveSelectedToUnused } = result.current;
+
+    act(() => moveSelectedToUnused(makeMockActive('selected:first'), makeMockOver('unused-container')));
+
+    expect(unused.result.current[0].length).toBe(2);
+    expect(selected.result.current[0].length).toBe(0);
+    expect(unused.result.current[0][1]).toEqual({
+      id: 'selected:first',
+      name: 'First Selected',
+    });
+  });
+
   it('move selected to empty unused', () => {
     const unused = renderHook(() => useState([] as ProfileSettingComponent[]));
     const selected = renderHook(() => useState([...mockSelected]));

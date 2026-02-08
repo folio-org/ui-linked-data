@@ -41,7 +41,7 @@ describe('useNudge', () => {
     expect(mockAnnounce).toHaveBeenCalled();
   });
 
-  it('makeMoveUp returns a function that announces and reorders upnward', async () => {
+  it('makeMoveUp returns a function that announces and reorders upward', async () => {
     const state = renderHook(() => useState(mockSelected));
     const { result } = renderHook(() => useNudge({ setSelected: state.result.current[1] }));
 
