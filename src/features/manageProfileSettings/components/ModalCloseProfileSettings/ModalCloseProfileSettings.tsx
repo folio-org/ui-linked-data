@@ -31,7 +31,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     if (isClosingNext) {
       setIsClosingNext(false);
       navigate(ROUTES.SEARCH.uri);
-    } else {
+    } else if (nextSelectedProfile) {
       setSelectedProfile(nextSelectedProfile);
     }
   };
