@@ -344,8 +344,8 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([
         {
           _hub: {
-            [BFLITE_URIS.LABEL]: ['Test Hub'],
-            [BFLITE_URIS.LINK]: ['http://test.uri'],
+            [BFLITE_URIS.LABEL]: 'Test Hub',
+            [BFLITE_URIS.LINK]: 'http://test.uri',
           },
         },
       ]);
@@ -390,7 +390,7 @@ describe('GroupProcessor', () => {
       expect(result).toEqual([
         {
           _hub: {
-            [BFLITE_URIS.LABEL]: ['Test Hub'],
+            [BFLITE_URIS.LABEL]: 'Test Hub',
           },
         },
       ]);
@@ -1417,6 +1417,247 @@ describe('GroupProcessor', () => {
 
         expect(result).toEqual([]);
       });
+    });
+  });
+
+  describe('applyConditionalProperties', () => {
+    it('filters properties based on sourceType when conditionalProperties is defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+            local: [BFLITE_URIS.IDENTIFIER_LCCN],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://test.uri' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result.properties).toEqual({
+        [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+        [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+      });
+    });
+
+    it('uses defaultSourceType when sourceType is not in value', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+            local: [BFLITE_URIS.IDENTIFIER_LCCN],
+          },
+          defaultSourceType: 'local',
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result.properties).toEqual({
+        [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+      });
+    });
+
+    it('returns original schema when conditionalProperties is not defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('returns original schema when properties is not defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('returns original schema when sourceType is not found', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('warns and returns original schema when sourceType is unknown', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'unknownSource' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Unknown sourceType: unknownSource, using all properties');
+      expect(result).toBe(recordSchemaProperty);
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('includes properties from alwaysIncludeIfPresent when they have values', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: ['label', 'rdfLink'],
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      // Existing LoC hub that has been saved (has id)
+      const value = {
+        id: 'existing-hub-id-123',
+        label: 'Existing LoC Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://id.loc.gov/...' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // Should include 'id' even though it's not in conditionalProperties for libraryOfCongress
+      expect(result.properties).toEqual({
+        label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' } },
+        rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' } },
+        id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' } },
+      });
+    });
+
+    it('does not include alwaysIncludeIfPresent properties when they have no value', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: ['label', 'rdfLink'],
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      // New LoC hub that hasn't been saved yet (no id)
+      const value = {
+        label: 'New LoC Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://id.loc.gov/...' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // Should NOT include 'id' because value doesn't have an id
+      expect(result.properties).toEqual({
+        label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' } },
+        rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' } },
+      });
+    });
+
+    it('does not duplicate property if already in conditionalProperties', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        id: 'local-hub-id',
+        label: 'Local Hub',
+        meta: { sourceType: 'local' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // 'id' should only appear once
+      expect(Object.keys(result.properties || {})).toEqual(['label', 'id']);
     });
   });
 });

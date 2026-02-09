@@ -3,7 +3,7 @@ import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
 import type { SearchTypeUIConfig, SearchableIndexUI } from '../types';
 
 export const hubsLookupUIConfig: SearchTypeUIConfig = {
-  limit: 100, // UI shows all 100 results per page
+  limit: 50, // UI shows all 50 results per page
   ui: {
     titleId: 'ld.hubs',
     subtitleId: 'ld.recordsFound',

@@ -1,5 +1,13 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
 import { getLookupLabelKey } from '@/common/helpers/schema.helper';
+
+const getHubSourceType = (hasRdfLink: boolean, hasHubId: boolean): string | undefined => {
+  if (hasRdfLink) return 'libraryOfCongress';
+  if (hasHubId) return 'local';
+
+  return undefined;
+};
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
   (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {
@@ -83,14 +91,23 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
 
 export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const hub = recordEntry._hub as Record<string, string | string[]>;
+
+    // Determine sourceType based on hub properties
+    const hasRdfLink = !!(hub.rdfLink && hub.rdfLink !== '');
+    const hasHubId = !!(hub.id && hub.id !== '');
+    const sourceType = getHubSourceType(hasRdfLink, hasHubId);
+
     const generatedValue = {
-      id: [''],
+      id: ensureArray(hub.id),
       _relation: recordEntry._relation,
     } as unknown as RecursiveRecordSchema;
 
     generatedValue._hub = {
-      value: recordEntry._hub[BFLITE_URIS.LABEL],
-      uri: recordEntry._hub[BFLITE_URIS.LINK],
+      value: ensureArray(hub.label),
+      uri: ensureArray(hub.rdfLink),
+      ...(hasHubId && { id: ensureArray(hub.id) }),
+      ...(sourceType && { sourceType }),
     } as RecursiveRecordSchema;
 
     return generatedValue;

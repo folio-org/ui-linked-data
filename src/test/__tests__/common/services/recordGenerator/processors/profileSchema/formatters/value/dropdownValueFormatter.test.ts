@@ -78,7 +78,7 @@ describe('DropdownValueFormatter', () => {
       });
     });
 
-    it('returns empty string in LINK property when uri is not available', () => {
+    it('does not include LINK property when uri is not available', () => {
       const value: UserValueContents = {
         label: 'test label',
         meta: {},
@@ -87,12 +87,11 @@ describe('DropdownValueFormatter', () => {
       const result = formatter.formatSimple(value);
 
       expect(result).toEqual({
-        [BFLITE_URIS.LINK]: [''],
         [BFLITE_URIS.LABEL]: ['test label'],
       });
     });
 
-    it('returns empty string in LABEL property when both basicLabel and label are not available', () => {
+    it('includes LINK but uses empty string in LABEL when both basicLabel and label are not available', () => {
       const value: UserValueContents = {
         label: undefined,
         meta: {
@@ -108,7 +107,7 @@ describe('DropdownValueFormatter', () => {
       });
     });
 
-    it('returns empty strings when meta is undefined', () => {
+    it('does not include LINK when meta is undefined', () => {
       const value: UserValueContents = {
         label: 'test label',
         meta: undefined,
@@ -117,12 +116,11 @@ describe('DropdownValueFormatter', () => {
       const result = formatter.formatSimple(value);
 
       expect(result).toEqual({
-        [BFLITE_URIS.LINK]: [''],
         [BFLITE_URIS.LABEL]: ['test label'],
       });
     });
 
-    it('returns object with empty LINK when meta.uri is null', () => {
+    it('does not include LINK when meta.uri is null', () => {
       const value: UserValueContents = {
         label: 'test label',
         meta: {
@@ -134,7 +132,6 @@ describe('DropdownValueFormatter', () => {
       const result = formatter.formatSimple(value);
 
       expect(result).toEqual({
-        [BFLITE_URIS.LINK]: [''],
         [BFLITE_URIS.LABEL]: ['basic label'],
       });
     });
@@ -175,8 +172,8 @@ describe('DropdownValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LABEL]: 'test label',
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
     });

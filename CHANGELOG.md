@@ -75,6 +75,9 @@
 * Enhance record generation with custom hubs. Fixes [UILD-673]
 * Preserve search results state. Refs [UILD-702].
 * Add navigation to Hub edit page. Refs [UILD-704].
+* Add the Hubs source to the complex lookups. Refs [UILD-710].
+* Implement API schema change for Hub. Refs [UILD-723].
+* Fix incorrect link property generation when URI is not available. Fixes [UILD-720].
 * Add drag and drop profile settings editing. Refs [UILD-697].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -150,6 +153,9 @@
 [UILD-673]:https://folio-org.atlassian.net/browse/UILD-673
 [UILD-702]:https://folio-org.atlassian.net/browse/UILD-702
 [UILD-704]:https://folio-org.atlassian.net/browse/UILD-704
+[UILD-710]:https://folio-org.atlassian.net/browse/UILD-710
+[UILD-723]:https://folio-org.atlassian.net/browse/UILD-723
+[UILD-720]:https://folio-org.atlassian.net/browse/UILD-720
 [UILD-697]:https://folio-org.atlassian.net/browse/UILD-697
 
 ## 1.0.5 (2025-04-30)

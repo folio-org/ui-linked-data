@@ -68,8 +68,8 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LABEL]: 'test label',
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
 
@@ -88,7 +88,7 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
+          [BFLITE_URIS.LABEL]: 'test label',
         });
       });
 
@@ -107,7 +107,7 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LINK]: ['test_uri'],
+          [BFLITE_URIS.LINK]: 'test_uri',
         });
       });
 
@@ -126,11 +126,11 @@ describe('BaseValueFormatter', () => {
         const result = formatter.formatComplex(value, recordSchemaEntry);
 
         expect(result).toEqual({
-          [BFLITE_URIS.LABEL]: ['test label'],
+          [BFLITE_URIS.LABEL]: 'test label',
         });
       });
 
-      it('returns empty object when value has no label', () => {
+      it('returns empty string when value has no label', () => {
         const value: UserValueContents = {
           meta: { uri: 'test_uri' },
         };
@@ -247,6 +247,276 @@ describe('BaseValueFormatter', () => {
 
         expect(result).toEqual('test_srs_id');
       });
+    });
+  });
+
+  describe('buildLinkLabelObject', () => {
+    it('returns object with label key and value', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+      });
+    });
+
+    it('includes LINK when uri is provided', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label', 'test_uri');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
+    });
+
+    it('does not include LINK when uri is undefined', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+      });
+    });
+
+    it('does not include LINK when uri is null', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.LABEL, 'test_label', null);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: ['test_label'],
+      });
+    });
+
+    it('does not include LINK when uri is empty string', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term', '');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+      });
+    });
+
+    it('works with TERM as label key', () => {
+      const result = formatter['buildLinkLabelObject'](BFLITE_URIS.TERM, 'test_term', 'test_uri');
+
+      expect(result).toEqual({
+        [BFLITE_URIS.TERM]: ['test_term'],
+        [BFLITE_URIS.LINK]: ['test_uri'],
+      });
+    });
+  });
+
+  describe('buildComplexObject', () => {
+    it('builds object using valueSource option when specified', () => {
+      const value: UserValueContents = {
+        label: 'Test Hub',
+        id: 'test-id',
+        meta: { uri: 'http://test.uri', basicLabel: 'Basic Label' },
+      };
+      const properties = {
+        'custom-id': {
+          type: RecordSchemaEntryType.string,
+          options: { valueSource: 'id' as const },
+        },
+        'custom-uri': {
+          type: RecordSchemaEntryType.string,
+          options: { valueSource: 'meta.uri' as const },
+        },
+        'custom-label': {
+          type: RecordSchemaEntryType.string,
+          options: { valueSource: 'meta.basicLabel' as const },
+        },
+      };
+
+      const result = formatter['buildComplexObject'](value, properties);
+
+      expect(result).toEqual({
+        'custom-id': 'test-id',
+        'custom-uri': 'http://test.uri',
+        'custom-label': 'Basic Label',
+      });
+    });
+
+    it('uses backward-compatible mapping when valueSource is not specified', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: { uri: 'http://test.uri' },
+      };
+      const properties = {
+        [BFLITE_URIS.LABEL]: {
+          type: RecordSchemaEntryType.string,
+        },
+        [BFLITE_URIS.LINK]: {
+          type: RecordSchemaEntryType.string,
+        },
+      };
+
+      const result = formatter['buildComplexObject'](value, properties);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: 'Test Label',
+        [BFLITE_URIS.LINK]: 'http://test.uri',
+      });
+    });
+
+    it('excludes properties with null or undefined values', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: {},
+      };
+      const properties = {
+        [BFLITE_URIS.LABEL]: {
+          type: RecordSchemaEntryType.string,
+        },
+        [BFLITE_URIS.LINK]: {
+          type: RecordSchemaEntryType.string,
+        },
+      };
+
+      const result = formatter['buildComplexObject'](value, properties);
+
+      expect(result).toEqual({
+        [BFLITE_URIS.LABEL]: 'Test Label',
+      });
+    });
+
+    it('excludes properties with empty string values', () => {
+      const value: UserValueContents = {
+        label: '',
+        meta: { uri: 'http://test.uri' },
+      };
+      const properties = {
+        [BFLITE_URIS.LABEL]: {
+          type: RecordSchemaEntryType.string,
+        },
+        [BFLITE_URIS.LINK]: {
+          type: RecordSchemaEntryType.string,
+        },
+      };
+
+      const result = formatter['buildComplexObject'](value, properties);
+
+      expect(result).toEqual({});
+    });
+  });
+
+  describe('resolveValuePath', () => {
+    it('resolves simple path', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        id: 'test-id',
+      };
+
+      const result = formatter['resolveValuePath'](value, 'id');
+
+      expect(result).toBe('test-id');
+    });
+
+    it('resolves nested path with dot notation', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: { uri: 'http://test.uri', basicLabel: 'Basic Label' },
+      };
+
+      const result = formatter['resolveValuePath'](value, 'meta.uri');
+
+      expect(result).toBe('http://test.uri');
+    });
+
+    it('resolves deeply nested path', () => {
+      const value = {
+        label: 'Test Label',
+        meta: {
+          nested: {
+            deep: {
+              value: 'deep-value',
+            },
+          },
+        },
+      } as unknown as UserValueContents;
+
+      const result = formatter['resolveValuePath'](value, 'meta.nested.deep.value');
+
+      expect(result).toBe('deep-value');
+    });
+
+    it('returns null when path does not exist', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+      };
+
+      const result = formatter['resolveValuePath'](value, 'meta.nonexistent');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when intermediate path is null', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: null as unknown as UserValueContents['meta'],
+      };
+
+      const result = formatter['resolveValuePath'](value, 'meta.uri');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when intermediate path is undefined', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: undefined,
+      };
+
+      const result = formatter['resolveValuePath'](value, 'meta.uri');
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when resolved value is not a string', () => {
+      const value = {
+        label: 'Test Label',
+        meta: {
+          complexValue: { nested: 'value' },
+        },
+      } as unknown as UserValueContents;
+
+      const result = formatter['resolveValuePath'](value, 'meta.complexValue');
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getValueFromSource', () => {
+    it('uses valueSource when specified', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        id: 'test-id',
+        meta: { uri: 'http://test.uri' },
+      };
+
+      const result = formatter['getValueFromSource'](value, 'id', BFLITE_URIS.LABEL);
+
+      expect(result).toBe('test-id');
+    });
+
+    it('uses backward-compatible mapping when valueSource is undefined', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: { uri: 'http://test.uri' },
+      };
+
+      const resultLabel = formatter['getValueFromSource'](value, undefined, BFLITE_URIS.LABEL);
+      const resultLink = formatter['getValueFromSource'](value, undefined, BFLITE_URIS.LINK);
+
+      expect(resultLabel).toBe('Test Label');
+      expect(resultLink).toBe('http://test.uri');
+    });
+
+    it('resolves nested paths with valueSource', () => {
+      const value: UserValueContents = {
+        label: 'Test Label',
+        meta: { uri: 'http://test.uri', basicLabel: 'Basic Label' },
+      };
+
+      const result = formatter['getValueFromSource'](value, 'meta.basicLabel', 'custom-key');
+
+      expect(result).toBe('Basic Label');
     });
   });
 });

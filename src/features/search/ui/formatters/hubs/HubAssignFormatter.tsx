@@ -15,6 +15,7 @@ export const HubAssignFormatter: FC<HubAssignFormatterProps> = ({ row, onAssign 
         id: row.__meta.id,
         title: (row.hub.label as string) || '',
         uri: (row.hub.uri as string) || '',
+        sourceType: row.__meta.isLocal ? 'local' : 'libraryOfCongress',
       },
       true,
     );

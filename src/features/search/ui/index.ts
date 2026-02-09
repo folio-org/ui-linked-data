@@ -11,7 +11,7 @@ export { SearchControlPane, ControlPane } from './components/SearchControlPane';
 export { SearchEmptyPlaceholder } from './components/SearchEmptyPlaceholder';
 
 // Hooks
-export { useSearchNavigationState, useSearchFilters, useFormattedResults, useTableFormatter } from './hooks';
+export { useSearchFilters, useFormattedResults, useTableFormatter } from './hooks';
 
 // Utils
 export { getActiveConfig, getSearchPlaceholder, getSearchPlaceholderLegacy, getPlaceholderForProperty } from './utils';
@@ -21,3 +21,6 @@ export * from './config';
 
 // Formatters
 export * from './formatters';
+
+// Constants
+export * from './constants';

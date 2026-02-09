@@ -58,6 +58,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     isError,
     error,
     refetch,
+    activeCoreConfig,
   } = useSearchQuery({
     fallbackCoreConfig: coreConfig,
     fallbackUIConfig: activeUIConfig,
@@ -82,6 +83,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       activeUIConfig,
       currentSegment,
       currentSource,
+      activeCoreConfig,
 
       // Search results
       results,
@@ -104,6 +106,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       flow,
       mode,
       activeUIConfig,
+      activeCoreConfig,
       results,
       isLoading,
       isGlobalLoading,

@@ -170,4 +170,114 @@ describe('useFormattedResults', () => {
     expect(result.current).toEqual(mockFormatted);
     expect(result.current?.[0].customId).toBe('1');
   });
+
+  test('uses activeCoreConfig formatter when activeCoreConfig is provided', () => {
+    const mockItems = [{ id: '1', title: 'Test 1' }];
+    const mockFormattedItems = [{ id: '1', title: 'Formatted with active config' }];
+
+    const mockActiveCoreFormatter = {
+      format: jest.fn().mockReturnValue(mockFormattedItems),
+    };
+
+    const mockActiveCoreConfig = {
+      strategies: {
+        resultFormatter: mockActiveCoreFormatter,
+      },
+    };
+
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockConfig,
+      activeCoreConfig: mockActiveCoreConfig,
+      flow: mockFlow,
+    });
+
+    const { result } = renderHook(() => useFormattedResults());
+
+    expect(mockActiveCoreFormatter.format).toHaveBeenCalledWith(mockItems);
+    expect(mockResultFormatter.format).not.toHaveBeenCalled();
+    expect(result.current).toEqual(mockFormattedItems);
+  });
+
+  test('uses config formatter when activeCoreConfig is undefined', () => {
+    const mockItems = [{ id: '1', title: 'Test 1' }];
+    const mockFormattedItems = [{ id: '1', title: 'Formatted with config' }];
+
+    mockResultFormatter.format.mockReturnValue(mockFormattedItems);
+
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockConfig,
+      activeCoreConfig: undefined,
+      flow: mockFlow,
+    });
+
+    const { result } = renderHook(() => useFormattedResults());
+
+    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems);
+    expect(result.current).toEqual(mockFormattedItems);
+  });
+
+  test('maintains stable formatting when config changes but activeCoreConfig remains the same', () => {
+    const mockItems = [{ id: '1' }];
+    const mockFormatted = [{ id: '1', formatted: true }];
+
+    const mockActiveCoreFormatter = {
+      format: jest.fn().mockReturnValue(mockFormatted),
+    };
+
+    const mockActiveCoreConfig = {
+      strategies: {
+        resultFormatter: mockActiveCoreFormatter,
+      },
+    };
+
+    const mockNewConfigFormatter = {
+      format: jest.fn().mockReturnValue([{ id: '1', different: true }]),
+    };
+
+    const mockNewConfig = {
+      strategies: {
+        resultFormatter: mockNewConfigFormatter,
+      },
+    };
+
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockConfig,
+      activeCoreConfig: mockActiveCoreConfig,
+      flow: mockFlow,
+    });
+
+    const { result, rerender } = renderHook(() => useFormattedResults());
+
+    expect(result.current).toEqual(mockFormatted);
+    expect(mockActiveCoreFormatter.format).toHaveBeenCalledTimes(1);
+
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockNewConfig,
+      activeCoreConfig: mockActiveCoreConfig,
+      flow: mockFlow,
+    });
+
+    rerender();
+
+    expect(mockActiveCoreFormatter.format).toHaveBeenCalledTimes(1);
+    expect(mockNewConfigFormatter.format).not.toHaveBeenCalled();
+    expect(result.current).toEqual(mockFormatted);
+  });
+
+  test('returns undefined when activeCoreConfig has no resultFormatter', () => {
+    mockUseSearchContext.mockReturnValue({
+      results: { items: [{ id: '1' }] },
+      config: mockConfig,
+      activeCoreConfig: { strategies: {} },
+      flow: mockFlow,
+    });
+
+    const { result } = renderHook(() => useFormattedResults());
+
+    expect(result.current).toBeUndefined();
+  });
 });

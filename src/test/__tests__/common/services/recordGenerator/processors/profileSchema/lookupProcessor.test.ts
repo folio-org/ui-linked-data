@@ -152,9 +152,9 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          term: ['Basic Label Value'],
-          labelProperty: ['Basic Label Value'],
-          displayName: ['test value'],
+          term: 'Basic Label Value',
+          labelProperty: 'Basic Label Value',
+          displayName: 'test value',
         },
       ]);
     });
@@ -187,8 +187,8 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          code: ['123'],
-          label: ['test value'],
+          code: '123',
+          label: 'test value',
         },
       ]);
     });
@@ -220,7 +220,7 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          code: ['test value'],
+          code: 'test value',
         },
       ]);
     });
@@ -251,7 +251,7 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          code: [''],
+          code: '',
         },
       ]);
     });
@@ -283,12 +283,12 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          general: ['test value'],
+          general: 'test value',
         },
       ]);
     });
 
-    it('uses empty array for general properties when label is missing', () => {
+    it('uses empty string for general properties when label is missing', () => {
       const recordSchemaEntry = {
         type: RecordSchemaEntryType.array,
         value: RecordSchemaEntryType.object,
@@ -314,7 +314,7 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          general: [],
+          general: '',
         },
       ]);
     });
@@ -425,16 +425,213 @@ describe('LookupProcessor', () => {
 
       expect(result).toEqual([
         {
-          link: ['http://example.com/resource/1'],
-          term: ['Basic Label 1'],
-          code: ['1'],
-          general: ['value 1'],
+          link: 'http://example.com/resource/1',
+          term: 'Basic Label 1',
+          code: '1',
+          general: 'value 1',
         },
         {
-          link: ['http://example.com/resource/2'],
-          term: ['Basic Label 2'],
-          code: ['2'],
-          general: ['value 2'],
+          link: 'http://example.com/resource/2',
+          term: 'Basic Label 2',
+          code: '2',
+          general: 'value 2',
+        },
+      ]);
+    });
+
+    it('processes array-type properties correctly', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          term: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          link: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          value: {
+            type: RecordSchemaEntryType.string,
+          },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                uri: 'http://example.com/resource/1',
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          term: ['Basic Label'],
+          link: ['http://example.com/resource/1'],
+          value: 'test value',
+        },
+      ]);
+    });
+
+    it('does not set link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: { type: RecordSchemaEntryType.string },
+          term: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          term: 'Basic Label',
+        },
+      ]);
+    });
+
+    it('does not set link property when meta is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: { type: RecordSchemaEntryType.string },
+          value: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          value: 'test value',
+        },
+      ]);
+    });
+
+    it('handles array-type link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          link: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+          term: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          term: ['Basic Label'],
+        },
+      ]);
+    });
+
+    it('handles nested object with link property when meta.uri is undefined', () => {
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          nested: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              link: { type: RecordSchemaEntryType.string },
+              label: { type: RecordSchemaEntryType.string },
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+      const profileSchemaEntry = {
+        uuid: 'test-uuid',
+        type: AdvancedFieldType.complex,
+      } as SchemaEntry;
+      const userValues = {
+        'test-uuid': {
+          contents: [
+            {
+              label: 'test value',
+              meta: {
+                basicLabel: 'Basic Label',
+              },
+            },
+          ],
+        },
+      } as unknown as UserValues;
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          nested: {
+            label: 'Basic Label',
+          },
         },
       ]);
     });
