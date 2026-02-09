@@ -10,6 +10,8 @@ import { listFromId } from '../utils/children';
 import { useMoveBetweenLists } from './useMoveBetweenLists';
 
 interface UseDragHandlersParams {
+  unused: ProfileSettingComponent[];
+  selected: ProfileSettingComponent[];
   startingList: ComponentType | null;
   cancelDrag: () => void;
   endDrag: () => void;
@@ -20,6 +22,8 @@ interface UseDragHandlersParams {
 }
 
 export const useDragHandlers = ({
+  unused,
+  selected,
   startingList,
   cancelDrag,
   endDrag,
@@ -30,7 +34,12 @@ export const useDragHandlers = ({
 }: UseDragHandlersParams) => {
   const { setIsModified } = useManageProfileSettingsState(['setIsModified']);
 
-  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({ setUnused, setSelected });
+  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({
+    unused,
+    selected,
+    setUnused,
+    setSelected,
+  });
 
   const handleDragStart = (event: DragStartEvent) => {
     startDrag(event.active.id as string, event.active.data.current?.sortable.containerId);

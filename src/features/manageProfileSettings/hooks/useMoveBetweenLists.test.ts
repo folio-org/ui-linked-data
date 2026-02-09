@@ -53,6 +53,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([...mockSelected]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),
@@ -70,6 +72,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([] as ProfileSettingComponent[]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),
@@ -87,6 +91,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([...mockSelected]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),
@@ -104,6 +110,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([...mockSelected]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),
@@ -125,6 +133,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([...mockSelected]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),
@@ -142,6 +152,8 @@ describe('useMoveBetweenLists', () => {
     const selected = renderHook(() => useState([...mockSelected]));
     const { result } = renderHook(() =>
       useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
         setUnused: unused.result.current[1],
         setSelected: selected.result.current[1],
       }),

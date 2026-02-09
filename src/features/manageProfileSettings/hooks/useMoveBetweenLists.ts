@@ -3,48 +3,57 @@ import { Dispatch, SetStateAction } from 'react';
 import { Active, Over } from '@dnd-kit/core';
 
 interface UseMoveBetweenListsParams {
+  unused: ProfileSettingComponent[];
+  selected: ProfileSettingComponent[];
   setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
   setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
 }
 
-export const useMoveBetweenLists = ({ setUnused, setSelected }: UseMoveBetweenListsParams) => {
+export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }: UseMoveBetweenListsParams) => {
   const moveBetweenLists = (
     sourceFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
     destinationFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
+    source: ProfileSettingComponent[],
+    destination: ProfileSettingComponent[],
     active: Active,
     over: Over,
   ) => {
-    let toMove: ProfileSettingComponent;
-    sourceFn(prev => {
-      const oldIndex = prev.findIndex(p => p.id === active.id);
-      const next = [...prev];
-      if (oldIndex >= 0) {
-        toMove = next.splice(oldIndex, 1)[0];
-      }
-      return next;
-    });
-    destinationFn(prev => {
-      if (toMove !== undefined) {
-        if (prev.length === 0) {
-          return [toMove];
+    let toMove: ProfileSettingComponent | null = null;
+
+    const sourceOldIndex = source.findIndex(p => p.id === active.id);
+    const sourceNext = [...source];
+    if (sourceOldIndex >= 0) {
+      toMove = sourceNext.splice(sourceOldIndex, 1)[0];
+    }
+
+    let destinationNext = [...destination];
+    if (toMove) {
+      if (destination.length > 0) {
+        const destinationNewIndex = destination.findIndex(p => p.id === over.id);
+        if (destinationNewIndex === -1) {
+          destinationNext.push(toMove);
         } else {
-          const newIndex = prev.findIndex(p => p.id === over.id);
-          if (newIndex === -1) {
-            return [...prev, toMove];
-          }
-          return [...prev.slice(0, newIndex), toMove, ...prev.slice(newIndex)];
+          destinationNext = [
+            ...destination.slice(0, destinationNewIndex),
+            toMove,
+            ...destination.slice(destinationNewIndex),
+          ];
         }
+      } else {
+        destinationNext = [toMove];
       }
-      return prev;
-    });
+    }
+
+    sourceFn(sourceNext);
+    destinationFn(destinationNext);
   };
 
   const moveUnusedToSelected = (active: Active, over: Over) => {
-    moveBetweenLists(setUnused, setSelected, active, over);
+    moveBetweenLists(setUnused, setSelected, unused, selected, active, over);
   };
 
   const moveSelectedToUnused = (active: Active, over: Over) => {
-    moveBetweenLists(setSelected, setUnused, active, over);
+    moveBetweenLists(setSelected, setUnused, selected, unused, active, over);
   };
 
   return {

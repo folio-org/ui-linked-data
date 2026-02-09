@@ -98,6 +98,8 @@ export const ProfileSettingsEditor = () => {
   });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
+    unused: unusedComponents,
+    selected: selectedComponents,
     startingList,
     cancelDrag,
     endDrag,
