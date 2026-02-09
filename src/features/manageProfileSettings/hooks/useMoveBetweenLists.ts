@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, startTransition } from 'react';
 
 import { Active, Over } from '@dnd-kit/core';
 
@@ -44,8 +44,13 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
       }
     }
 
-    sourceFn(sourceNext);
-    destinationFn(destinationNext);
+    // Mark state setting as non-urgent so boundary cases where an item is
+    // rapidly flipping between source and destination do not cause
+    // breaking 'maximum update depth' errors.
+    startTransition(() => {
+      sourceFn(sourceNext);
+      destinationFn(destinationNext);
+    });
   };
 
   const moveUnusedToSelected = (active: Active, over: Over) => {
