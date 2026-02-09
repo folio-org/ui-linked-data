@@ -1,5 +1,4 @@
 import { FC, memo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -10,7 +9,6 @@ import { useHubsTableFormatter } from '@/features/search/ui/hooks/useHubsTableFo
 
 export const HubsResultList: FC = memo(() => {
   const { navigateToEditPage } = useNavigateToEditPage();
-  const navigate = useNavigate();
 
   const handleEdit = (id: string) => {
     navigateToEditPage(generateEditResourceUrl(id));
@@ -18,7 +16,8 @@ export const HubsResultList: FC = memo(() => {
 
   const handleImport = (hubToken: string, _hubUri: string) => {
     const previewUrl = generateHubImportPreviewUrl(hubToken);
-    navigate(previewUrl);
+
+    navigateToEditPage(previewUrl);
   };
 
   const { formattedData, listHeader } = useHubsTableFormatter({
