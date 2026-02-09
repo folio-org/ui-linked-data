@@ -12,6 +12,7 @@ export const PROFILE_PREFERRED_API_ENDPOINT = '/linked-data/profile/preferred';
 export const PROFILE_SETTINGS_API_ENDPOINT = '/linked-data/profile/settings';
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
+export const HUB_IMPORT_API_ENDPOINT = '/linked-data/hub';
 
 export const SEARCH_API_ENDPOINT = {
   RESOURCES: '/search/linked-data/works',
