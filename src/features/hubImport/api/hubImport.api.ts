@@ -10,10 +10,16 @@ export const buildHubUri = (hubToken: string, source: string = DEFAULT_HUB_SOURC
     throw new Error(`Unknown hub source: ${source}`);
   }
 
-  return `${baseUri}/${hubToken}`;
+  return `${baseUri}/${hubToken}.json`;
 };
 
-export const getHubByUri = async ({ hubUri }: { hubUri: string }): Promise<RecordEntry> => {
+export const getHubByUri = async ({
+  hubUri,
+  signal,
+}: {
+  hubUri: string;
+  signal?: AbortSignal;
+}): Promise<RecordEntry> => {
   const url = baseApi.generateUrl(HUB_IMPORT_API_ENDPOINT);
 
   return baseApi.getJson({
@@ -21,17 +27,23 @@ export const getHubByUri = async ({ hubUri }: { hubUri: string }): Promise<Recor
     urlParams: {
       hubUri,
     },
+    requestParams: {
+      method: 'GET',
+      signal,
+    },
   });
 };
 
 export const getHubByToken = async ({
   hubToken,
   source = DEFAULT_HUB_SOURCE,
+  signal,
 }: {
   hubToken: string;
   source?: string;
+  signal?: AbortSignal;
 }): Promise<RecordEntry> => {
   const hubUri = buildHubUri(hubToken, source);
 
-  return getHubByUri({ hubUri });
+  return getHubByUri({ hubUri, signal });
 };

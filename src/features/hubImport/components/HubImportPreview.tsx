@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import { QueryParams } from '@/common/constants/routes.constants';
@@ -7,33 +6,28 @@ import { ExternalResourceLoader } from '@/components/ExternalResourceLoader';
 import { ModalDuplicateImportedResource } from '@/components/ModalDuplicateImportedResource';
 import { Preview } from '@/components/Preview';
 
-import { useInputsState, useMarcPreviewState } from '@/store';
+import { useInputsState } from '@/store';
 
 import { DEFAULT_HUB_SOURCE } from '../constants/hubSources.constants';
-import { useHubImport } from '../hooks/useHubImport';
+import { useHubQuery } from '../hooks/useHubQuery';
 
 import './HubImportPreview.scss';
 
 export const HubImportPreview = () => {
   const { record } = useInputsState(['record']);
-  const { fetchHubForPreview } = useHubImport();
-  const { resetBasicValue } = useMarcPreviewState(['resetBasicValue']);
   const { hubToken } = useParams<{ hubToken: string }>();
   const [searchParams] = useSearchParams();
   const source = searchParams.get(QueryParams.Source) ?? DEFAULT_HUB_SOURCE;
 
-  useEffect(() => {
-    if (hubToken) {
-      fetchHubForPreview(hubToken, source);
-    }
-
-    // TODO: UILD-552 - temporary solution. Reset the whole state on application unload.
-    resetBasicValue();
-  }, [hubToken, source]);
+  const { isLoading } = useHubQuery({
+    hubToken,
+    source,
+    enabled: !!hubToken,
+  });
 
   return (
     <div className="hub-import-preview">
-      {record ? (
+      {record && !isLoading ? (
         <Preview altDisplayNames={EDIT_ALT_DISPLAY_LABELS} forceRenderAllTopLevelEntities entityRowDisplay />
       ) : (
         <ExternalResourceLoader />
