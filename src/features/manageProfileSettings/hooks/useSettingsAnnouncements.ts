@@ -26,40 +26,39 @@ export const useSettingsAnnouncements = ({ profile, startingList, components }: 
     },
     onDragEnd: ({ active, over }: { active: Active; over: Over | null }) => {
       let announce;
-      if (over) {
-        const activeComponent = componentFromId(active.id as string, profile);
-        if (activeComponent) {
-          const targetId = over.data.current?.sortable?.containerId ?? over.id;
-          const targetList = listFromId(targetId);
-          const targetListPosition = components.findIndex(p => p.id === over.id) + 1;
+      const activeComponent = componentFromId(active.id as string, profile);
+      if (over && activeComponent) {
+        const targetId = over.data.current?.sortable?.containerId ?? over.id;
+        const targetList = listFromId(targetId);
+        const targetListPosition = components.findIndex(p => p.id === over.id) + 1;
+        const finalPosition = targetListPosition === -1 ? components.length : targetListPosition;
 
-          if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
-            // move from selected to unused
-            announce = formatMessage(
-              { id: 'ld.profileSettings.announce.movedToUnused' },
-              {
-                name: activeComponent.name,
-              },
-            );
-          } else if (startingList === ComponentType.selected && targetList === ComponentType.selected) {
-            // move from selected to selected
-            announce = formatMessage(
-              { id: 'ld.profileSettings.announce.reorderedSelected' },
-              {
-                name: activeComponent.name,
-                order: targetListPosition === -1 ? components.length : targetListPosition,
-              },
-            );
-          } else if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
-            // move from unused to selected
-            announce = formatMessage(
-              { id: 'ld.profileSettings.announce.movedToSelected' },
-              {
-                name: activeComponent.name,
-                order: targetListPosition === -1 ? components.length : targetListPosition,
-              },
-            );
-          }
+        if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
+          // move from selected to unused
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.movedToUnused' },
+            {
+              name: activeComponent.name,
+            },
+          );
+        } else if (startingList === ComponentType.selected && targetList === ComponentType.selected) {
+          // move from selected to selected
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.reorderedSelected' },
+            {
+              name: activeComponent.name,
+              order: finalPosition,
+            },
+          );
+        } else if (startingList === ComponentType.unused && targetList === ComponentType.selected) {
+          // move from unused to selected
+          announce = formatMessage(
+            { id: 'ld.profileSettings.announce.movedToSelected' },
+            {
+              name: activeComponent.name,
+              order: finalPosition,
+            },
+          );
         }
       }
       // ignore everything else
