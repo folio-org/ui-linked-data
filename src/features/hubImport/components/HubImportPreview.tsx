@@ -4,7 +4,6 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 import { Loading } from '@/components/Loading';
-import { ModalDuplicateImportedResource } from '@/components/ModalDuplicateImportedResource';
 import { Preview } from '@/components/Preview';
 
 import { useInputsState } from '@/store';
@@ -36,7 +35,6 @@ export const HubImportPreview = () => {
       ) : (
         <Loading label={loaderLabel} />
       )}
-      <ModalDuplicateImportedResource />
     </div>
   );
 };
