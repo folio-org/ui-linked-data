@@ -46,10 +46,14 @@ export const ProfileSettingsEditor = () => {
   const {
     fullProfile,
     profileSettings,
+    isSettingsActive,
+    setIsSettingsActive,
     // setProfileSettings, // TODO: UILD-698 save values
   } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
+    'isSettingsActive',
+    'setIsSettingsActive',
     // 'setProfileSettings', // TODO: UILD-698
   ]);
 
@@ -122,6 +126,7 @@ export const ProfileSettingsEditor = () => {
     if (fullProfile && profileSettings) {
       const profileChildren = getProfileChildren(fullProfile);
       setProfileComponents(profileChildren);
+      setIsSettingsActive(profileSettings.active);
       if (profileSettings.active && !!profileSettings.children?.length) {
         const visibleSettingsChildren = getSettingsChildren(fullProfile, profileSettings);
         setSelectedComponents(visibleSettingsChildren);
@@ -132,6 +137,13 @@ export const ProfileSettingsEditor = () => {
       }
     }
   }, [fullProfile, profileSettings]);
+
+  useEffect(() => {
+    if (!isSettingsActive) {
+      setSelectedComponents(profileComponents);
+      setUnusedComponents([]);
+    }
+  }, [isSettingsActive]);
 
   useEffect(() => {
     return () => {
@@ -159,7 +171,7 @@ export const ProfileSettingsEditor = () => {
             droppable={true}
             containerId={UNUSED_EMPTY_ID}
           >
-            {unusedComponents.length === 0 || !profileSettings.active ? (
+            {unusedComponents.length === 0 || !isSettingsActive ? (
               <div className="empty-list">
                 <FormattedMessage id="ld.unusedComponents.allUsed" />
               </div>
@@ -184,7 +196,7 @@ export const ProfileSettingsEditor = () => {
             droppable={false}
             containerId="selected-container"
           >
-            {profileSettings.active === true
+            {isSettingsActive === true
               ? selectedComponents.map((component, idx) => {
                   return (
                     <SelectedComponent

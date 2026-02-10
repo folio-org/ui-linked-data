@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, startTransition } from 'react';
 
 import { Active, Over, UniqueIdentifier } from '@dnd-kit/core';
 
+import { useManageProfileSettingsState } from '@/store';
+
 interface UseMoveBetweenListsParams {
   unused: ProfileSettingComponent[];
   selected: ProfileSettingComponent[];
@@ -10,6 +12,11 @@ interface UseMoveBetweenListsParams {
 }
 
 export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }: UseMoveBetweenListsParams) => {
+  const { setIsModified, setIsSettingsActive } = useManageProfileSettingsState([
+    'setIsModified',
+    'setIsSettingsActive',
+  ]);
+
   const moveBetweenLists = (
     sourceFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
     destinationFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
@@ -18,8 +25,6 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
     activeId: UniqueIdentifier,
     overId: UniqueIdentifier | null,
   ) => {
-    console.log(activeId);
-    console.log(overId);
     let toMove: ProfileSettingComponent | null = null;
 
     const sourceOldIndex = source.findIndex(p => p.id === activeId);
@@ -66,12 +71,16 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
   const makeMoveComponentIdToSelected = (id: string) => {
     return () => {
       moveBetweenLists(setUnused, setSelected, unused, selected, id, null);
+      setIsModified(true);
+      setIsSettingsActive(true);
     };
   };
 
   const makeMoveComponentIdToUnused = (id: string) => {
     return () => {
       moveBetweenLists(setSelected, setUnused, selected, unused, id, null);
+      setIsModified(true);
+      setIsSettingsActive(true);
     };
   };
 
