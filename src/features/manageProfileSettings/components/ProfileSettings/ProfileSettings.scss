@@ -1,17 +1,14 @@
+@use '@/common/styles/common.scss' as *;
+
 .profile-settings {
   flex: 1;
+  border-left: 1px solid $gray-200;
 
-  .nav .heading {
-    padding: 0 15px;
-  }
+  .nav {
+    background-color: $gray-100 !important;
 
-  .settings-sorting {
-    display: flex;
-    flex-direction: row;
-    padding: 0 15px;
-
-    .title {
-      padding-right: 4px;
+    .heading {
+      padding: 0 15px;
     }
   }
 }

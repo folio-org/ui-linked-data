@@ -6,4 +6,24 @@ export { ModalCloseProfileSettings } from './components/ModalCloseProfileSetting
 export { ProfileSettings } from './components/ProfileSettings';
 export { ProfilesList } from './components/ProfilesList';
 
-export { useProfileList, usePreferredProfiles, useNavigateToManageProfileSettings } from './hooks';
+export {
+  type UpdateStateParams,
+  useDragHandlers,
+  useDragStateUpdate,
+  useMoveBetweenLists,
+  useNavigateToManageProfileSettings,
+  useNudge,
+  useProfileList,
+  usePreferredProfiles,
+  useSettingsAnnouncements,
+} from './hooks';
+export {
+  componentFromId,
+  childrenDifference,
+  getProfileChildren,
+  getSettingsChildren,
+  FilteredKeyboardSensor,
+  FilteredPointerSensor,
+} from './utils';
+
+export * from './constants';

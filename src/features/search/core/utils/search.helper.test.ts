@@ -1,6 +1,7 @@
-import { removeBackslashes, generateSearchParamsState } from './search.helper';
 import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { SearchIdentifiers } from '@/common/constants/search.constants';
+
+import { generateSearchParamsState, removeBackslashes } from './search.helper';
 
 describe('search.helper', () => {
   describe('generateSearchParamsState', () => {
