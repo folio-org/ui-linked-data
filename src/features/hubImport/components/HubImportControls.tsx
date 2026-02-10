@@ -6,7 +6,7 @@ import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Button, ButtonType } from '@/components/Button';
 
 import { DEFAULT_HUB_SOURCE } from '../constants/hubSources.constants';
-import { useHubImportMutation } from '../hooks/useHubImportMutation';
+import { useHubImportMutation } from '../hooks';
 
 import './HubImportControls.scss';
 

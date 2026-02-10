@@ -10,7 +10,7 @@ import { Preview } from '@/components/Preview';
 import { useInputsState } from '@/store';
 
 import { DEFAULT_HUB_SOURCE } from '../constants/hubSources.constants';
-import { useHubQuery } from '../hooks/useHubQuery';
+import { useHubQuery } from '../hooks';
 
 import './HubImportPreview.scss';
 

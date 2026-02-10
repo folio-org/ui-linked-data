@@ -2,7 +2,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { Nav } from '@/components/Nav';
+import { Nav } from './Nav';
 
 const mockNavigate = jest.fn();
 
