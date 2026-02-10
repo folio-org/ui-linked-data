@@ -37,7 +37,7 @@ describe('HubsResultFormatter', () => {
       expect(result[0].source.className).toBe('hub-source');
     });
 
-    it('formats hub entries with isLocal flag set to true', () => {
+    it('formats local hub entries without localId using token', () => {
       const mockHubData = [
         {
           suggestLabel: 'Local Hub',
@@ -50,21 +50,42 @@ describe('HubsResultFormatter', () => {
       const result = formatter.format(mockHubData);
 
       expect(result[0].__meta.isLocal).toBe(true);
+      expect(result[0].__meta.id).toBe('token_123');
       expect(result[0].source.label).toBe('ld.source.libraryOfCongress.local');
     });
 
-    it('formats hub entries with isLocal flag set to false', () => {
+    it('formats local hub entries using localId instead of token', () => {
+      const mockHubData = [
+        {
+          suggestLabel: 'Local Hub',
+          uri: 'http://example.com/hub_1',
+          token: 'token_123',
+          isLocal: true,
+          localId: 'id_456',
+        },
+      ] as (HubSearchResultDTO & { isLocal: boolean; localId: string })[];
+
+      const result = formatter.format(mockHubData);
+
+      expect(result[0].__meta.id).toBe('id_456');
+      expect(result[0].__meta.isLocal).toBe(true);
+      expect(result[0].source.label).toBe('ld.source.libraryOfCongress.local');
+    });
+
+    it('formats non-local hub entries using token', () => {
       const mockHubData = [
         {
           suggestLabel: 'Remote Hub',
           uri: 'http://example.com/hub_1',
           token: 'token_123',
           isLocal: false,
+          localId: undefined,
         },
-      ] as (HubSearchResultDTO & { isLocal: boolean })[];
+      ] as (HubSearchResultDTO & { isLocal: boolean; localId?: string })[];
 
       const result = formatter.format(mockHubData);
 
+      expect(result[0].__meta.id).toBe('token_123');
       expect(result[0].__meta.isLocal).toBe(false);
       expect(result[0].source.label).toBe('ld.source.libraryOfCongress');
     });

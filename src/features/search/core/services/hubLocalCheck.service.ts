@@ -14,9 +14,9 @@ interface LocalHubCheckResponse {
  * Service for checking hub availability in the local system
  */
 export const hubLocalCheckService = {
-  async checkLocalAvailability(tokens: string[]): Promise<Set<string>> {
+  async checkLocalAvailability(tokens: string[]): Promise<Map<string, string>> {
     if (!tokens || tokens.length === 0) {
-      return new Set<string>();
+      return new Map<string, string>();
     }
 
     const query = buildHubLocalCheckQuery(tokens);

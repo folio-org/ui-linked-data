@@ -16,11 +16,12 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
     return hubList?.map(hubEntry => {
       const { suggestLabel = '', uri = '', token = '' } = hubEntry;
       const isLocal = getIsLocalFlag(hubEntry);
+      const localId = (hubEntry as HubSearchResultDTO & { localId?: string }).localId;
       const sourceLabel = getSourceLabel(isLocal);
 
       return {
         __meta: {
-          id: token,
+          id: isLocal && localId ? localId : token,
           key: uuidv4(),
           isAnchor: false,
           isLocal,
