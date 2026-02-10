@@ -79,6 +79,7 @@
 * Implement API schema change for Hub. Refs [UILD-723].
 * Fix incorrect link property generation when URI is not available. Fixes [UILD-720].
 * Add drag and drop profile settings editing. Refs [UILD-697].
+* Update custom settings toggle behavior. Refs [UILD-727].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -157,6 +158,7 @@
 [UILD-723]:https://folio-org.atlassian.net/browse/UILD-723
 [UILD-720]:https://folio-org.atlassian.net/browse/UILD-720
 [UILD-697]:https://folio-org.atlassian.net/browse/UILD-697
+[UILD-727]:https://folio-org.atlassian.net/browse/UILD-727
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

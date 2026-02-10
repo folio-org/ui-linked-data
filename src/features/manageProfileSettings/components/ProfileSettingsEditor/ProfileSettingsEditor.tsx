@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { DndContext, DragOverlay, MeasuringStrategy, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -32,6 +32,7 @@ import { UnusedComponent } from './UnusedComponent';
 import './ProfileSettingsEditor.scss';
 
 export const ProfileSettingsEditor = () => {
+  const { formatMessage } = useIntl();
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
   const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
   const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
@@ -96,6 +97,7 @@ export const ProfileSettingsEditor = () => {
     startingList: startingStyle,
     components: selectedComponents,
   });
+  const instructions = formatMessage({ id: 'ld.profileSettings.announce.instructions' });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
     unused: unusedComponents,
@@ -140,7 +142,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-          accessibility={{ announcements }}
+          accessibility={{ announcements, screenReaderInstructions: { draggable: instructions } }}
         >
           <ComponentList
             components={unusedComponents}
