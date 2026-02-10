@@ -34,6 +34,21 @@ export const getHubByUri = async ({
   });
 };
 
+export const importHub = async ({ hubUri, signal }: { hubUri: string; signal?: AbortSignal }): Promise<RecordEntry> => {
+  const url = baseApi.generateUrl(HUB_IMPORT_API_ENDPOINT);
+
+  return baseApi.getJson({
+    url,
+    urlParams: {
+      hubUri,
+    },
+    requestParams: {
+      method: 'POST',
+      signal,
+    },
+  });
+};
+
 export const getHubById = async ({
   hubId,
   source = DEFAULT_HUB_SOURCE,

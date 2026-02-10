@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
@@ -8,7 +9,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
 
-import { getHubById } from '../api/hubImport.api';
+import { buildHubUri, importHub } from '../api/hubImport.api';
 
 export const useHubImport = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
@@ -21,8 +22,9 @@ export const useHubImport = () => {
     try {
       setIsLoading(true);
 
-      const record = await getHubById({ hubId, source });
-      const id = getRecordId(record);
+      const hubUri = buildHubUri(hubId, source);
+      const record = await importHub({ hubUri });
+      const id = getRecordId(record, TYPE_URIS.HUB);
 
       if (id) {
         navigate(generateEditResourceUrl(id), { replace: true });
