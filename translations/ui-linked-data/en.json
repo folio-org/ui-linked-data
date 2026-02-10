@@ -228,6 +228,7 @@
   "ld.aria.sections.closeResourcePreview": "Close resource preview section",
   "ld.aria.filters.reset": "Reset filters button",
   "ld.aria.filters.reset.announce": "Search field and filters are reset",
+  "ld.aria.hubImport.close": "Close hub import preview page",
   "ld.duplicateImportWarn": "Duplicate import warning",
   "ld.rdPropertiesMatchContinue": "Properties of this resource match an existing resource. Do you want to continue?",
   "ld.errorMakingApiRequest": "Error making API request",
@@ -318,5 +319,7 @@
   "ld.unusedComponents.allUsed": "All components in use",
   "ld.selectedComponents": "Selected components",
   "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order.",
-  "ld.setDefaultTypeProfile": "Set as my default {type} profile"
+  "ld.setDefaultTypeProfile": "Set as my default {type} profile",
+  "ld.importHub.header.title": "Import hub - {title}",
+  "ld.importHub.fetchingById": "Fetching external hub id {hubId}..."
 }
