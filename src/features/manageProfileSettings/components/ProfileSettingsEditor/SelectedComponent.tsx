@@ -8,6 +8,7 @@ type SelectedComponentProps = {
   component: ProfileSettingComponent;
   upFn?: () => void;
   downFn?: () => void;
+  moveFn?: () => void;
 };
 
 export const SelectedComponent: FC<SelectedComponentProps> = props => {

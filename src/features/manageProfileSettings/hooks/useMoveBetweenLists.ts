@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, startTransition } from 'react';
 
-import { Active, Over } from '@dnd-kit/core';
+import { Active, Over, UniqueIdentifier } from '@dnd-kit/core';
 
 interface UseMoveBetweenListsParams {
   unused: ProfileSettingComponent[];
@@ -15,12 +15,14 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
     destinationFn: Dispatch<SetStateAction<ProfileSettingComponent[]>>,
     source: ProfileSettingComponent[],
     destination: ProfileSettingComponent[],
-    active: Active,
-    over: Over,
+    activeId: UniqueIdentifier,
+    overId: UniqueIdentifier | null,
   ) => {
+    console.log(activeId);
+    console.log(overId);
     let toMove: ProfileSettingComponent | null = null;
 
-    const sourceOldIndex = source.findIndex(p => p.id === active.id);
+    const sourceOldIndex = source.findIndex(p => p.id === activeId);
     const sourceNext = [...source];
     if (sourceOldIndex >= 0) {
       toMove = sourceNext.splice(sourceOldIndex, 1)[0];
@@ -29,7 +31,7 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
     let destinationNext = [...destination];
     if (toMove) {
       if (destination.length > 0) {
-        const destinationNewIndex = destination.findIndex(p => p.id === over.id);
+        const destinationNewIndex = destination.findIndex(p => p.id === overId);
         if (destinationNewIndex === -1) {
           destinationNext.push(toMove);
         } else {
@@ -54,15 +56,29 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
   };
 
   const moveUnusedToSelected = (active: Active, over: Over) => {
-    moveBetweenLists(setUnused, setSelected, unused, selected, active, over);
+    moveBetweenLists(setUnused, setSelected, unused, selected, active.id, over.id);
   };
 
   const moveSelectedToUnused = (active: Active, over: Over) => {
-    moveBetweenLists(setSelected, setUnused, selected, unused, active, over);
+    moveBetweenLists(setSelected, setUnused, selected, unused, active.id, over.id);
+  };
+
+  const makeMoveComponentIdToSelected = (id: string) => {
+    return () => {
+      moveBetweenLists(setUnused, setSelected, unused, selected, id, null);
+    };
+  };
+
+  const makeMoveComponentIdToUnused = (id: string) => {
+    return () => {
+      moveBetweenLists(setSelected, setUnused, selected, unused, id, null);
+    };
   };
 
   return {
     moveUnusedToSelected,
     moveSelectedToUnused,
+    makeMoveComponentIdToSelected,
+    makeMoveComponentIdToUnused,
   };
 };

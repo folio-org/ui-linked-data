@@ -12,6 +12,7 @@ import {
   type UpdateStateParams,
   useDragHandlers,
   useDragStateUpdate,
+  useMoveBetweenLists,
   useNudge,
   useSettingsAnnouncements,
 } from '../../hooks';
@@ -91,6 +92,12 @@ export const ProfileSettingsEditor = () => {
   );
 
   const { makeMoveUp, makeMoveDown } = useNudge({ setSelected: setSelectedComponents });
+  const { makeMoveComponentIdToSelected, makeMoveComponentIdToUnused } = useMoveBetweenLists({
+    unused: unusedComponents,
+    selected: selectedComponents,
+    setUnused: setUnusedComponents,
+    setSelected: setSelectedComponents,
+  });
 
   const { announcements } = useSettingsAnnouncements({
     profile: fullProfile as Profile,
@@ -158,7 +165,13 @@ export const ProfileSettingsEditor = () => {
               </div>
             ) : (
               unusedComponents.map(component => {
-                return <UnusedComponent key={component.id} component={component} />;
+                return (
+                  <UnusedComponent
+                    key={component.id}
+                    component={component}
+                    moveFn={makeMoveComponentIdToSelected(component.id)}
+                  />
+                );
               })
             )}
           </ComponentList>
@@ -181,6 +194,7 @@ export const ProfileSettingsEditor = () => {
                       component={component}
                       upFn={makeMoveUp(idx, component.name)}
                       downFn={makeMoveDown(idx, component.name)}
+                      moveFn={makeMoveComponentIdToUnused(component.id)}
                     />
                   );
                 })
@@ -193,6 +207,7 @@ export const ProfileSettingsEditor = () => {
                       component={component}
                       upFn={makeMoveUp(idx, component.name)}
                       downFn={makeMoveDown(idx, component.name)}
+                      moveFn={makeMoveComponentIdToUnused(component.id)}
                     />
                   );
                 })}
