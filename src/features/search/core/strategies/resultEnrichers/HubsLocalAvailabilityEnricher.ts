@@ -18,12 +18,16 @@ export class HubsLocalAvailabilityEnricher implements IResultEnricher {
       return rawData;
     }
 
-    const localHubIds = await hubLocalCheckService.checkLocalAvailability(tokens);
+    const localHubIdsMap = await hubLocalCheckService.checkLocalAvailability(tokens);
 
-    const enrichedData = hubData.map(hub => ({
-      ...hub,
-      isLocal: localHubIds.has(hub.token),
-    }));
+    const enrichedData = hubData.map(hub => {
+      const localId = localHubIdsMap.get(hub.token);
+      return {
+        ...hub,
+        isLocal: !!localId,
+        localId,
+      };
+    });
 
     return enrichedData as T[];
   }
