@@ -6,12 +6,12 @@ import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Button, ButtonType } from '@/components/Button';
 
 import { DEFAULT_HUB_SOURCE } from '../constants/hubSources.constants';
-import { useHubImport } from '../hooks/useHubImport';
+import { useHubImportMutation } from '../hooks/useHubImportMutation';
 
 import './HubImportControls.scss';
 
 export const HubImportControls = () => {
-  const { importHubForEdit } = useHubImport();
+  const { importHubForEdit } = useHubImportMutation();
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { hubId } = useParams<{ hubId: string }>();
