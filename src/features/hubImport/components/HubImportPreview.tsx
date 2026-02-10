@@ -15,19 +15,19 @@ import { useHubQuery } from '../hooks/useHubQuery';
 import './HubImportPreview.scss';
 
 export const HubImportPreview = () => {
-  const { hubToken } = useParams<{ hubToken: string }>();
+  const { hubId } = useParams<{ hubId: string }>();
   const { formatMessage } = useIntl();
   const { record } = useInputsState(['record']);
   const [searchParams] = useSearchParams();
   const source = searchParams.get(QueryParams.Source) ?? DEFAULT_HUB_SOURCE;
 
   const { isLoading } = useHubQuery({
-    hubToken,
+    hubId,
     source,
-    enabled: !!hubToken,
+    enabled: !!hubId,
   });
 
-  const loaderLabel = formatMessage({ id: 'ld.importHub.fetchingById' }, { hubId: hubToken });
+  const loaderLabel = formatMessage({ id: 'ld.importHub.fetchingById' }, { hubId });
 
   return (
     <div className="hub-import-preview">

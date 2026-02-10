@@ -1,5 +1,5 @@
-export const generateHubImportPreviewUrl = (hubToken: string): string => {
-  const baseUrl = `/import/hub/${hubToken}/preview`;
+export const generateHubImportPreviewUrl = (hubId: string): string => {
+  const baseUrl = `/import/hub/${hubId}/preview`;
 
   return baseUrl;
 };

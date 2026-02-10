@@ -14,13 +14,13 @@ export const HubImportControls = () => {
   const { importHubForEdit } = useHubImport();
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
-  const { hubToken } = useParams<{ hubToken: string }>();
+  const { hubId } = useParams<{ hubId: string }>();
   const [searchParams] = useSearchParams();
   const source = searchParams.get(QueryParams.Source) ?? DEFAULT_HUB_SOURCE;
 
   const handleContinue = () => {
-    if (hubToken) {
-      importHubForEdit(hubToken, source);
+    if (hubId) {
+      importHubForEdit(hubId, source);
     }
   };
 

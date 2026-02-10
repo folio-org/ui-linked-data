@@ -8,20 +8,20 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
 
-import { getHubByToken } from '../api/hubImport.api';
+import { getHubById } from '../api/hubImport.api';
 
 export const useHubImport = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const navigate = useNavigate();
 
-  const importHubForEdit = async (hubToken: string, source?: string) => {
-    if (!hubToken) return;
+  const importHubForEdit = async (hubId: string, source?: string) => {
+    if (!hubId) return;
 
     try {
       setIsLoading(true);
 
-      const record = await getHubByToken({ hubToken, source });
+      const record = await getHubById({ hubId, source });
       const id = getRecordId(record);
 
       if (id) {

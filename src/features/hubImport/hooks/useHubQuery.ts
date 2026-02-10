@@ -9,10 +9,10 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';
 
-import { getHubByToken } from '../api/hubImport.api';
+import { getHubById } from '../api/hubImport.api';
 
 interface UseHubQueryParams {
-  hubToken?: string;
+  hubId?: string;
   source?: string;
   enabled?: boolean;
 }
@@ -26,21 +26,21 @@ interface UseHubQueryResult {
   refetch: () => Promise<void>;
 }
 
-export function useHubQuery({ hubToken, source, enabled = true }: UseHubQueryParams): UseHubQueryResult {
+export function useHubQuery({ hubId, source, enabled = true }: UseHubQueryParams): UseHubQueryResult {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { getRecordAndInitializeParsing } = useRecordControls();
 
-  const queryKey = ['hub', hubToken, source];
+  const queryKey = ['hub', hubId, source];
 
   const queryFn = useCallback(
     async ({ signal }: { signal: AbortSignal }): Promise<RecordEntry | undefined> => {
-      if (!hubToken) {
+      if (!hubId) {
         return undefined;
       }
 
       try {
-        const hubRecord = await getHubByToken({
-          hubToken,
+        const hubRecord = await getHubById({
+          hubId,
           source,
           signal,
         });
@@ -65,10 +65,10 @@ export function useHubQuery({ hubToken, source, enabled = true }: UseHubQueryPar
         throw error;
       }
     },
-    [hubToken, source, addStatusMessagesItem, getRecordAndInitializeParsing],
+    [hubId, source, addStatusMessagesItem, getRecordAndInitializeParsing],
   );
 
-  const shouldEnable = enabled && !!hubToken;
+  const shouldEnable = enabled && !!hubId;
 
   const {
     data,
@@ -88,10 +88,10 @@ export function useHubQuery({ hubToken, source, enabled = true }: UseHubQueryPar
   });
 
   const refetch = useCallback(async () => {
-    if (hubToken) {
+    if (hubId) {
       await queryRefetch();
     }
-  }, [queryRefetch, hubToken]);
+  }, [queryRefetch, hubId]);
 
   return {
     data,
