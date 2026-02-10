@@ -5,7 +5,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { getRecordId } from '@/common/helpers/record.helper';
-import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useNavigateWithSearchState } from '@/common/hooks/useNavigateWithSearchState';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
@@ -20,7 +20,7 @@ interface ImportHubParams {
 export const useHubImportMutation = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { navigateToEditPage } = useNavigateToEditPage();
+  const { navigateWithState } = useNavigateWithSearchState();
 
   const mutation = useMutation<RecordEntry, Error, ImportHubParams>({
     mutationFn: async ({ hubId, source }) => {
@@ -35,7 +35,7 @@ export const useHubImportMutation = () => {
       const id = getRecordId(record, TYPE_URIS.HUB);
 
       if (id) {
-        navigateToEditPage(generateEditResourceUrl(id), { replace: true });
+        navigateWithState(generateEditResourceUrl(id), { replace: true });
       }
     },
     onError: err => {
