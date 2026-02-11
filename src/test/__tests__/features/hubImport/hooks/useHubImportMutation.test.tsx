@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { getRecordId } from '@/common/helpers/record.helper';
 
 import { importHub } from '@/features/hubImport/api/hubImport.api';
 import { useHubImportMutation } from '@/features/hubImport/hooks/useHubImportMutation';
@@ -151,9 +152,7 @@ describe('useHubImportMutation', () => {
 
     it('Does not navigate when record id is not found', async () => {
       const hubId = 'hub_no_id';
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const mockGetRecordId = require('@/common/helpers/record.helper').getRecordId as jest.Mock;
-      mockGetRecordId.mockReturnValueOnce(null);
+      (getRecordId as jest.Mock).mockReturnValueOnce(null);
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
