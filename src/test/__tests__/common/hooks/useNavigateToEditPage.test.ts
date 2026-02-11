@@ -179,6 +179,7 @@ describe('useNavigateToEditPage', () => {
     const navigationState = {
       [SearchQueryParams.Query]: 'test',
       [SearchQueryParams.Segment]: 'hubs',
+      isNavigatedFromLDE: true,
     };
     setUpdatedGlobalState([
       {
