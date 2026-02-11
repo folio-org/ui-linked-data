@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/common/constants/routes.constants';
 import { Modal } from '@/components/Modal';
 
-import { useManageProfileSettingsState } from '@/store';
+import { useManageProfileSettingsState, useUIState } from '@/store';
 
 import './ModalCloseProfileSettings.scss';
 
@@ -25,6 +25,10 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       'setSelectedProfile',
       'setIsModified',
     ]);
+  const { setIsManageProfileSettingsShowProfiles, setIsManageProfileSettingsShowEditor } = useUIState([
+    'setIsManageProfileSettingsShowProfiles',
+    'setIsManageProfileSettingsShowEditor',
+  ]);
 
   const doNext = () => {
     setIsModified(false);
@@ -33,6 +37,8 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       navigate(ROUTES.SEARCH.uri);
     } else if (nextSelectedProfile) {
       setSelectedProfile(nextSelectedProfile);
+      setIsManageProfileSettingsShowProfiles(false);
+      setIsManageProfileSettingsShowEditor(true);
     }
   };
 

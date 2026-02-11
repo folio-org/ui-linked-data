@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import classNames from 'classnames';
+
 import { StatusType } from '@/common/constants/status.constants';
 import { useLoadProfile } from '@/common/hooks/useLoadProfile';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+import { Button, ButtonType } from '@/components/Button';
 import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 
-import { useLoadingState, useManageProfileSettingsState, useStatusState } from '@/store';
+import { useLoadingState, useManageProfileSettingsState, useStatusState, useUIState } from '@/store';
+
+import ArrowLeftIcon from '@/assets/arrow-left-16.svg?react';
 
 import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
@@ -24,7 +29,23 @@ export const ProfileSettings = () => {
     'setFullProfile',
     'setProfileSettings',
   ]);
+  const {
+    isManageProfileSettingsBelowBreakpoint,
+    isManageProfileSettingsShowEditor,
+    setIsManageProfileSettingsShowProfiles,
+    setIsManageProfileSettingsShowEditor,
+  } = useUIState([
+    'isManageProfileSettingsBelowBreakpoint',
+    'isManageProfileSettingsShowEditor',
+    'setIsManageProfileSettingsShowProfiles',
+    'setIsManageProfileSettingsShowEditor',
+  ]);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+
+  const handleBack = () => {
+    setIsManageProfileSettingsShowProfiles(true);
+    setIsManageProfileSettingsShowEditor(false);
+  };
 
   useEffect(() => {
     if (selectedProfile) {
@@ -47,10 +68,18 @@ export const ProfileSettings = () => {
     }
   }, [selectedProfile]);
 
+  const showView =
+    !isManageProfileSettingsBelowBreakpoint ||
+    (isManageProfileSettingsBelowBreakpoint && isManageProfileSettingsShowEditor);
   return selectedProfile ? (
-    <div data-testid="profile-settings" className="profile-settings">
+    <div data-testid="profile-settings" className={classNames('profile-settings', showView ? '' : 'hidden')}>
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
+          {isManageProfileSettingsBelowBreakpoint && (
+            <Button type={ButtonType.Icon} onClick={handleBack}>
+              <ArrowLeftIcon />
+            </Button>
+          )}
           <h3 className="heading">
             <FormattedMessage
               id={getProfileLabelId(getResourceTypeFromURL(selectedProfile.resourceType as ResourceTypeURL))}
