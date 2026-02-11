@@ -6,9 +6,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
-import { HubImportNavPane } from '@/features/hubImport/components/HubImportNavPane';
-
 import { useInputsStore } from '@/store';
+
+import { HubImportNavPane } from './HubImportNavPane';
 
 const mockNavigate = jest.fn();
 const mockSearchResultsUri = '/search?query=test';

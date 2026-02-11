@@ -8,10 +8,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { getRecordId } from '@/common/helpers/record.helper';
 
-import { importHub } from '@/features/hubImport/api/hubImport.api';
-import { useHubImportMutation } from '@/features/hubImport/hooks/useHubImportMutation';
-
 import { useLoadingStateStore, useStatusStore } from '@/store';
+
+import { importHub } from '../api/hubImport.api';
+import { useHubImportMutation } from './useHubImportMutation';
 
 jest.mock('@/features/hubImport/api/hubImport.api', () => ({
   ...jest.requireActual('@/features/hubImport/api/hubImport.api'),

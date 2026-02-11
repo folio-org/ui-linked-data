@@ -81,8 +81,8 @@ export function useHubQuery({ hubId, source, enabled = true }: UseHubQueryParams
     queryKey,
     queryFn,
     enabled: shouldEnable,
-    staleTime: 0, // Always fetch fresh data
-    gcTime: 0, // Don't cache
+    staleTime: 0,
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: false,
   });

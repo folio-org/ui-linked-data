@@ -1,4 +1,4 @@
-import { generateHubImportPreviewUrl } from '@/features/hubImport/utils/navigation.helper';
+import { generateHubImportPreviewUrl } from './navigation.helper';
 
 describe('navigation.helper', () => {
   describe('generateHubImportPreviewUrl', () => {

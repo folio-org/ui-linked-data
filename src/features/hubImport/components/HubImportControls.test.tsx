@@ -3,7 +3,7 @@ import * as routerDom from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { HubImportControls } from '@/features/hubImport/components/HubImportControls';
+import { HubImportControls } from './HubImportControls';
 
 const mockNavigate = jest.fn();
 const mockImportHubForEdit = jest.fn();

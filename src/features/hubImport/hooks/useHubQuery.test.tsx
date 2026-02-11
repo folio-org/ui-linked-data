@@ -8,10 +8,10 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { getHubById } from '@/features/hubImport/api/hubImport.api';
-import { useHubQuery } from '@/features/hubImport/hooks/useHubQuery';
-
 import { useStatusStore } from '@/store';
+
+import { getHubById } from '../api/hubImport.api';
+import { useHubQuery } from './useHubQuery';
 
 jest.mock('@/features/hubImport/api/hubImport.api');
 jest.mock('@/common/services/userNotification', () => ({

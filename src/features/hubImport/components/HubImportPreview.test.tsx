@@ -7,9 +7,9 @@ import { render, screen } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
-import { HubImportPreview } from '@/features/hubImport/components/HubImportPreview';
-
 import { useInputsStore } from '@/store';
+
+import { HubImportPreview } from './HubImportPreview';
 
 const mockUseHubQuery = jest.fn();
 

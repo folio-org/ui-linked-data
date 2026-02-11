@@ -1,7 +1,7 @@
 import baseApi from '@/common/api/base.api';
 import { HUB_IMPORT_API_ENDPOINT } from '@/common/constants/api.constants';
 
-import { buildHubUri, getHubById, getHubByUri, importHub } from '@/features/hubImport/api/hubImport.api';
+import { buildHubUri, getHubById, getHubByUri, importHub } from './hubImport.api';
 
 jest.mock('@/common/api/base.api');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
