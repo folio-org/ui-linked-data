@@ -1,3 +1,5 @@
+import { BrowserRouter } from 'react-router-dom';
+
 import { render, screen } from '@testing-library/react';
 
 import { Row } from '@/components/Table';
@@ -12,34 +14,41 @@ jest.mock('@/components/Table', () => ({
   TableFlex: () => <div data-testid="table-flex">Table</div>,
 }));
 
-const mockNavigateToEditPage = jest.fn();
-const mockGenerateEditResourceUrl = jest.fn();
+const mockNavigateWithState = jest.fn();
 
-jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
-  useNavigateToEditPage: () => ({
-    navigateToEditPage: mockNavigateToEditPage,
+jest.mock('@/common/hooks/useNavigateWithSearchState', () => ({
+  useNavigateWithSearchState: () => ({
+    navigateWithState: mockNavigateWithState,
   }),
 }));
 
 jest.mock('@/common/helpers/navigation.helper', () => ({
-  generateEditResourceUrl: (id: string) => mockGenerateEditResourceUrl(id),
+  generateEditResourceUrl: (id: string) => `/resources/${id}/edit`,
+}));
+
+jest.mock('@/features/hubImport', () => ({
+  generateHubImportPreviewUrl: (id: string) => `/hub-import/${id}`,
 }));
 
 describe('HubsResultList', () => {
-  beforeEach(() => {
-    mockGenerateEditResourceUrl.mockImplementation((id: string) => `/resources/${id}/edit`);
-  });
-
   const mockFormatterReturn = {
     formattedData: [],
     listHeader: {},
     isLoading: false,
   };
 
+  const renderComponent = () => {
+    render(
+      <BrowserRouter>
+        <HubsResultList />
+      </BrowserRouter>,
+    );
+  };
+
   test('renders table component', () => {
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList />);
+    renderComponent();
 
     expect(screen.getByTestId('hubs-search-result-list')).toBeInTheDocument();
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
@@ -50,7 +59,7 @@ describe('HubsResultList', () => {
       .spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter')
       .mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList />);
+    renderComponent();
 
     expect(formatterSpy).toHaveBeenCalledWith({
       onEdit: expect.any(Function),
@@ -58,7 +67,7 @@ describe('HubsResultList', () => {
     });
   });
 
-  test('handleEdit navigates to edit page with correct URL', () => {
+  test('handleEdit calls navigateWithState with correct URL', () => {
     let capturedOnEdit: ((id: string) => void) | undefined;
 
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockImplementation(({ onEdit }) => {
@@ -67,18 +76,33 @@ describe('HubsResultList', () => {
       return mockFormatterReturn;
     });
 
-    render(<HubsResultList />);
+    renderComponent();
 
-    capturedOnEdit?.('hub-123');
+    capturedOnEdit?.('hub_123');
 
-    expect(mockGenerateEditResourceUrl).toHaveBeenCalledWith('hub-123');
-    expect(mockNavigateToEditPage).toHaveBeenCalledWith('/resources/hub-123/edit');
+    expect(mockNavigateWithState).toHaveBeenCalledWith('/resources/hub_123/edit');
+  });
+
+  test('handleImport calls navigateWithState with correct URL', () => {
+    let capturedOnImport: ((id: string) => void) | undefined;
+
+    jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockImplementation(({ onImport }) => {
+      capturedOnImport = onImport;
+
+      return mockFormatterReturn;
+    });
+
+    renderComponent();
+
+    capturedOnImport?.('hub_456');
+
+    expect(mockNavigateWithState).toHaveBeenCalledWith('/hub-import/hub_456');
   });
 
   test('applies correct CSS classes', () => {
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockFormatterReturn);
 
-    render(<HubsResultList />);
+    renderComponent();
 
     const container = screen.getByTestId('hubs-search-result-list');
     expect(container).toHaveClass('search-result-list');
@@ -93,7 +117,7 @@ describe('HubsResultList', () => {
 
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockReturnValue(mockDataWithItems);
 
-    render(<HubsResultList />);
+    renderComponent();
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
   });
