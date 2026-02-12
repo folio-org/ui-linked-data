@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { SearchIdentifiers } from '@/common/constants/search.constants';
+import { extractSearchParamsFromUrl } from '@/common/helpers/navigationState.helper';
 
 import { useSearchState } from '@/store';
 
-import { SearchParam, type SearchTypeConfig, extractSearchParamsFromUrl, removeBackslashes } from '../../core';
+import { SearchParam, type SearchTypeConfig, removeBackslashes } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
 import { getValidSearchBy } from '../utils';

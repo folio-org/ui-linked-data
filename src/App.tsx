@@ -9,6 +9,8 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Loading } from '@/components/Loading';
 import { EditWrapper, ExternalResourcePreview, ManageProfileSettings, Root, Search } from '@/views';
 
+import { HubImportPreview } from '@/features/hubImport';
+
 import en from '../translations/ui-linked-data/en.json';
 import { AsyncIntlProvider, QueryProvider, ServicesProvider } from './providers';
 import { useConfigState } from './store';
@@ -44,6 +46,10 @@ export const routes: RouteObject[] = [
       {
         path: ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri,
         element: <ExternalResourcePreview />,
+      },
+      {
+        path: ROUTES.HUB_IMPORT_PREVIEW.uri,
+        element: <HubImportPreview />,
       },
       {
         path: ROUTES.MANAGE_PROFILE_SETTINGS.uri,

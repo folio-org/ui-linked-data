@@ -6,7 +6,7 @@ import { Button, ButtonType } from '@/components/Button';
 interface HubActionFormatterProps {
   row: SearchResultsTableRow;
   onEdit?: (id: string) => void;
-  onImport?: (id: string, uri: string) => void;
+  onImport?: (uri: string) => void;
 }
 
 export const HubActionFormatter: FC<HubActionFormatterProps> = ({ row, onEdit, onImport }) => {
@@ -30,7 +30,7 @@ export const HubActionFormatter: FC<HubActionFormatterProps> = ({ row, onEdit, o
   return (
     <Button
       type={ButtonType.Primary}
-      onClick={() => onImport?.(hubId, hubUri)}
+      onClick={() => onImport?.(hubUri)}
       data-testid={`hub-import-${hubId}`}
       className="hub-action-button"
     >

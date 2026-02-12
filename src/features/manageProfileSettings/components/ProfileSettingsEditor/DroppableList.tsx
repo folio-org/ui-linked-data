@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
-import classNames from 'classnames';
+
 import { useDroppable } from '@dnd-kit/core';
+import classNames from 'classnames';
 
 type DroppableListProps = {
   id: string;

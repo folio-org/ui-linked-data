@@ -5,13 +5,14 @@ import classNames from 'classnames';
 import { FIXED_HEIGHT_VIEWS } from '@/common/constants/routes.constants';
 import { MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { CommonStatus } from '@/components/CommonStatus';
-import { Footer } from '@/components/Footer';
 import { Loading } from '@/components/Loading';
-import { Nav } from '@/components/Nav';
 import { ProfileSelectionManager } from '@/components/ProfileSelectionManager';
 
 import { useLoadingState } from '@/store';
+
+import { CommonStatus } from './components/CommonStatus';
+import { Footer } from './components/Footer';
+import { Nav } from './components/Nav';
 
 export const Root = () => {
   const fixedHeightContainerView = useRoutePathPattern(FIXED_HEIGHT_VIEWS);
