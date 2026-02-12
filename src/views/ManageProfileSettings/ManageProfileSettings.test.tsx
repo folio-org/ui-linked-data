@@ -2,7 +2,7 @@ import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { fetchPreferredProfiles, fetchProfile, fetchProfileSettings, fetchProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
@@ -102,6 +102,53 @@ describe('ManageProfileSettings', () => {
   it('renders profile settings with an auto-selected profile', () => {
     waitFor(() => {
       expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+    });
+  });
+
+  describe('responsive display', () => {
+    const setViewport = (width: number) => {
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: width });
+    };
+
+    it('displays profiles list and settings editor side by side when viewport is wide enough', () => {
+      setViewport(1400);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toBeVisible();
+        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      });
+    });
+
+    it('displays only profiles list when viewport is narrow', () => {
+      setViewport(600);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toBeVisible();
+        expect(screen.getByTestId('profile-settings')).not.toBeVisible();
+      });
+    });
+
+    it('displays only settings editor after selecting a profile from list when viewport is narrow', () => {
+      setViewport(600);
+
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).not.toBeVisible();
+        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      });
+    });
+
+    it('displays only profile list after returning from settings when viewport is narrow', () => {
+      setViewport(600);
+
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
+      fireEvent.click(screen.getByTestId('back-to-profiles-list'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toBeVisible();
+        expect(screen.getByTestId('profile-settings')).not.toBeVisible();
+      });
     });
   });
 });

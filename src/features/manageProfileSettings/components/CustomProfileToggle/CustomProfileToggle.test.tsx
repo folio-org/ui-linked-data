@@ -16,9 +16,7 @@ describe('CustomProfileToggle', () => {
       {
         store: useManageProfileSettingsState,
         state: {
-          profileSettings: {
-            active: active,
-          },
+          isSettingsActive: active,
           setIsModified: mockSetIsModified,
         },
       },
@@ -35,11 +33,13 @@ describe('CustomProfileToggle', () => {
     renderComponent(false);
 
     expect(screen.getByTestId('settings-active-default')).toBeChecked();
+    expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
   });
 
   it('renders with custom checked when settings are active', () => {
     renderComponent(true);
 
+    expect(screen.getByTestId('settings-active-default')).not.toBeChecked();
     expect(screen.getByTestId('settings-active-custom')).toBeChecked();
   });
 

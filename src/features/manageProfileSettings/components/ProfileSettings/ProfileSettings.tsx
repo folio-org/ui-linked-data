@@ -76,7 +76,7 @@ export const ProfileSettings = () => {
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           {isManageProfileSettingsBelowBreakpoint && (
-            <Button type={ButtonType.Icon} onClick={handleBack}>
+            <Button data-testid="back-to-profiles-list" type={ButtonType.Icon} onClick={handleBack}>
               <ArrowLeftIcon />
             </Button>
           )}

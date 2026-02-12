@@ -43,7 +43,12 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
 
   return (
     <div className={classNames('profile', selected ? 'selected' : '')}>
-      <Button type={ButtonType.ListItem} onClick={handleClick} label={profile.name} />
+      <Button
+        data-testid="resource-profile-item"
+        type={ButtonType.ListItem}
+        onClick={handleClick}
+        label={profile.name}
+      />
     </div>
   );
 };
