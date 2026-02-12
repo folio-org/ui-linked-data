@@ -27,7 +27,7 @@ jest.mock('@/common/helpers/navigation.helper', () => ({
 }));
 
 jest.mock('@/features/hubImport', () => ({
-  generateHubImportPreviewUrl: (id: string) => `/hub-import/${id}`,
+  generateHubImportPreviewUrl: (uri: string) => `/hub-import?sourceUri=${uri}`,
 }));
 
 describe('HubsResultList', () => {
@@ -84,7 +84,7 @@ describe('HubsResultList', () => {
   });
 
   test('handleImport calls navigateWithState with correct URL', () => {
-    let capturedOnImport: ((id: string) => void) | undefined;
+    let capturedOnImport: ((uri: string) => void) | undefined;
 
     jest.spyOn(useHubsTableFormatterModule, 'useHubsTableFormatter').mockImplementation(({ onImport }) => {
       capturedOnImport = onImport;
@@ -94,9 +94,9 @@ describe('HubsResultList', () => {
 
     renderComponent();
 
-    capturedOnImport?.('hub_456');
+    capturedOnImport?.('http://example.com/hub_456');
 
-    expect(mockNavigateWithState).toHaveBeenCalledWith('/hub-import/hub_456');
+    expect(mockNavigateWithState).toHaveBeenCalledWith('/hub-import?sourceUri=http://example.com/hub_456');
   });
 
   test('applies correct CSS classes', () => {

@@ -10,10 +10,13 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusStore } from '@/store';
 
-import { getHubById } from '../api/hubImport.api';
+import { getHubByUri } from '../api/hubImport.api';
 import { useHubQuery } from './useHubQuery';
 
-jest.mock('@/features/hubImport/api/hubImport.api');
+jest.mock('@/features/hubImport/api/hubImport.api', () => ({
+  ...jest.requireActual('@/features/hubImport/api/hubImport.api'),
+  getHubByUri: jest.fn(),
+}));
 jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
     createMessage: jest.fn(),
@@ -63,20 +66,19 @@ describe('useHubQuery', () => {
     ]);
 
     mockGetRecordAndInitializeParsing.mockResolvedValue(undefined);
-    (getHubById as jest.Mock).mockResolvedValue(mockRecord);
+    (getHubByUri as jest.Mock).mockResolvedValue(mockRecord);
   });
 
   describe('useHubQuery', () => {
-    it('Fetches hub data when hubId is provided', async () => {
-      const hubId = 'hub_123';
+    it('Fetches hub data when hubUri is provided', async () => {
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_123';
 
-      const { result } = renderHook(() => useHubQuery({ hubId }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-      expect(getHubById).toHaveBeenCalledWith({
-        hubId,
-        source: undefined,
+      expect(getHubByUri).toHaveBeenCalledWith({
+        hubUri: 'https://id.loc.gov/resources/hubs/hub_123.json',
         signal: expect.any(AbortSignal),
       });
       expect(mockGetRecordAndInitializeParsing).toHaveBeenCalledWith({
@@ -87,44 +89,42 @@ describe('useHubQuery', () => {
       expect(result.current.isError).toBe(false);
     });
 
-    it('Fetches hub data with specified source', async () => {
-      const hubId = 'hub_456';
-      const source = 'libraryOfCongress';
+    it('Normalizes http to https in hub URI', async () => {
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_456';
 
-      const { result } = renderHook(() => useHubQuery({ hubId, source }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-      expect(getHubById).toHaveBeenCalledWith({
-        hubId,
-        source,
+      expect(getHubByUri).toHaveBeenCalledWith({
+        hubUri: 'https://id.loc.gov/resources/hubs/hub_456.json',
         signal: expect.any(AbortSignal),
       });
       expect(result.current.data).toBe(mockRecord);
     });
 
-    it('Does not fetch when hubId is undefined', () => {
-      const { result } = renderHook(() => useHubQuery({ hubId: undefined }), { wrapper: createWrapper() });
+    it('Does not fetch when hubUri is undefined', () => {
+      const { result } = renderHook(() => useHubQuery({ hubUri: undefined }), { wrapper: createWrapper() });
 
-      expect(getHubById).not.toHaveBeenCalled();
+      expect(getHubByUri).not.toHaveBeenCalled();
       expect(result.current.data).toBeUndefined();
     });
 
     it('Does not fetch when enabled is false', () => {
-      const hubId = 'hub_789';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_789';
 
-      const { result } = renderHook(() => useHubQuery({ hubId, enabled: false }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri, enabled: false }), { wrapper: createWrapper() });
 
-      expect(getHubById).not.toHaveBeenCalled();
+      expect(getHubByUri).not.toHaveBeenCalled();
       expect(result.current.data).toBeUndefined();
     });
 
     it('Handles fetch errors', async () => {
-      const hubId = 'hub_error';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_error';
       const error = new Error('Fetch failed');
-      (getHubById as jest.Mock).mockRejectedValue(error);
+      (getHubByUri as jest.Mock).mockRejectedValue(error);
 
-      const { result } = renderHook(() => useHubQuery({ hubId }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       await waitFor(() => expect(result.current.isError).toBe(true));
 
@@ -135,12 +135,12 @@ describe('useHubQuery', () => {
     });
 
     it('Does not show error for aborted requests', async () => {
-      const hubId = 'hub_abort';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_abort';
       const abortError = new Error('Request aborted');
       abortError.name = 'AbortError';
-      (getHubById as jest.Mock).mockRejectedValue(abortError);
+      (getHubByUri as jest.Mock).mockRejectedValue(abortError);
 
-      const { result } = renderHook(() => useHubQuery({ hubId }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       await waitFor(() => expect(result.current.isError).toBe(true));
 
@@ -148,32 +148,32 @@ describe('useHubQuery', () => {
     });
 
     it('Refetches data when refetch is called', async () => {
-      const hubId = 'hub_refetch';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_refetch';
 
-      const { result } = renderHook(() => useHubQuery({ hubId }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-      const firstCallCount = (getHubById as jest.Mock).mock.calls.length;
+      const firstCallCount = (getHubByUri as jest.Mock).mock.calls.length;
 
       await result.current.refetch();
 
-      await waitFor(() => expect((getHubById as jest.Mock).mock.calls.length).toBe(firstCallCount + 1));
+      await waitFor(() => expect((getHubByUri as jest.Mock).mock.calls.length).toBe(firstCallCount + 1));
     });
 
-    it('Does not refetch when hubId is undefined', async () => {
-      const { result } = renderHook(() => useHubQuery({ hubId: undefined }), { wrapper: createWrapper() });
+    it('Does not refetch when hubUri is undefined', async () => {
+      const { result } = renderHook(() => useHubQuery({ hubUri: undefined }), { wrapper: createWrapper() });
 
-      const callCountBefore = (getHubById as jest.Mock).mock.calls.length;
+      const callCountBefore = (getHubByUri as jest.Mock).mock.calls.length;
 
       await result.current.refetch();
 
-      expect((getHubById as jest.Mock).mock.calls.length).toBe(callCountBefore);
+      expect((getHubByUri as jest.Mock).mock.calls.length).toBe(callCountBefore);
     });
 
     it('Returns correct loading and fetching states', async () => {
-      const hubId = 'hub_loading';
-      (getHubById as jest.Mock).mockImplementation(
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_loading';
+      (getHubByUri as jest.Mock).mockImplementation(
         () =>
           new Promise(resolve =>
             setTimeout(() => {
@@ -182,7 +182,7 @@ describe('useHubQuery', () => {
           ),
       );
 
-      const { result } = renderHook(() => useHubQuery({ hubId }), { wrapper: createWrapper() });
+      const { result } = renderHook(() => useHubQuery({ hubUri }), { wrapper: createWrapper() });
 
       expect(result.current.isLoading).toBe(true);
       expect(result.current.isFetching).toBe(true);

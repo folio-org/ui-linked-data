@@ -324,5 +324,5 @@
   "ld.profileSettings.announce.movedToUnused": "{name} moved to unused components.",
   "ld.profileSettings.announce.reorderedSelected": "{name} moved to position {order} in list.",
   "ld.importHub.header.title": "Import hub - {title}",
-  "ld.importHub.fetchingById": "Fetching external hub id {hubId}..."
+  "ld.importHub.fetchingFromUri": "Fetching hub from {uri}..."
 }

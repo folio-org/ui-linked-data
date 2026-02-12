@@ -29,7 +29,7 @@ export const ROUTES = {
     name: 'ld.externalResourcePreview',
   },
   HUB_IMPORT_PREVIEW: {
-    uri: `/${ROUTE_PATH.IMPORT}/${ROUTE_PATH.HUB}/:hubId/${ROUTE_PATH.PREVIEW}`,
+    uri: `/${ROUTE_PATH.IMPORT}/${ROUTE_PATH.HUB}/${ROUTE_PATH.PREVIEW}`,
     name: 'ld.hubImportPreview',
   },
   MANAGE_PROFILE_SETTINGS: {
@@ -55,6 +55,7 @@ export enum QueryParams {
   Ref = 'ref',
   CloneOf = 'cloneOf',
   Source = 'source',
+  SourceUri = 'sourceUri',
   ProfileId = 'profileId',
 }
 

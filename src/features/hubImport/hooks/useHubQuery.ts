@@ -9,11 +9,10 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';
 
-import { getHubById } from '../api/hubImport.api';
+import { getHubByUri, normalizeExternalHubUri } from '../api/hubImport.api';
 
 interface UseHubQueryParams {
-  hubId?: string;
-  source?: string;
+  hubUri?: string;
   enabled?: boolean;
 }
 
@@ -26,22 +25,22 @@ interface UseHubQueryResult {
   refetch: () => Promise<void>;
 }
 
-export function useHubQuery({ hubId, source, enabled = true }: UseHubQueryParams): UseHubQueryResult {
+export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseHubQueryResult {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { getRecordAndInitializeParsing } = useRecordControls();
 
-  const queryKey = ['hub', hubId, source];
+  const queryKey = ['hub', hubUri];
 
   const queryFn = useCallback(
     async ({ signal }: { signal: AbortSignal }): Promise<RecordEntry | undefined> => {
-      if (!hubId) {
+      if (!hubUri) {
         return undefined;
       }
 
       try {
-        const hubRecord = await getHubById({
-          hubId,
-          source,
+        const normalizedUri = normalizeExternalHubUri(hubUri);
+        const hubRecord = await getHubByUri({
+          hubUri: normalizedUri,
           signal,
         });
 
@@ -65,10 +64,10 @@ export function useHubQuery({ hubId, source, enabled = true }: UseHubQueryParams
         throw error;
       }
     },
-    [hubId, source, addStatusMessagesItem, getRecordAndInitializeParsing],
+    [hubUri, addStatusMessagesItem, getRecordAndInitializeParsing],
   );
 
-  const shouldEnable = enabled && !!hubId;
+  const shouldEnable = enabled && !!hubUri;
 
   const {
     data,
@@ -88,10 +87,10 @@ export function useHubQuery({ hubId, source, enabled = true }: UseHubQueryParams
   });
 
   const refetch = useCallback(async () => {
-    if (hubId) {
+    if (hubUri) {
       await queryRefetch();
     }
-  }, [queryRefetch, hubId]);
+  }, [queryRefetch, hubUri]);
 
   return {
     data,

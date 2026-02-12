@@ -88,12 +88,12 @@ describe('useHubImportMutation', () => {
   });
 
   describe('importHubForEdit', () => {
-    it('Imports hub and calls importHub with correct URI', async () => {
-      const hubId = 'hub_123';
+    it('Imports hub and calls importHub with normalized URI', async () => {
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_123';
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
-      await result.current.importHubForEdit(hubId);
+      await result.current.importHubForEdit(hubUri);
 
       await waitFor(() => expect(setIsLoading).toHaveBeenCalledWith(false));
 
@@ -102,13 +102,12 @@ describe('useHubImportMutation', () => {
       });
     });
 
-    it('Imports hub with specified source', async () => {
-      const hubId = 'hub_456';
-      const source = 'libraryOfCongress';
+    it('Normalizes https URI and appends .json', async () => {
+      const hubUri = 'https://id.loc.gov/resources/hubs/hub_456';
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
-      await result.current.importHubForEdit(hubId, source);
+      await result.current.importHubForEdit(hubUri);
 
       await waitFor(() => expect(setIsLoading).toHaveBeenCalledWith(false));
 
@@ -117,7 +116,7 @@ describe('useHubImportMutation', () => {
       });
     });
 
-    it('Does not import when hubId is empty', async () => {
+    it('Does not import when hubUri is empty', async () => {
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
       await result.current.importHubForEdit('');
@@ -126,11 +125,11 @@ describe('useHubImportMutation', () => {
     });
 
     it('Sets loading state to false after import completes', async () => {
-      const hubId = 'hub_complete';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_complete';
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
-      await result.current.importHubForEdit(hubId);
+      await result.current.importHubForEdit(hubUri);
 
       await waitFor(() => expect(setIsLoading).toHaveBeenCalledWith(false));
 
@@ -138,11 +137,11 @@ describe('useHubImportMutation', () => {
     });
 
     it('Sets loading state during import', async () => {
-      const hubId = 'hub_loading';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_loading';
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
-      await result.current.importHubForEdit(hubId);
+      await result.current.importHubForEdit(hubUri);
 
       await waitFor(() => expect(setIsLoading).toHaveBeenCalledWith(false));
 
@@ -151,12 +150,12 @@ describe('useHubImportMutation', () => {
     });
 
     it('Does not navigate when record id is not found', async () => {
-      const hubId = 'hub_no_id';
+      const hubUri = 'http://id.loc.gov/resources/hubs/hub_no_id';
       (getRecordId as jest.Mock).mockReturnValueOnce(null);
 
       const { result } = renderHook(() => useHubImportMutation(), { wrapper: createWrapper() });
 
-      await result.current.importHubForEdit(hubId);
+      await result.current.importHubForEdit(hubUri);
 
       await waitFor(() => expect(setIsLoading).toHaveBeenCalledWith(false));
 

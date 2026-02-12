@@ -10,11 +10,10 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
 
-import { buildHubUri, importHub } from '../api/hubImport.api';
+import { importHub, normalizeExternalHubUri } from '../api/hubImport.api';
 
 interface ImportHubParams {
-  hubId: string;
-  source?: string;
+  hubUri: string;
 }
 
 export const useHubImportMutation = () => {
@@ -23,10 +22,10 @@ export const useHubImportMutation = () => {
   const { navigateWithState } = useNavigateWithSearchState();
 
   const mutation = useMutation<RecordEntry, Error, ImportHubParams>({
-    mutationFn: async ({ hubId, source }) => {
-      const hubUri = buildHubUri(hubId, source);
+    mutationFn: async ({ hubUri }) => {
+      const normalizedUri = normalizeExternalHubUri(hubUri);
 
-      return importHub({ hubUri });
+      return importHub({ hubUri: normalizedUri });
     },
     onMutate: () => {
       setIsLoading(true);
@@ -46,10 +45,10 @@ export const useHubImportMutation = () => {
     },
   });
 
-  const importHubForEdit = async (hubId: string, source?: string) => {
-    if (!hubId) return;
+  const importHubForEdit = async (hubUri: string) => {
+    if (!hubUri) return;
 
-    await mutation.mutateAsync({ hubId, source });
+    await mutation.mutateAsync({ hubUri });
   };
 
   return {

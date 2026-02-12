@@ -1,7 +1,7 @@
 import baseApi from '@/common/api/base.api';
 import { HUB_IMPORT_API_ENDPOINT } from '@/common/constants/api.constants';
 
-import { buildHubUri, getHubById, getHubByUri, importHub } from './hubImport.api';
+import { getHubByUri, importHub, normalizeExternalHubUri } from './hubImport.api';
 
 jest.mock('@/common/api/base.api');
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -18,32 +18,24 @@ describe('hubImport.api', () => {
     mockBaseApi.generateUrl.mockReturnValue('/api/hub-import');
   });
 
-  describe('buildHubUri', () => {
-    it('Builds hub URI with default source', () => {
-      const hubId = 'hub_123';
-      const result = buildHubUri(hubId);
+  describe('normalizeExternalHubUri', () => {
+    it('Converts http to https and appends .json', () => {
+      const uri = 'http://id.loc.gov/resources/hubs/hub_123';
+      const result = normalizeExternalHubUri(uri);
 
       expect(result).toBe('https://id.loc.gov/resources/hubs/hub_123.json');
     });
 
-    it('Builds hub URI with specified source', () => {
-      const hubId = 'hub_456';
-      const source = 'libraryOfCongress';
-      const result = buildHubUri(hubId, source);
+    it('Keeps https and appends .json', () => {
+      const uri = 'https://id.loc.gov/resources/hubs/hub_456';
+      const result = normalizeExternalHubUri(uri);
 
       expect(result).toBe('https://id.loc.gov/resources/hubs/hub_456.json');
     });
 
-    it('Throws error for unknown source', () => {
-      const hubId = 'hub_789';
-      const source = 'unknownSource';
-
-      expect(() => buildHubUri(hubId, source)).toThrow('Unknown hub source: unknownSource');
-    });
-
-    it('Builds hub URI with numeric hub id', () => {
-      const hubId = '123456';
-      const result = buildHubUri(hubId);
+    it('Appends .json to URI with numeric id', () => {
+      const uri = 'http://id.loc.gov/resources/hubs/123456';
+      const result = normalizeExternalHubUri(uri);
 
       expect(result).toBe('https://id.loc.gov/resources/hubs/123456.json');
     });
@@ -127,67 +119,6 @@ describe('hubImport.api', () => {
         requestParams: {
           method: 'POST',
           signal: undefined,
-        },
-      });
-      expect(result).toBe(mockRecord);
-    });
-  });
-
-  describe('getHubById', () => {
-    it('Fetches hub by id with default source', async () => {
-      const hubId = 'hub_123';
-      mockBaseApi.getJson.mockResolvedValue(mockRecord);
-
-      const result = await getHubById({ hubId });
-
-      expect(mockBaseApi.getJson).toHaveBeenCalledWith({
-        url: '/api/hub-import',
-        urlParams: {
-          hubUri: `https://id.loc.gov/resources/hubs/${hubId}.json`,
-        },
-        requestParams: {
-          method: 'GET',
-          signal: undefined,
-        },
-      });
-      expect(result).toBe(mockRecord);
-    });
-
-    it('Fetches hub by id with specified source', async () => {
-      const hubId = 'hub_456';
-      const source = 'libraryOfCongress';
-      mockBaseApi.getJson.mockResolvedValue(mockRecord);
-
-      const result = await getHubById({ hubId, source });
-
-      expect(mockBaseApi.getJson).toHaveBeenCalledWith({
-        url: '/api/hub-import',
-        urlParams: {
-          hubUri: `https://id.loc.gov/resources/hubs/${hubId}.json`,
-        },
-        requestParams: {
-          method: 'GET',
-          signal: undefined,
-        },
-      });
-      expect(result).toBe(mockRecord);
-    });
-
-    it('Fetches hub by id with signal', async () => {
-      const hubId = 'hub_789';
-      const signal = new AbortController().signal;
-      mockBaseApi.getJson.mockResolvedValue(mockRecord);
-
-      const result = await getHubById({ hubId, signal });
-
-      expect(mockBaseApi.getJson).toHaveBeenCalledWith({
-        url: '/api/hub-import',
-        urlParams: {
-          hubUri: `https://id.loc.gov/resources/hubs/${hubId}.json`,
-        },
-        requestParams: {
-          method: 'GET',
-          signal,
         },
       });
       expect(result).toBe(mockRecord);

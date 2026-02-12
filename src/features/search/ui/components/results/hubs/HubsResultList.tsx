@@ -14,8 +14,8 @@ export const HubsResultList: FC = memo(() => {
     navigateWithState(generateEditResourceUrl(id));
   };
 
-  const handleImport = (id: string) => {
-    navigateWithState(generateHubImportPreviewUrl(id));
+  const handleImport = (uri: string) => {
+    navigateWithState(generateHubImportPreviewUrl(uri));
   };
 
   const { formattedData, listHeader } = useHubsTableFormatter({

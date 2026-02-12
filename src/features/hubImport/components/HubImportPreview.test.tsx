@@ -21,8 +21,10 @@ jest.mock('react-intl', () => ({
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useParams: () => ({ hubId: 'hub_123' }),
-  useSearchParams: () => [new URLSearchParams('source=loc'), jest.fn()],
+  useSearchParams: () => [
+    new URLSearchParams('sourceUri=http%3A%2F%2Fid.loc.gov%2Fresources%2Fhubs%2Fhub_123'),
+    jest.fn(),
+  ],
 }));
 
 jest.mock('@/features/hubImport/hooks', () => ({
@@ -86,43 +88,29 @@ describe('HubImportPreview', () => {
     expect(screen.queryByTestId('loading-component')).not.toBeInTheDocument();
   });
 
-  it('Calls useHubQuery with hubId and source', () => {
+  it('Calls useHubQuery with hubUri from sourceUri param', () => {
     renderComponent(mockRecord, false);
 
     expect(mockUseHubQuery).toHaveBeenCalledWith({
-      hubId: 'hub_123',
-      source: 'loc',
+      hubUri: 'http://id.loc.gov/resources/hubs/hub_123',
       enabled: true,
     });
   });
 
-  it('Shows loading label with hubId', () => {
+  it('Shows loading label with source URI', () => {
     renderComponent(null, true);
 
     const loadingComponent = screen.getByTestId('loading-component');
-    expect(loadingComponent.textContent).toContain('ld.importHub.fetchingById');
+    expect(loadingComponent.textContent).toContain('ld.importHub.fetchingFromUri');
   });
 
-  it('Uses default source when source param is missing', () => {
+  it('Disables query when sourceUri param is missing', () => {
     jest.spyOn(routerDom, 'useSearchParams').mockReturnValue([new URLSearchParams(), jest.fn()]);
 
     renderComponent(mockRecord, false);
 
     expect(mockUseHubQuery).toHaveBeenCalledWith({
-      hubId: 'hub_123',
-      source: 'libraryOfCongress',
-      enabled: true,
-    });
-  });
-
-  it('Disables query when hubId is not present', () => {
-    jest.spyOn(routerDom, 'useParams').mockReturnValue({ hubId: undefined });
-
-    renderComponent(null, false);
-
-    expect(mockUseHubQuery).toHaveBeenCalledWith({
-      hubId: undefined,
-      source: 'loc',
+      hubUri: undefined,
       enabled: false,
     });
   });

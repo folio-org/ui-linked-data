@@ -9,7 +9,7 @@ import { useFormattedResults } from './useFormattedResults';
 
 interface UseHubsTableFormatterProps {
   onEdit?: (id: string) => void;
-  onImport?: (id: string) => void;
+  onImport?: (uri: string) => void;
 }
 
 export interface UseHubsTableFormatterReturn {

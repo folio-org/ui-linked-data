@@ -1,5 +1,3 @@
-export const generateHubImportPreviewUrl = (hubId: string): string => {
-  const baseUrl = `/import/hub/${hubId}/preview`;
-
-  return baseUrl;
+export const generateHubImportPreviewUrl = (hubUri: string): string => {
+  return `/import/hub/preview?sourceUri=${encodeURIComponent(hubUri)}`;
 };

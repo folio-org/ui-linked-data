@@ -93,7 +93,7 @@ describe('HubActionFormatter', () => {
     expect(importButton).toHaveTextContent('ld.import.edit');
   });
 
-  it('calls onImport with hub id and uri when Import button is clicked', () => {
+  it('calls onImport with hub uri when Import button is clicked', () => {
     const mockRow: SearchResultsTableRow = {
       __meta: {
         id: 'token_2',
@@ -117,7 +117,7 @@ describe('HubActionFormatter', () => {
     const importButton = screen.getByTestId('hub-import-token_2');
     fireEvent.click(importButton);
 
-    expect(mockOnImport).toHaveBeenCalledWith('token_2', 'http://example.com/hub_2');
+    expect(mockOnImport).toHaveBeenCalledWith('http://example.com/hub_2');
     expect(mockOnImport).toHaveBeenCalledTimes(1);
     expect(mockOnEdit).not.toHaveBeenCalled();
   });

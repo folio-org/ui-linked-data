@@ -16,8 +16,10 @@ jest.mock('react-intl', () => ({
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useParams: () => ({ hubId: 'hub_123' }),
-  useSearchParams: () => [new URLSearchParams('source=loc'), jest.fn()],
+  useSearchParams: () => [
+    new URLSearchParams('sourceUri=http%3A%2F%2Fid.loc.gov%2Fresources%2Fhubs%2Fhub_123'),
+    jest.fn(),
+  ],
 }));
 
 jest.mock('@/common/hooks/useBackToSearchUri', () => ({
@@ -54,31 +56,21 @@ describe('HubImportControls', () => {
     expect(mockNavigate).toHaveBeenCalledWith(mockSearchResultsUri);
   });
 
-  it('Calls importHubForEdit with hubId and source on continue', () => {
+  it('Calls importHubForEdit with sourceUri on continue', () => {
     renderComponent();
 
     fireEvent.click(screen.getByTestId('continue-hub-import-button'));
 
-    expect(mockImportHubForEdit).toHaveBeenCalledWith('hub_123', 'loc');
+    expect(mockImportHubForEdit).toHaveBeenCalledWith('http://id.loc.gov/resources/hubs/hub_123');
   });
 
-  it('Does not call importHubForEdit when hubId is missing', () => {
-    jest.spyOn(routerDom, 'useParams').mockReturnValue({ hubId: undefined });
-
-    renderComponent();
-
-    fireEvent.click(screen.getByTestId('continue-hub-import-button'));
-
-    expect(mockImportHubForEdit).not.toHaveBeenCalled();
-  });
-
-  it('Uses default source when source param is missing', () => {
+  it('Does not call importHubForEdit when sourceUri is missing', () => {
     jest.spyOn(routerDom, 'useSearchParams').mockReturnValue([new URLSearchParams(), jest.fn()]);
 
     renderComponent();
 
     fireEvent.click(screen.getByTestId('continue-hub-import-button'));
 
-    expect(mockImportHubForEdit).toHaveBeenCalledWith('hub_123', 'libraryOfCongress');
+    expect(mockImportHubForEdit).not.toHaveBeenCalled();
   });
 });
