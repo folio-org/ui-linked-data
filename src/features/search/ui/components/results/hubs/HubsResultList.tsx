@@ -1,20 +1,22 @@
 import { FC, memo } from 'react';
 
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
-import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useNavigateWithSearchState } from '@/common/hooks/useNavigateWithSearchState';
 import { TableFlex } from '@/components/Table';
 
+import { generateHubImportPreviewUrl } from '@/features/hubImport';
 import { useHubsTableFormatter } from '@/features/search/ui/hooks/useHubsTableFormatter';
 
 export const HubsResultList: FC = memo(() => {
-  const { navigateToEditPage } = useNavigateToEditPage();
+  const { navigateWithState } = useNavigateWithSearchState();
 
   const handleEdit = (id: string) => {
-    navigateToEditPage(generateEditResourceUrl(id));
+    navigateWithState(generateEditResourceUrl(id));
   };
 
-  // TODO: implement Hub import functionality
-  const handleImport = (_id: string, _uri: string) => {};
+  const handleImport = (uri: string) => {
+    navigateWithState(generateHubImportPreviewUrl(uri));
+  };
 
   const { formattedData, listHeader } = useHubsTableFormatter({
     onEdit: handleEdit,

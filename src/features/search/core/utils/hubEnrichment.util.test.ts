@@ -42,7 +42,7 @@ describe('hubEnrichment.util', () => {
   });
 
   describe('extractOriginalIds', () => {
-    it('extracts originalIds from content array', () => {
+    it('extracts originalIds from content array and maps to ids', () => {
       const content = [
         { id: 'id_1', originalId: 'original_1' },
         { id: 'id_2', originalId: 'original_2' },
@@ -51,35 +51,47 @@ describe('hubEnrichment.util', () => {
 
       const result = extractOriginalIds(content);
 
-      expect(result).toEqual(new Set(['original_1', 'original_2', 'original_3']));
+      expect(result).toEqual(
+        new Map([
+          ['original_1', 'id_1'],
+          ['original_2', 'id_2'],
+          ['original_3', 'id_3'],
+        ]),
+      );
     });
 
-    it('returns empty set when content is undefined', () => {
+    it('returns empty map when content is undefined', () => {
       const result = extractOriginalIds();
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
     });
 
-    it('returns empty set when content is empty array', () => {
+    it('returns empty map when content is empty array', () => {
       const result = extractOriginalIds([]);
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
     });
 
-    it('filters out entries without originalId', () => {
+    it('filters out entries without originalId or id', () => {
       const content = [
         { id: 'id_1', originalId: 'original_1' },
         { id: 'id_2' },
         { id: 'id_3', originalId: undefined },
         { id: 'id_4', originalId: 'original_4' },
+        { originalId: 'original_5' },
       ];
 
       const result = extractOriginalIds(content);
 
-      expect(result).toEqual(new Set(['original_1', 'original_4']));
+      expect(result).toEqual(
+        new Map([
+          ['original_1', 'id_1'],
+          ['original_4', 'id_4'],
+        ]),
+      );
     });
 
-    it('handles duplicate originalIds', () => {
+    it('handles duplicate originalIds by keeping last occurrence', () => {
       const content = [
         { id: 'id_1', originalId: 'original_1' },
         { id: 'id_2', originalId: 'original_1' },
@@ -88,7 +100,12 @@ describe('hubEnrichment.util', () => {
 
       const result = extractOriginalIds(content);
 
-      expect(result).toEqual(new Set(['original_1', 'original_2']));
+      expect(result).toEqual(
+        new Map([
+          ['original_1', 'id_2'],
+          ['original_2', 'id_3'],
+        ]),
+      );
       expect(result.size).toBe(2);
     });
 
@@ -100,7 +117,7 @@ describe('hubEnrichment.util', () => {
 
       const result = extractOriginalIds(content);
 
-      expect(result).toEqual(new Set(['original_2']));
+      expect(result).toEqual(new Map([['original_2', 'id_2']]));
     });
   });
 

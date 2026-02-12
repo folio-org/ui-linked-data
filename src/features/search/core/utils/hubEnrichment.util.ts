@@ -6,12 +6,20 @@ export function buildHubLocalCheckQuery(tokens: string[]): string {
   return queryParts.join(` ${SEARCH_OPERATOR.OR} `);
 }
 
-export function extractOriginalIds(content?: Array<{ id?: string; originalId?: string }>): Set<string> {
+export function extractOriginalIds(content?: Array<{ id?: string; originalId?: string }>): Map<string, string> {
   if (!content || content.length === 0) {
-    return new Set<string>();
+    return new Map<string, string>();
   }
 
-  return new Set<string>(content.map(({ originalId }) => originalId).filter(Boolean) as string[]);
+  const idMap = new Map<string, string>();
+
+  content.forEach(({ id, originalId }) => {
+    if (originalId && id) {
+      idMap.set(originalId, id);
+    }
+  });
+
+  return idMap;
 }
 
 export function getIsLocalFlag(hubEntry: HubSearchResultDTO): boolean {

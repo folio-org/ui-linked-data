@@ -3,9 +3,10 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { StatusType } from '@/common/constants/status.constants';
-import { CommonStatus } from '@/components/CommonStatus';
 
 import { useStatusStore } from '@/store';
+
+import { CommonStatus } from './CommonStatus';
 
 describe('CommonStatus', () => {
   const renderComponent = (statusMessages: StatusEntry[] = []) => {

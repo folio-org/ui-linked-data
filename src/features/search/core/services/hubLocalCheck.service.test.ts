@@ -9,21 +9,21 @@ const mockBaseApi = baseApi as jest.Mocked<typeof baseApi>;
 
 describe('hubLocalCheckService', () => {
   describe('checkLocalAvailability', () => {
-    it('returns empty set when tokens array is empty', async () => {
+    it('returns empty map when tokens array is empty', async () => {
       const result = await hubLocalCheckService.checkLocalAvailability([]);
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
       expect(mockBaseApi.getJson).not.toHaveBeenCalled();
     });
 
-    it('returns empty set when tokens is null', async () => {
+    it('returns empty map when tokens is null', async () => {
       const result = await hubLocalCheckService.checkLocalAvailability(null as unknown as string[]);
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
       expect(mockBaseApi.getJson).not.toHaveBeenCalled();
     });
 
-    it('checks local availability and returns originalIds set', async () => {
+    it('checks local availability and returns originalIds mapped to ids', async () => {
       const tokens = ['token_1', 'token_2', 'token_3'];
       const mockResponse = {
         content: [
@@ -39,7 +39,12 @@ describe('hubLocalCheckService', () => {
       expect(mockBaseApi.getJson).toHaveBeenCalledWith({
         url: expect.stringContaining(SEARCH_API_ENDPOINT.HUBS_LOCAL),
       });
-      expect(result).toEqual(new Set(['token_1', 'token_2']));
+      expect(result).toEqual(
+        new Map([
+          ['token_1', 'id_1'],
+          ['token_2', 'id_2'],
+        ]),
+      );
     });
 
     it('builds correct query with multiple tokens', async () => {
@@ -63,7 +68,7 @@ describe('hubLocalCheckService', () => {
 
       const result = await hubLocalCheckService.checkLocalAvailability(tokens);
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
     });
 
     it('handles response without content field', async () => {
@@ -74,10 +79,10 @@ describe('hubLocalCheckService', () => {
 
       const result = await hubLocalCheckService.checkLocalAvailability(tokens);
 
-      expect(result).toEqual(new Set());
+      expect(result).toEqual(new Map());
     });
 
-    it('filters out entries without originalId', async () => {
+    it('filters out entries without originalId or id', async () => {
       const tokens = ['token_1', 'token_2'];
       const mockResponse = {
         content: [{ id: 'id_1', originalId: 'token_1' }, { id: 'id_2' }, { id: 'id_3', originalId: undefined }],
@@ -87,7 +92,7 @@ describe('hubLocalCheckService', () => {
 
       const result = await hubLocalCheckService.checkLocalAvailability(tokens);
 
-      expect(result).toEqual(new Set(['token_1']));
+      expect(result).toEqual(new Map([['token_1', 'id_1']]));
     });
   });
 });
