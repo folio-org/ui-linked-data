@@ -317,5 +317,8 @@
     "ld.unusedComponents.allUsed": "Todos os componentes em uso",
     "ld.selectedComponents": "Componentes selecionados",
     "ld.selectedComponents.description": "Arraste ou use os botões de mover para posicionar os componentes na ordem desejada.",
-    "ld.setDefaultTypeProfile": "Definir como meu perfil padrão {type}"
+    "ld.setDefaultTypeProfile": "Definir como meu perfil padrão {type}",
+    "ld.profileSettings.announce.movedToSelected": "{name} movido para os componentes selecionados. Posição {order} na lista.",
+    "ld.profileSettings.announce.movedToUnused": "{name} movido para componentes não utilizados.",
+    "ld.profileSettings.announce.reorderedSelected": "{name} movido para a posição {order} na lista."
 }

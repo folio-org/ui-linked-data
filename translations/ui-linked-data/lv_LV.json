@@ -20,7 +20,7 @@
     "ld.searchFor": "Search for",
     "ld.searchAndFilter": "Search & filter",
     "ld.enterSearchCriteria": "Enter search criteria to start search",
-    "ld.chooseFilterOrEnterSearchQuery": "Choose a filter or enter a search query to show results.",
+    "ld.chooseFilterOrEnterSearchQuery": "Izvēlieties filtru vai ievadiet meklēšanas vaicājumu, lai parādītu rezultātus.",
     "ld.searchNoRdsMatch": "No resource descriptions match your query",
     "ld.searchBySth": "Search by{by}...",
     "ld.errorFetching": "Error fetching data",
@@ -317,5 +317,8 @@
     "ld.unusedComponents.allUsed": "All components in use",
     "ld.selectedComponents": "Selected components",
     "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order.",
-    "ld.setDefaultTypeProfile": "Set as my default {type} profile"
+    "ld.setDefaultTypeProfile": "Set as my default {type} profile",
+    "ld.profileSettings.announce.movedToSelected": "{name} moved to selected components. Position {order} in list.",
+    "ld.profileSettings.announce.movedToUnused": "{name} moved to unused components.",
+    "ld.profileSettings.announce.reorderedSelected": "{name} moved to position {order} in list."
 }
