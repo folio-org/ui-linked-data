@@ -77,6 +77,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   return (
     <div
       className={classNames('component', isDragging ? 'dragging' : '')}
+      data-testid={`component-${component.id}`}
       style={style}
       ref={setNodeRef}
       {...attributes}
