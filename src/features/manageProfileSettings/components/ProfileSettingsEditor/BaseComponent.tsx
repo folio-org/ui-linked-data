@@ -84,13 +84,13 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     >
       <div className="name">
         <div ref={ref} className="grab" data-no-dnd="true">
-          <Button data-testid="grabber-menu" type={ButtonType.Icon} onClick={toggleIsMenuEnabled}>
+          <Button data-testid="activate-menu" type={ButtonType.Icon} onClick={toggleIsMenuEnabled}>
             <DragDrop />
           </Button>
           {isMenuEnabled && (
-            <div className="move-menu">
+            <div data-testid="move-menu" className="move-menu">
               <div className="move-menu-content">
-                <Button type={ButtonType.Text} onClick={moveFn}>
+                <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
                   <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
                 </Button>
               </div>
