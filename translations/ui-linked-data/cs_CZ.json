@@ -317,5 +317,8 @@
     "ld.unusedComponents.allUsed": "Všechny komponenty v provozu",
     "ld.selectedComponents": "Vybrané komponenty",
     "ld.selectedComponents.description": "Přetažením nebo pomocí tlačítek pro přesun umístěte komponenty v požadovaném pořadí.",
-    "ld.setDefaultTypeProfile": "Nastavení jako výchozí profil {type}"
+    "ld.setDefaultTypeProfile": "Nastavení jako výchozí profil {type}",
+    "ld.profileSettings.announce.movedToSelected": "{name} přesunuty do vybraných komponent. Umístění {order} v seznamu.",
+    "ld.profileSettings.announce.movedToUnused": "{name} přesunuto k nepoužívaným komponentám.",
+    "ld.profileSettings.announce.reorderedSelected": "{name} přesunuto na pozici {order} v seznamu."
 }
