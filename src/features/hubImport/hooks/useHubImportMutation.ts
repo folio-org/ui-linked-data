@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { importHub, normalizeExternalHubUri } from '@/common/api/hub.api';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
@@ -9,8 +10,6 @@ import { useNavigateWithSearchState } from '@/common/hooks/useNavigateWithSearch
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
-
-import { importHub, normalizeExternalHubUri } from '../api/hubImport.api';
 
 interface ImportHubParams {
   hubUri: string;
