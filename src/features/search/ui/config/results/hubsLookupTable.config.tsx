@@ -12,8 +12,8 @@ export const hubsLookupTableConfig: SearchResultsTableConfig = {
       label: 'ld.action',
       position: 0,
       className: 'cell-fixed',
-      minWidth: 100,
-      maxWidth: 100,
+      minWidth: 150,
+      maxWidth: 'max-content',
       formatter: HubAssignFormatter,
     },
     hub: {
