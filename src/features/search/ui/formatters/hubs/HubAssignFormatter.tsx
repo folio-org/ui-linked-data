@@ -9,20 +9,24 @@ interface HubAssignFormatterProps {
 }
 
 export const HubAssignFormatter: FC<HubAssignFormatterProps> = ({ row, onAssign }) => {
+  const { id, isLocal } = row.__meta;
+
   const handleButtonClick = () =>
     onAssign(
       {
-        id: row.__meta.id,
+        id,
         title: (row.hub.label as string) || '',
         uri: (row.hub.uri as string) || '',
-        sourceType: row.__meta.isLocal ? 'local' : 'libraryOfCongress',
+        sourceType: isLocal ? 'local' : 'libraryOfCongress',
       },
       true,
     );
 
+  const labelId = isLocal ? 'ld.assign' : 'ld.importAssign';
+
   return (
-    <Button type={ButtonType.Primary} onClick={handleButtonClick} data-testid={`assign-button-${row.__meta.id}`}>
-      <FormattedMessage id="ld.assign" />
+    <Button type={ButtonType.Primary} onClick={handleButtonClick} data-testid={`assign-button-${id}`}>
+      <FormattedMessage id={labelId} />
     </Button>
   );
 };

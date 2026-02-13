@@ -9,13 +9,7 @@ export { getModalConfig, getButtonLabel, COMPLEX_LOOKUP_MODAL_REGISTRY } from '.
 export type { ModalConfig } from './configs/modalRegistry';
 
 // Hooks
-export {
-  useComplexLookup,
-  useComplexLookupApi,
-  useComplexLookupValidation,
-  useMarcAssignment,
-  useMarcValidation,
-} from './hooks';
+export { useComplexLookupApi, useComplexLookupValidation, useMarcAssignment, useMarcValidation } from './hooks';
 
 // Utils
 export * from './utils';
