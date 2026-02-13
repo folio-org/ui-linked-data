@@ -2,28 +2,22 @@ import { FC } from 'react';
 
 import { TableFlex } from '@/components/Table';
 
-import { hubsLookupTableConfig } from '../../../config/results/hubsLookupTable.config';
-import { useFormattedResults } from '../../../hooks/useFormattedResults';
-import { useTableFormatter } from '../../../hooks/useTableFormatter';
+import { hubsLookupTableConfig } from '@/features/search/ui/config/results/hubsLookupTable.config';
+import { useFormattedResults } from '@/features/search/ui/hooks/useFormattedResults';
+import { useTableFormatter } from '@/features/search/ui/hooks/useTableFormatter';
 
 interface HubsLookupResultListProps {
   context?: 'search' | 'complexLookup';
   onAssign?: (data: ComplexLookupAssignRecordDTO) => void;
-  checkFailedId?: (id: string) => boolean;
 }
 
-export const HubsLookupResultList: FC<HubsLookupResultListProps> = ({
-  context = 'search',
-  onAssign,
-  checkFailedId,
-}) => {
+export const HubsLookupResultList: FC<HubsLookupResultListProps> = ({ context = 'search', onAssign }) => {
   const data = useFormattedResults<SearchResultsTableRow>() || [];
   const { formattedData, listHeader } = useTableFormatter({
     data,
     tableConfig: hubsLookupTableConfig,
     context,
     onAssign,
-    checkFailedId,
   });
 
   return (
