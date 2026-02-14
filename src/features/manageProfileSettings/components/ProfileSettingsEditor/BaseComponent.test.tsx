@@ -14,6 +14,7 @@ describe('BaseComponent', () => {
   const mockComponent = {
     id: 'test:component',
     name,
+    mandatory: false,
   };
 
   const renderComponent = (node: ReactNode) => {

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import { ROUTES } from '@/common/constants/routes.constants';
+import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Modal } from '@/components/Modal';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
@@ -17,6 +17,7 @@ type ModalCloseProfileSettingsProps = {
 export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ isOpen, setIsOpen }) => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
+  const searchResultsUri = useBackToSearchUri();
   const { isClosingNext, setIsClosingNext, nextSelectedProfile, setSelectedProfile, setIsModified } =
     useManageProfileSettingsState([
       'isClosingNext',
@@ -34,7 +35,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     setIsModified(false);
     if (isClosingNext) {
       setIsClosingNext(false);
-      navigate(ROUTES.SEARCH.uri);
+      navigate(searchResultsUri);
     } else if (nextSelectedProfile) {
       setSelectedProfile(nextSelectedProfile);
       setIsManageProfileSettingsShowProfiles(false);
