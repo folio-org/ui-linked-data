@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react';
 
-import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
-import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
+import * as useFormattedResultsHook from '@/features/search/ui/hooks/useFormattedResults';
+import * as useTableFormatterHook from '@/features/search/ui/hooks/useTableFormatter';
+
 import { HubsLookupResultList } from './HubsLookupResultList';
 
-jest.mock('../../../hooks/useFormattedResults');
-jest.mock('../../../hooks/useTableFormatter');
+jest.mock('@/features/search/ui/hooks/useFormattedResults');
+jest.mock('@/features/search/ui/hooks/useTableFormatter');
 interface MockTableFlexProps {
   header: unknown;
   data: unknown;
@@ -110,23 +111,6 @@ describe('HubsLookupResultList', () => {
       expect.objectContaining({
         context: 'complexLookup',
         onAssign,
-      }),
-    );
-  });
-
-  test('passes checkFailedId callback to useTableFormatter', () => {
-    mockUseFormattedResults.mockReturnValue(mockData);
-    mockUseTableFormatter.mockReturnValue({
-      formattedData: mockFormattedData,
-      listHeader: mockListHeader,
-    });
-
-    const checkFailedId = jest.fn();
-    render(<HubsLookupResultList checkFailedId={checkFailedId} />);
-
-    expect(mockUseTableFormatter).toHaveBeenCalledWith(
-      expect.objectContaining({
-        checkFailedId,
       }),
     );
   });

@@ -39,16 +39,6 @@ export const workRecordSchema: RecordSchema = {
         _hub: {
           type: RecordSchemaEntryType.object,
           properties: {
-            // LoC source properties
-            label: {
-              type: RecordSchemaEntryType.string,
-              options: { valueSource: 'label' },
-            },
-            rdfLink: {
-              type: RecordSchemaEntryType.string,
-              options: { valueSource: 'meta.uri' },
-            },
-            // Local source properties
             id: {
               type: RecordSchemaEntryType.string,
               options: { valueSource: 'id' },
@@ -56,13 +46,6 @@ export const workRecordSchema: RecordSchema = {
           },
           options: {
             propertyKey: '_hub',
-            defaultSourceType: 'libraryOfCongress',
-            conditionalProperties: {
-              libraryOfCongress: ['label', 'rdfLink'],
-              local: ['id', 'label'],
-            },
-            // Always include 'id' if present (for existing hubs that have been saved)
-            alwaysIncludeIfPresent: ['id'],
           },
         },
         _relation: {

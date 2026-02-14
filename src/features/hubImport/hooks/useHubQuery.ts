@@ -2,14 +2,13 @@ import { useCallback } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
+import { getHubByUri, normalizeExternalHubUri } from '@/common/api/hub.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';
-
-import { getHubByUri, normalizeExternalHubUri } from '../api/hubImport.api';
 
 interface UseHubQueryParams {
   hubUri?: string;

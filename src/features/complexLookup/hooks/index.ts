@@ -1,4 +1,3 @@
-export { useComplexLookup } from './useComplexLookup';
 export { useComplexLookupApi } from './useComplexLookupApi';
 export { useComplexLookupValidation } from './useComplexLookupValidation';
 export { useMarcAssignment } from './useMarcAssignment';
@@ -10,3 +9,5 @@ export { useComplexLookupField } from './useComplexLookupField';
 export { useAuthoritiesAssignment } from './useAuthoritiesAssignment';
 export { useAuthoritiesSegmentData } from './useAuthoritiesSegmentData';
 export { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
+export { useHubImportAssignmentMutation } from './useHubImportAssignmentMutation';
+export { useHubAssignment } from './useHubAssignment';

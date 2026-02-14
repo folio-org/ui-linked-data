@@ -5,16 +5,16 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { getHubByUri } from '@/common/api/hub.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusStore } from '@/store';
 
-import { getHubByUri } from '../api/hubImport.api';
 import { useHubQuery } from './useHubQuery';
 
-jest.mock('@/features/hubImport/api/hubImport.api', () => ({
-  ...jest.requireActual('@/features/hubImport/api/hubImport.api'),
+jest.mock('@/common/api/hub.api', () => ({
+  ...jest.requireActual('@/common/api/hub.api'),
   getHubByUri: jest.fn(),
 }));
 jest.mock('@/common/services/userNotification', () => ({

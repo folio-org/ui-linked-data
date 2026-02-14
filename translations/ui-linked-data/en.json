@@ -150,6 +150,7 @@
   "ld.headingReference": "Heading/Reference",
   "ld.unauthorized": "Unauthorized",
   "ld.assign": "Assign",
+  "ld.importAssign": "Import/Assign",
   "ld.assignAuthority": "Assign authority",
   "ld.change": "Change",
   "ld.searchCreatorAuthority": "Search creator authority",
@@ -235,6 +236,7 @@
   "ld.errorAssigningAuthority": "Error assigning authority",
   "ld.errorAssigningAuthority.not_valid_for_target": "Please select an authority with a resource type matching the edited authority field (e.g. LCNAF authority for the Creator field)",
   "ld.errorAssigningAuthority.unsupported_marc": "The selected authority isn't mapped to Linked Data, and can't be assigned yet. This is temporary, since MARC mapping is in progress.",
+  "ld.errorImportingHub": "Error importing hub. Please try again.",
   "ld.modal.uncontrolledAuthoritiesWarning.title": "Uncontrolled authorities warning",
   "ld.modal.uncontrolledAuthoritiesWarning.body": "This description includes one or more uncontrolled authorities.\n Do you want to save changes?",
 

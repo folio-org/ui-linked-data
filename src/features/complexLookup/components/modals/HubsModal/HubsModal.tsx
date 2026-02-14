@@ -1,12 +1,14 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { Loading } from '@/components/Loading';
 import { Modal } from '@/components/Modal';
 
 import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { useHubAssignment } from '@/features/complexLookup/hooks/useHubAssignment';
 import { HubsLookupResultList, SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -14,11 +16,12 @@ interface HubsModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
   initialQuery?: string;
-  onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+  onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
 }
 
 /**
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
+ * Supports import-on-assign for external hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, onAssign }) => {
   // Reset search state and set initial query when modal opens
@@ -27,6 +30,18 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
     initialQuery,
     defaultSegment: 'hubsLookup',
     defaultSource: 'libraryOfCongress',
+  });
+
+  const handleSuccessfulAssignment = useCallback(
+    (value: UserValueContents) => {
+      onAssign(value);
+      onClose();
+    },
+    [onAssign, onClose],
+  );
+
+  const { handleAssign, isAssigning } = useHubAssignment({
+    onAssignSuccess: handleSuccessfulAssignment,
   });
 
   return (
@@ -62,11 +77,14 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
             <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} showSubLabel={true} />
 
             <Search.ContentContainer>
-              <Search.Results>
-                {/* Existing component already supports complexLookup context! */}
-                <HubsLookupResultList context="complexLookup" onAssign={onAssign} />
-                <Search.Results.Pagination />
-              </Search.Results>
+              {isAssigning && <Loading />}
+
+              {!isAssigning && (
+                <Search.Results>
+                  <HubsLookupResultList context="complexLookup" onAssign={handleAssign} />
+                  <Search.Results.Pagination />
+                </Search.Results>
+              )}
             </Search.ContentContainer>
           </Search.Content>
         </Search>

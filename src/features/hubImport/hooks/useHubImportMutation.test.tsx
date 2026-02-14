@@ -5,16 +5,16 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { importHub } from '@/common/api/hub.api';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { getRecordId } from '@/common/helpers/record.helper';
 
 import { useLoadingStateStore, useStatusStore } from '@/store';
 
-import { importHub } from '../api/hubImport.api';
 import { useHubImportMutation } from './useHubImportMutation';
 
-jest.mock('@/features/hubImport/api/hubImport.api', () => ({
-  ...jest.requireActual('@/features/hubImport/api/hubImport.api'),
+jest.mock('@/common/api/hub.api', () => ({
+  ...jest.requireActual('@/common/api/hub.api'),
   importHub: jest.fn(),
 }));
 jest.mock('@/common/services/userNotification', () => ({
