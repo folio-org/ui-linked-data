@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import classNames from 'classnames';
+
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getUri } from '@/configs/resourceTypes';
 
 import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
 
-import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
+import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState, useUIState } from '@/store';
 
 import { ResourceProfiles } from './ResourceProfiles';
 
@@ -20,6 +22,15 @@ export const ProfilesList = () => {
   const { selectedProfile, setSelectedProfile } = useManageProfileSettingsState([
     'selectedProfile',
     'setSelectedProfile',
+  ]);
+  const {
+    isManageProfileSettingsBelowBreakpoint,
+    isManageProfileSettingsShowProfiles,
+    isManageProfileSettingsShowEditor,
+  } = useUIState([
+    'isManageProfileSettingsBelowBreakpoint',
+    'isManageProfileSettingsShowProfiles',
+    'isManageProfileSettingsShowEditor',
   ]);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
@@ -39,7 +50,13 @@ export const ProfilesList = () => {
   }, []);
 
   useEffect(() => {
-    if (availableProfiles && !selectedProfile && Object.keys(availableProfiles).length > 0) {
+    if (
+      !isManageProfileSettingsBelowBreakpoint &&
+      isManageProfileSettingsShowEditor &&
+      availableProfiles &&
+      !selectedProfile &&
+      Object.keys(availableProfiles).length > 0
+    ) {
       for (const resourceType in availableProfiles) {
         if (availableProfiles[resourceType as ResourceTypeURL]?.length > 0) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
@@ -49,8 +66,11 @@ export const ProfilesList = () => {
     }
   }, [availableProfiles]);
 
+  const showView =
+    !isManageProfileSettingsBelowBreakpoint ||
+    (isManageProfileSettingsBelowBreakpoint && isManageProfileSettingsShowProfiles);
   return availableProfiles ? (
-    <div data-testid="profiles-list" className="profiles-list">
+    <div data-testid="profiles-list" className={classNames('profiles-list', showView ? '' : 'hidden')}>
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <h3 className="heading">

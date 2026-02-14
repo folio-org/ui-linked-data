@@ -32,7 +32,10 @@ export const useDragHandlers = ({
   setUnused,
   startDrag,
 }: UseDragHandlersParams) => {
-  const { setIsModified } = useManageProfileSettingsState(['setIsModified']);
+  const { setIsModified, setIsSettingsActive } = useManageProfileSettingsState([
+    'setIsModified',
+    'setIsSettingsActive',
+  ]);
 
   const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({
     unused,
@@ -54,6 +57,7 @@ export const useDragHandlers = ({
 
     if (over && active.id !== over.id) {
       setIsModified(true);
+      setIsSettingsActive(true);
 
       const targetList = over.data.current?.sortable.containerId;
       if (startingList === ComponentType.selected && targetList === ComponentType.selected) {

@@ -1,14 +1,16 @@
 @use '@/common/styles/common.scss' as *;
 
 .profile-settings {
+  display: block;
   flex: 1;
   border-left: 1px solid $gray-200;
 
-  .nav {
-    background-color: $gray-100 !important;
+  &.hidden {
+    display: none;
+  }
 
-    .heading {
-      padding: 0 15px;
-    }
+  .nav {
+    background-color: $gray-50 !important;
+    padding: 0 15px 0 11px;
   }
 }

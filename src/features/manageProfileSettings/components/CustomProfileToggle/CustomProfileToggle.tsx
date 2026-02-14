@@ -5,15 +5,15 @@ import { useManageProfileSettingsState } from '@/store';
 import './CustomProfileToggle.scss';
 
 export const CustomProfileToggle = () => {
-  const { profileSettings, setProfileSettings, setIsModified } = useManageProfileSettingsState([
-    'profileSettings',
-    'setProfileSettings',
+  const { isSettingsActive, setIsSettingsActive, setIsModified } = useManageProfileSettingsState([
+    'isSettingsActive',
+    'setIsSettingsActive',
     'setIsModified',
   ]);
 
   const handleToggle = (active: boolean) => {
     setIsModified(true);
-    setProfileSettings(prev => ({ ...prev, active: active }));
+    setIsSettingsActive(active);
   };
 
   return (
@@ -23,7 +23,7 @@ export const CustomProfileToggle = () => {
         data-testid="settings-active-default"
         name="settings-active"
         type="radio"
-        checked={!profileSettings.active}
+        checked={!isSettingsActive}
         onChange={() => handleToggle(false)}
       />
       <label htmlFor="settings-active-default">
@@ -35,7 +35,7 @@ export const CustomProfileToggle = () => {
         data-testid="settings-active-custom"
         name="settings-active"
         type="radio"
-        checked={profileSettings.active}
+        checked={isSettingsActive}
         onChange={() => handleToggle(true)}
       />
       <label htmlFor="settings-active-custom">

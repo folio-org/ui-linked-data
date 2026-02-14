@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { DndContext, DragOverlay, MeasuringStrategy, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -12,6 +12,7 @@ import {
   type UpdateStateParams,
   useDragHandlers,
   useDragStateUpdate,
+  useMoveBetweenLists,
   useNudge,
   useSettingsAnnouncements,
 } from '../../hooks';
@@ -32,6 +33,7 @@ import { UnusedComponent } from './UnusedComponent';
 import './ProfileSettingsEditor.scss';
 
 export const ProfileSettingsEditor = () => {
+  const { formatMessage } = useIntl();
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
   const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
   const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
@@ -44,10 +46,14 @@ export const ProfileSettingsEditor = () => {
   const {
     fullProfile,
     profileSettings,
+    isSettingsActive,
+    setIsSettingsActive,
     // setProfileSettings, // TODO: UILD-698 save values
   } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
+    'isSettingsActive',
+    'setIsSettingsActive',
     // 'setProfileSettings', // TODO: UILD-698
   ]);
 
@@ -90,12 +96,19 @@ export const ProfileSettingsEditor = () => {
   );
 
   const { makeMoveUp, makeMoveDown } = useNudge({ setSelected: setSelectedComponents });
+  const { makeMoveComponentIdToSelected, makeMoveComponentIdToUnused } = useMoveBetweenLists({
+    unused: unusedComponents,
+    selected: selectedComponents,
+    setUnused: setUnusedComponents,
+    setSelected: setSelectedComponents,
+  });
 
   const { announcements } = useSettingsAnnouncements({
     profile: fullProfile as Profile,
     startingList: startingStyle,
     components: selectedComponents,
   });
+  const instructions = formatMessage({ id: 'ld.profileSettings.announce.instructions' });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
     unused: unusedComponents,
@@ -113,6 +126,7 @@ export const ProfileSettingsEditor = () => {
     if (fullProfile && profileSettings) {
       const profileChildren = getProfileChildren(fullProfile);
       setProfileComponents(profileChildren);
+      setIsSettingsActive(profileSettings.active);
       if (profileSettings.active && !!profileSettings.children?.length) {
         const visibleSettingsChildren = getSettingsChildren(fullProfile, profileSettings);
         setSelectedComponents(visibleSettingsChildren);
@@ -123,6 +137,13 @@ export const ProfileSettingsEditor = () => {
       }
     }
   }, [fullProfile, profileSettings]);
+
+  useEffect(() => {
+    if (!isSettingsActive) {
+      setSelectedComponents(profileComponents);
+      setUnusedComponents([]);
+    }
+  }, [isSettingsActive]);
 
   useEffect(() => {
     return () => {
@@ -140,7 +161,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-          accessibility={{ announcements }}
+          accessibility={{ announcements, screenReaderInstructions: { draggable: instructions } }}
         >
           <ComponentList
             components={unusedComponents}
@@ -150,13 +171,19 @@ export const ProfileSettingsEditor = () => {
             droppable={true}
             containerId={UNUSED_EMPTY_ID}
           >
-            {unusedComponents.length === 0 || !profileSettings.active ? (
+            {unusedComponents.length === 0 || !isSettingsActive ? (
               <div className="empty-list">
                 <FormattedMessage id="ld.unusedComponents.allUsed" />
               </div>
             ) : (
               unusedComponents.map(component => {
-                return <UnusedComponent key={component.id} component={component} />;
+                return (
+                  <UnusedComponent
+                    key={component.id}
+                    component={component}
+                    moveFn={makeMoveComponentIdToSelected(component.id)}
+                  />
+                );
               })
             )}
           </ComponentList>
@@ -169,7 +196,7 @@ export const ProfileSettingsEditor = () => {
             droppable={false}
             containerId="selected-container"
           >
-            {profileSettings.active === true
+            {isSettingsActive === true
               ? selectedComponents.map((component, idx) => {
                   return (
                     <SelectedComponent
@@ -179,6 +206,7 @@ export const ProfileSettingsEditor = () => {
                       component={component}
                       upFn={makeMoveUp(idx, component.name)}
                       downFn={makeMoveDown(idx, component.name)}
+                      moveFn={makeMoveComponentIdToUnused(component.id)}
                     />
                   );
                 })
@@ -191,6 +219,7 @@ export const ProfileSettingsEditor = () => {
                       component={component}
                       upFn={makeMoveUp(idx, component.name)}
                       downFn={makeMoveDown(idx, component.name)}
+                      moveFn={makeMoveComponentIdToUnused(component.id)}
                     />
                   );
                 })}

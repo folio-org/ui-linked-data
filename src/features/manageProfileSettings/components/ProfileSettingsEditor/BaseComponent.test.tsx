@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { DndContext } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { DraggingComponent } from './DraggingComponent';
 import { SelectedComponent } from './SelectedComponent';
@@ -40,7 +40,7 @@ describe('BaseComponent', () => {
     expect(screen.getByTestId('nudge-down')).toBeInTheDocument();
   });
 
-  it('renders SelectedComponent with only nudge down button', () => {
+  it('renders SelectedComponent at top of list with only nudge down button', () => {
     renderComponent(<SelectedComponent component={mockComponent} size={3} index={1} />);
 
     expect(screen.getByText('1. ' + name)).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('BaseComponent', () => {
     expect(screen.getByTestId('nudge-down')).toBeInTheDocument();
   });
 
-  it('renders SelectedComponent with only nudge up button', () => {
+  it('renders SelectedComponent at bottom of list with only nudge up button', () => {
     render(<SelectedComponent component={mockComponent} size={3} index={3} />);
 
     expect(screen.getByText('3. ' + name)).toBeInTheDocument();
@@ -60,5 +60,93 @@ describe('BaseComponent', () => {
     renderComponent(<DraggingComponent component={mockComponent} />);
 
     expect(screen.getByText(name)).toBeInTheDocument();
+  });
+
+  it('renders a SelectedComponent with a context menu when the button is clicked', () => {
+    render(<SelectedComponent component={mockComponent} size={1} index={1} />);
+
+    expect(screen.getByTestId('activate-menu')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+  });
+
+  it('renders an UnusedComponent with a context menu when the button is clicked', () => {
+    render(<UnusedComponent component={mockComponent} />);
+
+    expect(screen.getByTestId('activate-menu')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+  });
+
+  it('toggle off a context menu', () => {
+    render(<UnusedComponent component={mockComponent} />);
+
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.queryByTestId('move-menu')).not.toBeInTheDocument();
+    });
+  });
+
+  it('dismiss a context menu by clicking elsewhere', () => {
+    render(<UnusedComponent component={mockComponent} />);
+
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+
+    fireEvent.mouseDown(document);
+
+    waitFor(() => {
+      expect(screen.queryByTestId('move-menu')).not.toBeInTheDocument();
+    });
+  });
+
+  it('dismiss a context menu by typing escape', () => {
+    render(<UnusedComponent component={mockComponent} />);
+
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+
+    fireEvent.keyDown(document, { key: 'Escape' });
+
+    waitFor(() => {
+      expect(screen.queryByTestId('move-menu')).not.toBeInTheDocument();
+    });
+  });
+
+  it('dismiss a context menu by changing focus', () => {
+    render(<SelectedComponent component={mockComponent} size={2} index={1} />);
+
+    screen.getByTestId('activate-menu').focus();
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toBeInTheDocument();
+    });
+
+    expect(screen.getByTestId('nudge-down')).toBeInTheDocument();
+    screen.getByTestId('nudge-down').focus();
+
+    waitFor(() => {
+      expect(screen.queryByTestId('move-menu')).not.toBeInTheDocument();
+    });
   });
 });

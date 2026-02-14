@@ -1,3 +1,4 @@
+// Generic colors
 $base: #fff !default;
 $blue-50: #e9effa !default;
 $blue-100: #d8e3f5 !default;
@@ -12,12 +13,16 @@ $blue-700: #255096 !default;
 $blue-800: #1d3f75 !default;
 $blue-850: #23385a !default;
 $blue-2f: #2f609f !default;
+$gray-50: #f5f5f5 !default;
 $gray-100: #ebebeb !default;
 $gray-200: #d7d8da !default;
 $gray-300: #d9d9d9 !default;
+$gray-350: #ccc !default;
 $gray-400: #727272 !default;
 $gray-500: #55585d !default;
 $gray-600: #3d3f42 !default;
+
+// Purpose-oriented colors
 $disabled-input-bg-color: #ebebe4 !default;
 $disabled-input-color: #777 !default;
 $buttonHighlighted: #1960a4 !default;
@@ -25,7 +30,10 @@ $buttonHover: rgba(37, 118, 195, 0.2) !default;
 $buttonFocus: rgba(37, 118, 195, 0.3) !default;
 $error: #990000 !default;
 $title-bar-bg-color: rgba(0, 0, 0, 0.03) !default;
+
+// Shadows
 $listButton-drop-shadow: 0 0 0 2px rgba(166, 212, 255, 0.64) !default;
+$menu-drop-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.17) !default;
 
 $btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37) !default;
 $highlighted-focusable-outline-box-shadow:
@@ -37,10 +45,15 @@ $secondary-focusable-outline-box-shadow:
   0 0 0 1px $blue-500,
   0 0 0 4px $blue-100 !default;
 
+// Button attributes
 $btn-border-radius: 12px !default;
 $btn-icon-border-radius: 6px !default;
 $btn-height: 24px !default;
 
+// Font
+$font-md: 14px !default;
+
+// Mixins
 @mixin focused-outline-primary {
   &:focus,
   &:focus-visible {

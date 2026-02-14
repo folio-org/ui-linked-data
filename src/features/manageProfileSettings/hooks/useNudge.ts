@@ -13,11 +13,15 @@ interface UseNudgeParams {
 export const useNudge = ({ setSelected }: UseNudgeParams) => {
   const { formatMessage } = useIntl();
   const { announce } = useAnnouncement();
-  const { setIsModified } = useManageProfileSettingsState(['setIsModified']);
+  const { setIsModified, setIsSettingsActive } = useManageProfileSettingsState([
+    'setIsModified',
+    'setIsSettingsActive',
+  ]);
 
   const makeMove = (index: number, increment: number, name: string) => {
     return () => {
       setIsModified(true);
+      setIsSettingsActive(true);
       setSelected(prev => {
         announce(
           formatMessage(

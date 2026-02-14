@@ -165,4 +165,44 @@ describe('useMoveBetweenLists', () => {
     expect(unused.result.current[0].length).toBe(1);
     expect(selected.result.current[0].length).toBe(1);
   });
+
+  it('move by ID from selected to populated unused', () => {
+    const unused = renderHook(() => useState([...mockUnused]));
+    const selected = renderHook(() => useState([...mockSelected]));
+    const { result } = renderHook(() =>
+      useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
+        setUnused: unused.result.current[1],
+        setSelected: selected.result.current[1],
+      }),
+    );
+    const { makeMoveComponentIdToUnused } = result.current;
+    const moveComponentIdToUnused = makeMoveComponentIdToUnused('selected:first');
+
+    act(() => moveComponentIdToUnused());
+
+    expect(unused.result.current[0].length).toBe(2);
+    expect(selected.result.current[0].length).toBe(0);
+  });
+
+  it('move by ID from unused to populated selected', () => {
+    const unused = renderHook(() => useState([...mockUnused]));
+    const selected = renderHook(() => useState([...mockSelected]));
+    const { result } = renderHook(() =>
+      useMoveBetweenLists({
+        unused: unused.result.current[0],
+        selected: selected.result.current[0],
+        setUnused: unused.result.current[1],
+        setSelected: selected.result.current[1],
+      }),
+    );
+    const { makeMoveComponentIdToSelected } = result.current;
+    const moveComponentIdToSelected = makeMoveComponentIdToSelected('unused:first');
+
+    act(() => moveComponentIdToSelected());
+
+    expect(selected.result.current[0].length).toBe(2);
+    expect(unused.result.current[0].length).toBe(0);
+  });
 });

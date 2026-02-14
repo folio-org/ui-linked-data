@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -23,9 +24,11 @@ type BaseComponentProps = {
   type: ComponentType;
   upFn?: () => void;
   downFn?: () => void;
+  moveFn?: () => void;
 };
 
-export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, type, upFn, downFn }) => {
+export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, type, upFn, downFn, moveFn }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
     animateLayoutChanges: args => !args.isSorting || defaultAnimateLayoutChanges(args),
@@ -34,18 +37,66 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     transform: CSS.Transform.toString(transform),
     transition,
   };
+  const [isMenuEnabled, setIsMenuEnabled] = useState(false);
+
+  const toggleIsMenuEnabled = () => {
+    setIsMenuEnabled(prev => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setIsMenuEnabled(false);
+      }
+    };
+
+    const handleFocusOutside = (event: FocusEvent) => {
+      if (!event.relatedTarget || (ref.current && !ref.current.contains(event.relatedTarget as Node))) {
+        setIsMenuEnabled(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (ref.current && event.key === 'Escape') {
+        setIsMenuEnabled(false);
+        ref.current.focus();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('focusout', handleFocusOutside);
+    document.addEventListener('keydown', handleEscape);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('focusout', handleFocusOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
 
   return (
     <div
       className={classNames('component', isDragging ? 'dragging' : '')}
+      data-testid={`component-${component.id}`}
       style={style}
       ref={setNodeRef}
       {...attributes}
       {...listeners}
     >
       <div className="name">
-        <div className="grab">
-          <DragDrop />
+        <div ref={ref} className="grab" data-no-dnd="true">
+          <Button data-testid="activate-menu" type={ButtonType.Icon} onClick={toggleIsMenuEnabled}>
+            <DragDrop />
+          </Button>
+          {isMenuEnabled && (
+            <div data-testid="move-menu" className="move-menu">
+              <div className="move-menu-content">
+                <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
+                  <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
         {type === ComponentType.selected && !isDragging ? index + '. ' : ''}
         {component.name}

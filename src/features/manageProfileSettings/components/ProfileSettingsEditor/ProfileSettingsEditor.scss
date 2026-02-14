@@ -60,6 +60,28 @@
     &.dragging {
       opacity: 0.4;
     }
+
+    .move-menu {
+      display: block;
+      position: relative;
+
+      &-content {
+        position: absolute;
+        z-index: 2;
+        top: 13px;
+        left: -24px;
+        width: max-content;
+        padding: 7px;
+        border: 1px solid $gray-350;
+        background-color: $base;
+        box-shadow: $menu-drop-shadow;
+
+        button {
+          font-size: $font-md;
+          font-weight: 400;
+        }
+      }
+    }
   }
 
   .unused-components {

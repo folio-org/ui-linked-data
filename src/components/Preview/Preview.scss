@@ -1,3 +1,5 @@
+@use '@/common/styles/common.scss' as *;
+
 .preview-panel {
   padding: 0 0.938rem 0.75rem 0.938rem;
 
@@ -48,7 +50,7 @@
 
   .sub-heading {
     padding-bottom: 0.313rem;
-    font-size: 0.919rem;
+    font-size: $font-md;
   }
 }
 

@@ -153,6 +153,4 @@ describe('ProfileSettingsEditor', () => {
     expect(within(selected).getByText('1. Child B')).toBeInTheDocument();
     expect(screen.queryByText('ld.unusedComponents.allUsed')).not.toBeInTheDocument();
   });
-
-  // test actual drag and drop if feasible
 });

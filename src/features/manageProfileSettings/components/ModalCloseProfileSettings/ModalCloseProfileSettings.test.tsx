@@ -5,11 +5,13 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { useManageProfileSettingsState } from '@/store';
+import { useManageProfileSettingsState, useUIState } from '@/store';
 
 import { ModalCloseProfileSettings } from './ModalCloseProfileSettings';
 
 const mockUseNavigate = jest.fn();
+const mockSetIsManageProfileSettingsShowProfiles = jest.fn();
+const mockSetIsManageProfileSettingsShowEditor = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -57,7 +59,7 @@ describe('ModalCloseProfileSettings', () => {
   });
 
   it.skip('when closing view, save and continue saves and sets up view close', () => {
-    // TODO: saving not implemented, add test when save exists
+    // UILD-698: saving not implemented, add test when save exists
   });
 
   it('when changing profiles, continue without saving sets up next profile selection', async () => {
@@ -74,6 +76,13 @@ describe('ModalCloseProfileSettings', () => {
           setSelectedProfile: mockSetSelectedProfile,
         },
       },
+      {
+        store: useUIState,
+        state: {
+          setIsManageProfileSettingsShowEditor: mockSetIsManageProfileSettingsShowEditor,
+          setIsManageProfileSettingsShowProfiles: mockSetIsManageProfileSettingsShowProfiles,
+        },
+      },
     ]);
 
     renderComponent();
@@ -82,10 +91,12 @@ describe('ModalCloseProfileSettings', () => {
 
     await waitFor(() => {
       expect(mockSetSelectedProfile).toHaveBeenCalled();
+      expect(mockSetIsManageProfileSettingsShowEditor).toHaveBeenCalledWith(true);
+      expect(mockSetIsManageProfileSettingsShowProfiles).toHaveBeenCalledWith(false);
     });
   });
 
   it.skip('when changing profiles, save and continue saves and sets up next profile selection', () => {
-    // TODO: saving not implemented, add test when save exists
+    // UILD-698: saving not implemented, add test when save exists
   });
 });

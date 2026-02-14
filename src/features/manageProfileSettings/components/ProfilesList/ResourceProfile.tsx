@@ -17,20 +17,38 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
     'setSelectedProfile',
     'isModified',
   ]);
-  const { setIsManageProfileSettingsUnsavedModalOpen } = useUIState(['setIsManageProfileSettingsUnsavedModalOpen']);
+  const {
+    setIsManageProfileSettingsUnsavedModalOpen,
+    setIsManageProfileSettingsShowProfiles,
+    setIsManageProfileSettingsShowEditor,
+  } = useUIState([
+    'setIsManageProfileSettingsUnsavedModalOpen',
+    'setIsManageProfileSettingsShowProfiles',
+    'setIsManageProfileSettingsShowEditor',
+  ]);
 
   const handleClick = () => {
-    if (isModified) {
+    if (selected) {
+      setIsManageProfileSettingsShowProfiles(false);
+      setIsManageProfileSettingsShowEditor(true);
+    } else if (isModified) {
       setNextSelectedProfile(profile);
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
       setSelectedProfile(profile);
+      setIsManageProfileSettingsShowProfiles(false);
+      setIsManageProfileSettingsShowEditor(true);
     }
   };
 
   return (
     <div className={classNames('profile', selected ? 'selected' : '')}>
-      <Button type={ButtonType.ListItem} onClick={handleClick} label={profile.name} disabled={selected} />
+      <Button
+        data-testid="resource-profile-item"
+        type={ButtonType.ListItem}
+        onClick={handleClick}
+        label={profile.name}
+      />
     </div>
   );
 };
