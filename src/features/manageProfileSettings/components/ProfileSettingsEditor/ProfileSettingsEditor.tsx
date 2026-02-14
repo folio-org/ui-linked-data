@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { DndContext, DragOverlay, MeasuringStrategy, useSensor, useSensors } from '@dnd-kit/core';
+import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import classNames from 'classnames';
 
@@ -122,6 +123,16 @@ export const ProfileSettingsEditor = () => {
     startDrag,
   });
 
+  const chooseModifiers = () => {
+    if (fullProfile && activeId) {
+      const active = componentFromId(activeId, fullProfile);
+      if (active?.mandatory) {
+        return [restrictToParentElement];
+      }
+    }
+    return [];
+  };
+
   useEffect(() => {
     if (fullProfile && profileSettings) {
       const profileChildren = getProfileChildren(fullProfile);
@@ -161,6 +172,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
+          modifiers={chooseModifiers()}
           accessibility={{ announcements, screenReaderInstructions: { draggable: instructions } }}
         >
           <ComponentList

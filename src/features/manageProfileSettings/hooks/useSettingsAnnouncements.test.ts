@@ -121,6 +121,7 @@ describe('useSettingsAnnouncements', () => {
           {
             id: 'test:childB',
             name: 'B',
+            mandatory: false,
           },
         ],
       }),
@@ -143,6 +144,7 @@ describe('useSettingsAnnouncements', () => {
           {
             id: 'test:childB',
             name: 'B',
+            mandatory: false,
           },
         ],
       }),
@@ -165,6 +167,7 @@ describe('useSettingsAnnouncements', () => {
           {
             id: 'test:childB',
             name: 'B',
+            mandatory: false,
           },
         ],
       }),
@@ -187,6 +190,7 @@ describe('useSettingsAnnouncements', () => {
           {
             id: 'test:childB',
             name: 'B',
+            mandatory: false,
           },
         ],
       }),
