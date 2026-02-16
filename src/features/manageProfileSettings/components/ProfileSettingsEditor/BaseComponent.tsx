@@ -94,13 +94,13 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
           {isMenuEnabled && (
             <div data-testid="move-menu" className="move-menu">
               <div className="move-menu-content">
-                {!component.mandatory ? (
-                  <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
-                    <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
-                  </Button>
-                ) : (
+                {component.mandatory ? (
                   <Button type={ButtonType.Text} disabled={true}>
                     <FormattedMessage id="ld.moveUnavailable" />
+                  </Button>
+                ) : (
+                  <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
+                    <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
                   </Button>
                 )}
               </div>
