@@ -331,5 +331,5 @@
   "ld.moveToUnused": "Move to unused components",
   "ld.moveToSelected": "Move to selected components",
   "ld.moveUnavailable": "Required field, cannot move to unused",
-  "ld.requiredAnnotation": "(required field)"
+  "ld.requiredAnnotation": "required"
 }

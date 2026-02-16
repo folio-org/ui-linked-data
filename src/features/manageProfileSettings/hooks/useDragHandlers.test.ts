@@ -23,7 +23,7 @@ describe('useDragHandlers', () => {
   const mockSetSelected = jest.fn();
   const mockSetUnused = jest.fn();
 
-  const makeDragEvent = (hasOver: boolean, activeContainer: string, overContainer: string) => {
+  const makeDragEvent = (hasOver: boolean, mandatory: boolean, activeContainer: string, overContainer: string) => {
     const dragEvent = {
       active: {
         id: 'active',
@@ -31,6 +31,9 @@ describe('useDragHandlers', () => {
           current: {
             sortable: {
               containerId: activeContainer,
+            },
+            component: {
+              mandatory,
             },
           },
         },
@@ -81,7 +84,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragStart(
-      makeDragEvent(false, ComponentType.unused, ComponentType.selected) as unknown as DragStartEvent,
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.selected) as unknown as DragStartEvent,
     );
 
     expect(mockStartDrag).toHaveBeenCalled();
@@ -123,7 +126,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragOver(
-      makeDragEvent(true, ComponentType.unused, ComponentType.selected) as unknown as DragOverEvent,
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.selected) as unknown as DragOverEvent,
     );
 
     expect(mockMoveUnusedToSelected).toHaveBeenCalled();
@@ -145,7 +148,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragOver(
-      makeDragEvent(true, ComponentType.selected, ComponentType.unused) as unknown as DragOverEvent,
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.unused) as unknown as DragOverEvent,
     );
 
     expect(mockMoveSelectedToUnused).toHaveBeenCalled();
@@ -167,7 +170,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragOver(
-      makeDragEvent(true, ComponentType.selected, ComponentType.selected) as unknown as DragOverEvent,
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.selected) as unknown as DragOverEvent,
     );
 
     expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
@@ -190,7 +193,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragOver(
-      makeDragEvent(true, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
     );
 
     expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
@@ -213,7 +216,30 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragOver(
-      makeDragEvent(false, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
+    expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
+  });
+
+  it('does not switch from selected to unused when component is mandatory', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        unused: [],
+        selected: [],
+        startingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+        setSelected: mockSetSelected,
+        setUnused: mockSetUnused,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(false, true, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
     );
 
     expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
@@ -236,7 +262,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragEnd(
-      makeDragEvent(true, ComponentType.selected, ComponentType.selected) as unknown as DragEndEvent,
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.selected) as unknown as DragEndEvent,
     );
 
     expect(mockSetSelected).toHaveBeenCalled();
@@ -258,7 +284,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragEnd(
-      makeDragEvent(true, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
     );
 
     expect(mockSetUnused).toHaveBeenCalled();
@@ -280,7 +306,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragEnd(
-      makeDragEvent(false, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
     );
 
     expect(mockSetSelected).not.toHaveBeenCalled();

@@ -18,8 +18,9 @@ export {
   useSettingsAnnouncements,
 } from './hooks';
 export {
-  componentFromId,
   childrenDifference,
+  chooseModifiers,
+  componentFromId,
   getProfileChildren,
   getSettingsChildren,
   FilteredKeyboardSensor,
