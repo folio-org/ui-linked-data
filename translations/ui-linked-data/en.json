@@ -329,5 +329,6 @@
   "ld.importHub.fetchingFromUri": "Fetching hub from {uri}...",
   "ld.profileSettings.announce.instructions": "To pick up a component, press space or enter.  While dragging, use the arrow keys to move the component either up and down within each list or left and right to the other list. Press space or enter again to drop the component in its new position, or press escape to cancel.",
   "ld.moveToUnused": "Move to unused components",
-  "ld.moveToSelected": "Move to selected components"
+  "ld.moveToSelected": "Move to selected components",
+  "ld.authorities": "Authorities"
 }
