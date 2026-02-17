@@ -1,13 +1,8 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import classNames from 'classnames';
-
-import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { Loading } from '@/components/Loading';
-import { Modal } from '@/components/Modal';
-
-import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
+import { LookupModal } from '@/features/complexLookup/components/LookupModal';
+import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
   useAuthoritiesModalLogic,
@@ -15,7 +10,7 @@ import {
   useComplexLookupModalState,
   useHubsModalLogic,
 } from '@/features/complexLookup/hooks';
-import { AuthoritiesResultList, HubsLookupResultList, SOURCE_OPTIONS } from '@/features/search/ui';
+import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
 interface SubjectModalProps {
@@ -77,107 +72,64 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   });
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleModalClose}
-      title={<FormattedMessage id="ld.assignSubject" />}
-      titleClassName="modal-complex-lookup-title"
-      className={classNames(['modal-complex-lookup', IS_EMBEDDED_MODE && 'modal-complex-lookup-embedded'])}
-      classNameHeader={classNames([
-        'modal-complex-lookup-header',
-        IS_EMBEDDED_MODE && 'modal-complex-lookup-header-embedded',
-      ])}
-      showModalControls={false}
-    >
-      <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">
-        <Search
-          segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
-          defaultSegment={`authorities:${initialSegment}`}
-          flow="value"
-          mode="custom"
-        >
-          <Search.Controls>
-            <Search.Controls.SegmentGroup>
-              <Search.Controls.Segment
-                path="authorities"
-                defaultTo="authorities:browse"
-                labelId="ld.authorities"
-                onAfterChange={authoritiesData.onSegmentEnter}
-              />
-              <Search.Controls.Segment path="hubsLookup" labelId="ld.hubs" onBeforeChange={handleResetMarcPreview} />
-            </Search.Controls.SegmentGroup>
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.assignSubject" />}>
+      <Search
+        segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
+        defaultSegment={`authorities:${initialSegment}`}
+        flow="value"
+        mode="custom"
+      >
+        <Search.Controls>
+          <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment
+              path="authorities"
+              defaultTo="authorities:browse"
+              labelId="ld.authorities"
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+            <Search.Controls.Segment path="hubsLookup" labelId="ld.hubs" onBeforeChange={handleResetMarcPreview} />
+          </Search.Controls.SegmentGroup>
 
-            <Search.Controls.SegmentGroup parentPath="authorities">
-              <Search.Controls.Segment
-                path="authorities:search"
-                labelId="ld.search"
-                onAfterChange={authoritiesData.onSegmentEnter}
-              />
-              <Search.Controls.Segment
-                path="authorities:browse"
-                labelId="ld.browse"
-                onAfterChange={authoritiesData.onSegmentEnter}
-              />
-            </Search.Controls.SegmentGroup>
+          <Search.Controls.SegmentGroup parentPath="authorities">
+            <Search.Controls.Segment
+              path="authorities:search"
+              labelId="ld.search"
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+            <Search.Controls.Segment
+              path="authorities:browse"
+              labelId="ld.browse"
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+          </Search.Controls.SegmentGroup>
 
-            <Search.Controls.InputsWrapper />
-            <Search.Controls.SubmitButton />
-            <Search.Controls.MetaControls />
+          <Search.Controls.InputsWrapper />
+          <Search.Controls.SubmitButton />
+          <Search.Controls.MetaControls />
 
-            <Search.Controls.SegmentContent segment="hubsLookup">
-              <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
-            </Search.Controls.SegmentContent>
-          </Search.Controls>
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+          </Search.Controls.SegmentContent>
+        </Search.Controls>
 
-          <Search.Content>
-            <Search.Controls.SegmentContent segment="authorities" matchPrefix>
-              {!isMarcPreviewOpen && (
-                <>
-                  <Search.ControlPane label={<FormattedMessage id="ld.marcAuthority" />} />
-                  <Search.ContentContainer>
-                    <Search.Results>
-                      <AuthoritiesResultList
-                        context="complexLookup"
-                        onAssign={handleAuthoritiesAssign}
-                        onTitleClick={handleTitleClick}
-                        checkFailedId={checkFailedId}
-                      />
-                      <Search.Results.Pagination />
-                    </Search.Results>
-                  </Search.ContentContainer>
-                </>
-              )}
+        <Search.Content>
+          <Search.Controls.SegmentContent segment="authorities" matchPrefix>
+            <AuthoritiesContent
+              isMarcPreviewOpen={isMarcPreviewOpen}
+              isMarcLoading={isMarcLoading}
+              handleAuthoritiesAssign={handleAuthoritiesAssign}
+              handleTitleClick={handleTitleClick}
+              handleCloseMarcPreview={handleCloseMarcPreview}
+              checkFailedId={checkFailedId}
+              hasComplexFlow={hasComplexFlow}
+            />
+          </Search.Controls.SegmentContent>
 
-              {isMarcPreviewOpen && (
-                <>
-                  {isMarcLoading && <Loading />}
-                  {!isMarcLoading && (
-                    <MarcPreview
-                      onClose={handleCloseMarcPreview}
-                      onAssign={hasComplexFlow ? handleAuthoritiesAssign : undefined}
-                      checkFailedId={checkFailedId}
-                    />
-                  )}
-                </>
-              )}
-            </Search.Controls.SegmentContent>
-
-            <Search.Controls.SegmentContent segment="hubsLookup">
-              <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} showSubLabel={true} />
-              <Search.ContentContainer>
-                {isHubAssigning && <Loading />}
-
-                {!isHubAssigning && (
-                  <Search.Results>
-                    <HubsLookupResultList context="complexLookup" onAssign={handleHubAssign} />
-                    <Search.Results.Pagination />
-                  </Search.Results>
-                )}
-              </Search.ContentContainer>
-            </Search.Controls.SegmentContent>
-          </Search.Content>
-        </Search>
-      </div>
-    </Modal>
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <HubsContent isAssigning={isHubAssigning} handleHubAssign={handleHubAssign} />
+          </Search.Controls.SegmentContent>
+        </Search.Content>
+      </Search>
+    </LookupModal>
   );
 };
