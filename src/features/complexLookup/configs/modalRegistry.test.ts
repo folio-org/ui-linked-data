@@ -1,5 +1,6 @@
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
 import { HubsModal } from '../components/modals/HubsModal';
+import { SubjectModal } from '../components/modals/SubjectModal';
 import { ComplexLookupType } from '../constants/complexLookup.constants';
 import { COMPLEX_LOOKUP_MODAL_REGISTRY, getButtonLabel, getModalConfig } from './modalRegistry';
 
@@ -9,6 +10,10 @@ jest.mock('../components/modals/AuthoritiesModal', () => ({
 
 jest.mock('../components/modals/HubsModal', () => ({
   HubsModal: jest.fn(() => null),
+}));
+
+jest.mock('../components/modals/SubjectModal', () => ({
+  SubjectModal: jest.fn(() => null),
 }));
 
 describe('modalRegistry', () => {
@@ -32,6 +37,14 @@ describe('modalRegistry', () => {
       const config = COMPLEX_LOOKUP_MODAL_REGISTRY[ComplexLookupType.Authorities];
 
       expect(config.component).toBe(AuthoritiesModal);
+      expect(config.defaultProps).toEqual({ initialSegment: 'browse' });
+      expect(config.labels.button.base).toBe('ld.assignAuthority');
+    });
+
+    it('configures SubjectModal with correct properties', () => {
+      const config = COMPLEX_LOOKUP_MODAL_REGISTRY[ComplexLookupType.AuthoritiesSubject];
+
+      expect(config.component).toBe(SubjectModal);
       expect(config.defaultProps).toEqual({ initialSegment: 'browse' });
       expect(config.labels.button.base).toBe('ld.assignAuthority');
     });

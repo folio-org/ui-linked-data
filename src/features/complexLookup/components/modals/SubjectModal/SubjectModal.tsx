@@ -124,7 +124,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           </Search.Controls.SegmentContent>
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <HubsContent onAssign={onAssign} onClose={onClose} />
+            <HubsContent onAssign={onAssign} onClose={handleModalClose} />
           </Search.Controls.SegmentContent>
         </Search.Content>
       </Search>
