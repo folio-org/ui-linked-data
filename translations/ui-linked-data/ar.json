@@ -320,5 +320,13 @@
     "ld.setDefaultTypeProfile": "Set as my default {type} profile",
     "ld.profileSettings.announce.movedToSelected": "{name} moved to selected components. Position {order} in list.",
     "ld.profileSettings.announce.movedToUnused": "{name} moved to unused components.",
-    "ld.profileSettings.announce.reorderedSelected": "{name} moved to position {order} in list."
+    "ld.profileSettings.announce.reorderedSelected": "{name} moved to position {order} in list.",
+    "ld.aria.hubImport.close": "Close hub import preview page",
+    "ld.importHub.header.title": "Import hub - {title}",
+    "ld.importHub.fetchingFromUri": "Fetching hub from {uri}...",
+    "ld.importAssign": "Import/Assign",
+    "ld.errorImportingHub": "Error importing hub. Please try again.",
+    "ld.profileSettings.announce.instructions": "To pick up a component, press space or enter.  While dragging, use the arrow keys to move the component either up and down within each list or left and right to the other list. Press space or enter again to drop the component in its new position, or press escape to cancel.",
+    "ld.moveToUnused": "Move to unused components",
+    "ld.moveToSelected": "Move to selected components"
 }
