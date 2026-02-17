@@ -70,7 +70,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   });
 
   return (
-    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.assignSubject" />}>
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.searchSubjectAuthority" />}>
       <Search
         segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
         defaultSegment={`authorities:${initialSegment}`}
