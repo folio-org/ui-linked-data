@@ -8,7 +8,6 @@ import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,
   useComplexLookupModalState,
-  useHubsModalLogic,
 } from '@/features/complexLookup/hooks';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
@@ -24,6 +23,10 @@ interface SubjectModalProps {
   onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
 }
 
+/**
+ * SubjectModal - Modal wrapper for Subject lookup using new Search feature.
+ * Supports both Authority lookup (search/browse with MARC preview) and Hub lookup (with import-on-assign).
+ */
 export const SubjectModal: FC<SubjectModalProps> = ({
   isOpen,
   onClose,
@@ -59,11 +62,6 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     onAssign,
     onClose,
     isOpen,
-  });
-
-  const { handleHubAssign, isAssigning: isHubAssigning } = useHubsModalLogic({
-    onAssign,
-    onClose,
   });
 
   const { handleModalClose } = useComplexLookupModalCleanup({
@@ -126,7 +124,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           </Search.Controls.SegmentContent>
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <HubsContent isAssigning={isHubAssigning} handleHubAssign={handleHubAssign} />
+            <HubsContent onAssign={onAssign} onClose={onClose} />
           </Search.Controls.SegmentContent>
         </Search.Content>
       </Search>

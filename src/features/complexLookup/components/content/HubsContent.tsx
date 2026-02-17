@@ -3,12 +3,13 @@ import { FormattedMessage } from 'react-intl';
 
 import { Loading } from '@/components/Loading';
 
+import { useHubsModalLogic } from '@/features/complexLookup/hooks';
 import { HubsLookupResultList } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
 interface HubsContentProps {
-  isAssigning: boolean;
-  handleHubAssign: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
+  onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
+  onClose: VoidFunction;
 }
 
 /**
@@ -16,7 +17,9 @@ interface HubsContentProps {
  * Handles hubs results list with loading state during assignment.
  * Must be rendered inside a Search context.
  */
-export const HubsContent: FC<HubsContentProps> = ({ isAssigning, handleHubAssign }) => {
+export const HubsContent: FC<HubsContentProps> = ({ onAssign, onClose }) => {
+  const { handleHubAssign, isAssigning } = useHubsModalLogic({ onAssign, onClose });
+
   return (
     <>
       <Search.ControlPane label={<FormattedMessage id="ld.hubs" />} showSubLabel={true} />

@@ -82,6 +82,7 @@
 * Create a preview screen when importing a new Hub. Refs [UILD-725].
 * Add Continue button behavior at Hub preview screen. Refs [UILD-726].
 * Update custom settings toggle behavior. Refs [UILD-727].
+* Add possibility to assign Hubs as Subjects. Refs [UILD-711].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -163,6 +164,7 @@
 [UILD-725]:https://folio-org.atlassian.net/browse/UILD-725
 [UILD-726]:https://folio-org.atlassian.net/browse/UILD-726
 [UILD-727]:https://folio-org.atlassian.net/browse/UILD-727
+[UILD-711]:https://folio-org.atlassian.net/browse/UILD-711
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

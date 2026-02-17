@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import { useComplexLookupModalState, useHubsModalLogic } from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -27,12 +27,6 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
     defaultSource: 'libraryOfCongress',
   });
 
-  // Hub-specific logic (assignment with import-on-assign)
-  const { handleHubAssign, isAssigning } = useHubsModalLogic({
-    onAssign,
-    onClose,
-  });
-
   return (
     <LookupModal isOpen={isOpen} onClose={onClose} title={<FormattedMessage id="ld.hubs.assign" />}>
       <Search
@@ -51,7 +45,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
         </Search.Controls>
 
         <Search.Content>
-          <HubsContent isAssigning={isAssigning} handleHubAssign={handleHubAssign} />
+          <HubsContent onAssign={onAssign} onClose={onClose} />
         </Search.Content>
       </Search>
     </LookupModal>
