@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
@@ -10,15 +10,12 @@ import { Modal } from '@/components/Modal';
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
-  useAuthoritiesMarcPreview,
-  useAuthoritiesSegmentData,
+  useAuthoritiesModalLogic,
+  useComplexLookupModalCleanup,
   useComplexLookupModalState,
 } from '@/features/complexLookup/hooks';
-import { useAuthoritiesAssignment } from '@/features/complexLookup/hooks/useAuthoritiesAssignment';
 import { AuthoritiesResultList } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
-
-import { useMarcPreviewState, useUIState } from '@/store';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;
@@ -44,16 +41,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   modalConfig,
   onAssign,
 }) => {
-  const { isMarcPreviewOpen, setIsMarcPreviewOpen } = useUIState(['isMarcPreviewOpen', 'setIsMarcPreviewOpen']);
-  const { resetComplexValue: resetMarcPreviewData, resetMetadata: resetMarcPreviewMetadata } = useMarcPreviewState([
-    'resetComplexValue',
-    'resetMetadata',
-  ]);
-
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
-  const marcPreviewEndpoint = modalConfig?.api?.endpoints?.marcPreview;
-  const sourceEndpoint = modalConfig?.api?.endpoints?.source;
-  const facetsEndpoint = modalConfig?.api?.endpoints?.facets;
 
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
@@ -62,75 +50,30 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     defaultSegment: `authorities:${initialSegment}`,
   });
 
-  // Load source/facets on segment toggle and initial load
-  const authoritiesData = useAuthoritiesSegmentData({
-    sourceEndpoint,
-    facetsEndpoint,
-    facet: 'sourceFileId',
-    autoLoadOnMount: true,
+  // Authorities-specific logic (MARC preview, data loading, assignment)
+  const {
+    isMarcPreviewOpen,
+    isMarcLoading,
+    authoritiesData,
+    handleTitleClick,
+    handleAuthoritiesAssign,
+    handleCloseMarcPreview,
+    checkFailedId,
+    cleanup,
+  } = useAuthoritiesModalLogic({
+    entry,
+    lookupContext,
+    modalConfig,
+    onAssign,
+    onClose,
     isOpen,
   });
 
-  // Handle MARC preview loading and state management
-  const { loadMarcData, resetPreview, isLoading } = useAuthoritiesMarcPreview({
-    endpointUrl: marcPreviewEndpoint || '',
-    isMarcPreviewOpen,
+  // Modal cleanup handler
+  const { handleModalClose } = useComplexLookupModalCleanup({
+    onClose,
+    withMarcPreview: cleanup,
   });
-
-  // Cleanup and close handler after successful assignment
-  const handleSuccessfulAssignment = useCallback(
-    (value: UserValueContents | ComplexLookupAssignRecordDTO) => {
-      resetPreview();
-      setIsMarcPreviewOpen(false);
-      onAssign(value);
-      onClose();
-    },
-    [resetPreview, setIsMarcPreviewOpen, onAssign, onClose],
-  );
-
-  // Complex assignment validation hook
-  const assignmentHook = useAuthoritiesAssignment({
-    entry: entry || ({} as SchemaEntry),
-    lookupContext: lookupContext || '',
-    modalConfig: modalConfig || ({} as ModalConfig),
-    onAssignSuccess: handleSuccessfulAssignment,
-    enabled: hasComplexFlow,
-  });
-
-  // Wrapper to handle opening the preview modal
-  const handleTitleClick = useCallback(
-    (id: string, title?: string, headingType?: string) => {
-      loadMarcData(id, title, headingType);
-      setIsMarcPreviewOpen(true);
-    },
-    [loadMarcData, setIsMarcPreviewOpen],
-  );
-
-  const handleAssignClick = useCallback(
-    async (record: ComplexLookupAssignRecordDTO) => {
-      if (hasComplexFlow && assignmentHook) {
-        // Complex flow with validation
-        await assignmentHook.handleAssign(record);
-      } else {
-        // Simple flow
-        handleSuccessfulAssignment(record);
-      }
-    },
-    [hasComplexFlow, assignmentHook, handleSuccessfulAssignment],
-  );
-
-  const handleCloseMarcPreview = useCallback(() => {
-    resetPreview();
-    setIsMarcPreviewOpen(false);
-  }, [resetPreview, setIsMarcPreviewOpen]);
-
-  const handleModalClose = useCallback(() => {
-    setIsMarcPreviewOpen(false);
-    resetMarcPreviewData();
-    resetMarcPreviewMetadata();
-    resetPreview();
-    onClose();
-  }, [setIsMarcPreviewOpen, resetMarcPreviewData, resetMarcPreviewMetadata, resetPreview, onClose]);
 
   return (
     <Modal
@@ -181,9 +124,9 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
                   <Search.Results>
                     <AuthoritiesResultList
                       context="complexLookup"
-                      onAssign={handleAssignClick}
+                      onAssign={handleAuthoritiesAssign}
                       onTitleClick={handleTitleClick}
-                      checkFailedId={assignmentHook?.checkFailedId}
+                      checkFailedId={checkFailedId}
                     />
                     <Search.Results.Pagination />
                   </Search.Results>
@@ -194,12 +137,12 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
             {/* MARC Preview */}
             {isMarcPreviewOpen && (
               <>
-                {isLoading && <Loading />}
-                {!isLoading && (
+                {isMarcLoading && <Loading />}
+                {!isMarcLoading && (
                   <MarcPreview
                     onClose={handleCloseMarcPreview}
-                    onAssign={hasComplexFlow ? handleAssignClick : undefined}
-                    checkFailedId={assignmentHook?.checkFailedId}
+                    onAssign={hasComplexFlow ? handleAuthoritiesAssign : undefined}
+                    checkFailedId={checkFailedId}
                   />
                 )}
               </>

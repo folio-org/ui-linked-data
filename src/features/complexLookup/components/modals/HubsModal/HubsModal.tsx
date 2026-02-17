@@ -1,4 +1,4 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
@@ -7,8 +7,7 @@ import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
 import { Loading } from '@/components/Loading';
 import { Modal } from '@/components/Modal';
 
-import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
-import { useHubAssignment } from '@/features/complexLookup/hooks/useHubAssignment';
+import { useComplexLookupModalState, useHubsModalLogic } from '@/features/complexLookup/hooks';
 import { HubsLookupResultList, SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -32,16 +31,10 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
     defaultSource: 'libraryOfCongress',
   });
 
-  const handleSuccessfulAssignment = useCallback(
-    (value: UserValueContents) => {
-      onAssign(value);
-      onClose();
-    },
-    [onAssign, onClose],
-  );
-
-  const { handleAssign, isAssigning } = useHubAssignment({
-    onAssignSuccess: handleSuccessfulAssignment,
+  // Hub-specific logic (assignment with import-on-assign)
+  const { handleHubAssign, isAssigning } = useHubsModalLogic({
+    onAssign,
+    onClose,
   });
 
   return (
@@ -81,7 +74,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
 
               {!isAssigning && (
                 <Search.Results>
-                  <HubsLookupResultList context="complexLookup" onAssign={handleAssign} />
+                  <HubsLookupResultList context="complexLookup" onAssign={handleHubAssign} />
                   <Search.Results.Pagination />
                 </Search.Results>
               )}
