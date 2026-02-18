@@ -47,4 +47,5 @@ type ProfileSettingsWithDrift = ProfileSettings & ProfileSettingsDrift;
 type ProfileSettingComponent = {
   id: string;
   name: string;
+  mandatory: boolean;
 };
