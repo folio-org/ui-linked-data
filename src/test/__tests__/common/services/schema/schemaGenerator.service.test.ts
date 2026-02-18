@@ -335,7 +335,6 @@ describe('SchemaGeneratorService', () => {
         });
       });
 
-      //
       it('active settings with all children and no drift have settings visibility and no drift', () => {
         const settings = {
           active: true,
@@ -369,8 +368,7 @@ describe('SchemaGeneratorService', () => {
         });
       });
 
-      //
-      it('active settings with some children and some drift have settings visbility and some drift', () => {
+      it('active settings with some children and some drift have settings visibility and some drift', () => {
         const settings = {
           active: true,
           children: [
