@@ -4,17 +4,21 @@ import { Active, Over, UniqueIdentifier } from '@dnd-kit/core';
 
 import { useManageProfileSettingsState } from '@/store';
 
-interface UseMoveBetweenListsParams {
-  unused: ProfileSettingComponent[];
-  selected: ProfileSettingComponent[];
-  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
-  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
-}
-
-export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }: UseMoveBetweenListsParams) => {
-  const { setIsModified, setIsSettingsActive } = useManageProfileSettingsState([
+export const useMoveBetweenLists = () => {
+  const {
+    unusedComponents,
+    selectedComponents,
+    setIsModified,
+    setIsSettingsActive,
+    setUnusedComponents,
+    setSelectedComponents,
+  } = useManageProfileSettingsState([
+    'unusedComponents',
+    'selectedComponents',
     'setIsModified',
     'setIsSettingsActive',
+    'setUnusedComponents',
+    'setSelectedComponents',
   ]);
 
   const moveBetweenLists = (
@@ -61,16 +65,30 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
   };
 
   const moveUnusedToSelected = (active: Active, over: Over) => {
-    moveBetweenLists(setUnused, setSelected, unused, selected, active.id, over.id);
+    moveBetweenLists(
+      setUnusedComponents,
+      setSelectedComponents,
+      unusedComponents,
+      selectedComponents,
+      active.id,
+      over.id,
+    );
   };
 
   const moveSelectedToUnused = (active: Active, over: Over) => {
-    moveBetweenLists(setSelected, setUnused, selected, unused, active.id, over.id);
+    moveBetweenLists(
+      setSelectedComponents,
+      setUnusedComponents,
+      selectedComponents,
+      unusedComponents,
+      active.id,
+      over.id,
+    );
   };
 
   const makeMoveComponentIdToSelected = (id: string) => {
     return () => {
-      moveBetweenLists(setUnused, setSelected, unused, selected, id, null);
+      moveBetweenLists(setUnusedComponents, setSelectedComponents, unusedComponents, selectedComponents, id, null);
       setIsModified(true);
       setIsSettingsActive(true);
     };
@@ -78,7 +96,7 @@ export const useMoveBetweenLists = ({ unused, selected, setUnused, setSelected }
 
   const makeMoveComponentIdToUnused = (id: string) => {
     return () => {
-      moveBetweenLists(setSelected, setUnused, selected, unused, id, null);
+      moveBetweenLists(setSelectedComponents, setUnusedComponents, selectedComponents, unusedComponents, id, null);
       setIsModified(true);
       setIsSettingsActive(true);
     };
