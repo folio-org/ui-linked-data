@@ -69,7 +69,6 @@ export const ComplexLookupField: FC<Props> = ({ value = undefined, id, entry, on
       isOpen: isModalOpen,
       onClose: handleCloseModal,
       onAssign: handleAssign,
-      initialQuery: localValue?.[0]?.label,
       assignedValue: localValue?.[0],
       ...modalDefaultProps,
     };

@@ -7,6 +7,7 @@ import {
   SOURCE_TYPES,
   VALUE_DIVIDER,
 } from '@/features/complexLookup/constants/complexLookup.constants';
+import { SourceType } from '@/features/complexLookup/types';
 
 export const generateEmptyValueUuid = (uuid: string) => `${uuid}_${EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
 
@@ -99,6 +100,6 @@ export const formatComplexLookupDisplayValue = (values?: UserValueContents[]) =>
     .join(VALUE_DIVIDER);
 };
 
-export const getDefaultHubSource = (assignedValue?: UserValueContents) => {
-  return assignedValue?.meta?.sourceType || SOURCE_TYPES.LIBRARY_OF_CONGRESS;
+export const getDefaultHubSource = (assignedValue?: UserValueContents): SourceType => {
+  return (assignedValue?.meta?.sourceType as SourceType) || SOURCE_TYPES.LIBRARY_OF_CONGRESS;
 };

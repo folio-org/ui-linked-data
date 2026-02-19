@@ -14,8 +14,8 @@ import { Search } from '@/features/search/ui/components/Search';
 interface AuthoritiesModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  initialQuery?: string;
   initialSegment?: 'search' | 'browse';
+  assignedValue?: UserValueContents;
   entry?: SchemaEntry;
   lookupContext?: string;
   modalConfig?: ModalConfig;
@@ -28,8 +28,8 @@ interface AuthoritiesModalProps {
 export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   isOpen,
   onClose,
-  initialQuery,
   initialSegment = 'browse',
+  assignedValue,
   entry,
   lookupContext,
   modalConfig,
@@ -40,7 +40,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
     isOpen,
-    initialQuery,
+    assignedValue,
     defaultSegment: `authorities:${initialSegment}`,
   });
 

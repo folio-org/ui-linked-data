@@ -17,7 +17,6 @@ import { Search } from '@/features/search/ui/components/Search';
 interface SubjectModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  initialQuery?: string;
   initialSegment?: 'search' | 'browse';
   assignedValue?: UserValueContents;
   entry?: SchemaEntry;
@@ -33,7 +32,6 @@ interface SubjectModalProps {
 export const SubjectModal: FC<SubjectModalProps> = ({
   isOpen,
   onClose,
-  initialQuery,
   initialSegment = 'browse',
   assignedValue,
   entry,
@@ -49,7 +47,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
 
   useComplexLookupModalState({
     isOpen,
-    initialQuery,
+    assignedValue,
     defaultSegment,
     ...(defaultSource ? { defaultSource } : {}),
   });

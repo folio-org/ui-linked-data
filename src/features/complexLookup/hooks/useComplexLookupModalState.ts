@@ -4,22 +4,23 @@ import { useSearchState } from '@/store';
 
 interface UseComplexLookupModalStateParams {
   isOpen: boolean;
-  initialQuery?: string;
+  assignedValue?: UserValueContents;
   defaultSegment: string;
   defaultSource?: string;
 }
 
 /**
  * Custom hook to manage search state lifecycle for complex lookup modals.
- * Resets all search state when modal opens and sets initial query if provided.
+ * Resets all search state when modal opens and sets initial query from assignedValue if provided.
  * This ensures each modal starts with a clean state regardless of previous modal usage.
  */
 export function useComplexLookupModalState({
   isOpen,
-  initialQuery,
+  assignedValue,
   defaultSegment,
   defaultSource,
 }: UseComplexLookupModalStateParams) {
+  const initialQuery = assignedValue?.label;
   const {
     setQuery,
     resetQuery,

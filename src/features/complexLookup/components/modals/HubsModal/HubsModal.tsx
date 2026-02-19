@@ -11,7 +11,6 @@ import { Search } from '@/features/search/ui/components/Search';
 interface HubsModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  initialQuery?: string;
   assignedValue?: UserValueContents;
   onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
 }
@@ -20,13 +19,13 @@ interface HubsModalProps {
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
  * Supports import-on-assign for external hubs.
  */
-export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, assignedValue, onAssign }) => {
+export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
   const defaultSource = getDefaultHubSource(assignedValue);
 
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
     isOpen,
-    initialQuery,
+    assignedValue,
     defaultSegment: 'hubsLookup',
     defaultSource,
   });
