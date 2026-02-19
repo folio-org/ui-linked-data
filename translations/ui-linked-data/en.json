@@ -53,6 +53,7 @@
   "ld.preview": "Preview",
   "ld.confirmCloseRd": "Do you really want to close the resource description? All unsaved changes will be lost.",
   "ld.confirmDeleteRd": "Do you really want to delete the resource description?",
+  "ld.save": "Save",
   "ld.saveClose": "Save and close",
   "ld.close": "Close",
   "ld.delete": "Delete",
@@ -329,5 +330,8 @@
   "ld.importHub.fetchingFromUri": "Fetching hub from {uri}...",
   "ld.profileSettings.announce.instructions": "To pick up a component, press space or enter.  While dragging, use the arrow keys to move the component either up and down within each list or left and right to the other list. Press space or enter again to drop the component in its new position, or press escape to cancel.",
   "ld.moveToUnused": "Move to unused components",
-  "ld.moveToSelected": "Move to selected components"
+  "ld.moveToSelected": "Move to selected components",
+  "ld.error.saveProfileSettings": "Error saving profile settings",
+  "ld.profileComponentsDeselected": "Profile components deselected",
+  "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?"
 }

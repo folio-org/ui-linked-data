@@ -2,21 +2,44 @@ import { memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import { ROUTES } from '@/common/constants/routes.constants';
+import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Button, ButtonType } from '@/components/Button';
 
-import { useManageProfileSettingsState } from '@/store';
+import { useManageProfileSettingsState, useUIState } from '@/store';
+
+import { useSaveProfileSettings } from '../../hooks';
 
 import './ManageProfileSettingsControls.scss';
 
 export const ManageProfileSettingsControls = memo(() => {
   const navigate = useNavigate();
-  const { isModified } = useManageProfileSettingsState(['isModified']);
+  const searchResultsUri = useBackToSearchUri();
+  const { unusedComponents, isModified, setIsClosingNext } = useManageProfileSettingsState([
+    'unusedComponents',
+    'isModified',
+    'setIsClosingNext',
+  ]);
+  const { saveSettings } = useSaveProfileSettings();
+  const { setIsManageProfileSettingsUnusedComponentsModalOpen } = useUIState([
+    'setIsManageProfileSettingsUnusedComponentsModalOpen',
+  ]);
 
-  // placeholders
-  const handleButtonClick = () => {};
-  const handleButtonClickAndClose = () => {
-    navigate(ROUTES.SEARCH.uri);
+  const handleButtonClick = async () => {
+    if (unusedComponents.length > 0) {
+      setIsManageProfileSettingsUnusedComponentsModalOpen(true);
+    } else {
+      await saveSettings();
+    }
+  };
+
+  const handleButtonClickAndClose = async () => {
+    if (unusedComponents.length > 0) {
+      setIsClosingNext(true);
+      setIsManageProfileSettingsUnusedComponentsModalOpen(true);
+    } else {
+      await saveSettings();
+      navigate(searchResultsUri);
+    }
   };
 
   return (

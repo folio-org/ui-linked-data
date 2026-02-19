@@ -58,9 +58,7 @@ describe('ModalCloseProfileSettings', () => {
     });
   });
 
-  it.skip('when closing view, save and continue saves and sets up view close', () => {
-    // UILD-698: saving not implemented, add test when save exists
-  });
+  it('when closing view, save and continue saves and sets up view close', () => {});
 
   it('when changing profiles, continue without saving sets up next profile selection', async () => {
     setInitialGlobalState([
@@ -96,7 +94,5 @@ describe('ModalCloseProfileSettings', () => {
     });
   });
 
-  it.skip('when changing profiles, save and continue saves and sets up next profile selection', () => {
-    // UILD-698: saving not implemented, add test when save exists
-  });
+  it('when changing profiles, save and continue saves and sets up next profile selection', () => {});
 });
