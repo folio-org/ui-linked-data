@@ -1,8 +1,7 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { ensureArray } from '@/common/helpers/common.helper';
 import { getLookupLabelKey } from '@/common/helpers/schema.helper';
-
-import { LOOKUP_TYPES, SOURCE_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 
 const getHubSourceType = (hasRdfLink: boolean, hasHubId: boolean): string | undefined => {
   if (hasRdfLink) return SOURCE_TYPES.LIBRARY_OF_CONGRESS;

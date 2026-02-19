@@ -32,16 +32,6 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
 export const EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX = 'empty';
 export const VALUE_DIVIDER = ' ,';
 
-export const LOOKUP_TYPES = {
-  AUTHORITIES: 'authorities',
-  HUBS: 'hubs',
-} as const;
-
-export const SOURCE_TYPES = {
-  LOCAL: 'local',
-  LIBRARY_OF_CONGRESS: 'libraryOfCongress',
-} as const;
-
 export enum Authority {
   Creator = 'creator',
   Subject = 'subject',

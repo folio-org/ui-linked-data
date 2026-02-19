@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
+
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
-import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,

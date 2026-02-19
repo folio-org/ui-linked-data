@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-
-import { LOOKUP_TYPES, SOURCE_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 
 import { useStatusState } from '@/store';
 
