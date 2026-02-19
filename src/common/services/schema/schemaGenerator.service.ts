@@ -203,8 +203,14 @@ export class SchemaGeneratorService implements ISchemaGenerator {
       return true;
     }
 
+    // Bypass setting if mandatory
+    const profileNode = this.profile.find(child => child.id === nodeId);
+    if (profileNode?.constraints?.mandatory) {
+      return true;
+    }
+
     const setting = this.settings.children?.find(child => child.id === nodeId);
-    return setting ? setting.visible : true;
+    return setting?.visible ?? true;
   }
 
   private hasProfileSettingsDrift(nodeId: string) {

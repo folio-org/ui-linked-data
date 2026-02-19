@@ -77,12 +77,49 @@ describe('children', () => {
       expect(component).toBeDefined();
       expect(component?.id).toBe('test:childA');
       expect(component?.name).toBe('A');
+      expect(component?.mandatory).toBe(false);
     });
 
     it('generates a component with a blank label for an unrecognized ID', () => {
       const component = componentFromId('test:unknown', profile);
 
       expect(component).not.toBeDefined();
+    });
+
+    it('follows profile constraint mandatory value', () => {
+      const profileWithConstraints = [
+        {
+          id: 'test:block',
+          displayName: 'Test Profile',
+          type: AdvancedFieldType.block,
+          children: ['test:childA', 'test:childB'],
+        },
+        {
+          id: 'test:childA',
+          displayName: 'A',
+          type: AdvancedFieldType.simple,
+          constraints: {
+            mandatory: true,
+          },
+        },
+        {
+          id: 'test:childB',
+          displayName: 'B',
+          type: AdvancedFieldType.literal,
+          constraints: {
+            mandatory: false,
+          },
+        },
+      ] as Profile;
+
+      const componentA = componentFromId('test:childA', profileWithConstraints);
+      expect(componentA?.id).toBe('test:childA');
+      expect(componentA?.name).toBe('A');
+      expect(componentA?.mandatory).toBe(true);
+      const componentB = componentFromId('test:childB', profileWithConstraints);
+      expect(componentB?.id).toBe('test:childB');
+      expect(componentB?.name).toBe('B');
+      expect(componentB?.mandatory).toBe(false);
     });
   });
 
@@ -91,9 +128,9 @@ describe('children', () => {
       const children = getProfileChildren(profile);
 
       expect(children.length).toBe(3);
-      expect(children).toContainEqual({ id: 'test:childA', name: 'A' });
-      expect(children).toContainEqual({ id: 'test:childB', name: 'B' });
-      expect(children).toContainEqual({ id: 'test:childC', name: 'C' });
+      expect(children).toContainEqual({ id: 'test:childA', name: 'A', mandatory: false });
+      expect(children).toContainEqual({ id: 'test:childB', name: 'B', mandatory: false });
+      expect(children).toContainEqual({ id: 'test:childC', name: 'C', mandatory: false });
     });
 
     it('generates an empty list when no block is in the profile', () => {
@@ -129,8 +166,8 @@ describe('children', () => {
       const children = getSettingsChildren(profile, settings);
 
       expect(children.length).toBe(2);
-      expect(children).toContainEqual({ id: 'test:childA', name: 'A' });
-      expect(children).toContainEqual({ id: 'test:childC', name: 'C' });
+      expect(children).toContainEqual({ id: 'test:childA', name: 'A', mandatory: false });
+      expect(children).toContainEqual({ id: 'test:childC', name: 'C', mandatory: false });
     });
 
     it('generates an empty list when profile settings has no visible children', () => {
@@ -190,9 +227,53 @@ describe('children', () => {
       } as ProfileSettingsWithDrift);
 
       expect(children.length).toBe(2);
-      expect(children).toContainEqual({ id: 'test:childA', name: 'A' });
-      expect(children).toContainEqual({ id: 'test:childB', name: 'B' });
-      expect(children).not.toContainEqual({ id: 'test:childD', name: 'D' });
+      expect(children).toContainEqual({ id: 'test:childA', name: 'A', mandatory: false });
+      expect(children).toContainEqual({ id: 'test:childB', name: 'B', mandatory: false });
+      expect(children).not.toContainEqual({ id: 'test:childD', name: 'D', mandatory: false });
+    });
+
+    it('defers to mandatory constraint', () => {
+      const profileWithConstraints = [
+        {
+          id: 'test:block',
+          displayName: 'Test Profile',
+          type: AdvancedFieldType.block,
+          children: ['test:childA', 'test:childB'],
+        },
+        {
+          id: 'test:childA',
+          displayName: 'A',
+          type: AdvancedFieldType.simple,
+          constraints: {
+            mandatory: true,
+          },
+        },
+        {
+          id: 'test:childB',
+          displayName: 'B',
+          type: AdvancedFieldType.literal,
+          constraints: {
+            mandatory: false,
+          },
+        },
+      ] as Profile;
+      const children = getSettingsChildren(profileWithConstraints, {
+        active: true,
+        children: [
+          {
+            id: 'test:childA',
+            visible: false,
+          },
+          {
+            id: 'test:childB',
+            visible: false,
+          },
+        ],
+        missingFromSettings: [],
+      } as ProfileSettingsWithDrift);
+
+      expect(children.length).toBe(1);
+      expect(children).toContainEqual({ id: 'test:childA', name: 'A', mandatory: true });
     });
   });
 
@@ -203,7 +284,7 @@ describe('children', () => {
       const difference = childrenDifference(profileChildren, settingsChildren);
 
       expect(difference.length).toBe(1);
-      expect(difference).toContainEqual({ id: 'test:childB', name: 'B' });
+      expect(difference).toContainEqual({ id: 'test:childB', name: 'B', mandatory: false });
     });
 
     it('generates the same profile list when settings are empty', () => {
@@ -276,7 +357,7 @@ describe('children', () => {
       const difference = childrenDifference(profileChildren, settingsChildren);
 
       expect(difference.length).toBe(1);
-      expect(difference).toContainEqual({ id: 'test:childB', name: 'B' });
+      expect(difference).toContainEqual({ id: 'test:childB', name: 'B', mandatory: false });
     });
   });
 });

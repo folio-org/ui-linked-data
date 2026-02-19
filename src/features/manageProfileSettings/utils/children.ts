@@ -20,6 +20,7 @@ export const componentFromId = (id: string, profile: Profile): ProfileSettingCom
     return {
       id: id,
       name: profileComponent.displayName,
+      mandatory: profileComponent.constraints?.mandatory ?? false,
     };
   }
   return undefined;
@@ -41,7 +42,7 @@ export const getSettingsChildren = (
   return (
     settings.children?.reduce((result: ProfileSettingComponent[], child) => {
       const component = componentFromId(child.id, profile);
-      if (child.visible && component) {
+      if ((child.visible && component) || component?.mandatory) {
         result.push(component);
       }
       return result;

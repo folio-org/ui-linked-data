@@ -368,7 +368,7 @@ describe('SchemaGeneratorService', () => {
         });
       });
 
-      it('active settings with some children and some drift have settigs visbility and some drift', () => {
+      it('active settings with some children and some drift have settings visibility and some drift', () => {
         const settings = {
           active: true,
           children: [
@@ -391,6 +391,45 @@ describe('SchemaGeneratorService', () => {
           const child = schema.get(childId);
           expect(child?.editorVisible).toBe(visibles.includes((child as ProfileNode).id));
           expect(child?.profileSettingsDrift).toBe(drifts.includes((child as ProfileNode).id));
+        });
+      });
+
+      it('active settings with some children not visible are bypassed when mandatory', () => {
+        const profileWithMandatory = [
+          {
+            id: 'document',
+            type: AdvancedFieldType.block,
+            children: ['a'],
+          },
+          {
+            id: 'a',
+            type: AdvancedFieldType.literal,
+            constraints: {
+              mandatory: true,
+            },
+          },
+        ] as Profile;
+        const settings = {
+          active: true,
+          children: [
+            {
+              id: 'a',
+              visible: false,
+            },
+          ],
+          missingFromSettings: [],
+        } as ProfileSettingsWithDrift;
+        const visibles = ['a'];
+
+        service.init(profileWithMandatory, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(visibles.includes((child as ProfileNode).id));
         });
       });
     });
