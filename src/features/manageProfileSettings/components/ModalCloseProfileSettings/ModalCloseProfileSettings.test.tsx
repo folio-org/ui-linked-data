@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { MemoryRouter } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
@@ -20,10 +21,19 @@ jest.mock('react-router-dom', () => ({
 
 describe('ModalCloseProfileSettings', () => {
   const mockSetSelectedProfile = jest.fn();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
   const renderComponent = () => {
     return render(
       <MemoryRouter>
-        <ModalCloseProfileSettings isOpen={true} setIsOpen={() => {}} />
+        <QueryClientProvider client={queryClient}>
+          <ModalCloseProfileSettings isOpen={true} setIsOpen={() => {}} />
+        </QueryClientProvider>
       </MemoryRouter>,
     );
   };

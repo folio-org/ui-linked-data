@@ -88,6 +88,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -106,6 +107,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -122,6 +124,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -140,6 +143,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -158,6 +162,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -177,6 +182,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -196,6 +202,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -215,6 +222,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -234,6 +242,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -252,6 +261,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -270,6 +280,7 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
