@@ -4,6 +4,7 @@ import {
   AuthorityValidationTarget,
   COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
+  SOURCE_TYPES,
   VALUE_DIVIDER,
 } from '@/features/complexLookup/constants/complexLookup.constants';
 
@@ -96,4 +97,8 @@ export const formatComplexLookupDisplayValue = (values?: UserValueContents[]) =>
     .filter(({ label }) => label)
     .map(({ label }) => label)
     .join(VALUE_DIVIDER);
+};
+
+export const getDefaultHubSource = (assignedValue?: UserValueContents) => {
+  return assignedValue?.meta?.sourceType || SOURCE_TYPES.LIBRARY_OF_CONGRESS;
 };

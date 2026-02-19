@@ -5,4 +5,5 @@ export {
   getUpdatedSelectedEntries,
   generateValidationRequestBody,
   formatComplexLookupDisplayValue,
+  getDefaultHubSource,
 } from './complexLookup.helper';
