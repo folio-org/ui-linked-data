@@ -134,6 +134,7 @@ describe('ProfileSettingsEditor', () => {
               {
                 id: 'childA',
                 visible: false,
+                order: 2,
               },
             ],
           },

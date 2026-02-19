@@ -212,14 +212,17 @@ describe('SchemaGeneratorService', () => {
               {
                 id: 'r',
                 visible: true,
+                order: 1,
               },
               {
                 id: 'a',
                 visible: true,
+                order: 2,
               },
               {
                 id: '6',
                 visible: true,
+                order: 3,
               },
             ],
             missingFromSettings: [],
@@ -342,14 +345,17 @@ describe('SchemaGeneratorService', () => {
             {
               id: 'r',
               visible: true,
+              order: 1,
             },
             {
               id: 'a',
               visible: false,
+              order: 3,
             },
             {
               id: '6',
               visible: true,
+              order: 2,
             },
           ],
           missingFromSettings: [],
@@ -415,6 +421,7 @@ describe('SchemaGeneratorService', () => {
             {
               id: 'a',
               visible: false,
+              order: 1,
             },
           ],
           missingFromSettings: [],

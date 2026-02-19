@@ -9,6 +9,10 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
 
 export const useSaveProfileSettings = () => {
+  const queryClient = useQueryClient();
+  const { preferredProfiles, setPreferredProfiles } = useProfileState(['preferredProfiles', 'setPreferredProfiles']);
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const {
     isSettingsActive,
     isTypeDefaultProfile,
@@ -26,13 +30,6 @@ export const useSaveProfileSettings = () => {
     'setIsModified',
     'setProfileSettings',
   ]);
-
-  const { preferredProfiles, setPreferredProfiles } = useProfileState(['preferredProfiles', 'setPreferredProfiles']);
-
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
-
-  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const queryClient = useQueryClient();
 
   const determinePreferredAction = () => {
     const preferred = preferredProfiles.find(p => p.resourceType === selectedProfile.resourceType);
@@ -60,10 +57,9 @@ export const useSaveProfileSettings = () => {
     return null;
   };
 
-  const saveSettings = async () => {
-    const preferredAction = determinePreferredAction();
-
+  const generateSettings = () => {
     const settingsChildren = [] as ProfileSettingsChildProperties[];
+
     selectedComponents.forEach((child, index) => {
       settingsChildren.push({
         id: child.id,
@@ -71,6 +67,7 @@ export const useSaveProfileSettings = () => {
         order: index + 1,
       });
     });
+
     unusedComponents.forEach((child, index) => {
       settingsChildren.push({
         id: child.id,
@@ -78,15 +75,18 @@ export const useSaveProfileSettings = () => {
         order: selectedComponents.length + index + 1,
       });
     });
-    const settingsToSave = {
+
+    return {
       active: isSettingsActive,
       children: settingsChildren,
     } as ProfileSettings;
+  };
 
-    setIsLoading(true);
+  const saveAndSetPreferred = async () => {
+    const preferredAction = determinePreferredAction();
 
-    try {
-      if (preferredAction) {
+    if (preferredAction) {
+      try {
         await preferredAction();
         const updatedPreferredProfiles = createUpdatedPreferredProfiles({
           profileId: selectedProfile.id,
@@ -95,27 +95,38 @@ export const useSaveProfileSettings = () => {
           currentPreferredProfiles: preferredProfiles,
         });
         setPreferredProfiles(updatedPreferredProfiles);
+      } catch (error) {
+        logger.error('Failed to set preferred profile:', error);
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
+        );
       }
-    } catch (error) {
-      setIsLoading(false);
-      logger.error('Failed to set preferred profile:', error);
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
-      );
-      return;
     }
+  };
+
+  const saveAndSetSettings = async () => {
+    const settingsToSave = generateSettings();
 
     try {
       await saveProfileSettings(selectedProfile.id, settingsToSave);
       setProfileSettings({ ...settingsToSave, missingFromSettings: [] });
-      setIsModified(false);
       queryClient.invalidateQueries({ queryKey: ['profileSettings', selectedProfile.id] });
     } catch (error) {
       logger.error('Failed to set profile settings:', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.error.saveProfileSettings'));
+    }
+  };
+
+  const saveSettings = async () => {
+    try {
+      setIsLoading(true);
+      await saveAndSetPreferred();
+      await saveAndSetSettings();
     } finally {
       setIsLoading(false);
     }
+
+    setIsModified(false);
   };
 
   return {
