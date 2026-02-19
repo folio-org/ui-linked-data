@@ -43,6 +43,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
   const isAssignedHub = assignedValue?.meta?.lookupType === LOOKUP_TYPES.HUBS;
 
+  // TODO: refactor this to use a constant or enum instead of hardcoded values
   const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
   const defaultSource = isAssignedHub ? getDefaultHubSource(assignedValue) : undefined;
 
