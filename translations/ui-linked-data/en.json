@@ -170,6 +170,7 @@
   "ld.nameTitle": "Name-title",
   "ld.uniformTitle": "Uniform title",
   "ld.subject": "Subject",
+  "ld.searchSubjectAuthority": "Search subject authority",
   "ld.childrensSubjectHeading": "Children's subject heading",
   "ld.genre": "Genre",
   "ld.authoritySource": "Authority source",
@@ -331,5 +332,6 @@
   "ld.moveToUnused": "Move to unused components",
   "ld.moveToSelected": "Move to selected components",
   "ld.moveUnavailable": "Required field, cannot move to unused",
-  "ld.requiredAnnotation": "required"
+  "ld.requiredAnnotation": "required",
+  "ld.authorities": "Authorities"
 }
