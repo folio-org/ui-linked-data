@@ -81,8 +81,13 @@ export const useDragHandlers = ({
         // move from unused to selected
         moveUnusedToSelected(active, over);
         setStartingList(ComponentType.selected);
-      } else if (startingList === ComponentType.selected && targetList === ComponentType.unused) {
+      } else if (
+        startingList === ComponentType.selected &&
+        targetList === ComponentType.unused &&
+        !active.data.current?.component?.mandatory
+      ) {
         // move from selected to unused
+        // filter out mandatory components, should not be unused
         moveSelectedToUnused(active, over);
         setStartingList(ComponentType.unused);
       }

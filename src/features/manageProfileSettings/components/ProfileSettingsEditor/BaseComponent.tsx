@@ -32,6 +32,9 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
     animateLayoutChanges: args => !args.isSorting || defaultAnimateLayoutChanges(args),
+    data: {
+      component,
+    },
   });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -91,15 +94,28 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
           {isMenuEnabled && (
             <div data-testid="move-menu" className="move-menu">
               <div className="move-menu-content">
-                <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
-                  <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
-                </Button>
+                {component.mandatory ? (
+                  <Button type={ButtonType.Text} disabled={true}>
+                    <FormattedMessage id="ld.moveUnavailable" />
+                  </Button>
+                ) : (
+                  <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
+                    <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
+                  </Button>
+                )}
               </div>
             </div>
           )}
         </div>
         {type === ComponentType.selected && !isDragging ? index + '. ' : ''}
         {component.name}
+        {component.mandatory ? (
+          <span className="required">
+            <FormattedMessage id="ld.requiredAnnotation" />
+          </span>
+        ) : (
+          ''
+        )}
       </div>
       {type === ComponentType.selected && !isDragging ? (
         <div className="adjust" data-no-dnd="true">

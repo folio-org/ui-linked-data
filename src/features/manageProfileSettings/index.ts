@@ -20,8 +20,9 @@ export {
   useSaveProfileSettings,
 } from './hooks';
 export {
-  componentFromId,
   childrenDifference,
+  chooseModifiers,
+  componentFromId,
   getProfileChildren,
   getSettingsChildren,
   FilteredKeyboardSensor,

@@ -331,6 +331,8 @@
   "ld.profileSettings.announce.instructions": "To pick up a component, press space or enter.  While dragging, use the arrow keys to move the component either up and down within each list or left and right to the other list. Press space or enter again to drop the component in its new position, or press escape to cancel.",
   "ld.moveToUnused": "Move to unused components",
   "ld.moveToSelected": "Move to selected components",
+  "ld.moveUnavailable": "Required field, cannot move to unused",
+  "ld.requiredAnnotation": "required",
   "ld.error.saveProfileSettings": "Error saving profile settings",
   "ld.profileComponentsDeselected": "Profile components deselected",
   "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?"

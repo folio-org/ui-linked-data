@@ -82,6 +82,7 @@
 * Create a preview screen when importing a new Hub. Refs [UILD-725].
 * Add Continue button behavior at Hub preview screen. Refs [UILD-726].
 * Update custom settings toggle behavior. Refs [UILD-727].
+* Add mandatory field handling in custom settings. Refs [UILD-728].
 * Connect profile settings editor to save settings API. Refs [UILD-698].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -164,6 +165,7 @@
 [UILD-725]:https://folio-org.atlassian.net/browse/UILD-725
 [UILD-726]:https://folio-org.atlassian.net/browse/UILD-726
 [UILD-727]:https://folio-org.atlassian.net/browse/UILD-727
+[UILD-728]:https://folio-org.atlassian.net/browse/UILD-728
 [UILD-698]:https://folio-org.atlassian.net/browse/UILD-698
 
 ## 1.0.5 (2025-04-30)

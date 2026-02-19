@@ -1,7 +1,7 @@
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
-import { ROUTES } from '@/common/constants/routes.constants';
+import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Button, ButtonType } from '@/components/Button';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
@@ -14,6 +14,7 @@ export const ManageProfileSettingsControlPane = () => {
   const { formatMessage } = useIntl();
   const { setIsManageProfileSettingsUnsavedModalOpen } = useUIState(['setIsManageProfileSettingsUnsavedModalOpen']);
   const { isModified, setIsClosingNext } = useManageProfileSettingsState(['isModified', 'setIsClosingNext']);
+  const searchResultsUri = useBackToSearchUri();
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -21,7 +22,7 @@ export const ManageProfileSettingsControlPane = () => {
       setIsClosingNext(true);
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
-      navigate(ROUTES.SEARCH.uri);
+      navigate(searchResultsUri);
     }
   };
 

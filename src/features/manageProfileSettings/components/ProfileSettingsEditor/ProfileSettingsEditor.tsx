@@ -20,6 +20,7 @@ import {
   FilteredKeyboardSensor,
   FilteredPointerSensor,
   childrenDifference,
+  chooseModifiers,
   componentFromId,
   getProfileChildren,
   getSettingsChildren,
@@ -156,6 +157,7 @@ export const ProfileSettingsEditor = () => {
           onDragCancel={handleDragCancel}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
+          modifiers={chooseModifiers(activeId, fullProfile)}
           accessibility={{ announcements, screenReaderInstructions: { draggable: instructions } }}
         >
           <ComponentList
