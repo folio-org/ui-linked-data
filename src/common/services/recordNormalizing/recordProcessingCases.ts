@@ -2,6 +2,8 @@ import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ensureArray } from '@/common/helpers/common.helper';
 import { getLookupLabelKey } from '@/common/helpers/schema.helper';
 
+import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+
 const getHubSourceType = (hasRdfLink: boolean, hasHubId: boolean): string | undefined => {
   if (hasRdfLink) return 'libraryOfCongress';
   if (hasHubId) return 'local';
@@ -150,4 +152,21 @@ export const extractDropdownOption = (
 
     return { [recordEntry[fieldName][0]]: updatedValues };
   }) as unknown as RecursiveRecordSchema;
+};
+
+export const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  const originalEntries = record[blockKey][key] as unknown as RecordProcessingDTO;
+
+  processComplexLookup(record, blockKey, key, 'label');
+
+  const normalizedEntries = record[blockKey][key] as unknown as RecursiveRecordSchema[];
+
+  normalizedEntries.forEach((entry, index) => {
+    const original = originalEntries[index] as Record<string, unknown>;
+    const types = original?.types as string[] | undefined;
+
+    (entry as Record<string, unknown>).lookupType = types?.includes(BFLITE_URIS.HUB)
+      ? LOOKUP_TYPES.HUBS
+      : LOOKUP_TYPES.AUTHORITIES;
+  });
 };

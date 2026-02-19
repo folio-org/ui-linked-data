@@ -5,6 +5,8 @@ import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
+import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+
 import { useInputsState, useMarcPreviewState, useProfileState, useStatusState } from '@/store';
 
 import { ModalConfig } from '../configs/modalRegistry';
@@ -126,6 +128,7 @@ export function useAuthoritiesAssignment({
           meta: {
             type: AdvancedFieldType.complex,
             srsId,
+            lookupType: LOOKUP_TYPES.AUTHORITIES,
           },
         };
 

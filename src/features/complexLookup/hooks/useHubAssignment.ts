@@ -4,6 +4,8 @@ import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
+import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+
 import { useStatusState } from '@/store';
 
 import { useHubImportAssignmentMutation } from './useHubImportAssignmentMutation';
@@ -50,6 +52,7 @@ export function useHubAssignment({ onAssignSuccess }: UseHubAssignmentParams): U
             type: AdvancedFieldType.complex,
             uri,
             sourceType,
+            lookupType: LOOKUP_TYPES.HUBS,
           },
         };
 

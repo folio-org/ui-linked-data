@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
+import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,
@@ -17,6 +18,7 @@ interface SubjectModalProps {
   onClose: VoidFunction;
   initialQuery?: string;
   initialSegment?: 'search' | 'browse';
+  assignedValue?: UserValueContents;
   entry?: SchemaEntry;
   lookupContext?: string;
   modalConfig?: ModalConfig;
@@ -32,17 +34,23 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   onClose,
   initialQuery,
   initialSegment = 'browse',
+  assignedValue,
   entry,
   lookupContext,
   modalConfig,
   onAssign,
 }) => {
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
+  const isAssignedHub = assignedValue?.meta?.lookupType === LOOKUP_TYPES.HUBS;
+
+  const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
+  const defaultSource = isAssignedHub ? assignedValue?.meta?.sourceType || 'libraryOfCongress' : undefined;
 
   useComplexLookupModalState({
     isOpen,
     initialQuery,
-    defaultSegment: `authorities:${initialSegment}`,
+    defaultSegment,
+    ...(defaultSource ? { defaultSource } : {}),
   });
 
   const {
@@ -73,7 +81,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.searchSubjectAuthority" />}>
       <Search
         segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
-        defaultSegment={`authorities:${initialSegment}`}
+        defaultSegment={defaultSegment}
         flow="value"
         mode="custom"
       >
