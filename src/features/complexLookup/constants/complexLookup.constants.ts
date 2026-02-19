@@ -37,6 +37,11 @@ export const LOOKUP_TYPES = {
   HUBS: 'hubs',
 } as const;
 
+export const SOURCE_TYPES = {
+  LOCAL: 'local',
+  LIBRARY_OF_CONGRESS: 'libraryOfCongress',
+} as const;
+
 export enum Authority {
   Creator = 'creator',
   Subject = 'subject',

@@ -2,11 +2,11 @@ import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ensureArray } from '@/common/helpers/common.helper';
 import { getLookupLabelKey } from '@/common/helpers/schema.helper';
 
-import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 
 const getHubSourceType = (hasRdfLink: boolean, hasHubId: boolean): string | undefined => {
-  if (hasRdfLink) return 'libraryOfCongress';
-  if (hasHubId) return 'local';
+  if (hasRdfLink) return SOURCE_TYPES.LIBRARY_OF_CONGRESS;
+  if (hasHubId) return SOURCE_TYPES.LOCAL;
 
   return undefined;
 };

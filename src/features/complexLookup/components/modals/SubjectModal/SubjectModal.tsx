@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
-import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,
@@ -44,7 +44,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   const isAssignedHub = assignedValue?.meta?.lookupType === LOOKUP_TYPES.HUBS;
 
   const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
-  const defaultSource = isAssignedHub ? assignedValue?.meta?.sourceType || 'libraryOfCongress' : undefined;
+  const defaultSource = isAssignedHub ? assignedValue?.meta?.sourceType || SOURCE_TYPES.LIBRARY_OF_CONGRESS : undefined;
 
   useComplexLookupModalState({
     isOpen,

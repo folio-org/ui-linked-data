@@ -4,7 +4,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { LOOKUP_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/features/complexLookup/constants/complexLookup.constants';
 
 import { useStatusState } from '@/store';
 
@@ -39,7 +39,7 @@ export function useHubAssignment({ onAssignSuccess }: UseHubAssignmentParams): U
         let assignId = id;
 
         // External hubs require import to generate a local resource id
-        if (sourceType !== 'local' && uri) {
+        if (sourceType !== SOURCE_TYPES.LOCAL && uri) {
           const { importedId } = await importForAssignment({ hubUri: uri });
 
           assignId = importedId;
