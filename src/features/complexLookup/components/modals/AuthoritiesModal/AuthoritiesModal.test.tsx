@@ -256,14 +256,15 @@ describe('AuthoritiesModal', () => {
       });
     });
 
-    it('passes initialQuery to useComplexLookupModalState', () => {
+    it('passes assignedValue to useComplexLookupModalState', () => {
+      const assignedValue = { label: 'Test Query' } as UserValueContents;
       render(
-        <AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} initialQuery="Test Query" />,
+        <AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} assignedValue={assignedValue} />,
       );
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith(
         expect.objectContaining({
-          initialQuery: 'Test Query',
+          assignedValue: { label: 'Test Query' },
         }),
       );
     });
