@@ -841,4 +841,205 @@ describe('recordProcessingCases', () => {
       expect(record).toEqual(testResult);
     });
   });
+
+  describe('processSubjectComplexLookup', () => {
+    const hubUri = 'http://bibfra.me/vocab/lite/Hub';
+
+    beforeEach(() => {
+      mockedBFLiteUris({ HUB: hubUri, LINK: linkBFLiteUri, LABEL: labelBFLiteUri });
+    });
+
+    test('transforms subject entry and sets lookupType to authorities when types array does not include Hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_1',
+              label: 'Authority Subject',
+              types: ['http://bibfra.me/vocab/lite/Authority'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Authority Subject'],
+                isPreferred: undefined,
+              },
+              lookupType: 'authorities',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms subject entry and sets lookupType to hubs when types array includes Hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Hub Subject',
+              types: [hubUri, 'http://bibfra.me/vocab/lite/Topic'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Hub Subject'],
+                isPreferred: undefined,
+              },
+              lookupType: 'hubs',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms subject entry and sets lookupType to authorities when types array is undefined', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_2',
+              label: 'Subject without types',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_2'],
+              label: {
+                value: ['Subject without types'],
+                isPreferred: undefined,
+              },
+              lookupType: 'authorities',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple subject entries with mixed Hub and Authority types', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Hub Subject',
+              types: [hubUri],
+            },
+            {
+              id: 'auth_id_1',
+              label: 'Authority Subject',
+              types: ['http://bibfra.me/vocab/lite/Topic'],
+            },
+            {
+              id: 'hub_id_2',
+              label: 'Another Hub',
+              types: ['http://bibfra.me/vocab/lite/Work', hubUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Hub Subject'],
+                isPreferred: undefined,
+              },
+              lookupType: 'hubs',
+            },
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Authority Subject'],
+                isPreferred: undefined,
+              },
+              lookupType: 'authorities',
+            },
+            {
+              id: ['hub_id_2'],
+              label: {
+                value: ['Another Hub'],
+                isPreferred: undefined,
+              },
+              lookupType: 'hubs',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('preserves isPreferred and type attributes while adding lookupType', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Preferred Hub',
+              isPreferred: true,
+              type: 'TestType',
+              types: [hubUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Preferred Hub'],
+                isPreferred: true,
+              },
+              _subclass: 'TestType',
+              lookupType: 'hubs',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
 });

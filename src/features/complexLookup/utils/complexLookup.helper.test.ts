@@ -7,6 +7,7 @@ import { AuthorityValidationTarget } from '@/features/complexLookup/constants/co
 import {
   generateEmptyValueUuid,
   generateValidationRequestBody,
+  getDefaultHubSource,
   getLinkedField,
   getUpdatedSelectedEntries,
   updateLinkedFieldValue,
@@ -180,6 +181,56 @@ describe('complexLookup.helper', () => {
 
       expect(result.rawMarc).toContain('\\r');
       expect(result.rawMarc).toContain('\\n');
+    });
+  });
+
+  describe('getDefaultHubSource', () => {
+    it('returns sourceType from assignedValue meta when available', () => {
+      const assignedValue = {
+        meta: {
+          sourceType: 'local',
+        },
+      } as UserValueContents;
+
+      const result = getDefaultHubSource(assignedValue);
+
+      expect(result).toBe('local');
+    });
+
+    it('returns libraryOfCongress as default when assignedValue has no sourceType', () => {
+      const assignedValue = {
+        meta: {},
+      } as UserValueContents;
+
+      const result = getDefaultHubSource(assignedValue);
+
+      expect(result).toBe('libraryOfCongress');
+    });
+
+    it('returns libraryOfCongress as default when assignedValue is undefined', () => {
+      const result = getDefaultHubSource();
+
+      expect(result).toBe('libraryOfCongress');
+    });
+
+    it('returns libraryOfCongress as default when assignedValue has no meta', () => {
+      const assignedValue = {} as UserValueContents;
+
+      const result = getDefaultHubSource(assignedValue);
+
+      expect(result).toBe('libraryOfCongress');
+    });
+
+    it('returns libraryOfCongress sourceType from assignedValue meta', () => {
+      const assignedValue = {
+        meta: {
+          sourceType: 'libraryOfCongress',
+        },
+      } as UserValueContents;
+
+      const result = getDefaultHubSource(assignedValue);
+
+      expect(result).toBe('libraryOfCongress');
     });
   });
 });

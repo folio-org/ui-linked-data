@@ -84,6 +84,7 @@
 * Update custom settings toggle behavior. Refs [UILD-727].
 * Add mandatory field handling in custom settings. Refs [UILD-728].
 * Add possibility to assign Hubs as Subjects. Refs [UILD-711].
+* Add possibility to change the assigned Hubs as Subjects. Refs [UILD-730].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -167,6 +168,7 @@
 [UILD-727]:https://folio-org.atlassian.net/browse/UILD-727
 [UILD-728]:https://folio-org.atlassian.net/browse/UILD-728
 [UILD-711]:https://folio-org.atlassian.net/browse/UILD-711
+[UILD-730]:https://folio-org.atlassian.net/browse/UILD-730
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
