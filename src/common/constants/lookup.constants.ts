@@ -6,7 +6,7 @@ export const VALUE_KEY = '@value';
 export const CODE_SEPARATOR = '/';
 
 // TODO: Make correct types
-export const lookupConfig: Record<string, any> = {
+export const lookupConfig: Record<string, unknown> = {
   'http://id.loc.gov/authorities/childrensSubjects': {
     name: 'childrensSubjects',
     type: 'complex',
