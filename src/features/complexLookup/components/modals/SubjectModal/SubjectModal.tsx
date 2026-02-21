@@ -2,16 +2,17 @@ import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
-import { AuthoritiesContent } from '@/features/complexLookup/components/content';
+import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,
   useComplexLookupModalState,
 } from '@/features/complexLookup/hooks';
+import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
-interface AuthoritiesModalProps {
+interface SubjectModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
   initialQuery?: string;
@@ -23,9 +24,10 @@ interface AuthoritiesModalProps {
 }
 
 /**
- * AuthoritiesModal - Modal wrapper for Authority lookup using new Search feature.
+ * SubjectModal - Modal wrapper for Subject lookup using new Search feature.
+ * Supports both Authority lookup (search/browse with MARC preview) and Hub lookup (with import-on-assign).
  */
-export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
+export const SubjectModal: FC<SubjectModalProps> = ({
   isOpen,
   onClose,
   initialQuery,
@@ -37,14 +39,12 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
 }) => {
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
 
-  // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
     isOpen,
     initialQuery,
     defaultSegment: `authorities:${initialSegment}`,
   });
 
-  // Authorities-specific logic (MARC preview, data loading, assignment)
   const {
     isMarcPreviewOpen,
     isMarcLoading,
@@ -52,6 +52,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     handleTitleClick,
     handleAuthoritiesAssign,
     handleCloseMarcPreview,
+    handleResetMarcPreview,
     checkFailedId,
     cleanup,
   } = useAuthoritiesModalLogic({
@@ -63,23 +64,31 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
     isOpen,
   });
 
-  // Modal cleanup handler
   const { handleModalClose } = useComplexLookupModalCleanup({
     onClose,
     withMarcPreview: cleanup,
   });
 
   return (
-    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.selectMarcAuthority" />}>
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.searchSubjectAuthority" />}>
       <Search
-        segments={['authorities:search', 'authorities:browse']}
+        segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
         defaultSegment={`authorities:${initialSegment}`}
         flow="value"
         mode="custom"
       >
         <Search.Controls>
-          {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
           <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment
+              path="authorities"
+              defaultTo="authorities:browse"
+              labelId="ld.authorities"
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+            <Search.Controls.Segment path="hubsLookup" labelId="ld.hubs" onBeforeChange={handleResetMarcPreview} />
+          </Search.Controls.SegmentGroup>
+
+          <Search.Controls.SegmentGroup parentPath="authorities">
             <Search.Controls.Segment
               path="authorities:search"
               labelId="ld.search"
@@ -95,18 +104,28 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
           <Search.Controls.InputsWrapper />
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
+
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+          </Search.Controls.SegmentContent>
         </Search.Controls>
 
         <Search.Content>
-          <AuthoritiesContent
-            isMarcPreviewOpen={isMarcPreviewOpen}
-            isMarcLoading={isMarcLoading}
-            handleAuthoritiesAssign={handleAuthoritiesAssign}
-            handleTitleClick={handleTitleClick}
-            handleCloseMarcPreview={handleCloseMarcPreview}
-            checkFailedId={checkFailedId}
-            hasComplexFlow={hasComplexFlow}
-          />
+          <Search.Controls.SegmentContent segment="authorities" matchPrefix>
+            <AuthoritiesContent
+              isMarcPreviewOpen={isMarcPreviewOpen}
+              isMarcLoading={isMarcLoading}
+              handleAuthoritiesAssign={handleAuthoritiesAssign}
+              handleTitleClick={handleTitleClick}
+              handleCloseMarcPreview={handleCloseMarcPreview}
+              checkFailedId={checkFailedId}
+              hasComplexFlow={hasComplexFlow}
+            />
+          </Search.Controls.SegmentContent>
+
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <HubsContent onAssign={onAssign} onClose={handleModalClose} />
+          </Search.Controls.SegmentContent>
         </Search.Content>
       </Search>
     </LookupModal>

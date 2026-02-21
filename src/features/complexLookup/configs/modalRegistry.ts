@@ -9,6 +9,7 @@ import {
 
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
 import { HubsModal } from '../components/modals/HubsModal';
+import { SubjectModal } from '../components/modals/SubjectModal';
 import { AuthorityValidationTarget, ComplexLookupType } from '../constants/complexLookup.constants';
 
 export type AssignmentFlow = 'simple' | 'complex';
@@ -78,7 +79,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
   },
 
   [ComplexLookupType.AuthoritiesSubject]: {
-    component: AuthoritiesModal,
+    component: SubjectModal,
     defaultProps: {
       initialSegment: 'browse' as const,
     },

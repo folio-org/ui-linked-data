@@ -11,3 +11,6 @@ export { useAuthoritiesSegmentData } from './useAuthoritiesSegmentData';
 export { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
 export { useHubImportAssignmentMutation } from './useHubImportAssignmentMutation';
 export { useHubAssignment } from './useHubAssignment';
+export { useComplexLookupModalCleanup } from './useComplexLookupModalCleanup';
+export { useAuthoritiesModalLogic } from './useAuthoritiesModalLogic';
+export { useHubsModalLogic } from './useHubsModalLogic';
