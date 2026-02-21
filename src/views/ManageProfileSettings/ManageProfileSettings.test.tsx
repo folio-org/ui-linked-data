@@ -251,6 +251,33 @@ describe('ManageProfileSettings', () => {
     });
   });
 
+  describe('modals', () => {
+    it('shows a modal when changing profiles with unsaved changes', () => {
+      // deselect a component
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+        expect(screen.getByTestId('component-test:childB')).toBeInTheDocument();
+      });
+
+      const component = screen.getByTestId('component-test:childB');
+      const menuButton = within(component).getByTestId('activate-menu');
+      fireEvent.click(menuButton);
+      fireEvent.click(within(component).getByTestId('move-action'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+      });
+
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[1]);
+
+      waitFor(() => {
+        expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+      });
+    });
+  });
+
   describe('responsive display', () => {
     const setViewport = (width: number) => {
       Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: width });

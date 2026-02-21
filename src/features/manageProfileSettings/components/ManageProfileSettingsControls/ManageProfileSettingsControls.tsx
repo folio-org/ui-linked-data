@@ -43,7 +43,7 @@ export const ManageProfileSettingsControls = memo(() => {
   };
 
   return (
-    <div className="manage-profile-settings-controls">
+    <div data-testid="manage-profile-settings-controls" className="manage-profile-settings-controls">
       <Button
         data-testid="save-and-close"
         type={ButtonType.Primary}

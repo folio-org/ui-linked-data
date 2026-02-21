@@ -31,6 +31,23 @@ export const useSaveProfileSettings = () => {
     'setProfileSettings',
   ]);
 
+  const saveAndUpdatePreferredProfiles = async () => {
+    await savePreferredProfile(selectedProfile.id, selectedProfile.resourceType);
+    const updatedPreferredProfiles = createUpdatedPreferredProfiles({
+      profileId: selectedProfile.id,
+      profileName: selectedProfile.name,
+      resourceTypeURL: selectedProfile.resourceType,
+      currentPreferredProfiles: preferredProfiles,
+    });
+    setPreferredProfiles(updatedPreferredProfiles);
+  };
+
+  const deleteAndUpdatePreferredProfiles = async () => {
+    await deletePreferredProfile(selectedProfile.resourceType as ResourceTypeURL);
+    const updatedPreferredProfiles = preferredProfiles.filter(profile => profile.id !== selectedProfile.id);
+    setPreferredProfiles(updatedPreferredProfiles);
+  };
+
   const determinePreferredAction = () => {
     const preferred = preferredProfiles.find(p => p.resourceType === selectedProfile.resourceType);
 
@@ -38,18 +55,18 @@ export const useSaveProfileSettings = () => {
       if (preferred.id === selectedProfile.id) {
         if (!isTypeDefaultProfile) {
           // This was the default profile for this resource type but is now not, so delete.
-          return () => deletePreferredProfile(selectedProfile.resourceType as ResourceTypeURL);
+          return deleteAndUpdatePreferredProfiles;
         }
       } else {
         if (isTypeDefaultProfile) {
           // Another profile was the default for this resource type but this one now is, so save.
-          return () => savePreferredProfile(selectedProfile.id, selectedProfile.resourceType);
+          return saveAndUpdatePreferredProfiles;
         }
       }
     } else {
       if (isTypeDefaultProfile) {
         // No default was set for this resource type, set it to this one now.
-        return () => savePreferredProfile(selectedProfile.id, selectedProfile.resourceType);
+        return saveAndUpdatePreferredProfiles;
       }
     }
 
@@ -88,13 +105,6 @@ export const useSaveProfileSettings = () => {
     if (preferredAction) {
       try {
         await preferredAction();
-        const updatedPreferredProfiles = createUpdatedPreferredProfiles({
-          profileId: selectedProfile.id,
-          profileName: selectedProfile.name,
-          resourceTypeURL: selectedProfile.resourceType,
-          currentPreferredProfiles: preferredProfiles,
-        });
-        setPreferredProfiles(updatedPreferredProfiles);
       } catch (error) {
         logger.error('Failed to set preferred profile:', error);
         addStatusMessagesItem?.(

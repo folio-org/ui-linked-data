@@ -27,7 +27,13 @@ describe('useDragHandlers', () => {
   const mockSetSelected = jest.fn();
   const mockSetUnused = jest.fn();
 
-  const makeDragEvent = (hasOver: boolean, mandatory: boolean, activeContainer: string, overContainer: string) => {
+  const makeDragEvent = (
+    hasOver: boolean,
+    mandatory: boolean,
+    activeContainer: string,
+    overContainer: string,
+    overId: string = 'over',
+  ) => {
     const dragEvent = {
       active: {
         id: 'active',
@@ -53,7 +59,7 @@ describe('useDragHandlers', () => {
     if (hasOver) {
       // @ts-expect-error: avoid typing complaints for simplest way to simulate events
       dragEvent.over = {
-        id: 'over',
+        id: overId,
         data: {
           current: {
             sortable: {
@@ -88,7 +94,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -107,7 +112,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -124,7 +128,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -143,7 +146,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -162,7 +164,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -182,7 +183,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -202,7 +202,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -222,7 +221,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -242,7 +240,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
-        originalStartingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -261,7 +258,6 @@ describe('useDragHandlers', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -279,8 +275,7 @@ describe('useDragHandlers', () => {
   it('does not reorder on drag end for undroppable regions and sets state', () => {
     const { result } = renderHook(() =>
       useDragHandlers({
-        startingList: ComponentType.unused,
-        originalStartingList: ComponentType.unused,
+        startingList: ComponentType.selected,
         cancelDrag: mockCancelDrag,
         startDrag: mockStartDrag,
         endDrag: mockEndDrag,
@@ -289,7 +284,26 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragEnd(
-      makeDragEvent(false, false, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.selected) as unknown as DragEndEvent,
+    );
+
+    expect(mockSetSelected).not.toHaveBeenCalled();
+    expect(mockSetUnused).not.toHaveBeenCalled();
+  });
+
+  it('does not reorder when dragging between lists onto itself in the new list', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragEnd(
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused, 'active') as unknown as DragEndEvent,
     );
 
     expect(mockSetSelected).not.toHaveBeenCalled();
