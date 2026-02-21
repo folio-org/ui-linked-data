@@ -57,17 +57,13 @@ export const useSaveProfileSettings = () => {
           // This was the default profile for this resource type but is now not, so delete.
           return deleteAndUpdatePreferredProfiles;
         }
-      } else {
-        if (isTypeDefaultProfile) {
-          // Another profile was the default for this resource type but this one now is, so save.
-          return saveAndUpdatePreferredProfiles;
-        }
-      }
-    } else {
-      if (isTypeDefaultProfile) {
-        // No default was set for this resource type, set it to this one now.
+      } else if (isTypeDefaultProfile) {
+        // Another profile was the default for this resource type but this one now is, so save.
         return saveAndUpdatePreferredProfiles;
       }
+    } else if (isTypeDefaultProfile) {
+      // No default was set for this resource type, set it to this one now.
+      return saveAndUpdatePreferredProfiles;
     }
 
     // All other cases do not require action.
