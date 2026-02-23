@@ -23,6 +23,8 @@ export {
   childrenDifference,
   chooseModifiers,
   componentFromId,
+  determinePreferredAction,
+  generateSettings,
   getProfileChildren,
   getSettingsChildren,
   FilteredKeyboardSensor,
