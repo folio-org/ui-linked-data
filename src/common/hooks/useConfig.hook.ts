@@ -114,7 +114,12 @@ export const useConfig = () => {
       setSelectedRecordBlocks(selectedRecordBlocks);
     }
 
-    return { updatedSchema, initKey };
+    return {
+      updatedSchema,
+      initKey,
+      updatedUserValues: updatedUserValues ?? userValues,
+      selectedEntries: selectedEntriesService.get(),
+    };
   };
 
   const extractProfileParams = ({
@@ -184,7 +189,7 @@ export const useConfig = () => {
 
         const profileSettings = await loadProfileSettings(profile?.ids?.[0], selectedProfile);
 
-        const { updatedSchema, initKey } = await buildSchema({
+        const { updatedSchema, initKey, updatedUserValues, selectedEntries } = await buildSchema({
           profile: selectedProfile,
           settings: profileSettings,
           record: recordData,
@@ -195,8 +200,8 @@ export const useConfig = () => {
 
         const generatedData = {
           base: updatedSchema,
-          userValues: userValuesService.getAllValues(),
-          selectedEntries: selectedEntriesService.get(),
+          userValues: updatedUserValues,
+          selectedEntries: selectedEntries,
           initKey,
         };
 
@@ -214,10 +219,7 @@ export const useConfig = () => {
           ]);
         }
 
-        // Return the generated data for local use (e.g., hub preview)
-        if (skipPreviewContentUpdate) {
-          return generatedData;
-        }
+        return generatedData;
       }
     } finally {
       isProcessingProfiles.current = false;
@@ -233,10 +235,10 @@ export const useConfig = () => {
     skipPreviewContentUpdate,
   }: IGetProfiles): Promise<GeneratedPreviewData | void> => {
     // If processing is already running and caller provided a record/recordId,
-    // wait for the current processing to finish instead of returning immediately.
+    // wait for the current processing to finish and return its result.
     if (isProcessingProfiles.current && (record || recordId)) {
       if (processingPromise.current) {
-        await processingPromise.current;
+        return await processingPromise.current;
       }
 
       return;

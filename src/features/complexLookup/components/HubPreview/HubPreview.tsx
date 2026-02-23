@@ -77,6 +77,7 @@ export const HubPreview: FC<HubPreviewProps> = ({ onClose, onAssign, previewData
             altSchema={previewData.resource.base}
             altUserValues={previewData.resource.userValues}
             altInitKey={previewData.resource.initKey}
+            forceRenderAllTopLevelEntities={true}
           />
         ) : (
           <div>
