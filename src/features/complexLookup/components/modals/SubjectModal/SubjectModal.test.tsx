@@ -153,7 +153,7 @@ describe('SubjectModal', () => {
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
-        initialQuery: undefined,
+        assignedValue: undefined,
         defaultSegment: 'authorities:browse',
       });
     });
@@ -163,17 +163,20 @@ describe('SubjectModal', () => {
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
-        initialQuery: undefined,
+        assignedValue: undefined,
         defaultSegment: 'authorities:search',
       });
     });
 
-    it('passes initialQuery to useComplexLookupModalState', () => {
-      render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} initialQuery="Test Query" />);
+    it('passes assignedValue to useComplexLookupModalState', () => {
+      const assignedValue = { label: 'Test Query' } as UserValueContents;
+      render(
+        <SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} assignedValue={assignedValue} />,
+      );
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith(
         expect.objectContaining({
-          initialQuery: 'Test Query',
+          assignedValue: { label: 'Test Query' },
         }),
       );
     });

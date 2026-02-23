@@ -41,7 +41,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
-          initialQuery: 'test',
+          assignedValue: { label: 'test' } as UserValueContents,
           defaultSegment: 'authorities:browse',
         }),
       );
@@ -55,7 +55,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
-          initialQuery: 'test query',
+          assignedValue: { label: 'test query' } as UserValueContents,
           defaultSegment: 'authorities:browse',
         }),
       );
@@ -73,7 +73,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
-          initialQuery: 'test',
+          assignedValue: { label: 'test' } as UserValueContents,
           defaultSegment: 'authorities:browse',
         }),
       );
@@ -92,7 +92,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
-          initialQuery: 'test',
+          assignedValue: { label: 'test' } as UserValueContents,
           defaultSegment: 'hubs',
           defaultSource: 'external',
         }),
@@ -109,7 +109,7 @@ describe('useComplexLookupModalState', () => {
       );
     });
 
-    it('resets drafts when no initial query', () => {
+    it('resets drafts when no assigned value', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
@@ -127,7 +127,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: false,
-          initialQuery: 'test',
+          assignedValue: { label: 'test' } as UserValueContents,
           defaultSegment: 'authorities:browse',
         }),
       );
@@ -143,7 +143,7 @@ describe('useComplexLookupModalState', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: false,
-          initialQuery: 'test',
+          assignedValue: { label: 'test' } as UserValueContents,
           defaultSegment: 'authorities:browse',
         }),
       );
@@ -155,12 +155,12 @@ describe('useComplexLookupModalState', () => {
   });
 
   describe('state transitions', () => {
-    it('reinitializes when query changes', () => {
+    it('reinitializes when assigned value changes', () => {
       const { rerender } = renderHook(
         ({ query }) =>
           useComplexLookupModalState({
             isOpen: true,
-            initialQuery: query,
+            assignedValue: { label: query } as UserValueContents,
             defaultSegment: 'authorities:browse',
           }),
         { initialProps: { query: 'first' } },
@@ -179,7 +179,7 @@ describe('useComplexLookupModalState', () => {
         ({ isOpen }) =>
           useComplexLookupModalState({
             isOpen,
-            initialQuery: 'test',
+            assignedValue: { label: 'test' } as UserValueContents,
             defaultSegment: 'authorities:browse',
           }),
         { initialProps: { isOpen: true } },

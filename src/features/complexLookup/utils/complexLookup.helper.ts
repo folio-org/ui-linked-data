@@ -1,3 +1,4 @@
+import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 import {
@@ -6,6 +7,7 @@ import {
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
   VALUE_DIVIDER,
 } from '@/features/complexLookup/constants/complexLookup.constants';
+import { SourceType } from '@/features/complexLookup/types';
 
 export const generateEmptyValueUuid = (uuid: string) => `${uuid}_${EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
 
@@ -96,4 +98,8 @@ export const formatComplexLookupDisplayValue = (values?: UserValueContents[]) =>
     .filter(({ label }) => label)
     .map(({ label }) => label)
     .join(VALUE_DIVIDER);
+};
+
+export const getDefaultHubSource = (assignedValue?: UserValueContents): SourceType => {
+  return (assignedValue?.meta?.sourceType as SourceType) || SOURCE_TYPES.LIBRARY_OF_CONGRESS;
 };

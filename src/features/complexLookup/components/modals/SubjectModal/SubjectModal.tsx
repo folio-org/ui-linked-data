@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
+
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
@@ -9,14 +11,15 @@ import {
   useComplexLookupModalCleanup,
   useComplexLookupModalState,
 } from '@/features/complexLookup/hooks';
+import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
 interface SubjectModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  initialQuery?: string;
   initialSegment?: 'search' | 'browse';
+  assignedValue?: UserValueContents;
   entry?: SchemaEntry;
   lookupContext?: string;
   modalConfig?: ModalConfig;
@@ -30,19 +33,25 @@ interface SubjectModalProps {
 export const SubjectModal: FC<SubjectModalProps> = ({
   isOpen,
   onClose,
-  initialQuery,
   initialSegment = 'browse',
+  assignedValue,
   entry,
   lookupContext,
   modalConfig,
   onAssign,
 }) => {
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
+  const isAssignedHub = assignedValue?.meta?.lookupType === LOOKUP_TYPES.HUBS;
+
+  // TODO: refactor this to use a constant or enum instead of hardcoded values
+  const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
+  const defaultSource = isAssignedHub ? getDefaultHubSource(assignedValue) : undefined;
 
   useComplexLookupModalState({
     isOpen,
-    initialQuery,
-    defaultSegment: `authorities:${initialSegment}`,
+    assignedValue,
+    defaultSegment,
+    ...(defaultSource ? { defaultSource } : {}),
   });
 
   const {
@@ -73,7 +82,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.searchSubjectAuthority" />}>
       <Search
         segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
-        defaultSegment={`authorities:${initialSegment}`}
+        defaultSegment={defaultSegment}
         flow="value"
         mode="custom"
       >
@@ -106,7 +115,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           <Search.Controls.MetaControls />
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={defaultSource} />
           </Search.Controls.SegmentContent>
         </Search.Controls>
 
