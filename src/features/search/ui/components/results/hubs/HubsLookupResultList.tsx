@@ -9,15 +9,17 @@ import { useTableFormatter } from '@/features/search/ui/hooks/useTableFormatter'
 interface HubsLookupResultListProps {
   context?: 'search' | 'complexLookup';
   onAssign?: (data: ComplexLookupAssignRecordDTO) => void;
+  onTitleClick?: (id: string, title?: string) => void;
 }
 
-export const HubsLookupResultList: FC<HubsLookupResultListProps> = ({ context = 'search', onAssign }) => {
+export const HubsLookupResultList: FC<HubsLookupResultListProps> = ({ context = 'search', onAssign, onTitleClick }) => {
   const data = useFormattedResults<SearchResultsTableRow>() || [];
   const { formattedData, listHeader } = useTableFormatter({
     data,
     tableConfig: hubsLookupTableConfig,
     context,
     onAssign,
+    onTitleClick,
   });
 
   return (

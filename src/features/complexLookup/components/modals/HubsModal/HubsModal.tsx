@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState, useHubsLookupModalLogic } from '@/features/complexLookup/hooks';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -16,7 +16,7 @@ interface HubsModalProps {
 
 /**
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
- * Supports import-on-assign for external hubs.
+ * Supports import-on-assign for external hubs and preview for local hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, onAssign }) => {
   // Reset search state and set initial query when modal opens
@@ -26,6 +26,19 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
     defaultSegment: 'hubsLookup',
     defaultSource: 'libraryOfCongress',
   });
+
+  // Hub preview and assignment logic
+  const {
+    isHubPreviewOpen,
+    isPreviewLoading,
+    isAssigning,
+    previewData,
+    previewMeta,
+    handleHubTitleClick,
+    handleHubAssign,
+    handleCloseHubPreview,
+    handleHubPreviewAssign,
+  } = useHubsLookupModalLogic({ onAssign, onClose });
 
   return (
     <LookupModal isOpen={isOpen} onClose={onClose} title={<FormattedMessage id="ld.hubs.assign" />}>
@@ -45,7 +58,17 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
         </Search.Controls>
 
         <Search.Content>
-          <HubsContent onAssign={onAssign} onClose={onClose} />
+          <HubsContent
+            isHubPreviewOpen={isHubPreviewOpen}
+            isPreviewLoading={isPreviewLoading}
+            isAssigning={isAssigning}
+            previewData={previewData}
+            previewMeta={previewMeta}
+            handleHubAssign={handleHubAssign}
+            handleHubTitleClick={handleHubTitleClick}
+            handleCloseHubPreview={handleCloseHubPreview}
+            handleHubPreviewAssign={handleHubPreviewAssign}
+          />
         </Search.Content>
       </Search>
     </LookupModal>

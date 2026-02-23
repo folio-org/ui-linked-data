@@ -6,7 +6,7 @@ import './HubLinkFormatter.scss';
 
 interface HubLinkFormatterProps {
   row: SearchResultsTableRow;
-  onTitleClick?: (id: string, title: string) => void;
+  onTitleClick?: (id: string, title?: string) => void;
 }
 
 export const HubLinkFormatter: FC<HubLinkFormatterProps> = ({ row, onTitleClick }) => {
