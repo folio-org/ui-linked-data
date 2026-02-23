@@ -1,10 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-
-import { useInputsState } from '@/store';
+import { getRecord } from '@/common/api/records.api';
+import { useConfig } from '@/common/hooks/useConfig.hook';
 
 interface HubResourceData {
   base: Schema;
@@ -35,44 +34,44 @@ interface UseHubPreviewResult {
 export function useHubPreview({ isPreviewOpen }: UseHubPreviewParams): UseHubPreviewResult {
   const [previewMeta, setPreviewMeta] = useState<{ id: string; title: string } | null>(null);
   const [selectedRecordId, setSelectedRecordId] = useState<string | undefined>();
-  const { getRecordAndInitializeParsing } = useRecordControls();
-  const { previewContent } = useInputsState(['previewContent']);
+  const { getProfiles } = useConfig();
 
-  const { isLoading, isFetching } = useQuery({
+  const {
+    data: previewData,
+    isLoading,
+    isFetching,
+  } = useQuery({
     queryKey: ['hubPreview', selectedRecordId],
-    queryFn: async () => {
+    queryFn: async (): Promise<HubPreviewData | null> => {
       if (!selectedRecordId) return null;
 
-      const recordData = await getRecordAndInitializeParsing({
+      const recordData: RecordEntry = await getRecord({ recordId: selectedRecordId });
+
+      // Get generated preview data without updating previewContent store
+      const generatedData = await getProfiles({
+        record: recordData,
         recordId: selectedRecordId,
-        previewParams: { singular: false, noStateUpdate: true },
+        previewParams: { noStateUpdate: true },
+        skipPreviewContentUpdate: true,
       });
 
-      return recordData;
+      if (!generatedData) return null;
+
+      return {
+        id: selectedRecordId,
+        resource: {
+          base: generatedData.base,
+          userValues: generatedData.userValues,
+          initKey: generatedData.initKey,
+        },
+      };
     },
     enabled: !!selectedRecordId && isPreviewOpen,
     staleTime: 0,
     gcTime: 0,
-    retry: 1,
+    retry: false,
     refetchOnWindowFocus: false,
   });
-
-  const previewData = useMemo((): HubPreviewData | null => {
-    if (!selectedRecordId) return null;
-
-    const previewEntry = previewContent.find(({ id }) => id === selectedRecordId);
-
-    if (!previewEntry) return null;
-
-    return {
-      id: selectedRecordId,
-      resource: {
-        base: previewEntry.base as Schema,
-        userValues: previewEntry.userValues,
-        initKey: previewEntry.initKey,
-      },
-    };
-  }, [previewContent, selectedRecordId]);
 
   const loadHubPreview = useCallback((id: string, title: string) => {
     setSelectedRecordId(id);
@@ -87,7 +86,7 @@ export function useHubPreview({ isPreviewOpen }: UseHubPreviewParams): UseHubPre
   return {
     loadHubPreview,
     resetPreview,
-    previewData,
+    previewData: previewData ?? null,
     isLoading: isLoading || isFetching,
     previewMeta,
   };

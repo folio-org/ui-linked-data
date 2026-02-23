@@ -22,11 +22,19 @@ export type PreviewParams = {
   singular?: boolean;
 };
 
+type GeneratedPreviewData = {
+  base: Schema;
+  userValues: UserValues;
+  selectedEntries: string[];
+  initKey: string;
+};
+
 type IGetProfiles = {
   record?: RecordEntry;
   recordId?: string;
   previewParams?: PreviewParams;
   asClone?: boolean;
+  skipPreviewContentUpdate?: boolean;
   profile?: {
     ids: number[];
     rootEntry?: ProfileNode;
@@ -68,7 +76,7 @@ export const useConfig = () => {
   ]);
   const { getProcessedRecordAndSchema } = useProcessedRecordAndSchema();
   const isProcessingProfiles = useRef(false);
-  const processingPromise = useRef<Promise<void> | null>(null);
+  const processingPromise = useRef<Promise<void | GeneratedPreviewData> | null>(null);
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
 
@@ -137,7 +145,13 @@ export const useConfig = () => {
     };
   };
 
-  const processProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<void> => {
+  const processProfiles = async ({
+    record,
+    recordId,
+    previewParams,
+    asClone,
+    skipPreviewContentUpdate = false,
+  }: IGetProfiles): Promise<GeneratedPreviewData | void> => {
     try {
       const recordData = record?.resource || {};
       isProcessingProfiles.current = true;
@@ -179,20 +193,30 @@ export const useConfig = () => {
           noStateUpdate: previewParams?.noStateUpdate,
         });
 
-        if (previewParams && recordId) {
+        const generatedData = {
+          base: updatedSchema,
+          userValues: userValuesService.getAllValues(),
+          selectedEntries: selectedEntriesService.get(),
+          initKey,
+        };
+
+        // Update previewContent store unless explicitly skipped
+        if (previewParams && recordId && !skipPreviewContentUpdate) {
           setPreviewContent(prev => [
             ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
             {
               id: recordId,
-              base: updatedSchema,
-              userValues: userValuesService.getAllValues(),
-              selectedEntries: selectedEntriesService.get(),
-              initKey,
+              ...generatedData,
               title: recordTitle,
               entities,
               referenceIds,
             },
           ]);
+        }
+
+        // Return the generated data for local use (e.g., hub preview)
+        if (skipPreviewContentUpdate) {
+          return generatedData;
         }
       }
     } finally {
@@ -201,7 +225,13 @@ export const useConfig = () => {
     }
   };
 
-  const getProfiles = async ({ record, recordId, previewParams, asClone }: IGetProfiles): Promise<void> => {
+  const getProfiles = async ({
+    record,
+    recordId,
+    previewParams,
+    asClone,
+    skipPreviewContentUpdate,
+  }: IGetProfiles): Promise<GeneratedPreviewData | void> => {
     // If processing is already running and caller provided a record/recordId,
     // wait for the current processing to finish instead of returning immediately.
     if (isProcessingProfiles.current && (record || recordId)) {
@@ -214,7 +244,13 @@ export const useConfig = () => {
 
     // If there's no processingPromise active, start one and store it,
     // so other callers can await the same promise instead of racing.
-    processingPromise.current ??= processProfiles({ record, recordId, previewParams, asClone });
+    processingPromise.current ??= processProfiles({
+      record,
+      recordId,
+      previewParams,
+      asClone,
+      skipPreviewContentUpdate,
+    });
 
     return processingPromise.current;
   };
