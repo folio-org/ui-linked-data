@@ -10,6 +10,7 @@ type UserValueContents = {
     srsId?: string;
     isPreferred?: boolean;
     sourceType?: string;
+    lookupType?: string;
   };
 };
 

@@ -8,6 +8,7 @@ import {
   notesMapping,
   processComplexLookup,
   processHubsComplexLookup,
+  processSubjectComplexLookup,
   wrapSimpleLookupData,
   wrapWithContainer,
 } from './recordProcessingCases';
@@ -17,9 +18,6 @@ const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKe
 
 const processContributorComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
   processComplexLookup(record, blockKey, groupKey, '_name');
-
-const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
-  processComplexLookup(record, blockKey, groupKey, 'label');
 
 export const RECORD_NORMALIZING_CASES = {
   [BFLITE_URIS.PRODUCTION]: {

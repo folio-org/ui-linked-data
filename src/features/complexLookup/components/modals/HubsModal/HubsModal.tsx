@@ -4,13 +4,14 @@ import { FormattedMessage } from 'react-intl';
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
 import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
 interface HubsModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  initialQuery?: string;
+  assignedValue?: UserValueContents;
   onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
 }
 
@@ -18,13 +19,15 @@ interface HubsModalProps {
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
  * Supports import-on-assign for external hubs.
  */
-export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, onAssign }) => {
+export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
+  const defaultSource = getDefaultHubSource(assignedValue);
+
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
     isOpen,
-    initialQuery,
+    assignedValue,
     defaultSegment: 'hubsLookup',
-    defaultSource: 'libraryOfCongress',
+    defaultSource,
   });
 
   return (
@@ -32,7 +35,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"
-        defaultSource="libraryOfCongress"
+        defaultSource={defaultSource}
         flow="value"
         mode="custom"
       >
@@ -41,7 +44,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, initialQuery, o
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
 
-          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={defaultSource} />
         </Search.Controls>
 
         <Search.Content>

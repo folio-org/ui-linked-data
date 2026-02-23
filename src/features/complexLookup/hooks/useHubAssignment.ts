@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
@@ -37,7 +38,7 @@ export function useHubAssignment({ onAssignSuccess }: UseHubAssignmentParams): U
         let assignId = id;
 
         // External hubs require import to generate a local resource id
-        if (sourceType !== 'local' && uri) {
+        if (sourceType !== SOURCE_TYPES.LOCAL && uri) {
           const { importedId } = await importForAssignment({ hubUri: uri });
 
           assignId = importedId;
@@ -50,6 +51,7 @@ export function useHubAssignment({ onAssignSuccess }: UseHubAssignmentParams): U
             type: AdvancedFieldType.complex,
             uri,
             sourceType,
+            lookupType: LOOKUP_TYPES.HUBS,
           },
         };
 

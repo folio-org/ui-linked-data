@@ -18,7 +18,12 @@ export class ComplexLookupUserValueService implements IUserValueType {
     return data.map(item => ({
       id: this.getInternalId(item) ?? this.getId(item, id),
       label: this.getLabel(item),
-      meta: { type, uri: this.getUri(item), sourceType: this.getSourceType(item) },
+      meta: {
+        type,
+        uri: this.getUri(item),
+        sourceType: this.getSourceType(item),
+        lookupType: this.getLookupType(item),
+      },
     }));
   }
 
@@ -30,6 +35,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
         type,
         uri: this.getUri(data),
         sourceType: this.getSourceType(data),
+        lookupType: this.getLookupType(data),
         ...this.getPreferredMeta(data),
       },
     };
@@ -67,6 +73,10 @@ export class ComplexLookupUserValueService implements IUserValueType {
 
   private getSourceType(data: unknown) {
     return (data as { sourceType?: string })?.sourceType;
+  }
+
+  private getLookupType(data: unknown) {
+    return (data as { lookupType?: string })?.lookupType;
   }
 
   private getInternalId(data: unknown) {
