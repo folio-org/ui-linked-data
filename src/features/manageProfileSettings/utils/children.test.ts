@@ -45,6 +45,7 @@ describe('children', () => {
       {
         id: 'test:childB',
         visible: false,
+        order: 3,
       },
     ],
     missingFromSettings: [],
@@ -177,14 +178,17 @@ describe('children', () => {
           {
             id: 'test:childA',
             visible: false,
+            order: 1,
           },
           {
             id: 'test:childB',
             visible: false,
+            order: 2,
           },
           {
             id: 'test:childC',
             visible: false,
+            order: 3,
           },
         ],
         missingFromSettings: [],
@@ -263,10 +267,12 @@ describe('children', () => {
           {
             id: 'test:childA',
             visible: false,
+            order: 1,
           },
           {
             id: 'test:childB',
             visible: false,
+            order: 2,
           },
         ],
         missingFromSettings: [],

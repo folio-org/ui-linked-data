@@ -116,26 +116,26 @@ describe('HubsModal', () => {
 
   describe('Modal state management', () => {
     it('calls useComplexLookupModalState with correct parameters', () => {
-      const initialQuery = 'Test Hub';
+      const assignedValue = { label: 'Test Hub' } as UserValueContents;
 
       renderWithProviders(
-        <HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} initialQuery={initialQuery} />,
+        <HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} assignedValue={assignedValue} />,
       );
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
-        initialQuery: 'Test Hub',
+        assignedValue: { label: 'Test Hub' },
         defaultSegment: 'hubsLookup',
         defaultSource: 'libraryOfCongress',
       });
     });
 
-    it('calls useComplexLookupModalState without initialQuery when not provided', () => {
+    it('calls useComplexLookupModalState without assignedValue when not provided', () => {
       renderWithProviders(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       expect(ComplexLookupHooks.useComplexLookupModalState).toHaveBeenCalledWith({
         isOpen: true,
-        initialQuery: undefined,
+        assignedValue: undefined,
         defaultSegment: 'hubsLookup',
         defaultSource: 'libraryOfCongress',
       });

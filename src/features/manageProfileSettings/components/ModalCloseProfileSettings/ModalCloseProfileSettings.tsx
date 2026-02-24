@@ -7,6 +7,8 @@ import { Modal } from '@/components/Modal';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
+import { useSaveProfileSettings } from '../../hooks';
+
 import './ModalCloseProfileSettings.scss';
 
 type ModalCloseProfileSettingsProps = {
@@ -30,6 +32,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsShowEditor',
   ]);
+  const { saveSettings } = useSaveProfileSettings();
 
   const doNext = () => {
     setIsModified(false);
@@ -53,9 +56,9 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     doNext();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsOpen(false);
-    // TODO: handle save API calls
+    await saveSettings();
     doNext();
   };
 

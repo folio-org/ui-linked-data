@@ -314,4 +314,142 @@ describe('ComplexLookupUserValueService', () => {
 
     expect(result).toEqual(testResult);
   });
+
+  test('generates user value with lookupType from normalized authority data', () => {
+    const complexLookupUserValueService = new ComplexLookupUserValueService();
+    const testResult = {
+      uuid: 'testUuid_1',
+      contents: [
+        {
+          id: 'auth_id_1',
+          label: 'Authority Label',
+          meta: {
+            type: 'COMPLEX',
+            uri: 'test_uri',
+            sourceType: undefined,
+            lookupType: 'authorities',
+          },
+        },
+      ],
+    };
+
+    const result = complexLookupUserValueService.generate({
+      id: 'fallback_id',
+      data: [
+        {
+          id: ['auth_id_1'],
+          label: ['Authority Label'],
+          uri: ['test_uri'],
+          lookupType: 'authorities',
+        },
+      ] as unknown as RecordBasic[],
+      uuid: 'testUuid_1',
+      type: 'COMPLEX',
+    });
+
+    expect(result).toEqual(testResult);
+  });
+
+  test('generates user value with lookupType from normalized hub data', () => {
+    const complexLookupUserValueService = new ComplexLookupUserValueService();
+    const testResult = {
+      uuid: 'testUuid_1',
+      contents: [
+        {
+          id: 'hub_id_1',
+          label: 'Hub Label',
+          meta: {
+            type: 'COMPLEX',
+            uri: 'test_hub_uri',
+            sourceType: 'libraryOfCongress',
+            lookupType: 'hubs',
+          },
+        },
+      ],
+    };
+
+    const result = complexLookupUserValueService.generate({
+      id: 'fallback_id',
+      data: [
+        {
+          id: ['hub_id_1'],
+          label: ['Hub Label'],
+          uri: ['test_hub_uri'],
+          sourceType: 'libraryOfCongress',
+          lookupType: 'hubs',
+        },
+      ] as unknown as RecordBasic[],
+      uuid: 'testUuid_1',
+      type: 'COMPLEX',
+    });
+
+    expect(result).toEqual(testResult);
+  });
+
+  test('generates user value with lookupType from single normalized data object', () => {
+    const complexLookupUserValueService = new ComplexLookupUserValueService();
+    const testResult = {
+      uuid: 'subject_uuid',
+      contents: [
+        {
+          id: 'subject_id_1',
+          label: 'Subject Label',
+          meta: {
+            type: 'COMPLEX',
+            uri: 'subject_uri',
+            sourceType: undefined,
+            lookupType: 'authorities',
+          },
+        },
+      ],
+    };
+
+    const result = complexLookupUserValueService.generate({
+      id: 'fallback_id',
+      data: {
+        value: ['Subject Label'],
+        uri: ['subject_uri'],
+        id: ['subject_id_1'],
+        lookupType: 'authorities',
+      } as unknown as RecordBasic,
+      uuid: 'subject_uuid',
+      type: 'COMPLEX',
+    });
+
+    expect(result).toEqual(testResult);
+  });
+
+  test('generates user value without lookupType when not provided', () => {
+    const complexLookupUserValueService = new ComplexLookupUserValueService();
+    const testResult = {
+      uuid: 'testUuid_1',
+      contents: [
+        {
+          id: 'test_id_1',
+          label: 'Test Label',
+          meta: {
+            type: 'COMPLEX',
+            uri: 'test_uri',
+            sourceType: undefined,
+            lookupType: undefined,
+          },
+        },
+      ],
+    };
+
+    const result = complexLookupUserValueService.generate({
+      id: 'fallback_id',
+      data: [
+        {
+          id: ['test_id_1'],
+          label: ['Test Label'],
+          uri: ['test_uri'],
+        },
+      ] as unknown as RecordBasic[],
+      uuid: 'testUuid_1',
+      type: 'COMPLEX',
+    });
+
+    expect(result).toEqual(testResult);
+  });
 });

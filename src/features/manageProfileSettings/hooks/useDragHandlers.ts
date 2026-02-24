@@ -10,39 +10,29 @@ import { listFromId } from '../utils/children';
 import { useMoveBetweenLists } from './useMoveBetweenLists';
 
 interface UseDragHandlersParams {
-  unused: ProfileSettingComponent[];
-  selected: ProfileSettingComponent[];
   startingList: ComponentType | null;
   cancelDrag: () => void;
   endDrag: () => void;
-  setSelected: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
   setStartingList: Dispatch<SetStateAction<ComponentType | null>>;
-  setUnused: Dispatch<SetStateAction<ProfileSettingComponent[]>>;
   startDrag: (activeId: string, startingList: ComponentType | null) => void;
 }
 
 export const useDragHandlers = ({
-  unused,
-  selected,
   startingList,
   cancelDrag,
   endDrag,
-  setSelected,
   setStartingList,
-  setUnused,
   startDrag,
 }: UseDragHandlersParams) => {
-  const { setIsModified, setIsSettingsActive } = useManageProfileSettingsState([
-    'setIsModified',
-    'setIsSettingsActive',
-  ]);
+  const { setIsModified, setIsSettingsActive, setUnusedComponents, setSelectedComponents } =
+    useManageProfileSettingsState([
+      'setIsModified',
+      'setIsSettingsActive',
+      'setUnusedComponents',
+      'setSelectedComponents',
+    ]);
 
-  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists({
-    unused,
-    selected,
-    setUnused,
-    setSelected,
-  });
+  const { moveUnusedToSelected, moveSelectedToUnused } = useMoveBetweenLists();
 
   const handleDragStart = (event: DragStartEvent) => {
     startDrag(event.active.id as string, event.active.data.current?.sortable.containerId);
@@ -55,6 +45,18 @@ export const useDragHandlers = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
+    // If the component moved between lists, it will appear to be
+    // over itself; detect when a move happened and set modified even
+    // if no reordering is needed.
+    if (over && active.id === over.id) {
+      const activeStartingList = active.data.current?.sortable.containerId;
+      const targetList = over.data.current?.sortable.containerId;
+      if (activeStartingList !== targetList) {
+        setIsModified(true);
+        setIsSettingsActive(true);
+      }
+    }
+
     if (over && active.id !== over.id) {
       setIsModified(true);
       setIsSettingsActive(true);
@@ -62,14 +64,14 @@ export const useDragHandlers = ({
       const targetList = over.data.current?.sortable.containerId;
       if (startingList === ComponentType.selected && targetList === ComponentType.selected) {
         // moving within selected list
-        setSelected(prev => {
+        setSelectedComponents(prev => {
           const oldIndex = prev.findIndex(p => p.id === active.id);
           const newIndex = prev.findIndex(p => p.id === over.id);
           return arrayMove(prev, oldIndex, newIndex);
         });
       } else if (startingList === ComponentType.unused && targetList === ComponentType.unused) {
         // moving within unused list
-        setUnused(prev => {
+        setUnusedComponents(prev => {
           const oldIndex = prev.findIndex(p => p.id === active.id);
           const newIndex = prev.findIndex(p => p.id === over.id);
           return arrayMove(prev, oldIndex, newIndex);

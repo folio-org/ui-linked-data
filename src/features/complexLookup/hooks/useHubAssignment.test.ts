@@ -2,6 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
@@ -58,6 +59,7 @@ describe('useHubAssignment', () => {
         label: 'Local Hub Title',
         meta: {
           type: AdvancedFieldType.complex,
+          lookupType: LOOKUP_TYPES.HUBS,
           uri: 'http://example.com/hub1',
           sourceType: 'local',
         },
@@ -102,6 +104,7 @@ describe('useHubAssignment', () => {
         label: 'External Hub Title',
         meta: {
           type: AdvancedFieldType.complex,
+          lookupType: LOOKUP_TYPES.HUBS,
           uri: 'http://example.com/hub2',
           sourceType: 'libraryOfCongress',
         },
@@ -204,6 +207,7 @@ describe('useHubAssignment', () => {
         label: 'Hub Without URI',
         meta: {
           type: AdvancedFieldType.complex,
+          lookupType: LOOKUP_TYPES.HUBS,
           uri: undefined,
           sourceType: 'libraryOfCongress',
         },

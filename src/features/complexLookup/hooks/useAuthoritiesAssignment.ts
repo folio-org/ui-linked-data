@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 
+import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
@@ -126,6 +127,7 @@ export function useAuthoritiesAssignment({
           meta: {
             type: AdvancedFieldType.complex,
             srsId,
+            lookupType: LOOKUP_TYPES.AUTHORITIES,
           },
         };
 

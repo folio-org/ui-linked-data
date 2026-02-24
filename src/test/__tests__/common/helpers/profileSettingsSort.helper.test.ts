@@ -2,85 +2,52 @@ import { sortProfileSettingsChildren } from '@/common/helpers/profileSettingsSor
 
 describe('sortProfileSettingsChildren', () => {
   test.each([
-    ['visibility and order both undefined', [{ id: 'a' }, { id: 'b' }], [{ id: 'a' }, { id: 'b' }]],
     [
-      'visible and defined in first only',
-      [{ id: 'a' }, { id: 'b', visible: true }],
-      [{ id: 'b', visible: true }, { id: 'a' }],
-    ],
-    [
-      'visible and defined in second only',
-      [{ id: 'a', visible: true }, { id: 'b' }],
-      [{ id: 'a', visible: true }, { id: 'b' }],
-    ],
-    [
-      'visible and defined in both',
-      [
-        { id: 'a', visible: true },
-        { id: 'b', visible: true },
-      ],
-      [
-        { id: 'a', visible: true },
-        { id: 'b', visible: true },
-      ],
-    ],
-    [
-      'hidden in first and defined in both',
-      [
-        { id: 'a', visible: false },
-        { id: 'b', visible: true },
-      ],
-      [
-        { id: 'b', visible: true },
-        { id: 'a', visible: false },
-      ],
-    ],
-    [
-      'hidden in second and defined in both',
-      [
-        { id: 'a', visible: true },
-        { id: 'b', visible: false },
-      ],
-      [
-        { id: 'a', visible: true },
-        { id: 'b', visible: false },
-      ],
-    ],
-    [
-      'hidden in both',
-      [
-        { id: 'a', visible: false },
-        { id: 'b', visible: false },
-      ],
-      [
-        { id: 'a', visible: false },
-        { id: 'b', visible: false },
-      ],
-    ],
-    [
-      'order only in first',
+      'hidden in one',
       [
         { id: 'a', visible: true, order: 1 },
-        { id: 'b', visible: true },
+        { id: 'b', visible: false, order: 2 },
       ],
       [
         { id: 'a', visible: true, order: 1 },
-        { id: 'b', visible: true },
+        { id: 'b', visible: false, order: 2 },
       ],
     ],
     [
-      'order only in second',
+      'hidden in one with opposite ordering',
       [
-        { id: 'a', visible: true },
-        { id: 'b', visible: true, order: 1 },
+        { id: 'a', visible: true, order: 2 },
+        { id: 'b', visible: false, order: 1 },
       ],
       [
-        { id: 'b', visible: true, order: 1 },
-        { id: 'a', visible: true },
+        { id: 'a', visible: true, order: 2 },
+        { id: 'b', visible: false, order: 1 },
       ],
     ],
     [
-      'order in both',
+      'both hidden',
+      [
+        { id: 'a', visible: false, order: 1 },
+        { id: 'b', visible: false, order: 2 },
+      ],
+      [
+        { id: 'a', visible: false, order: 1 },
+        { id: 'b', visible: false, order: 2 },
+      ],
+    ],
+    [
+      'both hidden opposite ordering',
+      [
+        { id: 'a', visible: false, order: 2 },
+        { id: 'b', visible: false, order: 1 },
+      ],
+      [
+        { id: 'b', visible: false, order: 1 },
+        { id: 'a', visible: false, order: 2 },
+      ],
+    ],
+    [
+      'maintain original ordering',
       [
         { id: 'a', visible: true, order: 1 },
         { id: 'b', visible: true, order: 2 },

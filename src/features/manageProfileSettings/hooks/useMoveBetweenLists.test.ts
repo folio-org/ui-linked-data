@@ -1,7 +1,11 @@
-import { act, useState } from 'react';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { act } from 'react';
 
 import { Active, Over } from '@dnd-kit/core';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
+
+import { useManageProfileSettingsStore } from '@/store';
 
 import { useMoveBetweenLists } from './useMoveBetweenLists';
 
@@ -19,6 +23,9 @@ describe('useMoveBetweenLists', () => {
       name: 'First Selected',
     },
   ] as ProfileSettingComponent[];
+
+  const mockSetUnused = jest.fn();
+  const mockSetSelected = jest.fn();
 
   const makeMockActive = (id: string) => {
     return {
@@ -49,160 +56,193 @@ describe('useMoveBetweenLists', () => {
   };
 
   it('move unused to populated selected', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveUnusedToSelected } = result.current;
 
     act(() => moveUnusedToSelected(makeMockActive('unused:first'), makeMockOver('selected:first')));
 
-    expect(unused.result.current[0].length).toBe(0);
-    expect(selected.result.current[0].length).toBe(2);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenCalledWith(Array(0));
+      expect(mockSetSelected).toHaveBeenCalledWith(Array(2).fill(expect.anything()));
+    });
   });
 
   it('move unused to empty selected', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([] as ProfileSettingComponent[]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveUnusedToSelected } = result.current;
 
     act(() => moveUnusedToSelected(makeMockActive('unused:first'), makeMockOver('irrelevant')));
 
-    expect(unused.result.current[0].length).toBe(0);
-    expect(selected.result.current[0].length).toBe(1);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(0));
+      expect(mockSetSelected).toHaveBeenCalledWith(Array(1).fill(expect.anything()));
+    });
   });
 
   it('move selected to populated unused', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveSelectedToUnused } = result.current;
 
     act(() => moveSelectedToUnused(makeMockActive('selected:first'), makeMockOver('unused:first')));
 
-    expect(unused.result.current[0].length).toBe(2);
-    expect(selected.result.current[0].length).toBe(0);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(2).fill(expect.anything()));
+      expect(mockSetSelected).toHaveBeenCalledWith(Array(0));
+    });
   });
 
   it('move selected to end of populated unused container', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveSelectedToUnused } = result.current;
 
     act(() => moveSelectedToUnused(makeMockActive('selected:first'), makeMockOver('unused-container')));
 
-    expect(unused.result.current[0].length).toBe(2);
-    expect(selected.result.current[0].length).toBe(0);
-    expect(unused.result.current[0][1]).toEqual({
-      id: 'selected:first',
-      name: 'First Selected',
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(2).fill(expect.anything()));
+      expect(mockSetSelected).toHaveBeenCalledWith(Array(0));
+      expect(mockSetUnused.mock.calls[0][0][1]).toEqual({
+        id: 'selected:first',
+        name: 'First Selected',
+      });
     });
   });
 
   it('move selected to empty unused', () => {
-    const unused = renderHook(() => useState([] as ProfileSettingComponent[]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveSelectedToUnused } = result.current;
 
     act(() => moveSelectedToUnused(makeMockActive('selected:first'), makeMockOver('irrelevant')));
 
-    expect(unused.result.current[0].length).toBe(1);
-    expect(selected.result.current[0].length).toBe(0);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(1).fill(expect.anything()));
+      expect(mockSetSelected).toHaveBeenCalledWith(Array(0));
+    });
   });
 
   it('no change for unrecognized drag element', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { moveSelectedToUnused } = result.current;
 
     act(() => moveSelectedToUnused(makeMockActive('unknown'), makeMockOver('irrelevant')));
 
-    expect(unused.result.current[0].length).toBe(1);
-    expect(selected.result.current[0].length).toBe(1);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(1).fill(expect.anything()));
+      expect(mockSetSelected).toHaveBeenLastCalledWith(Array(1).fill(expect.anything()));
+    });
   });
 
   it('move by ID from selected to populated unused', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { makeMoveComponentIdToUnused } = result.current;
+
     const moveComponentIdToUnused = makeMoveComponentIdToUnused('selected:first');
 
     act(() => moveComponentIdToUnused());
 
-    expect(unused.result.current[0].length).toBe(2);
-    expect(selected.result.current[0].length).toBe(0);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(2).fill(expect.anything()));
+      expect(mockSetSelected).toHaveBeenLastCalledWith(Array(0));
+    });
   });
 
   it('move by ID from unused to populated selected', () => {
-    const unused = renderHook(() => useState([...mockUnused]));
-    const selected = renderHook(() => useState([...mockSelected]));
-    const { result } = renderHook(() =>
-      useMoveBetweenLists({
-        unused: unused.result.current[0],
-        selected: selected.result.current[0],
-        setUnused: unused.result.current[1],
-        setSelected: selected.result.current[1],
-      }),
-    );
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          unusedComponents: [...mockUnused],
+          selectedComponents: [...mockSelected],
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+    const { result } = renderHook(() => useMoveBetweenLists());
     const { makeMoveComponentIdToSelected } = result.current;
     const moveComponentIdToSelected = makeMoveComponentIdToSelected('unused:first');
 
     act(() => moveComponentIdToSelected());
 
-    expect(selected.result.current[0].length).toBe(2);
-    expect(unused.result.current[0].length).toBe(0);
+    waitFor(() => {
+      expect(mockSetUnused).toHaveBeenLastCalledWith(Array(0));
+      expect(mockSetSelected).toHaveBeenLastCalledWith(Array(2).fill(expect.anything()));
+    });
   });
 });

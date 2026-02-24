@@ -2,6 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
@@ -187,6 +188,7 @@ describe('useAuthoritiesAssignment', () => {
         label: 'Test Title',
         meta: {
           type: AdvancedFieldType.complex,
+          lookupType: LOOKUP_TYPES.AUTHORITIES,
           srsId: 'srs-id',
         },
       });
