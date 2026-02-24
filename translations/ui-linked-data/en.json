@@ -209,6 +209,7 @@
   "ld.aria.searchPane.open": "Open search pane",
   "ld.aria.modal.close": "Close {modalKind} modal",
   "ld.aria.complexLookup.marcPreview.close": "Close lookup MARC preview section",
+  "ld.aria.complexLookup.hubPreview.close": "Close lookup hub preview section",
   "ld.aria.advancedSearch.queryInput": "Advanced search row query input",
   "ld.aria.advancedSearch.operator": "Advanced search row operator",
   "ld.aria.advancedSearch.qualifier": "Advanced search row qualifier",
