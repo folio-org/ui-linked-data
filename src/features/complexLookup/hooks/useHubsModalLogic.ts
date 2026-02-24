@@ -112,7 +112,7 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
     previewMeta,
     handleHubTitleClick,
     handleHubAssign: handleAssign,
-    handleCloseHubPreview: handleCloseHubPreview,
+    handleCloseHubPreview,
     handleResetHubPreview: handleCloseHubPreview,
     handleHubPreviewAssign,
     cleanup: {

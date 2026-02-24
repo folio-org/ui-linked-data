@@ -86,11 +86,13 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     handleCloseHubPreview,
     handleResetHubPreview,
     handleHubPreviewAssign,
+    cleanup: hubCleanup,
   } = useHubsModalLogic({ onAssign, onClose });
 
   const { handleModalClose } = useComplexLookupModalCleanup({
     onClose,
     withMarcPreview: cleanup,
+    withHubPreview: hubCleanup,
   });
 
   return (

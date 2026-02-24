@@ -3,7 +3,11 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import { useComplexLookupModalState, useHubsModalLogic } from '@/features/complexLookup/hooks';
+import {
+  useComplexLookupModalCleanup,
+  useComplexLookupModalState,
+  useHubsModalLogic,
+} from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
@@ -41,10 +45,17 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
     handleHubAssign,
     handleCloseHubPreview,
     handleHubPreviewAssign,
+    cleanup,
   } = useHubsModalLogic({ onAssign, onClose });
 
+  // Modal cleanup handler
+  const { handleModalClose } = useComplexLookupModalCleanup({
+    onClose,
+    withHubPreview: cleanup,
+  });
+
   return (
-    <LookupModal isOpen={isOpen} onClose={onClose} title={<FormattedMessage id="ld.hubs.assign" />}>
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.hubs.assign" />}>
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"

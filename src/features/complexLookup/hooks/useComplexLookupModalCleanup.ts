@@ -7,9 +7,15 @@ interface MarcPreviewCleanup {
   resetMarcPreviewMetadata: VoidFunction;
 }
 
+interface HubPreviewCleanup {
+  resetIsHubPreviewOpen: VoidFunction;
+  resetPreview: VoidFunction;
+}
+
 interface UseComplexLookupModalCleanupParams {
   onClose: VoidFunction;
   withMarcPreview?: MarcPreviewCleanup;
+  withHubPreview?: HubPreviewCleanup;
 }
 
 interface UseComplexLookupModalCleanupResult {
@@ -22,6 +28,7 @@ interface UseComplexLookupModalCleanupResult {
 export function useComplexLookupModalCleanup({
   onClose,
   withMarcPreview,
+  withHubPreview,
 }: UseComplexLookupModalCleanupParams): UseComplexLookupModalCleanupResult {
   const handleModalClose = useCallback(() => {
     // Clean up MARC preview state if applicable
@@ -32,9 +39,15 @@ export function useComplexLookupModalCleanup({
       withMarcPreview.resetPreview();
     }
 
+    // Clean up Hub preview state if applicable
+    if (withHubPreview) {
+      withHubPreview.resetIsHubPreviewOpen();
+      withHubPreview.resetPreview();
+    }
+
     // Close the modal
     onClose();
-  }, [onClose, withMarcPreview]);
+  }, [onClose, withMarcPreview, withHubPreview]);
 
   return { handleModalClose };
 }
