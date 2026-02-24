@@ -10,7 +10,7 @@ import {
   useAuthoritiesModalLogic,
   useComplexLookupModalCleanup,
   useComplexLookupModalState,
-  useHubsLookupModalLogic,
+  useHubsModalLogic,
 } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
@@ -86,7 +86,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     handleCloseHubPreview,
     handleResetHubPreview,
     handleHubPreviewAssign,
-  } = useHubsLookupModalLogic({ onAssign, onClose });
+  } = useHubsModalLogic({ onAssign, onClose });
 
   const { handleModalClose } = useComplexLookupModalCleanup({
     onClose,

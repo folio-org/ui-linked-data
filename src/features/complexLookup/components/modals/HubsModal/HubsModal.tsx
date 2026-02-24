@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import { useComplexLookupModalState, useHubsLookupModalLogic } from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState, useHubsModalLogic } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
@@ -41,7 +41,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
     handleHubAssign,
     handleCloseHubPreview,
     handleHubPreviewAssign,
-  } = useHubsLookupModalLogic({ onAssign, onClose });
+  } = useHubsModalLogic({ onAssign, onClose });
 
   return (
     <LookupModal isOpen={isOpen} onClose={onClose} title={<FormattedMessage id="ld.hubs.assign" />}>

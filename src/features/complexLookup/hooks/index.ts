@@ -15,4 +15,3 @@ export { useComplexLookupModalCleanup } from './useComplexLookupModalCleanup';
 export { useAuthoritiesModalLogic } from './useAuthoritiesModalLogic';
 export { useHubsModalLogic } from './useHubsModalLogic';
 export { useHubPreview } from './useHubPreview';
-export { useHubsLookupModalLogic } from './useHubsLookupModalLogic';

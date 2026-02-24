@@ -9,7 +9,7 @@ jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesModalLogic: jest.fn(),
   useComplexLookupModalCleanup: jest.fn(),
-  useHubsLookupModalLogic: jest.fn(),
+  useHubsModalLogic: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -133,7 +133,7 @@ describe('SubjectModal', () => {
         resetMarcPreviewMetadata: jest.fn(),
       },
     });
-    (ComplexLookupHooks.useHubsLookupModalLogic as jest.Mock).mockReturnValue({
+    (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
       isHubPreviewOpen: false,
       isPreviewLoading: false,
       isAssigning: false,
