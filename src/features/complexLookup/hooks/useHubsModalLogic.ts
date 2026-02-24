@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useHubAssignment } from '@/features/complexLookup/hooks/useHubAssignment';
 import { useHubPreviewQuery } from '@/features/complexLookup/hooks/useHubPreviewQuery';
@@ -30,6 +30,7 @@ interface UseHubsModalLogicResult {
   // State
   isHubPreviewOpen: boolean;
   isPreviewLoading: boolean;
+  isPreviewError: boolean;
   isAssigning: boolean;
   previewData: HubPreviewData | null;
   previewMeta: { id: string; title: string } | null;
@@ -61,20 +62,32 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
     resetPreview,
     previewData,
     isLoading: isPreviewLoading,
+    isError: isPreviewError,
     previewMeta,
   } = useHubPreviewQuery({
     isPreviewOpen: isHubPreviewOpen,
   });
 
+  const closeHubPreview = useCallback(() => {
+    resetPreview();
+    resetIsHubPreviewOpen();
+  }, [resetPreview, resetIsHubPreviewOpen]);
+
+  // Auto-close preview on error
+  useEffect(() => {
+    if (isPreviewError && isHubPreviewOpen) {
+      closeHubPreview();
+    }
+  }, [isPreviewError, isHubPreviewOpen, closeHubPreview]);
+
   // Cleanup and close handler after successful assignment
   const handleSuccessfulAssignment = useCallback(
     (value: UserValueContents) => {
-      resetPreview();
-      setIsHubPreviewOpen(false);
+      closeHubPreview();
       onAssign(value);
       onClose();
     },
-    [resetPreview, setIsHubPreviewOpen, onAssign, onClose],
+    [closeHubPreview, onAssign, onClose],
   );
 
   // Hub assignment with import-on-assign logic
@@ -91,11 +104,6 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
     [loadHubPreview, setIsHubPreviewOpen],
   );
 
-  const handleCloseHubPreview = useCallback(() => {
-    resetPreview();
-    resetIsHubPreviewOpen();
-  }, [resetPreview, resetIsHubPreviewOpen]);
-
   // Assign from the preview panel (always local hubs)
   const handleHubPreviewAssign = useCallback(
     async (record: ComplexLookupAssignRecordDTO) => {
@@ -107,13 +115,14 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
   return {
     isHubPreviewOpen,
     isPreviewLoading,
+    isPreviewError,
     isAssigning,
     previewData,
     previewMeta,
     handleHubTitleClick,
     handleHubAssign: handleAssign,
-    handleCloseHubPreview,
-    handleResetHubPreview: handleCloseHubPreview,
+    handleCloseHubPreview: closeHubPreview,
+    handleResetHubPreview: closeHubPreview,
     handleHubPreviewAssign,
     cleanup: {
       resetIsHubPreviewOpen,

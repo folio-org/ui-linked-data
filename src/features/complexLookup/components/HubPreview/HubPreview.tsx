@@ -52,14 +52,12 @@ export const HubPreview: FC<HubPreviewProps> = ({ onClose, onAssign, previewData
     });
   };
 
-  if (!previewData) {
-    return null;
-  }
+  const hasPreviewResource = previewData?.resource && Object.keys(previewData.resource).length > 0;
 
   return (
     <div className="hub-preview-container">
       <ControlPane label={previewMeta?.title ?? ''} showSubLabel={false} renderCloseButton={renderCloseButton}>
-        {onAssign && (
+        {onAssign && hasPreviewResource ? (
           <div>
             <Button
               type={ButtonType.Highlighted}
@@ -70,17 +68,20 @@ export const HubPreview: FC<HubPreviewProps> = ({ onClose, onAssign, previewData
               <FormattedMessage id="ld.assign" />
             </Button>
           </div>
-        )}
+        ) : undefined}
       </ControlPane>
+
       <div className="hub-preview-content">
-        {previewData.resource && Object.keys(previewData.resource).length > 0 ? (
+        {hasPreviewResource ? (
           <Preview
             altSchema={previewData.resource.base}
             altUserValues={previewData.resource.userValues}
             altInitKey={previewData.resource.initKey}
             forceRenderAllTopLevelEntities={true}
           />
-        ) : (
+        ) : null}
+
+        {!hasPreviewResource && previewData && (
           <div>
             <FormattedMessage id="ld.resourceWithIdIsEmpty" values={{ id: previewData.id }} />
           </div>

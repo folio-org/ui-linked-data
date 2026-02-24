@@ -70,8 +70,9 @@ export const HubsContent: FC<HubsContentProps> = ({
 
       {isHubPreviewOpen && (
         <>
-          {isPreviewLoading && <Loading />}
-          {!isPreviewLoading && (
+          {isPreviewLoading ? (
+            <Loading />
+          ) : (
             <HubPreview
               onClose={handleCloseHubPreview!}
               onAssign={handleHubPreviewAssign}
