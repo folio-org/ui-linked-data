@@ -36,8 +36,6 @@ import './ProfileSettingsEditor.scss';
 export const ProfileSettingsEditor = () => {
   const { formatMessage } = useIntl();
   const [profileComponents, setProfileComponents] = useState([] as ProfileSettingComponent[]);
-  const [unusedComponents, setUnusedComponents] = useState([] as ProfileSettingComponent[]);
-  const [selectedComponents, setSelectedComponents] = useState([] as ProfileSettingComponent[]);
   const [draggingUnused, setDraggingUnused] = useState([] as ProfileSettingComponent[]);
   const [draggingSelected, setDraggingSelected] = useState([] as ProfileSettingComponent[]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -47,15 +45,21 @@ export const ProfileSettingsEditor = () => {
   const {
     fullProfile,
     profileSettings,
+    unusedComponents,
+    selectedComponents,
     isSettingsActive,
     setIsSettingsActive,
-    // setProfileSettings, // TODO: UILD-698 save values
+    setUnusedComponents,
+    setSelectedComponents,
   } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
+    'unusedComponents',
+    'selectedComponents',
     'isSettingsActive',
     'setIsSettingsActive',
-    // 'setProfileSettings', // TODO: UILD-698
+    'setUnusedComponents',
+    'setSelectedComponents',
   ]);
 
   const updateState = ({
@@ -97,12 +101,7 @@ export const ProfileSettingsEditor = () => {
   );
 
   const { makeMoveUp, makeMoveDown } = useNudge({ setSelected: setSelectedComponents });
-  const { makeMoveComponentIdToSelected, makeMoveComponentIdToUnused } = useMoveBetweenLists({
-    unused: unusedComponents,
-    selected: selectedComponents,
-    setUnused: setUnusedComponents,
-    setSelected: setSelectedComponents,
-  });
+  const { makeMoveComponentIdToSelected, makeMoveComponentIdToUnused } = useMoveBetweenLists();
 
   const { announcements } = useSettingsAnnouncements({
     profile: fullProfile as Profile,
@@ -112,14 +111,10 @@ export const ProfileSettingsEditor = () => {
   const instructions = formatMessage({ id: 'ld.profileSettings.announce.instructions' });
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
-    unused: unusedComponents,
-    selected: selectedComponents,
     startingList,
     cancelDrag,
     endDrag,
-    setSelected: setSelectedComponents,
     setStartingList,
-    setUnused: setUnusedComponents,
     startDrag,
   });
 

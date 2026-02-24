@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ModalCloseProfileSettings } from '@/features/manageProfileSettings/components/ModalCloseProfileSettings';
+import { ModalSaveUnusedProfileComponents } from '@/features/manageProfileSettings/components/ModalSaveUnusedProfileComponents';
 import { ProfileSettings } from '@/features/manageProfileSettings/components/ProfileSettings';
 import { ProfilesList } from '@/features/manageProfileSettings/components/ProfilesList';
 
@@ -8,22 +9,24 @@ import { useManageProfileSettingsState, useUIState } from '@/store';
 
 import './ManageProfileSettings.scss';
 
-//TODO: add ModalSaveUnusedProfileFields
-
 export const ManageProfileSettings = () => {
   const { selectedProfile } = useManageProfileSettingsState(['selectedProfile']);
   const {
     isManageProfileSettingsUnsavedModalOpen,
+    isManageProfileSettingsUnusedComponentsModalOpen,
     setIsManageProfileSettingsBelowBreakpoint,
     setIsManageProfileSettingsShowEditor,
     setIsManageProfileSettingsShowProfiles,
     setIsManageProfileSettingsUnsavedModalOpen,
+    setIsManageProfileSettingsUnusedComponentsModalOpen,
   } = useUIState([
     'isManageProfileSettingsUnsavedModalOpen',
+    'isManageProfileSettingsUnusedComponentsModalOpen',
     'setIsManageProfileSettingsBelowBreakpoint',
     'setIsManageProfileSettingsShowEditor',
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsUnsavedModalOpen',
+    'setIsManageProfileSettingsUnusedComponentsModalOpen',
   ]);
 
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
@@ -63,9 +66,14 @@ export const ManageProfileSettings = () => {
         <ProfilesList />
         <ProfileSettings />
       </div>
+
       <ModalCloseProfileSettings
         isOpen={isManageProfileSettingsUnsavedModalOpen}
         setIsOpen={setIsManageProfileSettingsUnsavedModalOpen}
+      />
+      <ModalSaveUnusedProfileComponents
+        isOpen={isManageProfileSettingsUnusedComponentsModalOpen}
+        setIsOpen={setIsManageProfileSettingsUnusedComponentsModalOpen}
       />
     </>
   );

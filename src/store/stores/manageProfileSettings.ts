@@ -9,6 +9,8 @@ type ProfileDTOState = ProfileDTO | null;
 export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDTO> &
   SliceState<'nextSelectedProfile', ProfileDTOState> &
   SliceState<'fullProfile', ProfileState> &
+  SliceState<'unusedComponents', ProfileSettingComponent[]> &
+  SliceState<'selectedComponents', ProfileSettingComponent[]> &
   SliceState<'isClosingNext', boolean> &
   SliceState<'isSettingsActive', boolean> &
   SliceState<'profileSettings', ProfileSettingsWithDrift> &
@@ -26,6 +28,12 @@ const sliceConfigs: SliceConfigs = {
   },
   fullProfile: {
     initialValue: null,
+  },
+  unusedComponents: {
+    initialValue: [],
+  },
+  selectedComponents: {
+    initialValue: [],
   },
   isClosingNext: {
     initialValue: false,

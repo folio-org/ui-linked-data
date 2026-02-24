@@ -30,7 +30,7 @@ type ProfileDTO = {
 type ProfileSettingsChildProperties = {
   id: string;
   visible: boolean;
-  order?: number;
+  order: number;
 };
 
 type ProfileSettings = {

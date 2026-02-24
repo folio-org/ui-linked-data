@@ -5,4 +5,5 @@ export { useNavigateToManageProfileSettings } from './useNavigateToManageProfile
 export { useNudge } from './useNudge';
 export { usePreferredProfiles } from './usePreferredProfiles';
 export { useProfileList } from './useProfileList';
+export { useSaveProfileSettings } from './useSaveProfileSettings';
 export { useSettingsAnnouncements } from './useSettingsAnnouncements';

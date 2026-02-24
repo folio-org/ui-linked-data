@@ -53,6 +53,7 @@
   "ld.preview": "Preview",
   "ld.confirmCloseRd": "Do you really want to close the resource description? All unsaved changes will be lost.",
   "ld.confirmDeleteRd": "Do you really want to delete the resource description?",
+  "ld.save": "Save",
   "ld.saveClose": "Save and close",
   "ld.close": "Close",
   "ld.delete": "Delete",
@@ -333,5 +334,8 @@
   "ld.moveToSelected": "Move to selected components",
   "ld.moveUnavailable": "Required field, cannot move to unused",
   "ld.requiredAnnotation": "required",
-  "ld.authorities": "Authorities"
+  "ld.authorities": "Authorities",
+  "ld.error.saveProfileSettings": "Error saving profile settings",
+  "ld.profileComponentsDeselected": "Profile components deselected",
+  "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?"
 }
