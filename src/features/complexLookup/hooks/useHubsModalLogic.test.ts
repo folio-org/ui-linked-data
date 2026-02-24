@@ -5,11 +5,11 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useUIStore } from '@/store';
 
 import * as useHubAssignmentModule from './useHubAssignment';
-import * as useHubPreviewModule from './useHubPreview';
+import * as useHubPreviewModule from './useHubPreviewQuery';
 import { useHubsModalLogic } from './useHubsModalLogic';
 
 jest.mock('./useHubAssignment');
-jest.mock('./useHubPreview');
+jest.mock('./useHubPreviewQuery');
 
 describe('useHubsModalLogic', () => {
   const mockOnAssign = jest.fn();
@@ -37,7 +37,7 @@ describe('useHubsModalLogic', () => {
       isAssigning: false,
     });
 
-    (useHubPreviewModule.useHubPreview as jest.Mock).mockReturnValue({
+    (useHubPreviewModule.useHubPreviewQuery as jest.Mock).mockReturnValue({
       loadHubPreview: mockLoadHubPreview,
       resetPreview: mockResetPreview,
       previewData: null,
@@ -333,7 +333,7 @@ describe('useHubsModalLogic', () => {
   });
 
   describe('Preview state', () => {
-    it('returns preview state from useHubPreview', () => {
+    it('returns preview state from useHubPreviewQuery', () => {
       const mockPreviewData = {
         id: 'hub_1',
         resource: {
@@ -344,7 +344,7 @@ describe('useHubsModalLogic', () => {
       };
       const mockPreviewMeta = { id: 'hub_1', title: 'Hub 1' };
 
-      (useHubPreviewModule.useHubPreview as jest.Mock).mockReturnValue({
+      (useHubPreviewModule.useHubPreviewQuery as jest.Mock).mockReturnValue({
         loadHubPreview: mockLoadHubPreview,
         resetPreview: mockResetPreview,
         previewData: mockPreviewData,

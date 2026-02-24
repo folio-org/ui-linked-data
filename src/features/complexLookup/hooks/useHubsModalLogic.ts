@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { useHubAssignment } from '@/features/complexLookup/hooks/useHubAssignment';
-import { useHubPreview } from '@/features/complexLookup/hooks/useHubPreview';
+import { useHubPreviewQuery } from '@/features/complexLookup/hooks/useHubPreviewQuery';
 
 import { useUIState } from '@/store';
 
@@ -62,7 +62,7 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
     previewData,
     isLoading: isPreviewLoading,
     previewMeta,
-  } = useHubPreview({
+  } = useHubPreviewQuery({
     isPreviewOpen: isHubPreviewOpen,
   });
 
