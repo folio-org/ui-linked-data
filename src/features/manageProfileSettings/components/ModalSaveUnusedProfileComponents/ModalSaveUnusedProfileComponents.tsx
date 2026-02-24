@@ -11,12 +11,12 @@ import { useSaveProfileSettings } from '../../hooks';
 
 import './ModalSaveUnusedProfileComponents.scss';
 
-type ModalCloseProfileSettingsProps = {
+type ModalSaveUnusedProfileComponentsProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 };
 
-export const ModalSaveUnusedProfileComponents: FC<ModalCloseProfileSettingsProps> = ({ isOpen, setIsOpen }) => {
+export const ModalSaveUnusedProfileComponents: FC<ModalSaveUnusedProfileComponentsProps> = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   const { formatMessage } = useIntl();
   const searchResultsUri = useBackToSearchUri();
@@ -32,6 +32,7 @@ export const ModalSaveUnusedProfileComponents: FC<ModalCloseProfileSettingsProps
   };
 
   const handleClose = () => {
+    setIsClosingNext(false);
     setIsOpen(false);
   };
 

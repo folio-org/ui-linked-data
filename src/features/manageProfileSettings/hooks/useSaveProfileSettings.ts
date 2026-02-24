@@ -65,11 +65,10 @@ export const useSaveProfileSettings = () => {
       setIsLoading(true);
       await saveAndSetPreferred();
       await saveAndSetSettings();
+      setIsModified(false);
     } finally {
       setIsLoading(false);
     }
-
-    setIsModified(false);
   };
 
   return {

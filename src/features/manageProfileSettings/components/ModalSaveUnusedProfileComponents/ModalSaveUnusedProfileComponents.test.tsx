@@ -93,7 +93,7 @@ describe('ModalSaveUnusedProfileComponents', () => {
       {
         store: useManageProfileSettingsState,
         state: {
-          isClosingNext: false,
+          isClosingNext: true,
           setIsClosingNext: mockSetIsClosingNext,
         },
       },
@@ -106,7 +106,7 @@ describe('ModalSaveUnusedProfileComponents', () => {
     waitFor(() => {
       expect(mockSaveSettings).toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalled();
-      expect(mockSetIsClosingNext).toHaveBeenCalled();
+      expect(mockSetIsClosingNext).toHaveBeenCalledWith(false);
     });
   });
 });

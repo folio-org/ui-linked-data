@@ -62,7 +62,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -85,7 +85,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -108,7 +108,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -131,7 +131,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -158,7 +158,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -181,7 +181,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -204,7 +204,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },
@@ -229,7 +229,7 @@ describe('useMoveBetweenLists', () => {
         state: {
           unusedComponents: [...mockUnused],
           selectedComponents: [...mockSelected],
-          setUnusedCompenents: mockSetUnused,
+          setUnusedComponents: mockSetUnused,
           setSelectedComponents: mockSetSelected,
         },
       },

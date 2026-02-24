@@ -31,7 +31,7 @@ const createWrapper = () => {
   );
 };
 
-describe('useSaveProfilesettings', () => {
+describe('useSaveProfileSettings', () => {
   describe('saveSettings', () => {
     const mockSetIsLoading = jest.fn();
     const mockAddStatusMessagesItem = jest.fn();

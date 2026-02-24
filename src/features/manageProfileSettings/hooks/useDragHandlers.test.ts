@@ -303,7 +303,7 @@ describe('useDragHandlers', () => {
     );
 
     result.current.handleDragEnd(
-      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused, 'active') as unknown as DragEndEvent,
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.unused, 'active') as unknown as DragEndEvent,
     );
 
     expect(mockSetSelected).not.toHaveBeenCalled();
