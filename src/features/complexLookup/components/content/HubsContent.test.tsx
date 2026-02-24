@@ -1,12 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
-
 import { HubsContent } from './HubsContent';
-
-jest.mock('@/features/complexLookup/hooks', () => ({
-  useHubsModalLogic: jest.fn(),
-}));
 
 jest.mock('@/components/Loading', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
@@ -45,20 +39,12 @@ jest.mock('@/features/search/ui', () => ({
 }));
 
 describe('HubsContent', () => {
-  const mockOnAssign = jest.fn();
-  const mockOnClose = jest.fn();
   const mockHandleHubAssign = jest.fn();
-
-  beforeEach(() => {
-    (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-      handleHubAssign: mockHandleHubAssign,
-      isAssigning: false,
-    });
-  });
+  const mockHandleHubTitleClick = jest.fn();
 
   describe('Component structure', () => {
     it('renders control pane with hubs label', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent />);
 
       const controlPane = screen.getByTestId('control-pane');
       expect(controlPane).toBeInTheDocument();
@@ -66,13 +52,13 @@ describe('HubsContent', () => {
     });
 
     it('renders content container', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent />);
 
       expect(screen.getByTestId('content-container')).toBeInTheDocument();
     });
 
     it('renders HubsLookupResultList with complexLookup context', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent />);
 
       const resultList = screen.getByTestId('hubs-lookup-result-list');
       expect(resultList).toBeInTheDocument();
@@ -80,52 +66,38 @@ describe('HubsContent', () => {
     });
 
     it('renders pagination component', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent />);
 
       expect(screen.getByTestId('pagination')).toBeInTheDocument();
     });
   });
 
-  describe('Hook integration', () => {
-    it('calls useHubsModalLogic with onAssign and onClose', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
-
-      expect(ComplexLookupHooks.useHubsModalLogic).toHaveBeenCalledWith({
-        onAssign: mockOnAssign,
-        onClose: mockOnClose,
-      });
-    });
-
+  describe('Props integration', () => {
     it('passes handleHubAssign to HubsLookupResultList', () => {
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent handleHubAssign={mockHandleHubAssign} />);
 
       screen.getByText('Assign Hub').click();
 
       expect(mockHandleHubAssign).toHaveBeenCalledWith({ id: 'hub_1', title: 'Hub 1' });
-      expect(mockOnAssign).not.toHaveBeenCalled();
+    });
+
+    it('passes handleHubTitleClick to HubsLookupResultList', () => {
+      render(<HubsContent handleHubTitleClick={mockHandleHubTitleClick} />);
+
+      expect(screen.getByTestId('hubs-lookup-result-list')).toBeInTheDocument();
     });
   });
 
   describe('Loading state', () => {
     it('shows loading state when isAssigning is true', () => {
-      (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-        handleHubAssign: mockHandleHubAssign,
-        isAssigning: true,
-      });
-
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent isAssigning={true} />);
 
       expect(screen.getByTestId('loading')).toBeInTheDocument();
       expect(screen.queryByTestId('hubs-lookup-result-list')).not.toBeInTheDocument();
     });
 
     it('shows result list when isAssigning is false', () => {
-      (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-        handleHubAssign: mockHandleHubAssign,
-        isAssigning: false,
-      });
-
-      render(<HubsContent onAssign={mockOnAssign} onClose={mockOnClose} />);
+      render(<HubsContent isAssigning={false} />);
 
       expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
       expect(screen.getByTestId('hubs-lookup-result-list')).toBeInTheDocument();

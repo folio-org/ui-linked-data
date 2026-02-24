@@ -9,6 +9,7 @@ jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesModalLogic: jest.fn(),
   useComplexLookupModalCleanup: jest.fn(),
+  useHubsLookupModalLogic: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -83,15 +84,15 @@ jest.mock('@/features/complexLookup/components/content', () => ({
     </div>
   ),
   HubsContent: ({
-    onAssign,
-    onClose,
+    handleHubAssign,
+    handleCloseHubPreview,
   }: {
-    onAssign: (value: ComplexLookupAssignRecordDTO) => void;
-    onClose: () => void;
+    handleHubAssign?: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
+    handleCloseHubPreview?: VoidFunction;
   }) => (
     <div data-testid="hubs-content">
-      <button onClick={() => onAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>
-      <button onClick={onClose}>Close</button>
+      {handleHubAssign && <button onClick={() => handleHubAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>}
+      {handleCloseHubPreview && <button onClick={handleCloseHubPreview}>Close</button>}
     </div>
   ),
 }));
@@ -106,6 +107,11 @@ describe('SubjectModal', () => {
   const mockHandleModalClose = jest.fn();
   const mockOnSegmentEnter = jest.fn();
   const mockCheckFailedId = jest.fn();
+  const mockHandleHubTitleClick = jest.fn();
+  const mockHandleHubAssign = jest.fn();
+  const mockHandleCloseHubPreview = jest.fn();
+  const mockHandleResetHubPreview = jest.fn();
+  const mockHandleHubPreviewAssign = jest.fn();
 
   beforeEach(() => {
     (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
@@ -126,6 +132,18 @@ describe('SubjectModal', () => {
         resetMarcPreviewData: jest.fn(),
         resetMarcPreviewMetadata: jest.fn(),
       },
+    });
+    (ComplexLookupHooks.useHubsLookupModalLogic as jest.Mock).mockReturnValue({
+      isHubPreviewOpen: false,
+      isPreviewLoading: false,
+      isAssigning: false,
+      previewData: null,
+      previewMeta: null,
+      handleHubTitleClick: mockHandleHubTitleClick,
+      handleHubAssign: mockHandleHubAssign,
+      handleCloseHubPreview: mockHandleCloseHubPreview,
+      handleResetHubPreview: mockHandleResetHubPreview,
+      handleHubPreviewAssign: mockHandleHubPreviewAssign,
     });
     (ComplexLookupHooks.useComplexLookupModalCleanup as jest.Mock).mockReturnValue({
       handleModalClose: mockHandleModalClose,
@@ -318,21 +336,21 @@ describe('SubjectModal', () => {
   });
 
   describe('Hubs assignment flow', () => {
-    it('calls onAssign directly when hub is assigned', () => {
+    it('calls handleHubAssign when hub is assigned', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       screen.getByText('Assign Hub').click();
 
-      expect(mockOnAssign).toHaveBeenCalledWith({ id: 'hub_1', title: 'Hub 1' });
+      expect(mockHandleHubAssign).toHaveBeenCalledWith({ id: 'hub_1', title: 'Hub 1' });
     });
 
-    it('calls handleModalClose when close is triggered from HubsContent', () => {
+    it('calls handleCloseHubPreview when close is triggered from HubsContent', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       const closeButtons = screen.getAllByText('Close');
       closeButtons[1].click();
 
-      expect(mockHandleModalClose).toHaveBeenCalled();
+      expect(mockHandleCloseHubPreview).toHaveBeenCalled();
     });
   });
 

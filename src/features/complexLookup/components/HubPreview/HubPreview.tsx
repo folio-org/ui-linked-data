@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Preview } from '@/components/Preview';
 
@@ -47,7 +48,7 @@ export const HubPreview: FC<HubPreviewProps> = ({ onClose, onAssign, previewData
     onAssign({
       id: previewMeta.id,
       title: previewMeta.title,
-      sourceType: 'local',
+      sourceType: SOURCE_TYPES.LOCAL,
     });
   };
 
