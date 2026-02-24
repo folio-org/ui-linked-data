@@ -25,18 +25,19 @@ export class HubsLookupResultFormatter implements IResultFormatter<SearchResults
       const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
       const { notes = [] } = more || {};
       const isLocal = getIsLocalFlag(hubEntry);
+      const localId = (hubEntry as HubSearchResultDTO & { localId?: string }).localId;
       const sourceLabel = getSourceLabel(isLocal);
 
       return {
         __meta: {
-          id: token,
+          id: isLocal && localId ? localId : token,
           key: uuidv4(),
           isAnchor: false,
           isLocal,
         },
         hub: {
           label: suggestLabel,
-          uri: uri,
+          uri,
           className: 'hub-title',
         },
         source: {
