@@ -1,6 +1,6 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 
 import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
@@ -180,7 +180,9 @@ describe('useAuthoritiesAssignment', () => {
       }),
     );
 
-    await result.current.handleAssign(mockRecord);
+    await act(async () => {
+      await result.current.handleAssign(mockRecord);
+    });
 
     await waitFor(() => {
       expect(mockOnAssignSuccess).toHaveBeenCalledWith({
@@ -224,7 +226,9 @@ describe('useAuthoritiesAssignment', () => {
       }),
     );
 
-    await result.current.handleAssign(mockRecord);
+    await act(async () => {
+      await result.current.handleAssign(mockRecord);
+    });
 
     await waitFor(() => {
       expect(mockAddFailedEntryId).toHaveBeenCalledWith('test-id');
@@ -255,7 +259,9 @@ describe('useAuthoritiesAssignment', () => {
       }),
     );
 
-    await result.current.handleAssign(mockRecord);
+    await act(async () => {
+      await result.current.handleAssign(mockRecord);
+    });
 
     await waitFor(() => {
       expect(mockAddFailedEntryId).toHaveBeenCalledWith('test-id');
@@ -285,7 +291,9 @@ describe('useAuthoritiesAssignment', () => {
       }),
     );
 
-    await result.current.handleAssign(mockRecord);
+    await act(async () => {
+      await result.current.handleAssign(mockRecord);
+    });
 
     expect(mockGetMarcDataForAssignment).not.toHaveBeenCalled();
     expect(mockOnAssignSuccess).not.toHaveBeenCalled();
@@ -297,7 +305,7 @@ describe('useAuthoritiesAssignment', () => {
       title: 'Test Title',
     };
 
-    mockGetMarcDataForAssignment.mockImplementation(() => delayedResolve({ srsId: 'srs-id', marcData: {} }, 50));
+    mockGetMarcDataForAssignment.mockImplementation(() => delayedResolve({ srsId: 'srs-id', marcData: {} }, 150));
 
     mockValidateMarcRecord.mockResolvedValue({
       validAssignment: true,
