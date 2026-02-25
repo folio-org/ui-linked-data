@@ -870,8 +870,9 @@ describe('recordProcessingCases', () => {
               label: {
                 value: ['Authority Subject'],
                 isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
               },
-              lookupType: 'authorities',
             },
           ],
         },
@@ -903,8 +904,9 @@ describe('recordProcessingCases', () => {
               label: {
                 value: ['Hub Subject'],
                 isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
               },
-              lookupType: 'hubs',
             },
           ],
         },
@@ -935,8 +937,9 @@ describe('recordProcessingCases', () => {
               label: {
                 value: ['Subject without types'],
                 isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
               },
-              lookupType: 'authorities',
             },
           ],
         },
@@ -978,24 +981,27 @@ describe('recordProcessingCases', () => {
               label: {
                 value: ['Hub Subject'],
                 isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
               },
-              lookupType: 'hubs',
             },
             {
               id: ['auth_id_1'],
               label: {
                 value: ['Authority Subject'],
                 isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
               },
-              lookupType: 'authorities',
             },
             {
               id: ['hub_id_2'],
               label: {
                 value: ['Another Hub'],
                 isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
               },
-              lookupType: 'hubs',
             },
           ],
         },
@@ -1006,7 +1012,7 @@ describe('recordProcessingCases', () => {
       expect(record).toEqual(testResult);
     });
 
-    test('preserves isPreferred and type attributes while adding lookupType', () => {
+    test('preserves isPreferred attribute while adding lookupType', () => {
       const record = {
         [blockKey]: {
           [groupKey]: [
@@ -1014,7 +1020,6 @@ describe('recordProcessingCases', () => {
               id: 'hub_id_1',
               label: 'Preferred Hub',
               isPreferred: true,
-              type: 'TestType',
               types: [hubUri],
             },
           ],
@@ -1029,9 +1034,9 @@ describe('recordProcessingCases', () => {
               label: {
                 value: ['Preferred Hub'],
                 isPreferred: true,
+                lookupType: 'hubs',
+                sourceType: 'local',
               },
-              _subclass: 'TestType',
-              lookupType: 'hubs',
             },
           ],
         },

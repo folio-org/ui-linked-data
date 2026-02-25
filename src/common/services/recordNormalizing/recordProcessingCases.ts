@@ -154,18 +154,23 @@ export const extractDropdownOption = (
 };
 
 export const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
-  const originalEntries = record[blockKey][key] as unknown as RecordProcessingDTO;
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
 
-  processComplexLookup(record, blockKey, key, 'label');
+  record[blockKey][key] = normalizedEntries.map(recordEntry => {
+    const hasRdfLink = !!(recordEntry.rdfLink && (recordEntry.rdfLink as unknown as string) !== '');
+    const hasHubId = !!(recordEntry.id && (recordEntry.id as unknown as string) !== '');
+    const sourceType = getHubSourceType(hasRdfLink, hasHubId);
+    const types = recordEntry.types as string[] | undefined;
+    const lookupType = types?.includes(BFLITE_URIS.HUB) ? LOOKUP_TYPES.HUBS : LOOKUP_TYPES.AUTHORITIES;
 
-  const normalizedEntries = record[blockKey][key] as unknown as RecursiveRecordSchema[];
-
-  normalizedEntries.forEach((entry, index) => {
-    const original = originalEntries[index] as Record<string, unknown>;
-    const types = original?.types as string[] | undefined;
-
-    (entry as Record<string, unknown>).lookupType = types?.includes(BFLITE_URIS.HUB)
-      ? LOOKUP_TYPES.HUBS
-      : LOOKUP_TYPES.AUTHORITIES;
-  });
+    return {
+      id: [recordEntry.id],
+      label: {
+        value: [recordEntry.label],
+        isPreferred: recordEntry.isPreferred,
+        sourceType,
+        lookupType,
+      },
+    };
+  }) as unknown as RecursiveRecordSchema;
 };
