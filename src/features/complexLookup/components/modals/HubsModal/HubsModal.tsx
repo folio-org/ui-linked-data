@@ -3,11 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import {
-  useComplexLookupModalCleanup,
-  useComplexLookupModalState,
-  useHubsModalLogic,
-} from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
@@ -34,24 +30,10 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
     defaultSource,
   });
 
-  // Hub preview and assignment logic
-  const {
-    isHubPreviewOpen,
-    isPreviewLoading,
-    isAssigning,
-    previewData,
-    previewMeta,
-    handleHubTitleClick,
-    handleHubAssign,
-    handleCloseHubPreview,
-    handleHubPreviewAssign,
-    cleanup,
-  } = useHubsModalLogic({ onAssign, onClose });
-
-  // Modal cleanup handler
-  const { handleModalClose } = useComplexLookupModalCleanup({
+  // Hub preview integration - handles preview state, assignment, and cleanup
+  const { hubPreviewProps, handleModalClose } = useModalWithHubPreview({
+    onAssign,
     onClose,
-    withHubPreview: cleanup,
   });
 
   return (
@@ -72,17 +54,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
         </Search.Controls>
 
         <Search.Content>
-          <HubsContent
-            isHubPreviewOpen={isHubPreviewOpen}
-            isPreviewLoading={isPreviewLoading}
-            isAssigning={isAssigning}
-            previewData={previewData}
-            previewMeta={previewMeta}
-            handleHubAssign={handleHubAssign}
-            handleHubTitleClick={handleHubTitleClick}
-            handleCloseHubPreview={handleCloseHubPreview}
-            handleHubPreviewAssign={handleHubPreviewAssign}
-          />
+          <HubsContent {...hubPreviewProps} />
         </Search.Content>
       </Search>
     </LookupModal>

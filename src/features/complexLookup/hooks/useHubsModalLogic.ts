@@ -1,20 +1,12 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
+
+import { useAutoCloseOnError } from '@/common/hooks/useAutoCloseOnError';
 
 import { useHubAssignment } from '@/features/complexLookup/hooks/useHubAssignment';
 import { useHubPreviewQuery } from '@/features/complexLookup/hooks/useHubPreviewQuery';
+import { HubPreviewData, HubPreviewMeta } from '@/features/complexLookup/types/hubPreview.types';
 
 import { useUIState } from '@/store';
-
-interface HubResourceData {
-  base: Schema;
-  userValues: UserValues;
-  initKey: string;
-}
-
-interface HubPreviewData {
-  id: string;
-  resource: HubResourceData;
-}
 
 interface UseHubsModalLogicParams {
   onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
@@ -33,7 +25,7 @@ interface UseHubsModalLogicResult {
   isPreviewError: boolean;
   isAssigning: boolean;
   previewData: HubPreviewData | null;
-  previewMeta: { id: string; title: string } | null;
+  previewMeta: HubPreviewMeta | null;
 
   // Handlers
   handleHubTitleClick: (id: string, title?: string) => void;
@@ -74,11 +66,11 @@ export function useHubsModalLogic({ onAssign, onClose }: UseHubsModalLogicParams
   }, [resetPreview, resetIsHubPreviewOpen]);
 
   // Auto-close preview on error
-  useEffect(() => {
-    if (isPreviewError && isHubPreviewOpen) {
-      closeHubPreview();
-    }
-  }, [isPreviewError, isHubPreviewOpen, closeHubPreview]);
+  useAutoCloseOnError({
+    isError: isPreviewError,
+    isOpen: isHubPreviewOpen,
+    onClose: closeHubPreview,
+  });
 
   // Cleanup and close handler after successful assignment
   const handleSuccessfulAssignment = useCallback(

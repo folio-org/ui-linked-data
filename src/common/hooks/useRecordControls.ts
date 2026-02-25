@@ -40,6 +40,7 @@ type IBaseFetchRecord = {
   idType?: ExternalResourceIdType;
   errorMessage?: string;
   previewParams?: PreviewParams;
+  signal?: AbortSignal;
 };
 
 type HandleRecordUpdateProps = {
@@ -96,8 +97,8 @@ export const useRecordControls = () => {
     return `${uri}${separator}${SearchQueryParams.Segment}=${segment}`;
   };
 
-  const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
-    const recordData = await getRecordAndInitializeParsing({ recordId });
+  const fetchRecord = async (recordId: string, previewParams?: PreviewParams, signal?: AbortSignal) => {
+    const recordData = await getRecordAndInitializeParsing({ recordId, signal });
 
     if (!recordData) return;
 
@@ -333,11 +334,12 @@ export const useRecordControls = () => {
     idType,
     previewParams,
     errorMessage,
+    signal,
   }: IBaseFetchRecord) => {
     if (!recordId && !cachedRecord) return;
 
     try {
-      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType })));
+      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType, signal })));
 
       await getProfiles({
         record: recordData,

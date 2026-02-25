@@ -1,13 +1,16 @@
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
-import { StatusType } from '@/common/constants/status.constants';
+import { usePreviewQuery } from '@/common/hooks/usePreviewQuery';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
-import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useStatusState, useUIState } from '@/store';
+import { useUIState } from '@/store';
+
+interface HubSearchPreviewResult {
+  success: boolean;
+  previewId?: string;
+  error?: unknown;
+}
 
 /**
  * Hook for triggering a hub record preview on the Search page.
@@ -15,43 +18,37 @@ import { useStatusState, useUIState } from '@/store';
  */
 export const useHubSearchPreview = () => {
   const { fetchRecord } = useRecordControls();
-  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
-  const currentPreviewIdRef = useRef<string | null>(null);
 
-  const { isFetching, refetch } = useQuery({
-    queryKey: ['hub-preview'],
-    queryFn: async () => {
-      const previewId = currentPreviewIdRef.current;
-
-      if (!previewId) {
-        return { success: false };
-      }
-
+  const fetchHubForPreview = useCallback(
+    async (id: string, signal: AbortSignal): Promise<HubSearchPreviewResult> => {
       try {
-        await fetchRecord(previewId, { singular: true });
-        return { success: true, previewId };
+        await fetchRecord(id, { singular: true }, signal);
+
+        return { success: true, previewId: id };
       } catch (error) {
         logger.error('Error fetching hub record:', error);
-        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+
         return { success: false, error };
       }
     },
-    enabled: false,
-    staleTime: 0,
-    gcTime: 0,
-    retry: false,
-    refetchOnWindowFocus: false,
+    [fetchRecord],
+  );
+
+  const { loadPreview, isLoading } = usePreviewQuery<HubSearchPreviewResult>({
+    queryKey: 'hub-search-preview',
+    fetchFn: fetchHubForPreview,
+    enabled: true,
+    errorMessage: 'ld.errorFetching',
   });
 
   const handlePreview = useCallback(
     (id: string) => {
       resetFullDisplayComponentType();
-      currentPreviewIdRef.current = id;
-      refetch();
+      loadPreview(id);
     },
-    [resetFullDisplayComponentType, refetch],
+    [resetFullDisplayComponentType, loadPreview],
   );
 
-  return { handlePreview, isLoading: isFetching };
+  return { handlePreview, isLoading };
 };

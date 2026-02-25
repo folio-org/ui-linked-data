@@ -5,26 +5,18 @@ import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Preview } from '@/components/Preview';
 
+import { HubPreviewData, HubPreviewMeta } from '@/features/complexLookup/types/hubPreview.types';
 import { ControlPane } from '@/features/search/ui';
 
 import Times16 from '@/assets/times-16.svg?react';
 
 import './HubPreview.scss';
 
-interface HubResourceData {
-  base: Schema;
-  userValues: UserValues;
-  initKey: string;
-}
-
 interface HubPreviewProps {
   onClose: VoidFunction;
   onAssign?: (record: ComplexLookupAssignRecordDTO) => void | Promise<void>;
-  previewData: {
-    id: string;
-    resource: HubResourceData;
-  } | null;
-  previewMeta: { id: string; title: string } | null;
+  previewData: HubPreviewData | null;
+  previewMeta: HubPreviewMeta | null;
 }
 
 export const HubPreview: FC<HubPreviewProps> = ({ onClose, onAssign, previewData, previewMeta }) => {

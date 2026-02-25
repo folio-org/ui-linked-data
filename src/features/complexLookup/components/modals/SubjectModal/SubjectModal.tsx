@@ -8,9 +8,8 @@ import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/compon
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
   useAuthoritiesModalLogic,
-  useComplexLookupModalCleanup,
   useComplexLookupModalState,
-  useHubsModalLogic,
+  useModalWithHubPreview,
 } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
@@ -74,25 +73,11 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     isOpen,
   });
 
-  // Hub preview and assignment logic
-  const {
-    isHubPreviewOpen,
-    isPreviewLoading,
-    isAssigning,
-    previewData,
-    previewMeta,
-    handleHubTitleClick,
-    handleHubAssign,
-    handleCloseHubPreview,
-    handleResetHubPreview,
-    handleHubPreviewAssign,
-    cleanup: hubCleanup,
-  } = useHubsModalLogic({ onAssign, onClose });
-
-  const { handleModalClose } = useComplexLookupModalCleanup({
+  // Hub preview integration - handles preview state, assignment, and cleanup
+  const { hubPreviewProps, handleModalClose } = useModalWithHubPreview({
+    onAssign,
     onClose,
     withMarcPreview: cleanup,
-    withHubPreview: hubCleanup,
   });
 
   return (
@@ -116,7 +101,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
               labelId="ld.hubs"
               onBeforeChange={() => {
                 handleResetMarcPreview();
-                handleResetHubPreview();
+                hubPreviewProps.handleCloseHubPreview();
               }}
             />
           </Search.Controls.SegmentGroup>
@@ -125,14 +110,14 @@ export const SubjectModal: FC<SubjectModalProps> = ({
             <Search.Controls.Segment
               path="authorities:search"
               labelId="ld.search"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
               onAfterChange={authoritiesData.onSegmentEnter}
-              onBeforeChange={handleResetHubPreview}
             />
             <Search.Controls.Segment
               path="authorities:browse"
               labelId="ld.browse"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
               onAfterChange={authoritiesData.onSegmentEnter}
-              onBeforeChange={handleResetHubPreview}
             />
           </Search.Controls.SegmentGroup>
 
@@ -159,17 +144,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           </Search.Controls.SegmentContent>
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <HubsContent
-              isHubPreviewOpen={isHubPreviewOpen}
-              isPreviewLoading={isPreviewLoading}
-              isAssigning={isAssigning}
-              previewData={previewData}
-              previewMeta={previewMeta}
-              handleHubAssign={handleHubAssign}
-              handleHubTitleClick={handleHubTitleClick}
-              handleCloseHubPreview={handleCloseHubPreview}
-              handleHubPreviewAssign={handleHubPreviewAssign}
-            />
+            <HubsContent {...hubPreviewProps} />
           </Search.Controls.SegmentContent>
         </Search.Content>
       </Search>
