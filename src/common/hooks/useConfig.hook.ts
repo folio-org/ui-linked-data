@@ -168,7 +168,7 @@ export const useConfig = () => {
           setSelectedProfile(selectedProfile);
         }
 
-        const profileSettings = await loadProfileSettings(profile?.ids?.[0], selectedProfile);
+        const profileSettings = await loadProfileSettings(String(profile?.ids?.[0]), selectedProfile);
 
         const { updatedSchema, initKey } = await buildSchema({
           profile: selectedProfile,

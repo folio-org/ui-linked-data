@@ -11,6 +11,7 @@ import { useMoveBetweenLists } from './useMoveBetweenLists';
 
 interface UseDragHandlersParams {
   startingList: ComponentType | null;
+  originalStartingList: ComponentType | null;
   cancelDrag: () => void;
   endDrag: () => void;
   setStartingList: Dispatch<SetStateAction<ComponentType | null>>;
@@ -19,6 +20,7 @@ interface UseDragHandlersParams {
 
 export const useDragHandlers = ({
   startingList,
+  originalStartingList,
   cancelDrag,
   endDrag,
   setStartingList,
@@ -49,9 +51,8 @@ export const useDragHandlers = ({
     // over itself; detect when a move happened and set modified even
     // if no reordering is needed.
     if (over && active.id === over.id) {
-      const activeStartingList = active.data.current?.sortable.containerId;
       const targetList = over.data.current?.sortable.containerId;
-      if (activeStartingList !== targetList) {
+      if (originalStartingList !== targetList) {
         setIsModified(true);
         setIsSettingsActive(true);
       }

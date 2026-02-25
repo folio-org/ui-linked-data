@@ -53,7 +53,7 @@ export const useSaveProfileSettings = () => {
     try {
       await saveProfileSettings(selectedProfile.id, settingsToSave);
       setProfileSettings({ ...settingsToSave, missingFromSettings: [] });
-      queryClient.invalidateQueries({ queryKey: ['profileSettings', selectedProfile.id] });
+      queryClient.refetchQueries({ queryKey: ['profileSettings', String(selectedProfile.id)] });
     } catch (error) {
       logger.error('Failed to set profile settings:', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.error.saveProfileSettings'));
