@@ -8,8 +8,7 @@ import { SubjectModal } from './SubjectModal';
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesModalLogic: jest.fn(),
-  useComplexLookupModalCleanup: jest.fn(),
-  useHubsModalLogic: jest.fn(),
+  useModalWithHubPreview: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -110,7 +109,6 @@ describe('SubjectModal', () => {
   const mockHandleHubTitleClick = jest.fn();
   const mockHandleHubAssign = jest.fn();
   const mockHandleCloseHubPreview = jest.fn();
-  const mockHandleResetHubPreview = jest.fn();
   const mockHandleHubPreviewAssign = jest.fn();
 
   beforeEach(() => {
@@ -133,19 +131,18 @@ describe('SubjectModal', () => {
         resetMarcPreviewMetadata: jest.fn(),
       },
     });
-    (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-      isHubPreviewOpen: false,
-      isPreviewLoading: false,
-      isAssigning: false,
-      previewData: null,
-      previewMeta: null,
-      handleHubTitleClick: mockHandleHubTitleClick,
-      handleHubAssign: mockHandleHubAssign,
-      handleCloseHubPreview: mockHandleCloseHubPreview,
-      handleResetHubPreview: mockHandleResetHubPreview,
-      handleHubPreviewAssign: mockHandleHubPreviewAssign,
-    });
-    (ComplexLookupHooks.useComplexLookupModalCleanup as jest.Mock).mockReturnValue({
+    (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+      hubPreviewProps: {
+        isHubPreviewOpen: false,
+        isPreviewLoading: false,
+        isAssigning: false,
+        previewData: null,
+        previewMeta: null,
+        handleHubTitleClick: mockHandleHubTitleClick,
+        handleHubAssign: mockHandleHubAssign,
+        handleCloseHubPreview: mockHandleCloseHubPreview,
+        handleHubPreviewAssign: mockHandleHubPreviewAssign,
+      },
       handleModalClose: mockHandleModalClose,
     });
   });
@@ -241,11 +238,12 @@ describe('SubjectModal', () => {
     });
   });
 
-  describe('Modal cleanup integration', () => {
-    it('calls useComplexLookupModalCleanup with cleanup object', () => {
+  describe('Modal integration', () => {
+    it('calls useModalWithHubPreview with correct parameters', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
-      expect(ComplexLookupHooks.useComplexLookupModalCleanup).toHaveBeenCalledWith({
+      expect(ComplexLookupHooks.useModalWithHubPreview).toHaveBeenCalledWith({
+        onAssign: mockOnAssign,
         onClose: mockOnClose,
         withMarcPreview: expect.objectContaining({
           setIsMarcPreviewOpen: expect.any(Function),
@@ -256,7 +254,7 @@ describe('SubjectModal', () => {
       });
     });
 
-    it('uses handleModalClose from useComplexLookupModalCleanup for modal close', () => {
+    it('uses handleModalClose from useModalWithHubPreview for modal close', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       screen.getByTestId('modal-close').click();
