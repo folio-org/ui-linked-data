@@ -54,7 +54,7 @@ export const ProfileSettings = () => {
           setIsLoading(true);
           const profile = await loadProfile(selectedProfile.id);
           setFullProfile(profile);
-          setProfileSettings(await loadProfileSettings(selectedProfile.id, profile));
+          setProfileSettings(await loadProfileSettings(String(selectedProfile.id), profile));
         } catch {
           addStatusMessagesItem?.(
             UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),

@@ -112,6 +112,7 @@ export const ProfileSettingsEditor = () => {
 
   const { handleDragStart, handleDragCancel, handleDragOver, handleDragEnd } = useDragHandlers({
     startingList,
+    originalStartingList: startingStyle,
     cancelDrag,
     endDrag,
     setStartingList,
