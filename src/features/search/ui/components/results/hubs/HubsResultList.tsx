@@ -6,12 +6,11 @@ import { Loading } from '@/components/Loading';
 import { TableFlex } from '@/components/Table';
 
 import { generateHubImportPreviewUrl } from '@/features/hubImport';
-import { useHubSearchPreview } from '@/features/search/ui/hooks/useHubSearchPreview';
-import { useHubsTableFormatter } from '@/features/search/ui/hooks/useHubsTableFormatter';
+import { useHubSearchPreviewQuery, useHubsTableFormatter } from '@/features/search/ui/hooks';
 
 export const HubsResultList: FC = memo(() => {
   const { navigateWithState } = useNavigateWithSearchState();
-  const { handlePreview, isLoading } = useHubSearchPreview();
+  const { loadHubPreview, isLoading } = useHubSearchPreviewQuery();
 
   const handleEdit = (id: string) => {
     navigateWithState(generateEditResourceUrl(id));
@@ -24,7 +23,7 @@ export const HubsResultList: FC = memo(() => {
   const { formattedData, listHeader } = useHubsTableFormatter({
     onEdit: handleEdit,
     onImport: handleImport,
-    onTitleClick: handlePreview,
+    onTitleClick: loadHubPreview,
   });
 
   return (

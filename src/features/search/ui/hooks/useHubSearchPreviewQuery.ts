@@ -16,7 +16,7 @@ interface HubSearchPreviewResult {
  * Hook for triggering a hub record preview on the Search page.
  * Fetches the hub record and populates the FullDisplay preview panel.
  */
-export const useHubSearchPreview = () => {
+export const useHubSearchPreviewQuery = () => {
   const { fetchRecord } = useRecordControls();
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
 
@@ -42,7 +42,7 @@ export const useHubSearchPreview = () => {
     errorMessage: 'ld.errorFetching',
   });
 
-  const handlePreview = useCallback(
+  const loadHubPreview = useCallback(
     (id: string) => {
       resetFullDisplayComponentType();
       loadPreview(id);
@@ -50,5 +50,5 @@ export const useHubSearchPreview = () => {
     [resetFullDisplayComponentType, loadPreview],
   );
 
-  return { handlePreview, isLoading };
+  return { loadHubPreview, isLoading };
 };
