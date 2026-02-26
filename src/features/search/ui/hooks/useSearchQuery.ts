@@ -67,13 +67,19 @@ export function useSearchQuery({
 
   // Validate searchBy against the effective configs' valid options
   // If the URL has an invalid searchBy for this segment, use the config's default
+  // For advanced search (pre-formatted CQL query without searchBy), keep it undefined
   const effectiveSearchBy = useMemo(() => {
+    // Keep searchBy as undefined for advanced search
+    if (committed.query && !committed.searchBy && committed.query.trim().startsWith('(')) {
+      return undefined;
+    }
+
     if (!effectiveCoreConfig || !effectiveUIConfig) {
       return committed.searchBy;
     }
 
     return getValidSearchBy(committed.searchBy, effectiveUIConfig, effectiveCoreConfig);
-  }, [committed.searchBy, effectiveCoreConfig, effectiveUIConfig]);
+  }, [committed.query, committed.searchBy, effectiveCoreConfig, effectiveUIConfig]);
 
   const queryKey = useMemo(
     () =>
