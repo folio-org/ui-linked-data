@@ -114,7 +114,7 @@ export const ModalImport = memo(() => {
           if (delta > 0) {
             await new Promise(r => setTimeout(r, delta));
           }
-          setIsImportSuccessful(true);
+          setIsImportSuccessful(response.resources?.length > 0);
           if (response.resources?.length === 1) {
             setNavigationTarget(response.resources[0]);
           }
