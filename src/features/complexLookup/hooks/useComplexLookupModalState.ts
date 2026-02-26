@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { normalizeQuery } from '@/features/search/core';
+
 import { useSearchState } from '@/store';
 
 interface UseComplexLookupModalStateParams {
@@ -21,6 +23,7 @@ export function useComplexLookupModalState({
   defaultSource,
 }: UseComplexLookupModalStateParams) {
   const initialQuery = assignedValue?.label;
+  const normalizedInitialQuery = initialQuery ? (normalizeQuery(initialQuery) ?? '') : '';
   // Extract assigned source from meta (if editing existing value with source)
   const assignedSource = assignedValue?.meta?.sourceType;
   // Use assigned source if exists, otherwise use config default
@@ -54,11 +57,11 @@ export function useComplexLookupModalState({
         ...(initialSource ? { source: initialSource } : {}),
       });
 
-      // Set committed values with initial query and source
+      // Set committed values with normalized initial query and source
       // This triggers useSearchQuery to auto-execute the search via its enabled flag
       setCommittedValues({
         segment: defaultSegment,
-        query: initialQuery || '',
+        query: normalizedInitialQuery,
         searchBy: undefined,
         source: initialSource,
         offset: 0,
@@ -66,12 +69,13 @@ export function useComplexLookupModalState({
 
       // Set draft query to populate the input field and save to segment draft
       if (initialQuery) {
+        // Store the original query in the input field for user editing
         setQuery(initialQuery);
 
-        // Save initial query to segment draft so it persists when switching segments
+        // Save normalized query to segment draft for consistency with handleSubmit
         setDraftBySegment({
           [defaultSegment]: {
-            query: initialQuery,
+            query: normalizedInitialQuery,
             searchBy: undefined,
             source: initialSource,
           },
@@ -88,5 +92,5 @@ export function useComplexLookupModalState({
       resetCommittedValues();
       resetDraftBySegment();
     }
-  }, [isOpen, initialQuery, defaultSegment, initialSource]);
+  }, [isOpen, initialQuery, normalizedInitialQuery, defaultSegment, initialSource]);
 }
