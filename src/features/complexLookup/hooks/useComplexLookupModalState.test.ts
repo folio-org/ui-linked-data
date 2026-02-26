@@ -63,7 +63,7 @@ describe('useComplexLookupModalState', () => {
       expect(mockSetCommittedValues).toHaveBeenCalledWith({
         segment: 'authorities:browse',
         query: 'test query',
-        searchBy: '',
+        searchBy: undefined,
         source: undefined,
         offset: 0,
       });
@@ -82,7 +82,7 @@ describe('useComplexLookupModalState', () => {
       expect(mockSetDraftBySegment).toHaveBeenCalledWith({
         'authorities:browse': {
           query: 'test',
-          searchBy: '',
+          searchBy: undefined,
           source: undefined,
         },
       });
