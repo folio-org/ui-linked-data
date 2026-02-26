@@ -8,7 +8,7 @@ import { SubjectModal } from './SubjectModal';
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
   useAuthoritiesModalLogic: jest.fn(),
-  useComplexLookupModalCleanup: jest.fn(),
+  useModalWithHubPreview: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -83,15 +83,15 @@ jest.mock('@/features/complexLookup/components/content', () => ({
     </div>
   ),
   HubsContent: ({
-    onAssign,
-    onClose,
+    handleHubAssign,
+    handleCloseHubPreview,
   }: {
-    onAssign: (value: ComplexLookupAssignRecordDTO) => void;
-    onClose: () => void;
+    handleHubAssign?: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
+    handleCloseHubPreview?: VoidFunction;
   }) => (
     <div data-testid="hubs-content">
-      <button onClick={() => onAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>
-      <button onClick={onClose}>Close</button>
+      {handleHubAssign && <button onClick={() => handleHubAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>}
+      {handleCloseHubPreview && <button onClick={handleCloseHubPreview}>Close</button>}
     </div>
   ),
 }));
@@ -106,6 +106,10 @@ describe('SubjectModal', () => {
   const mockHandleModalClose = jest.fn();
   const mockOnSegmentEnter = jest.fn();
   const mockCheckFailedId = jest.fn();
+  const mockHandleHubTitleClick = jest.fn();
+  const mockHandleHubAssign = jest.fn();
+  const mockHandleCloseHubPreview = jest.fn();
+  const mockHandleHubPreviewAssign = jest.fn();
 
   beforeEach(() => {
     (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
@@ -127,7 +131,18 @@ describe('SubjectModal', () => {
         resetMarcPreviewMetadata: jest.fn(),
       },
     });
-    (ComplexLookupHooks.useComplexLookupModalCleanup as jest.Mock).mockReturnValue({
+    (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+      hubPreviewProps: {
+        isHubPreviewOpen: false,
+        isPreviewLoading: false,
+        isAssigning: false,
+        previewData: null,
+        previewMeta: null,
+        handleHubTitleClick: mockHandleHubTitleClick,
+        handleHubAssign: mockHandleHubAssign,
+        handleCloseHubPreview: mockHandleCloseHubPreview,
+        handleHubPreviewAssign: mockHandleHubPreviewAssign,
+      },
       handleModalClose: mockHandleModalClose,
     });
   });
@@ -223,11 +238,12 @@ describe('SubjectModal', () => {
     });
   });
 
-  describe('Modal cleanup integration', () => {
-    it('calls useComplexLookupModalCleanup with cleanup object', () => {
+  describe('Modal integration', () => {
+    it('calls useModalWithHubPreview with correct parameters', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
-      expect(ComplexLookupHooks.useComplexLookupModalCleanup).toHaveBeenCalledWith({
+      expect(ComplexLookupHooks.useModalWithHubPreview).toHaveBeenCalledWith({
+        onAssign: mockOnAssign,
         onClose: mockOnClose,
         withMarcPreview: expect.objectContaining({
           setIsMarcPreviewOpen: expect.any(Function),
@@ -238,7 +254,7 @@ describe('SubjectModal', () => {
       });
     });
 
-    it('uses handleModalClose from useComplexLookupModalCleanup for modal close', () => {
+    it('uses handleModalClose from useModalWithHubPreview for modal close', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       screen.getByTestId('modal-close').click();
@@ -318,21 +334,21 @@ describe('SubjectModal', () => {
   });
 
   describe('Hubs assignment flow', () => {
-    it('calls onAssign directly when hub is assigned', () => {
+    it('calls handleHubAssign when hub is assigned', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       screen.getByText('Assign Hub').click();
 
-      expect(mockOnAssign).toHaveBeenCalledWith({ id: 'hub_1', title: 'Hub 1' });
+      expect(mockHandleHubAssign).toHaveBeenCalledWith({ id: 'hub_1', title: 'Hub 1' });
     });
 
-    it('calls handleModalClose when close is triggered from HubsContent', () => {
+    it('calls handleCloseHubPreview when close is triggered from HubsContent', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       const closeButtons = screen.getAllByText('Close');
       closeButtons[1].click();
 
-      expect(mockHandleModalClose).toHaveBeenCalled();
+      expect(mockHandleCloseHubPreview).toHaveBeenCalled();
     });
   });
 

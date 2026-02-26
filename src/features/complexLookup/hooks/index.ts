@@ -14,3 +14,5 @@ export { useHubAssignment } from './useHubAssignment';
 export { useComplexLookupModalCleanup } from './useComplexLookupModalCleanup';
 export { useAuthoritiesModalLogic } from './useAuthoritiesModalLogic';
 export { useHubsModalLogic } from './useHubsModalLogic';
+export { useHubPreviewQuery } from './useHubPreviewQuery';
+export { useModalWithHubPreview } from './useModalWithHubPreview';

@@ -8,8 +8,8 @@ import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/compon
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import {
   useAuthoritiesModalLogic,
-  useComplexLookupModalCleanup,
   useComplexLookupModalState,
+  useModalWithHubPreview,
 } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
@@ -28,7 +28,7 @@ interface SubjectModalProps {
 
 /**
  * SubjectModal - Modal wrapper for Subject lookup using new Search feature.
- * Supports both Authority lookup (search/browse with MARC preview) and Hub lookup (with import-on-assign).
+ * Supports both Authority lookup (search/browse with MARC preview) and Hub lookup (with import-on-assign and preview).
  */
 export const SubjectModal: FC<SubjectModalProps> = ({
   isOpen,
@@ -73,7 +73,9 @@ export const SubjectModal: FC<SubjectModalProps> = ({
     isOpen,
   });
 
-  const { handleModalClose } = useComplexLookupModalCleanup({
+  // Hub preview integration - handles preview state, assignment, and cleanup
+  const { hubPreviewProps, handleModalClose } = useModalWithHubPreview({
+    onAssign,
     onClose,
     withMarcPreview: cleanup,
   });
@@ -94,18 +96,27 @@ export const SubjectModal: FC<SubjectModalProps> = ({
               labelId="ld.authorities"
               onAfterChange={authoritiesData.onSegmentEnter}
             />
-            <Search.Controls.Segment path="hubsLookup" labelId="ld.hubs" onBeforeChange={handleResetMarcPreview} />
+            <Search.Controls.Segment
+              path="hubsLookup"
+              labelId="ld.hubs"
+              onBeforeChange={() => {
+                handleResetMarcPreview();
+                hubPreviewProps.handleCloseHubPreview();
+              }}
+            />
           </Search.Controls.SegmentGroup>
 
           <Search.Controls.SegmentGroup parentPath="authorities">
             <Search.Controls.Segment
               path="authorities:search"
               labelId="ld.search"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
               onAfterChange={authoritiesData.onSegmentEnter}
             />
             <Search.Controls.Segment
               path="authorities:browse"
               labelId="ld.browse"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
               onAfterChange={authoritiesData.onSegmentEnter}
             />
           </Search.Controls.SegmentGroup>
@@ -133,7 +144,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           </Search.Controls.SegmentContent>
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <HubsContent onAssign={onAssign} onClose={handleModalClose} />
+            <HubsContent {...hubPreviewProps} />
           </Search.Controls.SegmentContent>
         </Search.Content>
       </Search>

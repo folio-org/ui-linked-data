@@ -10,6 +10,7 @@ import { useFormattedResults } from './useFormattedResults';
 interface UseHubsTableFormatterProps {
   onEdit?: (id: string) => void;
   onImport?: (uri: string) => void;
+  onTitleClick?: (id: string) => void;
 }
 
 export interface UseHubsTableFormatterReturn {
@@ -20,15 +21,24 @@ export interface UseHubsTableFormatterReturn {
 /**
  * Table formatter hook for Hub Search Results
  */
-export function useHubsTableFormatter({ onEdit, onImport }: UseHubsTableFormatterProps): UseHubsTableFormatterReturn {
+export function useHubsTableFormatter({
+  onEdit,
+  onImport,
+  onTitleClick,
+}: UseHubsTableFormatterProps): UseHubsTableFormatterReturn {
   const { formatMessage } = useIntl();
   const formattedResults = useFormattedResults<SearchResultsTableRow>();
 
   const formattedData = useMemo(() => {
     if (!formattedResults) return [];
 
-    return applyColumnFormatters(formattedResults, hubsTableConfig.columns, { formatMessage, onEdit, onImport });
-  }, [formattedResults, formatMessage, onEdit, onImport]);
+    return applyColumnFormatters(formattedResults, hubsTableConfig.columns, {
+      formatMessage,
+      onEdit,
+      onImport,
+      onTitleClick,
+    });
+  }, [formattedResults, formatMessage, onEdit, onImport, onTitleClick]);
 
   const listHeader = useMemo(() => {
     return buildTableHeader(hubsTableConfig.columns, formatMessage);

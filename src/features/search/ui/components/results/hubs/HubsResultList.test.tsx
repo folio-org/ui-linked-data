@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 
 import { Row } from '@/components/Table';
@@ -30,6 +31,13 @@ jest.mock('@/features/hubImport', () => ({
   generateHubImportPreviewUrl: (uri: string) => `/hub-import?sourceUri=${uri}`,
 }));
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
+
 describe('HubsResultList', () => {
   const mockFormatterReturn = {
     formattedData: [],
@@ -39,9 +47,11 @@ describe('HubsResultList', () => {
 
   const renderComponent = () => {
     render(
-      <BrowserRouter>
-        <HubsResultList />
-      </BrowserRouter>,
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <HubsResultList />
+        </BrowserRouter>
+      </QueryClientProvider>,
     );
   };
 
@@ -64,6 +74,7 @@ describe('HubsResultList', () => {
     expect(formatterSpy).toHaveBeenCalledWith({
       onEdit: expect.any(Function),
       onImport: expect.any(Function),
+      onTitleClick: expect.any(Function),
     });
   });
 

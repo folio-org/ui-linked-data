@@ -13,6 +13,7 @@ export type ProfileSelectionType = {
 
 export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'isMarcPreviewOpen', boolean> &
+  SliceState<'isHubPreviewOpen', boolean> &
   SliceState<'isSearchPaneCollapsed', boolean> &
   SliceState<'isDuplicateImportedResourceModalOpen', boolean> &
   SliceState<'collapsedEntries', UIEntries> &
@@ -44,6 +45,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: FullDisplayType.Basic,
   },
   isMarcPreviewOpen: {
+    initialValue: false,
+  },
+  isHubPreviewOpen: {
     initialValue: false,
   },
   isDuplicateImportedResourceModalOpen: {

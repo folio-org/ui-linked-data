@@ -6,3 +6,5 @@ export { useSearchQuery } from './useSearchQuery';
 export { useSearchSegment } from './useSearchSegment';
 export { useFormattedResults } from './useFormattedResults';
 export { useTableFormatter } from './useTableFormatter';
+export { useHubsTableFormatter } from './useHubsTableFormatter';
+export { useHubSearchPreviewQuery } from './useHubSearchPreviewQuery';

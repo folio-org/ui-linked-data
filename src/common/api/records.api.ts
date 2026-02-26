@@ -15,6 +15,7 @@ type SingleRecord = {
 
 type IGetRecord = SingleRecord & {
   idType?: ExternalResourceIdType;
+  signal?: AbortSignal;
 };
 
 type GetAllRecords = {
@@ -25,12 +26,13 @@ type GetAllRecords = {
 
 const singleRecordUrl = `${BIBFRAME_API_ENDPOINT}/:recordId`;
 
-export const getRecord = async ({ recordId, idType }: IGetRecord) => {
+export const getRecord = async ({ recordId, idType, signal }: IGetRecord) => {
   const selectedUrl = (idType && GET_RESOURCE_BY_TYPE_URIS[idType]) ?? singleRecordUrl;
   const url = baseApi.generateUrl(selectedUrl, { name: ':recordId', value: recordId });
 
   return baseApi.getJson({
     url,
+    requestParams: signal ? { method: 'GET', signal } : { method: 'GET' },
   });
 };
 

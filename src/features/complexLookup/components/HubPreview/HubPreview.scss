@@ -1,0 +1,15 @@
+.hub-preview-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .hub-preview-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+
+    .preview-panel .preview-entity {
+      max-width: 100%;
+    }
+  }
+}

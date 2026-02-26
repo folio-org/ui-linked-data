@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
-import { useComplexLookupModalState } from '@/features/complexLookup/hooks';
+import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
 import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
@@ -17,7 +17,7 @@ interface HubsModalProps {
 
 /**
  * HubsModal - Modal wrapper for Hub lookup using new Search feature.
- * Supports import-on-assign for external hubs.
+ * Supports import-on-assign for external hubs and preview for local hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
   const defaultSource = getDefaultHubSource(assignedValue);
@@ -30,8 +30,14 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
     defaultSource,
   });
 
+  // Hub preview integration - handles preview state, assignment, and cleanup
+  const { hubPreviewProps, handleModalClose } = useModalWithHubPreview({
+    onAssign,
+    onClose,
+  });
+
   return (
-    <LookupModal isOpen={isOpen} onClose={onClose} title={<FormattedMessage id="ld.hubs.assign" />}>
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.hubs.assign" />}>
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"
@@ -48,7 +54,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
         </Search.Controls>
 
         <Search.Content>
-          <HubsContent onAssign={onAssign} onClose={onClose} />
+          <HubsContent {...hubPreviewProps} />
         </Search.Content>
       </Search>
     </LookupModal>

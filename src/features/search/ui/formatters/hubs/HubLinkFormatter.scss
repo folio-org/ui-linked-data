@@ -1,0 +1,9 @@
+.hub-link {
+  font-weight: 400;
+}
+
+button.hub-link {
+  &:hover {
+    text-decoration-line: underline;
+  }
+}

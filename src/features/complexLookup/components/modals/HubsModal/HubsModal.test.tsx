@@ -7,7 +7,7 @@ import { HubsModal } from './HubsModal';
 
 jest.mock('@/features/complexLookup/hooks', () => ({
   useComplexLookupModalState: jest.fn(),
-  useHubsModalLogic: jest.fn(),
+  useModalWithHubPreview: jest.fn(),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -90,12 +90,23 @@ describe('HubsModal', () => {
   const mockOnClose = jest.fn();
   const mockOnAssign = jest.fn();
   const mockHandleHubAssign = jest.fn();
+  const mockHandleModalClose = jest.fn();
 
   beforeEach(() => {
     (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);
-    (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-      handleHubAssign: mockHandleHubAssign,
-      isAssigning: false,
+    (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+      hubPreviewProps: {
+        handleHubAssign: mockHandleHubAssign,
+        isAssigning: false,
+        isHubPreviewOpen: false,
+        isPreviewLoading: false,
+        previewData: null,
+        previewMeta: null,
+        handleHubTitleClick: jest.fn(),
+        handleCloseHubPreview: jest.fn(),
+        handleHubPreviewAssign: jest.fn(),
+      },
+      handleModalClose: mockHandleModalClose,
     });
   });
 
@@ -191,9 +202,19 @@ describe('HubsModal', () => {
 
   describe('Hub assignment flow', () => {
     it('shows loading state when isAssigning is true', () => {
-      (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-        handleHubAssign: mockHandleHubAssign,
-        isAssigning: true,
+      (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+        hubPreviewProps: {
+          handleHubAssign: mockHandleHubAssign,
+          isAssigning: true,
+          isHubPreviewOpen: false,
+          isPreviewLoading: false,
+          previewData: null,
+          previewMeta: null,
+          handleHubTitleClick: jest.fn(),
+          handleCloseHubPreview: jest.fn(),
+          handleHubPreviewAssign: jest.fn(),
+        },
+        handleModalClose: mockHandleModalClose,
       });
 
       renderWithProviders(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
@@ -203,9 +224,19 @@ describe('HubsModal', () => {
     });
 
     it('hides loading state when isAssigning is false', () => {
-      (ComplexLookupHooks.useHubsModalLogic as jest.Mock).mockReturnValue({
-        handleHubAssign: mockHandleHubAssign,
-        isAssigning: false,
+      (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+        hubPreviewProps: {
+          handleHubAssign: mockHandleHubAssign,
+          isAssigning: false,
+          isHubPreviewOpen: false,
+          isPreviewLoading: false,
+          previewData: null,
+          previewMeta: null,
+          handleHubTitleClick: jest.fn(),
+          handleCloseHubPreview: jest.fn(),
+          handleHubPreviewAssign: jest.fn(),
+        },
+        handleModalClose: mockHandleModalClose,
       });
 
       renderWithProviders(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
@@ -214,10 +245,10 @@ describe('HubsModal', () => {
       expect(screen.getByTestId('hubs-lookup-result-list')).toBeInTheDocument();
     });
 
-    it('initializes useHubsModalLogic with onAssign and onClose callbacks', () => {
+    it('initializes useModalWithHubPreview with onAssign and onClose callbacks', () => {
       renderWithProviders(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
-      expect(ComplexLookupHooks.useHubsModalLogic).toHaveBeenCalledWith({
+      expect(ComplexLookupHooks.useModalWithHubPreview).toHaveBeenCalledWith({
         onAssign: mockOnAssign,
         onClose: mockOnClose,
       });
