@@ -4,7 +4,6 @@ import { FormattedMessage } from 'react-intl';
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
 import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
-import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -20,14 +19,13 @@ interface HubsModalProps {
  * Supports import-on-assign for external hubs and preview for local hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
-  const defaultSource = getDefaultHubSource(assignedValue);
-
   // Reset search state and set initial query when modal opens
+  // defaultSource is config default (LoC), assigned source is extracted from assignedValue.meta
   useComplexLookupModalState({
     isOpen,
     assignedValue,
     defaultSegment: 'hubsLookup',
-    defaultSource,
+    defaultSource: 'libraryOfCongress',
   });
 
   // Hub preview integration - handles preview state, assignment, and cleanup
@@ -41,7 +39,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"
-        defaultSource={defaultSource}
+        defaultSource="libraryOfCongress"
         flow="value"
         mode="custom"
       >
@@ -50,7 +48,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
 
-          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={defaultSource} />
+          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
         </Search.Controls>
 
         <Search.Content>

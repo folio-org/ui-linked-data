@@ -21,6 +21,10 @@ export function useComplexLookupModalState({
   defaultSource,
 }: UseComplexLookupModalStateParams) {
   const initialQuery = assignedValue?.label;
+  // Extract assigned source from meta (if editing existing value with source)
+  const assignedSource = assignedValue?.meta?.sourceType;
+  // Use assigned source if exists, otherwise use config default
+  const initialSource = assignedSource || defaultSource;
   const {
     setQuery,
     resetQuery,
@@ -45,19 +49,18 @@ export function useComplexLookupModalState({
 
   useEffect(() => {
     if (isOpen) {
-      // Set navigation state with the default segment to ensure correct tab is selected
       setNavigationState({
         segment: defaultSegment,
-        ...(defaultSource ? { source: defaultSource } : {}),
+        ...(initialSource ? { source: initialSource } : {}),
       });
 
-      // Set committed values with initial query if provided
+      // Set committed values with initial query and source
       // This triggers useSearchQuery to auto-execute the search via its enabled flag
       setCommittedValues({
         segment: defaultSegment,
         query: initialQuery || '',
         searchBy: '',
-        source: defaultSource,
+        source: initialSource,
         offset: 0,
       });
 
@@ -70,7 +73,7 @@ export function useComplexLookupModalState({
           [defaultSegment]: {
             query: initialQuery,
             searchBy: '',
-            source: defaultSource,
+            source: initialSource,
           },
         });
       } else {
@@ -85,5 +88,5 @@ export function useComplexLookupModalState({
       resetCommittedValues();
       resetDraftBySegment();
     }
-  }, [isOpen, initialQuery, defaultSegment, defaultSource]);
+  }, [isOpen, initialQuery, defaultSegment, initialSource]);
 }
