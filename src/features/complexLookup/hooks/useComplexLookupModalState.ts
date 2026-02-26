@@ -59,7 +59,7 @@ export function useComplexLookupModalState({
       setCommittedValues({
         segment: defaultSegment,
         query: initialQuery || '',
-        searchBy: '',
+        searchBy: undefined,
         source: initialSource,
         offset: 0,
       });
@@ -72,7 +72,7 @@ export function useComplexLookupModalState({
         setDraftBySegment({
           [defaultSegment]: {
             query: initialQuery,
-            searchBy: '',
+            searchBy: undefined,
             source: initialSource,
           },
         });

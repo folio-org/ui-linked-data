@@ -67,19 +67,13 @@ export function useSearchQuery({
 
   // Validate searchBy against the effective configs' valid options
   // If the URL has an invalid searchBy for this segment, use the config's default
-  // For advanced search (query without searchBy), keep it undefined
   const effectiveSearchBy = useMemo(() => {
-    // Advanced search: query exists but searchBy is undefined - keep it undefined
-    if (committed.query && !committed.searchBy) {
-      return undefined;
-    }
-
     if (!effectiveCoreConfig || !effectiveUIConfig) {
       return committed.searchBy;
     }
 
     return getValidSearchBy(committed.searchBy, effectiveUIConfig, effectiveCoreConfig);
-  }, [committed.query, committed.searchBy, effectiveCoreConfig, effectiveUIConfig]);
+  }, [committed.searchBy, effectiveCoreConfig, effectiveUIConfig]);
 
   const queryKey = useMemo(
     () =>
