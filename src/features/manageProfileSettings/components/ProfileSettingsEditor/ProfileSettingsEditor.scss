@@ -181,5 +181,15 @@
 @container (max-width: 599.98px) {
   .components-editor {
     grid-template-columns: 1fr 1fr;
+
+    .component {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .name {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   }
 }
