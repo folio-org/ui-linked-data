@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
+
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
 import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
@@ -25,7 +27,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
     isOpen,
     assignedValue,
     defaultSegment: 'hubsLookup',
-    defaultSource: 'libraryOfCongress',
+    defaultSource: SOURCE_TYPES.LIBRARY_OF_CONGRESS,
   });
 
   // Hub preview integration - handles preview state, assignment, and cleanup
@@ -39,7 +41,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"
-        defaultSource="libraryOfCongress"
+        defaultSource={SOURCE_TYPES.LIBRARY_OF_CONGRESS}
         flow="value"
         mode="custom"
       >
@@ -48,7 +50,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
 
-          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={SOURCE_TYPES.LIBRARY_OF_CONGRESS} />
         </Search.Controls>
 
         <Search.Content>

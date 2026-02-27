@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
@@ -45,7 +45,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
   // TODO: refactor this to use a constant or enum instead of hardcoded values
   const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
   // defaultSource is config default (LoC for hubs), assigned source extracted from assignedValue.meta
-  const defaultSource = isAssignedHub ? 'libraryOfCongress' : undefined;
+  const defaultSource = isAssignedHub ? SOURCE_TYPES.LIBRARY_OF_CONGRESS : undefined;
 
   useComplexLookupModalState({
     isOpen,
@@ -126,7 +126,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           <Search.Controls.MetaControls />
 
           <Search.Controls.SegmentContent segment="hubsLookup">
-            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue="libraryOfCongress" />
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={SOURCE_TYPES.LIBRARY_OF_CONGRESS} />
           </Search.Controls.SegmentContent>
         </Search.Controls>
 

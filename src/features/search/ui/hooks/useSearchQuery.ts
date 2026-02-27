@@ -69,7 +69,7 @@ export function useSearchQuery({
   // If the URL has an invalid searchBy for this segment, use the config's default
   // For advanced search (pre-formatted CQL query without searchBy), keep it undefined
   const effectiveSearchBy = useMemo(() => {
-    // Keep searchBy as undefined for advanced search
+    // Advanced search: query exists but searchBy is undefined - keep it undefined
     if (committed.query && !committed.searchBy && committed.query.trim().startsWith('(')) {
       return undefined;
     }
