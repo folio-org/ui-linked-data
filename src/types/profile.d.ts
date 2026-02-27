@@ -34,6 +34,8 @@ type ProfileSettingsChildProperties = {
 };
 
 type ProfileSettings = {
+  id?: string | number;
+  resourceType?: string;
   active: boolean;
   children?: ProfileSettingsChildProperties[];
 };

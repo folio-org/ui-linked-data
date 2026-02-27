@@ -1,10 +1,10 @@
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
-export const detectDrift = (profile: Profile, settings: ProfileSettings) => {
+export const detectDrift = (profile: Profile, settings: ProfileSettings, resourceTypeURL?: string) => {
   const missingFromSettings: string[] = [];
 
   profile.forEach(node => {
-    if (node.type === AdvancedFieldType.block) {
+    if (node.type === AdvancedFieldType.block && resourceTypeURL ? resourceTypeURL === node.uriBFLite : false) {
       node.children?.forEach(nodeChild => {
         const settingsMatch = settings.children?.find(child => child.id === nodeChild);
         if (!settingsMatch) {
@@ -16,6 +16,7 @@ export const detectDrift = (profile: Profile, settings: ProfileSettings) => {
 
   return {
     ...settings,
+    resourceType: resourceTypeURL,
     missingFromSettings,
   } as ProfileSettingsWithDrift;
 };

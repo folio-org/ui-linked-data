@@ -104,7 +104,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     const nodeOptions: NodeOptions = {
       uuid,
       path: this.getPathForNode(node.id),
-      children: this.transformChildren(node.type, node.children),
+      children: this.transformChildren(node.type, node.uriBFLite, node.children),
       linkedEntry: this.transformLinkedEntry(node.linkedEntry),
       editorVisible: this.getEditorVisibility(node.id),
       profileSettingsDrift: this.hasProfileSettingsDrift(node.id),
@@ -142,10 +142,10 @@ export class SchemaGeneratorService implements ISchemaGenerator {
     };
   }
 
-  private transformChildren(type: string, children?: string[]) {
+  private transformChildren(type: string, uri?: string, children?: string[]) {
     if (!children) return undefined;
 
-    if (type === AdvancedFieldType.block && this.settings.active) {
+    if (type === AdvancedFieldType.block && this.settings.active && this.settings.resourceType === uri) {
       return this.transformBlockChildrenOrdering(children);
     }
 
