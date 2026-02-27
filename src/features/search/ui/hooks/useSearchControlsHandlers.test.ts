@@ -452,11 +452,11 @@ describe('useSearchControlsHandlers', () => {
       });
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        segment: 'test',
+        segment: 'search',
       });
     });
 
-    it('resets navigation state with segment from config id', () => {
+    it('resets navigation state using active segment from navigationState', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
       };
@@ -468,7 +468,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'test' });
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'search' });
     });
 
     it('clears URL params in URL flow', () => {
