@@ -21,13 +21,15 @@ interface HubsModalProps {
  * Supports import-on-assign for external hubs and preview for local hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
+  const defaultSource = SOURCE_TYPES.LIBRARY_OF_CONGRESS;
+
   // Reset search state and set initial query when modal opens
   // defaultSource is config default (LoC), assigned source is extracted from assignedValue.meta
   useComplexLookupModalState({
     isOpen,
     assignedValue,
     defaultSegment: 'hubsLookup',
-    defaultSource: SOURCE_TYPES.LIBRARY_OF_CONGRESS,
+    defaultSource,
   });
 
   // Hub preview integration - handles preview state, assignment, and cleanup
@@ -41,7 +43,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
       <Search
         segments={['hubsLookup']}
         defaultSegment="hubsLookup"
-        defaultSource={SOURCE_TYPES.LIBRARY_OF_CONGRESS}
+        defaultSource={defaultSource}
         flow="value"
         mode="custom"
       >
@@ -50,7 +52,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
           <Search.Controls.SubmitButton />
           <Search.Controls.MetaControls />
 
-          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={SOURCE_TYPES.LIBRARY_OF_CONGRESS} />
+          <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={defaultSource} />
         </Search.Controls>
 
         <Search.Content>
