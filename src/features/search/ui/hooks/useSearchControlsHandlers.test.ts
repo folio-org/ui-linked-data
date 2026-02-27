@@ -518,6 +518,49 @@ describe('useSearchControlsHandlers', () => {
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
+
+    it('sets default source in navigation state when segment has a default source', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'hubsLookup' },
+            draftBySegment: {},
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+        {
+          store: useInputsState,
+          state: { resetPreviewContent },
+        },
+        {
+          store: useUIState,
+          state: { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid },
+        },
+      ]);
+
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        segment: 'hubsLookup',
+        source: 'libraryOfCongress',
+      });
+    });
   });
 
   describe('Handler stability', () => {

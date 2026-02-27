@@ -24,9 +24,7 @@ export function useComplexLookupModalState({
 }: UseComplexLookupModalStateParams) {
   const initialQuery = assignedValue?.label;
   const normalizedInitialQuery = initialQuery ? (normalizeQuery(initialQuery) ?? '') : '';
-  // Extract assigned source from meta (if editing existing value with source)
   const assignedSource = assignedValue?.meta?.sourceType;
-  // Use assigned source if exists, otherwise use config default
   const initialSource = assignedSource || defaultSource;
   const {
     setQuery,
