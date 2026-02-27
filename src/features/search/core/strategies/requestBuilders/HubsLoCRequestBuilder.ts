@@ -28,7 +28,10 @@ export class HubsLoCRequestBuilder extends BaseRequestBuilder {
   }
 
   private buildQueryParams(searchBy: string, value: string): Record<string, string> {
-    const indexConfig = this.searchableIndicesMap?.[searchBy as keyof HubSearchableIndicesMap];
+    const resolvedSearchBy =
+      this.searchableIndicesMap && !(searchBy in this.searchableIndicesMap) ? SearchableIndex.HubNameKeyword : searchBy;
+
+    const indexConfig = this.searchableIndicesMap?.[resolvedSearchBy as keyof HubSearchableIndicesMap];
     const config = indexConfig?.query;
 
     if (typeof config === 'object' && config !== null) {
@@ -38,7 +41,6 @@ export class HubsLoCRequestBuilder extends BaseRequestBuilder {
       };
     }
 
-    // Default fallback
     return { q: value };
   }
 
