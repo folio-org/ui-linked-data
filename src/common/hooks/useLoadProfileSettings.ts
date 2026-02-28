@@ -14,7 +14,11 @@ export const useLoadProfileSettings = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const queryClient = useQueryClient();
 
-  const loadProfileSettings = async (profileId: string | number | undefined, profile: Profile) => {
+  const loadProfileSettings = async (
+    profileId: string | number | undefined,
+    profile: Profile,
+    resourceTypeURL?: string,
+  ) => {
     const queryKey = ['profileSettings', profileId];
     const queryFn = async () => {
       if (profileId === undefined) {
@@ -22,7 +26,7 @@ export const useLoadProfileSettings = () => {
       }
       const settings = await fetchProfileSettings(profileId);
       sortProfileSettingsChildren(settings);
-      return detectDrift(profile, settings);
+      return detectDrift(profile, settings, resourceTypeURL);
     };
 
     try {

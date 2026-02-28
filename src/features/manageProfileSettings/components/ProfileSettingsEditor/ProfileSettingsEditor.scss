@@ -41,7 +41,8 @@
       .required {
         padding-left: 8px;
         text-transform: uppercase;
-        color: $gray-400;
+        font-weight: 600;
+        color: $gray-500;
       }
     }
 
@@ -180,5 +181,15 @@
 @container (max-width: 599.98px) {
   .components-editor {
     grid-template-columns: 1fr 1fr;
+
+    .component {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .name {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   }
 }
