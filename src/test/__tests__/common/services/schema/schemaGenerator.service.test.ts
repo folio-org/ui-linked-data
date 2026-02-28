@@ -243,6 +243,22 @@ describe('SchemaGeneratorService', () => {
           } as ProfileSettingsWithDrift,
           ['6', 'a', 'r'],
         ],
+        [
+          'active settings with non-matching resource type do not apply',
+          {
+            active: true,
+            resourceTypeURL: 'something-else',
+            children: [
+              {
+                id: 'r',
+                visible: true,
+                order: 1,
+              },
+            ],
+            missingFromSettings: ['6', 'a'],
+          },
+          ['a', '6', 'r'],
+        ],
       ])('%s', (_title, settings, expected) => {
         service.init(baseProfile, settings);
         service.generate('init-key');

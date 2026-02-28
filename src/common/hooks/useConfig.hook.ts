@@ -8,7 +8,7 @@ import { QueryParams } from '@/common/constants/routes.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
-import { RESOURCE_TYPE_REGISTRY, mapToResourceType } from '@/configs/resourceTypes';
+import { getUri, mapToResourceType } from '@/configs/resourceTypes';
 
 import { useInputsState, useProfileState } from '@/store';
 
@@ -194,7 +194,7 @@ export const useConfig = () => {
         const profileSettings = await loadProfileSettings(
           String(profile?.ids?.[0]),
           selectedProfile,
-          RESOURCE_TYPE_REGISTRY[resourceType].uri,
+          getUri(resourceType),
         );
 
         const { updatedSchema, initKey, updatedUserValues, selectedEntries } = await buildSchema({

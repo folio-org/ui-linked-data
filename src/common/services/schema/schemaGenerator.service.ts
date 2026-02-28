@@ -145,7 +145,7 @@ export class SchemaGeneratorService implements ISchemaGenerator {
   private transformChildren(type: string, uri?: string, children?: string[]) {
     if (!children) return undefined;
 
-    if (type === AdvancedFieldType.block && this.settings.active && this.settings.resourceType === uri) {
+    if (type === AdvancedFieldType.block && this.settings.active && this.settings.resourceTypeURL === uri) {
       return this.transformBlockChildrenOrdering(children);
     }
 

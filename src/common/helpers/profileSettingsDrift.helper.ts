@@ -16,7 +16,7 @@ export const detectDrift = (profile: Profile, settings: ProfileSettings, resourc
 
   return {
     ...settings,
-    resourceType: resourceTypeURL,
+    resourceTypeURL,
     missingFromSettings,
   } as ProfileSettingsWithDrift;
 };
