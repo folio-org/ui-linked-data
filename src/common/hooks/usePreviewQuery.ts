@@ -40,10 +40,11 @@ export function usePreviewQuery<TData>({
 }: UsePreviewQueryParams<TData>): UsePreviewQueryResult<TData> {
   const [previewMeta, setPreviewMeta] = useState<PreviewMeta | null>(null);
   const [selectedId, setSelectedId] = useState<string | undefined>();
+  const [requestKey, setRequestKey] = useState(0);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const { data, isLoading, isFetching, isError, error } = useQuery({
-    queryKey: [queryKey, selectedId],
+    queryKey: [queryKey, selectedId, requestKey],
     queryFn: async ({ signal }) => {
       if (!selectedId) return null;
 
@@ -70,11 +71,13 @@ export function usePreviewQuery<TData>({
 
   const loadPreview = useCallback((id: string, meta?: PreviewMeta) => {
     setSelectedId(id);
+    setRequestKey(prev => prev + 1);
     setPreviewMeta(meta ?? { id });
   }, []);
 
   const resetPreview = useCallback(() => {
     setSelectedId(undefined);
+    setRequestKey(0);
     setPreviewMeta(null);
   }, []);
 

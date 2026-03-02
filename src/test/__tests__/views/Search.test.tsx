@@ -13,7 +13,7 @@ import * as FeatureConstants from '@/common/constants/feature.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { Search } from '@/views';
 
-import { useSearchStore, useUIStore } from '@/store';
+import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 
 const mockIsEmbeddedMode = getMockedImportedConstant(BuildConstants, 'IS_EMBEDDED_MODE');
 const mockSearchFiltersEnabled = getMockedImportedConstant(FeatureConstants, 'SEARCH_FILTERS_ENABLED');
@@ -62,9 +62,10 @@ describe('Search', () => {
   });
 
   describe('component unmount', () => {
-    test('clears fullDisplayComponentType and selectedInstances on unmount', () => {
+    test('clears fullDisplayComponentType, selectedInstances and previewContent on unmount', () => {
       const mockResetFullDisplayComponentType = jest.fn();
       const mockResetSelectedInstances = jest.fn();
+      const mockResetPreviewContent = jest.fn();
 
       setInitialGlobalState([
         {
@@ -79,6 +80,12 @@ describe('Search', () => {
             resetSelectedInstances: mockResetSelectedInstances,
           },
         },
+        {
+          store: useInputsStore,
+          state: {
+            resetPreviewContent: mockResetPreviewContent,
+          },
+        },
       ]);
 
       const { unmount } = renderWithProviders(<Search />);
@@ -87,6 +94,7 @@ describe('Search', () => {
 
       expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
       expect(mockResetSelectedInstances).toHaveBeenCalled();
+      expect(mockResetPreviewContent).toHaveBeenCalled();
     });
   });
 
