@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-
 import { ROUTES } from '@/common/constants/routes.constants';
+import { useNavigateWithSearchState } from '@/common/hooks/useNavigateWithSearchState';
 
 export const useNavigateToManageProfileSettings = () => {
-  const navigate = useNavigate();
+  const { navigateWithState } = useNavigateWithSearchState();
 
   return {
-    navigateToManageProfileSettings: () => navigate(ROUTES.MANAGE_PROFILE_SETTINGS.uri),
+    navigateToManageProfileSettings: () => navigateWithState(ROUTES.MANAGE_PROFILE_SETTINGS.uri),
   };
 };

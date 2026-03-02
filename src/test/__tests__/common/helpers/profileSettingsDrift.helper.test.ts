@@ -7,6 +7,7 @@ describe('profileSettingsDrift.helper', () => {
       {
         id: 'document',
         type: AdvancedFieldType.block,
+        uriBFLite: 'type-uri',
         children: ['field-a', 'field-b', 'field-c', 'field-d'],
       },
       {
@@ -26,13 +27,14 @@ describe('profileSettingsDrift.helper', () => {
         type: AdvancedFieldType.literal,
       },
     ] as Profile;
+
     it('no drift when settings and profile children sets match', () => {
       const settings = {
         active: true,
         children: [{ id: 'field-a' }, { id: 'field-b' }, { id: 'field-c' }, { id: 'field-d' }],
       } as ProfileSettings;
 
-      const result = detectDrift(testProfile, settings);
+      const result = detectDrift(testProfile, settings, 'type-uri');
 
       expect(result.missingFromSettings).toHaveLength(0);
     });
@@ -50,7 +52,7 @@ describe('profileSettingsDrift.helper', () => {
         ],
       } as ProfileSettings;
 
-      const result = detectDrift(testProfile, settings);
+      const result = detectDrift(testProfile, settings, 'type-uri');
 
       expect(result.missingFromSettings).toHaveLength(0);
     });
@@ -61,11 +63,36 @@ describe('profileSettingsDrift.helper', () => {
         children: [{ id: 'field-a' }, { id: 'field-b' }],
       } as ProfileSettings;
 
-      const result = detectDrift(testProfile, settings);
+      const result = detectDrift(testProfile, settings, 'type-uri');
 
+      expect(result.resourceTypeURL).toEqual('type-uri');
       expect(result.missingFromSettings).toHaveLength(2);
       expect(result.missingFromSettings).toContain('field-c');
       expect(result.missingFromSettings).toContain('field-d');
+    });
+
+    it('no drift detected for non-matching resource type URL where drift would normally be detected', () => {
+      const settings = {
+        active: true,
+        children: [{ id: 'field-a' }, { id: 'field-b' }],
+      } as ProfileSettings;
+
+      const result = detectDrift(testProfile, settings, 'different-type-uri');
+
+      expect(result.resourceTypeURL).toEqual('different-type-uri');
+      expect(result.missingFromSettings).toHaveLength(0);
+    });
+
+    it('no drift detected for no resource type URL where drift would normally be detected', () => {
+      const settings = {
+        active: true,
+        children: [{ id: 'field-a' }, { id: 'field-b' }],
+      } as ProfileSettings;
+
+      const result = detectDrift(testProfile, settings);
+
+      expect(result.resourceTypeURL).toBeUndefined();
+      expect(result.missingFromSettings).toHaveLength(0);
     });
   });
 });
