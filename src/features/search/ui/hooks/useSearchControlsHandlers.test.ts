@@ -452,11 +452,11 @@ describe('useSearchControlsHandlers', () => {
       });
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        segment: 'test',
+        segment: 'search',
       });
     });
 
-    it('resets navigation state with segment from config id', () => {
+    it('resets navigation state using active segment from navigationState', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
       };
@@ -468,7 +468,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'test' });
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'search' });
     });
 
     it('clears URL params in URL flow', () => {
@@ -517,6 +517,49 @@ describe('useSearchControlsHandlers', () => {
       expect(resetPreviewContent).toHaveBeenCalled();
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
+    });
+
+    it('sets default source in navigation state when segment has a default source', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'hubsLookup' },
+            draftBySegment: {},
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+        {
+          store: useInputsState,
+          state: { resetPreviewContent },
+        },
+        {
+          store: useUIState,
+          state: { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid },
+        },
+      ]);
+
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        segment: 'hubsLookup',
+        source: 'libraryOfCongress',
+      });
     });
   });
 

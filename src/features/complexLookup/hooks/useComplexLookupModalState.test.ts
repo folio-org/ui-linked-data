@@ -63,7 +63,7 @@ describe('useComplexLookupModalState', () => {
       expect(mockSetCommittedValues).toHaveBeenCalledWith({
         segment: 'authorities:browse',
         query: 'test query',
-        searchBy: '',
+        searchBy: undefined,
         source: undefined,
         offset: 0,
       });
@@ -82,7 +82,7 @@ describe('useComplexLookupModalState', () => {
       expect(mockSetDraftBySegment).toHaveBeenCalledWith({
         'authorities:browse': {
           query: 'test',
-          searchBy: '',
+          searchBy: undefined,
           source: undefined,
         },
       });
@@ -119,6 +119,70 @@ describe('useComplexLookupModalState', () => {
 
       expect(mockSetQuery).not.toHaveBeenCalled();
       expect(mockResetDraftBySegment).toHaveBeenCalled();
+    });
+
+    it('uses assigned source from meta over default source', () => {
+      renderHook(() =>
+        useComplexLookupModalState({
+          isOpen: true,
+          assignedValue: { label: 'test', meta: { sourceType: 'local' } } as UserValueContents,
+          defaultSegment: 'hubsLookup',
+          defaultSource: 'libraryOfCongress',
+        }),
+      );
+
+      expect(mockSetNavigationState).toHaveBeenCalledWith({
+        segment: 'hubsLookup',
+        source: 'local',
+      });
+      expect(mockSetCommittedValues).toHaveBeenCalledWith(expect.objectContaining({ source: 'local' }));
+    });
+
+    it('uses assigned source from meta when no default source', () => {
+      renderHook(() =>
+        useComplexLookupModalState({
+          isOpen: true,
+          assignedValue: { label: 'test', meta: { sourceType: 'local' } } as UserValueContents,
+          defaultSegment: 'hubsLookup',
+        }),
+      );
+
+      expect(mockSetNavigationState).toHaveBeenCalledWith({
+        segment: 'hubsLookup',
+        source: 'local',
+      });
+    });
+
+    it('normalizes initial query with special characters for committed values', () => {
+      renderHook(() =>
+        useComplexLookupModalState({
+          isOpen: true,
+          assignedValue: { label: "O'Brien" } as UserValueContents,
+          defaultSegment: 'authorities:browse',
+        }),
+      );
+
+      expect(mockSetCommittedValues).toHaveBeenCalledWith(expect.objectContaining({ query: String.raw`O\'Brien` }));
+      // Input field receives the original label for user editing
+      expect(mockSetQuery).toHaveBeenCalledWith("O'Brien");
+    });
+
+    it('stores raw query in segment draft', () => {
+      renderHook(() =>
+        useComplexLookupModalState({
+          isOpen: true,
+          assignedValue: { label: "O'Brien" } as UserValueContents,
+          defaultSegment: 'authorities:browse',
+        }),
+      );
+
+      expect(mockSetDraftBySegment).toHaveBeenCalledWith({
+        'authorities:browse': {
+          query: "O'Brien",
+          searchBy: undefined,
+          source: undefined,
+        },
+      });
     });
   });
 
