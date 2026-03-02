@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
+
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
 import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
-import { getDefaultHubSource } from '@/features/complexLookup/utils';
 import { SOURCE_OPTIONS } from '@/features/search/ui';
 import { Search } from '@/features/search/ui/components/Search';
 
@@ -20,9 +21,10 @@ interface HubsModalProps {
  * Supports import-on-assign for external hubs and preview for local hubs.
  */
 export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, onAssign }) => {
-  const defaultSource = getDefaultHubSource(assignedValue);
+  const defaultSource = SOURCE_TYPES.LIBRARY_OF_CONGRESS;
 
   // Reset search state and set initial query when modal opens
+  // defaultSource is config default (LoC), assigned source is extracted from assignedValue.meta
   useComplexLookupModalState({
     isOpen,
     assignedValue,

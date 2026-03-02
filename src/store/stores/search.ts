@@ -12,7 +12,7 @@ type SourceData = SourceDataDTO | null;
 
 export interface SegmentDraft {
   query: string;
-  searchBy: SearchIdentifiers;
+  searchBy: SearchIdentifiers | undefined;
   source?: string;
 }
 
@@ -21,7 +21,7 @@ export type DraftBySegment = Record<string, SegmentDraft>;
 export interface CommittedValues {
   segment?: string;
   query: string;
-  searchBy: string;
+  searchBy: string | undefined;
   source?: string;
   offset: number;
   selector?: 'query' | 'prev' | 'next'; // Browse pagination selector

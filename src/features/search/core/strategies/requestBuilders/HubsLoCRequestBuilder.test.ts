@@ -75,7 +75,7 @@ describe('HubsLoCRequestBuilder', () => {
       expect(result.urlParams.count).toBe('100');
     });
 
-    it('falls back to default when searchBy not in map', () => {
+    it('falls back to hubNameKeyword when searchBy not in map', () => {
       const builder = new HubsLoCRequestBuilder(mockMap);
       const result = builder.build({
         query: 'test',
@@ -83,7 +83,9 @@ describe('HubsLoCRequestBuilder', () => {
         limit: 100,
       });
 
-      expect(result.urlParams.q).toBe('test');
+      expect(result.urlParams.label).toBe('test');
+      expect(result.urlParams.rdftype).toBe('Hub');
+      expect(result.urlParams.q).toBeUndefined();
     });
   });
 

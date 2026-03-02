@@ -5,7 +5,13 @@ import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/sear
 
 import { type CommittedValues, type SegmentDraft, useInputsState, useSearchState, useUIState } from '@/store';
 
-import { SearchParam, type SearchTypeConfig, normalizeQuery, resolveCoreConfig } from '../../core';
+import {
+  SearchParam,
+  type SearchTypeConfig,
+  getDefaultSourceForSegment,
+  normalizeQuery,
+  resolveCoreConfig,
+} from '../../core';
 import { resolveUIConfig } from '../config';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
@@ -248,8 +254,9 @@ export const useSearchControlsHandlers = ({
           params.set(SearchParam.SEGMENT, newSegment);
 
           // If restored segment has query, include full search params (auto-search)
+          // Normalize query for URL (CQL escaping) - drafts store raw user input
           if (hasPreservedQuery) {
-            params.set(SearchParam.QUERY, restoredDraft.query);
+            params.set(SearchParam.QUERY, normalizeQuery(restoredDraft.query) ?? '');
             params.set(SearchParam.SEARCH_BY, restoredDraft.searchBy);
 
             if (restoredDraft.source) {
@@ -261,9 +268,10 @@ export const useSearchControlsHandlers = ({
         });
       } else if (hasPreservedQuery) {
         // Value flow: only update committedValues if there's a query to preserve
+        // Normalize query for committed values (CQL escaping) - drafts store raw user input
         setCommittedValues({
           segment: newSegment,
-          query: restoredDraft.query,
+          query: normalizeQuery(restoredDraft.query) ?? '',
           searchBy: restoredDraft.searchBy,
           source: restoredDraft.source,
           offset: 0,
@@ -324,11 +332,12 @@ export const useSearchControlsHandlers = ({
       : searchBy;
 
     // Save current draft on submit (with validated searchBy)
+    // Store raw query in draft (drafts store user-facing text, not CQL-escaped)
     if (segment) {
       setDraftBySegment({
         ...draftBySegment,
         [segment]: {
-          query: normalizedQuery,
+          query,
           searchBy: validSearchBy,
           source,
         },
@@ -384,7 +393,6 @@ export const useSearchControlsHandlers = ({
     const state = useSearchState.getState();
     const navState = state.navigationState as Record<string, unknown>;
     const currentSegment = navState?.[SearchParam.SEGMENT] as string | undefined;
-    const currentSource = navState?.[SearchParam.SOURCE] as string | undefined;
 
     resetQuery();
     resetSearchBy();
@@ -400,12 +408,21 @@ export const useSearchControlsHandlers = ({
       setDraftBySegment(rest);
     }
 
-    // Reset navigation to defaults
+    // Reset navigation to defaults using the current segment
     const defaultNav = {} as Record<string, unknown>;
-    const defaultSegment = coreConfigRef.current.id;
 
-    if (defaultSegment) {
-      defaultNav[SearchParam.SEGMENT] = defaultSegment;
+    // Use current segment from navigationState (not from coreConfig.id)
+    const baseSegment = currentSegment || coreConfigRef.current.id;
+
+    if (baseSegment) {
+      defaultNav[SearchParam.SEGMENT] = baseSegment;
+
+      // Set default source from base segment config
+      const defaultSource = getDefaultSourceForSegment(baseSegment);
+
+      if (defaultSource) {
+        defaultNav[SearchParam.SOURCE] = defaultSource;
+      }
     }
 
     setNavigationState(defaultNav as SearchParamsState);
@@ -414,13 +431,15 @@ export const useSearchControlsHandlers = ({
       setSearchParams(() => {
         const params = new URLSearchParams();
 
-        // Preserve segment when clearing
-        if (currentSegment) {
-          params.set(SearchParam.SEGMENT, currentSegment);
+        // Use base segment (not current segment which might have source in ID)
+        if (baseSegment) {
+          params.set(SearchParam.SEGMENT, baseSegment);
         }
 
-        // Delete source when clearing
-        if (currentSource) {
+        // Set default source instead of deleting
+        if (defaultNav[SearchParam.SOURCE]) {
+          params.set(SearchParam.SOURCE, defaultNav[SearchParam.SOURCE] as string);
+        } else {
           params.delete(SearchParam.SOURCE);
         }
 
@@ -430,7 +449,17 @@ export const useSearchControlsHandlers = ({
       // Value flow: reset committed search
       resetCommittedValues();
     }
-  }, [resetQuery, resetSearchBy, setDraftBySegment, setNavigationState, setSearchParams, resetCommittedValues]);
+  }, [
+    resetQuery,
+    resetSearchBy,
+    setDraftBySegment,
+    setNavigationState,
+    setSearchParams,
+    resetCommittedValues,
+    resetPreviewContent,
+    resetFullDisplayComponentType,
+    resetCurrentlyPreviewedEntityBfid,
+  ]);
 
   return {
     onSegmentChange: handleSegmentChange,

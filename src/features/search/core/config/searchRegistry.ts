@@ -52,3 +52,27 @@ export function resolveCoreConfig(segment?: string, source?: string): SearchType
 
   return undefined;
 }
+
+/**
+ * Extract the default source from a segment's base config.
+ * If the base config has a composite ID with the pattern `${segment}:${source}`
+ * (e.g., base config for 'hubsLookup' has ID 'hubsLookup:libraryOfCongress'),
+ * returns the source part ('libraryOfCongress').
+ * Otherwise, returns undefined (no default source).
+ */
+export function getDefaultSourceForSegment(segment?: string): string | undefined {
+  if (!segment) return undefined;
+
+  const baseConfig = searchRegistry[segment];
+  if (!baseConfig) return undefined;
+
+  const expectedPrefix = `${segment}:`;
+
+  if (baseConfig.id.startsWith(expectedPrefix)) {
+    const source = baseConfig.id.substring(expectedPrefix.length);
+
+    return source;
+  }
+
+  return undefined;
+}

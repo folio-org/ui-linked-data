@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 
+import { normalizeQuery } from '@/features/search/core';
+
 import { useSearchState } from '@/store';
 
 interface UseComplexLookupModalStateParams {
@@ -21,6 +23,9 @@ export function useComplexLookupModalState({
   defaultSource,
 }: UseComplexLookupModalStateParams) {
   const initialQuery = assignedValue?.label;
+  const normalizedInitialQuery = initialQuery ? (normalizeQuery(initialQuery) ?? '') : '';
+  const assignedSource = assignedValue?.meta?.sourceType;
+  const initialSource = assignedSource || defaultSource;
   const {
     setQuery,
     resetQuery,
@@ -45,32 +50,32 @@ export function useComplexLookupModalState({
 
   useEffect(() => {
     if (isOpen) {
-      // Set navigation state with the default segment to ensure correct tab is selected
       setNavigationState({
         segment: defaultSegment,
-        ...(defaultSource ? { source: defaultSource } : {}),
+        ...(initialSource ? { source: initialSource } : {}),
       });
 
-      // Set committed values with initial query if provided
+      // Set committed values with normalized initial query and source
       // This triggers useSearchQuery to auto-execute the search via its enabled flag
       setCommittedValues({
         segment: defaultSegment,
-        query: initialQuery || '',
-        searchBy: '',
-        source: defaultSource,
+        query: normalizedInitialQuery,
+        searchBy: undefined,
+        source: initialSource,
         offset: 0,
       });
 
       // Set draft query to populate the input field and save to segment draft
       if (initialQuery) {
+        // Store the original query in the input field for user editing
         setQuery(initialQuery);
 
-        // Save initial query to segment draft so it persists when switching segments
+        // Save raw query to segment draft
         setDraftBySegment({
           [defaultSegment]: {
             query: initialQuery,
-            searchBy: '',
-            source: defaultSource,
+            searchBy: undefined,
+            source: initialSource,
           },
         });
       } else {
@@ -85,5 +90,5 @@ export function useComplexLookupModalState({
       resetCommittedValues();
       resetDraftBySegment();
     }
-  }, [isOpen, initialQuery, defaultSegment, defaultSource]);
+  }, [isOpen, initialQuery, normalizedInitialQuery, defaultSegment, initialSource]);
 }

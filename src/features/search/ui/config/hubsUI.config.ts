@@ -1,4 +1,6 @@
-import type { SearchTypeUIConfig } from '../types';
+import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+
+import type { SearchTypeUIConfig, SearchableIndexUI } from '../types';
 
 export const hubsUIConfig: SearchTypeUIConfig = {
   limit: 50, // UI shows all 50 results per page
@@ -27,4 +29,10 @@ export const hubsUIConfig: SearchTypeUIConfig = {
     isVisibleSubLabel: true,
     isVisibleEmptySearchPlaceholder: true,
   },
+  searchableIndices: [
+    {
+      labelId: 'ld.search.hubNameLeftAnchored',
+      value: SearchableIndex.HubNameLeftAnchored,
+    },
+  ] as SearchableIndexUI[],
 };
