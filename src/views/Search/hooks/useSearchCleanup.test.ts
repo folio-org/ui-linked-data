@@ -2,7 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';
 
-import { useSearchStore, useUIStore } from '@/store';
+import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 
 import { useSearchCleanup } from './useSearchCleanup';
 
@@ -17,6 +17,7 @@ jest.mock('@/common/hooks/useContainerEvents', () => ({
 describe('useSearchCleanup', () => {
   const mockResetSelectedInstances = jest.fn();
   const mockResetFullDisplayComponentType = jest.fn();
+  const mockResetPreviewContent = jest.fn();
 
   beforeEach(() => {
     setInitialGlobalState([
@@ -30,6 +31,12 @@ describe('useSearchCleanup', () => {
         store: useUIStore,
         state: {
           resetFullDisplayComponentType: mockResetFullDisplayComponentType,
+        },
+      },
+      {
+        store: useInputsStore,
+        state: {
+          resetPreviewContent: mockResetPreviewContent,
         },
       },
     ]);
@@ -48,5 +55,6 @@ describe('useSearchCleanup', () => {
 
     expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
     expect(mockResetSelectedInstances).toHaveBeenCalled();
+    expect(mockResetPreviewContent).toHaveBeenCalled();
   });
 });
