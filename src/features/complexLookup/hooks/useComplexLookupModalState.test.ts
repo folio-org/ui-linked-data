@@ -167,7 +167,7 @@ describe('useComplexLookupModalState', () => {
       expect(mockSetQuery).toHaveBeenCalledWith("O'Brien");
     });
 
-    it('stores normalized query in segment draft', () => {
+    it('stores raw query in segment draft', () => {
       renderHook(() =>
         useComplexLookupModalState({
           isOpen: true,
@@ -178,7 +178,7 @@ describe('useComplexLookupModalState', () => {
 
       expect(mockSetDraftBySegment).toHaveBeenCalledWith({
         'authorities:browse': {
-          query: String.raw`O\'Brien`,
+          query: "O'Brien",
           searchBy: undefined,
           source: undefined,
         },

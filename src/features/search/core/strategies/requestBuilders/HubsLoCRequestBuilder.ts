@@ -29,7 +29,9 @@ export class HubsLoCRequestBuilder extends BaseRequestBuilder {
 
   private buildQueryParams(searchBy: string, value: string): Record<string, string> {
     const resolvedSearchBy =
-      this.searchableIndicesMap && !(searchBy in this.searchableIndicesMap) ? SearchableIndex.HubNameKeyword : searchBy;
+      this.searchableIndicesMap && !Object.hasOwn(this.searchableIndicesMap, searchBy)
+        ? SearchableIndex.HubNameKeyword
+        : searchBy;
 
     const indexConfig = this.searchableIndicesMap?.[resolvedSearchBy as keyof HubSearchableIndicesMap];
     const config = indexConfig?.query;

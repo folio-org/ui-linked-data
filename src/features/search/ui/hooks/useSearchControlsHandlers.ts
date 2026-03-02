@@ -254,8 +254,9 @@ export const useSearchControlsHandlers = ({
           params.set(SearchParam.SEGMENT, newSegment);
 
           // If restored segment has query, include full search params (auto-search)
+          // Normalize query for URL (CQL escaping) - drafts store raw user input
           if (hasPreservedQuery) {
-            params.set(SearchParam.QUERY, restoredDraft.query);
+            params.set(SearchParam.QUERY, normalizeQuery(restoredDraft.query) ?? '');
             params.set(SearchParam.SEARCH_BY, restoredDraft.searchBy);
 
             if (restoredDraft.source) {
@@ -267,9 +268,10 @@ export const useSearchControlsHandlers = ({
         });
       } else if (hasPreservedQuery) {
         // Value flow: only update committedValues if there's a query to preserve
+        // Normalize query for committed values (CQL escaping) - drafts store raw user input
         setCommittedValues({
           segment: newSegment,
-          query: restoredDraft.query,
+          query: normalizeQuery(restoredDraft.query) ?? '',
           searchBy: restoredDraft.searchBy,
           source: restoredDraft.source,
           offset: 0,
@@ -330,11 +332,12 @@ export const useSearchControlsHandlers = ({
       : searchBy;
 
     // Save current draft on submit (with validated searchBy)
+    // Store raw query in draft (drafts store user-facing text, not CQL-escaped)
     if (segment) {
       setDraftBySegment({
         ...draftBySegment,
         [segment]: {
-          query: normalizedQuery,
+          query,
           searchBy: validSearchBy,
           source,
         },

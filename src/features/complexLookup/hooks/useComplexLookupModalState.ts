@@ -70,10 +70,10 @@ export function useComplexLookupModalState({
         // Store the original query in the input field for user editing
         setQuery(initialQuery);
 
-        // Save normalized query to segment draft for consistency with handleSubmit
+        // Save raw query to segment draft
         setDraftBySegment({
           [defaultSegment]: {
-            query: normalizedInitialQuery,
+            query: initialQuery,
             searchBy: undefined,
             source: initialSource,
           },
