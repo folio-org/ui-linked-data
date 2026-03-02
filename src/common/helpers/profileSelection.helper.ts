@@ -45,9 +45,9 @@ export const isProfilePreferred = ({
   preferredProfiles?: ProfileDTO[];
   resourceTypeURL?: ResourceTypeURL;
 }) => {
-  if (!preferredProfiles || !resourceTypeURL) return false;
+  if (!profileId || !preferredProfiles || !resourceTypeURL) return false;
 
   return preferredProfiles.some(
-    ({ id, resourceType }) => id.toString() === profileId.toString() && resourceType === resourceTypeURL,
+    ({ id, resourceType }) => id?.toString() === profileId?.toString() && resourceType === resourceTypeURL,
   );
 };

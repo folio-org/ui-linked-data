@@ -100,9 +100,10 @@ describe('useProfileSelection', () => {
       expect(setIsLoading).toHaveBeenCalledWith(false);
     });
 
-    test('opens profile selection modal when no preferred profile matches resource type', async () => {
+    test('loads available profiles and opens modal when no preferred profile matches resource type', async () => {
       const nonMatchingProfiles = [{ id: 'other-profile', name: 'Other Profile', resourceType: 'other-type' }];
       (fetchPreferredProfiles as jest.Mock).mockResolvedValue(nonMatchingProfiles);
+      (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
 
       const { result } = renderHook(() => useProfileSelection());
       await act(async () => {
@@ -114,6 +115,8 @@ describe('useProfileSelection', () => {
 
       expect(setIsLoading).toHaveBeenCalledWith(true);
       expect(fetchPreferredProfiles).toHaveBeenCalledWith();
+      expect(fetchProfiles).toHaveBeenCalledWith(resourceTypeURL);
+      expect(setAvailableProfiles).toHaveBeenCalled();
       expect(callbackMock).not.toHaveBeenCalled();
       expect(setIsProfileSelectionModalOpen).toHaveBeenCalledWith(true);
       expect(setIsLoading).toHaveBeenCalledWith(false);

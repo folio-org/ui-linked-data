@@ -259,6 +259,26 @@ describe('profileSelection.helper', () => {
       expect(result).toBe(false);
     });
 
+    it('returns false when profileId is undefined', () => {
+      const result = isProfilePreferred({
+        profileId: undefined as unknown as string,
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when profileId is null', () => {
+      const result = isProfilePreferred({
+        profileId: null as unknown as string,
+        preferredProfiles: mockPreferredProfiles,
+        resourceTypeURL: 'work_URL' as ResourceTypeURL,
+      });
+
+      expect(result).toBe(false);
+    });
+
     it('handles string and number ID comparison correctly', () => {
       const profiles = [{ id: 123, name: 'Test', resourceType: 'work_URL' }] as ProfileDTO[];
 
