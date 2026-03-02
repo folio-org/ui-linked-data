@@ -65,6 +65,8 @@ export const useProfileSelection = () => {
 
         // If no matching profile was found, show the modal
         if (!profileProcessed) {
+          await loadAvailableProfiles(resourceTypeURL);
+
           openModal({ action: 'set', resourceTypeURL });
         }
 
