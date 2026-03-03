@@ -83,6 +83,7 @@ export const BFLITE_URIS = {
   CATALOGING_LANGUAGE: 'http://bibfra.me/vocab/lite/catalogingLanguage',
   PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/library/publicationFrequency',
   EXPRESSION_OF: 'http://bibfra.me/vocab/lite/expressionOf',
+  CONCEPT: 'http://bibfra.me/vocab/lite/Concept',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {

@@ -844,9 +844,18 @@ describe('recordProcessingCases', () => {
 
   describe('processSubjectComplexLookup', () => {
     const hubUri = 'http://bibfra.me/vocab/lite/Hub';
+    const conceptUri = 'http://bibfra.me/vocab/lite/Concept';
+    const authorityUri = 'http://bibfra.me/vocab/lite/Authority';
+    const topicUri = 'http://bibfra.me/vocab/lite/Topic';
+    const workUri = 'http://bibfra.me/vocab/lite/Work';
 
     beforeEach(() => {
-      mockedBFLiteUris({ HUB: hubUri, LINK: linkBFLiteUri, LABEL: labelBFLiteUri });
+      mockedBFLiteUris({
+        HUB: hubUri,
+        LINK: linkBFLiteUri,
+        LABEL: labelBFLiteUri,
+        CONCEPT: conceptUri,
+      });
     });
 
     test('transforms subject entry and sets lookupType to authorities when types array does not include Hub', () => {
@@ -856,7 +865,7 @@ describe('recordProcessingCases', () => {
             {
               id: 'auth_id_1',
               label: 'Authority Subject',
-              types: ['http://bibfra.me/vocab/lite/Authority'],
+              types: [authorityUri],
             },
           ],
         },
@@ -873,6 +882,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'authorities',
                 sourceType: 'local',
               },
+              _subclass: authorityUri,
             },
           ],
         },
@@ -890,7 +900,7 @@ describe('recordProcessingCases', () => {
             {
               id: 'hub_id_1',
               label: 'Hub Subject',
-              types: [hubUri, 'http://bibfra.me/vocab/lite/Topic'],
+              types: [hubUri, topicUri],
             },
           ],
         },
@@ -907,6 +917,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'hubs',
                 sourceType: 'local',
               },
+              _subclass: hubUri,
             },
           ],
         },
@@ -962,12 +973,12 @@ describe('recordProcessingCases', () => {
             {
               id: 'auth_id_1',
               label: 'Authority Subject',
-              types: ['http://bibfra.me/vocab/lite/Topic'],
+              types: [topicUri],
             },
             {
               id: 'hub_id_2',
               label: 'Another Hub',
-              types: ['http://bibfra.me/vocab/lite/Work', hubUri],
+              types: [workUri, hubUri],
             },
           ],
         },
@@ -984,6 +995,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'hubs',
                 sourceType: 'local',
               },
+              _subclass: hubUri,
             },
             {
               id: ['auth_id_1'],
@@ -993,6 +1005,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'authorities',
                 sourceType: 'local',
               },
+              _subclass: topicUri,
             },
             {
               id: ['hub_id_2'],
@@ -1002,6 +1015,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'hubs',
                 sourceType: 'local',
               },
+              _subclass: workUri,
             },
           ],
         },
@@ -1037,6 +1051,7 @@ describe('recordProcessingCases', () => {
                 lookupType: 'hubs',
                 sourceType: 'local',
               },
+              _subclass: hubUri,
             },
           ],
         },
@@ -1045,6 +1060,76 @@ describe('recordProcessingCases', () => {
       RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
 
       expect(record).toEqual(testResult);
+    });
+
+    test('includes _subclass when types contains a non-CONCEPT type', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_1',
+              label: 'Topic Subject',
+              types: [conceptUri, topicUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Topic Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+              _subclass: topicUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('omits _subclass when all types are CONCEPT', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_2',
+              label: 'Pure Concept Subject',
+              types: [conceptUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_2'],
+              label: {
+                value: ['Pure Concept Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+      expect((record[blockKey][groupKey] as unknown as RecordBasic[])[0]).not.toHaveProperty('_subclass');
     });
   });
 });
