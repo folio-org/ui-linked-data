@@ -89,6 +89,7 @@
 * Add hub preview functionality. Refs [UILD-736].
 * Fix profile cache management and drag and drop affecting modified state. Refs [UILD-739].
 * Fix profile setting application in editor and search state, minor UX adjustments. Refs [UILD-740].
+* Add Subclass for the Subject field. Refs [UILD-593].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -177,6 +178,7 @@
 [UILD-736]:https://folio-org.atlassian.net/browse/UILD-736
 [UILD-739]:https://folio-org.atlassian.net/browse/UILD-739
 [UILD-740]:https://folio-org.atlassian.net/browse/UILD-740
+[UILD-593]:https://folio-org.atlassian.net/browse/UILD-593
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

@@ -162,6 +162,7 @@ export const processSubjectComplexLookup = (record: RecordEntry, blockKey: strin
     const sourceType = getHubSourceType(hasRdfLink, hasHubId);
     const types = recordEntry.types as string[] | undefined;
     const lookupType = types?.includes(BFLITE_URIS.HUB) ? LOOKUP_TYPES.HUBS : LOOKUP_TYPES.AUTHORITIES;
+    const _subclass = recordEntry.types?.find(type => type !== BFLITE_URIS.CONCEPT);
 
     return {
       id: [recordEntry.id],
@@ -171,6 +172,7 @@ export const processSubjectComplexLookup = (record: RecordEntry, blockKey: strin
         sourceType,
         lookupType,
       },
+      ...(_subclass && { _subclass }),
     };
   }) as unknown as RecursiveRecordSchema;
 };
