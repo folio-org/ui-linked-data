@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -41,6 +41,10 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     transition,
   };
   const [isMenuEnabled, setIsMenuEnabled] = useState(false);
+  const { formatMessage } = useIntl();
+  const nudgeUpAriaLabel = formatMessage({ id: 'ld.aria.nudgeComponentUp' });
+  const nudgeDownAriaLabel = formatMessage({ id: 'ld.aria.nudgeComponentDown' });
+  const moveComponentAriaLabel = formatMessage({ id: 'ld.aria.moveComponentOptions' });
 
   const toggleIsMenuEnabled = () => {
     setIsMenuEnabled(prev => !prev);
@@ -95,11 +99,16 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
             <div data-testid="move-menu" className="move-menu">
               <div className="move-menu-content">
                 {component.mandatory ? (
-                  <Button type={ButtonType.Text} disabled={true}>
+                  <Button type={ButtonType.Text} disabled={true} aria-label={moveComponentAriaLabel}>
                     <FormattedMessage id="ld.moveUnavailable" />
                   </Button>
                 ) : (
-                  <Button type={ButtonType.Text} onClick={moveFn} data-testid="move-action">
+                  <Button
+                    type={ButtonType.Text}
+                    onClick={moveFn}
+                    data-testid="move-action"
+                    aria-label={moveComponentAriaLabel}
+                  >
                     <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
                   </Button>
                 )}
@@ -120,12 +129,12 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
       {type === ComponentType.selected && !isDragging ? (
         <div className="adjust" data-no-dnd="true">
           {index !== 1 && (
-            <Button data-testid="nudge-up" type={ButtonType.Icon} onClick={upFn}>
+            <Button data-testid="nudge-up" type={ButtonType.Icon} onClick={upFn} aria-label={nudgeUpAriaLabel}>
               <ArrowUp />
             </Button>
           )}
           {index !== size && (
-            <Button data-testid="nudge-down" type={ButtonType.Icon} onClick={downFn}>
+            <Button data-testid="nudge-down" type={ButtonType.Icon} onClick={downFn} aria-label={nudgeDownAriaLabel}>
               <ArrowDown />
             </Button>
           )}
