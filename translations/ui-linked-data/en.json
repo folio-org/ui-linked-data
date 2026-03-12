@@ -314,6 +314,7 @@
   "ld.cantLoadProfileSettings": "Cannot load custom profile settings, using profile defaults",
   "ld.manageProfileSettings": "Manage profile settings",
   "ld.profiles": "Profiles",
+  "ld.aria.profiles": "Profile navigation",
   "ld.profile": "profile",
   "ld.unsavedProfileChanges": "Unsaved profile changes",
   "ld.unsavedProfilePrompt": "Would you like to save your changes before proceeding?",

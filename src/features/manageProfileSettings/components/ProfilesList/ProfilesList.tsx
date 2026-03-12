@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -32,7 +32,9 @@ export const ProfilesList = () => {
     'isManageProfileSettingsShowProfiles',
     'isManageProfileSettingsShowEditor',
   ]);
+  const { formatMessage } = useIntl();
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
+  const ariaLabel = formatMessage({ id: 'ld.aria.profiles ' });
 
   useEffect(() => {
     const initialize = async () => {
@@ -70,7 +72,11 @@ export const ProfilesList = () => {
     !isManageProfileSettingsBelowBreakpoint ||
     (isManageProfileSettingsBelowBreakpoint && isManageProfileSettingsShowProfiles);
   return availableProfiles ? (
-    <div data-testid="profiles-list" className={classNames('profiles-list', showView ? '' : 'hidden')}>
+    <section
+      data-testid="profiles-list"
+      className={classNames('profiles-list', showView ? '' : 'hidden')}
+      aria-label={ariaLabel}
+    >
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           <h3 className="heading">
@@ -90,7 +96,7 @@ export const ProfilesList = () => {
           );
         })}
       </div>
-    </div>
+    </section>
   ) : (
     <></>
   );
