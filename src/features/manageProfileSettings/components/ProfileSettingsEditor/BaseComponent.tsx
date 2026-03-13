@@ -29,6 +29,7 @@ type BaseComponentProps = {
 
 export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, type, upFn, downFn, moveFn }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLButtonElement>(null);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
     animateLayoutChanges: args => !args.isSorting || defaultAnimateLayoutChanges(args),
@@ -45,6 +46,12 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   const toggleIsMenuEnabled = () => {
     setIsMenuEnabled(prev => !prev);
   };
+
+  useEffect(() => {
+    if (isMenuEnabled && menuRef.current) {
+      menuRef.current.focus();
+    }
+  }, [isMenuEnabled]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,18 +95,21 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     >
       <div className="name">
         <div ref={ref} className="grab" data-no-dnd="true">
-          <Button data-testid="activate-menu" type={ButtonType.Icon} onClick={toggleIsMenuEnabled}>
+          <Button
+            data-testid="activate-menu"
+            aria-haspoup={true}
+            aria-label={<FormattedMessage id="ld.aria.moveComponentOptions" />}
+            aria-expanded={isMenuEnabled}
+            type={ButtonType.Icon}
+            onClick={toggleIsMenuEnabled}
+          >
             <DragDrop />
           </Button>
           {isMenuEnabled && (
-            <div data-testid="move-menu" className="move-menu">
-              <div className="move-menu-content">
+            <ul data-testid="move-menu" className="move-menu">
+              <li className="move-menu-content" role="none">
                 {component.mandatory ? (
-                  <Button
-                    type={ButtonType.Text}
-                    disabled={true}
-                    aria-label={<FormattedMessage id="ld.aria.moveComponentOptions" />}
-                  >
+                  <Button type={ButtonType.Text} disabled={true} role="menuitem">
                     <FormattedMessage id="ld.moveUnavailable" />
                   </Button>
                 ) : (
@@ -107,13 +117,14 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
                     type={ButtonType.Text}
                     onClick={moveFn}
                     data-testid="move-action"
-                    aria-label={<FormattedMessage id="ld.aria.moveComponentOptions" />}
+                    role="menuitem"
+                    ref={menuRef}
                   >
                     <FormattedMessage id={type === ComponentType.selected ? 'ld.moveToUnused' : 'ld.moveToSelected'} />
                   </Button>
                 )}
-              </div>
-            </div>
+              </li>
+            </ul>
           )}
         </div>
         {type === ComponentType.selected && !isDragging ? index + '. ' : ''}
