@@ -128,7 +128,6 @@
   "ld.cantSelectReferenceContents": "Can't select reference contents while fetching a reference",
   "ld.addNewInstance": "Add new instance",
   "ld.askSaveChangesBeforeProceeding": "Would you like to save your changes before proceeding?",
-  "ld.unsavedRecentEdits": "Recent edits made to the resource have not been saved. Unsaved changes will be lost.",
   "ld.unsavedChanges": "Unsaved changes",
   "ld.continueWithoutSaving": "Continue without saving",
   "ld.noTitleInBrackets": "No title",

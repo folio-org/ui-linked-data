@@ -27,7 +27,7 @@ export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSub
       className="modal-switch-to-new-record"
     >
       <div className="close-record-contents" data-testid="modal-close-record-content">
-        <FormattedMessage id="ld.unsavedRecentEdits" />
+        <FormattedMessage id="ld.askSaveChangesBeforeProceeding" />
       </div>
     </Modal>
   );
