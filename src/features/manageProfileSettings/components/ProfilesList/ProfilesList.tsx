@@ -34,7 +34,7 @@ export const ProfilesList = () => {
   ]);
   const { formatMessage } = useIntl();
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const ariaLabel = formatMessage({ id: 'ld.aria.profiles ' });
+  const ariaLabel = formatMessage({ id: 'ld.aria.profiles' });
 
   useEffect(() => {
     const initialize = async () => {
