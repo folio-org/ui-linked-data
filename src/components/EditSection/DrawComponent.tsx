@@ -59,7 +59,7 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         showLabel={false}
         className="entity-heading"
       >
-        <strong className="heading">{displayNameWithAltValue}</strong>
+        <h3 className="heading">{displayNameWithAltValue}</h3>
         {!!collapsibleEntries.size && (
           <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
             <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
