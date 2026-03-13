@@ -1,8 +1,9 @@
-import { FC, type ReactElement, ReactNode, memo, useEffect, useRef } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 
 import classNames from 'classnames';
+import { FocusTrap } from 'focus-trap-react';
 
 import { AriaModalKind, MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { Button, ButtonType } from '@/components/Button';
@@ -67,7 +68,6 @@ const Modal: FC<Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 
@@ -83,14 +83,6 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [shouldCloseOnEsc]);
 
-  useEffect(() => {
-    console.log('focus');
-    if (isOpen && closeButtonRef.current) {
-      console.log('for real');
-      closeButtonRef.current.focus();
-    }
-  }, [isOpen]);
-
   const onExternalClickClose = () => {
     if (shouldCloseOnExternalClick) {
       onClose();
@@ -101,47 +93,49 @@ const Modal: FC<Props> = ({
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
-            <div className={classNames(['modal-header', classNameHeader])}>
-              {showCloseIconButton && (
-                <Button
-                  ref={closeButtonRef}
-                  onClick={onClose}
-                  className="close-button"
-                  ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
-                >
-                  <Times16 />
-                </Button>
-              )}
-              <h3 className={classNames(['title', titleClassName])}>{title}</h3>
-              {alignTitleCenter && <span className="empty-block" />}
-            </div>
-            {!!children && children}
-            {showModalControls && (
-              <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
-                {!cancelButtonHidden && (
+          <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+            <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
+              <div className={classNames(['modal-header', classNameHeader])}>
+                {showCloseIconButton && (
                   <Button
-                    disabled={cancelButtonDisabled}
-                    onClick={onCancel}
-                    type={ButtonType.Primary}
-                    data-testid="modal-button-cancel"
+                    tabIndex={1}
+                    onClick={onClose}
+                    className="close-button"
+                    ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
                   >
-                    {cancelButtonLabel}
+                    <Times16 />
                   </Button>
                 )}
-                {!submitButtonHidden && (
-                  <Button
-                    disabled={submitButtonDisabled}
-                    type={ButtonType.Highlighted}
-                    onClick={onSubmit}
-                    data-testid="modal-button-submit"
-                  >
-                    {submitButtonLabel}
-                  </Button>
-                )}
+                <h3 className={classNames(['title', titleClassName])}>{title}</h3>
+                {alignTitleCenter && <span className="empty-block" />}
               </div>
-            )}
-          </div>
+              {!!children && children}
+              {showModalControls && (
+                <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                  {!cancelButtonHidden && (
+                    <Button
+                      disabled={cancelButtonDisabled}
+                      onClick={onCancel}
+                      type={ButtonType.Primary}
+                      data-testid="modal-button-cancel"
+                    >
+                      {cancelButtonLabel}
+                    </Button>
+                  )}
+                  {!submitButtonHidden && (
+                    <Button
+                      disabled={submitButtonDisabled}
+                      type={ButtonType.Highlighted}
+                      onClick={onSubmit}
+                      data-testid="modal-button-submit"
+                    >
+                      {submitButtonLabel}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </FocusTrap>
         </>,
         portalElement,
       )
