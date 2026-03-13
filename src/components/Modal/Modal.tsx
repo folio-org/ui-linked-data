@@ -1,4 +1,4 @@
-import { FC, type ReactElement, ReactNode, memo, useEffect } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 
@@ -67,6 +67,7 @@ const Modal: FC<Props> = ({
 }) => {
   const { formatMessage } = useIntl();
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
 
@@ -82,6 +83,14 @@ const Modal: FC<Props> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [shouldCloseOnEsc]);
 
+  useEffect(() => {
+    console.log('focus');
+    if (isOpen && closeButtonRef.current) {
+      console.log('for real');
+      closeButtonRef.current.focus();
+    }
+  }, [isOpen]);
+
   const onExternalClickClose = () => {
     if (shouldCloseOnExternalClick) {
       onClose();
@@ -95,13 +104,14 @@ const Modal: FC<Props> = ({
           <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
             <div className={classNames(['modal-header', classNameHeader])}>
               {showCloseIconButton && (
-                <button
+                <Button
+                  ref={closeButtonRef}
                   onClick={onClose}
                   className="close-button"
-                  aria-label={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
+                  ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
                 >
                   <Times16 />
-                </button>
+                </Button>
               )}
               <h3 className={classNames(['title', titleClassName])}>{title}</h3>
               {alignTitleCenter && <span className="empty-block" />}
