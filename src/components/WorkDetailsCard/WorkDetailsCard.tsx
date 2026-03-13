@@ -13,7 +13,6 @@ import { Button, ButtonType } from '@/components/Button';
 import { getTitle } from '@/features/search/core';
 
 import CaretDown from '@/assets/caret-down.svg?react';
-import Lightbulb from '@/assets/lightbulb-shining-16.svg?react';
 
 import './WorkDetailsCard.scss';
 
@@ -54,10 +53,7 @@ export const WorkDetailsCard: FC<WorkDetailsCard> = ({
           <CaretDown className={classNames({ ['icon-collapsed']: !isOpen }, 'toggle-icon')} />
         </Button>
         <div className="title">
-          <Lightbulb />
-          <span>
-            <FormattedMessage id="ld.work" />
-          </span>
+          <FormattedMessage id="ld.work" />
         </div>
         <Button
           type={ButtonType.Primary}

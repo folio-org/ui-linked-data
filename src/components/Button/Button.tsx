@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler, ReactNode } from 'react';
+import { FC, MouseEventHandler, ReactNode, RefObject } from 'react';
 
 import classNames from 'classnames';
 
@@ -28,6 +28,7 @@ type Button = {
   'data-testid'?: string;
   role?: string;
   ariaLabel?: string;
+  ref?: RefObject<HTMLButtonElement | null>;
 };
 
 export const Button: FC<Button> = ({
@@ -42,9 +43,11 @@ export const Button: FC<Button> = ({
   'data-testid': dataTestId,
   role,
   ariaLabel,
+  ref,
 }) => (
   <button
     id={id}
+    ref={ref}
     data-testid={dataTestId}
     disabled={disabled}
     onClick={onClick}

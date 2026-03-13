@@ -47,9 +47,9 @@ export const ControlPane: FC<ControlPaneProps> = ({
       )}
       {label && (
         <div className="search-control-pane-title">
-          <h2 className="search-control-pane-mainLabel">
+          <h4 className="search-control-pane-mainLabel">
             <span>{label}</span>
-          </h2>
+          </h4>
 
           {showSubLabel && subLabel && (
             <div className="search-control-pane-subLabel">

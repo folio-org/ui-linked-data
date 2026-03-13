@@ -41,7 +41,7 @@ export const MetaControls: FC<MetaControlsProps> = ({ isCentered = true, childre
         <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
         {showAdvancedSearch && (
           <Button
-            type={ButtonType.Link}
+            type={ButtonType.Primary}
             className="search-button"
             onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
           >

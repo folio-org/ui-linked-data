@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 
 import classNames from 'classnames';
+import { FocusTrap } from 'focus-trap-react';
 
 import { AriaModalKind, MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { Button, ButtonType } from '@/components/Button';
@@ -92,46 +93,48 @@ const Modal: FC<Props> = ({
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
-            <div className={classNames(['modal-header', classNameHeader])}>
-              {showCloseIconButton && (
-                <button
-                  onClick={onClose}
-                  className="close-button"
-                  aria-label={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
-                >
-                  <Times16 />
-                </button>
-              )}
-              <h3 className={classNames(['title', titleClassName])}>{title}</h3>
-              {alignTitleCenter && <span className="empty-block" />}
-            </div>
-            {!!children && children}
-            {showModalControls && (
-              <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
-                {!cancelButtonHidden && (
+          <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+            <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
+              <div className={classNames(['modal-header', classNameHeader])}>
+                {showCloseIconButton && (
                   <Button
-                    disabled={cancelButtonDisabled}
-                    onClick={onCancel}
-                    type={ButtonType.Primary}
-                    data-testid="modal-button-cancel"
+                    onClick={onClose}
+                    className="close-button"
+                    ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
                   >
-                    {cancelButtonLabel}
+                    <Times16 />
                   </Button>
                 )}
-                {!submitButtonHidden && (
-                  <Button
-                    disabled={submitButtonDisabled}
-                    type={ButtonType.Highlighted}
-                    onClick={onSubmit}
-                    data-testid="modal-button-submit"
-                  >
-                    {submitButtonLabel}
-                  </Button>
-                )}
+                <h3 className={classNames(['title', titleClassName])}>{title}</h3>
+                {alignTitleCenter && <span className="empty-block" />}
               </div>
-            )}
-          </div>
+              {!!children && children}
+              {showModalControls && (
+                <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                  {!cancelButtonHidden && (
+                    <Button
+                      disabled={cancelButtonDisabled}
+                      onClick={onCancel}
+                      type={ButtonType.Primary}
+                      data-testid="modal-button-cancel"
+                    >
+                      {cancelButtonLabel}
+                    </Button>
+                  )}
+                  {!submitButtonHidden && (
+                    <Button
+                      disabled={submitButtonDisabled}
+                      type={ButtonType.Highlighted}
+                      onClick={onSubmit}
+                      data-testid="modal-button-submit"
+                    >
+                      {submitButtonLabel}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </FocusTrap>
         </>,
         portalElement,
       )
