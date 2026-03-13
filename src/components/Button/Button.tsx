@@ -29,7 +29,6 @@ type Button = {
   role?: string;
   ariaLabel?: string;
   ref?: RefObject<HTMLButtonElement | null>;
-  tabIndex?: number;
 };
 
 export const Button: FC<Button> = ({
@@ -45,7 +44,6 @@ export const Button: FC<Button> = ({
   role,
   ariaLabel,
   ref,
-  tabIndex = 0,
 }) => (
   <button
     id={id}
@@ -55,7 +53,6 @@ export const Button: FC<Button> = ({
     onClick={onClick}
     role={role}
     aria-label={ariaLabel}
-    tabIndex={tabIndex}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,
