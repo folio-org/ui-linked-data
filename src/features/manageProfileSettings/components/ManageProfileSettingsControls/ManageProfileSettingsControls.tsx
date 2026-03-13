@@ -24,7 +24,7 @@ export const ManageProfileSettingsControls = memo(() => {
     'setIsManageProfileSettingsUnusedComponentsModalOpen',
   ]);
   const { formatMessage } = useIntl();
-  const ariaLabel = formatMessage({ id: 'ld.actions ' });
+  const ariaLabel = formatMessage({ id: 'ld.actions' });
 
   const handleButtonClick = async () => {
     if (unusedComponents.length > 0) {
