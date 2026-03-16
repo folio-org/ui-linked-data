@@ -1,7 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 
 import { useManageProfileSettingsStore } from '@/store';
 
@@ -26,6 +26,7 @@ describe('useDragHandlers', () => {
   const mockSetStartingList = jest.fn();
   const mockSetSelected = jest.fn();
   const mockSetUnused = jest.fn();
+  const mockDataDragEnd = jest.fn();
 
   const makeDragEvent = (
     hasOver: boolean,
@@ -45,6 +46,7 @@ describe('useDragHandlers', () => {
             component: {
               mandatory,
             },
+            dragEnd: mockDataDragEnd,
           },
         },
         rect: {
@@ -261,6 +263,9 @@ describe('useDragHandlers', () => {
     );
 
     expect(mockSetSelected).toHaveBeenCalled();
+    waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
   });
 
   it('reorders unused on drag end for unused and sets state', () => {
@@ -280,6 +285,9 @@ describe('useDragHandlers', () => {
     );
 
     expect(mockSetUnused).toHaveBeenCalled();
+    waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
   });
 
   it('does not reorder on drag end for undroppable regions and sets state', () => {
@@ -300,6 +308,9 @@ describe('useDragHandlers', () => {
 
     expect(mockSetSelected).not.toHaveBeenCalled();
     expect(mockSetUnused).not.toHaveBeenCalled();
+    waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
   });
 
   it('does not reorder when dragging between lists onto itself in the new list', () => {
@@ -320,5 +331,8 @@ describe('useDragHandlers', () => {
 
     expect(mockSetSelected).not.toHaveBeenCalled();
     expect(mockSetUnused).not.toHaveBeenCalled();
+    waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
   });
 });
