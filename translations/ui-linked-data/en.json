@@ -344,5 +344,5 @@
   "ld.error.saveProfileSettings": "Error saving profile settings",
   "ld.profileComponentsDeselected": "Profile components deselected",
   "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?",
-  "ld.visibleByDrift": "This section is shown because it is missing from your settings. Manage your settings for this profile to clear this message."
+  "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }
