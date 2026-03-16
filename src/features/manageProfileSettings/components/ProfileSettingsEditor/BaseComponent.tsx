@@ -30,11 +30,17 @@ type BaseComponentProps = {
 export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, type, upFn, downFn, moveFn }) => {
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
+  const dataRef = useRef<HTMLDivElement>(null);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
     animateLayoutChanges: args => !args.isSorting || defaultAnimateLayoutChanges(args),
     data: {
       component,
+      dragEnd: () => {
+        if (dataRef.current) {
+          dataRef.current.parentElement?.focus();
+        }
+      },
     },
   });
   const style = {
@@ -93,7 +99,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
       {...attributes}
       {...listeners}
     >
-      <div className="name">
+      <div ref={dataRef} className="name">
         <div ref={ref} className="grab" data-no-dnd="true">
           <Button
             data-testid="activate-menu"

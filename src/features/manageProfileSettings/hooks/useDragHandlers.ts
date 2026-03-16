@@ -81,6 +81,15 @@ export const useDragHandlers = ({
       // movement between lists is covered by onDragOver
     }
 
+    // Set focus on dragged component after dnd-kit cleanup functions
+    // have been removed. This may end up corrected in future versions of
+    // dnd-kit, making this unnecessary.
+    if (active.data?.current?.dragEnd) {
+      setTimeout(() => {
+        active.data.current?.dragEnd();
+      }, 50);
+    }
+
     endDrag();
   };
 
