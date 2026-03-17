@@ -69,7 +69,7 @@ export const ModalImport = memo(() => {
   const doImport = async () => {
     // Reject if importFile is taking too long since we've removed
     // the ability to alter the modal state during load.
-    return new Promise<ImportFileResponseDTO>((resolve, reject) => {
+    return new Promise<ImportResponseDTO>((resolve, reject) => {
       const timeout = setTimeout(
         () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
         LOADING_TIMEOUT_MS,

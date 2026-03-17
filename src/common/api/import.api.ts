@@ -1,4 +1,4 @@
-import { IMPORT_JSON_FILE_API_ENDPOINT } from '@/common/constants/api.constants';
+import { IMPORT_JSON_FILE_API_ENDPOINT, IMPORT_JSON_URL_API_ENDPOINT } from '@/common/constants/api.constants';
 
 import baseApi from './base.api';
 
@@ -20,5 +20,21 @@ export const importFile = async (files: File[]) => {
     },
   });
 
-  return (await response?.json()) as Promise<ImportFileResponseDTO>;
+  return (await response?.json()) as Promise<ImportResponseDTO>;
+};
+
+export const importUrl = async (url: string) => {
+  const apiUrl = baseApi.generateUrl(IMPORT_JSON_URL_API_ENDPOINT);
+
+  const response = await baseApi.request({
+    url: apiUrl,
+    urlParams: {
+      url,
+    },
+    requestParams: {
+      method: 'POST',
+    },
+  });
+
+  return (await response?.json()) as Promise<ImportResponseDTO>;
 };
