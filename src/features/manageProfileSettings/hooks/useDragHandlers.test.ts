@@ -246,7 +246,7 @@ describe('useDragHandlers', () => {
     expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
   });
 
-  it('reorders selected on drag end for selected and sets state', () => {
+  it('reorders selected on drag end for selected and sets state', async () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
@@ -263,12 +263,12 @@ describe('useDragHandlers', () => {
     );
 
     expect(mockSetSelected).toHaveBeenCalled();
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockDataDragEnd).toHaveBeenCalled();
     });
   });
 
-  it('reorders unused on drag end for unused and sets state', () => {
+  it('reorders unused on drag end for unused and sets state', async () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
@@ -285,12 +285,12 @@ describe('useDragHandlers', () => {
     );
 
     expect(mockSetUnused).toHaveBeenCalled();
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockDataDragEnd).toHaveBeenCalled();
     });
   });
 
-  it('does not reorder on drag end for undroppable regions and sets state', () => {
+  it('does not reorder on drag end for undroppable regions and sets state', async () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.selected,
@@ -308,12 +308,12 @@ describe('useDragHandlers', () => {
 
     expect(mockSetSelected).not.toHaveBeenCalled();
     expect(mockSetUnused).not.toHaveBeenCalled();
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockDataDragEnd).toHaveBeenCalled();
     });
   });
 
-  it('does not reorder when dragging between lists onto itself in the new list', () => {
+  it('does not reorder when dragging between lists onto itself in the new list', async () => {
     const { result } = renderHook(() =>
       useDragHandlers({
         startingList: ComponentType.unused,
@@ -331,7 +331,7 @@ describe('useDragHandlers', () => {
 
     expect(mockSetSelected).not.toHaveBeenCalled();
     expect(mockSetUnused).not.toHaveBeenCalled();
-    waitFor(() => {
+    await waitFor(() => {
       expect(mockDataDragEnd).toHaveBeenCalled();
     });
   });

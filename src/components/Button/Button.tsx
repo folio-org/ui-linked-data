@@ -28,6 +28,8 @@ type Button = {
   'data-testid'?: string;
   role?: string;
   ariaLabel?: string;
+  ariaHasPopup?: boolean;
+  ariaExpanded?: boolean;
   ref?: RefObject<HTMLButtonElement | null>;
 };
 
@@ -43,6 +45,8 @@ export const Button: FC<Button> = ({
   'data-testid': dataTestId,
   role,
   ariaLabel,
+  ariaHasPopup,
+  ariaExpanded,
   ref,
 }) => (
   <button
@@ -53,6 +57,8 @@ export const Button: FC<Button> = ({
     onClick={onClick}
     role={role}
     aria-label={ariaLabel}
+    aria-haspopup={ariaHasPopup}
+    aria-expanded={ariaExpanded}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,

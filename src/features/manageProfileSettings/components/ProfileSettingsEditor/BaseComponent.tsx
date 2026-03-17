@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -31,6 +31,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
   const dataRef = useRef<HTMLDivElement>(null);
+  const { formatMessage } = useIntl();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: component.id,
     animateLayoutChanges: args => !args.isSorting || defaultAnimateLayoutChanges(args),
@@ -103,16 +104,21 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
         <div ref={ref} className="grab" data-no-dnd="true">
           <Button
             data-testid="activate-menu"
-            aria-haspopup={true}
-            aria-label={<FormattedMessage id="ld.aria.moveComponentOptions" />}
-            aria-expanded={isMenuEnabled}
+            ariaLabel={formatMessage({ id: 'ld.aria.moveComponentOptions' })}
+            ariaHasPopup={true}
+            ariaExpanded={isMenuEnabled}
             type={ButtonType.Icon}
             onClick={toggleIsMenuEnabled}
           >
             <DragDrop />
           </Button>
           {isMenuEnabled && (
-            <ul data-testid="move-menu" className="move-menu">
+            <ul
+              data-testid="move-menu"
+              className="move-menu"
+              role="menu"
+              aria-label={formatMessage({ id: 'ld.aria.moveComponentOptions' })}
+            >
               <li className="move-menu-content" role="none">
                 {component.mandatory ? (
                   <Button type={ButtonType.Text} disabled={true} role="menuitem">
@@ -150,7 +156,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
               data-testid="nudge-up"
               type={ButtonType.Icon}
               onClick={upFn}
-              aria-label={<FormattedMessage id="ld.aria.nudgeComponentUp" />}
+              ariaLabel={formatMessage({ id: 'ld.aria.nudgeComponentUp' })}
             >
               <ArrowUp />
             </Button>
@@ -160,7 +166,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
               data-testid="nudge-down"
               type={ButtonType.Icon}
               onClick={downFn}
-              aria-label={<FormattedMessage id="ld.aria.nudgeComponentDown" />}
+              ariaLabel={formatMessage({ id: 'ld.aria.nudgeComponentDown' })}
             >
               <ArrowDown />
             </Button>

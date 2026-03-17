@@ -93,7 +93,12 @@ const Modal: FC<Props> = ({
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+          <FocusTrap
+            focusTrapOptions={{
+              clickOutsideDeactivates: shouldCloseOnExternalClick,
+              escapeDeactivates: shouldCloseOnEsc,
+            }}
+          >
             <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
               <div className={classNames(['modal-header', classNameHeader])}>
                 {showCloseIconButton && (
