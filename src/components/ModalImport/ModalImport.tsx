@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { importFile } from '@/common/api/import.api';
+import { importFile, importUrl } from '@/common/api/import.api';
 import {
   HOLD_LOADING_SCREEN_MS,
   IMPORT_FILE_LOG_MEDIA_TYPE,
@@ -29,6 +29,7 @@ export const ModalImport = memo(() => {
   const [isImportCompleted, setIsImportCompleted] = useState(false);
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [urlToRetrieve, setUrlToRetrieve] = useState<string | undefined>();
   const [navigationTarget, setNavigationTarget] = useState('');
   const { isImportModalOpen, setIsImportModalOpen } = useUIState(['isImportModalOpen', 'setIsImportModalOpen']);
   const { formatMessage } = useIntl();
@@ -66,7 +67,7 @@ export const ModalImport = memo(() => {
     setIsImportReady(false);
   };
 
-  const doImport = async () => {
+  const doImportFile = async () => {
     // Reject if importFile is taking too long since we've removed
     // the ability to alter the modal state during load.
     return new Promise<ImportResponseDTO>((resolve, reject) => {
@@ -87,12 +88,46 @@ export const ModalImport = memo(() => {
     });
   };
 
+  const doImportUrl = async () => {
+    // Reject if importUrl is taking too long since we've removed
+    // the ability to alter the modal state during load.
+    return new Promise<ImportResponseDTO>((resolve, reject) => {
+      const timeout = setTimeout(
+        () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
+        LOADING_TIMEOUT_MS,
+      );
+      importUrl(urlToRetrieve!)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(e => {
+          reject(new Error(e));
+        })
+        .finally(() => {
+          clearTimeout(timeout);
+        });
+    });
+  };
+
   const getFilenameWithoutExtension = (filename: string) => {
     const extensionIndex = filename.lastIndexOf('.');
     if (extensionIndex > 0) {
       return filename.substring(0, extensionIndex);
     }
     return filename;
+  };
+
+  const getUrlFilenameWithoutExtension = (url: string) => {
+    let filename;
+    const filenameIndex = url.lastIndexOf('/');
+    if (filenameIndex > 0) {
+      const fullFilename = url.substring(filenameIndex + 1);
+      const extensionIndex = fullFilename.indexOf('.');
+      if (extensionIndex > 0) {
+        filename = fullFilename.substring(0, extensionIndex);
+      }
+    }
+    return filename ? filename : url;
   };
 
   const downloadLog = (filePrefix: string, log: string) => {
@@ -108,7 +143,7 @@ export const ModalImport = memo(() => {
         try {
           // Wait at least long enough to read the loading message for success.
           const started = Date.now();
-          const response = await doImport();
+          const response = await doImportFile();
           const elapsed = Date.now() - started;
           const delta = HOLD_LOADING_SCREEN_MS - elapsed;
           if (delta > 0) {
@@ -124,6 +159,23 @@ export const ModalImport = memo(() => {
         }
         break;
       case ImportModes.JsonUrl:
+        try {
+          // Wait at least long enough to read the loading message for success.
+          const started = Date.now();
+          const response = await doImportUrl();
+          const elapsed = Date.now() - started;
+          const delta = HOLD_LOADING_SCREEN_MS - elapsed;
+          if (delta > 0) {
+            await new Promise(r => setTimeout(r, delta));
+          }
+          setIsImportSuccessful(true);
+          if (response.resources?.length === 1) {
+            setNavigationTarget(response.resources[0]);
+          }
+          downloadLog(getUrlFilenameWithoutExtension(urlToRetrieve!), response.log);
+        } catch {
+          setIsImportSuccessful(false);
+        }
         break;
     }
     setIsImportSubmitted(false);
@@ -182,7 +234,16 @@ export const ModalImport = memo(() => {
       <div className="body" data-testid="modal-import">
         {!isImportSubmitted && !isImportCompleted && (
           <SelectorImportMode
-            {...{ importMode, switchMode, onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }}
+            {...{
+              importMode,
+              switchMode,
+              onImportReady,
+              onImportNotReady,
+              filesToUpload,
+              setFilesToUpload,
+              urlToRetrieve,
+              setUrlToRetrieve,
+            }}
           />
         )}
         {isImportSubmitted && <Submitted />}

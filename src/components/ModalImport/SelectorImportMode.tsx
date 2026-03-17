@@ -14,6 +14,8 @@ type SelectorImportModeProps = {
   onImportNotReady: VoidFunction;
   filesToUpload: File[];
   setFilesToUpload: (files: File[]) => void;
+  urlToRetrieve: string | undefined;
+  setUrlToRetrieve: (url: string) => void;
 };
 
 export const SelectorImportMode: FC<SelectorImportModeProps> = ({
@@ -23,6 +25,8 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
   onImportNotReady,
   filesToUpload,
   setFilesToUpload,
+  urlToRetrieve,
+  setUrlToRetrieve,
 }) => {
   return (
     <>
@@ -48,7 +52,9 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
       {importMode === ImportModes.JsonFile && (
         <ImportModeFile {...{ onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }} />
       )}
-      {importMode === ImportModes.JsonUrl && <ImportModeUrl />}
+      {importMode === ImportModes.JsonUrl && (
+        <ImportModeUrl {...{ onImportReady, onImportNotReady, urlToRetrieve, setUrlToRetrieve }} />
+      )}
     </>
   );
 };
