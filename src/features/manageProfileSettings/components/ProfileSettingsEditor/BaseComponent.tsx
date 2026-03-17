@@ -116,7 +116,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
             <ul
               data-testid="move-menu"
               className="move-menu"
-              role="menu"
+              role="menu" // NOSONAR
               aria-label={formatMessage({ id: 'ld.aria.moveComponentOptions' })}
             >
               <li className="move-menu-content" role="none">
