@@ -91,6 +91,11 @@
 * Fix profile setting application in editor and search state, minor UX adjustments. Refs [UILD-740].
 * Add Subclass for the Subject field. Refs [UILD-593].
 * Fix the relation URLs to match with the URLs defined in https://bibfra.me/vocab/relation [UILD-748]
+* Auto-focus the close button modals, and keep focus cycle within the modal. Refs [UILD-580]
+* Address manage profile settings label accessibility issues. Refs [UILD-749].
+* Fix use of the enter key on dropdown menu items. Refs [UILD-750].
+* Fix excessively small font in modal title. Refs [UILD-751].
+* Address markup and styling issues, set focus on drop, and add drift explanation to editor. Refs [UILD-756].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -181,6 +186,11 @@
 [UILD-740]:https://folio-org.atlassian.net/browse/UILD-740
 [UILD-593]:https://folio-org.atlassian.net/browse/UILD-593
 [UILD-748]:https://folio-org.atlassian.net/browse/UILD-748
+[UILD-580]:https://folio-org.atlassian.net/browse/UILD-580
+[UILD-749]:https://folio-org.atlassian.net/browse/UILD-749
+[UILD-750]:https://folio-org.atlassian.net/browse/UILD-750
+[UILD-751]:https://folio-org.atlassian.net/browse/UILD-751
+[UILD-756]:https://folio-org.atlassian.net/browse/UILD-756
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
