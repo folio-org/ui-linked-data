@@ -41,7 +41,7 @@ export const ModalImport = memo(() => {
     setIsImportCompleted(false);
     setIsImportSuccessful(false);
     setFilesToUpload([]);
-    setImportMode(ImportModes.JsonFile);
+    setUrlToRetrieve(undefined);
   };
 
   const reset = () => {

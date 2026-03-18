@@ -43,6 +43,7 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
             { value: ImportModes.JsonFile, label: 'importFile' },
             { value: ImportModes.JsonUrl, label: 'importUrl' },
           ]}
+          value={importMode}
           withIntl={true}
           className="mode-select"
           onChange={({ value }) => switchMode(value)}
