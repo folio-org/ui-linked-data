@@ -30,7 +30,13 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
       <label htmlFor="url">
         <FormattedMessage id="ld.importUrlLabel" />
       </label>
-      <Input id="url" value={urlToRetrieve} placeholder="https://" onChange={handleChange} />
+      <Input
+        data-testid="import-url-input"
+        id="url"
+        value={urlToRetrieve}
+        placeholder="https://"
+        onChange={handleChange}
+      />
     </div>
   );
 };
