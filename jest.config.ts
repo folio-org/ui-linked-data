@@ -1,5 +1,6 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.aliases.json';
+// @ts-ignore
+import { compilerOptions } from './tsconfig.aliases.json' with { type: 'json' };
 
 export default {
   testEnvironment: 'jsdom',
