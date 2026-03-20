@@ -97,7 +97,19 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14', 'uuid15'],
+      children: [
+        'uuid3',
+        'uuid4',
+        'uuid5',
+        'uuid6',
+        'uuid7',
+        'uuid9',
+        'uuid10',
+        'uuid13',
+        'uuid14',
+        'uuid15',
+        'uuid16',
+      ],
     },
   ],
   [
@@ -243,6 +255,17 @@ const schema = new Map([
       editorVisible: false,
     },
   ],
+  [
+    'uuid16',
+    {
+      bfid: 'uuid16Bfid',
+      displayName: 'uuid16',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid16'],
+      uuid: 'uuid16',
+      profileSettingsDrift: true,
+    },
+  ],
 ]);
 
 const monograph = {
@@ -382,6 +405,16 @@ describe('EditSection', () => {
 
     const section = getByTestId('field-with-meta-controls-uuid15');
     expect(section).toHaveClass('field-hidden-by-settings');
+  });
+
+  test('renders field shown due to drift with explanatory text', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    expect(await findByText('uuid16')).toBeInTheDocument();
+
+    const section = getByTestId('field-with-meta-controls-uuid16');
+    expect(section).toHaveClass('field-visible-by-drift');
+    expect(within(section).getByText('ld.visibleByDrift')).toBeInTheDocument();
   });
 
   describe('location-based form placeholder', () => {

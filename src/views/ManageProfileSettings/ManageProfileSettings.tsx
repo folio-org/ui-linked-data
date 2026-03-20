@@ -62,10 +62,10 @@ export const ManageProfileSettings = () => {
 
   return (
     <>
-      <div data-testid="manage-profile-settings" className="manage-profile-settings">
+      <main data-testid="manage-profile-settings" className="manage-profile-settings">
         <ProfilesList />
         <ProfileSettings />
-      </div>
+      </main>
 
       <ModalCloseProfileSettings
         isOpen={isManageProfileSettingsUnsavedModalOpen}

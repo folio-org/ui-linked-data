@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler, ReactNode } from 'react';
+import { FC, MouseEventHandler, ReactNode, RefObject } from 'react';
 
 import classNames from 'classnames';
 
@@ -28,6 +28,9 @@ type Button = {
   'data-testid'?: string;
   role?: string;
   ariaLabel?: string;
+  ariaHasPopup?: boolean;
+  ariaExpanded?: boolean;
+  ref?: RefObject<HTMLButtonElement | null>;
 };
 
 export const Button: FC<Button> = ({
@@ -42,14 +45,20 @@ export const Button: FC<Button> = ({
   'data-testid': dataTestId,
   role,
   ariaLabel,
+  ariaHasPopup,
+  ariaExpanded,
+  ref,
 }) => (
   <button
     id={id}
+    ref={ref}
     data-testid={dataTestId}
     disabled={disabled}
     onClick={onClick}
     role={role}
     aria-label={ariaLabel}
+    aria-haspopup={ariaHasPopup}
+    aria-expanded={ariaExpanded}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,

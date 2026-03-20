@@ -103,11 +103,11 @@ export const Dropdown: FC<DropdownProps> = ({
         break;
 
       case ' ':
+      case 'Enter':
         optionsRef.current[index]?.click();
         collapse();
         break;
 
-      case 'Enter':
       case 'Escape':
         collapse();
         break;
