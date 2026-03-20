@@ -229,7 +229,7 @@
 
     &:active:not(:disabled)::before {
       content: '•';
-      font-size: 14px;
+      font-size: $font-md;
       margin: 0 0 0 -14px;
       padding: 0;
     }

@@ -1,4 +1,5 @@
 import { FC, ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -78,6 +79,11 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       data-testid={`field-with-meta-controls-${uuid}`}
       {...restProps}
     >
+      {entry.profileSettingsDrift && (
+        <div className="drift-warning">
+          <FormattedMessage id="ld.visibleByDrift" />
+        </div>
+      )}
       {isCompact ? (
         <CompactLayout {...commonLayoutProps} marcMapping={marcMapping}>
           {children}

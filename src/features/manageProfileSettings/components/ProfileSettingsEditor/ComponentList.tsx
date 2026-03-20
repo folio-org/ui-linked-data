@@ -28,7 +28,7 @@ export const ComponentList: FC<ComponentListProps> = ({
   const Container = droppable ? DroppableList : 'div';
 
   return (
-    <div data-testid={`${type}-component-list`} className={`${type}-components`} aria-labelledby={`${type}-title`}>
+    <section data-testid={`${type}-component-list`} className={`${type}-components`} aria-labelledby={`${type}-title`}>
       <h4>
         <span id={`${type}-title`} className="title">
           <FormattedMessage id={titleId} />
@@ -43,6 +43,6 @@ export const ComponentList: FC<ComponentListProps> = ({
           {children}
         </SortableContext>
       </Container>
-    </div>
+    </section>
   );
 };

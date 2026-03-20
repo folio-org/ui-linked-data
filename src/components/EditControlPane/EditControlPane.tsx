@@ -144,7 +144,7 @@ export const EditControlPane = () => {
           <Times16 />
         </Button>
       </nav>
-      <div className="heading">
+      <h2 className="heading">
         {!isLoading &&
           Array.from(currentlyEditedEntityBfid).map(bfid => (
             <FormattedMessage
@@ -152,7 +152,7 @@ export const EditControlPane = () => {
               id={`ld.${getEditActionPrefix(isInCreateMode, queryParams)}${RESOURCE_TEMPLATE_IDS[bfid]}`}
             />
           ))}
-      </div>
+      </h2>
       {!isInCreateMode ? (
         <Dropdown labelId="ld.actions" items={items} buttonTestId="edit-control-actions-toggle" />
       ) : (

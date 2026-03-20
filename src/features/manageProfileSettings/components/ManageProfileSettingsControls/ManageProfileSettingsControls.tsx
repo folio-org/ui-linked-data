@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
 import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
@@ -23,6 +23,8 @@ export const ManageProfileSettingsControls = memo(() => {
   const { setIsManageProfileSettingsUnusedComponentsModalOpen } = useUIState([
     'setIsManageProfileSettingsUnusedComponentsModalOpen',
   ]);
+  const { formatMessage } = useIntl();
+  const ariaLabel = formatMessage({ id: 'ld.actions' });
 
   const handleButtonClick = async () => {
     if (unusedComponents.length > 0) {
@@ -43,7 +45,11 @@ export const ManageProfileSettingsControls = memo(() => {
   };
 
   return (
-    <div data-testid="manage-profile-settings-controls" className="manage-profile-settings-controls">
+    <section
+      data-testid="manage-profile-settings-controls"
+      className="manage-profile-settings-controls"
+      aria-label={ariaLabel}
+    >
       <Button
         data-testid="save-and-close"
         type={ButtonType.Primary}
@@ -61,6 +67,6 @@ export const ManageProfileSettingsControls = memo(() => {
       >
         <FormattedMessage id="ld.saveAndKeepEditing" />
       </Button>
-    </div>
+    </section>
   );
 });

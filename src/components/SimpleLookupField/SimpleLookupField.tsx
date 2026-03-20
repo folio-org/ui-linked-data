@@ -125,7 +125,6 @@ export const SimpleLookupField: FC<Props> = ({
       data-testid="simple-lookup"
       isSearchable
       isClearable
-      openMenuOnFocus
       isLoading={isLoading}
       isMulti={isMulti}
       menuPlacement={forceDisplayOptionsAtTheTop ? 'top' : 'auto'}
