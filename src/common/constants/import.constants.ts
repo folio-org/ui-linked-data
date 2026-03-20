@@ -13,3 +13,8 @@ export enum ImportModes {
   JsonFile = 'jsonfile',
   JsonUrl = 'jsonurl',
 }
+
+export enum ImportFilterTypes {
+  Instance = 'instance',
+  Hub = 'hub',
+}

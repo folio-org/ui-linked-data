@@ -135,11 +135,11 @@ describe('useSearchActions', () => {
     });
   });
 
-  describe('handleImport', () => {
+  describe('handleImportInstances', () => {
     test('Opens import modal when closed', () => {
       const { result } = renderHook(() => useSearchActions());
 
-      result.current.handleImport();
+      result.current.handleImportInstances();
 
       expect(mockSetIsImportModalOpen).toHaveBeenCalledWith(true);
     });
@@ -157,7 +157,7 @@ describe('useSearchActions', () => {
 
       const { result } = renderHook(() => useSearchActions());
 
-      result.current.handleImport();
+      result.current.handleImportInstances();
 
       expect(mockSetIsImportModalOpen).not.toHaveBeenCalled();
     });

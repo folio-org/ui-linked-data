@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { ImportModes } from '@/common/constants/import.constants';
+import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
 import { Select } from '@/components/Select';
 
 import { ImportModeFile } from './ImportModeFile';
@@ -16,6 +16,9 @@ type SelectorImportModeProps = {
   setFilesToUpload: (files: File[]) => void;
   urlToRetrieve: string | undefined;
   setUrlToRetrieve: (url: string) => void;
+  defaultWorkType: string;
+  setDefaultWorkType: (workType: string) => void;
+  importModalFilterType: ImportFilterTypes;
 };
 
 export const SelectorImportMode: FC<SelectorImportModeProps> = ({
@@ -27,12 +30,20 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
   setFilesToUpload,
   urlToRetrieve,
   setUrlToRetrieve,
+  defaultWorkType,
+  setDefaultWorkType,
+  importModalFilterType,
 }) => {
+  const description =
+    importModalFilterType === ImportFilterTypes.Instance ? (
+      <FormattedMessage id="ld.importInstancesDescription" />
+    ) : (
+      <FormattedMessage id="ld.importHubsDescription" />
+    );
+
   return (
     <>
-      <div className="description">
-        <FormattedMessage id="ld.importDescription" />
-      </div>
+      <div className="description">{description}</div>
       <div className="selector">
         <label htmlFor="mode-select">
           <FormattedMessage id="ld.importOption" />
@@ -54,7 +65,17 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
         <ImportModeFile {...{ onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }} />
       )}
       {importMode === ImportModes.JsonUrl && (
-        <ImportModeUrl {...{ onImportReady, onImportNotReady, urlToRetrieve, setUrlToRetrieve }} />
+        <ImportModeUrl
+          {...{
+            onImportReady,
+            onImportNotReady,
+            urlToRetrieve,
+            setUrlToRetrieve,
+            defaultWorkType,
+            setDefaultWorkType,
+            importModalFilterType,
+          }}
+        />
       )}
     </>
   );

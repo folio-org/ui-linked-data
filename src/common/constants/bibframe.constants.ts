@@ -80,3 +80,8 @@ export const INSTANCE_CLONE_DELETE_PROPERTIES = [
 // should be removed from cloned instances. Break the association
 // if the sets start to differ.
 export const PROPERTIES_FROM_FOLIO = INSTANCE_CLONE_DELETE_PROPERTIES;
+
+export const WORK_TYPES = [
+  { label: 'types.books', uri: 'http://bibfra.me/vocab/library/Books' },
+  { label: 'types.continuingResources', uri: 'http://bibfra.me/vocab/library/ContinuingResources' },
+];

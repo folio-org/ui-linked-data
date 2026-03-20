@@ -16,8 +16,14 @@ import './Search.scss';
 export const SearchView = () => {
   const { selectedInstances } = useSearchState(['selectedInstances']);
 
-  const { handlePreviewMultiple, handleImport, onClickNewWork, onClickNewHub, navigateToManageProfileSettings } =
-    useSearchActions();
+  const {
+    handlePreviewMultiple,
+    handleImportInstances,
+    handleImportHubs,
+    onClickNewWork,
+    onClickNewHub,
+    navigateToManageProfileSettings,
+  } = useSearchActions();
 
   useSearchCleanup();
 
@@ -26,19 +32,21 @@ export const SearchView = () => {
       createResourceActionsConfig({
         onClickNewWork,
         handlePreviewMultiple,
-        handleImport,
+        handleImportInstances,
         navigateToManageProfileSettings,
         selectedInstancesCount: selectedInstances.length,
       }),
-    [onClickNewWork, handlePreviewMultiple, handleImport, selectedInstances.length],
+    [onClickNewWork, handlePreviewMultiple, handleImportInstances, selectedInstances.length],
   );
 
   const hubActions = useMemo(
     () =>
       createHubActionsConfig({
         onClickNewHub,
+        handleImportHubs,
+        navigateToManageProfileSettings,
       }),
-    [onClickNewHub],
+    [onClickNewHub, handleImportHubs],
   );
 
   return (

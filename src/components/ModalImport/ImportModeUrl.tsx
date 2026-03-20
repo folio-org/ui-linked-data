@@ -1,13 +1,19 @@
 import { ChangeEvent, FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import { WORK_TYPES } from '@/common/constants/bibframe.constants';
+import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { Input } from '@/components/Input';
+import { Select, SelectValue } from '@/components/Select';
 
 type ImportModeUrlProps = {
   onImportReady: () => void;
   onImportNotReady: VoidFunction;
   urlToRetrieve: string | undefined;
   setUrlToRetrieve: (url: string) => void;
+  defaultWorkType: string;
+  setDefaultWorkType: (workType: string) => void;
+  importModalFilterType: ImportFilterTypes;
 };
 
 export const ImportModeUrl: FC<ImportModeUrlProps> = ({
@@ -15,14 +21,21 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
   onImportNotReady,
   urlToRetrieve,
   setUrlToRetrieve,
+  defaultWorkType,
+  setDefaultWorkType,
+  importModalFilterType,
 }) => {
-  const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+  const handleUrlChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     if (value.length > 0) {
       onImportReady();
     } else {
       onImportNotReady();
     }
     setUrlToRetrieve(value);
+  };
+
+  const handleWorkTypeChange = ({ value }: SelectValue) => {
+    setDefaultWorkType(value);
   };
 
   return (
@@ -35,8 +48,31 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
         id="url"
         value={urlToRetrieve}
         placeholder="https://"
-        onChange={handleChange}
+        onChange={handleUrlChange}
       />
+
+      {importModalFilterType === ImportFilterTypes.Instance && (
+        <>
+          <label id="default-work-type-label" htmlFor="default-work-type">
+            <FormattedMessage id="ld.importDefaultWorkType" />
+          </label>
+          <Select
+            data-testid="default-work-type"
+            id="default-work-type"
+            options={WORK_TYPES.map(workType => {
+              return {
+                label: workType.label,
+                value: workType.uri,
+                isDisabled: false,
+              };
+            })}
+            value={defaultWorkType}
+            withIntl={true}
+            ariaLabelledBy="default-work-type-label"
+            onChange={handleWorkTypeChange}
+          />
+        </>
+      )}
     </div>
   );
 };
