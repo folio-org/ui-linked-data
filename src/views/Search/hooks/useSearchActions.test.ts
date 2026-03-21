@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
@@ -58,6 +59,7 @@ describe('useSearchActions', () => {
   const mockResetPreviewContent = jest.fn();
   const mockSetFullDisplayComponentType = jest.fn();
   const mockSetIsImportModalOpen = jest.fn();
+  const mockSetImportModalFilterType = jest.fn();
   const mockAddStatusMessagesItem = jest.fn();
 
   beforeEach(() => {
@@ -86,6 +88,7 @@ describe('useSearchActions', () => {
           setFullDisplayComponentType: mockSetFullDisplayComponentType,
           isImportModalOpen: false,
           setIsImportModalOpen: mockSetIsImportModalOpen,
+          setImportModalFilterType: mockSetImportModalFilterType,
         },
       },
       {
@@ -142,6 +145,7 @@ describe('useSearchActions', () => {
       result.current.handleImportInstances();
 
       expect(mockSetIsImportModalOpen).toHaveBeenCalledWith(true);
+      expect(mockSetImportModalFilterType).toHaveBeenCalledWith(ImportFilterTypes.Instance);
     });
 
     test('Does not open import modal when already open', () => {
@@ -158,6 +162,35 @@ describe('useSearchActions', () => {
       const { result } = renderHook(() => useSearchActions());
 
       result.current.handleImportInstances();
+
+      expect(mockSetIsImportModalOpen).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('handleImportHubs', () => {
+    test('Opens import modal when closed', () => {
+      const { result } = renderHook(() => useSearchActions());
+
+      result.current.handleImportHubs();
+
+      expect(mockSetIsImportModalOpen).toHaveBeenCalledWith(true);
+      expect(mockSetImportModalFilterType).toHaveBeenCalledWith(ImportFilterTypes.Hub);
+    });
+
+    test('Does not open import modal when already open', () => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state: {
+            isImportModalOpen: true,
+            setIsImportModalOpen: mockSetIsImportModalOpen,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSearchActions());
+
+      result.current.handleImportHubs();
 
       expect(mockSetIsImportModalOpen).not.toHaveBeenCalled();
     });

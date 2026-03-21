@@ -36,7 +36,13 @@ export const SearchView = () => {
         navigateToManageProfileSettings,
         selectedInstancesCount: selectedInstances.length,
       }),
-    [onClickNewWork, handlePreviewMultiple, handleImportInstances, selectedInstances.length],
+    [
+      onClickNewWork,
+      handlePreviewMultiple,
+      handleImportInstances,
+      navigateToManageProfileSettings,
+      selectedInstances.length,
+    ],
   );
 
   const hubActions = useMemo(
@@ -46,7 +52,7 @@ export const SearchView = () => {
         handleImportHubs,
         navigateToManageProfileSettings,
       }),
-    [onClickNewHub, handleImportHubs],
+    [onClickNewHub, handleImportHubs, navigateToManageProfileSettings],
   );
 
   return (
