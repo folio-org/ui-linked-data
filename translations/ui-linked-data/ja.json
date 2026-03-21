@@ -114,7 +114,6 @@
     "ld.cantSelectReferenceContents": "Can't select reference contents while fetching a reference",
     "ld.addNewInstance": "Add new instance",
     "ld.askSaveChangesBeforeProceeding": "Would you like to save your changes before proceeding?",
-    "ld.unsavedRecentEdits": "Recent edits made to the resource have not been saved. Unsaved changes will be lost.",
     "ld.unsavedChanges": "Unsaved changes",
     "ld.continueWithoutSaving": "Continue without saving",
     "ld.noTitleInBrackets": "No title",
@@ -338,5 +337,11 @@
     "ld.profileComponentsDeselected": "プロファイルコンポーネントの選択が解除されました",
     "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?",
     "ld.cantLoadHubPreview": "Can't load preview for this hub resource",
-    "ld.aria.complexLookup.hubPreview.close": "Close lookup hub preview section"
+    "ld.aria.complexLookup.hubPreview.close": "Close lookup hub preview section",
+    "ld.modal.chooseProfileWarning.title": "Unable to change profile",
+    "ld.aria.profiles": "Profile navigation",
+    "ld.aria.nudgeComponentUp": "Move component up",
+    "ld.aria.nudgeComponentDown": "Move component down",
+    "ld.aria.moveComponentOptions": "Move component options",
+    "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }
