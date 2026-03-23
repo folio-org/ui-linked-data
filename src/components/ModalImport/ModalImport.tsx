@@ -132,7 +132,7 @@ export const ModalImport = memo(() => {
   const getUrlFilenameWithoutExtension = (url: string) => {
     let filename;
     const filenameIndex = url.lastIndexOf('/');
-    if (filenameIndex > 0) {
+    if (filenameIndex >= 7) {
       const fullFilename = url.substring(filenameIndex + 1);
       const extensionIndex = fullFilename.indexOf('.');
       if (extensionIndex > 0) {

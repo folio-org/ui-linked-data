@@ -2,7 +2,7 @@ import { IMPORT_JSON_FILE_API_ENDPOINT, IMPORT_JSON_URL_API_ENDPOINT } from '@/c
 
 import baseApi from './base.api';
 
-export const importFile = async (files: File[], filterType: string) => {
+export const importFile = async (files: File[], filterType: string): Promise<ImportResponseDTO> => {
   const formData = new FormData();
 
   // Only uploading one file at the moment
@@ -12,7 +12,7 @@ export const importFile = async (files: File[], filterType: string) => {
 
   const url = baseApi.generateUrl(IMPORT_JSON_FILE_API_ENDPOINT);
 
-  const response = await baseApi.request({
+  return await baseApi.getJson({
     url,
     urlParams: {
       filterType,
@@ -22,14 +22,16 @@ export const importFile = async (files: File[], filterType: string) => {
       body: formData,
     },
   });
-
-  return (await response?.json()) as Promise<ImportResponseDTO>;
 };
 
-export const importUrl = async (url: string, filterType: string, defaultWorkType: string) => {
+export const importUrl = async (
+  url: string,
+  filterType: string,
+  defaultWorkType: string,
+): Promise<ImportResponseDTO> => {
   const apiUrl = baseApi.generateUrl(IMPORT_JSON_URL_API_ENDPOINT);
 
-  const response = await baseApi.request({
+  return baseApi.getJson({
     url: apiUrl,
     urlParams: {
       url,
@@ -40,6 +42,4 @@ export const importUrl = async (url: string, filterType: string, defaultWorkType
       method: 'POST',
     },
   });
-
-  return (await response?.json()) as Promise<ImportResponseDTO>;
 };

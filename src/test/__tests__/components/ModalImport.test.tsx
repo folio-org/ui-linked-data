@@ -8,7 +8,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import * as importApi from '@/common/api/import.api';
-import { ImportModes } from '@/common/constants/import.constants';
+import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
 import { ModalImport } from '@/components/ModalImport';
 
 import { useUIStore } from '@/store';
@@ -16,6 +16,7 @@ import { useUIStore } from '@/store';
 describe('ModalImport', () => {
   const user = userEvent.setup();
   const file = new File(['{}'], 'resources.json', { type: 'application/json' });
+  const extensionlessFile = new File(['{}'], 'instance', { type: 'application/json' });
   let importFileMock = jest.fn();
   let importUrlMock = jest.fn();
   window.URL.createObjectURL = jest.fn();
@@ -28,10 +29,23 @@ describe('ModalImport', () => {
   beforeEach(() => {
     importFileMock = (jest.spyOn(importApi, 'importFile') as any).mockImplementation(() => Promise.resolve(null));
     importUrlMock = (jest.spyOn(importApi, 'importUrl') as any).mockImplementation(() => Promise.resolve(null));
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  const renderComponent = (filterType?: ImportFilterTypes) => {
+    if (filterType === undefined) {
+      filterType = ImportFilterTypes.Instance;
+    }
     setInitialGlobalState([
       {
         store: useUIStore,
-        state: { isImportModalOpen: true },
+        state: {
+          isImportModalOpen: true,
+          importModalFilterType: filterType,
+        },
       },
     ]);
     render(
@@ -39,28 +53,55 @@ describe('ModalImport', () => {
         <ModalImport />
       </BrowserRouter>,
     );
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
+  };
 
   test('renders import window', () => {
+    renderComponent();
     expect(screen.getByTestId('modal-import')).toBeInTheDocument();
   });
 
   test('initially in file import mode', () => {
+    renderComponent();
     expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
     expect(screen.queryByTestId('modal-import-url-mode')).not.toBeInTheDocument();
   });
 
   test('select change switches to URL import mode', () => {
+    renderComponent();
     fireEvent.change(screen.getByTestId('modal-import-mode-selector'), { target: { value: ImportModes.JsonUrl } });
     expect(screen.queryByTestId('modal-import-file-mode')).not.toBeInTheDocument();
     expect(screen.getByTestId('modal-import-url-mode')).toBeInTheDocument();
   });
 
+  describe('instance and hub import', () => {
+    test('import a hub', () => {
+      renderComponent(ImportFilterTypes.Hub);
+      expect(screen.getByText('ld.importHubs')).toBeInTheDocument();
+    });
+
+    test('import an instance', () => {
+      renderComponent(ImportFilterTypes.Instance);
+      expect(screen.getByText('ld.importInstances')).toBeInTheDocument();
+    });
+
+    test('import a hub by url has no default work type filter', () => {
+      renderComponent(ImportFilterTypes.Hub);
+      fireEvent.change(screen.getByTestId('modal-import-mode-selector'), { target: { value: ImportModes.JsonUrl } });
+      expect(screen.queryByTestId('default-work-type')).not.toBeInTheDocument();
+    });
+
+    test('import an instance by url has default work type filter', () => {
+      renderComponent(ImportFilterTypes.Instance);
+      fireEvent.change(screen.getByTestId('modal-import-mode-selector'), { target: { value: ImportModes.JsonUrl } });
+      expect(screen.getByTestId('default-work-type')).toBeInTheDocument();
+    });
+  });
+
   describe('file import', () => {
+    beforeEach(() => {
+      renderComponent();
+    });
+
     test('an added file enables import to proceed', async () => {
       const input = screen.getByTestId('dropzone-file-input');
       await user.upload(input, file);
@@ -86,7 +127,7 @@ describe('ModalImport', () => {
       jest.useFakeTimers({ advanceTimers: true });
       importFileMock.mockResolvedValueOnce({ resources: ['1'], log: '' });
       const input = screen.getByTestId('dropzone-file-input');
-      await user.upload(input, file);
+      await user.upload(input, extensionlessFile);
       await user.click(screen.getByTestId('modal-button-submit'));
       await jest.advanceTimersToNextTimerAsync();
       expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
@@ -161,6 +202,7 @@ describe('ModalImport', () => {
 
   describe('URL import', () => {
     beforeEach(() => {
+      renderComponent();
       fireEvent.change(screen.getByTestId('modal-import-mode-selector'), { target: { value: ImportModes.JsonUrl } });
     });
 
@@ -170,9 +212,19 @@ describe('ModalImport', () => {
       expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
     });
 
-    test('clicking import moves to loading message', async () => {
+    test('actuate all inputs', async () => {
       const input = screen.getByTestId('import-url-input');
       await user.type(input, 'some-test-url');
+      fireEvent.change(screen.getByTestId('default-work-type'), {
+        target: { value: 'http://bibfra.me/vocab/library/ContinuingResources' },
+      });
+      await userEvent.clear(input);
+      expect(screen.getByTestId('modal-button-submit')).not.toBeEnabled();
+    });
+
+    test('clicking import moves to loading message', async () => {
+      const input = screen.getByTestId('import-url-input');
+      await user.type(input, 'https://some-test-url/filename.json');
       await user.click(screen.getByTestId('modal-button-submit'));
       expect(importUrlMock).toHaveBeenCalled();
       expect(screen.getByTestId('modal-import-waiting')).toBeInTheDocument();
