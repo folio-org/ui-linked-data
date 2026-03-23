@@ -26,6 +26,7 @@ import { Submitted } from './Submitted';
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
+  const defaultLogFilename = 'importing';
   const [importMode, setImportMode] = useState(ImportModes.JsonFile);
   const [isImportReady, setIsImportReady] = useState(false);
   const [isImportSubmitted, setIsImportSubmitted] = useState(false);
@@ -100,9 +101,7 @@ export const ModalImport = memo(() => {
     // Reject if importUrl is taking too long since we've removed
     // the ability to alter the modal state during load.
     return new Promise<ImportResponseDTO>((resolve, reject) => {
-      if (!urlToRetrieve) {
-        reject(new Error('No URL provided'));
-      } else {
+      if (urlToRetrieve) {
         const timeout = setTimeout(
           () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
           LOADING_TIMEOUT_MS,
@@ -117,6 +116,8 @@ export const ModalImport = memo(() => {
           .finally(() => {
             clearTimeout(timeout);
           });
+      } else {
+        reject(new Error('No URL provided'));
       }
     });
   };
@@ -139,7 +140,7 @@ export const ModalImport = memo(() => {
         filename = fullFilename.substring(0, extensionIndex);
       }
     }
-    return filename ? filename : url;
+    return filename ?? url;
   };
 
   const downloadLog = (filePrefix: string, log: string) => {
@@ -157,11 +158,11 @@ export const ModalImport = memo(() => {
       switch (importMode) {
         case ImportModes.JsonFile:
           response = await doImportFile();
-          filename = getFilenameWithoutExtension(filesToUpload[0].name);
+          filename = getFilenameWithoutExtension(filesToUpload[0].name ?? defaultLogFilename);
           break;
         case ImportModes.JsonUrl:
           response = await doImportUrl();
-          filename = getUrlFilenameWithoutExtension(urlToRetrieve!);
+          filename = getUrlFilenameWithoutExtension(urlToRetrieve ?? defaultLogFilename);
           break;
       }
       const elapsed = Date.now() - started;
