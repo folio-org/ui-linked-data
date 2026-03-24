@@ -2,13 +2,25 @@
 
 .common-status {
   position: fixed;
-  bottom: 1.75rem;
+  bottom: 3.5rem;
   right: 2rem;
   z-index: 10100;
+  display: grid;
+  grid-template-areas: 'statuses';
+
+  &:hover,
+  &:focus-within {
+    display: flex;
+    flex-direction: column-reverse;
+
+    .status-message {
+      transform: translateY(0) translateX(0);
+    }
+  }
 }
 
 .status-message {
-  position: relative;
+  grid-area: statuses;
   width: 42.375rem;
   padding: 0.5rem 0.65625rem;
   border: 1px solid #d7d8da;
@@ -18,13 +30,7 @@
   flex-direction: row;
   align-items: center;
   font-size: 0.875rem;
-  transform: translateX(1500px);
-  opacity: 0;
-  animation: slideInOut 5500ms ease-in-out;
-
-  &:not(:first-child) {
-    margin-top: 0.5rem;
-  }
+  animation: slideIn 1100ms ease-in-out;
 
   &-icon {
     margin-right: 1rem;
@@ -74,24 +80,14 @@
   }
 }
 
-@keyframes slideInOut {
-  0% {
+@keyframes slideIn {
+  from {
     opacity: 0;
     transform: translateX(120%);
   }
 
-  5% {
+  to {
     transform: translateX(0);
     opacity: 1;
-  }
-
-  95% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateX(120%);
-    opacity: 0;
   }
 }

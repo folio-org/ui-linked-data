@@ -1,5 +1,6 @@
 import { FC, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useLocation } from 'react-router-dom';
 
 import classNames from 'classnames';
 
@@ -15,24 +16,18 @@ import CloseIcon from '@/assets/times-16.svg?react';
 
 import './CommonStatus.scss';
 
-const DELETE_TIMEOUT = 10000;
-
 export const CommonStatus: FC = () => {
+  const location = useLocation();
+  const { formatMessage } = useIntl();
   const { statusMessages, setStatusMessages } = useStatusState(['statusMessages', 'setStatusMessages']);
+
+  useEffect(() => {
+    setStatusMessages([]);
+  }, [location.pathname]);
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
   };
-
-  const deleteOldestMessage = () => deleteMessage(statusMessages[0].id);
-
-  useEffect(() => {
-    if (!statusMessages.length) {
-      return;
-    }
-
-    setTimeout(deleteOldestMessage, DELETE_TIMEOUT);
-  }, [statusMessages]);
 
   const renderIcon = (type: StatusType) => {
     switch (type) {
@@ -48,9 +43,20 @@ export const CommonStatus: FC = () => {
   };
 
   return statusMessages?.length ? (
-    <div className="common-status" data-testid="common-status">
-      {statusMessages.map(({ id, type, message }) => (
-        <div key={id} className={classNames(['status-message', type])} role="status">
+    <section
+      className="common-status"
+      data-testid="common-status"
+      aria-label={formatMessage({ id: 'ld.aria.notifications' })}
+    >
+      {statusMessages.map(({ id, type, message }, idx) => (
+        <div
+          key={id}
+          className={classNames(['status-message', type])}
+          role="status"
+          style={{
+            transform: 'translateY(-' + 25 * idx + '%) translateX(-' + 2 * idx + '%)',
+          }}
+        >
           {renderIcon(type as StatusType)}
           <span className="status-message-text">
             <FormattedMessage id={message as string} defaultMessage={message as string} />
@@ -60,6 +66,6 @@ export const CommonStatus: FC = () => {
           </Button>
         </div>
       ))}
-    </div>
+    </section>
   ) : null;
 };
