@@ -63,7 +63,7 @@ export const CommonStatus: FC = () => {
       aria-label={formatMessage({ id: 'ld.aria.notifications' })}
     >
       {statusMessages.map(({ id, type, message }, idx) => (
-        <div key={id} className={classNames(['status-message', type])} role="status" style={messageInlineStyle(idx)}>
+        <output key={id} className={classNames(['status-message', type])} style={messageInlineStyle(idx)}>
           {renderIcon(type as StatusType)}
           <span className="status-message-text">
             <FormattedMessage id={message as string} defaultMessage={message as string} />
@@ -71,7 +71,7 @@ export const CommonStatus: FC = () => {
           <Button className="status-message-close" type={ButtonType.Icon} onClick={() => deleteMessage(id)}>
             <CloseIcon />
           </Button>
-        </div>
+        </output>
       ))}
     </section>
   ) : null;
