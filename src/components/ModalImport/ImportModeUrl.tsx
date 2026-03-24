@@ -1,10 +1,10 @@
 import { ChangeEvent, FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { WORK_TYPES } from '@/common/constants/bibframe.constants';
 import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { Input } from '@/components/Input';
-import { Select, SelectValue } from '@/components/Select';
+
+import { DefaultWorkTypeSelector } from './DefaultWorkTypeSelector';
 
 type ImportModeUrlProps = {
   onImportReady: VoidFunction;
@@ -34,18 +34,6 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
     setUrlToRetrieve(value);
   };
 
-  const handleWorkTypeChange = ({ value }: SelectValue) => {
-    setDefaultWorkType(value);
-  };
-
-  const workTypeOptions = WORK_TYPES.map(workType => {
-    return {
-      label: workType.label,
-      value: workType.uri,
-      isDisabled: false,
-    };
-  });
-
   return (
     <div className="mode url-mode" data-testid="modal-import-url-mode">
       <label htmlFor="url">
@@ -60,20 +48,7 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
       />
 
       {importModalFilterType === ImportFilterTypes.Instance && (
-        <>
-          <label id="default-work-type-label" htmlFor="default-work-type">
-            <FormattedMessage id="ld.importDefaultWorkType" />
-          </label>
-          <Select
-            data-testid="default-work-type"
-            id="default-work-type"
-            options={workTypeOptions}
-            value={defaultWorkType}
-            withIntl={true}
-            ariaLabelledBy="default-work-type-label"
-            onChange={handleWorkTypeChange}
-          />
-        </>
+        <DefaultWorkTypeSelector {...{ defaultWorkType, setDefaultWorkType }} />
       )}
     </div>
   );
