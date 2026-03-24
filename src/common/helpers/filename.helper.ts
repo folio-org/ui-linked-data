@@ -25,7 +25,7 @@ export const getUrlFilenameWithoutExtension = (url: string) => {
     }
   } catch {
     // argument cannot be parsed as a URL, pass it through with some sanitizing
-    filename = url.replaceAll(/[^A-Za-z0-9_]/g, '-');
+    filename = url.replaceAll(/\W/g, '-');
   }
   return filename;
 };
