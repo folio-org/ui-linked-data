@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useLocation } from 'react-router-dom';
 
@@ -18,11 +18,15 @@ import './CommonStatus.scss';
 
 export const CommonStatus: FC = () => {
   const location = useLocation();
+  const previousPath = useRef(location.pathname);
   const { formatMessage } = useIntl();
   const { statusMessages, setStatusMessages } = useStatusState(['statusMessages', 'setStatusMessages']);
 
   useEffect(() => {
-    setStatusMessages([]);
+    if (previousPath.current !== location.pathname) {
+      setStatusMessages([]);
+    }
+    previousPath.current = location.pathname;
   }, [location.pathname]);
 
   const deleteMessage = (messageId?: string) => {
