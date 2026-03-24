@@ -1,3 +1,5 @@
+import { BFLITE_URIS } from './bibframeMapping.constants';
+
 export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   'lde:Profile:Work': 'Work',
   'lde:Profile:Instance': 'Instance',
@@ -82,6 +84,6 @@ export const INSTANCE_CLONE_DELETE_PROPERTIES = [
 export const PROPERTIES_FROM_FOLIO = INSTANCE_CLONE_DELETE_PROPERTIES;
 
 export const WORK_TYPES = [
-  { label: 'types.books', uri: 'http://bibfra.me/vocab/library/Books' },
-  { label: 'types.continuingResources', uri: 'http://bibfra.me/vocab/library/ContinuingResources' },
+  { label: 'types.books', uri: BFLITE_URIS.BOOKS },
+  { label: 'types.continuingResources', uri: BFLITE_URIS.CONTINUING_RESOURCES },
 ];

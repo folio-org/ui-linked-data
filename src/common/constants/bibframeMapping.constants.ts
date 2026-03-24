@@ -84,6 +84,8 @@ export const BFLITE_URIS = {
   PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/library/publicationFrequency',
   EXPRESSION_OF: 'http://bibfra.me/vocab/lite/expressionOf',
   CONCEPT: 'http://bibfra.me/vocab/lite/Concept',
+  BOOKS: 'http://bibfra.me/vocab/library/Books',
+  CONTINUING_RESOURCES: 'http://bibfra.me/vocab/library/ContinuingResources',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {

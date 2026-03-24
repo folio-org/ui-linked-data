@@ -12,6 +12,7 @@ import {
   LOADING_TIMEOUT_MS,
 } from '@/common/constants/import.constants';
 import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
+import { getFilenameWithoutExtension, getUrlFilenameWithoutExtension } from '@/common/helpers/filename.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Modal } from '@/components/Modal';
@@ -120,27 +121,6 @@ export const ModalImport = memo(() => {
         reject(new Error('No URL provided'));
       }
     });
-  };
-
-  const getFilenameWithoutExtension = (filename: string) => {
-    const extensionIndex = filename.lastIndexOf('.');
-    if (extensionIndex > 0) {
-      return filename.substring(0, extensionIndex);
-    }
-    return filename;
-  };
-
-  const getUrlFilenameWithoutExtension = (url: string) => {
-    let filename;
-    const filenameIndex = url.lastIndexOf('/');
-    if (filenameIndex >= 7) {
-      const fullFilename = url.substring(filenameIndex + 1);
-      const extensionIndex = fullFilename.indexOf('.');
-      if (extensionIndex > 0) {
-        filename = fullFilename.substring(0, extensionIndex);
-      }
-    }
-    return filename ?? url;
   };
 
   const downloadLog = (filePrefix: string, log: string) => {

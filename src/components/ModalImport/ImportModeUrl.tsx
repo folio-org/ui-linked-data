@@ -7,7 +7,7 @@ import { Input } from '@/components/Input';
 import { Select, SelectValue } from '@/components/Select';
 
 type ImportModeUrlProps = {
-  onImportReady: () => void;
+  onImportReady: VoidFunction;
   onImportNotReady: VoidFunction;
   urlToRetrieve: string | undefined;
   setUrlToRetrieve: (url: string) => void;
@@ -38,6 +38,14 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
     setDefaultWorkType(value);
   };
 
+  const workTypeOptions = WORK_TYPES.map(workType => {
+    return {
+      label: workType.label,
+      value: workType.uri,
+      isDisabled: false,
+    };
+  });
+
   return (
     <div className="mode url-mode" data-testid="modal-import-url-mode">
       <label htmlFor="url">
@@ -59,13 +67,7 @@ export const ImportModeUrl: FC<ImportModeUrlProps> = ({
           <Select
             data-testid="default-work-type"
             id="default-work-type"
-            options={WORK_TYPES.map(workType => {
-              return {
-                label: workType.label,
-                value: workType.uri,
-                isDisabled: false,
-              };
-            })}
+            options={workTypeOptions}
             value={defaultWorkType}
             withIntl={true}
             ariaLabelledBy="default-work-type-label"
