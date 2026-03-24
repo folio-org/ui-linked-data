@@ -2,7 +2,7 @@
 
 .common-status {
   position: fixed;
-  bottom: 3.5rem;
+  bottom: 4rem;
   right: 2rem;
   z-index: 10100;
   display: grid;
@@ -12,9 +12,10 @@
   &:focus-within {
     display: flex;
     flex-direction: column-reverse;
+    gap: 12px;
 
     .status-message {
-      transform: translateY(0) translateX(0);
+      transform: translateY(0) translateX(0) !important;
     }
   }
 }
@@ -30,7 +31,8 @@
   flex-direction: row;
   align-items: center;
   font-size: 0.875rem;
-  animation: slideIn 1100ms ease-in-out;
+  opacity: 0;
+  animation: slideIn 750ms ease-in;
 
   &-icon {
     margin-right: 1rem;
@@ -87,7 +89,7 @@
   }
 
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: translateX(--final-x);
   }
 }

@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import React, { FC, useEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useLocation } from 'react-router-dom';
 
@@ -29,6 +29,16 @@ export const CommonStatus: FC = () => {
     setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
   };
 
+  const messageInlineStyle = (index: number) => {
+    const finalY = -25 * index + '%';
+    const finalX = -2 * index + '%';
+    return {
+      transform: `translate(${finalX}, ${finalY})`,
+      animationFillMode: 'forwards',
+      '--final-x': finalX,
+    } as React.CSSProperties;
+  };
+
   const renderIcon = (type: StatusType) => {
     switch (type) {
       case StatusType.success:
@@ -49,14 +59,7 @@ export const CommonStatus: FC = () => {
       aria-label={formatMessage({ id: 'ld.aria.notifications' })}
     >
       {statusMessages.map(({ id, type, message }, idx) => (
-        <div
-          key={id}
-          className={classNames(['status-message', type])}
-          role="status"
-          style={{
-            transform: 'translateY(-' + 25 * idx + '%) translateX(-' + 2 * idx + '%)',
-          }}
-        >
+        <div key={id} className={classNames(['status-message', type])} role="status" style={messageInlineStyle(idx)}>
           {renderIcon(type as StatusType)}
           <span className="status-message-text">
             <FormattedMessage id={message as string} defaultMessage={message as string} />
