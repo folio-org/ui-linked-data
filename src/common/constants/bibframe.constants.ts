@@ -25,9 +25,9 @@ export enum BibframeEntities {
 }
 
 export const TYPE_URIS = {
-  INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
-  WORK: 'http://bibfra.me/vocab/lite/Work',
-  HUB: 'http://bibfra.me/vocab/lite/Hub',
+  INSTANCE: BFLITE_URIS.INSTANCE,
+  WORK: BFLITE_URIS.WORK,
+  HUB: BFLITE_URIS.HUB,
 };
 
 export const CONSTRAINTS: Constraints = {
@@ -49,12 +49,12 @@ export const GROUP_COMPLEX_CUTOFF_LEVEL = 4;
 export const ENTITY_LEVEL = 1;
 
 export const TITLE_CONTAINER_URIS = [
-  'http://bibfra.me/vocab/library/Title',
-  'http://bibfra.me/vocab/library/ParralelTitle',
-  'http://bibfra.me/vocab/library/VariantTitle',
+  BFLITE_URIS.TITLE_CONTAINER,
+  BFLITE_URIS.LIBRARY_PARALLEL_TITLE,
+  BFLITE_URIS.LIBRARY_VARIANT_TITLE,
 ];
 
-export const LOOKUPS_WITH_SIMPLE_STRUCTURE = ['http://bibfra.me/vocab/library/issuance'];
+export const LOOKUPS_WITH_SIMPLE_STRUCTURE = [BFLITE_URIS.ISSUANCE];
 
 export const LOC_GOV_URI = 'http://id.loc.gov/';
 
@@ -71,10 +71,7 @@ export const ENTRY_CONTROL_DELIMITER = '--';
 export const TWIN_CHILDREN_KEY_DELIMITER = '$$';
 export const PROFILE_NODE_ID_DELIMITER = ':';
 
-export const INSTANCE_CLONE_DELETE_PROPERTIES = [
-  'http://bibfra.me/vocab/lite/createdDate',
-  'http://bibfra.me/vocab/library/controlNumber',
-];
+export const INSTANCE_CLONE_DELETE_PROPERTIES = [BFLITE_URIS.CREATED_DATE, BFLITE_URIS.CONTROL_NUMBER];
 
 // Properties with values originating from FOLIO that may need
 // a visual placeholder in the editor before those values have
