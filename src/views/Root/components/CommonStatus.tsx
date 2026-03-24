@@ -64,7 +64,7 @@ export const CommonStatus: FC = () => {
           <span className="status-message-text">
             <FormattedMessage id={message as string} defaultMessage={message as string} />
           </span>
-          <Button className="status-message-close" type={ButtonType.Text} onClick={() => deleteMessage(id)}>
+          <Button className="status-message-close" type={ButtonType.Icon} onClick={() => deleteMessage(id)}>
             <CloseIcon />
           </Button>
         </div>

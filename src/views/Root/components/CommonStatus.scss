@@ -43,15 +43,9 @@
   }
 
   &-close {
-    padding: 0;
+    color: $buttonIcon;
+    padding: 3.5px;
     background-color: transparent;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background-color: transparent;
-      opacity: 0.5;
-    }
   }
 
   &.success {
@@ -64,8 +58,7 @@
     color: #943e00;
     background-color: #f7e7de;
 
-    .status-message-icon path,
-    .status-message-close path {
+    .status-message-icon path {
       fill: #943e00;
     }
   }
@@ -75,9 +68,8 @@
     color: $error;
     background-color: #ead2d0;
 
-    .status-message-icon path,
-    .status-message-close path {
-      fill: $error;
+    .status-message-icon path {
+      fill: #000;
     }
   }
 }
