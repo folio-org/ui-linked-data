@@ -9,18 +9,18 @@ type DefaultWorkTypeSelectorProps = {
   setDefaultWorkType: (workType: string) => void;
 };
 
+const WORK_TYPE_OPTIONS = WORK_TYPES.map(workType => {
+  return {
+    label: workType.label,
+    value: workType.uri,
+    isDisabled: false,
+  };
+});
+
 export const DefaultWorkTypeSelector: FC<DefaultWorkTypeSelectorProps> = ({ defaultWorkType, setDefaultWorkType }) => {
   const handleWorkTypeChange = ({ value }: SelectValue) => {
     setDefaultWorkType(value);
   };
-
-  const workTypeOptions = WORK_TYPES.map(workType => {
-    return {
-      label: workType.label,
-      value: workType.uri,
-      isDisabled: false,
-    };
-  });
 
   return (
     <>
@@ -30,7 +30,7 @@ export const DefaultWorkTypeSelector: FC<DefaultWorkTypeSelectorProps> = ({ defa
       <Select
         data-testid="default-work-type"
         id="default-work-type"
-        options={workTypeOptions}
+        options={WORK_TYPE_OPTIONS}
         value={defaultWorkType}
         withIntl={true}
         ariaLabelledBy="default-work-type-label"
