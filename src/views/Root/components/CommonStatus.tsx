@@ -1,5 +1,6 @@
-import { FC, useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import React, { FC, useEffect, useRef } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useLocation } from 'react-router-dom';
 
 import classNames from 'classnames';
 
@@ -15,24 +16,41 @@ import CloseIcon from '@/assets/times-16.svg?react';
 
 import './CommonStatus.scss';
 
-const DELETE_TIMEOUT = 10000;
+// In order to display a staircase effect for successive toasts,
+// translate each new one according to these step values as
+// percentages of the total toast size. Note that widespread
+// adoption of CSS sibling-index() would allow this to be
+// defined in a stylesheet instead. Without it, programmatic
+// definition is needed.
+const STAGGER_Y = -25;
+const STAGGER_X = -2;
+
+const messageInlineStyle = (index: number) => {
+  const finalY = STAGGER_X * index + '%';
+  const finalX = STAGGER_Y * index + '%';
+  return {
+    transform: `translate(${finalX}, ${finalY})`,
+    animationFillMode: 'forwards',
+    '--final-x': finalX,
+  } as React.CSSProperties;
+};
 
 export const CommonStatus: FC = () => {
+  const location = useLocation();
+  const previousPath = useRef(location.pathname);
+  const { formatMessage } = useIntl();
   const { statusMessages, setStatusMessages } = useStatusState(['statusMessages', 'setStatusMessages']);
+
+  useEffect(() => {
+    if (previousPath.current !== location.pathname) {
+      setStatusMessages([]);
+    }
+    previousPath.current = location.pathname;
+  }, [location.pathname]);
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
   };
-
-  const deleteOldestMessage = () => deleteMessage(statusMessages[0].id);
-
-  useEffect(() => {
-    if (!statusMessages.length) {
-      return;
-    }
-
-    setTimeout(deleteOldestMessage, DELETE_TIMEOUT);
-  }, [statusMessages]);
 
   const renderIcon = (type: StatusType) => {
     switch (type) {
@@ -48,18 +66,22 @@ export const CommonStatus: FC = () => {
   };
 
   return statusMessages?.length ? (
-    <div className="common-status" data-testid="common-status">
-      {statusMessages.map(({ id, type, message }) => (
-        <div key={id} className={classNames(['status-message', type])} role="status">
+    <section
+      className="common-status"
+      data-testid="common-status"
+      aria-label={formatMessage({ id: 'ld.aria.notifications' })}
+    >
+      {statusMessages.map(({ id, type, message }, idx) => (
+        <output key={id} className={classNames(['status-message', type])} style={messageInlineStyle(idx)}>
           {renderIcon(type as StatusType)}
           <span className="status-message-text">
             <FormattedMessage id={message as string} defaultMessage={message as string} />
           </span>
-          <Button className="status-message-close" type={ButtonType.Text} onClick={() => deleteMessage(id)}>
+          <Button className="status-message-close" type={ButtonType.Icon} onClick={() => deleteMessage(id)}>
             <CloseIcon />
           </Button>
-        </div>
+        </output>
       ))}
-    </div>
+    </section>
   ) : null;
 };

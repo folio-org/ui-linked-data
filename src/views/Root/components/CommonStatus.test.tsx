@@ -1,5 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
+import { MemoryRouter } from 'react-router-dom';
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { StatusType } from '@/common/constants/status.constants';
@@ -8,8 +10,14 @@ import { useStatusStore } from '@/store';
 
 import { CommonStatus } from './CommonStatus';
 
+const mockUseLocation = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: () => mockUseLocation(),
+}));
+
 describe('CommonStatus', () => {
-  const renderComponent = (statusMessages: StatusEntry[] = []) => {
+  const renderComponent = (statusMessages: StatusEntry[] = [], location: string = '/') => {
     setInitialGlobalState([
       {
         store: useStatusStore,
@@ -17,10 +25,20 @@ describe('CommonStatus', () => {
       },
     ]);
 
-    return render(<CommonStatus />);
+    mockUseLocation.mockReturnValue({ pathname: location });
+
+    return render(
+      <MemoryRouter initialEntries={[{ pathname: location }]}>
+        <CommonStatus />
+      </MemoryRouter>,
+    );
   };
 
   const getStatusMessagesCount = (container: HTMLElement) => container.querySelectorAll('.status-message').length;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test('does not render "CommonStatus" component', () => {
     renderComponent();
@@ -57,5 +75,27 @@ describe('CommonStatus', () => {
     await waitFor(() => {
       expect(getStatusMessagesCount(container)).toBe(1);
     });
+  });
+
+  test('clear notifications on location change', async () => {
+    const statusMessages = [
+      { id: '01', type: StatusType.success, message: 'test message 1' },
+      { id: '02', type: StatusType.error, message: 'test message 2' },
+    ];
+
+    const { container, rerender } = renderComponent(statusMessages);
+
+    expect(screen.getByTestId('common-status')).toBeInTheDocument();
+    expect(getStatusMessagesCount(container)).toBe(2);
+
+    mockUseLocation.mockReturnValue({ pathname: '/different' });
+
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/different' }]}>
+        <CommonStatus />
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByTestId('common-status')).not.toBeInTheDocument();
   });
 });
