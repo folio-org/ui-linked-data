@@ -114,7 +114,6 @@
     "ld.cantSelectReferenceContents": "لا يمكن تحديد محتويات المرجع أثناء جلب مرجع ما",
     "ld.addNewInstance": "إضافة وعاء جديد",
     "ld.askSaveChangesBeforeProceeding": "هل ترغب في حفظ التغييرات قبل المتابعة؟",
-    "ld.unsavedRecentEdits": "لم يتم حفظ التعديلات الأخيرة التي تم إجراؤها على المورد. ستفقد التغييرات غير المحفوظة.",
     "ld.unsavedChanges": "تغييرات غير محفوظة",
     "ld.continueWithoutSaving": "المتابعة بدون حفظ",
     "ld.noTitleInBrackets": "لا يوجد عنوان",
@@ -338,5 +337,11 @@
     "ld.profileComponentsDeselected": "Profile components deselected",
     "ld.removedProfileComponentsResult": "You have removed components from your selected list for this profile. Only the selected components will be visible for resources using this profile. Would you like to proceed?",
     "ld.cantLoadHubPreview": "Can't load preview for this hub resource",
-    "ld.aria.complexLookup.hubPreview.close": "Close lookup hub preview section"
+    "ld.aria.complexLookup.hubPreview.close": "Close lookup hub preview section",
+    "ld.modal.chooseProfileWarning.title": "Unable to change profile",
+    "ld.aria.profiles": "Profile navigation",
+    "ld.aria.nudgeComponentUp": "Move component up",
+    "ld.aria.nudgeComponentDown": "Move component down",
+    "ld.aria.moveComponentOptions": "Move component options",
+    "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }

@@ -114,7 +114,6 @@
     "ld.cantSelectReferenceContents": "Při načítání odkazu nelze vybrat obsah odkazu",
     "ld.addNewInstance": "Přidat nový titul",
     "ld.askSaveChangesBeforeProceeding": "Chcete uložit změny, než budete pokračovat?",
-    "ld.unsavedRecentEdits": "Nedávné úpravy zdroje nebyly uloženy. Neuložené změny budou ztraceny.",
     "ld.unsavedChanges": "Neuložené změny",
     "ld.continueWithoutSaving": "Pokračovat bez ukládání",
     "ld.noTitleInBrackets": "Bez názvu",
@@ -338,5 +337,11 @@
     "ld.profileComponentsDeselected": "Výběr komponent profilu zrušen",
     "ld.removedProfileComponentsResult": "Odebrali jste komponenty ze seznamu vybraného pro tento profil. Pro zdroje používající tento profil budou viditelné pouze vybrané komponenty. Chcete pokračovat?",
     "ld.cantLoadHubPreview": "Nelze načíst náhled pro tento zdroj centra",
-    "ld.aria.complexLookup.hubPreview.close": "Zavřít sekci náhledu vyhledávacího centra"
+    "ld.aria.complexLookup.hubPreview.close": "Zavřít sekci náhledu vyhledávacího centra",
+    "ld.modal.chooseProfileWarning.title": "Unable to change profile",
+    "ld.aria.profiles": "Profile navigation",
+    "ld.aria.nudgeComponentUp": "Move component up",
+    "ld.aria.nudgeComponentDown": "Move component down",
+    "ld.aria.moveComponentOptions": "Move component options",
+    "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }

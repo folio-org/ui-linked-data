@@ -114,7 +114,6 @@
     "ld.cantSelectReferenceContents": "Não é possível selecionar o conteúdo de referência ao buscar uma referência",
     "ld.addNewInstance": "Adicionar nova instância",
     "ld.askSaveChangesBeforeProceeding": "Gostaria de salvar suas alterações antes de prosseguir?",
-    "ld.unsavedRecentEdits": "As edições recentes feitas no recurso não foram salvas. As alterações não salvas serão perdidas.",
     "ld.unsavedChanges": "Alterações não salvas",
     "ld.continueWithoutSaving": "Continuar sem salvar",
     "ld.noTitleInBrackets": "Sem título",
@@ -338,5 +337,11 @@
     "ld.profileComponentsDeselected": "Componentes do perfil desmarcados",
     "ld.removedProfileComponentsResult": "Você removeu componentes da lista selecionada para esse perfil. Somente os componentes selecionados ficarão visíveis para os recursos que usam esse perfil. Deseja prosseguir?",
     "ld.cantLoadHubPreview": "Não foi possível carregar a pré-visualização deste recurso do hub.",
-    "ld.aria.complexLookup.hubPreview.close": "Fechar a seção de visualização do hub de pré-visualização"
+    "ld.aria.complexLookup.hubPreview.close": "Fechar a seção de visualização do hub de pré-visualização",
+    "ld.modal.chooseProfileWarning.title": "Unable to change profile",
+    "ld.aria.profiles": "Profile navigation",
+    "ld.aria.nudgeComponentUp": "Move component up",
+    "ld.aria.nudgeComponentDown": "Move component down",
+    "ld.aria.moveComponentOptions": "Move component options",
+    "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }

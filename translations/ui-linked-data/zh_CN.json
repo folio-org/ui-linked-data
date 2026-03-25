@@ -114,7 +114,6 @@
     "ld.cantSelectReferenceContents": "获取参照时无法选择参照内容",
     "ld.addNewInstance": "添加新实例",
     "ld.askSaveChangesBeforeProceeding": "是否想在继续之前保存更改？",
-    "ld.unsavedRecentEdits": "对资源所做的最新编辑尚未保存。未保存的更改将会丢失。",
     "ld.unsavedChanges": "未保存的更改",
     "ld.continueWithoutSaving": "退出而不保存",
     "ld.noTitleInBrackets": "无题名",
@@ -338,5 +337,11 @@
     "ld.profileComponentsDeselected": "已取消选择配置文件组件",
     "ld.removedProfileComponentsResult": "您已从该配置文件的已选列表中移除组件。只有已选组件才会对使用此配置文件的资源可见。是否继续？",
     "ld.cantLoadHubPreview": "无法加载此hub资源的预览",
-    "ld.aria.complexLookup.hubPreview.close": "关闭查看hub预览部分"
+    "ld.aria.complexLookup.hubPreview.close": "关闭查看hub预览部分",
+    "ld.modal.chooseProfileWarning.title": "Unable to change profile",
+    "ld.aria.profiles": "Profile navigation",
+    "ld.aria.nudgeComponentUp": "Move component up",
+    "ld.aria.nudgeComponentDown": "Move component down",
+    "ld.aria.moveComponentOptions": "Move component options",
+    "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message."
 }
