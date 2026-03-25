@@ -16,6 +16,25 @@ import CloseIcon from '@/assets/times-16.svg?react';
 
 import './CommonStatus.scss';
 
+// In order to display a staircase effect for successive toasts,
+// translate each new one according to these step values as
+// percentages of the total toast size. Note that widespread
+// adoption of CSS sibling-index() would allow this to be
+// defined in a stylesheet instead. Without it, programmatic
+// definition is needed.
+const STAGGER_Y = -25;
+const STAGGER_X = -2;
+
+const messageInlineStyle = (index: number) => {
+  const finalY = STAGGER_X * index + '%';
+  const finalX = STAGGER_Y * index + '%';
+  return {
+    transform: `translate(${finalX}, ${finalY})`,
+    animationFillMode: 'forwards',
+    '--final-x': finalX,
+  } as React.CSSProperties;
+};
+
 export const CommonStatus: FC = () => {
   const location = useLocation();
   const previousPath = useRef(location.pathname);
@@ -31,16 +50,6 @@ export const CommonStatus: FC = () => {
 
   const deleteMessage = (messageId?: string) => {
     setStatusMessages(prev => prev.filter(({ id }) => id !== messageId));
-  };
-
-  const messageInlineStyle = (index: number) => {
-    const finalY = -25 * index + '%';
-    const finalX = -2 * index + '%';
-    return {
-      transform: `translate(${finalX}, ${finalY})`,
-      animationFillMode: 'forwards',
-      '--final-x': finalX,
-    } as React.CSSProperties;
   };
 
   const renderIcon = (type: StatusType) => {
