@@ -9,7 +9,7 @@ import Transfer16 from '@/assets/transfer-16.svg?react';
 export interface ResourceActionsParams {
   onClickNewWork: () => void;
   handlePreviewMultiple: () => void | Promise<void>;
-  handleImport: () => void;
+  handleImportInstances: () => void;
   navigateToManageProfileSettings: () => void;
   selectedInstancesCount: number;
 }
@@ -17,7 +17,7 @@ export interface ResourceActionsParams {
 export const createResourceActionsConfig = ({
   onClickNewWork,
   handlePreviewMultiple,
-  handleImport,
+  handleImportInstances,
   navigateToManageProfileSettings,
   selectedInstancesCount,
 }: ResourceActionsParams) => [
@@ -45,7 +45,7 @@ export const createResourceActionsConfig = ({
         type: DropdownItemType.basic,
         labelId: 'ld.importInstances',
         icon: <Lightning16 />,
-        action: handleImport,
+        action: handleImportInstances,
       },
       {
         id: 'manageProfileSettings',

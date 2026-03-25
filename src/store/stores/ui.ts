@@ -1,3 +1,4 @@
+import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 
 import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
@@ -23,6 +24,7 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'currentlyPreviewedEntityBfid', UIEntries> &
   SliceState<'hasShownAuthorityWarning', boolean> &
   SliceState<'isImportModalOpen', boolean> &
+  SliceState<'importModalFilterType', ImportFilterTypes> &
   SliceState<'isProfileSelectionModalOpen', boolean> &
   SliceState<'profileSelectionType', ProfileSelectionType> &
   SliceState<'isManageProfileSettingsUnsavedModalOpen', boolean> &
@@ -70,6 +72,9 @@ const sliceConfigs: SliceConfigs = {
   },
   isImportModalOpen: {
     initialValue: false,
+  },
+  importModalFilterType: {
+    initialValue: ImportFilterTypes.Instance,
   },
   isProfileSelectionModalOpen: {
     initialValue: false,

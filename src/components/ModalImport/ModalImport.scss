@@ -12,9 +12,9 @@
 
     .description,
     .selector,
-    .mode,
     .submitted,
-    .completed {
+    .completed,
+    .mode label {
       margin-top: 24px;
     }
 
@@ -22,7 +22,7 @@
       font-weight: bold;
     }
 
-    .mode-select,
+    select,
     input {
       background-color: rgba(0, 0, 0, 3%);
       width: 100%;
