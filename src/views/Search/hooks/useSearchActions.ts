@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
@@ -21,11 +22,9 @@ export const useSearchActions = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { fetchRecord } = useRecordControls();
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { setFullDisplayComponentType, isImportModalOpen, setIsImportModalOpen } = useUIState([
-    'setFullDisplayComponentType',
-    'isImportModalOpen',
-    'setIsImportModalOpen',
-  ]);
+  const { setFullDisplayComponentType, isImportModalOpen, setIsImportModalOpen, setImportModalFilterType } = useUIState(
+    ['setFullDisplayComponentType', 'isImportModalOpen', 'setIsImportModalOpen', 'setImportModalFilterType'],
+  );
   const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
   const { onCreateNewResource } = useNavigateToCreatePage();
   const { navigateToManageProfileSettings } = useNavigateToManageProfileSettings();
@@ -59,13 +58,24 @@ export const useSearchActions = () => {
   ]);
 
   /**
-   * Opens the import modal
+   * Opens the import modal for instances
    */
-  const handleImport = useCallback(() => {
+  const handleImportInstances = useCallback(() => {
     if (!isImportModalOpen) {
+      setImportModalFilterType(ImportFilterTypes.Instance);
       setIsImportModalOpen(true);
     }
-  }, [isImportModalOpen, setIsImportModalOpen]);
+  }, [isImportModalOpen, setIsImportModalOpen, setImportModalFilterType]);
+
+  /**
+   * Opens the import modal for hubs
+   */
+  const handleImportHubs = useCallback(() => {
+    if (!isImportModalOpen) {
+      setImportModalFilterType(ImportFilterTypes.Hub);
+      setIsImportModalOpen(true);
+    }
+  }, [isImportModalOpen, setIsImportModalOpen, setImportModalFilterType]);
 
   /**
    * Navigates to create a new Work resource
@@ -93,7 +103,8 @@ export const useSearchActions = () => {
 
   return {
     handlePreviewMultiple,
-    handleImport,
+    handleImportInstances,
+    handleImportHubs,
     onClickNewWork,
     onClickNewHub,
     navigateToManageProfileSettings,

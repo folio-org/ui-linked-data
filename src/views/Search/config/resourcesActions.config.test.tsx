@@ -6,14 +6,14 @@ import { createResourceActionsConfig } from './resourcesActions.config';
 describe('createResourceActionsConfig', () => {
   const mockOnClickNewWork = jest.fn();
   const mockHandlePreviewMultiple = jest.fn();
-  const mockHandleImport = jest.fn();
+  const mockHandleImportInstances = jest.fn();
   const mockNavigateToManageProfileSettings = jest.fn();
 
   test('Creates resource actions configuration with all actions', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
@@ -28,7 +28,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
@@ -46,7 +46,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
@@ -65,7 +65,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: MIN_AMT_OF_INSTANCES_TO_COMPARE - 1,
     });
@@ -79,7 +79,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: MIN_AMT_OF_INSTANCES_TO_COMPARE,
     });
@@ -93,7 +93,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
@@ -103,7 +103,7 @@ describe('createResourceActionsConfig', () => {
     expect(importAction.id).toBe('import');
     expect(importAction.type).toBe(DropdownItemType.basic);
     expect(importAction.labelId).toBe('ld.importInstances');
-    expect(importAction.action).toBe(mockHandleImport);
+    expect(importAction.action).toBe(mockHandleImportInstances);
     expect(importAction.icon).toBeDefined();
   });
 
@@ -111,7 +111,7 @@ describe('createResourceActionsConfig', () => {
     const config = createResourceActionsConfig({
       onClickNewWork: mockOnClickNewWork,
       handlePreviewMultiple: mockHandlePreviewMultiple,
-      handleImport: mockHandleImport,
+      handleImportInstances: mockHandleImportInstances,
       navigateToManageProfileSettings: mockNavigateToManageProfileSettings,
       selectedInstancesCount: 3,
     });
