@@ -1,6 +1,14 @@
 import { getLookupDict } from '@/common/api/lookup.api';
 import { ApiErrorCodes } from '@/common/constants/api.constants';
 
+const hasLinkedDataSuffix = (pathname: string) => {
+  return pathname.endsWith('.json') || hasTextTypeSuffix(pathname);
+};
+
+const hasTextTypeSuffix = (pathname: string) => {
+  return pathname.endsWith('.rdf') || pathname.endsWith('.xml');
+};
+
 export const loadSimpleLookup = async (
   uris: string | string[],
 ): Promise<LoadSimpleLookupResponseItem[] | undefined> => {
@@ -10,9 +18,17 @@ export const loadSimpleLookup = async (
 
   for await (const uri of uris) {
     let formattedUri = uri;
-    if (uri.startsWith('http://') || uri.startsWith('https://')) {
-      formattedUri = !uri.includes('.json') ? `${uri}.json` : uri;
+    const parsed = URL.parse(uri);
+    if (parsed) {
+      if (!hasLinkedDataSuffix(parsed.pathname)) {
+        parsed.pathname = `${parsed.pathname}.json`;
+      }
+      if (parsed.hostname.endsWith('id.loc.gov')) {
+        parsed.protocol = 'https';
+      }
+      formattedUri = parsed.href;
     }
+
     const data = await fetchSimpleLookup(formattedUri);
 
     return data;
@@ -20,19 +36,24 @@ export const loadSimpleLookup = async (
 };
 
 const fetchSimpleLookup = async (url: string): Promise<any> => {
-  if (url.includes('id.loc.gov')) {
-    url = url.replace('http://', 'https://');
-  }
-
   let sameOrigin = true;
-  if (url.startsWith('http://') || url.startsWith('https://')) {
+  let isText = false;
+
+  const parsed = URL.parse(url);
+  if (parsed) {
     sameOrigin = false;
+    if (hasTextTypeSuffix(parsed.pathname)) {
+      isText = true;
+    }
+  } else {
+    // Parse likely local-relative URL path with a placeholder host to check suffix
+    const localhostParsed = URL.parse(url, 'http://localhost/');
+    if (localhostParsed && hasTextTypeSuffix(localhostParsed.pathname)) {
+      isText = true;
+    }
   }
 
-  // if we use the memberOf there might be a id URL in the params, make sure its not https
-  url = url.replace('memberOf=https://id.loc.gov/', 'memberOf=http://id.loc.gov/');
-
-  const response = await getLookupDict(url, url.includes('.rdf') || url.includes('.xml'), sameOrigin);
+  const response = await getLookupDict(url, isText, sameOrigin);
 
   return response;
 };
