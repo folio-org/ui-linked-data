@@ -46,6 +46,15 @@ describe('api.helper', () => {
       );
     });
 
+    test('no change to https for query parameter value', async () => {
+      await loadSimpleLookup('http://some-other-domain/vocabulary/millus?q=http://id.loc.gov/resources/');
+      expect(mockGetLookupDict).toHaveBeenCalledWith(
+        'http://some-other-domain/vocabulary/millus.json?q=http://id.loc.gov/resources/',
+        expect.anything(),
+        expect.anything(),
+      );
+    });
+
     test('same origin is not set for http url', async () => {
       await loadSimpleLookup('http://some-other-domain/id');
       expect(mockGetLookupDict).toHaveBeenCalledWith(expect.anything(), expect.anything(), false);
