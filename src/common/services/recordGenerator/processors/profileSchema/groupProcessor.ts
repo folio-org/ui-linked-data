@@ -223,7 +223,11 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!selectedKey) return;
 
-    groupObject[selectedKey] = processedValue;
+    if (recordSchemaProperty.type === RecordSchemaEntryType.array) {
+      groupObject[selectedKey] = ensureArray(processedValue);
+    } else {
+      groupObject[selectedKey] = processedValue;
+    }
   }
 
   private applyConditionalProperties(

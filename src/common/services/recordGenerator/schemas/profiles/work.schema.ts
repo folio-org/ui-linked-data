@@ -133,13 +133,9 @@ export const workRecordSchema: RecordSchema = {
         [BFLITE_URIS.DISSERTATION_ID]: stringArrayProperty,
         _grantingInstitutionReference: {
           type: RecordSchemaEntryType.array,
-          value: RecordSchemaEntryType.object,
-          properties: {
-            id: {
-              type: RecordSchemaEntryType.string,
-              options: { valueSource: 'id' },
-            },
-            srsId: stringArrayProperty,
+          options: {
+            propertyKey: '_grantingInstitutionReference',
+            outputFormat: 'reference',
           },
         },
       }),

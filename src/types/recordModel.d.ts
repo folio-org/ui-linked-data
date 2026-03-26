@@ -28,6 +28,8 @@ interface RecordSchemaEntry {
     defaultSourceType?: string;
     // Properties that should always be included if they have a value, regardless of conditionalProperties
     alwaysIncludeIfPresent?: string[];
+    // Output format for complex lookups: 'reference' produces { id } or { srsId } based on value availability
+    outputFormat?: 'reference';
   };
 }
 
