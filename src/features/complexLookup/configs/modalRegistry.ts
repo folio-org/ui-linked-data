@@ -111,7 +111,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     },
     labels: {
       button: {
-        base: 'ld.assignAuthority',
+        base: 'ld.assign',
         change: 'ld.change',
       },
     },

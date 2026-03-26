@@ -124,6 +124,25 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
 
       [BFLITE_URIS.LIBRARY_CHARACTERISTIC]: createArrayObjectProperty(linkAndTermProperties),
+
+      [BFLITE_URIS.DISSERTATION]: createArrayObjectProperty({
+        [BFLITE_URIS.NOTE]: stringArrayProperty,
+        [BFLITE_URIS.DEGREE]: stringArrayProperty,
+        [BFLITE_URIS.DATE]: stringArrayProperty,
+        [BFLITE_URIS.MISC_INFO]: stringArrayProperty,
+        [BFLITE_URIS.DISSERTATION_ID]: stringArrayProperty,
+        _grantingInstitutionReference: {
+          type: RecordSchemaEntryType.array,
+          value: RecordSchemaEntryType.object,
+          properties: {
+            id: {
+              type: RecordSchemaEntryType.string,
+              options: { valueSource: 'id' },
+            },
+            srsId: stringArrayProperty,
+          },
+        },
+      }),
     },
   },
 };
