@@ -32,7 +32,7 @@
   }
 
   &-highlighted {
-    background-color: $buttonHighlighted;
+    background-color: $button-standard;
     border: 1px solid transparent;
     color: $base;
     @include focused-outline-primary();
@@ -111,27 +111,30 @@
   }
 
   &-primary {
-    color: $blue-600;
-    box-shadow: 0 0 0 1px $blue-400;
-    background-color: white;
+    color: $button-standard;
+    border: 1px solid $button-standard;
+    background-color: $base;
     @include focused-outline-secondary;
 
     &:hover {
-      color: $blue-700;
-      background-color: $blue-100;
-      box-shadow:
-        $btn-hover-drop-shadow,
-        0 0 0 1px $blue-500;
+      background: $button-primary-hover;
+    }
+
+    &:focus,
+    &:focus-visible {
+      background: $buttonHover;
+      text-decoration: underline 2px;
     }
 
     &:active {
-      color: $blue-800;
-      background-color: $blue-100;
-      box-shadow: 0 0 0 1px $blue-500;
-    }
+      color: $base;
+      background-color: $button-standard;
+      text-decoration: underline 2px;
 
-    &:disabled {
-      box-shadow: 0 0 0 1px transparent;
+      > svg *,
+      * {
+        fill: $base;
+      }
     }
   }
 
@@ -168,7 +171,7 @@
 
     &:active {
       border: 1px solid rgba(0, 0, 0, 0.5);
-      background-color: $buttonHighlighted;
+      background-color: $button-standard;
       box-shadow: 0 0 0 3px $buttonFocus;
       color: #fff;
 

@@ -26,7 +26,8 @@ $gray-600: #3d3f42 !default;
 // Purpose-oriented colors
 $disabled-input-bg-color: #ebebe4 !default;
 $disabled-input-color: #777 !default;
-$buttonHighlighted: #1960a4 !default;
+$button-standard: #1960a4 !default;
+$button-primary-hover: rgba(1 1 2 / 2%) !default;
 $buttonIcon: rgba(0, 0, 0, 0.62) !default;
 $buttonHover: rgba(37, 118, 195, 0.2) !default;
 $buttonFocus: rgba(37, 118, 195, 0.3) !default;
@@ -40,17 +41,17 @@ $menu-drop-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.17) !default;
 
 $btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37) !default;
 $highlighted-focusable-outline-box-shadow:
-  0 0 0 1px $base,
-  0 0 0 3px $buttonHighlighted,
-  0 0 0 6px $buttonShadow !default;
+  0 0 0 1px inset $blue-400,
+  0 0 0 2px inset $button-standard,
+  0 0 0 2px $buttonShadow !default;
 
 $highlighted-active-outline-box-shadow:
-  0 0 0 1px $base,
-  0 0 0 3px $buttonHighlighted !default;
+  0 0 0 1px inset $blue-400,
+  0 0 0 2px inset $button-standard !default;
 
 $secondary-focusable-outline-box-shadow:
-  0 0 0 1px $blue-500,
-  0 0 0 4px $blue-100 !default;
+  0 0 0 1px inset $blue-400,
+  0 0 0 2px $buttonShadow !default;
 
 // Button attributes
 $btn-border-radius: 12px !default;
@@ -74,18 +75,13 @@ $font-md: 14px !default;
 }
 
 @mixin focused-outline-secondary {
-  &:focus:not(:active),
-  &:focus-visible:not(:active) {
+  &:focus,
+  &:focus-visible {
     outline: none;
-    box-shadow:
-      0 0 0 1px inset $blue-500,
-      $secondary-focusable-outline-box-shadow;
+    box-shadow: $secondary-focusable-outline-box-shadow;
 
-    &:hover {
-      outline: none;
-      box-shadow:
-        0 0 0 1px inset $blue-500,
-        $secondary-focusable-outline-box-shadow;
+    &:active {
+      box-shadow: $highlighted-active-outline-box-shadow;
     }
   }
 }
