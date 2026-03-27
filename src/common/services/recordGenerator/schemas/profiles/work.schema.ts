@@ -88,7 +88,10 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.SUMMARY]: stringArrayProperty,
 
       [BFLITE_URIS.SUBJECT]: createArrayObjectProperty({
-        label: stringArrayProperty,
+        label: {
+          type: RecordSchemaEntryType.string,
+          options: { referenceField: true },
+        },
       }),
 
       [BFLITE_URIS.TABLE_OF_CONTENTS]: stringArrayProperty,
