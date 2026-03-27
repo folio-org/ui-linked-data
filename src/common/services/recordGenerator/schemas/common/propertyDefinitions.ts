@@ -82,7 +82,7 @@ export const contributorProperties = {
   _name: {
     type: RecordSchemaEntryType.string,
     options: {
-      referenceField: true,
+      outputFormat: 'reference' as const,
     },
   },
   roles: {

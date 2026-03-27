@@ -199,29 +199,9 @@ export class GroupProcessor extends BaseFieldProcessor {
     repeatable: boolean;
   }) {
     if (entryType === AdvancedFieldType.complex) {
-      if (recordSchemaProperty.options?.referenceField) {
-        this.processReferenceField(values, groupObject);
-      } else {
-        this.processComplexEntry(values, recordSchemaProperty, groupObject);
-      }
+      this.processComplexEntry(values, recordSchemaProperty, groupObject);
     } else {
       this.processSimpleEntry(uriBFLite, entryType, values, recordSchemaProperty, groupObject, repeatable);
-    }
-  }
-
-  private processReferenceField(values: UserValueContents[], groupObject: GeneratedValue) {
-    const valueToProcess = values.find(value => value.meta?.srsId ?? value.id) ?? values[0];
-
-    if (!valueToProcess) return;
-
-    if (valueToProcess.meta?.srsId) {
-      const srsId = valueToProcess.meta.srsId;
-
-      groupObject['srsId'] = Array.isArray(srsId) ? srsId[0] : srsId;
-    } else if (valueToProcess.id) {
-      const id = valueToProcess.id;
-
-      groupObject['id'] = Array.isArray(id) ? id[0] : id;
     }
   }
 
@@ -238,6 +218,18 @@ export class GroupProcessor extends BaseFieldProcessor {
     const processedValue = this.processValueByType(AdvancedFieldType.complex, valueToProcess, effectiveSchemaProperty);
 
     if (!processedValue) return;
+
+    // type: string + outputFormat: 'reference' -> spread { srsId/id } flat into parent (no named key)
+    if (
+      recordSchemaProperty.type === RecordSchemaEntryType.string &&
+      recordSchemaProperty.options?.outputFormat === 'reference'
+    ) {
+      if (typeof processedValue === 'object' && !Array.isArray(processedValue)) {
+        Object.assign(groupObject, processedValue);
+      }
+
+      return;
+    }
 
     const selectedKey = this.determinePropertyKey(effectiveSchemaProperty, valueToProcess);
 

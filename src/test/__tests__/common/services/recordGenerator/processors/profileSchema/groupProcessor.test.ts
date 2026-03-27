@@ -1773,7 +1773,7 @@ describe('GroupProcessor', () => {
     });
   });
 
-  describe('when referenceField option is set', () => {
+  describe('when outputFormat is reference with type string (flat spread)', () => {
     it('emits srsId flat into parent group object', () => {
       const profileSchemaEntry = {
         type: AdvancedFieldType.group,
@@ -1791,7 +1791,7 @@ describe('GroupProcessor', () => {
         properties: {
           _name: {
             type: RecordSchemaEntryType.string,
-            options: { referenceField: true },
+            options: { outputFormat: 'reference' as const },
           },
         },
       } as RecordSchemaEntry;
@@ -1824,7 +1824,7 @@ describe('GroupProcessor', () => {
         properties: {
           _name: {
             type: RecordSchemaEntryType.string,
-            options: { referenceField: true },
+            options: { outputFormat: 'reference' as const },
           },
         },
       } as RecordSchemaEntry;
@@ -1860,7 +1860,7 @@ describe('GroupProcessor', () => {
         properties: {
           _name: {
             type: RecordSchemaEntryType.string,
-            options: { referenceField: true },
+            options: { outputFormat: 'reference' as const },
           },
           roles: {
             type: RecordSchemaEntryType.array,

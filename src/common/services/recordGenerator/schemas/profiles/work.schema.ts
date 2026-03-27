@@ -90,7 +90,7 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.SUBJECT]: createArrayObjectProperty({
         label: {
           type: RecordSchemaEntryType.string,
-          options: { referenceField: true },
+          options: { outputFormat: 'reference' },
         },
       }),
 
