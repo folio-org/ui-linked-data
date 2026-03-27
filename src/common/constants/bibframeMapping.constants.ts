@@ -55,7 +55,7 @@ export const BFLITE_URIS = {
   LIBRARY_STATUS: 'http://bibfra.me/vocab/library/status',
   LIBRARY_SUPPLEMENTARY_CONTENT: 'http://bibfra.me/vocab/library/supplementaryContent',
   LIBRARY_MEDIA: 'http://bibfra.me/vocab/library/media',
-  LIBRARY_DIMENSIONS: 'http://bibfra.me/vocab/library/dimensions',
+  LIBRARY_DIMENSIONS: 'http://bibfra.me/vocab/lite/dimensions',
   LIBRARY_CARRIER: 'http://bibfra.me/vocab/library/carrier',
   LIBRARY_ACCESS_LOCATION: 'http://bibfra.me/vocab/library/accessLocation',
   NOTES: '_notes',
@@ -88,6 +88,8 @@ export const BFLITE_URIS = {
   DEGREE: 'http://bibfra.me/vocab/library/degree',
   MISC_INFO: 'http://bibfra.me/vocab/library/miscInfo',
   DISSERTATION_ID: 'http://bibfra.me/vocab/library/dissertationID',
+  BOOKS: 'http://bibfra.me/vocab/library/Books',
+  CONTINUING_RESOURCES: 'http://bibfra.me/vocab/library/ContinuingResources',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {

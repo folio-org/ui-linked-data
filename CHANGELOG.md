@@ -98,6 +98,8 @@
 * Address markup and styling issues, set focus on drop, and add drift explanation to editor. Refs [UILD-756].
 * Fix multiselect to require active input for opening list instead of auto-opening. Refs [UILD-592].
 * Add Dissertation section. Refs [UILD-623].
+* Update toast behavior to remove auto-dismissal and display. Refs [UILD-755].
+* Update dimensions property URI. Refs [UILD-763].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -195,6 +197,8 @@
 [UILD-756]:https://folio-org.atlassian.net/browse/UILD-756
 [UILD-592]:https://folio-org.atlassian.net/browse/UILD-592
 [UILD-623]:https://folio-org.atlassian.net/browse/UILD-623
+[UILD-755]:https://folio-org.atlassian.net/browse/UILD-755
+[UILD-763]:https://folio-org.atlassian.net/browse/UILD-763
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

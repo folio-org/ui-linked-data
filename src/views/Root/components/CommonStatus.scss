@@ -2,13 +2,26 @@
 
 .common-status {
   position: fixed;
-  bottom: 1.75rem;
+  bottom: 4rem;
   right: 2rem;
   z-index: 10100;
+  display: grid;
+  grid-template-areas: 'statuses';
+
+  &:hover,
+  &:focus-within {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    .status-message {
+      transform: translateY(0) translateX(0) !important;
+    }
+  }
 }
 
 .status-message {
-  position: relative;
+  grid-area: statuses;
   width: 42.375rem;
   padding: 0.5rem 0.65625rem;
   border: 1px solid #d7d8da;
@@ -18,13 +31,8 @@
   flex-direction: row;
   align-items: center;
   font-size: 0.875rem;
-  transform: translateX(1500px);
   opacity: 0;
-  animation: slideInOut 5500ms ease-in-out;
-
-  &:not(:first-child) {
-    margin-top: 0.5rem;
-  }
+  animation: slideIn 750ms ease-in;
 
   &-icon {
     margin-right: 1rem;
@@ -35,15 +43,9 @@
   }
 
   &-close {
-    padding: 0;
+    color: $buttonIcon;
+    padding: 3.5px;
     background-color: transparent;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background-color: transparent;
-      opacity: 0.5;
-    }
   }
 
   &.success {
@@ -56,8 +58,7 @@
     color: #943e00;
     background-color: #f7e7de;
 
-    .status-message-icon path,
-    .status-message-close path {
+    .status-message-icon path {
       fill: #943e00;
     }
   }
@@ -67,31 +68,20 @@
     color: $error;
     background-color: #ead2d0;
 
-    .status-message-icon path,
-    .status-message-close path {
-      fill: $error;
+    .status-message-icon path {
+      fill: #000;
     }
   }
 }
 
-@keyframes slideInOut {
-  0% {
+@keyframes slideIn {
+  from {
     opacity: 0;
     transform: translateX(120%);
   }
 
-  5% {
-    transform: translateX(0);
+  to {
     opacity: 1;
-  }
-
-  95% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-
-  100% {
-    transform: translateX(120%);
-    opacity: 0;
+    transform: translateX(--final-x);
   }
 }
