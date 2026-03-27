@@ -81,7 +81,9 @@ export const seriesProperties = {
 export const contributorProperties = {
   _name: {
     type: RecordSchemaEntryType.string,
-    value: RecordSchemaEntryType.string,
+    options: {
+      referenceField: true,
+    },
   },
   roles: {
     type: RecordSchemaEntryType.array,

@@ -30,6 +30,9 @@ interface RecordSchemaEntry {
     alwaysIncludeIfPresent?: string[];
     // Output format for complex lookups: 'reference' produces { id } or { srsId } based on value availability
     outputFormat?: 'reference';
+    // Emits srsId or id as a flat key directly into the containing object (Pattern A).
+    // Used for Creator/Contributor where the reference key coexists with other fields like `roles`.
+    referenceField?: boolean;
   };
 }
 

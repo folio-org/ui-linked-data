@@ -199,9 +199,29 @@ export class GroupProcessor extends BaseFieldProcessor {
     repeatable: boolean;
   }) {
     if (entryType === AdvancedFieldType.complex) {
-      this.processComplexEntry(values, recordSchemaProperty, groupObject);
+      if (recordSchemaProperty.options?.referenceField) {
+        this.processReferenceField(values, groupObject);
+      } else {
+        this.processComplexEntry(values, recordSchemaProperty, groupObject);
+      }
     } else {
       this.processSimpleEntry(uriBFLite, entryType, values, recordSchemaProperty, groupObject, repeatable);
+    }
+  }
+
+  private processReferenceField(values: UserValueContents[], groupObject: GeneratedValue) {
+    const valueToProcess = values.find(value => value.meta?.srsId ?? value.id) ?? values[0];
+
+    if (!valueToProcess) return;
+
+    if (valueToProcess.meta?.srsId) {
+      const srsId = valueToProcess.meta.srsId;
+
+      groupObject['srsId'] = Array.isArray(srsId) ? srsId[0] : srsId;
+    } else if (valueToProcess.id) {
+      const id = valueToProcess.id;
+
+      groupObject['id'] = Array.isArray(id) ? id[0] : id;
     }
   }
 

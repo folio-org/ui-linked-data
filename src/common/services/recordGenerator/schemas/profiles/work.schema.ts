@@ -38,14 +38,9 @@ export const workRecordSchema: RecordSchema = {
       _hubs: createArrayObjectProperty({
         _hub: {
           type: RecordSchemaEntryType.object,
-          properties: {
-            id: {
-              type: RecordSchemaEntryType.string,
-              options: { valueSource: 'id' },
-            },
-          },
           options: {
             propertyKey: '_hub',
+            outputFormat: 'reference',
           },
         },
         _relation: {
@@ -75,7 +70,13 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.ORIGIN_PLACE]: createArrayObjectProperty(nameAndLinkProperties),
 
       [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: createArrayObjectProperty({
-        _geographicCoverageReference: stringArrayProperty,
+        _geographicCoverageReference: {
+          type: RecordSchemaEntryType.array,
+          options: {
+            propertyKey: '_geographicCoverageReference',
+            outputFormat: 'reference',
+          },
+        },
       }),
 
       [BFLITE_URIS.TARGET_AUDIENCE]: createArrayObjectProperty(linkAndTermProperties),
