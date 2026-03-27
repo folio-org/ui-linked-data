@@ -19,37 +19,36 @@
   &:disabled:hover,
   &:disabled:active {
     border-color: transparent;
-    color: $gray-400;
+    color: $base-text;
     background-color: $gray-200;
     cursor: not-allowed;
     box-shadow: none;
+    opacity: 0.65;
 
     > svg *,
     * {
-      fill: $gray-400;
+      fill: $base-text;
     }
   }
 
   &-highlighted {
-    background-color: $blue-500;
+    background-color: $buttonHighlighted;
     border: 1px solid transparent;
     color: $base;
     @include focused-outline-primary();
 
     &:hover:not(:disabled) {
-      background-color: $blue-500-hover;
-      box-shadow: $btn-hover-drop-shadow;
+      opacity: 0.9;
     }
 
     &:active:not(:disabled) {
-      border: 1px solid transparent;
-      background-color: $blue-700;
+      text-decoration: none;
     }
 
     &:focus,
-    :focus-visible {
-      border: 1px solid black;
+    &:focus-visible {
       border-style: inset;
+      text-decoration: underline 2px;
     }
   }
 
@@ -136,22 +135,6 @@
     }
   }
 
-  &-passive {
-    color: $blue-600;
-    background-color: transparent;
-    @include focused-outline-secondary;
-
-    &:hover {
-      color: $blue-700;
-      background-color: $blue-100;
-    }
-
-    &:active {
-      color: $blue-800;
-      background-color: $blue-100;
-    }
-  }
-
   &-ghost {
     padding: 0;
     height: initial;
@@ -159,11 +142,18 @@
   }
 
   &-icon {
+    color: $buttonIcon;
     border-radius: $btn-icon-border-radius;
     padding: 0.188rem;
     height: fit-content;
     background-color: transparent;
     border: 1px solid transparent;
+
+    > svg,
+    path,
+    * {
+      fill: #000;
+    }
 
     &:hover {
       background-color: $buttonHover;

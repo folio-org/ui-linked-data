@@ -1,5 +1,6 @@
 // Generic colors
 $base: #fff !default;
+$base-text: #000 !default;
 $blue-50: #e9effa !default;
 $blue-100: #d8e3f5 !default;
 $blue-200: #d7dfeb !default;
@@ -29,18 +30,23 @@ $buttonHighlighted: #1960a4 !default;
 $buttonIcon: rgba(0, 0, 0, 0.62) !default;
 $buttonHover: rgba(37, 118, 195, 0.2) !default;
 $buttonFocus: rgba(37, 118, 195, 0.3) !default;
+$buttonShadow: rgba(166, 212, 255, 0.65) !default;
 $error: #990000 !default;
 $title-bar-bg-color: rgba(0, 0, 0, 0.03) !default;
 
 // Shadows
-$listButton-drop-shadow: 0 0 0 2px rgba(166, 212, 255, 0.64) !default;
+$listButton-drop-shadow: 0 0 0 2px $buttonShadow !default;
 $menu-drop-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.17) !default;
 
 $btn-hover-drop-shadow: 0px 10px 10px -6px rgba(0, 0, 0, 0.37) !default;
 $highlighted-focusable-outline-box-shadow:
   0 0 0 1px $base,
-  0 0 0 3px $blue-500,
-  0 0 0 6px $blue-100 !default;
+  0 0 0 3px $buttonHighlighted,
+  0 0 0 6px $buttonShadow !default;
+
+$highlighted-active-outline-box-shadow:
+  0 0 0 1px $base,
+  0 0 0 3px $buttonHighlighted !default;
 
 $secondary-focusable-outline-box-shadow:
   0 0 0 1px $blue-500,
@@ -62,7 +68,7 @@ $font-md: 14px !default;
     box-shadow: $highlighted-focusable-outline-box-shadow;
 
     &:active {
-      box-shadow: none;
+      box-shadow: $highlighted-active-outline-box-shadow;
     }
   }
 }

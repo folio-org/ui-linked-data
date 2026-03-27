@@ -105,7 +105,7 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
           <Button
             data-testid="activate-menu"
             ariaLabel={formatMessage({ id: 'ld.aria.moveComponentOptions' })}
-            ariaHasPopup={true}
+            ariaHaspopup="menu"
             ariaExpanded={isMenuEnabled}
             type={ButtonType.Icon}
             onClick={toggleIsMenuEnabled}

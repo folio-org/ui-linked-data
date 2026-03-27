@@ -2,6 +2,8 @@ import { FC, ReactNode, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 
+import { Button, ButtonType } from '../Button';
+
 import './Tooltip.scss';
 
 interface TooltipProps {
@@ -55,17 +57,17 @@ export const Tooltip: FC<TooltipProps> = ({
 
   return (
     <div className={classNames(['tooltip-container', className])}>
-      <button
+      <Button
+        type={ButtonType.Icon}
         ref={buttonRef}
-        className="button button-icon"
-        aria-label={isVisible ? triggerCloseAriaLabel : triggerOpenAriaLabel}
-        aria-expanded={isVisible}
-        aria-haspopup="dialog"
+        ariaLabel={isVisible ? triggerCloseAriaLabel : triggerOpenAriaLabel}
+        ariaExpanded={isVisible}
+        ariaHaspopup="dialog"
         onClick={() => setIsVisible(prev => !prev)}
         data-testid={dataTestId}
       >
         {triggerContent}
-      </button>
+      </Button>
 
       {isVisible && (
         <div
