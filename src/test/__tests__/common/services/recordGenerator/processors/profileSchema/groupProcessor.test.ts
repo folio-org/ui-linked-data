@@ -1660,4 +1660,116 @@ describe('GroupProcessor', () => {
       expect(Object.keys(result.properties || {})).toEqual(['label', 'id']);
     });
   });
+
+  describe('complex lookup with outputFormat reference', () => {
+    it('wraps reference object in array when schema type is array', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+            options: {
+              propertyKey: '_grantingInstitutionReference',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _grantingInstitutionReference: [{ id: 'id_1' }] }]);
+    });
+
+    it('generates object with srsId when meta.srsId is available', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1', meta: { srsId: 'srs_id_1' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+            options: {
+              propertyKey: '_grantingInstitutionReference',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _grantingInstitutionReference: [{ srsId: 'srs_id_1' }] }]);
+    });
+
+    it('does not wrap reference object when schema type is not array', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            options: {
+              propertyKey: '_ref',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _ref: { id: 'id_1' } }]);
+    });
+  });
 });
