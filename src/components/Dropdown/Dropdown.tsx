@@ -40,10 +40,6 @@ export const Dropdown: FC<DropdownProps> = ({
   const toggle = () => setIsExpanded(oldValue => !oldValue);
 
   const handleButtonKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    buttonRef.current?.blur();
-
     switch (event.key) {
       case 'ArrowDown':
         expand();
@@ -64,6 +60,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
       case 'Enter':
       case ' ':
+        event.preventDefault();
         toggle();
         break;
 
@@ -73,8 +70,6 @@ export const Dropdown: FC<DropdownProps> = ({
   };
 
   const handleOptionKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-
     const { key, currentTarget } = event;
     const { nextSibling, previousSibling, parentNode } = currentTarget;
 
@@ -104,6 +99,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
       case ' ':
       case 'Enter':
+        event.preventDefault();
         optionsRef.current[index]?.click();
         collapse();
         break;
