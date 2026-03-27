@@ -103,6 +103,7 @@ const Modal: FC<Props> = ({
               <div className={classNames(['modal-header', classNameHeader])}>
                 {showCloseIconButton && (
                   <Button
+                    type={ButtonType.Icon}
                     onClick={onClose}
                     className="close-button"
                     ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}

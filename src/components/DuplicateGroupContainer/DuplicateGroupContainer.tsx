@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 
 import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
-import { Button } from '@/components/Button';
+import { Button, ButtonType } from '@/components/Button';
 import { IFields } from '@/components/Fields';
 
 import { useUIState } from '@/store';
@@ -43,7 +43,12 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
     <div className={classNames('duplicate-group-container', groupClassName)}>
       {generateComponent({ uuid, groupingDisabled: true })}
       {!!twinsAmount && (
-        <Button data-testid="expand-collapse-button" className="expand-collapse-button" onClick={toggleCollapseExpand}>
+        <Button
+          type={ButtonType.Icon}
+          data-testid="expand-collapse-button"
+          className="expand-collapse-button"
+          onClick={toggleCollapseExpand}
+        >
           <ArrowChevronUp className={classNames({ 'arrow-closed': isCollapsed })} />
           <span>
             <FormattedMessage

@@ -26,6 +26,7 @@ export const PreviewContent = () => {
       <section key={id} className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
         <div className="full-display-control-panel">
           <Button
+            type={ButtonType.Icon}
             className="close"
             data-testid="preview-remove"
             onClick={handleButtonClick}

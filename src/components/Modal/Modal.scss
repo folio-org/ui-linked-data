@@ -33,24 +33,6 @@
       font-size: 1.4rem;
       font-weight: 500;
     }
-
-    .close-button {
-      height: 24px;
-      width: 24px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      background-color: transparent;
-      padding: 0;
-      border: none;
-      border-radius: 0;
-      cursor: pointer;
-
-      &:hover {
-        border: none !important;
-      }
-    }
   }
 
   &-content {
