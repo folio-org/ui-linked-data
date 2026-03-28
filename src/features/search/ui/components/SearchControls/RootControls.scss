@@ -17,15 +17,27 @@
 
     &-centered {
       justify-content: center;
+    }
+  }
 
-      > .search-button {
-        width: 100%;
-        height: $btn-height;
-        border-radius: calc($btn-height / 2);
-        line-height: $btn-height;
+  .meta-controls,
+  .meta-conrols-centered {
+    .search-button {
+      &:focus,
+      &:focus-visible {
+        border: 1px solid $buttonIcon;
+        box-shadow: 0 0 0 2px $buttonShadow;
+      }
 
-        &:disabled {
-          background-color: $gray-200;
+      &:active {
+        color: $base;
+        background-color: $button-standard;
+        border: 1px solid $blue-400;
+        text-decoration: underline 2px;
+
+        > svg *,
+        * {
+          fill: $base;
         }
       }
     }

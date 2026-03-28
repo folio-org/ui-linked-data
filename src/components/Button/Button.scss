@@ -20,7 +20,7 @@
   &:disabled:active {
     border-color: transparent;
     color: $base-text;
-    background-color: $gray-200;
+    background-color: $gray-350;
     cursor: not-allowed;
     box-shadow: none;
     opacity: 0.65;
@@ -57,34 +57,39 @@
     background-color: inherit;
     padding: 0;
 
-    &:disabled {
-      background-color: initial;
+    &:focus,
+    &:focus-visible {
+      background-color: $buttonHover;
 
-      &:hover {
-        background-color: initial;
+      &:active {
+        border: none;
       }
     }
 
-    &:hover:not(:focus, :disabled) {
-      box-shadow: none;
+    &:hover {
+      &:active {
+        background-color: $buttonHover;
+      }
     }
   }
 
   &-text {
     padding: 0 0.5em;
+    border-radius: 18px;
     height: 30px;
-    @include focused-outline-secondary();
+    @include focused-outline-text();
 
     &:hover {
-      background-color: $blue-50;
+      background-color: $button-primary-hover;
     }
 
+    &:focus,
     &:focus-visible {
-      text-decoration: underline;
+      text-decoration: underline 2px;
     }
 
     &:active:not(:disabled) {
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
