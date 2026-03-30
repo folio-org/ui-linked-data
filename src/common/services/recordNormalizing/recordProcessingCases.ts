@@ -176,3 +176,22 @@ export const processSubjectComplexLookup = (record: RecordEntry, blockKey: strin
     };
   }) as unknown as RecursiveRecordSchema;
 };
+
+export const processDissertation = (record: RecordEntry, blockKey: string, key: string, selector: string) => {
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][key] = (normalizedEntries as unknown as Record<string, unknown>[]).flatMap(entry => {
+    const references = entry[selector] as RecordProcessingDTO;
+
+    if (!references?.length) return entry;
+
+    return references.map(({ id, label, isPreferred }) => ({
+      ...entry,
+      id: ensureArray(id as unknown as string),
+      [selector]: {
+        value: ensureArray(label as unknown as string),
+        isPreferred,
+      },
+    }));
+  }) as unknown as RecursiveRecordSchema;
+};
