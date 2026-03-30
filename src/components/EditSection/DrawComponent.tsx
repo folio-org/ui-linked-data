@@ -15,6 +15,7 @@ import { SimpleLookupField } from '@/components/SimpleLookupField';
 import { ComplexLookupField } from '@/features/complexLookup';
 import { getPlaceholderForProperty } from '@/features/search/ui';
 
+import { BlockActions } from './BlockActions';
 import { EditSectionDataProps } from './renderDrawComponent';
 
 export type IDrawComponent = {
@@ -60,11 +61,14 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         className="entity-heading"
       >
         <h3 className="heading">{displayNameWithAltValue}</h3>
-        {!!collapsibleEntries.size && (
-          <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
-            <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
-          </Button>
-        )}
+        <div className="block-heading-controls">
+          {!!collapsibleEntries.size && (
+            <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
+              <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
+            </Button>
+          )}
+          <BlockActions entry={entry} />
+        </div>
       </FieldWithMetadataAndControls>
     );
   }
