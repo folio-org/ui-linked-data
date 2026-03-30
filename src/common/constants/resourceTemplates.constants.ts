@@ -27,4 +27,17 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
       },
     },
   ],
+  [BFLITE_URIS.HUB]: [
+    {
+      path: [
+        BFLITE_URIS.HUB,
+        'http://bibfra.me/vocab/library/title',
+        'http://bibfra.me/vocab/library/Title',
+        'http://bibfra.me/vocab/library/mainTitle',
+      ],
+      template: {
+        prefix: 'ld.duplicateHubInBrackets',
+      },
+    },
+  ],
 };
