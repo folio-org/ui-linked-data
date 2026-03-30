@@ -100,6 +100,7 @@
 * Add Dissertation section. Refs [UILD-623].
 * Update toast behavior to remove auto-dismissal and display. Refs [UILD-755].
 * Update dimensions property URI. Refs [UILD-763].
+* Retrieve most value dictionaries from local API instead of id.loc.gov. Refs [UILD-754].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -199,6 +200,7 @@
 [UILD-623]:https://folio-org.atlassian.net/browse/UILD-623
 [UILD-755]:https://folio-org.atlassian.net/browse/UILD-755
 [UILD-763]:https://folio-org.atlassian.net/browse/UILD-763
+[UILD-754]:https://folio-org.atlassian.net/browse/UILD-754
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
