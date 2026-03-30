@@ -148,6 +148,49 @@ describe('BaseValueFormatter', () => {
       });
     });
 
+    describe('when outputFormat is reference', () => {
+      it('returns object with srsId when meta.srsId exists', () => {
+        const value = {
+          id: 'id_1',
+          meta: { srsId: 'srs_id_1' },
+        } as unknown as UserValueContents;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          options: { outputFormat: 'reference' as const },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual({ srsId: 'srs_id_1' });
+      });
+
+      it('returns object with id when only id exists', () => {
+        const value = {
+          id: 'id_1',
+        } as unknown as UserValueContents;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          options: { outputFormat: 'reference' as const },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toEqual({ id: 'id_1' });
+      });
+
+      it('returns null when neither srsId nor id exists', () => {
+        const value = { label: 'test' } as unknown as UserValueContents;
+        const recordSchemaEntry = {
+          type: RecordSchemaEntryType.array,
+          options: { outputFormat: 'reference' as const },
+        };
+
+        const result = formatter.formatComplex(value, recordSchemaEntry);
+
+        expect(result).toBeNull();
+      });
+    });
+
     describe('when recordSchemaEntry has no properties (Creator/Contributor scenario)', () => {
       it('returns srsId when available', () => {
         const value = {
@@ -393,6 +436,50 @@ describe('BaseValueFormatter', () => {
       const result = formatter['buildComplexObject'](value, properties);
 
       expect(result).toEqual({});
+    });
+  });
+
+  describe('buildReferenceObject', () => {
+    it('returns object with srsId when meta.srsId exists', () => {
+      const value = {
+        id: 'id_1',
+        meta: { srsId: 'srs_id_1' },
+      } as unknown as UserValueContents;
+
+      const result = formatter['buildReferenceObject'](value);
+
+      expect(result).toEqual({ srsId: 'srs_id_1' });
+    });
+
+    it('returns object with id when only id exists', () => {
+      const value = {
+        id: 'id_1',
+      } as unknown as UserValueContents;
+
+      const result = formatter['buildReferenceObject'](value);
+
+      expect(result).toEqual({ id: 'id_1' });
+    });
+
+    it('prioritizes srsId over id', () => {
+      const value = {
+        id: 'id_1',
+        meta: { srsId: 'srs_id_1' },
+      } as unknown as UserValueContents;
+
+      const result = formatter['buildReferenceObject'](value);
+
+      expect(result).toEqual({ srsId: 'srs_id_1' });
+    });
+
+    it('returns null when neither srsId nor id exists', () => {
+      const value = {
+        label: 'test',
+      } as unknown as UserValueContents;
+
+      const result = formatter['buildReferenceObject'](value);
+
+      expect(result).toBeNull();
     });
   });
 

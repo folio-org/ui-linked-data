@@ -1132,4 +1132,143 @@ describe('recordProcessingCases', () => {
       expect((record[blockKey][groupKey] as unknown as RecordBasic[])[0]).not.toHaveProperty('_subclass');
     });
   });
+
+  describe('processDissertation', () => {
+    const selector = '_refs';
+
+    test('expands entry with references into multiple entries', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [
+                { id: 'id_1', label: 'label_1', isPreferred: true },
+                { id: 'id_2', label: 'label_2', isPreferred: false },
+              ],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              id: ['id_1'],
+              [selector]: {
+                value: ['label_1'],
+                isPreferred: true,
+              },
+            },
+            {
+              field_1: 'value_1',
+              id: ['id_2'],
+              [selector]: {
+                value: ['label_2'],
+                isPreferred: false,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('returns entry unchanged when references are empty', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [],
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('returns entry unchanged when selector is not present', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('handles multiple entries with mixed references', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [{ id: 'id_1', label: 'label_1', isPreferred: true }],
+            },
+            {
+              field_2: 'value_2',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              id: ['id_1'],
+              [selector]: {
+                value: ['label_1'],
+                isPreferred: true,
+              },
+            },
+            {
+              field_2: 'value_2',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+  });
 });
