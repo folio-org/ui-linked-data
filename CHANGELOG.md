@@ -102,6 +102,7 @@
 * Update dimensions property URI. Refs [UILD-763].
 * Retrieve most value dictionaries from local API instead of id.loc.gov. Refs [UILD-754].
 * Add Duplicate Hub functionality. Refs [UILD-772].
+* Move Actions menu to the Edit area. Refs [UILD-765].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -203,6 +204,7 @@
 [UILD-763]:https://folio-org.atlassian.net/browse/UILD-763
 [UILD-754]:https://folio-org.atlassian.net/browse/UILD-754
 [UILD-772]:https://folio-org.atlassian.net/browse/UILD-772
+[UILD-765]:https://folio-org.atlassian.net/browse/UILD-765
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
