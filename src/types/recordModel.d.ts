@@ -28,6 +28,12 @@ interface RecordSchemaEntry {
     defaultSourceType?: string;
     // Properties that should always be included if they have a value, regardless of conditionalProperties
     alwaysIncludeIfPresent?: string[];
+    // Output format for complex lookups: 'reference' produces { id } or { srsId } based on value availability.
+    // Behavior depends on the entry's type:
+    //   type: array  -> groupObject[key] = [{ srsId/id }]
+    //   type: object -> groupObject[key] = { srsId/id }
+    //   type: string -> Object.assign(groupObject, { srsId/id }) — spreads flat, no named key (Creator/Contributor/Subject)
+    outputFormat?: 'reference';
   };
 }
 

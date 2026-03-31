@@ -18,6 +18,11 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     value: UserValueContents,
     recordSchemaEntry?: RecordSchemaEntry,
   ): string | Record<string, string | string[]> | null {
+    // Reference output: produces { id } or { srsId } for reference-type complex lookups
+    if (recordSchemaEntry?.options?.outputFormat === 'reference') {
+      return this.buildReferenceObject(value);
+    }
+
     // If recordSchemaEntry has properties, try to generate complex object structure.
     // This is used for Hubs.
     if (recordSchemaEntry?.properties && Object.keys(recordSchemaEntry.properties).length > 0) {
@@ -33,6 +38,22 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     const selectedId = value.meta?.srsId ?? value.id ?? '';
 
     return Array.isArray(selectedId) ? selectedId[0] : selectedId;
+  }
+
+  protected buildReferenceObject(value: UserValueContents): Record<string, string> | null {
+    if (value.meta?.srsId) {
+      const srsId = value.meta.srsId;
+
+      return { srsId: Array.isArray(srsId) ? srsId[0] : srsId };
+    }
+
+    if (value.id) {
+      const id = value.id;
+
+      return { id: Array.isArray(id) ? id[0] : id };
+    }
+
+    return null;
   }
 
   protected buildComplexObject(

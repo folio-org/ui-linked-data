@@ -219,11 +219,27 @@ export class GroupProcessor extends BaseFieldProcessor {
 
     if (!processedValue) return;
 
+    // type: string + outputFormat: 'reference' -> spread { srsId/id } flat into parent (no named key)
+    if (
+      recordSchemaProperty.type === RecordSchemaEntryType.string &&
+      recordSchemaProperty.options?.outputFormat === 'reference'
+    ) {
+      if (typeof processedValue === 'object' && !Array.isArray(processedValue)) {
+        Object.assign(groupObject, processedValue);
+      }
+
+      return;
+    }
+
     const selectedKey = this.determinePropertyKey(effectiveSchemaProperty, valueToProcess);
 
     if (!selectedKey) return;
 
-    groupObject[selectedKey] = processedValue;
+    if (recordSchemaProperty.type === RecordSchemaEntryType.array) {
+      groupObject[selectedKey] = ensureArray(processedValue);
+    } else {
+      groupObject[selectedKey] = processedValue;
+    }
   }
 
   private applyConditionalProperties(

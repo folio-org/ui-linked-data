@@ -7,6 +7,7 @@ import {
   languagesMapping,
   notesMapping,
   processComplexLookup,
+  processDissertation,
   processHubsComplexLookup,
   processSubjectComplexLookup,
   wrapSimpleLookupData,
@@ -63,5 +64,9 @@ export const RECORD_NORMALIZING_CASES = {
   },
   _hubs: {
     process: processHubsComplexLookup,
+  },
+  [BFLITE_URIS.DISSERTATION]: {
+    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processDissertation(record, blockKey, groupKey, '_grantingInstitutionReference'),
   },
 };
