@@ -84,6 +84,10 @@ export const BFLITE_URIS = {
   PUBLICATION_FREQUENCY: 'http://bibfra.me/vocab/library/publicationFrequency',
   EXPRESSION_OF: 'http://bibfra.me/vocab/lite/expressionOf',
   CONCEPT: 'http://bibfra.me/vocab/lite/Concept',
+  DISSERTATION: 'http://bibfra.me/vocab/scholar/dissertation',
+  DEGREE: 'http://bibfra.me/vocab/library/degree',
+  MISC_INFO: 'http://bibfra.me/vocab/library/miscInfo',
+  DISSERTATION_ID: 'http://bibfra.me/vocab/library/dissertationID',
   BOOKS: 'http://bibfra.me/vocab/library/Books',
   CONTINUING_RESOURCES: 'http://bibfra.me/vocab/library/ContinuingResources',
 };

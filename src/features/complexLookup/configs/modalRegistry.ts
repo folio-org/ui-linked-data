@@ -103,6 +103,31 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     },
     linkedField: 'subclass',
   },
+
+  [ComplexLookupType.Institution]: {
+    component: AuthoritiesModal,
+    defaultProps: {
+      initialSegment: 'browse' as const,
+    },
+    labels: {
+      button: {
+        base: 'ld.assign',
+        change: 'ld.change',
+      },
+    },
+    assignmentFlow: 'complex',
+    api: {
+      endpoints: {
+        marcPreview: MARC_PREVIEW_ENDPOINT.AUTHORITY,
+        validation: AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT,
+        source: SOURCE_API_ENDPOINT.AUTHORITY,
+        facets: FACETS_API_ENDPOINT.AUTHORITY,
+      },
+      validationTarget: {
+        institution: AuthorityValidationTarget.DegreeGrantingInstitution,
+      },
+    },
+  },
 } as const;
 
 export function getModalConfig(lookupType: ComplexLookupType): ModalConfig {

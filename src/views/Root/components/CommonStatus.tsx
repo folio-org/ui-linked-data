@@ -26,8 +26,8 @@ const STAGGER_Y = -25;
 const STAGGER_X = -2;
 
 const messageInlineStyle = (index: number) => {
-  const finalY = STAGGER_X * index + '%';
-  const finalX = STAGGER_Y * index + '%';
+  const finalY = STAGGER_Y * index + '%';
+  const finalX = STAGGER_X * index + '%';
   return {
     transform: `translate(${finalX}, ${finalY})`,
     animationFillMode: 'forwards',

@@ -97,8 +97,11 @@
 * Fix excessively small font in modal title. Refs [UILD-751].
 * Address markup and styling issues, set focus on drop, and add drift explanation to editor. Refs [UILD-756].
 * Fix multiselect to require active input for opening list instead of auto-opening. Refs [UILD-592].
+* Add Dissertation section. Refs [UILD-623].
 * Update toast behavior to remove auto-dismissal and display. Refs [UILD-755].
 * Update dimensions property URI. Refs [UILD-763].
+* Retrieve most value dictionaries from local API instead of id.loc.gov. Refs [UILD-754].
+* Add Duplicate Hub functionality. Refs [UILD-772].
 * Move Actions menu to the Edit area. Refs [UILD-765].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -196,8 +199,11 @@
 [UILD-751]:https://folio-org.atlassian.net/browse/UILD-751
 [UILD-756]:https://folio-org.atlassian.net/browse/UILD-756
 [UILD-592]:https://folio-org.atlassian.net/browse/UILD-592
+[UILD-623]:https://folio-org.atlassian.net/browse/UILD-623
 [UILD-755]:https://folio-org.atlassian.net/browse/UILD-755
 [UILD-763]:https://folio-org.atlassian.net/browse/UILD-763
+[UILD-754]:https://folio-org.atlassian.net/browse/UILD-754
+[UILD-772]:https://folio-org.atlassian.net/browse/UILD-772
 [UILD-765]:https://folio-org.atlassian.net/browse/UILD-765
 
 ## 1.0.5 (2025-04-30)
