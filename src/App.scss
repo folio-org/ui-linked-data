@@ -42,6 +42,127 @@ h6 {
   overflow: hidden;
 }
 
+select,
+input:not(#creatable-select-input),
+textarea {
+  background-color: $title-bar-bg-color;
+  border: 1px solid $buttonIcon;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  &:focus,
+  &:focus-visible {
+    border: 1px solid $button-standard;
+    box-shadow: 0 0 0 2px inset $buttonFocus;
+  }
+
+  &:disabled {
+    background-color: $disabled-input-bg-color;
+    color: $disabled-input-color;
+    border: 1px solid $disabled-border-color;
+  }
+
+  &::placeholder {
+    color: $buttonIcon;
+  }
+}
+
+select {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+// react-select CreatableSelect re-styled in CSS instead of via TS
+$sl: 'simple-lookup__';
+.simple-lookup {
+  width: 100%;
+  background-color: $title-bar-bg-color;
+
+  &__control {
+    border: 1px solid $buttonIcon;
+    padding: 0 5px;
+
+    &--is-focused {
+      border: 1px solid $button-standard;
+      box-shadow: 0 0 0 2px inset $buttonFocus;
+    }
+
+    .#{$sl}value-container {
+      display: flex;
+      align-items: center;
+      padding: 0;
+      line-height: auto;
+
+      .#{$sl}placeholder {
+        color: $buttonIcon;
+      }
+
+      .#{$sl}multi-value {
+        align-items: center;
+        margin: 1px 2px;
+        border: 1px solid $disabled-border-color;
+        background-color: #efefef;
+
+        &__label {
+          padding-top: 0;
+          padding-bottom: 0;
+          line-height: 1.125rem;
+        }
+
+        &__remove {
+          padding: 0.25rem;
+        }
+      }
+
+      .#{$sl}input-container {
+        display: flex;
+        grid-area: auto;
+        width: 0;
+        margin: 0;
+        padding: 0 0 0 3px;
+      }
+    }
+
+    .#{$sl}indicators {
+      padding: 0;
+
+      .#{$sl}indicator-separator {
+        width: 0;
+      }
+
+      .#{$sl}clear-indicator {
+        padding: 0;
+      }
+
+      .#{$sl}dropdown-indicator {
+        padding: 0 0.5rem;
+      }
+    }
+  }
+
+  &__menu {
+    margin-top: 7px;
+    border: 1px solid $gray-350;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+
+    &-list {
+      background-color: $base;
+      padding: 7px;
+
+      .#{$sl}option {
+        padding: 8px 12px;
+      }
+
+      .#{$sl}option.#{$sl}option--is-focused {
+        background-color: $buttonHover;
+      }
+    }
+  }
+}
+
 #editor-root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -62,40 +183,7 @@ h6 {
     font-size: 3.2em;
     line-height: 1.1;
   }
-
-  select,
   input {
-    &:disabled {
-      background-color: $disabled-input-bg-color;
-      color: $disabled-input-color;
-    }
-  }
-
-  select {
-    cursor: pointer;
-    @include focused-outline-secondary-with-border();
-
-    &:focus-visible {
-      position: relative;
-    }
-
-    &:disabled {
-      cursor: default;
-    }
-  }
-
-  input {
-    &[type='text']:not(#creatable-select-input) {
-      cursor: text;
-      @include focused-outline-secondary-with-border();
-    }
-
-    &:disabled {
-      margin: 0;
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     &[type='checkbox'] {
       -webkit-appearance: none;
       appearance: none;

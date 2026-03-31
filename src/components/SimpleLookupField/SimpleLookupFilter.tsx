@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, GroupBase, MultiValue, StylesConfig, createFilter } from 'react-select';
+import { ActionMeta, MultiValue, createFilter } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
@@ -12,7 +12,6 @@ import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
 import { OptionMultiline } from './OptionMultiline';
-import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 
 import './SimpleLookupField.scss';
 
@@ -62,7 +61,7 @@ export const SimpleLookupFilter: FC<SimpleLookupFilterProps> = ({
       value={localValue}
       placeholder={<FormattedMessage id="ld.select" />}
       inputId="creatable-select-input"
-      styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
+      unstyled
       filterOption={createFilter({
         ignoreCase: true,
         ignoreAccents: true,
