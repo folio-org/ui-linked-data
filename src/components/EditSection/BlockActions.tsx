@@ -2,8 +2,9 @@ import { FC } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@/common/constants/feature.constants';
-import { RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
+import { INVENTORY_VIEW_URL, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
 import { useMarcData } from '@/common/hooks/useMarcData';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
@@ -32,12 +33,16 @@ export const BlockActions: FC<BlockActionsProps> = ({ entry }) => {
   const { fetchMarcData } = useMarcData(setBasicValue);
   const { exportInstanceRdf } = useResourceExport();
   const { openModalForProfileChange } = useProfileSelection();
-  const { selectedRecordBlocks } = useInputsState(['selectedRecordBlocks']);
+  const { selectedRecordBlocks, record } = useInputsState(['selectedRecordBlocks', 'record']);
 
   if (isInCreateMode) return null;
 
   const isInstance = entry.bfid === PROFILE_BFIDS.INSTANCE;
   const isWork = entry.bfid === PROFILE_BFIDS.WORK;
+  const inventoryId = (record?.resource?.[BFLITE_URIS.INSTANCE] as Record<string, unknown>)?.folioMetadata as
+    | Record<string, string>
+    | undefined;
+  const inventoryViewId = inventoryId?.inventoryId;
 
   const handleDuplicate = () => {
     if (resourceId) {
@@ -46,6 +51,12 @@ export const BlockActions: FC<BlockActionsProps> = ({ entry }) => {
   };
 
   const handleFetchMarcData = async () => fetchMarcData(resourceId);
+
+  const viewInInventary = () => {
+    if (inventoryViewId) {
+      globalThis.location.assign(`${INVENTORY_VIEW_URL}/${inventoryViewId}`);
+    }
+  };
 
   const handleExportInstanceRdf = () => {
     if (resourceId) {
@@ -88,12 +99,13 @@ export const BlockActions: FC<BlockActionsProps> = ({ entry }) => {
           action: handleFetchMarcData,
         },
         {
-          id: 'viewInInventory',
+          id: 'inventoryView',
           type: DropdownItemType.basic,
-          labelId: 'ld.viewInInventory',
+          labelId: 'ld.inventoryView',
           icon: <ExternalLink16 />,
-          isDisabled: IS_DISABLED_FOR_ALPHA,
-          hidden: true,
+          hidden: !isInstance,
+          isDisabled: !inventoryViewId,
+          action: viewInInventary,
         },
         {
           id: 'exportInstanceRdf',
