@@ -132,48 +132,47 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
         onClose={onClose}
         onSubmit={handleSubmit}
         onCancel={onCancel}
+        data-testid="modal-choose-profile-content"
       >
-        <div className="modal-content" data-testid="modal-choose-profile-content">
-          {profileSelectionType.action === 'set' && (
-            <p className="modal-description">
-              <FormattedMessage id="ld.modal.chooseResourceProfile.subtitle" />
-            </p>
-          )}
-          <div className="modal-content-controls">
-            <div className="modal-content-controls-block">
-              <h4 className="modal-content-subheader">{labelSelect}</h4>
-              <Select
-                name={labelSelect}
-                id="select-profile"
-                onChange={onChange}
-                value={profileIdToSelectValue(selectedValue)}
-                options={profilesAsOptions()}
-              ></Select>
-            </div>
-            <div className="modal-content-controls-block">
-              <label className="modal-content-label">
-                <input
-                  type="checkbox"
-                  checked={isDefault}
-                  onChange={() => {
-                    setIsDefault(prev => !prev);
-                  }}
-                  name={labelSetAsDefault}
-                  aria-label={labelSetAsDefault}
-                />
-                <span>{labelSetAsDefault}</span>
-              </label>
-            </div>
-
-            {profileSelectionType.action === 'change' && (
-              <WarningMessages
-                profileSelectionType={profileSelectionType}
-                profiles={profiles}
-                selectedProfileId={selectedProfileId}
-                selectedValue={selectedValue}
-              />
-            )}
+        {profileSelectionType.action === 'set' && (
+          <p className="modal-description">
+            <FormattedMessage id="ld.modal.chooseResourceProfile.subtitle" />
+          </p>
+        )}
+        <div className="modal-content-controls">
+          <div className="modal-content-controls-block">
+            <h4 className="modal-content-subheader">{labelSelect}</h4>
+            <Select
+              name={labelSelect}
+              id="select-profile"
+              onChange={onChange}
+              value={profileIdToSelectValue(selectedValue)}
+              options={profilesAsOptions()}
+            ></Select>
           </div>
+          <div className="modal-content-controls-block">
+            <label className="modal-content-label">
+              <input
+                type="checkbox"
+                checked={isDefault}
+                onChange={() => {
+                  setIsDefault(prev => !prev);
+                }}
+                name={labelSetAsDefault}
+                aria-label={labelSetAsDefault}
+              />
+              <span>{labelSetAsDefault}</span>
+            </label>
+          </div>
+
+          {profileSelectionType.action === 'change' && (
+            <WarningMessages
+              profileSelectionType={profileSelectionType}
+              profiles={profiles}
+              selectedProfileId={selectedProfileId}
+              selectedValue={selectedValue}
+            />
+          )}
         </div>
       </Modal>
     );

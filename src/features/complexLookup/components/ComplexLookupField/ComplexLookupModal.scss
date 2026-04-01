@@ -7,31 +7,17 @@
     max-width: 1240px;
     min-width: 460px;
     width: 75vw;
-    padding: 0;
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
 
     .modal-header {
-      &.modal-complex-lookup-header {
-        padding: 1rem;
-        border-bottom: 1px solid #dedede;
-        font-size: 0.875rem;
-        text-align: center;
-
-        &-embedded {
-          &.modal-complex-lookup-header,
-          .modal-complex-lookup-title {
-            font-size: 1rem;
-          }
+      &.modal-complex-lookup-header-embedded {
+        &.modal-complex-lookup-header,
+        .modal-complex-lookup-title {
+          font-size: 1rem;
         }
-      }
-
-      .modal-complex-lookup-title {
-        width: 100%;
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-align: center;
       }
     }
 

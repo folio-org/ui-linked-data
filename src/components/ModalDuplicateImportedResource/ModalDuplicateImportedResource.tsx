@@ -23,7 +23,6 @@ export const ModalDuplicateImportedResource = memo(() => {
       title={formatMessage({ id: 'ld.duplicateImportWarn' })}
       submitButtonLabel={formatMessage({ id: 'ld.continue' })}
       submitButtonDisabled
-      alignTitleCenter
       cancelButtonLabel={formatMessage({ id: 'ld.backToInventory' })}
       onClose={() => setIsDuplicateImportedResourceModalOpen(false)}
       onCancel={() => dispatchNavigateToOriginEventWithFallback()}

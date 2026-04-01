@@ -90,6 +90,16 @@
     padding: 16px 0 12px 0;
     display: flex;
     flex-direction: column;
+
+    .text-input {
+      margin-top: -1px;
+      padding: 4px 5px;
+      height: 26px;
+    }
+
+    .select-textarea {
+      margin-top: -1px;
+    }
   }
 
   .controls {

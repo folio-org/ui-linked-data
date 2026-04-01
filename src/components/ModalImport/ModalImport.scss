@@ -1,15 +1,7 @@
 .modal.import {
-  padding: 0;
   width: 630px;
 
-  .modal-header {
-    border-bottom: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
-    padding: 24px 24px 16px 24px;
-  }
-
-  .body {
-    padding: 0 24px;
-
+  .modal-content {
     .description,
     .selector,
     .submitted,
@@ -19,7 +11,7 @@
     }
 
     label {
-      font-weight: bold;
+      font-weight: 700;
     }
 
     select,
@@ -44,15 +36,5 @@
         width: 6em;
       }
     }
-  }
-
-  .modal-controls-spread {
-    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
-    padding: 15px 24px 16px 24px;
-  }
-
-  .modal-controls {
-    border-top: 1px solid color-mix(in oklch, currentcolor 15%, transparent);
-    padding: 15px 24px 16px 24px;
   }
 }

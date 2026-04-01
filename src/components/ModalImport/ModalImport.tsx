@@ -208,8 +208,6 @@ export const ModalImport = memo(() => {
       submitButtonDisabled={!isImportReady && !isImportCompleted}
       submitButtonLabel={submitButtonLabel()}
       onSubmit={onSubmit}
-      alignTitleCenter
-      spreadModalControls
       cancelButtonDisabled={isImportSubmitted}
       showCloseIconButton={!isImportSubmitted}
       shouldCloseOnEsc={!isImportSubmitted}
@@ -218,28 +216,27 @@ export const ModalImport = memo(() => {
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onCancel={reset}
       onClose={reset}
+      data-testid="modal-import"
     >
-      <div className="body" data-testid="modal-import">
-        {!isImportSubmitted && !isImportCompleted && (
-          <SelectorImportMode
-            {...{
-              importMode,
-              switchMode,
-              onImportReady,
-              onImportNotReady,
-              filesToUpload,
-              setFilesToUpload,
-              urlToRetrieve,
-              setUrlToRetrieve,
-              defaultWorkType,
-              setDefaultWorkType,
-              importModalFilterType,
-            }}
-          />
-        )}
-        {isImportSubmitted && <Submitted />}
-        {isImportCompleted && <Completed {...{ isImportSuccessful }} />}
-      </div>
+      {!isImportSubmitted && !isImportCompleted && (
+        <SelectorImportMode
+          {...{
+            importMode,
+            switchMode,
+            onImportReady,
+            onImportNotReady,
+            filesToUpload,
+            setFilesToUpload,
+            urlToRetrieve,
+            setUrlToRetrieve,
+            defaultWorkType,
+            setDefaultWorkType,
+            importModalFilterType,
+          }}
+        />
+      )}
+      {isImportSubmitted && <Submitted />}
+      {isImportCompleted && <Completed {...{ isImportSuccessful }} />}
     </Modal>
   );
 });

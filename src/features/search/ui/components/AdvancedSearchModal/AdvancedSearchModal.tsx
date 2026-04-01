@@ -100,6 +100,7 @@ export const AdvancedSearchModal: FC = memo(() => {
       onCancel={closeModal}
       shouldCloseOnEsc
       submitButtonDisabled={submitButtonDisabled}
+      wrapContents={false}
       ariaModalKind={AriaModalKind.AdvancedSearch}
     >
       <div className="advanced-search-container">

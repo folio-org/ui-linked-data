@@ -36,6 +36,7 @@ $buttonFocus: rgba(37, 118, 195, 0.3) !default;
 $buttonShadow: rgba(166, 212, 255, 0.65) !default;
 $error: #990000 !default;
 $title-bar-bg-color: rgba(0, 0, 0, 0.03) !default;
+$modal-border-color: rgba(0, 0, 0, 0.15) !default;
 
 // Shadows
 $listButton-drop-shadow: 0 0 0 2px $buttonShadow !default;
@@ -61,6 +62,7 @@ $btn-icon-border-radius: 6px !default;
 $btn-height: 24px !default;
 
 // Font
+$font-sm: 12px !default;
 $font-md: 14px !default;
 
 // Mixins

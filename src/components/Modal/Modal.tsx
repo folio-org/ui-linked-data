@@ -35,10 +35,9 @@ interface Props {
   children?: ReactNode;
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
-  spreadModalControls?: boolean;
   titleClassName?: string;
-  alignTitleCenter?: boolean;
   ariaModalKind?: string;
+  wrapContents?: boolean;
 }
 
 const Modal: FC<Props> = ({
@@ -60,9 +59,8 @@ const Modal: FC<Props> = ({
   cancelButtonHidden,
   showCloseIconButton = true,
   showModalControls = true,
-  spreadModalControls = false,
   titleClassName,
-  alignTitleCenter = false,
+  wrapContents = true,
   ariaModalKind = AriaModalKind.Basic,
   'data-testid': modalTestId,
 }) => {
@@ -88,6 +86,10 @@ const Modal: FC<Props> = ({
     if (shouldCloseOnExternalClick) {
       onClose();
     }
+  };
+
+  const wrappedContents = () => {
+    return wrapContents ? <div className="modal-content">{children}</div> : children;
   };
 
   return isOpen && portalElement
@@ -120,11 +122,10 @@ const Modal: FC<Props> = ({
                   </Button>
                 )}
                 <h3 className={classNames(['title', titleClassName])}>{title}</h3>
-                {alignTitleCenter && <span className="empty-block" />}
               </div>
-              {!!children && children}
+              {!!children && wrappedContents()}
               {showModalControls && (
-                <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                <div className="modal-controls">
                   {!cancelButtonHidden && (
                     <Button
                       disabled={cancelButtonDisabled}
