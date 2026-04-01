@@ -104,6 +104,7 @@
 * Add Duplicate Hub functionality. Refs [UILD-772].
 * Move Actions menu to the Edit area. Refs [UILD-765].
 * Add Inventary View link. Refs [UILD-768].
+* Show warning that 'Dissertation' will be lost when the user switches from Books to Serials Work profile. Refs [UILD-778].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -207,6 +208,7 @@
 [UILD-772]:https://folio-org.atlassian.net/browse/UILD-772
 [UILD-765]:https://folio-org.atlassian.net/browse/UILD-765
 [UILD-768]:https://folio-org.atlassian.net/browse/UILD-768
+[UILD-778]:https://folio-org.atlassian.net/browse/UILD-778
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
