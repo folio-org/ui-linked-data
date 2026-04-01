@@ -1,11 +1,31 @@
 @use '@/common/styles/common.scss' as *;
 
-.select-input {
-  height: 27px;
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
 
-  option:disabled,
-  &.placeholder,
-  &.placeholder option:disabled {
-    color: $gray-400;
+  .select-input {
+    min-height: 24px;
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+
+    option:disabled,
+    &.placeholder,
+    &.placeholder option:disabled {
+      color: $gray-400;
+    }
+  }
+
+  .select-icon {
+    position: absolute;
+    top: 2px;
+    right: 9px;
+    pointer-events: none;
+
+    path {
+      fill: $buttonIcon;
+    }
   }
 }
