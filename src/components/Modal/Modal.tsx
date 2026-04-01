@@ -1,4 +1,4 @@
-import { FC, type ReactElement, ReactNode, memo, useEffect } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 
@@ -67,6 +67,7 @@ const Modal: FC<Props> = ({
   'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
+  const modalRef = useRef<HTMLDivElement>(null);
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
@@ -97,9 +98,16 @@ const Modal: FC<Props> = ({
             focusTrapOptions={{
               clickOutsideDeactivates: shouldCloseOnExternalClick,
               escapeDeactivates: shouldCloseOnEsc,
+              fallbackFocus: modalRef.current || undefined,
             }}
           >
-            <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
+            <div
+              className={classNames(['modal', className])}
+              role="dialog"
+              data-testid={modalTestId || 'modal'}
+              tabIndex={-1}
+              ref={modalRef}
+            >
               <div className={classNames(['modal-header', classNameHeader])}>
                 {showCloseIconButton && (
                   <Button
