@@ -137,7 +137,7 @@
   "ld.cantLoadHubPreview": "Can't load preview for this hub resource",
   "ld.duplicate": "Duplicate",
   "ld.viewLinkedData": "View linked data",
-  "ld.viewInInventory": "View in Inventory app",
+  "ld.inventoryView": "Inventory View",
   "ld.authorityType": "Authority Type",
   "ld.person": "Person",
   "ld.source": "Source",

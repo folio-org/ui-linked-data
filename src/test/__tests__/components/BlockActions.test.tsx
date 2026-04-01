@@ -8,6 +8,7 @@ import { fireEvent, render } from '@testing-library/react';
 
 import * as recordsApi from '@/common/api/records.api';
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 import * as useProfileSelectionHook from '@/common/hooks/useProfileSelection';
 import { BlockActions } from '@/components/EditSection/BlockActions';
@@ -33,11 +34,11 @@ const workEntry = {
   path: ['uuid_work'],
 } as SchemaEntry;
 
-const renderBlockActions = (entry: SchemaEntry) => {
+const renderBlockActions = (entry: SchemaEntry, record?: Record<string, unknown>) => {
   setInitialGlobalState([
     {
       store: useInputsState,
-      state: { selectedRecordBlocks: { block: 'test-block' } },
+      state: { selectedRecordBlocks: { block: 'test-block' }, record: record ?? null },
     },
   ]);
 
@@ -153,5 +154,32 @@ describe('BlockActions', () => {
     fireEvent.click(await findByText('ld.changeInstanceProfile'));
 
     expect(openModalForProfileChangeMock).toHaveBeenCalledWith({ resourceTypeURL: 'test-block' });
+  });
+
+  test('enables inventory view button when inventoryId is available', async () => {
+    const record = {
+      resource: {
+        [BFLITE_URIS.INSTANCE]: {
+          id: 'resource_1',
+          folioMetadata: { inventoryId: 'inventory_1' },
+        },
+      },
+    };
+
+    const { findByText, findByTestId } = renderBlockActions(instanceEntry, record);
+
+    fireEvent.click(await findByTestId('block-actions-toggle'));
+
+    const button = await findByText('ld.inventoryView');
+    expect(button.closest('button')).not.toBeDisabled();
+  });
+
+  test('disables inventory view button when inventoryId is not available', async () => {
+    const { findByText, findByTestId } = renderBlockActions(instanceEntry);
+
+    fireEvent.click(await findByTestId('block-actions-toggle'));
+
+    const button = await findByText('ld.inventoryView');
+    expect(button.closest('button')).toBeDisabled();
   });
 });
