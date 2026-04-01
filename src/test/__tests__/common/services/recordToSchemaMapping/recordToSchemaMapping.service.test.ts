@@ -169,6 +169,122 @@ describe('RecordToSchemaMappingService', () => {
     });
   });
 
+  describe('enumerated fields handling', () => {
+    const enumeratedSchema = new Map([
+      [
+        'block_key',
+        {
+          bfid: 'blockId',
+          children: ['group_key'],
+          displayName: 'Block',
+          path: ['block_key'],
+          type: 'block',
+          uri: 'blockUri',
+          uriBFLite: 'block_1',
+          uuid: 'block_key',
+        },
+      ],
+      [
+        'group_key',
+        {
+          children: ['enum_key'],
+          displayName: 'Hubs group',
+          path: ['block_key', 'group_key'],
+          type: 'group',
+          uriBFLite: 'uriBFLite_hubs',
+          uuid: 'group_key',
+        },
+      ],
+      [
+        'enum_key',
+        {
+          children: ['option_key_1', 'option_key_2'],
+          constraints: {},
+          displayName: 'Relationship',
+          path: ['block_key', 'group_key', 'enum_key'],
+          type: 'enumerated',
+          uriBFLite: '_relation',
+          uuid: 'enum_key',
+        },
+      ],
+      [
+        'option_key_1',
+        {
+          displayName: 'Enum option 1',
+          path: ['block_key', 'group_key', 'enum_key', 'option_key_1'],
+          type: 'dropdownOption',
+          uriBFLite: 'uriBFLite_enumOption_1',
+          uuid: 'option_key_1',
+        },
+      ],
+      [
+        'option_key_2',
+        {
+          displayName: 'Enum option 2',
+          path: ['block_key', 'group_key', 'enum_key', 'option_key_2'],
+          type: 'dropdownOption',
+          uriBFLite: 'uriBFLite_enumOption_2',
+          uuid: 'option_key_2',
+        },
+      ],
+    ]);
+
+    test('passes labelMap with resolved display names for enumerated fields', async () => {
+      jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(enumeratedSchema as unknown as Schema);
+
+      const mockRecord = {
+        block_1: {
+          uriBFLite_hubs: [
+            {
+              _relation: 'uriBFLite_enumOption_1',
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: enumeratedSchema as unknown as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(userValuesService.setValue).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'enumerated',
+          value: expect.objectContaining({
+            data: 'uriBFLite_enumOption_1',
+            labelMap: {
+              uriBFLite_enumOption_1: 'Enum option 1',
+              uriBFLite_enumOption_2: 'Enum option 2',
+            },
+          }),
+        }),
+      );
+    });
+
+    test('selects matching dropdown option for enumerated field', async () => {
+      jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(enumeratedSchema as unknown as Schema);
+
+      const mockRecord = {
+        block_1: {
+          uriBFLite_hubs: [
+            {
+              _relation: 'uriBFLite_enumOption_2',
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: enumeratedSchema as unknown as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'option_key_2');
+    });
+  });
+
   test('returns updated schema with repeatable subcomponents', async () => {
     jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(updatedSchemaWithRepeatableSubcomponents as Schema);
 
