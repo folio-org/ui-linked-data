@@ -307,13 +307,19 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
 
     if (type === AdvancedFieldTypeEnum.enumerated) {
       this.handleDropdownOptions(schemaUiElem, recordEntryValue as string);
+
+      const labelMap = this.buildEnumeratedLabelMap(schemaUiElem);
+
       await this.setUserValue({
         valueKey: newValueKey,
         data,
         fieldUri: recordKey,
         schemaUiElem,
         id,
+        labelMap,
       });
+
+      return;
     }
 
     if (type === AdvancedFieldTypeEnum.literal && constraints?.repeatable) {
@@ -346,6 +352,20 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         this.selectedEntriesService.addNew(undefined, dropdownOptionEntry.uuid);
       }
     }
+  }
+
+  private buildEnumeratedLabelMap(schemaUiElem: SchemaEntry): Record<string, string> {
+    const labelMap: Record<string, string> = {};
+
+    schemaUiElem.children?.forEach(childUuid => {
+      const child = this.updatedSchema?.get(childUuid);
+
+      if (child?.uriBFLite && child?.displayName) {
+        labelMap[child.uriBFLite] = child.displayName;
+      }
+    });
+
+    return labelMap;
   }
 
   private async handleRepeatableSubcomponents({
@@ -411,12 +431,14 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     fieldUri,
     schemaUiElem,
     id,
+    labelMap,
   }: {
     valueKey: string;
     data: RecordEntryValue;
     fieldUri: string;
     schemaUiElem: SchemaEntry;
     id?: string;
+    labelMap?: Record<string, string>;
   }) {
     const { type, constraints, uriBFLite } = schemaUiElem;
     const partialTemplateMatch = this.templateMetadata?.filter(({ path }) => path.at(-1) === fieldUri);
@@ -442,6 +464,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         blockUri: this.currentBlockUri,
         groupUri: this.currentRecordGroupKey,
         fieldUri,
+        labelMap,
       },
     });
   }
