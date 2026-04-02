@@ -47,7 +47,7 @@ $sl: 'simple-lookup__';
 
         &:focus,
         &:focus-visible {
-          background-color: #fff;
+          background-color: $base;
         }
       }
 
@@ -93,7 +93,7 @@ $sl: 'simple-lookup__';
   &__menu {
     margin-top: 7px;
     border: 1px solid $gray-350;
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 32px $disabled-border-color;
 
     &-list {
       background-color: $base;
@@ -104,7 +104,6 @@ $sl: 'simple-lookup__';
       }
 
       .#{$sl}option.#{$sl}option--is-focused {
-        background-color: $buttonHover;
         box-shadow: 0 0 0 3px inset $button-standard;
       }
     }

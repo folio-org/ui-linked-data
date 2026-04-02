@@ -38,13 +38,7 @@
 
     select,
     input {
-      height: 1.5rem;
       font-size: 1rem;
-    }
-
-    select {
-      padding: 0;
-      padding-left: 0.313rem;
     }
 
     .group-label {
@@ -84,7 +78,7 @@
 
 .edit-section-passive {
   .edit-section-group {
-    border-color: rgba(0, 0, 0, 0.1);
-    background-color: #fafafa;
+    border-color: $disabled-border-color;
+    background-color: $gray-50;
   }
 }

@@ -44,7 +44,7 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
       {generateComponent({ uuid, groupingDisabled: true })}
       {!!twinsAmount && (
         <Button
-          type={ButtonType.Icon}
+          type={ButtonType.Text}
           data-testid="expand-collapse-button"
           className="expand-collapse-button"
           onClick={toggleCollapseExpand}
