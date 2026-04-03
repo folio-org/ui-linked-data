@@ -77,7 +77,6 @@ const setupMockParams = (setSearchParams: jest.Mock, profileId?: string) => {
 };
 
 describe('useConfig', () => {
-  const setProfiles = jest.fn();
   const setSelectedProfile = jest.fn();
   const setUserValues = jest.fn();
   const setPreparedFields = jest.fn();
@@ -120,8 +119,6 @@ describe('useConfig', () => {
       {
         store: useProfileStore,
         state: {
-          profiles: [],
-          setProfiles,
           selectedProfile: {},
           setSelectedProfile,
           preparedFields: {},
