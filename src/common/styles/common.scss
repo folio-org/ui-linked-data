@@ -78,6 +78,9 @@ $btn-height: 24px !default;
 $font-sm: 12px !default;
 $font-md: 14px !default;
 
+// Modal
+$modal-padding: 15px !default;
+
 // Mixins
 @mixin focused-outline-primary {
   &:focus,

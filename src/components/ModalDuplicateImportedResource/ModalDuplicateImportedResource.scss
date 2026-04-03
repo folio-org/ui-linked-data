@@ -1,5 +1,7 @@
+@use '@/common/styles/common.scss' as *;
+
 .duplicate-imported-resource {
   &-contents {
-    padding: 15px 0;
+    padding: $modal-padding 0;
   }
 }
