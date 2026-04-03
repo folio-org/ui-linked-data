@@ -29,7 +29,7 @@ $sl: 'simple-lookup__';
         align-items: center;
         margin: 1px 2px;
         border: 1px solid $disabled-border-color;
-        background-color: #efefef;
+        background-color: $gray-90;
 
         &__label {
           padding: 0 3px 0 6px;

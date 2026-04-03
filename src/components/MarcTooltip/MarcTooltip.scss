@@ -7,7 +7,7 @@
 
   &-icon {
     path {
-      fill: rgba(0, 0, 0, 0.62);
+      fill: $buttonIcon;
     }
 
     &:hover path {
@@ -15,7 +15,7 @@
     }
 
     &:active path {
-      fill: white;
+      fill: $base;
     }
   }
 

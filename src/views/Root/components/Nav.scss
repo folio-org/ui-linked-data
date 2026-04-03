@@ -1,3 +1,5 @@
+@use '@/common/styles/common.scss' as *;
+
 #editor-root .nav {
   position: sticky;
   position: -webkit-sticky;
@@ -9,8 +11,8 @@
   flex-direction: row;
   justify-content: space-between;
   padding-right: 0.75rem;
-  border-bottom: 1px solid #d7d8da;
-  background-color: white;
+  border-bottom: 1px solid $gray-200;
+  background-color: $base;
 
   nav {
     display: flex;
@@ -30,21 +32,21 @@
       line-height: 0.875rem;
       font-size: 0.875rem;
       font-weight: 400;
-      color: #000;
+      color: $base-text;
 
       &:hover {
-        background-color: #d7d8da;
+        background-color: $gray-200;
       }
 
       &.active {
         font-weight: 600;
-        background-color: #d7d8da;
+        background-color: $gray-200;
       }
 
       &.disabled {
         pointer-events: none;
         background-color: transparent;
-        color: #d3d3d3;
+        color: $gray-300;
       }
     }
   }
@@ -91,7 +93,7 @@
     display: flex;
     align-self: stretch;
     align-items: center;
-    border-left: 1px solid #d7d8da;
+    border-left: 1px solid $gray-200;
     font-size: 1rem;
     font-weight: 600;
     padding: 0 1.5rem;

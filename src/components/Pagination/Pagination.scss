@@ -1,3 +1,5 @@
+@use '@/common/styles/common.scss' as *;
+
 #editor-root {
   .pagination {
     display: flex;
@@ -6,7 +8,7 @@
     align-items: center;
     width: 100%;
     min-height: 41px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid $modal-border-color;
     margin-bottom: 0.8rem;
 
     &-button {
@@ -22,11 +24,7 @@
       }
 
       path {
-        fill: #000;
-      }
-
-      &:disabled path {
-        fill: #e0dfdf;
+        fill: $base-text;
       }
     }
 

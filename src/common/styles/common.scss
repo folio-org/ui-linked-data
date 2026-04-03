@@ -15,11 +15,13 @@ $blue-800: #1d3f75 !default;
 $blue-850: #23385a !default;
 $blue-2f: #2f609f !default;
 $gray-50: #f5f5f5 !default;
+$gray-90: #efefef !default;
 $gray-100: #ebebeb !default;
 $gray-200: #d7d8da !default;
 $gray-300: #d9d9d9 !default;
 $gray-350: #ccc !default;
 $gray-400: #727272 !default;
+$gray-450: #6c6c6c !default;
 $gray-500: #55585d !default;
 $gray-600: #3d3f42 !default;
 
@@ -35,8 +37,19 @@ $buttonHover: rgba(37, 118, 195, 0.2) !default;
 $buttonFocus: rgba(37, 118, 195, 0.3) !default;
 $buttonShadow: rgba(166, 212, 255, 0.65) !default;
 $error: #990000 !default;
+$error-bg-color: #e4c7c6 !default;
+$success: #070 !default;
+$success-bg-color: #cedcc9 !default;
+$warning: #812d02 !default;
+$warning-bg-color: #f4e0d6 !default;
 $title-bar-bg-color: rgba(0, 0, 0, 0.03) !default;
 $modal-border-color: rgba(0, 0, 0, 0.15) !default;
+$loading-bg-color: rgba(255, 255, 255, 0.9) !default;
+$overlay-bg-color: rgba(0, 0, 0, 0.5) !default;
+$comparison-index-bg-color: #9fc7ea !default;
+$edit-group-border-color: #3986c5 !default;
+$edit-group-bg-color: #c5daf420 !default;
+$selected-row-bg-color: d3e4f3 !default;
 
 // Shadows
 $listButton-drop-shadow: 0 0 0 2px $buttonShadow !default;

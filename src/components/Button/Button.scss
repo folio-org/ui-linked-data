@@ -113,7 +113,7 @@
     }
 
     &:active:not(:disabled) {
-      color: #000;
+      color: $base-text;
       text-decoration: underline;
     }
   }
@@ -164,7 +164,7 @@
     > svg,
     path,
     * {
-      fill: #000;
+      fill: $base-text;
     }
 
     &:hover {
@@ -174,21 +174,21 @@
     &:focus,
     &:focus-visible {
       outline: none;
-      border: 1px solid rgba(0, 0, 0, 0.5);
+      border: 1px solid $buttonIcon;
       background-color: $buttonFocus;
       box-shadow: 0 0 0 3px $buttonFocus;
     }
 
     &:active {
-      border: 1px solid rgba(0, 0, 0, 0.5);
+      border: 1px solid $buttonIcon;
       background-color: $button-standard;
       box-shadow: 0 0 0 3px $buttonFocus;
-      color: #fff;
+      color: $base;
 
       > svg,
       path,
       * {
-        fill: #fff;
+        fill: $base;
         opacity: 1;
         fill-opacity: 1;
       }
@@ -226,7 +226,7 @@
     &:focus,
     &:focus-visible {
       outline: none;
-      border: 1px solid rgba(0, 0, 0, 0.5);
+      border: 1px solid $overlay-bg-color;
       background-color: $buttonHover;
       box-shadow: $listButton-drop-shadow;
     }

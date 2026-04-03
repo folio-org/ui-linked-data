@@ -42,7 +42,7 @@
         margin-bottom: 0.5rem;
         font-size: 0.855rem;
         font-weight: 700;
-        color: rgba(0, 0, 0, 0.62);
+        color: $buttonIcon;
       }
     }
 
@@ -58,7 +58,7 @@
       }
 
       &-icon {
-        fill: #000;
+        fill: $base-text;
 
         path {
           fill-opacity: 1;

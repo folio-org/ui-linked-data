@@ -65,7 +65,7 @@ h6 {
 
   hr {
     border: none;
-    border-bottom: 1px solid #d7d8da;
+    border-bottom: 1px solid $gray-200;
     width: 100%;
     text-align: left;
     margin-left: 0;
@@ -137,8 +137,8 @@ h6 {
       }
 
       &:checked {
-        border-color: black;
-        background-color: black;
+        border-color: $base-text;
+        background-color: $base-text;
 
         &:disabled {
           border-color: $disabled-check-radio-bg-color;
@@ -178,7 +178,7 @@ h6 {
         border-radius: 50%;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        background-color: black;
+        background-color: $base-text;
       }
 
       &:checked::before {
@@ -257,7 +257,7 @@ h6 {
     }
 
     &:active {
-      color: #000;
+      color: $base-text;
       text-decoration-color: $blue-850;
     }
 

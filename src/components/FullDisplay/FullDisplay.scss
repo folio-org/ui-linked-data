@@ -1,7 +1,9 @@
+@use '@/common/styles/common.scss' as *;
+
 .full-display {
   &-container {
     width: 540px;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid $modal-border-color;
 
     .preview-contents-container {
       height: 100%;
@@ -21,8 +23,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 0.938rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: rgba(0, 0, 0, 0.03);
+    border-bottom: 1px solid $modal-border-color;
+    background-color: $title-bar-bg-color;
     height: 2.75rem;
 
     .close {
@@ -45,7 +47,7 @@
 
       .type {
         font-size: 0.75rem;
-        color: rgba(0, 0, 0, 0.62);
+        color: $buttonIcon;
       }
     }
   }
