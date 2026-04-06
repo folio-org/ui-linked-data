@@ -16,7 +16,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 }
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
-  const { flow, mode = 'custom', children } = props;
+  const { flow, mode = 'custom', children, resultFormatterLabelIds } = props;
   const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
@@ -84,6 +84,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       currentSegment,
       currentSource,
       activeCoreConfig,
+      resultFormatterLabelIds,
 
       // Search results
       results,
@@ -107,6 +108,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       mode,
       activeUIConfig,
       activeCoreConfig,
+      resultFormatterLabelIds,
       results,
       isLoading,
       isGlobalLoading,

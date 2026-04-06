@@ -30,6 +30,7 @@ export interface ModalConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ComponentType<any>;
   defaultProps: Record<string, unknown>;
+  resultFormatterLabelIds?: Record<string, string>;
   labels: {
     button: {
       base: string;
@@ -59,6 +60,9 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     defaultProps: {
       initialSegment: 'browse' as const,
     },
+    resultFormatterLabelIds: {
+      authoritySourceFallback: 'ld.notSpecified',
+    },
     labels: {
       button: {
         base: 'ld.assignAuthority',
@@ -86,6 +90,9 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     defaultProps: {
       initialSegment: 'browse' as const,
     },
+    resultFormatterLabelIds: {
+      authoritySourceFallback: 'ld.notSpecified',
+    },
     labels: {
       button: {
         base: 'ld.assignAuthority',
@@ -112,6 +119,9 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     component: AuthoritiesModal,
     defaultProps: {
       initialSegment: 'browse' as const,
+    },
+    resultFormatterLabelIds: {
+      authoritySourceFallback: 'ld.notSpecified',
     },
     labels: {
       button: {

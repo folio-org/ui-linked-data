@@ -76,6 +76,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
         defaultSegment={`authorities:${initialSegment}`}
         flow="value"
         mode="custom"
+        resultFormatterLabelIds={modalConfig?.resultFormatterLabelIds}
       >
         <Search.Controls>
           {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}

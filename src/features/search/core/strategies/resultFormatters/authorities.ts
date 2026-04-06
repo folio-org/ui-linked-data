@@ -1,28 +1,28 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { IResultFormatter } from '../../types';
+import { IResultFormatter, ResultFormatterOptions } from '../../types';
 
 /**
  * Formats Authority data for search/browse results
  * Output: Flat table rows with metadata
  */
 export class AuthoritiesResultFormatter implements IResultFormatter<SearchResultsTableRow> {
-  format(data: unknown[], sourceData?: unknown): SearchResultsTableRow[] {
+  format(data: unknown[], sourceData?: unknown, options?: ResultFormatterOptions): SearchResultsTableRow[] {
     const authoritiesList = data as (AuthorityAsSearchResultDTO | AuthorityAsBrowseResultDTO)[];
     const sources = (sourceData as SourceDataDTO) || [];
 
-    return this.formatAuthorities(authoritiesList, sources);
+    return this.formatAuthorities(authoritiesList, sources, options?.authoritySourceFallback);
   }
 
   private formatAuthorities(
     authoritiesList: AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[],
     sourceData?: SourceDataDTO,
+    authoritySourceFallback?: string,
   ): SearchResultsTableRow[] {
     return authoritiesList?.map(authorityEntry => {
       const selectedEntry = (authorityEntry.authority ?? authorityEntry) as AuthorityAsSearchResultDTO;
       const { id = '', authRefType = '', headingRef = '', headingType = '', sourceFileId = '' } = selectedEntry;
-      const sourceLabel =
-        sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name ?? (sourceFileId || 'N/A');
+      const sourceLabel = sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name;
       const { isAnchor } = authorityEntry;
 
       return {
@@ -43,7 +43,7 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
           className: 'heading-type',
         },
         authoritySource: {
-          label: sourceLabel,
+          label: sourceLabel ?? authoritySourceFallback ?? sourceFileId,
           className: 'authority-source',
         },
       };
