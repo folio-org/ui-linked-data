@@ -11,13 +11,13 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
     const authoritiesList = data as (AuthorityAsSearchResultDTO | AuthorityAsBrowseResultDTO)[];
     const sources = (sourceData as SourceDataDTO) || [];
 
-    return this.formatAuthorities(authoritiesList, sources, options?.authoritySourceFallback);
+    return this.formatAuthorities(authoritiesList, sources, options?.notSpecifiedLabel);
   }
 
   private formatAuthorities(
     authoritiesList: AuthorityAsSearchResultDTO[] | AuthorityAsBrowseResultDTO[],
     sourceData?: SourceDataDTO,
-    authoritySourceFallback?: string,
+    notSpecifiedLabel?: string,
   ): SearchResultsTableRow[] {
     return authoritiesList?.map(authorityEntry => {
       const selectedEntry = (authorityEntry.authority ?? authorityEntry) as AuthorityAsSearchResultDTO;
@@ -43,7 +43,7 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
           className: 'heading-type',
         },
         authoritySource: {
-          label: sourceLabel ?? authoritySourceFallback ?? sourceFileId,
+          label: sourceLabel ?? notSpecifiedLabel ?? sourceFileId,
           className: 'authority-source',
         },
       };

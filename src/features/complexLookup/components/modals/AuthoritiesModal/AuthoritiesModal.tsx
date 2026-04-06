@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { AuthoritiesContent } from '@/features/complexLookup/components/content';
@@ -35,7 +35,11 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
   modalConfig,
   onAssign,
 }) => {
+  const { formatMessage } = useIntl();
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
+  const notSpecifiedLabel = modalConfig?.labels.notSpecified
+    ? formatMessage({ id: modalConfig.labels.notSpecified })
+    : undefined;
 
   // Reset search state and set initial query when modal opens
   useComplexLookupModalState({
@@ -76,7 +80,6 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
         defaultSegment={`authorities:${initialSegment}`}
         flow="value"
         mode="custom"
-        resultFormatterLabelIds={modalConfig?.resultFormatterLabelIds}
       >
         <Search.Controls>
           {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
@@ -102,6 +105,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
           <AuthoritiesContent
             isMarcPreviewOpen={isMarcPreviewOpen}
             isMarcLoading={isMarcLoading}
+            notSpecifiedLabel={notSpecifiedLabel}
             handleAuthoritiesAssign={handleAuthoritiesAssign}
             handleTitleClick={handleTitleClick}
             handleCloseMarcPreview={handleCloseMarcPreview}

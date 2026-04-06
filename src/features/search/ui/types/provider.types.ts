@@ -1,8 +1,6 @@
 import type { SearchTypeConfig } from '../../core/types';
 import type { SearchTypeUIConfig } from './ui.types';
 
-export type ResultFormatterLabelIds = Record<string, string>;
-
 /**
  * Flow types:
  * - 'url': Search driven by URL params (Search pages) - auto-executes on param changes
@@ -61,7 +59,6 @@ export interface SearchContextValue {
   currentSource?: string;
   // Active core config used for the current results (based on committed source)
   activeCoreConfig?: SearchTypeConfig;
-  resultFormatterLabelIds?: ResultFormatterLabelIds;
 
   // Search results (from React Query)
   results: SearchResults | undefined;
@@ -105,7 +102,6 @@ interface DynamicModeProps {
 interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
-  resultFormatterLabelIds?: ResultFormatterLabelIds;
   children: React.ReactNode;
 }
 

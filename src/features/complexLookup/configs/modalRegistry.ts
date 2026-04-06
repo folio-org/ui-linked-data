@@ -30,12 +30,12 @@ export interface ModalConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   component: ComponentType<any>;
   defaultProps: Record<string, unknown>;
-  resultFormatterLabelIds?: Record<string, string>;
   labels: {
     button: {
       base: string;
       change: string;
     };
+    notSpecified?: string;
   };
   assignmentFlow: AssignmentFlow;
   api?: ModalApiConfig;
@@ -60,14 +60,12 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     defaultProps: {
       initialSegment: 'browse' as const,
     },
-    resultFormatterLabelIds: {
-      authoritySourceFallback: 'ld.notSpecified',
-    },
     labels: {
       button: {
         base: 'ld.assignAuthority',
         change: 'ld.change',
       },
+      notSpecified: 'ld.notSpecified',
     },
     assignmentFlow: 'complex',
     api: {
@@ -90,14 +88,12 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     defaultProps: {
       initialSegment: 'browse' as const,
     },
-    resultFormatterLabelIds: {
-      authoritySourceFallback: 'ld.notSpecified',
-    },
     labels: {
       button: {
         base: 'ld.assignAuthority',
         change: 'ld.change',
       },
+      notSpecified: 'ld.notSpecified',
     },
     assignmentFlow: 'complex',
     api: {
@@ -120,14 +116,12 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
     defaultProps: {
       initialSegment: 'browse' as const,
     },
-    resultFormatterLabelIds: {
-      authoritySourceFallback: 'ld.notSpecified',
-    },
     labels: {
       button: {
         base: 'ld.assign',
         change: 'ld.change',
       },
+      notSpecified: 'ld.notSpecified',
     },
     assignmentFlow: 'complex',
     api: {

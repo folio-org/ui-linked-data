@@ -47,7 +47,9 @@ export interface IResponseTransformer {
   transform(response: unknown, limit: number): NormalizedSearchResult;
 }
 
-export type ResultFormatterOptions = Record<string, string | undefined>;
+export interface ResultFormatterOptions {
+  notSpecifiedLabel?: string;
+}
 
 /**
  * Result formatter interface - formats normalized results for UI display
