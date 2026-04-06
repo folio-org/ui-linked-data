@@ -5,6 +5,7 @@ import {
   FACETS_API_ENDPOINT,
   MARC_PREVIEW_ENDPOINT,
   SOURCE_API_ENDPOINT,
+  SOURCE_API_RESPONSE_KEY,
 } from '@/common/constants/api.constants';
 
 import { AuthoritiesModal } from '../components/modals/AuthoritiesModal';
@@ -21,6 +22,7 @@ export interface ModalApiConfig {
     source?: string;
     facets?: string;
   };
+  sourceDataKey?: string;
   validationTarget?: Record<string, AuthorityValidationTarget>;
 }
 
@@ -71,6 +73,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         source: SOURCE_API_ENDPOINT.AUTHORITY,
         facets: FACETS_API_ENDPOINT.AUTHORITY,
       },
+      sourceDataKey: SOURCE_API_RESPONSE_KEY.AUTHORITY,
       validationTarget: {
         creator: AuthorityValidationTarget.CreatorOfWork,
       },
@@ -97,6 +100,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         source: SOURCE_API_ENDPOINT.AUTHORITY,
         facets: FACETS_API_ENDPOINT.AUTHORITY,
       },
+      sourceDataKey: SOURCE_API_RESPONSE_KEY.AUTHORITY,
       validationTarget: {
         subject: AuthorityValidationTarget.SubjectOfWork,
       },
@@ -123,6 +127,7 @@ export const COMPLEX_LOOKUP_MODAL_REGISTRY: Record<ComplexLookupType, ModalConfi
         source: SOURCE_API_ENDPOINT.AUTHORITY,
         facets: FACETS_API_ENDPOINT.AUTHORITY,
       },
+      sourceDataKey: SOURCE_API_RESPONSE_KEY.AUTHORITY,
       validationTarget: {
         institution: AuthorityValidationTarget.DegreeGrantingInstitution,
       },

@@ -6,14 +6,32 @@ const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
 
 interface AuthoritiesDataQueriesConfig {
   sourceEndpoint?: string;
+  sourceDataKey?: string;
   facetsEndpoint?: string;
   facet?: string;
+}
+
+function extractSourceData(response: unknown, sourceDataKey?: string): unknown {
+  if (!sourceDataKey) {
+    return response;
+  }
+
+  if (typeof response === 'object' && response !== null && sourceDataKey in response) {
+    return (response as Record<string, unknown>)[sourceDataKey];
+  }
+
+  return response;
 }
 
 /**
  * Hook that encapsulates React Query data fetching for authorities source and facets.
  */
-export function useAuthoritiesDataQueries({ sourceEndpoint, facetsEndpoint, facet }: AuthoritiesDataQueriesConfig) {
+export function useAuthoritiesDataQueries({
+  sourceEndpoint,
+  sourceDataKey,
+  facetsEndpoint,
+  facet,
+}: AuthoritiesDataQueriesConfig) {
   const {
     data: sourceData,
     isLoading: isSourceLoading,
@@ -30,7 +48,7 @@ export function useAuthoritiesDataQueries({ sourceEndpoint, facetsEndpoint, face
         sameOrigin: true,
       });
 
-      return data;
+      return extractSourceData(data, sourceDataKey);
     },
     enabled: false,
     staleTime: 0,

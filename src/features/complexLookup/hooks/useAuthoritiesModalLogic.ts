@@ -64,11 +64,13 @@ export function useAuthoritiesModalLogic({
   const hasComplexFlow = !!(entry && lookupContext && modalConfig);
   const marcPreviewEndpoint = modalConfig?.api?.endpoints?.marcPreview;
   const sourceEndpoint = modalConfig?.api?.endpoints?.source;
+  const sourceDataKey = modalConfig?.api?.sourceDataKey;
   const facetsEndpoint = modalConfig?.api?.endpoints?.facets;
 
   // Load source/facets on segment toggle and initial load
   const authoritiesData = useAuthoritiesSegmentData({
     sourceEndpoint,
+    sourceDataKey,
     facetsEndpoint,
     facet: 'sourceFileId',
     autoLoadOnMount: true,

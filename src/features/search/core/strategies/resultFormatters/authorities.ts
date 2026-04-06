@@ -21,7 +21,8 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
     return authoritiesList?.map(authorityEntry => {
       const selectedEntry = (authorityEntry.authority ?? authorityEntry) as AuthorityAsSearchResultDTO;
       const { id = '', authRefType = '', headingRef = '', headingType = '', sourceFileId = '' } = selectedEntry;
-      const sourceLabel = sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name ?? sourceFileId;
+      const sourceLabel =
+        sourceData?.find(({ id: sourceId }) => sourceId === sourceFileId)?.name ?? (sourceFileId || 'N/A');
       const { isAnchor } = authorityEntry;
 
       return {

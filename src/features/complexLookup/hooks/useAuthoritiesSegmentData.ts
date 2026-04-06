@@ -8,6 +8,7 @@ import { useAuthoritiesDataQueries } from './useAuthoritiesDataQueries';
 
 interface AuthoritiesSegmentDataConfig {
   sourceEndpoint?: string;
+  sourceDataKey?: string;
   facetsEndpoint?: string;
   facet?: string;
   autoLoadOnMount?: boolean;
@@ -20,6 +21,7 @@ interface AuthoritiesSegmentDataConfig {
  */
 export function useAuthoritiesSegmentData({
   sourceEndpoint,
+  sourceDataKey,
   facetsEndpoint,
   facet,
   autoLoadOnMount,
@@ -36,6 +38,7 @@ export function useAuthoritiesSegmentData({
     isLoading: isQueriesLoading,
   } = useAuthoritiesDataQueries({
     sourceEndpoint,
+    sourceDataKey,
     facetsEndpoint,
     facet,
   });
