@@ -1,7 +1,9 @@
+@use '@/common/styles/common.scss' as *;
+
 .preview-container {
   min-width: 475px;
   max-width: 475px;
-  border-right: 1px solid #00000019;
+  border-right: 1px solid $disabled-border-color;
 
   .preview-container-header {
     display: flex;
@@ -15,7 +17,7 @@
   }
 
   &.positioned-second {
-    border-left: 1px solid rgba(0, 0, 0, 0.0980392157);
+    border-left: 1px solid $modal-border-color;
     border-right: none;
   }
 }

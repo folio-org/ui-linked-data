@@ -1,4 +1,4 @@
-import { FC, type ReactElement, ReactNode, memo, useEffect } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useIntl } from 'react-intl';
 
@@ -35,10 +35,9 @@ interface Props {
   children?: ReactNode;
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
-  spreadModalControls?: boolean;
   titleClassName?: string;
-  alignTitleCenter?: boolean;
   ariaModalKind?: string;
+  wrapContents?: boolean;
 }
 
 const Modal: FC<Props> = ({
@@ -60,13 +59,13 @@ const Modal: FC<Props> = ({
   cancelButtonHidden,
   showCloseIconButton = true,
   showModalControls = true,
-  spreadModalControls = false,
   titleClassName,
-  alignTitleCenter = false,
+  wrapContents = true,
   ariaModalKind = AriaModalKind.Basic,
   'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
+  const modalRef = useRef<HTMLDivElement>(null);
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
@@ -89,6 +88,10 @@ const Modal: FC<Props> = ({
     }
   };
 
+  const wrappedContents = () => {
+    return wrapContents ? <div className="modal-content">{children}</div> : children;
+  };
+
   return isOpen && portalElement
     ? createPortal(
         <>
@@ -97,12 +100,20 @@ const Modal: FC<Props> = ({
             focusTrapOptions={{
               clickOutsideDeactivates: shouldCloseOnExternalClick,
               escapeDeactivates: shouldCloseOnEsc,
+              fallbackFocus: modalRef.current || undefined,
             }}
           >
-            <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
+            <div
+              className={classNames(['modal', className])}
+              role="dialog"
+              data-testid={modalTestId || 'modal'}
+              tabIndex={-1}
+              ref={modalRef}
+            >
               <div className={classNames(['modal-header', classNameHeader])}>
                 {showCloseIconButton && (
                   <Button
+                    type={ButtonType.Icon}
                     onClick={onClose}
                     className="close-button"
                     ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
@@ -111,11 +122,10 @@ const Modal: FC<Props> = ({
                   </Button>
                 )}
                 <h3 className={classNames(['title', titleClassName])}>{title}</h3>
-                {alignTitleCenter && <span className="empty-block" />}
               </div>
-              {!!children && children}
+              {!!children && wrappedContents()}
               {showModalControls && (
-                <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
+                <div className="modal-controls">
                   {!cancelButtonHidden && (
                     <Button
                       disabled={cancelButtonDisabled}

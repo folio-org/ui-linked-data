@@ -18,27 +18,27 @@ export const CustomProfileToggle = () => {
 
   return (
     <div className="settings-option">
-      <input
-        id="settings-active-default"
-        data-testid="settings-active-default"
-        name="settings-active"
-        type="radio"
-        checked={!isSettingsActive}
-        onChange={() => handleToggle(false)}
-      />
       <label htmlFor="settings-active-default">
+        <input
+          id="settings-active-default"
+          data-testid="settings-active-default"
+          name="settings-active"
+          type="radio"
+          checked={!isSettingsActive}
+          onChange={() => handleToggle(false)}
+        />
         <FormattedMessage id="ld.profileDefault" />
       </label>
       <span className="empty-block" />
-      <input
-        id="settings-active-custom"
-        data-testid="settings-active-custom"
-        name="settings-active"
-        type="radio"
-        checked={isSettingsActive}
-        onChange={() => handleToggle(true)}
-      />
       <label htmlFor="settings-active-custom">
+        <input
+          id="settings-active-custom"
+          data-testid="settings-active-custom"
+          name="settings-active"
+          type="radio"
+          checked={isSettingsActive}
+          onChange={() => handleToggle(true)}
+        />
         <FormattedMessage id="ld.custom" />
       </label>
     </div>

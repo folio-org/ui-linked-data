@@ -70,20 +70,16 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       onClose={handleClose}
       onCancel={handleCancel}
       onSubmit={handleSubmit}
-      spreadModalControls={true}
-      alignTitleCenter={true}
       title={formatMessage({ id: 'ld.unsavedProfileChanges' })}
       cancelButtonLabel={formatMessage({ id: 'ld.continueWithoutSaving' })}
       submitButtonLabel={formatMessage({ id: 'ld.saveAndContinue' })}
     >
-      <div className="modal-content">
-        <p>
-          <FormattedMessage id="ld.unsavedProfilePrompt" />
-        </p>
-        <p>
-          <FormattedMessage id="ld.unsavedProfileNote" />
-        </p>
-      </div>
+      <p>
+        <FormattedMessage id="ld.unsavedProfilePrompt" />
+      </p>
+      <p>
+        <FormattedMessage id="ld.unsavedProfileNote" />
+      </p>
     </Modal>
   );
 };

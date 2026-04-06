@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import classNames from 'classnames';
 
 import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
-import { Button } from '@/components/Button';
+import { Button, ButtonType } from '@/components/Button';
 
 import { useUIState } from '@/store';
 
@@ -38,6 +38,7 @@ export const ControlPane: FC<ControlPaneProps> = ({
       {renderCloseButton?.()}
       {isSearchPaneCollapsed && (
         <Button
+          type={ButtonType.Icon}
           onClick={() => setIsSearchPaneCollapsed(false)}
           className="open-ctl"
           ariaLabel={formatMessage({ id: 'ld.aria.searchPane.open' })}

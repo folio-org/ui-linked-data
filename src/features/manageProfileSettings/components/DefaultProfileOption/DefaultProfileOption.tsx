@@ -53,14 +53,14 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
 
   return (
     <div className="default-settings">
-      <input
-        type="checkbox"
-        checked={isTypeDefaultProfile}
-        onChange={handleDefaultChange}
-        id="type-default-setting"
-        data-testid="type-default-setting"
-      />
       <label htmlFor="type-default-setting">
+        <input
+          type="checkbox"
+          checked={isTypeDefaultProfile}
+          onChange={handleDefaultChange}
+          id="type-default-setting"
+          data-testid="type-default-setting"
+        />
         <FormattedMessage id="ld.setDefaultTypeProfile" values={{ type: getTypeLabel() }} />
       </label>
     </div>

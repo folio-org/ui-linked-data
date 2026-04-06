@@ -3,7 +3,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { Button } from '@/components/Button';
+import { Button, ButtonType } from '@/components/Button';
 
 import { useUIState } from '@/store';
 
@@ -69,6 +69,7 @@ export const RootControls: FC<RootControlsProps> = ({ children, className, showF
               <FormattedMessage id={showFilters ? 'ld.searchAndFilter' : 'ld.search'} />
             </h4>
             <Button
+              type={ButtonType.Icon}
               className="close-ctl"
               onClick={handleToggleCollapse}
               ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}

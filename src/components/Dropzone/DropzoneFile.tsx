@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Button } from '@/components/Button';
+import { Button, ButtonType } from '@/components/Button';
 
 import Report16 from '@/assets/report-16.svg?react';
 import Trash16 from '@/assets/trash-16.svg?react';
@@ -26,7 +26,7 @@ export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
         </span>
         <span className="date">{formatTimestamp(file.lastModified)}</span>
       </span>
-      <Button onClick={() => onRemoveFile(file)} data-testid="dropzone-file-remove">
+      <Button type={ButtonType.Icon} onClick={() => onRemoveFile(file)} data-testid="dropzone-file-remove">
         <Trash16 />
       </Button>
     </div>

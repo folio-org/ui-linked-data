@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler, ReactNode, RefObject } from 'react';
+import { AriaAttributes, FC, KeyboardEventHandler, MouseEventHandler, ReactNode, Ref } from 'react';
 
 import classNames from 'classnames';
 
@@ -10,7 +10,6 @@ export enum ButtonType {
   Text = 'text',
   Link = 'link',
   Primary = 'primary',
-  Passive = 'passive',
   Ghost = 'ghost',
   Icon = 'icon',
   ListItem = 'list-item',
@@ -22,15 +21,17 @@ type Button = {
   label?: string | ReactNode;
   children?: string | ReactNode;
   onClick?: MouseEventHandler<HTMLButtonElement> | VoidFunction;
+  onKeyDown?: KeyboardEventHandler<HTMLButtonElement> | VoidFunction;
   className?: string;
   prefix?: string | ReactNode;
   disabled?: boolean;
   'data-testid'?: string;
   role?: string;
   ariaLabel?: string;
-  ariaHasPopup?: boolean;
+  ariaHaspopup?: AriaAttributes['aria-haspopup'];
   ariaExpanded?: boolean;
-  ref?: RefObject<HTMLButtonElement | null>;
+  tabbable?: boolean;
+  ref?: Ref<HTMLButtonElement | null>;
 };
 
 export const Button: FC<Button> = ({
@@ -39,14 +40,16 @@ export const Button: FC<Button> = ({
   label,
   children,
   onClick,
+  onKeyDown,
   className = '',
-  type = ButtonType.Passive,
+  type = ButtonType.Primary,
   disabled,
   'data-testid': dataTestId,
   role,
   ariaLabel,
-  ariaHasPopup,
+  ariaHaspopup,
   ariaExpanded,
+  tabbable = true,
   ref,
 }) => (
   <button
@@ -54,11 +57,14 @@ export const Button: FC<Button> = ({
     ref={ref}
     data-testid={dataTestId}
     disabled={disabled}
+    aria-disabled={disabled}
     onClick={onClick}
+    onKeyDown={onKeyDown}
     role={role}
     aria-label={ariaLabel}
-    aria-haspopup={ariaHasPopup}
+    aria-haspopup={ariaHaspopup}
     aria-expanded={ariaExpanded}
+    tabIndex={tabbable ? 0 : -1}
     className={classNames('button', {
       [`button-${type}`]: type,
       [className]: className,
