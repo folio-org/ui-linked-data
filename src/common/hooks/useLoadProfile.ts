@@ -1,19 +1,19 @@
+import { useQueryClient } from '@tanstack/react-query';
+
 import { fetchProfile } from '@/common/api/profiles.api';
 
-import { useProfileState } from '@/store';
+export const PROFILE_QUERY_KEY = 'profile';
+const STALE_TIME = 12 * 60 * 60 * 1000; // 12 hours
 
 export const useLoadProfile = () => {
-  const { profiles, setProfiles } = useProfileState(['profiles', 'setProfiles']);
+  const queryClient = useQueryClient();
 
-  const loadProfile = async (profileId: string | number) => {
-    if (profiles[profileId]) {
-      return profiles[profileId];
-    }
-
-    const profile = await fetchProfile(profileId);
-    setProfiles(prev => ({ ...prev, [profileId]: profile }));
-
-    return profile;
+  const loadProfile = (profileId: string | number) => {
+    return queryClient.ensureQueryData({
+      queryKey: [PROFILE_QUERY_KEY, String(profileId)],
+      queryFn: () => fetchProfile(profileId),
+      staleTime: STALE_TIME,
+    });
   };
 
   return {

@@ -73,6 +73,16 @@
     .heading {
       font-size: 1.138rem;
     }
+
+    .block-heading-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dropdown-options {
+      width: 20rem;
+    }
   }
 }
 

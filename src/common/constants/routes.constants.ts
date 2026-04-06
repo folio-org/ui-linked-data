@@ -72,3 +72,5 @@ export enum ForceNavigateToDest {
   CreatePage = 'createPage',
   CreatePageAsClone = 'createPageAsClone',
 }
+
+export const INVENTORY_VIEW_URL = '/inventory/view';

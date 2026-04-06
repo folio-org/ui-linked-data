@@ -14,7 +14,7 @@ export const profileWarningsByName = {
       Books: ['ld.field.typeOfContinuingResource'],
     },
     Books: {
-      'Serials Work': ['ld.na'],
+      'Serials Work': ['ld.field.dissertation'],
     },
   },
   [TYPE_URIS.INSTANCE as ResourceTypeURL]: {

@@ -1,4 +1,4 @@
-import { getLabelEntry } from './schema.data';
+﻿import { getLabelEntry } from './schema.data';
 
 export const updatedSchema = new Map([
   [

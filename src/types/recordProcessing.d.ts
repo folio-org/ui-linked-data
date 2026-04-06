@@ -9,6 +9,7 @@ type UserValueDTO = {
   blockUri?: string;
   groupUri?: string;
   fieldUri?: string;
+  labelMap?: Record<string, string>;
 };
 
 type RecordNormalizingCasesMap = Record<
