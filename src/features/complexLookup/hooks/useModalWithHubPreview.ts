@@ -7,6 +7,7 @@ interface MarcPreviewCleanup {
   resetPreview: VoidFunction;
   resetMarcPreviewData: VoidFunction;
   resetMarcPreviewMetadata: VoidFunction;
+  clearFailedEntryIds: VoidFunction;
 }
 
 interface UseModalWithHubPreviewParams {
