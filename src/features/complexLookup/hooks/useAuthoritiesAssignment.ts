@@ -26,6 +26,7 @@ interface UseAuthoritiesAssignmentResult {
   handleAssign: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
   isAssigning: boolean;
   checkFailedId: (id?: string) => boolean;
+  clearFailedEntryIds: VoidFunction;
 }
 
 export function useAuthoritiesAssignment({
@@ -170,5 +171,6 @@ export function useAuthoritiesAssignment({
     handleAssign,
     isAssigning,
     checkFailedId,
+    clearFailedEntryIds,
   };
 }

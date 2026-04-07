@@ -21,6 +21,7 @@ interface AuthoritiesModalCleanup {
   resetPreview: VoidFunction;
   resetMarcPreviewData: VoidFunction;
   resetMarcPreviewMetadata: VoidFunction;
+  clearFailedEntryIds: VoidFunction;
 }
 
 interface UseAuthoritiesModalLogicResult {
@@ -151,6 +152,7 @@ export function useAuthoritiesModalLogic({
       resetPreview,
       resetMarcPreviewData,
       resetMarcPreviewMetadata,
+      clearFailedEntryIds: authoritiesAssignment?.clearFailedEntryIds,
     },
   };
 }
