@@ -51,6 +51,7 @@ export default [
       '@typescript-eslint/no-unused-expressions': 'warn',
       '@typescript-eslint/no-require-imports': 'warn',
       'react-hooks/exhaustive-deps': 'off',
+      'react-compiler/react-compiler': 'off',
       'no-fallthrough': [
         'error',
         {
@@ -69,6 +70,24 @@ export default [
     plugins: {
       jest,
     },
+
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+  {
+    files: ['src/test/**/*.js'],
+
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
+  {
+    files: ['src/test/**/*.ts'],
 
     rules: {
       'jest/prefer-expect-assertions': 'off',
