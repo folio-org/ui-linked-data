@@ -7,3 +7,4 @@ export {
   formatComplexLookupDisplayValue,
   getDefaultHubSource,
 } from './complexLookup.helper';
+export { extractNestedData } from './dataExtraction';

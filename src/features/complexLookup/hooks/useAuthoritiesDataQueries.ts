@@ -2,25 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 
 import baseApi from '@/common/api/base.api';
 
+import { extractNestedData } from '../utils';
+
 const DEFAULT_SEARCH_FACETS_QUERY = 'id=*';
+const QUERY_CONFIG = {
+  enabled: false,
+  staleTime: 0,
+  gcTime: 0,
+};
 
 interface AuthoritiesDataQueriesConfig {
   sourceEndpoint?: string;
   sourceDataKey?: string;
   facetsEndpoint?: string;
   facet?: string;
-}
-
-function extractSourceData(response: unknown, sourceDataKey?: string): unknown {
-  if (!sourceDataKey) {
-    return response;
-  }
-
-  if (typeof response === 'object' && response !== null && sourceDataKey in response) {
-    return (response as Record<string, unknown>)[sourceDataKey];
-  }
-
-  return response;
 }
 
 /**
@@ -36,7 +31,7 @@ export function useAuthoritiesDataQueries({
     data: sourceData,
     isLoading: isSourceLoading,
     refetch: refetchSource,
-  } = useQuery({
+  } = useQuery<SourceDataDTO>({
     queryKey: ['authorities-source', sourceEndpoint],
     queryFn: async () => {
       if (!sourceEndpoint) {
@@ -48,18 +43,16 @@ export function useAuthoritiesDataQueries({
         sameOrigin: true,
       });
 
-      return extractSourceData(data, sourceDataKey);
+      return extractNestedData(data, sourceDataKey) as SourceDataDTO;
     },
-    enabled: false,
-    staleTime: 0,
-    gcTime: 0,
+    ...QUERY_CONFIG,
   });
 
   const {
     data: facetsData,
     isLoading: isFacetsLoading,
     refetch: refetchFacets,
-  } = useQuery({
+  } = useQuery<FacetsDTO>({
     queryKey: ['authorities-facets', facetsEndpoint, facet],
     queryFn: async () => {
       if (!facetsEndpoint) {
@@ -78,11 +71,9 @@ export function useAuthoritiesDataQueries({
         sameOrigin: true,
       });
 
-      return data;
+      return data as FacetsDTO;
     },
-    enabled: false,
-    staleTime: 0,
-    gcTime: 0,
+    ...QUERY_CONFIG,
   });
 
   return {
