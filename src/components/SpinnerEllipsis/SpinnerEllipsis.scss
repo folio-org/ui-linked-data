@@ -1,4 +1,5 @@
 /* https://github.com/folio-org/stripes-components/blob/master/lib/Icon/DotSpinner.css */
+@use '@/common/styles/common.scss' as *;
 
 .spinner {
   display: flex;
@@ -18,7 +19,7 @@
     width: 33%;
     height: 33%;
     margin: 0 8%;
-    background-color: rgba(0, 0, 0, 62%);
+    background-color: $buttonIcon;
     border-radius: 999px;
     display: inline-block;
     animation: sk-bouncedelay 1.4s infinite ease-in-out both;

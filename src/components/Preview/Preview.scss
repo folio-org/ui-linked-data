@@ -13,14 +13,14 @@
     width: 100%;
 
     &:not(:last-child) {
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid $modal-border-color;
       padding-right: 0.938rem;
       margin-right: 0.938rem;
     }
   }
 
   .preview-block {
-    border-bottom: 1px solid #00000019;
+    border-bottom: 1px solid $disabled-border-color;
     margin-top: 0.75rem;
     padding-bottom: 0.75rem;
 
@@ -73,8 +73,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid $modal-border-color;
+    background-color: $title-bar-bg-color;
 
     &-plain {
       padding-top: 0.75rem;
@@ -90,7 +90,7 @@
       }
 
       span {
-        color: rgba(0, 0, 0, 0.6);
+        color: $buttonIcon;
       }
     }
   }

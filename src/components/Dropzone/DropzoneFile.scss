@@ -1,6 +1,8 @@
+@use '@/common/styles/common.scss' as *;
+
 .dropzone-file {
   align-items: center;
-  border: 2px solid rgba(0, 0, 0, 50%);
+  border: 2px solid $overlay-bg-color;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
@@ -20,7 +22,7 @@
     }
 
     .date {
-      color: rgba(0, 0, 0, 62%);
+      color: $buttonIcon;
       flex-grow: 1;
     }
   }

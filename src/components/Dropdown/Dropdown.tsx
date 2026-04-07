@@ -7,6 +7,8 @@ import { DropdownItemType } from '@/common/constants/uiElements.constants';
 
 import Caret from '@/assets/dropdown-caret.svg?react';
 
+import { Button, ButtonType } from '../Button';
+
 import './Dropdown.scss';
 
 type DropdownProps = {
@@ -40,10 +42,6 @@ export const Dropdown: FC<DropdownProps> = ({
   const toggle = () => setIsExpanded(oldValue => !oldValue);
 
   const handleButtonKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    buttonRef.current?.blur();
-
     switch (event.key) {
       case 'ArrowDown':
         expand();
@@ -64,6 +62,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
       case 'Enter':
       case ' ':
+        event.preventDefault();
         toggle();
         break;
 
@@ -73,8 +72,6 @@ export const Dropdown: FC<DropdownProps> = ({
   };
 
   const handleOptionKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-
     const { key, currentTarget } = event;
     const { nextSibling, previousSibling, parentNode } = currentTarget;
 
@@ -104,6 +101,7 @@ export const Dropdown: FC<DropdownProps> = ({
 
       case ' ':
       case 'Enter':
+        event.preventDefault();
         optionsRef.current[index]?.click();
         collapse();
         break;
@@ -136,9 +134,9 @@ export const Dropdown: FC<DropdownProps> = ({
 
   return (
     <div ref={ref} className={classNames('dropdown', className)}>
-      <button
-        type="button"
-        className={classNames(['dropdown-button', isExpanded ? 'expanded' : 'collapsed', 'button-highlighted'])}
+      <Button
+        type={ButtonType.Highlighted}
+        className={classNames(['dropdown-button', isExpanded ? 'expanded' : 'collapsed'])}
         ref={buttonRef}
         onClick={toggle}
         onKeyDown={handleButtonKeyDown}
@@ -149,7 +147,7 @@ export const Dropdown: FC<DropdownProps> = ({
           <FormattedMessage id={labelId} />
         </span>
         <Caret className="dropdown-icon" />
-      </button>
+      </Button>
 
       <div className={classNames(['dropdown-options', isExpanded ? 'expanded' : 'collapsed'])}>
         {items?.map(({ id, labelId, data }) => (
@@ -170,16 +168,15 @@ export const Dropdown: FC<DropdownProps> = ({
                   switch (type) {
                     case DropdownItemType.basic:
                       return (
-                        <button
-                          type="button"
+                        <Button
+                          type={ButtonType.Text}
                           key={id}
                           ref={elem => {
                             optionsRef.current[index] = elem;
                           }}
                           role="menuitem"
                           disabled={isDisabled}
-                          aria-disabled={isDisabled}
-                          tabIndex={isExpanded ? 0 : -1}
+                          tabbable={isExpanded}
                           onClick={() => {
                             action?.();
                             toggle();
@@ -192,7 +189,7 @@ export const Dropdown: FC<DropdownProps> = ({
                           <span className="dropdown-options-button-label">
                             <FormattedMessage id={labelId} />
                           </span>
-                        </button>
+                        </Button>
                       );
                     case DropdownItemType.customComponent:
                       return renderComponent?.(id);

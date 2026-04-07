@@ -3,7 +3,6 @@
   height: 26px;
   min-height: 26px;
   padding: 1px 0.5rem 0;
-  border: 1px solid gray;
   font-size: 1rem;
   font-family: inherit;
 
@@ -11,15 +10,6 @@
     width: 100%;
     min-width: 100%;
     max-width: 100%;
-  }
-
-  &:focus {
-    border: 1px solid #3e75cf;
-    outline: 0;
-    box-shadow:
-      0 0 0 1px #3e75cf,
-      0 0 0 1px #3e75cf,
-      0 0 0 4px #d8e3f5;
   }
 }
 

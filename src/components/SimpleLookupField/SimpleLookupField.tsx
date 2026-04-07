@@ -1,6 +1,14 @@
 import { FC, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, GroupBase, MultiValue, StylesConfig, createFilter } from 'react-select';
+import {
+  ActionMeta,
+  CSSObjectWithLabel,
+  GroupBase,
+  MultiValue,
+  OptionProps,
+  StylesConfig,
+  createFilter,
+} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
@@ -15,7 +23,6 @@ import { useStatusState } from '@/store';
 import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
-import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
 
 import './SimpleLookupField.scss';
 
@@ -35,6 +42,19 @@ interface Props {
 }
 
 const LoadingMessage: FC = () => <FormattedMessage id="ld.loading" />;
+
+// Most of react-select can be styled from CSS, but :focus on the pill removal button
+// cannot, so remove most styling with `unstyled` but do define this one state.
+// Uses $blue-400 and $button-standard for the boxShadow.
+const customStyles = {
+  multiValueRemove: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({
+    ...base,
+    ...(state.isFocused && {
+      background: 'transparent',
+      boxShadow: '0 0 0 1px inset #6591d9, 0 0 0 2px inset #1960a4',
+    }),
+  }),
+};
 
 export const SimpleLookupField: FC<Props> = ({
   uri,
@@ -146,7 +166,8 @@ export const SimpleLookupField: FC<Props> = ({
       placeholder={<FormattedMessage id="ld.select" />}
       loadingMessage={() => <LoadingMessage />}
       inputId="creatable-select-input"
-      styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
+      unstyled
+      styles={customStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({
         ignoreCase: true,
         ignoreAccents: true,

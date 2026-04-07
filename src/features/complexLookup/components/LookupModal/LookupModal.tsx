@@ -28,6 +28,7 @@ export const LookupModal: FC<LookupModalProps> = ({ isOpen, onClose, title, chil
         'modal-complex-lookup-header',
         IS_EMBEDDED_MODE && 'modal-complex-lookup-header-embedded',
       ])}
+      wrapContents={false}
       showModalControls={false}
     >
       <div className="complex-lookup-search-contents" data-testid="complex-lookup-search-contents">

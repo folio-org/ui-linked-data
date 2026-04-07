@@ -1,8 +1,10 @@
+@use '@/common/styles/common.scss' as *;
+
 .comparison {
   display: flex;
   flex-direction: column;
   width: 700px;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid $modal-border-color;
 
   header {
     display: flex;
@@ -23,7 +25,7 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid $modal-border-color;
 
       > * {
         font-size: 0.875rem;
@@ -42,7 +44,7 @@
     width: 18px;
     height: 18px;
     text-align: center;
-    background-color: #9fc7ea;
+    background-color: $comparison-index-bg-color;
     border-radius: 0.125rem;
     font-size: 12px;
     display: flex;
@@ -63,7 +65,7 @@
       overflow-x: hidden;
       overflow-y: scroll;
       flex: 1;
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid $modal-border-color;
 
       &-header {
         display: flex;
@@ -96,7 +98,7 @@
       align-self: center;
       width: 100%;
       font-size: 1.138rem;
-      color: rgba(0, 0, 0, 0.62);
+      color: $buttonIcon;
 
       svg {
         width: 2.5rem;

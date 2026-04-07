@@ -49,17 +49,13 @@ export const ModalSaveUnusedProfileComponents: FC<ModalSaveUnusedProfileComponen
       onClose={handleClose}
       onCancel={handleClose}
       onSubmit={handleSubmit}
-      spreadModalControls={true}
-      alignTitleCenter={true}
       title={formatMessage({ id: 'ld.profileComponentsDeselected' })}
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       submitButtonLabel={formatMessage({ id: 'ld.save' })}
     >
-      <div className="modal-content">
-        <p>
-          <FormattedMessage id="ld.removedProfileComponentsResult" />
-        </p>
-      </div>
+      <p>
+        <FormattedMessage id="ld.removedProfileComponentsResult" />
+      </p>
     </Modal>
   );
 };

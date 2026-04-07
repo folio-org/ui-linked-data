@@ -3,8 +3,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { Modal } from '@/components/Modal';
 
-import './ModalDeleteRecord.scss';
-
 interface Props {
   isOpen: boolean;
   toggleIsOpen: (value: boolean) => void;

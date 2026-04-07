@@ -1,3 +1,5 @@
+@use '@/common/styles/common.scss' as *;
+
 .instances-list {
   padding: 0.75rem 0.938rem;
 
@@ -13,7 +15,7 @@
 
   .no-instances {
     font-size: 1.125rem;
-    color: rgba(0, 0, 0, 0.62);
+    color: $buttonIcon;
     text-align: center;
     padding: 2.5rem 0;
   }

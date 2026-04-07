@@ -2,7 +2,7 @@
 
 .work-details-card {
   padding: 1rem 0.5rem 1rem 1rem;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: $title-bar-bg-color;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -37,7 +37,7 @@
   }
 
   .details {
-    margin-left: 2.25rem;
+    margin-left: 2.7rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
@@ -53,18 +53,18 @@
       margin-left: -8px; /* offset padding position */
 
       &:hover {
-        color: #23385a;
+        color: $blue-850;
         background-color: $buttonHover;
       }
 
       &:focus-visible {
-        color: #23385a;
+        color: $blue-850;
         outline-color: $blue-2f;
       }
 
       &:active {
-        color: #fff;
-        background-color: rgba(0, 0, 0, 0.62);
+        color: $base;
+        background-color: $buttonIcon;
       }
     }
 
