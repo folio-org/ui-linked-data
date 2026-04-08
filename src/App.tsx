@@ -4,6 +4,7 @@ import { Navigate, RouteObject, RouterProvider, createBrowserRouter } from 'reac
 import { OKAPI_CONFIG } from '@/common/constants/api.constants';
 import { DEFAULT_LOCALE } from '@/common/constants/i18n.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
+import { LOCALES } from '@/common/i18n/locales';
 import { localStorageService } from '@/common/services/storage';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Loading } from '@/components/Loading';
@@ -66,13 +67,20 @@ export const routes: RouteObject[] = [
 const createRouter = (basename: string) => createBrowserRouter(routes, { basename });
 
 const Container: FC<IContainer> = ({ routePrefix = '', config }) => {
-  const { setCustomEvents, setHasNavigationOrigin } = useConfigState(['setCustomEvents', 'setHasNavigationOrigin']);
+  const { setCustomEvents, setHasNavigationOrigin, setLocale } = useConfigState([
+    'setCustomEvents',
+    'setHasNavigationOrigin',
+    'setLocale',
+  ]);
   const cachedMessages = useRef({ [DEFAULT_LOCALE]: en });
   const router = useMemo(() => createRouter(routePrefix), [routePrefix]);
 
   useEffect(() => {
     setCustomEvents(config?.customEvents as Record<string, string>);
     config?.navigationOrigin && setHasNavigationOrigin(true);
+    setLocale(
+      (config?.locale as string) || localStorageService.deserialize(OKAPI_CONFIG)?.locale || LOCALES.ENGLISH_US,
+    );
   }, [config]);
 
   return (
