@@ -1307,7 +1307,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
-            { [realBFLiteUris.TITLE]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
             { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
           ],
         },
@@ -1316,7 +1316,7 @@ describe('recordProcessingCases', () => {
       const testResult = {
         [blockKey]: {
           [groupKey]: [
-            { [realBFLiteUris.TITLE]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
             { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
             { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
           ],
