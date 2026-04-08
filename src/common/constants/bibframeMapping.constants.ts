@@ -59,7 +59,6 @@ export const BFLITE_URIS = {
   LIBRARY_CARRIER: 'http://bibfra.me/vocab/library/carrier',
   LIBRARY_ACCESS_LOCATION: 'http://bibfra.me/vocab/library/accessLocation',
   NOTES: '_notes',
-  GEOGRAPHIC_COVERAGE: 'http://id.loc.gov/ontologies/bibframe/geographicCoverage',
   GOVERNMENT_PUBLICATION: 'http://bibfra.me/vocab/library/governmentPublication',
   DATE_START: 'http://bibfra.me/vocab/lite/dateStart',
   ORIGIN_PLACE: 'http://bibfra.me/vocab/library/originPlace',
