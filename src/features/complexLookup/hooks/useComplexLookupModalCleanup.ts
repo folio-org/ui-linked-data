@@ -5,6 +5,7 @@ interface MarcPreviewCleanup {
   resetPreview: VoidFunction;
   resetMarcPreviewData: VoidFunction;
   resetMarcPreviewMetadata: VoidFunction;
+  clearFailedEntryIds: VoidFunction;
 }
 
 interface HubPreviewCleanup {
@@ -37,6 +38,7 @@ export function useComplexLookupModalCleanup({
       withMarcPreview.resetMarcPreviewData();
       withMarcPreview.resetMarcPreviewMetadata();
       withMarcPreview.resetPreview();
+      withMarcPreview.clearFailedEntryIds();
     }
 
     // Clean up Hub preview state if applicable

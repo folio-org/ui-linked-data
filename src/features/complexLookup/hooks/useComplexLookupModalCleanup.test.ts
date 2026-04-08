@@ -8,6 +8,7 @@ describe('useComplexLookupModalCleanup', () => {
   const mockResetPreview = jest.fn();
   const mockResetMarcPreviewData = jest.fn();
   const mockResetMarcPreviewMetadata = jest.fn();
+  const mockClearFailedEntryIds = jest.fn();
 
   describe('Basic cleanup', () => {
     it('returns handleModalClose function', () => {
@@ -40,6 +41,7 @@ describe('useComplexLookupModalCleanup', () => {
       resetPreview: mockResetPreview,
       resetMarcPreviewData: mockResetMarcPreviewData,
       resetMarcPreviewMetadata: mockResetMarcPreviewMetadata,
+      clearFailedEntryIds: mockClearFailedEntryIds,
     };
 
     it('calls all MARC preview cleanup functions when provided', () => {
@@ -57,6 +59,7 @@ describe('useComplexLookupModalCleanup', () => {
       expect(mockResetPreview).toHaveBeenCalledTimes(1);
       expect(mockResetMarcPreviewData).toHaveBeenCalledTimes(1);
       expect(mockResetMarcPreviewMetadata).toHaveBeenCalledTimes(1);
+      expect(mockClearFailedEntryIds).toHaveBeenCalledTimes(1);
     });
 
     it('calls onClose after MARC preview cleanup', () => {
@@ -77,6 +80,7 @@ describe('useComplexLookupModalCleanup', () => {
       const trackingSetIsMarcPreviewOpen = jest.fn(() => callOrder.push('setIsMarcPreviewOpen'));
       const trackingResetMarcPreviewData = jest.fn(() => callOrder.push('resetMarcPreviewData'));
       const trackingResetMarcPreviewMetadata = jest.fn(() => callOrder.push('resetMarcPreviewMetadata'));
+      const trackingClearFailedEntryIds = jest.fn(() => callOrder.push('clearFailedEntryIds'));
       const trackingResetPreview = jest.fn(() => callOrder.push('resetPreview'));
       const trackingOnClose = jest.fn(() => callOrder.push('onClose'));
 
@@ -88,6 +92,7 @@ describe('useComplexLookupModalCleanup', () => {
             resetPreview: trackingResetPreview,
             resetMarcPreviewData: trackingResetMarcPreviewData,
             resetMarcPreviewMetadata: trackingResetMarcPreviewMetadata,
+            clearFailedEntryIds: trackingClearFailedEntryIds,
           },
         }),
       );
@@ -99,6 +104,7 @@ describe('useComplexLookupModalCleanup', () => {
         'resetMarcPreviewData',
         'resetMarcPreviewMetadata',
         'resetPreview',
+        'clearFailedEntryIds',
         'onClose',
       ]);
     });
@@ -168,6 +174,7 @@ describe('useComplexLookupModalCleanup', () => {
       resetPreview: mockResetPreview,
       resetMarcPreviewData: mockResetMarcPreviewData,
       resetMarcPreviewMetadata: mockResetMarcPreviewMetadata,
+      clearFailedEntryIds: mockClearFailedEntryIds,
     };
 
     const mockResetIsHubPreviewOpen = jest.fn();
@@ -193,6 +200,7 @@ describe('useComplexLookupModalCleanup', () => {
       expect(mockResetPreview).toHaveBeenCalledTimes(1);
       expect(mockResetMarcPreviewData).toHaveBeenCalledTimes(1);
       expect(mockResetMarcPreviewMetadata).toHaveBeenCalledTimes(1);
+      expect(mockClearFailedEntryIds).toHaveBeenCalledTimes(1);
       expect(mockResetIsHubPreviewOpen).toHaveBeenCalledTimes(1);
       expect(mockResetHubPreview).toHaveBeenCalledTimes(1);
       expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -203,6 +211,7 @@ describe('useComplexLookupModalCleanup', () => {
       const trackingSetIsMarcPreviewOpen = jest.fn(() => callOrder.push('setIsMarcPreviewOpen'));
       const trackingResetMarcPreviewData = jest.fn(() => callOrder.push('resetMarcPreviewData'));
       const trackingResetMarcPreviewMetadata = jest.fn(() => callOrder.push('resetMarcPreviewMetadata'));
+      const trackingClearFailedEntryIds = jest.fn(() => callOrder.push('clearFailedEntryIds'));
       const trackingResetMarcPreview = jest.fn(() => callOrder.push('resetMarcPreview'));
       const trackingResetIsHubPreviewOpen = jest.fn(() => callOrder.push('resetIsHubPreviewOpen'));
       const trackingResetHubPreview = jest.fn(() => callOrder.push('resetHubPreview'));
@@ -216,6 +225,7 @@ describe('useComplexLookupModalCleanup', () => {
             resetPreview: trackingResetMarcPreview,
             resetMarcPreviewData: trackingResetMarcPreviewData,
             resetMarcPreviewMetadata: trackingResetMarcPreviewMetadata,
+            clearFailedEntryIds: trackingClearFailedEntryIds,
           },
           withHubPreview: {
             resetIsHubPreviewOpen: trackingResetIsHubPreviewOpen,
@@ -231,6 +241,7 @@ describe('useComplexLookupModalCleanup', () => {
         'resetMarcPreviewData',
         'resetMarcPreviewMetadata',
         'resetMarcPreview',
+        'clearFailedEntryIds',
         'resetIsHubPreviewOpen',
         'resetHubPreview',
         'onClose',
@@ -279,6 +290,7 @@ describe('useComplexLookupModalCleanup', () => {
         resetPreview: mockResetPreview,
         resetMarcPreviewData: mockResetMarcPreviewData,
         resetMarcPreviewMetadata: mockResetMarcPreviewMetadata,
+        clearFailedEntryIds: mockClearFailedEntryIds,
       };
 
       const newMarcPreviewCleanup = {
@@ -286,6 +298,7 @@ describe('useComplexLookupModalCleanup', () => {
         resetPreview: jest.fn(),
         resetMarcPreviewData: jest.fn(),
         resetMarcPreviewMetadata: jest.fn(),
+        clearFailedEntryIds: jest.fn(),
       };
 
       const { result, rerender } = renderHook(

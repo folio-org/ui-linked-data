@@ -107,6 +107,8 @@
 * Show property labels in Work preview. Refs [UILD-759].
 * Show warning that 'Dissertation' will be lost when the user switches from Books to Serials Work profile. Refs [UILD-778].
 * Reconcile styling to latest Stripes styling. Refs [UILD-761].
+* Change behavior of "Assign" button between different lookups. Refs [UILD-745].
+* Add missing localization. Refs [UILD-784].
 * Show Authority Source name in search results. Refs [UILD-764].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -214,6 +216,8 @@
 [UILD-759]:https://folio-org.atlassian.net/browse/UILD-759
 [UILD-778]:https://folio-org.atlassian.net/browse/UILD-778
 [UILD-761]:https://folio-org.atlassian.net/browse/UILD-761
+[UILD-745]:https://folio-org.atlassian.net/browse/UILD-745
+[UILD-784]:https://folio-org.atlassian.net/browse/UILD-784
 [UILD-764]:https://folio-org.atlassian.net/browse/UILD-764
 
 ## 1.0.5 (2025-04-30)
