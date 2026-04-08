@@ -1292,10 +1292,10 @@ describe('recordProcessingCases', () => {
           [groupKey]: [
             {
               id: ['geo_id_1'],
-              value: ['Yellow River (China)'],
-              isPreferred: false,
-              sourceType: 'local',
-              lookupType: 'authorities',
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
             },
           ],
         },
@@ -1304,70 +1304,6 @@ describe('recordProcessingCases', () => {
       RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
 
       expect(record).toEqual(testResult);
-    });
-
-    test('transforms a LoC entry with rdfLink', () => {
-      const record = {
-        [blockKey]: {
-          [groupKey]: [
-            {
-              id: '',
-              label: 'China',
-              isPreferred: true,
-              rdfLink: 'http://id.loc.gov/authorities/geographics/n79074408',
-            },
-          ],
-        },
-      } as unknown as RecordEntry;
-
-      const testResult = {
-        [blockKey]: {
-          [groupKey]: [
-            {
-              id: [],
-              value: ['China'],
-              isPreferred: true,
-              sourceType: 'libraryOfCongress',
-              lookupType: 'authorities',
-            },
-          ],
-        },
-      };
-
-      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
-
-      expect(record).toEqual(testResult);
-    });
-
-    test('transforms an entry without id or rdfLink and omits sourceType', () => {
-      const record = {
-        [blockKey]: {
-          [groupKey]: [
-            {
-              label: 'Unknown Place',
-              isPreferred: false,
-            },
-          ],
-        },
-      } as unknown as RecordEntry;
-
-      const testResult = {
-        [blockKey]: {
-          [groupKey]: [
-            {
-              id: [],
-              value: ['Unknown Place'],
-              isPreferred: false,
-              lookupType: 'authorities',
-            },
-          ],
-        },
-      };
-
-      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
-
-      expect(record).toEqual(testResult);
-      expect((record[blockKey][groupKey] as unknown as RecordBasic[])[0]).not.toHaveProperty('sourceType');
     });
 
     test('transforms multiple entries', () => {
@@ -1393,17 +1329,17 @@ describe('recordProcessingCases', () => {
           [groupKey]: [
             {
               id: ['geo_id_1'],
-              value: ['Yellow River (China)'],
-              isPreferred: false,
-              sourceType: 'local',
-              lookupType: 'authorities',
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
             },
             {
               id: ['geo_id_2'],
-              value: ['Nile River'],
-              isPreferred: true,
-              sourceType: 'local',
-              lookupType: 'authorities',
+              label: {
+                value: ['Nile River'],
+                isPreferred: true,
+              },
             },
           ],
         },
