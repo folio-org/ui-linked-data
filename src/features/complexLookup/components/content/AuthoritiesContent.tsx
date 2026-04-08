@@ -10,6 +10,7 @@ import { Search } from '@/features/search/ui/components/Search';
 interface AuthoritiesContentProps {
   isMarcPreviewOpen: boolean;
   isMarcLoading: boolean;
+  notSpecifiedLabel?: string;
   handleAuthoritiesAssign: (record: ComplexLookupAssignRecordDTO) => Promise<void>;
   handleTitleClick: (id: string) => void;
   handleCloseMarcPreview: VoidFunction;
@@ -25,6 +26,7 @@ interface AuthoritiesContentProps {
 export const AuthoritiesContent: FC<AuthoritiesContentProps> = ({
   isMarcPreviewOpen,
   isMarcLoading,
+  notSpecifiedLabel,
   handleAuthoritiesAssign,
   handleTitleClick,
   handleCloseMarcPreview,
@@ -40,6 +42,7 @@ export const AuthoritiesContent: FC<AuthoritiesContentProps> = ({
             <Search.Results>
               <AuthoritiesResultList
                 context="complexLookup"
+                notSpecifiedLabel={notSpecifiedLabel}
                 onAssign={handleAuthoritiesAssign}
                 onTitleClick={handleTitleClick}
                 checkFailedId={checkFailedId}

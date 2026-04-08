@@ -14,7 +14,7 @@ describe('useAuthoritiesSegmentData', () => {
   const mockConfig = {
     sourceEndpoint: '/search/authorities/source',
     facetsEndpoint: '/search/authorities/facets',
-    sourceKey: 'authorities',
+    sourceDataKey: 'authoritySourceFiles',
     facet: 'sourceFileId',
     autoLoadOnMount: false,
   };
@@ -53,6 +53,13 @@ describe('useAuthoritiesSegmentData', () => {
 
   it('should initialize hook with data fetching disabled', () => {
     const { result } = renderHook(() => useAuthoritiesSegmentData(mockConfig));
+
+    expect(useAuthoritiesDataQueries).toHaveBeenCalledWith({
+      sourceEndpoint: '/search/authorities/source',
+      sourceDataKey: 'authoritySourceFiles',
+      facetsEndpoint: '/search/authorities/facets',
+      facet: 'sourceFileId',
+    });
 
     expect(result.current).toBeDefined();
     expect(result.current.onSegmentEnter).toBeDefined();

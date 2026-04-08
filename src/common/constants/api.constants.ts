@@ -31,6 +31,10 @@ export const SOURCE_API_ENDPOINT = {
   AUTHORITY: '/authority-source-files',
 };
 
+export const SOURCE_API_RESPONSE_KEY = {
+  AUTHORITY: 'authoritySourceFiles',
+};
+
 export const FACETS_API_ENDPOINT = {
   AUTHORITY: '/search/authorities/facets',
 };
