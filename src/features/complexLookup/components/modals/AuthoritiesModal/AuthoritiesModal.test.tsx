@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { useServicesContext } from '@/common/hooks/useServicesContext';
 
+import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
 
 import {
@@ -29,6 +30,13 @@ jest.mock('@/features/complexLookup/hooks', () => ({
 
 jest.mock('@/common/hooks/useServicesContext', () => ({
   useServicesContext: jest.fn(),
+}));
+
+jest.mock('react-intl', () => ({
+  FormattedMessage: ({ id }: { id: string }) => <>{id}</>,
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => `formatted:${id}`,
+  }),
 }));
 
 jest.mock('@/components/Modal', () => ({
@@ -80,15 +88,18 @@ jest.mock('@/features/search/ui/components/Search', () => {
 jest.mock('@/features/search/ui', () => ({
   AuthoritiesResultList: ({
     context,
+    notSpecifiedLabel,
     onAssign,
     onTitleClick,
   }: {
     context: string;
+    notSpecifiedLabel?: string;
     onAssign: (record: ComplexLookupAssignRecordDTO) => void;
     onTitleClick: (id: string, title?: string, headingType?: string) => void;
   }) => (
     <div data-testid="authorities-result-list">
       <span>{context}</span>
+      {notSpecifiedLabel && <span data-testid="not-specified-label">{notSpecifiedLabel}</span>}
       <button onClick={() => onAssign({ id: 'auth-1', title: 'Authority 1' })}>Assign Authority</button>
       <button onClick={() => onTitleClick('auth-1', 'Authority 1', 'Personal Name')}>View MARC</button>
     </div>
@@ -379,6 +390,24 @@ describe('AuthoritiesModal', () => {
       render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       expect(screen.getByTestId('search')).toBeInTheDocument();
+    });
+
+    it('passes localized notSpecified label from modal config to authorities results', () => {
+      const modalConfig = {
+        labels: {
+          button: {
+            base: 'ld.assignAuthority',
+            change: 'ld.change',
+          },
+          notSpecified: 'ld.notSpecified',
+        },
+      } as unknown as ModalConfig;
+
+      render(
+        <AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} modalConfig={modalConfig} />,
+      );
+
+      expect(screen.getByTestId('not-specified-label')).toHaveTextContent('formatted:ld.notSpecified');
     });
 
     it('renders AuthoritiesResultList with complexLookup context', () => {

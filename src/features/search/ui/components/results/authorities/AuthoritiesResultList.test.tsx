@@ -6,6 +6,11 @@ import { AuthoritiesResultList } from './AuthoritiesResultList';
 
 jest.mock('../../../hooks/useFormattedResults');
 jest.mock('../../../hooks/useTableFormatter');
+jest.mock('react-intl', () => ({
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => `formatted:${id}`,
+  }),
+}));
 interface MockTableFlexProps {
   header: unknown;
   data: unknown;
@@ -62,6 +67,23 @@ describe('AuthoritiesResultList', () => {
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
     expect(screen.getByTestId('table-flex')).toHaveClass('results-list');
+    expect(mockUseFormattedResults).toHaveBeenCalledWith({
+      notSpecifiedLabel: 'formatted:ld.notSpecified',
+    });
+  });
+
+  test('passes provided notSpecifiedLabel to useFormattedResults', () => {
+    mockUseFormattedResults.mockReturnValue(mockData);
+    mockUseTableFormatter.mockReturnValue({
+      formattedData: mockFormattedData,
+      listHeader: mockListHeader,
+    });
+
+    render(<AuthoritiesResultList notSpecifiedLabel="Localized fallback" />);
+
+    expect(mockUseFormattedResults).toHaveBeenCalledWith({
+      notSpecifiedLabel: 'Localized fallback',
+    });
   });
 
   test('renders with empty data when useFormattedResults returns undefined', () => {

@@ -1,4 +1,3 @@
-export { useComplexLookupApi } from './useComplexLookupApi';
 export { useComplexLookupValidation } from './useComplexLookupValidation';
 export { useMarcAssignment } from './useMarcAssignment';
 export { useMarcValidation } from './useMarcValidation';
