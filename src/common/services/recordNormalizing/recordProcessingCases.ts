@@ -1,3 +1,4 @@
+import { TITLE_ORDER } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { ensureArray } from '@/common/helpers/common.helper';
@@ -194,4 +195,20 @@ export const processDissertation = (record: RecordEntry, blockKey: string, key: 
       },
     }));
   }) as unknown as RecursiveRecordSchema;
+};
+
+const getTitlePriority = (titleEntry: Record<string, unknown>): number => {
+  const index = TITLE_ORDER.findIndex(uri => uri in titleEntry);
+
+  return index === -1 ? Infinity : index;
+};
+
+export const reorderTitles = (record: RecordEntry, blockKey: string, key: string) => {
+  const titles = record[blockKey][key] as unknown as Record<string, unknown>[];
+
+  if (!titles?.length) return;
+
+  record[blockKey][key] = [...titles].sort(
+    (a, b) => getTitlePriority(a) - getTitlePriority(b),
+  ) as unknown as RecursiveRecordSchema;
 };
