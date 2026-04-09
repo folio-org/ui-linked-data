@@ -15,6 +15,7 @@ describe('useModalWithHubPreview', () => {
     resetPreview: jest.fn(),
     resetMarcPreviewData: jest.fn(),
     resetMarcPreviewMetadata: jest.fn(),
+    clearFailedEntryIds: jest.fn(),
   };
 
   const mockHubsLogic = {

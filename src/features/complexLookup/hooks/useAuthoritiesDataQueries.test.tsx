@@ -32,7 +32,7 @@ const createWrapper = () => {
 };
 
 describe('useAuthoritiesDataQueries', () => {
-  const mockSourceData = { id: 'source-1', name: 'Test Source' };
+  const mockSourceData = [{ id: 'source-1', name: 'Test Source' }];
   const mockFacetsData = { facets: [{ id: 'facet-1', name: 'Test Facet' }] };
 
   it('returns initial state with loading false when queries are not enabled', () => {
@@ -73,6 +73,29 @@ describe('useAuthoritiesDataQueries', () => {
     expect(baseApi.getJson).toHaveBeenCalledWith({
       url: '/api/source',
       sameOrigin: true,
+    });
+  });
+
+  it('unwraps source data from configured response container', async () => {
+    (baseApi.getJson as jest.Mock).mockResolvedValue({
+      authoritySourceFiles: mockSourceData,
+      totalRecords: 1,
+    });
+
+    const { result } = renderHook(
+      () =>
+        useAuthoritiesDataQueries({
+          sourceEndpoint: '/api/source',
+          sourceDataKey: 'authoritySourceFiles',
+          facetsEndpoint: '/api/facets',
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    result.current.refetchSource();
+
+    await waitFor(() => {
+      expect(result.current.sourceData).toEqual(mockSourceData);
     });
   });
 

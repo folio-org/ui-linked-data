@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useIntl } from 'react-intl';
 
 import { TableFlex } from '@/components/Table';
 
@@ -8,6 +9,7 @@ import { useTableFormatter } from '../../../hooks/useTableFormatter';
 
 interface AuthoritiesResultListProps {
   context?: 'search' | 'complexLookup';
+  notSpecifiedLabel?: string;
   onAssign?: (data: ComplexLookupAssignRecordDTO) => void;
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   checkFailedId?: (id: string) => boolean;
@@ -15,11 +17,14 @@ interface AuthoritiesResultListProps {
 
 export const AuthoritiesResultList: FC<AuthoritiesResultListProps> = ({
   context = 'search',
+  notSpecifiedLabel,
   onAssign,
   onTitleClick,
   checkFailedId,
 }) => {
-  const data = useFormattedResults<SearchResultsTableRow>() || [];
+  const { formatMessage } = useIntl();
+  const fallbackLabel = notSpecifiedLabel ?? formatMessage({ id: 'ld.notSpecified' });
+  const data = useFormattedResults<SearchResultsTableRow>({ notSpecifiedLabel: fallbackLabel }) || [];
   const { formattedData, listHeader } = useTableFormatter({
     data,
     tableConfig: authoritiesTableConfig,

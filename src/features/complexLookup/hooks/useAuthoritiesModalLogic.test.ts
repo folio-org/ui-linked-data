@@ -37,6 +37,7 @@ describe('useAuthoritiesModalLogic', () => {
         source: '/source',
         facets: '/facets',
       },
+      sourceDataKey: 'authoritySourceFiles',
     },
   } as unknown as ModalConfig;
 
@@ -138,6 +139,7 @@ describe('useAuthoritiesModalLogic', () => {
 
       expect(useAuthoritiesSegmentDataModule.useAuthoritiesSegmentData).toHaveBeenCalledWith({
         sourceEndpoint: '/source',
+        sourceDataKey: 'authoritySourceFiles',
         facetsEndpoint: '/facets',
         facet: 'sourceFileId',
         autoLoadOnMount: true,
@@ -156,6 +158,7 @@ describe('useAuthoritiesModalLogic', () => {
 
       expect(useAuthoritiesSegmentDataModule.useAuthoritiesSegmentData).toHaveBeenCalledWith({
         sourceEndpoint: undefined,
+        sourceDataKey: undefined,
         facetsEndpoint: undefined,
         facet: 'sourceFileId',
         autoLoadOnMount: true,

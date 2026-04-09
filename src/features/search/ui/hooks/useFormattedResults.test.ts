@@ -1,6 +1,10 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
 
 import { logger } from '@/common/services/logger';
+
+import { useSearchStore } from '@/store';
 
 import * as SearchProvider from '../providers/SearchProvider';
 import * as useCommittedSearchParamsHook from './useCommittedSearchParams';
@@ -32,6 +36,14 @@ describe('useFormattedResults', () => {
 
   beforeEach(() => {
     mockUseCommittedSearchParams.mockReturnValue({ offset: 0 });
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          sourceData: null,
+        },
+      },
+    ]);
   });
 
   test('returns undefined when results are not available', () => {
@@ -95,8 +107,51 @@ describe('useFormattedResults', () => {
 
     const { result } = renderHook(() => useFormattedResults());
 
-    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems);
+    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems, null, undefined);
     expect(result.current).toEqual(mockFormattedItems);
+  });
+
+  test('passes sourceData from store to formatter when available', () => {
+    const mockItems = [{ id: '1', title: 'Test 1' }];
+    const mockFormattedItems = [{ id: '1', title: 'Formatted Test 1' }];
+    const sourceData = [{ id: 'source_1', name: 'Source 1' }];
+
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          sourceData,
+        },
+      },
+    ]);
+
+    mockResultFormatter.format.mockReturnValue(mockFormattedItems);
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockConfig,
+      flow: mockFlow,
+    });
+
+    renderHook(() => useFormattedResults());
+
+    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems, sourceData, undefined);
+  });
+
+  test('passes formatter options when provided', () => {
+    const mockItems = [{ id: 'id_1', title: 'Test 1' }];
+    const formatterOptions = { notSpecifiedLabel: 'Not specified' };
+
+    mockUseSearchContext.mockReturnValue({
+      results: { items: mockItems },
+      config: mockConfig,
+      flow: mockFlow,
+    });
+
+    renderHook(() => useFormattedResults(formatterOptions));
+
+    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems, null, {
+      notSpecifiedLabel: 'Not specified',
+    });
   });
 
   test('handles formatting errors gracefully', () => {
@@ -174,6 +229,7 @@ describe('useFormattedResults', () => {
   test('uses activeCoreConfig formatter when activeCoreConfig is provided', () => {
     const mockItems = [{ id: '1', title: 'Test 1' }];
     const mockFormattedItems = [{ id: '1', title: 'Formatted with active config' }];
+    const sourceData = [{ id: 'source_1', name: 'Source 1' }];
 
     const mockActiveCoreFormatter = {
       format: jest.fn().mockReturnValue(mockFormattedItems),
@@ -185,6 +241,15 @@ describe('useFormattedResults', () => {
       },
     };
 
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          sourceData,
+        },
+      },
+    ]);
+
     mockUseSearchContext.mockReturnValue({
       results: { items: mockItems },
       config: mockConfig,
@@ -194,7 +259,7 @@ describe('useFormattedResults', () => {
 
     const { result } = renderHook(() => useFormattedResults());
 
-    expect(mockActiveCoreFormatter.format).toHaveBeenCalledWith(mockItems);
+    expect(mockActiveCoreFormatter.format).toHaveBeenCalledWith(mockItems, sourceData, undefined);
     expect(mockResultFormatter.format).not.toHaveBeenCalled();
     expect(result.current).toEqual(mockFormattedItems);
   });
@@ -214,7 +279,7 @@ describe('useFormattedResults', () => {
 
     const { result } = renderHook(() => useFormattedResults());
 
-    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems);
+    expect(mockResultFormatter.format).toHaveBeenCalledWith(mockItems, null, undefined);
     expect(result.current).toEqual(mockFormattedItems);
   });
 
