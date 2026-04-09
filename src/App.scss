@@ -24,6 +24,10 @@ h6 {
   margin: 0;
 }
 
+:focus-visible {
+  outline: 2px solid $blue-500;
+}
+
 #app-root {
   display: flex;
   flex-direction: column;
@@ -83,7 +87,6 @@ h6 {
 
     &:focus,
     &:focus-visible {
-      outline: none;
       border: 1px solid $button-standard;
       box-shadow: 0 0 0 2px inset $buttonFocus;
     }
@@ -149,11 +152,6 @@ h6 {
           transform: scale(1);
         }
       }
-
-      &:focus,
-      &:focus-visible {
-        outline: none;
-      }
     }
 
     &[type='radio'] {
@@ -196,18 +194,12 @@ h6 {
         border-color: $disabled-check-radio-bg-color;
         background-color: $disabled-check-radio-bg-color;
       }
-
-      &:focus,
-      &:focus-visible {
-        outline: none;
-      }
     }
   }
 
   :not(label) > input[type='checkbox'] {
     &:focus,
     &:focus-visible {
-      outline: none;
       box-shadow: $secondary-focusable-outline-box-shadow;
     }
   }

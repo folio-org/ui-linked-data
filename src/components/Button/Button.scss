@@ -47,7 +47,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       border-style: inset;
       text-decoration: underline 2px;
     }
@@ -60,7 +59,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       background-color: $buttonHover;
 
       &:active {
@@ -87,7 +85,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       text-decoration: underline 2px;
     }
 
@@ -130,7 +127,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       background: $buttonHover;
       text-decoration: underline 2px;
     }
@@ -173,7 +169,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       border: 1px solid $buttonIcon;
       background-color: $buttonFocus;
       box-shadow: 0 0 0 3px $buttonFocus;
@@ -225,7 +220,6 @@
 
     &:focus,
     &:focus-visible {
-      outline: none;
       border: 1px solid $overlay-bg-color;
       background-color: $buttonHover;
       box-shadow: $listButton-drop-shadow;

@@ -85,7 +85,6 @@ $modal-padding: 15px !default;
 @mixin focused-outline-primary {
   &:focus,
   &:focus-visible {
-    outline: none;
     box-shadow: $highlighted-focusable-outline-box-shadow;
 
     &:active {
@@ -97,7 +96,6 @@ $modal-padding: 15px !default;
 @mixin focused-outline-secondary {
   &:focus,
   &:focus-visible {
-    outline: none;
     box-shadow: $secondary-focusable-outline-box-shadow;
 
     &:active {
@@ -109,7 +107,6 @@ $modal-padding: 15px !default;
 @mixin focused-outline-text {
   &:focus,
   &:focus-visible {
-    outline: none;
     box-shadow: $secondary-focusable-outline-box-shadow;
 
     &:active {
@@ -119,8 +116,6 @@ $modal-padding: 15px !default;
 }
 
 @mixin focused-outline-secondary-with-border {
-  outline: none;
-
   &:focus,
   &:focus-visible {
     border: 1px solid $blue-500;
