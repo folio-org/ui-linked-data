@@ -1,9 +1,14 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, Suspense, lazy } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
-import { IS_PROD_MODE } from '@/common/constants/bundle.constants';
+const ReactQueryDevtools = import.meta.env.PROD
+  ? () => null
+  : lazy(() =>
+      import('@tanstack/react-query-devtools').then(({ ReactQueryDevtools }) => ({
+        default: ReactQueryDevtools,
+      })),
+    );
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +27,9 @@ export const QueryProvider: FC<QueryProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {!IS_PROD_MODE && <ReactQueryDevtools initialIsOpen={false} />}
+      <Suspense>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Suspense>
     </QueryClientProvider>
   );
 };
