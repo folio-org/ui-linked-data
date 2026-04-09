@@ -7,31 +7,20 @@ import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(() => {
   const alias = {
-    '@': path.resolve(__dirname, './src'),
+    '@': path.resolve(import.meta.dirname, './src'),
   };
 
   // config type "library" is used for building a web-component,
   // which is used for the embedded application
   return env.npm_config_type === 'library'
     ? {
-        plugins: [
-          react({
-            jsxRuntime: 'automatic',
-          }),
-          svgr(),
-          cssInjectedByJsPlugin(),
-        ],
+        plugins: [react(), svgr(), cssInjectedByJsPlugin()],
         build: {
           lib: {
-            entry: path.resolve(__dirname, 'src/embed.tsx'),
+            entry: path.resolve(import.meta.dirname, 'src/embed.tsx'),
             name: 'linked-data',
             formats: ['es'],
             fileName: format => `linked-data.${format}.js`,
-          },
-          rollupOptions: {
-            output: {
-              codeSplitting: false,
-            },
           },
         },
         envPrefix: 'EDITOR_',
