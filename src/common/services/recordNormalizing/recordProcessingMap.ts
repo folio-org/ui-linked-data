@@ -8,8 +8,10 @@ import {
   notesMapping,
   processComplexLookup,
   processDissertation,
+  processGeographicCoverageComplexLookup,
   processHubsComplexLookup,
   processSubjectComplexLookup,
+  reorderTitles,
   wrapSimpleLookupData,
   wrapWithContainer,
 } from './recordProcessingCases';
@@ -65,8 +67,14 @@ export const RECORD_NORMALIZING_CASES = {
   _hubs: {
     process: processHubsComplexLookup,
   },
+  _geographicCoverageReference: {
+    process: processGeographicCoverageComplexLookup,
+  },
   [BFLITE_URIS.DISSERTATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
       processDissertation(record, blockKey, groupKey, '_grantingInstitutionReference'),
+  },
+  [BFLITE_URIS.TITLE]: {
+    process: reorderTitles,
   },
 };

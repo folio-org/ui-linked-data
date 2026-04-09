@@ -5,6 +5,7 @@ import * as SchemaHelper from '@/common/helpers/schema.helper';
 import * as RecordProcessingCases from '@/common/services/recordNormalizing/recordProcessingCases';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+const realBFLiteUris = BibframeMappingConstants.BFLITE_URIS;
 
 jest.mock('@/common/helpers/schema.helper', () => ({
   getLookupLabelKey: jest.fn(),
@@ -1269,6 +1270,209 @@ describe('recordProcessingCases', () => {
       RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
 
       expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('processGeographicCoverageComplexLookup', () => {
+    test('transforms a local entry with id and label', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+              types: ['http://bibfra.me/vocab/lite/Place'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple entries', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+            },
+            {
+              id: 'geo_id_2',
+              label: 'Nile River',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+            {
+              id: ['geo_id_2'],
+              label: {
+                value: ['Nile River'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('reorderTitles', () => {
+    beforeEach(() => {
+      mockedBFLiteUris(realBFLiteUris);
+    });
+
+    test('reorders Work/Hub titles: VariantTitle before WorkTitle -> WorkTitle first', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('reorders Instance titles: ParallelTitle, InstanceTitle, VariantTitle -> InstanceTitle, ParallelTitle, VariantTitle', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does not change already-ordered titles', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const expected = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(expected);
+    });
+
+    test('sorts unknown title types to the end', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { unknownTitleUri: { mainTitle: ['Unknown Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { unknownTitleUri: { mainTitle: ['Unknown Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does nothing when titles are not present', () => {
+      const record = {
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      } as unknown as RecordEntry;
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual({
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      });
     });
   });
 });
