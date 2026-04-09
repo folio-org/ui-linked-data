@@ -69,11 +69,10 @@ export const workRecordSchema: RecordSchema = {
 
       [BFLITE_URIS.ORIGIN_PLACE]: createArrayObjectProperty(nameAndLinkProperties),
 
-      [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: createArrayObjectProperty({
-        _geographicCoverageReference: {
-          type: RecordSchemaEntryType.array,
+      _geographicCoverageReference: createArrayObjectProperty({
+        label: {
+          type: RecordSchemaEntryType.string,
           options: {
-            propertyKey: '_geographicCoverageReference',
             outputFormat: 'reference',
           },
         },

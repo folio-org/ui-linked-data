@@ -178,6 +178,20 @@ export const processSubjectComplexLookup = (record: RecordEntry, blockKey: strin
   }) as unknown as RecursiveRecordSchema;
 };
 
+export const processGeographicCoverageComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][key] = normalizedEntries.map(({ id, label, isPreferred }) => {
+    return {
+      id: ensureArray(id),
+      label: {
+        value: [label as unknown as string],
+        isPreferred,
+      },
+    };
+  }) as unknown as RecursiveRecordSchema;
+};
+
 export const processDissertation = (record: RecordEntry, blockKey: string, key: string, selector: string) => {
   const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
 

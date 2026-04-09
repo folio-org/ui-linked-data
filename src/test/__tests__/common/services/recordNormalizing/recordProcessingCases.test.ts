@@ -1273,6 +1273,85 @@ describe('recordProcessingCases', () => {
     });
   });
 
+  describe('processGeographicCoverageComplexLookup', () => {
+    test('transforms a local entry with id and label', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+              types: ['http://bibfra.me/vocab/lite/Place'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple entries', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+            },
+            {
+              id: 'geo_id_2',
+              label: 'Nile River',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+            {
+              id: ['geo_id_2'],
+              label: {
+                value: ['Nile River'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
   describe('reorderTitles', () => {
     beforeEach(() => {
       mockedBFLiteUris(realBFLiteUris);
