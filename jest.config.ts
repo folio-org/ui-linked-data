@@ -1,6 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
-import { compilerOptions } from './tsconfig.aliases.json' with { type: 'json' };
+const { compilerOptions } = JSON.parse(readFileSync('./tsconfig.aliases.json', 'utf-8'));
 
 export default {
   testEnvironment: 'jsdom',
