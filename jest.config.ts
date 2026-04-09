@@ -1,16 +1,16 @@
 import { pathsToModuleNameMapper } from 'ts-jest';
-// @ts-ignore
+
 import { compilerOptions } from './tsconfig.aliases.json' with { type: 'json' };
 
 export default {
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}'],
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.jsx?$': 'ts-jest', // Transform JavaScript files including from node_modules/uuid
+    '^.+\\.tsx?$': ['ts-jest', { tsconfig: './tsconfig.test.json' }],
+    '^.+\\.jsx?$': ['ts-jest', { tsconfig: './tsconfig.test.json' }], // Transform JavaScript files including from node_modules/uuid
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(uuid)/)', // Transform uuid package since it's pure ESM
+    'node_modules[\\\\/](?!(uuid|react-intl|intl-messageformat|@formatjs)[\\\\/])', // Transform ESM-only packages
   ],
   coverageDirectory: '<rootDir>/artifacts/coverage-jest/',
   moduleNameMapper: {
