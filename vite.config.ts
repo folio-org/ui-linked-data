@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
-import path from 'path';
-import { env } from 'process';
+import path from 'node:path';
+import { env } from 'node:process';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import svgr from 'vite-plugin-svgr';
@@ -30,7 +30,7 @@ export default defineConfig(() => {
           },
           rollupOptions: {
             output: {
-              inlineDynamicImports: true,
+              codeSplitting: false,
             },
           },
         },
