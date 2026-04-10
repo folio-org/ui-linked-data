@@ -36,15 +36,18 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
     }
   }, [TRIGGER_MODAL, onTriggerModal]);
 
+  const dispatchUnblockEvent = () => dispatchEventWrapper(UNBLOCK_NAVIGATION);
+  const dispatchBlockEvent = () => dispatchEventWrapper(BLOCK_NAVIGATION);
+
   useEffect(() => {
     if (IS_EMBEDDED_MODE && watchEditedState) {
-      isEdited ? dispatchBlockEvent() : dispatchUnblockEvent();
+      if (isEdited) {
+        dispatchBlockEvent();
+      } else {
+        dispatchUnblockEvent();
+      }
     }
   }, [BLOCK_NAVIGATION, isEdited, watchEditedState]);
-
-  const dispatchUnblockEvent = () => dispatchEventWrapper(UNBLOCK_NAVIGATION);
-
-  const dispatchBlockEvent = () => dispatchEventWrapper(BLOCK_NAVIGATION);
 
   const dispatchProceedNavigationEvent = () => dispatchEventWrapper(PROCEED_NAVIGATION);
 

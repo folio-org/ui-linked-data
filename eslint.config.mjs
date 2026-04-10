@@ -54,7 +54,6 @@ export default [
       'react-compiler/react-compiler': 'off',
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/refs': 'warn',
-      'react-hooks/immutability': 'warn',
       'react-hooks/preserve-manual-memoization': 'warn',
       'preserve-caught-error': 'warn',
       'no-fallthrough': [
