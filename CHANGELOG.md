@@ -112,6 +112,7 @@
 * Show Authority Source name in search results. Refs [UILD-764].
 * Add support for the Geographic Coverage field. Fixes [UILD-665].
 * Change display order for titles. Refs [UILD-304].
+* Respond to the embedding application's locale config. Refs [UILD-786].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -223,6 +224,7 @@
 [UILD-764]:https://folio-org.atlassian.net/browse/UILD-764
 [UILD-665]:https://folio-org.atlassian.net/browse/UILD-665
 [UILD-304]:https://folio-org.atlassian.net/browse/UILD-304
+[UILD-786]:https://folio-org.atlassian.net/browse/UILD-786
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
