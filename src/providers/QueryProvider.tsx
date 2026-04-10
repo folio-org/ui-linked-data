@@ -1,14 +1,8 @@
-import { FC, ReactNode, Suspense, lazy } from 'react';
+import { FC, ReactNode, Suspense } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const ReactQueryDevtools = import.meta.env.PROD
-  ? () => null
-  : lazy(() =>
-      import('@tanstack/react-query-devtools').then(({ ReactQueryDevtools }) => ({
-        default: ReactQueryDevtools,
-      })),
-    );
+import { ReactQueryDevtools } from './queryDevtools';
 
 const queryClient = new QueryClient({
   defaultOptions: {
