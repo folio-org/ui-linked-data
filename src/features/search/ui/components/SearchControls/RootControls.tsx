@@ -65,9 +65,9 @@ export const RootControls: FC<RootControlsProps> = ({ children, className, showF
       {!isSearchPaneCollapsed && (
         <section className={classNames('search-pane', className)} aria-labelledby="search-pane-header-title">
           <div className="search-pane-header">
-            <h4 id="search-pane-header-title" className="search-pane-header-title">
+            <h2 id="search-pane-header-title" className="search-pane-header-title">
               <FormattedMessage id={showFilters ? 'ld.searchAndFilter' : 'ld.search'} />
-            </h4>
+            </h2>
             <Button
               type={ButtonType.Icon}
               className="close-ctl"
