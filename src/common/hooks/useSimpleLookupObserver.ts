@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { GroupBase } from 'react-select';
-import Select from 'react-select/dist/declarations/src/Select';
+import { type GroupBase, type SelectInstance } from 'react-select';
 
 import {
   CREATABLE_SELECT_OFFSET_PLACEMENT_TRIG,
@@ -8,7 +7,7 @@ import {
 } from '@/common/constants/uiElements.constants';
 
 export const useSimpleLookupObserver = () => {
-  const simpleLookupRef = useRef<Select<unknown, boolean, GroupBase<unknown>>>(null);
+  const simpleLookupRef = useRef<SelectInstance<unknown, boolean, GroupBase<unknown>>>(null);
   const [forceDisplayOptionsAtTheTop, setForceDisplayOptionsAtTheTop] = useState(false);
 
   const observer = new IntersectionObserver(

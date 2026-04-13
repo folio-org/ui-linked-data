@@ -113,7 +113,15 @@
 * Add support for the Geographic Coverage field. Fixes [UILD-665].
 * Change display order for titles. Refs [UILD-304].
 * Respond to the embedding application's locale config. Refs [UILD-786].
+<<<<<<< UILD-586
 * Fix editor save button being incorrectly enabled. Fixes [UILD-586].
+=======
+<<<<<<< fix/UILD-743-search-results-preview
+* Hide preview when starting a new search on the Search page. Fixes [UILD-743].
+=======
+* Fix layout of Work title on the Search results page. Fixes [UILD-677].
+>>>>>>> master
+>>>>>>> master
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -226,7 +234,15 @@
 [UILD-665]:https://folio-org.atlassian.net/browse/UILD-665
 [UILD-304]:https://folio-org.atlassian.net/browse/UILD-304
 [UILD-786]:https://folio-org.atlassian.net/browse/UILD-786
+<<<<<<< UILD-586
 [UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
+=======
+<<<<<<< fix/UILD-743-search-results-preview
+[UILD-743]:https://folio-org.atlassian.net/browse/UILD-743
+=======
+[UILD-677]:https://folio-org.atlassian.net/browse/UILD-677
+>>>>>>> master
+>>>>>>> master
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

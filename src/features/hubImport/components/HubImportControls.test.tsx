@@ -1,5 +1,4 @@
 import { BrowserRouter } from 'react-router-dom';
-import * as routerDom from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
@@ -8,6 +7,7 @@ import { HubImportControls } from './HubImportControls';
 const mockNavigate = jest.fn();
 const mockImportHubForEdit = jest.fn();
 const mockSearchResultsUri = '/search?query=test';
+let mockSearchParams = new URLSearchParams('sourceUri=http%3A%2F%2Fid.loc.gov%2Fresources%2Fhubs%2Fhub_123');
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id }: { id: string }) => <span>{id}</span>,
@@ -16,10 +16,7 @@ jest.mock('react-intl', () => ({
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
-  useSearchParams: () => [
-    new URLSearchParams('sourceUri=http%3A%2F%2Fid.loc.gov%2Fresources%2Fhubs%2Fhub_123'),
-    jest.fn(),
-  ],
+  useSearchParams: () => [mockSearchParams, jest.fn()],
 }));
 
 jest.mock('@/common/hooks/useBackToSearchUri', () => ({
@@ -33,6 +30,10 @@ jest.mock('@/features/hubImport/hooks', () => ({
 }));
 
 describe('HubImportControls', () => {
+  beforeEach(() => {
+    mockSearchParams = new URLSearchParams('sourceUri=http%3A%2F%2Fid.loc.gov%2Fresources%2Fhubs%2Fhub_123');
+  });
+
   const renderComponent = () => {
     render(
       <BrowserRouter>
@@ -65,7 +66,7 @@ describe('HubImportControls', () => {
   });
 
   it('Does not call importHubForEdit when sourceUri is missing', () => {
-    jest.spyOn(routerDom, 'useSearchParams').mockReturnValue([new URLSearchParams(), jest.fn()]);
+    mockSearchParams = new URLSearchParams();
 
     renderComponent();
 

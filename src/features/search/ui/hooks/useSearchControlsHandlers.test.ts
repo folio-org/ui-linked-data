@@ -426,6 +426,20 @@ describe('useSearchControlsHandlers', () => {
       expect(setSearchParams).not.toHaveBeenCalled();
       expect(setCommittedValues).toHaveBeenCalled();
     });
+
+    it('resets preview and comparison state on submit', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
+    });
   });
 
   describe('onReset', () => {
