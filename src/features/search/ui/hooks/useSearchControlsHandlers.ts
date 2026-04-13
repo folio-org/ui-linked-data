@@ -308,6 +308,12 @@ export const useSearchControlsHandlers = ({
     [setSearchParams, setCommittedValues],
   );
 
+  const resetPreview = () => {
+    resetPreviewContent();
+    resetFullDisplayComponentType();
+    resetCurrentlyPreviewedEntityBfid();
+  };
+
   const handleSubmit = useCallback(() => {
     const state = useSearchState.getState();
     const { query, searchBy, navigationState, draftBySegment, committedValues } = state;
@@ -366,6 +372,8 @@ export const useSearchControlsHandlers = ({
             { segment, query: normalizedQuery, searchBy: validSearchBy, source },
           );
 
+    resetPreview();
+
     if (flowRef.current === 'url') {
       // URL flow: update URL params
       const urlParams = buildSearchUrlParams(segment, normalizedQuery, validSearchBy, source);
@@ -396,10 +404,7 @@ export const useSearchControlsHandlers = ({
 
     resetQuery();
     resetSearchBy();
-    // Reset preview
-    resetPreviewContent();
-    resetFullDisplayComponentType();
-    resetCurrentlyPreviewedEntityBfid();
+    resetPreview();
 
     if (currentSegment) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
