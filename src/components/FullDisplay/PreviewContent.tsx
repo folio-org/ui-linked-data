@@ -35,7 +35,7 @@ export const PreviewContent = () => {
             <Times16 />
           </Button>
           <div className="info">
-            <span className="title">{title}</span>
+            <h2 className="title">{title}</h2>
           </div>
           <Button
             data-testid="preview-fetch"
