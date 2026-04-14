@@ -115,6 +115,7 @@
 * Respond to the embedding application's locale config. Refs [UILD-786].
 * Hide preview when starting a new search on the Search page. Fixes [UILD-743].
 * Fix layout of Work title on the Search results page. Fixes [UILD-677].
+* Fix editor save button being incorrectly enabled. Fixes [UILD-586].
 * Fix missing preview field label. Fixes [UILD-541].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
@@ -230,6 +231,7 @@
 [UILD-786]:https://folio-org.atlassian.net/browse/UILD-786
 [UILD-743]:https://folio-org.atlassian.net/browse/UILD-743
 [UILD-677]:https://folio-org.atlassian.net/browse/UILD-677
+[UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
 [UILD-541]:https://folio-org.atlassian.net/browse/UILD-541
 
 ## 1.0.5 (2025-04-30)
