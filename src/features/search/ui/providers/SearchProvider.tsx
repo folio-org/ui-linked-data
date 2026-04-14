@@ -16,7 +16,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 }
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
-  const { flow, mode = 'custom', children } = props;
+  const { flow, mode = 'custom', children, onSubmitCallback } = props;
   const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
@@ -66,7 +66,14 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
   });
 
   // Handlers for search controls (after results so we can pass pageMetadata for browse pagination and refetch)
-  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow, results, refetch });
+  const handlers = useSearchControlsHandlers({
+    coreConfig,
+    uiConfig: activeUIConfig,
+    flow,
+    results,
+    refetch,
+    onSubmitCallback,
+  });
 
   // Sync URL to store (URL flow only)
   useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });

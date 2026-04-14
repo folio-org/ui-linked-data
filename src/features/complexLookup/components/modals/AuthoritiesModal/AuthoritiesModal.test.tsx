@@ -62,9 +62,14 @@ jest.mock('@/components/Modal', () => ({
     ) : null,
 }));
 
+let capturedSearchOnSubmitCallback: (() => void) | undefined;
+
 jest.mock('@/features/search/ui/components/Search', () => {
   const MockSearch = Object.assign(
-    ({ children }: { children: React.ReactNode }) => <div data-testid="search">{children}</div>,
+    ({ children, onSubmitCallback }: { children: React.ReactNode; onSubmitCallback?: () => void }) => {
+      capturedSearchOnSubmitCallback = onSubmitCallback;
+      return <div data-testid="search">{children}</div>;
+    },
     {
       Controls: Object.assign(({ children }: { children: React.ReactNode }) => <div>{children}</div>, {
         SegmentGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -425,6 +430,12 @@ describe('AuthoritiesModal', () => {
 
       expect(mockHandleAuthoritiesAssign).toHaveBeenCalledWith({ id: 'auth-1', title: 'Authority 1' });
       expect(mockOnAssign).not.toHaveBeenCalled();
+    });
+
+    it('passes handleCloseMarcPreview as onSubmitCallback to Search', () => {
+      render(<AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      expect(capturedSearchOnSubmitCallback).toBe(mockHandleCloseMarcPreview);
     });
   });
 
