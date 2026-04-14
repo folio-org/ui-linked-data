@@ -11,14 +11,16 @@ import {
   ImportModes,
   LOADING_TIMEOUT_MS,
 } from '@/common/constants/import.constants';
+import { StatusType } from '@/common/constants/status.constants';
 import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
 import { getFilenameWithoutExtension, getUrlFilenameWithoutExtension } from '@/common/helpers/filename.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Modal } from '@/components/Modal';
 import { getUri } from '@/configs/resourceTypes';
 
-import { useUIState } from '@/store';
+import { useStatusState, useUIState } from '@/store';
 
 import { Completed } from './Completed';
 import { SelectorImportMode } from './SelectorImportMode';
@@ -42,6 +44,7 @@ export const ModalImport = memo(() => {
     'importModalFilterType',
     'setIsImportModalOpen',
   ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
 
@@ -78,13 +81,18 @@ export const ModalImport = memo(() => {
   };
 
   const doImportFile = async () => {
+    // Reject if file is empty.
+    if (filesToUpload[0].size === 0) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importFileEmptyError'));
+      throw new Error();
+    }
     // Reject if importFile is taking too long since we've removed
     // the ability to alter the modal state during load.
     return new Promise<ImportResponseDTO>((resolve, reject) => {
-      const timeout = setTimeout(
-        () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-        LOADING_TIMEOUT_MS,
-      );
+      const timeout = setTimeout(() => {
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
+        reject(new Error());
+      }, LOADING_TIMEOUT_MS);
       importFile(filesToUpload, getUri(importModalFilterType))
         .then(result => {
           resolve(result);
@@ -103,10 +111,10 @@ export const ModalImport = memo(() => {
     // the ability to alter the modal state during load.
     return new Promise<ImportResponseDTO>((resolve, reject) => {
       if (urlToRetrieve) {
-        const timeout = setTimeout(
-          () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-          LOADING_TIMEOUT_MS,
-        );
+        const timeout = setTimeout(() => {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
+          reject(new Error());
+        }, LOADING_TIMEOUT_MS);
         importUrl(urlToRetrieve, getUri(importModalFilterType), defaultWorkType)
           .then(result => {
             resolve(result);
@@ -118,7 +126,8 @@ export const ModalImport = memo(() => {
             clearTimeout(timeout);
           });
       } else {
-        reject(new Error('No URL provided'));
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importNoUrlError'));
+        reject(new Error());
       }
     });
   };
@@ -152,7 +161,11 @@ export const ModalImport = memo(() => {
         await new Promise(r => setTimeout(r, delta));
       }
       setIsImportSuccessful(true);
-      if (response.resources?.length === 1) {
+      if (!response.resources || response.resources?.length === 0) {
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.warning, 'ld.importNoResourcesWarning'),
+        );
+      } else if (response.resources?.length === 1) {
         setNavigationTarget(response.resources[0]);
       }
       downloadLog(filename, response.log);
