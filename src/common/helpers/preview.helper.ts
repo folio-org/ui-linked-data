@@ -46,11 +46,12 @@ export const getPreviewFieldsConditions = ({
   const isBranchEnd = !hasChildren;
   const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
   const isBranchEndWithValues = !!selectedUserValues;
+  const isWithoutComplexSearch = type !== AdvancedFieldType.complex || (type === AdvancedFieldType.complex && !bfid);
   const shouldRenderLabelOrPlaceholders =
     (!(isEntity && hideEntities) && isPreviewable && isGroupable) ||
     type === AdvancedFieldType.dropdown ||
     type === AdvancedFieldType.enumerated ||
-    (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
+    (isBranchEndWithValues && isWithoutComplexSearch) ||
     isBranchEndWithoutValues;
   const hasOnlyDropdownChildren =
     hasChildren &&
