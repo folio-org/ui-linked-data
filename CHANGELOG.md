@@ -118,6 +118,7 @@
 * Fix editor save button being incorrectly enabled. Fixes [UILD-586].
 * Fix missing preview field label. Fixes [UILD-541].
 * Importing an empty file treated as an error. Fixes [UILD-692].
+* Fix CSS rule leaking out of this module. Fixes [UILD-796].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -235,6 +236,7 @@
 [UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
 [UILD-541]:https://folio-org.atlassian.net/browse/UILD-541
 [UILD-692]:https://folio-org.atlassian.net/browse/UILD-692
+[UILD-796]:https://folio-org.atlassian.net/browse/UILD-796
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
