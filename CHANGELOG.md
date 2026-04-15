@@ -117,6 +117,7 @@
 * Fix layout of Work title on the Search results page. Fixes [UILD-677].
 * Fix editor save button being incorrectly enabled. Fixes [UILD-586].
 * Fix missing preview field label. Fixes [UILD-541].
+* Hide preview in complex lookups. Fixes [UILD-709].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -233,6 +234,7 @@
 [UILD-677]:https://folio-org.atlassian.net/browse/UILD-677
 [UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
 [UILD-541]:https://folio-org.atlassian.net/browse/UILD-541
+[UILD-709]:https://folio-org.atlassian.net/browse/UILD-709
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].

@@ -34,9 +34,14 @@ jest.mock('@/components/Modal', () => ({
     ) : null,
 }));
 
+let capturedSearchOnSubmitCallback: (() => void) | undefined;
+
 jest.mock('@/features/search/ui/components/Search', () => {
   const MockSearch = Object.assign(
-    ({ children }: { children: React.ReactNode }) => <div data-testid="search">{children}</div>,
+    ({ children, onSubmitCallback }: { children: React.ReactNode; onSubmitCallback?: () => void }) => {
+      capturedSearchOnSubmitCallback = onSubmitCallback;
+      return <div data-testid="search">{children}</div>;
+    },
     {
       Controls: Object.assign(({ children }: { children: React.ReactNode }) => <div>{children}</div>, {
         SegmentGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
@@ -357,6 +362,15 @@ describe('SubjectModal', () => {
       render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
 
       expect(screen.getByTestId('search')).toBeInTheDocument();
+    });
+
+    it('closes both MARC and Hub previews when onSubmitCallback is invoked', () => {
+      render(<SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      capturedSearchOnSubmitCallback?.();
+
+      expect(mockHandleCloseMarcPreview).toHaveBeenCalledTimes(1);
+      expect(mockHandleCloseHubPreview).toHaveBeenCalledTimes(1);
     });
   });
 });

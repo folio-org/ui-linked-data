@@ -87,6 +87,10 @@ export const SubjectModal: FC<SubjectModalProps> = ({
         defaultSegment={defaultSegment}
         flow="value"
         mode="custom"
+        onSubmitCallback={() => {
+          handleCloseMarcPreview();
+          hubPreviewProps.handleCloseHubPreview();
+        }}
       >
         <Search.Controls>
           <Search.Controls.SegmentGroup>

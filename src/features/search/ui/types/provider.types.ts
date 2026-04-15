@@ -103,6 +103,7 @@ interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
   children: React.ReactNode;
+  onSubmitCallback?: () => void;
 }
 
 export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);
