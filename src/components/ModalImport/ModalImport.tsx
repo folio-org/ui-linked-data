@@ -84,14 +84,14 @@ export const ModalImport = memo(() => {
     // Reject if file is empty.
     if (filesToUpload[0].size === 0) {
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importFileEmptyError'));
-      throw new Error();
+      throw new Error('Empty import file');
     }
     // Reject if importFile is taking too long since we've removed
     // the ability to alter the modal state during load.
     return new Promise<ImportResponseDTO>((resolve, reject) => {
       const timeout = setTimeout(() => {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
-        reject(new Error());
+        reject(new Error('Import timeout'));
       }, LOADING_TIMEOUT_MS);
       importFile(filesToUpload, getUri(importModalFilterType))
         .then(result => {
@@ -113,7 +113,7 @@ export const ModalImport = memo(() => {
       if (urlToRetrieve) {
         const timeout = setTimeout(() => {
           addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
-          reject(new Error());
+          reject(new Error('Import timeout'));
         }, LOADING_TIMEOUT_MS);
         importUrl(urlToRetrieve, getUri(importModalFilterType), defaultWorkType)
           .then(result => {
@@ -127,7 +127,7 @@ export const ModalImport = memo(() => {
           });
       } else {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importNoUrlError'));
-        reject(new Error());
+        reject(new Error('No URL'));
       }
     });
   };
