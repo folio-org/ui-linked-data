@@ -1,6 +1,11 @@
 # Change history for ui-linked-data
 
-## 1.0.6 (IN PROGRESS)
+## 1.0.7 (IN PROGRESS)
+
+## 1.0.6 (2026-04-15)
+* Bump react-router-dom from ^6.28.1 to ^6.30.3 fixing CVE-2025-68470. Refs [UILD-746].
+
+[UILD-746]:https://folio-org.atlassian.net/browse/UILD-746
 
 ## 1.0.5 (2025-04-30)
 * Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].

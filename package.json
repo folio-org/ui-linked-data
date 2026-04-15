@@ -1,6 +1,6 @@
 {
   "name": "@folio/linked-data",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "publishConfig": {
     "registry": "https://repository.folio.org/repository/npm-folio/"
@@ -38,7 +38,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-intl": "^6.8.9",
-    "react-router-dom": "^6.28.1",
+    "react-router-dom": "^6.30.3",
     "react-select": "^5.9.0",
     "uuid": "^9.0.1",
     "zustand": "^5.0.3"
