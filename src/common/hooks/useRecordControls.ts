@@ -152,7 +152,7 @@ export const useRecordControls = () => {
   ) => {
     navigate(generateEditResourceUrl(updatedRecordId), {
       replace: true,
-      state: location.state,
+      state: { ...(location.state as NavigationState), preserveStatusMessages: true },
     });
 
     if (isProfileChange) {
@@ -192,7 +192,9 @@ export const useRecordControls = () => {
 
       return updatedRecordId;
     } else {
-      navigate(ensureSegmentInUri(searchResultsUri));
+      navigate(ensureSegmentInUri(searchResultsUri), {
+        state: { preserveStatusMessages: true } satisfies NavigationState,
+      });
     }
 
     return updatedRecordId;
