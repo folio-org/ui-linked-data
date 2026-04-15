@@ -24,10 +24,6 @@ h6 {
   margin: 0;
 }
 
-:focus-visible {
-  outline: 2px solid $blue-500;
-}
-
 #app-root {
   display: flex;
   flex-direction: column;
@@ -36,10 +32,6 @@ h6 {
 .main-content {
   flex: 1;
   overflow: auto;
-}
-
-.welcome-screen {
-  padding: 12px;
 }
 
 .no-overflow {
@@ -101,6 +93,10 @@ h6 {
     &::placeholder {
       color: $buttonIcon;
     }
+  }
+
+  :focus-visible {
+    outline: 2px solid $blue-500;
   }
 
   select {
