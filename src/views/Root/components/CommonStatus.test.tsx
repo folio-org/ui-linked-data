@@ -88,7 +88,7 @@ describe('CommonStatus', () => {
     expect(screen.getByTestId('common-status')).toBeInTheDocument();
     expect(getStatusMessagesCount(container)).toBe(2);
 
-    mockUseLocation.mockReturnValue({ pathname: '/different' });
+    mockUseLocation.mockReturnValue({ pathname: '/different', state: null });
 
     rerender(
       <MemoryRouter initialEntries={[{ pathname: '/different' }]}>
@@ -97,5 +97,27 @@ describe('CommonStatus', () => {
     );
 
     expect(screen.queryByTestId('common-status')).not.toBeInTheDocument();
+  });
+
+  test('preserves messages when navigating with preserveStatusMessages flag', async () => {
+    const statusMessages = [{ id: '01', type: StatusType.success, message: 'ld.rdUpdateSuccess' }];
+
+    const { container, rerender } = renderComponent(statusMessages, '/edit');
+
+    expect(getStatusMessagesCount(container)).toBe(1);
+
+    mockUseLocation.mockReturnValue({
+      pathname: '/search',
+      state: { preserveStatusMessages: true },
+    });
+
+    rerender(
+      <MemoryRouter initialEntries={[{ pathname: '/search' }]}>
+        <CommonStatus />
+      </MemoryRouter>,
+    );
+
+    expect(getStatusMessagesCount(container)).toBe(1);
+    expect(screen.getByText('ld.rdUpdateSuccess')).toBeInTheDocument();
   });
 });
