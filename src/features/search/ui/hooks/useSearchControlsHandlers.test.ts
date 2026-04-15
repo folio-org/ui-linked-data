@@ -440,6 +440,24 @@ describe('useSearchControlsHandlers', () => {
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
+
+    it('calls onSubmitCallback on submit when provided', () => {
+      const mockOnSubmitCallback = jest.fn();
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url',
+          onSubmitCallback: mockOnSubmitCallback,
+        }),
+      );
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(mockOnSubmitCallback).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('onReset', () => {

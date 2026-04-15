@@ -37,9 +37,14 @@ jest.mock('@/components/Loading', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
 }));
 
+let capturedSearchOnSubmitCallback: (() => void) | undefined;
+
 jest.mock('@/features/search/ui/components/Search', () => {
   const MockSearch = Object.assign(
-    ({ children }: { children: React.ReactNode }) => <div data-testid="search">{children}</div>,
+    ({ children, onSubmitCallback }: { children: React.ReactNode; onSubmitCallback?: () => void }) => {
+      capturedSearchOnSubmitCallback = onSubmitCallback;
+      return <div data-testid="search">{children}</div>;
+    },
     {
       Controls: Object.assign(({ children }: { children: React.ReactNode }) => <div>{children}</div>, {
         InputsWrapper: () => <div />,
@@ -197,6 +202,29 @@ describe('HubsModal', () => {
 
       expect(mockHandleHubAssign).toHaveBeenCalledWith({ id: 'hub-1', title: 'Hub 1' });
       expect(mockOnAssign).not.toHaveBeenCalled();
+    });
+
+    it('passes handleCloseHubPreview as onSubmitCallback to Search', () => {
+      const mockHandleCloseHubPreview = jest.fn();
+
+      (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+        hubPreviewProps: {
+          handleHubAssign: mockHandleHubAssign,
+          isAssigning: false,
+          isHubPreviewOpen: false,
+          isPreviewLoading: false,
+          previewData: null,
+          previewMeta: null,
+          handleHubTitleClick: jest.fn(),
+          handleCloseHubPreview: mockHandleCloseHubPreview,
+          handleHubPreviewAssign: jest.fn(),
+        },
+        handleModalClose: mockHandleModalClose,
+      });
+
+      renderWithProviders(<HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} />);
+
+      expect(capturedSearchOnSubmitCallback).toBe(mockHandleCloseHubPreview);
     });
   });
 

@@ -30,6 +30,7 @@ interface UseSearchControlsHandlersParams {
     };
   };
   refetch?: () => Promise<void>;
+  onSubmitCallback?: () => void;
 }
 
 interface SearchControlsHandlers {
@@ -113,6 +114,7 @@ export const useSearchControlsHandlers = ({
   flow,
   results,
   refetch,
+  onSubmitCallback,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -123,6 +125,7 @@ export const useSearchControlsHandlers = ({
   const resultsRef = useRef(results);
   const refetchRef = useRef(refetch);
   const searchParamsRef = useRef(searchParams);
+  const onSubmitCallbackRef = useRef(onSubmitCallback);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
@@ -131,7 +134,8 @@ export const useSearchControlsHandlers = ({
     resultsRef.current = results;
     refetchRef.current = refetch;
     searchParamsRef.current = searchParams;
-  }, [coreConfig, uiConfig, flow, results, refetch, searchParams]);
+    onSubmitCallbackRef.current = onSubmitCallback;
+  }, [coreConfig, uiConfig, flow, results, refetch, searchParams, onSubmitCallback]);
 
   const {
     setNavigationState,
@@ -373,6 +377,7 @@ export const useSearchControlsHandlers = ({
           );
 
     resetPreview();
+    onSubmitCallbackRef.current?.();
 
     if (flowRef.current === 'url') {
       // URL flow: update URL params

@@ -117,6 +117,8 @@
 * Fix layout of Work title on the Search results page. Fixes [UILD-677].
 * Fix editor save button being incorrectly enabled. Fixes [UILD-586].
 * Fix missing preview field label. Fixes [UILD-541].
+* Hide preview in complex lookups. Fixes [UILD-709].
+* Show a toast after saving a resource. Fixes [UILD-563].
 * Importing an empty file treated as an error. Fixes [UILD-692].
 * Fix CSS rule leaking out of this module. Fixes [UILD-796].
 
@@ -235,6 +237,8 @@
 [UILD-677]:https://folio-org.atlassian.net/browse/UILD-677
 [UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
 [UILD-541]:https://folio-org.atlassian.net/browse/UILD-541
+[UILD-709]:https://folio-org.atlassian.net/browse/UILD-709
+[UILD-563]:https://folio-org.atlassian.net/browse/UILD-563
 [UILD-692]:https://folio-org.atlassian.net/browse/UILD-692
 [UILD-796]:https://folio-org.atlassian.net/browse/UILD-796
 

@@ -42,7 +42,10 @@ export const CommonStatus: FC = () => {
   const { statusMessages, setStatusMessages } = useStatusState(['statusMessages', 'setStatusMessages']);
 
   useEffect(() => {
-    if (previousPath.current !== location.pathname) {
+    const shouldClearMessages =
+      previousPath.current !== location.pathname && !(location.state as NavigationState)?.preserveStatusMessages;
+
+    if (shouldClearMessages) {
       setStatusMessages([]);
     }
     previousPath.current = location.pathname;
