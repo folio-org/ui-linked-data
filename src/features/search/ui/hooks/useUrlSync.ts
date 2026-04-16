@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { SearchIdentifiers } from '@/common/constants/search.constants';
@@ -19,13 +19,26 @@ interface UseUrlSyncParams {
 
 export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): void => {
   const [searchParams] = useSearchParams();
-  const { query, setQuery, searchBy, setSearchBy, setNavigationState } = useSearchState([
-    'query',
+  const { setQuery, setSearchBy, setNavigationState } = useSearchState([
     'setQuery',
-    'searchBy',
     'setSearchBy',
     'setNavigationState',
   ]);
+
+  // Use refs for query/searchBy to avoid subscribing to their changes.
+  // Reactive subscriptions would cause SearchProvider to re-render on every keystroke,
+  // even in value flow where useUrlSync is a complete no-op.
+  const queryRef = useRef(useSearchState.getState().query);
+  const searchByRef = useRef(useSearchState.getState().searchBy);
+
+  useEffect(() => {
+    const unsubscribe = useSearchState.subscribe(state => {
+      queryRef.current = state.query;
+      searchByRef.current = state.searchBy;
+    });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     // Only sync for URL flow
@@ -39,7 +52,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     const isAdvancedSearch = queryFromUrl !== null && searchByFromUrl === null;
 
     // Only sync query to store if it's NOT an advanced search
-    if (!isAdvancedSearch && queryFromUrl !== null && queryFromUrl !== query) {
+    if (!isAdvancedSearch && queryFromUrl !== null && queryFromUrl !== queryRef.current) {
       const unescapedQuery = removeBackslashes(queryFromUrl);
       setQuery(unescapedQuery);
     }
@@ -48,7 +61,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
     if (searchByFromUrl !== null) {
       const validSearchBy = getValidSearchBy(searchByFromUrl, uiConfig, coreConfig);
 
-      if (validSearchBy !== searchBy) {
+      if (validSearchBy !== searchByRef.current) {
         setSearchBy(validSearchBy as SearchIdentifiers);
       }
     }
@@ -61,7 +74,7 @@ export const useUrlSync = ({ flow, coreConfig, uiConfig }: UseUrlSyncParams): vo
 
     // If URL has no query but store does, clear store (only for simple search)
     // Don't clear if it's transitioning from advanced search
-    if (queryFromUrl === null && query && searchByFromUrl !== null) {
+    if (queryFromUrl === null && queryRef.current && searchByFromUrl !== null) {
       setQuery('');
     }
   }, [flow, searchParams, setQuery, setSearchBy, setNavigationState, coreConfig, uiConfig]);
