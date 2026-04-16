@@ -1,7 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { IResultFormatter } from '../../types';
-import { getIsLocalFlag, getSourceLabel } from '../../utils';
+import { createCompositeKeyBuilder, getIsLocalFlag, getSourceLabel } from '../../utils';
 
 /**
  * Formats Hub data for Search page results
@@ -13,16 +11,19 @@ export class HubsResultFormatter implements IResultFormatter<SearchResultsTableR
   }
 
   private formatHubs(hubList: HubSearchResultDTO[]): SearchResultsTableRow[] {
+    const buildFallbackKey = createCompositeKeyBuilder();
+
     return hubList?.map(hubEntry => {
       const { suggestLabel = '', uri = '', token = '' } = hubEntry;
       const isLocal = getIsLocalFlag(hubEntry);
       const localId = (hubEntry as HubSearchResultDTO & { localId?: string }).localId;
       const sourceLabel = getSourceLabel(isLocal);
+      const stableId = isLocal && localId ? localId : token;
 
       return {
         __meta: {
-          id: isLocal && localId ? localId : token,
-          key: uuidv4(),
+          id: stableId,
+          key: stableId || buildFallbackKey('hub', [suggestLabel, uri, isLocal]),
           isAnchor: false,
           isLocal,
         },

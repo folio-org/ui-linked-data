@@ -69,6 +69,7 @@ describe('HubsLookupResultFormatter', () => {
     // Test first item with Auth and RDA notes
     const firstItem = result[0];
     expect(firstItem.__meta.id).toBe('test_token');
+    expect(firstItem.__meta.key).toBe('test_token');
     expect(firstItem.hub.label).toBe('Beta (Computer file) suggest');
     expect(firstItem.hub.uri).toBe('test_uri/test_token');
     expect(firstItem.auth.label).toBe('ld.yes');
@@ -77,9 +78,21 @@ describe('HubsLookupResultFormatter', () => {
     // Test second item without Auth and RDA notes
     const secondItem = result[1];
     expect(secondItem.__meta.id).toBe('test-hub-id');
+    expect(secondItem.__meta.key).toBe('test-hub-id');
     expect(secondItem.hub.label).toBe('Alpha Test suggest');
     expect(secondItem.auth.label).toBe(undefined);
     expect(secondItem.rda.label).toBe(undefined);
+  });
+
+  test('uses a deterministic fallback key when token is missing', () => {
+    const firstResult = formatter.format([{ ...mockHubData[0], token: '' }]);
+    const secondResult = formatter.format([{ ...mockHubData[0], token: '' }]);
+
+    expect(firstResult[0].__meta.id).toBe('');
+    expect(firstResult[0].__meta.key).toBe(secondResult[0].__meta.key);
+    expect(firstResult[0].__meta.key).toContain('hub-lookup:');
+    expect(firstResult[0].__meta.key).toContain('beta (computer file) suggest');
+    expect(firstResult[0].__meta.key).not.toBe('hub-lookup-0');
   });
 
   test('handles empty hub list', () => {

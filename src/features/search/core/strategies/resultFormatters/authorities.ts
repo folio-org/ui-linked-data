@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { IResultFormatter, ResultFormatterOptions } from '../../types';
+import { createCompositeKeyBuilder } from '../../utils';
 
 /**
  * Formats Authority data for search/browse results
@@ -19,6 +18,8 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
     sourceData?: SourceDataDTO,
     notSpecifiedLabel?: string,
   ): SearchResultsTableRow[] {
+    const buildFallbackKey = createCompositeKeyBuilder();
+
     return authoritiesList?.map(authorityEntry => {
       const selectedEntry = (authorityEntry.authority ?? authorityEntry) as AuthorityAsSearchResultDTO;
       const { id = '', authRefType = '', headingRef = '', headingType = '', sourceFileId = '' } = selectedEntry;
@@ -28,7 +29,7 @@ export class AuthoritiesResultFormatter implements IResultFormatter<SearchResult
       return {
         __meta: {
           id,
-          key: uuidv4(),
+          key: id || buildFallbackKey('authority', [headingRef, headingType, authRefType, sourceFileId, isAnchor]),
           isAnchor,
         },
         authorized: {
