@@ -1,7 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { IResultFormatter } from '../../types';
-import { getIsLocalFlag, getSourceLabel } from '../../utils';
+import { createCompositeKeyBuilder, getIsLocalFlag, getSourceLabel } from '../../utils';
 
 const checkAuthNote = (notes: string[]) => notes.some(note => note.includes('Created from auth.'));
 
@@ -21,17 +19,20 @@ export class HubsLookupResultFormatter implements IResultFormatter<SearchResults
   }
 
   private formatHubs(hubList: HubSearchResultDTO[]): SearchResultsTableRow[] {
+    const buildFallbackKey = createCompositeKeyBuilder();
+
     return hubList?.map(hubEntry => {
-      const { suggestLabel = '', uri = '', token = '', more } = hubEntry;
+      const { suggestLabel = '', uri = '', token = '', more, aLabel = '', vLabel = '', sLabel = '' } = hubEntry;
       const { notes = [] } = more || {};
       const isLocal = getIsLocalFlag(hubEntry);
       const localId = (hubEntry as HubSearchResultDTO & { localId?: string }).localId;
       const sourceLabel = getSourceLabel(isLocal);
+      const stableId = isLocal && localId ? localId : token;
 
       return {
         __meta: {
-          id: isLocal && localId ? localId : token,
-          key: uuidv4(),
+          id: stableId,
+          key: stableId || buildFallbackKey('hub-lookup', [suggestLabel, uri, aLabel, vLabel, sLabel, isLocal]),
           isAnchor: false,
           isLocal,
         },

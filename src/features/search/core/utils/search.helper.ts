@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { SearchQueryParams } from '@/common/constants/routes.constants';
 import {
   AdvancedSearchQualifiers,
@@ -8,6 +6,34 @@ import {
   TitleTypes,
 } from '@/common/constants/search.constants';
 import { Row } from '@/components/Table';
+
+type CompositePrimitiveKeyPart = string | number | boolean | null | undefined;
+type CompositeKeyPart = CompositePrimitiveKeyPart | ReadonlyArray<CompositePrimitiveKeyPart>;
+
+export const normalizeKeyPart = (value: CompositeKeyPart): string => {
+  if (Array.isArray(value)) {
+    return JSON.stringify(value.map(item => normalizeKeyPart(item)));
+  }
+
+  return String(value ?? '')
+    .normalize('NFKC')
+    .trim()
+    .toLowerCase()
+    .replaceAll(/\s+/g, ' ');
+};
+
+export const createCompositeKeyBuilder = () => {
+  const occurrenceBySignature = new Map<string, number>();
+
+  return (prefix: string, parts: CompositeKeyPart[]): string => {
+    const signature = JSON.stringify(parts.map(normalizeKeyPart));
+    const occurrence = occurrenceBySignature.get(signature) ?? 0;
+
+    occurrenceBySignature.set(signature, occurrence + 1);
+
+    return `${prefix}:${signature}#${occurrence}`;
+  };
+};
 
 export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
@@ -19,27 +45,32 @@ export const getTitle = (titles: GenericStructDTO<TitleType>[] | undefined) => {
 };
 
 export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchResultDTO[]): Row[] => {
+  const buildFallbackKey = createCompositeKeyBuilder();
+
   return instanceList.map(({ id, titles, identifiers, publications }) => {
     // at the moment, picking the first match/first item in list for display
     // this might change depending on requirements
 
     const selectedPublisher = publications?.find(({ name, date }) => name ?? date);
+    const title = getTitle(titles);
+    const isbn = findIdentifier(SearchIdentifiers.ISBN, identifiers);
+    const lccn = findIdentifier(SearchIdentifiers.LCCN, identifiers);
 
     return {
       __meta: {
         id,
-        key: uuidv4(),
+        key: id || buildFallbackKey('instance', [title, isbn, lccn, selectedPublisher?.name, selectedPublisher?.date]),
       },
       title: {
-        label: getTitle(titles),
+        label: title,
         className: 'title',
       },
       isbn: {
-        label: findIdentifier(SearchIdentifiers.ISBN, identifiers),
+        label: isbn,
         className: 'identifier',
       },
       lccn: {
-        label: findIdentifier(SearchIdentifiers.LCCN, identifiers),
+        label: lccn,
         className: 'identifier',
       },
       publisher: {
@@ -115,14 +146,14 @@ export const generateSearchParamsState = (
 };
 
 export const normalizeQuery = (query?: string | null) => {
-  return query?.replaceAll(/['"/\\]/g, '\\$&');
+  return query?.replaceAll(/['"/\\]/g, String.raw`\$&`);
 };
 
 export const removeBackslashes = (query?: string | null) => {
   if (!query) return '';
 
   return query
-    .replace(/\\"/g, '"') // replace escaped double quotes with double quotes
-    .replace(/\\\\/g, '\\') // replace double backslashes with single
-    .replace(/([^\\])\\(?!\\)/g, '$1'); // remove single backslashes;
+    .replaceAll(String.raw`\"`, '"') // replace escaped double quotes with double quotes
+    .replaceAll(String.raw`\\`, '\\') // replace double backslashes with single
+    .replaceAll(/([^\\])\\(?!\\)/g, '$1'); // remove single backslashes;
 };
