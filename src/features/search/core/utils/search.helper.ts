@@ -10,23 +10,21 @@ import { Row } from '@/components/Table';
 type CompositePrimitiveKeyPart = string | number | boolean | null | undefined;
 type CompositeKeyPart = CompositePrimitiveKeyPart | ReadonlyArray<CompositePrimitiveKeyPart>;
 
-export const normalizeKeyPart = (value: CompositeKeyPart): string => {
-  if (Array.isArray(value)) {
-    return JSON.stringify(value.map(item => normalizeKeyPart(item)));
-  }
-
-  return String(value ?? '')
+export const normalizeKeyPart = (value: CompositePrimitiveKeyPart): string =>
+  String(value ?? '')
     .normalize('NFKC')
     .trim()
     .toLowerCase()
     .replaceAll(/\s+/g, ' ');
-};
 
 export const createCompositeKeyBuilder = () => {
   const occurrenceBySignature = new Map<string, number>();
 
   return (prefix: string, parts: CompositeKeyPart[]): string => {
-    const signature = JSON.stringify(parts.map(normalizeKeyPart));
+    const normalizedParts = parts.map(part =>
+      Array.isArray(part) ? part.map(normalizeKeyPart) : normalizeKeyPart(part as CompositePrimitiveKeyPart),
+    );
+    const signature = JSON.stringify(normalizedParts);
     const occurrence = occurrenceBySignature.get(signature) ?? 0;
 
     occurrenceBySignature.set(signature, occurrence + 1);
