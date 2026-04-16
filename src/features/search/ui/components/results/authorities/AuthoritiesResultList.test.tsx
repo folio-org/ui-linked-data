@@ -86,6 +86,21 @@ describe('AuthoritiesResultList', () => {
     });
   });
 
+  test('reuses formatter options across rerenders when fallback label does not change', () => {
+    mockUseFormattedResults.mockReturnValue(mockData);
+    mockUseTableFormatter.mockReturnValue({
+      formattedData: mockFormattedData,
+      listHeader: mockListHeader,
+    });
+
+    const { rerender } = render(<AuthoritiesResultList />);
+
+    rerender(<AuthoritiesResultList />);
+
+    expect(mockUseFormattedResults).toHaveBeenCalledTimes(2);
+    expect(mockUseFormattedResults.mock.calls[0][0]).toBe(mockUseFormattedResults.mock.calls[1][0]);
+  });
+
   test('renders with empty data when useFormattedResults returns undefined', () => {
     mockUseFormattedResults.mockReturnValue(undefined);
     mockUseTableFormatter.mockReturnValue({
