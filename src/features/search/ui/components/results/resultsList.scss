@@ -1,0 +1,8 @@
+@use '@/common/styles/common.scss' as *;
+
+.search-result-list {
+  .button-link {
+    height: auto;
+    min-height: $btn-height;
+  }
+}

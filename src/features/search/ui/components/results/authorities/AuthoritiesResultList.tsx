@@ -3,9 +3,10 @@ import { useIntl } from 'react-intl';
 
 import { TableFlex } from '@/components/Table';
 
-import { authoritiesTableConfig } from '../../../config/results/authoritiesTable.config';
-import { useFormattedResults } from '../../../hooks/useFormattedResults';
-import { useTableFormatter } from '../../../hooks/useTableFormatter';
+import { authoritiesTableConfig } from '@/features/search/ui/config';
+import { useFormattedResults, useTableFormatter } from '@/features/search/ui/hooks';
+
+import '../resultsList.scss';
 
 interface AuthoritiesResultListProps {
   context?: 'search' | 'complexLookup';
