@@ -1,6 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { IResultFormatter, LocalHubSearchResultDTO } from '../../types';
+import { createCompositeKeyBuilder } from '../../utils';
 
 /**
  * Formats local Hub data for Search page results
@@ -13,6 +12,8 @@ export class HubsLocalResultFormatter implements IResultFormatter<SearchResultsT
   }
 
   private formatHubs(hubList: LocalHubSearchResultDTO[]): SearchResultsTableRow[] {
+    const buildFallbackKey = createCompositeKeyBuilder();
+
     return hubList?.map(hubEntry => {
       const { label = '', id = '', originalId } = hubEntry;
 
@@ -22,7 +23,7 @@ export class HubsLocalResultFormatter implements IResultFormatter<SearchResultsT
       return {
         __meta: {
           id,
-          key: uuidv4(),
+          key: id || buildFallbackKey('hub-local', [label, originalId]),
           isAnchor: false,
           isLocal: true,
           originalId,

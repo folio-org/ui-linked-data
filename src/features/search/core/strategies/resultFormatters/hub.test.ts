@@ -27,7 +27,7 @@ describe('HubsResultFormatter', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].__meta.id).toBe('token_123');
-      expect(result[0].__meta.key).toBeDefined();
+      expect(result[0].__meta.key).toBe('token_123');
       expect(result[0].__meta.isAnchor).toBe(false);
       expect(result[0].__meta.isLocal).toBe(false);
       expect(result[0].hub.label).toBe('Test Hub');
@@ -68,6 +68,7 @@ describe('HubsResultFormatter', () => {
       const result = formatter.format(mockHubData);
 
       expect(result[0].__meta.id).toBe('id_456');
+      expect(result[0].__meta.key).toBe('id_456');
       expect(result[0].__meta.isLocal).toBe(true);
       expect(result[0].source.label).toBe('ld.source.libraryOfCongress.local');
     });
@@ -105,6 +106,8 @@ describe('HubsResultFormatter', () => {
       expect(result[0].hub.label).toBe('');
       expect(result[0].hub.uri).toBe('');
       expect(result[0].__meta.id).toBe('');
+      expect(result[0].__meta.key).toContain('hub:');
+      expect(result[0].__meta.key).not.toBe('hub-0');
     });
 
     it('formats multiple hub entries correctly', () => {
@@ -134,7 +137,7 @@ describe('HubsResultFormatter', () => {
       expect(result[2].__meta.id).toBe('token_3');
     });
 
-    it('generates unique keys for each entry', () => {
+    it('uses stable keys for each entry', () => {
       const mockHubData = [
         {
           suggestLabel: 'Hub 1',
@@ -150,7 +153,8 @@ describe('HubsResultFormatter', () => {
 
       const result = formatter.format(mockHubData);
 
-      expect(result[0].__meta.key).not.toBe(result[1].__meta.key);
+      expect(result[0].__meta.key).toBe('token_1');
+      expect(result[1].__meta.key).toBe('token_2');
     });
   });
 });

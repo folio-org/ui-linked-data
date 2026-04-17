@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 
 import { TableFlex } from '@/components/Table';
@@ -24,7 +24,8 @@ export const AuthoritiesResultList: FC<AuthoritiesResultListProps> = ({
 }) => {
   const { formatMessage } = useIntl();
   const fallbackLabel = notSpecifiedLabel ?? formatMessage({ id: 'ld.notSpecified' });
-  const data = useFormattedResults<SearchResultsTableRow>({ notSpecifiedLabel: fallbackLabel }) || [];
+  const formatterOptions = useMemo(() => ({ notSpecifiedLabel: fallbackLabel }), [fallbackLabel]);
+  const data = useFormattedResults<SearchResultsTableRow>(formatterOptions) || [];
   const { formattedData, listHeader } = useTableFormatter({
     data,
     tableConfig: authoritiesTableConfig,

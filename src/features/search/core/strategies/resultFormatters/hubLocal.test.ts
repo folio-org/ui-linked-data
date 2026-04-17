@@ -25,6 +25,7 @@ describe('HubsLocalResultFormatter', () => {
       expect(result[0]).toMatchObject({
         __meta: {
           id: 'hub_1',
+          key: 'hub_1',
           isAnchor: false,
           isLocal: true,
         },
@@ -38,7 +39,6 @@ describe('HubsLocalResultFormatter', () => {
           className: 'hub-source',
         },
       });
-      expect(result[0].__meta.key).toBeDefined();
     });
 
     it('Formats local hub without originalId as "Local"', () => {
@@ -56,6 +56,7 @@ describe('HubsLocalResultFormatter', () => {
       expect(result[0]).toMatchObject({
         __meta: {
           id: 'hub_2',
+          key: 'hub_2',
           isAnchor: false,
           isLocal: true,
         },
@@ -134,6 +135,9 @@ describe('HubsLocalResultFormatter', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0].__meta.id).toBe('');
+      expect(result[0].__meta.key).toContain('hub-local:');
+      expect(result[0].__meta.key).toContain('test hub');
+      expect(result[0].__meta.key).not.toBe('hub-local-0');
     });
 
     it('Sets isLocal to true for all results', () => {
@@ -158,7 +162,7 @@ describe('HubsLocalResultFormatter', () => {
       });
     });
 
-    it('Generates unique keys for each result', () => {
+    it('Uses stable keys for each result', () => {
       const mockData: LocalHubSearchResultDTO[] = [
         {
           id: 'hub_1',
@@ -174,10 +178,8 @@ describe('HubsLocalResultFormatter', () => {
 
       const result = formatter.format(mockData);
 
-      const keys = result.map(r => r.__meta.key);
-      const uniqueKeys = new Set(keys);
-
-      expect(uniqueKeys.size).toBe(keys.length);
+      expect(result[0].__meta.key).toBe('hub_1');
+      expect(result[1].__meta.key).toBe('hub_2');
     });
 
     it('Handles originalId with empty string as "Local"', () => {

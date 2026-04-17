@@ -1,4 +1,4 @@
-import { type RefObject, useCallback, useEffect, useRef } from 'react';
+import { type RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
 import { type SetURLSearchParams, useSearchParams } from 'react-router-dom';
 
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
@@ -471,11 +471,14 @@ export const useSearchControlsHandlers = ({
     resetCurrentlyPreviewedEntityBfid,
   ]);
 
-  return {
-    onSegmentChange: handleSegmentChange,
-    onSourceChange: handleSourceChange,
-    onPageChange: handlePageChange,
-    onSubmit: handleSubmit,
-    onReset: handleReset,
-  };
+  return useMemo(
+    () => ({
+      onSegmentChange: handleSegmentChange,
+      onSourceChange: handleSourceChange,
+      onPageChange: handlePageChange,
+      onSubmit: handleSubmit,
+      onReset: handleReset,
+    }),
+    [handleSegmentChange, handleSourceChange, handlePageChange, handleSubmit, handleReset],
+  );
 };

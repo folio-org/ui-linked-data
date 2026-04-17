@@ -31,7 +31,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '1',
-          key: expect.any(String),
+          key: '1',
           isAnchor: true,
         },
         authorized: {
@@ -72,7 +72,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '2',
-          key: expect.any(String),
+          key: '2',
           isAnchor: false,
         },
         authorized: {
@@ -104,7 +104,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '1',
-          key: expect.any(String),
+          key: '1',
           isAnchor: true,
         },
         authorized: {
@@ -151,7 +151,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '3',
-          key: expect.any(String),
+          key: '3',
           isAnchor: false,
         },
         authorized: {
@@ -198,7 +198,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: 'id_3',
-          key: expect.any(String),
+          key: 'id_3',
           isAnchor: false,
         },
         authorized: {
@@ -245,7 +245,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '4',
-          key: expect.any(String),
+          key: '4',
           isAnchor: false,
         },
         authorized: {
@@ -271,5 +271,28 @@ describe('AuthoritiesResultFormatter', () => {
     });
 
     expect(result).toEqual(testResult);
+  });
+
+  it('uses a deterministic fallback key when id is missing', () => {
+    const authoritiesListWithoutId = [
+      {
+        authority: {
+          id: '',
+          authRefType: 'testType_fallback',
+          headingRef: 'testHeading_fallback',
+          headingType: 'testHeadingType_fallback',
+          sourceFileId: 'testSource_fallback',
+        },
+        isAnchor: false,
+      },
+    ];
+
+    const firstResult = formatter.format(authoritiesListWithoutId as unknown as AuthorityAsBrowseResultDTO[]);
+    const secondResult = formatter.format(authoritiesListWithoutId as unknown as AuthorityAsBrowseResultDTO[]);
+
+    expect(firstResult[0].__meta.key).toBe(secondResult[0].__meta.key);
+    expect(firstResult[0].__meta.key).toContain('authority:');
+    expect(firstResult[0].__meta.key).toContain('testheading_fallback');
+    expect(firstResult[0].__meta.key).not.toBe('authority-0');
   });
 });
