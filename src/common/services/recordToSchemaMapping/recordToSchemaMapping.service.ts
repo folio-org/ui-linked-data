@@ -45,11 +45,18 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     return this.updatedSchema;
   }
 
+  private processSequentially<T>(items: Iterable<T>, callback: (item: T, index: number) => Promise<void>) {
+    return Array.from(items).reduce<Promise<void>>(
+      (promise, item, index) => promise.then(() => callback(item, index)),
+      Promise.resolve(),
+    );
+  }
+
   private async traverseBlocks() {
-    for await (const blockUri of this.recordBlocks.values()) {
+    await this.processSequentially(this.recordBlocks.values(), async blockUri => {
       this.currentBlockUri = blockUri;
       await this.traverseBlock();
-    }
+    });
   }
 
   private async traverseBlock() {
@@ -58,25 +65,28 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     try {
       if (!this.record[this.currentBlockUri]) return;
 
-      for await (const [recordKey, recordEntry] of Object.entries(this.record[this.currentBlockUri])) {
-        if (!recordEntry) continue;
+      await this.processSequentially(
+        Object.entries(this.record[this.currentBlockUri]),
+        async ([recordKey, recordEntry]) => {
+          if (!recordEntry) return;
 
-        await this.processRecordEntry(recordKey, recordEntry);
-      }
+          await this.processRecordEntry(recordKey, recordEntry as Record<string, unknown>);
+        },
+      );
     } catch (error) {
       console.error('Cannot apply a record to the schema:', error);
       this.commonStatusService.set('ld.recordMappingToSchema', StatusType.error);
     }
   }
 
-  private async processRecordEntry(recordKey: string, recordEntry: any) {
+  private async processRecordEntry(recordKey: string, recordEntry: Record<string, unknown>) {
     this.currentRecordGroupKey = recordKey;
 
     const schemaEntries = this.getSchemaEntries(recordKey);
 
-    for await (const [recordGroupIndex, recordGroup] of Object.entries(recordEntry)) {
+    await this.processSequentially(Object.entries(recordEntry), async ([recordGroupIndex, recordGroup]) => {
       await this.processRecordGroup(recordGroupIndex, recordEntry, recordGroup, schemaEntries, recordKey);
-    }
+    });
   }
 
   private async processRecordGroup(
@@ -114,15 +124,17 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       schemaEntry.type === AdvancedFieldTypeEnum.dropdown || schemaEntry.type === AdvancedFieldTypeEnum.enumerated;
 
     if (isDropdown) {
-      await this.traverseDropdownOptions(recordGroup, schemaEntry);
+      if (recordGroup && typeof recordGroup === 'object' && !Array.isArray(recordGroup)) {
+        await this.traverseDropdownOptions(recordGroup as Record<string, unknown>, schemaEntry);
+      }
     } else {
       await this.traverseGroupsAndUIControls(recordGroup, schemaEntry);
     }
   }
 
-  private async traverseDropdownOptions(recordGroup: any, schemaEntry: SchemaEntry) {
+  private async traverseDropdownOptions(recordGroup: Record<string, unknown>, schemaEntry: SchemaEntry) {
     // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-    for await (const [idx, groupElem] of Object.entries(recordGroup)) {
+    await this.processSequentially(Object.entries(recordGroup), async ([idx, groupElem]) => {
       const dropdownOptionUUID = this.findSchemaDropdownOption(schemaEntry, idx);
       const typedGroupElem = groupElem as Record<string, string[] | RecordBasic[]>;
 
@@ -133,20 +145,20 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
       } else {
         await this.mapRecordListToSchemaEntry(typedGroupElem, schemaEntry);
       }
-    }
+    });
   }
 
-  private async traverseGroupsAndUIControls(recordGroup: any, schemaEntry: SchemaEntry) {
+  private async traverseGroupsAndUIControls(recordGroup: unknown, schemaEntry: SchemaEntry) {
     if (UI_CONTROLS_LIST.includes(schemaEntry?.type as AdvancedFieldTypeEnum)) {
       await this.mapRecordValueToSchemaEntry({
         schemaEntry,
         recordKey: this.currentRecordGroupKey as string,
-        recordEntryValue: recordGroup,
+        recordEntryValue: recordGroup as RecordEntryValue,
       });
-    } else if (recordGroup && typeof recordGroup === 'object') {
+    } else if (recordGroup && typeof recordGroup === 'object' && !Array.isArray(recordGroup)) {
       // Used for complex groups, which contains a number of subfields
       // traverse within the selected record element (find dropdown options and elements ouside dropdown)
-      await this.mapRecordListToSchemaEntry(recordGroup, schemaEntry);
+      await this.mapRecordListToSchemaEntry(recordGroup as Record<string, string[] | RecordBasic[]>, schemaEntry);
     }
   }
 
@@ -253,8 +265,8 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     recordGroupEntry: Record<string, string[] | RecordBasic[]>,
     schemaEntry: SchemaEntry,
   ) {
-    for await (const [key, value] of Object.entries(recordGroupEntry)) {
-      if (key === 'id') continue;
+    await this.processSequentially(Object.entries(recordGroupEntry), async ([key, value]) => {
+      if (key === 'id') return;
 
       await this.mapRecordValueToSchemaEntry({
         schemaEntry,
@@ -262,7 +274,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
         recordEntryValue: value,
         id: recordGroupEntry?.id as unknown as string,
       });
-    }
+    });
   }
 
   private async mapRecordValueToSchemaEntry({
@@ -387,7 +399,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     let updatedData = data;
 
     if (Array.isArray(recordEntryValue)) {
-      for await (const [key, value] of Object.entries(recordEntryValue)) {
+      await this.processSequentially(Object.entries(recordEntryValue), async ([key, value]) => {
         if (this.shouldDuplicateEntry(recordEntryValue, key)) {
           newValueKey = await this.createDuplicateEntry(schemaUiElem);
           updatedData = value;
@@ -400,7 +412,7 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
           schemaUiElem,
           id,
         });
-      }
+      });
     } else {
       await this.setUserValue({
         valueKey: newValueKey,
@@ -483,15 +495,21 @@ export class RecordToSchemaMappingService implements IRecordToSchemaMapping {
     // add support for RecordBasic[] value type if needed
     if (typeof value === 'object' && !isValueArray) return value;
 
-    const entryPathAsUris = schemaEntry.path.map(id => this.updatedSchema.get(id)?.uriBFLite).filter(uri => uri);
+    const entryPathAsUris = schemaEntry.path.map(id => this.updatedSchema.get(id)?.uriBFLite).filter(Boolean);
     const matchedTemplates = templates.filter(
       ({ path }) => path.length === entryPathAsUris.length && String(path) === String(entryPathAsUris),
     );
 
     if (!matchedTemplates.length) return value;
 
+    if (isValueArray && value.some(item => typeof item !== 'string')) {
+      return value;
+    }
+
     const prefixValueList = matchedTemplates.map(({ template }) => template.prefix);
 
-    return [...prefixValueList, ...(isValueArray ? value : [value])].join(' ');
+    const valueList: string[] = (isValueArray ? value : [value]) as string[];
+
+    return [...prefixValueList, ...valueList].join(' ');
   }
 }
