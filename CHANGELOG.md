@@ -120,6 +120,8 @@
 * Hide preview in complex lookups. Fixes [UILD-709].
 * Show a toast after saving a resource. Fixes [UILD-563].
 * Fix the broken search results table. Fixes [UILD-788].
+* Importing an empty file treated as an error. Fixes [UILD-692].
+* Fix CSS rule leaking out of this module. Fixes [UILD-796].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -239,6 +241,8 @@
 [UILD-709]:https://folio-org.atlassian.net/browse/UILD-709
 [UILD-563]:https://folio-org.atlassian.net/browse/UILD-563
 [UILD-788]:https://folio-org.atlassian.net/browse/UILD-788
+[UILD-692]:https://folio-org.atlassian.net/browse/UILD-692
+[UILD-796]:https://folio-org.atlassian.net/browse/UILD-796
 
 ## 1.0.5 (2025-04-30)
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
