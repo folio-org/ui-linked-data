@@ -1,6 +1,8 @@
 # Change history for ui-linked-data
 
-## 2.0.0 (IN PROGRESS)
+## 2.0.1 (IN PROGRESS)
+
+## 2.0.0 (2026-04-17)
 * Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
 * Clear global state on web component disconnection. Refs [UILD-552].
 * Fixed incorrect instances list display when the user opens the Create Work page. Fixes [UILD-560].
