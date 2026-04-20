@@ -8,6 +8,8 @@ import { TableFlex } from '@/components/Table';
 import { generateHubImportPreviewUrl } from '@/features/hubImport';
 import { useHubSearchPreviewQuery, useHubsTableFormatter } from '@/features/search/ui/hooks';
 
+import '../resultsList.scss';
+
 export const HubsResultList: FC = memo(() => {
   const { navigateWithState } = useNavigateWithSearchState();
   const { loadHubPreview, isLoading } = useHubSearchPreviewQuery();
