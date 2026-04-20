@@ -9,13 +9,22 @@ import { userEvent } from '@testing-library/user-event';
 
 import * as importApi from '@/common/api/import.api';
 import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
 import { ModalImport } from '@/components/ModalImport';
 
 import { useUIStore } from '@/store';
 
+jest.mock('@/common/services/userNotification', () => ({
+  UserNotificationFactory: {
+    createMessage: jest.fn(),
+  },
+}));
+
 describe('ModalImport', () => {
   const user = userEvent.setup();
   const file = new File(['{}'], 'resources.json', { type: 'application/json' });
+  const emptyFile = new File([], 'empty.json', { type: 'application/json' });
   const extensionlessFile = new File(['{}'], 'instance', { type: 'application/json' });
   let importFileMock = jest.fn();
   let importUrlMock = jest.fn();
@@ -108,6 +117,15 @@ describe('ModalImport', () => {
       expect(screen.getByTestId('modal-button-submit')).toBeEnabled();
     });
 
+    test('an empty file results in an error', async () => {
+      const input = screen.getByTestId('dropzone-file-input');
+      await user.upload(input, emptyFile);
+      await user.click(screen.getByTestId('modal-button-submit'));
+      await jest.advanceTimersToNextTimerAsync();
+      expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.importFileEmptyError');
+    });
+
     test('clicking import moves to loading message', async () => {
       const input = screen.getByTestId('dropzone-file-input');
       await user.upload(input, file);
@@ -149,6 +167,7 @@ describe('ModalImport', () => {
       await user.click(screen.getByTestId('modal-button-submit'));
       await jest.advanceTimersToNextTimerAsync();
       expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.importTimedout');
     });
 
     test('failed import shows try again button which resets modal state', async () => {
@@ -163,6 +182,19 @@ describe('ModalImport', () => {
       await user.click(screen.getByTestId('modal-button-submit'));
       await jest.advanceTimersToNextTimerAsync();
       expect(screen.getByTestId('modal-import-file-mode')).toBeInTheDocument();
+    });
+
+    test('successful import of no resources produces a warning', async () => {
+      jest.useFakeTimers({ advanceTimers: true });
+      importFileMock.mockResolvedValueOnce({ log: '' });
+      const input = screen.getByTestId('dropzone-file-input');
+      await user.upload(input, file);
+      await user.click(screen.getByTestId('modal-button-submit'));
+      await jest.advanceTimersToNextTimerAsync();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(
+        StatusType.warning,
+        'ld.importNoResourcesWarning',
+      );
     });
 
     test('successful import of one resource navigates to edit the resource', async () => {
@@ -263,6 +295,7 @@ describe('ModalImport', () => {
       await user.click(screen.getByTestId('modal-button-submit'));
       await jest.advanceTimersToNextTimerAsync();
       expect(screen.getByTestId('modal-import-completed')).toBeInTheDocument();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.importTimedout');
     });
 
     test('failed import shows try again button which resets modal state', async () => {
@@ -279,6 +312,19 @@ describe('ModalImport', () => {
       expect(screen.getByTestId('modal-import-url-mode')).toBeInTheDocument();
     });
 
+    test('successful import of no resources produces a warning', async () => {
+      jest.useFakeTimers({ advanceTimers: true });
+      importUrlMock.mockResolvedValueOnce({ log: '' });
+      const input = screen.getByTestId('import-url-input');
+      await user.type(input, 'some-test-url');
+      await user.click(screen.getByTestId('modal-button-submit'));
+      await jest.advanceTimersToNextTimerAsync();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(
+        StatusType.warning,
+        'ld.importNoResourcesWarning',
+      );
+    });
+
     test('successful import of one resource navigates to edit the resource', async () => {
       jest.useFakeTimers({ advanceTimers: true });
       importUrlMock.mockResolvedValueOnce({ resources: ['1'], log: '' });
@@ -290,7 +336,7 @@ describe('ModalImport', () => {
       expect(navigateToEditPage).toHaveBeenCalled();
     });
 
-    test('successful import of anything other than one resource does not navigate', async () => {
+    test('successful import of anything more than one resource does not navigate', async () => {
       jest.useFakeTimers({ advanceTimers: true });
       importUrlMock.mockResolvedValueOnce({ resources: ['1', '2', '3'], log: '' });
       const input = screen.getByTestId('import-url-input');
