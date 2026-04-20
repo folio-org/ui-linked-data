@@ -6,7 +6,7 @@ type MarcField = {
   field: MarcDTOParsedRecordContentField;
 };
 
-const normalizeIndicator = (indicator?: string) => indicator?.replace(/\\/g, ' ');
+const normalizeIndicator = (indicator?: string) => indicator?.replaceAll('\\', ' ');
 
 export const MarcField: FC<MarcField> = ({ field }) => {
   const fieldTag = Object.keys(field)[0];
