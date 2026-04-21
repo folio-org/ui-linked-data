@@ -113,6 +113,7 @@ type ComplexLookupAssignRecordDTO = {
   title: string;
   linkedFieldValue?: string;
   uri?: string;
+  sourceType?: string;
 };
 
 type QueryParameterConfig = {

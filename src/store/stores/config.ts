@@ -1,8 +1,9 @@
-import { LOCALES } from '@common/i18n/locales';
-import { OKAPI_CONFIG } from '@common/constants/api.constants';
-import { localStorageService } from '@common/services/storage';
+import { OKAPI_CONFIG } from '@/common/constants/api.constants';
+import { LOCALES } from '@/common/i18n/locales';
+import { localStorageService } from '@/common/services/storage';
+
+import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
-import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
 
 type Locale = (typeof LOCALES)[keyof typeof LOCALES];
 type CustomEvents = Record<string, string> | null;

@@ -1,9 +1,10 @@
 import { act } from '@testing-library/react';
 import { v4 as uuidv4 } from 'uuid';
-import { SchemaWithDuplicatesService } from '@common/services/schema';
-import { SelectedEntriesService } from '@common/services/selectedEntries';
-import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
-import { IUserValues } from '@common/services/userValues/userValues.interface';
+
+import { SchemaWithDuplicatesService } from '@/common/services/schema';
+import { SelectedEntriesService } from '@/common/services/selectedEntries';
+import { ISelectedEntries } from '@/common/services/selectedEntries/selectedEntries.interface';
+import { IUserValues } from '@/common/services/userValues/userValues.interface';
 
 jest.mock('uuid');
 

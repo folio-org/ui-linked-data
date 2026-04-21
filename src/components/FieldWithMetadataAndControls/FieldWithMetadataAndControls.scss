@@ -1,3 +1,5 @@
+@use '@/common/styles/common.scss' as *;
+
 .field-with-meta-controls-container {
   display: flex;
   align-items: center;
@@ -32,11 +34,24 @@
     margin-right: 0.5rem;
     justify-self: flex-start;
     font-weight: bold;
-    font-size: 0.919rem;
+    font-size: $font-md;
   }
 
   .controls-container {
     display: flex;
     align-items: center;
   }
+}
+
+.edit-section-group:has(.field-hidden-by-settings) {
+  display: none;
+}
+
+.edit-section .edit-section-group:has(.field-visible-by-drift) {
+  background-color: $gray-300;
+}
+
+.edit-section-group .drift-warning {
+  font-size: $font-md;
+  font-style: italic;
 }

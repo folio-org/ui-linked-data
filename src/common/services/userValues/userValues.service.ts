@@ -1,9 +1,11 @@
 import { cloneDeep } from 'lodash';
-import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@common/constants/uiControls.constants';
+
+import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@/common/constants/uiControls.constants';
+
 import { ComplexLookupUserValueService, LiteralUserValueService, SimpleLookupUserValueService } from './userValueTypes';
+import { EnumeratedUserValueService } from './userValueTypes/enumerated';
 import { IUserValueType } from './userValueTypes/userValueType.interface';
 import { IUserValues } from './userValues.interface';
-import { EnumeratedUserValueService } from './userValueTypes/enumerated';
 
 export class UserValuesService implements IUserValues {
   private generatedValue?: UserValue;

@@ -1,0 +1,87 @@
+@use '@/common/styles/common.scss' as *;
+
+.common-status {
+  position: fixed;
+  bottom: 4rem;
+  right: 2rem;
+  z-index: 10100;
+  display: grid;
+  grid-template-areas: 'statuses';
+
+  &:hover,
+  &:focus-within {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    .status-message {
+      transform: translateY(0) translateX(0) !important;
+    }
+  }
+}
+
+.status-message {
+  grid-area: statuses;
+  width: 42.375rem;
+  padding: 0.5rem 0.65625rem;
+  border: 1px solid $gray-200;
+  border-radius: 6px;
+  background: $base;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 0.875rem;
+  opacity: 0;
+  animation: slideIn 750ms ease-in;
+
+  &-icon {
+    margin-right: 1rem;
+  }
+
+  &-text {
+    flex: 1;
+  }
+
+  &-close {
+    color: $buttonIcon;
+    padding: 3.5px;
+    background-color: transparent;
+  }
+
+  &.success {
+    border-color: $success;
+    background-color: $success-bg-color;
+  }
+
+  &.warning {
+    border-color: $warning;
+    color: $warning;
+    background-color: $warning-bg-color;
+
+    .status-message-icon path {
+      fill: $warning;
+    }
+  }
+
+  &.error {
+    border-color: $error;
+    color: $error;
+    background-color: $error-bg-color;
+
+    .status-message-icon path {
+      fill: $base-text;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(--final-x);
+  }
+}

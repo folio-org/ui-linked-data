@@ -1,7 +1,9 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { ImportModes } from '@common/constants/import.constants';
-import { Select } from '@components/Select';
+
+import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
+import { Select } from '@/components/Select';
+
 import { ImportModeFile } from './ImportModeFile';
 import { ImportModeUrl } from './ImportModeUrl';
 
@@ -12,6 +14,11 @@ type SelectorImportModeProps = {
   onImportNotReady: VoidFunction;
   filesToUpload: File[];
   setFilesToUpload: (files: File[]) => void;
+  urlToRetrieve: string | undefined;
+  setUrlToRetrieve: (url: string) => void;
+  defaultWorkType: string;
+  setDefaultWorkType: (workType: string) => void;
+  importModalFilterType: ImportFilterTypes;
 };
 
 export const SelectorImportMode: FC<SelectorImportModeProps> = ({
@@ -21,12 +28,22 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
   onImportNotReady,
   filesToUpload,
   setFilesToUpload,
+  urlToRetrieve,
+  setUrlToRetrieve,
+  defaultWorkType,
+  setDefaultWorkType,
+  importModalFilterType,
 }) => {
+  const description =
+    importModalFilterType === ImportFilterTypes.Instance ? (
+      <FormattedMessage id="ld.importInstancesDescription" />
+    ) : (
+      <FormattedMessage id="ld.importHubsDescription" />
+    );
+
   return (
     <>
-      <div className="description">
-        <FormattedMessage id="ld.importDescription" />
-      </div>
+      <div className="description">{description}</div>
       <div className="selector">
         <label htmlFor="mode-select">
           <FormattedMessage id="ld.importOption" />
@@ -37,6 +54,7 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
             { value: ImportModes.JsonFile, label: 'importFile' },
             { value: ImportModes.JsonUrl, label: 'importUrl' },
           ]}
+          value={importMode}
           withIntl={true}
           className="mode-select"
           onChange={({ value }) => switchMode(value)}
@@ -46,7 +64,19 @@ export const SelectorImportMode: FC<SelectorImportModeProps> = ({
       {importMode === ImportModes.JsonFile && (
         <ImportModeFile {...{ onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }} />
       )}
-      {importMode === ImportModes.JsonUrl && <ImportModeUrl />}
+      {importMode === ImportModes.JsonUrl && (
+        <ImportModeUrl
+          {...{
+            onImportReady,
+            onImportNotReady,
+            urlToRetrieve,
+            setUrlToRetrieve,
+            defaultWorkType,
+            setDefaultWorkType,
+            importModalFilterType,
+          }}
+        />
+      )}
     </>
   );
 };

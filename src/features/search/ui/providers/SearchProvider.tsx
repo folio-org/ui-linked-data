@@ -1,6 +1,9 @@
-import { FC, useMemo, createContext, useContext } from 'react';
+import { FC, createContext, useContext, useMemo } from 'react';
+
+import { useLoadingState } from '@/store';
+
+import { useSearchControlsHandlers, useSearchQuery, useSearchSegment, useUrlSync } from '../hooks';
 import type { SearchContextValue, SearchProviderProps } from '../types/provider.types';
-import { useSearchControlsHandlers, useSearchQuery, useUrlSync, useSearchSegment } from '../hooks';
 import { resolveSearchConfigs } from '../utils';
 
 export const SearchContext = createContext<SearchContextValue | null>(null);
@@ -13,7 +16,8 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 }
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
-  const { flow, mode = 'custom', children } = props;
+  const { flow, mode = 'custom', children, onSubmitCallback } = props;
+  const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
   const dynamicParams = isDynamicMode(props)
@@ -46,12 +50,6 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     [currentSegment, currentSource, props],
   );
 
-  // Handlers for search controls
-  const handlers = useSearchControlsHandlers({ coreConfig, uiConfig: activeUIConfig, flow });
-
-  // Sync URL to store (URL flow only)
-  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
-
   // Search query
   const {
     data: results,
@@ -60,11 +58,25 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     isError,
     error,
     refetch,
+    activeCoreConfig,
   } = useSearchQuery({
     fallbackCoreConfig: coreConfig,
     fallbackUIConfig: activeUIConfig,
     flow,
   });
+
+  // Handlers for search controls (after results so we can pass pageMetadata for browse pagination and refetch)
+  const handlers = useSearchControlsHandlers({
+    coreConfig,
+    uiConfig: activeUIConfig,
+    flow,
+    results,
+    refetch,
+    onSubmitCallback,
+  });
+
+  // Sync URL to store (URL flow only)
+  useUrlSync({ flow, coreConfig, uiConfig: activeUIConfig });
 
   const contextValue = useMemo(
     (): SearchContextValue => ({
@@ -76,10 +88,13 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
 
       // Computed values
       activeUIConfig,
+      currentSegment,
+      currentSource,
+      activeCoreConfig,
 
       // Search results
       results,
-      isLoading,
+      isLoading: isLoading || isGlobalLoading,
       isFetching,
       isError,
       error,
@@ -98,8 +113,10 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
       flow,
       mode,
       activeUIConfig,
+      activeCoreConfig,
       results,
       isLoading,
+      isGlobalLoading,
       isFetching,
       isError,
       error,

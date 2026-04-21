@@ -1,6 +1,6 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { checkShouldGroupWrap, getPreviewFieldsConditions } from '@common/helpers/preview.helper';
+import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { checkShouldGroupWrap, getPreviewFieldsConditions } from '@/common/helpers/preview.helper';
 
 describe('preview.helper', () => {
   describe('checkShouldGroupWrap', () => {
@@ -270,11 +270,31 @@ describe('preview.helper', () => {
       expect(result.shouldRenderPlaceholders).toBe(true);
     });
 
-    test('handles branch end with complex type', () => {
+    test('handles branch end with non-search complex type', () => {
       const result = getPreviewFieldsConditions({
         ...baseParams,
         entry: {
           ...baseParams.entry,
+          type: AdvancedFieldType.complex,
+          children: undefined,
+        },
+        userValues: {
+          'test-uuid': {
+            uuid: 'test-uuid',
+            contents: [{ label: 'some value' }],
+          },
+        },
+      });
+
+      expect(result.shouldRenderLabelOrPlaceholders).toBe(true);
+    });
+
+    test('handles branch end with search complex type', () => {
+      const result = getPreviewFieldsConditions({
+        ...baseParams,
+        entry: {
+          ...baseParams.entry,
+          bfid: 'lde:test:search',
           type: AdvancedFieldType.complex,
           children: undefined,
         },

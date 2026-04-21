@@ -1,6 +1,7 @@
-import { create as actualCreate, type StateCreator } from 'zustand';
+import { type StateCreator, create as actualCreate } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { IS_PROD_MODE } from '@common/constants/bundle.constants';
+
+import { IS_PROD_MODE } from '@/common/constants/bundle.constants';
 
 const STORE_NAME = 'Linked Data Editor';
 

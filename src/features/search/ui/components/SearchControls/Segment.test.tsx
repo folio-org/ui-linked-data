@@ -1,14 +1,20 @@
-import { render, screen, fireEvent } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { SearchParam } from '@/features/search/core';
+
 import { useSearchStore } from '@/store';
+
 import { Segment } from './Segment';
 
 const mockOnSegmentChange = jest.fn();
+let mockCurrentSegment = '';
 
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
     onSegmentChange: mockOnSegmentChange,
+    currentSegment: mockCurrentSegment,
   }),
 }));
 
@@ -18,6 +24,10 @@ jest.mock('react-intl', () => ({
 
 describe('Segment', () => {
   const setNavigationState = jest.fn();
+
+  beforeEach(() => {
+    mockCurrentSegment = '';
+  });
 
   describe('rendering', () => {
     it('renders button with derived label from path', () => {
@@ -106,6 +116,7 @@ describe('Segment', () => {
 
   describe('active state', () => {
     it('renders button with Highlighted type when segment matches path', () => {
+      mockCurrentSegment = 'resources';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -123,6 +134,7 @@ describe('Segment', () => {
     });
 
     it('renders button with Primary type for parent segment when child is active', () => {
+      mockCurrentSegment = 'authorities:search';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -140,6 +152,7 @@ describe('Segment', () => {
     });
 
     it('renders button with Primary type when segment does not match', () => {
+      mockCurrentSegment = 'authorities';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -191,6 +204,7 @@ describe('Segment', () => {
     });
 
     it('does not call onSegmentChange when clicking already active segment', () => {
+      mockCurrentSegment = 'resources';
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -210,6 +224,7 @@ describe('Segment', () => {
     });
 
     it('does not call onSegmentChange when clicking active segment with defaultTo', () => {
+      mockCurrentSegment = 'authorities:search';
       setInitialGlobalState([
         {
           store: useSearchStore,

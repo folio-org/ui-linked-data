@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { InstanceTitleFormatter } from './InstanceTitleFormatter';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import type { Row } from '@/components/Table';
+
+import { InstanceTitleFormatter } from './InstanceTitleFormatter';
 
 interface MockButtonProps {
   children: React.ReactNode;

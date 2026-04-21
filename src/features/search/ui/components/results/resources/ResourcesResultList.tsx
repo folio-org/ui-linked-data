@@ -1,5 +1,8 @@
 import { useFormattedResults } from '@/features/search/ui';
+
 import { SearchResultEntry } from './SearchResultEntry';
+
+import '../resultsList.scss';
 import './ResourcesResultList.scss';
 
 export const ResourcesResultList = () => {

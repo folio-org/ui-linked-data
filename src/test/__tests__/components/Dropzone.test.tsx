@@ -1,6 +1,7 @@
-import { fireEvent, render, screen, act } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { Dropzone } from '@components/Dropzone';
+
+import { Dropzone } from '@/components/Dropzone';
 
 describe('Dropzone', () => {
   const user = userEvent.setup();

@@ -1,7 +1,8 @@
-import { getMarcRecord } from '@common/api/records.api';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useStatusState } from '@src/store';
+import { getMarcRecord } from '@/common/api/records.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useLoadingState, useStatusState } from '@/store';
 
 export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);

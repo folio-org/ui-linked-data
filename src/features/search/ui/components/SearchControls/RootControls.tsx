@@ -1,13 +1,19 @@
 import { FC, ReactNode } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button } from '@/components/Button';
-import CaretDown from '@/assets/caret-down.svg?react';
+
+import { Button, ButtonType } from '@/components/Button';
+
 import { useUIState } from '@/store';
+
+import CaretDown from '@/assets/caret-down.svg?react';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { InputsWrapper } from './InputsWrapper';
-import { SubmitButton } from './SubmitButton';
 import { MetaControls } from './MetaControls';
+import { SubmitButton } from './SubmitButton';
+
 import './RootControls.scss';
 
 interface RootControlsProps {
@@ -63,6 +69,7 @@ export const RootControls: FC<RootControlsProps> = ({ children, className, showF
               <FormattedMessage id={showFilters ? 'ld.searchAndFilter' : 'ld.search'} />
             </h2>
             <Button
+              type={ButtonType.Icon}
               className="close-ctl"
               onClick={handleToggleCollapse}
               ariaLabel={formatMessage({ id: 'ld.aria.searchPane.close' })}

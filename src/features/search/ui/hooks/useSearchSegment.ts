@@ -1,6 +1,8 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+
 import { useSearchState } from '@/store';
+
 import { SearchParam } from '../../core';
 import type { SearchFlow } from '../types/provider.types';
 
@@ -62,7 +64,7 @@ export function useSearchSegment({
     return staticCoreConfigId ?? '';
   }, [isDynamicMode, segments, defaultSegment, staticCoreConfigId]);
 
-  // Initialize segment/source on mount (value flow only)
+  // Initialize segment/source on mount when a default segment or source is provided.
   useEffect(() => {
     if (isInitialized.current) return;
     isInitialized.current = true;
@@ -70,21 +72,18 @@ export function useSearchSegment({
     // Skip if we already have segment from URL or state
     if (getSegmentFromState()) return;
 
-    // Only initialize state for value flow
-    if (flow === 'value') {
-      const initialState: Record<string, unknown> = {};
+    const initialState: Record<string, unknown> = {};
 
-      if (computedDefaultSegment) {
-        initialState[SearchParam.SEGMENT] = computedDefaultSegment;
-      }
+    if (computedDefaultSegment) {
+      initialState[SearchParam.SEGMENT] = computedDefaultSegment;
+    }
 
-      if (defaultSource) {
-        initialState[SearchParam.SOURCE] = defaultSource;
-      }
+    if (defaultSource) {
+      initialState[SearchParam.SOURCE] = defaultSource;
+    }
 
-      if (Object.keys(initialState).length > 0) {
-        setNavigationState(initialState as SearchParamsState);
-      }
+    if (Object.keys(initialState).length > 0) {
+      setNavigationState(initialState as SearchParamsState);
     }
   }, []);
 

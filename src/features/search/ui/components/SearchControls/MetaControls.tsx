@@ -1,19 +1,24 @@
 import { FC, ReactNode, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button, ButtonType } from '@/components/Button';
+
 import { Announcement } from '@/components/Announcement';
+import { Button, ButtonType } from '@/components/Button';
+
 import { useUIState } from '@/store';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 import { AdvancedSearchModal } from '../AdvancedSearchModal';
 import { ResetButton } from './ResetButton';
 
 interface MetaControlsProps {
+  isCentered?: boolean;
   children?: ReactNode;
 }
 
-export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
-  const { mode, activeUIConfig, onReset } = useSearchContext();
+export const MetaControls: FC<MetaControlsProps> = ({ isCentered = true, children }) => {
+  const { mode, activeUIConfig } = useSearchContext();
   const [announcementMessage, setAnnouncementMessage] = useState('');
   const { isAdvancedSearchOpen, setIsAdvancedSearchOpen } = useUIState([
     'isAdvancedSearchOpen',
@@ -21,23 +26,22 @@ export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
   ]);
 
   const showAdvancedSearch = activeUIConfig.features?.hasAdvancedSearch;
+  const className = classNames(['meta-controls', !showAdvancedSearch && isCentered && 'meta-controls-centered']);
 
   // Custom mode: render provided children
   if (mode === 'custom' && children) {
-    return (
-      <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>{children}</div>
-    );
+    return <div className={className}>{children}</div>;
   }
 
   // Auto mode: render based on config
   return (
     <>
-      <div className={classNames(['meta-controls', !showAdvancedSearch && 'meta-controls-centered'])}>
+      <div className={className}>
         <ResetButton />
         <Announcement message={announcementMessage} onClear={() => setAnnouncementMessage('')} />
         {showAdvancedSearch && (
           <Button
-            type={ButtonType.Link}
+            type={ButtonType.Primary}
             className="search-button"
             onClick={() => setIsAdvancedSearchOpen(isOpen => !isOpen)}
           >
@@ -47,7 +51,7 @@ export const MetaControls: FC<MetaControlsProps> = ({ children }) => {
       </div>
 
       {/* Advanced Search modal */}
-      {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal clearValues={onReset} />}
+      {showAdvancedSearch && isAdvancedSearchOpen && <AdvancedSearchModal />}
     </>
   );
 };

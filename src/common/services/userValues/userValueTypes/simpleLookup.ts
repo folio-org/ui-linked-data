@@ -1,8 +1,9 @@
-import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@common/helpers/lookupOptions.helper';
+import { BFLITE_TYPES_MAP, BFLITE_URIS, DEFAULT_GROUP_VALUES } from '@/common/constants/bibframeMapping.constants';
+import { alphabeticSortLabel } from '@/common/helpers/common.helper';
+import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
+
 import { UserValueType } from './userValueType';
 import { IUserValueType } from './userValueType.interface';
-import { alphabeticSortLabel } from '@common/helpers/common.helper';
-import { BFLITE_TYPES_MAP, DEFAULT_GROUP_VALUES, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
   private uri?: string;

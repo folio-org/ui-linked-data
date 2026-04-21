@@ -5,5 +5,6 @@ export const getMockedImportedConstant =
     Object.defineProperty(constantsModule, constantName, {
       value,
       writable: true,
+      configurable: true,
     });
   };

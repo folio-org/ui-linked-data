@@ -1,4 +1,4 @@
-import StorageService from '@common/services/storage/baseStorage.service';
+import StorageService from '@/common/services/storage/baseStorage.service';
 
 class DummyStorageService extends StorageService {}
 

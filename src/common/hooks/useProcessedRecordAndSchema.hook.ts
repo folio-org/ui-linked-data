@@ -1,12 +1,15 @@
 import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { DUPLICATE_RESOURCE_TEMPLATE } from '@common/constants/resourceTemplates.constants';
-import { getAdjustedRecordContents, wrapRecordValuesWithCommonContainer } from '@common/helpers/record.helper';
-import { applyIntlToTemplates } from '@common/helpers/recordFormatting.helper';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
+
+import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplates.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { getAdjustedRecordContents, wrapRecordValuesWithCommonContainer } from '@/common/helpers/record.helper';
+import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useInputsState, useStatusState } from '@/store';
+
 import { useServicesContext } from './useServicesContext';
-import { useInputsState, useStatusState } from '@src/store';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;

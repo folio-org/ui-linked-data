@@ -1,19 +1,29 @@
-import { recordGeneratorService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import * as Router from 'react-router-dom';
+import { recordGeneratorService } from '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { renderHook } from '@testing-library/react';
-import { useRecordGeneration } from '@common/hooks/useRecordGeneration';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsStore, useProfileStore } from '@src/store';
+
+import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
+
+import { useInputsStore, useProfileStore } from '@/store';
+
+let mockSearchParams = new URLSearchParams('?type=work');
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useSearchParams: () => [mockSearchParams, jest.fn()],
+}));
 
 describe('useRecordGeneration', () => {
+  beforeEach(() => {
+    mockSearchParams = new URLSearchParams('?type=work');
+  });
+
   it('generates a record using new service', () => {
     const schema = 'mockSchema';
     const userValues = 'mockUserValues';
     const selectedEntries: string[] = [];
-    const profileId = "2";
-
-    const searchParams = new URLSearchParams('?block=testBlock&reference.key=testKey');
-    jest.spyOn(Router, 'useSearchParams').mockReturnValueOnce([searchParams, jest.fn()]);
+    const profileId = '2';
 
     setInitialGlobalState([
       {
@@ -27,13 +37,6 @@ describe('useRecordGeneration', () => {
         state: {
           userValues,
           selectedEntries,
-          record: {
-            resource: {
-              testBlock: {
-                testKey: [{ id: 'testId' }],
-              },
-            },
-          },
         },
       },
     ]);

@@ -1,11 +1,13 @@
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as RecordProcessingCases from '@common/services/recordNormalizing/recordProcessingCases';
-import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import * as SchemaHelper from '@common/helpers/schema.helper';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
+import * as SchemaHelper from '@/common/helpers/schema.helper';
+import * as RecordProcessingCases from '@/common/services/recordNormalizing/recordProcessingCases';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
+const realBFLiteUris = BibframeMappingConstants.BFLITE_URIS;
 
-jest.mock('@common/helpers/schema.helper', () => ({
+jest.mock('@/common/helpers/schema.helper', () => ({
   getLookupLabelKey: jest.fn(),
 }));
 
@@ -203,6 +205,117 @@ describe('recordProcessingCases', () => {
       RecordProcessingCases.languagesMapping(record, blockKey);
 
       expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('hubLanguagesMapping', () => {
+    const languageBFLiteUri = 'languageBFLiteUri';
+    const termBFLiteUri = 'termBFLiteUri';
+    const codeBFLiteUri = 'codeBFLiteUri';
+
+    beforeEach(() => {
+      mockedBFLiteUris({
+        LINK: linkBFLiteUri,
+        LABEL: labelBFLiteUri,
+        LANGUAGES: languagesNonBFUri,
+        LANGUAGE: languageBFLiteUri,
+        TERM: termBFLiteUri,
+        CODE: codeBFLiteUri,
+      });
+    });
+
+    test('wraps Hub language data into _languages structure', () => {
+      const record = {
+        [blockKey]: {
+          [languageBFLiteUri]: [
+            {
+              id: 'lang_id_1',
+              [linkBFLiteUri]: ['testLanguageLink_1'],
+              [termBFLiteUri]: ['testLanguageTerm_1'],
+              [codeBFLiteUri]: ['testLanguageCode_1'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_1',
+                [linkBFLiteUri]: ['testLanguageLink_1'],
+                [termBFLiteUri]: ['testLanguageTerm_1'],
+                [codeBFLiteUri]: ['testLanguageCode_1'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('wraps multiple Hub language entries into _languages structure', () => {
+      const record = {
+        [blockKey]: {
+          [languageBFLiteUri]: [
+            {
+              id: 'lang_id_1',
+              [linkBFLiteUri]: ['testLanguageLink_1'],
+              [termBFLiteUri]: ['testLanguageTerm_1'],
+            },
+            {
+              id: 'lang_id_2',
+              [linkBFLiteUri]: ['testLanguageLink_2'],
+              [termBFLiteUri]: ['testLanguageTerm_2'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [languagesNonBFUri]: [
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_1',
+                [linkBFLiteUri]: ['testLanguageLink_1'],
+                [termBFLiteUri]: ['testLanguageTerm_1'],
+              },
+            },
+            {
+              [languageBFLiteUri]: {
+                id: 'lang_id_2',
+                [linkBFLiteUri]: ['testLanguageLink_2'],
+                [termBFLiteUri]: ['testLanguageTerm_2'],
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does nothing when language data is not present', () => {
+      const record = {
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      } as unknown as RecordEntry;
+
+      RecordProcessingCases.hubLanguagesMapping(record, blockKey, languageBFLiteUri);
+
+      expect(record).toEqual({
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      });
     });
   });
 
@@ -495,15 +608,15 @@ describe('recordProcessingCases', () => {
   });
 
   describe('processHubsComplexLookup', () => {
-    test('transforms entry with hub data containing LINK and LABEL', () => {
+    test('transforms entry with hub data containing rdfLink and label as strings', () => {
       const record = {
         [blockKey]: {
           [groupKey]: [
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
           ],
@@ -513,11 +626,12 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],
@@ -536,15 +650,15 @@ describe('recordProcessingCases', () => {
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
             {
               _relation: 'relation_2',
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_2'],
-                [labelBFLiteUri]: ['Hub Label 2'],
+                rdfLink: 'test_hub_uri_2',
+                label: 'Hub Label 2',
               },
             },
           ],
@@ -554,19 +668,21 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
               },
             },
             {
-              id: [''],
+              id: [],
               _relation: 'relation_2',
               _hub: {
                 value: ['Hub Label 2'],
                 uri: ['test_hub_uri_2'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],
@@ -585,8 +701,8 @@ describe('recordProcessingCases', () => {
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: [],
-                [labelBFLiteUri]: [],
+                rdfLink: undefined,
+                label: undefined,
               },
             },
           ],
@@ -596,7 +712,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: 'relation_1',
               _hub: {
                 value: [],
@@ -612,15 +728,15 @@ describe('recordProcessingCases', () => {
       expect(record).toEqual(testResult);
     });
 
-    test('transforms entry with single string values in hub data', () => {
+    test('transforms entry with id and label for local source', () => {
       const record = {
         [blockKey]: {
           [groupKey]: [
             {
               _relation: 'relation_1',
               _hub: {
-                [linkBFLiteUri]: 'test_hub_uri_1',
-                [labelBFLiteUri]: 'Hub Label 1',
+                id: 'local_id_123',
+                label: 'Local Hub Label',
               },
             },
           ],
@@ -630,11 +746,13 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: ['local_id_123'],
               _relation: 'relation_1',
               _hub: {
-                value: 'Hub Label 1',
-                uri: 'test_hub_uri_1',
+                value: ['Local Hub Label'],
+                uri: [],
+                id: ['local_id_123'],
+                sourceType: 'local',
               },
             },
           ],
@@ -656,8 +774,8 @@ describe('recordProcessingCases', () => {
                 subtype: 'nested',
               },
               _hub: {
-                [linkBFLiteUri]: ['test_hub_uri_1'],
-                [labelBFLiteUri]: ['Hub Label 1'],
+                rdfLink: 'test_hub_uri_1',
+                label: 'Hub Label 1',
               },
             },
           ],
@@ -667,7 +785,7 @@ describe('recordProcessingCases', () => {
         [blockKey]: {
           [groupKey]: [
             {
-              id: [''],
+              id: [],
               _relation: {
                 type: 'complex',
                 subtype: 'nested',
@@ -675,6 +793,7 @@ describe('recordProcessingCases', () => {
               _hub: {
                 value: ['Hub Label 1'],
                 uri: ['test_hub_uri_1'],
+                sourceType: 'libraryOfCongress',
               },
             },
           ],
@@ -684,6 +803,676 @@ describe('recordProcessingCases', () => {
       RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
 
       expect(record).toEqual(testResult);
+    });
+
+    test('transforms existing LoC hub with id (saved hub) - preserves id inside _hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              _relation: 'relation_1',
+              _hub: {
+                id: 'backend_generated_id_123',
+                rdfLink: 'http://id.loc.gov/resources/hubs/abc123',
+                label: 'Existing LoC Hub',
+              },
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['backend_generated_id_123'],
+              _relation: 'relation_1',
+              _hub: {
+                value: ['Existing LoC Hub'],
+                uri: ['http://id.loc.gov/resources/hubs/abc123'],
+                id: ['backend_generated_id_123'],
+                sourceType: 'libraryOfCongress',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processHubsComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('processSubjectComplexLookup', () => {
+    const hubUri = 'http://bibfra.me/vocab/lite/Hub';
+    const conceptUri = 'http://bibfra.me/vocab/lite/Concept';
+    const authorityUri = 'http://bibfra.me/vocab/lite/Authority';
+    const topicUri = 'http://bibfra.me/vocab/lite/Topic';
+    const workUri = 'http://bibfra.me/vocab/lite/Work';
+
+    beforeEach(() => {
+      mockedBFLiteUris({
+        HUB: hubUri,
+        LINK: linkBFLiteUri,
+        LABEL: labelBFLiteUri,
+        CONCEPT: conceptUri,
+      });
+    });
+
+    test('transforms subject entry and sets lookupType to authorities when types array does not include Hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_1',
+              label: 'Authority Subject',
+              types: [authorityUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Authority Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+              _subclass: authorityUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms subject entry and sets lookupType to hubs when types array includes Hub', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Hub Subject',
+              types: [hubUri, topicUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Hub Subject'],
+                isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
+              },
+              _subclass: hubUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms subject entry and sets lookupType to authorities when types array is undefined', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_2',
+              label: 'Subject without types',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_2'],
+              label: {
+                value: ['Subject without types'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple subject entries with mixed Hub and Authority types', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Hub Subject',
+              types: [hubUri],
+            },
+            {
+              id: 'auth_id_1',
+              label: 'Authority Subject',
+              types: [topicUri],
+            },
+            {
+              id: 'hub_id_2',
+              label: 'Another Hub',
+              types: [workUri, hubUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Hub Subject'],
+                isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
+              },
+              _subclass: hubUri,
+            },
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Authority Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+              _subclass: topicUri,
+            },
+            {
+              id: ['hub_id_2'],
+              label: {
+                value: ['Another Hub'],
+                isPreferred: undefined,
+                lookupType: 'hubs',
+                sourceType: 'local',
+              },
+              _subclass: workUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('preserves isPreferred attribute while adding lookupType', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'hub_id_1',
+              label: 'Preferred Hub',
+              isPreferred: true,
+              types: [hubUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['hub_id_1'],
+              label: {
+                value: ['Preferred Hub'],
+                isPreferred: true,
+                lookupType: 'hubs',
+                sourceType: 'local',
+              },
+              _subclass: hubUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('includes _subclass when types contains a non-CONCEPT type', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_1',
+              label: 'Topic Subject',
+              types: [conceptUri, topicUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_1'],
+              label: {
+                value: ['Topic Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+              _subclass: topicUri,
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('omits _subclass when all types are CONCEPT', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'auth_id_2',
+              label: 'Pure Concept Subject',
+              types: [conceptUri],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['auth_id_2'],
+              label: {
+                value: ['Pure Concept Subject'],
+                isPreferred: undefined,
+                lookupType: 'authorities',
+                sourceType: 'local',
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processSubjectComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+      expect((record[blockKey][groupKey] as unknown as RecordBasic[])[0]).not.toHaveProperty('_subclass');
+    });
+  });
+
+  describe('processDissertation', () => {
+    const selector = '_refs';
+
+    test('expands entry with references into multiple entries', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [
+                { id: 'id_1', label: 'label_1', isPreferred: true },
+                { id: 'id_2', label: 'label_2', isPreferred: false },
+              ],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              id: ['id_1'],
+              [selector]: {
+                value: ['label_1'],
+                isPreferred: true,
+              },
+            },
+            {
+              field_1: 'value_1',
+              id: ['id_2'],
+              [selector]: {
+                value: ['label_2'],
+                isPreferred: false,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('returns entry unchanged when references are empty', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [],
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('returns entry unchanged when selector is not present', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('handles multiple entries with mixed references', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              [selector]: [{ id: 'id_1', label: 'label_1', isPreferred: true }],
+            },
+            {
+              field_2: 'value_2',
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              field_1: 'value_1',
+              id: ['id_1'],
+              [selector]: {
+                value: ['label_1'],
+                isPreferred: true,
+              },
+            },
+            {
+              field_2: 'value_2',
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processDissertation(record, blockKey, groupKey, selector);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('processGeographicCoverageComplexLookup', () => {
+    test('transforms a local entry with id and label', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+              types: ['http://bibfra.me/vocab/lite/Place'],
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('transforms multiple entries', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: 'geo_id_1',
+              label: 'Yellow River (China)',
+              isPreferred: false,
+            },
+            {
+              id: 'geo_id_2',
+              label: 'Nile River',
+              isPreferred: true,
+            },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            {
+              id: ['geo_id_1'],
+              label: {
+                value: ['Yellow River (China)'],
+                isPreferred: false,
+              },
+            },
+            {
+              id: ['geo_id_2'],
+              label: {
+                value: ['Nile River'],
+                isPreferred: true,
+              },
+            },
+          ],
+        },
+      };
+
+      RecordProcessingCases.processGeographicCoverageComplexLookup(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+  });
+
+  describe('reorderTitles', () => {
+    beforeEach(() => {
+      mockedBFLiteUris(realBFLiteUris);
+    });
+
+    test('reorders Work/Hub titles: VariantTitle before WorkTitle -> WorkTitle first', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('reorders Instance titles: ParallelTitle, InstanceTitle, VariantTitle -> InstanceTitle, ParallelTitle, VariantTitle', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Instance Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does not change already-ordered titles', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const expected = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_PARALLEL_TITLE]: { mainTitle: ['Parallel Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(expected);
+    });
+
+    test('sorts unknown title types to the end', () => {
+      const record = {
+        [blockKey]: {
+          [groupKey]: [
+            { unknownTitleUri: { mainTitle: ['Unknown Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+          ],
+        },
+      } as unknown as RecordEntry;
+
+      const testResult = {
+        [blockKey]: {
+          [groupKey]: [
+            { [realBFLiteUris.TITLE_CONTAINER]: { mainTitle: ['Work Title'] } },
+            { [realBFLiteUris.LIBRARY_VARIANT_TITLE]: { mainTitle: ['Variant Title'] } },
+            { unknownTitleUri: { mainTitle: ['Unknown Title'] } },
+          ],
+        },
+      };
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual(testResult);
+    });
+
+    test('does nothing when titles are not present', () => {
+      const record = {
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      } as unknown as RecordEntry;
+
+      RecordProcessingCases.reorderTitles(record, blockKey, groupKey);
+
+      expect(record).toEqual({
+        [blockKey]: {
+          otherField: ['value'],
+        },
+      });
     });
   });
 });

@@ -1,13 +1,19 @@
-import { FC, ReactNode, memo, useEffect, type ReactElement } from 'react';
+import { FC, type ReactElement, ReactNode, memo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import classNames from 'classnames';
-import { AriaModalKind, MODAL_CONTAINER_ID } from '@common/constants/uiElements.constants';
-import Times16 from '@src/assets/times-16.svg?react';
-import { Button, ButtonType } from '@components/Button';
-import './Modal.scss';
 import { useIntl } from 'react-intl';
+
+import classNames from 'classnames';
+import { FocusTrap } from 'focus-trap-react';
+
+import { AriaModalKind, MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
+import { Button, ButtonType } from '@/components/Button';
+
+import Times16 from '@/assets/times-16.svg?react';
+
+import './Modal.scss';
+
 // TODO: UILD-147 - Uncomment for using with Shadow DOM
-// import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
+// import { WEB_COMPONENT_NAME } from '@/common/constants/web-component';
 
 interface Props {
   'data-testid'?: string;
@@ -29,10 +35,9 @@ interface Props {
   children?: ReactNode;
   showCloseIconButton?: boolean;
   showModalControls?: boolean;
-  spreadModalControls?: boolean;
   titleClassName?: string;
-  alignTitleCenter?: boolean;
   ariaModalKind?: string;
+  wrapContents?: boolean;
 }
 
 const Modal: FC<Props> = ({
@@ -54,13 +59,13 @@ const Modal: FC<Props> = ({
   cancelButtonHidden,
   showCloseIconButton = true,
   showModalControls = true,
-  spreadModalControls = false,
   titleClassName,
-  alignTitleCenter = false,
+  wrapContents = true,
   ariaModalKind = AriaModalKind.Basic,
   'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
+  const modalRef = useRef<HTMLDivElement>(null);
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
@@ -83,50 +88,68 @@ const Modal: FC<Props> = ({
     }
   };
 
+  const wrappedContents = () => {
+    return wrapContents ? <div className="modal-content">{children}</div> : children;
+  };
+
   return isOpen && portalElement
     ? createPortal(
         <>
           <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
-          <div className={classNames(['modal', className])} role="dialog" data-testid={modalTestId || 'modal'}>
-            <div className={classNames(['modal-header', classNameHeader])}>
-              {showCloseIconButton && (
-                <button
-                  onClick={onClose}
-                  className="close-button"
-                  aria-label={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
-                >
-                  <Times16 />
-                </button>
-              )}
-              <h3 className={classNames(['title', titleClassName])}>{title}</h3>
-              {alignTitleCenter && <span className="empty-block" />}
-            </div>
-            {!!children && children}
-            {showModalControls && (
-              <div className={spreadModalControls ? 'modal-controls-spread' : 'modal-controls'}>
-                {!cancelButtonHidden && (
+          <FocusTrap
+            focusTrapOptions={{
+              clickOutsideDeactivates: shouldCloseOnExternalClick,
+              escapeDeactivates: shouldCloseOnEsc,
+              fallbackFocus: modalRef.current || undefined,
+            }}
+          >
+            <div
+              className={classNames(['modal', className])}
+              role="dialog"
+              data-testid={modalTestId || 'modal'}
+              tabIndex={-1}
+              ref={modalRef}
+            >
+              <div className={classNames(['modal-header', classNameHeader])}>
+                {showCloseIconButton && (
                   <Button
-                    disabled={cancelButtonDisabled}
-                    onClick={onCancel}
-                    type={ButtonType.Primary}
-                    data-testid="modal-button-cancel"
+                    type={ButtonType.Icon}
+                    onClick={onClose}
+                    className="close-button"
+                    ariaLabel={formatMessage({ id: 'ld.aria.modal.close' }, { modalKind: ariaModalKind })}
                   >
-                    {cancelButtonLabel}
+                    <Times16 />
                   </Button>
                 )}
-                {!submitButtonHidden && (
-                  <Button
-                    disabled={submitButtonDisabled}
-                    type={ButtonType.Highlighted}
-                    onClick={onSubmit}
-                    data-testid="modal-button-submit"
-                  >
-                    {submitButtonLabel}
-                  </Button>
-                )}
+                <h3 className={classNames(['title', titleClassName])}>{title}</h3>
               </div>
-            )}
-          </div>
+              {!!children && wrappedContents()}
+              {showModalControls && (
+                <div className="modal-controls">
+                  {!cancelButtonHidden && (
+                    <Button
+                      disabled={cancelButtonDisabled}
+                      onClick={onCancel}
+                      type={ButtonType.Primary}
+                      data-testid="modal-button-cancel"
+                    >
+                      {cancelButtonLabel}
+                    </Button>
+                  )}
+                  {!submitButtonHidden && (
+                    <Button
+                      disabled={submitButtonDisabled}
+                      type={ButtonType.Highlighted}
+                      onClick={onSubmit}
+                      data-testid="modal-button-submit"
+                    >
+                      {submitButtonLabel}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+          </FocusTrap>
         </>,
         portalElement,
       )

@@ -1,10 +1,16 @@
 import { FC, ReactNode } from 'react';
+import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
-import { useProfileSchema } from '@common/hooks/useProfileSchema';
-import { useInputsState, useProfileState } from '@src/store';
+
+import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@/common/helpers/repeatableFields.helper';
+import { useProfileSchema } from '@/common/hooks/useProfileSchema';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
+
 import './FieldWithMetadataAndControls.scss';
 
 type IFieldWithMetadataAndControls = {
@@ -65,12 +71,19 @@ export const FieldWithMetadataAndControls: FC<IFieldWithMetadataAndControls> = (
       className={classNames(
         'field-with-meta-controls-container',
         { 'field-with-meta-controls-container-extended': !isCompact && hasDuplicateGroupButton },
+        { 'field-hidden-by-settings': !entry.editorVisible },
+        { 'field-visible-by-drift': entry.profileSettingsDrift },
         className,
       )}
       id={uuid}
       data-testid={`field-with-meta-controls-${uuid}`}
       {...restProps}
     >
+      {entry.profileSettingsDrift && (
+        <div className="drift-warning">
+          <FormattedMessage id="ld.visibleByDrift" />
+        </div>
+      )}
       {isCompact ? (
         <CompactLayout {...commonLayoutProps} marcMapping={marcMapping}>
           {children}

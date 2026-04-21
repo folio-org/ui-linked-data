@@ -1,19 +1,30 @@
 import { FC, useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
 import { FormattedMessage } from 'react-intl';
-import { ActionMeta, createFilter, GroupBase, MultiValue, StylesConfig } from 'react-select';
-import { useSimpleLookupData } from '@common/hooks/useSimpleLookupData';
-import { useSimpleLookupObserver } from '@common/hooks/useSimpleLookupObserver';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { filterLookupOptionsByParentBlock } from '@common/helpers/lookupOptions.helper';
-import { SIMPLE_LOOKUPS_ENABLED } from '@common/constants/feature.constants';
+import {
+  ActionMeta,
+  CSSObjectWithLabel,
+  GroupBase,
+  MultiValue,
+  OptionProps,
+  StylesConfig,
+  createFilter,
+} from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+
+import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { filterLookupOptionsByParentBlock } from '@/common/helpers/lookupOptions.helper';
+import { useSimpleLookupData } from '@/common/hooks/useSimpleLookupData';
+import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useStatusState } from '@/store';
+
+import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';
 import { MultiValueRemove } from './MultiValueRemove';
-import { ClearIndicator } from './ClearIndicator';
-import { SimpleLookupFieldStyles } from './SimpleLookupField.styles';
+
 import './SimpleLookupField.scss';
-import { useStatusState } from '@src/store';
 
 interface Props {
   uri: string;
@@ -31,6 +42,19 @@ interface Props {
 }
 
 const LoadingMessage: FC = () => <FormattedMessage id="ld.loading" />;
+
+// Most of react-select can be styled from CSS, but :focus on the pill removal button
+// cannot, so remove most styling with `unstyled` but do define this one state.
+// Uses $blue-400 and $button-standard for the boxShadow.
+const customStyles = {
+  multiValueRemove: (base: CSSObjectWithLabel, state: OptionProps<unknown, boolean, GroupBase<unknown>>) => ({
+    ...base,
+    ...(state.isFocused && {
+      background: 'transparent',
+      boxShadow: '0 0 0 1px inset #6591d9, 0 0 0 2px inset #1960a4',
+    }),
+  }),
+};
 
 export const SimpleLookupField: FC<Props> = ({
   uri,
@@ -121,7 +145,6 @@ export const SimpleLookupField: FC<Props> = ({
       data-testid="simple-lookup"
       isSearchable
       isClearable
-      openMenuOnFocus
       isLoading={isLoading}
       isMulti={isMulti}
       menuPlacement={forceDisplayOptionsAtTheTop ? 'top' : 'auto'}
@@ -143,7 +166,8 @@ export const SimpleLookupField: FC<Props> = ({
       placeholder={<FormattedMessage id="ld.select" />}
       loadingMessage={() => <LoadingMessage />}
       inputId="creatable-select-input"
-      styles={SimpleLookupFieldStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
+      unstyled
+      styles={customStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
       filterOption={createFilter({
         ignoreCase: true,
         ignoreAccents: true,

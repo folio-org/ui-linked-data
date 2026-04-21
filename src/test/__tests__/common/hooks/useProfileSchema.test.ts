@@ -1,6 +1,8 @@
-import { schemaWithDuplicatesService } from '@src/test/__mocks__/common/hooks/useServicesContext.mock';
-import { useProfileSchema } from '@common/hooks/useProfileSchema';
+import { schemaWithDuplicatesService } from '@/test/__mocks__/common/hooks/useServicesContext.mock';
+
 import { act, renderHook } from '@testing-library/react';
+
+import { useProfileSchema } from '@/common/hooks/useProfileSchema';
 
 describe('useProfileSchema', () => {
   const entry = {

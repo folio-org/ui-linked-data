@@ -1,6 +1,6 @@
-import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { AdvancedFieldType, NOT_PREVIEWABLE_TYPES } from '@common/constants/uiControls.constants';
-import { PREVIEW_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
+import { GROUP_BY_LEVEL, GROUP_CONTENTS_LEVEL, PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType, NOT_PREVIEWABLE_TYPES } from '@/common/constants/uiControls.constants';
+import { PREVIEW_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 
 export const checkShouldGroupWrap = (level: number, entry = {} as SchemaEntry) => {
   const { children, type } = entry;
@@ -46,11 +46,12 @@ export const getPreviewFieldsConditions = ({
   const isBranchEnd = !hasChildren;
   const isBranchEndWithoutValues = !selectedUserValues && isBranchEnd;
   const isBranchEndWithValues = !!selectedUserValues;
+  const isWithoutComplexSearch = type !== AdvancedFieldType.complex || (type === AdvancedFieldType.complex && !bfid);
   const shouldRenderLabelOrPlaceholders =
     (!(isEntity && hideEntities) && isPreviewable && isGroupable) ||
     type === AdvancedFieldType.dropdown ||
     type === AdvancedFieldType.enumerated ||
-    (isBranchEndWithValues && type !== AdvancedFieldType.complex) ||
+    (isBranchEndWithValues && isWithoutComplexSearch) ||
     isBranchEndWithoutValues;
   const hasOnlyDropdownChildren =
     hasChildren &&

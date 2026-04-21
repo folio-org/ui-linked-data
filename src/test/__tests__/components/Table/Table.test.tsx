@@ -1,5 +1,6 @@
-import { Table } from '@components/Table';
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import { Table } from '@/components/Table';
 
 describe('Table', () => {
   const mockHeader = {

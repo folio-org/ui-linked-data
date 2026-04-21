@@ -1,8 +1,10 @@
-import { useState, useCallback } from 'react';
-import BaseApi from '@common/api/base.api';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useStatusState } from '@src/store';
+import { useCallback, useState } from 'react';
+
+import BaseApi from '@/common/api/base.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useLoadingState, useStatusState } from '@/store';
 
 interface RequestConfig {
   url: string;

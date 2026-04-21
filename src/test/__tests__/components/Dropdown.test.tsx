@@ -1,6 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
-import { DropdownItemType } from '@common/constants/uiElements.constants';
-import { Dropdown } from '@components/Dropdown';
+
+import { DropdownItemType } from '@/common/constants/uiElements.constants';
+import { Dropdown } from '@/components/Dropdown';
 
 describe('Dropdown', () => {
   const labelId = 'test-label';

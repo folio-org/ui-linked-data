@@ -1,0 +1,157 @@
+import { FC } from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
+
+import { LookupModal } from '@/features/complexLookup/components/LookupModal';
+import { AuthoritiesContent, HubsContent } from '@/features/complexLookup/components/content';
+import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
+import {
+  useAuthoritiesModalLogic,
+  useComplexLookupModalState,
+  useModalWithHubPreview,
+} from '@/features/complexLookup/hooks';
+import { SOURCE_OPTIONS } from '@/features/search/ui';
+import { Search } from '@/features/search/ui/components/Search';
+
+interface SubjectModalProps {
+  isOpen: boolean;
+  onClose: VoidFunction;
+  initialSegment?: 'search' | 'browse';
+  assignedValue?: UserValueContents;
+  entry?: SchemaEntry;
+  lookupContext?: string;
+  modalConfig?: ModalConfig;
+  onAssign: (value: UserValueContents | ComplexLookupAssignRecordDTO) => void;
+}
+
+/**
+ * SubjectModal - Modal wrapper for Subject lookup using new Search feature.
+ * Supports both Authority lookup (search/browse with MARC preview) and Hub lookup (with import-on-assign and preview).
+ */
+export const SubjectModal: FC<SubjectModalProps> = ({
+  isOpen,
+  onClose,
+  initialSegment = 'browse',
+  assignedValue,
+  entry,
+  lookupContext,
+  modalConfig,
+  onAssign,
+}) => {
+  const hasComplexFlow = !!(entry && lookupContext && modalConfig);
+  const isAssignedHub = assignedValue?.meta?.lookupType === LOOKUP_TYPES.HUBS;
+
+  // TODO: refactor this to use a constant or enum instead of hardcoded values
+  const defaultSegment = isAssignedHub ? 'hubsLookup' : `authorities:${initialSegment}`;
+  // defaultSource is config default (LoC for hubs), assigned source extracted from assignedValue.meta
+  const defaultSource = isAssignedHub ? SOURCE_TYPES.LIBRARY_OF_CONGRESS : undefined;
+
+  useComplexLookupModalState({
+    isOpen,
+    assignedValue,
+    defaultSegment,
+    ...(defaultSource ? { defaultSource } : {}),
+  });
+
+  const {
+    isMarcPreviewOpen,
+    isMarcLoading,
+    authoritiesData,
+    handleTitleClick,
+    handleAuthoritiesAssign,
+    handleCloseMarcPreview,
+    handleResetMarcPreview,
+    checkFailedId,
+    cleanup,
+  } = useAuthoritiesModalLogic({
+    entry,
+    lookupContext,
+    modalConfig,
+    onAssign,
+    onClose,
+    isOpen,
+  });
+
+  // Hub preview integration - handles preview state, assignment, and cleanup
+  const { hubPreviewProps, handleModalClose } = useModalWithHubPreview({
+    onAssign,
+    onClose,
+    withMarcPreview: cleanup,
+  });
+
+  return (
+    <LookupModal isOpen={isOpen} onClose={handleModalClose} title={<FormattedMessage id="ld.searchSubjectAuthority" />}>
+      <Search
+        segments={['authorities:search', 'authorities:browse', 'hubsLookup']}
+        defaultSegment={defaultSegment}
+        flow="value"
+        mode="custom"
+        onSubmitCallback={() => {
+          handleCloseMarcPreview();
+          hubPreviewProps.handleCloseHubPreview();
+        }}
+      >
+        <Search.Controls>
+          <Search.Controls.SegmentGroup>
+            <Search.Controls.Segment
+              path="authorities"
+              defaultTo="authorities:browse"
+              labelId="ld.authorities"
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+            <Search.Controls.Segment
+              path="hubsLookup"
+              labelId="ld.hubs"
+              onBeforeChange={() => {
+                handleResetMarcPreview();
+                hubPreviewProps.handleCloseHubPreview();
+              }}
+            />
+          </Search.Controls.SegmentGroup>
+
+          <Search.Controls.SegmentGroup parentPath="authorities">
+            <Search.Controls.Segment
+              path="authorities:search"
+              labelId="ld.search"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+            <Search.Controls.Segment
+              path="authorities:browse"
+              labelId="ld.browse"
+              onBeforeChange={hubPreviewProps.handleCloseHubPreview}
+              onAfterChange={authoritiesData.onSegmentEnter}
+            />
+          </Search.Controls.SegmentGroup>
+
+          <Search.Controls.InputsWrapper />
+          <Search.Controls.SubmitButton />
+          <Search.Controls.MetaControls />
+
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <Search.Controls.SourceSelector options={SOURCE_OPTIONS} defaultValue={SOURCE_TYPES.LIBRARY_OF_CONGRESS} />
+          </Search.Controls.SegmentContent>
+        </Search.Controls>
+
+        <Search.Content>
+          <Search.Controls.SegmentContent segment="authorities" matchPrefix>
+            <AuthoritiesContent
+              isMarcPreviewOpen={isMarcPreviewOpen}
+              isMarcLoading={isMarcLoading}
+              handleAuthoritiesAssign={handleAuthoritiesAssign}
+              handleTitleClick={handleTitleClick}
+              handleCloseMarcPreview={handleCloseMarcPreview}
+              checkFailedId={checkFailedId}
+              hasComplexFlow={hasComplexFlow}
+            />
+          </Search.Controls.SegmentContent>
+
+          <Search.Controls.SegmentContent segment="hubsLookup">
+            <HubsContent {...hubPreviewProps} />
+          </Search.Controls.SegmentContent>
+        </Search.Content>
+      </Search>
+    </LookupModal>
+  );
+};

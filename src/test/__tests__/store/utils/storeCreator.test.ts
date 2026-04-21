@@ -1,5 +1,6 @@
 import { create as actualCreate } from 'zustand';
-import { storeResetFunctions, create, resetAllStores } from '@src/store/utils/storeCreator';
+
+import { create, resetAllStores, storeResetFunctions } from '@/store/utils/storeCreator';
 
 jest.mock('zustand', () => ({
   create: jest.fn(),

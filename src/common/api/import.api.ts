@@ -1,7 +1,8 @@
-import { IMPORT_JSON_FILE_API_ENDPOINT } from '@common/constants/api.constants';
+import { IMPORT_JSON_FILE_API_ENDPOINT, IMPORT_JSON_URL_API_ENDPOINT } from '@/common/constants/api.constants';
+
 import baseApi from './base.api';
 
-export const importFile = async (files: File[]) => {
+export const importFile = async (files: File[], filterType: string): Promise<ImportResponseDTO> => {
   const formData = new FormData();
 
   // Only uploading one file at the moment
@@ -11,13 +12,34 @@ export const importFile = async (files: File[]) => {
 
   const url = baseApi.generateUrl(IMPORT_JSON_FILE_API_ENDPOINT);
 
-  const response = await baseApi.request({
+  return await baseApi.getJson({
     url,
+    urlParams: {
+      filterType,
+    },
     requestParams: {
       method: 'POST',
       body: formData,
     },
   });
+};
 
-  return (await response?.json()) as Promise<ImportFileResponseDTO>;
+export const importUrl = async (
+  url: string,
+  filterType: string,
+  defaultWorkType: string,
+): Promise<ImportResponseDTO> => {
+  const apiUrl = baseApi.generateUrl(IMPORT_JSON_URL_API_ENDPOINT);
+
+  return baseApi.getJson({
+    url: apiUrl,
+    urlParams: {
+      url,
+      filterType,
+      defaultWorkType,
+    },
+    requestParams: {
+      method: 'POST',
+    },
+  });
 };

@@ -1,19 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { EditSection } from '@components/EditSection';
-import { BibframeEntities, PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { scrollEntity } from '@common/helpers/pageScrolling.helper';
-import { getResourceIdFromUri } from '@common/helpers/navigation.helper';
-import { useConfig } from '@common/hooks/useConfig.hook';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { useResetRecordStatus } from '@common/hooks/useResetRecordStatus';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import { RecordStatus, ResourceType } from '@common/constants/record.constants';
-import { EditPreview } from '@components/EditPreview';
-import { QueryParams } from '@common/constants/routes.constants';
-import { ViewMarcModal } from '@components/ViewMarcModal';
-import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@src/store';
+
+import { BibframeEntities } from '@/common/constants/bibframe.constants';
+import { RecordStatus } from '@/common/constants/record.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
+import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
+import { useConfig } from '@/common/hooks/useConfig.hook';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { useResetRecordStatus } from '@/common/hooks/useResetRecordStatus';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { EditPreview } from '@/components/EditPreview';
+import { EditSection } from '@/components/EditSection';
+import { ViewMarcModal } from '@/components/ViewMarcModal';
+import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
+
+import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
+
 import './Edit.scss';
 
 const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
@@ -47,14 +51,25 @@ export const Edit = () => {
   const prevResourceId = useRef<string | null | undefined>(null);
   const prevCloneOf = useRef<string | null>(null);
 
+  // Get resource type from URL parameter using registry
+  const resourceType = mapToResourceType(typeParam);
+  const showPreviewSection = hasSplitLayout(resourceType);
+
   function setEntitesBFIds() {
-    const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
-    const isInstancePageType = resourceDecriptionType === ResourceType.instance;
-    const editedEntityBfId = isInstancePageType ? PROFILE_BFIDS.INSTANCE : PROFILE_BFIDS.WORK;
-    const previewedEntityBfId = isInstancePageType ? PROFILE_BFIDS.WORK : PROFILE_BFIDS.INSTANCE;
+    const editedEntityBfId = getProfileBfid(resourceType);
 
     setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
-    setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
+
+    // Only set preview entity if this type has a reference to another type
+    if (hasReference(resourceType)) {
+      const reference = getReference(resourceType);
+      const previewedEntityBfId = getProfileBfid(reference?.targetType);
+
+      setCurrentlyPreviewedEntityBfid(new Set([previewedEntityBfId]));
+    } else {
+      // No preview for standalone types like Hub
+      setCurrentlyPreviewedEntityBfid(new Set());
+    }
   }
 
   useResetRecordStatus();
@@ -65,7 +80,7 @@ export const Edit = () => {
     scrollEntity({ top: 0, behavior: 'instant' });
 
     async function init() {
-      if (resourceId ?? cloneOfParam) {
+      if (resourceId ?? cloneOfParam ?? refParam) {
         return;
       }
 
@@ -122,7 +137,6 @@ export const Edit = () => {
           return;
         }
 
-        const resourceDecriptionType = (typeParam as ResourceType) || ResourceType.instance;
         const resourceReference = refParam;
         setEntitesBFIds();
         clearRecordState();
@@ -132,7 +146,7 @@ export const Edit = () => {
         if (resourceReference) {
           record = (await fetchRecordAndSelectEntityValues(
             resourceReference,
-            resourceDecriptionType.toUpperCase() as BibframeEntities,
+            resourceType.toUpperCase() as BibframeEntities,
           )) as RecordEntry;
         }
 
@@ -155,7 +169,7 @@ export const Edit = () => {
     <div data-testid="edit-page" className="edit-page">
       {!marcPreviewData && (
         <>
-          <EditPreview />
+          {showPreviewSection && <EditPreview />}
           <EditSection />
         </>
       )}

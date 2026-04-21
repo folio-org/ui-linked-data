@@ -1,8 +1,11 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import GeneralSearch from '@/assets/general-search.svg?react';
-import './SearchEmptyPlaceholder.scss';
+
 import classNames from 'classnames';
+
+import GeneralSearch from '@/assets/general-search.svg?react';
+
+import './SearchEmptyPlaceholder.scss';
 
 type SearchEmptyPlaceholderProps = {
   labelId?: string;

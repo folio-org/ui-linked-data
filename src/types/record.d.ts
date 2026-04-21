@@ -1,4 +1,4 @@
-type RecordStatusType = keyof typeof import('@common/constants/record.constants').RecordStatus;
+type RecordStatusType = keyof typeof import('@/common/constants/record.constants').RecordStatus;
 
 type RecordID = string | number | undefined;
 
@@ -29,7 +29,7 @@ type RecordBlocksBFLite = Record<
   string,
   {
     uri: string;
-    reference: RecordReference;
+    reference?: RecordReference;
   }
 >;
 

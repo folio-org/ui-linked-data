@@ -1,4 +1,4 @@
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
 type ProfileWarningMap = {
   [resourceTypeURL in ResourceTypeURL]: {
@@ -14,7 +14,7 @@ export const profileWarningsByName = {
       Books: ['ld.field.typeOfContinuingResource'],
     },
     Books: {
-      'Serials Work': ['ld.na'],
+      'Serials Work': ['ld.field.dissertation'],
     },
   },
   [TYPE_URIS.INSTANCE as ResourceTypeURL]: {

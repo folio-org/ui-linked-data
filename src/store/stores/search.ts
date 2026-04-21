@@ -2,16 +2,17 @@ import {
   DEFAULT_FACET_BY_SEGMENT,
   DEFAULT_SEARCH_BY,
   DEFAULT_SEARCH_LIMITERS,
-} from '@common/constants/search.constants';
+} from '@/common/constants/search.constants';
+
+import { SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
-import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
 
 type Data = null | WorkAsSearchResultDTO[];
 type SourceData = SourceDataDTO | null;
 
 export interface SegmentDraft {
   query: string;
-  searchBy: SearchIdentifiers;
+  searchBy: SearchIdentifiers | undefined;
   source?: string;
 }
 
@@ -20,9 +21,10 @@ export type DraftBySegment = Record<string, SegmentDraft>;
 export interface CommittedValues {
   segment?: string;
   query: string;
-  searchBy: string;
+  searchBy: string | undefined;
   source?: string;
   offset: number;
+  selector?: 'query' | 'prev' | 'next'; // Browse pagination selector
 }
 
 const DEFAULT_COMMITTED_VALUES: CommittedValues = {
@@ -31,6 +33,7 @@ const DEFAULT_COMMITTED_VALUES: CommittedValues = {
   searchBy: DEFAULT_SEARCH_BY,
   source: undefined,
   offset: 0,
+  selector: 'query',
 };
 
 export type SearchState = SliceState<'query', string> &

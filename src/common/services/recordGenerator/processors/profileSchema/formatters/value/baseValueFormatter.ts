@@ -1,6 +1,8 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
+import { SimplePropertyResult } from '@/common/services/recordGenerator/types/profileSchemaProcessor.types';
+
 import { IValueFormatter } from './valueFormatter.interface';
-import { SimplePropertyResult } from '@common/services/recordGenerator/types/profileSchemaProcessor.types';
 
 export abstract class BaseValueFormatter implements IValueFormatter {
   formatLiteral(value: UserValueContents): string[] {
@@ -15,7 +17,12 @@ export abstract class BaseValueFormatter implements IValueFormatter {
   formatComplex(
     value: UserValueContents,
     recordSchemaEntry?: RecordSchemaEntry,
-  ): string | Record<string, string[]> | null {
+  ): string | Record<string, string | string[]> | null {
+    // Reference output: produces { id } or { srsId } for reference-type complex lookups
+    if (recordSchemaEntry?.options?.outputFormat === 'reference') {
+      return this.buildReferenceObject(value);
+    }
+
     // If recordSchemaEntry has properties, try to generate complex object structure.
     // This is used for Hubs.
     if (recordSchemaEntry?.properties && Object.keys(recordSchemaEntry.properties).length > 0) {
@@ -33,26 +40,98 @@ export abstract class BaseValueFormatter implements IValueFormatter {
     return Array.isArray(selectedId) ? selectedId[0] : selectedId;
   }
 
+  protected buildReferenceObject(value: UserValueContents): Record<string, string> | null {
+    if (value.meta?.srsId) {
+      const srsId = value.meta.srsId;
+
+      return { srsId: Array.isArray(srsId) ? srsId[0] : srsId };
+    }
+
+    if (value.id) {
+      const id = value.id;
+
+      return { id: Array.isArray(id) ? id[0] : id };
+    }
+
+    return null;
+  }
+
   protected buildComplexObject(
     value: UserValueContents,
     properties: Record<string, RecordSchemaEntry>,
-  ): Record<string, string[]> {
-    const result: Record<string, string[]> = {};
+  ): Record<string, string | string[]> {
+    const result: Record<string, string | string[]> = {};
 
-    if (!value.label || !value.meta?.uri) {
+    if (!value.label) {
       return result;
     }
 
-    const labelProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LABEL);
-    if (labelProperty) {
-      result[labelProperty] = [value.label];
-    }
+    Object.entries(properties).forEach(([propertyKey, propertySchema]) => {
+      const mappedValue = this.getValueFromSource(value, propertySchema.options?.valueSource, propertyKey);
 
-    const linkProperty = Object.keys(properties).find(key => key === BFLITE_URIS.LINK);
-    if (linkProperty) {
-      result[linkProperty] = [value.meta.uri];
+      if (mappedValue !== null && mappedValue !== undefined && mappedValue !== '') {
+        // Use the schema type: array or string
+        const isArrayType = propertySchema.type === 'array';
+
+        if (isArrayType) {
+          result[propertyKey] = ensureArray(mappedValue);
+        } else {
+          result[propertyKey] = Array.isArray(mappedValue) ? mappedValue[0] : mappedValue;
+        }
+      }
+    });
+
+    return result;
+  }
+
+  protected buildLinkLabelObject(labelKey: string, label: string, uri?: string | null): Record<string, string[]> {
+    const result: Record<string, string[]> = {
+      [labelKey]: [label],
+    };
+
+    if (uri) {
+      result[BFLITE_URIS.LINK] = [uri];
     }
 
     return result;
+  }
+
+  private getValueFromSource(
+    value: UserValueContents,
+    valueSource: string | undefined,
+    propertyKey: string,
+  ): string | string[] | null {
+    if (valueSource) {
+      return this.resolveValuePath(value, valueSource);
+    }
+
+    // Fallback: existing heuristic-based mapping for backward compatibility
+    return this.baseValueMapping(value, propertyKey);
+  }
+
+  private resolveValuePath(value: UserValueContents, path: string): string | null {
+    // Simple path resolver for dot notation (e.g., 'meta.uri')
+    const parts = path.split('.');
+    let current: unknown = value;
+
+    for (const part of parts) {
+      if (current === null || current === undefined) return null;
+
+      current = (current as Record<string, unknown>)[part];
+    }
+
+    return typeof current === 'string' ? current : null;
+  }
+
+  private baseValueMapping(value: UserValueContents, propertyKey: string): string | null {
+    if (propertyKey === BFLITE_URIS.LABEL) {
+      return value.label ?? null;
+    }
+
+    if (propertyKey === BFLITE_URIS.LINK) {
+      return value.meta?.uri ?? null;
+    }
+
+    return null;
   }
 }

@@ -1,4 +1,5 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { IMarcMappingGenerator } from './marcMappingGenerator.interface';
 
 export class MarcMappingGeneratorService implements IMarcMappingGenerator {

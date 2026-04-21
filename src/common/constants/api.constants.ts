@@ -9,14 +9,34 @@ export const INVENTORY_API_ENDPOINT = '/linked-data/inventory-instance';
 export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const PROFILE_METADATA_API_ENDPOINT = '/linked-data/profile/metadata';
 export const PROFILE_PREFERRED_API_ENDPOINT = '/linked-data/profile/preferred';
+export const PROFILE_SETTINGS_API_ENDPOINT = '/linked-data/profile/settings';
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
+export const IMPORT_JSON_URL_API_ENDPOINT = '/linked-data/import/url';
+export const HUB_IMPORT_API_ENDPOINT = '/linked-data/hub';
 
 export const SEARCH_API_ENDPOINT = {
   RESOURCES: '/search/linked-data/works',
   AUTHORITIES_SEARCH: '/search/authorities',
   AUTHORITIES_BROWSE: '/browse/authorities',
   HUBS_EXTERNAL: 'https://id.loc.gov/resources/hubs/suggest2/',
+  HUBS_LOCAL: '/search/linked-data/hubs',
+};
+
+export const MARC_PREVIEW_ENDPOINT = {
+  AUTHORITY: '/source-storage/records/:recordId/formatted?idType=AUTHORITY',
+};
+
+export const SOURCE_API_ENDPOINT = {
+  AUTHORITY: '/authority-source-files',
+};
+
+export const SOURCE_API_RESPONSE_KEY = {
+  AUTHORITY: 'authoritySourceFiles',
+};
+
+export const FACETS_API_ENDPOINT = {
+  AUTHORITY: '/search/authorities/facets',
 };
 
 export const DEFAULT_PAGES_METADATA = {

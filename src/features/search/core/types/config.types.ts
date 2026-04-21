@@ -21,11 +21,11 @@ export interface DataCapabilities {
  * - "resources" - Simple resource search
  * - "authorities:search" - Authorities keyword search
  * - "authorities:browse" - Authorities alphabetical browse
- * - "hubs:internal" - Internal hub registry
- * - "hubs:external" - External hub services
+ * - "hubs:local" - Internal hub registry
+ * - "hubs:libraryOfCongress" - External hub services
  */
 export interface SearchTypeConfig {
-  id: string; // 'resources' | 'hubs:internal' | 'hubs:external' | 'authorities:search' | 'authorities:browse'
+  id: string; // 'resources' | 'hubs:local' | 'hubs:libraryOfCongress' | 'authorities:search' | 'authorities:browse'
   // Default strategies for this search type (can be overridden by segments/sources)
   strategies?: SearchStrategies;
 

@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .dropzone-wrapper {
   .dropzone {
@@ -18,13 +18,13 @@
     }
 
     &.waiting {
-      background-color: rgba(0, 0, 0, 3%);
-      border: 1px dashed rgba(0, 0, 0, 50%);
+      background-color: $title-bar-bg-color;
+      border: 1px dashed $overlay-bg-color;
     }
 
     &.dragging {
-      background-color: rgba(0, 0, 0, 50%);
-      border: 2px dashed rgba(0, 0, 0, 50%);
+      background-color: $overlay-bg-color;
+      border: 2px dashed $overlay-bg-color;
       color: $base;
     }
   }

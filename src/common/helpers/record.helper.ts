@@ -1,8 +1,20 @@
 import { cloneDeep } from 'lodash';
-import { PROFILE_BFIDS, TITLE_CONTAINER_URIS, TYPE_URIS, INSTANCE_CLONE_DELETE_PROPERTIES } from '@common/constants/bibframe.constants';
-import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@common/constants/bibframeMapping.constants';
-import { ResourceType } from '@common/constants/record.constants';
-import { QueryParams } from '@common/constants/routes.constants';
+
+import {
+  INSTANCE_CLONE_DELETE_PROPERTIES,
+  TITLE_CONTAINER_URIS,
+  TYPE_URIS,
+} from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS, BLOCKS_BFLITE, REF_TO_NAME } from '@/common/constants/bibframeMapping.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import {
+  getProfileBfid,
+  getReference,
+  getUri,
+  hasReference,
+  mapToResourceType,
+  mapUriToResourceType,
+} from '@/configs/resourceTypes';
 
 type IGetAdjustedRecordContents = {
   record: RecordEntry;
@@ -18,11 +30,32 @@ export const getRecordId = (record: RecordEntry | null, selectedBlock?: string, 
 };
 
 export const getPrimaryEntitiesFromRecord = (record: RecordEntry, editable = true) => {
-  const isInstance = record?.resource[TYPE_URIS.INSTANCE];
-  const workAsPrimary = editable ? [PROFILE_BFIDS.WORK] : [PROFILE_BFIDS.INSTANCE];
-  const instanceAsPrimary = editable ? [PROFILE_BFIDS.INSTANCE] : [PROFILE_BFIDS.WORK];
+  if (!record) {
+    return [getProfileBfid(undefined)];
+  }
 
-  return isInstance ? instanceAsPrimary : workAsPrimary;
+  const recordContents = record.resource ?? record;
+
+  if (!recordContents || typeof recordContents !== 'object' || !Object.keys(recordContents).length) {
+    // Fallback for empty records (e.g., during Create mode before data is loaded)
+    return [getProfileBfid(undefined)];
+  }
+
+  const { block } = getEditingRecordBlocks(recordContents as RecordEntry);
+
+  if (!block) {
+    return [getProfileBfid(undefined)];
+  }
+
+  const resourceType = mapUriToResourceType(block);
+
+  // For editable mode, return the main entity's profile BFID
+  // For preview mode (!editable), return the reference target's profile BFID if it exists
+  if (editable || !hasReference(resourceType)) {
+    return [getProfileBfid(resourceType)];
+  }
+
+  return [getProfileBfid(getReference(resourceType)?.targetType)];
 };
 
 export const getEditingRecordBlocks = (record: RecordEntry) => {
@@ -44,13 +77,12 @@ export const getEditingRecordBlocks = (record: RecordEntry) => {
 };
 
 export const getSelectedRecordBlocks = (searchParams: URLSearchParams) => {
-  const isInstancePageType = searchParams?.get(QueryParams.Type) === ResourceType.instance;
-  const block = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.uri : BLOCKS_BFLITE.WORK.uri;
-  const reference = isInstancePageType ? BLOCKS_BFLITE.INSTANCE.reference : BLOCKS_BFLITE.WORK.reference;
+  const typeParam = searchParams?.get(QueryParams.Type);
+  const resourceType = mapToResourceType(typeParam);
 
   return {
-    block,
-    reference,
+    block: getUri(resourceType),
+    reference: getReference(resourceType),
   };
 };
 
@@ -89,10 +121,9 @@ export const getAdjustedRecordContents = ({ record, block, reference, asClone }:
 
   // Delete unique admin metadata values to avoid colliding with
   // the clone source's local control number and to not use a past date
-  if (asClone && block === BFLITE_URIS.INSTANCE &&
-      adjustedRecord[block][BFLITE_URIS.ADMIN_METADATA]) {
+  if (asClone && block === BFLITE_URIS.INSTANCE && adjustedRecord[block][BFLITE_URIS.ADMIN_METADATA]) {
     INSTANCE_CLONE_DELETE_PROPERTIES.forEach(property => {
-        delete (adjustedRecord[block][BFLITE_URIS.ADMIN_METADATA] as unknown as any[])?.[0]?.[property];
+      delete (adjustedRecord[block][BFLITE_URIS.ADMIN_METADATA] as unknown as any[])?.[0]?.[property];
     });
   }
 

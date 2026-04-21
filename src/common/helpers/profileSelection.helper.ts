@@ -1,5 +1,5 @@
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
-import { profileWarningsByName } from '@src/configs';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+import { profileWarningsByName } from '@/configs';
 
 export const getLabelId = ({
   labels: { workSet, instanceSet, workChange, instanceChange, defaultLabel },
@@ -45,9 +45,9 @@ export const isProfilePreferred = ({
   preferredProfiles?: ProfileDTO[];
   resourceTypeURL?: ResourceTypeURL;
 }) => {
-  if (!preferredProfiles || !resourceTypeURL) return false;
+  if (!profileId || !preferredProfiles || !resourceTypeURL) return false;
 
   return preferredProfiles.some(
-    ({ id, resourceType }) => id.toString() === profileId.toString() && resourceType === resourceTypeURL,
+    ({ id, resourceType }) => id?.toString() === profileId?.toString() && resourceType === resourceTypeURL,
   );
 };

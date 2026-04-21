@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { DatePicker } from '@components/DatePicker/DatePicker';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { DatePicker } from '@/components/DatePicker/DatePicker';
 
 describe('DatePicker Component', () => {
   it('renders the input element with correct attributes', () => {

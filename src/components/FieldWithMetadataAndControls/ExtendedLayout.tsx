@@ -1,9 +1,11 @@
 import { FC, ReactNode, memo } from 'react';
-import classNames from 'classnames';
-import { DuplicateGroup } from '@components/DuplicateGroup';
-import { MarcTooltip } from '@components/MarcTooltip';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
 import { FormattedMessage } from 'react-intl';
+
+import classNames from 'classnames';
+
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { DuplicateGroup } from '@/components/DuplicateGroup';
+import { MarcTooltip } from '@/components/MarcTooltip';
 
 type IExtendedLayout = {
   entry: SchemaEntry;

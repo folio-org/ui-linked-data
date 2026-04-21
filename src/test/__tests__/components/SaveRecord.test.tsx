@@ -1,9 +1,13 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { saveRecord } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import { SaveRecord } from '@components/SaveRecord';
+import { saveRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
-import { useStatusStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { SaveRecord } from '@/components/SaveRecord';
+
+import { useStatusStore } from '@/store';
 
 describe('SaveRecord', () => {
   function renderSaveRecordComponent(isRecordEdited = true) {

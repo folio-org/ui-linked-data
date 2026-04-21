@@ -1,12 +1,16 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import { RESOURCE_TEMPLATE_IDS } from '@common/constants/bibframe.constants';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { Button, ButtonType } from '@components/Button';
-import { Preview } from '@components/Preview';
-import { useInputsState } from '@src/store';
-import Times16 from '@src/assets/times-16.svg?react';
-import { DOM_ELEMENTS } from '@common/constants/domElementsIdentifiers.constants';
+
+import { RESOURCE_TEMPLATE_IDS } from '@/common/constants/bibframe.constants';
+import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constants';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Button, ButtonType } from '@/components/Button';
+import { Preview } from '@/components/Preview';
+
+import { useInputsState } from '@/store';
+
+import Times16 from '@/assets/times-16.svg?react';
+
 import './FullDisplay.scss';
 
 export const PreviewContent = () => {
@@ -22,6 +26,7 @@ export const PreviewContent = () => {
       <section key={id} className={DOM_ELEMENTS.classNames.fullDisplayContainer}>
         <div className="full-display-control-panel">
           <Button
+            type={ButtonType.Icon}
             className="close"
             data-testid="preview-remove"
             onClick={handleButtonClick}
@@ -30,7 +35,7 @@ export const PreviewContent = () => {
             <Times16 />
           </Button>
           <div className="info">
-            <span className="title">{title}</span>
+            <h2 className="title">{title}</h2>
           </div>
           <Button
             data-testid="preview-fetch"

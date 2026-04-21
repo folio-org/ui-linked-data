@@ -1,5 +1,5 @@
-import { Button, ButtonType } from '@/components/Button';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { Button, ButtonType } from '@/components/Button';
 import type { Row } from '@/components/Table';
 
 interface TitleFormatterProps {

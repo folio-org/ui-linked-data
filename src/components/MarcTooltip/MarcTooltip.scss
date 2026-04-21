@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .marc-tooltip {
   &-wrapper {
@@ -7,15 +7,15 @@
 
   &-icon {
     path {
-      fill: rgba(0, 0, 0, 0.62);
+      fill: $buttonIcon;
     }
 
     &:hover path {
-      fill: $buttonHighlighted;
+      fill: $button-standard;
     }
 
     &:active path {
-      fill: white;
+      fill: $base;
     }
   }
 

@@ -1,4 +1,4 @@
-import { isSegmentActive, isParentSegmentActive } from './segmentUtils';
+import { isParentSegmentActive, isSegmentActive } from './segmentUtils';
 
 describe('segmentUtils', () => {
   describe('isSegmentActive', () => {

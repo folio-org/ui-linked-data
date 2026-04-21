@@ -1,8 +1,8 @@
-type DropdownItemType = keyof typeof import('@common/constants/uiElements.constants').DropdownItemType;
-type SearchLimiterNames = `${import('@common/constants/search.constants').SearchLimiterNames}`;
-type SearchLimiterNamesAuthority = `${import('@common/constants/search.constants').SearchLimiterNamesAuthority}`;
-type FiltersGroupCheckType = `${import('@common/constants/search.constants').FiltersGroupCheckType}`;
-type FiltersType = `${import('@common/constants/search.constants').FiltersType}`;
+type DropdownItemType = keyof typeof import('@/common/constants/uiElements.constants').DropdownItemType;
+type SearchLimiterNames = `${import('@/common/constants/search.constants').SearchLimiterNames}`;
+type SearchLimiterNamesAuthority = `${import('@/common/constants/search.constants').SearchLimiterNamesAuthority}`;
+type FiltersGroupCheckType = `${import('@/common/constants/search.constants').FiltersGroupCheckType}`;
+type FiltersType = `${import('@/common/constants/search.constants').FiltersType}`;
 type ReactElement = import('react').ReactElement;
 
 type DropdownItem = {
@@ -11,7 +11,7 @@ type DropdownItem = {
   isDisabled?: boolean;
   labelId?: string;
   icon?: ReactElement<unknown>;
-  action?: VoidFunction;
+  action?: () => void | Promise<void>;
   hidden?: boolean;
   renderComponent?: (key: string | number) => ReactElement<unknown>;
 };

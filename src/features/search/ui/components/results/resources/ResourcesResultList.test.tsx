@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { ResourcesResultList } from './ResourcesResultList';
+
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
+import { ResourcesResultList } from './ResourcesResultList';
 
 jest.mock('../../../hooks/useFormattedResults');
 interface MockSearchResultEntryProps {

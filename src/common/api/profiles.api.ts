@@ -2,7 +2,9 @@ import {
   PROFILE_API_ENDPOINT,
   PROFILE_METADATA_API_ENDPOINT,
   PROFILE_PREFERRED_API_ENDPOINT,
-} from '@common/constants/api.constants';
+  PROFILE_SETTINGS_API_ENDPOINT,
+} from '@/common/constants/api.constants';
+
 import baseApi from './base.api';
 
 export const fetchProfile = (profileId: string | number) =>
@@ -46,6 +48,27 @@ export const deletePreferredProfile = (resourceType: ResourceTypeURL) => {
     url,
     requestParams: {
       method: 'DELETE',
+    },
+  });
+};
+
+export const fetchProfileSettings = (profileId: string | number) =>
+  baseApi.getJson({
+    url: `${PROFILE_SETTINGS_API_ENDPOINT}/${profileId}`,
+  }) as Promise<ProfileSettings>;
+
+export const saveProfileSettings = (profileId: string | number, settings: ProfileSettings) => {
+  const url = `${PROFILE_SETTINGS_API_ENDPOINT}/${profileId}`;
+  const body = JSON.stringify(settings);
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'POST',
+      body,
+      headers: {
+        'content-type': 'application/json',
+      },
     },
   });
 };

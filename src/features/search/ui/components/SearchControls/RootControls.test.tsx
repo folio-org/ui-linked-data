@@ -1,7 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { RootControls } from './RootControls';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { useUIStore } from '@/store';
+
+import { RootControls } from './RootControls';
 
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({

@@ -1,5 +1,5 @@
-import { LiteralUserValueService } from '@common/services/userValues/userValueTypes';
-import { IUserValueType } from '@common/services/userValues/userValueTypes/userValueType.interface';
+import { LiteralUserValueService } from '@/common/services/userValues/userValueTypes';
+import { IUserValueType } from '@/common/services/userValues/userValueTypes/userValueType.interface';
 
 describe('LiteralUserValueService', () => {
   let literalUserValueService: IUserValueType;

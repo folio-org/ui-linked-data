@@ -1,9 +1,10 @@
-import { IS_NEW_SEARCH_ENABLED } from './feature.constants';
-
 export const ROUTE_PATH = {
   RESOURCES: 'resources',
   CREATE: 'create',
   EDIT: 'edit',
+  IMPORT: 'import',
+  PREVIEW: 'preview',
+  HUB: 'hub',
 };
 
 export const ROUTES = {
@@ -13,10 +14,6 @@ export const ROUTES = {
   },
   SEARCH: {
     uri: '/search',
-    name: 'ld.searchResource',
-  },
-  SEARCH_NEW: {
-    uri: IS_NEW_SEARCH_ENABLED ? '/search-new' : '/search',
     name: 'ld.searchResource',
   },
   RESOURCE_CREATE: {
@@ -31,21 +28,34 @@ export const ROUTES = {
     uri: `/${ROUTE_PATH.RESOURCES}/external/:externalId/preview`,
     name: 'ld.externalResourcePreview',
   },
+  HUB_IMPORT_PREVIEW: {
+    uri: `/${ROUTE_PATH.IMPORT}/${ROUTE_PATH.HUB}/${ROUTE_PATH.PREVIEW}`,
+    name: 'ld.hubImportPreview',
+  },
+  MANAGE_PROFILE_SETTINGS: {
+    uri: `/manage-profile-settings`,
+    name: 'ld.manageProfileSettings',
+  },
 };
 
 export const RESOURCE_URLS = [ROUTES.RESOURCE_EDIT.uri];
 export const EXTERNAL_RESOURCE_URLS = [ROUTES.EXTERNAL_RESOURCE_PREVIEW.uri];
+export const HUB_IMPORT_URLS = [ROUTES.HUB_IMPORT_PREVIEW.uri];
 
 export const RESOURCE_EDIT_CREATE_URLS = [ROUTES.RESOURCE_EDIT.uri, ROUTES.RESOURCE_CREATE.uri];
 
 export const RESOURCE_CREATE_URLS = [ROUTES.RESOURCE_CREATE.uri];
 
-export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri, ROUTES.SEARCH_NEW.uri];
+export const MANAGE_PROFILE_SETTINGS_URLS = [ROUTES.MANAGE_PROFILE_SETTINGS.uri];
+
+export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
 
 export enum QueryParams {
   Type = 'type',
   Ref = 'ref',
   CloneOf = 'cloneOf',
+  Source = 'source',
+  SourceUri = 'sourceUri',
   ProfileId = 'profileId',
 }
 
@@ -62,3 +72,5 @@ export enum ForceNavigateToDest {
   CreatePage = 'createPage',
   CreatePageAsClone = 'createPageAsClone',
 }
+
+export const INVENTORY_VIEW_URL = '/inventory/view';

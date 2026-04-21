@@ -1,0 +1,9 @@
+.manage-profile-settings-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  :first-child {
+    margin-left: auto;
+  }
+}

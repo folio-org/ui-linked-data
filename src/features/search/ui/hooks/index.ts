@@ -1,6 +1,3 @@
-export { useSearch } from './useSearch';
-export { useLoadSearchResults } from './useLoadSearchResults';
-export { useSearchNavigationState } from './useSearchNavigationState';
 export { useSearchFilters } from './useSearchFilters';
 export { useSearchControlsHandlers } from './useSearchControlsHandlers';
 export { useUrlSync } from './useUrlSync';
@@ -9,3 +6,5 @@ export { useSearchQuery } from './useSearchQuery';
 export { useSearchSegment } from './useSearchSegment';
 export { useFormattedResults } from './useFormattedResults';
 export { useTableFormatter } from './useTableFormatter';
+export { useHubsTableFormatter } from './useHubsTableFormatter';
+export { useHubSearchPreviewQuery } from './useHubSearchPreviewQuery';

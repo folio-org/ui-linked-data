@@ -1,10 +1,12 @@
 @use '@/common/styles/common.scss' as *;
 
 .search-control-pane {
+  position: relative;
+  z-index: 1000;
   display: flex;
   padding: 0 1rem;
   border-bottom: 1px solid $gray-200;
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: $title-bar-bg-color;
   height: 2.75rem;
   align-items: center;
 
@@ -32,7 +34,7 @@
     font-size: 0.875rem;
     line-height: 1.3125rem;
     font-weight: 700;
-    color: #000;
+    color: $base-text;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -41,7 +43,7 @@
   &-subLabel {
     font-size: 0.75rem;
     line-height: 1.25rem;
-    color: rgba(108, 108, 108, 1);
+    color: $gray-450;
   }
 
   &-embedded {

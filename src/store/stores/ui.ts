@@ -1,5 +1,7 @@
-import { FullDisplayType } from '@common/constants/uiElements.constants';
-import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { ImportFilterTypes } from '@/common/constants/import.constants';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
+
+import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
 export type UIEntries = Set<string>;
@@ -12,6 +14,7 @@ export type ProfileSelectionType = {
 
 export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'isMarcPreviewOpen', boolean> &
+  SliceState<'isHubPreviewOpen', boolean> &
   SliceState<'isSearchPaneCollapsed', boolean> &
   SliceState<'isDuplicateImportedResourceModalOpen', boolean> &
   SliceState<'collapsedEntries', UIEntries> &
@@ -21,8 +24,15 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'currentlyPreviewedEntityBfid', UIEntries> &
   SliceState<'hasShownAuthorityWarning', boolean> &
   SliceState<'isImportModalOpen', boolean> &
+  SliceState<'importModalFilterType', ImportFilterTypes> &
   SliceState<'isProfileSelectionModalOpen', boolean> &
-  SliceState<'profileSelectionType', ProfileSelectionType>;
+  SliceState<'profileSelectionType', ProfileSelectionType> &
+  SliceState<'isManageProfileSettingsUnsavedModalOpen', boolean> &
+  SliceState<'isManageProfileSettingsUnusedComponentsModalOpen', boolean> &
+  SliceState<'isManageProfileSettingsUnusedFieldsModalOpen', boolean> &
+  SliceState<'isManageProfileSettingsBelowBreakpoint', boolean> &
+  SliceState<'isManageProfileSettingsShowProfiles', boolean> &
+  SliceState<'isManageProfileSettingsShowEditor', boolean>;
 
 const STORE_NAME = 'UI';
 
@@ -37,6 +47,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: FullDisplayType.Basic,
   },
   isMarcPreviewOpen: {
+    initialValue: false,
+  },
+  isHubPreviewOpen: {
     initialValue: false,
   },
   isDuplicateImportedResourceModalOpen: {
@@ -60,11 +73,32 @@ const sliceConfigs: SliceConfigs = {
   isImportModalOpen: {
     initialValue: false,
   },
+  importModalFilterType: {
+    initialValue: ImportFilterTypes.Instance,
+  },
   isProfileSelectionModalOpen: {
     initialValue: false,
   },
   profileSelectionType: {
     initialValue: {},
+  },
+  isManageProfileSettingsUnsavedModalOpen: {
+    initialValue: false,
+  },
+  isManageProfileSettingsUnusedComponentsModalOpen: {
+    initialValue: false,
+  },
+  isManageProfileSettingsUnusedFieldsModalOpen: {
+    initialValue: false,
+  },
+  isManageProfileSettingsBelowBreakpoint: {
+    initialValue: false,
+  },
+  isManageProfileSettingsShowProfiles: {
+    initialValue: true,
+  },
+  isManageProfileSettingsShowEditor: {
+    initialValue: true,
   },
 };
 

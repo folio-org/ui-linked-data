@@ -1,14 +1,14 @@
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { StatusType } from '@common/constants/status.constants';
-import SuccessNotification from '@common/services/userNotification/notificationTypes/success';
-import ErrorNotification from '@common/services/userNotification/notificationTypes/error';
-import InfoNotification from '@common/services/userNotification/notificationTypes/info';
-import WarningNotification from '@common/services/userNotification/notificationTypes/warning';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import ErrorNotification from '@/common/services/userNotification/notificationTypes/error';
+import InfoNotification from '@/common/services/userNotification/notificationTypes/info';
+import SuccessNotification from '@/common/services/userNotification/notificationTypes/success';
+import WarningNotification from '@/common/services/userNotification/notificationTypes/warning';
 
-jest.mock('@common/services/userNotification/notificationTypes/success');
-jest.mock('@common/services/userNotification/notificationTypes/error');
-jest.mock('@common/services/userNotification/notificationTypes/info');
-jest.mock('@common/services/userNotification/notificationTypes/warning');
+jest.mock('@/common/services/userNotification/notificationTypes/success');
+jest.mock('@/common/services/userNotification/notificationTypes/error');
+jest.mock('@/common/services/userNotification/notificationTypes/info');
+jest.mock('@/common/services/userNotification/notificationTypes/warning');
 
 describe('UserNotificationFactory', () => {
   type Class = { new (...args: any[]): any };

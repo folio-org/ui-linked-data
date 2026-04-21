@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { SchemaGeneratorService } from '@common/services/schema';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+
+import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { SchemaGeneratorService } from '@/common/services/schema';
+
 import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
 
 jest.mock('uuid');
@@ -26,10 +29,10 @@ describe('SchemaGeneratorService', () => {
   });
 
   describe('init', () => {
-    it('initializes with empty profile', () => {
+    it('initializes with empty profile and inactive settings', () => {
       const profile = [] as Profile;
 
-      service.init(profile);
+      service.init(profile, DEFAULT_INACTIVE_SETTINGS);
 
       expect(service.get().size).toBe(0);
     });
@@ -41,10 +44,10 @@ describe('SchemaGeneratorService', () => {
           type: AdvancedFieldType.literal,
         },
       ] as Profile;
-      service.init(initialProfile);
+      service.init(initialProfile, DEFAULT_INACTIVE_SETTINGS);
 
       const newProfile = [] as Profile;
-      service.init(newProfile);
+      service.init(newProfile, DEFAULT_INACTIVE_SETTINGS);
 
       expect(service.get().size).toBe(0);
     });
@@ -67,7 +70,7 @@ describe('SchemaGeneratorService', () => {
     ] as Profile;
 
     beforeEach(() => {
-      service.init(testProfile);
+      service.init(testProfile, DEFAULT_INACTIVE_SETTINGS);
     });
 
     it('generates schema with transformed nodes', () => {
@@ -115,7 +118,7 @@ describe('SchemaGeneratorService', () => {
         },
       ] as Profile;
 
-      service.init(nestedProfile);
+      service.init(nestedProfile, DEFAULT_INACTIVE_SETTINGS);
       service.generate('init-key');
 
       const schema = service.get();
@@ -138,13 +141,320 @@ describe('SchemaGeneratorService', () => {
         },
       ] as Profile;
 
-      service.init(profile);
+      service.init(profile, DEFAULT_INACTIVE_SETTINGS);
       service.generate('init-key');
 
       const schema = service.get();
 
       expect(schema.size).toBe(1);
       expect(schema.get('init-key')).toBeDefined();
+    });
+  });
+
+  describe('profile settings', () => {
+    const baseProfile = [
+      {
+        id: 'document',
+        type: AdvancedFieldType.block,
+        children: ['a', '6', 'r'],
+      },
+      {
+        id: 'a',
+        type: AdvancedFieldType.literal,
+      },
+      {
+        id: '6',
+        type: AdvancedFieldType.literal,
+      },
+      {
+        id: 'r',
+        type: AdvancedFieldType.literal,
+      },
+    ] as Profile;
+
+    beforeEach(() => {
+      (uuidv4 as jest.Mock).mockImplementation(Math.random);
+    });
+
+    describe('block child ordering', () => {
+      it.each([
+        ['inactive, empty settings have no effect', DEFAULT_INACTIVE_SETTINGS, ['a', '6', 'r']],
+        [
+          'inactive settings with children and drift have no effect',
+          {
+            active: false,
+            children: [
+              {
+                id: 'r',
+              },
+              {
+                id: 'a',
+              },
+            ],
+            missingFromSettings: ['6'],
+          } as ProfileSettingsWithDrift,
+          ['a', '6', 'r'],
+        ],
+        [
+          'active settings with no children use drift order',
+          {
+            active: true,
+            children: [],
+            missingFromSettings: ['6', 'r', 'a'],
+          } as ProfileSettingsWithDrift,
+          ['6', 'r', 'a'],
+        ],
+        [
+          'active settings with all children and no drift use settings order',
+          {
+            active: true,
+            children: [
+              {
+                id: 'r',
+                visible: true,
+                order: 1,
+              },
+              {
+                id: 'a',
+                visible: true,
+                order: 2,
+              },
+              {
+                id: '6',
+                visible: true,
+                order: 3,
+              },
+            ],
+            missingFromSettings: [],
+          } as ProfileSettingsWithDrift,
+          ['r', 'a', '6'],
+        ],
+        [
+          'active settings with all children and no drift use settings order',
+          {
+            active: true,
+            children: [
+              {
+                id: '6',
+                visible: true,
+              },
+            ],
+            missingFromSettings: ['a', 'r'],
+          } as ProfileSettingsWithDrift,
+          ['6', 'a', 'r'],
+        ],
+        [
+          'active settings with non-matching resource type do not apply',
+          {
+            active: true,
+            resourceTypeURL: 'something-else',
+            children: [
+              {
+                id: 'r',
+                visible: true,
+                order: 1,
+              },
+            ],
+            missingFromSettings: ['6', 'a'],
+          },
+          ['a', '6', 'r'],
+        ],
+      ])('%s', (_title, settings, expected) => {
+        service.init(baseProfile, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        const children = node?.children?.map(childId => (schema.get(childId) as ProfileNode).id);
+
+        expect(children).toEqual(expected);
+      });
+    });
+
+    describe('node options for visibility and drift', () => {
+      const baseProfile = [
+        {
+          id: 'document',
+          type: AdvancedFieldType.block,
+          children: ['a', '6', 'r'],
+        },
+        {
+          id: 'a',
+          type: AdvancedFieldType.literal,
+        },
+        {
+          id: '6',
+          type: AdvancedFieldType.literal,
+        },
+        {
+          id: 'r',
+          type: AdvancedFieldType.literal,
+        },
+      ] as Profile;
+
+      beforeEach(() => {
+        (uuidv4 as jest.Mock).mockImplementation(Math.random);
+      });
+
+      it('inactive, empty settings have all visible and no drift', () => {
+        service.init(baseProfile, DEFAULT_INACTIVE_SETTINGS);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(true);
+          expect(child?.profileSettingsDrift).toBe(false);
+        });
+      });
+
+      it('inactive settings with children and drift have all visible and no drift', () => {
+        const settings = {
+          active: false,
+          children: [
+            {
+              id: 'r',
+            },
+            {
+              id: 'a',
+            },
+          ],
+          missingFromSettings: ['6'],
+        } as ProfileSettingsWithDrift;
+
+        service.init(baseProfile, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(true);
+          expect(child?.profileSettingsDrift).toBe(false);
+        });
+      });
+
+      it('active settings with no children have all visible and all drift', () => {
+        const settings = {
+          active: true,
+          children: [],
+          missingFromSettings: ['6', 'r', 'a'],
+        } as ProfileSettingsWithDrift;
+
+        service.init(baseProfile, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(true);
+          expect(child?.profileSettingsDrift).toBe(true);
+        });
+      });
+
+      it('active settings with all children and no drift have settings visibility and no drift', () => {
+        const settings = {
+          active: true,
+          children: [
+            {
+              id: 'r',
+              visible: true,
+              order: 1,
+            },
+            {
+              id: 'a',
+              visible: false,
+              order: 3,
+            },
+            {
+              id: '6',
+              visible: true,
+              order: 2,
+            },
+          ],
+          missingFromSettings: [],
+        } as ProfileSettingsWithDrift;
+        const visibles = ['6', 'r'];
+
+        service.init(baseProfile, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(visibles.includes((child as ProfileNode).id));
+          expect(child?.profileSettingsDrift).toBe(false);
+        });
+      });
+
+      it('active settings with some children and some drift have settings visibility and some drift', () => {
+        const settings = {
+          active: true,
+          children: [
+            {
+              id: '6',
+              visible: false,
+            },
+          ],
+          missingFromSettings: ['a', 'r'],
+        } as ProfileSettingsWithDrift;
+        const visibles = ['a', 'r'];
+        const drifts = ['a', 'r'];
+
+        service.init(baseProfile, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(visibles.includes((child as ProfileNode).id));
+          expect(child?.profileSettingsDrift).toBe(drifts.includes((child as ProfileNode).id));
+        });
+      });
+
+      it('active settings with some children not visible are bypassed when mandatory', () => {
+        const profileWithMandatory = [
+          {
+            id: 'document',
+            type: AdvancedFieldType.block,
+            children: ['a'],
+          },
+          {
+            id: 'a',
+            type: AdvancedFieldType.literal,
+            constraints: {
+              mandatory: true,
+            },
+          },
+        ] as Profile;
+        const settings = {
+          active: true,
+          children: [
+            {
+              id: 'a',
+              visible: false,
+              order: 1,
+            },
+          ],
+          missingFromSettings: [],
+        } as ProfileSettingsWithDrift;
+        const visibles = ['a'];
+
+        service.init(profileWithMandatory, settings);
+        service.generate('init-key');
+
+        const schema = service.get();
+        const node = schema.get('init-key');
+
+        node?.children?.forEach(childId => {
+          const child = schema.get(childId);
+          expect(child?.editorVisible).toBe(visibles.includes((child as ProfileNode).id));
+        });
+      });
     });
   });
 });

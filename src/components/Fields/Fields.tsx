@@ -1,13 +1,16 @@
+import { FC, type ReactElement, type ReactNode, memo } from 'react';
+
 import classNames from 'classnames';
-import { FC, memo, type ReactElement, type ReactNode } from 'react';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { IDrawComponent } from '@components/EditSection';
-import { ENTITY_LEVEL } from '@common/constants/bibframe.constants';
-import { generateTwinChildrenKey } from '@common/helpers/schema.helper';
-import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
-import { ConditionalWrapper } from '@components/ConditionalWrapper';
-import { DuplicateSubcomponentContainer } from '@components/DuplicateSubcomponentContainer';
-import { useInputsState, useProfileState, useUIState } from '@src/store';
+
+import { ENTITY_LEVEL } from '@/common/constants/bibframe.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { generateTwinChildrenKey } from '@/common/helpers/schema.helper';
+import { ConditionalWrapper } from '@/components/ConditionalWrapper';
+import { DuplicateGroupContainer } from '@/components/DuplicateGroupContainer';
+import { DuplicateSubcomponentContainer } from '@/components/DuplicateSubcomponentContainer';
+import { IDrawComponent } from '@/components/EditSection';
+
+import { useInputsState, useProfileState, useUIState } from '@/store';
 
 export type IFields = {
   uuid: string | null;

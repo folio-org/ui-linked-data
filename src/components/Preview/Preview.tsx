@@ -1,7 +1,11 @@
 import { FC } from 'react';
+
 import classNames from 'classnames';
-import { useInputsState, useProfileState } from '@src/store';
+
+import { useInputsState, useProfileState } from '@/store';
+
 import { Fields } from './Fields';
+
 import './Preview.scss';
 
 type IPreview = {
@@ -33,6 +37,7 @@ export const Preview: FC<IPreview> = ({
   const userValues = altUserValues ?? userValuesFromState;
   const schema = altSchema ?? schemaFromState;
   const initialSchemaKey = altInitKey ?? initialSchemaKeyFromState;
+  const paths = Object.keys(userValues).flatMap(key => schema.get(key)?.path ?? '');
 
   return (
     <div
@@ -43,9 +48,7 @@ export const Preview: FC<IPreview> = ({
         <Fields
           base={schema}
           uuid={initialSchemaKey}
-          paths={Object.keys(userValues)
-            .map(key => schema.get(key)?.path ?? '')
-            .flat()}
+          paths={paths}
           altSchema={altSchema}
           altUserValues={altUserValues}
           altSelectedEntries={altSelectedEntries}

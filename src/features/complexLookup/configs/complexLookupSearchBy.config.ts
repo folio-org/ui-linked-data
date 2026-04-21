@@ -1,6 +1,7 @@
-import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 import { SearchSegment } from '@/common/constants/search.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+
+import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 
 export const COMPLEX_LOOKUP_SEARCH_BY_CONFIG = {
   [ComplexLookupType.Authorities]: {

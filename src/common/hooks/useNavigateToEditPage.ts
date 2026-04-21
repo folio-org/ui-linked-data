@@ -1,18 +1,20 @@
-import { ROUTES, QueryParams } from '@common/constants/routes.constants';
-import { useSearchState } from '@src/store';
-import { useNavigate } from 'react-router-dom';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 
+import { useNavigateWithSearchState } from './useNavigateWithSearchState';
+
+/**
+ * Hook for navigating to edit pages while preserving search state
+ * This is a convenience wrapper around useNavigateWithSearchState
+ */
 export const useNavigateToEditPage = () => {
-  const navigate = useNavigate();
-  const { navigationState } = useSearchState(['navigationState']);
+  const { navigateWithState } = useNavigateWithSearchState();
 
   const navigateAsDuplicate = (duplicateId: string) => {
-    navigate(`${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.CloneOf}=${duplicateId}`, { state: navigationState });
+    navigateWithState(`${ROUTES.RESOURCE_CREATE.uri}?${QueryParams.CloneOf}=${duplicateId}`);
   };
 
   return {
-    navigateToEditPage: (uri: string, { ...options } = {}) =>
-      navigate(uri, { state: { ...navigationState, isNavigatedFromLDE: true }, ...options }),
+    navigateToEditPage: navigateWithState,
     navigateAsDuplicate,
   };
 };

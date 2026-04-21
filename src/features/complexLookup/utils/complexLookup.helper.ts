@@ -1,9 +1,13 @@
+import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import {
   AuthorityValidationTarget,
   COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING,
   EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX,
+  VALUE_DIVIDER,
 } from '@/features/complexLookup/constants/complexLookup.constants';
-import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { SourceType } from '@/features/complexLookup/types';
 
 export const generateEmptyValueUuid = (uuid: string) => `${uuid}_${EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
 
@@ -19,14 +23,18 @@ export const updateLinkedFieldValue = ({
   schema,
   linkedField,
   linkedFieldValue,
+  modalConfig,
   lookupConfig,
 }: {
   schema: Map<string, SchemaEntry>;
   linkedField?: SchemaEntry;
   linkedFieldValue?: string;
-  lookupConfig: ComplexLookupsConfigEntry;
+  modalConfig?: { linkedField?: string };
+  lookupConfig?: ComplexLookupsConfigEntry;
 }) => {
-  const linkedFieldTyped = lookupConfig.linkedField as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
+  // Support both modern (modalConfig) and legacy (lookupConfig) configurations
+  const linkedFieldName = modalConfig?.linkedField || lookupConfig?.linkedField;
+  const linkedFieldTyped = linkedFieldName as keyof typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING;
   const linkedFieldValueTyped =
     linkedFieldValue as keyof (typeof COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING)[typeof linkedFieldTyped];
   const linkedFieldValueUri =
@@ -81,4 +89,17 @@ export const generateValidationRequestBody = (
     rawMarc: escapedString,
     target,
   };
+};
+
+export const formatComplexLookupDisplayValue = (values?: UserValueContents[]) => {
+  if (!values?.length) return '';
+
+  return values
+    .filter(({ label }) => label)
+    .map(({ label }) => label)
+    .join(VALUE_DIVIDER);
+};
+
+export const getDefaultHubSource = (assignedValue?: UserValueContents): SourceType => {
+  return (assignedValue?.meta?.sourceType as SourceType) || SOURCE_TYPES.LIBRARY_OF_CONGRESS;
 };

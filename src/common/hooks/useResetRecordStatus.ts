@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { RecordStatus } from '@common/constants/record.constants';
-import { useStatusState } from '@src/store';
+
+import { RecordStatus } from '@/common/constants/record.constants';
+
+import { useStatusState } from '@/store';
 
 export const useResetRecordStatus = () => {
   const { recordStatus, setRecordStatus } = useStatusState(['recordStatus', 'setRecordStatus']);

@@ -4,6 +4,4 @@ export { AuthoritiesSearchResponseTransformer } from './AuthoritiesSearchRespons
 export { AuthoritiesBrowseResponseTransformer } from './AuthoritiesBrowseResponseTransformer';
 export { ResourcesResponseTransformer } from './ResourcesResponseTransformer';
 export { HubResponseTransformer } from './HubResponseTransformer';
-
-// Legacy exports (deprecated) - for backward compatibility
-export * from './legacy';
+export { HubLocalResponseTransformer } from './HubLocalResponseTransformer';

@@ -4,4 +4,7 @@ export {
   updateLinkedFieldValue,
   getUpdatedSelectedEntries,
   generateValidationRequestBody,
+  formatComplexLookupDisplayValue,
+  getDefaultHubSource,
 } from './complexLookup.helper';
+export { extractNestedData } from './dataExtraction';

@@ -1,6 +1,9 @@
-import { renderHook } from '@testing-library/react';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { renderHook } from '@testing-library/react';
+
 import { useComplexLookupValidation } from '@/features/complexLookup/hooks/useComplexLookupValidation';
+
 import { useComplexLookupStore } from '@/store/stores/complexLookup';
 
 describe('useComplexLookupValidation', () => {

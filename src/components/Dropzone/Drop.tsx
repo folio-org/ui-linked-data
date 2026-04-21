@@ -1,8 +1,10 @@
 import { FC } from 'react';
-import classNames from 'classnames';
+import { DropzoneInputProps, DropzoneRootProps } from 'react-dropzone';
 import { FormattedMessage } from 'react-intl';
-import { DropzoneRootProps, DropzoneInputProps } from 'react-dropzone';
-import { Button, ButtonType } from '@components/Button';
+
+import classNames from 'classnames';
+
+import { Button, ButtonType } from '@/components/Button';
 
 interface Props {
   getRootProps: <T extends DropzoneRootProps>(props?: T | undefined) => T;

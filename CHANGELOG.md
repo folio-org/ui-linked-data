@@ -1,6 +1,8 @@
 # Change history for ui-linked-data
 
-## 2.0.0 (IN PROGRESS)
+## 3.0.0 (IN PROGRESS)
+
+## 2.0.0 (2026-04-17)
 * Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
 * Clear global state on web component disconnection. Refs [UILD-552].
 * Fixed incorrect instances list display when the user opens the Create Work page. Fixes [UILD-560].
@@ -59,6 +61,70 @@
 * React Query setup and apply to Search. Refs [UILD-676].
 * Add request building and response transforming strategies for Search. Update UI to support segment hierarchy. Refs [UILD-683].
 * Add results formatting strategies for Search. Update UI to support search results for different types of search. Refs [UILD-683].
+* Update Complex lookups to use the new Search feature. Refs [UILD-686].
+* Add Hub tab to landing page. Refs [UILD-687].
+* Add custom workspace profile settings application. Refs [UILD-684].
+* Add Hub search behavior for LoC source; fix search results table. Refs [UILD-688].
+* Add Hubs actions menu. Refs [UILD-693].
+* Add initial workspace profile settings editing. Refs [UILD-685].
+* Refactor Edit page to support multiple resource types. Add Hub create page. Refs [UILD-694].
+* Persist Hub when save button is clicked. Refs [UILD-699].
+* Add workspace profile settings components. Refs [UILD-696].
+* Fix incorrect display of panels on the Edit page. Refs [UILD-708].
+* Organize imports order in the code. Refs [UILD-722].
+* Remove legacy search code. Refs [UILD-721].
+* Bump react-router-dom from ^6.28.1 to ^6.30.3 fixing CVE-2025-68470. Refs [UILD-724].
+* Enhance record generation with custom hubs. Fixes [UILD-673]
+* Preserve search results state. Refs [UILD-702].
+* Add navigation to Hub edit page. Refs [UILD-704].
+* Add the Hubs source to the complex lookups. Refs [UILD-710].
+* Implement API schema change for Hub. Refs [UILD-723].
+* Fix incorrect link property generation when URI is not available. Fixes [UILD-720].
+* Add drag and drop profile settings editing. Refs [UILD-697].
+* Create a preview screen when importing a new Hub. Refs [UILD-725].
+* Add Continue button behavior at Hub preview screen. Refs [UILD-726].
+* Update custom settings toggle behavior. Refs [UILD-727].
+* Add mandatory field handling in custom settings. Refs [UILD-728].
+* Add possibility to assign Hubs as Subjects. Refs [UILD-711].
+* Add possibility to change the assigned Hubs as Subjects. Refs [UILD-730].
+* Connect profile settings editor to save settings API. Refs [UILD-698].
+* Add hub preview functionality. Refs [UILD-736].
+* Fix profile cache management and drag and drop affecting modified state. Refs [UILD-739].
+* Fix profile setting application in editor and search state, minor UX adjustments. Refs [UILD-740].
+* Add Subclass for the Subject field. Refs [UILD-593].
+* Fix the relation URLs to match with the URLs defined in https://bibfra.me/vocab/relation [UILD-748]
+* Auto-focus the close button modals, and keep focus cycle within the modal. Refs [UILD-580]
+* Address manage profile settings label accessibility issues. Refs [UILD-749].
+* Fix use of the enter key on dropdown menu items. Refs [UILD-750].
+* Fix excessively small font in modal title. Refs [UILD-751].
+* Address markup and styling issues, set focus on drop, and add drift explanation to editor. Refs [UILD-756].
+* Fix multiselect to require active input for opening list instead of auto-opening. Refs [UILD-592].
+* Add Dissertation section. Refs [UILD-623].
+* Update toast behavior to remove auto-dismissal and display. Refs [UILD-755].
+* Update dimensions property URI. Refs [UILD-763].
+* Retrieve most value dictionaries from local API instead of id.loc.gov. Refs [UILD-754].
+* Add Duplicate Hub functionality. Refs [UILD-772].
+* Move Actions menu to the Edit area. Refs [UILD-765].
+* Add Inventary View link. Refs [UILD-768].
+* Show property labels in Work preview. Refs [UILD-759].
+* Show warning that 'Dissertation' will be lost when the user switches from Books to Serials Work profile. Refs [UILD-778].
+* Reconcile styling to latest Stripes styling. Refs [UILD-761].
+* Change behavior of "Assign" button between different lookups. Refs [UILD-745].
+* Add missing localization. Refs [UILD-784].
+* Show Authority Source name in search results. Refs [UILD-764].
+* Add support for the Geographic Coverage field. Fixes [UILD-665].
+* Change display order for titles. Refs [UILD-304].
+* Respond to the embedding application's locale config. Refs [UILD-786].
+* Hide preview when starting a new search on the Search page. Fixes [UILD-743].
+* Fix layout of Work title on the Search results page. Fixes [UILD-677].
+* Fix editor save button being incorrectly enabled. Fixes [UILD-586].
+* Fix missing preview field label. Fixes [UILD-541].
+* Hide preview in complex lookups. Fixes [UILD-709].
+* Show a toast after saving a resource. Fixes [UILD-563].
+* Fix the broken search results table. Fixes [UILD-788].
+* Importing an empty file treated as an error. Fixes [UILD-692].
+* Fix CSS rule leaking out of this module. Fixes [UILD-796].
+* Fix overlapping labels in the search results table. Fixes [UILD-797].
 
 [UILD-552]:https://folio-org.atlassian.net/browse/UILD-552
 [UILD-544]:https://folio-org.atlassian.net/browse/UILD-544
@@ -118,9 +184,71 @@
 [UILD-675]:https://folio-org.atlassian.net/browse/UILD-675
 [UILD-676]:https://folio-org.atlassian.net/browse/UILD-676
 [UILD-683]:https://folio-org.atlassian.net/browse/UILD-683
+[UILD-686]:https://folio-org.atlassian.net/browse/UILD-686
+[UILD-687]:https://folio-org.atlassian.net/browse/UILD-687
+[UILD-684]:https://folio-org.atlassian.net/browse/UILD-684
+[UILD-688]:https://folio-org.atlassian.net/browse/UILD-688
+[UILD-693]:https://folio-org.atlassian.net/browse/UILD-693
+[UILD-685]:https://folio-org.atlassian.net/browse/UILD-685
+[UILD-694]:https://folio-org.atlassian.net/browse/UILD-694
+[UILD-699]:https://folio-org.atlassian.net/browse/UILD-699
+[UILD-696]:https://folio-org.atlassian.net/browse/UILD-696
+[UILD-708]:https://folio-org.atlassian.net/browse/UILD-708
+[UILD-722]:https://folio-org.atlassian.net/browse/UILD-722
+[UILD-721]:https://folio-org.atlassian.net/browse/UILD-721
+[UILD-673]:https://folio-org.atlassian.net/browse/UILD-673
+[UILD-702]:https://folio-org.atlassian.net/browse/UILD-702
+[UILD-704]:https://folio-org.atlassian.net/browse/UILD-704
+[UILD-710]:https://folio-org.atlassian.net/browse/UILD-710
+[UILD-723]:https://folio-org.atlassian.net/browse/UILD-723
+[UILD-720]:https://folio-org.atlassian.net/browse/UILD-720
+[UILD-697]:https://folio-org.atlassian.net/browse/UILD-697
+[UILD-725]:https://folio-org.atlassian.net/browse/UILD-725
+[UILD-726]:https://folio-org.atlassian.net/browse/UILD-726
+[UILD-727]:https://folio-org.atlassian.net/browse/UILD-727
+[UILD-728]:https://folio-org.atlassian.net/browse/UILD-728
+[UILD-711]:https://folio-org.atlassian.net/browse/UILD-711
+[UILD-730]:https://folio-org.atlassian.net/browse/UILD-730
+[UILD-698]:https://folio-org.atlassian.net/browse/UILD-698
+[UILD-736]:https://folio-org.atlassian.net/browse/UILD-736
+[UILD-739]:https://folio-org.atlassian.net/browse/UILD-739
+[UILD-740]:https://folio-org.atlassian.net/browse/UILD-740
+[UILD-593]:https://folio-org.atlassian.net/browse/UILD-593
+[UILD-748]:https://folio-org.atlassian.net/browse/UILD-748
+[UILD-580]:https://folio-org.atlassian.net/browse/UILD-580
+[UILD-749]:https://folio-org.atlassian.net/browse/UILD-749
+[UILD-750]:https://folio-org.atlassian.net/browse/UILD-750
+[UILD-751]:https://folio-org.atlassian.net/browse/UILD-751
+[UILD-756]:https://folio-org.atlassian.net/browse/UILD-756
+[UILD-592]:https://folio-org.atlassian.net/browse/UILD-592
+[UILD-623]:https://folio-org.atlassian.net/browse/UILD-623
+[UILD-755]:https://folio-org.atlassian.net/browse/UILD-755
+[UILD-763]:https://folio-org.atlassian.net/browse/UILD-763
+[UILD-754]:https://folio-org.atlassian.net/browse/UILD-754
+[UILD-772]:https://folio-org.atlassian.net/browse/UILD-772
+[UILD-765]:https://folio-org.atlassian.net/browse/UILD-765
+[UILD-768]:https://folio-org.atlassian.net/browse/UILD-768
+[UILD-759]:https://folio-org.atlassian.net/browse/UILD-759
+[UILD-778]:https://folio-org.atlassian.net/browse/UILD-778
+[UILD-761]:https://folio-org.atlassian.net/browse/UILD-761
+[UILD-745]:https://folio-org.atlassian.net/browse/UILD-745
+[UILD-784]:https://folio-org.atlassian.net/browse/UILD-784
+[UILD-764]:https://folio-org.atlassian.net/browse/UILD-764
+[UILD-665]:https://folio-org.atlassian.net/browse/UILD-665
+[UILD-304]:https://folio-org.atlassian.net/browse/UILD-304
+[UILD-786]:https://folio-org.atlassian.net/browse/UILD-786
+[UILD-743]:https://folio-org.atlassian.net/browse/UILD-743
+[UILD-677]:https://folio-org.atlassian.net/browse/UILD-677
+[UILD-586]:https://folio-org.atlassian.net/browse/UILD-586
+[UILD-541]:https://folio-org.atlassian.net/browse/UILD-541
+[UILD-709]:https://folio-org.atlassian.net/browse/UILD-709
+[UILD-563]:https://folio-org.atlassian.net/browse/UILD-563
+[UILD-788]:https://folio-org.atlassian.net/browse/UILD-788
+[UILD-692]:https://folio-org.atlassian.net/browse/UILD-692
+[UILD-796]:https://folio-org.atlassian.net/browse/UILD-796
+[UILD-797]:https://folio-org.atlassian.net/browse/UILD-797
 
 ## 1.0.5 (2025-04-30)
-* Fixed incorrect behavior when navigating between duplicated resources. Fixes [UILD-553].
 * Browser Back button navigates to Edit without duplicated title when navigated from Duplicate screen. Fixes [UILD-554].
 
 [UILD-553]:https://folio-org.atlassian.net/browse/UILD-553

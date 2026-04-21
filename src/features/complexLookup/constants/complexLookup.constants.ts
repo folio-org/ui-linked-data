@@ -2,6 +2,7 @@ export enum ComplexLookupType {
   Authorities = 'authorities',
   AuthoritiesSubject = 'authoritiesSubject',
   Hub = 'hub',
+  Institution = 'institution',
 }
 
 export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
@@ -31,14 +32,9 @@ export const COMPLEX_LOOKUPS_LINKED_FIELDS_MAPPING = {
 
 export const EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX = 'empty';
 export const VALUE_DIVIDER = ' ,';
-export const __MOCK_URI_CHANGE_WHEN_IMPLEMENTING = '__MOCK_URI_CHANGE_WHEN_IMPLEMENTING';
-
-export enum Authority {
-  Creator = 'creator',
-  Subject = 'subject',
-}
 
 export enum AuthorityValidationTarget {
   CreatorOfWork = 'CREATOR_OF_WORK',
   SubjectOfWork = 'SUBJECT_OF_WORK',
+  DegreeGrantingInstitution = 'DEGREE_GRANTING_INSTITUTION',
 }

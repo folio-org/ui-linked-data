@@ -1,7 +1,11 @@
-import { renderHook } from '@testing-library/react';
-import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { useSearchParams } from 'react-router-dom';
+
+import { renderHook } from '@testing-library/react';
+
 import { useSearchStore } from '@/store';
+
 import type { SearchTypeConfig } from '../../core/types';
 import { useUrlSync } from './useUrlSync';
 
@@ -58,6 +62,48 @@ describe('useUrlSync', () => {
       expect(setQuery).toHaveBeenCalledWith('test query');
     });
 
+    it('syncs all params from URL to navigationState', () => {
+      const searchParams = new URLSearchParams({
+        query: 'test query',
+        searchBy: 'title',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'title',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+    });
+
+    it('syncs query to navigationState', () => {
+      const searchParams = new URLSearchParams({ query: 'test query', searchBy: 'keyword' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'keyword',
+      });
+    });
+
+    it('syncs offset to navigationState', () => {
+      const searchParams = new URLSearchParams({ offset: '40' });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
+
+      renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
+
+      expect(setNavigationState).toHaveBeenCalledWith({ offset: '40' });
+    });
+
     it('does not sync query when it is advanced search (no searchBy in URL)', () => {
       const searchParams = new URLSearchParams({ query: 'test query' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
@@ -107,11 +153,14 @@ describe('useUrlSync', () => {
 
       expect(setQuery).toHaveBeenCalledWith('test query');
       expect(setSearchBy).toHaveBeenCalledWith('author');
-      // The hook updates segment and source in separate sequential calls
-      // Because they're updating in the same effect, they both see empty navigationState
-      expect(setNavigationState).toHaveBeenCalledTimes(2);
-      expect(setNavigationState.mock.calls[0][0]).toEqual({ segment: 'browse' });
-      expect(setNavigationState.mock.calls[1][0]).toEqual({ source: 'external' });
+      // The hook updates all params to navigationState in a single call
+      expect(setNavigationState).toHaveBeenCalledTimes(1);
+      expect(setNavigationState).toHaveBeenCalledWith({
+        query: 'test query',
+        searchBy: 'author',
+        segment: 'browse',
+        source: 'external',
+      });
     });
 
     it('clears query when URL has no query but store does and searchBy is present', () => {
@@ -183,14 +232,14 @@ describe('useUrlSync', () => {
       expect(setQuery).not.toHaveBeenCalled();
     });
 
-    it('preserves existing navigation state when updating segment', () => {
+    it('clears stale params from navigationState when not in URL', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
           state: {
             query: '',
             searchBy: 'keyword',
-            navigationState: { source: 'local', existingKey: 'value' },
+            navigationState: { offset: '40', source: 'old', segment: 'old' },
             setQuery,
             setSearchBy,
             setNavigationState,
@@ -198,26 +247,25 @@ describe('useUrlSync', () => {
         },
       ]);
 
-      const searchParams = new URLSearchParams({ segment: 'browse' });
+      const searchParams = new URLSearchParams({ segment: 'browse', source: 'new' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        source: 'local',
-        existingKey: 'value',
         segment: 'browse',
+        source: 'new',
       });
     });
 
-    it('preserves existing navigation state when updating source', () => {
+    it('clears offset from navigationState when new search has no offset', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
           state: {
             query: '',
             searchBy: 'keyword',
-            navigationState: { segment: 'search', existingKey: 'value' },
+            navigationState: { query: 'old query', offset: '40', segment: 'hubs' },
             setQuery,
             setSearchBy,
             setNavigationState,
@@ -225,19 +273,98 @@ describe('useUrlSync', () => {
         },
       ]);
 
-      const searchParams = new URLSearchParams({ source: 'external' });
+      const searchParams = new URLSearchParams({ query: 'new query', searchBy: 'keyword', segment: 'hubs' });
       (useSearchParams as jest.Mock).mockReturnValue([searchParams]);
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        segment: 'search',
-        existingKey: 'value',
-        source: 'external',
+        query: 'new query',
+        searchBy: 'keyword',
+        segment: 'hubs',
       });
     });
 
-    it('does not update segment if URL value matches current segment', () => {
+    it('checks the offset persistence', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test',
+            searchBy: 'keyword',
+            navigationState: {},
+            setQuery,
+            setSearchBy,
+            setNavigationState,
+          },
+        },
+      ]);
+
+      const searchParams1 = new URLSearchParams({
+        query: 'test',
+        searchBy: 'keyword',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams1]);
+
+      const { rerender } = renderHook(() =>
+        useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }),
+      );
+
+      expect(setNavigationState).toHaveBeenLastCalledWith({
+        query: 'test',
+        searchBy: 'keyword',
+        segment: 'hubs',
+        source: 'libraryOfCongress',
+        offset: '20',
+      });
+
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test',
+            searchBy: 'keyword',
+            navigationState: {
+              query: 'test',
+              searchBy: 'keyword',
+              segment: 'hubs',
+              source: 'libraryOfCongress',
+              offset: '20',
+            },
+            setQuery,
+            setSearchBy,
+            setNavigationState,
+          },
+        },
+      ]);
+
+      const searchParams2 = new URLSearchParams({
+        query: 'test',
+        searchBy: 'keyword',
+        segment: 'hubs',
+        source: 'local',
+      });
+      (useSearchParams as jest.Mock).mockReturnValue([searchParams2]);
+      setNavigationState.mockClear();
+
+      rerender();
+
+      expect(setNavigationState).toHaveBeenLastCalledWith({
+        query: 'test',
+        searchBy: 'keyword',
+        segment: 'hubs',
+        source: 'local',
+      });
+
+      // Verify offset is not in the result
+      const lastCall = setNavigationState.mock.calls.at(-1)?.[0];
+      expect(lastCall).not.toHaveProperty('offset');
+    });
+
+    it('updates segment if URL value matches current segment', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -257,10 +384,10 @@ describe('useUrlSync', () => {
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
-      expect(setNavigationState).not.toHaveBeenCalled();
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'browse' });
     });
 
-    it('does not update source if URL value matches current source', () => {
+    it('updates source if URL value matches current source', () => {
       setInitialGlobalState([
         {
           store: useSearchStore,
@@ -280,7 +407,7 @@ describe('useUrlSync', () => {
 
       renderHook(() => useUrlSync({ flow: 'url', coreConfig: mockConfig, uiConfig: mockUIConfig }));
 
-      expect(setNavigationState).not.toHaveBeenCalled();
+      expect(setNavigationState).toHaveBeenCalledWith({ source: 'external' });
     });
   });
 

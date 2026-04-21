@@ -1,6 +1,8 @@
 import { FC, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '@components/Modal';
+
+import { Modal } from '@/components/Modal';
+
 import './ModalSwitchToNewRecord.scss';
 
 interface Props {
@@ -25,7 +27,7 @@ export const ModalSwitchToNewRecord: FC<Props> = memo(({ isOpen, onCancel, onSub
       className="modal-switch-to-new-record"
     >
       <div className="close-record-contents" data-testid="modal-close-record-content">
-        <FormattedMessage id="ld.unsavedRecentEdits" />
+        <FormattedMessage id="ld.askSaveChangesBeforeProceeding" />
       </div>
     </Modal>
   );

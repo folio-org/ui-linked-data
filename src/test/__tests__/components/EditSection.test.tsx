@@ -1,12 +1,16 @@
-import '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import '@src/test/__mocks__/common/hooks/useConfig.mock';
-import { fireEvent, render, waitFor, within } from '@testing-library/react';
+import '@/test/__mocks__/common/hooks/useConfig.mock';
+import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { ServicesProvider } from '@src/providers';
-import { routes } from '@src/App';
-import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
+
+import { fireEvent, render, waitFor, within } from '@testing-library/react';
+
+import { routes } from '@/App';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { ServicesProvider } from '@/providers';
+
+import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 
 const userValues = {
   uuid3: {
@@ -93,7 +97,19 @@ const schema = new Map([
       path: ['uuid0', 'uuid2'],
       uuid: 'uuid2',
       type: AdvancedFieldType.block,
-      children: ['uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid9', 'uuid10', 'uuid13', 'uuid14'],
+      children: [
+        'uuid3',
+        'uuid4',
+        'uuid5',
+        'uuid6',
+        'uuid7',
+        'uuid9',
+        'uuid10',
+        'uuid13',
+        'uuid14',
+        'uuid15',
+        'uuid16',
+      ],
     },
   ],
   [
@@ -228,6 +244,28 @@ const schema = new Map([
       uuid: 'uuid14',
     },
   ],
+  [
+    'uuid15',
+    {
+      bfid: 'uuid15Bfid',
+      displayName: 'uuid15',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid15'],
+      uuid: 'uuid15',
+      editorVisible: false,
+    },
+  ],
+  [
+    'uuid16',
+    {
+      bfid: 'uuid16Bfid',
+      displayName: 'uuid16',
+      type: AdvancedFieldType.literal,
+      path: ['uuid0', 'uuid2', 'uuid16'],
+      uuid: 'uuid16',
+      profileSettingsDrift: true,
+    },
+  ],
 ]);
 
 const monograph = {
@@ -247,7 +285,7 @@ const monograph = {
 };
 
 globalThis.scrollTo = jest.fn();
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('EditSection', () => {
   const renderScreen = () => {
@@ -358,6 +396,25 @@ describe('EditSection', () => {
 
     const section = getByTestId('field-with-meta-controls-uuid13');
     expect(within(section).getByTestId('literal-field')).toBeDisabled();
+  });
+
+  test('renders but does not display field hidden by settings', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    expect(await findByText('uuid15')).toBeInTheDocument();
+
+    const section = getByTestId('field-with-meta-controls-uuid15');
+    expect(section).toHaveClass('field-hidden-by-settings');
+  });
+
+  test('renders field shown due to drift with explanatory text', async () => {
+    const { getByTestId, findByText } = renderScreen();
+
+    expect(await findByText('uuid16')).toBeInTheDocument();
+
+    const section = getByTestId('field-with-meta-controls-uuid16');
+    expect(section).toHaveClass('field-visible-by-drift');
+    expect(within(section).getByText('ld.visibleByDrift')).toBeInTheDocument();
   });
 
   describe('location-based form placeholder', () => {

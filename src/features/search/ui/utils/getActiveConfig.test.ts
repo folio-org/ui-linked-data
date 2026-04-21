@@ -1,5 +1,5 @@
-import { getActiveConfig } from './getActiveConfig.helper';
 import type { SearchTypeUIConfig } from '../types/ui.types';
+import { getActiveConfig } from './getActiveConfig.helper';
 
 describe('getActiveConfig', () => {
   const baseUIConfig: SearchTypeUIConfig = {

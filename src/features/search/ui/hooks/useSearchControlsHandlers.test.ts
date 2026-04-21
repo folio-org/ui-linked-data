@@ -1,29 +1,42 @@
-import { renderHook, act } from '@testing-library/react';
-import { useSearchParams } from 'react-router-dom';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
-import { useSearchStore } from '@/store';
+
+import { useSearchParams } from 'react-router-dom';
+
+import { act, renderHook } from '@testing-library/react';
+
+import { useInputsState, useSearchStore, useUIState } from '@/store';
+
 import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
-import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 import { resolveUIConfig } from '../config';
 import { getValidSearchBy } from '../utils';
+import { useSearchControlsHandlers } from './useSearchControlsHandlers';
 
 jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-jest.mock('../../core', () => ({
-  ...jest.requireActual('../../core'),
-  resolveCoreConfig: jest.fn(),
-}));
+jest.mock('../../core', () => {
+  const actual = jest.requireActual('../../core');
+
+  return {
+    ...actual,
+    normalizeQuery: jest.requireActual('../../core/utils/search.helper').normalizeQuery,
+    resolveCoreConfig: jest.fn(),
+  };
+});
 
 jest.mock('../config', () => ({
   resolveUIConfig: jest.fn(),
 }));
 
-jest.mock('../utils', () => ({
-  ...jest.requireActual('../utils'),
-  getValidSearchBy: jest.fn(searchBy => searchBy),
-}));
+jest.mock('../utils', () => {
+  const actual = jest.requireActual('../utils');
+
+  return {
+    ...actual,
+    getValidSearchBy: jest.fn(searchBy => searchBy),
+  };
+});
 
 describe('useSearchControlsHandlers', () => {
   const mockConfig: SearchTypeConfig = {
@@ -43,6 +56,9 @@ describe('useSearchControlsHandlers', () => {
   const setCommittedValues = jest.fn();
   const resetCommittedValues = jest.fn();
   const setSearchParams = jest.fn();
+  const resetPreviewContent = jest.fn();
+  const resetFullDisplayComponentType = jest.fn();
+  const resetCurrentlyPreviewedEntityBfid = jest.fn();
 
   const mockSegmentConfig: SearchTypeConfig = {
     id: 'browse',
@@ -81,6 +97,19 @@ describe('useSearchControlsHandlers', () => {
           setDraftBySegment,
           setCommittedValues,
           resetCommittedValues,
+        },
+      },
+      {
+        store: useInputsState,
+        state: {
+          resetPreviewContent,
+        },
+      },
+      {
+        store: useUIState,
+        state: {
+          resetFullDisplayComponentType,
+          resetCurrentlyPreviewedEntityBfid,
         },
       },
     ]);
@@ -145,6 +174,20 @@ describe('useSearchControlsHandlers', () => {
 
       expect(setNavigationState).toHaveBeenCalled();
       expect(setSearchParams).not.toHaveBeenCalled();
+    });
+
+    it('resets preview and comparison state when changing segment', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
   });
 
@@ -383,6 +426,38 @@ describe('useSearchControlsHandlers', () => {
       expect(setSearchParams).not.toHaveBeenCalled();
       expect(setCommittedValues).toHaveBeenCalled();
     });
+
+    it('resets preview and comparison state on submit', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
+    });
+
+    it('calls onSubmitCallback on submit when provided', () => {
+      const mockOnSubmitCallback = jest.fn();
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url',
+          onSubmitCallback: mockOnSubmitCallback,
+        }),
+      );
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(mockOnSubmitCallback).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('onReset', () => {
@@ -409,11 +484,11 @@ describe('useSearchControlsHandlers', () => {
       });
 
       expect(setNavigationState).toHaveBeenCalledWith({
-        segment: 'test',
+        segment: 'search',
       });
     });
 
-    it('resets navigation state with segment from config id', () => {
+    it('resets navigation state using active segment from navigationState', () => {
       const configWithoutDefaults: SearchTypeConfig = {
         id: 'test',
       };
@@ -425,7 +500,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'test' });
+      expect(setNavigationState).toHaveBeenCalledWith({ segment: 'search' });
     });
 
     it('clears URL params in URL flow', () => {
@@ -460,6 +535,63 @@ describe('useSearchControlsHandlers', () => {
       expect(resetSearchBy).toHaveBeenCalled();
       expect(setNavigationState).toHaveBeenCalled();
       expect(setSearchParams).not.toHaveBeenCalled();
+    });
+
+    it('resets preview and comparison state when resetting', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
+    });
+
+    it('sets default source in navigation state when segment has a default source', () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test query',
+            searchBy: 'keyword',
+            navigationState: { segment: 'hubsLookup' },
+            draftBySegment: {},
+            setNavigationState,
+            resetQuery,
+            resetSearchBy,
+            setQuery,
+            setSearchBy,
+            setDraftBySegment,
+            setCommittedValues,
+            resetCommittedValues,
+          },
+        },
+        {
+          store: useInputsState,
+          state: { resetPreviewContent },
+        },
+        {
+          store: useUIState,
+          state: { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid },
+        },
+      ]);
+
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(setNavigationState).toHaveBeenCalledWith({
+        segment: 'hubsLookup',
+        source: 'libraryOfCongress',
+      });
     });
   });
 
@@ -579,7 +711,7 @@ describe('useSearchControlsHandlers', () => {
         },
       ]);
 
-      (getValidSearchBy as jest.Mock).mockReturnValue('title');
+      (getValidSearchBy as jest.Mock).mockReturnValue('isbn');
 
       const { result } = renderHook(() =>
         useSearchControlsHandlers({ coreConfig: mockConfig, uiConfig: mockUIConfig, flow: 'url' }),
@@ -934,7 +1066,7 @@ describe('useSearchControlsHandlers', () => {
       const params = updaterFn(new URLSearchParams());
 
       expect(params.get(SearchParam.SEGMENT)).toBe('authorities');
-      expect(params.get(SearchParam.SOURCE)).toBe('external');
+      expect(params.has(SearchParam.SOURCE)).toBe(false);
       expect(params.has(SearchParam.QUERY)).toBe(false);
       expect(params.has(SearchParam.SEARCH_BY)).toBe(false);
     });

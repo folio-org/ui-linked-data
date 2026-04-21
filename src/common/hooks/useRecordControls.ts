@@ -1,27 +1,31 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+
 import {
-  postRecord,
-  putRecord,
   deleteRecord as deleteRecordRequest,
   getGraphIdByExternalId,
   getRecord,
-} from '@common/api/records.api';
-import { BibframeEntities } from '@common/constants/bibframe.constants';
-import { StatusType } from '@common/constants/status.constants';
-import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@common/helpers/record.helper';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { PreviewParams, useConfig } from '@common/hooks/useConfig.hook';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
-import { BLOCKS_BFLITE } from '@common/constants/bibframeMapping.constants';
-import { RecordStatus, ResourceType } from '@common/constants/record.constants';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
-import { ExternalResourceIdType } from '@common/constants/api.constants';
-import { getFriendlyErrorMessage } from '@common/helpers/api.helper';
-import { useLoadingState, useStatusState, useProfileState, useInputsState, useUIState } from '@src/store';
-import { useRecordGeneration } from './useRecordGeneration';
+  postRecord,
+  putRecord,
+} from '@/common/api/records.api';
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { BibframeEntities } from '@/common/constants/bibframe.constants';
+import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
+import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
+import { QueryParams, ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@/common/helpers/record.helper';
+import { PreviewParams, useConfig } from '@/common/hooks/useConfig.hook';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
+
+import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
+
 import { useBackToSearchUri } from './useBackToSearchUri';
 import { useContainerEvents } from './useContainerEvents';
+import { useRecordGeneration } from './useRecordGeneration';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;
@@ -36,6 +40,8 @@ type IBaseFetchRecord = {
   idType?: ExternalResourceIdType;
   errorMessage?: string;
   previewParams?: PreviewParams;
+  signal?: AbortSignal;
+  skipProfileProcessing?: boolean;
 };
 
 type HandleRecordUpdateProps = {
@@ -79,8 +85,21 @@ export const useRecordControls = () => {
   const isClone = queryParams.get(QueryParams.CloneOf);
   const { generateRecord } = useRecordGeneration();
 
-  const fetchRecord = async (recordId: string, previewParams?: PreviewParams) => {
-    const recordData = await getRecordAndInitializeParsing({ recordId });
+  const ensureSegmentInUri = (uri: string) => {
+    if (uri.includes(`${SearchQueryParams.Segment}=`)) {
+      return uri;
+    }
+
+    const typeParam = searchParams.get(QueryParams.Type);
+    const resourceType = mapToResourceType(typeParam);
+    const segment = getSearchSegment(resourceType);
+    const separator = uri.includes('?') ? '&' : '?';
+
+    return `${uri}${separator}${SearchQueryParams.Segment}=${segment}`;
+  };
+
+  const fetchRecord = async (recordId: string, previewParams?: PreviewParams, signal?: AbortSignal) => {
+    const recordData = await getRecordAndInitializeParsing({ recordId, signal, skipProfileProcessing: true });
 
     if (!recordData) return;
 
@@ -133,7 +152,7 @@ export const useRecordControls = () => {
   ) => {
     navigate(generateEditResourceUrl(updatedRecordId), {
       replace: true,
-      state: location.state,
+      state: { ...(location.state as NavigationState), preserveStatusMessages: true },
     });
 
     if (isProfileChange) {
@@ -160,18 +179,22 @@ export const useRecordControls = () => {
         searchParams.get(QueryParams.Type) ?? ResourceType.instance
       )?.toUpperCase() as BibframeEntities;
 
-      const selectedBlock = BLOCKS_BFLITE[blocksBfliteKey]?.uri;
+      const blockConfig = BLOCKS_BFLITE[blocksBfliteKey];
+      const selectedBlock = blockConfig?.uri;
 
-      if (shouldSetSearchParams) {
+      // Only set search params if this resource type has a reference (e.g., Work/Instance)
+      if (shouldSetSearchParams && blockConfig?.reference) {
         setSearchParams({
-          type: BLOCKS_BFLITE[blocksBfliteKey]?.reference?.name,
+          type: blockConfig.reference.name,
           ref: String(getRecordId(parsedResponse, selectedBlock)),
         });
       }
 
       return updatedRecordId;
     } else {
-      navigate(searchResultsUri);
+      navigate(ensureSegmentInUri(searchResultsUri), {
+        state: { preserveStatusMessages: true } satisfies NavigationState,
+      });
     }
 
     return updatedRecordId;
@@ -249,7 +272,7 @@ export const useRecordControls = () => {
   const discardRecord = (clearState = true) => {
     if (clearState) clearRecordState();
 
-    dispatchNavigateToOriginEventWithFallback(searchResultsUri);
+    dispatchNavigateToOriginEventWithFallback(ensureSegmentInUri(searchResultsUri));
   };
 
   const deleteRecord = async () => {
@@ -271,7 +294,14 @@ export const useRecordControls = () => {
   const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
     try {
       const record = await getRecord({ recordId });
-      const uriSelector = BLOCKS_BFLITE[entityId]?.reference?.uri;
+      const blockConfig = BLOCKS_BFLITE[entityId];
+
+      // If this entity type doesn't have a reference (like Hub), return early
+      if (!blockConfig?.reference) {
+        return { resource: record?.resource };
+      }
+
+      const uriSelector = blockConfig.reference.uri;
       const contents = record?.resource?.[uriSelector];
 
       if (!contents) {
@@ -284,13 +314,13 @@ export const useRecordControls = () => {
 
       const selectedContents = {
         ...contents,
-        [BLOCKS_BFLITE[entityId]?.reference?.key]: undefined,
+        [blockConfig.reference.key]: undefined,
       };
 
       return {
         resource: {
-          [BLOCKS_BFLITE[entityId]?.uri]: {
-            [BLOCKS_BFLITE[entityId]?.reference?.key]: [selectedContents],
+          [blockConfig.uri]: {
+            [blockConfig.reference.key]: [selectedContents],
           },
         },
       };
@@ -307,17 +337,21 @@ export const useRecordControls = () => {
     idType,
     previewParams,
     errorMessage,
+    signal,
+    skipProfileProcessing = false,
   }: IBaseFetchRecord) => {
     if (!recordId && !cachedRecord) return;
 
     try {
-      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType })));
+      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType, signal })));
 
-      await getProfiles({
-        record: recordData,
-        recordId,
-        previewParams,
-      });
+      if (!skipProfileProcessing) {
+        await getProfiles({
+          record: recordData,
+          recordId,
+          previewParams,
+        });
+      }
 
       return recordData;
     } catch (err) {

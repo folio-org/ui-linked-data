@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useIntl } from 'react-intl';
-import { type Row } from '@/components/Table';
+
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { type Row } from '@/components/Table';
 
 interface UseTableFormatterProps {
   data: SearchResultsTableRow[];

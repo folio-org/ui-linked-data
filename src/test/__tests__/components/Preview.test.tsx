@@ -1,8 +1,12 @@
-import { Preview } from '@components/Preview';
-import { useInputsStore, useProfileStore, useUIStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { render, screen } from '@testing-library/react';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { BrowserRouter } from 'react-router-dom';
+
+import { render, screen } from '@testing-library/react';
+
+import { Preview } from '@/components/Preview';
+
+import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 
 const initialSchemaKey = 'uuid0';
 

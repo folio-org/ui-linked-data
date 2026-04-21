@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { IS_EMBEDDED_MODE } from '@common/constants/build.constants';
-import { dispatchEventWrapper, getWrapperAsWebComponent } from '@common/helpers/dom.helper';
-import { ROUTES } from '@common/constants/routes.constants';
-import { useConfigState, useStatusState } from '@src/store';
+
+import { IS_EMBEDDED_MODE } from '@/common/constants/build.constants';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { dispatchEventWrapper, getWrapperAsWebComponent } from '@/common/helpers/dom.helper';
+
+import { useConfigState, useStatusState } from '@/store';
 
 type IUseContainerEvents =
   | {
@@ -34,15 +36,18 @@ export const useContainerEvents = ({ onTriggerModal, watchEditedState = false }:
     }
   }, [TRIGGER_MODAL, onTriggerModal]);
 
+  const dispatchUnblockEvent = () => dispatchEventWrapper(UNBLOCK_NAVIGATION);
+  const dispatchBlockEvent = () => dispatchEventWrapper(BLOCK_NAVIGATION);
+
   useEffect(() => {
     if (IS_EMBEDDED_MODE && watchEditedState) {
-      isEdited ? dispatchBlockEvent() : dispatchUnblockEvent();
+      if (isEdited) {
+        dispatchBlockEvent();
+      } else {
+        dispatchUnblockEvent();
+      }
     }
   }, [BLOCK_NAVIGATION, isEdited, watchEditedState]);
-
-  const dispatchUnblockEvent = () => dispatchEventWrapper(UNBLOCK_NAVIGATION);
-
-  const dispatchBlockEvent = () => dispatchEventWrapper(BLOCK_NAVIGATION);
 
   const dispatchProceedNavigationEvent = () => dispatchEventWrapper(PROCEED_NAVIGATION);
 

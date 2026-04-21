@@ -1,4 +1,5 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { ProcessContext } from '../../types/common.types';
 import { BaseDropdownProcessor } from './baseDropdownProcessor';
 

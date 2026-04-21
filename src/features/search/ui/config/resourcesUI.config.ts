@@ -1,4 +1,5 @@
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
+
 import type { SearchTypeUIConfig } from '../types';
 
 export const resourcesUIConfig: SearchTypeUIConfig = {
@@ -8,6 +9,7 @@ export const resourcesUIConfig: SearchTypeUIConfig = {
     subtitleId: '',
     placeholderId: '',
     emptyStateId: 'ld.enterSearchCriteria',
+    noResultsId: 'ld.searchNoRdsMatch',
   },
   features: {
     // Navigation

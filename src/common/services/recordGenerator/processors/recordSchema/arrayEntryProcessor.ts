@@ -1,8 +1,10 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { ValueOptions, ValueResult, SchemaPropertyValue } from '../../types/value.types';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
+
 import { ProcessContext } from '../../types/common.types';
-import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
+import { SchemaPropertyValue, ValueOptions, ValueResult } from '../../types/value.types';
 import { IProfileSchemaProcessorManager } from '../profileSchema/profileSchemaProcessorManager.interface';
+import { IValueProcessor, SchemaValue } from '../value/valueProcessor.interface';
 import { IRecordSchemaEntryProcessor } from './recordSchemaProcessor.interface';
 
 export class ArrayEntryProcessor implements IRecordSchemaEntryProcessor {
@@ -70,7 +72,7 @@ export class ArrayEntryProcessor implements IRecordSchemaEntryProcessor {
     }
 
     const { property: containerProperty, type = 'array' } = container;
-    const arrayValues = Array.isArray(result.value) ? result.value : [result.value];
+    const arrayValues = ensureArray(result.value as SchemaPropertyValue | SchemaPropertyValue[]);
     const wrappedValues = arrayValues.map((value: SchemaPropertyValue) => ({
       [containerProperty]: type === 'array' ? [value] : value,
     }));

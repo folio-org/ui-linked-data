@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+import { WEB_COMPONENT_NAME } from '@/common/constants/web-component';
+
 import { App } from './App';
-import { WEB_COMPONENT_NAME } from '@common/constants/web-component';
 import { resetAllStores } from './store';
 
 class MarvaNextComponent extends HTMLElement {

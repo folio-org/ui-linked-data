@@ -1,4 +1,5 @@
 import { DEFAULT_SEARCH_BY } from '@/common/constants/search.constants';
+
 import type { SearchTypeConfig } from '../../core/types';
 import type { SearchTypeUIConfig } from '../types';
 import { getValidSearchBy } from './getValidSearchBy.helper';

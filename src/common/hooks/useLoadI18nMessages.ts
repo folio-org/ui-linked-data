@@ -1,4 +1,4 @@
-import { loadI18nMessages } from '@common/helpers/locales.helper';
+import { loadI18nMessages } from '@/common/helpers/locales.helper';
 
 export const useLoadI18nMessages = (cachedMessages: I18nMessages, defaultLocale = 'en') => {
   const getMessages = (locale: string) => {
@@ -13,7 +13,7 @@ export const useLoadI18nMessages = (cachedMessages: I18nMessages, defaultLocale 
     const messages = await loadI18nMessages(locale);
 
     if (messages) {
-      cachedMessages[locale] = {...cachedMessages[defaultLocale], ...messages};
+      cachedMessages[locale] = { ...cachedMessages[defaultLocale], ...messages };
     }
   };
 

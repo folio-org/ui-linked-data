@@ -1,6 +1,8 @@
 import { renderHook } from '@testing-library/react';
-import { useTableFormatter } from './useTableFormatter';
+
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
+
+import { useTableFormatter } from './useTableFormatter';
 
 jest.mock('react-intl', () => ({
   useIntl: () => ({

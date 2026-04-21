@@ -1,7 +1,8 @@
 import { FC, memo } from 'react';
-import { useRecordControls } from '@common/hooks/useRecordControls';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
+
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { Button, ButtonType } from '@/components/Button';
 
 const CloseRecord: FC = () => {
   const { discardRecord } = useRecordControls();

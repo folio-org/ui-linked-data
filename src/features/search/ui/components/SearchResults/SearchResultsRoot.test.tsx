@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+
 import { SearchResultsRoot } from './SearchResultsRoot';
 
 describe('SearchResultsRoot', () => {
@@ -13,18 +14,17 @@ describe('SearchResultsRoot', () => {
     expect(screen.getByText('Test Results')).toBeInTheDocument();
   });
 
-  test('applies default className', () => {
+  test('renders as fragment when no className provided', () => {
     const { container } = render(
       <SearchResultsRoot>
         <div>Content</div>
       </SearchResultsRoot>,
     );
 
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('search-results-container');
+    expect(container.firstChild).toContainHTML('Content');
   });
 
-  test('applies custom className along with default', () => {
+  test('applies custom className when provided', () => {
     const { container } = render(
       <SearchResultsRoot className="custom-class">
         <div>Content</div>
@@ -32,7 +32,6 @@ describe('SearchResultsRoot', () => {
     );
 
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('search-results-container');
     expect(wrapper).toHaveClass('custom-class');
   });
 
@@ -51,9 +50,7 @@ describe('SearchResultsRoot', () => {
   test('renders with no children', () => {
     const { container } = render(<SearchResultsRoot />);
 
-    const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toBeInTheDocument();
-    expect(wrapper).toHaveClass('search-results-container');
+    expect(container.firstChild).toBeNull();
   });
 
   test('renders with multiple custom classes', () => {
@@ -64,7 +61,6 @@ describe('SearchResultsRoot', () => {
     );
 
     const wrapper = container.firstChild as HTMLElement;
-    expect(wrapper).toHaveClass('search-results-container');
     expect(wrapper).toHaveClass('class-one');
     expect(wrapper).toHaveClass('class-two');
   });

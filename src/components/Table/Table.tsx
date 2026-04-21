@@ -1,6 +1,9 @@
 import type { JSX } from 'react';
+
 import classNames from 'classnames';
+
 import { HeaderCell } from './HeaderCell';
+
 import './Table.scss';
 
 export type Cell = {

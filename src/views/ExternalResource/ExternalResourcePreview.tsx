@@ -1,12 +1,15 @@
-import { ExternalResourceLoader } from '@components/ExternalResourceLoader';
-import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { ExternalResourceIdType } from '@common/constants/api.constants';
-import { Preview } from '@components/Preview';
-import { EDIT_ALT_DISPLAY_LABELS } from '@common/constants/uiElements.constants';
-import { ModalDuplicateImportedResource } from '@components/ModalDuplicateImportedResource';
-import { useInputsState, useMarcPreviewState } from '@src/store';
+import { useParams } from 'react-router-dom';
+
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { ExternalResourceLoader } from '@/components/ExternalResourceLoader';
+import { ModalDuplicateImportedResource } from '@/components/ModalDuplicateImportedResource';
+import { Preview } from '@/components/Preview';
+
+import { useInputsState, useMarcPreviewState } from '@/store';
+
 import './ExternalResourcePreview.scss';
 
 export const ExternalResourcePreview = () => {

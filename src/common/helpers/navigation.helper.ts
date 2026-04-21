@@ -1,5 +1,6 @@
-import { ROUTES, QueryParams, ForceNavigateToDest, ROUTE_PATH } from '@common/constants/routes.constants';
 import { matchPath } from 'react-router-dom';
+
+import { ForceNavigateToDest, QueryParams, ROUTES, ROUTE_PATH } from '@/common/constants/routes.constants';
 
 export const generateEditResourceUrl = (resourceId?: string | number) => `/resources/${resourceId}/edit`;
 
@@ -30,7 +31,7 @@ export const getIsCreatePage = () => {
   const { pathname } = window.location;
 
   return pathname === ROUTES.RESOURCE_CREATE.uri;
-}
+};
 
 export const generatePageURL = ({
   url,

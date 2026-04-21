@@ -1,5 +1,6 @@
 import { FC } from 'react';
-import { Dropzone } from '@components/Dropzone';
+
+import { Dropzone } from '@/components/Dropzone';
 
 type ImportModeFileProps = {
   onImportReady: () => void;

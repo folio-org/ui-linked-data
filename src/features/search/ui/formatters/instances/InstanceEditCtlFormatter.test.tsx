@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { InstanceEditCtlFormatter } from './InstanceEditCtlFormatter';
+import { fireEvent, render, screen } from '@testing-library/react';
+
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import type { Row } from '@/components/Table';
+
+import { InstanceEditCtlFormatter } from './InstanceEditCtlFormatter';
 
 jest.mock('@/common/helpers/navigation.helper', () => ({
   generateEditResourceUrl: jest.fn((id: string) => `/edit/${id}`),

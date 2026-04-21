@@ -5,7 +5,7 @@ import {
   PublishDate,
   SearchLimiterNames,
   Suppressed,
-} from '@common/constants/search.constants';
+} from '@/common/constants/search.constants';
 
 export const filters = [
   {

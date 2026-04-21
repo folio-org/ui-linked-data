@@ -1,7 +1,11 @@
-import { FC, ReactNode, useState, type JSX } from 'react';
+import { FC, type JSX, ReactNode, useState } from 'react';
+
 import classNames from 'classnames';
-import CaretDown from '@src/assets/caret-down.svg?react';
-import { Button, ButtonType } from '@components/Button';
+
+import { Button, ButtonType } from '@/components/Button';
+
+import CaretDown from '@/assets/caret-down.svg?react';
+
 import './Accordion.scss';
 
 type Accordion = {

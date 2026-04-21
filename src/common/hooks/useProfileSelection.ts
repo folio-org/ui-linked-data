@@ -1,45 +1,20 @@
-import { fetchProfiles, fetchPreferredProfiles } from '@common/api/profiles.api';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useProfileState, useStatusState, useUIState } from '@src/store';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { usePreferredProfiles } from '@/features/manageProfileSettings/hooks/usePreferredProfiles';
+import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
+
+import { useLoadingState, useStatusState, useUIState } from '@/store';
 
 export const useProfileSelection = () => {
-  const { setPreferredProfiles, availableProfiles, setAvailableProfiles } = useProfileState([
-    'setPreferredProfiles',
-    'availableProfiles',
-    'setAvailableProfiles',
-  ]);
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setIsProfileSelectionModalOpen, setProfileSelectionType } = useUIState([
     'setIsProfileSelectionModalOpen',
     'setProfileSelectionType',
   ]);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-
-  // Loads available profiles if they haven't been loaded yet
-  const loadAvailableProfiles = async (resourceTypeURL: ResourceTypeURL) => {
-    if (!availableProfiles?.[resourceTypeURL]?.length) {
-      try {
-        const result = await fetchProfiles(resourceTypeURL);
-
-        setAvailableProfiles(prev => {
-          return {
-            ...prev,
-            [resourceTypeURL]: result,
-          };
-        });
-      } catch (error) {
-        console.error('Failed to load available profiles:', error);
-        // Re-throw to be handled by 'checkProfileAndProceed'
-        throw error;
-      }
-    }
-  };
-
-  // Loads preferred profiles if they haven't been loaded yet
-  const getPreferredProfiles = async () => {
-    return await fetchPreferredProfiles();
-  };
+  const { loadAvailableProfiles } = useProfileList();
+  const { loadPreferredProfiles, preferredProfileForType } = usePreferredProfiles();
 
   // Processes the case when a preferred profile exists
   const handlePreferredProfileCase = (
@@ -47,11 +22,7 @@ export const useProfileSelection = () => {
     resourceTypeURL: string,
     callback: (profileId: string | number) => void,
   ): boolean => {
-    if (profiles.length) {
-      setPreferredProfiles(profiles);
-    }
-
-    const profile = profiles.find(profile => profile.resourceType === resourceTypeURL);
+    const profile = preferredProfileForType(resourceTypeURL, profiles);
 
     if (profile) {
       callback(profile.id);
@@ -87,21 +58,31 @@ export const useProfileSelection = () => {
       setIsLoading(true);
 
       // Get preferred profiles
-      const preferredProfilesResult = await getPreferredProfiles();
+      const preferredProfiles = await loadPreferredProfiles();
 
-      if (preferredProfilesResult.length > 0) {
-        const profileProcessed = handlePreferredProfileCase(preferredProfilesResult, resourceTypeURL, callback);
+      if (preferredProfiles?.length) {
+        const profileProcessed = handlePreferredProfileCase(preferredProfiles, resourceTypeURL, callback);
 
         // If no matching profile was found, show the modal
         if (!profileProcessed) {
+          await loadAvailableProfiles(resourceTypeURL);
+
           openModal({ action: 'set', resourceTypeURL });
         }
 
         return;
       }
 
-      // No preferred profiles, load available profiles and show modal
-      await loadAvailableProfiles(resourceTypeURL);
+      // No preferred profiles, load available profiles
+      const loadedProfiles = await loadAvailableProfiles(resourceTypeURL);
+
+      // Check if only one profile is available - auto-select it
+      if (loadedProfiles?.length === 1) {
+        callback(loadedProfiles[0].id);
+        return;
+      }
+
+      // Multiple profiles available - show modal
       openModal({ action: 'set', resourceTypeURL });
     } catch (error) {
       console.error('Failed to check profile and proceed:', error);
@@ -116,11 +97,7 @@ export const useProfileSelection = () => {
     try {
       setIsLoading(true);
 
-      const preferredProfilesResult = await getPreferredProfiles();
-
-      if (preferredProfilesResult.length > 0) {
-        setPreferredProfiles(preferredProfilesResult);
-      }
+      await loadPreferredProfiles();
 
       await loadAvailableProfiles(resourceTypeURL);
       openModal({ action: 'change', resourceTypeURL });

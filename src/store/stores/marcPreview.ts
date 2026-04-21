@@ -1,4 +1,4 @@
-import { createStoreFactory, SliceConfigs } from '../utils/createStoreFactory';
+import { SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
 type MarcPreviewData = MarcDTO | null;

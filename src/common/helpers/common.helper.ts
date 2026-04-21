@@ -15,3 +15,11 @@ export const deleteFromSetImmutable = <T = unknown>(set: Set<T>, toDelete: T[]) 
 
   return clone;
 };
+
+export const ensureArray = <T>(value: T | T[] | undefined | null): T[] => {
+  if (value === undefined || value === null) {
+    return [];
+  }
+
+  return Array.isArray(value) ? value : [value];
+};

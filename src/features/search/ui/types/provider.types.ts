@@ -30,6 +30,8 @@ export interface SearchResults {
   pageMetadata?: {
     totalElements: number;
     totalPages: number;
+    prev?: string; // Browse pagination: anchor value for previous page
+    next?: string; // Browse pagination: anchor value for next page
   };
 }
 
@@ -52,6 +54,11 @@ export interface SearchContextValue {
 
   // Computed values
   activeUIConfig: SearchTypeUIConfig;
+  // Current navigation params derived by provider (reflects URL or defaults)
+  currentSegment: string;
+  currentSource?: string;
+  // Active core config used for the current results (based on committed source)
+  activeCoreConfig?: SearchTypeConfig;
 
   // Search results (from React Query)
   results: SearchResults | undefined;
@@ -96,6 +103,7 @@ interface BaseProviderProps {
   flow: SearchFlow;
   mode?: RenderMode;
   children: React.ReactNode;
+  onSubmitCallback?: () => void;
 }
 
 export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);

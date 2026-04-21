@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
-import { useModalControls } from '@common/hooks/useModalControls';
+
+import { useModalControls } from '@/common/hooks/useModalControls';
 
 describe('useModalControls', () => {
   test('setIsModalOpen - sets "isModalOpen" value', () => {

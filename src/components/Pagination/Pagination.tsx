@@ -1,8 +1,11 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
-import LeftIcon from '@src/assets/chevron-left.svg?react';
-import RightIcon from '@src/assets/chevron-right.svg?react';
+
+import { Button, ButtonType } from '@/components/Button';
+
+import LeftIcon from '@/assets/chevron-left.svg?react';
+import RightIcon from '@/assets/chevron-right.svg?react';
+
 import './Pagination.scss';
 
 export type Props = {

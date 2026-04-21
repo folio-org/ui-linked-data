@@ -1,5 +1,15 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { getLookupLabelKey } from '@common/helpers/schema.helper';
+import { TITLE_ORDER } from '@/common/constants/bibframe.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { LOOKUP_TYPES, SOURCE_TYPES } from '@/common/constants/lookup.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
+import { getLookupLabelKey } from '@/common/helpers/schema.helper';
+
+const getHubSourceType = (hasRdfLink: boolean, hasHubId: boolean): string | undefined => {
+  if (hasRdfLink) return SOURCE_TYPES.LIBRARY_OF_CONGRESS;
+  if (hasHubId) return SOURCE_TYPES.LOCAL;
+
+  return undefined;
+};
 
 export const wrapWithContainer = (record: RecordEntry, blockKey: string, key: string, container: string) => {
   (record[blockKey][key] as unknown as string[]).forEach(recordEntry => {
@@ -83,18 +93,39 @@ export const processComplexLookup = (record: RecordEntry, blockKey: string, key:
 
 export const processHubsComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
   record[blockKey][key] = (record[blockKey][key] as unknown as RecordProcessingDTO).map(recordEntry => {
+    const hub = recordEntry._hub as Record<string, string | string[]>;
+
+    // Determine sourceType based on hub properties
+    const hasRdfLink = !!(hub.rdfLink && hub.rdfLink !== '');
+    const hasHubId = !!(hub.id && hub.id !== '');
+    const sourceType = getHubSourceType(hasRdfLink, hasHubId);
+
     const generatedValue = {
-      id: [''],
+      id: ensureArray(hub.id),
       _relation: recordEntry._relation,
     } as unknown as RecursiveRecordSchema;
 
     generatedValue._hub = {
-      value: recordEntry._hub[BFLITE_URIS.LABEL],
-      uri: recordEntry._hub[BFLITE_URIS.LINK],
+      value: ensureArray(hub.label),
+      uri: ensureArray(hub.rdfLink),
+      ...(hasHubId && { id: ensureArray(hub.id) }),
+      ...(sourceType && { sourceType }),
     } as RecursiveRecordSchema;
 
     return generatedValue;
   }) as unknown as RecursiveRecordSchema;
+};
+
+export const hubLanguagesMapping = (record: RecordEntry, blockKey: string, key: string) => {
+  if (!record[blockKey][key]) return;
+
+  const languageData = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][BFLITE_URIS.LANGUAGES] = languageData.map(langEntry => ({
+    [key]: langEntry,
+  })) as unknown as RecursiveRecordSchema;
+
+  delete record[blockKey][key];
 };
 
 export const extractDropdownOption = (
@@ -121,4 +152,77 @@ export const extractDropdownOption = (
 
     return { [recordEntry[fieldName][0]]: updatedValues };
   }) as unknown as RecursiveRecordSchema;
+};
+
+export const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][key] = normalizedEntries.map(recordEntry => {
+    const hasRdfLink = !!(recordEntry.rdfLink && (recordEntry.rdfLink as unknown as string) !== '');
+    const hasHubId = !!(recordEntry.id && (recordEntry.id as unknown as string) !== '');
+    const sourceType = getHubSourceType(hasRdfLink, hasHubId);
+    const types = recordEntry.types as string[] | undefined;
+    const lookupType = types?.includes(BFLITE_URIS.HUB) ? LOOKUP_TYPES.HUBS : LOOKUP_TYPES.AUTHORITIES;
+    const _subclass = recordEntry.types?.find(type => type !== BFLITE_URIS.CONCEPT);
+
+    return {
+      id: [recordEntry.id],
+      label: {
+        value: [recordEntry.label],
+        isPreferred: recordEntry.isPreferred,
+        sourceType,
+        lookupType,
+      },
+      ...(_subclass && { _subclass }),
+    };
+  }) as unknown as RecursiveRecordSchema;
+};
+
+export const processGeographicCoverageComplexLookup = (record: RecordEntry, blockKey: string, key: string) => {
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][key] = normalizedEntries.map(({ id, label, isPreferred }) => {
+    return {
+      id: ensureArray(id),
+      label: {
+        value: [label as unknown as string],
+        isPreferred,
+      },
+    };
+  }) as unknown as RecursiveRecordSchema;
+};
+
+export const processDissertation = (record: RecordEntry, blockKey: string, key: string, selector: string) => {
+  const normalizedEntries = record[blockKey][key] as unknown as RecordBasic[];
+
+  record[blockKey][key] = (normalizedEntries as unknown as Record<string, unknown>[]).flatMap(entry => {
+    const references = entry[selector] as RecordProcessingDTO;
+
+    if (!references?.length) return entry;
+
+    return references.map(({ id, label, isPreferred }) => ({
+      ...entry,
+      id: ensureArray(id as unknown as string),
+      [selector]: {
+        value: ensureArray(label as unknown as string),
+        isPreferred,
+      },
+    }));
+  }) as unknown as RecursiveRecordSchema;
+};
+
+const getTitlePriority = (titleEntry: Record<string, unknown>): number => {
+  const index = TITLE_ORDER.findIndex(uri => uri in titleEntry);
+
+  return index === -1 ? Infinity : index;
+};
+
+export const reorderTitles = (record: RecordEntry, blockKey: string, key: string) => {
+  const titles = record[blockKey][key] as unknown as Record<string, unknown>[];
+
+  if (!titles?.length) return;
+
+  record[blockKey][key] = [...titles].sort(
+    (a, b) => getTitlePriority(a) - getTitlePriority(b),
+  ) as unknown as RecursiveRecordSchema;
 };

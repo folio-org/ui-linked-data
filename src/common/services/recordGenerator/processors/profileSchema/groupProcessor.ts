@@ -1,9 +1,11 @@
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { ensureArray } from '@/common/helpers/common.helper';
+
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
-import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
 import { LinkedPropertyInfo, ProcessContext } from '../../types/common.types';
+import { ProcessorResult } from '../../types/profileSchemaProcessor.types';
+import { ChildEntryWithValues, GeneratedValue } from '../../types/value.types';
 import { BaseFieldProcessor } from './baseFieldProcessor';
 import { GroupValueFormatter } from './formatters';
 
@@ -208,18 +210,131 @@ export class GroupProcessor extends BaseFieldProcessor {
     recordSchemaProperty: RecordSchemaEntry,
     groupObject: GeneratedValue,
   ) {
-    const valueWithId = values.find(value => value.meta?.srsId ?? value.id);
+    const valueToProcess = values.find(value => value.meta?.srsId ?? value.id) ?? values[0];
 
-    if (!valueWithId) return;
+    if (!valueToProcess) return;
 
-    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueWithId, recordSchemaProperty);
+    const effectiveSchemaProperty = this.applyConditionalProperties(recordSchemaProperty, valueToProcess);
+    const processedValue = this.processValueByType(AdvancedFieldType.complex, valueToProcess, effectiveSchemaProperty);
 
-    if (processedValue) {
-      const idKey = valueWithId.meta?.srsId ? 'srsId' : 'id';
-      const selectedKey = recordSchemaProperty.options?.propertyKey ?? idKey;
+    if (!processedValue) return;
 
+    // type: string + outputFormat: 'reference' -> spread { srsId/id } flat into parent (no named key)
+    if (
+      recordSchemaProperty.type === RecordSchemaEntryType.string &&
+      recordSchemaProperty.options?.outputFormat === 'reference'
+    ) {
+      if (typeof processedValue === 'object' && !Array.isArray(processedValue)) {
+        Object.assign(groupObject, processedValue);
+      }
+
+      return;
+    }
+
+    const selectedKey = this.determinePropertyKey(effectiveSchemaProperty, valueToProcess);
+
+    if (!selectedKey) return;
+
+    if (recordSchemaProperty.type === RecordSchemaEntryType.array) {
+      groupObject[selectedKey] = ensureArray(processedValue);
+    } else {
       groupObject[selectedKey] = processedValue;
     }
+  }
+
+  private applyConditionalProperties(
+    recordSchemaProperty: RecordSchemaEntry,
+    value: UserValueContents,
+  ): RecordSchemaEntry {
+    const { conditionalProperties, defaultSourceType, alwaysIncludeIfPresent } = recordSchemaProperty.options || {};
+
+    if (!conditionalProperties || !recordSchemaProperty.properties) {
+      return recordSchemaProperty;
+    }
+
+    const sourceType = value.meta?.sourceType ?? defaultSourceType;
+
+    if (!sourceType) {
+      return recordSchemaProperty;
+    }
+
+    const activePropertyKeys = conditionalProperties[sourceType];
+
+    if (!activePropertyKeys) {
+      console.warn(`Unknown sourceType: ${sourceType}, using all properties`);
+
+      return recordSchemaProperty;
+    }
+
+    // Build final property keys: start with active ones from conditionalProperties
+    const finalPropertyKeys = this.buildFinalPropertyKeys(
+      activePropertyKeys,
+      alwaysIncludeIfPresent,
+      value,
+      recordSchemaProperty.properties,
+    );
+
+    // Filter properties to only include final ones
+    const filteredProperties = Object.fromEntries(
+      Object.entries(recordSchemaProperty.properties).filter(([key]) => finalPropertyKeys.includes(key)),
+    );
+
+    return {
+      ...recordSchemaProperty,
+      properties: filteredProperties,
+    };
+  }
+
+  private buildFinalPropertyKeys(
+    activePropertyKeys: string[],
+    alwaysIncludeIfPresent: string[] | undefined,
+    value: UserValueContents,
+    properties: Record<string, RecordSchemaEntry>,
+  ): string[] {
+    if (!alwaysIncludeIfPresent || alwaysIncludeIfPresent.length === 0) {
+      return activePropertyKeys;
+    }
+
+    const additionalKeys = alwaysIncludeIfPresent.filter(propKey => {
+      // Skip if already in activePropertyKeys
+      if (activePropertyKeys.includes(propKey)) {
+        return false;
+      }
+
+      // Check if property exists in schema and has a value
+      const propSchema = properties[propKey];
+
+      if (!propSchema) {
+        return false;
+      }
+
+      // Check if the value has data for this property using valueSource
+      const valueSource = propSchema.options?.valueSource;
+      if (valueSource) {
+        const resolvedValue = this.resolveValuePath(value, valueSource);
+
+        return resolvedValue !== null && resolvedValue !== undefined && resolvedValue !== '';
+      }
+
+      return false;
+    });
+
+    return [...activePropertyKeys, ...additionalKeys];
+  }
+
+  private resolveValuePath(value: UserValueContents, path: string): unknown {
+    const parts = path.split('.');
+    let current: unknown = value;
+
+    for (const part of parts) {
+      if (current === null || current === undefined) {
+        return null;
+      }
+
+      current = (current as Record<string, unknown>)[part];
+    }
+
+    return current;
   }
 
   private processSimpleEntry(
@@ -233,7 +348,7 @@ export class GroupProcessor extends BaseFieldProcessor {
     const processedValues = this.processSimpleValues(entryType, values, recordSchemaProperty);
 
     if (processedValues.length > 0) {
-      const valuesArray = Array.isArray(processedValues) ? processedValues : [processedValues];
+      const valuesArray = ensureArray(processedValues);
 
       if (repeatable && groupObject[uriBFLite]) {
         if (Array.isArray(groupObject[uriBFLite])) {
@@ -269,5 +384,19 @@ export class GroupProcessor extends BaseFieldProcessor {
 
   private validateEntryType(type?: string) {
     return Object.values(AdvancedFieldType).includes(type as AdvancedFieldType) ? (type as AdvancedFieldType) : null;
+  }
+
+  private determinePropertyKey(
+    recordSchemaProperty: RecordSchemaEntry,
+    valueToProcess: UserValueContents,
+  ): string | undefined {
+    if (recordSchemaProperty.options?.propertyKey) {
+      return recordSchemaProperty.options.propertyKey;
+    }
+
+    if (valueToProcess.meta?.srsId) return 'srsId';
+    if (valueToProcess.id) return 'id';
+
+    return undefined;
   }
 }

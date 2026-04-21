@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { TableFlex } from '@components/Table/TableFlex';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { TableFlex } from '@/components/Table/TableFlex';
 
 describe('TableFlex Component', () => {
   const header = {

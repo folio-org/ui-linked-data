@@ -1,6 +1,7 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { Row } from '@/components/Table';
+
 import { getEditingRecordBlocks, unwrapRecordValuesFromCommonContainer } from './record.helper';
-import { Row } from '@components/Table';
 
 const getReferenceIds = (record: RecordEntry, block: string, referenceKey: string) => {
   const typedReferenceBlock = record.resource?.[block]?.[referenceKey] as unknown as Record<string, RecordEntry>[];

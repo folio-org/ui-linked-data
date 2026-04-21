@@ -1,12 +1,16 @@
-import { Button, ButtonType } from '@components/Button';
-import { Preview } from './Preview';
-import { PreviewActionsDropdown } from '@components/PreviewActionsDropdown';
-import Times16 from '@src/assets/times-16.svg?react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { ResourceType } from '@common/constants/record.constants';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+
 import classNames from 'classnames';
+
+import { ResourceType } from '@/common/constants/record.constants';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { Button, ButtonType } from '@/components/Button';
+import { PreviewActionsDropdown } from '@/components/PreviewActionsDropdown';
+
+import Times16 from '@/assets/times-16.svg?react';
+
+import { Preview } from './Preview';
 
 export type ITitledPreview = {
   showCloseCtl?: boolean;

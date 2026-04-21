@@ -4,9 +4,10 @@ import {
   GET_RESOURCE_BY_TYPE_URIS,
   INVENTORY_API_ENDPOINT,
   MAX_LIMIT,
-} from '@common/constants/api.constants';
+} from '@/common/constants/api.constants';
+import { TYPE_URIS } from '@/common/constants/bibframe.constants';
+
 import baseApi from './base.api';
-import { TYPE_URIS } from '@common/constants/bibframe.constants';
 
 type SingleRecord = {
   recordId: string;
@@ -14,6 +15,7 @@ type SingleRecord = {
 
 type IGetRecord = SingleRecord & {
   idType?: ExternalResourceIdType;
+  signal?: AbortSignal;
 };
 
 type GetAllRecords = {
@@ -24,12 +26,13 @@ type GetAllRecords = {
 
 const singleRecordUrl = `${BIBFRAME_API_ENDPOINT}/:recordId`;
 
-export const getRecord = async ({ recordId, idType }: IGetRecord) => {
+export const getRecord = async ({ recordId, idType, signal }: IGetRecord) => {
   const selectedUrl = (idType && GET_RESOURCE_BY_TYPE_URIS[idType]) ?? singleRecordUrl;
   const url = baseApi.generateUrl(selectedUrl, { name: ':recordId', value: recordId });
 
   return baseApi.getJson({
     url,
+    requestParams: signal ? { method: 'GET', signal } : { method: 'GET' },
   });
 };
 
@@ -63,7 +66,7 @@ export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { 
 
 const instanceRdfUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/rdf`;
 
-export const getRdfRecord = ( recordId: string ) => {
+export const getRdfRecord = (recordId: string) => {
   const url = baseApi.generateUrl(instanceRdfUrl, {
     name: ':recordId',
     value: recordId,

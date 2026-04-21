@@ -1,5 +1,6 @@
-import { StatusType as Status } from '@common/constants/status.constants';
-import { Success, Error as ErrorNotification, Info, Warning } from './notificationTypes';
+import { StatusType as Status } from '@/common/constants/status.constants';
+
+import { Error as ErrorNotification, Info, Success, Warning } from './notificationTypes';
 import BaseNotification from './notificationTypes/base';
 
 const notificationMap = {

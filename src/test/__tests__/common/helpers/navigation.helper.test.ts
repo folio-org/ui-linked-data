@@ -1,5 +1,5 @@
-import { getResourceIdFromUri, generatePageURL, getIsCreatePage } from '@common/helpers/navigation.helper';
-import { QueryParams } from '@common/constants/routes.constants';
+import { QueryParams } from '@/common/constants/routes.constants';
+import { generatePageURL, getIsCreatePage, getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 
 describe('location-based functions', () => {
   const originalLocation = globalThis.location.href;

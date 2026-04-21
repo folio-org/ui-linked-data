@@ -1,9 +1,11 @@
+import type { IntlShape } from 'react-intl';
+
 import { SearchIdentifiers } from '@/common/constants/search.constants';
 import { SearchableIndex } from '@/common/constants/searchableIndex.constants';
-import { getPlaceholderForProperty, getSearchPlaceholderLegacy, getSearchPlaceholder } from './placeholder.helper';
+
 import { SearchTypeConfig } from '../../core';
 import type { SearchTypeUIConfig } from '../types';
-import type { IntlShape } from 'react-intl';
+import { getPlaceholderForProperty, getSearchPlaceholder, getSearchPlaceholderLegacy } from './placeholder.helper';
 
 describe('getSearchPlaceholderLegacy', () => {
   const mockHubOptions = [

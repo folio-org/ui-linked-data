@@ -1,1 +1,1 @@
-export { ViewMarcModal } from "./ViewMarcModal";
+export { ViewMarcModal } from './ViewMarcModal';

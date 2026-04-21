@@ -1,0 +1,338 @@
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
+import { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
+import { renderHook, waitFor } from '@testing-library/react';
+
+import { useManageProfileSettingsStore } from '@/store';
+
+import { ComponentType } from '../components/ProfileSettingsEditor/BaseComponent';
+import { useDragHandlers } from './useDragHandlers';
+
+const mockMoveUnusedToSelected = jest.fn();
+const mockMoveSelectedToUnused = jest.fn();
+jest.mock('./useMoveBetweenLists', () => ({
+  useMoveBetweenLists: () => {
+    return {
+      moveUnusedToSelected: mockMoveUnusedToSelected,
+      moveSelectedToUnused: mockMoveSelectedToUnused,
+    };
+  },
+}));
+
+describe('useDragHandlers', () => {
+  const mockCancelDrag = jest.fn();
+  const mockStartDrag = jest.fn();
+  const mockEndDrag = jest.fn();
+  const mockSetStartingList = jest.fn();
+  const mockSetSelected = jest.fn();
+  const mockSetUnused = jest.fn();
+  const mockDataDragEnd = jest.fn();
+
+  const makeDragEvent = (
+    hasOver: boolean,
+    mandatory: boolean,
+    activeContainer: string,
+    overContainer: string,
+    overId: string = 'over',
+  ) => {
+    const dragEvent = {
+      active: {
+        id: 'active',
+        data: {
+          current: {
+            sortable: {
+              containerId: activeContainer,
+            },
+            component: {
+              mandatory,
+            },
+            dragEnd: mockDataDragEnd,
+          },
+        },
+        rect: {
+          current: {
+            initial: null,
+            translated: null,
+          },
+        },
+      },
+      activatorEvent: {},
+    };
+    if (hasOver) {
+      // @ts-expect-error: avoid typing complaints for simplest way to simulate events
+      dragEvent.over = {
+        id: overId,
+        data: {
+          current: {
+            sortable: {
+              containerId: overContainer,
+            },
+          },
+        },
+        rect: {
+          current: {
+            initial: null,
+            translated: null,
+          },
+        },
+      };
+    }
+    return dragEvent;
+  };
+
+  beforeEach(() => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          setUnusedComponents: mockSetUnused,
+          setSelectedComponents: mockSetSelected,
+        },
+      },
+    ]);
+  });
+
+  it('sets state for drag start', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragStart(
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.selected) as unknown as DragStartEvent,
+    );
+
+    expect(mockStartDrag).toHaveBeenCalled();
+  });
+
+  it('set state for drag cancel', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragCancel();
+
+    expect(mockCancelDrag).toHaveBeenCalled();
+  });
+
+  it('switches from unused to selected on dragging unused over selected', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.selected) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveUnusedToSelected).toHaveBeenCalled();
+  });
+
+  it('switches from selected to unused on dragging selected over unused', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.unused) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).toHaveBeenCalled();
+  });
+
+  it('does not switch lists dragging selected over selected', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.selected) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
+    expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
+  });
+
+  it('does not switch lists dragging unused over unused', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
+    expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
+  });
+
+  it('does not do anything when dragging over undroppable regions', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
+    expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
+  });
+
+  it('does not switch from selected to unused when component is mandatory', () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragOver(
+      makeDragEvent(false, true, ComponentType.unused, ComponentType.unused) as unknown as DragOverEvent,
+    );
+
+    expect(mockMoveSelectedToUnused).not.toHaveBeenCalled();
+    expect(mockMoveUnusedToSelected).not.toHaveBeenCalled();
+  });
+
+  it('reorders selected on drag end for selected and sets state', async () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragEnd(
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.selected) as unknown as DragEndEvent,
+    );
+
+    expect(mockSetSelected).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
+  });
+
+  it('reorders unused on drag end for unused and sets state', async () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.unused,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragEnd(
+      makeDragEvent(true, false, ComponentType.unused, ComponentType.unused) as unknown as DragEndEvent,
+    );
+
+    expect(mockSetUnused).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
+  });
+
+  it('does not reorder on drag end for undroppable regions and sets state', async () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.selected,
+        originalStartingList: ComponentType.selected,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragEnd(
+      makeDragEvent(false, false, ComponentType.unused, ComponentType.selected) as unknown as DragEndEvent,
+    );
+
+    expect(mockSetSelected).not.toHaveBeenCalled();
+    expect(mockSetUnused).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
+  });
+
+  it('does not reorder when dragging between lists onto itself in the new list', async () => {
+    const { result } = renderHook(() =>
+      useDragHandlers({
+        startingList: ComponentType.unused,
+        originalStartingList: ComponentType.selected,
+        cancelDrag: mockCancelDrag,
+        startDrag: mockStartDrag,
+        endDrag: mockEndDrag,
+        setStartingList: mockSetStartingList,
+      }),
+    );
+
+    result.current.handleDragEnd(
+      makeDragEvent(true, false, ComponentType.selected, ComponentType.unused, 'active') as unknown as DragEndEvent,
+    );
+
+    expect(mockSetSelected).not.toHaveBeenCalled();
+    expect(mockSetUnused).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockDataDragEnd).toHaveBeenCalled();
+    });
+  });
+});

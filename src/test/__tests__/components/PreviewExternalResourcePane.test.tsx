@@ -1,8 +1,11 @@
-import { PreviewExternalResourcePane } from '@components/PreviewExternalResourcePane';
-import { useInputsStore } from '@src/store';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+
+import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
+
+import { useInputsStore } from '@/store';
 
 const navigate = jest.fn();
 const getRecordTitle = jest.fn();
@@ -13,11 +16,11 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn(),
 }));
 
-jest.mock('@common/helpers/record.helper', () => ({
+jest.mock('@/common/helpers/record.helper', () => ({
   getRecordTitle: () => getRecordTitle(),
 }));
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 describe('PreviewExternalResourcePane', () => {
   beforeEach(() => {

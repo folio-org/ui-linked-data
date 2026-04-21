@@ -1,5 +1,6 @@
-import { Pagination } from '@components/Pagination';
 import { fireEvent, render, screen } from '@testing-library/react';
+
+import { Pagination } from '@/components/Pagination';
 
 describe('Pagination', () => {
   const onPrevPageClick = jest.fn();

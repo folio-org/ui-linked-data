@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .edit-section {
   display: flex;
@@ -19,8 +19,8 @@
 
   &-group {
     position: relative;
-    border: 1px solid #3986c5;
-    background-color: #c5daf420;
+    border: 1px solid $edit-group-border-color;
+    background-color: $edit-group-bg-color;
     border-radius: 4px;
     padding: 0.938rem;
     padding-top: 0.313rem;
@@ -33,22 +33,16 @@
     }
 
     &:focus-within {
-      box-shadow: inset 0 0 0 1px #3986c5;
+      box-shadow: inset 0 0 0 1px $edit-group-border-color;
     }
 
     select,
     input {
-      height: 1.5rem;
       font-size: 1rem;
     }
 
-    select {
-      padding: 0;
-      padding-left: 0.313rem;
-    }
-
     .group-label {
-      font-size: 0.919rem;
+      font-size: $font-md;
       font-weight: bold;
     }
   }
@@ -79,12 +73,22 @@
     .heading {
       font-size: 1.138rem;
     }
+
+    .block-heading-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dropdown-options {
+      width: 20rem;
+    }
   }
 }
 
 .edit-section-passive {
   .edit-section-group {
-    border-color: rgba(0, 0, 0, 0.1);
-    background-color: #fafafa;
+    border-color: $disabled-border-color;
+    background-color: $gray-50;
   }
 }

@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Modal } from '@components/Modal';
-import './ModalDeleteRecord.scss';
+
+import { Modal } from '@/components/Modal';
 
 interface Props {
   isOpen: boolean;

@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 body {
   margin: 0;
@@ -34,10 +34,6 @@ h6 {
   overflow: auto;
 }
 
-.welcome-screen {
-  padding: 12px;
-}
-
 .no-overflow {
   overflow: hidden;
 }
@@ -63,57 +59,68 @@ h6 {
     line-height: 1.1;
   }
 
+  hr {
+    border: none;
+    border-bottom: 1px solid $gray-200;
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+    margin-top: 12px;
+  }
+
   select,
-  input {
+  input[type='text']:not(#creatable-select-input),
+  textarea {
+    background-color: $title-bar-bg-color;
+    border: 1px solid $buttonIcon;
+    padding-left: 5px;
+    padding-right: 5px;
+    height: 24px;
+
+    &:focus,
+    &:focus-visible {
+      border: 1px solid $button-standard;
+      box-shadow: 0 0 0 2px inset $buttonFocus;
+    }
+
     &:disabled {
       background-color: $disabled-input-bg-color;
       color: $disabled-input-color;
+      border: 1px solid $disabled-border-color;
+      cursor: not-allowed;
     }
+
+    &::placeholder {
+      color: $buttonIcon;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid $blue-500;
   }
 
   select {
     cursor: pointer;
-    @include focused-outline-secondary-with-border();
-
-    &:focus-visible {
-      position: relative;
-    }
-
-    &:disabled {
-      cursor: default;
-    }
   }
 
   input {
-    &[type='text']:not(#creatable-select-input) {
-      cursor: text;
-      @include focused-outline-secondary-with-border();
-    }
-
-    &:disabled {
-      margin: 0;
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     &[type='checkbox'] {
       -webkit-appearance: none;
       appearance: none;
-      background-color: #fff;
+      background-color: $base;
       margin: 0;
       font: inherit;
       color: currentColor;
       width: 1em;
       height: 1em;
-      border: 0.11em solid gray;
+      border: 0.11em solid $gray-400;
       border-radius: 0.3em;
       display: grid;
       place-content: center;
       cursor: pointer;
-      @include focused-outline-primary();
 
       &:disabled {
-        color: lightgray;
+        background-color: $disabled-check-radio-bg-color;
         cursor: not-allowed;
       }
 
@@ -123,14 +130,19 @@ h6 {
         height: 0.65em;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        box-shadow: inset 10em 10em white;
+        box-shadow: inset 10em 10em $base;
         clip-path: polygon(19% 39%, 37% 58%, 84% 13%, 96% 26%, 37% 83%, 7% 52%);
         background-color: CanvasText;
       }
 
       &:checked {
-        border-color: black;
-        background-color: black;
+        border-color: $base-text;
+        background-color: $base-text;
+
+        &:disabled {
+          border-color: $disabled-check-radio-bg-color;
+          background-color: $disabled-check-radio-bg-color;
+        }
 
         &::before {
           transform: scale(1);
@@ -140,56 +152,78 @@ h6 {
 
     &[type='radio'] {
       appearance: none;
-      background-color: #fff;
+      background-color: $base;
       margin: 0;
       font: inherit;
       color: currentColor;
       width: 1em;
       height: 1em;
-      border: 0.11em solid gray;
+      border: 0.11em solid $gray-400;
       border-radius: 50%;
-      transform: translateY(0.2em);
+      transform: translateY(0);
       display: grid;
       place-content: center;
       cursor: pointer;
-      @include focused-outline-primary();
 
       &::before {
         content: '';
-        width: 0.45em;
-        height: 0.45em;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        box-shadow: inset 10em 10em black;
+        background-color: $base-text;
       }
 
       &:checked::before {
         transform: scale(1);
       }
 
+      &:checked {
+        &:disabled {
+          border-color: $disabled-check-radio-bg-color;
+          background-color: $disabled-check-radio-bg-color;
+        }
+      }
+
       &:disabled {
-        color: lightgray;
-        cursor: not-allowed;
+        border-color: $disabled-check-radio-bg-color;
+        background-color: $disabled-check-radio-bg-color;
       }
     }
   }
 
-  hr {
-    border: none;
-    border-bottom: 1px solid #d7d8da;
-    width: 100%;
-    text-align: left;
-    margin-left: 0;
-    margin-top: 12px;
+  :not(label) > input[type='checkbox'] {
+    &:focus,
+    &:focus-visible {
+      box-shadow: $secondary-focusable-outline-box-shadow;
+    }
   }
 
   label {
     cursor: pointer;
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 5px;
     align-items: center;
+    min-height: 24px;
+    padding: 0 5px;
+    margin-left: -5px;
+    margin-right: -5px;
+  }
+
+  label:has(input[type='checkbox']),
+  label:has(input[type='radio']) {
+    border-radius: $btn-icon-border-radius;
+
+    &:hover,
+    &:focus-within {
+      background-color: $buttonHover;
+    }
+
+    &:focus-within {
+      box-shadow: $highlighted-focusable-outline-box-shadow;
+    }
   }
 
   .invisible-text {
@@ -211,7 +245,7 @@ h6 {
     }
 
     &:active {
-      color: #000;
+      color: $base-text;
       text-decoration-color: $blue-850;
     }
 

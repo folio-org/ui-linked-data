@@ -1,13 +1,15 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import './Loading.scss';
 
 type LoadingProps = {
   hasLabel?: boolean;
+  label?: string;
   'data-testid'?: string;
 };
 
-export const Loading: FC<LoadingProps> = ({ hasLabel = true, 'data-testid': dataTestId }) => (
+export const Loading: FC<LoadingProps> = ({ hasLabel = true, label, 'data-testid': dataTestId }) => (
   <>
     <div className="loader-overlay" />
     <div className="loader" data-testid={dataTestId}>
@@ -17,11 +19,7 @@ export const Loading: FC<LoadingProps> = ({ hasLabel = true, 'data-testid': data
         <div className="bounce3" />
       </div>
 
-      {hasLabel && (
-        <span className="loading-label">
-          <FormattedMessage id="ld.loading" />
-        </span>
-      )}
+      {hasLabel && <span className="loading-label">{label ?? <FormattedMessage id={'ld.loading'} />}</span>}
     </div>
   </>
 );

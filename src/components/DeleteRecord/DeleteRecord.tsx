@@ -1,14 +1,16 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { ModalDeleteRecord } from '@components/ModalDeleteRecord';
-import { useModalControls } from '@common/hooks/useModalControls';
-import { useRoutePathPattern } from '@common/hooks/useRoutePathPattern';
-import { RESOURCE_URLS } from '@common/constants/routes.constants';
-import { checkButtonDisabledState } from '@common/helpers/recordControls.helper';
-import { Button, ButtonType } from '@components/Button';
-import { useRecordStatus } from '@common/hooks/useRecordStatus';
-import { useInputsState, useStatusState } from '@src/store';
+
+import { RESOURCE_URLS } from '@/common/constants/routes.constants';
+import { checkButtonDisabledState } from '@/common/helpers/recordControls.helper';
+import { useModalControls } from '@/common/hooks/useModalControls';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { useRecordStatus } from '@/common/hooks/useRecordStatus';
+import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
+import { Button, ButtonType } from '@/components/Button';
+import { ModalDeleteRecord } from '@/components/ModalDeleteRecord';
+
+import { useInputsState, useStatusState } from '@/store';
 
 const DeleteRecord: FC = () => {
   const { record } = useInputsState(['record']);

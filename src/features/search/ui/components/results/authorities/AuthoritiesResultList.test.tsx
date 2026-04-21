@@ -1,10 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import { AuthoritiesResultList } from './AuthoritiesResultList';
+
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
 import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
+import { AuthoritiesResultList } from './AuthoritiesResultList';
 
 jest.mock('../../../hooks/useFormattedResults');
 jest.mock('../../../hooks/useTableFormatter');
+jest.mock('react-intl', () => ({
+  useIntl: () => ({
+    formatMessage: ({ id }: { id: string }) => `formatted:${id}`,
+  }),
+}));
 interface MockTableFlexProps {
   header: unknown;
   data: unknown;
@@ -60,7 +66,39 @@ describe('AuthoritiesResultList', () => {
     render(<AuthoritiesResultList />);
 
     expect(screen.getByTestId('table-flex')).toBeInTheDocument();
-    expect(screen.getByTestId('table-flex')).toHaveClass('results-table');
+    expect(screen.getByTestId('table-flex')).toHaveClass('results-list');
+    expect(mockUseFormattedResults).toHaveBeenCalledWith({
+      notSpecifiedLabel: 'formatted:ld.notSpecified',
+    });
+  });
+
+  test('passes provided notSpecifiedLabel to useFormattedResults', () => {
+    mockUseFormattedResults.mockReturnValue(mockData);
+    mockUseTableFormatter.mockReturnValue({
+      formattedData: mockFormattedData,
+      listHeader: mockListHeader,
+    });
+
+    render(<AuthoritiesResultList notSpecifiedLabel="Localized fallback" />);
+
+    expect(mockUseFormattedResults).toHaveBeenCalledWith({
+      notSpecifiedLabel: 'Localized fallback',
+    });
+  });
+
+  test('reuses formatter options across rerenders when fallback label does not change', () => {
+    mockUseFormattedResults.mockReturnValue(mockData);
+    mockUseTableFormatter.mockReturnValue({
+      formattedData: mockFormattedData,
+      listHeader: mockListHeader,
+    });
+
+    const { rerender } = render(<AuthoritiesResultList />);
+
+    rerender(<AuthoritiesResultList />);
+
+    expect(mockUseFormattedResults).toHaveBeenCalledTimes(2);
+    expect(mockUseFormattedResults.mock.calls[0][0]).toBe(mockUseFormattedResults.mock.calls[1][0]);
   });
 
   test('renders with empty data when useFormattedResults returns undefined', () => {

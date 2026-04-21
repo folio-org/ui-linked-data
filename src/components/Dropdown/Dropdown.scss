@@ -1,20 +1,11 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .dropdown {
   position: relative;
   display: inline-block;
 
   &-button {
-    display: flex;
-    align-items: center;
-    padding: 3px 1rem;
-    border: 1px solid $buttonHighlighted;
-    border-radius: 12px;
     font-size: 0.875rem;
-    font-weight: 700;
-    background-color: $buttonHighlighted;
-    color: $base;
-    cursor: pointer;
 
     &-label {
       margin-right: 10px;
@@ -51,74 +42,26 @@
         margin-bottom: 0.5rem;
         font-size: 0.855rem;
         font-weight: 700;
-        color: rgba(0, 0, 0, 0.62);
+        color: $buttonIcon;
       }
     }
 
     &-button {
-      display: flex;
       width: 100%;
-      align-items: center;
+      justify-content: flex-start;
       margin-bottom: 0.5rem;
-      padding: 2px 5px;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      background-color: transparent;
       font-size: 0.875rem;
       font-weight: 700;
-      color: #000;
-      cursor: pointer;
 
       &:last-child {
         margin-bottom: 0;
       }
 
       &-icon {
-        margin: 1px 0.75rem 0 0;
-        fill: #000;
+        fill: $base-text;
 
         path {
           fill-opacity: 1;
-        }
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: default;
-      }
-
-      &:hover {
-        background-color: $buttonHover;
-
-        &:disabled {
-          background-color: transparent;
-        }
-      }
-
-      &:focus {
-        border-color: rgba(0, 0, 0, 0.2);
-        background-color: $buttonFocus;
-        box-shadow: 0 0 0 3px $buttonFocus;
-      }
-
-      &:active {
-        border-color: rgba(0, 0, 0, 0.2);
-        background-color: $buttonHighlighted;
-        color: $base;
-        text-decoration: none;
-
-        .dropdown-options-button-icon path {
-          fill: $base;
-        }
-
-        &:disabled {
-          border: none;
-          background-color: transparent;
-          color: #000;
-
-          .dropdown-options-button-icon path {
-            fill: #000;
-          }
         }
       }
     }

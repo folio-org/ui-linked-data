@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { MAX_FILE_SIZE_BYTES } from '@common/constants/import.constants';
-import { FilesList } from './FilesList';
+
+import { MAX_FILE_SIZE_BYTES } from '@/common/constants/import.constants';
+
+import ErrorIcon from '@/assets/exclamation-circle.svg?react';
+
 import { Drop } from './Drop';
-import ErrorIcon from '@src/assets/exclamation-circle.svg?react';
+import { FilesList } from './FilesList';
+
 import './Dropzone.scss';
 
 interface Props {

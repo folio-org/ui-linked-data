@@ -1,8 +1,9 @@
-import { getRdfRecord } from '@common/api/records.api';
-import { initiateUserAgentDownload } from '@common/helpers/download.helper';
-import { StatusType } from '@common/constants/status.constants';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useStatusState } from '@src/store';
+import { getRdfRecord } from '@/common/api/records.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useLoadingState, useStatusState } from '@/store';
 
 export const useResourceExport = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);

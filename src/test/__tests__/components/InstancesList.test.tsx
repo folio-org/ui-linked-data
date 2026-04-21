@@ -1,12 +1,15 @@
-import { navigateToEditPage } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { onCreateNewResource } from '@src/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
-import { getRecordAndInitializeParsing } from '@src/test/__mocks__/common/hooks/useRecordControls.mock';
-import * as RecordFormatter from '@common/helpers/recordFormatting.helper';
-import { InstancesList } from '@components/InstancesList';
-import { fireEvent, render } from '@testing-library/react';
+import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
+import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
+import { getRecordAndInitializeParsing } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+
 import { BrowserRouter } from 'react-router-dom';
 
-jest.mock('@common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+import { fireEvent, render } from '@testing-library/react';
+
+import * as RecordFormatter from '@/common/helpers/recordFormatting.helper';
+import { InstancesList } from '@/components/InstancesList';
+
+jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('InstancesList', () => {
   const renderWithProps = () => {

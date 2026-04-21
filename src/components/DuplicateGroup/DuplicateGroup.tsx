@@ -1,12 +1,16 @@
 import { FC, memo } from 'react';
-import classNames from 'classnames';
-import { Button, ButtonType } from '@components/Button';
-import Plus16 from '@src/assets/plus-16.svg?react';
-import Trash16 from '@src/assets/trash-16.svg?react';
-import { getHtmlIdForSchemaControl } from '@common/helpers/schema.helper';
-import { SchemaControlType } from '@common/constants/uiControls.constants';
-import './DuplicateGroup.scss';
 import { useIntl } from 'react-intl';
+
+import classNames from 'classnames';
+
+import { SchemaControlType } from '@/common/constants/uiControls.constants';
+import { getHtmlIdForSchemaControl } from '@/common/helpers/schema.helper';
+import { Button, ButtonType } from '@/components/Button';
+
+import Plus16 from '@/assets/plus-16.svg?react';
+import Trash16 from '@/assets/trash-16.svg?react';
+
+import './DuplicateGroup.scss';
 
 interface Props {
   onClickDuplicate?: VoidFunction;

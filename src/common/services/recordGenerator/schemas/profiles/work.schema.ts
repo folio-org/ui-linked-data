@@ -1,23 +1,24 @@
-import { SIMPLE_LOOKUP_MAPPING, BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
+import { BFLITE_URIS, SIMPLE_LOOKUP_MAPPING } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+
 import {
-  stringArrayProperty,
-  standardTitleProperties,
+  assigningSourceProperty,
+  contributorProperties,
   extendedTitleProperties,
-  variantTitleProperties,
   linkAndLabelProperties,
   linkAndTermProperties,
-  contributorProperties,
   nameAndLinkProperties,
-  assigningSourceProperty,
   seriesProperties,
+  standardTitleProperties,
+  stringArrayProperty,
+  variantTitleProperties,
 } from '../common/propertyDefinitions';
 import {
-  createObjectProperty,
   createArrayObjectProperty,
-  createNotesProperty,
-  createStatusProperty,
   createLanguagesProperty,
+  createNotesProperty,
+  createObjectProperty,
+  createStatusProperty,
 } from '../common/schemaBuilders';
 
 export const workRecordSchema: RecordSchema = {
@@ -35,9 +36,13 @@ export const workRecordSchema: RecordSchema = {
       _creatorReference: createArrayObjectProperty(contributorProperties),
 
       _hubs: createArrayObjectProperty({
-        _hub: createObjectProperty(linkAndLabelProperties, {
-          propertyKey: '_hub',
-        }),
+        _hub: {
+          type: RecordSchemaEntryType.object,
+          options: {
+            propertyKey: '_hub',
+            outputFormat: 'reference',
+          },
+        },
         _relation: {
           type: RecordSchemaEntryType.string,
           value: RecordSchemaEntryType.string,
@@ -64,8 +69,13 @@ export const workRecordSchema: RecordSchema = {
 
       [BFLITE_URIS.ORIGIN_PLACE]: createArrayObjectProperty(nameAndLinkProperties),
 
-      [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: createArrayObjectProperty({
-        _geographicCoverageReference: stringArrayProperty,
+      _geographicCoverageReference: createArrayObjectProperty({
+        label: {
+          type: RecordSchemaEntryType.string,
+          options: {
+            outputFormat: 'reference',
+          },
+        },
       }),
 
       [BFLITE_URIS.TARGET_AUDIENCE]: createArrayObjectProperty(linkAndTermProperties),
@@ -77,7 +87,10 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.SUMMARY]: stringArrayProperty,
 
       [BFLITE_URIS.SUBJECT]: createArrayObjectProperty({
-        label: stringArrayProperty,
+        label: {
+          type: RecordSchemaEntryType.string,
+          options: { outputFormat: 'reference' },
+        },
       }),
 
       [BFLITE_URIS.TABLE_OF_CONTENTS]: stringArrayProperty,
@@ -114,6 +127,21 @@ export const workRecordSchema: RecordSchema = {
       [BFLITE_URIS.IS_PART_OF]: createArrayObjectProperty(seriesProperties),
 
       [BFLITE_URIS.LIBRARY_CHARACTERISTIC]: createArrayObjectProperty(linkAndTermProperties),
+
+      [BFLITE_URIS.DISSERTATION]: createArrayObjectProperty({
+        [BFLITE_URIS.NOTE]: stringArrayProperty,
+        [BFLITE_URIS.DEGREE]: stringArrayProperty,
+        [BFLITE_URIS.DATE]: stringArrayProperty,
+        [BFLITE_URIS.MISC_INFO]: stringArrayProperty,
+        [BFLITE_URIS.DISSERTATION_ID]: stringArrayProperty,
+        _grantingInstitutionReference: {
+          type: RecordSchemaEntryType.array,
+          options: {
+            propertyKey: '_grantingInstitutionReference',
+            outputFormat: 'reference',
+          },
+        },
+      }),
     },
   },
 };

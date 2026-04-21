@@ -1,11 +1,16 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+import { useIntl } from 'react-intl';
+
 import { TableFlex } from '@/components/Table';
-import { useFormattedResults } from '../../../hooks/useFormattedResults';
-import { useTableFormatter } from '../../../hooks/useTableFormatter';
-import { authoritiesTableConfig } from '../../../config/results/authoritiesTable.config';
+
+import { authoritiesTableConfig } from '@/features/search/ui/config';
+import { useFormattedResults, useTableFormatter } from '@/features/search/ui/hooks';
+
+import '../resultsList.scss';
 
 interface AuthoritiesResultListProps {
   context?: 'search' | 'complexLookup';
+  notSpecifiedLabel?: string;
   onAssign?: (data: ComplexLookupAssignRecordDTO) => void;
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   checkFailedId?: (id: string) => boolean;
@@ -13,11 +18,15 @@ interface AuthoritiesResultListProps {
 
 export const AuthoritiesResultList: FC<AuthoritiesResultListProps> = ({
   context = 'search',
+  notSpecifiedLabel,
   onAssign,
   onTitleClick,
   checkFailedId,
 }) => {
-  const data = useFormattedResults<SearchResultsTableRow>() || [];
+  const { formatMessage } = useIntl();
+  const fallbackLabel = notSpecifiedLabel ?? formatMessage({ id: 'ld.notSpecified' });
+  const formatterOptions = useMemo(() => ({ notSpecifiedLabel: fallbackLabel }), [fallbackLabel]);
+  const data = useFormattedResults<SearchResultsTableRow>(formatterOptions) || [];
   const { formattedData, listHeader } = useTableFormatter({
     data,
     tableConfig: authoritiesTableConfig,
@@ -27,5 +36,9 @@ export const AuthoritiesResultList: FC<AuthoritiesResultListProps> = ({
     checkFailedId,
   });
 
-  return <TableFlex header={listHeader} data={formattedData} className="results-table" />;
+  return (
+    <div className="search-result-list">
+      <TableFlex header={listHeader} data={formattedData} className="results-list" />
+    </div>
+  );
 };

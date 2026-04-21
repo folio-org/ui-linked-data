@@ -9,6 +9,8 @@ export { HubAssignFormatter } from './hubs/HubAssignFormatter';
 export { HubLinkFormatter } from './hubs/HubLinkFormatter';
 export { AuthNotesFormatter } from './hubs/AuthNotesFormatter';
 export { RDANotesFormatter } from './hubs/RDANotesFormatter';
+export { HubSourceFormatter } from './hubs/HubSourceFormatter';
+export { HubActionFormatter } from './hubs/HubActionFormatter';
 
 // Instances formatters
 export { InstanceTitleFormatter } from './instances/InstanceTitleFormatter';

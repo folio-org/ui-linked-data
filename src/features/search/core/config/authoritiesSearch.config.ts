@@ -1,9 +1,11 @@
-import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
-import type { SearchTypeConfig } from '../types';
+
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
+
 import { AuthoritiesSearchRequestBuilder } from '../strategies/requestBuilders';
 import { AuthoritiesSearchResponseTransformer } from '../strategies/responseTransformers';
 import { AuthoritiesResultFormatter } from '../strategies/resultFormatters';
+import type { SearchTypeConfig } from '../types';
 
 /**
  * Authorities Search Configuration (Atomic)

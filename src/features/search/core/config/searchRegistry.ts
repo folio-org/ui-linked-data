@@ -1,9 +1,11 @@
 import type { SearchTypeConfig } from '../types';
-import { resourcesConfig } from './resources.config';
-import { authoritiesSearchConfig } from './authoritiesSearch.config';
 import { authoritiesBrowseConfig } from './authoritiesBrowse.config';
-import { hubsInternalConfig } from './hubsInternal.config';
-import { hubsExternalConfig } from './hubsExternal.config';
+import { authoritiesSearchConfig } from './authoritiesSearch.config';
+import { hubsLibraryOfCongressConfig } from './hubsLibraryOfCongress.config';
+import { hubsLocalConfig } from './hubsLocal.config';
+import { hubsLookupLibraryOfCongressConfig } from './hubsLookupLibraryOfCongress.config';
+import { hubsLookupLocalConfig } from './hubsLookupLocal.config';
+import { resourcesConfig } from './resources.config';
 
 /**
  * Atomic Search Registry
@@ -19,10 +21,15 @@ export const searchRegistry: Record<string, SearchTypeConfig> = {
   'authorities:search': authoritiesSearchConfig,
   'authorities:browse': authoritiesBrowseConfig,
 
-  // Hubs - base config defaults to external
-  hubs: hubsExternalConfig,
-  'hubs:internal': hubsInternalConfig,
-  'hubs:external': hubsExternalConfig,
+  // Hubs - base config defaults to LoC
+  hubs: hubsLibraryOfCongressConfig,
+  'hubs:local': hubsLocalConfig,
+  'hubs:libraryOfCongress': hubsLibraryOfCongressConfig,
+
+  // Hubs - configs for complex lookups
+  hubsLookup: hubsLookupLibraryOfCongressConfig,
+  'hubsLookup:local': hubsLookupLocalConfig,
+  'hubsLookup:libraryOfCongress': hubsLookupLibraryOfCongressConfig,
 };
 
 // Helper function to get a search config by ID
@@ -42,6 +49,30 @@ export function resolveCoreConfig(segment?: string, source?: string): SearchType
   }
 
   if (searchRegistry[segment]) return searchRegistry[segment];
+
+  return undefined;
+}
+
+/**
+ * Extract the default source from a segment's base config.
+ * If the base config has a composite ID with the pattern `${segment}:${source}`
+ * (e.g., base config for 'hubsLookup' has ID 'hubsLookup:libraryOfCongress'),
+ * returns the source part ('libraryOfCongress').
+ * Otherwise, returns undefined (no default source).
+ */
+export function getDefaultSourceForSegment(segment?: string): string | undefined {
+  if (!segment) return undefined;
+
+  const baseConfig = searchRegistry[segment];
+  if (!baseConfig) return undefined;
+
+  const expectedPrefix = `${segment}:`;
+
+  if (baseConfig.id.startsWith(expectedPrefix)) {
+    const source = baseConfig.id.substring(expectedPrefix.length);
+
+    return source;
+  }
 
   return undefined;
 }

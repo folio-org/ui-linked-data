@@ -1,6 +1,6 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@common/helpers/repeatableFields.helper';
-import * as SchemaHelper from '@common/helpers/schema.helper';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@/common/helpers/repeatableFields.helper';
+import * as SchemaHelper from '@/common/helpers/schema.helper';
 
 describe('repeatableFields.helper', () => {
   describe('checkRepeatableGroup', () => {

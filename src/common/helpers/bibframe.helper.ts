@@ -1,5 +1,5 @@
-import { RecordEditActions } from '@common/constants/record.constants';
-import { QueryParams, ROUTES } from '@common/constants/routes.constants';
+import { RecordEditActions } from '@/common/constants/record.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 
 export const getEditActionPrefix = (route?: string, search?: URLSearchParams) => {
   if (route === ROUTES.RESOURCE_CREATE.uri) {

@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Tooltip } from '@components/Tooltip';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { Tooltip } from '@/components/Tooltip';
 
 describe('Tooltip', () => {
   const triggerContent = <span>Trigger</span>;

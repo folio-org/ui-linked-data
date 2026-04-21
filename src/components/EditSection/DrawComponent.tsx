@@ -1,18 +1,22 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+
 import { GROUP_COMPLEX_CUTOFF_LEVEL } from '@/common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
-import { findParentEntryByProperty } from '@/common/helpers/schema.helper';
 import { getIsCreatePage } from '@/common/helpers/navigation.helper';
+import { findParentEntryByProperty } from '@/common/helpers/schema.helper';
 import { Button, ButtonType } from '@/components/Button';
-import { ComplexLookupField } from '@/features/complexLookup/components/ComplexLookupField';
 import { DropdownField } from '@/components/DropdownField';
 import { FieldWithMetadataAndControls } from '@/components/FieldWithMetadataAndControls';
 import { LiteralField } from '@/components/LiteralField';
 import { SimpleLookupField } from '@/components/SimpleLookupField';
-import { EditSectionDataProps } from './renderDrawComponent';
+
+import { ComplexLookupField } from '@/features/complexLookup';
 import { getPlaceholderForProperty } from '@/features/search/ui';
+
+import { BlockActions } from './BlockActions';
+import { EditSectionDataProps } from './renderDrawComponent';
 
 export type IDrawComponent = {
   schema: Map<string, SchemaEntry>;
@@ -56,12 +60,15 @@ export const DrawComponent: FC<IDrawComponent & EditSectionDataProps> = ({
         showLabel={false}
         className="entity-heading"
       >
-        <strong className="heading">{displayNameWithAltValue}</strong>
-        {!!collapsibleEntries.size && (
-          <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
-            <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
-          </Button>
-        )}
+        <h3 className="heading">{displayNameWithAltValue}</h3>
+        <div className="block-heading-controls">
+          {!!collapsibleEntries.size && (
+            <Button className="toggle-expansion-button" type={ButtonType.Link} onClick={handleGroupsCollapseExpand}>
+              <FormattedMessage id={collapsedEntries.size ? 'ld.expandAll' : 'ld.collapseAll'} />
+            </Button>
+          )}
+          <BlockActions entry={entry} />
+        </div>
       </FieldWithMetadataAndControls>
     );
   }

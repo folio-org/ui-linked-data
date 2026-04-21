@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
-import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
+
 import { IRecordNormalizing } from './recordNormalizing.interface';
+import { RECORD_NORMALIZING_CASES } from './recordProcessingMap';
 
 export class RecordNormalizingService implements IRecordNormalizing {
   private record: RecordEntry;

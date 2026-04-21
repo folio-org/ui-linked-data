@@ -1,13 +1,14 @@
-import { StatusType } from '@common/constants/status.constants';
-import { ROUTES } from '@common/constants/routes.constants';
-import { deletePreferredProfile, savePreferredProfile } from '@common/api/profiles.api';
-import { generatePageURL } from '@common/helpers/navigation.helper';
-import { getProfileNameById, createUpdatedPreferredProfiles } from '@common/helpers/profileActions.helper';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@common/hooks/useRecordControls';
-import { UserNotificationFactory } from '@common/services/userNotification';
-import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@src/store';
-import { isProfilePreferred } from '@common/helpers/profileSelection.helper';
+import { deletePreferredProfile, savePreferredProfile } from '@/common/api/profiles.api';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { generatePageURL } from '@/common/helpers/navigation.helper';
+import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
+import { isProfilePreferred } from '@/common/helpers/profileSelection.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { useRecordControls } from '@/common/hooks/useRecordControls';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
 
 interface UseProfileSelectionActionsProps {
   resourceTypeURL?: ResourceTypeURL;

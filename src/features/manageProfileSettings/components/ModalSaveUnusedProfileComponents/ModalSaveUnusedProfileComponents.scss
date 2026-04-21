@@ -1,0 +1,12 @@
+@use '@/common/styles/common.scss' as *;
+
+.modal-save-unused-profile-components {
+  min-width: 475px;
+}
+
+@media screen and (width < 768px) {
+  .modal-save-unused-profile-components {
+    min-width: 0;
+    width: 90%;
+  }
+}

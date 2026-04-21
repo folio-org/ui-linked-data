@@ -1,9 +1,12 @@
 import { useIntl } from 'react-intl';
-import { Button, ButtonType } from '@components/Button';
-import Times16 from '@src/assets/times-16.svg?react';
-import { getRecordTitle } from '@common/helpers/record.helper';
-import { useContainerEvents } from '@common/hooks/useContainerEvents';
-import { useInputsState } from '@src/store';
+
+import { getRecordTitle } from '@/common/helpers/record.helper';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { Button, ButtonType } from '@/components/Button';
+
+import { useInputsState } from '@/store';
+
+import Times16 from '@/assets/times-16.svg?react';
 
 export const PreviewExternalResourcePane = () => {
   const { record } = useInputsState(['record']);

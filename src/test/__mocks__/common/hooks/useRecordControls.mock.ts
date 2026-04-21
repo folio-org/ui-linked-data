@@ -6,7 +6,7 @@ export const fetchRecordAndSelectEntityValues = jest.fn();
 export const fetchExternalRecordForPreview = jest.fn();
 export const getRecordAndInitializeParsing = jest.fn();
 
-jest.mock('@common/hooks/useRecordControls', () => ({
+jest.mock('@/common/hooks/useRecordControls', () => ({
   useRecordControls: () => ({
     saveRecord,
     discardRecord,

@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 .button {
   display: flex;
@@ -19,37 +19,36 @@
   &:disabled:hover,
   &:disabled:active {
     border-color: transparent;
-    color: $gray-400;
-    background-color: $gray-200;
+    color: $base-text;
+    background-color: $gray-350;
     cursor: not-allowed;
     box-shadow: none;
+    opacity: 0.65;
 
     > svg *,
     * {
-      fill: $gray-400;
+      fill: $base-text;
     }
   }
 
   &-highlighted {
-    background-color: $blue-500;
+    background-color: $button-standard;
     border: 1px solid transparent;
     color: $base;
     @include focused-outline-primary();
 
     &:hover:not(:disabled) {
-      background-color: $blue-500-hover;
-      box-shadow: $btn-hover-drop-shadow;
+      opacity: 0.9;
     }
 
     &:active:not(:disabled) {
-      border: 1px solid transparent;
-      background-color: $blue-700;
+      text-decoration: none;
     }
 
     &:focus,
-    :focus-visible {
-      border: 1px solid black;
+    &:focus-visible {
       border-style: inset;
+      text-decoration: underline 2px;
     }
   }
 
@@ -58,34 +57,39 @@
     background-color: inherit;
     padding: 0;
 
-    &:disabled {
-      background-color: initial;
+    &:focus,
+    &:focus-visible {
+      background-color: $buttonHover;
 
-      &:hover {
-        background-color: initial;
+      &:active {
+        border: none;
       }
     }
 
-    &:hover:not(:focus, :disabled) {
-      box-shadow: none;
+    &:hover {
+      &:active {
+        background-color: $buttonHover;
+      }
     }
   }
 
   &-text {
     padding: 0 0.5em;
+    border-radius: 18px;
     height: 30px;
-    @include focused-outline-secondary();
+    @include focused-outline-text();
 
     &:hover {
-      background-color: $blue-50;
+      background-color: $button-primary-hover;
     }
 
+    &:focus,
     &:focus-visible {
-      text-decoration: underline;
+      text-decoration: underline 2px;
     }
 
     &:active:not(:disabled) {
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 
@@ -106,49 +110,36 @@
     }
 
     &:active:not(:disabled) {
-      color: #000;
+      color: $base-text;
       text-decoration: underline;
     }
   }
 
   &-primary {
-    color: $blue-600;
-    box-shadow: 0 0 0 1px $blue-400;
-    background-color: white;
+    color: $button-standard;
+    border: 1px solid $button-standard;
+    background-color: $base;
     @include focused-outline-secondary;
 
     &:hover {
-      color: $blue-700;
-      background-color: $blue-100;
-      box-shadow:
-        $btn-hover-drop-shadow,
-        0 0 0 1px $blue-500;
+      background: $button-primary-hover;
+    }
+
+    &:focus,
+    &:focus-visible {
+      background: $buttonHover;
+      text-decoration: underline 2px;
     }
 
     &:active {
-      color: $blue-800;
-      background-color: $blue-100;
-      box-shadow: 0 0 0 1px $blue-500;
-    }
+      color: $base;
+      background-color: $button-standard;
+      text-decoration: underline 2px;
 
-    &:disabled {
-      box-shadow: 0 0 0 1px transparent;
-    }
-  }
-
-  &-passive {
-    color: $blue-600;
-    background-color: transparent;
-    @include focused-outline-secondary;
-
-    &:hover {
-      color: $blue-700;
-      background-color: $blue-100;
-    }
-
-    &:active {
-      color: $blue-800;
-      background-color: $blue-100;
+      > svg *,
+      * {
+        fill: $base;
+      }
     }
   }
 
@@ -159,11 +150,18 @@
   }
 
   &-icon {
+    color: $buttonIcon;
     border-radius: $btn-icon-border-radius;
     padding: 0.188rem;
     height: fit-content;
     background-color: transparent;
     border: 1px solid transparent;
+
+    > svg,
+    path,
+    * {
+      fill: $base-text;
+    }
 
     &:hover {
       background-color: $buttonHover;
@@ -171,21 +169,21 @@
 
     &:focus,
     &:focus-visible {
-      border: 1px solid rgba(0, 0, 0, 0.5);
+      border: 1px solid $buttonIcon;
       background-color: $buttonFocus;
       box-shadow: 0 0 0 3px $buttonFocus;
     }
 
     &:active {
-      border: 1px solid rgba(0, 0, 0, 0.5);
-      background-color: $buttonHighlighted;
+      border: 1px solid $buttonIcon;
+      background-color: $button-standard;
       box-shadow: 0 0 0 3px $buttonFocus;
-      color: #fff;
+      color: $base;
 
       > svg,
       path,
       * {
-        fill: #fff;
+        fill: $base;
         opacity: 1;
         fill-opacity: 1;
       }
@@ -196,6 +194,42 @@
         fill-opacity: 0.6;
         opacity: 0.6;
       }
+    }
+  }
+
+  &-list-item {
+    width: 100%;
+    height: initial;
+    background-color: transparent;
+    border: 1px solid transparent;
+    justify-content: left;
+    font-weight: normal;
+    border-radius: 0;
+
+    &:disabled,
+    &:disabled:hover,
+    &:disabled:active {
+      cursor: default;
+      background-color: transparent;
+      color: inherit;
+    }
+
+    &:hover {
+      background-color: $buttonHover;
+    }
+
+    &:focus,
+    &:focus-visible {
+      border: 1px solid $overlay-bg-color;
+      background-color: $buttonHover;
+      box-shadow: $listButton-drop-shadow;
+    }
+
+    &:active:not(:disabled)::before {
+      content: '•';
+      font-size: $font-md;
+      margin: 0 0 0 -14px;
+      padding: 0;
     }
   }
 

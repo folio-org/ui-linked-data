@@ -1,13 +1,19 @@
-import { BFLITE_URIS } from '@common/constants/bibframeMapping.constants';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+
 import {
-  wrapWithContainer,
-  extractValue,
-  wrapSimpleLookupData,
-  notesMapping,
   extractDropdownOption,
-  processComplexLookup,
+  extractValue,
+  hubLanguagesMapping,
   languagesMapping,
+  notesMapping,
+  processComplexLookup,
+  processDissertation,
+  processGeographicCoverageComplexLookup,
   processHubsComplexLookup,
+  processSubjectComplexLookup,
+  reorderTitles,
+  wrapSimpleLookupData,
+  wrapWithContainer,
 } from './recordProcessingCases';
 
 const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -15,9 +21,6 @@ const processProvisionActivity = (record: RecordEntry, blockKey: string, groupKe
 
 const processContributorComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
   processComplexLookup(record, blockKey, groupKey, '_name');
-
-const processSubjectComplexLookup = (record: RecordEntry, blockKey: string, groupKey: string) =>
-  processComplexLookup(record, blockKey, groupKey, 'label');
 
 export const RECORD_NORMALIZING_CASES = {
   [BFLITE_URIS.PRODUCTION]: {
@@ -49,7 +52,10 @@ export const RECORD_NORMALIZING_CASES = {
     process: processContributorComplexLookup,
   },
   _languages: {
-    process: languagesMapping
+    process: languagesMapping,
+  },
+  [BFLITE_URIS.LANGUAGE]: {
+    process: hubLanguagesMapping,
   },
   [BFLITE_URIS.CLASSIFICATION]: {
     process: (record: RecordEntry, blockKey: string, groupKey: string) =>
@@ -59,6 +65,16 @@ export const RECORD_NORMALIZING_CASES = {
     process: processSubjectComplexLookup,
   },
   _hubs: {
-    process: processHubsComplexLookup
-  }
+    process: processHubsComplexLookup,
+  },
+  _geographicCoverageReference: {
+    process: processGeographicCoverageComplexLookup,
+  },
+  [BFLITE_URIS.DISSERTATION]: {
+    process: (record: RecordEntry, blockKey: string, groupKey: string) =>
+      processDissertation(record, blockKey, groupKey, '_grantingInstitutionReference'),
+  },
+  [BFLITE_URIS.TITLE]: {
+    process: reorderTitles,
+  },
 };

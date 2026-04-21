@@ -1,5 +1,7 @@
-import { FC, ReactNode, ReactElement } from 'react';
+import { FC, ReactElement, ReactNode } from 'react';
+
 import classNames from 'classnames';
+
 import { Cell, Row } from './Table';
 
 type HeaderCellProps = {

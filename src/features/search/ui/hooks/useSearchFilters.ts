@@ -1,5 +1,7 @@
 import { ChangeEvent } from 'react';
+
 import { SearchLimiterNames } from '@/common/constants/search.constants';
+
 import { useSearchState } from '@/store';
 
 export const useSearchFilters = () => {

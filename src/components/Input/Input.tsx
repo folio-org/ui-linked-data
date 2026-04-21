@@ -1,5 +1,7 @@
-import classNames from 'classnames';
 import { ChangeEvent, FC, HTMLInputTypeAttribute } from 'react';
+
+import classNames from 'classnames';
+
 import './Input.scss';
 
 type InputProps = {

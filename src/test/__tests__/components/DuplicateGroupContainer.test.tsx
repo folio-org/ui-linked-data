@@ -1,6 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { DuplicateGroupContainer } from '@components/DuplicateGroupContainer';
 import { Fragment, ReactNode } from 'react';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { DuplicateGroupContainer } from '@/components/DuplicateGroupContainer';
 
 const mockClonedByUuid = '0xf';
 

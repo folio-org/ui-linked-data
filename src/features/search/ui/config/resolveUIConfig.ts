@@ -1,6 +1,6 @@
 import type { SearchTypeUIConfig } from '../types';
-import { searchUIRegistry } from './searchUIRegistry';
 import { getActiveConfig } from '../utils';
+import { searchUIRegistry } from './searchUIRegistry';
 
 export function getUIRegistryKey(segment: string): keyof typeof searchUIRegistry | undefined {
   if (!segment || typeof segment !== 'string') {

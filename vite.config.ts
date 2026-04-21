@@ -1,41 +1,26 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
-import path from 'path';
+import path from 'node:path';
+import { env } from 'node:process';
+import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
-import { env } from 'process';
+import svgr from 'vite-plugin-svgr';
 
 export default defineConfig(() => {
   const alias = {
-    '@src': path.resolve(__dirname, './src'),
-    '@common': path.resolve(__dirname, './src/common'),
-    '@components': path.resolve(__dirname, './src/components'),
-    '@views': path.resolve(__dirname, './src/views'),
-    '@': path.resolve(__dirname, './src'),
+    '@': path.resolve(import.meta.dirname, './src'),
   };
 
   // config type "library" is used for building a web-component,
   // which is used for the embedded application
   return env.npm_config_type === 'library'
     ? {
-        plugins: [
-          react({
-            jsxRuntime: 'automatic',
-          }),
-          svgr(),
-          cssInjectedByJsPlugin(),
-        ],
+        plugins: [react(), svgr(), cssInjectedByJsPlugin()],
         build: {
           lib: {
-            entry: path.resolve(__dirname, 'src/embed.tsx'),
+            entry: path.resolve(import.meta.dirname, 'src/embed.tsx'),
             name: 'linked-data',
             formats: ['es'],
             fileName: format => `linked-data.${format}.js`,
-          },
-          rollupOptions: {
-            output: {
-              inlineDynamicImports: true,
-            },
           },
         },
         envPrefix: 'EDITOR_',

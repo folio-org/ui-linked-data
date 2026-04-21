@@ -1,5 +1,5 @@
-import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 import { SEARCH_QUERY_VALUE_PARAM, SearchSegment } from '@/common/constants/search.constants';
+import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constants/searchableIndex.constants';
 
 export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
@@ -90,6 +90,19 @@ export const HUB_SEARCHABLE_INDICES_MAP: HubSearchableIndicesMap = {
         searchtype: 'keyword',
       },
       format: 'parameters',
+    } as QueryParameterConfig,
+  },
+};
+
+export const HUB_LOCAL_SEARCHABLE_INDICES_MAP: HubSearchableIndicesMap = {
+  [SearchableIndex.HubNameLeftAnchored]: {
+    [SearchableIndexQuerySelector.Query]: {
+      paramName: 'label',
+    } as QueryParameterConfig,
+  },
+  [SearchableIndex.HubNameKeyword]: {
+    [SearchableIndexQuerySelector.Query]: {
+      paramName: 'label',
     } as QueryParameterConfig,
   },
 };

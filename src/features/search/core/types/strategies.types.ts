@@ -9,6 +9,7 @@ export interface SearchRequestParams {
   offset?: number;
   precedingRecordsCount?: number;
   sortBy?: string;
+  selector?: 'query' | 'prev' | 'next'; // Browse pagination selector
 }
 
 /**
@@ -46,11 +47,23 @@ export interface IResponseTransformer {
   transform(response: unknown, limit: number): NormalizedSearchResult;
 }
 
+export interface ResultFormatterOptions {
+  notSpecifiedLabel?: string;
+}
+
 /**
  * Result formatter interface - formats normalized results for UI display
  */
 export interface IResultFormatter<TFormatted = unknown> {
-  format(data: unknown[], sourceData?: unknown): TFormatted[];
+  format(data: unknown[], sourceData?: unknown, options?: ResultFormatterOptions): TFormatted[];
+}
+
+/**
+ * Result enricher interface - enriches formatted results with additional data
+ * Executes after formatting, allows async operations like API calls
+ */
+export interface IResultEnricher {
+  enrich<T>(formattedResults: T[]): Promise<T[]>;
 }
 
 /**
@@ -60,4 +73,5 @@ export interface SearchStrategies {
   requestBuilder?: IRequestBuilder;
   responseTransformer?: IResponseTransformer;
   resultFormatter?: IResultFormatter;
+  resultEnricher?: IResultEnricher;
 }

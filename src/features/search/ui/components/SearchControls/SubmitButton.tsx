@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import { Button, ButtonType } from '@/components/Button';
+
 import { useSearchState } from '@/store';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 
 export const SubmitButton: FC = () => {

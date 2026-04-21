@@ -1,5 +1,5 @@
-type UIEntries = import('@src/store').UIEntries;
-type ProfileSelectionActionType = import('@src/store').ProfileSelectionActionType;
-type ProfileSelectionType = import('@src/store').ProfileSelectionType;
+type UIEntries = import('@/store').UIEntries;
+type ProfileSelectionActionType = import('@/store').ProfileSelectionActionType;
+type ProfileSelectionType = import('@/store').ProfileSelectionType;
 
 type SetState<V> = (value: V) => V;

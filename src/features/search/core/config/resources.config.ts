@@ -1,7 +1,7 @@
-import type { SearchTypeConfig } from '../types';
 import { ResourcesRequestBuilder } from '../strategies/requestBuilders';
 import { ResourcesResponseTransformer } from '../strategies/responseTransformers';
 import { ResourcesResultFormatter } from '../strategies/resultFormatters';
+import type { SearchTypeConfig } from '../types';
 
 /**
  * Resources Search Type Configuration

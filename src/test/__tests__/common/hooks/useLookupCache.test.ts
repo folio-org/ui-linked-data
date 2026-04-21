@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
-import { useLookupCacheService } from '@common/hooks/useLookupCache.hook';
+
+import { useLookupCacheService } from '@/common/hooks/useLookupCache.hook';
 
 describe('useLookupCacheService', () => {
   test('sets a simple lookup value', () => {

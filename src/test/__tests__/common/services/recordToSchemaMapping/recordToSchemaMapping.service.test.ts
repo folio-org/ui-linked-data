@@ -1,13 +1,15 @@
-import { ISelectedEntries } from '@common/services/selectedEntries/selectedEntries.interface';
-import { IUserValues } from '@common/services/userValues/userValues.interface';
-import { SchemaWithDuplicatesService } from '@common/services/schema';
-import { RecordToSchemaMappingService } from '@common/services/recordToSchemaMapping';
-import { getMockedImportedConstant } from '@src/test/__mocks__/common/constants/constants.mock';
-import * as BibframeMappingConstants from '@common/constants/bibframeMapping.constants';
-import { StatusType } from '@common/constants/status.constants';
+import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
+
+import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { RecordToSchemaMappingService } from '@/common/services/recordToSchemaMapping';
+import { SchemaWithDuplicatesService } from '@/common/services/schema';
+import { ISelectedEntries } from '@/common/services/selectedEntries/selectedEntries.interface';
+import { IUserValues } from '@/common/services/userValues/userValues.interface';
+
+import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents } from './data/record.data';
 import { getLabelEntry, schema } from './data/schema.data';
 import { updatedSchema, updatedSchemaWithRepeatableSubcomponents } from './data/updatedSchema.data';
-import { mockInstanceTemplateMetadata, record, recordWithRepeatableSubcomponents } from './data/record.data';
 
 const mockedBFLiteUris = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
 mockedBFLiteUris({ LINK: 'testLinkUri' });
@@ -164,6 +166,122 @@ describe('RecordToSchemaMappingService', () => {
 
       expect(selectedEntriesService.remove).toHaveBeenCalledWith('testKey-7');
       expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'testKey-7');
+    });
+  });
+
+  describe('enumerated fields handling', () => {
+    const enumeratedSchema = new Map([
+      [
+        'block_key',
+        {
+          bfid: 'blockId',
+          children: ['group_key'],
+          displayName: 'Block',
+          path: ['block_key'],
+          type: 'block',
+          uri: 'blockUri',
+          uriBFLite: 'block_1',
+          uuid: 'block_key',
+        },
+      ],
+      [
+        'group_key',
+        {
+          children: ['enum_key'],
+          displayName: 'Hubs group',
+          path: ['block_key', 'group_key'],
+          type: 'group',
+          uriBFLite: 'uriBFLite_hubs',
+          uuid: 'group_key',
+        },
+      ],
+      [
+        'enum_key',
+        {
+          children: ['option_key_1', 'option_key_2'],
+          constraints: {},
+          displayName: 'Relationship',
+          path: ['block_key', 'group_key', 'enum_key'],
+          type: 'enumerated',
+          uriBFLite: '_relation',
+          uuid: 'enum_key',
+        },
+      ],
+      [
+        'option_key_1',
+        {
+          displayName: 'Enum option 1',
+          path: ['block_key', 'group_key', 'enum_key', 'option_key_1'],
+          type: 'dropdownOption',
+          uriBFLite: 'uriBFLite_enumOption_1',
+          uuid: 'option_key_1',
+        },
+      ],
+      [
+        'option_key_2',
+        {
+          displayName: 'Enum option 2',
+          path: ['block_key', 'group_key', 'enum_key', 'option_key_2'],
+          type: 'dropdownOption',
+          uriBFLite: 'uriBFLite_enumOption_2',
+          uuid: 'option_key_2',
+        },
+      ],
+    ]);
+
+    test('passes labelMap with resolved display names for enumerated fields', async () => {
+      jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(enumeratedSchema as unknown as Schema);
+
+      const mockRecord = {
+        block_1: {
+          uriBFLite_hubs: [
+            {
+              _relation: 'uriBFLite_enumOption_1',
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: enumeratedSchema as unknown as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(userValuesService.setValue).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'enumerated',
+          value: expect.objectContaining({
+            data: 'uriBFLite_enumOption_1',
+            labelMap: {
+              uriBFLite_enumOption_1: 'Enum option 1',
+              uriBFLite_enumOption_2: 'Enum option 2',
+            },
+          }),
+        }),
+      );
+    });
+
+    test('selects matching dropdown option for enumerated field', async () => {
+      jest.spyOn(repeatableFieldsService, 'get').mockReturnValue(enumeratedSchema as unknown as Schema);
+
+      const mockRecord = {
+        block_1: {
+          uriBFLite_hubs: [
+            {
+              _relation: 'uriBFLite_enumOption_2',
+            },
+          ],
+        },
+      };
+
+      await service.init({
+        schema: enumeratedSchema as unknown as Schema,
+        record: mockRecord as unknown as RecordEntry,
+        recordBlocks: ['block_1'],
+      });
+
+      expect(selectedEntriesService.addNew).toHaveBeenCalledWith(undefined, 'option_key_2');
     });
   });
 

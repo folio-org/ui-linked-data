@@ -1,4 +1,4 @@
-@use '@common/styles/common.scss' as *;
+@use '@/common/styles/common.scss' as *;
 
 $table-cell-border: 1px solid rgba(0, 0, 0, 0.1);
 $row-even-bg-color: rgba(0, 0, 0, 0.03);
@@ -26,10 +26,10 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     }
 
     .row-selected {
-      background-color: #d3e4f3;
+      background-color: $selected-row-bg-color;
 
       > * {
-        border-color: white;
+        border-color: $base;
       }
     }
   }
@@ -172,7 +172,7 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
 
   .table-head .table-row {
     border-bottom: 5px solid $blue-600;
-    background-color: #fff;
+    background-color: $base;
   }
 
   .table-head-cell {
@@ -180,7 +180,7 @@ $row-odd-bg-color: rgba(0, 0, 0, 0.08);
     top: 5px;
     padding-bottom: 5px;
     padding-right: 0;
-    border-right: 1px solid white;
+    border-right: 1px solid $base;
     background: transparent;
     display: flex;
     align-items: flex-end;

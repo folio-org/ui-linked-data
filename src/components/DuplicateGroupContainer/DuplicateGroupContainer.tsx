@@ -1,11 +1,16 @@
 import { FC, ReactNode } from 'react';
 import { FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { Button } from '@components/Button';
-import { IFields } from '@components/Fields';
-import ArrowChevronUp from '@src/assets/arrow-chevron-up.svg?react';
-import { deleteFromSetImmutable } from '@common/helpers/common.helper';
-import { useUIState } from '@src/store';
+
+import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
+import { Button, ButtonType } from '@/components/Button';
+import { IFields } from '@/components/Fields';
+
+import { useUIState } from '@/store';
+
+import ArrowChevronUp from '@/assets/arrow-chevron-up.svg?react';
+
 import './DuplicateGroupContainer.scss';
 
 interface IDuplicateGroupContainer {
@@ -38,7 +43,12 @@ export const DuplicateGroupContainer: FC<IDuplicateGroupContainer> = ({
     <div className={classNames('duplicate-group-container', groupClassName)}>
       {generateComponent({ uuid, groupingDisabled: true })}
       {!!twinsAmount && (
-        <Button data-testid="expand-collapse-button" className="expand-collapse-button" onClick={toggleCollapseExpand}>
+        <Button
+          type={ButtonType.Text}
+          data-testid="expand-collapse-button"
+          className="expand-collapse-button"
+          onClick={toggleCollapseExpand}
+        >
           <ArrowChevronUp className={classNames({ 'arrow-closed': isCollapsed })} />
           <span>
             <FormattedMessage

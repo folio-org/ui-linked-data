@@ -1,9 +1,14 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+
 import { IProfileSchemaManager } from '../../profileSchemaManager.interface';
-import { ProcessorResult, SimplePropertyResult, ExtendedPropertyResult } from '../../types/profileSchemaProcessor.types';
 import { ProcessContext } from '../../types/common.types';
+import {
+  ExtendedPropertyResult,
+  ProcessorResult,
+  SimplePropertyResult,
+} from '../../types/profileSchemaProcessor.types';
 import { IValueFormatter } from './formatters';
+import { IProfileSchemaProcessor } from './profileSchemaProcessor.interface';
 import { ProcessorUtils } from './utils/processorUtils';
 
 export abstract class BaseFieldProcessor implements IProfileSchemaProcessor {

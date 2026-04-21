@@ -1,5 +1,5 @@
-import { MarcMappingGeneratorService } from '@common/services/schema/marcMappingGenerator';
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { MarcMappingGeneratorService } from '@/common/services/schema/marcMappingGenerator';
 
 describe('MarcMappingGeneratorService', () => {
   let service: MarcMappingGeneratorService;

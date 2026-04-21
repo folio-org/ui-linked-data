@@ -1,25 +1,22 @@
-import { navigateAsDuplicate } from '@src/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { EditControlPane } from '@components/EditControlPane';
-import { fireEvent, render } from '@testing-library/react';
-import { RouterProvider, createMemoryRouter } from 'react-router';
-import * as recordsApi from '@common/api/records.api';
-import * as useProfileSelectionHook from '@common/hooks/useProfileSelection';
-import { ROUTES } from '@common/constants/routes.constants';
-import { PROFILE_BFIDS } from '@common/constants/bibframe.constants';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
-import { useInputsState, useUIStore } from '@src/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-const renderWrapper = (withDropdown = true, customState?: Parameters<typeof setInitialGlobalState>[0]) => {
-  const path = withDropdown ? ROUTES.RESOURCE_EDIT.uri : ROUTES.RESOURCE_CREATE.uri;
+import { RouterProvider, createMemoryRouter } from 'react-router';
+
+import { render } from '@testing-library/react';
+
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { ROUTES } from '@/common/constants/routes.constants';
+import { EditControlPane } from '@/components/EditControlPane';
+
+import { useUIStore } from '@/store';
+
+const renderWrapper = (customState?: Parameters<typeof setInitialGlobalState>[0]) => {
+  const path = ROUTES.RESOURCE_EDIT.uri;
 
   const defaultState = [
     {
       store: useUIStore,
       state: { currentlyEditedEntityBfid: new Set([PROFILE_BFIDS.INSTANCE]) },
-    },
-    {
-      store: useInputsState,
-      state: { selectedRecordBlocks: { block: 'test-block' } },
     },
   ];
 
@@ -41,83 +38,15 @@ const renderWrapper = (withDropdown = true, customState?: Parameters<typeof setI
 };
 
 describe('EditControlPane', () => {
-  test('fetches MARC data', async () => {
-    const getMarcRecordMock = jest.spyOn(recordsApi, 'getMarcRecord').mockImplementation(() => Promise.resolve(null));
+  test('renders close button', () => {
+    const { getByTestId } = renderWrapper();
 
-    const { findByText, findByTestId } = renderWrapper();
-
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.viewMarc'));
-
-    expect(getMarcRecordMock).toHaveBeenCalled();
+    expect(getByTestId('nav-close-button')).toBeInTheDocument();
   });
 
-  test('handles duplicate resource navigation', async () => {
-    const { findByText, findByTestId } = renderWrapper();
+  test('renders heading', () => {
+    const { container } = renderWrapper();
 
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.duplicate'));
-
-    expect(navigateAsDuplicate).toHaveBeenCalled();
-  });
-
-  test("doesn't render actions dropdown in create mode", () => {
-    const { queryByText } = renderWrapper(false);
-
-    expect(queryByText('ld.actions')).not.toBeInTheDocument();
-  });
-
-  test('fetches RDF data', async () => {
-    const getRdfRecordMock = jest
-      .spyOn(recordsApi, 'getRdfRecord')
-      .mockImplementation(() => Promise.resolve(new Response()));
-
-    const { findByText, findByTestId } = renderWrapper();
-
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.exportInstanceRdf'));
-
-    expect(getRdfRecordMock).toHaveBeenCalled();
-  });
-
-  test('opens Profile Change modal for Work profile', async () => {
-    const openModalForProfileChangeMock = jest.fn();
-    jest.spyOn(useProfileSelectionHook, 'useProfileSelection').mockReturnValue({
-      checkProfileAndProceed: jest.fn(),
-      openModalForProfileChange: openModalForProfileChangeMock,
-    });
-
-    const workProfileState = [
-      {
-        store: useUIStore,
-        state: { currentlyEditedEntityBfid: new Set([PROFILE_BFIDS.WORK]) },
-      },
-      {
-        store: useInputsState,
-        state: { selectedRecordBlocks: { block: 'test-work-block' } },
-      },
-    ];
-
-    const { findByText, findByTestId } = renderWrapper(true, workProfileState);
-
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.changeWorkProfile'));
-
-    expect(openModalForProfileChangeMock).toHaveBeenCalledWith({ resourceTypeURL: 'test-work-block' });
-  });
-
-  test('opens Profile Change modal for Instance profile', async () => {
-    const openModalForProfileChangeMock = jest.fn();
-    jest.spyOn(useProfileSelectionHook, 'useProfileSelection').mockReturnValue({
-      checkProfileAndProceed: jest.fn(),
-      openModalForProfileChange: openModalForProfileChangeMock,
-    });
-
-    const { findByText, findByTestId } = renderWrapper();
-
-    fireEvent.click(await findByTestId('edit-control-actions-toggle'));
-    fireEvent.click(await findByText('ld.changeInstanceProfile'));
-
-    expect(openModalForProfileChangeMock).toHaveBeenCalledWith({ resourceTypeURL: 'test-block' });
+    expect(container.querySelector('.heading')).toBeInTheDocument();
   });
 });

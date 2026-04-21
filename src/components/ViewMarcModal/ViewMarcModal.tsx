@@ -1,5 +1,7 @@
-import { useMarcPreviewState } from '@src/store';
-import { MarcContent } from '@components/MarcContent';
+import { MarcContent } from '@/components/MarcContent';
+
+import { useMarcPreviewState } from '@/store';
+
 import './ViewMarcModal.scss';
 
 export const ViewMarcModal = () => {

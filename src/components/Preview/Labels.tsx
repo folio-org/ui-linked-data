@@ -1,6 +1,8 @@
 import { FC } from 'react';
+
 import classNames from 'classnames';
-import Lightbulb16 from '@src/assets/lightbulb-shining-16.svg?react';
+
+import Lightbulb16 from '@/assets/lightbulb-shining-16.svg?react';
 
 type LabelProps = {
   isEntity: boolean;

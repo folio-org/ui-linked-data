@@ -1,9 +1,10 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { GroupProcessor } from '@common/services/recordGenerator/processors/profileSchema/groupProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
+import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { GroupProcessor } from '@/common/services/recordGenerator/processors/profileSchema/groupProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
 
 describe('GroupProcessor', () => {
   let processor: GroupProcessor;
@@ -283,6 +284,157 @@ describe('GroupProcessor', () => {
       const userValues = {
         child_1: {
           contents: [{ label: 'test label', id: 'test_id', meta: { id: 'test_id' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ id: 'test_id' }]);
+    });
+
+    it('processes complex type child with propertyKey option correctly', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Hub', meta: { uri: 'http://test.uri' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+              [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+            },
+            options: {
+              propertyKey: '_hub',
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          _hub: {
+            [BFLITE_URIS.LABEL]: 'Test Hub',
+            [BFLITE_URIS.LINK]: 'http://test.uri',
+          },
+        },
+      ]);
+    });
+
+    it('processes complex type child with propertyKey but no link correctly', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Hub' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            properties: {
+              [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+              [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+            },
+            options: {
+              propertyKey: '_hub',
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([
+        {
+          _hub: {
+            [BFLITE_URIS.LABEL]: 'Test Hub',
+          },
+        },
+      ]);
+    });
+
+    it('skips complex type child without propertyKey when no id or srsId exists', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'test label' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([]);
+    });
+
+    it('processes complex type child prioritizing value with id over value without id', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'value without id' }, { label: 'value with id', id: 'test_id', meta: { id: 'test_id' } }],
         },
       } as unknown as UserValues;
       const recordSchemaEntry = {
@@ -1265,6 +1417,473 @@ describe('GroupProcessor', () => {
 
         expect(result).toEqual([]);
       });
+    });
+  });
+
+  describe('applyConditionalProperties', () => {
+    it('filters properties based on sourceType when conditionalProperties is defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+            local: [BFLITE_URIS.IDENTIFIER_LCCN],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://test.uri' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result.properties).toEqual({
+        [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+        [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+      });
+    });
+
+    it('uses defaultSourceType when sourceType is not in value', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+            local: [BFLITE_URIS.IDENTIFIER_LCCN],
+          },
+          defaultSourceType: 'local',
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result.properties).toEqual({
+        [BFLITE_URIS.IDENTIFIER_LCCN]: { type: RecordSchemaEntryType.string },
+      });
+    });
+
+    it('returns original schema when conditionalProperties is not defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('returns original schema when properties is not defined', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'libraryOfCongress' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('returns original schema when sourceType is not found', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(result).toBe(recordSchemaProperty);
+    });
+
+    it('warns and returns original schema when sourceType is unknown', () => {
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          [BFLITE_URIS.LABEL]: { type: RecordSchemaEntryType.string },
+          [BFLITE_URIS.LINK]: { type: RecordSchemaEntryType.string },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: [BFLITE_URIS.LABEL, BFLITE_URIS.LINK],
+          },
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        label: 'Test Hub',
+        meta: { sourceType: 'unknownSource' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      expect(consoleWarnSpy).toHaveBeenCalledWith('Unknown sourceType: unknownSource, using all properties');
+      expect(result).toBe(recordSchemaProperty);
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('includes properties from alwaysIncludeIfPresent when they have values', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: ['label', 'rdfLink'],
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      // Existing LoC hub that has been saved (has id)
+      const value = {
+        id: 'existing-hub-id-123',
+        label: 'Existing LoC Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://id.loc.gov/...' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // Should include 'id' even though it's not in conditionalProperties for libraryOfCongress
+      expect(result.properties).toEqual({
+        label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' } },
+        rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' } },
+        id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' } },
+      });
+    });
+
+    it('does not include alwaysIncludeIfPresent properties when they have no value', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            libraryOfCongress: ['label', 'rdfLink'],
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      // New LoC hub that hasn't been saved yet (no id)
+      const value = {
+        label: 'New LoC Hub',
+        meta: { sourceType: 'libraryOfCongress', uri: 'http://id.loc.gov/...' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // Should NOT include 'id' because value doesn't have an id
+      expect(result.properties).toEqual({
+        label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' } },
+        rdfLink: { type: RecordSchemaEntryType.string, options: { valueSource: 'meta.uri' } },
+      });
+    });
+
+    it('does not duplicate property if already in conditionalProperties', () => {
+      const recordSchemaProperty = {
+        type: RecordSchemaEntryType.object,
+        properties: {
+          label: { type: RecordSchemaEntryType.string, options: { valueSource: 'label' as const } },
+          id: { type: RecordSchemaEntryType.string, options: { valueSource: 'id' as const } },
+        },
+        options: {
+          conditionalProperties: {
+            local: ['id', 'label'],
+          },
+          alwaysIncludeIfPresent: ['id'],
+        },
+      } as RecordSchemaEntry;
+
+      const value = {
+        id: 'local-hub-id',
+        label: 'Local Hub',
+        meta: { sourceType: 'local' },
+      } as UserValueContents;
+
+      const result = processor['applyConditionalProperties'](recordSchemaProperty, value);
+
+      // 'id' should only appear once
+      expect(Object.keys(result.properties || {})).toEqual(['label', 'id']);
+    });
+  });
+
+  describe('complex lookup with outputFormat reference', () => {
+    it('wraps reference object in array when schema type is array', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+            options: {
+              propertyKey: '_grantingInstitutionReference',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _grantingInstitutionReference: [{ id: 'id_1' }] }]);
+    });
+
+    it('generates object with srsId when meta.srsId is available', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1', meta: { srsId: 'srs_id_1' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+            options: {
+              propertyKey: '_grantingInstitutionReference',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _grantingInstitutionReference: [{ srsId: 'srs_id_1' }] }]);
+    });
+
+    it('does not wrap reference object when schema type is not array', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          uri_1: {
+            type: RecordSchemaEntryType.object,
+            options: {
+              propertyKey: '_ref',
+              outputFormat: 'reference' as const,
+            },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: 'uri_1',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ _ref: { id: 'id_1' } }]);
+    });
+  });
+
+  describe('when outputFormat is reference with type string (flat spread)', () => {
+    it('emits srsId flat into parent group object', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Creator', meta: { srsId: 'srs_id_1' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          _name: {
+            type: RecordSchemaEntryType.string,
+            options: { outputFormat: 'reference' as const },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: '_name',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ srsId: 'srs_id_1' }]);
+    });
+
+    it('emits id flat into parent group object when only id is available', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ id: 'id_1' }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          _name: {
+            type: RecordSchemaEntryType.string,
+            options: { outputFormat: 'reference' as const },
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry.mockReturnValue({
+        uuid: 'child_1',
+        type: AdvancedFieldType.complex,
+        uriBFLite: '_name',
+      } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ id: 'id_1' }]);
+    });
+
+    it('emits srsId alongside roles when both children are present', () => {
+      const profileSchemaEntry = {
+        type: AdvancedFieldType.group,
+        uuid: 'test_uuid',
+        children: ['child_1', 'child_2'],
+      } as SchemaEntry;
+      const userValues = {
+        child_1: {
+          contents: [{ label: 'Test Creator', meta: { srsId: 'srs_id_1' } }],
+        },
+        child_2: {
+          contents: [{ label: 'author role', meta: { uri: 'http://example.org/author' } }],
+        },
+      } as unknown as UserValues;
+      const recordSchemaEntry = {
+        type: RecordSchemaEntryType.array,
+        value: RecordSchemaEntryType.object,
+        properties: {
+          _name: {
+            type: RecordSchemaEntryType.string,
+            options: { outputFormat: 'reference' as const },
+          },
+          roles: {
+            type: RecordSchemaEntryType.array,
+            value: RecordSchemaEntryType.string,
+          },
+        },
+      } as RecordSchemaEntry;
+
+      mockProfileSchemaManager.getSchemaEntry
+        .mockReturnValueOnce({
+          uuid: 'child_1',
+          type: AdvancedFieldType.complex,
+          uriBFLite: '_name',
+        } as SchemaEntry)
+        .mockReturnValueOnce({
+          uuid: 'child_2',
+          type: AdvancedFieldType.simple,
+          uriBFLite: 'roles',
+        } as SchemaEntry);
+
+      const result = processor.process({ profileSchemaEntry, userValues, selectedEntries, recordSchemaEntry });
+
+      expect(result).toEqual([{ srsId: 'srs_id_1', roles: ['http://example.org/author'] }]);
     });
   });
 });

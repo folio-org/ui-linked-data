@@ -5,7 +5,7 @@
   flex-direction: column;
   min-width: 290px;
   width: 290px;
-  border-right: 1px solid #d7d8da;
+  border-right: 1px solid $gray-200;
 
   &-header,
   .meta-controls {
@@ -17,15 +17,27 @@
 
     &-centered {
       justify-content: center;
+    }
+  }
 
-      > .search-button {
-        width: 100%;
-        height: $btn-height;
-        border-radius: calc($btn-height / 2);
-        line-height: $btn-height;
+  .meta-controls,
+  .meta-conrols-centered {
+    .search-button {
+      &:focus,
+      &:focus-visible {
+        border: 1px solid $buttonIcon;
+        box-shadow: 0 0 0 2px $buttonShadow;
+      }
 
-        &:disabled {
-          background-color: $gray-200;
+      &:active {
+        color: $base;
+        background-color: $button-standard;
+        border: 1px solid $blue-400;
+        text-decoration: underline 2px;
+
+        > svg *,
+        * {
+          fill: $base;
         }
       }
     }
@@ -35,7 +47,7 @@
     height: 2.75rem;
     min-height: 2.75rem;
     padding: 0 1rem;
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: $title-bar-bg-color;
 
     .close-ctl {
       height: 2.125rem;
@@ -49,6 +61,8 @@
     }
 
     &-title {
+      flex: 1;
+      text-align: center;
       font-size: 0.875rem;
     }
   }
@@ -76,13 +90,6 @@
     padding: 16px 0 12px 0;
     display: flex;
     flex-direction: column;
-
-    .select-input,
-    .text-input {
-      border-radius: 0;
-      border: 1px solid gray;
-      padding: 4px;
-    }
 
     .text-input {
       margin-top: -1px;

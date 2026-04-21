@@ -1,11 +1,11 @@
-import { AdvancedFieldType } from '@common/constants/uiControls.constants';
-import { RecordSchemaEntryType } from '@common/constants/recordSchema.constants';
-import { UnwrappedDropdownOptionProcessor } from '@common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor';
-import { ProfileSchemaManager } from '@common/services/recordGenerator/profileSchemaManager';
-import { ProfileSchemaProcessorManager } from '@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
+import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
+import { ProfileSchemaProcessorManager } from '@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager';
+import { UnwrappedDropdownOptionProcessor } from '@/common/services/recordGenerator/processors/profileSchema/unwrappedDropdownOptionProcessor';
+import { ProfileSchemaManager } from '@/common/services/recordGenerator/profileSchemaManager';
 
-jest.mock('@common/services/recordGenerator/profileSchemaManager');
-jest.mock('@common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
+jest.mock('@/common/services/recordGenerator/profileSchemaManager');
+jest.mock('@/common/services/recordGenerator/processors/profileSchema/profileSchemaProcessorManager');
 
 describe('UnwrappedDropdownOptionProcessor', () => {
   let processor: UnwrappedDropdownOptionProcessor;

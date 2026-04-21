@@ -1,5 +1,6 @@
-import { SpinnerEllipsis } from '@components/SpinnerEllipsis';
 import { FormattedMessage } from 'react-intl';
+
+import { SpinnerEllipsis } from '@/components/SpinnerEllipsis';
 
 export const Submitted = () => {
   return (

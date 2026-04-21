@@ -31,7 +31,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '1',
-          key: expect.any(String),
+          key: '1',
           isAnchor: true,
         },
         authorized: {
@@ -72,7 +72,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '2',
-          key: expect.any(String),
+          key: '2',
           isAnchor: false,
         },
         authorized: {
@@ -104,7 +104,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '1',
-          key: expect.any(String),
+          key: '1',
           isAnchor: true,
         },
         authorized: {
@@ -151,7 +151,7 @@ describe('AuthoritiesResultFormatter', () => {
       {
         __meta: {
           id: '3',
-          key: expect.any(String),
+          key: '3',
           isAnchor: false,
         },
         authorized: {
@@ -178,5 +178,121 @@ describe('AuthoritiesResultFormatter', () => {
     );
 
     expect(result).toEqual(testResult);
+  });
+
+  it('uses placeholder text when sourceData does not match and fallback is configured', () => {
+    const authoritiesListWithDifferentSource = [
+      {
+        authority: {
+          id: 'id_3',
+          authRefType: 'testType_3',
+          headingRef: 'testHeading_3',
+          headingType: 'testHeadingType_3',
+          sourceFileId: 'testSource_3',
+        },
+        isAnchor: false,
+      },
+    ];
+    const sourceData = [{ id: 'testSource_4', name: 'Source Name 4' }];
+    const testResult = [
+      {
+        __meta: {
+          id: 'id_3',
+          key: 'id_3',
+          isAnchor: false,
+        },
+        authorized: {
+          label: 'testType_3',
+        },
+        title: {
+          label: 'testHeading_3',
+          className: 'title',
+        },
+        subclass: {
+          label: 'testHeadingType_3',
+          className: 'heading-type',
+        },
+        authoritySource: {
+          label: 'Not specified',
+          className: 'authority-source',
+        },
+      },
+    ];
+
+    const result = formatter.format(
+      authoritiesListWithDifferentSource as unknown as AuthorityAsBrowseResultDTO[],
+      sourceData as SourceDataDTO,
+      { notSpecifiedLabel: 'Not specified' },
+    );
+
+    expect(result).toEqual(testResult);
+  });
+
+  it('uses placeholder text when sourceFileId is null', () => {
+    const authoritiesListWithNullSource = [
+      {
+        authority: {
+          id: '4',
+          authRefType: 'testType_4',
+          headingRef: 'testHeading_4',
+          headingType: 'testHeadingType_4',
+          sourceFileId: null,
+        },
+        isAnchor: false,
+      },
+    ];
+    const testResult = [
+      {
+        __meta: {
+          id: '4',
+          key: '4',
+          isAnchor: false,
+        },
+        authorized: {
+          label: 'testType_4',
+        },
+        title: {
+          label: 'testHeading_4',
+          className: 'title',
+        },
+        subclass: {
+          label: 'testHeadingType_4',
+          className: 'heading-type',
+        },
+        authoritySource: {
+          label: 'Not specified',
+          className: 'authority-source',
+        },
+      },
+    ];
+
+    const result = formatter.format(authoritiesListWithNullSource as unknown as AuthorityAsBrowseResultDTO[], null, {
+      notSpecifiedLabel: 'Not specified',
+    });
+
+    expect(result).toEqual(testResult);
+  });
+
+  it('uses a deterministic fallback key when id is missing', () => {
+    const authoritiesListWithoutId = [
+      {
+        authority: {
+          id: '',
+          authRefType: 'testType_fallback',
+          headingRef: 'testHeading_fallback',
+          headingType: 'testHeadingType_fallback',
+          sourceFileId: 'testSource_fallback',
+        },
+        isAnchor: false,
+      },
+    ];
+
+    const firstResult = formatter.format(authoritiesListWithoutId as unknown as AuthorityAsBrowseResultDTO[]);
+    const secondResult = formatter.format(authoritiesListWithoutId as unknown as AuthorityAsBrowseResultDTO[]);
+
+    expect(firstResult[0].__meta.key).toBe(secondResult[0].__meta.key);
+    expect(firstResult[0].__meta.key).toContain('authority:');
+    expect(firstResult[0].__meta.key).toContain('testheading_fallback');
+    expect(firstResult[0].__meta.key).not.toBe('authority-0');
   });
 });

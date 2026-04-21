@@ -1,17 +1,36 @@
-import { useCallback, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { type SegmentDraft, useSearchState } from '@/store';
+import { type RefObject, useCallback, useEffect, useMemo, useRef } from 'react';
+import { type SetURLSearchParams, useSearchParams } from 'react-router-dom';
+
 import { DEFAULT_SEARCH_BY, SEARCH_RESULTS_LIMIT } from '@/common/constants/search.constants';
-import { SearchParam, type SearchTypeConfig, resolveCoreConfig } from '../../core';
+
+import { type CommittedValues, type SegmentDraft, useInputsState, useSearchState, useUIState } from '@/store';
+
+import {
+  SearchParam,
+  type SearchTypeConfig,
+  getDefaultSourceForSegment,
+  normalizeQuery,
+  resolveCoreConfig,
+} from '../../core';
+import { resolveUIConfig } from '../config';
 import type { SearchFlow } from '../types';
 import type { SearchTypeUIConfig } from '../types/ui.types';
-import { getValidSearchBy } from '../utils';
-import { resolveUIConfig } from '../config';
+import { buildSearchUrlParams, getValidSearchBy, haveSearchValuesChanged } from '../utils';
 
 interface UseSearchControlsHandlersParams {
   coreConfig: SearchTypeConfig;
   uiConfig: SearchTypeUIConfig;
   flow: SearchFlow;
+  results?: {
+    pageMetadata?: {
+      totalElements: number;
+      totalPages: number;
+      prev?: string;
+      next?: string;
+    };
+  };
+  refetch?: () => Promise<void>;
+  onSubmitCallback?: () => void;
 }
 
 interface SearchControlsHandlers {
@@ -22,25 +41,101 @@ interface SearchControlsHandlers {
   onReset: () => void;
 }
 
+// Helper functions for pagination
+function handleUrlFlowPageChange(
+  newPage: number,
+  setSearchParams: SetURLSearchParams,
+  uiConfigRef: RefObject<SearchTypeUIConfig>,
+  coreConfigRef: RefObject<SearchTypeConfig>,
+) {
+  setSearchParams(prev => {
+    const params = new URLSearchParams(prev);
+    const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
+    const offset = newPage * uiPageSize;
+
+    if (offset > 0) {
+      params.set(SearchParam.OFFSET, offset.toString());
+    } else {
+      params.delete(SearchParam.OFFSET);
+    }
+
+    return params;
+  });
+}
+
+function handleValueFlowPageChange(
+  newPage: number,
+  resultsRef: RefObject<{ pageMetadata?: { prev?: string; next?: string } } | undefined>,
+  coreConfigRef: RefObject<SearchTypeConfig>,
+  uiConfigRef: RefObject<SearchTypeUIConfig>,
+  setCommittedValues: (values: CommittedValues) => void,
+) {
+  const state = useSearchState.getState();
+  const { committedValues, draftBySegment, navigationState } = state;
+  const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
+  const currentPage = Math.floor((committedValues.offset || 0) / uiPageSize);
+  const isBrowse = coreConfigRef.current.id?.includes(':browse');
+  const isInitialPage = newPage === 0;
+
+  if (isBrowse && !isInitialPage && resultsRef.current?.pageMetadata) {
+    // Browse pagination: use prev/next anchors
+    const isNextPage = newPage > currentPage;
+    const anchor = isNextPage ? resultsRef.current.pageMetadata.next : resultsRef.current.pageMetadata.prev;
+    const selector = isNextPage ? 'next' : 'prev';
+
+    if (anchor) {
+      setCommittedValues({
+        ...committedValues,
+        query: anchor,
+        selector,
+        offset: newPage * uiPageSize,
+      });
+    }
+  } else {
+    // Search/Hubs pagination or initial browse page: use original query from draft
+    const currentSegment = navigationState.segment || committedValues.segment;
+    const draft = currentSegment ? draftBySegment[currentSegment] : undefined;
+    const originalQuery = draft?.query || committedValues.query;
+
+    setCommittedValues({
+      ...committedValues,
+      query: originalQuery,
+      offset: newPage * uiPageSize,
+      selector: 'query',
+    });
+  }
+}
+
 // Use `resolveCoreConfig` from core registry
 
 export const useSearchControlsHandlers = ({
   coreConfig,
   uiConfig,
   flow,
+  results,
+  refetch,
+  onSubmitCallback,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Use refs for config/flow to avoid recreating handlers
+  // Use refs for config/flow/results/refetch to avoid recreating handlers
   const coreConfigRef = useRef(coreConfig);
   const uiConfigRef = useRef(uiConfig);
   const flowRef = useRef(flow);
+  const resultsRef = useRef(results);
+  const refetchRef = useRef(refetch);
+  const searchParamsRef = useRef(searchParams);
+  const onSubmitCallbackRef = useRef(onSubmitCallback);
 
   useEffect(() => {
     coreConfigRef.current = coreConfig;
     uiConfigRef.current = uiConfig;
     flowRef.current = flow;
-  }, [coreConfig, uiConfig, flow]);
+    resultsRef.current = results;
+    refetchRef.current = refetch;
+    searchParamsRef.current = searchParams;
+    onSubmitCallbackRef.current = onSubmitCallback;
+  }, [coreConfig, uiConfig, flow, results, refetch, searchParams, onSubmitCallback]);
 
   const {
     setNavigationState,
@@ -60,6 +155,11 @@ export const useSearchControlsHandlers = ({
     'setDraftBySegment',
     'setCommittedValues',
     'resetCommittedValues',
+  ]);
+  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
+  const { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid } = useUIState([
+    'resetFullDisplayComponentType',
+    'resetCurrentlyPreviewedEntityBfid',
   ]);
 
   // Helper to save current segment's draft
@@ -121,6 +221,11 @@ export const useSearchControlsHandlers = ({
       // Save current segment's draft before switching
       saveCurrentDraft();
 
+      // Reset preview
+      resetPreviewContent();
+      resetFullDisplayComponentType();
+      resetCurrentlyPreviewedEntityBfid();
+
       // Resolve configs for the new segment using centralized resolvers
       const newSegmentConfig = resolveCoreConfig(newSegment);
       const newSegmentUIConfig = resolveUIConfig(newSegment);
@@ -153,8 +258,9 @@ export const useSearchControlsHandlers = ({
           params.set(SearchParam.SEGMENT, newSegment);
 
           // If restored segment has query, include full search params (auto-search)
+          // Normalize query for URL (CQL escaping) - drafts store raw user input
           if (hasPreservedQuery) {
-            params.set(SearchParam.QUERY, restoredDraft.query);
+            params.set(SearchParam.QUERY, normalizeQuery(restoredDraft.query) ?? '');
             params.set(SearchParam.SEARCH_BY, restoredDraft.searchBy);
 
             if (restoredDraft.source) {
@@ -165,17 +271,21 @@ export const useSearchControlsHandlers = ({
           return params;
         });
       } else if (hasPreservedQuery) {
-        // Value flow: commit if preserved query exists
+        // Value flow: only update committedValues if there's a query to preserve
+        // Normalize query for committed values (CQL escaping) - drafts store raw user input
         setCommittedValues({
           segment: newSegment,
-          query: restoredDraft.query,
+          query: normalizeQuery(restoredDraft.query) ?? '',
           searchBy: restoredDraft.searchBy,
           source: restoredDraft.source,
           offset: 0,
         });
+      } else {
+        // Value flow: reset to clear results when switching to empty segment
+        resetCommittedValues();
       }
     },
-    [saveCurrentDraft, restoreDraft, setNavigationState, setSearchParams, setCommittedValues],
+    [saveCurrentDraft, restoreDraft, setNavigationState, setSearchParams, setCommittedValues, resetCommittedValues],
   );
 
   const handleSourceChange = useCallback(
@@ -194,34 +304,33 @@ export const useSearchControlsHandlers = ({
   const handlePageChange = useCallback(
     (newPage: number) => {
       if (flowRef.current === 'url') {
-        setSearchParams(prev => {
-          const params = new URLSearchParams(prev);
-          // Use UI page size from UI config with fallback to core config limit
-          const uiPageSize = uiConfigRef.current.limit || coreConfigRef.current.defaults?.limit || SEARCH_RESULTS_LIMIT;
-          const offset = newPage * uiPageSize;
-
-          if (offset > 0) {
-            params.set(SearchParam.OFFSET, offset.toString());
-          } else {
-            params.delete(SearchParam.OFFSET);
-          }
-
-          return params;
-        });
+        handleUrlFlowPageChange(newPage, setSearchParams, uiConfigRef, coreConfigRef);
+      } else {
+        handleValueFlowPageChange(newPage, resultsRef, coreConfigRef, uiConfigRef, setCommittedValues);
       }
-
-      // Value flow pagination: handled via setCommittedValues when implemented
     },
-    [setSearchParams],
+    [setSearchParams, setCommittedValues],
   );
+
+  const resetPreview = () => {
+    resetPreviewContent();
+    resetFullDisplayComponentType();
+    resetCurrentlyPreviewedEntityBfid();
+  };
 
   const handleSubmit = useCallback(() => {
     const state = useSearchState.getState();
-    const { query, searchBy, navigationState, draftBySegment } = state;
+    const { query, searchBy, navigationState, draftBySegment, committedValues } = state;
+
+    // Normalize query: escape special characters for CQL compatibility
+    const normalizedQuery = normalizeQuery(query) ?? '';
 
     const navState = navigationState as Record<string, unknown>;
-    const segment = (navState?.[SearchParam.SEGMENT] as string) ?? '';
-    const source = navState?.[SearchParam.SOURCE] as string | undefined;
+    // If navigationState lacks a segment (possible on very early submit),
+    // fall back to the current core config id so default segment is included
+    // in the URL for URL flow.
+    const segment = (navState?.[SearchParam.SEGMENT] as string) ?? coreConfigRef.current?.id ?? '';
+    const source = (navState?.[SearchParam.SOURCE] as string) ?? undefined;
 
     // Resolve the effective configs for the current segment + source
     const effectiveCoreConfig = resolveCoreConfig(segment, source) ?? coreConfigRef.current;
@@ -233,6 +342,7 @@ export const useSearchControlsHandlers = ({
       : searchBy;
 
     // Save current draft on submit (with validated searchBy)
+    // Store raw query in draft (drafts store user-facing text, not CQL-escaped)
     if (segment) {
       setDraftBySegment({
         ...draftBySegment,
@@ -244,49 +354,62 @@ export const useSearchControlsHandlers = ({
       });
     }
 
+    // Determine if search values have changed
+    const valuesChanged =
+      flowRef.current === 'url'
+        ? haveSearchValuesChanged(
+            {
+              segment: searchParams.get(SearchParam.SEGMENT),
+              query: searchParams.get(SearchParam.QUERY),
+              searchBy: searchParams.get(SearchParam.SEARCH_BY),
+              source: searchParams.get(SearchParam.SOURCE),
+            },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
+          )
+        : haveSearchValuesChanged(
+            {
+              segment: committedValues.segment,
+              query: committedValues.query,
+              searchBy: committedValues.searchBy,
+              source: committedValues.source,
+            },
+            { segment, query: normalizedQuery, searchBy: validSearchBy, source },
+          );
+
+    resetPreview();
+    onSubmitCallbackRef.current?.();
+
     if (flowRef.current === 'url') {
-      // URL flow: URL becomes the "committed" state
-      const urlParams = new URLSearchParams();
-
-      if (segment) {
-        urlParams.set(SearchParam.SEGMENT, segment);
-      }
-
-      if (query) {
-        urlParams.set(SearchParam.QUERY, query);
-      }
-
-      // Only include searchBy if it exists (for simple search)
-      // Advanced search has query but no searchBy
-      if (validSearchBy && searchBy) {
-        urlParams.set(SearchParam.SEARCH_BY, validSearchBy);
-      }
-
-      if (source) {
-        urlParams.set(SearchParam.SOURCE, source);
-      }
-
+      // URL flow: update URL params
+      const urlParams = buildSearchUrlParams(segment, normalizedQuery, validSearchBy, source);
       setSearchParams(urlParams);
-    } else {
-      // Value flow: commit to store
+
+      // If params didn't change, force refetch
+      if (!valuesChanged) {
+        refetchRef.current?.();
+      }
+    } else if (valuesChanged) {
+      // Value flow: update committedValues if changed, otherwise force refetch
       setCommittedValues({
         segment,
-        query,
+        query: normalizedQuery,
         searchBy: validSearchBy,
         source,
         offset: 0,
       });
+    } else {
+      refetchRef.current?.();
     }
-  }, [setDraftBySegment, setSearchParams, setCommittedValues]);
+  }, [searchParams, setDraftBySegment, setSearchParams, setCommittedValues]);
 
   const handleReset = useCallback(() => {
     const state = useSearchState.getState();
     const navState = state.navigationState as Record<string, unknown>;
     const currentSegment = navState?.[SearchParam.SEGMENT] as string | undefined;
-    const currentSource = navState?.[SearchParam.SOURCE] as string | undefined;
 
     resetQuery();
     resetSearchBy();
+    resetPreview();
 
     if (currentSegment) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -295,12 +418,21 @@ export const useSearchControlsHandlers = ({
       setDraftBySegment(rest);
     }
 
-    // Reset navigation to defaults
+    // Reset navigation to defaults using the current segment
     const defaultNav = {} as Record<string, unknown>;
-    const defaultSegment = coreConfigRef.current.id;
 
-    if (defaultSegment) {
-      defaultNav[SearchParam.SEGMENT] = defaultSegment;
+    // Use current segment from navigationState (not from coreConfig.id)
+    const baseSegment = currentSegment || coreConfigRef.current.id;
+
+    if (baseSegment) {
+      defaultNav[SearchParam.SEGMENT] = baseSegment;
+
+      // Set default source from base segment config
+      const defaultSource = getDefaultSourceForSegment(baseSegment);
+
+      if (defaultSource) {
+        defaultNav[SearchParam.SOURCE] = defaultSource;
+      }
     }
 
     setNavigationState(defaultNav as SearchParamsState);
@@ -309,14 +441,16 @@ export const useSearchControlsHandlers = ({
       setSearchParams(() => {
         const params = new URLSearchParams();
 
-        // Preserve segment when clearing
-        if (currentSegment) {
-          params.set(SearchParam.SEGMENT, currentSegment);
+        // Use base segment (not current segment which might have source in ID)
+        if (baseSegment) {
+          params.set(SearchParam.SEGMENT, baseSegment);
         }
 
-        // Preserve source when clearing
-        if (currentSource) {
-          params.set(SearchParam.SOURCE, currentSource);
+        // Set default source instead of deleting
+        if (defaultNav[SearchParam.SOURCE]) {
+          params.set(SearchParam.SOURCE, defaultNav[SearchParam.SOURCE] as string);
+        } else {
+          params.delete(SearchParam.SOURCE);
         }
 
         return params;
@@ -325,13 +459,26 @@ export const useSearchControlsHandlers = ({
       // Value flow: reset committed search
       resetCommittedValues();
     }
-  }, [resetQuery, resetSearchBy, setDraftBySegment, setNavigationState, setSearchParams, setCommittedValues]);
+  }, [
+    resetQuery,
+    resetSearchBy,
+    setDraftBySegment,
+    setNavigationState,
+    setSearchParams,
+    resetCommittedValues,
+    resetPreviewContent,
+    resetFullDisplayComponentType,
+    resetCurrentlyPreviewedEntityBfid,
+  ]);
 
-  return {
-    onSegmentChange: handleSegmentChange,
-    onSourceChange: handleSourceChange,
-    onPageChange: handlePageChange,
-    onSubmit: handleSubmit,
-    onReset: handleReset,
-  };
+  return useMemo(
+    () => ({
+      onSegmentChange: handleSegmentChange,
+      onSourceChange: handleSourceChange,
+      onPageChange: handlePageChange,
+      onSubmit: handleSubmit,
+      onReset: handleReset,
+    }),
+    [handleSegmentChange, handleSourceChange, handlePageChange, handleSubmit, handleReset],
+  );
 };

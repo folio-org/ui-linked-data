@@ -1,32 +1,50 @@
 import { memo, useState } from 'react';
-import { useNavigateToEditPage } from '@common/hooks/useNavigateToEditPage';
-import { generateEditResourceUrl } from '@common/helpers/navigation.helper';
+import { useIntl } from 'react-intl';
+
+import { importFile, importUrl } from '@/common/api/import.api';
+import { WORK_TYPES } from '@/common/constants/bibframe.constants';
 import {
-  ImportModes,
   HOLD_LOADING_SCREEN_MS,
-  LOADING_TIMEOUT_MS,
   IMPORT_FILE_LOG_MEDIA_TYPE,
   IMPORT_FILE_LOG_NAME_SUFFIX,
-} from '@common/constants/import.constants';
-import { initiateUserAgentDownload } from '@common/helpers/download.helper';
-import { Modal } from '@components/Modal';
-import { useIntl } from 'react-intl';
-import { useUIState } from '@src/store';
-import { importFile } from '@common/api/import.api';
+  ImportFilterTypes,
+  ImportModes,
+  LOADING_TIMEOUT_MS,
+} from '@/common/constants/import.constants';
+import { StatusType } from '@/common/constants/status.constants';
+import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
+import { getFilenameWithoutExtension, getUrlFilenameWithoutExtension } from '@/common/helpers/filename.helper';
+import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+import { Modal } from '@/components/Modal';
+import { getUri } from '@/configs/resourceTypes';
+
+import { useStatusState, useUIState } from '@/store';
+
+import { Completed } from './Completed';
 import { SelectorImportMode } from './SelectorImportMode';
 import { Submitted } from './Submitted';
-import { Completed } from './Completed';
+
 import './ModalImport.scss';
 
 export const ModalImport = memo(() => {
+  const defaultLogFilename = 'importing';
   const [importMode, setImportMode] = useState(ImportModes.JsonFile);
   const [isImportReady, setIsImportReady] = useState(false);
   const [isImportSubmitted, setIsImportSubmitted] = useState(false);
   const [isImportCompleted, setIsImportCompleted] = useState(false);
   const [isImportSuccessful, setIsImportSuccessful] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [urlToRetrieve, setUrlToRetrieve] = useState<string | undefined>();
+  const [defaultWorkType, setDefaultWorkType] = useState<string>(WORK_TYPES[0].uri);
   const [navigationTarget, setNavigationTarget] = useState('');
-  const { isImportModalOpen, setIsImportModalOpen } = useUIState(['isImportModalOpen', 'setIsImportModalOpen']);
+  const { isImportModalOpen, importModalFilterType, setIsImportModalOpen } = useUIState([
+    'isImportModalOpen',
+    'importModalFilterType',
+    'setIsImportModalOpen',
+  ]);
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
 
@@ -36,7 +54,7 @@ export const ModalImport = memo(() => {
     setIsImportCompleted(false);
     setIsImportSuccessful(false);
     setFilesToUpload([]);
-    setImportMode(ImportModes.JsonFile);
+    setUrlToRetrieve(undefined);
   };
 
   const reset = () => {
@@ -62,15 +80,20 @@ export const ModalImport = memo(() => {
     setIsImportReady(false);
   };
 
-  const doImport = async () => {
+  const doImportFile = async () => {
+    // Reject if file is empty.
+    if (filesToUpload[0].size === 0) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importFileEmptyError'));
+      throw new Error('Empty import file');
+    }
     // Reject if importFile is taking too long since we've removed
     // the ability to alter the modal state during load.
-    return new Promise<ImportFileResponseDTO>((resolve, reject) => {
-      const timeout = setTimeout(
-        () => reject(new Error(formatMessage({ id: 'ld.importTimedOut' }))),
-        LOADING_TIMEOUT_MS,
-      );
-      importFile(filesToUpload)
+    return new Promise<ImportResponseDTO>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
+        reject(new Error('Import timeout'));
+      }, LOADING_TIMEOUT_MS);
+      importFile(filesToUpload, getUri(importModalFilterType))
         .then(result => {
           resolve(result);
         })
@@ -83,12 +106,30 @@ export const ModalImport = memo(() => {
     });
   };
 
-  const getFilenameWithoutExtension = (filename: string) => {
-    const extensionIndex = filename.lastIndexOf('.');
-    if (extensionIndex > 0) {
-      return filename.substring(0, extensionIndex);
-    }
-    return filename;
+  const doImportUrl = async () => {
+    // Reject if importUrl is taking too long since we've removed
+    // the ability to alter the modal state during load.
+    return new Promise<ImportResponseDTO>((resolve, reject) => {
+      if (urlToRetrieve) {
+        const timeout = setTimeout(() => {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importTimedout'));
+          reject(new Error('Import timeout'));
+        }, LOADING_TIMEOUT_MS);
+        importUrl(urlToRetrieve, getUri(importModalFilterType), defaultWorkType)
+          .then(result => {
+            resolve(result);
+          })
+          .catch(e => {
+            reject(new Error(e));
+          })
+          .finally(() => {
+            clearTimeout(timeout);
+          });
+      } else {
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.importNoUrlError'));
+        reject(new Error('No URL'));
+      }
+    });
   };
 
   const downloadLog = (filePrefix: string, log: string) => {
@@ -99,28 +140,37 @@ export const ModalImport = memo(() => {
   const processImport = async () => {
     setIsImportReady(false);
     setIsImportSubmitted(true);
-    switch (importMode) {
-      case ImportModes.JsonFile:
-        try {
-          // Wait at least long enough to read the loading message for success.
-          const started = Date.now();
-          const response = await doImport();
-          const elapsed = Date.now() - started;
-          const delta = HOLD_LOADING_SCREEN_MS - elapsed;
-          if (delta > 0) {
-            await new Promise(r => setTimeout(r, delta));
-          }
-          setIsImportSuccessful(response.resources?.length > 0);
-          if (response.resources?.length === 1) {
-            setNavigationTarget(response.resources[0]);
-          }
-          downloadLog(getFilenameWithoutExtension(filesToUpload[0].name), response.log);
-        } catch {
-          setIsImportSuccessful(false);
-        }
-        break;
-      case ImportModes.JsonUrl:
-        break;
+    try {
+      let response;
+      let filename;
+      const started = Date.now();
+      switch (importMode) {
+        case ImportModes.JsonFile:
+          response = await doImportFile();
+          filename = getFilenameWithoutExtension(filesToUpload[0].name ?? defaultLogFilename);
+          break;
+        case ImportModes.JsonUrl:
+          response = await doImportUrl();
+          filename = getUrlFilenameWithoutExtension(urlToRetrieve ?? defaultLogFilename);
+          break;
+      }
+      const elapsed = Date.now() - started;
+      // Wait at least long enough to read the loading message for success.
+      const delta = HOLD_LOADING_SCREEN_MS - elapsed;
+      if (delta > 0) {
+        await new Promise(r => setTimeout(r, delta));
+      }
+      setIsImportSuccessful(response.resources?.length > 0);
+      if (!response.resources || response.resources?.length === 0) {
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.warning, 'ld.importNoResourcesWarning'),
+        );
+      } else if (response.resources?.length === 1) {
+        setNavigationTarget(response.resources[0]);
+      }
+      downloadLog(filename, response.log);
+    } catch {
+      setIsImportSuccessful(false);
     }
     setIsImportSubmitted(false);
     setIsImportCompleted(true);
@@ -128,21 +178,28 @@ export const ModalImport = memo(() => {
 
   const title = () => {
     let msg = { id: 'ld.importInstances' };
+    if (importModalFilterType === ImportFilterTypes.Hub) {
+      msg = { id: 'ld.importHubs' };
+    }
+
     if (isImportSuccessful) {
       msg = { id: 'ld.importSuccessful' };
     } else if (isImportCompleted) {
       msg = { id: 'ld.importFailed' };
     }
+
     return formatMessage(msg);
   };
 
   const submitButtonLabel = () => {
     let msg = { id: 'ld.import' };
+
     if (isImportSuccessful) {
       msg = { id: 'ld.importDone' };
     } else if (isImportCompleted) {
       msg = { id: 'ld.importTryAgain' };
     }
+
     return formatMessage(msg);
   };
 
@@ -164,8 +221,6 @@ export const ModalImport = memo(() => {
       submitButtonDisabled={!isImportReady && !isImportCompleted}
       submitButtonLabel={submitButtonLabel()}
       onSubmit={onSubmit}
-      alignTitleCenter
-      spreadModalControls
       cancelButtonDisabled={isImportSubmitted}
       showCloseIconButton={!isImportSubmitted}
       shouldCloseOnEsc={!isImportSubmitted}
@@ -174,16 +229,27 @@ export const ModalImport = memo(() => {
       cancelButtonLabel={formatMessage({ id: 'ld.cancel' })}
       onCancel={reset}
       onClose={reset}
+      data-testid="modal-import"
     >
-      <div className="body" data-testid="modal-import">
-        {!isImportSubmitted && !isImportCompleted && (
-          <SelectorImportMode
-            {...{ importMode, switchMode, onImportReady, onImportNotReady, filesToUpload, setFilesToUpload }}
-          />
-        )}
-        {isImportSubmitted && <Submitted />}
-        {isImportCompleted && <Completed {...{ isImportSuccessful }} />}
-      </div>
+      {!isImportSubmitted && !isImportCompleted && (
+        <SelectorImportMode
+          {...{
+            importMode,
+            switchMode,
+            onImportReady,
+            onImportNotReady,
+            filesToUpload,
+            setFilesToUpload,
+            urlToRetrieve,
+            setUrlToRetrieve,
+            defaultWorkType,
+            setDefaultWorkType,
+            importModalFilterType,
+          }}
+        />
+      )}
+      {isImportSubmitted && <Submitted />}
+      {isImportCompleted && <Completed {...{ isImportSuccessful }} />}
     </Modal>
   );
 });

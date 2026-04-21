@@ -1,4 +1,4 @@
-import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = Profile | null;
@@ -8,8 +8,7 @@ export type AvailableProfiles = {
 };
 export type PreferredProfiles = ProfileDTO[];
 
-export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
-  SliceState<'availableProfiles', AvailableProfiles> &
+export type ProfileState = SliceState<'availableProfiles', AvailableProfiles> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
@@ -18,9 +17,6 @@ export type ProfileState = SliceState<'profiles', Record<string, Profile>> &
 const STORE_NAME = 'Profile';
 
 const sliceConfigs: SliceConfigs = {
-  profiles: {
-    initialValue: {},
-  },
   availableProfiles: {
     initialValue: null,
   },

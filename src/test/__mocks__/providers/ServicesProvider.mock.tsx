@@ -1,5 +1,6 @@
 import { ReactNode, useMemo } from 'react';
-import { ServicesContext } from '@src/contexts';
+
+import { ServicesContext } from '@/contexts';
 
 export const userValuesService = {
   set: jest.fn(),

@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { useIntl } from 'react-intl';
+
 import { Select, type SelectValue } from '@/components/Select';
+
 import { useSearchState } from '@/store';
+
 import { useSearchContext } from '../../providers/SearchProvider';
 
 export const SearchBySelect: FC = () => {

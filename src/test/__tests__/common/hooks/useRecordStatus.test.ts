@@ -1,8 +1,12 @@
-import { renderHook } from '@testing-library/react';
-import { useStatusStore } from '@src/store';
-import { useRecordStatus } from '@common/hooks/useRecordStatus';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
+
 import { useParams } from 'react-router-dom';
-import { setInitialGlobalState } from '@src/test/__mocks__/store';
+
+import { renderHook } from '@testing-library/react';
+
+import { useRecordStatus } from '@/common/hooks/useRecordStatus';
+
+import { useStatusStore } from '@/store';
 
 const mockResourceId = 'mockResourceId';
 

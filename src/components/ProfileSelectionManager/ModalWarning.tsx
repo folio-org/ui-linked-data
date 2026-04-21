@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Modal } from '@components/Modal';
+
+import { Modal } from '@/components/Modal';
 
 interface ModalWarningProps {
   isOpen: boolean;
@@ -12,8 +13,9 @@ export const ModalWarning: FC<ModalWarningProps> = ({ isOpen, onClose }) => {
     <Modal
       className="modal-profile-warning"
       isOpen={isOpen}
-      title={''}
+      title={<FormattedMessage id="ld.modal.chooseProfileWarning.title" />}
       onClose={onClose}
+      showModalControls={false}
       cancelButtonHidden={true}
       submitButtonHidden={true}
       data-testid="modal-profile-warning"

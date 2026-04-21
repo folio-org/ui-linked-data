@@ -1,5 +1,7 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
-import type { SearchRequestParams, SearchRequestDescriptor } from '../../types';
+
+import type { SearchRequestDescriptor, SearchRequestParams } from '../../types';
+import { normalizeQuery } from '../../utils';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
 export class ResourcesRequestBuilder extends BaseRequestBuilder {
@@ -28,8 +30,9 @@ export class ResourcesRequestBuilder extends BaseRequestBuilder {
     const sortClause = ` sortby ${sortBy ?? this.defaultSortBy}`;
 
     if (searchBy) {
-      // Simple search: wrap query in CQL syntax
-      return `(${searchBy} all "${query}")${sortClause}`;
+      const escapedQuery = normalizeQuery(query) ?? '';
+
+      return `(${searchBy} all "${escapedQuery}")${sortClause}`;
     }
 
     // Advanced search: query is already CQL formatted, just add sortby

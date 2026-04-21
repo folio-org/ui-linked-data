@@ -1,7 +1,10 @@
-import { useInputsState, useUIState } from '@src/store';
+import { FullDisplayType } from '@/common/constants/uiElements.constants';
+import { Comparison } from '@/components/Comparison';
+
+import { useInputsState, useUIState } from '@/store';
+
 import { PreviewContent } from './PreviewContent';
-import { FullDisplayType } from '@common/constants/uiElements.constants';
-import { Comparison } from '@components/Comparison';
+
 import './FullDisplay.scss';
 
 export const FullDisplay = () => {

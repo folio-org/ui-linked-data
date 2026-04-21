@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+
 import { SearchEmptyPlaceholder } from './SearchEmptyPlaceholder';
 
 jest.mock('@/assets/general-search.svg?react', () => ({

@@ -1,4 +1,4 @@
-import { createStoreFactory, type SliceConfigs } from '../utils/createStoreFactory';
+import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
 
 export type LoadingState = SliceState<'isLoading', boolean>;

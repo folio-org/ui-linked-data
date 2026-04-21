@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
+
 import classNames from 'classnames';
+
 import './ButtonGroup.scss';
 
 type ButtonGroupProps = {
