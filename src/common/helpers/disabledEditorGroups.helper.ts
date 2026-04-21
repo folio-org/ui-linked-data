@@ -1,15 +1,15 @@
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
-const DISABLED_FIELD_TYPES = [
+const DISABLED_FIELD_TYPES = new Set([
   AdvancedFieldType.literal,
   AdvancedFieldType.simple,
   AdvancedFieldType.complex,
   AdvancedFieldType.dropdown,
   AdvancedFieldType.enumerated,
-];
+]);
 
-const DISABLED_PARENT_BFIDS = [PROFILE_BFIDS.WORK];
+const DISABLED_PARENT_BFIDS = new Set([PROFILE_BFIDS.WORK]);
 
 export const getComplexLookups = (schema: Schema) =>
   Array.from(schema.values()).filter(({ type }) => type === AdvancedFieldType.complex);
@@ -17,7 +17,7 @@ export const getComplexLookups = (schema: Schema) =>
 export const getDisabledParentDescendants = (schema: Schema) => {
   const schemaValues = Array.from(schema.values());
   const parentUuids = schemaValues.reduce((acc: any, { uuid, bfid }) => {
-    if (bfid && DISABLED_PARENT_BFIDS.includes(bfid)) {
+    if (bfid && DISABLED_PARENT_BFIDS.has(bfid)) {
       return [...acc, uuid];
     }
 
@@ -51,7 +51,7 @@ export const getDisabledFieldsWithinGroup = (schema: Schema, childElements: stri
 
     if (!schemaElem?.type) return;
 
-    if (DISABLED_FIELD_TYPES.includes(schemaElem.type as AdvancedFieldType)) {
+    if (DISABLED_FIELD_TYPES.has(schemaElem.type as AdvancedFieldType)) {
       disabledFields.set(schemaElem.uuid, schemaElem);
     }
 
