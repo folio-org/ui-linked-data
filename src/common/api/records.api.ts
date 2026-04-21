@@ -53,7 +53,10 @@ export const getGraphIdByExternalId = async ({ recordId }: IGetRecord) => {
 
 const singleRecordMarcUrl = `${BIBFRAME_API_ENDPOINT}/:recordId/marc`;
 
-export const getMarcRecord = async ({ recordId, endpointUrl }: SingleRecord & { endpointUrl?: string }) => {
+export const getMarcRecord = async ({
+  recordId,
+  endpointUrl,
+}: SingleRecord & { endpointUrl?: string }): Promise<MarcDTO> => {
   const url = baseApi.generateUrl(endpointUrl ?? singleRecordMarcUrl, {
     name: ':recordId',
     value: recordId,
