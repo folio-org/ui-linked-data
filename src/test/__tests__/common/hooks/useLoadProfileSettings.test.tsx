@@ -20,6 +20,9 @@ jest.mock('@/common/helpers/profileSettingsDrift.helper', () => ({
   detectDrift: jest.fn(),
 }));
 
+const mockInstanceResourceTypeUrl = 'mock-instance-resource-type-url';
+const mockWorkResourceTypeUrl = 'mock-work-resource-type-url';
+
 describe('useLoadProfileSettings', () => {
   const addStatusMessagesItem = jest.fn();
   let queryClient: QueryClient;
@@ -84,6 +87,37 @@ describe('useLoadProfileSettings', () => {
 
       expect(settings).toBe(newProfileSettingsWithDrift);
       expect(fetchProfileSettings).toHaveBeenCalledWith(1);
+    });
+
+    test('recomputes drift for each resource type while reusing cached settings', async () => {
+      const newProfileSettings = {
+        active: true,
+        children: [],
+      } as ProfileSettings;
+      const profile = [] as Profile;
+      const instanceSettings = {
+        ...newProfileSettings,
+        resourceTypeURL: mockInstanceResourceTypeUrl,
+        missingFromSettings: [],
+      } as ProfileSettingsWithDrift;
+      const workSettings = {
+        ...newProfileSettings,
+        resourceTypeURL: mockWorkResourceTypeUrl,
+        missingFromSettings: [],
+      } as ProfileSettingsWithDrift;
+
+      (fetchProfileSettings as jest.Mock).mockResolvedValue(newProfileSettings);
+      (detectDrift as jest.Mock).mockReturnValueOnce(instanceSettings).mockReturnValueOnce(workSettings);
+
+      const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
+      const first = await result.current.loadProfileSettings(1, profile, mockInstanceResourceTypeUrl);
+      const second = await result.current.loadProfileSettings(1, profile, mockWorkResourceTypeUrl);
+
+      expect(first).toBe(instanceSettings);
+      expect(second).toBe(workSettings);
+      expect(fetchProfileSettings).toHaveBeenCalledTimes(1);
+      expect(detectDrift).toHaveBeenNthCalledWith(1, profile, newProfileSettings, mockInstanceResourceTypeUrl);
+      expect(detectDrift).toHaveBeenNthCalledWith(2, profile, newProfileSettings, mockWorkResourceTypeUrl);
     });
 
     test('error in fetchProfileSettings returns default settings', async () => {
