@@ -1,8 +1,10 @@
 # Change history for ui-linked-data
 
 ## 3.0.0 (IN PROGRESS)
+* Fix for the case when changes to profile settings are not applied immediately. Fixes [UILD-798].
 * Fix Sonar issues. Refs [UILD-792].
 
+[UILD-798]:https://folio-org.atlassian.net/browse/UILD-798
 [UILD-792]:https://folio-org.atlassian.net/browse/UILD-792
 
 ## 2.0.0 (2026-04-17)

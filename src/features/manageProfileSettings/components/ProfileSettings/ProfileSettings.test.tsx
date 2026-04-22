@@ -5,8 +5,9 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 
-import { fetchProfile, fetchProfileSettings } from '@/common/api/profiles.api';
+import { fetchProfile } from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
+import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 
 import { useLoadingState, useManageProfileSettingsState, useStatusStore } from '@/store';
 
@@ -17,10 +18,25 @@ jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
 }));
+jest.mock('@/common/hooks/useLoadProfileSettings', () => ({
+  useLoadProfileSettings: jest.fn(),
+}));
+jest.mock('../CustomProfileToggle', () => ({
+  CustomProfileToggle: () => <div data-testid="custom-profile-toggle" />,
+}));
+jest.mock('../DefaultProfileOption', () => ({
+  DefaultProfileOption: () => <div data-testid="default-profile-option" />,
+}));
+jest.mock('../ProfileSettingsEditor', () => ({
+  ProfileSettingsEditor: () => <div data-testid="profile-settings-editor" />,
+}));
+
+const mockWorkResourceTypeUrl = 'mock-work-resource-type-url';
 
 describe('ProfileSettings', () => {
   const mockAddStatusMessagesItem = jest.fn();
   const mockSetIsLoading = jest.fn();
+  const mockLoadProfileSettings = jest.fn();
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -28,6 +44,19 @@ describe('ProfileSettings', () => {
         retry: false,
       },
     },
+  });
+
+  beforeEach(() => {
+    queryClient.clear();
+    (fetchProfile as jest.Mock).mockResolvedValue([]);
+    (useLoadProfileSettings as jest.Mock).mockReturnValue({
+      loadProfileSettings: mockLoadProfileSettings,
+    });
+    mockLoadProfileSettings.mockResolvedValue({
+      active: true,
+      children: [],
+      missingFromSettings: [],
+    });
   });
 
   const renderComponent = (selected: boolean) => {
@@ -39,7 +68,7 @@ describe('ProfileSettings', () => {
             ? {
                 id: 'one',
                 name: 'One',
-                resourceType: 'test-resource',
+                resourceType: mockWorkResourceTypeUrl,
               }
             : null,
         },
@@ -99,7 +128,7 @@ describe('ProfileSettings', () => {
   it('shows an error when loading profile settings fails', async () => {
     const error = new Error('Failed to load profile settings');
     (fetchProfile as jest.Mock).mockResolvedValue([]);
-    (fetchProfileSettings as jest.Mock).mockRejectedValue(error);
+    mockLoadProfileSettings.mockRejectedValue(error);
 
     renderComponent(true);
 
@@ -111,6 +140,17 @@ describe('ProfileSettings', () => {
         }),
       );
       expect(mockSetIsLoading).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('passes the selected profile resource type URI to load profile settings', async () => {
+    const profile = [] as Profile;
+    (fetchProfile as jest.Mock).mockResolvedValue(profile);
+
+    renderComponent(true);
+
+    await waitFor(() => {
+      expect(mockLoadProfileSettings).toHaveBeenCalledWith('one', profile, mockWorkResourceTypeUrl);
     });
   });
 });

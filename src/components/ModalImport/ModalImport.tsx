@@ -160,7 +160,7 @@ export const ModalImport = memo(() => {
       if (delta > 0) {
         await new Promise(r => setTimeout(r, delta));
       }
-      setIsImportSuccessful(true);
+      setIsImportSuccessful(response.resources?.length > 0);
       if (!response.resources || response.resources?.length === 0) {
         addStatusMessagesItem?.(
           UserNotificationFactory.createMessage(StatusType.warning, 'ld.importNoResourcesWarning'),

@@ -19,23 +19,23 @@ export const useLoadProfileSettings = () => {
     profile: Profile,
     resourceTypeURL?: string,
   ) => {
-    const queryKey = ['profileSettings', profileId];
-    const queryFn = async () => {
-      if (profileId === undefined) {
-        return DEFAULT_INACTIVE_SETTINGS;
-      }
-      const settings = await fetchProfileSettings(profileId);
-      sortProfileSettingsChildren(settings);
-      return detectDrift(profile, settings, resourceTypeURL);
-    };
+    if (profileId === undefined) {
+      return DEFAULT_INACTIVE_SETTINGS;
+    }
 
     try {
       const settings = await queryClient.ensureQueryData({
-        queryKey,
-        queryFn,
+        queryKey: ['profileSettings', String(profileId)],
+        queryFn: async () => {
+          const loadedSettings = await fetchProfileSettings(profileId);
+          sortProfileSettingsChildren(loadedSettings);
+
+          return loadedSettings;
+        },
         staleTime: Infinity,
       });
-      return settings;
+
+      return detectDrift(profile, settings, resourceTypeURL);
     } catch (error) {
       logger.error('Error fetching profile settings:', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadProfileSettings'));
