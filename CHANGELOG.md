@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 3.0.0 (IN PROGRESS)
+* Fix for the case when changes to profile settings are not applied immediately. Fixes [UILD-798].
+
+[UILD-798]:https://folio-org.atlassian.net/browse/UILD-798
 
 ## 2.0.0 (2026-04-17)
 * Remove unnecessary child subcomponents when copying a whole field when the record is loaded. Fixes [UILD-544].
