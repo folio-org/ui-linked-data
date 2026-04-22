@@ -8,7 +8,7 @@ import { useLoadProfile } from '@/common/hooks/useLoadProfile';
 import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Button, ButtonType } from '@/components/Button';
-import { getProfileLabelId, getResourceTypeFromURL, getUri } from '@/configs/resourceTypes';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 
 import { useLoadingState, useManageProfileSettingsState, useStatusState, useUIState } from '@/store';
 
@@ -55,7 +55,7 @@ export const ProfileSettings = () => {
           const profile = await loadProfile(selectedProfile.id);
           setFullProfile(profile);
           setProfileSettings(
-            await loadProfileSettings(String(selectedProfile.id), profile, getUri(selectedProfile.resourceType)),
+            await loadProfileSettings(String(selectedProfile.id), profile, selectedProfile.resourceType),
           );
         } catch {
           addStatusMessagesItem?.(
