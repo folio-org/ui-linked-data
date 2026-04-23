@@ -95,7 +95,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
     dropdownEntry.children.forEach(optionUuid => {
       const optionEntry = schema.get(optionUuid);
 
-      if (!optionEntry || optionEntry.type !== AdvancedFieldType.dropdownOption) return;
+      if (optionEntry?.type !== AdvancedFieldType.dropdownOption) return;
 
       if (optionEntry.children && optionEntry.children.length > 0) {
         const optionMarcMapping = this.collectMarcMappingFromChildren(optionEntry, schema);
@@ -108,9 +108,7 @@ export class MarcMappingGeneratorService implements IMarcMappingGenerator {
   }
 
   private addMarcMappingToEntry(entry: SchemaEntry, marcMapping: Record<string, string>) {
-    if (!entry.marcMapping) {
-      entry.marcMapping = {};
-    }
+    entry.marcMapping ??= {};
 
     Object.assign(entry.marcMapping, marcMapping);
   }

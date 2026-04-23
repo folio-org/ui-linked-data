@@ -60,9 +60,9 @@ export const filterLookupOptionsByMappedValue = (
   const bfGroup = getBFGroup(typesMap as FieldTypeMap, propertyURI, parentGroupUri);
 
   if (bfGroup) {
-    const bf20Uris = Object.values(bfGroup.data).map(({ uri }) => uri);
+    const bf20Uris = new Set(Object.values(bfGroup.data).map(({ uri }) => uri));
 
-    filteredLookupData = lookupData.filter(({ value }) => bf20Uris.includes(value.uri));
+    filteredLookupData = lookupData.filter(({ value }) => bf20Uris.has(value.uri));
   }
 
   return filteredLookupData;

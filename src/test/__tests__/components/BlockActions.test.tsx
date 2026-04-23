@@ -94,7 +94,9 @@ describe('BlockActions', () => {
   });
 
   test('fetches MARC data for Instance entry', async () => {
-    const getMarcRecordMock = jest.spyOn(recordsApi, 'getMarcRecord').mockImplementation(() => Promise.resolve(null));
+    const getMarcRecordMock = jest
+      .spyOn(recordsApi, 'getMarcRecord')
+      .mockImplementation(() => Promise.resolve({} as MarcDTO));
 
     const { findByText, findByTestId } = renderBlockActions(instanceEntry);
 

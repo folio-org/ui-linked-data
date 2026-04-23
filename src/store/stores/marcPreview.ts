@@ -4,7 +4,7 @@ import { type SliceState } from '../utils/slice';
 type MarcPreviewData = MarcDTO | null;
 type MarcPreviewMetaData = MarcPreviewMetadata | null;
 
-export type MarcPreviewState = SliceState<'basicValue', any> &
+export type MarcPreviewState = SliceState<'basicValue', MarcPreviewData> &
   SliceState<'complexValue', MarcPreviewData> &
   SliceState<'metadata', MarcPreviewMetaData>;
 
