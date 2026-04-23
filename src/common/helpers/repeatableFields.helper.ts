@@ -17,9 +17,7 @@ export const checkRepeatableGroup = ({
   const { type, children, constraints } = entry;
 
   let isRepeatableGroup =
-    level === GROUP_BY_LEVEL &&
-    !isDisabled &&
-    (constraints?.repeatable !== false || typeof constraints === 'undefined');
+    level === GROUP_BY_LEVEL && !isDisabled && (constraints?.repeatable !== false || constraints === undefined);
 
   if (isRepeatableGroup) {
     const isGroupType = type === AdvancedFieldType.group;
@@ -37,7 +35,7 @@ export const checkRepeatableSubcomponent = ({ entry, isDisabled }: { entry: Sche
   const { type, constraints } = entry;
   const isRepeatable =
     !isDisabled &&
-    (constraints?.repeatable !== false || typeof constraints === 'undefined') &&
+    (constraints?.repeatable !== false || constraints === undefined) &&
     // remove this condition after updating the profile
     type === AdvancedFieldType.literal;
 

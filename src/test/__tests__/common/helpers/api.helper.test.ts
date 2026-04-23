@@ -134,6 +134,18 @@ describe('api.helper', () => {
       await loadSimpleLookup('/msomething.rdf?memberOf=http://id.loc.gov/something.json');
       expect(mockGetLookupDict).toHaveBeenCalledWith(expect.anything(), true, expect.anything());
     });
+
+    test('tries lookup URIs in order until one resolves', async () => {
+      const response = [{ label: 'resolved value' }];
+
+      mockGetLookupDict.mockResolvedValueOnce(undefined).mockResolvedValueOnce(response);
+
+      await expect(
+        loadSimpleLookup(['http://some-other-domain/id-1', 'http://some-other-domain/id-2']),
+      ).resolves.toEqual(response);
+      expect(mockGetLookupDict).toHaveBeenNthCalledWith(1, 'http://some-other-domain/id-1.json', false, false);
+      expect(mockGetLookupDict).toHaveBeenNthCalledWith(2, 'http://some-other-domain/id-2.json', false, false);
+    });
   });
 
   describe('checkHasErrorOfCodeType', () => {

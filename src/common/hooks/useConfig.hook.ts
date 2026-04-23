@@ -14,7 +14,7 @@ import { useInputsState, useProfileState } from '@/store';
 
 import { useLoadProfile } from './useLoadProfile';
 import { useLoadProfileSettings } from './useLoadProfileSettings';
-import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema.hook';
+import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema';
 import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {

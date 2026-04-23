@@ -9,33 +9,43 @@ const hasTextTypeSuffix = (pathname: string) => {
   return pathname.endsWith('.rdf') || pathname.endsWith('.xml');
 };
 
+const formatSimpleLookupUri = (uri: string) => {
+  const parsed = URL.parse(uri);
+
+  if (!parsed) {
+    return uri;
+  }
+
+  if (!hasLinkedDataSuffix(parsed.pathname)) {
+    parsed.pathname = `${parsed.pathname}.json`;
+  }
+
+  if (parsed.hostname.endsWith('id.loc.gov')) {
+    parsed.protocol = 'https';
+  }
+
+  return parsed.href;
+};
+
+const findSimpleLookup = (uris: string[]) => {
+  return uris.reduce<Promise<LoadSimpleLookupResponseItem[] | undefined>>(async (resultPromise, uri) => {
+    const result = await resultPromise;
+
+    if (result) {
+      return result;
+    }
+
+    return fetchSimpleLookup(formatSimpleLookupUri(uri));
+  }, Promise.resolve(undefined));
+};
+
 export const loadSimpleLookup = async (
   uris: string | string[],
 ): Promise<LoadSimpleLookupResponseItem[] | undefined> => {
-  if (!Array.isArray(uris)) {
-    uris = [uris];
-  }
-
-  for await (const uri of uris) {
-    let formattedUri = uri;
-    const parsed = URL.parse(uri);
-    if (parsed) {
-      if (!hasLinkedDataSuffix(parsed.pathname)) {
-        parsed.pathname = `${parsed.pathname}.json`;
-      }
-      if (parsed.hostname.endsWith('id.loc.gov')) {
-        parsed.protocol = 'https';
-      }
-      formattedUri = parsed.href;
-    }
-
-    const data = await fetchSimpleLookup(formattedUri);
-
-    return data;
-  }
+  return findSimpleLookup(Array.isArray(uris) ? uris : [uris]);
 };
 
-const fetchSimpleLookup = async (url: string): Promise<any> => {
+const fetchSimpleLookup = async (url: string): Promise<LoadSimpleLookupResponseItem[] | undefined> => {
   let sameOrigin = true;
   let isText = false;
 
@@ -55,7 +65,7 @@ const fetchSimpleLookup = async (url: string): Promise<any> => {
 
   const response = await getLookupDict(url, isText, sameOrigin);
 
-  return response;
+  return response as LoadSimpleLookupResponseItem[] | undefined;
 };
 
 export const checkHasErrorOfCodeType = (err: ApiError, codeType: ApiErrorCodes) =>

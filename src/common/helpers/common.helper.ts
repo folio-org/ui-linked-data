@@ -9,7 +9,7 @@ export const alphabeticSortLabel = <T extends { label?: string }>(a: T, b: T): 0
 };
 
 export const deleteFromSetImmutable = <T = unknown>(set: Set<T>, toDelete: T[]) => {
-  const clone = new Set([...set]);
+  const clone = new Set(set);
 
   toDelete.forEach(entry => clone.delete(entry));
 

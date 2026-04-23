@@ -33,9 +33,9 @@ export const useRecordGeneration = () => {
     record && block && reference
       ? (getReferenceIds(record, block, reference.key) as unknown as { id: string }[])
       : undefined;
-  const entityType = !block
-    ? ResourceType.work
-    : (BibframeEntitiesMap[block as keyof typeof BibframeEntitiesMap] ?? ResourceType.work);
+  const entityType = block
+    ? (BibframeEntitiesMap[block as keyof typeof BibframeEntitiesMap] ?? ResourceType.work)
+    : ResourceType.work;
 
   const generateRecord = ({ profileId }: { profileId?: string | null }) => {
     const recordProfileId = record?.resource?.[block as keyof typeof BibframeEntitiesMap]?.profileId as

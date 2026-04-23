@@ -118,7 +118,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     const deletable = uuids.length >= MIN_AMT_OF_SIBLING_ENTRIES_TO_BE_DELETABLE;
 
     uuids.forEach((uuid, cloneIndex) =>
-      this.schema.set(uuid, { ...(this.schema.get(uuid) ?? {}), deletable, cloneIndex } as SchemaEntry),
+      this.schema.set(uuid, { ...this.schema.get(uuid), deletable, cloneIndex } as SchemaEntry),
     );
   }
 
@@ -279,9 +279,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     if (childEntryId) {
       const twinChildrenKey = generateTwinChildrenKey(originalEntry);
 
-      if (!updatedParentEntry.twinChildren) {
-        updatedParentEntry.twinChildren = {};
-      }
+      updatedParentEntry.twinChildren ??= {};
 
       updatedParentEntry.twinChildren[twinChildrenKey] = [
         ...new Set([...(updatedParentEntry.twinChildren[twinChildrenKey] ?? []), originalEntry.uuid, updatedEntryUuid]),
@@ -342,7 +340,7 @@ export class SchemaWithDuplicatesService implements ISchemaWithDuplicatesService
     if (!originalUserValue) return;
 
     const originalChildEntry = this.schema.get(originalChildEntryUuid);
-    if (!originalChildEntry || originalChildEntry.type !== AdvancedFieldType.dropdownOption) return;
+    if (originalChildEntry?.type !== AdvancedFieldType.dropdownOption) return;
 
     const uris = originalUserValue.contents.map(content => content.meta?.uri).filter(Boolean) as string[];
     if (uris.length === 0) return;
