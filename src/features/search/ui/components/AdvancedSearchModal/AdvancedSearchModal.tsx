@@ -43,7 +43,7 @@ export const AdvancedSearchModal: FC = memo(() => {
   // potentially optimize
   const submitButtonDisabled = !rawQuery.filter(
     ({ rowIndex, operator, index, qualifier, query }) =>
-      (rowIndex !== 0 ? operator : true) && index && qualifier && query,
+      (rowIndex === 0 ? true : operator) && index && qualifier && query,
   ).length;
 
   const onChangeInput = (value: string, name: string, rowIndex?: number) => {
