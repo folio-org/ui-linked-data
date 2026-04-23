@@ -88,7 +88,7 @@ export const MarcPreview: FC<MarcPreviewProps> = ({ onClose, onAssign, checkFail
             <div className="marc-preview-content-title">
               <FormattedMessage id="ld.marcAuthorityRecord" />
             </div>
-            <MarcContent marc={marcPreviewData} className="marc-contents" />
+            <MarcContent marc={marcPreviewData} className="marc-contents" tabIndex={0} />
           </div>
         </div>
       ) : null}

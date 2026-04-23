@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { ComponentPropsWithoutRef, FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
@@ -11,19 +11,15 @@ export type SelectValue = {
   value: string;
   label?: string;
   isDisabled?: boolean;
-  [x: string]: any;
 };
 
-type Select = {
-  id?: string;
+type Select = Omit<ComponentPropsWithoutRef<'select'>, 'value' | 'onChange'> & {
   value?: string | SelectValue;
   onChange: (item: SelectValue) => void;
   options: (string | SelectValue)[];
   withIntl?: boolean;
-  className?: string;
   ariaLabel?: string;
   ariaLabelledBy?: string;
-  [x: string]: any;
 };
 
 export const Select: FC<Select> = ({
@@ -50,7 +46,9 @@ export const Select: FC<Select> = ({
             typeof item === 'string' ? item === value : item.value === value,
           );
 
-          selectedValue && onChange(typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue);
+          if (selectedValue) {
+            onChange(typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue);
+          }
         }}
         role="combobox"
         aria-expanded="false"
@@ -69,7 +67,7 @@ export const Select: FC<Select> = ({
           );
         })}
       </select>
-      <span className="select-icon" role="presentation">
+      <span className="select-icon" aria-hidden="true">
         <CaretDown16 />
       </span>
     </div>

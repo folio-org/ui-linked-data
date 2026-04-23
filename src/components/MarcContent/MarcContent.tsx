@@ -1,18 +1,16 @@
-import { FC } from 'react';
+import { ComponentPropsWithoutRef, FC } from 'react';
 
 import { MarcField } from '@/components/MarcField';
 
-type MarcContent = {
+type MarcContentProps = ComponentPropsWithoutRef<'section'> & {
   marc: MarcDTO;
-  [x: string]: any;
 };
 
-export const MarcContent: FC<MarcContent> = ({ marc, ...rest }) => {
+export const MarcContent: FC<MarcContentProps> = ({ marc, ...rest }) => {
   const parsedContent = marc?.parsedRecord?.content;
 
   return (
-    <section tabIndex={0} {...rest}>
-      {/* NOSONAR */}
+    <section {...rest}>
       <table>
         <tbody>
           <tr>
