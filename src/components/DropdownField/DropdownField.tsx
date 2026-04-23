@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Select, type SelectValue } from '@/components/Select';
+import { Select } from '@/components/Select';
 
 interface IDropdownField {
   options: ReactSelectOption[];
@@ -29,9 +29,9 @@ export const DropdownField: FC<IDropdownField> = ({
     setLocalValue(value);
   }, [value]);
 
-  const handleOnChange = (option: SelectValue) => {
-    onChange(option as ReactSelectOption, uuid, true);
-    setLocalValue(option as ReactSelectOption);
+  const handleOnChange = (option: ReactSelectOption) => {
+    onChange(option, uuid, true);
+    setLocalValue(option);
   };
 
   return (

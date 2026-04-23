@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, FC } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
@@ -13,16 +13,19 @@ export type SelectValue = {
   isDisabled?: boolean;
 };
 
-type Select = Omit<ComponentPropsWithoutRef<'select'>, 'value' | 'onChange'> & {
-  value?: string | SelectValue;
-  onChange: (item: SelectValue) => void;
-  options: (string | SelectValue)[];
+type SelectProps<T extends SelectValue = SelectValue> = Omit<
+  ComponentPropsWithoutRef<'select'>,
+  'value' | 'onChange'
+> & {
+  value?: string | T;
+  onChange: (item: T) => void;
+  options: (string | T)[];
   withIntl?: boolean;
   ariaLabel?: string;
   ariaLabelledBy?: string;
 };
 
-export const Select: FC<Select> = ({
+export function Select<T extends SelectValue = SelectValue>({
   id,
   value,
   onChange,
@@ -32,7 +35,7 @@ export const Select: FC<Select> = ({
   ariaLabel,
   ariaLabelledBy,
   ...restProps
-}) => {
+}: SelectProps<T>) {
   const selectedValue = typeof value === 'string' ? value : value?.value;
 
   return (
@@ -47,7 +50,7 @@ export const Select: FC<Select> = ({
           );
 
           if (selectedValue) {
-            onChange(typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue);
+            onChange((typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue) as T);
           }
         }}
         role="combobox"
@@ -72,4 +75,4 @@ export const Select: FC<Select> = ({
       </span>
     </div>
   );
-};
+}
