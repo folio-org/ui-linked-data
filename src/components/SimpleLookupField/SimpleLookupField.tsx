@@ -43,6 +43,8 @@ interface Props {
 
 const LoadingMessage: FC = () => <FormattedMessage id="ld.loading" />;
 
+const getLoadingMessage = () => <LoadingMessage />;
+
 // Most of react-select can be styled from CSS, but :focus on the pill removal button
 // cannot, so remove most styling with `unstyled` but do define this one state.
 // Uses $blue-400 and $button-standard for the boxShadow.
@@ -164,7 +166,7 @@ export const SimpleLookupField: FC<Props> = ({
       }
       value={isMulti ? localValueMulti : localValueSingle}
       placeholder={<FormattedMessage id="ld.select" />}
-      loadingMessage={() => <LoadingMessage />}
+      loadingMessage={getLoadingMessage}
       inputId="creatable-select-input"
       unstyled
       styles={customStyles as unknown as StylesConfig<unknown, boolean, GroupBase<unknown>>}
