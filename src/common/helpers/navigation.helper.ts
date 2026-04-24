@@ -15,7 +15,7 @@ export const getForceNavigateToDest = (pathname: string, search?: string): Force
 };
 
 export const getResourceIdFromUri = () => {
-  const { pathname } = window.location;
+  const { pathname } = globalThis.location;
 
   const splittedPath = pathname.split('/');
   const isEditResourcePage = splittedPath.includes(ROUTE_PATH.RESOURCES) && splittedPath.includes(ROUTE_PATH.EDIT);
@@ -28,7 +28,7 @@ export const getResourceIdFromUri = () => {
 };
 
 export const getIsCreatePage = () => {
-  const { pathname } = window.location;
+  const { pathname } = globalThis.location;
 
   return pathname === ROUTES.RESOURCE_CREATE.uri;
 };

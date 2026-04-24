@@ -4,14 +4,18 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
 
-export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
+import { logger } from '../services/logger';
+
+type SetMarcPreviewData = (value: MarcDTO | null) => void;
+
+export const useMarcData = (setMarcPreviewData: SetMarcPreviewData) => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const fetchMarcData = async (recordId?: string, endpointUrl?: string): Promise<MarcDTO | undefined> => {
     if (!recordId) return undefined;
 
-    let marcData;
+    let marcData: MarcDTO | undefined;
 
     try {
       setIsLoading(true);
@@ -20,6 +24,7 @@ export const useMarcData = (setMarcPreviewData: (value: any) => void) => {
 
       setMarcPreviewData(marcData);
     } catch (error) {
+      logger.error('Error occurred while fetching MARC data', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadMarc'));
     } finally {
       setIsLoading(false);

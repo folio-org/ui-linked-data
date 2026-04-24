@@ -59,7 +59,6 @@ export const useProcessedRecordAndSchema = () => {
               })
             : undefined;
 
-          !noStateUpdate && setRecord(wrapRecordValuesWithCommonContainer(adjustedRecord));
           selectedRecordBlocks = { block, reference };
           schemaWithDuplicatesService.set(baseSchema);
           recordNormalizingService.init(adjustedRecord, block, reference);
@@ -75,6 +74,10 @@ export const useProcessedRecordAndSchema = () => {
 
           updatedSchema = recordToSchemaMappingService.get();
           updatedUserValues = userValuesService.getAllValues();
+
+          if (!noStateUpdate) {
+            setRecord(wrapRecordValuesWithCommonContainer(adjustedRecord));
+          }
         }
       } catch (error) {
         console.error(error);

@@ -59,6 +59,18 @@ export class LookupProcessor implements IProfileSchemaProcessor {
     return nestedResult;
   }
 
+  private hasLabelKey(key: string): boolean {
+    return key.includes('term') || key.includes('label') || key.includes('name');
+  }
+
+  private assignValue(result: GeneratedValue, key: string, value: string | undefined, isArrayType: boolean) {
+    if (value) {
+      result[key] = isArrayType ? [value] : value;
+    } else {
+      result[key] = isArrayType ? [] : '';
+    }
+  }
+
   private mapEntryValue({
     result,
     key,
@@ -83,7 +95,7 @@ export class LookupProcessor implements IProfileSchemaProcessor {
       if (!meta?.uri) return;
 
       value = meta.uri;
-    } else if (meta?.basicLabel && (key.includes('term') || key.includes('label') || key.includes('name'))) {
+    } else if (meta?.basicLabel && this.hasLabelKey(key)) {
       value = meta.basicLabel;
     } else if (key.includes('code')) {
       value = meta?.uri?.split('/').pop() ?? label ?? '';
@@ -97,11 +109,6 @@ export class LookupProcessor implements IProfileSchemaProcessor {
       value = label;
     }
 
-    // Format the value according to schema type (array or string)
-    if (value) {
-      result[key] = isArrayType ? [value] : value;
-    } else {
-      result[key] = isArrayType ? [] : '';
-    }
+    this.assignValue(result, key, value, isArrayType);
   }
 }

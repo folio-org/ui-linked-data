@@ -56,7 +56,7 @@ export const findParentEntryByProperty = <T>({
 
 export const getParentEntryUuid = (path: string[]) => {
   const index = path.length - PREV_ENTRY_PATH_INDEX;
-  const parentEntryIndex = index >= 0 ? index : 0;
+  const parentEntryIndex = Math.max(index, 0);
 
   return path[parentEntryIndex];
 };

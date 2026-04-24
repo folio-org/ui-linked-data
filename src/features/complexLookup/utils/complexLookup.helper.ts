@@ -83,7 +83,7 @@ export const generateValidationRequestBody = (
   if (!marcData) return {};
 
   const rawMarcEncoded = JSON.stringify(marcData?.parsedRecord?.content, null, 2);
-  const escapedString = rawMarcEncoded.replace(/\r/g, '\r').replace(/\n/g, '\n');
+  const escapedString = rawMarcEncoded.replaceAll('\r', '\r').replaceAll('\n', '\n');
 
   return {
     rawMarc: escapedString,
