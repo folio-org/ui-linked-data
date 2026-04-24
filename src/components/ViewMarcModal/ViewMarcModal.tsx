@@ -10,7 +10,7 @@ export const ViewMarcModal = () => {
   return (
     marcPreviewData && (
       <div className="view-marc-modal">
-        <MarcContent marc={marcPreviewData} className="marc-contents" />
+        <MarcContent marc={marcPreviewData} className="marc-contents" tabIndex={0} />
       </div>
     )
   );

@@ -20,7 +20,7 @@ import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, u
 
 import './Edit.scss';
 
-const ignoreLoadingStatuses = [RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing];
+const ignoreLoadingStatuses = new Set([RecordStatus.saveAndClose, RecordStatus.saveAndKeepEditing]);
 
 export const Edit = () => {
   const { getProfiles } = useConfig();
@@ -113,7 +113,7 @@ export const Edit = () => {
   // TODO: UILD-60, UILD-643 - refactor this after introducing Zustand selectors and React Query
   useEffect(() => {
     async function loadRecord() {
-      if (!recordStatusType || ignoreLoadingStatuses.includes(recordStatusType)) return;
+      if (!recordStatusType || ignoreLoadingStatuses.has(recordStatusType)) return;
 
       const fetchableId = resourceId ?? cloneOfParam;
 

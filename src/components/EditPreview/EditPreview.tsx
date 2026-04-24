@@ -64,7 +64,7 @@ export const EditPreview = memo(() => {
     >
       {showPreview ? (
         <TitledPreview
-          ownId={dependencies?.entries?.[0]?.id?.toString()}
+          ownId={dependencies?.entries?.[0]?.id as string | undefined}
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
           previewContent={selectedForPreview}

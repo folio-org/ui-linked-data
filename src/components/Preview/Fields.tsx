@@ -62,7 +62,7 @@ export const Fields = ({
   // don't render top level entities not selected for preview
   if (isEntity && !currentlyPreviewedEntityBfid.has(bfid) && !forceRenderAllTopLevelEntities) return null;
 
-  const isGroupParentEntryType = base.get(entry.path[entry.path.length - 2])?.type === AdvancedFieldType.group;
+  const isGroupParentEntryType = base.get(entry.path.at(-2) ?? '')?.type === AdvancedFieldType.group;
 
   const {
     isGroupable,

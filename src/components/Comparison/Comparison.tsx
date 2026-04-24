@@ -47,7 +47,7 @@ export const Comparison = () => {
       setCurrentPage(prevValue => {
         const previousPage = prevValue - 1;
 
-        return previousPage >= 0 ? previousPage : 0;
+        return Math.max(previousPage, 0);
       });
     }
 
@@ -104,7 +104,7 @@ export const Comparison = () => {
       </header>
       <div className="comparison-contents">
         {previewContent
-          .sort((a, b) => selectedInstances.indexOf(a.id) - selectedInstances.indexOf(b.id))
+          .toSorted((a, b) => selectedInstances.indexOf(a.id) - selectedInstances.indexOf(b.id))
           .slice(currentPage, currentPage + 2)
           .map(({ initKey, base, userValues, id, title, referenceIds, selectedEntries }, index) => (
             <section key={id} className="entry">
@@ -144,7 +144,7 @@ export const Comparison = () => {
           <div className="insufficient-resource-amt" data-testid="insufficient-resource-amt">
             <GeneralSearch />
             <FormattedMessage
-              id={!previewContent.length ? 'ld.chooseTwoResourcesCompare' : 'ld.chooseOneResourceCompare'}
+              id={previewContent.length ? 'ld.chooseOneResourceCompare' : 'ld.chooseTwoResourcesCompare'}
             />
           </div>
         )}

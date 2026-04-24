@@ -88,9 +88,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     const recordId = await saveRecord({ asRefToNewRecord: true, shouldSetSearchParams: !forceNavigateTo });
     setRecordStatus({ type: RecordStatus.saveAndClose });
 
-    if (!forceNavigateTo) {
-      proceedNavigation();
-    } else {
+    if (forceNavigateTo) {
       stopNavigation();
       dispatchUnblockEvent();
 
@@ -103,6 +101,8 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
         newSearchParams.set(paramKey, recordId);
         navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
       }
+    } else {
+      proceedNavigation();
     }
   };
 

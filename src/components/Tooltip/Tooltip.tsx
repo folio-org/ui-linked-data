@@ -27,7 +27,7 @@ export const Tooltip: FC<TooltipProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,15 +70,15 @@ export const Tooltip: FC<TooltipProps> = ({
       </Button>
 
       {isVisible && (
-        <div
+        <dialog
           ref={tooltipRef}
           className={classNames(['tooltip-content', contentClassName])}
           tabIndex={-1}
-          role="dialog"
+          open
           data-testid={`${dataTestId}__content`}
         >
           {content}
-        </div>
+        </dialog>
       )}
     </div>
   );

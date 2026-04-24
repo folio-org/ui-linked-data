@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
@@ -11,22 +11,21 @@ export type SelectValue = {
   value: string;
   label?: string;
   isDisabled?: boolean;
-  [x: string]: any;
 };
 
-type Select = {
-  id?: string;
-  value?: string | SelectValue;
-  onChange: (item: SelectValue) => void;
-  options: (string | SelectValue)[];
+type SelectProps<T extends SelectValue = SelectValue> = Omit<
+  ComponentPropsWithoutRef<'select'>,
+  'value' | 'onChange'
+> & {
+  value?: string | T;
+  onChange: (item: T) => void;
+  options: (string | T)[];
   withIntl?: boolean;
-  className?: string;
   ariaLabel?: string;
   ariaLabelledBy?: string;
-  [x: string]: any;
 };
 
-export const Select: FC<Select> = ({
+export function Select<T extends SelectValue = SelectValue>({
   id,
   value,
   onChange,
@@ -36,7 +35,7 @@ export const Select: FC<Select> = ({
   ariaLabel,
   ariaLabelledBy,
   ...restProps
-}) => {
+}: SelectProps<T>) {
   const selectedValue = typeof value === 'string' ? value : value?.value;
 
   return (
@@ -50,7 +49,9 @@ export const Select: FC<Select> = ({
             typeof item === 'string' ? item === value : item.value === value,
           );
 
-          selectedValue && onChange(typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue);
+          if (selectedValue) {
+            onChange((typeof selectedValue === 'string' ? { value: selectedValue } : selectedValue) as T);
+          }
         }}
         role="combobox"
         aria-expanded="false"
@@ -69,9 +70,9 @@ export const Select: FC<Select> = ({
           );
         })}
       </select>
-      <span className="select-icon" role="presentation">
+      <span className="select-icon" aria-hidden="true">
         <CaretDown16 />
       </span>
     </div>
   );
-};
+}

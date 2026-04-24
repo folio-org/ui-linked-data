@@ -18,7 +18,7 @@ import './Modal.scss';
 interface Props {
   'data-testid'?: string;
   isOpen: boolean;
-  title: string | ReactElement<any>;
+  title: string | ReactElement<unknown>;
   className?: string;
   classNameHeader?: string;
   submitButtonDisabled?: boolean;
@@ -65,7 +65,7 @@ const Modal: FC<Props> = ({
   'data-testid': modalTestId,
 }) => {
   const { formatMessage } = useIntl();
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDialogElement>(null);
   const portalElement = document.getElementById(MODAL_CONTAINER_ID) as Element;
   // TODO: UILD-147 - uncomment for using with Shadow DOM
   // || (document.querySelector(WEB_COMPONENT_NAME)?.shadowRoot?.getElementById(MODAL_CONTAINER_ID) as Element)
@@ -77,9 +77,9 @@ const Modal: FC<Props> = ({
       onClose();
     }
 
-    window.addEventListener('keydown', handleEscape);
+    globalThis.addEventListener('keydown', handleEscape);
 
-    return () => window.removeEventListener('keydown', handleEscape);
+    return () => globalThis.removeEventListener('keydown', handleEscape);
   }, [shouldCloseOnEsc]);
 
   const onExternalClickClose = () => {
@@ -95,20 +95,20 @@ const Modal: FC<Props> = ({
   return isOpen && portalElement
     ? createPortal(
         <>
-          <div className="overlay" onClick={onExternalClickClose} role="presentation" data-testid="modal-overlay" />
+          <div className="overlay" onClick={onExternalClickClose} aria-hidden="true" data-testid="modal-overlay" />
           <FocusTrap
             focusTrapOptions={{
               clickOutsideDeactivates: shouldCloseOnExternalClick,
               escapeDeactivates: shouldCloseOnEsc,
-              fallbackFocus: modalRef.current || undefined,
+              fallbackFocus: () => modalRef.current ?? document.body,
             }}
           >
-            <div
+            <dialog
               className={classNames(['modal', className])}
-              role="dialog"
               data-testid={modalTestId || 'modal'}
               tabIndex={-1}
               ref={modalRef}
+              open
             >
               <div className={classNames(['modal-header', classNameHeader])}>
                 {showCloseIconButton && (
@@ -148,7 +148,7 @@ const Modal: FC<Props> = ({
                   )}
                 </div>
               )}
-            </div>
+            </dialog>
           </FocusTrap>
         </>,
         portalElement,

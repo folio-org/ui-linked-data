@@ -29,7 +29,7 @@ export const DropdownField: FC<IDropdownField> = ({
     setLocalValue(value);
   }, [value]);
 
-  const handleOnChange = (option: any) => {
+  const handleOnChange = (option: ReactSelectOption) => {
     onChange(option, uuid, true);
     setLocalValue(option);
   };

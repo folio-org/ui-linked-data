@@ -107,6 +107,6 @@ class MarvaNextComponent extends HTMLElement {
   }
 }
 
-if (!window.customElements.get(WEB_COMPONENT_NAME)) {
-  window.customElements.define(WEB_COMPONENT_NAME, MarvaNextComponent);
+if (!globalThis.customElements.get(WEB_COMPONENT_NAME)) {
+  globalThis.customElements.define(WEB_COMPONENT_NAME, MarvaNextComponent);
 }
