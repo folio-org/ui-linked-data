@@ -48,7 +48,11 @@ export class ComplexLookupUserValueService implements IUserValueType {
   }
 
   private getLabel(item: unknown) {
-    return typeof item === 'object' ? (item as { label: string[] })?.label[0] : String(item);
+    if (typeof item === 'object') return (item as { label: string[] })?.label?.[0];
+
+    const primitive = item as string | number | undefined;
+
+    return String(primitive);
   }
 
   private getSingleLabel(data: unknown) {
@@ -58,7 +62,7 @@ export class ComplexLookupUserValueService implements IUserValueType {
   private getPreferredMeta(data: unknown) {
     const isPreferred = (data as Record<string, boolean>)?.isPreferred;
 
-    return isPreferred !== undefined ? { isPreferred } : {};
+    return isPreferred === undefined ? {} : { isPreferred };
   }
 
   private getUri(data: unknown) {

@@ -6,6 +6,8 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useStatusState } from '@/store';
 
+import { logger } from '../services/logger';
+
 interface RequestConfig {
   url: string;
   method?: APIRequestMethod;
@@ -49,6 +51,7 @@ export function useApi<T>() {
 
         return response;
       } catch (error) {
+        logger.error('Error occurred while making API request', error);
         addStatusMessagesItem?.(
           UserNotificationFactory.createMessage(StatusType.error, errorMessageId ?? 'ld.errorMakingApiRequest'),
         );
