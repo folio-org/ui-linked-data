@@ -54,7 +54,7 @@
     "@eslint/compat": "^1.4.1",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.39.4",
-    "@tanstack/react-query-devtools": "^5.97.0",
+    "@tanstack/react-query-devtools": "^5.100.5",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.1.0",
