@@ -48,7 +48,7 @@ export const RESOURCE_CREATE_URLS = [ROUTES.RESOURCE_CREATE.uri];
 
 export const MANAGE_PROFILE_SETTINGS_URLS = [ROUTES.MANAGE_PROFILE_SETTINGS.uri];
 
-export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri];
+export const FIXED_HEIGHT_VIEWS = [ROUTES.SEARCH.uri, ROUTES.MANAGE_PROFILE_SETTINGS.uri];
 
 export enum QueryParams {
   Type = 'type',
