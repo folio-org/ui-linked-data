@@ -16,7 +16,7 @@ function isDynamicMode(props: SearchProviderProps): props is SearchProviderProps
 }
 
 export const SearchProvider: FC<SearchProviderProps> = props => {
-  const { flow, mode = 'custom', children, onSubmitCallback } = props;
+  const { flow, mode = 'custom', children, onSubmitCallback, managePreview } = props;
   const { isLoading: isGlobalLoading } = useLoadingState(['isLoading']);
 
   // Extract dynamic/static mode params
@@ -73,6 +73,7 @@ export const SearchProvider: FC<SearchProviderProps> = props => {
     results,
     refetch,
     onSubmitCallback,
+    managePreview,
   });
 
   // Sync URL to store (URL flow only)

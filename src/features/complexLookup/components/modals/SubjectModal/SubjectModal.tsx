@@ -91,6 +91,7 @@ export const SubjectModal: FC<SubjectModalProps> = ({
           handleCloseMarcPreview();
           hubPreviewProps.handleCloseHubPreview();
         }}
+        managePreview={false}
       >
         <Search.Controls>
           <Search.Controls.SegmentGroup>

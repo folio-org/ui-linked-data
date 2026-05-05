@@ -81,6 +81,7 @@ export const AuthoritiesModal: FC<AuthoritiesModalProps> = ({
         flow="value"
         mode="custom"
         onSubmitCallback={handleCloseMarcPreview}
+        managePreview={false}
       >
         <Search.Controls>
           {/* Segment tabs - clicking triggers onSegmentChange, auto-resolves new config */}
