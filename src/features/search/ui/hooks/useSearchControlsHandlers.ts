@@ -31,6 +31,7 @@ interface UseSearchControlsHandlersParams {
   };
   refetch?: () => Promise<void>;
   onSubmitCallback?: () => void;
+  managePreview?: boolean;
 }
 
 interface SearchControlsHandlers {
@@ -115,6 +116,7 @@ export const useSearchControlsHandlers = ({
   results,
   refetch,
   onSubmitCallback,
+  managePreview = true,
 }: UseSearchControlsHandlersParams): SearchControlsHandlers => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -222,9 +224,7 @@ export const useSearchControlsHandlers = ({
       saveCurrentDraft();
 
       // Reset preview
-      resetPreviewContent();
-      resetFullDisplayComponentType();
-      resetCurrentlyPreviewedEntityBfid();
+      resetPreview();
 
       // Resolve configs for the new segment using centralized resolvers
       const newSegmentConfig = resolveCoreConfig(newSegment);
@@ -313,9 +313,11 @@ export const useSearchControlsHandlers = ({
   );
 
   const resetPreview = () => {
-    resetPreviewContent();
-    resetFullDisplayComponentType();
-    resetCurrentlyPreviewedEntityBfid();
+    if (managePreview) {
+      resetPreviewContent();
+      resetFullDisplayComponentType();
+      resetCurrentlyPreviewedEntityBfid();
+    }
   };
 
   const handleSubmit = useCallback(() => {

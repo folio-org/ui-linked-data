@@ -4,10 +4,12 @@
 * Fix Sonar issues. Refs [UILD-792].
 * Fix for hidden menu bar. Refs [UILD-805].
 * Fix for tooltip position. Refs [UILD-806].
+* Fix for blank preview in editor while searching for complex values. Refs [UILD-807].
 
 [UILD-792]:https://folio-org.atlassian.net/browse/UILD-792
 [UILD-805]:https://folio-org.atlassian.net/browse/UILD-805
 [UILD-806]:https://folio-org.atlassian.net/browse/UILD-806
+[UILD-807]:https://folio-org.atlassian.net/browse/UILD-807
 
 ## 2.0.1 (2026-04-23)
 * Fix for the case when changes to profile settings are not applied immediately. Fixes [UILD-798].

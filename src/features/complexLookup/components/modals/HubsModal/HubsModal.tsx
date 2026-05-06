@@ -47,6 +47,7 @@ export const HubsModal: FC<HubsModalProps> = ({ isOpen, onClose, assignedValue, 
         flow="value"
         mode="custom"
         onSubmitCallback={hubPreviewProps.handleCloseHubPreview}
+        managePreview={false}
       >
         <Search.Controls>
           <Search.Controls.InputsWrapper />

@@ -189,6 +189,25 @@ describe('useSearchControlsHandlers', () => {
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
+
+    it('skips preview management while configured not to when changing segment', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url',
+          managePreview: false,
+        }),
+      );
+
+      act(() => {
+        result.current.onSegmentChange('browse');
+      });
+
+      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
+    });
   });
 
   describe('onSourceChange', () => {
@@ -441,6 +460,25 @@ describe('useSearchControlsHandlers', () => {
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
 
+    it('skips preview management while configured not to on submit', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url',
+          managePreview: false,
+        }),
+      );
+
+      act(() => {
+        result.current.onSubmit();
+      });
+
+      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
+    });
+
     it('calls onSubmitCallback on submit when provided', () => {
       const mockOnSubmitCallback = jest.fn();
       const { result } = renderHook(() =>
@@ -549,6 +587,25 @@ describe('useSearchControlsHandlers', () => {
       expect(resetPreviewContent).toHaveBeenCalled();
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
+    });
+
+    it('skips preview management while configured not to on reset', () => {
+      const { result } = renderHook(() =>
+        useSearchControlsHandlers({
+          coreConfig: mockConfig,
+          uiConfig: mockUIConfig,
+          flow: 'url',
+          managePreview: false,
+        }),
+      );
+
+      act(() => {
+        result.current.onReset();
+      });
+
+      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
+      expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
     });
 
     it('sets default source in navigation state when segment has a default source', () => {

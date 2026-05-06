@@ -104,6 +104,7 @@ interface BaseProviderProps {
   mode?: RenderMode;
   children: React.ReactNode;
   onSubmitCallback?: () => void;
+  managePreview?: boolean;
 }
 
 export type SearchProviderProps = BaseProviderProps & (StaticModeProps | DynamicModeProps);
