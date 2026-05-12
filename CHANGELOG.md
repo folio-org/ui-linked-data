@@ -1,6 +1,8 @@
 # Change history for ui-linked-data
 
 ## 3.0.0 (IN PROGRESS)
+
+## 2.0.2 (2026-05-07)
 * Fix Sonar issues. Refs [UILD-792].
 * Fix for hidden menu bar. Refs [UILD-805].
 * Fix for tooltip position. Refs [UILD-806].
