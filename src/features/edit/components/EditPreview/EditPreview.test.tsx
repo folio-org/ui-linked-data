@@ -6,9 +6,10 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { act, render, screen } from '@testing-library/react';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
-import { EditPreview } from '@/components/EditPreview';
 
 import { useInputsStore, useUIStore } from '@/store';
+
+import { EditPreview } from './EditPreview';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 

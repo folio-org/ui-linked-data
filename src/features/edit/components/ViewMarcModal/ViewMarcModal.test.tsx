@@ -2,9 +2,9 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { render } from '@testing-library/react';
 
-import { ViewMarcModal } from '@/components/ViewMarcModal';
-
 import { useMarcPreviewStore } from '@/store';
+
+import { ViewMarcModal } from './ViewMarcModal';
 
 const { leader, subfieldContent } = {
   leader: '372489',
