@@ -6,7 +6,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
 import { fetchProfile } from '@/common/api/profiles.api';
-import { PROFILE_QUERY_KEY, useLoadProfile } from '@/common/hooks/useLoadProfile';
+
+import { PROFILE_QUERY_KEY, useLoadProfile } from './useLoadProfile';
 
 jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),

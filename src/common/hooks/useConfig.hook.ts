@@ -10,10 +10,10 @@ import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } 
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
 import { getUri, mapToResourceType } from '@/configs/resourceTypes';
 
+import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
+
 import { useInputsState, useProfileState } from '@/store';
 
-import { useLoadProfile } from './useLoadProfile';
-import { useLoadProfileSettings } from './useLoadProfileSettings';
 import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema';
 import { useServicesContext } from './useServicesContext';
 

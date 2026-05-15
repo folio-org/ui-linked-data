@@ -7,7 +7,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 
 import { fetchProfile } from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
-import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
+
+import { useLoadProfileSettings } from '@/features/profiles';
 
 import { useLoadingState, useManageProfileSettingsState, useStatusStore } from '@/store';
 
@@ -18,7 +19,7 @@ jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
 }));
-jest.mock('@/common/hooks/useLoadProfileSettings', () => ({
+jest.mock('@/features/profiles/hooks/useLoadProfileSettings', () => ({
   useLoadProfileSettings: jest.fn(),
 }));
 jest.mock('../CustomProfileToggle', () => ({

@@ -9,9 +9,10 @@ import { renderHook } from '@testing-library/react';
 import { fetchProfileSettings } from '@/common/api/profiles.api';
 import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
-import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 
 import { useStatusState } from '@/store';
+
+import { useLoadProfileSettings } from './useLoadProfileSettings';
 
 jest.mock('@/common/api/profiles.api', () => ({
   fetchProfileSettings: jest.fn(),
