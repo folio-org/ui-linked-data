@@ -1,5 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
+import { MemoryRouter } from 'react-router-dom';
+
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { useSearchStore } from '@/store';
@@ -30,7 +32,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     expect(screen.getByTestId('id-search-reset-button')).toBeInTheDocument();
     expect(screen.getByText('ld.reset')).toBeInTheDocument();
@@ -46,7 +52,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     expect(screen.getByTestId('x-in-circle-icon')).toBeInTheDocument();
   });
@@ -61,7 +71,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     expect(button).not.toBeDisabled();
@@ -77,7 +91,51 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByTestId('id-search-reset-button');
+    expect(button).toBeDisabled();
+  });
+
+  test('button is enabled when advanced search is active', () => {
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          query: '',
+        },
+      },
+    ]);
+
+    render(
+      <MemoryRouter initialEntries={['/?query=title+adj+value']}>
+        <ResetButton />
+      </MemoryRouter>,
+    );
+
+    const button = screen.getByTestId('id-search-reset-button');
+    expect(button).not.toBeDisabled();
+  });
+
+  test('button is disabled when query is empty and no advanced search is active', () => {
+    setInitialGlobalState([
+      {
+        store: useSearchStore,
+        state: {
+          query: '',
+        },
+      },
+    ]);
+
+    render(
+      <MemoryRouter initialEntries={['/?query=some+query&searchBy=title']}>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     expect(button).toBeDisabled();
@@ -93,7 +151,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     fireEvent.click(button);
@@ -111,7 +173,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     fireEvent.click(button);
@@ -129,7 +195,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     expect(button).toHaveClass('search-button');
@@ -145,7 +215,11 @@ describe('ResetButton', () => {
       },
     ]);
 
-    render(<ResetButton />);
+    render(
+      <MemoryRouter>
+        <ResetButton />
+      </MemoryRouter>,
+    );
 
     const button = screen.getByTestId('id-search-reset-button');
     expect(button).toHaveAttribute('aria-label');

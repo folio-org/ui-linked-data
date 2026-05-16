@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 3.0.0 (IN PROGRESS)
+* Fix Reset search option is missing after using Advanced Search. Fixes [UILD-812].
+
+[UILD-792]:https://folio-org.atlassian.net/browse/UILD-812
 
 ## 2.0.2 (2026-05-07)
 * Fix Sonar issues. Refs [UILD-792].
