@@ -5,7 +5,7 @@ import { getMarcRecord } from '@/features/resources';
 
 import { useLoadingState, useStatusState } from '@/store';
 
-import { logger } from '../services/logger';
+import { logger } from '../../../common/services/logger';
 
 type SetMarcPreviewData = (value: MarcDTO | null) => void;
 

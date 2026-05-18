@@ -6,13 +6,13 @@ import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { IS_DISABLED_FOR_ALPHA } from '@/common/constants/feature.constants';
 import { INVENTORY_VIEW_URL, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
-import { useMarcData } from '@/common/hooks/useMarcData';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useResourceExport } from '@/common/hooks/useResourceExport';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Dropdown } from '@/components/Dropdown';
 
+import { useResourceExport } from '@/features/edit';
 import { useProfileSelection } from '@/features/profiles';
+import { useMarcData } from '@/features/resources';
 
 import { useInputsState, useMarcPreviewState } from '@/store';
 
