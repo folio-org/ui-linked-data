@@ -7,7 +7,7 @@ import { Fragment } from 'react/jsx-runtime';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { Comparison } from '@/components/Comparison';
+import { Comparison } from '@/features/comparison/components/Comparison';
 
 import { useInputsStore, useSearchStore, useUIStore } from '@/store';
 

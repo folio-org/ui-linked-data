@@ -6,10 +6,10 @@ import { ResourceType } from '@/common/constants/record.constants';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
-import { PreviewActionsDropdown } from '@/components/PreviewActionsDropdown';
 
 import Times16 from '@/assets/times-16.svg?react';
 
+import { PreviewActionsDropdown } from '../PreviewActionsDropdown';
 import { Preview } from './Preview';
 
 export type ITitledPreview = {

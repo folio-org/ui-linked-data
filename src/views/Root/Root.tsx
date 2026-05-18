@@ -6,7 +6,8 @@ import { FIXED_HEIGHT_VIEWS } from '@/common/constants/routes.constants';
 import { MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Loading } from '@/components/Loading';
-import { ProfileSelectionManager } from '@/components/ProfileSelectionManager';
+
+import { ProfileSelectionManager } from '@/features/profiles/components/ProfileSelectionManager';
 
 import { useLoadingState } from '@/store';
 

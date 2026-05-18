@@ -5,7 +5,7 @@ import {
   RESOURCE_EDIT_CREATE_URLS,
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
+import { PreviewExternalResourceControls } from '@/views/ExternalResource/components/PreviewExternalResourceControls';
 
 import { RecordControls } from '@/features/edit/components/RecordControls';
 import { HubImportControls } from '@/features/hubImport';

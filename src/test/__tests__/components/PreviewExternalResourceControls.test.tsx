@@ -5,8 +5,9 @@ import * as ReactRouterDom from 'react-router-dom';
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
 import { act, render } from '@testing-library/react';
 
-import * as RecordsApi from '@/common/api/records.api';
-import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
+import { PreviewExternalResourceControls } from '@/views/ExternalResource/components/PreviewExternalResourceControls';
+
+import * as RecordsApi from '@/features/resources/api/records.api';
 
 const navigate = jest.fn();
 

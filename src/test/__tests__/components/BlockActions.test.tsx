@@ -6,13 +6,13 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import * as recordsApi from '@/common/api/records.api';
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
-import * as useProfileSelectionHook from '@/common/hooks/useProfileSelection';
 
 import { BlockActions } from '@/features/edit/components/EditSection/BlockActions';
+import * as useProfileSelectionHook from '@/features/profiles/hooks/useProfileSelection';
+import * as recordsApi from '@/features/resources/api/records.api';
 
 import { useInputsState } from '@/store';
 

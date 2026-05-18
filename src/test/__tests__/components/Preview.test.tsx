@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { Preview } from '@/components/Preview';
+import { Preview } from '@/features/preview/components/Preview';
 
 import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 

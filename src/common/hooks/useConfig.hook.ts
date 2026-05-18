@@ -11,10 +11,10 @@ import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
 import { getUri, mapToResourceType } from '@/configs/resourceTypes';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
+import { useProcessedRecordAndSchema } from '@/features/resources/hooks/useProcessedRecordAndSchema';
 
 import { useInputsState, useProfileState } from '@/store';
 
-import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema';
 import { useServicesContext } from './useServicesContext';
 
 export type PreviewParams = {

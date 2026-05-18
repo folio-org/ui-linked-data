@@ -1,6 +1,7 @@
-import { getMarcRecord } from '@/common/api/records.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { getMarcRecord } from '@/features/resources/api/records.api';
 
 import { useLoadingState, useStatusState } from '@/store';
 

@@ -11,7 +11,7 @@ import * as importApi from '@/common/api/import.api';
 import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { ModalImport } from '@/components/ModalImport';
+import { ModalImport } from '@/views/Search/components/ModalImport';
 
 import { useUIStore } from '@/store';
 

@@ -8,8 +8,8 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { FullDisplay } from '@/components/FullDisplay';
 import { Edit } from '@/views';
+import { FullDisplay } from '@/views/Search/components/FullDisplay';
 
 import { useInputsStore } from '@/store';
 

@@ -8,9 +8,10 @@ import { StatusType } from '@/common/constants/status.constants';
 import { generatePageURL } from '@/common/helpers/navigation.helper';
 import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useProfileSelectionActions } from '@/common/hooks/useProfileSelectionActions';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useProfileSelectionActions } from '@/features/profiles/hooks/useProfileSelectionActions';
 
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
 

@@ -1,13 +1,6 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
-import {
-  deleteRecord as deleteRecordRequest,
-  getGraphIdByExternalId,
-  getRecord,
-  postRecord,
-  putRecord,
-} from '@/common/api/records.api';
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
@@ -21,11 +14,19 @@ import { PreviewParams, useConfig } from '@/common/hooks/useConfig.hook';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
+import {
+  deleteRecord as deleteRecordRequest,
+  getGraphIdByExternalId,
+  getRecord,
+  postRecord,
+  putRecord,
+} from '@/features/resources/api/records.api';
+import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
+
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
 import { useBackToSearchUri } from './useBackToSearchUri';
 import { useContainerEvents } from './useContainerEvents';
-import { useRecordGeneration } from './useRecordGeneration';
 
 type SaveRecordProps = {
   asRefToNewRecord?: boolean;

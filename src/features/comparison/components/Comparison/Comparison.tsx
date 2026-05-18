@@ -6,8 +6,9 @@ import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 import { Pagination } from '@/components/Pagination';
-import { Preview } from '@/components/Preview';
-import { PreviewActionsDropdown } from '@/components/PreviewActionsDropdown';
+
+import { Preview } from '@/features/preview/components/Preview';
+import { PreviewActionsDropdown } from '@/features/preview/components/PreviewActionsDropdown';
 
 import { useInputsState, useSearchState, useUIState } from '@/store';
 

@@ -6,7 +6,7 @@ import {
   RESOURCE_EDIT_CREATE_URLS,
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
+import { PreviewExternalResourcePane } from '@/views/ExternalResource/components/PreviewExternalResourcePane';
 
 import { EditControlPane } from '@/features/edit/components/EditControlPane';
 import { ViewMarcControlPane } from '@/features/edit/components/ViewMarcControlPane';

@@ -8,10 +8,11 @@ import { INVENTORY_VIEW_URL, RESOURCE_CREATE_URLS } from '@/common/constants/rou
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
 import { useMarcData } from '@/common/hooks/useMarcData';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useProfileSelection } from '@/common/hooks/useProfileSelection';
 import { useResourceExport } from '@/common/hooks/useResourceExport';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Dropdown } from '@/components/Dropdown';
+
+import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
 
 import { useInputsState, useMarcPreviewState } from '@/store';
 

@@ -3,7 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
 
-import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
+import { PreviewExternalResourcePane } from '@/views/ExternalResource/components/PreviewExternalResourcePane';
 
 import { useInputsStore } from '@/store';
 

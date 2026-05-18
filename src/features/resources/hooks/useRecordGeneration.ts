@@ -4,11 +4,10 @@ import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getSelectedRecordBlocks } from '@/common/helpers/record.helper';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { getDefaultProfileId } from '@/configs/resourceTypes';
 
 import { useInputsState, useProfileState } from '@/store';
-
-import { useServicesContext } from './useServicesContext';
 
 const getReferenceIds = (record: RecordEntry, block: string, referenceKey: string) => {
   const typedReferenceBlock = record.resource?.[block]?.[referenceKey] as unknown as Record<string, RecordEntry>[];

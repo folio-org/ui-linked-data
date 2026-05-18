@@ -6,13 +6,13 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { getRecord } from '@/common/api/records.api';
+import { getRecord } from '@/features/resources/api/records.api';
 
 import { useStatusStore } from '@/store';
 
 import { useHubPreviewQuery } from './useHubPreviewQuery';
 
-jest.mock('@/common/api/records.api', () => ({
+jest.mock('@/features/resources/api/records.api', () => ({
   getRecord: jest.fn(),
 }));
 

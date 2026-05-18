@@ -3,8 +3,8 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { getLabelId, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
 import { Modal } from '@/components/Modal';
+import { Select, SelectValue } from '@/components/Select';
 
-import { Select, SelectValue } from '../Select';
 import { WarningMessages } from './WarningMessages';
 
 import './ModalChooseProfile.scss';

@@ -1,3 +1,4 @@
+import baseApi from '@/common/api/base.api';
 import {
   BIBFRAME_API_ENDPOINT,
   ExternalResourceIdType,
@@ -6,8 +7,6 @@ import {
   MAX_LIMIT,
 } from '@/common/constants/api.constants';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-
-import baseApi from './base.api';
 
 type SingleRecord = {
   recordId: string;

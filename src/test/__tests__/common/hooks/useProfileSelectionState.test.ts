@@ -3,7 +3,8 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { act, renderHook } from '@testing-library/react';
 
 import { getRecordProfileId } from '@/common/helpers/record.helper';
-import { useProfileSelectionState } from '@/common/hooks/useProfileSelectionState';
+
+import { useProfileSelectionState } from '@/features/profiles/hooks/useProfileSelectionState';
 
 import { useInputsState } from '@/store';
 

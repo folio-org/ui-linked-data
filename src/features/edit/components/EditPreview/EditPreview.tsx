@@ -7,8 +7,9 @@ import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
 import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { TitledPreview } from '@/components/Preview/TitledPreview';
 import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
+
+import { TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
 
 import { useInputsState } from '@/store';
 

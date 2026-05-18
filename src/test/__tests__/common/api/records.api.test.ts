@@ -1,6 +1,7 @@
 import baseApi from '@/common/api/base.api';
-import { getGraphIdByExternalId, getRecord } from '@/common/api/records.api';
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
+
+import { getGraphIdByExternalId, getRecord } from '@/features/resources/api/records.api';
 
 describe('records.api', () => {
   describe('getRecord', () => {

@@ -5,7 +5,8 @@ import { DOM_ELEMENTS } from '@/common/constants/domElementsIdentifiers.constant
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
-import { Preview } from '@/components/Preview';
+
+import { Preview } from '@/features/preview/components/Preview';
 
 import { useInputsState } from '@/store';
 

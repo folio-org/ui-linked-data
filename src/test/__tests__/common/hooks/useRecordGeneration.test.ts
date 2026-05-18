@@ -3,7 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';
 
-import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
+import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
 
 import { useInputsStore, useProfileStore } from '@/store';
 

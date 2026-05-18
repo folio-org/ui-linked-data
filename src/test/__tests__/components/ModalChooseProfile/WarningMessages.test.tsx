@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
 import * as profileSelectionHelper from '@/common/helpers/profileSelection.helper';
-import { WarningMessages } from '@/components/ModalChooseProfile/WarningMessages';
+
+import { WarningMessages } from '@/features/profiles/components/ModalChooseProfile/WarningMessages';
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id }: { id: string }) => <span data-testid={`formatted-message-${id}`}>{id}</span>,

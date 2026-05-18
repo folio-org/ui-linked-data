@@ -4,11 +4,13 @@ import { useParams } from 'react-router-dom';
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { ExternalResourceLoader } from '@/components/ExternalResourceLoader';
-import { ModalDuplicateImportedResource } from '@/components/ModalDuplicateImportedResource';
-import { Preview } from '@/components/Preview';
+
+import { Preview } from '@/features/preview/components/Preview';
 
 import { useInputsState, useMarcPreviewState } from '@/store';
+
+import { ExternalResourceLoader } from './components/ExternalResourceLoader';
+import { ModalDuplicateImportedResource } from './components/ModalDuplicateImportedResource';
 
 import './ExternalResourcePreview.scss';
 

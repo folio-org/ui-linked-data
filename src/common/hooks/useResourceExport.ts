@@ -1,7 +1,8 @@
-import { getRdfRecord } from '@/common/api/records.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { getRdfRecord } from '@/features/resources/api/records.api';
 
 import { useLoadingState, useStatusState } from '@/store';
 

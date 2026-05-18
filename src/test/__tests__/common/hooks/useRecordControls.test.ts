@@ -2,7 +2,6 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';
 
-import * as recordsApi from '@/common/api/records.api';
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { RecordStatus } from '@/common/constants/record.constants';
@@ -11,8 +10,10 @@ import { StatusType } from '@/common/constants/status.constants';
 import * as recordHelper from '@/common/helpers/record.helper';
 import { PreviewParams } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { useRecordGeneration } from '@/common/hooks/useRecordGeneration';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import * as recordsApi from '@/features/resources/api/records.api';
+import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
 
 import { useInputsStore, useStatusStore } from '@/store';
 
@@ -27,7 +28,7 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [new URLSearchParams('type=hub'), jest.fn()],
 }));
 
-jest.mock('@/common/api/records.api', () => ({
+jest.mock('@/features/resources/api/records.api', () => ({
   getRecord: jest.fn(),
   postRecord: jest.fn(),
   putRecord: jest.fn(),
@@ -42,7 +43,7 @@ jest.mock('@/common/hooks/useContainerEvents', () => ({
 }));
 
 const mockGenerateRecord = jest.fn();
-jest.mock('@/common/hooks/useRecordGeneration', () => ({
+jest.mock('@/features/resources/hooks/useRecordGeneration', () => ({
   useRecordGeneration: () => ({
     generateRecord: mockGenerateRecord,
   }),

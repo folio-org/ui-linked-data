@@ -35,7 +35,7 @@ jest.mock('@/components/Loading', () => ({
   Loading: ({ label }: { label: string }) => <div data-testid="loading-component">{label}</div>,
 }));
 
-jest.mock('@/components/Preview', () => ({
+jest.mock('@/features/preview/components/Preview', () => ({
   Preview: () => <div data-testid="preview-component">Preview</div>,
 }));
 

@@ -1,1 +1,1 @@
-export { Comparison } from '@/components/Comparison';
+export { Comparison } from './components/Comparison';

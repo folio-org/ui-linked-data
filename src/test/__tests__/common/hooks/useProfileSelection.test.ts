@@ -6,8 +6,9 @@ import { act, renderHook } from '@testing-library/react';
 import { fetchPreferredProfiles, fetchProfiles } from '@/common/api/profiles.api';
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { useProfileSelection } from '@/common/hooks/useProfileSelection';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
 
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 

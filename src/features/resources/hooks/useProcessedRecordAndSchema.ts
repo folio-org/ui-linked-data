@@ -5,11 +5,10 @@ import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplate
 import { StatusType } from '@/common/constants/status.constants';
 import { getAdjustedRecordContents, wrapRecordValuesWithCommonContainer } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useInputsState, useStatusState } from '@/store';
-
-import { useServicesContext } from './useServicesContext';
 
 type IGetProcessedRecordAndSchema = {
   baseSchema: Schema;

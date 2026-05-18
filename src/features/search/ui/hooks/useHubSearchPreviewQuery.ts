@@ -1,8 +1,9 @@
 import { useCallback } from 'react';
 
-import { usePreviewQuery } from '@/common/hooks/usePreviewQuery';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
+
+import { usePreviewQuery } from '@/features/preview/hooks/usePreviewQuery';
 
 import { useUIState } from '@/store';
 
