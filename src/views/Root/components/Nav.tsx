@@ -6,10 +6,10 @@ import {
   RESOURCE_EDIT_CREATE_URLS,
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { EditControlPane } from '@/components/EditControlPane';
 import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
-import { ViewMarcControlPane } from '@/components/ViewMarcControlPane';
 
+import { EditControlPane } from '@/features/edit/components/EditControlPane';
+import { ViewMarcControlPane } from '@/features/edit/components/ViewMarcControlPane';
 import { HubImportNavPane } from '@/features/hubImport';
 import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
 

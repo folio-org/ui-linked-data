@@ -5,12 +5,13 @@ import { RESOURCE_URLS } from '@/common/constants/routes.constants';
 import { checkButtonDisabledState } from '@/common/helpers/recordControls.helper';
 import { useModalControls } from '@/common/hooks/useModalControls';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { useRecordStatus } from '@/common/hooks/useRecordStatus';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Button, ButtonType } from '@/components/Button';
-import { ModalDeleteRecord } from '@/components/ModalDeleteRecord';
 
 import { useInputsState, useStatusState } from '@/store';
+
+import { useRecordStatus } from '../../hooks/useRecordStatus';
+import { ModalDeleteRecord } from '../ModalDeleteRecord';
 
 const DeleteRecord: FC = () => {
   const { record } = useInputsState(['record']);

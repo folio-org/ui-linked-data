@@ -9,12 +9,12 @@ import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { useConfig } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { useResetRecordStatus } from '@/common/hooks/useResetRecordStatus';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { EditSection } from '@/components/EditSection';
 import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 
 import { EditPreview, ViewMarcModal } from '@/features/edit';
+import { EditSection } from '@/features/edit/components/EditSection';
+import { useResetRecordStatus } from '@/features/edit/hooks/useResetRecordStatus';
 
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
 

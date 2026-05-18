@@ -8,10 +8,11 @@ import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { useModalControls } from '@/common/hooks/useModalControls';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { ModalCloseRecord } from '@/components/ModalCloseRecord';
-import { ModalSwitchToNewRecord } from '@/components/ModalSwitchToNewRecord';
 
 import { useStatusState } from '@/store';
+
+import { ModalCloseRecord } from '../ModalCloseRecord';
+import { ModalSwitchToNewRecord } from '../ModalSwitchToNewRecord';
 
 import './Prompt.scss';
 

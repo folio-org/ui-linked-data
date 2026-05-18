@@ -3,7 +3,8 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { renderHook } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
-import { useSaveRecordWarning } from '@/common/hooks/useSaveRecordWarning';
+
+import { useSaveRecordWarning } from '@/features/edit/hooks/useSaveRecordWarning';
 
 import { useInputsStore, useUIStore } from '@/store';
 

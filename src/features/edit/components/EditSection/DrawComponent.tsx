@@ -8,13 +8,13 @@ import { getIsCreatePage } from '@/common/helpers/navigation.helper';
 import { findParentEntryByProperty } from '@/common/helpers/schema.helper';
 import { Button, ButtonType } from '@/components/Button';
 import { DropdownField } from '@/components/DropdownField';
-import { FieldWithMetadataAndControls } from '@/components/FieldWithMetadataAndControls';
 import { LiteralField } from '@/components/LiteralField';
 import { SimpleLookupField } from '@/components/SimpleLookupField';
 
 import { ComplexLookupField } from '@/features/complexLookup';
 import { getPlaceholderForProperty } from '@/features/search/ui';
 
+import { FieldWithMetadataAndControls } from '../FieldWithMetadataAndControls';
 import { BlockActions } from './BlockActions';
 import { EditSectionDataProps } from './renderDrawComponent';
 

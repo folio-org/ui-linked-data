@@ -6,7 +6,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { Prompt } from '@/components/Prompt';
+import { Prompt } from '@/features/edit/components/Prompt';
 
 import { useConfigStore } from '@/store';
 

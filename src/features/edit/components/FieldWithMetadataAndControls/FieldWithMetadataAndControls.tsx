@@ -4,10 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 
 import { checkRepeatableGroup, checkRepeatableSubcomponent } from '@/common/helpers/repeatableFields.helper';
-import { useProfileSchema } from '@/common/hooks/useProfileSchema';
 
 import { useInputsState, useProfileState } from '@/store';
 
+import { useProfileSchema } from '../../hooks/useProfileSchema';
 import { CompactLayout } from './CompactLayout';
 import { ExtendedLayout } from './ExtendedLayout';
 

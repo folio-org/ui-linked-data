@@ -7,7 +7,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { DeleteRecord } from '@/components/DeleteRecord';
+import { DeleteRecord } from '@/features/edit/components/DeleteRecord';
 
 import { useInputsStore } from '@/store';
 

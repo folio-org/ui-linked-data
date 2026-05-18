@@ -5,11 +5,12 @@ import classNames from 'classnames';
 
 import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
 import { Button, ButtonType } from '@/components/Button';
-import { IFields } from '@/components/Fields';
 
 import { useUIState } from '@/store';
 
 import ArrowChevronUp from '@/assets/arrow-chevron-up.svg?react';
+
+import { IFields } from '../Fields';
 
 import './DuplicateGroupContainer.scss';
 

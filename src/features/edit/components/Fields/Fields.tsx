@@ -6,11 +6,12 @@ import { ENTITY_LEVEL } from '@/common/constants/bibframe.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { generateTwinChildrenKey } from '@/common/helpers/schema.helper';
 import { ConditionalWrapper } from '@/components/ConditionalWrapper';
-import { DuplicateGroupContainer } from '@/components/DuplicateGroupContainer';
-import { DuplicateSubcomponentContainer } from '@/components/DuplicateSubcomponentContainer';
-import { IDrawComponent } from '@/components/EditSection';
 
 import { useInputsState, useProfileState, useUIState } from '@/store';
+
+import { DuplicateGroupContainer } from '../DuplicateGroupContainer';
+import { DuplicateSubcomponentContainer } from '../DuplicateSubcomponentContainer';
+import { IDrawComponent } from '../EditSection';
 
 export type IFields = {
   uuid: string | null;

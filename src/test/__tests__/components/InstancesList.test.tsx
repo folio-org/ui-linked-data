@@ -7,7 +7,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { fireEvent, render } from '@testing-library/react';
 
 import * as RecordFormatter from '@/common/helpers/recordFormatting.helper';
-import { InstancesList } from '@/components/InstancesList';
+
+import { InstancesList } from '@/features/edit/components/InstancesList';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 

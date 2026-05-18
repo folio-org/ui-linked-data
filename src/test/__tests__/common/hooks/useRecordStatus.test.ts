@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
-import { useRecordStatus } from '@/common/hooks/useRecordStatus';
+import { useRecordStatus } from '@/features/edit/hooks/useRecordStatus';
 
 import { useStatusStore } from '@/store';
 

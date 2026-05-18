@@ -1,8 +1,7 @@
 import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
+import { useServicesContext } from '@/common/hooks/useServicesContext';
 
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
-
-import { useServicesContext } from './useServicesContext';
 
 export const useProfileSchema = () => {
   const { selectedEntriesService, schemaWithDuplicatesService, userValuesService } =

@@ -6,8 +6,8 @@ import {
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
-import { RecordControls } from '@/components/RecordControls';
 
+import { RecordControls } from '@/features/edit/components/RecordControls';
 import { HubImportControls } from '@/features/hubImport';
 import { ManageProfileSettingsControls } from '@/features/manageProfileSettings/components/ManageProfileSettingsControls/ManageProfileSettingsControls';
 

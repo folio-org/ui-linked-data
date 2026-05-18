@@ -7,11 +7,12 @@ import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, RESOURCE_CREATE_URLS } from '@/common/constants/routes.constants';
 import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { InstancesList } from '@/components/InstancesList';
 import { TitledPreview } from '@/components/Preview/TitledPreview';
 import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
 
 import { useInputsState } from '@/store';
+
+import { InstancesList } from '../InstancesList';
 
 import './EditPreview.scss';
 

@@ -1,6 +1,6 @@
 import { FC, Fragment, ReactNode } from 'react';
 
-import { IFields } from '@/components/Fields';
+import { IFields } from '../Fields';
 
 interface IDuplicateSubcomponentContainer {
   entry: SchemaEntry;

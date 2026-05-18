@@ -11,7 +11,8 @@ import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 import * as useProfileSelectionHook from '@/common/hooks/useProfileSelection';
-import { BlockActions } from '@/components/EditSection/BlockActions';
+
+import { BlockActions } from '@/features/edit/components/EditSection/BlockActions';
 
 import { useInputsState } from '@/store';
 

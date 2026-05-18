@@ -6,7 +6,8 @@ import { render } from '@testing-library/react';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
-import { EditControlPane } from '@/components/EditControlPane';
+
+import { EditControlPane } from '@/features/edit/components/EditControlPane';
 
 import { useUIStore } from '@/store';
 

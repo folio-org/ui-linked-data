@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { DuplicateGroup } from '@/components/DuplicateGroup';
+import { DuplicateGroup } from '@/features/edit/components/DuplicateGroup';
 
 describe('DuplicateGroup', () => {
   const { getByTestId, queryByTestId } = screen;

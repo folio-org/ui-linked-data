@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
-import { useSaveRecord } from '@/common/hooks/useSaveRecord';
+import { useSaveRecord } from '@/features/edit/hooks/useSaveRecord';
 
 import { useStatusStore } from '@/store';
 

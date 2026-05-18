@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { SaveRecord } from '@/components/SaveRecord';
+import { SaveRecord } from '@/features/edit/components/SaveRecord';
 
 import { useStatusStore } from '@/store';
 

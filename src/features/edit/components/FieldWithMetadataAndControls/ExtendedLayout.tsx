@@ -4,8 +4,9 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
-import { DuplicateGroup } from '@/components/DuplicateGroup';
 import { MarcTooltip } from '@/components/MarcTooltip';
+
+import { DuplicateGroup } from '../DuplicateGroup';
 
 type IExtendedLayout = {
   entry: SchemaEntry;

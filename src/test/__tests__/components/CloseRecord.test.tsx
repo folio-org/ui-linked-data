@@ -3,7 +3,7 @@ import '@/test/__mocks__/components/Modal.mock';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { CloseRecord } from '@/components/CloseRecord';
+import { CloseRecord } from '@/features/edit/components/CloseRecord';
 
 describe('CloseRecord', () => {
   beforeEach(() => render(<CloseRecord />));
