@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
 
-import { usePreviewQuery } from '@/features/preview/hooks/usePreviewQuery';
+import { usePreviewQuery } from '@/features/preview';
 
 import { useUIState } from '@/store';
 

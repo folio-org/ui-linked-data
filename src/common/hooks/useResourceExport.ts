@@ -2,7 +2,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { initiateUserAgentDownload } from '@/common/helpers/download.helper';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { getRdfRecord } from '@/features/resources/api/records.api';
+import { getRdfRecord } from '@/features/resources';
 
 import { useLoadingState, useStatusState } from '@/store';
 

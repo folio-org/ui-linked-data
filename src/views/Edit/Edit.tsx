@@ -12,9 +12,7 @@ import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 
-import { EditPreview, ViewMarcModal } from '@/features/edit';
-import { EditSection } from '@/features/edit/components/EditSection';
-import { useResetRecordStatus } from '@/features/edit/hooks/useResetRecordStatus';
+import { EditPreview, EditSection, ViewMarcModal, useResetRecordStatus } from '@/features/edit';
 
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
 

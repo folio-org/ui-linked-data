@@ -10,11 +10,12 @@ import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 
-import { BlockActions } from '@/features/edit/components/EditSection/BlockActions';
 import * as useProfileSelectionHook from '@/features/profiles/hooks/useProfileSelection';
 import * as recordsApi from '@/features/resources/api/records.api';
 
 import { useInputsState } from '@/store';
+
+import { BlockActions } from './BlockActions';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

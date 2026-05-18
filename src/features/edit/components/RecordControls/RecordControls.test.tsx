@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
 
-import { RecordControls } from '@/features/edit/components/RecordControls';
+import { RecordControls } from './RecordControls';
 
-jest.mock('@/features/edit/components/SaveRecord', () => ({
+jest.mock('../SaveRecord', () => ({
   SaveRecord: ({ locally }: any) => <div data-testid={`save-record${locally ? '-locally' : ''}-component`} />,
 }));
 
-jest.mock('@/features/edit/components/CloseRecord', () => ({
+jest.mock('../CloseRecord', () => ({
   CloseRecord: () => <div data-testid="close-record-component" />,
 }));
 

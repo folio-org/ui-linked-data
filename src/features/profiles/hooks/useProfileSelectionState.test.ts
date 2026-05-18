@@ -4,9 +4,9 @@ import { act, renderHook } from '@testing-library/react';
 
 import { getRecordProfileId } from '@/common/helpers/record.helper';
 
-import { useProfileSelectionState } from '@/features/profiles/hooks/useProfileSelectionState';
-
 import { useInputsState } from '@/store';
+
+import { useProfileSelectionState } from './useProfileSelectionState';
 
 jest.mock('@/common/helpers/record.helper', () => ({
   getRecordProfileId: jest.fn(),

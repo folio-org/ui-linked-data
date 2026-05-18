@@ -3,9 +3,9 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';
 
-import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
-
 import { useInputsStore, useProfileStore } from '@/store';
+
+import { useRecordGeneration } from './useRecordGeneration';
 
 let mockSearchParams = new URLSearchParams('?type=work');
 

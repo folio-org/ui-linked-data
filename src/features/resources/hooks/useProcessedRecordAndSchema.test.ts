@@ -3,9 +3,9 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { act, renderHook } from '@testing-library/react';
 
-import { useProcessedRecordAndSchema } from '@/features/resources/hooks/useProcessedRecordAndSchema';
-
 import { useInputsStore, useStatusStore } from '@/store';
+
+import { useProcessedRecordAndSchema } from './useProcessedRecordAndSchema';
 
 describe('useProcessedRecordAndSchema', () => {
   const mockSetRecord = jest.fn();

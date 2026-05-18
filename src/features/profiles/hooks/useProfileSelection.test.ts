@@ -8,9 +8,9 @@ import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
-
 import { useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
+
+import { useProfileSelection } from './useProfileSelection';
 
 jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),

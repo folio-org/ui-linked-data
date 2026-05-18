@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { useConfig } from '@/common/hooks/useConfig.hook';
 
 import { HubPreviewData, HubPreviewMeta } from '@/features/complexLookup/types/hubPreview.types';
-import { usePreviewQuery } from '@/features/preview/hooks/usePreviewQuery';
-import { getRecord } from '@/features/resources/api/records.api';
+import { usePreviewQuery } from '@/features/preview';
+import { getRecord } from '@/features/resources';
 
 interface UseHubPreviewParams {
   isPreviewOpen: boolean;

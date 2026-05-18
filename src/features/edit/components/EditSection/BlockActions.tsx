@@ -12,7 +12,7 @@ import { useResourceExport } from '@/common/hooks/useResourceExport';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Dropdown } from '@/components/Dropdown';
 
-import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
+import { useProfileSelection } from '@/features/profiles';
 
 import { useInputsState, useMarcPreviewState } from '@/store';
 

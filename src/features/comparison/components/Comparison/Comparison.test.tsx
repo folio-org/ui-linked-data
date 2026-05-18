@@ -7,9 +7,9 @@ import { Fragment } from 'react/jsx-runtime';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { Comparison } from '@/features/comparison/components/Comparison';
-
 import { useInputsStore, useSearchStore, useUIStore } from '@/store';
+
+import { Comparison } from './Comparison';
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {

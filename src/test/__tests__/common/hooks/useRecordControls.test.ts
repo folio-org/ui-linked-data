@@ -12,8 +12,8 @@ import { PreviewParams } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import * as recordsApi from '@/features/resources/api/records.api';
-import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
+import * as recordsApi from '@/features/resources';
+import { useRecordGeneration } from '@/features/resources';
 
 import { useInputsStore, useStatusStore } from '@/store';
 
@@ -28,10 +28,14 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [new URLSearchParams('type=hub'), jest.fn()],
 }));
 
-jest.mock('@/features/resources/api/records.api', () => ({
+const mockGenerateRecord = jest.fn();
+jest.mock('@/features/resources', () => ({
   getRecord: jest.fn(),
   postRecord: jest.fn(),
   putRecord: jest.fn(),
+  useRecordGeneration: () => ({
+    generateRecord: mockGenerateRecord,
+  }),
 }));
 
 const mockDispatchUnblockEvent = jest.fn();
@@ -39,13 +43,6 @@ jest.mock('@/common/hooks/useContainerEvents', () => ({
   useContainerEvents: () => ({
     dispatchUnblockEvent: mockDispatchUnblockEvent,
     dispatchNavigateToOriginEventWithFallback: mockDispatchNavigateToOriginEventWithFallback,
-  }),
-}));
-
-const mockGenerateRecord = jest.fn();
-jest.mock('@/features/resources/hooks/useRecordGeneration', () => ({
-  useRecordGeneration: () => ({
-    generateRecord: mockGenerateRecord,
   }),
 }));
 

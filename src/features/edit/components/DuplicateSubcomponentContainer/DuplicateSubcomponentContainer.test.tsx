@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import { DuplicateSubcomponentContainer } from '@/features/edit/components/DuplicateSubcomponentContainer';
-import { IFields } from '@/features/edit/components/Fields';
+import { IFields } from '../Fields';
+import { DuplicateSubcomponentContainer } from './DuplicateSubcomponentContainer';
 
 const mockEntry = {
   uuid: 'testUuid_1',

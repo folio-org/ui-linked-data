@@ -19,7 +19,8 @@ jest.mock('@/common/api/profiles.api', () => ({
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
 }));
-jest.mock('@/features/profiles/hooks/useLoadProfileSettings', () => ({
+jest.mock('@/features/profiles', () => ({
+  ...jest.requireActual('@/features/profiles'),
   useLoadProfileSettings: jest.fn(),
 }));
 jest.mock('../CustomProfileToggle', () => ({

@@ -5,7 +5,7 @@ import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { EDIT_ALT_DISPLAY_LABELS } from '@/common/constants/uiElements.constants';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 
-import { Preview } from '@/features/preview/components/Preview';
+import { Preview } from '@/features/preview';
 
 import { useInputsState, useMarcPreviewState } from '@/store';
 

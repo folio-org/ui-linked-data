@@ -6,7 +6,7 @@ import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 
-import { Preview } from '@/features/preview/components/Preview';
+import { Preview } from '@/features/preview';
 
 import { useInputsState } from '@/store';
 

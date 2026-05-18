@@ -5,10 +5,10 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ROUTES } from '@/common/constants/routes.constants';
 
-import { ProfileSelectionManager } from '@/features/profiles/components/ProfileSelectionManager';
-
 import { useInputsState, useNavigationState, useProfileState, useUIState } from '@/store';
 import { useStatusState } from '@/store/selectors';
+
+import { ProfileSelectionManager } from './ProfileSelectionManager';
 
 const mockSetIsProfileSelectionModalOpen = jest.fn();
 const mockNavigateToEditPage = jest.fn();

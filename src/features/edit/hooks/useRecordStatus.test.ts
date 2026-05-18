@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
-import { useRecordStatus } from '@/features/edit/hooks/useRecordStatus';
-
 import { useStatusStore } from '@/store';
+
+import { useRecordStatus } from './useRecordStatus';
 
 const mockResourceId = 'mockResourceId';
 

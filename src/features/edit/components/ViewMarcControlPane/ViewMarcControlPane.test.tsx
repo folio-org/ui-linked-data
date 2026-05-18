@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { ViewMarcControlPane } from '@/features/edit/components/ViewMarcControlPane';
+import { ViewMarcControlPane } from './ViewMarcControlPane';
 
 describe('ViewMarcControlPane', () => {
   test('renders the pane', () => {

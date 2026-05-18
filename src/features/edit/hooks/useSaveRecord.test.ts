@@ -4,9 +4,9 @@ import { useSearchParams } from 'react-router-dom';
 
 import { renderHook } from '@testing-library/react';
 
-import { useSaveRecord } from '@/features/edit/hooks/useSaveRecord';
-
 import { useStatusStore } from '@/store';
+
+import { useSaveRecord } from './useSaveRecord';
 
 const mockSaveRecord = jest.fn();
 const mockOpenModal = jest.fn();

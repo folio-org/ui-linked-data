@@ -2,7 +2,7 @@ import { Fragment, ReactNode } from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { DuplicateGroupContainer } from '@/features/edit/components/DuplicateGroupContainer';
+import { DuplicateGroupContainer } from './DuplicateGroupContainer';
 
 const mockClonedByUuid = '0xf';
 

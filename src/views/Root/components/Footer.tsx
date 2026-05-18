@@ -7,7 +7,7 @@ import {
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { PreviewExternalResourceControls } from '@/views/ExternalResource/components/PreviewExternalResourceControls';
 
-import { RecordControls } from '@/features/edit/components/RecordControls';
+import { RecordControls } from '@/features/edit';
 import { HubImportControls } from '@/features/hubImport';
 import { ManageProfileSettingsControls } from '@/features/manageProfileSettings/components/ManageProfileSettingsControls/ManageProfileSettingsControls';
 

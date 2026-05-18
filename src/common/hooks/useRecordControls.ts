@@ -20,8 +20,8 @@ import {
   getRecord,
   postRecord,
   putRecord,
-} from '@/features/resources/api/records.api';
-import { useRecordGeneration } from '@/features/resources/hooks/useRecordGeneration';
+  useRecordGeneration,
+} from '@/features/resources';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 

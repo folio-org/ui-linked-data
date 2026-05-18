@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { generatePageURL } from '@/common/helpers/navigation.helper';
 
-import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
+import { useProfileSelection } from '@/features/profiles';
 
 import { useNavigationState } from '@/store';
 

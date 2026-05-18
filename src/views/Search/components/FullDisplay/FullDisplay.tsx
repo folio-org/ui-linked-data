@@ -1,6 +1,6 @@
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 
-import { Comparison } from '@/features/comparison/components/Comparison';
+import { Comparison } from '@/features/comparison';
 
 import { useInputsState, useUIState } from '@/store';
 

@@ -11,9 +11,9 @@ import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useProfileSelectionActions } from '@/features/profiles/hooks/useProfileSelectionActions';
-
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
+
+import { useProfileSelectionActions } from './useProfileSelectionActions';
 
 jest.mock('@/common/api/profiles.api', () => ({
   savePreferredProfile: jest.fn(),

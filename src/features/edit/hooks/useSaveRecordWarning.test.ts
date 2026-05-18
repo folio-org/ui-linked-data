@@ -4,9 +4,9 @@ import { renderHook } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
-import { useSaveRecordWarning } from '@/features/edit/hooks/useSaveRecordWarning';
-
 import { useInputsStore, useUIStore } from '@/store';
+
+import { useSaveRecordWarning } from './useSaveRecordWarning';
 
 describe('useSaveRecordWarning', () => {
   const mockSetHasShownAuthorityWarning = jest.fn();

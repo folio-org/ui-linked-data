@@ -2,7 +2,7 @@ import { createModalContainer } from '@/test/__mocks__/common/misc/createModalCo
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { ModalUncontrolledAuthorities } from '@/features/edit/components/ModalUncontrolledAuthorities';
+import { ModalUncontrolledAuthorities } from './ModalUncontrolledAuthorities';
 
 describe('ModalUncontrolledAuthorities', () => {
   const props = {

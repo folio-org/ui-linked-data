@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { ITitledPreview, TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
+import { ITitledPreview, TitledPreview } from './TitledPreview';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 

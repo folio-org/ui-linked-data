@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import { Preview } from '@/features/preview/components/Preview';
-
 import { useInputsStore, useProfileStore, useUIStore } from '@/store';
+
+import { Preview } from './Preview';
 
 const initialSchemaKey = 'uuid0';
 

@@ -11,7 +11,7 @@ import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
 import { getUri, mapToResourceType } from '@/configs/resourceTypes';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
-import { useProcessedRecordAndSchema } from '@/features/resources/hooks/useProcessedRecordAndSchema';
+import { useProcessedRecordAndSchema } from '@/features/resources';
 
 import { useInputsState, useProfileState } from '@/store';
 

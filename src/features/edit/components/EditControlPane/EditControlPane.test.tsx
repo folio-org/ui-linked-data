@@ -7,9 +7,9 @@ import { render } from '@testing-library/react';
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 
-import { EditControlPane } from '@/features/edit/components/EditControlPane';
-
 import { useUIStore } from '@/store';
+
+import { EditControlPane } from './EditControlPane';
 
 const renderWrapper = (customState?: Parameters<typeof setInitialGlobalState>[0]) => {
   const path = ROUTES.RESOURCE_EDIT.uri;

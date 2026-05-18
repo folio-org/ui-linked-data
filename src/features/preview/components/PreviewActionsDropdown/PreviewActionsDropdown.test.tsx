@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { PreviewActionsDropdown } from '@/features/preview/components/PreviewActionsDropdown';
+import { PreviewActionsDropdown } from './PreviewActionsDropdown';
 
 describe('PreviewActionsDropdown', () => {
   const entityType = 'mockEntityType';

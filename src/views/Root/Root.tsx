@@ -7,7 +7,7 @@ import { MODAL_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Loading } from '@/components/Loading';
 
-import { ProfileSelectionManager } from '@/features/profiles/components/ProfileSelectionManager';
+import { ProfileSelectionManager } from '@/features/profiles';
 
 import { useLoadingState } from '@/store';
 

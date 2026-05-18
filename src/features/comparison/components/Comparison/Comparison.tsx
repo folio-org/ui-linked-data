@@ -7,8 +7,7 @@ import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 import { Pagination } from '@/components/Pagination';
 
-import { Preview } from '@/features/preview/components/Preview';
-import { PreviewActionsDropdown } from '@/features/preview/components/PreviewActionsDropdown';
+import { Preview, PreviewActionsDropdown } from '@/features/preview';
 
 import { useInputsState, useSearchState, useUIState } from '@/store';
 

@@ -5,9 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { SaveRecord } from '@/features/edit/components/SaveRecord';
-
 import { useStatusStore } from '@/store';
+
+import { SaveRecord } from '.';
 
 describe('SaveRecord', () => {
   function renderSaveRecordComponent(isRecordEdited = true) {

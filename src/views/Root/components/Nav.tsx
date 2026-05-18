@@ -8,8 +8,7 @@ import {
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { PreviewExternalResourcePane } from '@/views/ExternalResource/components/PreviewExternalResourcePane';
 
-import { EditControlPane } from '@/features/edit/components/EditControlPane';
-import { ViewMarcControlPane } from '@/features/edit/components/ViewMarcControlPane';
+import { EditControlPane, ViewMarcControlPane } from '@/features/edit';
 import { HubImportNavPane } from '@/features/hubImport';
 import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
 
