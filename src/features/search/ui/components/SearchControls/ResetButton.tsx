@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useSearchParams } from 'react-router-dom';
 
 import { Button, ButtonType } from '@/components/Button';
+
+import { SearchParam } from '@/features/search/core';
 
 import { useSearchState } from '@/store';
 
@@ -11,10 +14,12 @@ import { useSearchContext } from '../../providers/SearchProvider';
 
 export const ResetButton: FC = () => {
   const { formatMessage } = useIntl();
+  const [searchParams] = useSearchParams();
   const { onReset } = useSearchContext();
   const { query } = useSearchState(['query']);
 
-  const isDisabled = !query;
+  const isAdvancedSearch = !!searchParams.get(SearchParam.QUERY) && !searchParams.get(SearchParam.SEARCH_BY);
+  const isDisabled = !query && !isAdvancedSearch;
 
   return (
     <Button
