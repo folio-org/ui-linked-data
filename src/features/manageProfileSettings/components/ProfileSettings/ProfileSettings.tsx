@@ -4,11 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 
 import { StatusType } from '@/common/constants/status.constants';
-import { useLoadProfile } from '@/common/hooks/useLoadProfile';
-import { useLoadProfileSettings } from '@/common/hooks/useLoadProfileSettings';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Button, ButtonType } from '@/components/Button';
 import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
+
+import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
 
 import { useLoadingState, useManageProfileSettingsState, useStatusState, useUIState } from '@/store';
 

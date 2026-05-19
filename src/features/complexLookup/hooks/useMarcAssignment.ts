@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { useMarcData } from '../../../common/hooks/useMarcData';
+import { useMarcData } from '@/features/resources';
 
 interface MarcAssignmentOptions {
   complexValue: MarcDTO | null;

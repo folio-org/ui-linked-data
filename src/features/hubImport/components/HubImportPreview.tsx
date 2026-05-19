@@ -3,7 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 
 import { QueryParams } from '@/common/constants/routes.constants';
 import { Loading } from '@/components/Loading';
-import { Preview } from '@/components/Preview';
+
+import { Preview } from '@/features/preview';
 
 import { useInputsState } from '@/store';
 

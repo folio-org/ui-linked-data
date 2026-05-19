@@ -5,9 +5,9 @@ import {
   RESOURCE_EDIT_CREATE_URLS,
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { PreviewExternalResourceControls } from '@/components/PreviewExternalResourceControls';
-import { RecordControls } from '@/components/RecordControls';
+import { PreviewExternalResourceControls } from '@/views/ExternalResource/components/PreviewExternalResourceControls';
 
+import { RecordControls } from '@/features/edit';
 import { HubImportControls } from '@/features/hubImport';
 import { ManageProfileSettingsControls } from '@/features/manageProfileSettings/components/ManageProfileSettingsControls/ManageProfileSettingsControls';
 

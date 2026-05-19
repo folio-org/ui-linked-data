@@ -1,0 +1,20 @@
+import { discardRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/components/Modal.mock';
+
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { CloseRecord } from '.';
+
+describe('CloseRecord', () => {
+  beforeEach(() => render(<CloseRecord />));
+
+  test('renders "Close record" button', () => {
+    expect(screen.getByTestId('close-record-button')).toBeInTheDocument();
+  });
+
+  test('triggers "openModal" function', () => {
+    fireEvent.click(screen.getByTestId('close-record-button'));
+
+    expect(discardRecord).toHaveBeenCalledTimes(1);
+  });
+});
