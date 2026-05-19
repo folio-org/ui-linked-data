@@ -6,10 +6,10 @@ import { ConditionalWrapper } from '@/components/ConditionalWrapper';
 
 import { useInputsState, useProfileState, useUIState } from '@/store';
 
+import { FieldProps } from '../../types';
 import { ChildFields } from './ChildFields';
 import { Labels } from './Labels';
 import { Values } from './Values';
-import { FieldProps } from './preview.types';
 import { getPreviewWrapper } from './preview.wrappers';
 
 export const Fields = ({

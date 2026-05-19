@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { checkShouldGroupWrap } from '@/common/helpers/preview.helper';
 import { ConditionalWrapper } from '@/components/ConditionalWrapper';
 
-import { ChildFieldsProps } from './preview.types';
+import { ChildFieldsProps } from '../../types';
 import { getValueGroupWrapper } from './preview.wrappers';
 
 export const ChildFields: FC<ChildFieldsProps> = ({

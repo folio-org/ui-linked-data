@@ -11,7 +11,7 @@ import { Button, ButtonType } from '@/components/Button';
 import { useInputsState, useStatusState } from '@/store';
 
 import { useRecordStatus } from '../../hooks/useRecordStatus';
-import { ModalDeleteRecord } from '../ModalDeleteRecord';
+import { ModalDeleteRecord } from '../modals';
 
 const DeleteRecord: FC = () => {
   const { record } = useInputsState(['record']);

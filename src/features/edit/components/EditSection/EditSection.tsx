@@ -13,7 +13,7 @@ import { getEditSectionPassiveClass, hasReference, resolveResourceType } from '@
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
 
 import { Fields } from '../Fields';
-import { Prompt } from '../Prompt';
+import { Prompt } from '../modals';
 import { renderDrawComponent } from './renderDrawComponent';
 
 import './EditSection.scss';

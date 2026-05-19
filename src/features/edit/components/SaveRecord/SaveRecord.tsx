@@ -3,9 +3,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { Button, ButtonType } from '@/components/Button';
 
-import { useSaveRecord } from '../../hooks/useSaveRecord';
-import { useSaveRecordWarning } from '../../hooks/useSaveRecordWarning';
-import { ModalUncontrolledAuthorities } from '../ModalUncontrolledAuthorities';
+import { useSaveRecord, useSaveRecordWarning } from '../../hooks';
+import { ModalUncontrolledAuthorities } from '../modals';
 
 type SaveRecordProps = {
   primary?: boolean;

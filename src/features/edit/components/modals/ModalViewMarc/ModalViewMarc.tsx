@@ -2,9 +2,9 @@ import { MarcContent } from '@/components/MarcContent';
 
 import { useMarcPreviewState } from '@/store';
 
-import './ViewMarcModal.scss';
+import './ModalViewMarc.scss';
 
-export const ViewMarcModal = () => {
+export const ModalViewMarc = () => {
   const { basicValue: marcPreviewData } = useMarcPreviewState(['basicValue']);
 
   return (

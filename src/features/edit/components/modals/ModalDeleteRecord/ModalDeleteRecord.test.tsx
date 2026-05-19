@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { ModalDeleteRecord } from './ModalDeleteRecord';
 
-describe('ModalCloseRecord', () => {
+describe('ModalDeleteRecord', () => {
   const toggleIsOpen = jest.fn();
   const deleteRecord = jest.fn();
 

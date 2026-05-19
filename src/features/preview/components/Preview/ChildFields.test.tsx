@@ -4,8 +4,8 @@ import { render } from '@testing-library/react';
 
 import { checkShouldGroupWrap } from '@/common/helpers/preview.helper';
 
+import { ChildFieldsProps } from '../../types';
 import { ChildFields } from './ChildFields';
-import { ChildFieldsProps } from './preview.types';
 
 jest.mock('@/common/helpers/preview.helper', () => ({
   checkShouldGroupWrap: jest.fn(),

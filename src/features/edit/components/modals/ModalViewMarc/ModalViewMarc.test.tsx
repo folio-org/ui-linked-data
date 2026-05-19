@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 
 import { useMarcPreviewStore } from '@/store';
 
-import { ViewMarcModal } from './ViewMarcModal';
+import { ModalViewMarc } from './ModalViewMarc';
 
 const { leader, subfieldContent } = {
   leader: '372489',
@@ -45,7 +45,7 @@ describe('ViewMarcModal', () => {
       },
     ]);
 
-    const { findByText } = render(<ViewMarcModal />);
+    const { findByText } = render(<ModalViewMarc />);
 
     expect(await findByText(leader, { exact: false })).toBeInTheDocument();
     expect(await findByText(subfieldContent, { exact: false })).toBeInTheDocument();

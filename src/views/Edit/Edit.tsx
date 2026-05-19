@@ -12,7 +12,7 @@ import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 
-import { EditPreview, EditSection, ViewMarcModal, useResetRecordStatus } from '@/features/edit';
+import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@/features/edit';
 
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
 
@@ -171,7 +171,7 @@ export const Edit = () => {
           <EditSection />
         </>
       )}
-      <ViewMarcModal />
+      <ModalViewMarc />
     </div>
   );
 };
