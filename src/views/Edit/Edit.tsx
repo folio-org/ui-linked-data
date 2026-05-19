@@ -9,12 +9,10 @@ import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { useConfig } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { useResetRecordStatus } from '@/common/hooks/useResetRecordStatus';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { EditPreview } from '@/components/EditPreview';
-import { EditSection } from '@/components/EditSection';
-import { ViewMarcModal } from '@/components/ViewMarcModal';
 import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
+
+import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@/features/edit';
 
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
 
@@ -173,7 +171,7 @@ export const Edit = () => {
           <EditSection />
         </>
       )}
-      <ViewMarcModal />
+      <ModalViewMarc />
     </div>
   );
 };

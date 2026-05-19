@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 
 import { Dropdown } from '@/components/Dropdown';
-import { FullDisplay } from '@/components/FullDisplay';
-import { ModalImport } from '@/components/ModalImport';
 
 import { HubsResultList, ResourcesResultList, SOURCE_OPTIONS, Search } from '@/features/search/ui';
 
 import { useSearchState } from '@/store';
 
+import { FullDisplay } from './components/FullDisplay';
+import { ModalImport } from './components/ModalImport';
 import { createHubActionsConfig, createResourceActionsConfig } from './config';
 import { useSearchActions, useSearchCleanup } from './hooks';
 

@@ -48,7 +48,8 @@ jest.mock('@/common/helpers/record.helper', () => ({
 jest.mock('@/common/helpers/recordFormatting.helper', () => ({
   getReferenceIdsRaw: jest.fn().mockReturnValue([]),
 }));
-jest.mock('@/common/hooks/useProcessedRecordAndSchema', () => ({
+jest.mock('@/features/resources', () => ({
+  ...jest.requireActual('@/features/resources'),
   useProcessedRecordAndSchema: () => ({
     getProcessedRecordAndSchema: jest.fn().mockResolvedValue({
       updatedSchema: {},
