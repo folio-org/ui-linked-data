@@ -11,7 +11,6 @@ import * as recordsApi from '@/features/resources';
 
 import { useInputsStore, useStatusStore } from '@/store';
 
-import { useRecordGeneration } from './useRecordGeneration';
 import { useRecordMutations } from './useRecordMutations';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
@@ -143,7 +142,7 @@ describe('useRecordMutations', () => {
     });
 
     it('does not save if generateRecord returns null', async () => {
-      jest.spyOn(useRecordGeneration(), 'generateRecord').mockReturnValue(undefined);
+      mockGenerateRecord.mockReturnValue(undefined);
 
       const { result } = renderHook(() => useRecordMutations());
       await result.current.saveRecord();
