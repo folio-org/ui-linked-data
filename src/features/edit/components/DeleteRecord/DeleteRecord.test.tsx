@@ -1,8 +1,8 @@
 import { checkButtonDisabledState } from '@/test/__mocks__/common/helpers/recordControls.helper.mock';
 import { openModal } from '@/test/__mocks__/common/hooks/useModalControls.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import '@/test/__mocks__/components/Modal.mock';
+import '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
