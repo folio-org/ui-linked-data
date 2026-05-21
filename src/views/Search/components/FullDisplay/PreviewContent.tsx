@@ -20,13 +20,13 @@ const PreviewContentItem = ({ resourceId, onClose }: { resourceId: string; onClo
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
   const { data, isLoading } = useResourcePreviewQuery(resourceId, 'search-preview');
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setIsLoading, resetIsLoading } = useLoadingState(['setIsLoading', 'resetIsLoading']);
   const { setCurrentlyPreviewedEntityBfid } = useUIState(['setCurrentlyPreviewedEntityBfid']);
 
   useEffect(() => {
     setIsLoading(isLoading);
 
-    return () => setIsLoading(false);
+    return () => resetIsLoading();
   }, [isLoading]);
 
   useLayoutEffect(() => {

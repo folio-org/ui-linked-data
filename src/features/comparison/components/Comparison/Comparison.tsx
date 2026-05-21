@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ResourceType } from '@/common/constants/record.constants';
@@ -10,7 +10,7 @@ import { Pagination } from '@/components/Pagination';
 import { useComparisonData } from '@/features/comparison/hooks';
 import { Preview, PreviewActionsDropdown } from '@/features/preview';
 
-import { useSearchState, useUIState } from '@/store';
+import { useLoadingState, useSearchState, useUIState } from '@/store';
 
 import GeneralSearch from '@/assets/general-search.svg?react';
 import Times16 from '@/assets/times-16.svg?react';
@@ -29,10 +29,17 @@ export const Comparison = () => {
     'selectedInstances',
   ]);
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
+  const { setIsLoading, resetIsLoading } = useLoadingState(['setIsLoading', 'resetIsLoading']);
   const { navigateToEditPage } = useNavigateToEditPage();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const { items } = useComparisonData(selectedInstances);
+  const { items, isLoading } = useComparisonData(selectedInstances);
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+
+    return () => resetIsLoading();
+  }, [isLoading]);
 
   const handleCloseComparison = () => {
     resetFullDisplayComponentType();
