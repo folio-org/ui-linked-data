@@ -2,13 +2,14 @@ import { FormattedMessage } from 'react-intl';
 import { useParams } from 'react-router-dom';
 
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { Button, ButtonType } from '@/components/Button';
+
+import { useRecordNavigation } from '@/features/resources';
 
 import './PreviewExternalResourceControls.scss';
 
 export const PreviewExternalResourceControls = () => {
-  const { tryFetchExternalRecordForEdit } = useRecordControls();
+  const { tryFetchExternalRecordForEdit } = useRecordNavigation();
   const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const { externalId } = useParams();
 

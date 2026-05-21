@@ -13,6 +13,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 
 import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@/features/edit';
+import { useRecordNavigation } from '@/features/resources';
 
 import { useInputsState, useLoadingState, useMarcPreviewState, useStatusState, useUIState } from '@/store';
 
@@ -22,7 +23,8 @@ const ignoreLoadingStatuses = new Set([RecordStatus.saveAndClose, RecordStatus.s
 
 export const Edit = () => {
   const { getProfiles } = useConfig();
-  const { fetchRecord, clearRecordState, fetchRecordAndSelectEntityValues } = useRecordControls();
+  const { fetchRecord, fetchRecordAndSelectEntityValues } = useRecordControls();
+  const { clearRecordState } = useRecordNavigation();
   const resourceId = getResourceIdFromUri();
   const { resetRecord, resetUserValues, resetSelectedEntries } = useInputsState([
     'resetRecord',
