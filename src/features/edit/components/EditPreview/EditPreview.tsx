@@ -12,7 +12,7 @@ import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/confi
 import { useEditPreview } from '@/features/edit/hooks';
 import { TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
 
-import { useInputsState } from '@/store';
+import { useInputsState, useLoadingState } from '@/store';
 
 import { InstancesList } from '../InstancesList';
 
@@ -24,7 +24,11 @@ export const EditPreview = memo(() => {
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
-  const [selectedInstanceId, setSelectedInstanceId] = useState<string | undefined>(undefined);
+  const [selection, setSelection] = useState<{ resourceId?: string; instanceId?: string }>({});
+  // Derive selected instance — automatically resets when navigating to a different resource
+  const selectedInstanceId = selection.resourceId === resourceId ? selection.instanceId : undefined;
+
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -36,15 +40,19 @@ export const EditPreview = memo(() => {
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
   const isSingleInstance = dependencies?.entries?.length === 1;
-  const linkedEntityId = dependencies?.entries?.[0]?.id?.toString();
+  const linkedEntityId = (dependencies?.entries?.[0] as { id?: string } | undefined)?.id;
   const previewInstanceId = isSingleInstance ? linkedEntityId : selectedInstanceId;
+  // Only query when the dependency is an instance — Work preview uses the store schema directly
+  const instancePreviewId = dependencies?.type === ResourceType.instance ? previewInstanceId : undefined;
 
-  const { altSchema, altUserValues, altInitKey, title } = useEditPreview(previewInstanceId);
+  const { altSchema, altUserValues, altInitKey, title, isLoading } = useEditPreview(instancePreviewId);
 
-  // Reset selected instance when navigating to a different resource
+  // Show global spinner while instance preview data is loading
   useEffect(() => {
-    setSelectedInstanceId(undefined);
-  }, [resourceId]);
+    setIsLoading(isLoading);
+
+    return () => setIsLoading(false);
+  }, [isLoading, setIsLoading]);
 
   const previewData =
     altUserValues && Object.keys(altUserValues).length > 0
@@ -76,7 +84,7 @@ export const EditPreview = memo(() => {
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
           previewContent={previewData}
-          onClickClose={() => setSelectedInstanceId(undefined)}
+          onClickClose={() => setSelection({ resourceId, instanceId: undefined })}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
       ) : (
@@ -84,7 +92,7 @@ export const EditPreview = memo(() => {
           type={dependencies?.type}
           refId={resourceId}
           contents={dependencies}
-          onSelectInstance={setSelectedInstanceId}
+          onSelectInstance={id => setSelection({ resourceId, instanceId: id })}
         />
       )}
     </div>
