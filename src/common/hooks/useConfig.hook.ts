@@ -5,8 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
-import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
-import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
+import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
 import { getUri } from '@/configs/resourceTypes';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
@@ -33,7 +32,6 @@ type IGetProfiles = {
   recordId?: string;
   previewParams?: PreviewParams;
   asClone?: boolean;
-  skipPreviewContentUpdate?: boolean;
   profile?: {
     ids: number[];
     rootEntry?: ProfileNode;
@@ -60,9 +58,8 @@ export const useConfig = () => {
     'setInitialSchemaKey',
     'setSchema',
   ]);
-  const { setUserValues, setPreviewContent, setSelectedRecordBlocks, setSelectedEntries } = useInputsState([
+  const { setUserValues, setSelectedRecordBlocks, setSelectedEntries } = useInputsState([
     'setUserValues',
-    'setPreviewContent',
     'setSelectedRecordBlocks',
     'setSelectedEntries',
   ]);
@@ -116,10 +113,8 @@ export const useConfig = () => {
 
   const processProfiles = async ({
     record,
-    recordId,
     previewParams,
     asClone,
-    skipPreviewContentUpdate = false,
   }: IGetProfiles): Promise<GeneratedPreviewData | void> => {
     try {
       const recordData = record?.resource || {};
@@ -141,10 +136,6 @@ export const useConfig = () => {
 
       const loadedProfiles = await Promise.all(profile?.ids?.map(profileId => loadProfile(profileId)));
       const selectedProfile = profile?.rootEntry ? [profile.rootEntry, ...loadedProfiles.flat()] : loadedProfiles[0];
-
-      const recordTitle = getRecordTitle(recordData as RecordEntry);
-      const entities = getPrimaryEntitiesFromRecord(record as RecordEntry);
-      const referenceIds = getReferenceIdsRaw(record as RecordEntry);
 
       if (selectedProfile) {
         if (!previewParams?.noStateUpdate) {
@@ -173,20 +164,6 @@ export const useConfig = () => {
           initKey,
         };
 
-        // Update previewContent store unless explicitly skipped
-        if (previewParams && recordId && !skipPreviewContentUpdate) {
-          setPreviewContent(prev => [
-            ...(previewParams.singular ? [] : prev.filter(({ id }) => id !== recordId)),
-            {
-              id: recordId,
-              ...generatedData,
-              title: recordTitle,
-              entities,
-              referenceIds,
-            },
-          ]);
-        }
-
         return generatedData;
       }
     } finally {
@@ -200,7 +177,6 @@ export const useConfig = () => {
     recordId,
     previewParams,
     asClone,
-    skipPreviewContentUpdate,
   }: IGetProfiles): Promise<GeneratedPreviewData | void> => {
     // If processing is already running and caller provided a record/recordId,
     // wait for the current processing to finish and return its result.
@@ -219,7 +195,6 @@ export const useConfig = () => {
       recordId,
       previewParams,
       asClone,
-      skipPreviewContentUpdate,
     });
 
     return processingPromise.current;

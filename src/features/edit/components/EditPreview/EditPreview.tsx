@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import classNames from 'classnames';
@@ -9,6 +9,7 @@ import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
 
+import { useEditPreview } from '@/features/edit/hooks';
 import { TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
 
 import { useInputsState } from '@/store';
@@ -18,17 +19,12 @@ import { InstancesList } from '../InstancesList';
 import './EditPreview.scss';
 
 export const EditPreview = memo(() => {
-  const { record, previewContent, selectedRecordBlocks, setPreviewContent, resetPreviewContent } = useInputsState([
-    'record',
-    'previewContent',
-    'selectedRecordBlocks',
-    'setPreviewContent',
-    'resetPreviewContent',
-  ]);
+  const { record, selectedRecordBlocks } = useInputsState(['record', 'selectedRecordBlocks']);
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -39,20 +35,28 @@ export const EditPreview = memo(() => {
   const isPositionedSecond = previewPosition === 'right';
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
-  const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
-  const selectedForPreview = previewContent?.[0];
+  const linkedEntityId = dependencies?.entries?.[0]?.id?.toString();
 
+  const { altSchema, altUserValues, altInitKey, title } = useEditPreview(linkedEntityId);
+
+  // Reset dismiss state when navigating to a different resource
   useEffect(() => {
-    resetPreviewContent();
+    setIsDismissed(false);
   }, [resourceId]);
 
-  useEffect(() => {
-    if (isCreateWorkPageOpened) {
-      const initialInputsState = useInputsState.getInitialState();
+  const previewData =
+    !isDismissed && altUserValues && Object.keys(altUserValues).length > 0
+      ? ({
+          id: linkedEntityId ?? '',
+          base: altSchema ?? new Map(),
+          userValues: altUserValues,
+          initKey: altInitKey ?? '',
+          selectedEntries: [],
+          title,
+        } as PreviewContent)
+      : undefined;
 
-      useInputsState.setState(initialInputsState, true);
-    }
-  }, [isCreateWorkPageOpened]);
+  const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || !!previewData;
 
   if (!shouldShowPreview) {
     return null;
@@ -66,11 +70,11 @@ export const EditPreview = memo(() => {
     >
       {showPreview ? (
         <TitledPreview
-          ownId={dependencies?.entries?.[0]?.id as string | undefined}
+          ownId={linkedEntityId}
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
-          previewContent={selectedForPreview}
-          onClickClose={() => setPreviewContent(prev => prev.filter(({ id }) => id !== selectedForPreview.id))}
+          previewContent={previewData}
+          onClickClose={() => setIsDismissed(true)}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
       ) : (
