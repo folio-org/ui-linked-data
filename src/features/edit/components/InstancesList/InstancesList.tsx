@@ -3,11 +3,9 @@ import { FormattedMessage } from 'react-intl';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
-import { wrapRecordValuesWithCommonContainer } from '@/common/helpers/record.helper';
 import { formatDependeciesTable } from '@/common/helpers/recordFormatting.helper';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { Button, ButtonType } from '@/components/Button';
 import { Row, Table } from '@/components/Table';
 
@@ -17,6 +15,7 @@ type IInstancesList = {
   contents?: { keys: { key?: string; uri?: string }; entries: Record<string, unknown>[] };
   type?: string;
   refId?: string;
+  onSelectInstance?: (id: string) => void;
 };
 
 const instancesListHeader: Row = {
@@ -37,8 +36,7 @@ const instancesListHeader: Row = {
   },
 };
 
-export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } = {}, type, refId }) => {
-  const { getRecordAndInitializeParsing } = useRecordControls();
+export const InstancesList: FC<IInstancesList> = ({ contents: { entries } = {}, type, refId, onSelectInstance }) => {
   const { navigateToEditPage } = useNavigateToEditPage();
   const { onCreateNewResource } = useNavigateToCreatePage();
 
@@ -55,15 +53,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { keys, entries } 
   const applyActionItems = (rows: Row[]): Row[] =>
     rows.map(row => {
       const rowMeta = row.__meta;
-      const onClickPreview = () =>
-        keys?.uri &&
-        getRecordAndInitializeParsing({
-          recordId: rowMeta?.id,
-          cachedRecord: wrapRecordValuesWithCommonContainer({
-            [keys?.uri]: rowMeta as unknown as RecordEntry<RecursiveRecordSchema>,
-          }),
-          previewParams: { singular: true, noStateUpdate: true },
-        });
+      const onClickPreview = () => rowMeta?.id && onSelectInstance?.(rowMeta.id);
 
       const onClickEdit = () => navigateToEditPage(generateEditResourceUrl(rowMeta?.id));
 

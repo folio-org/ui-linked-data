@@ -24,7 +24,7 @@ export const EditPreview = memo(() => {
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string | undefined>(undefined);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -35,17 +35,19 @@ export const EditPreview = memo(() => {
   const isPositionedSecond = previewPosition === 'right';
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
+  const isSingleInstance = dependencies?.entries?.length === 1;
   const linkedEntityId = dependencies?.entries?.[0]?.id?.toString();
+  const previewInstanceId = isSingleInstance ? linkedEntityId : selectedInstanceId;
 
-  const { altSchema, altUserValues, altInitKey, title } = useEditPreview(linkedEntityId);
+  const { altSchema, altUserValues, altInitKey, title } = useEditPreview(previewInstanceId);
 
-  // Reset dismiss state when navigating to a different resource
+  // Reset selected instance when navigating to a different resource
   useEffect(() => {
-    setIsDismissed(false);
+    setSelectedInstanceId(undefined);
   }, [resourceId]);
 
   const previewData =
-    !isDismissed && altUserValues && Object.keys(altUserValues).length > 0
+    altUserValues && Object.keys(altUserValues).length > 0
       ? ({
           id: linkedEntityId ?? '',
           base: altSchema ?? new Map(),
@@ -56,7 +58,7 @@ export const EditPreview = memo(() => {
         } as PreviewContent)
       : undefined;
 
-  const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || !!previewData;
+  const showPreview = !!previewInstanceId && !isCreateWorkPageOpened;
 
   if (!shouldShowPreview) {
     return null;
@@ -74,11 +76,16 @@ export const EditPreview = memo(() => {
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
           previewContent={previewData}
-          onClickClose={() => setIsDismissed(true)}
+          onClickClose={() => setSelectedInstanceId(undefined)}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
       ) : (
-        <InstancesList type={dependencies?.type} refId={resourceId} contents={dependencies} />
+        <InstancesList
+          type={dependencies?.type}
+          refId={resourceId}
+          contents={dependencies}
+          onSelectInstance={setSelectedInstanceId}
+        />
       )}
     </div>
   );

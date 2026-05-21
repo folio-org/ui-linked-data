@@ -53,7 +53,7 @@ export const useEditPage = () => {
     (record?: RecordEntry | null) => {
       if (record) {
         setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(record)));
-        setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(record, true)));
+        setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(record, false)));
       } else {
         const editedEntityBfId = getProfileBfid(resourceType);
 

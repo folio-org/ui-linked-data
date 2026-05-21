@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { RESOURCE_TEMPLATE_IDS } from '@/common/constants/bibframe.constants';
@@ -10,7 +10,7 @@ import { Button, ButtonType } from '@/components/Button';
 import { Preview } from '@/features/preview';
 import { useResourcePreviewQuery } from '@/features/resources';
 
-import { useInputsState } from '@/store';
+import { useInputsState, useLoadingState, useUIState } from '@/store';
 
 import Times16 from '@/assets/times-16.svg?react';
 
@@ -19,7 +19,21 @@ import './FullDisplay.scss';
 const PreviewContentItem = ({ resourceId, onClose }: { resourceId: string; onClose: (id: string) => void }) => {
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { data } = useResourcePreviewQuery(resourceId, 'search-preview');
+  const { data, isLoading } = useResourcePreviewQuery(resourceId, 'search-preview');
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setCurrentlyPreviewedEntityBfid } = useUIState(['setCurrentlyPreviewedEntityBfid']);
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+
+    return () => setIsLoading(false);
+  }, [isLoading]);
+
+  useLayoutEffect(() => {
+    if (data?.entities) {
+      setCurrentlyPreviewedEntityBfid(new Set(data.entities));
+    }
+  }, [data?.entities]);
 
   if (!data) return null;
 
@@ -51,7 +65,7 @@ const PreviewContentItem = ({ resourceId, onClose }: { resourceId: string; onClo
       </div>
       {Object.keys(userValues).length ? (
         <div data-testid="preview-contents-container" className="preview-contents-container">
-          <Preview altSchema={schema} altUserValues={userValues} altInitKey={initKey} forceRenderAllTopLevelEntities />
+          <Preview altSchema={schema} altUserValues={userValues} altInitKey={initKey} />
         </div>
       ) : (
         <div>
