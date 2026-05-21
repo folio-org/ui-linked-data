@@ -1,3 +1,4 @@
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { createSchemaPipeline } from '@/common/services/pipeline';
 
 import { getRecord } from '../api/records.api';
@@ -14,6 +15,7 @@ export type FetchAndBuildPreviewParams = {
     profile: Profile,
     uri?: string,
   ) => Promise<ProfileSettingsWithDrift>;
+  idType?: ExternalResourceIdType;
 };
 
 export const fetchAndBuildPreview = async ({
@@ -22,8 +24,9 @@ export const fetchAndBuildPreview = async ({
   sharedInfra,
   loadProfile,
   loadProfileSettings,
+  idType,
 }: FetchAndBuildPreviewParams): Promise<ProcessedResource | null> => {
-  const rawRecord = await getRecord({ recordId: resourceId, signal });
+  const rawRecord = await getRecord({ recordId: resourceId, signal, idType });
 
   if (!rawRecord) return null;
 

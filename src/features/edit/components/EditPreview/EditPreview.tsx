@@ -45,26 +45,15 @@ export const EditPreview = memo(() => {
   // Only query when the dependency is an instance — Work preview uses the store schema directly
   const instancePreviewId = dependencies?.type === ResourceType.instance ? previewInstanceId : undefined;
 
-  const { altSchema, altUserValues, altInitKey, title, isLoading } = useEditPreview(instancePreviewId);
+  const { data: previewData, isLoading } = useEditPreview(instancePreviewId);
 
-  // Show global spinner while instance preview data is loading
   useEffect(() => {
     setIsLoading(isLoading);
 
     return () => setIsLoading(false);
   }, [isLoading, setIsLoading]);
 
-  const previewData =
-    altUserValues && Object.keys(altUserValues).length > 0
-      ? ({
-          id: linkedEntityId ?? '',
-          base: altSchema ?? new Map(),
-          userValues: altUserValues,
-          initKey: altInitKey ?? '',
-          selectedEntries: [],
-          title,
-        } as PreviewContent)
-      : undefined;
+  const hasPreviewContent = previewData && Object.keys(previewData.userValues).length > 0;
 
   const showPreview = !!previewInstanceId && !isCreateWorkPageOpened;
 
@@ -83,7 +72,7 @@ export const EditPreview = memo(() => {
           ownId={linkedEntityId}
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
-          previewContent={previewData}
+          previewContent={hasPreviewContent ? previewData : undefined}
           onClickClose={() => setSelection({ resourceId, instanceId: undefined })}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
