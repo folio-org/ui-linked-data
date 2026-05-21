@@ -84,7 +84,6 @@ describe('useConfig', () => {
   const setSchema = jest.fn();
   const setInitialSchemaKey = jest.fn();
   const setSelectedEntries = jest.fn();
-  const setPreviewContent = jest.fn();
   const setSelectedRecordBlocks = jest.fn();
   const setSearchParams = jest.fn();
   let queryClient: QueryClient;
@@ -134,11 +133,9 @@ describe('useConfig', () => {
         store: useInputsStore,
         state: {
           userValues: {},
-          previewContent: [],
           selectedEntries: [],
           setUserValues,
           setSelectedEntries,
-          setPreviewContent,
           setSelectedRecordBlocks,
         },
       },

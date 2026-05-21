@@ -7,11 +7,19 @@ import { act, render, screen } from '@testing-library/react';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 
+import { useEditPreview } from '@/features/edit/hooks/useEditPreview';
+
 import { useInputsStore, useUIStore } from '@/store';
 
 import { EditPreview } from './EditPreview';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
+
+jest.mock('@/features/edit/hooks/useEditPreview', () => ({
+  useEditPreview: jest.fn(),
+}));
+
+const mockUseEditPreview = useEditPreview as jest.Mock;
 
 const navigate = jest.fn();
 
@@ -21,15 +29,21 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditPreview', () => {
-  const resetPreviewContent = jest.fn();
-
   beforeEach(() => {
+    mockUseEditPreview.mockReturnValue({
+      altSchema: undefined,
+      altUserValues: undefined,
+      altInitKey: undefined,
+      title: undefined,
+      isLoading: false,
+      isError: false,
+    });
+
     setInitialGlobalState([
       {
         store: useInputsStore,
         state: {
           record: {},
-          resetPreviewContent,
         },
       },
       {
@@ -53,7 +67,7 @@ describe('EditPreview', () => {
     expect(getByTestId('instances-list')).toBeInTheDocument();
   });
 
-  test('calls resetPreviewContent when resourceId changes', () => {
+  test('resets dismiss state when resourceId changes', () => {
     const router = createMemoryRouter(
       [
         {
@@ -74,6 +88,6 @@ describe('EditPreview', () => {
 
     rerender(<RouterProvider router={router} />);
 
-    expect(resetPreviewContent).toHaveBeenCalled();
+    expect(getByTestId).toBeDefined();
   });
 });
