@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 import { SchemaPipelineProvider } from '@/providers';
 
@@ -56,11 +57,15 @@ export const Edit = () => {
       {!marcPreviewData && (
         <>
           {showPreviewSection && (
-            <SchemaPipelineProvider>
-              <EditPreview />
-            </SchemaPipelineProvider>
+            <ErrorBoundary>
+              <SchemaPipelineProvider>
+                <EditPreview />
+              </SchemaPipelineProvider>
+            </ErrorBoundary>
           )}
-          <EditSection />
+          <ErrorBoundary>
+            <EditSection />
+          </ErrorBoundary>
         </>
       )}
       <ModalViewMarc />
