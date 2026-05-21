@@ -1,7 +1,8 @@
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import { getProfiles } from '@/test/__mocks__/common/hooks/useConfig.mock';
-import { clearRecordState, fetchRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { fetchRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { clearRecordState } from '@/test/__mocks__/features/resources/hooks/useRecordNavigation.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import * as Router from 'react-router-dom';
@@ -13,8 +14,7 @@ import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import * as NavigationHelper from '@/common/helpers/navigation.helper';
 import { Edit } from '@/views';
 
-import { useUIStore } from '@/store';
-import { useProfileStore } from '@/store/stores/profile';
+import { useProfileStore, useUIStore } from '@/store';
 
 const monograph = {
   id: 'id',

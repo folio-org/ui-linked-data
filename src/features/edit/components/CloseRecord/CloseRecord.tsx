@@ -1,11 +1,12 @@
 import { FC, memo } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { Button, ButtonType } from '@/components/Button';
 
+import { useRecordNavigation } from '@/features/resources';
+
 const CloseRecord: FC = () => {
-  const { discardRecord } = useRecordControls();
+  const { discardRecord } = useRecordNavigation();
 
   return (
     <Button data-testid="close-record-button" type={ButtonType.Primary} onClick={() => discardRecord(false)}>

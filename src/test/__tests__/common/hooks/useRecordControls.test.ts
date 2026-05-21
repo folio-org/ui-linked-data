@@ -1,26 +1,18 @@
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-
 import { renderHook } from '@testing-library/react';
 
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
-import { RecordStatus } from '@/common/constants/record.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import * as recordHelper from '@/common/helpers/record.helper';
 import { PreviewParams } from '@/common/hooks/useConfig.hook';
 import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import * as recordsApi from '@/features/resources';
-import { useRecordGeneration } from '@/features/resources';
-
-import { useInputsStore, useStatusStore } from '@/store';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 const mockNavigate = jest.fn();
-const mockDispatchNavigateToOriginEventWithFallback = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
@@ -28,21 +20,14 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: () => [new URLSearchParams('type=hub'), jest.fn()],
 }));
 
-const mockGenerateRecord = jest.fn();
 jest.mock('@/features/resources', () => ({
   getRecord: jest.fn(),
-  postRecord: jest.fn(),
-  putRecord: jest.fn(),
-  useRecordGeneration: () => ({
-    generateRecord: mockGenerateRecord,
-  }),
 }));
 
-const mockDispatchUnblockEvent = jest.fn();
 jest.mock('@/common/hooks/useContainerEvents', () => ({
   useContainerEvents: () => ({
-    dispatchUnblockEvent: mockDispatchUnblockEvent,
-    dispatchNavigateToOriginEventWithFallback: mockDispatchNavigateToOriginEventWithFallback,
+    dispatchUnblockEvent: jest.fn(),
+    dispatchNavigateToOriginEventWithFallback: jest.fn(),
   }),
 }));
 
@@ -60,96 +45,8 @@ jest.mock('@/common/services/userNotification', () => ({
 }));
 
 describe('useRecordControls', () => {
-  const mockSetRecordStatus = jest.fn();
-  const mockApiResponse = { id: 'test-id' };
-
   beforeEach(() => {
     jest.spyOn(console, 'error').mockReturnValue();
-  });
-
-  describe('saveRecord', () => {
-    beforeEach(() => {
-      setInitialGlobalState([
-        {
-          store: useStatusStore,
-          state: {
-            setRecordStatus: mockSetRecordStatus,
-          },
-        },
-        {
-          store: useInputsStore,
-          state: {
-            selectedRecordBlocks: null,
-            record: {},
-          },
-        },
-      ]);
-
-      mockGenerateRecord.mockReturnValue({});
-    });
-
-    it('saves record with default props', async () => {
-      const mockResponse = { json: () => Promise.resolve(mockApiResponse) };
-      (recordsApi.postRecord as jest.Mock).mockResolvedValue(mockResponse);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord();
-
-      expect(recordsApi.postRecord).toHaveBeenCalled();
-    });
-
-    it('handles save with asRefToNewRecord=true', async () => {
-      const mockResponse = { json: () => Promise.resolve(mockApiResponse) };
-      (recordsApi.postRecord as jest.Mock).mockResolvedValue(mockResponse);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord({ asRefToNewRecord: true });
-
-      expect(recordsApi.postRecord).toHaveBeenCalled();
-    });
-
-    it('handles save with isNavigatingBack=false', async () => {
-      const mockResponse = { json: () => Promise.resolve(mockApiResponse) };
-      (recordsApi.putRecord as jest.Mock).mockResolvedValue(mockResponse);
-
-      jest.spyOn(recordHelper, 'getRecordId').mockReturnValue('existing-id');
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord({ isNavigatingBack: false });
-
-      expect(recordsApi.putRecord).toHaveBeenCalled();
-    });
-
-    it('handles save errors', async () => {
-      (recordsApi.postRecord as jest.Mock).mockRejectedValue(new Error('Save failed'));
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord();
-
-      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.cantSaveRd');
-    });
-
-    it('updates record status on successful save', async () => {
-      const mockResponse = { json: () => Promise.resolve(mockApiResponse) };
-      (recordsApi.postRecord as jest.Mock).mockResolvedValue(mockResponse);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord();
-
-      expect(mockSetRecordStatus).toHaveBeenCalledWith({
-        type: RecordStatus.saveAndClose,
-      });
-    });
-
-    it('does not save if generateRecord returns null', async () => {
-      jest.spyOn(useRecordGeneration(), 'generateRecord').mockReturnValue(undefined);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.saveRecord();
-
-      expect(recordsApi.postRecord).not.toHaveBeenCalled();
-      expect(recordsApi.putRecord).not.toHaveBeenCalled();
-    });
   });
 
   describe('fetchRecordAndSelectEntityValues', () => {
@@ -287,85 +184,6 @@ describe('useRecordControls', () => {
         recordId: 'test-id',
         previewParams,
       });
-    });
-  });
-
-  describe('changeRecordProfile', () => {
-    const mockSetRecord = jest.fn();
-    const mockSetIsEdited = jest.fn();
-    const mockSetLastSavedRecordId = jest.fn();
-    const mockSelectedRecordBlocks = { block: 'test-block' };
-    const mockRecord = { id: 'record-id', data: 'test data' };
-    const mockNewProfileId = '456';
-    const mockResponseData = { id: 'updated-record-id', data: 'updated data' };
-
-    beforeEach(() => {
-      setInitialGlobalState([
-        {
-          store: useStatusStore,
-          state: {
-            setIsRecordEdited: mockSetIsEdited,
-            setLastSavedRecordId: mockSetLastSavedRecordId,
-          },
-        },
-        {
-          store: useInputsStore,
-          state: {
-            record: mockRecord,
-            setRecord: mockSetRecord,
-            selectedRecordBlocks: mockSelectedRecordBlocks,
-          },
-        },
-      ]);
-
-      mockGenerateRecord.mockReturnValue({ generated: 'record' });
-      jest
-        .spyOn(recordHelper, 'getRecordId')
-        .mockReturnValueOnce('record-id')
-        .mockReturnValueOnce('record-id')
-        .mockReturnValueOnce('updated-record-id')
-        .mockReturnValueOnce('updated-record-id');
-    });
-
-    it('successfully changes record profile', async () => {
-      mockGenerateRecord.mockReturnValue(mockResponseData);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.changeRecordProfile({ profileId: mockNewProfileId });
-
-      expect(mockGenerateRecord).toHaveBeenCalledWith({ profileId: mockNewProfileId });
-    });
-
-    it('does not proceed if generateRecord returns nothing', async () => {
-      mockGenerateRecord.mockReturnValue(undefined);
-
-      const { result } = renderHook(() => useRecordControls());
-      await result.current.changeRecordProfile({ profileId: mockNewProfileId });
-
-      expect(recordsApi.putRecord).not.toHaveBeenCalled();
-      expect(mockSetRecord).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('discardRecord', () => {
-    it('discards record and navigates away with segment parameter', () => {
-      setInitialGlobalState([
-        {
-          store: useInputsStore,
-          state: {
-            record: null,
-            selectedRecordBlocks: null,
-          },
-        },
-      ]);
-
-      const { result } = renderHook(() => useRecordControls());
-      result.current.discardRecord();
-
-      expect(mockDispatchUnblockEvent).toHaveBeenCalled();
-      expect(mockDispatchNavigateToOriginEventWithFallback).toHaveBeenCalledWith(
-        expect.stringContaining('segment=hubs'),
-      );
     });
   });
 });

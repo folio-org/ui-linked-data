@@ -16,8 +16,8 @@ jest.mock('react-router-dom', () => ({
   useSearchParams: jest.fn(),
 }));
 
-jest.mock('@/common/hooks/useRecordControls', () => ({
-  useRecordControls: () => ({
+jest.mock('@/features/resources', () => ({
+  useRecordMutations: () => ({
     saveRecord: mockSaveRecord,
   }),
 }));

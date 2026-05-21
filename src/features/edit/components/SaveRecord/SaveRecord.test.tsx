@@ -1,4 +1,4 @@
-import { saveRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import { saveRecord } from '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { BrowserRouter } from 'react-router-dom';

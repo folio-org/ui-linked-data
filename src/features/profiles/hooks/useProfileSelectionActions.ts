@@ -5,8 +5,9 @@ import { generatePageURL } from '@/common/helpers/navigation.helper';
 import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
 import { isProfilePreferred } from '@/common/helpers/profileSelection.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useRecordMutations } from '@/features/resources';
 
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
 
@@ -30,7 +31,7 @@ export const useProfileSelectionActions = ({
     'setPreferredProfiles',
   ]);
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { changeRecordProfile } = useRecordControls();
+  const { changeRecordProfile } = useRecordMutations();
 
   const updatePreferredProfiles = (profileId: string | number) => {
     if (!resourceTypeURL) return;

@@ -3,15 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 
 import { v4 as uuidv4 } from 'uuid';
 
-import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import { getEditingRecordBlocks, getPrimaryEntitiesFromRecord, getRecordTitle } from '@/common/helpers/record.helper';
 import { getReferenceIdsRaw } from '@/common/helpers/recordFormatting.helper';
-import { getUri, mapToResourceType } from '@/configs/resourceTypes';
+import { getUri } from '@/configs/resourceTypes';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
-import { useProcessedRecordAndSchema } from '@/features/resources';
+import { extractProfileParams, useProcessedRecordAndSchema } from '@/features/resources';
 
 import { useInputsState, useProfileState } from '@/store';
 
@@ -39,13 +38,6 @@ type IGetProfiles = {
     ids: number[];
     rootEntry?: ProfileNode;
   };
-};
-
-type IExtractProfileParams = {
-  recordData: RecordData;
-  profileIdParam: string | null;
-  typeParam: string | null;
-  editingRecordBlocks?: SelectedRecordBlocks;
 };
 
 type IBuildSchema = {
@@ -94,7 +86,7 @@ export const useConfig = () => {
     userValuesService.set(userValues);
     selectedEntriesService.set([]);
 
-    schemaGeneratorService.init(profile as unknown as Profile, settings);
+    schemaGeneratorService.init(profile, settings);
     schemaGeneratorService.generate(initKey);
 
     const { updatedSchema, updatedUserValues, selectedRecordBlocks } = await getProcessedRecordAndSchema({
@@ -119,38 +111,6 @@ export const useConfig = () => {
       initKey,
       updatedUserValues: updatedUserValues ?? userValues,
       selectedEntries: selectedEntriesService.get(),
-    };
-  };
-
-  const extractProfileParams = ({
-    recordData,
-    profileIdParam,
-    typeParam,
-    editingRecordBlocks,
-  }: IExtractProfileParams) => {
-    if (recordData && Object.keys(recordData).length) {
-      const block = editingRecordBlocks?.block as keyof typeof BibframeEntitiesMap;
-      const reference = editingRecordBlocks?.reference?.key;
-      const recordProfileId = recordData[block]?.profileId as string | number | null | undefined;
-
-      // Use record's profileId if present;
-      // only fall back to URL param if there is no profileId (valid for the Create resource page)
-      const profileId = recordProfileId ?? profileIdParam;
-      const referenceProfileId = (recordData[block]?.[reference as string] as unknown as RecursiveRecordSchema[])?.[0]
-        ?.profileId as string;
-      const resourceTypeValue = BibframeEntitiesMap[block];
-      const mappedResourceType = mapToResourceType(resourceTypeValue);
-
-      return {
-        profileId,
-        referenceProfileId,
-        resourceType: mappedResourceType,
-      };
-    }
-
-    return {
-      profileId: profileIdParam,
-      resourceType: mapToResourceType(typeParam),
     };
   };
 

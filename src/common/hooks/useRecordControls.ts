@@ -1,39 +1,17 @@
-import { flushSync } from 'react-dom';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
-import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
-import { QueryParams, ROUTES, SearchQueryParams } from '@/common/constants/routes.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
-import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
-import { getPrimaryEntitiesFromRecord, getRecordId, getSelectedRecordBlocks } from '@/common/helpers/record.helper';
+import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
 import { PreviewParams, useConfig } from '@/common/hooks/useConfig.hook';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
-import {
-  deleteRecord as deleteRecordRequest,
-  getGraphIdByExternalId,
-  getRecord,
-  postRecord,
-  putRecord,
-  useRecordGeneration,
-} from '@/features/resources';
+import { getRecord } from '@/features/resources';
 
-import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
-
-import { useBackToSearchUri } from './useBackToSearchUri';
-import { useContainerEvents } from './useContainerEvents';
-
-type SaveRecordProps = {
-  asRefToNewRecord?: boolean;
-  shouldSetSearchParams?: boolean;
-  isNavigatingBack?: boolean;
-  profileId?: string;
-};
+import { useInputsState, useLoadingState, useStatusState, useUIState } from '@/store';
 
 type IBaseFetchRecord = {
   recordId?: string;
@@ -45,58 +23,51 @@ type IBaseFetchRecord = {
   skipProfileProcessing?: boolean;
 };
 
-type HandleRecordUpdateProps = {
-  generatedRecord?: RecordEntry;
-  recordId: string;
-  updatedSelectedRecordBlocks: SelectedRecordBlocks;
-  isNavigatingBack?: boolean;
-  asRefToNewRecord?: boolean;
-  shouldSetSearchParams?: boolean;
-  isProfileChange?: boolean;
-};
-
 export const useRecordControls = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
-  const { resetUserValues, selectedRecordBlocks, setSelectedRecordBlocks, record, setRecord } = useInputsState([
-    'resetUserValues',
-    'selectedRecordBlocks',
-    'setSelectedRecordBlocks',
-    'record',
-    'setRecord',
-  ]);
-  const { setSelectedProfile } = useProfileState(['setSelectedProfile']);
+  const [queryParams] = useSearchParams();
+  const { setRecord } = useInputsState(['setRecord']);
   const { setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid } = useUIState([
     'setCurrentlyEditedEntityBfid',
     'setCurrentlyPreviewedEntityBfid',
   ]);
-  const {
-    setRecordStatus,
-    setLastSavedRecordId,
-    setIsRecordEdited: setIsEdited,
-    addStatusMessagesItem,
-  } = useStatusState(['setRecordStatus', 'setLastSavedRecordId', 'setIsRecordEdited', 'addStatusMessagesItem']);
-  const currentRecordId = getRecordId(record);
+  const { setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState([
+    'setIsRecordEdited',
+    'addStatusMessagesItem',
+  ]);
   const { getProfiles } = useConfig();
   const navigate = useNavigate();
-  const location = useLocation();
-  const searchResultsUri = useBackToSearchUri();
-  const { dispatchUnblockEvent, dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
-  const [queryParams] = useSearchParams();
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
   const isClone = queryParams.get(QueryParams.CloneOf);
-  const { generateRecord } = useRecordGeneration();
 
-  const ensureSegmentInUri = (uri: string) => {
-    if (uri.includes(`${SearchQueryParams.Segment}=`)) {
-      return uri;
+  const getRecordAndInitializeParsing = async ({
+    recordId,
+    cachedRecord,
+    idType,
+    previewParams,
+    errorMessage,
+    signal,
+    skipProfileProcessing = false,
+  }: IBaseFetchRecord) => {
+    if (!recordId && !cachedRecord) return;
+
+    try {
+      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType, signal })));
+
+      if (!skipProfileProcessing) {
+        await getProfiles({
+          record: recordData,
+          recordId,
+          previewParams,
+        });
+      }
+
+      return recordData;
+    } catch (err) {
+      console.error('Error initializing record parsing:', err);
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
+      );
     }
-
-    const typeParam = searchParams.get(QueryParams.Type);
-    const resourceType = mapToResourceType(typeParam);
-    const segment = getSearchSegment(resourceType);
-    const separator = uri.includes('?') ? '&' : '?';
-
-    return `${uri}${separator}${SearchQueryParams.Segment}=${segment}`;
   };
 
   const fetchRecord = async (recordId: string, previewParams?: PreviewParams, signal?: AbortSignal) => {
@@ -121,175 +92,18 @@ export const useRecordControls = () => {
     setIsEdited(false);
   };
 
-  // Helper functions to reduce cognitive complexity in handleRecordUpdate
-  const saveRecordToApi = async (recordId: string, generatedRecord: RecordEntry) => {
-    const shouldPostRecord = !recordId || isClone;
-
-    return shouldPostRecord ? await postRecord(generatedRecord) : await putRecord(recordId, generatedRecord);
-  };
-
-  const updateStateAfterSave = (parsedResponse: RecordEntry, asRefToNewRecord: boolean, recordId: string) => {
-    dispatchUnblockEvent();
-
-    if (!asRefToNewRecord) {
-      setRecord(parsedResponse);
-    }
-
-    // Show success message
-    addStatusMessagesItem?.(
-      UserNotificationFactory.createMessage(StatusType.success, recordId ? 'ld.rdUpdateSuccess' : 'ld.rdSaveSuccess'),
-    );
-
-    // isEdited state update is not immediately reflected in the <Prompt />
-    // blocker component, forcing <Prompt /> to block the navigation call below
-    // right before isEdited is set to false, disabling <Prompt />
-    flushSync(() => setIsEdited(false));
-  };
-
-  const handleProfileOrNoNavigationChange = async (
-    updatedRecordId: string,
-    parsedResponse: RecordEntry,
-    isProfileChange: boolean,
-  ) => {
-    navigate(generateEditResourceUrl(updatedRecordId), {
-      replace: true,
-      state: { ...(location.state as NavigationState), preserveStatusMessages: true },
-    });
-
-    if (isProfileChange) {
-      await getProfiles({
-        record: parsedResponse,
-      });
-    } else {
-      setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
-    }
-
-    return updatedRecordId;
-  };
-
-  const handleBackNavigation = (
-    updatedRecordId: string,
-    parsedResponse: RecordEntry,
-    asRefToNewRecord: boolean,
-    shouldSetSearchParams: boolean,
-  ) => {
-    setRecordStatus({ type: RecordStatus.saveAndClose });
-
-    if (asRefToNewRecord) {
-      const blocksBfliteKey = (
-        searchParams.get(QueryParams.Type) ?? ResourceType.instance
-      )?.toUpperCase() as BibframeEntities;
-
-      const blockConfig = BLOCKS_BFLITE[blocksBfliteKey];
-      const selectedBlock = blockConfig?.uri;
-
-      // Only set search params if this resource type has a reference (e.g., Work/Instance)
-      if (shouldSetSearchParams && blockConfig?.reference) {
-        setSearchParams({
-          type: blockConfig.reference.name,
-          ref: String(getRecordId(parsedResponse, selectedBlock)),
-        });
-      }
-
-      return updatedRecordId;
-    } else {
-      navigate(ensureSegmentInUri(searchResultsUri), {
-        state: { preserveStatusMessages: true } satisfies NavigationState,
-      });
-    }
-
-    return updatedRecordId;
-  };
-
-  const handleRecordUpdate = async ({
-    generatedRecord,
-    recordId,
-    updatedSelectedRecordBlocks,
-    isNavigatingBack = true,
-    asRefToNewRecord = false,
-    shouldSetSearchParams = true,
-    isProfileChange = false,
-  }: HandleRecordUpdateProps) => {
-    if (!generatedRecord) return;
+  const fetchExternalRecordForPreview = async (recordId?: string, idType = ExternalResourceIdType.Inventory) => {
+    if (!recordId) return;
 
     setIsLoading(true);
 
-    try {
-      const response = await saveRecordToApi(recordId, generatedRecord);
-      const parsedResponse = await response.json();
-
-      updateStateAfterSave(parsedResponse, asRefToNewRecord, recordId);
-
-      const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
-      setLastSavedRecordId(updatedRecordId);
-
-      // Handle different navigation scenarios
-      if (isProfileChange || !isNavigatingBack) {
-        return await handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
-      }
-
-      if (isNavigatingBack) {
-        return handleBackNavigation(updatedRecordId, parsedResponse, asRefToNewRecord, shouldSetSearchParams);
-      }
-
-      return updatedRecordId;
-    } catch (error) {
-      console.error('Cannot update the resource description', error);
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const saveRecord = async ({
-    asRefToNewRecord = false,
-    isNavigatingBack = true,
-    shouldSetSearchParams = true,
-    profileId,
-  }: SaveRecordProps = {}) => {
-    const generatedRecord = generateRecord({ profileId });
-    const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
-    const recordId = getRecordId(record, updatedSelectedRecordBlocks?.block);
-
-    return await handleRecordUpdate({
-      generatedRecord,
+    await getRecordAndInitializeParsing({
       recordId,
-      updatedSelectedRecordBlocks,
-      isNavigatingBack,
-      asRefToNewRecord,
-      shouldSetSearchParams,
+      idType,
+      errorMessage: 'ld.errorFetchingExternalResourceForPreview',
     });
-  };
 
-  const clearRecordState = () => {
-    resetUserValues();
-    setRecord(null);
-    setSelectedRecordBlocks(undefined);
-    setSelectedProfile(null);
-    setRecordStatus({ type: RecordStatus.close });
-    dispatchUnblockEvent();
-  };
-
-  const discardRecord = (clearState = true) => {
-    if (clearState) clearRecordState();
-
-    dispatchNavigateToOriginEventWithFallback(ensureSegmentInUri(searchResultsUri));
-  };
-
-  const deleteRecord = async () => {
-    try {
-      if (!currentRecordId) return;
-
-      await deleteRecordRequest(currentRecordId as unknown as string);
-      discardRecord();
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
-
-      navigate(ROUTES.SEARCH.uri);
-    } catch (error) {
-      console.error('Cannot delete the resource description', error);
-
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
-    }
+    setIsLoading(false);
   };
 
   const fetchRecordAndSelectEntityValues = async (recordId: string, entityId: BibframeEntities) => {
@@ -332,93 +146,10 @@ export const useRecordControls = () => {
     }
   };
 
-  const getRecordAndInitializeParsing = async ({
-    recordId,
-    cachedRecord,
-    idType,
-    previewParams,
-    errorMessage,
-    signal,
-    skipProfileProcessing = false,
-  }: IBaseFetchRecord) => {
-    if (!recordId && !cachedRecord) return;
-
-    try {
-      const recordData: RecordEntry = cachedRecord ?? (recordId && (await getRecord({ recordId, idType, signal })));
-
-      if (!skipProfileProcessing) {
-        await getProfiles({
-          record: recordData,
-          recordId,
-          previewParams,
-        });
-      }
-
-      return recordData;
-    } catch (err) {
-      console.error('Error initializing record parsing:', err);
-      addStatusMessagesItem?.(
-        UserNotificationFactory.createMessage(StatusType.error, errorMessage ?? 'ld.errorFetching'),
-      );
-    }
-  };
-
-  const fetchExternalRecordForPreview = async (recordId?: string, idType = ExternalResourceIdType.Inventory) => {
-    if (!recordId) return;
-
-    setIsLoading(true);
-
-    await getRecordAndInitializeParsing({
-      recordId,
-      idType,
-      errorMessage: 'ld.errorFetchingExternalResourceForPreview',
-    });
-
-    setIsLoading(false);
-  };
-
-  const tryFetchExternalRecordForEdit = async (recordId?: string) => {
-    try {
-      if (!recordId) return;
-
-      setIsLoading(true);
-
-      const { id } = await getGraphIdByExternalId({ recordId });
-
-      if (id) {
-        navigate(generateEditResourceUrl(id), { replace: true });
-      }
-    } catch (err: unknown) {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(err)));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const changeRecordProfile = ({ profileId }: { profileId: string | number }) => {
-    const generatedRecord = generateRecord({ profileId: `${profileId}` });
-    const updatedSelectedRecordBlocks = selectedRecordBlocks || getSelectedRecordBlocks(searchParams);
-    const recordId = getRecordId(record, updatedSelectedRecordBlocks?.block);
-
-    return handleRecordUpdate({
-      generatedRecord,
-      recordId,
-      updatedSelectedRecordBlocks,
-      isNavigatingBack: false,
-      isProfileChange: true,
-    });
-  };
-
   return {
     fetchRecord,
-    saveRecord,
-    deleteRecord,
-    discardRecord,
-    clearRecordState,
-    fetchRecordAndSelectEntityValues,
-    fetchExternalRecordForPreview,
-    tryFetchExternalRecordForEdit,
     getRecordAndInitializeParsing,
-    changeRecordProfile,
+    fetchExternalRecordForPreview,
+    fetchRecordAndSelectEntityValues,
   };
 };

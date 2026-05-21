@@ -7,7 +7,8 @@ import { getForceNavigateToDest } from '@/common/helpers/navigation.helper';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { useModalControls } from '@/common/hooks/useModalControls';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
+
+import { useRecordMutations } from '@/features/resources';
 
 import { useStatusState } from '@/store';
 
@@ -21,7 +22,7 @@ interface Props {
 }
 
 export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
-  const { saveRecord } = useRecordControls();
+  const { saveRecord } = useRecordMutations();
   const {
     isModalOpen: isCloseRecordModalOpen,
     setIsModalOpen: setIsCloseRecordModalOpen,

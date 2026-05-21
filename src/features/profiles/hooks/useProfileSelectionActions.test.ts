@@ -8,8 +8,9 @@ import { StatusType } from '@/common/constants/status.constants';
 import { generatePageURL } from '@/common/helpers/navigation.helper';
 import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useRecordMutations } from '@/features/resources';
 
 import { useLoadingState, useNavigationState, useProfileState, useStatusState } from '@/store';
 
@@ -28,8 +29,8 @@ jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: jest.fn(),
 }));
 
-jest.mock('@/common/hooks/useRecordControls', () => ({
-  useRecordControls: jest.fn(),
+jest.mock('@/features/resources', () => ({
+  useRecordMutations: jest.fn(),
 }));
 
 jest.mock('@/common/services/userNotification', () => ({
@@ -107,7 +108,7 @@ describe('useProfileSelectionActions', () => {
       navigateToEditPage: mockNavigateToEditPage,
     });
 
-    (useRecordControls as jest.Mock).mockReturnValue({
+    (useRecordMutations as jest.Mock).mockReturnValue({
       changeRecordProfile: mockChangeRecordProfile,
     });
 

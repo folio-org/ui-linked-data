@@ -1,6 +1,9 @@
 # Change history for ui-linked-data
 
 ## 3.0.0 (IN PROGRESS)
+* Refactor record control hooks. Refs [UILD-744].
+
+[UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 
 ## 2.0.4 (2026-06-03)
 * Fix default profile type persistence across edit form and profile settings. Fixes [UILD-820].

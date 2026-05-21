@@ -20,8 +20,8 @@ jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
     navigateToEditPage: mockNavigateToEditPage,
   }),
 }));
-jest.mock('@/common/hooks/useRecordControls', () => ({
-  useRecordControls: () => ({
+jest.mock('@/features/resources', () => ({
+  useRecordMutations: () => ({
     changeRecordProfile: mockChangeRecordProfile,
   }),
 }));

@@ -1,5 +1,5 @@
-import { discardRecord } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
 import '@/test/__mocks__/components/Modal.mock';
+import { discardRecord } from '@/test/__mocks__/features/resources/hooks/useRecordNavigation.mock';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 

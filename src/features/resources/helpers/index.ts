@@ -1,0 +1,1 @@
+export { extractProfileParams } from './resourceParams';

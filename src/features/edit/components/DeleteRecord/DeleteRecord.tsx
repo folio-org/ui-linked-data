@@ -4,9 +4,10 @@ import { FormattedMessage } from 'react-intl';
 import { RESOURCE_URLS } from '@/common/constants/routes.constants';
 import { checkButtonDisabledState } from '@/common/helpers/recordControls.helper';
 import { useModalControls } from '@/common/hooks/useModalControls';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { Button, ButtonType } from '@/components/Button';
+
+import { useRecordMutations } from '@/features/resources';
 
 import { useInputsState, useStatusState } from '@/store';
 
@@ -17,7 +18,7 @@ const DeleteRecord: FC = () => {
   const { record } = useInputsState(['record']);
   const { isRecordEdited: isEdited } = useStatusState(['isRecordEdited']);
   const resourceRoutePattern = useRoutePathPattern(RESOURCE_URLS);
-  const { deleteRecord } = useRecordControls();
+  const { deleteRecord } = useRecordMutations();
   const { isModalOpen, setIsModalOpen, openModal } = useModalControls();
   const { hasBeenSaved } = useRecordStatus();
   const isDisabledForEditPage =
