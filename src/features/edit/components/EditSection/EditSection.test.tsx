@@ -1,5 +1,6 @@
 import '@/test/__mocks__/common/hooks/useConfig.mock';
 import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';

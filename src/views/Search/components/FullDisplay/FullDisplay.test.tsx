@@ -1,6 +1,7 @@
 import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import '@/test/__mocks__/common/hooks/useConfig.mock';
 import '@/test/__mocks__/common/hooks/useRecordControls.mock';
+import '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { Fragment, ReactNode } from 'react';
@@ -34,7 +35,7 @@ const mockPreviewContent = [
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
 jest.mock('react-intl', () => ({
-  FormattedMessage: ({ id, values }: any) => {
+  FormattedMessage: ({ id, values }: never) => {
     return (
       <div id={id}>
         {Object.entries(values ?? {})?.map(([k, v]) => (
