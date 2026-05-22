@@ -6,6 +6,7 @@ import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
+import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
@@ -79,7 +80,9 @@ export const useEditPage = () => {
       setUserValues(result.userValues);
       setSelectedEntries(result.selectedEntries);
       setSelectedRecordBlocks(result.selectedRecordBlocks);
+
       if (record !== undefined) setRecord(record);
+
       applyEntityBfids(record);
     },
     [
@@ -140,8 +143,8 @@ export const useEditPage = () => {
             },
           },
         };
-      } catch (e) {
-        console.error('Error fetching record and selecting entity values: ', e);
+      } catch (error) {
+        logger.error('Error fetching record and selecting entity values: ', error);
 
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       }

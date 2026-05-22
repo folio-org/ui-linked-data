@@ -1,4 +1,5 @@
 import { StatusType } from '@/common/constants/status.constants';
+import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { usePreferredProfiles } from '@/features/manageProfileSettings/hooks/usePreferredProfiles';
@@ -85,7 +86,7 @@ export const useProfileSelection = () => {
       // Multiple profiles available - show modal
       openModal({ action: 'set', resourceTypeURL });
     } catch (error) {
-      console.error('Failed to check profile and proceed:', error);
+      logger.error('Failed to check profile and proceed:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfiles'));
     } finally {
@@ -98,11 +99,11 @@ export const useProfileSelection = () => {
       setIsLoading(true);
 
       await loadPreferredProfiles();
-
       await loadAvailableProfiles(resourceTypeURL);
+
       openModal({ action: 'change', resourceTypeURL });
     } catch (error) {
-      console.error('Failed to load profiles and proceed:', error);
+      logger.error('Failed to load profiles and proceed:', error);
 
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfiles'));
     } finally {

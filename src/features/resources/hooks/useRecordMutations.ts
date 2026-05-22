@@ -211,6 +211,7 @@ export const useRecordMutations = () => {
       return updatedRecordId;
     } catch (error) {
       logger.error('Cannot update the resource description', error);
+
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, getFriendlyErrorMessage(error)));
     } finally {
       setIsLoading(false);
@@ -248,6 +249,7 @@ export const useRecordMutations = () => {
       navigate(ROUTES.SEARCH.uri);
     } catch (error) {
       logger.error('Cannot delete the resource description', error);
+
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantDeleteRd'));
     }
   };
