@@ -1,4 +1,3 @@
-import '@/test/__mocks__/common/hooks/useConfig.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';

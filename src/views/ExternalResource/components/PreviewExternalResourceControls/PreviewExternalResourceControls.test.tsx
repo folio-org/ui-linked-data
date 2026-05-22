@@ -1,5 +1,3 @@
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-
 import * as ReactRouterDom from 'react-router-dom';
 
 import { fireEvent, screen, waitFor } from '@testing-library/dom';
