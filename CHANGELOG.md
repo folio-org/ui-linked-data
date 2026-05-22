@@ -2,6 +2,7 @@
 
 ## 3.0.0 (IN PROGRESS)
 * Refactor record control hooks. Refs [UILD-744].
+* Refactor resource processing and preview loading. Refs [UILD-744].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 
