@@ -10,9 +10,7 @@ import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import { getRecord } from '@/features/resources/api/records.api';
-import { useResourceProcessing } from '@/features/resources/hooks/useResourceProcessing';
-import type { ProcessedResource } from '@/features/resources/types';
+import { type ProcessedResource, getRecord, useResourceProcessing } from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
