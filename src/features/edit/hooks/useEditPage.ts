@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
-import { QueryParams } from '@/common/constants/routes.constants';
+import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
+import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
@@ -26,7 +26,7 @@ export const useEditPage = () => {
   const resourceType = mapToResourceType(typeParam);
 
   const { processResource } = useResourceProcessing();
-  const { fetchRecordAndSelectEntityValues } = useRecordControls();
+  const navigate = useNavigate();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
@@ -107,6 +107,48 @@ export const useEditPage = () => {
     }
   }, [processResource, applyToStores, setIsLoading, addStatusMessagesItem]);
 
+  const fetchRefRecord = useCallback(
+    async (recordId: string, entityId: BibframeEntities) => {
+      try {
+        const record = await getRecord({ recordId });
+        const blockConfig = BLOCKS_BFLITE[entityId];
+
+        if (!blockConfig?.reference) {
+          return { resource: record?.resource };
+        }
+
+        const uriSelector = blockConfig.reference.uri;
+        const contents = record?.resource?.[uriSelector];
+
+        if (!contents) {
+          addStatusMessagesItem?.(
+            UserNotificationFactory.createMessage(StatusType.error, 'ld.cantSelectReferenceContents'),
+          );
+
+          return navigate(ROUTES.RESOURCE_CREATE.uri);
+        }
+
+        const selectedContents = {
+          ...contents,
+          [blockConfig.reference.key]: undefined,
+        };
+
+        return {
+          resource: {
+            [blockConfig.uri]: {
+              [blockConfig.reference.key]: [selectedContents],
+            },
+          },
+        };
+      } catch (e) {
+        console.error('Error fetching record and selecting entity values: ', e);
+
+        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+      }
+    },
+    [navigate, addStatusMessagesItem],
+  );
+
   const loadResource = useCallback(
     async (resourceId: string | null | undefined, options?: LoadResourceOptions) => {
       const { asClone = false, ref } = options ?? {};
@@ -119,10 +161,7 @@ export const useEditPage = () => {
         if (resourceId) {
           record = (await getRecord({ recordId: resourceId })) as RecordEntry | null;
         } else if (ref) {
-          record = (await fetchRecordAndSelectEntityValues(
-            ref,
-            resourceType.toUpperCase() as BibframeEntities,
-          )) as RecordEntry | null;
+          record = (await fetchRefRecord(ref, resourceType.toUpperCase() as BibframeEntities)) as RecordEntry | null;
 
           if (!record) return;
 
@@ -147,7 +186,7 @@ export const useEditPage = () => {
       applyToStores,
       applyEntityBfids,
       resourceType,
-      fetchRecordAndSelectEntityValues,
+      fetchRefRecord,
       setIsLoading,
       addStatusMessagesItem,
       setIsEdited,

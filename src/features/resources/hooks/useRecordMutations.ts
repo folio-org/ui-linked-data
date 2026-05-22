@@ -10,15 +10,20 @@ import { getFriendlyErrorMessage } from '@/common/helpers/api.helper';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { getRecordId, getSelectedRecordBlocks } from '@/common/helpers/record.helper';
 import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
-import { useConfig } from '@/common/hooks/useConfig.hook';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
-import { deleteRecord as deleteRecordRequest, postRecord, putRecord, useRecordGeneration } from '@/features/resources';
+import {
+  deleteRecord as deleteRecordRequest,
+  postRecord,
+  putRecord,
+  useRecordGeneration,
+  useResourceProcessing,
+} from '@/features/resources';
 
-import { useInputsState, useLoadingState, useStatusState } from '@/store';
+import { useInputsState, useLoadingState, useProfileState, useStatusState } from '@/store';
 
 import { useRecordNavigation } from './useRecordNavigation';
 
@@ -42,7 +47,15 @@ type HandleRecordUpdateProps = {
 export const useRecordMutations = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { setIsLoading } = useLoadingState(['setIsLoading']);
-  const { selectedRecordBlocks, record, setRecord } = useInputsState(['selectedRecordBlocks', 'record', 'setRecord']);
+  const { selectedRecordBlocks, record, setRecord, setUserValues, setSelectedEntries, setSelectedRecordBlocks } =
+    useInputsState([
+      'selectedRecordBlocks',
+      'record',
+      'setRecord',
+      'setUserValues',
+      'setSelectedEntries',
+      'setSelectedRecordBlocks',
+    ]);
   const {
     setRecordStatus,
     setLastSavedRecordId,
@@ -50,7 +63,12 @@ export const useRecordMutations = () => {
     addStatusMessagesItem,
   } = useStatusState(['setRecordStatus', 'setLastSavedRecordId', 'setIsRecordEdited', 'addStatusMessagesItem']);
   const currentRecordId = getRecordId(record);
-  const { getProfiles } = useConfig(); // TEMPORARY — will be replaced after "useConfig" refactoring
+  const { processResource } = useResourceProcessing();
+  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
+    'setSelectedProfile',
+    'setInitialSchemaKey',
+    'setSchema',
+  ]);
   const navigate = useNavigate();
   const location = useLocation();
   const searchResultsUri = useBackToSearchUri();
@@ -108,9 +126,16 @@ export const useRecordMutations = () => {
     });
 
     if (isProfileChange) {
-      await getProfiles({
-        record: parsedResponse,
-      });
+      const result = await processResource({ record: parsedResponse });
+
+      if (result) {
+        setSelectedProfile(result.selectedProfile ?? null);
+        setSchema(result.schema);
+        setInitialSchemaKey(result.initKey);
+        setUserValues(result.userValues);
+        setSelectedEntries(result.selectedEntries);
+        setSelectedRecordBlocks(result.selectedRecordBlocks);
+      }
     } else {
       setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
     }
