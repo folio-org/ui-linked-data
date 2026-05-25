@@ -158,7 +158,7 @@ export const useSearchControlsHandlers = ({
     'setCommittedValues',
     'resetCommittedValues',
   ]);
-  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
+  const { resetActivePreviewIds } = useInputsState(['resetActivePreviewIds']);
   const { resetFullDisplayComponentType, resetCurrentlyPreviewedEntityBfid } = useUIState([
     'resetFullDisplayComponentType',
     'resetCurrentlyPreviewedEntityBfid',
@@ -314,7 +314,7 @@ export const useSearchControlsHandlers = ({
 
   const resetPreview = () => {
     if (managePreview) {
-      resetPreviewContent();
+      resetActivePreviewIds();
       resetFullDisplayComponentType();
       resetCurrentlyPreviewedEntityBfid();
     }
@@ -468,7 +468,7 @@ export const useSearchControlsHandlers = ({
     setNavigationState,
     setSearchParams,
     resetCommittedValues,
-    resetPreviewContent,
+    resetActivePreviewIds,
     resetFullDisplayComponentType,
     resetCurrentlyPreviewedEntityBfid,
   ]);

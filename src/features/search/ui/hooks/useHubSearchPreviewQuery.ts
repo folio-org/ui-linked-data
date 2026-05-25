@@ -1,55 +1,22 @@
 import { useCallback } from 'react';
 
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { logger } from '@/common/services/logger';
-
-import { usePreviewQuery } from '@/features/preview';
-
-import { useUIState } from '@/store';
-
-interface HubSearchPreviewResult {
-  success: boolean;
-  previewId?: string;
-  error?: unknown;
-}
+import { useInputsState, useUIState } from '@/store';
 
 /**
  * Hook for triggering a hub record preview on the Search page.
- * Fetches the hub record and populates the FullDisplay preview panel.
+ * Sets the active preview ID so the FullDisplay panel fetches and shows the hub.
  */
 export const useHubSearchPreviewQuery = () => {
-  const { fetchRecord } = useRecordControls();
+  const { setActivePreviewIds } = useInputsState(['setActivePreviewIds']);
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
-
-  const fetchHubForPreview = useCallback(
-    async (id: string, signal: AbortSignal): Promise<HubSearchPreviewResult> => {
-      try {
-        await fetchRecord(id, { singular: true }, signal);
-
-        return { success: true, previewId: id };
-      } catch (error) {
-        logger.error('Error fetching hub record:', error);
-
-        return { success: false, error };
-      }
-    },
-    [fetchRecord],
-  );
-
-  const { loadPreview, isLoading } = usePreviewQuery<HubSearchPreviewResult>({
-    queryKey: 'hub-search-preview',
-    fetchFn: fetchHubForPreview,
-    enabled: true,
-    errorMessage: 'ld.errorFetching',
-  });
 
   const loadHubPreview = useCallback(
     (id: string) => {
       resetFullDisplayComponentType();
-      loadPreview(id);
+      setActivePreviewIds([id]);
     },
-    [resetFullDisplayComponentType, loadPreview],
+    [resetFullDisplayComponentType, setActivePreviewIds],
   );
 
-  return { loadHubPreview, isLoading };
+  return { loadHubPreview, isLoading: false };
 };

@@ -1,5 +1,3 @@
-import '@/test/__mocks__/common/hooks/useConfig.mock';
-import '@/test/__mocks__/common/hooks/useRecordControls.mock';
 import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
 
 import { render } from '@testing-library/react';

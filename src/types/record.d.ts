@@ -9,17 +9,6 @@ type LocallySavedRecord = {
   data: ParsedRecord;
 };
 
-type PreviewContent = {
-  id: string;
-  base: Map<string, any>;
-  userValues: UserValues;
-  selectedEntries: string[];
-  initKey: string;
-  title?: string;
-  entities?: string[];
-  referenceIds?: { id: RecordEntry<RecursiveRecordSchema> }[];
-};
-
 type RecordReference = {
   key: string;
   uri: string;

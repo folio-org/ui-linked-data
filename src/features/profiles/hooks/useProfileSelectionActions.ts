@@ -5,6 +5,7 @@ import { generatePageURL } from '@/common/helpers/navigation.helper';
 import { createUpdatedPreferredProfiles, getProfileNameById } from '@/common/helpers/profileActions.helper';
 import { isProfilePreferred } from '@/common/helpers/profileSelection.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useRecordMutations } from '@/features/resources';
@@ -55,7 +56,7 @@ export const useProfileSelectionActions = ({
       await savePreferredProfile(profileId, resourceTypeURL);
       updatePreferredProfiles(profileId);
     } catch (error) {
-      console.error('Failed to set preferred profile:', error);
+      logger.error('Failed to set preferred profile:', error);
 
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
@@ -73,7 +74,7 @@ export const useProfileSelectionActions = ({
       }
       setPreferredProfiles(preferredProfiles.filter(({ resourceType }) => resourceType !== resourceTypeURL));
     } catch (error) {
-      console.error('Failed to set preferred profile:', error);
+      logger.error('Failed to set preferred profile:', error);
 
       addStatusMessagesItem?.(
         UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileSaveAsPreferred'),
@@ -104,7 +105,7 @@ export const useProfileSelectionActions = ({
       try {
         await changeRecordProfile({ profileId });
       } catch (error) {
-        console.error('Failed to change record profile:', error);
+        logger.error('Failed to change record profile:', error);
 
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.error.profileChange'));
       }

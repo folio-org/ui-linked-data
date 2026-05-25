@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import classNames from 'classnames';
@@ -9,26 +9,26 @@ import { getRecordDependencies } from '@/common/helpers/record.helper';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
 
+import { useEditPreview } from '@/features/edit/hooks';
 import { TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
 
-import { useInputsState } from '@/store';
+import { useInputsState, useLoadingState } from '@/store';
 
 import { InstancesList } from '../InstancesList';
 
 import './EditPreview.scss';
 
 export const EditPreview = memo(() => {
-  const { record, previewContent, selectedRecordBlocks, setPreviewContent, resetPreviewContent } = useInputsState([
-    'record',
-    'previewContent',
-    'selectedRecordBlocks',
-    'setPreviewContent',
-    'resetPreviewContent',
-  ]);
+  const { record, selectedRecordBlocks } = useInputsState(['record', 'selectedRecordBlocks']);
   const isCreatePageOpen = useRoutePathPattern(RESOURCE_CREATE_URLS);
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
+  const [selection, setSelection] = useState<{ resourceId?: string; instanceId?: string }>({});
+  // Derive selected instance — automatically resets when navigating to a different resource
+  const selectedInstanceId = selection.resourceId === resourceId ? selection.instanceId : undefined;
+
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -39,20 +39,23 @@ export const EditPreview = memo(() => {
   const isPositionedSecond = previewPosition === 'right';
   const isCreateWorkPageOpened = isCreatePageOpen && typeParam === ResourceType.work;
   const dependencies = getRecordDependencies(record);
-  const showPreview = (dependencies?.entries?.length === 1 && !isCreateWorkPageOpened) || previewContent.length;
-  const selectedForPreview = previewContent?.[0];
+  const isSingleInstance = dependencies?.entries?.length === 1;
+  const linkedEntityId = (dependencies?.entries?.[0] as { id?: string } | undefined)?.id;
+  const previewInstanceId = isSingleInstance ? linkedEntityId : selectedInstanceId;
+  // Only query when the dependency is an instance — Work preview uses the store schema directly
+  const instancePreviewId = dependencies?.type === ResourceType.instance ? previewInstanceId : undefined;
+
+  const { data: previewData, isLoading } = useEditPreview(instancePreviewId);
 
   useEffect(() => {
-    resetPreviewContent();
-  }, [resourceId]);
+    setIsLoading(isLoading);
 
-  useEffect(() => {
-    if (isCreateWorkPageOpened) {
-      const initialInputsState = useInputsState.getInitialState();
+    return () => setIsLoading(false);
+  }, [isLoading, setIsLoading]);
 
-      useInputsState.setState(initialInputsState, true);
-    }
-  }, [isCreateWorkPageOpened]);
+  const hasPreviewContent = previewData && Object.keys(previewData.userValues).length > 0;
+
+  const showPreview = !!previewInstanceId && !isCreateWorkPageOpened;
 
   if (!shouldShowPreview) {
     return null;
@@ -66,15 +69,20 @@ export const EditPreview = memo(() => {
     >
       {showPreview ? (
         <TitledPreview
-          ownId={dependencies?.entries?.[0]?.id as string | undefined}
+          ownId={linkedEntityId}
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
-          previewContent={selectedForPreview}
-          onClickClose={() => setPreviewContent(prev => prev.filter(({ id }) => id !== selectedForPreview.id))}
+          previewContent={hasPreviewContent ? previewData : undefined}
+          onClickClose={() => setSelection({ resourceId, instanceId: undefined })}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
       ) : (
-        <InstancesList type={dependencies?.type} refId={resourceId} contents={dependencies} />
+        <InstancesList
+          type={dependencies?.type}
+          refId={resourceId}
+          contents={dependencies}
+          onSelectInstance={id => setSelection({ resourceId, instanceId: id })}
+        />
       )}
     </div>
   );

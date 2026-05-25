@@ -7,7 +7,7 @@ interface TitleFormatterProps {
   formatMessage: (descriptor: { id: string }, values?: Record<string, unknown>) => string;
   onPreview: (id: string) => void;
   selectedInstances: string[];
-  previewContent: Array<{ id: string }>;
+  activePreviewIds: string[];
   fullDisplayComponentType?: FullDisplayType;
 }
 
@@ -16,7 +16,7 @@ export const InstanceTitleFormatter = ({
   formatMessage,
   onPreview,
   selectedInstances,
-  previewContent,
+  activePreviewIds,
   fullDisplayComponentType,
 }: TitleFormatterProps) => {
   const rowMeta = row.__meta;
@@ -26,7 +26,7 @@ export const InstanceTitleFormatter = ({
   return (
     <div className="title-wrapper">
       {comparisonIndex >= 0 &&
-        (previewContent.length > 1 || fullDisplayComponentType === FullDisplayType.Comparison) && (
+        (activePreviewIds.length > 1 || fullDisplayComponentType === FullDisplayType.Comparison) && (
           <span className="comparison-index">{comparisonIndex + 1}</span>
         )}
       <Button

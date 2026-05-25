@@ -3,12 +3,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
-import { StatusType } from '@/common/constants/status.constants';
 import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
-import { logger } from '@/common/services/logger';
-import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Button, ButtonType } from '@/components/Button';
 import { Table } from '@/components/Table';
 import { WorkDetailsCard } from '@/components/WorkDetailsCard';
@@ -17,7 +13,7 @@ import { formatItemSearchInstanceListData } from '@/features/search/core';
 import { instancesTableConfig } from '@/features/search/ui/config';
 import { useTableFormatter } from '@/features/search/ui/hooks';
 
-import { useInputsState, useLoadingState, useSearchState, useStatusState, useUIState } from '@/store';
+import { useInputsState, useSearchState, useUIState } from '@/store';
 
 import CommentIcon from '@/assets/comment-lines-12.svg?react';
 
@@ -39,30 +35,17 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     'setSelectedInstances',
   ]);
   const [isOpen, setIsOpen] = useState(true);
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
-  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { previewContent } = useInputsState(['previewContent']);
+  const { activePreviewIds, setActivePreviewIds } = useInputsState(['activePreviewIds', 'setActivePreviewIds']);
   const { resetFullDisplayComponentType, fullDisplayComponentType } = useUIState([
     'resetFullDisplayComponentType',
     'fullDisplayComponentType',
   ]);
   const toggleIsOpen = () => setIsOpen(!isOpen);
-  const { fetchRecord } = useRecordControls();
   const { onCreateNewResource } = useNavigateToCreatePage();
 
-  const handleOpenPreview = async (id: string) => {
-    try {
-      setIsLoading(true);
-      resetFullDisplayComponentType();
-
-      await fetchRecord(id, { singular: true });
-    } catch (error) {
-      logger.error('Error fetching record:', error);
-
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
-    } finally {
-      setIsLoading(false);
-    }
+  const handleOpenPreview = (id: string) => {
+    resetFullDisplayComponentType();
+    setActivePreviewIds([id]);
   };
 
   const toggleInstanceSelect = useCallback(
@@ -81,7 +64,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
     onEdit: navigateToEditPage,
     onToggleSelect: toggleInstanceSelect,
     selectedInstances,
-    previewContent,
+    activePreviewIds,
     fullDisplayComponentType,
   });
 
@@ -105,12 +88,7 @@ export const SearchResultEntry: FC<SearchResultEntry> = ({ instances, ...restOfW
         {...restOfWork}
       />
       {!!instances?.length && isOpen && (
-        <Table
-          header={listHeader}
-          data={formattedData}
-          selectedRows={previewContent?.map(({ id }) => id)}
-          className="instance-list"
-        />
+        <Table header={listHeader} data={formattedData} selectedRows={activePreviewIds} className="instance-list" />
       )}
       {!isOpen && (
         <div className="empty-or-closed">
