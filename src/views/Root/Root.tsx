@@ -17,7 +17,7 @@ import { Nav } from './components/Nav';
 
 export const Root = () => {
   const fixedHeightContainerView = useRoutePathPattern(FIXED_HEIGHT_VIEWS);
-  const { isLoading } = useLoadingState(['isLoading']);
+  const { isLoading, isPreviewLoading } = useLoadingState(['isLoading', 'isPreviewLoading']);
 
   return (
     <div data-testid="root" id="app-root">
@@ -30,7 +30,7 @@ export const Root = () => {
       <ProfileSelectionManager />
       <div id={MODAL_CONTAINER_ID} />
 
-      {isLoading && <Loading />}
+      {(isLoading || isPreviewLoading) && <Loading />}
     </div>
   );
 };

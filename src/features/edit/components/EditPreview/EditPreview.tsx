@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useLayoutEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import classNames from 'classnames';
@@ -28,7 +28,7 @@ export const EditPreview = memo(() => {
   // Derive selected instance — automatically resets when navigating to a different resource
   const selectedInstanceId = selection.resourceId === resourceId ? selection.instanceId : undefined;
 
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setIsPreviewLoading } = useLoadingState(['setIsPreviewLoading']);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -47,11 +47,11 @@ export const EditPreview = memo(() => {
 
   const { data: previewData, isLoading } = useEditPreview(instancePreviewId);
 
-  useEffect(() => {
-    setIsLoading(isLoading);
+  useLayoutEffect(() => {
+    setIsPreviewLoading(isLoading);
 
-    return () => setIsLoading(false);
-  }, [isLoading, setIsLoading]);
+    return () => setIsPreviewLoading(false);
+  }, [isLoading, setIsPreviewLoading]);
 
   const hasPreviewContent = previewData && Object.keys(previewData.userValues).length > 0;
 

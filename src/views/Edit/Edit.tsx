@@ -25,7 +25,7 @@ export const Edit = () => {
     'resetBasicValue',
   ]);
   const { resetHasShownAuthorityWarning } = useUIState(['resetHasShownAuthorityWarning']);
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  const { setIsLoading, setIsPreviewLoading } = useLoadingState(['setIsLoading', 'setIsPreviewLoading']);
   const [searchParams] = useSearchParams();
   const cloneOfParam = searchParams.get(QueryParams.CloneOf);
   const typeParam = searchParams.get(QueryParams.Type);
@@ -53,6 +53,7 @@ export const Edit = () => {
     return () => {
       clearRecordState();
       setIsLoading(false);
+      setIsPreviewLoading(false);
     };
   }, [resourceId, cloneOfParam, refParam, resourceType]);
 
