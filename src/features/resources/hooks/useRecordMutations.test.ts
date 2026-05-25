@@ -24,6 +24,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const mockGenerateRecord = jest.fn();
+const mockProcessResource = jest.fn();
 jest.mock('@/features/resources', () => ({
   getRecord: jest.fn(),
   postRecord: jest.fn(),
@@ -31,6 +32,9 @@ jest.mock('@/features/resources', () => ({
   deleteRecord: jest.fn(),
   useRecordGeneration: () => ({
     generateRecord: mockGenerateRecord,
+  }),
+  useResourceProcessing: () => ({
+    processResource: mockProcessResource,
   }),
 }));
 
@@ -43,13 +47,6 @@ jest.mock('@/common/hooks/useContainerEvents', () => ({
   useContainerEvents: () => ({
     dispatchUnblockEvent: jest.fn(),
     dispatchNavigateToOriginEventWithFallback: jest.fn(),
-  }),
-}));
-
-const mockGetProfiles = jest.fn();
-jest.mock('@/common/hooks/useConfig.hook', () => ({
-  useConfig: () => ({
-    getProfiles: mockGetProfiles,
   }),
 }));
 

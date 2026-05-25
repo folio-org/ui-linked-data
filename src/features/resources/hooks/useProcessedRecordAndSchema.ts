@@ -6,6 +6,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { getAdjustedRecordContents, wrapRecordValuesWithCommonContainer } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
 import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useInputsState, useStatusState } from '@/store';
@@ -79,7 +80,7 @@ export const useProcessedRecordAndSchema = () => {
           }
         }
       } catch (error) {
-        console.error(error);
+        logger.error('Failed to load a resource', error);
 
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
       }

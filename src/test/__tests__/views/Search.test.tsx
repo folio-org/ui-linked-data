@@ -62,10 +62,10 @@ describe('Search', () => {
   });
 
   describe('component unmount', () => {
-    test('clears fullDisplayComponentType, selectedInstances and previewContent on unmount', () => {
+    test('clears fullDisplayComponentType, selectedInstances and activePreviewIds on unmount', () => {
       const mockResetFullDisplayComponentType = jest.fn();
       const mockResetSelectedInstances = jest.fn();
-      const mockResetPreviewContent = jest.fn();
+      const mockResetActivePreviewIds = jest.fn();
 
       setInitialGlobalState([
         {
@@ -83,7 +83,7 @@ describe('Search', () => {
         {
           store: useInputsStore,
           state: {
-            resetPreviewContent: mockResetPreviewContent,
+            resetActivePreviewIds: mockResetActivePreviewIds,
           },
         },
       ]);
@@ -94,7 +94,7 @@ describe('Search', () => {
 
       expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
       expect(mockResetSelectedInstances).toHaveBeenCalled();
-      expect(mockResetPreviewContent).toHaveBeenCalled();
+      expect(mockResetActivePreviewIds).toHaveBeenCalled();
     });
   });
 

@@ -7,6 +7,8 @@ import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 
+import type { ProcessedResource } from '@/features/resources';
+
 import Times16 from '@/assets/times-16.svg?react';
 
 import { PreviewActionsDropdown } from '../PreviewActionsDropdown';
@@ -17,7 +19,7 @@ export type ITitledPreview = {
   ownId?: string;
   refId?: string | null;
   type?: string;
-  previewContent?: PreviewContent;
+  previewContent?: ProcessedResource;
   onClickClose?: VoidFunction;
 };
 
@@ -31,8 +33,7 @@ export const TitledPreview = ({
 }: ITitledPreview) => {
   const { formatMessage } = useIntl();
   const { navigateToEditPage } = useNavigateToEditPage();
-  const { title, id, base, initKey, userValues } = previewContent ?? {};
-  const selectedOwnId = id ?? ownId;
+  const { title, schema, initKey, userValues } = previewContent ?? {};
   const withPreviewContent = (
     <>
       {showCloseCtl ? (
@@ -51,7 +52,7 @@ export const TitledPreview = ({
     </>
   );
 
-  const navigateToOwnEditPage = () => selectedOwnId && navigateToEditPage(generateEditResourceUrl(selectedOwnId));
+  const navigateToOwnEditPage = () => ownId && navigateToEditPage(generateEditResourceUrl(ownId));
 
   return (
     <div className="titled-preview">
@@ -75,14 +76,14 @@ export const TitledPreview = ({
         )}
         {type === ResourceType.instance && (
           <PreviewActionsDropdown
-            ownId={selectedOwnId}
+            ownId={ownId}
             referenceId={refId}
             entityType={type}
             handleNavigateToEditPage={navigateToOwnEditPage}
           />
         )}
       </div>
-      <Preview altInitKey={initKey} altSchema={base} altUserValues={userValues} hideEntities />
+      <Preview altInitKey={initKey} altSchema={schema} altUserValues={userValues} hideEntities />
     </div>
   );
 };

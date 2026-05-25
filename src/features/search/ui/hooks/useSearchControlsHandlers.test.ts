@@ -56,7 +56,7 @@ describe('useSearchControlsHandlers', () => {
   const setCommittedValues = jest.fn();
   const resetCommittedValues = jest.fn();
   const setSearchParams = jest.fn();
-  const resetPreviewContent = jest.fn();
+  const resetActivePreviewIds = jest.fn();
   const resetFullDisplayComponentType = jest.fn();
   const resetCurrentlyPreviewedEntityBfid = jest.fn();
 
@@ -102,7 +102,7 @@ describe('useSearchControlsHandlers', () => {
       {
         store: useInputsState,
         state: {
-          resetPreviewContent,
+          resetActivePreviewIds,
         },
       },
       {
@@ -185,7 +185,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onSegmentChange('browse');
       });
 
-      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetActivePreviewIds).toHaveBeenCalled();
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
@@ -204,7 +204,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onSegmentChange('browse');
       });
 
-      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetActivePreviewIds).not.toHaveBeenCalled();
       expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
     });
@@ -455,7 +455,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onSubmit();
       });
 
-      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetActivePreviewIds).toHaveBeenCalled();
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
@@ -474,7 +474,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onSubmit();
       });
 
-      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetActivePreviewIds).not.toHaveBeenCalled();
       expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
     });
@@ -584,7 +584,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(resetPreviewContent).toHaveBeenCalled();
+      expect(resetActivePreviewIds).toHaveBeenCalled();
       expect(resetFullDisplayComponentType).toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).toHaveBeenCalled();
     });
@@ -603,7 +603,7 @@ describe('useSearchControlsHandlers', () => {
         result.current.onReset();
       });
 
-      expect(resetPreviewContent).not.toHaveBeenCalled();
+      expect(resetActivePreviewIds).not.toHaveBeenCalled();
       expect(resetFullDisplayComponentType).not.toHaveBeenCalled();
       expect(resetCurrentlyPreviewedEntityBfid).not.toHaveBeenCalled();
     });
@@ -629,7 +629,7 @@ describe('useSearchControlsHandlers', () => {
         },
         {
           store: useInputsState,
-          state: { resetPreviewContent },
+          state: { resetActivePreviewIds },
         },
         {
           store: useUIState,

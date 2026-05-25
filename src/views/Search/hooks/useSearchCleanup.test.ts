@@ -17,7 +17,7 @@ jest.mock('@/common/hooks/useContainerEvents', () => ({
 describe('useSearchCleanup', () => {
   const mockResetSelectedInstances = jest.fn();
   const mockResetFullDisplayComponentType = jest.fn();
-  const mockResetPreviewContent = jest.fn();
+  const mockResetActivePreviewIds = jest.fn();
 
   beforeEach(() => {
     setInitialGlobalState([
@@ -36,7 +36,7 @@ describe('useSearchCleanup', () => {
       {
         store: useInputsStore,
         state: {
-          resetPreviewContent: mockResetPreviewContent,
+          resetActivePreviewIds: mockResetActivePreviewIds,
         },
       },
     ]);
@@ -55,6 +55,6 @@ describe('useSearchCleanup', () => {
 
     expect(mockResetFullDisplayComponentType).toHaveBeenCalled();
     expect(mockResetSelectedInstances).toHaveBeenCalled();
-    expect(mockResetPreviewContent).toHaveBeenCalled();
+    expect(mockResetActivePreviewIds).toHaveBeenCalled();
   });
 });

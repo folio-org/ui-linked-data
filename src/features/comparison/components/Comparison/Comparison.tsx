@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ResourceType } from '@/common/constants/record.constants';
@@ -7,9 +7,10 @@ import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 import { Pagination } from '@/components/Pagination';
 
+import { useComparisonData } from '@/features/comparison/hooks';
 import { Preview, PreviewActionsDropdown } from '@/features/preview';
 
-import { useInputsState, useSearchState, useUIState } from '@/store';
+import { useLoadingState, useSearchState, useUIState } from '@/store';
 
 import GeneralSearch from '@/assets/general-search.svg?react';
 import Times16 from '@/assets/times-16.svg?react';
@@ -22,22 +23,25 @@ const COMPARED_ELEMENTS_COUNT = 2;
 
 export const Comparison = () => {
   const { formatMessage } = useIntl();
-  const { previewContent, setPreviewContent, resetPreviewContent } = useInputsState([
-    'previewContent',
-    'setPreviewContent',
-    'resetPreviewContent',
-  ]);
   const { setSelectedInstances, resetSelectedInstances, selectedInstances } = useSearchState([
     'setSelectedInstances',
     'resetSelectedInstances',
     'selectedInstances',
   ]);
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
+  const { setIsLoading, resetIsLoading } = useLoadingState(['setIsLoading', 'resetIsLoading']);
   const { navigateToEditPage } = useNavigateToEditPage();
   const [currentPage, setCurrentPage] = useState(0);
 
+  const { items, isLoading } = useComparisonData(selectedInstances);
+
+  useEffect(() => {
+    setIsLoading(isLoading);
+
+    return () => resetIsLoading();
+  }, [isLoading]);
+
   const handleCloseComparison = () => {
-    resetPreviewContent();
     resetFullDisplayComponentType();
     resetSelectedInstances();
   };
@@ -51,21 +55,17 @@ export const Comparison = () => {
       });
     }
 
-    setPreviewContent(prev => {
-      const updatedPreviewContent = prev.filter(({ id: prevId }) => prevId !== id);
+    const updatedInstances = selectedInstances.filter(prevId => prevId !== id);
 
-      if (!updatedPreviewContent.length) {
-        resetFullDisplayComponentType();
-      }
+    if (!updatedInstances.length) {
+      resetFullDisplayComponentType();
+    }
 
-      return updatedPreviewContent;
-    });
-    setSelectedInstances(prev => prev.filter(prevId => prevId !== id));
+    setSelectedInstances(updatedInstances);
   };
 
   const handleNavigateToOwnEditPage = (id: string) => navigateToEditPage(generateEditResourceUrl(id));
-  const totalPages = (previewContent.length > 1 ? previewContent.length : 2) - 1;
-  const comparisonIndex = previewContent.findIndex(({ id }) => id);
+  const totalPages = (selectedInstances.length > 1 ? selectedInstances.length : 2) - 1;
 
   return (
     <section className="comparison">
@@ -88,13 +88,13 @@ export const Comparison = () => {
         </div>
         <div className="subheading">
           <span>
-            <FormattedMessage id="ld.nResourcesSelected" values={{ n: previewContent.length }} />
+            <FormattedMessage id="ld.nResourcesSelected" values={{ n: selectedInstances.length }} />
           </span>
           <Button
             data-testid="clear-comparison-selections"
             type={ButtonType.Icon}
             onClick={handleCloseComparison}
-            disabled={!previewContent.length}
+            disabled={!selectedInstances.length}
             className="nav-close"
           >
             <TimesCircle12 />
@@ -103,10 +103,10 @@ export const Comparison = () => {
         </div>
       </header>
       <div className="comparison-contents">
-        {previewContent
+        {items
           .toSorted((a, b) => selectedInstances.indexOf(a.id) - selectedInstances.indexOf(b.id))
           .slice(currentPage, currentPage + 2)
-          .map(({ initKey, base, userValues, id, title, referenceIds, selectedEntries }, index) => (
+          .map(({ id, data }, index) => (
             <section key={id} className="entry">
               <div className="entry-header">
                 <div className="entry-header-controls">
@@ -121,30 +121,32 @@ export const Comparison = () => {
                   </Button>
                   <PreviewActionsDropdown
                     ownId={id}
-                    referenceId={referenceIds?.[0]?.id as unknown as string}
+                    referenceId={data?.referenceIds?.[0]?.id as unknown as string}
                     entityType={ResourceType.instance}
                     handleNavigateToEditPage={() => handleNavigateToOwnEditPage(id)}
                   />
                 </div>
                 <h3>
-                  <span className="comparison-index">{comparisonIndex + currentPage + index + 1}</span>
-                  <span>{title}</span>
+                  <span className="comparison-index">{currentPage + index + 1}</span>
+                  <span>{data?.title}</span>
                 </h3>
               </div>
-              <Preview
-                altInitKey={initKey}
-                altSchema={base}
-                altUserValues={userValues}
-                altSelectedEntries={selectedEntries}
-                forceRenderAllTopLevelEntities
-              />
+              {data && (
+                <Preview
+                  altInitKey={data.initKey}
+                  altSchema={data.schema}
+                  altUserValues={data.userValues}
+                  altSelectedEntries={data.selectedEntries}
+                  forceRenderAllTopLevelEntities
+                />
+              )}
             </section>
           ))}
-        {previewContent.length <= 1 && (
+        {selectedInstances.length <= 1 && (
           <div className="insufficient-resource-amt" data-testid="insufficient-resource-amt">
             <GeneralSearch />
             <FormattedMessage
-              id={previewContent.length ? 'ld.chooseOneResourceCompare' : 'ld.chooseTwoResourcesCompare'}
+              id={selectedInstances.length ? 'ld.chooseOneResourceCompare' : 'ld.chooseTwoResourcesCompare'}
             />
           </div>
         )}
@@ -155,7 +157,7 @@ export const Comparison = () => {
           onNextPageClick={() => setCurrentPage(prev => prev + 1)}
           onPrevPageClick={() => setCurrentPage(prev => prev - 1)}
           totalPages={totalPages}
-          totalResultsCount={previewContent.length}
+          totalResultsCount={selectedInstances.length}
           useSlidingWindow={true}
           pageSize={COMPARED_ELEMENTS_COUNT}
           showCount

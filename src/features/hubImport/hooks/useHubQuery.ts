@@ -4,11 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getHubByUri, normalizeExternalHubUri } from '@/common/api/hub.api';
 import { StatusType } from '@/common/constants/status.constants';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useStatusState } from '@/store';
+import { useResourceProcessing } from '@/features/resources';
+
+import { useInputsState, useProfileState, useStatusState } from '@/store';
 
 interface UseHubQueryParams {
   hubUri?: string;
@@ -26,7 +27,17 @@ interface UseHubQueryResult {
 
 export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseHubQueryResult {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { getRecordAndInitializeParsing } = useRecordControls();
+  const { processResource } = useResourceProcessing();
+  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
+    'setSelectedProfile',
+    'setInitialSchemaKey',
+    'setSchema',
+  ]);
+  const { setUserValues, setSelectedEntries, setSelectedRecordBlocks } = useInputsState([
+    'setUserValues',
+    'setSelectedEntries',
+    'setSelectedRecordBlocks',
+  ]);
 
   const queryKey = ['hub', hubUri];
 
@@ -44,10 +55,18 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
         });
 
         // Initialize record for preview
-        await getRecordAndInitializeParsing({
-          cachedRecord: hubRecord,
-          errorMessage: 'ld.errorFetchingHubForPreview',
-        });
+        const result = await processResource({ record: hubRecord });
+
+        if (!result) {
+          throw new Error('ld.errorFetchingHubForPreview');
+        }
+
+        setSelectedProfile(result.selectedProfile ?? null);
+        setSchema(result.schema);
+        setInitialSchemaKey(result.initKey);
+        setUserValues(result.userValues);
+        setSelectedEntries(result.selectedEntries);
+        setSelectedRecordBlocks(result.selectedRecordBlocks);
 
         return hubRecord;
       } catch (error) {
@@ -63,7 +82,17 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
         throw error;
       }
     },
-    [hubUri, addStatusMessagesItem, getRecordAndInitializeParsing],
+    [
+      hubUri,
+      addStatusMessagesItem,
+      processResource,
+      setSelectedProfile,
+      setSchema,
+      setInitialSchemaKey,
+      setUserValues,
+      setSelectedEntries,
+      setSelectedRecordBlocks,
+    ],
   );
 
   const shouldEnable = enabled && !!hubUri;

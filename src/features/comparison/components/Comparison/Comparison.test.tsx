@@ -7,9 +7,15 @@ import { Fragment } from 'react/jsx-runtime';
 
 import { fireEvent, render } from '@testing-library/react';
 
-import { useInputsStore, useSearchStore, useUIStore } from '@/store';
+import { useComparisonData } from '@/features/comparison/hooks';
+
+import { useSearchStore, useUIStore } from '@/store';
 
 import { Comparison } from './Comparison';
+
+jest.mock('@/features/comparison/hooks', () => ({
+  useComparisonData: jest.fn(),
+}));
 
 jest.mock('react-intl', () => ({
   FormattedMessage: ({ id, values }: any) => {
@@ -24,21 +30,29 @@ jest.mock('react-intl', () => ({
   }),
 }));
 
+const mockUseComparisonData = useComparisonData as jest.Mock;
+
+const makeItem = (id: string, title = 'mockTitle') => ({
+  id,
+  data: { title, schema: new Map(), userValues: {}, initKey: '', referenceIds: [], selectedEntries: [] },
+  isLoading: false,
+});
+
 describe('Comparison', () => {
-  const resetPreviewContent = jest.fn();
   const resetFullDisplayComponentType = jest.fn();
   const resetSelectedInstances = jest.fn();
   const setSelectedInstances = jest.fn();
-  const setPreviewContent = jest.fn();
 
   const baseMockState = [
     {
-      store: useInputsStore,
-      state: { previewContent: [{ id: 'mockId', title: 'mockTitle' }], setPreviewContent },
+      store: useSearchStore,
+      state: { selectedInstances: ['mockId'], setSelectedInstances },
     },
   ];
 
-  const renderWithState = (stateArgs?: StoreWithState[]) => {
+  const renderWithState = (stateArgs?: StoreWithState[], comparisonItems = [makeItem('mockId')]) => {
+    mockUseComparisonData.mockReturnValue({ items: comparisonItems, isLoading: false });
+
     if (stateArgs) {
       setInitialGlobalState(stateArgs);
     }
@@ -56,7 +70,7 @@ describe('Comparison', () => {
   };
 
   test('renders placeholder if no previewContent present', () => {
-    const { getByText } = renderWithState();
+    const { getByText } = renderWithState([], []);
 
     expect(getByText('ld.chooseTwoResourcesCompare')).toBeInTheDocument();
   });
@@ -70,12 +84,8 @@ describe('Comparison', () => {
   test('removes an entry', () => {
     const { getByTestId } = renderWithState([
       {
-        store: useInputsStore,
-        state: { previewContent: [{ id: 'mockId', title: 'mockTitle' }] },
-      },
-      {
         store: useSearchStore,
-        state: { setSelectedInstances },
+        state: { selectedInstances: ['mockId'], setSelectedInstances },
       },
       {
         store: useUIStore,
@@ -90,39 +100,26 @@ describe('Comparison', () => {
   });
 
   test('updates current page when removing last item on last page', () => {
-    const setPreviewContent = jest.fn();
-    const { getByTestId } = renderWithState([
-      {
-        store: useInputsStore,
-        state: {
-          previewContent: [
-            { id: 'mockId_1', title: 'mockTitle 1' },
-            { id: 'mockId_2', title: 'mockTitle 2' },
-            { id: 'mockId_3', title: 'mockTitle 3' },
-          ],
-          setPreviewContent,
+    const ids = ['mockId_1', 'mockId_2', 'mockId_3'];
+    const { getByTestId } = renderWithState(
+      [
+        {
+          store: useSearchStore,
+          state: { selectedInstances: ids, setSelectedInstances },
         },
-      },
-      {
-        store: useSearchStore,
-        state: { setSelectedInstances },
-      },
-    ]);
+      ],
+      ids.map(id => makeItem(id)),
+    );
 
     fireEvent.click(getByTestId('forward-button'));
     fireEvent.click(getByTestId('remove-comparison-entry-mockId_3'));
 
-    expect(setPreviewContent).toHaveBeenCalled();
     expect(setSelectedInstances).toHaveBeenCalled();
     expect(getByTestId('backward-button')).toBeInTheDocument();
   });
 
   test('closes comparison', async () => {
     const { getByTestId } = renderWithState([
-      {
-        store: useInputsStore,
-        state: { resetPreviewContent },
-      },
       {
         store: useUIStore,
         state: { resetFullDisplayComponentType },
@@ -135,7 +132,6 @@ describe('Comparison', () => {
 
     fireEvent.click(getByTestId('close-comparison-section'));
 
-    expect(resetPreviewContent).toHaveBeenCalled();
     expect(resetFullDisplayComponentType).toHaveBeenCalled();
     expect(resetSelectedInstances).toHaveBeenCalled();
   });
@@ -150,18 +146,16 @@ describe('Comparison', () => {
   });
 
   test('navigates page-wise', async () => {
-    const { getByTestId, getAllByText } = renderWithState([
-      {
-        store: useInputsStore,
-        state: {
-          previewContent: [
-            { id: 'mockId_1', title: 'mockTitle 1' },
-            { id: 'mockId_2', title: 'mockTitle 2' },
-            { id: 'mockId_3', title: 'mockTitle 3' },
-          ],
+    const ids = ['mockId_1', 'mockId_2', 'mockId_3'];
+    const { getByTestId, getAllByText } = renderWithState(
+      [
+        {
+          store: useSearchStore,
+          state: { selectedInstances: ids },
         },
-      },
-    ]);
+      ],
+      ids.map(id => makeItem(id)),
+    );
 
     fireEvent.click(getByTestId('forward-button'));
 

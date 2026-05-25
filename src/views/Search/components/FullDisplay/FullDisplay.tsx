@@ -9,11 +9,11 @@ import { PreviewContent } from './PreviewContent';
 import './FullDisplay.scss';
 
 export const FullDisplay = () => {
-  const { previewContent } = useInputsState(['previewContent']);
+  const { activePreviewIds } = useInputsState(['activePreviewIds']);
   const { fullDisplayComponentType } = useUIState(['fullDisplayComponentType']);
 
   const contents = {
-    [FullDisplayType.Basic]: !!previewContent.length && <PreviewContent />,
+    [FullDisplayType.Basic]: !!activePreviewIds.length && <PreviewContent />,
     [FullDisplayType.Comparison]: <Comparison />,
   };
 

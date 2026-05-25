@@ -1,6 +1,5 @@
 import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateToCreatePage.mock';
 import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToEditPage.mock';
-import { getRecordAndInitializeParsing } from '@/test/__mocks__/common/hooks/useRecordControls.mock';
 
 import { BrowserRouter } from 'react-router-dom';
 
@@ -13,6 +12,8 @@ import { InstancesList } from './InstancesList';
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: true }));
 
 describe('InstancesList', () => {
+  const onSelectInstance = jest.fn();
+
   const renderWithProps = () => {
     const contents = [
       {
@@ -40,6 +41,7 @@ describe('InstancesList', () => {
           contents={{ keys: { uri: 'mockUri' }, entries: [{ key: 'value' }] }}
           type="mockType"
           refId="mockRefId"
+          onSelectInstance={onSelectInstance}
         />
         ,
       </BrowserRouter>,
@@ -70,7 +72,7 @@ describe('InstancesList', () => {
 
     fireEvent.click(getByTestId('preview-button__mockId'));
 
-    expect(getRecordAndInitializeParsing).toHaveBeenCalled();
+    expect(onSelectInstance).toHaveBeenCalledWith('mockId');
   });
 
   test('invokes edit control', () => {

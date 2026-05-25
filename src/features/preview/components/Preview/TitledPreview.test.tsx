@@ -15,8 +15,7 @@ describe('TitledPreview', () => {
     onClickClose: jest.fn(),
     previewContent: {
       title: 'mockTitle',
-      id: 'mockId',
-      base: new Map(),
+      schema: new Map(),
       initKey: 'mockInitKey',
       userValues: {},
       selectedEntries: [],

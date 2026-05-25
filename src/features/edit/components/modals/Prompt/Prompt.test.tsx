@@ -1,5 +1,5 @@
-import '@/test/__mocks__/common/hooks/useConfig.mock';
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+import '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
