@@ -1,6 +1,8 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
@@ -16,6 +18,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
 import {
+  RESOURCE_QUERY_KEY,
   deleteRecord as deleteRecordRequest,
   postRecord,
   putRecord,
@@ -77,6 +80,7 @@ export const useRecordMutations = () => {
   const isClone = queryParams.get(QueryParams.CloneOf);
   const { generateRecord } = useRecordGeneration();
   const { discardRecord } = useRecordNavigation();
+  const queryClient = useQueryClient();
 
   const ensureSegmentInUri = (uri: string) => {
     if (uri.includes(`${SearchQueryParams.Segment}=`)) {
@@ -199,6 +203,9 @@ export const useRecordMutations = () => {
       const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
       setLastSavedRecordId(updatedRecordId);
 
+      queryClient.setQueryData([RESOURCE_QUERY_KEY, updatedRecordId], parsedResponse);
+      await queryClient.invalidateQueries({ queryKey: [RESOURCE_QUERY_KEY] });
+
       // Handle different navigation scenarios
       if (isProfileChange || !isNavigatingBack) {
         return await handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
@@ -243,6 +250,7 @@ export const useRecordMutations = () => {
       if (!currentRecordId) return;
 
       await deleteRecordRequest(currentRecordId);
+      queryClient.removeQueries({ queryKey: [RESOURCE_QUERY_KEY, currentRecordId] });
       discardRecord();
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 

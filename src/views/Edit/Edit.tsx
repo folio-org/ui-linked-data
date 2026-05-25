@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { QueryParams } from '@/common/constants/routes.constants';
@@ -12,7 +12,7 @@ import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@
 import { useEditPage } from '@/features/edit/hooks/useEditPage';
 import { useRecordNavigation } from '@/features/resources';
 
-import { useMarcPreviewState, useUIState } from '@/store';
+import { useLoadingState, useMarcPreviewState, useUIState } from '@/store';
 
 import './Edit.scss';
 
@@ -25,6 +25,7 @@ export const Edit = () => {
     'resetBasicValue',
   ]);
   const { resetHasShownAuthorityWarning } = useUIState(['resetHasShownAuthorityWarning']);
+  const { setIsLoading } = useLoadingState(['setIsLoading']);
   const [searchParams] = useSearchParams();
   const cloneOfParam = searchParams.get(QueryParams.CloneOf);
   const typeParam = searchParams.get(QueryParams.Type);
@@ -34,6 +35,10 @@ export const Edit = () => {
   const showPreviewSection = hasSplitLayout(resourceType);
 
   useResetRecordStatus();
+
+  useLayoutEffect(() => {
+    setIsLoading(true);
+  }, [resourceId, cloneOfParam, refParam, resourceType]);
 
   useEffect(() => {
     resetMarcPreviewData();
@@ -45,7 +50,10 @@ export const Edit = () => {
       initNewResource();
     }
 
-    return () => clearRecordState();
+    return () => {
+      clearRecordState();
+      setIsLoading(false);
+    };
   }, [resourceId, cloneOfParam, refParam, resourceType]);
 
   useEffect(() => {

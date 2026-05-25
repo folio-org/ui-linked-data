@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
@@ -10,7 +12,7 @@ import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import { type ProcessedResource, getRecord, useResourceProcessing } from '@/features/resources/';
+import { type ProcessedResource, resourceQueryOptions, useResourceProcessing } from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -25,6 +27,7 @@ export const useEditPage = () => {
   const resourceType = mapToResourceType(typeParam);
 
   const { processResource } = useResourceProcessing();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
@@ -111,7 +114,7 @@ export const useEditPage = () => {
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
       try {
-        const record = await getRecord({ recordId });
+        const record = await queryClient.ensureQueryData(resourceQueryOptions(recordId));
         const blockConfig = BLOCKS_BFLITE[entityId];
 
         if (!blockConfig?.reference) {
@@ -147,7 +150,7 @@ export const useEditPage = () => {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       }
     },
-    [navigate, addStatusMessagesItem],
+    [navigate, addStatusMessagesItem, queryClient],
   );
 
   const loadResource = useCallback(
@@ -160,7 +163,7 @@ export const useEditPage = () => {
         let record: RecordEntry | null | undefined;
 
         if (resourceId) {
-          record = (await getRecord({ recordId: resourceId })) as RecordEntry | null;
+          record = await queryClient.ensureQueryData(resourceQueryOptions(resourceId));
         } else if (ref) {
           record = (await fetchRefRecord(ref, resourceType.toUpperCase() as BibframeEntities)) as RecordEntry | null;
 
@@ -188,6 +191,7 @@ export const useEditPage = () => {
       applyEntityBfids,
       resourceType,
       fetchRefRecord,
+      queryClient,
       setIsLoading,
       addStatusMessagesItem,
       setIsEdited,
