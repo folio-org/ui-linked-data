@@ -98,18 +98,25 @@ export const useEditPage = () => {
     ],
   );
 
-  const initNewResource = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const result = await processResource({});
+  const initNewResource = useCallback(
+    async (isCancelled: () => boolean = () => false) => {
+      try {
+        setIsLoading(true);
+        const result = await processResource({});
 
-      if (result) applyToStores(result, null);
-    } catch {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [processResource, applyToStores, setIsLoading, addStatusMessagesItem]);
+        if (isCancelled()) return;
+
+        if (result) applyToStores(result, null);
+      } catch {
+        if (!isCancelled()) {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+        }
+      } finally {
+        if (!isCancelled()) setIsLoading(false);
+      }
+    },
+    [processResource, applyToStores, setIsLoading, addStatusMessagesItem],
+  );
 
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
@@ -154,7 +161,11 @@ export const useEditPage = () => {
   );
 
   const loadResource = useCallback(
-    async (resourceId: string | null | undefined, options?: LoadResourceOptions) => {
+    async (
+      resourceId: string | null | undefined,
+      options?: LoadResourceOptions,
+      isCancelled: () => boolean = () => false,
+    ) => {
       const { asClone = false, ref } = options ?? {};
 
       try {
@@ -174,15 +185,17 @@ export const useEditPage = () => {
 
         const result = await processResource({ record: record ?? undefined, asClone });
 
-        if (!result) return;
+        if (isCancelled() || !result) return;
 
         applyToStores(result, record);
 
         if (resourceId && !asClone) setIsEdited(false);
       } catch {
-        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        if (!isCancelled()) {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled()) setIsLoading(false);
       }
     },
     [

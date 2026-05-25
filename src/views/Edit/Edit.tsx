@@ -41,16 +41,19 @@ export const Edit = () => {
   }, [resourceId, cloneOfParam, refParam, resourceType]);
 
   useEffect(() => {
+    let cancelled = false;
+
     resetMarcPreviewData();
     scrollEntity({ top: 0, behavior: 'instant' });
 
     if (resourceId || cloneOfParam || refParam) {
-      loadResource(resourceId ?? cloneOfParam, { asClone: !!cloneOfParam, ref: refParam });
+      loadResource(resourceId ?? cloneOfParam, { asClone: !!cloneOfParam, ref: refParam }, () => cancelled);
     } else {
-      initNewResource();
+      initNewResource(() => cancelled);
     }
 
     return () => {
+      cancelled = true;
       clearRecordState();
       setIsLoading(false);
       setIsPreviewLoading(false);
