@@ -3,8 +3,10 @@
 ## 3.0.0 (IN PROGRESS)
 * Refactor record control hooks. Refs [UILD-744].
 * Refactor resource processing and preview loading. Refs [UILD-744].
+* Refactor resource loading. Refs [UILD-816].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
+[UILD-816]:https://folio-org.atlassian.net/browse/UILD-816
 
 ## 2.0.3 (2026-05-19)
 * Fix Reset search option is missing after using Advanced Search. Fixes [UILD-812].
