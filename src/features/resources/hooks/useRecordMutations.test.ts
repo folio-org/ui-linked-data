@@ -189,6 +189,19 @@ describe('useRecordMutations', () => {
 
       expect(mockProcessResource).toHaveBeenCalledWith({ record: savedRecord });
     });
+
+    it('sets saveAndKeepEditing status when isNavigatingBack is false', async () => {
+      const savedRecord = { id: 'saved-id' };
+      const mockResponse = { json: () => Promise.resolve(savedRecord) };
+      (recordsApi.putRecord as jest.Mock).mockResolvedValue(mockResponse);
+      jest.spyOn(recordHelper, 'getRecordId').mockReturnValue('saved-id');
+      mockProcessResource.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useRecordMutations());
+      await result.current.saveRecord({ isNavigatingBack: false });
+
+      expect(mockSetRecordStatus).toHaveBeenCalledWith({ type: RecordStatus.saveAndKeepEditing });
+    });
   });
 
   describe('changeRecordProfile', () => {
