@@ -43,7 +43,7 @@ describe('useNavigateToEditPage', () => {
     setUpdatedGlobalState([
       {
         store: useSearchStore,
-        updatedState: { navigationState: navigationState as SearchParamsState },
+        updatedState: { navigationState },
       },
     ]);
     (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
@@ -132,7 +132,7 @@ describe('useNavigateToEditPage', () => {
     setUpdatedGlobalState([
       {
         store: useSearchStore,
-        updatedState: { navigationState: navigationState as SearchParamsState },
+        updatedState: { navigationState },
       },
     ]);
 
@@ -160,7 +160,7 @@ describe('useNavigateToEditPage', () => {
     setUpdatedGlobalState([
       {
         store: useSearchStore,
-        updatedState: { navigationState: navigationState as SearchParamsState },
+        updatedState: { navigationState },
       },
     ]);
 
@@ -190,7 +190,7 @@ describe('useNavigateToEditPage', () => {
     setUpdatedGlobalState([
       {
         store: useSearchStore,
-        updatedState: { navigationState: navigationState as SearchParamsState },
+        updatedState: { navigationState },
       },
     ]);
     (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
@@ -319,6 +319,22 @@ describe('useNavigateToEditPage', () => {
       state: {
         isNavigatedFromLDE: true,
       },
+    });
+  });
+
+  it('forwards options argument to navigate when provided', () => {
+    (useSearchParams as jest.Mock).mockReturnValue([new URLSearchParams()]);
+    (useLocation as jest.Mock).mockReturnValue({ state: null });
+
+    const { result } = renderHook(() => useNavigateToEditPage());
+    const { navigateToEditPage } = result.current;
+
+    navigateToEditPage('/edit/123', { replace: true });
+
+    expect(useLoadingStateStore.getState().isLoading).toBe(true);
+    expect(mockNavigate).toHaveBeenCalledWith('/edit/123', {
+      state: { isNavigatedFromLDE: true },
+      replace: true,
     });
   });
 });

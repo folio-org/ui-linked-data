@@ -6,4 +6,4 @@ export { useRecordMutations } from './useRecordMutations';
 export { useRecordNavigation } from './useRecordNavigation';
 export { useResourcePreviewQuery } from './useResourcePreviewQuery';
 export { useResourceProcessing } from './useResourceProcessing';
-export { resourceQueryOptions, RESOURCE_QUERY_KEY } from './useResourceQuery';
+export { resourceQueryOptions, RESOURCE_QUERY_KEY } from './resourceQuery';

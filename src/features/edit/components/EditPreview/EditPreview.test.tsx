@@ -2,9 +2,11 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
+import { ResourceType } from '@/common/constants/record.constants';
+import * as recordHelper from '@/common/helpers/record.helper';
 
 import { useEditPreview } from '@/features/edit/hooks/useEditPreview';
 
@@ -18,6 +20,18 @@ jest.mock('@/features/edit/hooks/useEditPreview', () => ({
   useEditPreview: jest.fn(),
 }));
 
+jest.mock('@/common/helpers/record.helper', () => ({
+  ...jest.requireActual('@/common/helpers/record.helper'),
+}));
+
+jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
+  useNavigateToCreatePage: () => ({ onCreateNewResource: jest.fn() }),
+}));
+
+jest.mock('@/features/preview/components/Preview/TitledPreview', () => ({
+  TitledPreview: () => null,
+}));
+
 const mockUseEditPreview = useEditPreview as jest.Mock;
 
 const navigate = jest.fn();
@@ -28,6 +42,10 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditPreview', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   beforeEach(() => {
     mockUseEditPreview.mockReturnValue({
       altSchema: undefined,
@@ -66,27 +84,38 @@ describe('EditPreview', () => {
     expect(getByTestId('instances-list')).toBeInTheDocument();
   });
 
-  test('resets dismiss state when resourceId changes', () => {
-    const router = createMemoryRouter(
-      [
-        {
-          path: '/resources/:resourceId/edit',
-          element: <EditPreview />,
-        },
-      ],
-      {
-        initialEntries: ['/resources/123/edit'],
-      },
-    );
-
-    const { rerender } = render(<RouterProvider router={router} />);
-
-    act(() => {
-      router.navigate('/resources/456/edit');
+  test('shows instances list after navigating to a different resource when an instance was selected', async () => {
+    jest.spyOn(recordHelper, 'getRecordDependencies').mockReturnValue({
+      keys: { key: 'instanceKey', uri: 'http://bibfra.me/vocab/lite/Instance' },
+      type: ResourceType.instance,
+      entries: [{ id: 'instance-1' }, { id: 'instance-2' }],
     });
 
-    rerender(<RouterProvider router={router} />);
+    setInitialGlobalState([
+      { store: useInputsStore, state: { record: { resource: {} } } },
+      { store: useUIStore, state: { currentlyPreviewedEntityBfid: new Set([PROFILE_BFIDS.INSTANCE]) } },
+    ]);
 
-    expect(getByTestId).toBeDefined();
+    const router = createMemoryRouter([{ path: '/resources/:resourceId/edit', element: <EditPreview /> }], {
+      initialEntries: ['/resources/work-1/edit?type=work'],
+    });
+
+    const { container } = render(<RouterProvider router={router} />);
+    const view = within(container);
+
+    // Instances list is shown initially (no instance selected)
+    expect(view.getByTestId('instances-list')).toBeInTheDocument();
+
+    // Click instance preview button -> selection set -> list replaced by TitledPreview
+    fireEvent.click(view.getByTestId('preview-button__instance-1'));
+    expect(view.queryByTestId('instances-list')).not.toBeInTheDocument();
+
+    // Navigate to a different work resource
+    await act(async () => {
+      router.navigate('/resources/work-2/edit?type=work');
+    });
+
+    // After navigation, selection is reset -> instances list shown again
+    expect(view.getByTestId('instances-list')).toBeInTheDocument();
   });
 });
