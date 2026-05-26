@@ -18,6 +18,7 @@ interface UseHubQueryParams {
 
 interface UseHubQueryResult {
   data: RecordEntry | undefined;
+  processed: ProcessedResource | undefined;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -129,6 +130,7 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
 
   return {
     data: queryData?.hubRecord,
+    processed: queryData?.processed,
     isLoading,
     isFetching,
     isError,

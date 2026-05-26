@@ -102,6 +102,7 @@ export const useEditPage = () => {
     async (isCancelled: () => boolean = () => false) => {
       try {
         setIsLoading(true);
+
         const result = await processResource({});
 
         if (isCancelled()) return;
@@ -121,7 +122,7 @@ export const useEditPage = () => {
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
       try {
-        const record = await queryClient.ensureQueryData(resourceQueryOptions(recordId));
+        const record = await queryClient.fetchQuery(resourceQueryOptions(recordId));
         const blockConfig = BLOCKS_BFLITE[entityId];
 
         if (!blockConfig?.reference) {
@@ -174,7 +175,7 @@ export const useEditPage = () => {
         let record: RecordEntry | null | undefined;
 
         if (resourceId) {
-          record = await queryClient.ensureQueryData(resourceQueryOptions(resourceId));
+          record = await queryClient.fetchQuery(resourceQueryOptions(resourceId));
         } else if (ref) {
           record = (await fetchRefRecord(ref, resourceType.toUpperCase() as BibframeEntities)) as RecordEntry | null;
 
