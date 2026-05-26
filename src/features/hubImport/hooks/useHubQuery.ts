@@ -39,7 +39,8 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
     'setInitialSchemaKey',
     'setSchema',
   ]);
-  const { setUserValues, setSelectedEntries, setSelectedRecordBlocks } = useInputsState([
+  const { setRecord, setUserValues, setSelectedEntries, setSelectedRecordBlocks } = useInputsState([
+    'setRecord',
     'setUserValues',
     'setSelectedEntries',
     'setSelectedRecordBlocks',
@@ -105,7 +106,8 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
   useEffect(() => {
     if (!queryData) return;
 
-    const { processed } = queryData;
+    const { hubRecord, processed } = queryData;
+    setRecord(hubRecord);
     setSelectedProfile(processed.selectedProfile ?? null);
     setSchema(processed.schema);
     setInitialSchemaKey(processed.initKey);
@@ -114,6 +116,7 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
     setSelectedRecordBlocks(processed.selectedRecordBlocks);
   }, [
     queryData,
+    setRecord,
     setSelectedProfile,
     setSchema,
     setInitialSchemaKey,
