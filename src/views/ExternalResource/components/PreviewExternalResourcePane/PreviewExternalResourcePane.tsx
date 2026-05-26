@@ -1,15 +1,20 @@
 import { useIntl } from 'react-intl';
+import { useParams } from 'react-router-dom';
 
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { getRecordTitle } from '@/common/helpers/record.helper';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
 import { Button, ButtonType } from '@/components/Button';
 
-import { useInputsState } from '@/store';
+import { useResourcePreviewQuery } from '@/features/resources';
 
 import Times16 from '@/assets/times-16.svg?react';
 
 export const PreviewExternalResourcePane = () => {
-  const { record } = useInputsState(['record']);
+  const { externalId } = useParams();
+  const { data } = useResourcePreviewQuery(externalId, 'edit-link', {
+    idType: ExternalResourceIdType.Inventory,
+  });
   const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
   const { formatMessage } = useIntl();
 
@@ -26,7 +31,7 @@ export const PreviewExternalResourcePane = () => {
           <Times16 />
         </Button>
       </nav>
-      <div className="heading">{record && getRecordTitle(record)}</div>
+      <div className="heading">{data?.record && getRecordTitle(data.record)}</div>
       <span className="empty-block" />
     </div>
   );

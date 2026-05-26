@@ -12,7 +12,7 @@ import { EditControlPane, ViewMarcControlPane } from '@/features/edit';
 import { HubImportNavPane } from '@/features/hubImport';
 import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
 
-import { useInputsState, useMarcPreviewState } from '@/store';
+import { useMarcPreviewState } from '@/store';
 
 import './Nav.scss';
 
@@ -22,12 +22,8 @@ export const Nav = () => {
   const isHubImportOpen = useRoutePathPattern(HUB_IMPORT_URLS);
   const isManageProfileSettingsOpen = useRoutePathPattern(MANAGE_PROFILE_SETTINGS_URLS);
   const { basicValue: marcPreviewData } = useMarcPreviewState(['basicValue']);
-  const { record } = useInputsState(['record']);
   const isVisible =
-    isEditSectionOpen ||
-    (isExternalResourceSectionOpen && record) ||
-    (isHubImportOpen && record) ||
-    isManageProfileSettingsOpen;
+    isEditSectionOpen || isExternalResourceSectionOpen || isHubImportOpen || isManageProfileSettingsOpen;
 
   return (
     isVisible && (
