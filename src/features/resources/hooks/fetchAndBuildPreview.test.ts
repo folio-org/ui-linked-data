@@ -44,7 +44,7 @@ describe('fetchAndBuildPreview', () => {
     expect(buildProcessedResourceModule.buildProcessedResource).not.toHaveBeenCalled();
   });
 
-  it('calls buildProcessedResource with the fetched record and returns its result', async () => {
+  it('calls buildProcessedResource with the fetched record and includes the raw record in the result', async () => {
     const mockRecord = { resource: { key: 'value' } };
     (recordsApi.getRecord as jest.Mock).mockResolvedValue(mockRecord);
 
@@ -64,7 +64,23 @@ describe('fetchAndBuildPreview', () => {
         loadProfileSettings: mockLoadProfileSettings,
       }),
     );
-    expect(result).toBe(mockProcessedResource);
+    expect(result).toEqual({ ...mockProcessedResource, record: mockRecord });
+  });
+
+  it('returns null when buildProcessedResource returns null', async () => {
+    const mockRecord = { resource: {} };
+    (recordsApi.getRecord as jest.Mock).mockResolvedValue(mockRecord);
+    (buildProcessedResourceModule.buildProcessedResource as jest.Mock).mockResolvedValue(null);
+
+    const result = await fetchAndBuildPreview({
+      resourceId: 'res-1',
+      signal: mockSignal,
+      sharedInfra: mockSharedInfra,
+      loadProfile: mockLoadProfile,
+      loadProfileSettings: mockLoadProfileSettings,
+    });
+
+    expect(result).toBeNull();
   });
 
   it('forwards the abort signal to getRecord', async () => {
