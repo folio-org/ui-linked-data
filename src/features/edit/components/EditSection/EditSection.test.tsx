@@ -1,5 +1,7 @@
 import '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
+import '@/test/__mocks__/features/hubImport/hooks/useHubQuery.mock';
 import '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
+import '@/test/__mocks__/features/resources/hooks/useResourcePreviewQuery.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
@@ -293,7 +295,7 @@ describe('EditSection', () => {
       {
         store: useProfileStore,
         state: {
-          selectedProfile: monograph as unknown as ProfileEntry,
+          selectedProfile: monograph,
           initialSchemaKey: 'uuid0',
           schema: schema as Schema,
         },
