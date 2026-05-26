@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
+import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
@@ -188,7 +189,11 @@ export const useEditPage = () => {
 
         if (isCancelled() || !result) return;
 
-        applyToStores(result, record);
+        // When cloning a work, pass null so the preview section is empty (the clone has no linked instances yet).
+        // Instance clones retain the original record so the linked work preview remains visible.
+        const isWorkClone = asClone && resourceType === ResourceType.work;
+
+        applyToStores(result, isWorkClone ? null : record);
 
         if (resourceId && !asClone) setIsEdited(false);
       } catch {
