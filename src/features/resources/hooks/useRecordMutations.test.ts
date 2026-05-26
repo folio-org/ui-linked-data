@@ -30,6 +30,7 @@ jest.mock('@/features/resources', () => ({
   postRecord: jest.fn(),
   putRecord: jest.fn(),
   deleteRecord: jest.fn(),
+  RESOURCE_QUERY_KEY: 'resource',
   useRecordGeneration: () => ({
     generateRecord: mockGenerateRecord,
   }),
@@ -41,6 +42,17 @@ jest.mock('@/features/resources', () => ({
 const mockDiscardRecord = jest.fn();
 jest.mock('@/features/resources/hooks/useRecordNavigation', () => ({
   useRecordNavigation: () => ({ discardRecord: mockDiscardRecord }),
+}));
+
+const mockInvalidateQueries = jest.fn().mockResolvedValue(undefined);
+const mockSetQueryData = jest.fn();
+const mockRemoveQueries = jest.fn();
+jest.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({
+    invalidateQueries: mockInvalidateQueries,
+    setQueryData: mockSetQueryData,
+    removeQueries: mockRemoveQueries,
+  }),
 }));
 
 jest.mock('@/common/hooks/useContainerEvents', () => ({
@@ -62,6 +74,9 @@ describe('useRecordMutations', () => {
 
   beforeEach(() => {
     jest.spyOn(console, 'error').mockReturnValue();
+    mockInvalidateQueries.mockClear();
+    mockSetQueryData.mockClear();
+    mockRemoveQueries.mockClear();
   });
 
   describe('saveRecord', () => {
@@ -146,6 +161,33 @@ describe('useRecordMutations', () => {
 
       expect(recordsApi.postRecord).not.toHaveBeenCalled();
       expect(recordsApi.putRecord).not.toHaveBeenCalled();
+    });
+
+    it('invalidates and updates the query cache after a successful save', async () => {
+      const savedRecord = { id: 'saved-id' };
+      const mockResponse = { json: () => Promise.resolve(savedRecord) };
+      (recordsApi.putRecord as jest.Mock).mockResolvedValue(mockResponse);
+      jest.spyOn(recordHelper, 'getRecordId').mockReturnValue('saved-id');
+
+      const { result } = renderHook(() => useRecordMutations());
+      await result.current.saveRecord();
+
+      expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ['resource'], refetchType: 'none' });
+      expect(mockSetQueryData).toHaveBeenCalledWith(['resource', 'saved-id'], savedRecord);
+      expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ['preview'], refetchType: 'active' });
+    });
+
+    it('calls processResource when isNavigatingBack is false', async () => {
+      const savedRecord = { id: 'saved-id' };
+      const mockResponse = { json: () => Promise.resolve(savedRecord) };
+      (recordsApi.putRecord as jest.Mock).mockResolvedValue(mockResponse);
+      jest.spyOn(recordHelper, 'getRecordId').mockReturnValue('saved-id');
+      mockProcessResource.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useRecordMutations());
+      await result.current.saveRecord({ isNavigatingBack: false });
+
+      expect(mockProcessResource).toHaveBeenCalledWith({ record: savedRecord });
     });
   });
 

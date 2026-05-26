@@ -6,6 +6,7 @@ import * as BibframeConstants from '@/common/constants/bibframeMapping.constants
 import { AdvancedFieldType as AdvancedFieldTypeEnum } from '@/common/constants/uiControls.constants';
 import * as CommonHelper from '@/common/helpers/common.helper';
 import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
+import { logger } from '@/common/services/logger';
 import { SimpleLookupUserValueService } from '@/common/services/userValues/userValueTypes';
 import { IUserValueType } from '@/common/services/userValues/userValueTypes/userValueType.interface';
 
@@ -43,6 +44,10 @@ mockDefaultGroupValues({
     value: 'defaultItemUri_1',
   },
 });
+
+jest.mock('@/common/services/logger', () => ({
+  logger: { error: jest.fn() },
+}));
 
 jest.mock('@/common/helpers/lookupOptions.helper', () => ({
   filterLookupOptionsByMappedValue: jest.fn(),
@@ -537,5 +542,55 @@ describe('SimpleLookupUserValueService', () => {
     await simpleLookupUserValueService.generate(value);
 
     expect(cacheService.save).not.toHaveBeenCalled();
+  });
+
+  test('deduplicates concurrent fetch requests for the same URI', async () => {
+    (cacheService.getById as jest.Mock).mockReturnValue(null);
+    (apiClient.loadSimpleLookupData as jest.Mock).mockClear();
+    (apiClient.loadSimpleLookupData as jest.Mock).mockResolvedValue({ data: [] });
+    (formatLookupOptions as jest.Mock).mockReturnValue([]);
+    (filterLookupOptionsByMappedValue as jest.Mock).mockReturnValue([]);
+
+    const makeValue = (uuid: string) =>
+      ({
+        data: { testUriSelector_1: ['testOptionUri_1'] },
+        uri: 'testUri_dedup',
+        uuid,
+        uriSelector: 'testUriSelector_1',
+        type: AdvancedFieldTypeEnum.simple as AdvancedFieldType,
+      }) as UserValueDTO;
+
+    const [result1, result2] = await Promise.all([
+      simpleLookupUserValueService.generate(makeValue('uuid-1')),
+      simpleLookupUserValueService.generate(makeValue('uuid-2')),
+    ]);
+
+    expect(apiClient.loadSimpleLookupData).toHaveBeenCalledTimes(1);
+    expect(result1.uuid).toBe('uuid-1');
+    expect(result2.uuid).toBe('uuid-2');
+  });
+
+  test('logs an error and continues when the API throws during fetch', async () => {
+    (cacheService.getById as jest.Mock).mockReturnValue(null);
+    (apiClient.loadSimpleLookupData as jest.Mock).mockRejectedValue(new Error('Network error'));
+
+    const data = {
+      [BibframeConstants.BFLITE_URIS.LABEL]: ['fallback label'],
+      testUriSelector_1: ['testOptionUri_1'],
+    } as unknown as RecordBasic;
+    const value = {
+      data,
+      uri: 'testUri_1',
+      uuid: 'testUuid_err',
+      uriSelector: 'testUriSelector_1',
+      type: AdvancedFieldTypeEnum.simple as AdvancedFieldType,
+    } as UserValueDTO;
+
+    const result = await simpleLookupUserValueService.generate(value);
+
+    expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Lookup fetch failed'), expect.any(Error));
+    expect(result.uuid).toBe('testUuid_err');
+    expect(result.contents).toHaveLength(1);
+    expect(result.contents?.[0].label).toBe('fallback label');
   });
 });
