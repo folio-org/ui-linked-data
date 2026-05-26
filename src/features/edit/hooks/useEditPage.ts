@@ -13,7 +13,7 @@ import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import { type ProcessedResource, resourceQueryOptions, useResourceProcessing } from '@/features/resources/';
+import { type ProcessedResource, generateResourceQueryOptions, useResourceProcessing } from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -123,7 +123,7 @@ export const useEditPage = () => {
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
       try {
-        const record = await queryClient.fetchQuery(resourceQueryOptions(recordId));
+        const record = await queryClient.fetchQuery(generateResourceQueryOptions(recordId));
         const blockConfig = BLOCKS_BFLITE[entityId];
 
         if (!blockConfig?.reference) {
@@ -176,7 +176,7 @@ export const useEditPage = () => {
         let record: RecordEntry | null | undefined;
 
         if (resourceId) {
-          record = await queryClient.fetchQuery(resourceQueryOptions(resourceId));
+          record = await queryClient.fetchQuery(generateResourceQueryOptions(resourceId));
         } else if (ref) {
           record = (await fetchRefRecord(ref, resourceType.toUpperCase() as BibframeEntities)) as RecordEntry | null;
 

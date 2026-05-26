@@ -29,7 +29,7 @@ jest.mock('@tanstack/react-query', () => ({
 }));
 
 jest.mock('@/features/resources', () => ({
-  resourceQueryOptions: (id: string) => mockResourceQueryOptions(id),
+  generateResourceQueryOptions: (id: string) => mockResourceQueryOptions(id),
   useResourceProcessing: () => ({ processResource: mockProcessResource }),
 }));
 
