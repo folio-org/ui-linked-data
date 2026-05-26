@@ -8,6 +8,7 @@ import { SearchQueryParams } from '@/common/constants/routes.constants';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 
 import { useSearchStore } from '@/store';
+import { useLoadingStateStore } from '@/store/stores/loadingState';
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
@@ -25,6 +26,10 @@ describe('useNavigateToEditPage', () => {
       {
         store: useSearchStore,
         state: { navigationState: {} },
+      },
+      {
+        store: useLoadingStateStore,
+        state: { isLoading: false },
       },
     ]);
   });
@@ -48,6 +53,7 @@ describe('useNavigateToEditPage', () => {
 
     navigateToEditPage(uri);
 
+    expect(useLoadingStateStore.getState().isLoading).toBe(true);
     expect(mockNavigate).toHaveBeenCalledWith(uri, { state: { ...navigationState, isNavigatedFromLDE: true } });
   });
 
@@ -194,6 +200,7 @@ describe('useNavigateToEditPage', () => {
 
     navigateAsDuplicate(duplicateId);
 
+    expect(useLoadingStateStore.getState().isLoading).toBe(true);
     expect(mockNavigate).toHaveBeenCalledWith('/resources/create?cloneOf=dup-123', { state: navigationState });
   });
 
