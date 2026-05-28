@@ -1,17 +1,14 @@
-import { setInitialGlobalState } from '@/test/__mocks__/store';
-
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
-import { useInputsStore } from '@/store';
-
 import { HubImportNavPane } from './HubImportNavPane';
 
 const mockNavigate = jest.fn();
 const mockSearchResultsUri = '/search?query=test';
+const mockUseHubQuery = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -32,6 +29,10 @@ jest.mock('react-intl', () => ({
   }),
 }));
 
+jest.mock('@/features/hubImport/hooks', () => ({
+  useHubQuery: (...args: unknown[]) => mockUseHubQuery(...args),
+}));
+
 describe('HubImportNavPane', () => {
   const mockRecord = {
     id: 'hub_123',
@@ -43,15 +44,8 @@ describe('HubImportNavPane', () => {
     },
   } as unknown as RecordEntry;
 
-  const renderComponent = (record?: RecordEntry) => {
-    setInitialGlobalState([
-      {
-        store: useInputsStore,
-        state: {
-          record: record ?? null,
-        },
-      },
-    ]);
+  const renderComponent = (hubData?: RecordEntry) => {
+    mockUseHubQuery.mockReturnValue({ data: hubData ?? null });
 
     render(
       <BrowserRouter>

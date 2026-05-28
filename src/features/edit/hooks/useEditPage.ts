@@ -1,8 +1,11 @@
 import { useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
+import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
@@ -10,7 +13,7 @@ import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import { type ProcessedResource, getRecord, useResourceProcessing } from '@/features/resources/';
+import { type ProcessedResource, generateResourceQueryOptions, useResourceProcessing } from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -25,6 +28,7 @@ export const useEditPage = () => {
   const resourceType = mapToResourceType(typeParam);
 
   const { processResource } = useResourceProcessing();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
@@ -95,23 +99,31 @@ export const useEditPage = () => {
     ],
   );
 
-  const initNewResource = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const result = await processResource({});
+  const initNewResource = useCallback(
+    async (isCancelled: () => boolean = () => false) => {
+      try {
+        setIsLoading(true);
 
-      if (result) applyToStores(result, null);
-    } catch {
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [processResource, applyToStores, setIsLoading, addStatusMessagesItem]);
+        const result = await processResource({});
+
+        if (isCancelled()) return;
+
+        if (result) applyToStores(result, null);
+      } catch {
+        if (!isCancelled()) {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
+        }
+      } finally {
+        if (!isCancelled()) setIsLoading(false);
+      }
+    },
+    [processResource, applyToStores, setIsLoading, addStatusMessagesItem],
+  );
 
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
       try {
-        const record = await getRecord({ recordId });
+        const record = await queryClient.fetchQuery(generateResourceQueryOptions(recordId));
         const blockConfig = BLOCKS_BFLITE[entityId];
 
         if (!blockConfig?.reference) {
@@ -147,11 +159,15 @@ export const useEditPage = () => {
         addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
       }
     },
-    [navigate, addStatusMessagesItem],
+    [navigate, addStatusMessagesItem, queryClient],
   );
 
   const loadResource = useCallback(
-    async (resourceId: string | null | undefined, options?: LoadResourceOptions) => {
+    async (
+      resourceId: string | null | undefined,
+      options?: LoadResourceOptions,
+      isCancelled: () => boolean = () => false,
+    ) => {
       const { asClone = false, ref } = options ?? {};
 
       try {
@@ -160,7 +176,7 @@ export const useEditPage = () => {
         let record: RecordEntry | null | undefined;
 
         if (resourceId) {
-          record = (await getRecord({ recordId: resourceId })) as RecordEntry | null;
+          record = await queryClient.fetchQuery(generateResourceQueryOptions(resourceId));
         } else if (ref) {
           record = (await fetchRefRecord(ref, resourceType.toUpperCase() as BibframeEntities)) as RecordEntry | null;
 
@@ -171,15 +187,21 @@ export const useEditPage = () => {
 
         const result = await processResource({ record: record ?? undefined, asClone });
 
-        if (!result) return;
+        if (isCancelled() || !result) return;
 
-        applyToStores(result, record);
+        // When cloning a work, pass null so the preview section is empty (the clone has no linked instances yet).
+        // Instance clones retain the original record so the linked work preview remains visible.
+        const isWorkClone = asClone && resourceType === ResourceType.work;
+
+        applyToStores(result, isWorkClone ? null : record);
 
         if (resourceId && !asClone) setIsEdited(false);
       } catch {
-        addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        if (!isCancelled()) {
+          addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingResource'));
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled()) setIsLoading(false);
       }
     },
     [
@@ -188,6 +210,7 @@ export const useEditPage = () => {
       applyEntityBfids,
       resourceType,
       fetchRefRecord,
+      queryClient,
       setIsLoading,
       addStatusMessagesItem,
       setIsEdited,

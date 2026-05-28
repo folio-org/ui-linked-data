@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { QueryParams } from '@/common/constants/routes.constants';
@@ -12,7 +12,7 @@ import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@
 import { useEditPage } from '@/features/edit/hooks/useEditPage';
 import { useRecordNavigation } from '@/features/resources';
 
-import { useMarcPreviewState, useUIState } from '@/store';
+import { useLoadingState, useMarcPreviewState, useUIState } from '@/store';
 
 import './Edit.scss';
 
@@ -25,6 +25,7 @@ export const Edit = () => {
     'resetBasicValue',
   ]);
   const { resetHasShownAuthorityWarning } = useUIState(['resetHasShownAuthorityWarning']);
+  const { setIsLoading, setIsPreviewLoading } = useLoadingState(['setIsLoading', 'setIsPreviewLoading']);
   const [searchParams] = useSearchParams();
   const cloneOfParam = searchParams.get(QueryParams.CloneOf);
   const typeParam = searchParams.get(QueryParams.Type);
@@ -35,17 +36,28 @@ export const Edit = () => {
 
   useResetRecordStatus();
 
+  useLayoutEffect(() => {
+    setIsLoading(true);
+  }, [resourceId, cloneOfParam, refParam, resourceType]);
+
   useEffect(() => {
+    let cancelled = false;
+
     resetMarcPreviewData();
     scrollEntity({ top: 0, behavior: 'instant' });
 
     if (resourceId || cloneOfParam || refParam) {
-      loadResource(resourceId ?? cloneOfParam, { asClone: !!cloneOfParam, ref: refParam });
+      loadResource(resourceId ?? cloneOfParam, { asClone: !!cloneOfParam, ref: refParam }, () => cancelled);
     } else {
-      initNewResource();
+      initNewResource(() => cancelled);
     }
 
-    return () => clearRecordState();
+    return () => {
+      cancelled = true;
+      clearRecordState();
+      setIsLoading(false);
+      setIsPreviewLoading(false);
+    };
   }, [resourceId, cloneOfParam, refParam, resourceType]);
 
   useEffect(() => {

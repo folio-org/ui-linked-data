@@ -5,6 +5,8 @@ import { getRecord } from '../api/records.api';
 import { buildProcessedResource } from '../helpers/buildProcessedResource';
 import type { ProcessedResource } from '../types';
 
+export type PreviewResult = ProcessedResource & { record: RecordEntry };
+
 export type FetchAndBuildPreviewParams = {
   resourceId: string;
   signal: AbortSignal;
@@ -25,17 +27,21 @@ export const fetchAndBuildPreview = async ({
   loadProfile,
   loadProfileSettings,
   idType,
-}: FetchAndBuildPreviewParams): Promise<ProcessedResource | null> => {
+}: FetchAndBuildPreviewParams): Promise<PreviewResult | null> => {
   const rawRecord = await getRecord({ recordId: resourceId, signal, idType });
 
   if (!rawRecord) return null;
 
   const pipeline = createSchemaPipeline(sharedInfra);
 
-  return buildProcessedResource({
+  const processed = await buildProcessedResource({
     pipeline,
     record: rawRecord as RecordEntry,
     loadProfile,
     loadProfileSettings,
   });
+
+  if (!processed) return null;
+
+  return { ...processed, record: rawRecord as RecordEntry };
 };

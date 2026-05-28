@@ -71,7 +71,7 @@ describe('Edit', () => {
     await renderComponent(monograph as unknown as ProfileEntry);
 
     expect(screen.getByTestId('edit-page')).toBeInTheDocument();
-    expect(loadResource).toHaveBeenCalledWith('testResourceId', { asClone: false, ref: null });
+    expect(loadResource).toHaveBeenCalledWith('testResourceId', { asClone: false, ref: null }, expect.any(Function));
   });
 
   test("calls initNewResource and doesn't call loadResource when no resourceId", async () => {
@@ -93,7 +93,7 @@ describe('Edit', () => {
 
     await renderComponent(monograph as unknown as ProfileEntry);
 
-    expect(loadResource).toHaveBeenCalledWith(cloneOfParam, { asClone: true, ref: null });
+    expect(loadResource).toHaveBeenCalledWith(cloneOfParam, { asClone: true, ref: null }, expect.any(Function));
     globalThis.history.replaceState({}, '', originalLocation);
   });
 

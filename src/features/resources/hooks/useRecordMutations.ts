@@ -1,6 +1,8 @@
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { BibframeEntities } from '@/common/constants/bibframe.constants';
 import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { RecordStatus, ResourceType } from '@/common/constants/record.constants';
@@ -16,6 +18,7 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getSearchSegment, mapToResourceType } from '@/configs/resourceTypes';
 
 import {
+  RESOURCE_QUERY_KEY,
   deleteRecord as deleteRecordRequest,
   postRecord,
   putRecord,
@@ -77,6 +80,7 @@ export const useRecordMutations = () => {
   const isClone = queryParams.get(QueryParams.CloneOf);
   const { generateRecord } = useRecordGeneration();
   const { discardRecord } = useRecordNavigation();
+  const queryClient = useQueryClient();
 
   const ensureSegmentInUri = (uri: string) => {
     if (uri.includes(`${SearchQueryParams.Segment}=`)) {
@@ -125,18 +129,20 @@ export const useRecordMutations = () => {
       state: { ...(location.state as NavigationState), preserveStatusMessages: true },
     });
 
-    if (isProfileChange) {
-      const result = await processResource({ record: parsedResponse });
+    // Always re-derive form state from the server response so server-side normalisation
+    // is reflected in the form (applies to both profile changes and same-ID saves)
+    const result = await processResource({ record: parsedResponse });
 
-      if (result) {
-        setSelectedProfile(result.selectedProfile ?? null);
-        setSchema(result.schema);
-        setInitialSchemaKey(result.initKey);
-        setUserValues(result.userValues);
-        setSelectedEntries(result.selectedEntries);
-        setSelectedRecordBlocks(result.selectedRecordBlocks);
-      }
-    } else {
+    if (result) {
+      setSelectedProfile(result.selectedProfile ?? null);
+      setSchema(result.schema);
+      setInitialSchemaKey(result.initKey);
+      setUserValues(result.userValues);
+      setSelectedEntries(result.selectedEntries);
+      setSelectedRecordBlocks(result.selectedRecordBlocks);
+    }
+
+    if (!isProfileChange) {
       setRecordStatus({ type: RecordStatus.saveAndKeepEditing });
     }
 
@@ -199,6 +205,14 @@ export const useRecordMutations = () => {
       const updatedRecordId = getRecordId(parsedResponse, updatedSelectedRecordBlocks?.block);
       setLastSavedRecordId(updatedRecordId);
 
+      // Mark all other cached resources stale first (Instance↔Work cross-effects); refetchType: 'none'
+      // prevents immediate background refetches — resources re-fetch on next ensureQueryData access
+      await queryClient.invalidateQueries({ queryKey: [RESOURCE_QUERY_KEY], refetchType: 'none' });
+      // Overwrite the saved entry with the authoritative server response (updatedAt = now, staleTime = Infinity)
+      queryClient.setQueryData([RESOURCE_QUERY_KEY, updatedRecordId], parsedResponse);
+      // Refresh any previews currently on screen so they reflect the updated resource
+      await queryClient.invalidateQueries({ queryKey: ['preview'], refetchType: 'active' });
+
       // Handle different navigation scenarios
       if (isProfileChange || !isNavigatingBack) {
         return await handleProfileOrNoNavigationChange(updatedRecordId, parsedResponse, isProfileChange);
@@ -243,6 +257,10 @@ export const useRecordMutations = () => {
       if (!currentRecordId) return;
 
       await deleteRecordRequest(currentRecordId);
+      queryClient.removeQueries({ queryKey: [RESOURCE_QUERY_KEY, currentRecordId] });
+      // Invalidate cross-effect resources (e.g., a work whose instance was updated)
+      await queryClient.invalidateQueries({ queryKey: [RESOURCE_QUERY_KEY], refetchType: 'none' });
+      await queryClient.invalidateQueries({ queryKey: ['preview'], refetchType: 'active' });
       discardRecord();
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.success, 'ld.rdDeleted'));
 
