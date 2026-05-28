@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { useSearchParams } from 'react-router-dom';
 
@@ -6,7 +6,8 @@ import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplate
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
-import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
+import { createSchemaPipeline } from '@/common/services/pipeline';
+import { SharedInfraContext } from '@/contexts';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
 
@@ -23,7 +24,7 @@ export const useResourceProcessing = () => {
   const typeParam = searchParams.get(QueryParams.Type);
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
 
-  const pipeline = useSchemaPipeline();
+  const sharedInfra = useContext(SharedInfraContext);
 
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
@@ -31,6 +32,8 @@ export const useResourceProcessing = () => {
 
   const processResource = useCallback(
     async ({ record, asClone = false }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
+      const pipeline = createSchemaPipeline(sharedInfra);
+
       const recordData = record?.resource ?? {};
       const editingRecordBlocks =
         recordData && Object.keys(recordData).length ? getEditingRecordBlocks(recordData as RecordEntry) : undefined;
@@ -52,7 +55,7 @@ export const useResourceProcessing = () => {
         loadProfileSettings,
       });
     },
-    [typeParam, profileIdParam, pipeline, loadProfile, loadProfileSettings, formatMessage],
+    [typeParam, profileIdParam, sharedInfra, loadProfile, loadProfileSettings, formatMessage],
   );
 
   return { processResource };

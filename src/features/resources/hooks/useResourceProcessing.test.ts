@@ -13,8 +13,12 @@ jest.mock('../helpers/buildProcessedResource', () => ({
   buildProcessedResource: jest.fn(),
 }));
 
-jest.mock('@/common/hooks/useSchemaPipeline', () => ({
-  useSchemaPipeline: () => ({ schemaGeneratorService: {} }),
+jest.mock('@/common/services/pipeline', () => ({
+  createSchemaPipeline: () => ({ schemaGeneratorService: {} }),
+}));
+
+jest.mock('@/contexts', () => ({
+  SharedInfraContext: { _currentValue: {} },
 }));
 
 jest.mock('@/features/profiles', () => ({

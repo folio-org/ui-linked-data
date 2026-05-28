@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useLayoutEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import classNames from 'classnames';
@@ -24,11 +24,20 @@ export const EditPreview = memo(() => {
   const { resourceId } = useParams();
   const [queryParams] = useSearchParams();
   const typeParam = queryParams.get(QueryParams.Type);
-  const [selection, setSelection] = useState<{ resourceId?: string; instanceId?: string }>({});
-  // Derive selected instance — automatically resets when navigating to a different resource
-  const selectedInstanceId = selection.resourceId === resourceId ? selection.instanceId : undefined;
+  const [selection, setSelection] = useState<{ instanceId?: string }>({});
+  const [prevResourceId, setPrevResourceId] = useState(resourceId);
 
-  const { setIsLoading } = useLoadingState(['setIsLoading']);
+  // Reset instance selection whenever the work resource changes (e.g. navigating work->instance->work)
+  // so the instance list is shown instead of the previously opened preview.
+  if (prevResourceId !== resourceId) {
+    setPrevResourceId(resourceId);
+    setSelection({});
+  }
+
+  // Derive selected instance — automatically resets when navigating to a different resource
+  const selectedInstanceId = selection.instanceId;
+
+  const { setIsPreviewLoading } = useLoadingState(['setIsPreviewLoading']);
 
   // Resolve resource type: from loaded record (Edit) or URL param (Create)
   const blockUri = selectedRecordBlocks?.block;
@@ -47,11 +56,11 @@ export const EditPreview = memo(() => {
 
   const { data: previewData, isLoading } = useEditPreview(instancePreviewId);
 
-  useEffect(() => {
-    setIsLoading(isLoading);
+  useLayoutEffect(() => {
+    setIsPreviewLoading(isLoading);
 
-    return () => setIsLoading(false);
-  }, [isLoading, setIsLoading]);
+    return () => setIsPreviewLoading(false);
+  }, [isLoading, setIsPreviewLoading]);
 
   const hasPreviewContent = previewData && Object.keys(previewData.userValues).length > 0;
 
@@ -73,7 +82,7 @@ export const EditPreview = memo(() => {
           refId={resourceId ?? queryParams.get(QueryParams.Ref)}
           type={dependencies?.type}
           previewContent={hasPreviewContent ? previewData : undefined}
-          onClickClose={() => setSelection({ resourceId, instanceId: undefined })}
+          onClickClose={() => setSelection({ instanceId: undefined })}
           showCloseCtl={(dependencies?.entries?.length ?? 0) > 1}
         />
       ) : (
@@ -81,7 +90,7 @@ export const EditPreview = memo(() => {
           type={dependencies?.type}
           refId={resourceId}
           contents={dependencies}
-          onSelectInstance={id => setSelection({ resourceId, instanceId: id })}
+          onSelectInstance={id => setSelection({ instanceId: id })}
         />
       )}
     </div>

@@ -2,10 +2,13 @@ import { BFLITE_TYPES_MAP, BFLITE_URIS, DEFAULT_GROUP_VALUES } from '@/common/co
 import { alphabeticSortLabel } from '@/common/helpers/common.helper';
 import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
 
+import { logger } from '../../logger';
 import { UserValueType } from './userValueType';
 import { IUserValueType } from './userValueType.interface';
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
+  private static pendingFetches = new Map<string, Promise<void>>();
+
   private uri?: string;
   private groupUri?: string;
   private propertyUri?: string;
@@ -155,15 +158,38 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
   }
 
   private async loadData() {
-    const response = await this.apiClient.loadSimpleLookupData(this.uri as string);
+    const uri = this.uri as string;
 
-    if (!response) return;
+    const pending = SimpleLookupUserValueService.pendingFetches.get(uri);
+    if (pending) {
+      await pending;
+      return;
+    }
 
-    const formattedLookupData = formatLookupOptions(response, this.uri);
-    const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri, this.groupUri);
+    const fetchPromise = this.fetchAndCache();
+    SimpleLookupUserValueService.pendingFetches.set(uri, fetchPromise);
 
-    this.loadedData = filteredLookupData?.toSorted(alphabeticSortLabel);
+    try {
+      await fetchPromise;
+    } finally {
+      SimpleLookupUserValueService.pendingFetches.delete(uri);
+    }
+  }
 
-    this.saveLoadedData();
+  private async fetchAndCache() {
+    try {
+      const response = await this.apiClient.loadSimpleLookupData(this.uri as string);
+
+      if (!response) return;
+
+      const formattedLookupData = formatLookupOptions(response, this.uri);
+      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri, this.groupUri);
+
+      this.loadedData = filteredLookupData?.toSorted(alphabeticSortLabel);
+
+      this.saveLoadedData();
+    } catch (error) {
+      logger.error('Lookup fetch failed — generate() continues with record labels only', error);
+    }
   }
 }

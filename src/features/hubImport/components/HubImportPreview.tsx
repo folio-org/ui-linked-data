@@ -6,31 +6,37 @@ import { Loading } from '@/components/Loading';
 
 import { Preview } from '@/features/preview';
 
-import { useInputsState } from '@/store';
-
 import { useHubQuery } from '../hooks';
 
 import './HubImportPreview.scss';
 
 export const HubImportPreview = () => {
   const { formatMessage } = useIntl();
-  const { record } = useInputsState(['record']);
   const [searchParams] = useSearchParams();
   const sourceUri = searchParams.get(QueryParams.SourceUri);
 
-  const { isLoading } = useHubQuery({
+  const { data, processed, isLoading } = useHubQuery({
     hubUri: sourceUri ?? undefined,
     enabled: !!sourceUri,
   });
 
+  // Keep spinner up through the one-render gap between queryFn resolving and
+  // the useHubQuery store-sync useEffect populating downstream consumers
+  const loading = isLoading || !data;
   const loaderLabel = formatMessage({ id: 'ld.importHub.fetchingFromUri' }, { uri: sourceUri });
 
   return (
     <div className="hub-import-preview">
-      {record && !isLoading ? (
-        <Preview forceRenderAllTopLevelEntities entityRowDisplay />
-      ) : (
+      {loading ? (
         <Loading label={loaderLabel} />
+      ) : (
+        <Preview
+          altSchema={processed?.schema}
+          altInitKey={processed?.initKey}
+          altUserValues={processed?.userValues}
+          forceRenderAllTopLevelEntities
+          entityRowDisplay
+        />
       )}
     </div>
   );

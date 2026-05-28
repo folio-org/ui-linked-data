@@ -7,8 +7,6 @@ import * as recordHelper from '@/common/helpers/record.helper';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import * as resourcesModule from '@/features/resources';
-
 import { useInputsStore, useLoadingStateStore, useProfileStore, useStatusStore, useUIStore } from '@/store';
 
 import { useEditPage } from './useEditPage';
@@ -21,9 +19,17 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const mockProcessResource = jest.fn();
+const mockFetchQuery = jest.fn();
+const mockResourceQueryOptions = jest.fn((id: string) => ({ queryKey: ['resource', id] }));
+
+jest.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({
+    fetchQuery: mockFetchQuery,
+  }),
+}));
 
 jest.mock('@/features/resources', () => ({
-  getRecord: jest.fn(),
+  generateResourceQueryOptions: (id: string) => mockResourceQueryOptions(id),
   useResourceProcessing: () => ({ processResource: mockProcessResource }),
 }));
 
@@ -157,7 +163,7 @@ describe('useEditPage', () => {
   describe('loadResource with resourceId', () => {
     it('fetches record, processes it and applies to stores', async () => {
       const mockRecord = { resource: { uri: 'test' } };
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue(mockRecord);
+      mockFetchQuery.mockResolvedValue(mockRecord);
       mockProcessResource.mockResolvedValue(mockProcessedResource);
       jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue(['lde:Profile:Instance']);
 
@@ -167,13 +173,13 @@ describe('useEditPage', () => {
         await result.current.loadResource('resource-id-1');
       });
 
-      expect(resourcesModule.getRecord).toHaveBeenCalledWith({ recordId: 'resource-id-1' });
+      expect(mockFetchQuery).toHaveBeenCalled();
       expect(mockProcessResource).toHaveBeenCalledWith(expect.objectContaining({ record: mockRecord, asClone: false }));
       expect(mockSetSchema).toHaveBeenCalledWith(mockProcessedResource.schema);
     });
 
     it('calls setIsEdited(false) when not a clone', async () => {
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue({ resource: {} });
+      mockFetchQuery.mockResolvedValue({ resource: {} });
       mockProcessResource.mockResolvedValue(mockProcessedResource);
       jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue([]);
 
@@ -187,7 +193,7 @@ describe('useEditPage', () => {
     });
 
     it('does not call setIsEdited when asClone is true', async () => {
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue({ resource: {} });
+      mockFetchQuery.mockResolvedValue({ resource: {} });
       mockProcessResource.mockResolvedValue(mockProcessedResource);
       jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue([]);
 
@@ -201,7 +207,7 @@ describe('useEditPage', () => {
     });
 
     it('returns early and does not apply stores when processResource returns null', async () => {
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue({ resource: {} });
+      mockFetchQuery.mockResolvedValue({ resource: {} });
       mockProcessResource.mockResolvedValue(null);
 
       const { result } = renderHook(() => useEditPage());
@@ -214,7 +220,7 @@ describe('useEditPage', () => {
     });
 
     it('reports error status message when fetching fails', async () => {
-      (resourcesModule.getRecord as jest.Mock).mockRejectedValue(new Error('network error'));
+      mockFetchQuery.mockRejectedValue(new Error('network error'));
 
       const { result } = renderHook(() => useEditPage());
 
@@ -236,7 +242,7 @@ describe('useEditPage', () => {
           [WORK_URI]: { 'http://bibfra.me/vocab/library/mainTitle': ['Test Work Title'] },
         },
       };
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue(mockRecord);
+      mockFetchQuery.mockResolvedValue(mockRecord);
       mockProcessResource.mockResolvedValue(mockProcessedResource);
       jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue([]);
 
@@ -246,7 +252,7 @@ describe('useEditPage', () => {
         await result.current.loadResource(null, { ref: 'ref-id-1' });
       });
 
-      expect(resourcesModule.getRecord).toHaveBeenCalledWith({ recordId: 'ref-id-1' });
+      expect(mockFetchQuery).toHaveBeenCalled();
       expect(mockSetCurrentlyEditedEntityBfid).toHaveBeenCalledWith(new Set(['lde:Profile:Instance']));
     });
 
@@ -257,7 +263,7 @@ describe('useEditPage', () => {
           'http://bibfra.me/vocab/lite/Instance': {},
         },
       };
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue(mockRecord);
+      mockFetchQuery.mockResolvedValue(mockRecord);
 
       const { result } = renderHook(() => useEditPage());
 
@@ -276,7 +282,7 @@ describe('useEditPage', () => {
   describe('applyEntityBfids', () => {
     it('uses entities from record when record is provided', async () => {
       const mockRecord = { resource: {} };
-      (resourcesModule.getRecord as jest.Mock).mockResolvedValue(mockRecord);
+      mockFetchQuery.mockResolvedValue(mockRecord);
       mockProcessResource.mockResolvedValue(mockProcessedResource);
       jest
         .spyOn(recordHelper, 'getPrimaryEntitiesFromRecord')
@@ -319,6 +325,46 @@ describe('useEditPage', () => {
       });
 
       expect(mockSetCurrentlyPreviewedEntityBfid).toHaveBeenCalledWith(new Set(['lde:Profile:Work']));
+    });
+  });
+
+  describe('isWorkClone behavior', () => {
+    it('passes null to stores when cloning a work (clears instance preview)', async () => {
+      (mapToResourceType as jest.Mock).mockReturnValue('work');
+
+      const mockRecord = { resource: { uri: 'test-work' } };
+
+      mockFetchQuery.mockResolvedValue(mockRecord);
+      mockProcessResource.mockResolvedValue(mockProcessedResource);
+      jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue([]);
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.loadResource('work-id-1', { asClone: true });
+      });
+
+      // null is passed so the preview section has no linked instances
+      expect(mockSetRecord).toHaveBeenCalledWith(null);
+    });
+
+    it('passes the original record to stores when cloning an instance (preserves work preview)', async () => {
+      (mapToResourceType as jest.Mock).mockReturnValue('instance');
+
+      const mockRecord = { resource: { uri: 'test-instance' } };
+
+      mockFetchQuery.mockResolvedValue(mockRecord);
+      mockProcessResource.mockResolvedValue(mockProcessedResource);
+      jest.spyOn(recordHelper, 'getPrimaryEntitiesFromRecord').mockReturnValue([]);
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.loadResource('instance-id-1', { asClone: true });
+      });
+
+      // original record is passed so the linked work preview remains visible
+      expect(mockSetRecord).toHaveBeenCalledWith(mockRecord);
     });
   });
 });
