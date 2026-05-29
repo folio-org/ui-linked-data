@@ -10,7 +10,7 @@ const saveAndUpdatePreferredProfiles = async (
 ) => {
   await savePreferredProfile(selectedProfile.id, selectedProfile.resourceType);
   const updatedPreferredProfiles = createUpdatedPreferredProfiles({
-    profileId: selectedProfile.id,
+    profileId: String(selectedProfile.id),
     profileName: selectedProfile.name,
     resourceTypeURL: selectedProfile.resourceType,
     currentPreferredProfiles: preferredProfiles,
@@ -24,7 +24,7 @@ const deleteAndUpdatePreferredProfiles = async (
   setPreferredProfiles: (value: PreferredProfiles | SetState<PreferredProfiles>) => void,
 ) => {
   await deletePreferredProfile(selectedProfile.resourceType as ResourceTypeURL);
-  const updatedPreferredProfiles = preferredProfiles.filter(profile => profile.id !== selectedProfile.id);
+  const updatedPreferredProfiles = preferredProfiles.filter(profile => profile.id !== String(selectedProfile.id));
   setPreferredProfiles(updatedPreferredProfiles);
 };
 
@@ -36,7 +36,7 @@ export const determinePreferredAction = (
   const preferred = preferredProfiles.find(p => p.resourceType === selectedProfile.resourceType);
 
   if (preferred) {
-    if (preferred.id === selectedProfile.id) {
+    if (preferred.id === String(selectedProfile.id)) {
       if (!isTypeDefaultProfile) {
         // This was the default profile for this resource type but is now not, so delete.
         return deleteAndUpdatePreferredProfiles;
