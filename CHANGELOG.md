@@ -2,6 +2,11 @@
 
 ## 3.0.0 (IN PROGRESS)
 
+## 2.0.4 (2026-06-03)
+* Fix default profile type persistence across edit form and profile settings. Fixes [UILD-820].
+
+[UILD-820]:https://folio-org.atlassian.net/browse/UILD-820
+
 ## 2.0.3 (2026-05-19)
 * Fix Reset search option is missing after using Advanced Search. Fixes [UILD-812].
 
