@@ -1,0 +1,129 @@
+import { FC, useState } from 'react';
+import { useBlocker } from 'react-router-dom';
+
+import { RecordStatus } from '@/common/constants/record.constants';
+import { ForceNavigateToDest, QueryParams } from '@/common/constants/routes.constants';
+import { getForceNavigateToDest } from '@/common/helpers/navigation.helper';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { useModalControls } from '@/common/hooks/useModalControls';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
+
+import { useRecordMutations } from '@/features/resources';
+
+import { useStatusState } from '@/store';
+
+import { ModalCloseRecord } from '../ModalCloseRecord';
+import { ModalSwitchToNewRecord } from '../ModalSwitchToNewRecord';
+
+import './Prompt.scss';
+
+interface Props {
+  when: boolean;
+}
+
+export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
+  const { saveRecord } = useRecordMutations();
+  const {
+    isModalOpen: isCloseRecordModalOpen,
+    setIsModalOpen: setIsCloseRecordModalOpen,
+    openModal: openCloseRecordModal,
+  } = useModalControls();
+  const {
+    isModalOpen: isSwitchToNewRecordModalOpen,
+    setIsModalOpen: setIsSwitchToNewRecordModalOpen,
+    openModal: openSwitchToNewRecordModal,
+  } = useModalControls();
+  const { setIsRecordEdited: setIsEdited, setRecordStatus } = useStatusState(['setIsRecordEdited', 'setRecordStatus']);
+  const [forceNavigateTo, setForceNavigateTo] = useState<{
+    pathname: string;
+    search: string;
+    to?: ForceNavigateToDest | null;
+  } | null>(null);
+  const { navigateToEditPage } = useNavigateToEditPage();
+  const { dispatchProceedNavigationEvent, dispatchUnblockEvent } = useContainerEvents({
+    onTriggerModal: () => setIsCloseRecordModalOpen(true),
+  });
+
+  const closeAllModals = () => {
+    setIsCloseRecordModalOpen(false);
+    setIsSwitchToNewRecordModalOpen(false);
+  };
+
+  const blocker = useBlocker(({ currentLocation, nextLocation: { pathname, search } }) => {
+    // TODO: investigate what's the case for this behavior
+    if (currentLocation?.pathname === pathname) return false;
+
+    // ATM that means we're switching to a new record which will
+    // use the current one as a reference. Meaning, we'll have to
+    // update the current record and force navigate to the updated
+    // ID we receive from the update operation
+
+    if (shouldPrompt) {
+      const forceNavigateToDest = getForceNavigateToDest(pathname, search);
+
+      if (forceNavigateToDest) {
+        setForceNavigateTo({ pathname, search, to: forceNavigateToDest });
+
+        openSwitchToNewRecordModal();
+      } else {
+        openCloseRecordModal();
+      }
+    }
+
+    return shouldPrompt;
+  });
+
+  const stopNavigation = () => {
+    closeAllModals();
+    blocker.reset?.();
+  };
+
+  const proceedNavigation = () => {
+    blocker.proceed?.();
+    dispatchProceedNavigationEvent();
+    closeAllModals();
+    setIsEdited(false);
+    setRecordStatus({ type: RecordStatus.open });
+  };
+
+  const saveAndContinue = async () => {
+    const recordId = await saveRecord({ asRefToNewRecord: true, shouldSetSearchParams: !forceNavigateTo });
+    setRecordStatus({ type: RecordStatus.saveAndClose });
+
+    if (forceNavigateTo) {
+      stopNavigation();
+      dispatchUnblockEvent();
+
+      if (forceNavigateTo.to === ForceNavigateToDest.EditPage) {
+        navigateToEditPage(forceNavigateTo.pathname, { replace: true });
+      } else {
+        const newSearchParams = new URLSearchParams(forceNavigateTo?.search);
+        const paramKey = forceNavigateTo.to === ForceNavigateToDest.CreatePage ? QueryParams.Ref : QueryParams.CloneOf;
+
+        newSearchParams.set(paramKey, recordId);
+        navigateToEditPage(`${forceNavigateTo.pathname}?${newSearchParams}`, { replace: true });
+      }
+    } else {
+      proceedNavigation();
+    }
+  };
+
+  const continueWithoutSaving = () => proceedNavigation();
+
+  return (
+    <>
+      <ModalSwitchToNewRecord
+        isOpen={isSwitchToNewRecordModalOpen}
+        onSubmit={saveAndContinue}
+        onCancel={continueWithoutSaving}
+        onClose={stopNavigation}
+      />
+      <ModalCloseRecord
+        isOpen={isCloseRecordModalOpen}
+        onCancel={proceedNavigation}
+        onSubmit={stopNavigation}
+        onClose={stopNavigation}
+      />
+    </>
+  );
+};

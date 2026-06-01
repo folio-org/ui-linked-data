@@ -1,0 +1,38 @@
+import { useIntl } from 'react-intl';
+import { useParams } from 'react-router-dom';
+
+import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { getRecordTitle } from '@/common/helpers/record.helper';
+import { useContainerEvents } from '@/common/hooks/useContainerEvents';
+import { Button, ButtonType } from '@/components/Button';
+
+import { useResourcePreviewQuery } from '@/features/resources';
+
+import Times16 from '@/assets/times-16.svg?react';
+
+export const PreviewExternalResourcePane = () => {
+  const { externalId } = useParams();
+  const { data } = useResourcePreviewQuery(externalId, 'edit-link', {
+    idType: ExternalResourceIdType.Inventory,
+  });
+  const { dispatchNavigateToOriginEventWithFallback } = useContainerEvents();
+  const { formatMessage } = useIntl();
+
+  return (
+    <div className="nav-block nav-block-fixed-height">
+      <nav>
+        <Button
+          data-testid="nav-close-button"
+          type={ButtonType.Icon}
+          onClick={() => dispatchNavigateToOriginEventWithFallback()}
+          className="nav-close"
+          ariaLabel={formatMessage({ id: 'ld.aria.externalResourcePreview.close' })}
+        >
+          <Times16 />
+        </Button>
+      </nav>
+      <div className="heading">{data?.record && getRecordTitle(data.record)}</div>
+      <span className="empty-block" />
+    </div>
+  );
+};

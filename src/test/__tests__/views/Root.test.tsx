@@ -1,6 +1,8 @@
-import '@/test/__mocks__/common/hooks/useConfig.mock';
 import { useRoutePathPattern } from '@/test/__mocks__/common/hooks/useRoutePathPattern.mock';
 import '@/test/__mocks__/components/Loading.mock';
+import '@/test/__mocks__/features/hubImport/hooks/useHubQuery.mock';
+import '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
+import '@/test/__mocks__/features/resources/hooks/useResourcePreviewQuery.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';

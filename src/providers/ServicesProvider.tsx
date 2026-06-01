@@ -1,20 +1,9 @@
-import { FC, type ReactElement, useMemo } from 'react';
+import { FC, type ReactElement, useMemo, useRef } from 'react';
 
-import { apiClient } from '@/common/api/client';
 import { useCommonStatus } from '@/common/hooks/useCommonStatus';
 import { useLookupCacheService } from '@/common/hooks/useLookupCache.hook';
-import { RecordGenerator } from '@/common/services/recordGenerator';
-import { RecordNormalizingService } from '@/common/services/recordNormalizing';
-import { RecordToSchemaMappingService } from '@/common/services/recordToSchemaMapping';
-import {
-  MarcMappingGeneratorService,
-  SchemaGeneratorService,
-  SchemaWithDuplicatesService,
-} from '@/common/services/schema';
-import { EntryPropertiesGeneratorService } from '@/common/services/schema/entryPropertiesGenerator.service';
-import { SelectedEntriesService } from '@/common/services/selectedEntries';
-import { UserValuesService } from '@/common/services/userValues';
-import { ServicesContext } from '@/contexts';
+import { createSchemaPipeline } from '@/common/services/pipeline';
+import { SchemaPipelineContext, ServicesContext, SharedInfraContext } from '@/contexts';
 
 type ServicesProviderProps = {
   children: ReactElement<unknown>;
@@ -22,65 +11,31 @@ type ServicesProviderProps = {
 
 export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
   const lookupCacheService = useLookupCacheService();
-  const commonStatusService = useCommonStatus();
+  const rawCommonStatus = useCommonStatus();
+  const commonStatusRef = useRef(rawCommonStatus);
+  commonStatusRef.current = rawCommonStatus;
+  const commonStatusService = useMemo<ICommonStatus>(
+    () => ({ set: (l10nId, type) => commonStatusRef.current.set(l10nId, type) }),
+    [],
+  );
 
-  const entryPropertiesGeneratorService = useMemo(() => new EntryPropertiesGeneratorService(), []);
-  const marcMappingGeneratorService = useMemo(() => new MarcMappingGeneratorService(), []);
-  const selectedEntriesService = useMemo(() => new SelectedEntriesService([]), []);
-  const userValuesService = useMemo(
-    () => new UserValuesService({}, apiClient, lookupCacheService),
-    [lookupCacheService],
+  const sharedInfra = useMemo<SharedInfraServices>(
+    () => ({ lookupCacheService, commonStatusService }),
+    [lookupCacheService, commonStatusService],
   );
-  const schemaWithDuplicatesService = useMemo(
-    () =>
-      new SchemaWithDuplicatesService(
-        {} as Schema,
-        selectedEntriesService,
-        entryPropertiesGeneratorService,
-        userValuesService,
-      ),
-    [selectedEntriesService, entryPropertiesGeneratorService, userValuesService],
-  );
-  const recordNormalizingService = useMemo(() => new RecordNormalizingService(), []);
-  const recordToSchemaMappingService = useMemo(
-    () =>
-      new RecordToSchemaMappingService(
-        selectedEntriesService,
-        schemaWithDuplicatesService,
-        userValuesService,
-        commonStatusService,
-      ),
-    [selectedEntriesService, schemaWithDuplicatesService, userValuesService, commonStatusService],
-  );
-  const schemaGeneratorService = useMemo(
-    () =>
-      new SchemaGeneratorService(selectedEntriesService, entryPropertiesGeneratorService, marcMappingGeneratorService),
-    [selectedEntriesService, entryPropertiesGeneratorService, marcMappingGeneratorService],
-  );
-  const recordGeneratorService = useMemo(() => new RecordGenerator(), []);
+
+  const pipeline = useMemo(() => createSchemaPipeline(sharedInfra), [sharedInfra]);
 
   const servicesValue = useMemo(
-    () => ({
-      selectedEntriesService,
-      userValuesService,
-      schemaWithDuplicatesService,
-      lookupCacheService,
-      recordNormalizingService,
-      recordToSchemaMappingService,
-      schemaGeneratorService,
-      recordGeneratorService,
-    }),
-    [
-      selectedEntriesService,
-      userValuesService,
-      schemaWithDuplicatesService,
-      lookupCacheService,
-      recordNormalizingService,
-      recordToSchemaMappingService,
-      schemaGeneratorService,
-      recordGeneratorService,
-    ],
+    () => ({ ...pipeline, lookupCacheService, commonStatusService }),
+    [pipeline, lookupCacheService, commonStatusService],
   );
 
-  return <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>;
+  return (
+    <SharedInfraContext.Provider value={sharedInfra}>
+      <SchemaPipelineContext.Provider value={pipeline}>
+        <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>
+      </SchemaPipelineContext.Provider>
+    </SharedInfraContext.Provider>
+  );
 };

@@ -12,11 +12,11 @@ interface UseTableFormatterProps {
   onTitleClick?: (id: string, title?: string, headingType?: string) => void;
   checkFailedId?: (id: string) => boolean;
   // Instance-specific props
-  onPreview?: (id: string) => Promise<void>;
+  onPreview?: (id: string) => void;
   onEdit?: (url: string) => void;
   onToggleSelect?: (id: string, checked: boolean) => void;
   selectedInstances?: string[];
-  previewContent?: Array<{ id: string }>;
+  activePreviewIds?: string[];
   fullDisplayComponentType?: FullDisplayType;
 }
 
@@ -36,7 +36,7 @@ export const useTableFormatter = ({
   onEdit,
   onToggleSelect,
   selectedInstances = [],
-  previewContent = [],
+  activePreviewIds = [],
   fullDisplayComponentType,
 }: UseTableFormatterProps) => {
   const { formatMessage } = useIntl();
@@ -65,7 +65,7 @@ export const useTableFormatter = ({
                   onEdit,
                   onToggleSelect,
                   selectedInstances,
-                  previewContent,
+                  activePreviewIds,
                   fullDisplayComponentType,
                 })
               : row[key]?.label,
@@ -85,7 +85,7 @@ export const useTableFormatter = ({
       onEdit,
       onToggleSelect,
       selectedInstances,
-      previewContent,
+      activePreviewIds,
       fullDisplayComponentType,
     ],
   );
