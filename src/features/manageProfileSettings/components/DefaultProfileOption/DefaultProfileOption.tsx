@@ -42,7 +42,7 @@ export const DefaultProfileOption: FC<DefaultProfileOptionProps> = ({ selectedPr
       const preferredProfiles = await loadPreferredProfiles();
       if (preferredProfiles?.length) {
         const preferred = preferredProfileForType(selectedProfile.resourceType, preferredProfiles);
-        setIsTypeDefaultProfile(!!preferred && preferred.id === selectedProfile.id);
+        setIsTypeDefaultProfile(!!preferred && preferred.id === String(selectedProfile.id));
       } else {
         setIsTypeDefaultProfile(false);
       }

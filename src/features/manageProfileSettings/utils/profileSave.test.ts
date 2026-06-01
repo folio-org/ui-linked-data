@@ -134,6 +134,33 @@ describe('profileSave', () => {
         expect(deletePreferredProfile).toHaveBeenCalled();
       }
     });
+
+    it('deletes preferred profile when previously set to this and not selected while handling number and string ID discrepancy', async () => {
+      (deletePreferredProfile as jest.Mock).mockResolvedValue({});
+      (savePreferredProfile as jest.Mock).mockResolvedValue({});
+      const preferredProfiles = [
+        {
+          id: '55',
+          name: 'prefer',
+          resourceType: 'for-type',
+        },
+      ];
+      const selectedProfile = {
+        id: 55,
+        name: 'prefer',
+        resourceType: 'for-type',
+      };
+
+      const preferredAction = determinePreferredAction(selectedProfile, preferredProfiles, false);
+
+      expect(preferredAction).not.toBeNull();
+      if (preferredAction) {
+        preferredAction(selectedProfile, preferredProfiles, jest.fn());
+
+        expect(savePreferredProfile).not.toHaveBeenCalled();
+        expect(deletePreferredProfile).toHaveBeenCalled();
+      }
+    });
   });
 
   describe('generateSettings', () => {
