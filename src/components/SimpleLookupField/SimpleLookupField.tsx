@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   ActionMeta,
@@ -77,11 +77,18 @@ export const SimpleLookupField: FC<Props> = ({
   propertyUri,
   parentBlockUri,
 }) => {
-  const { data: rawOptions = [], isPending: isLoading, isError } = useQuery(lookupQueryOptions(uri));
+  const [menuOpened, setMenuOpened] = useState(false);
+  const {
+    data: rawOptions = [],
+    isFetching: isLoading,
+    isError,
+  } = useQuery({ ...lookupQueryOptions(uri), enabled: menuOpened });
   const loadedOptions = filterLookupOptionsByMappedValue(rawOptions, propertyUri, parentGroupUri);
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri, parentGroupUri);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
+
+  const handleMenuOpen = useCallback(() => setMenuOpened(true), []);
 
   useEffect(() => {
     if (isError) {
@@ -146,6 +153,7 @@ export const SimpleLookupField: FC<Props> = ({
       components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
+      onMenuOpen={handleMenuOpen}
       // Uncomment if uncontrolled options are required/supported
       // getOptionLabel={getOptionLabel}
       // Remove the line below once uncontrolled options are required/supported
