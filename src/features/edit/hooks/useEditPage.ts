@@ -11,7 +11,13 @@ import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
+import {
+  getProfileBfid,
+  getReference,
+  hasReference,
+  mapToResourceType,
+  resolveResourceType,
+} from '@/configs/resourceTypes';
 
 import { type ProcessedResource, generateResourceQueryOptions, useResourceProcessing } from '@/features/resources/';
 
@@ -20,6 +26,12 @@ import { useInputsState, useLoadingState, useProfileState, useStatusState, useUI
 type LoadResourceOptions = {
   asClone?: boolean;
   ref?: string | null;
+};
+
+type ApplyToStoresProps = {
+  result: ProcessedResource;
+  record?: RecordEntry | null;
+  withReference?: boolean;
 };
 
 export const useEditPage = () => {
@@ -53,7 +65,7 @@ export const useEditPage = () => {
   ]);
 
   const applyEntityBfids = useCallback(
-    (record?: RecordEntry | null) => {
+    (record?: RecordEntry | null, withReference?: boolean) => {
       if (record) {
         setCurrentlyEditedEntityBfid(new Set(getPrimaryEntitiesFromRecord(record)));
         setCurrentlyPreviewedEntityBfid(new Set(getPrimaryEntitiesFromRecord(record, false)));
@@ -62,7 +74,7 @@ export const useEditPage = () => {
 
         setCurrentlyEditedEntityBfid(new Set([editedEntityBfId]));
 
-        if (hasReference(resourceType)) {
+        if (withReference && hasReference(resourceType)) {
           const ref = getReference(resourceType);
 
           setCurrentlyPreviewedEntityBfid(new Set([getProfileBfid(ref?.targetType)]));
@@ -75,7 +87,7 @@ export const useEditPage = () => {
   );
 
   const applyToStores = useCallback(
-    (result: ProcessedResource, record?: RecordEntry | null) => {
+    ({ result, record, withReference }: ApplyToStoresProps) => {
       setSelectedProfile(result.selectedProfile ?? null);
       setSchema(result.schema);
       setInitialSchemaKey(result.initKey);
@@ -85,7 +97,7 @@ export const useEditPage = () => {
 
       if (record !== undefined) setRecord(record);
 
-      applyEntityBfids(record);
+      applyEntityBfids(record, withReference);
     },
     [
       setSelectedProfile,
@@ -108,7 +120,7 @@ export const useEditPage = () => {
 
         if (isCancelled()) return;
 
-        if (result) applyToStores(result, null);
+        if (result) applyToStores({ result, record: null });
       } catch {
         if (!isCancelled()) {
           addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
@@ -189,11 +201,30 @@ export const useEditPage = () => {
 
         if (isCancelled() || !result) return;
 
-        // When cloning a work, pass null so the preview section is empty (the clone has no linked instances yet).
-        // Instance clones retain the original record so the linked work preview remains visible.
-        const isWorkClone = asClone && resourceType === ResourceType.work;
+        // When cloning a work, strip the instance reference from the record so the Instance preview
+        // section is not displayed. Instance clones retain the original record so the linked work preview remains visible.
+        const blockUri = result?.selectedRecordBlocks?.block;
+        const resourceTypeResolved = resolveResourceType(blockUri, typeParam);
+        const isWorkClone = asClone && resourceTypeResolved === ResourceType.work;
 
-        applyToStores(result, isWorkClone ? null : record);
+        let recordToStore = record;
+        if (isWorkClone && record) {
+          const {
+            uri: workBlockUri,
+            reference: { key: instanceRefKey },
+          } = BLOCKS_BFLITE.WORK;
+          const workBlock = record.resource?.[workBlockUri] as Record<string, unknown>;
+
+          recordToStore = {
+            ...record,
+            resource: {
+              ...record.resource,
+              [workBlockUri]: { ...workBlock, [instanceRefKey]: undefined },
+            },
+          } as RecordEntry;
+        }
+
+        applyToStores({ result, record: recordToStore, withReference: !isWorkClone });
 
         if (resourceId && !asClone) setIsEdited(false);
       } catch {
