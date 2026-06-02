@@ -1,11 +1,10 @@
 import { deleteFromSetImmutable } from '@/common/helpers/common.helper';
-import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
 
 export const useProfileSchema = () => {
-  const { selectedEntriesService, schemaWithDuplicatesService, userValuesService } =
-    useServicesContext() as Required<ServicesParams>;
+  const { selectedEntriesService, schemaWithDuplicatesService, userValuesService } = useSchemaPipeline();
   const { setCollapsibleEntries } = useUIState(['setCollapsibleEntries']);
   const { userValues, setUserValues, setSelectedEntries } = useInputsState([
     'userValues',

@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { ExternalResourceIdType } from '@/common/constants/api.constants';
+import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { SharedInfraContext } from '@/contexts';
 
 import { useLoadProfile } from '@/features/profiles/hooks/useLoadProfile';
@@ -18,6 +19,7 @@ export const useResourcePreviewQuery = (
   options?: { enabled?: boolean; idType?: ExternalResourceIdType },
 ) => {
   const sharedInfra = useContext(SharedInfraContext);
+  const queryClient = useQueryClient();
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
 
@@ -26,10 +28,13 @@ export const useResourcePreviewQuery = (
     queryFn: ({ signal }) => {
       if (!resourceId) return null;
 
+      const loadLookup = (uri: string) => queryClient.ensureQueryData(lookupQueryOptions(uri));
+
       return fetchAndBuildPreview({
         resourceId,
         signal,
         sharedInfra,
+        loadLookup,
         loadProfile,
         loadProfileSettings,
         idType: options?.idType,

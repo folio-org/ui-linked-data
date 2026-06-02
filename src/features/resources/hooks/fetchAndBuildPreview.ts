@@ -11,6 +11,7 @@ export type FetchAndBuildPreviewParams = {
   resourceId: string;
   signal: AbortSignal;
   sharedInfra: SharedInfraServices;
+  loadLookup: (uri: string) => Promise<MultiselectOption[]>;
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
     id: string | number | undefined,
@@ -24,6 +25,7 @@ export const fetchAndBuildPreview = async ({
   resourceId,
   signal,
   sharedInfra,
+  loadLookup,
   loadProfile,
   loadProfileSettings,
   idType,
@@ -32,7 +34,7 @@ export const fetchAndBuildPreview = async ({
 
   if (!rawRecord) return null;
 
-  const pipeline = createSchemaPipeline(sharedInfra);
+  const pipeline = createSchemaPipeline(sharedInfra, loadLookup);
 
   const processed = await buildProcessedResource({
     pipeline,

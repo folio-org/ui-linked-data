@@ -2,8 +2,11 @@ import { useCallback, useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { useSearchParams } from 'react-router-dom';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplates.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
+import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
 import { createSchemaPipeline } from '@/common/services/pipeline';
@@ -25,6 +28,7 @@ export const useResourceProcessing = () => {
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
 
   const sharedInfra = useContext(SharedInfraContext);
+  const queryClient = useQueryClient();
 
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
@@ -32,7 +36,8 @@ export const useResourceProcessing = () => {
 
   const processResource = useCallback(
     async ({ record, asClone = false }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
-      const pipeline = createSchemaPipeline(sharedInfra);
+      const loadLookup = (uri: string) => queryClient.ensureQueryData(lookupQueryOptions(uri));
+      const pipeline = createSchemaPipeline(sharedInfra, loadLookup);
 
       const recordData = record?.resource ?? {};
       const editingRecordBlocks =
@@ -55,7 +60,7 @@ export const useResourceProcessing = () => {
         loadProfileSettings,
       });
     },
-    [typeParam, profileIdParam, sharedInfra, loadProfile, loadProfileSettings, formatMessage],
+    [typeParam, profileIdParam, sharedInfra, queryClient, loadProfile, loadProfileSettings, formatMessage],
   );
 
   return { processResource };

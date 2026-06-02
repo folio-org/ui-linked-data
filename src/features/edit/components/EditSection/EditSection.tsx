@@ -7,7 +7,7 @@ import { debounce } from 'lodash';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { EDIT_SECTION_CONTAINER_ID } from '@/common/constants/uiElements.constants';
 import { useContainerEvents } from '@/common/hooks/useContainerEvents';
-import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { getEditSectionPassiveClass, hasReference, resolveResourceType } from '@/configs/resourceTypes';
 
 import { useInputsState, useProfileState, useStatusState, useUIState } from '@/store';
@@ -21,7 +21,7 @@ import './EditSection.scss';
 const USER_INPUT_DELAY = 100;
 
 export const EditSection = memo(() => {
-  const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
+  const { selectedEntriesService } = useSchemaPipeline();
   const { initialSchemaKey } = useProfileState(['initialSchemaKey']);
   const { userValues, addUserValuesItem, selectedEntries, setSelectedEntries } = useInputsState([
     'userValues',
