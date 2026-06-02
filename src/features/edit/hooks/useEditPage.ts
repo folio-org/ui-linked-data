@@ -125,7 +125,7 @@ export const useEditPage = () => {
 
         if (isCancelled()) return;
 
-        if (result) applyToStores({ result, record: null });
+        if (result) applyToStores({ result, record: null, withReference: true });
       } catch {
         if (!isCancelled()) {
           addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));

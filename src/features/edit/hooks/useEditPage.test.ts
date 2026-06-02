@@ -5,7 +5,13 @@ import { act, renderHook } from '@testing-library/react';
 import { StatusType } from '@/common/constants/status.constants';
 import * as recordHelper from '@/common/helpers/record.helper';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
+import {
+  getProfileBfid,
+  getReference,
+  hasReference,
+  mapToResourceType,
+  resolveResourceType,
+} from '@/configs/resourceTypes';
 
 import { useInputsStore, useLoadingStateStore, useProfileStore, useStatusStore, useUIStore } from '@/store';
 
@@ -41,6 +47,7 @@ jest.mock('@/common/services/userNotification', () => ({
 
 jest.mock('@/configs/resourceTypes', () => ({
   mapToResourceType: jest.fn(() => 'instance'),
+  resolveResourceType: jest.fn(() => 'instance'),
   getProfileBfid: jest.fn(() => 'lde:Profile:Instance'),
   hasReference: jest.fn(() => false),
   getReference: jest.fn(),
@@ -329,10 +336,21 @@ describe('useEditPage', () => {
   });
 
   describe('isWorkClone behavior', () => {
-    it('passes null to stores when cloning a work (clears instance preview)', async () => {
-      (mapToResourceType as jest.Mock).mockReturnValue('work');
+    const WORK_URI = 'http://bibfra.me/vocab/lite/Work';
+    const INSTANCE_REF_KEY = '_instanceReference';
 
-      const mockRecord = { resource: { uri: 'test-work' } };
+    it('strips the instance reference from the record when cloning a work', async () => {
+      (mapToResourceType as jest.Mock).mockReturnValue('work');
+      (resolveResourceType as jest.Mock).mockReturnValue('work');
+
+      const mockRecord = {
+        resource: {
+          [WORK_URI]: {
+            someField: ['test value'],
+            [INSTANCE_REF_KEY]: [{ id: 'instance-1' }],
+          },
+        },
+      };
 
       mockFetchQuery.mockResolvedValue(mockRecord);
       mockProcessResource.mockResolvedValue(mockProcessedResource);
@@ -344,12 +362,14 @@ describe('useEditPage', () => {
         await result.current.loadResource('work-id-1', { asClone: true });
       });
 
-      // null is passed so the preview section has no linked instances
-      expect(mockSetRecord).toHaveBeenCalledWith(null);
+      const storedRecord = mockSetRecord.mock.calls[0][0];
+      expect(storedRecord.resource[WORK_URI]).not.toHaveProperty(INSTANCE_REF_KEY);
+      expect(storedRecord.resource[WORK_URI]).toHaveProperty('someField');
     });
 
     it('passes the original record to stores when cloning an instance (preserves work preview)', async () => {
       (mapToResourceType as jest.Mock).mockReturnValue('instance');
+      (resolveResourceType as jest.Mock).mockReturnValue('instance');
 
       const mockRecord = { resource: { uri: 'test-instance' } };
 
