@@ -19,7 +19,7 @@ import {
   filterLookupOptionsByMappedValue,
   filterLookupOptionsByParentBlock,
 } from '@/common/helpers/lookupOptions.helper';
-import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
+import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
@@ -82,7 +82,7 @@ export const SimpleLookupField: FC<Props> = ({
     data: rawOptions = [],
     isFetching: isLoading,
     isError,
-  } = useQuery({ ...lookupQueryOptions(uri), enabled: menuOpened });
+  } = useQuery({ ...generateLookupQueryOptions(uri), enabled: menuOpened });
   const loadedOptions = filterLookupOptionsByMappedValue(rawOptions, propertyUri, parentGroupUri);
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri, parentGroupUri);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);

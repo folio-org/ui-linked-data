@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplates.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
-import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
+import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
 import { createSchemaPipeline } from '@/common/services/pipeline';
@@ -36,7 +36,7 @@ export const useResourceProcessing = () => {
 
   const processResource = useCallback(
     async ({ record, asClone = false }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
-      const loadLookup = (uri: string) => queryClient.ensureQueryData(lookupQueryOptions(uri));
+      const loadLookup = (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri));
       const pipeline = createSchemaPipeline(sharedInfra, loadLookup);
 
       const recordData = record?.resource ?? {};

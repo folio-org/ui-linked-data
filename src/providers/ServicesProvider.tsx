@@ -2,7 +2,7 @@ import { FC, type ReactElement, useCallback, useMemo, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
+import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { useCommonStatus } from '@/common/hooks/useCommonStatus';
 import { createSchemaPipeline } from '@/common/services/pipeline';
 import { SchemaPipelineContext, SharedInfraContext } from '@/contexts';
@@ -23,7 +23,10 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
 
   const sharedInfra = useMemo<SharedInfraServices>(() => ({ commonStatusService }), [commonStatusService]);
 
-  const loadLookup = useCallback((uri: string) => queryClient.ensureQueryData(lookupQueryOptions(uri)), [queryClient]);
+  const loadLookup = useCallback(
+    (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri)),
+    [queryClient],
+  );
 
   const pipeline = useMemo(() => createSchemaPipeline(sharedInfra, loadLookup), [sharedInfra, loadLookup]);
 

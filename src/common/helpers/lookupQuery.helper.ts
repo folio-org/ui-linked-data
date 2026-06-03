@@ -3,7 +3,7 @@ import { formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
 
 import { loadSimpleLookup } from './api.helper';
 
-export const lookupQueryOptions = (uri: string) => ({
+export const generateLookupQueryOptions = (uri: string) => ({
   queryKey: ['lookup', uri] as const,
   queryFn: async (): Promise<MultiselectOption[]> => {
     const response = await loadSimpleLookup(uri);

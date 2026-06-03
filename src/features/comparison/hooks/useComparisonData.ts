@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 
-import { lookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
+import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { SharedInfraContext } from '@/contexts';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
@@ -18,7 +18,7 @@ export const useComparisonData = (resourceIds: string[]) => {
     queries: resourceIds.map(id => ({
       queryKey: ['preview', 'comparison', id],
       queryFn: ({ signal }: { signal: AbortSignal }) => {
-        const loadLookup = (uri: string) => queryClient.ensureQueryData(lookupQueryOptions(uri));
+        const loadLookup = (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri));
 
         return fetchAndBuildPreview({
           resourceId: id,
