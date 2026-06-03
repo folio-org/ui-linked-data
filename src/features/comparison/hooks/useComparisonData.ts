@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 
-import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { SharedInfraContext } from '@/contexts';
 
 import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';

@@ -6,9 +6,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { DUPLICATE_RESOURCE_TEMPLATE } from '@/common/constants/resourceTemplates.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
-import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
 import { applyIntlToTemplates } from '@/common/helpers/recordFormatting.helper';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { createSchemaPipeline } from '@/common/services/pipeline';
 import { SharedInfraContext } from '@/contexts';
 

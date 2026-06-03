@@ -19,8 +19,8 @@ import {
   filterLookupOptionsByMappedValue,
   filterLookupOptionsByParentBlock,
 } from '@/common/helpers/lookupOptions.helper';
-import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';

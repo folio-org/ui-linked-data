@@ -2,8 +2,8 @@ import { FC, type ReactElement, useCallback, useMemo, useRef } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { generateLookupQueryOptions } from '@/common/helpers/lookupQuery.helper';
 import { useCommonStatus } from '@/common/hooks/useCommonStatus';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { createSchemaPipeline } from '@/common/services/pipeline';
 import { SchemaPipelineContext, SharedInfraContext } from '@/contexts';
 

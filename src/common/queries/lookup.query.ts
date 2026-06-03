@@ -1,7 +1,6 @@
+import { loadSimpleLookup } from '@/common/helpers/api.helper';
 import { alphabeticSortLabel } from '@/common/helpers/common.helper';
 import { formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
-
-import { loadSimpleLookup } from './api.helper';
 
 export const generateLookupQueryOptions = (uri: string) => ({
   queryKey: ['lookup', uri] as const,
