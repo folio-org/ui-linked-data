@@ -1,4 +1,4 @@
-import { schemaWithDuplicatesService } from '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { schemaWithDuplicatesService } from '@/test/__mocks__/common/hooks/useSchemaPipeline.mock';
 
 import { act, renderHook } from '@testing-library/react';
 

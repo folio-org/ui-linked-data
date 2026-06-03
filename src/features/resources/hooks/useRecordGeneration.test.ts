@@ -1,4 +1,4 @@
-import { recordGeneratorService } from '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import { recordGeneratorService } from '@/test/__mocks__/common/hooks/useSchemaPipeline.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';

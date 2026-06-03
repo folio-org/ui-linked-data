@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 
-import { ServicesContext } from '@/contexts';
+import { SchemaPipelineContext } from '@/contexts';
 
 export const userValuesService = {
   set: jest.fn(),
@@ -23,12 +23,6 @@ export const schemaWithDuplicatesService = {
   duplicateEntry: jest.fn(),
 } as unknown as ISchemaWithDuplicatesService;
 
-export const lookupCacheService = {
-  save: jest.fn(),
-  getAll: jest.fn(),
-  getById: jest.fn(),
-} as unknown as ILookupCacheService;
-
 export const recordNormalizingService = {
   init: jest.fn(),
   get: jest.fn(),
@@ -40,17 +34,22 @@ export const recordToSchemaMappingService = {
 } as IRecordToSchemaMappingService;
 
 export const MockServicesProvider = ({ children }: { children: ReactNode }) => {
-  const servicesValue = useMemo(
+  const pipelineValue = useMemo(
     () => ({
       userValuesService,
       selectedEntriesService,
       schemaWithDuplicatesService,
-      lookupCacheService,
       recordNormalizingService,
       recordToSchemaMappingService,
+      recordGeneratorService: { generate: jest.fn() } as unknown as IRecordGeneratorService,
+      schemaGeneratorService: { init: jest.fn(), get: jest.fn(), generate: jest.fn() } as ISchemaGeneratorService,
     }),
     [],
   );
 
-  return <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>;
+  return (
+    <SchemaPipelineContext.Provider value={pipelineValue as SchemaPipelineServices}>
+      {children}
+    </SchemaPipelineContext.Provider>
+  );
 };
