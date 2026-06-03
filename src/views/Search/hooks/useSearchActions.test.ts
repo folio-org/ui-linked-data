@@ -1,21 +1,17 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { ResourceType } from '@/common/constants/record.constants';
-import { StatusType } from '@/common/constants/status.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
-import { logger } from '@/common/services/logger';
-import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useInputsStore, useLoadingStateStore, useSearchStore, useStatusStore, useUIStore } from '@/store';
+import { useUIStore } from '@/store';
 
 import { useSearchActions } from './useSearchActions';
 
 const mockOnCreateNewResource = jest.fn();
-const mockFetchRecord = jest.fn();
 const mockUseNavigate = jest.fn();
 const mockNavigateToManageProfileSettings = jest.fn();
 
@@ -31,57 +27,18 @@ jest.mock('@/features/manageProfileSettings/hooks/useNavigateToManageProfileSett
   }),
 }));
 
-jest.mock('@/common/hooks/useRecordControls', () => ({
-  useRecordControls: () => ({
-    fetchRecord: mockFetchRecord,
-  }),
-}));
-
-jest.mock('@/common/services/logger', () => ({
-  logger: {
-    error: jest.fn(),
-  },
-}));
-
-jest.mock('@/common/services/userNotification', () => ({
-  UserNotificationFactory: {
-    createMessage: jest.fn(),
-  },
-}));
-
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockUseNavigate,
 }));
 
 describe('useSearchActions', () => {
-  const mockSetIsLoading = jest.fn();
-  const mockResetPreviewContent = jest.fn();
   const mockSetFullDisplayComponentType = jest.fn();
   const mockSetIsImportModalOpen = jest.fn();
   const mockSetImportModalFilterType = jest.fn();
-  const mockAddStatusMessagesItem = jest.fn();
 
   beforeEach(() => {
     setInitialGlobalState([
-      {
-        store: useSearchStore,
-        state: {
-          selectedInstances: ['instance_1', 'instance_2'],
-        },
-      },
-      {
-        store: useLoadingStateStore,
-        state: {
-          setIsLoading: mockSetIsLoading,
-        },
-      },
-      {
-        store: useInputsStore,
-        state: {
-          resetPreviewContent: mockResetPreviewContent,
-        },
-      },
       {
         store: useUIStore,
         state: {
@@ -91,50 +48,16 @@ describe('useSearchActions', () => {
           setImportModalFilterType: mockSetImportModalFilterType,
         },
       },
-      {
-        store: useStatusStore,
-        state: {
-          addStatusMessagesItem: mockAddStatusMessagesItem,
-        },
-      },
     ]);
-
-    mockFetchRecord.mockResolvedValue(undefined);
   });
 
   describe('handlePreviewMultiple', () => {
-    test('Fetches records for preview in reversed order', async () => {
+    test('opens comparison view', () => {
       const { result } = renderHook(() => useSearchActions());
 
-      await result.current.handlePreviewMultiple();
+      result.current.handlePreviewMultiple();
 
-      await waitFor(() => {
-        expect(mockSetIsLoading).toHaveBeenCalledWith(true);
-        expect(mockResetPreviewContent).toHaveBeenCalled();
-        expect(mockSetFullDisplayComponentType).toHaveBeenCalledWith(FullDisplayType.Comparison);
-        expect(mockFetchRecord).toHaveBeenCalledTimes(2);
-        expect(mockFetchRecord).toHaveBeenNthCalledWith(1, 'instance_2', {});
-        expect(mockFetchRecord).toHaveBeenNthCalledWith(2, 'instance_1', {});
-        expect(mockSetIsLoading).toHaveBeenCalledWith(false);
-      });
-    });
-
-    test('Handles error during record fetching', async () => {
-      const error = new Error('Fetch failed');
-      mockFetchRecord.mockRejectedValueOnce(error);
-      const mockMessage = { type: StatusType.error, content: 'error' };
-      (UserNotificationFactory.createMessage as jest.Mock).mockReturnValue(mockMessage);
-
-      const { result } = renderHook(() => useSearchActions());
-
-      await result.current.handlePreviewMultiple();
-
-      await waitFor(() => {
-        expect(logger.error).toHaveBeenCalledWith('Error fetching records for preview:', error);
-        expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(StatusType.error, 'ld.errorFetching');
-        expect(mockAddStatusMessagesItem).toHaveBeenCalledWith(mockMessage);
-        expect(mockSetIsLoading).toHaveBeenCalledWith(false);
-      });
+      expect(mockSetFullDisplayComponentType).toHaveBeenCalledWith(FullDisplayType.Comparison);
     });
   });
 

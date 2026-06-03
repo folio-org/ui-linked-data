@@ -80,6 +80,8 @@ export class UserValuesService implements IUserValues {
   }
 
   private async generateValue() {
+    this.generatedValue = undefined;
+
     try {
       const typedValue = { ...this.value } as UserValueDTO;
       this.generatedValue = await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });

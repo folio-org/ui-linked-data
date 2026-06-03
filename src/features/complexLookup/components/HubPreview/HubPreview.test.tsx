@@ -37,7 +37,7 @@ jest.mock('@/features/search/ui', () => ({
   ),
 }));
 
-jest.mock('@/components/Preview', () => ({
+jest.mock('@/features/preview', () => ({
   Preview: ({
     altSchema,
     altUserValues,

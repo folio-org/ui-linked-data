@@ -6,14 +6,13 @@ import {
   RESOURCE_EDIT_CREATE_URLS,
 } from '@/common/constants/routes.constants';
 import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
-import { EditControlPane } from '@/components/EditControlPane';
-import { PreviewExternalResourcePane } from '@/components/PreviewExternalResourcePane';
-import { ViewMarcControlPane } from '@/components/ViewMarcControlPane';
+import { PreviewExternalResourcePane } from '@/views/ExternalResource/components/PreviewExternalResourcePane';
 
+import { EditControlPane, ViewMarcControlPane } from '@/features/edit';
 import { HubImportNavPane } from '@/features/hubImport';
 import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
 
-import { useInputsState, useMarcPreviewState } from '@/store';
+import { useMarcPreviewState } from '@/store';
 
 import './Nav.scss';
 
@@ -23,12 +22,8 @@ export const Nav = () => {
   const isHubImportOpen = useRoutePathPattern(HUB_IMPORT_URLS);
   const isManageProfileSettingsOpen = useRoutePathPattern(MANAGE_PROFILE_SETTINGS_URLS);
   const { basicValue: marcPreviewData } = useMarcPreviewState(['basicValue']);
-  const { record } = useInputsState(['record']);
   const isVisible =
-    isEditSectionOpen ||
-    (isExternalResourceSectionOpen && record) ||
-    (isHubImportOpen && record) ||
-    isManageProfileSettingsOpen;
+    isEditSectionOpen || isExternalResourceSectionOpen || isHubImportOpen || isManageProfileSettingsOpen;
 
   return (
     isVisible && (
