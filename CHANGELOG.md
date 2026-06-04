@@ -6,6 +6,7 @@
 * Refactor resource loading. Refs [UILD-816].
 * Fix duplicate Work cannot be saved. Fixes [UILD-821].
 * Refactor services providers and simple lookup data loading. Refs [UILD-816].
+* Refactor imports and add import boundary rules. Refs [UILD-816].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 [UILD-816]:https://folio-org.atlassian.net/browse/UILD-816
