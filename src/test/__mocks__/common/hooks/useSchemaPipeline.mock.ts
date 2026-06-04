@@ -20,12 +20,6 @@ export const schemaWithDuplicatesService = {
   deleteEntry: jest.fn(),
 } as unknown as ISchemaWithDuplicatesService;
 
-export const lookupCacheService = {
-  save: jest.fn(),
-  getAll: jest.fn(),
-  getById: jest.fn(),
-} as unknown as ILookupCacheService;
-
 export const recordNormalizingService = {
   init: jest.fn(),
   get: jest.fn(),
@@ -46,12 +40,11 @@ export const schemaGeneratorService = {
   generate: jest.fn(),
 } as ISchemaGeneratorService;
 
-jest.mock('@/common/hooks/useServicesContext.ts', () => ({
-  useServicesContext: () => ({
+jest.mock('@/common/hooks/useSchemaPipeline', () => ({
+  useSchemaPipeline: () => ({
     userValuesService,
     selectedEntriesService,
     schemaWithDuplicatesService,
-    lookupCacheService,
     recordNormalizingService,
     recordToSchemaMappingService,
     recordGeneratorService,

@@ -17,8 +17,8 @@ import { useMarcValidation } from './useMarcValidation';
 jest.mock('./useMarcValidation');
 jest.mock('./useMarcAssignment');
 jest.mock('./useComplexLookupValidation');
-jest.mock('@/common/hooks/useServicesContext', () => ({
-  useServicesContext: () => ({
+jest.mock('@/common/hooks/useSchemaPipeline', () => ({
+  useSchemaPipeline: () => ({
     selectedEntriesService: {
       get: jest.fn().mockReturnValue(['entry1']),
       set: jest.fn(),

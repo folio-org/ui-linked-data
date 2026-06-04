@@ -1,16 +1,18 @@
-import { FC, type ReactElement, useMemo, useRef } from 'react';
+import { FC, type ReactElement, useCallback, useMemo, useRef } from 'react';
+
+import { useQueryClient } from '@tanstack/react-query';
 
 import { useCommonStatus } from '@/common/hooks/useCommonStatus';
-import { useLookupCacheService } from '@/common/hooks/useLookupCache.hook';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { createSchemaPipeline } from '@/common/services/pipeline';
-import { SchemaPipelineContext, ServicesContext, SharedInfraContext } from '@/contexts';
+import { SchemaPipelineContext, SharedInfraContext } from '@/contexts';
 
 type ServicesProviderProps = {
   children: ReactElement<unknown>;
 };
 
 export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
-  const lookupCacheService = useLookupCacheService();
+  const queryClient = useQueryClient();
   const rawCommonStatus = useCommonStatus();
   const commonStatusRef = useRef(rawCommonStatus);
   commonStatusRef.current = rawCommonStatus;
@@ -19,23 +21,18 @@ export const ServicesProvider: FC<ServicesProviderProps> = ({ children }) => {
     [],
   );
 
-  const sharedInfra = useMemo<SharedInfraServices>(
-    () => ({ lookupCacheService, commonStatusService }),
-    [lookupCacheService, commonStatusService],
+  const sharedInfra = useMemo<SharedInfraServices>(() => ({ commonStatusService }), [commonStatusService]);
+
+  const loadLookup = useCallback(
+    (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri)),
+    [queryClient],
   );
 
-  const pipeline = useMemo(() => createSchemaPipeline(sharedInfra), [sharedInfra]);
-
-  const servicesValue = useMemo(
-    () => ({ ...pipeline, lookupCacheService, commonStatusService }),
-    [pipeline, lookupCacheService, commonStatusService],
-  );
+  const pipeline = useMemo(() => createSchemaPipeline(sharedInfra, loadLookup), [sharedInfra, loadLookup]);
 
   return (
     <SharedInfraContext.Provider value={sharedInfra}>
-      <SchemaPipelineContext.Provider value={pipeline}>
-        <ServicesContext.Provider value={servicesValue}>{children}</ServicesContext.Provider>
-      </SchemaPipelineContext.Provider>
+      <SchemaPipelineContext.Provider value={pipeline}>{children}</SchemaPipelineContext.Provider>
     </SharedInfraContext.Provider>
   );
 };

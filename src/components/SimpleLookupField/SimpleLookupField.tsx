@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
   ActionMeta,
@@ -11,11 +11,16 @@ import {
 } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { useQuery } from '@tanstack/react-query';
+
 import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { filterLookupOptionsByParentBlock } from '@/common/helpers/lookupOptions.helper';
-import { useSimpleLookupData } from '@/common/hooks/useSimpleLookupData';
+import {
+  filterLookupOptionsByMappedValue,
+  filterLookupOptionsByParentBlock,
+} from '@/common/helpers/lookupOptions.helper';
 import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
+import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';
@@ -72,11 +77,24 @@ export const SimpleLookupField: FC<Props> = ({
   propertyUri,
   parentBlockUri,
 }) => {
-  const { getLookupData, loadLookupData } = useSimpleLookupData();
-  const loadedOptions = getLookupData()?.[uri] || [];
+  const [menuOpened, setMenuOpened] = useState(false);
+  const {
+    data: rawOptions = [],
+    isFetching: isLoading,
+    isError,
+  } = useQuery({ ...generateLookupQueryOptions(uri), enabled: menuOpened });
+  const loadedOptions = filterLookupOptionsByMappedValue(rawOptions, propertyUri, parentGroupUri);
   const options = filterLookupOptionsByParentBlock(loadedOptions, propertyUri, parentBlockUri, parentGroupUri);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const { simpleLookupRef, forceDisplayOptionsAtTheTop } = useSimpleLookupObserver();
+
+  const handleMenuOpen = useCallback(() => setMenuOpened(true), []);
+
+  useEffect(() => {
+    if (isError) {
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
+    }
+  }, [isError, addStatusMessagesItem]);
 
   const userValuesToMultiselect = (value: UserValueContents[] | undefined) => {
     return value?.map(({ label = '', meta: { uri, basicLabel } = {} }) => ({
@@ -102,24 +120,6 @@ export const SimpleLookupField: FC<Props> = ({
   const [localValueSingle, setLocalValueSingle] = useState<MultiselectOption | undefined>(
     userValuesToMultiselect(value)?.[0],
   );
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const loadOptions = async (): Promise<void> => {
-    if (options?.length) return;
-
-    setIsLoading(true);
-
-    try {
-      await loadLookupData(uri, propertyUri, parentGroupUri);
-    } catch (error) {
-      console.error('Cannot load data for the Lookup:', error);
-
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadSimpleLookupData'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // Uncomment if uncontrolled options are required/supported
   // const getOptionLabel = (option: MultiselectOption): string =>
@@ -153,7 +153,7 @@ export const SimpleLookupField: FC<Props> = ({
       components={{ DropdownIndicator, MultiValueRemove, ClearIndicator }}
       isDisabled={isDisabled || !SIMPLE_LOOKUPS_ENABLED}
       options={options}
-      onMenuOpen={loadOptions}
+      onMenuOpen={handleMenuOpen}
       // Uncomment if uncontrolled options are required/supported
       // getOptionLabel={getOptionLabel}
       // Remove the line below once uncontrolled options are required/supported
