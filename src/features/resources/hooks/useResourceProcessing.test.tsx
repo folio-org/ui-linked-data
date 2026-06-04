@@ -1,3 +1,6 @@
+import { ReactNode } from 'react';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook } from '@testing-library/react';
 
 import { getEditingRecordBlocks } from '@/common/helpers/record.helper';
@@ -40,14 +43,31 @@ jest.mock('@/common/helpers/recordFormatting.helper', () => ({
 
 const mockProcessedResource = { schema: {}, userValues: {} } as unknown as import('../types').ProcessedResource;
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+      },
+    },
+  });
+
+  return ({ children }: { children: ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
+
 describe('useResourceProcessing', () => {
+  let wrapper: ReturnType<typeof createWrapper>;
+
   beforeEach(() => {
+    wrapper = createWrapper();
     (buildProcessedResourceModule.buildProcessedResource as jest.Mock).mockResolvedValue(mockProcessedResource);
     (getEditingRecordBlocks as jest.Mock).mockReturnValue(undefined);
   });
 
   it('calls buildProcessedResource with typeParam and profileIdParam from URL', async () => {
-    const { result } = renderHook(() => useResourceProcessing());
+    const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({});
 
@@ -61,7 +81,7 @@ describe('useResourceProcessing', () => {
 
   it('forwards record to buildProcessedResource', async () => {
     const record = { resource: { key: 'value' } } as unknown as RecordEntry;
-    const { result } = renderHook(() => useResourceProcessing());
+    const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({ record });
 
@@ -75,7 +95,7 @@ describe('useResourceProcessing', () => {
     const record = { resource: { [block]: {} } } as unknown as RecordEntry;
     (getEditingRecordBlocks as jest.Mock).mockReturnValue({ block });
 
-    const { result } = renderHook(() => useResourceProcessing());
+    const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({ record, asClone: true });
 
@@ -88,7 +108,7 @@ describe('useResourceProcessing', () => {
   });
 
   it('passes undefined templateMetadata for asClone without a block', async () => {
-    const { result } = renderHook(() => useResourceProcessing());
+    const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({ asClone: true });
 
@@ -101,7 +121,7 @@ describe('useResourceProcessing', () => {
   });
 
   it('returns the result from buildProcessedResource', async () => {
-    const { result } = renderHook(() => useResourceProcessing());
+    const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     const output = await result.current.processResource({});
 

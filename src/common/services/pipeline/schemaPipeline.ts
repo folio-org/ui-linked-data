@@ -1,4 +1,3 @@
-import { apiClient } from '@/common/api/client';
 import { RecordGenerator } from '@/common/services/recordGenerator';
 import { RecordNormalizingService } from '@/common/services/recordNormalizing';
 import { RecordToSchemaMappingService } from '@/common/services/recordToSchemaMapping';
@@ -11,14 +10,14 @@ import { EntryPropertiesGeneratorService } from '@/common/services/schema/entryP
 import { SelectedEntriesService } from '@/common/services/selectedEntries';
 import { UserValuesService } from '@/common/services/userValues';
 
-export const createSchemaPipeline = ({
-  lookupCacheService,
-  commonStatusService,
-}: SharedInfraServices): SchemaPipelineServices => {
+export const createSchemaPipeline = (
+  { commonStatusService }: SharedInfraServices,
+  loadLookup: (uri: string) => Promise<MultiselectOption[]>,
+): SchemaPipelineServices => {
   const entryPropertiesGeneratorService = new EntryPropertiesGeneratorService();
   const marcMappingGeneratorService = new MarcMappingGeneratorService();
   const selectedEntriesService = new SelectedEntriesService([]);
-  const userValuesService = new UserValuesService({}, apiClient, lookupCacheService);
+  const userValuesService = new UserValuesService({}, loadLookup);
   const schemaWithDuplicatesService = new SchemaWithDuplicatesService(
     {} as Schema,
     selectedEntriesService,

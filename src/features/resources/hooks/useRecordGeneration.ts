@@ -4,7 +4,7 @@ import { BibframeEntitiesMap } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams } from '@/common/constants/routes.constants';
 import { getSelectedRecordBlocks } from '@/common/helpers/record.helper';
-import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { getDefaultProfileId } from '@/configs/resourceTypes';
 
 import { useInputsState, useProfileState } from '@/store';
@@ -17,7 +17,7 @@ const getReferenceIds = (record: RecordEntry, block: string, referenceKey: strin
 
 export const useRecordGeneration = () => {
   const [searchParams] = useSearchParams();
-  const { recordGeneratorService } = useServicesContext();
+  const { recordGeneratorService } = useSchemaPipeline();
   const { record, userValues, selectedEntries, selectedRecordBlocks } = useInputsState([
     'record',
     'userValues',

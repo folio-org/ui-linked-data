@@ -6,7 +6,6 @@ import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
-import { SchemaPipelineProvider } from '@/providers';
 
 import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@/features/edit';
 import { useEditPage } from '@/features/edit/hooks/useEditPage';
@@ -70,9 +69,7 @@ export const Edit = () => {
         <>
           {showPreviewSection && (
             <ErrorBoundary>
-              <SchemaPipelineProvider>
-                <EditPreview />
-              </SchemaPipelineProvider>
+              <EditPreview />
             </ErrorBoundary>
           )}
           <ErrorBoundary>

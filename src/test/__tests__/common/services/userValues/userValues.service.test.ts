@@ -34,13 +34,12 @@ jest.mock('@/common/services/userValues/userValueTypes/simpleLookup.ts', () => (
 }));
 
 describe('UserValuesService', () => {
-  const apiClient = { loadSimpleLookupData: jest.fn() } as unknown as IApiClient;
-  const cacheService = { save: jest.fn(), getAll: jest.fn(), getById: jest.fn() } as unknown as ILookupCacheService;
+  const loadLookup = jest.fn() as unknown as (uri: string) => Promise<MultiselectOption[]>;
 
   let userValuesService: IUserValues;
 
   beforeEach(() => {
-    userValuesService = new UserValuesService({}, apiClient, cacheService);
+    userValuesService = new UserValuesService({}, loadLookup);
   });
 
   test('sets a user value for Literal field', async () => {

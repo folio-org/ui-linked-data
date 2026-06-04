@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { LOOKUP_TYPES } from '@/common/constants/lookup.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
-import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useInputsState, useMarcPreviewState, useProfileState, useStatusState } from '@/store';
@@ -38,7 +38,7 @@ export function useAuthoritiesAssignment({
 }: UseAuthoritiesAssignmentParams): UseAuthoritiesAssignmentResult {
   const [isAssigning, setIsAssigning] = useState(false);
 
-  const { selectedEntriesService } = useServicesContext() as Required<ServicesParams>;
+  const { selectedEntriesService } = useSchemaPipeline();
   const { schema } = useProfileState(['schema']);
   const { selectedEntries, setSelectedEntries } = useInputsState(['selectedEntries', 'setSelectedEntries']);
   const {

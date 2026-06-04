@@ -2,7 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 
-import { useServicesContext } from '@/common/hooks/useServicesContext';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
@@ -28,8 +28,8 @@ jest.mock('@/features/complexLookup/hooks', () => ({
   useAuthoritiesAssignment: jest.fn(),
 }));
 
-jest.mock('@/common/hooks/useServicesContext', () => ({
-  useServicesContext: jest.fn(),
+jest.mock('@/common/hooks/useSchemaPipeline', () => ({
+  useSchemaPipeline: jest.fn(),
 }));
 
 jest.mock('react-intl', () => ({
@@ -192,7 +192,7 @@ describe('AuthoritiesModal', () => {
       },
     ]);
 
-    (useServicesContext as jest.Mock).mockReturnValue({
+    (useSchemaPipeline as jest.Mock).mockReturnValue({
       selectedEntriesService: {},
     });
     (ComplexLookupHooks.useComplexLookupModalState as jest.Mock).mockReturnValue(undefined);

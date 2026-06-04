@@ -36,6 +36,7 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
     });
@@ -52,6 +53,7 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
     });
@@ -76,6 +78,7 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
     });
@@ -90,6 +93,7 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
     });
@@ -104,6 +108,7 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
       idType: 'INVENTORY_ID' as import('@/common/constants/api.constants').ExternalResourceIdType,
@@ -119,10 +124,11 @@ describe('fetchAndBuildPreview', () => {
       resourceId: 'res-1',
       signal: mockSignal,
       sharedInfra: mockSharedInfra,
+      loadLookup: jest.fn(),
       loadProfile: mockLoadProfile,
       loadProfileSettings: mockLoadProfileSettings,
     });
 
-    expect(pipelineModule.createSchemaPipeline).toHaveBeenCalledWith(mockSharedInfra);
+    expect(pipelineModule.createSchemaPipeline).toHaveBeenCalledWith(mockSharedInfra, expect.any(Function));
   });
 });

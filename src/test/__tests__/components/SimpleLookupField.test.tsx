@@ -1,5 +1,4 @@
-import { MockServicesProvider } from '@/test/__mocks__/providers/ServicesProvider.mock';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -7,24 +6,14 @@ import { SimpleLookupField } from '@/components/SimpleLookupField';
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
 
-jest.mock('@/common/hooks/useSimpleLookupData', () => ({
-  useSimpleLookupData: () => ({
-    getLookupData: jest.fn().mockReturnValue({
-      lookupUri: [
-        {
-          label: 'value-1',
-        },
-        {
-          label: 'value-2',
-        },
-        {
-          label: 'value-3',
-        },
-      ],
-    }),
-    loadLookupData: jest.fn(),
-  }),
-}));
+const mockOptions = [
+  { label: 'value-1', value: { label: 'value-1', uri: 'uri-1' }, __isNew__: false },
+  { label: 'value-2', value: { label: 'value-2', uri: 'uri-2' }, __isNew__: false },
+  { label: 'value-3', value: { label: 'value-3', uri: 'uri-3' }, __isNew__: false },
+];
+
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+queryClient.setQueryData(['lookup', 'lookupUri'], mockOptions);
 
 describe('Simple lookup field', () => {
   const renderScreen = (isMulti: boolean) => {
@@ -38,9 +27,9 @@ describe('Simple lookup field', () => {
     ];
 
     return render(
-      <MockServicesProvider>
+      <QueryClientProvider client={queryClient}>
         <SimpleLookupField uri="lookupUri" uuid="uuid1" onChange={() => {}} value={initialValue} isMulti={isMulti} />
-      </MockServicesProvider>,
+      </QueryClientProvider>,
     );
   };
 

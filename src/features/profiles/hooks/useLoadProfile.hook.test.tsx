@@ -1,4 +1,4 @@
-import '@/test/__mocks__/common/hooks/useServicesContext.mock';
+import '@/test/__mocks__/common/hooks/useSchemaPipeline.mock';
 
 import { ReactNode } from 'react';
 

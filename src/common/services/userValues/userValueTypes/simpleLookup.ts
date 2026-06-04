@@ -1,35 +1,26 @@
 import { BFLITE_TYPES_MAP, BFLITE_URIS, DEFAULT_GROUP_VALUES } from '@/common/constants/bibframeMapping.constants';
-import { alphabeticSortLabel } from '@/common/helpers/common.helper';
-import { filterLookupOptionsByMappedValue, formatLookupOptions } from '@/common/helpers/lookupOptions.helper';
+import { filterLookupOptionsByMappedValue } from '@/common/helpers/lookupOptions.helper';
 
 import { logger } from '../../logger';
 import { UserValueType } from './userValueType';
 import { IUserValueType } from './userValueType.interface';
 
 export class SimpleLookupUserValueService extends UserValueType implements IUserValueType {
-  private static pendingFetches = new Map<string, Promise<void>>();
-
-  private uri?: string;
-  private groupUri?: string;
-  private propertyUri?: string;
   private loadedData?: MultiselectOption[];
   private contents?: UserValueContents[];
 
-  constructor(
-    private readonly apiClient: IApiClient,
-    private readonly cacheService: ILookupCacheService,
-  ) {
+  constructor(private readonly loadLookup: (uri: string) => Promise<MultiselectOption[]>) {
     super();
   }
 
   async generate({ data, uri, uuid, uriSelector, type, propertyUri, groupUri, fieldUri }: UserValueDTO) {
-    this.uri = uri;
-    this.groupUri = groupUri;
-    this.propertyUri = propertyUri;
-    const cachedData = this.getCachedData();
+    try {
+      const allOptions = await this.loadLookup(uri as string);
 
-    if (!cachedData) {
-      await this.loadData();
+      this.loadedData = filterLookupOptionsByMappedValue(allOptions, propertyUri, groupUri);
+    } catch (error) {
+      logger.error('Lookup fetch failed — generate() continues with record labels only', error);
+      this.loadedData = [];
     }
 
     this.contents = [];
@@ -123,12 +114,10 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
         : itemUri;
 
     // Check if the loaded options contain a value from the record
-    const loadedOption = this.cacheService
-      .getById(uri as string)
-      ?.find(
-        ({ label: optionLabel, value }) =>
-          value.uri === mappedUri || (label && value.label === label) || (label && optionLabel === label),
-      );
+    const loadedOption = this.loadedData?.find(
+      ({ label: optionLabel, value }) =>
+        value.uri === mappedUri || (label && value.label === label) || (label && optionLabel === label),
+    );
 
     // Use a default empty string if label is undefined
     const safeLabel = label || '';
@@ -145,51 +134,5 @@ export class SimpleLookupUserValueService extends UserValueType implements IUser
     };
 
     this.contents?.push(contentItem);
-  }
-
-  private getCachedData() {
-    return this.uri ? this.cacheService.getById(this.uri) : undefined;
-  }
-
-  private saveLoadedData() {
-    if (!this.uri || !this.loadedData) return;
-
-    this.cacheService.save(this.uri, this.loadedData);
-  }
-
-  private async loadData() {
-    const uri = this.uri as string;
-
-    const pending = SimpleLookupUserValueService.pendingFetches.get(uri);
-    if (pending) {
-      await pending;
-      return;
-    }
-
-    const fetchPromise = this.fetchAndCache();
-    SimpleLookupUserValueService.pendingFetches.set(uri, fetchPromise);
-
-    try {
-      await fetchPromise;
-    } finally {
-      SimpleLookupUserValueService.pendingFetches.delete(uri);
-    }
-  }
-
-  private async fetchAndCache() {
-    try {
-      const response = await this.apiClient.loadSimpleLookupData(this.uri as string);
-
-      if (!response) return;
-
-      const formattedLookupData = formatLookupOptions(response, this.uri);
-      const filteredLookupData = filterLookupOptionsByMappedValue(formattedLookupData, this.propertyUri, this.groupUri);
-
-      this.loadedData = filteredLookupData?.toSorted(alphabeticSortLabel);
-
-      this.saveLoadedData();
-    } catch (error) {
-      logger.error('Lookup fetch failed — generate() continues with record labels only', error);
-    }
   }
 }

@@ -6,6 +6,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
 
 import { routes } from '@/App';
@@ -310,10 +311,22 @@ describe('EditSection', () => {
       },
     ]);
 
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
     return render(
-      <ServicesProvider>
-        <RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })} />
-      </ServicesProvider>,
+      <QueryClientProvider client={queryClient}>
+        <ServicesProvider>
+          <RouterProvider
+            router={createMemoryRouter(routes, { initialEntries: ['/resources/create?type=instance'] })}
+          />
+        </ServicesProvider>
+      </QueryClientProvider>,
     );
   };
 
