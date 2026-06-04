@@ -1,10 +1,6 @@
 import { SearchQueryParams } from '@/common/constants/routes.constants';
-import {
-  AdvancedSearchQualifiers,
-  AdvancedSearchSchema,
-  SearchIdentifiers,
-  TitleTypes,
-} from '@/common/constants/search.constants';
+import { AdvancedSearchQualifiers, AdvancedSearchSchema, SearchIdentifiers } from '@/common/constants/search.constants';
+import { getTitle } from '@/common/helpers/search.helper';
 import { Row } from '@/components/Table';
 
 type CompositePrimitiveKeyPart = string | number | boolean | null | undefined;
@@ -35,12 +31,6 @@ export const createCompositeKeyBuilder = () => {
 
 export const findIdentifier = (id: SearchIdentifiers, identifiers?: { value?: string; type?: string }[]) =>
   identifiers?.find(({ type }) => type === id.toUpperCase())?.value;
-
-export const getTitle = (titles: GenericStructDTO<TitleType>[] | undefined) => {
-  const mainTitle = titles?.find(({ type }) => type === TitleTypes.Main)?.value;
-  const subTitle = titles?.find(({ type }) => type === TitleTypes.Sub)?.value;
-  return [mainTitle, subTitle].filter(t => !!t).join(' ');
-};
 
 export const formatItemSearchInstanceListData = (instanceList: InstanceAsSearchResultDTO[]): Row[] => {
   const buildFallbackKey = createCompositeKeyBuilder();

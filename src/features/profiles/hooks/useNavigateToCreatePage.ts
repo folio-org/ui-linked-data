@@ -2,12 +2,11 @@ import { useRef } from 'react';
 
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { generatePageURL } from '@/common/helpers/navigation.helper';
-
-import { useProfileSelection } from '@/features/profiles';
+import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 
 import { useNavigationState } from '@/store';
 
-import { useNavigateToEditPage } from './useNavigateToEditPage';
+import { useProfileSelection } from './useProfileSelection';
 
 export const useNavigateToCreatePage = () => {
   const { navigateToEditPage } = useNavigateToEditPage();

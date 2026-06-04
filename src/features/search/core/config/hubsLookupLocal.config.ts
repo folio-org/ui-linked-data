@@ -1,6 +1,5 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
-
-import { HUB_LOCAL_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
+import { HUB_LOCAL_SEARCHABLE_INDICES_MAP } from '@/common/constants/searchableIndices.constants';
 
 import { HubsLocalRequestBuilder } from '../strategies/requestBuilders';
 import { HubLocalResponseTransformer } from '../strategies/responseTransformers';

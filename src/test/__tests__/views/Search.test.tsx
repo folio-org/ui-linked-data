@@ -22,7 +22,7 @@ mockIsEmbeddedMode(false);
 mockSearchFiltersEnabled(false);
 
 const onCreateNewResource = jest.fn();
-jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
+jest.mock('@/features/profiles/hooks/useNavigateToCreatePage', () => ({
   useNavigateToCreatePage: () => ({
     onCreateNewResource,
   }),

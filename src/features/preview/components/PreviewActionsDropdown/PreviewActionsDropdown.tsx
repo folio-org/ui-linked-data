@@ -2,9 +2,10 @@ import { FC } from 'react';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Dropdown } from '@/components/Dropdown';
+
+import { useNavigateToCreatePage } from '@/features/profiles';
 
 import Duplicate16 from '@/assets/duplicate-16.svg?react';
 import Edit16 from '@/assets/edit-16.svg?react';

@@ -4,8 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { Loading } from '@/components/Loading';
 
 import { MarcPreview } from '@/features/complexLookup/components/MarcPreview';
-import { AuthoritiesResultList } from '@/features/search/ui';
-import { Search } from '@/features/search/ui/components/Search';
+import { AuthoritiesResultList, Search } from '@/features/search/ui';
 
 interface AuthoritiesContentProps {
   isMarcPreviewOpen: boolean;

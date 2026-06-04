@@ -11,8 +11,7 @@ import {
   useComplexLookupModalState,
   useModalWithHubPreview,
 } from '@/features/complexLookup/hooks';
-import { SOURCE_OPTIONS } from '@/features/search/ui';
-import { Search } from '@/features/search/ui/components/Search';
+import { SOURCE_OPTIONS, Search } from '@/features/search/ui';
 
 interface SubjectModalProps {
   isOpen: boolean;

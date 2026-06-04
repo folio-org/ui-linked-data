@@ -4,12 +4,13 @@ import { act, renderHook } from '@testing-library/react';
 
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import * as navigationHelper from '@/common/helpers/navigation.helper';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 
 import { useProfileSelection } from '@/features/profiles';
 
 import { useNavigationState } from '@/store';
+
+import { useNavigateToCreatePage } from './useNavigateToCreatePage';
 
 jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: jest.fn(),

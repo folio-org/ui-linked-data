@@ -4,10 +4,11 @@ import { FormattedMessage } from 'react-intl';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
 import { formatDependeciesTable } from '@/common/helpers/recordFormatting.helper';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 import { Row, Table } from '@/components/Table';
+
+import { useNavigateToCreatePage } from '@/features/profiles';
 
 import './InstancesList.scss';
 
@@ -78,7 +79,7 @@ export const InstancesList: FC<IInstancesList> = ({ contents: { entries } = {}, 
       };
     });
 
-  const formattedInstances = applyActionItems(formatDependeciesTable(entries ?? []));
+  const formattedInstances = applyActionItems(formatDependeciesTable(entries ?? []) as Row[]);
 
   return (
     <div className="instances-list" data-testid="instances-list">

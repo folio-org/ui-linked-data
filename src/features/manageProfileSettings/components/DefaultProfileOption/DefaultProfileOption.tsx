@@ -3,9 +3,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 
-import { useManageProfileSettingsState } from '@/store';
+import { usePreferredProfiles } from '@/features/profiles';
 
-import { usePreferredProfiles } from '../../hooks/usePreferredProfiles';
+import { useManageProfileSettingsState } from '@/store';
 
 import './DefaultProfileOption.scss';
 
