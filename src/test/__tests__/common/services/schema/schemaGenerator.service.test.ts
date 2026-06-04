@@ -6,6 +6,7 @@ import { generateEmptyValueUuid } from '@/common/helpers/schema.helper';
 import { SchemaGeneratorService } from '@/common/services/schema';
 
 jest.mock('uuid');
+jest.mock('@/common/helpers/schema.helper');
 jest.mock('@/features/complexLookup/utils/complexLookup.helper');
 
 describe('SchemaGeneratorService', () => {

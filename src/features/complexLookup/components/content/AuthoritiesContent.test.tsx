@@ -6,7 +6,7 @@ jest.mock('@/components/Loading', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
 }));
 
-jest.mock('@/features/search/ui/components/Search', () => {
+jest.mock('@/features/search/ui', () => {
   const MockSearch = Object.assign(
     ({ children }: { children: React.ReactNode }) => <div data-testid="search">{children}</div>,
     {
@@ -20,32 +20,31 @@ jest.mock('@/features/search/ui/components/Search', () => {
     },
   );
 
-  return { Search: MockSearch };
+  return {
+    Search: MockSearch,
+    AuthoritiesResultList: ({
+      context,
+      notSpecifiedLabel,
+      onAssign,
+      onTitleClick,
+      checkFailedId,
+    }: {
+      context: string;
+      notSpecifiedLabel?: string;
+      onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+      onTitleClick: (id: string) => void;
+      checkFailedId?: (id?: string) => boolean;
+    }) => (
+      <div data-testid="authorities-result-list">
+        <span>{context}</span>
+        {notSpecifiedLabel && <span data-testid="not-specified-label">{notSpecifiedLabel}</span>}
+        <button onClick={() => onAssign({ id: 'auth_1', title: 'Authority 1' })}>Assign Authority</button>
+        <button onClick={() => onTitleClick('auth_1')}>View MARC</button>
+        {checkFailedId && <span data-testid="has-check-failed-id">has checkFailedId</span>}
+      </div>
+    ),
+  };
 });
-
-jest.mock('@/features/search/ui', () => ({
-  AuthoritiesResultList: ({
-    context,
-    notSpecifiedLabel,
-    onAssign,
-    onTitleClick,
-    checkFailedId,
-  }: {
-    context: string;
-    notSpecifiedLabel?: string;
-    onAssign: (record: ComplexLookupAssignRecordDTO) => void;
-    onTitleClick: (id: string) => void;
-    checkFailedId?: (id?: string) => boolean;
-  }) => (
-    <div data-testid="authorities-result-list">
-      <span>{context}</span>
-      {notSpecifiedLabel && <span data-testid="not-specified-label">{notSpecifiedLabel}</span>}
-      <button onClick={() => onAssign({ id: 'auth_1', title: 'Authority 1' })}>Assign Authority</button>
-      <button onClick={() => onTitleClick('auth_1')}>View MARC</button>
-      {checkFailedId && <span data-testid="has-check-failed-id">has checkFailedId</span>}
-    </div>
-  ),
-}));
 
 jest.mock('@/features/complexLookup/components/MarcPreview', () => ({
   MarcPreview: ({
