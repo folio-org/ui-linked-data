@@ -64,7 +64,7 @@ jest.mock('@/components/Modal', () => ({
 
 let capturedSearchOnSubmitCallback: (() => void) | undefined;
 
-jest.mock('@/features/search/ui/components/Search', () => {
+jest.mock('@/features/search/ui', () => {
   const MockSearch = Object.assign(
     ({ children, onSubmitCallback }: { children: React.ReactNode; onSubmitCallback?: () => void }) => {
       capturedSearchOnSubmitCallback = onSubmitCallback;
@@ -87,29 +87,28 @@ jest.mock('@/features/search/ui/components/Search', () => {
     },
   );
 
-  return { Search: MockSearch };
+  return {
+    Search: MockSearch,
+    AuthoritiesResultList: ({
+      context,
+      notSpecifiedLabel,
+      onAssign,
+      onTitleClick,
+    }: {
+      context: string;
+      notSpecifiedLabel?: string;
+      onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+      onTitleClick: (id: string, title?: string, headingType?: string) => void;
+    }) => (
+      <div data-testid="authorities-result-list">
+        <span>{context}</span>
+        {notSpecifiedLabel && <span data-testid="not-specified-label">{notSpecifiedLabel}</span>}
+        <button onClick={() => onAssign({ id: 'auth-1', title: 'Authority 1' })}>Assign Authority</button>
+        <button onClick={() => onTitleClick('auth-1', 'Authority 1', 'Personal Name')}>View MARC</button>
+      </div>
+    ),
+  };
 });
-
-jest.mock('@/features/search/ui', () => ({
-  AuthoritiesResultList: ({
-    context,
-    notSpecifiedLabel,
-    onAssign,
-    onTitleClick,
-  }: {
-    context: string;
-    notSpecifiedLabel?: string;
-    onAssign: (record: ComplexLookupAssignRecordDTO) => void;
-    onTitleClick: (id: string, title?: string, headingType?: string) => void;
-  }) => (
-    <div data-testid="authorities-result-list">
-      <span>{context}</span>
-      {notSpecifiedLabel && <span data-testid="not-specified-label">{notSpecifiedLabel}</span>}
-      <button onClick={() => onAssign({ id: 'auth-1', title: 'Authority 1' })}>Assign Authority</button>
-      <button onClick={() => onTitleClick('auth-1', 'Authority 1', 'Personal Name')}>View MARC</button>
-    </div>
-  ),
-}));
 
 jest.mock('@/features/complexLookup/components/MarcPreview', () => ({
   MarcPreview: ({ onClose }: { onClose: () => void }) => (

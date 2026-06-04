@@ -6,7 +6,7 @@ import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import * as navigationHelper from '@/common/helpers/navigation.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 
-import { useProfileSelection } from '@/features/profiles';
+import { useProfileSelection } from '@/features/profiles/hooks/useProfileSelection';
 
 import { useNavigationState } from '@/store';
 
@@ -16,8 +16,7 @@ jest.mock('@/common/hooks/useNavigateToEditPage', () => ({
   useNavigateToEditPage: jest.fn(),
 }));
 
-jest.mock('@/features/profiles', () => ({
-  ...jest.requireActual('@/features/profiles'),
+jest.mock('@/features/profiles/hooks/useProfileSelection', () => ({
   useProfileSelection: jest.fn(),
 }));
 
