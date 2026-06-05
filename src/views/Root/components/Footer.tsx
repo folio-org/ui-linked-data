@@ -12,7 +12,7 @@ import { PreviewExternalResourceControls } from '@/views/ExternalResource/compon
 
 import { RecordControls } from '@/features/edit';
 import { HubImportControls, useHubQuery } from '@/features/hubImport';
-import { ManageProfileSettingsControls } from '@/features/manageProfileSettings/components/ManageProfileSettingsControls/ManageProfileSettingsControls';
+import { ManageProfileSettingsControls } from '@/features/manageProfileSettings';
 import { useResourcePreviewQuery } from '@/features/resources';
 
 import { useMarcPreviewState } from '@/store';

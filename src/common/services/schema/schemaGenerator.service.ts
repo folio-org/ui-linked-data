@@ -3,8 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PROFILE_NODE_ID_DELIMITER } from '@/common/constants/bibframe.constants';
 import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
-
-import { generateEmptyValueUuid } from '@/features/complexLookup/utils/complexLookup.helper';
+import { generateEmptyValueUuid } from '@/common/helpers/schema.helper';
 
 import { IEntryPropertiesGeneratorService } from './entryPropertiesGenerator.interface';
 import type { IMarcMappingGenerator } from './marcMappingGenerator';

@@ -2,9 +2,9 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { renderHook } from '@testing-library/react';
 
-import { useSearchStore } from '@/store';
+import { useSearchFilterLookupOptions } from '@/common/hooks/useSearchFilterLookupOptions';
 
-import { useSearchFilterLookupOptions } from './useSearchFilterLookupOptions';
+import { useSearchStore } from '@/store';
 
 function testUseSearchFilterLookupOptions(
   options: { facet?: string; hasMappedSourceData?: boolean },

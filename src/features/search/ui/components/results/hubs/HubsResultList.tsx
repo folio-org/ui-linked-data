@@ -1,11 +1,10 @@
 import { FC, memo } from 'react';
 
-import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { generateEditResourceUrl, generateHubImportPreviewUrl } from '@/common/helpers/navigation.helper';
 import { useNavigateWithSearchState } from '@/common/hooks/useNavigateWithSearchState';
 import { Loading } from '@/components/Loading';
 import { TableFlex } from '@/components/Table';
 
-import { generateHubImportPreviewUrl } from '@/features/hubImport';
 import { useHubSearchPreviewQuery, useHubsTableFormatter } from '@/features/search/ui/hooks';
 
 import '../resultsList.scss';

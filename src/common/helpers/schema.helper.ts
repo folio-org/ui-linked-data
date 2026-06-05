@@ -11,6 +11,8 @@ import {
 import { BFLITE_LABELS_MAP, BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType, SchemaControlType, UI_CONTROLS_LIST } from '@/common/constants/uiControls.constants';
 
+export const generateEmptyValueUuid = (uuid: string) => `${uuid}_empty`;
+
 export const getLookupLabelKey = (uriBFLite?: string) => {
   const typedUriBFLite = uriBFLite as keyof typeof BFLITE_LABELS_MAP;
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { ModalCloseProfileSettings } from '@/features/manageProfileSettings/components/ModalCloseProfileSettings';
-import { ModalSaveUnusedProfileComponents } from '@/features/manageProfileSettings/components/ModalSaveUnusedProfileComponents';
-import { ProfileSettings } from '@/features/manageProfileSettings/components/ProfileSettings';
-import { ProfilesList } from '@/features/manageProfileSettings/components/ProfilesList';
+import {
+  ModalCloseProfileSettings,
+  ModalSaveUnusedProfileComponents,
+  ProfileSettings,
+  ProfilesList,
+} from '@/features/manageProfileSettings';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 

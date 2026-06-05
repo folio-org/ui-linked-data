@@ -5,7 +5,6 @@ import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import * as ComplexLookupConstants from '@/features/complexLookup/constants/complexLookup.constants';
 import { AuthorityValidationTarget } from '@/features/complexLookup/constants/complexLookup.constants';
 import {
-  generateEmptyValueUuid,
   generateValidationRequestBody,
   getDefaultHubSource,
   getLinkedField,
@@ -21,17 +20,6 @@ mockImportedConstant({
 });
 
 describe('complexLookup.helper', () => {
-  describe('generateEmptyValueUuid', () => {
-    it('appends the suffix to the UUID', () => {
-      const uuid = 'testUuid';
-      const testResult = `${uuid}_${ComplexLookupConstants.EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
-
-      const result = generateEmptyValueUuid(uuid);
-
-      expect(result).toBe(testResult);
-    });
-  });
-
   describe('getLinkedField', () => {
     const schemaEntry = {
       path: ['dependentUuid_1'],
