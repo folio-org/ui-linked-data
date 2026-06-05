@@ -6,8 +6,7 @@ import { ExternalResourceIdType } from '@/common/constants/api.constants';
 import { generateLookupQueryOptions } from '@/common/queries/lookup.query';
 import { SharedInfraContext } from '@/contexts';
 
-import { useLoadProfile } from '@/features/profiles/hooks/useLoadProfile';
-import { useLoadProfileSettings } from '@/features/profiles/hooks/useLoadProfileSettings';
+import { useLoadProfile, useLoadProfileSettings } from '@/features/profiles';
 
 import { fetchAndBuildPreview } from './fetchAndBuildPreview';
 

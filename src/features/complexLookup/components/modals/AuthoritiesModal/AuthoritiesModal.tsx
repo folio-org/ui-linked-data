@@ -9,7 +9,7 @@ import {
   useComplexLookupModalCleanup,
   useComplexLookupModalState,
 } from '@/features/complexLookup/hooks';
-import { Search } from '@/features/search/ui/components/Search';
+import { Search } from '@/features/search/ui';
 
 interface AuthoritiesModalProps {
   isOpen: boolean;

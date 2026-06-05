@@ -5,8 +5,7 @@ import { Loading } from '@/components/Loading';
 
 import { HubPreview } from '@/features/complexLookup/components/HubPreview';
 import { HubPreviewProps } from '@/features/complexLookup/types/hubPreview.types';
-import { HubsLookupResultList } from '@/features/search/ui';
-import { Search } from '@/features/search/ui/components/Search';
+import { HubsLookupResultList, Search } from '@/features/search/ui';
 
 /**
  * HubsContent - Reusable content block for hubs lookup.

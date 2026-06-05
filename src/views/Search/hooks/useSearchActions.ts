@@ -4,9 +4,9 @@ import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ImportFilterTypes } from '@/common/constants/import.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 
-import { useNavigateToManageProfileSettings } from '@/features/manageProfileSettings/hooks/useNavigateToManageProfileSettings';
+import { useNavigateToManageProfileSettings } from '@/features/manageProfileSettings';
+import { useNavigateToCreatePage } from '@/features/profiles';
 
 import { useUIState } from '@/store';
 

@@ -4,9 +4,8 @@ import { ActionMeta, MultiValue, createFilter } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { SIMPLE_LOOKUPS_ENABLED } from '@/common/constants/feature.constants';
+import { useSearchFilterLookupOptions } from '@/common/hooks/useSearchFilterLookupOptions';
 import { useSimpleLookupObserver } from '@/common/hooks/useSimpleLookupObserver';
-
-import { useSearchFilterLookupOptions } from '@/features/search/core';
 
 import { ClearIndicator } from './ClearIndicator';
 import { DropdownIndicator } from './DropdownIndicator';

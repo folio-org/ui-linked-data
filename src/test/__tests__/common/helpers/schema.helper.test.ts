@@ -3,12 +3,25 @@ import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/con
 import * as BibframeMappingConstants from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import * as SchemaHelper from '@/common/helpers/schema.helper';
-import { checkEmptyChildren, generateTwinChildrenKey } from '@/common/helpers/schema.helper';
+import { checkEmptyChildren, generateEmptyValueUuid, generateTwinChildrenKey } from '@/common/helpers/schema.helper';
+
+import * as ComplexLookupConstants from '@/features/complexLookup/constants/complexLookup.constants';
 
 describe('schema.helper', () => {
   const { getLookupLabelKey, hasChildEntry, findParentEntryByProperty, getHtmlIdForEntry } = SchemaHelper;
   const mockBFUrisConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_URIS');
   const mockBFLabelsConstant = getMockedImportedConstant(BibframeMappingConstants, 'BFLITE_LABELS_MAP');
+
+  describe('generateEmptyValueUuid', () => {
+    it('appends the suffix to the UUID', () => {
+      const uuid = 'testUuid';
+      const testResult = `${uuid}_${ComplexLookupConstants.EMPTY_LINKED_DROPDOWN_OPTION_SUFFIX}`;
+
+      const result = generateEmptyValueUuid(uuid);
+
+      expect(result).toBe(testResult);
+    });
+  });
 
   describe('getLookupLabelKey', () => {
     test('returns mapped value', () => {

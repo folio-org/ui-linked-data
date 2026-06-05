@@ -3,12 +3,12 @@ import { FormattedMessage } from 'react-intl';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
-import { useNavigateToCreatePage } from '@/common/hooks/useNavigateToCreatePage';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
 import { Table } from '@/components/Table';
 import { WorkDetailsCard } from '@/components/WorkDetailsCard';
 
+import { useNavigateToCreatePage } from '@/features/profiles';
 import { formatItemSearchInstanceListData } from '@/features/search/core';
 import { instancesTableConfig } from '@/features/search/ui/config';
 import { useTableFormatter } from '@/features/search/ui/hooks';

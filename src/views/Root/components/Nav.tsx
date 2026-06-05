@@ -10,7 +10,7 @@ import { PreviewExternalResourcePane } from '@/views/ExternalResource/components
 
 import { EditControlPane, ViewMarcControlPane } from '@/features/edit';
 import { HubImportNavPane } from '@/features/hubImport';
-import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings/components/ManageProfileSettingsControlPane';
+import { ManageProfileSettingsControlPane } from '@/features/manageProfileSettings';
 
 import { useMarcPreviewState } from '@/store';
 

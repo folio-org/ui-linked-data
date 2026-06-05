@@ -24,7 +24,7 @@ jest.mock('@/common/helpers/record.helper', () => ({
   ...jest.requireActual('@/common/helpers/record.helper'),
 }));
 
-jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
+jest.mock('@/features/profiles/hooks/useNavigateToCreatePage', () => ({
   useNavigateToCreatePage: () => ({ onCreateNewResource: jest.fn() }),
 }));
 

@@ -15,7 +15,7 @@ const mockOnCreateNewResource = jest.fn();
 const mockUseNavigate = jest.fn();
 const mockNavigateToManageProfileSettings = jest.fn();
 
-jest.mock('@/common/hooks/useNavigateToCreatePage', () => ({
+jest.mock('@/features/profiles/hooks/useNavigateToCreatePage', () => ({
   useNavigateToCreatePage: () => ({
     onCreateNewResource: mockOnCreateNewResource,
   }),

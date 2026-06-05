@@ -7,7 +7,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getUri } from '@/configs/resourceTypes';
 
-import { useProfileList } from '@/features/manageProfileSettings/hooks/useProfileList';
+import { useProfileList } from '@/features/profiles';
 
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState, useUIState } from '@/store';
 

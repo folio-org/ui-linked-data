@@ -6,8 +6,7 @@ import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { LookupModal } from '@/features/complexLookup/components/LookupModal';
 import { HubsContent } from '@/features/complexLookup/components/content';
 import { useComplexLookupModalState, useModalWithHubPreview } from '@/features/complexLookup/hooks';
-import { SOURCE_OPTIONS } from '@/features/search/ui';
-import { Search } from '@/features/search/ui/components/Search';
+import { SOURCE_OPTIONS, Search } from '@/features/search/ui';
 
 interface HubsModalProps {
   isOpen: boolean;

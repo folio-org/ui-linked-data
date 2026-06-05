@@ -7,8 +7,7 @@ import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 
-import { EditPreview, EditSection, ModalViewMarc, useResetRecordStatus } from '@/features/edit';
-import { useEditPage } from '@/features/edit/hooks/useEditPage';
+import { EditPreview, EditSection, ModalViewMarc, useEditPage, useResetRecordStatus } from '@/features/edit';
 import { useRecordNavigation } from '@/features/resources';
 
 import { useLoadingState, useMarcPreviewState, useUIState } from '@/store';

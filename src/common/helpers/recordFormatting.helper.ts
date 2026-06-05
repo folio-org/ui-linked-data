@@ -1,5 +1,4 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
-import { Row } from '@/components/Table';
 
 import { getEditingRecordBlocks, unwrapRecordValuesFromCommonContainer } from './record.helper';
 
@@ -21,7 +20,7 @@ export const applyIntlToTemplates = ({
     template: Object.fromEntries(Object.entries(template).map(([k, v]) => [k, format({ id: v })])),
   }));
 
-export const formatDependeciesTable = (deps: Record<string, unknown>[]): Row[] => {
+export const formatDependeciesTable = (deps: Record<string, unknown>[]) => {
   return deps.map(({ id, ...rest }) => {
     const selectedPublication = (rest?.[BFLITE_URIS.PUBLICATION] as Record<string, unknown>)?.[0] as Record<
       string,
@@ -52,7 +51,7 @@ export const formatDependeciesTable = (deps: Record<string, unknown>[]): Row[] =
         className: 'publication-date',
       },
     };
-  }) as Row[];
+  }) as Record<string, unknown>[];
 };
 
 export const getReferenceIdsRaw = (record: RecordEntry) => {

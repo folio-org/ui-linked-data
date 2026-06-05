@@ -10,7 +10,7 @@ import { useRoutePathPattern } from '@/common/hooks/useRoutePathPattern';
 import { getPreviewPosition, hasSplitLayout, resolveResourceType } from '@/configs/resourceTypes';
 
 import { useEditPreview } from '@/features/edit/hooks';
-import { TitledPreview } from '@/features/preview/components/Preview/TitledPreview';
+import { TitledPreview } from '@/features/preview';
 
 import { useInputsState, useLoadingState } from '@/store';
 
