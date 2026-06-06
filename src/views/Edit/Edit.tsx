@@ -1,8 +1,7 @@
 import { useEffect, useLayoutEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { QueryParams } from '@/common/constants/routes.constants';
-import { getResourceIdFromUri } from '@/common/helpers/navigation.helper';
 import { scrollEntity } from '@/common/helpers/pageScrolling.helper';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
@@ -17,7 +16,7 @@ import './Edit.scss';
 export const Edit = () => {
   const { initNewResource, loadResource } = useEditPage();
   const { clearRecordState } = useRecordNavigation();
-  const resourceId = getResourceIdFromUri();
+  const resourceId = useParams().resourceId;
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState([
     'basicValue',
     'resetBasicValue',
@@ -52,11 +51,16 @@ export const Edit = () => {
 
     return () => {
       cancelled = true;
-      clearRecordState();
       setIsLoading(false);
       setIsPreviewLoading(false);
     };
   }, [resourceId, cloneOfParam, refParam, resourceType]);
+
+  useEffect(() => {
+    return () => {
+      clearRecordState();
+    };
+  }, []);
 
   useEffect(() => {
     resetHasShownAuthorityWarning();
