@@ -9,7 +9,6 @@ import * as Router from 'react-router-dom';
 import { act, render, screen } from '@testing-library/react';
 
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
-import * as NavigationHelper from '@/common/helpers/navigation.helper';
 import { Edit } from '@/views';
 
 import { useProfileStore } from '@/store';
@@ -66,7 +65,6 @@ describe('Edit', () => {
 
   test('renders EditSection component if a profile is selected and calls loadResource', async () => {
     jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
-    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue('testResourceId');
 
     await renderComponent(monograph as unknown as ProfileEntry);
 
@@ -76,7 +74,6 @@ describe('Edit', () => {
 
   test("calls initNewResource and doesn't call loadResource when no resourceId", async () => {
     jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: undefined });
-    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue(undefined);
 
     await renderComponent(null);
 
@@ -99,7 +96,6 @@ describe('Edit', () => {
 
   test('skips initNewResource when resourceId or cloneOfParam exists', async () => {
     jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testId' });
-    jest.spyOn(NavigationHelper, 'getResourceIdFromUri').mockReturnValue('testId');
 
     await renderComponent(null);
 
