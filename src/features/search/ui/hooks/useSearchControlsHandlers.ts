@@ -218,6 +218,14 @@ export const useSearchControlsHandlers = ({
     [setQuery, setSearchBy],
   );
 
+  const resetPreview = () => {
+    if (managePreview) {
+      resetActivePreviewIds();
+      resetFullDisplayComponentType();
+      resetCurrentlyPreviewedEntityBfid();
+    }
+  };
+
   const handleSegmentChange = useCallback(
     (newSegment: string) => {
       // Save current segment's draft before switching
@@ -296,7 +304,7 @@ export const useSearchControlsHandlers = ({
       updatedState[SearchParam.SOURCE] = newSource;
 
       // Source is not immediately synced to URL - only on submit
-      setNavigationState(updatedState as SearchParamsState);
+      setNavigationState(updatedState);
     },
     [setNavigationState],
   );
@@ -311,14 +319,6 @@ export const useSearchControlsHandlers = ({
     },
     [setSearchParams, setCommittedValues],
   );
-
-  const resetPreview = () => {
-    if (managePreview) {
-      resetActivePreviewIds();
-      resetFullDisplayComponentType();
-      resetCurrentlyPreviewedEntityBfid();
-    }
-  };
 
   const handleSubmit = useCallback(() => {
     const state = useSearchState.getState();
