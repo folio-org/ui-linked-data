@@ -4,6 +4,7 @@ export const BFLITE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
   WORK: 'http://bibfra.me/vocab/lite/Work',
   HUB: 'http://bibfra.me/vocab/lite/Hub',
+  AUTHORITY: '_authority',
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
@@ -143,6 +144,12 @@ export const BLOCKS_BFLITE = {
     uri: BFLITE_URIS.HUB,
     referenceKey: '',
     resourceType: ResourceType.hub,
+    reference: undefined,
+  },
+  AUTHORITY: {
+    uri: BFLITE_URIS.AUTHORITY,
+    referenceKey: '',
+    resourceType: ResourceType.authority,
     reference: undefined,
   },
 };

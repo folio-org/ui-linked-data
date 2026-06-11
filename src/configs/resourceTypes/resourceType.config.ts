@@ -68,4 +68,21 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
       segment: 'hubs',
     },
   },
+
+  [ResourceType.authority]: {
+    type: ResourceType.authority,
+    uri: BFLITE_URIS.AUTHORITY,
+    profileBfid: 'lde:Profile:Authority',
+    defaultProfileId: 8,
+    profileChildren: ['Profile:Authority'],
+    dependencies: [],
+    ui: {
+      hasPreview: false,
+      editPageLayout: 'single',
+    },
+    labelId: 'ld.hub',
+    search: {
+      segment: 'authorities',
+    },
+  },
 };
