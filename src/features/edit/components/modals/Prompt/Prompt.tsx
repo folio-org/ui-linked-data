@@ -10,7 +10,7 @@ import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 
 import { useRecordMutations } from '@/features/resources';
 
-import { useStatusState } from '@/store';
+import { useLoadingState, useStatusState } from '@/store';
 
 import { ModalCloseRecord } from '../ModalCloseRecord';
 import { ModalSwitchToNewRecord } from '../ModalSwitchToNewRecord';
@@ -43,6 +43,7 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
   const { dispatchProceedNavigationEvent, dispatchUnblockEvent } = useContainerEvents({
     onTriggerModal: () => setIsCloseRecordModalOpen(true),
   });
+  const { resetIsLoading } = useLoadingState(['resetIsLoading']);
 
   const closeAllModals = () => {
     setIsCloseRecordModalOpen(false);
@@ -59,6 +60,8 @@ export const Prompt: FC<Props> = ({ when: shouldPrompt }) => {
     // ID we receive from the update operation
 
     if (shouldPrompt) {
+      resetIsLoading();
+
       const forceNavigateToDest = getForceNavigateToDest(pathname, search);
 
       if (forceNavigateToDest) {

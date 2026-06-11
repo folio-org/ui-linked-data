@@ -9,6 +9,7 @@ import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
@@ -30,6 +31,7 @@ export const useEditPage = () => {
   const { processResource } = useResourceProcessing();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { selectedEntriesService } = useSchemaPipeline();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
@@ -82,6 +84,7 @@ export const useEditPage = () => {
       setUserValues(result.userValues);
       setSelectedEntries(result.selectedEntries);
       setSelectedRecordBlocks(result.selectedRecordBlocks);
+      selectedEntriesService.set(result.selectedEntries);
 
       if (record !== undefined) setRecord(record);
 
