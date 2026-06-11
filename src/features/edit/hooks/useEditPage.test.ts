@@ -53,6 +53,14 @@ jest.mock('@/configs/resourceTypes', () => ({
   getReference: jest.fn(),
 }));
 
+const mockSelectedEntriesServiceSet = jest.fn();
+
+jest.mock('@/common/hooks/useSchemaPipeline', () => ({
+  useSchemaPipeline: () => ({
+    selectedEntriesService: { set: mockSelectedEntriesServiceSet },
+  }),
+}));
+
 const mockSetIsLoading = jest.fn();
 const mockSetSelectedProfile = jest.fn();
 const mockSetInitialSchemaKey = jest.fn();
@@ -121,6 +129,20 @@ describe('useEditPage', () => {
     (getProfileBfid as jest.Mock).mockReturnValue('lde:Profile:Instance');
     (hasReference as jest.Mock).mockReturnValue(false);
     setupStores();
+  });
+
+  describe('applyToStores', () => {
+    it('calls selectedEntriesService.set with selectedEntries from the processed resource', async () => {
+      mockProcessResource.mockResolvedValue(mockProcessedResource);
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.initNewResource();
+      });
+
+      expect(mockSelectedEntriesServiceSet).toHaveBeenCalledWith(mockProcessedResource.selectedEntries);
+    });
   });
 
   describe('initNewResource', () => {

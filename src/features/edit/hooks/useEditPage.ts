@@ -14,6 +14,7 @@ import {
   unwrapRecordValuesFromCommonContainer,
   wrapRecordValuesWithCommonContainer,
 } from '@/common/helpers/record.helper';
+import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import {
@@ -47,6 +48,7 @@ export const useEditPage = () => {
   const { processResource } = useResourceProcessing();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { selectedEntriesService } = useSchemaPipeline();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
@@ -99,6 +101,7 @@ export const useEditPage = () => {
       setUserValues(result.userValues);
       setSelectedEntries(result.selectedEntries);
       setSelectedRecordBlocks(result.selectedRecordBlocks);
+      selectedEntriesService.set(result.selectedEntries);
 
       if (record !== undefined) setRecord(record);
 

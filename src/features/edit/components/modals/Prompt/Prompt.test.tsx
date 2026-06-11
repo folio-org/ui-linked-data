@@ -4,9 +4,9 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { useConfigStore } from '@/store';
+import { useConfigStore, useLoadingStateStore } from '@/store';
 
 import { Prompt } from './Prompt';
 
@@ -15,6 +15,7 @@ const mockedUseBlocker = {
   proceed: jest.fn(),
 };
 
+const mockResetIsLoading = jest.fn();
 const setIsModalOpen = jest.fn();
 const openModal = jest.fn();
 const dispatchEvent = jest.fn();
@@ -60,6 +61,10 @@ const renderPrompt = (isBlocking = true) => {
       store: useConfigStore,
       state: { customEvents: { TRIGGER_MODAL: 'triggermodal' } },
     },
+    {
+      store: useLoadingStateStore,
+      state: { resetIsLoading: mockResetIsLoading },
+    },
   ]);
 
   return render(
@@ -101,5 +106,17 @@ describe('Prompt', () => {
     mockedContainer.dispatchEvent(new CustomEvent('triggermodal'));
 
     expect(addEventListener).toHaveBeenCalled();
+  });
+
+  test('calls resetIsLoading when navigation is blocked', () => {
+    expect(mockResetIsLoading).toHaveBeenCalled();
+  });
+
+  test('does not call resetIsLoading when "when" prop is false', () => {
+    cleanup();
+    mockResetIsLoading.mockClear();
+    renderPrompt(false);
+
+    expect(mockResetIsLoading).not.toHaveBeenCalled();
   });
 });
