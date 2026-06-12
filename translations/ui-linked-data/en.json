@@ -167,6 +167,7 @@
   "ld.duplicateInstanceInBrackets": "(DUPLICATE INSTANCE)",
   "ld.duplicateWorkInBrackets": "(DUPLICATE WORK)",
   "ld.duplicateHubInBrackets": "(DUPLICATE HUB)",
+  "ld.duplicateAuthorityInBrackets": "(DUPLICATE AUTHORITY)",
   "ld.identifierAll": "Identifier (all)",
   "ld.personalName": "Personal name",
   "ld.corporateName": "Corporate/Conference name",

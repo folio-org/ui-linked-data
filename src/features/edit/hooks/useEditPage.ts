@@ -129,8 +129,9 @@ export const useEditPage = () => {
         if (isCancelled()) return;
 
         if (result) applyToStores({ result, record: null, withReference: true });
-      } catch {
+      } catch (error) {
         if (!isCancelled()) {
+          logger.error('Error occurred while processing a resource', error);
           addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
         }
       } finally {
