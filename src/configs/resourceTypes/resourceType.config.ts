@@ -1,3 +1,4 @@
+import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 
@@ -7,7 +8,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.instance]: {
     type: ResourceType.instance,
     uri: BFLITE_URIS.INSTANCE,
-    profileBfid: 'lde:Profile:Instance',
+    profileBfid: PROFILE_BFIDS.INSTANCE,
     defaultProfileId: 3,
     profileChildren: ['Profile:Work', 'Profile:Instance'],
     dependencies: [ResourceType.work],
@@ -31,7 +32,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.work]: {
     type: ResourceType.work,
     uri: BFLITE_URIS.WORK,
-    profileBfid: 'lde:Profile:Work',
+    profileBfid: PROFILE_BFIDS.WORK,
     defaultProfileId: 2,
     profileChildren: ['Profile:Work', 'Profile:Instance'],
     dependencies: [ResourceType.instance],
@@ -55,7 +56,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.hub]: {
     type: ResourceType.hub,
     uri: BFLITE_URIS.HUB,
-    profileBfid: 'lde:Profile:Hub',
+    profileBfid: PROFILE_BFIDS.HUB,
     defaultProfileId: 7,
     profileChildren: ['Profile:Hub'],
     dependencies: [],
@@ -72,7 +73,7 @@ export const RESOURCE_TYPE_REGISTRY: ResourceTypeRegistry = {
   [ResourceType.authority]: {
     type: ResourceType.authority,
     uri: BFLITE_URIS.AUTHORITY,
-    profileBfid: 'lde:Profile:Authority',
+    profileBfid: PROFILE_BFIDS.AUTHORITY,
     defaultProfileId: 8,
     profileChildren: ['Profile:Authority'],
     dependencies: [],

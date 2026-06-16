@@ -90,6 +90,14 @@ export const BFLITE_URIS = {
   DISSERTATION_ID: 'http://bibfra.me/vocab/library/dissertationID',
   BOOKS: 'http://bibfra.me/vocab/library/Books',
   CONTINUING_RESOURCES: 'http://bibfra.me/vocab/library/ContinuingResources',
+  NUMERATION: 'http://bibfra.me/vocab/library/numeration',
+  TITLES: 'http://bibfra.me/vocab/library/titles',
+  ATTRIBUTION: 'http://bibfra.me/vocab/library/attribution',
+  NAME_ALTERNATIVE: 'http://bibfra.me/vocab/lite/nameAlternative',
+  AFFILIATION: 'http://bibfra.me/vocab/scholar/affiliation',
+  SUBORDINATE_UNIT: 'http://bibfra.me/vocab/library/subordinateUnit',
+  PLACE: 'http://bibfra.me/vocab/library/place',
+  GEOGRAPHIC_COVERAGE: 'http://bibfra.me/vocab/library/geographicCoverage',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
