@@ -1,7 +1,8 @@
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { RecordSchemaEntryType } from '@/common/constants/recordSchema.constants';
 
-import { stringArrayProperty } from '../common/propertyDefinitions';
+import { linkAndLabelProperties, stringArrayProperty } from '../common/propertyDefinitions';
+import { createArrayObjectProperty, createObjectProperty, createStatusProperty } from '../common/schemaBuilders';
 
 export const authorityRecordSchema: RecordSchema = {
   [BFLITE_URIS.AUTHORITY]: {
@@ -21,6 +22,18 @@ export const authorityRecordSchema: RecordSchema = {
       [BFLITE_URIS.SUBORDINATE_UNIT]: stringArrayProperty,
       [BFLITE_URIS.PLACE]: stringArrayProperty,
       [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: stringArrayProperty,
+      [BFLITE_URIS.MAP]: createArrayObjectProperty({
+        [BFLITE_URIS.IDENTIFIER_LCCN]: createObjectProperty({
+          [BFLITE_URIS.NAME]: stringArrayProperty,
+          [BFLITE_URIS.QUALIFIER]: stringArrayProperty,
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
+        }),
+        [BFLITE_URIS.IDENTIFIER_OTHER]: createObjectProperty({
+          [BFLITE_URIS.NAME]: stringArrayProperty,
+          [BFLITE_URIS.QUALIFIER]: stringArrayProperty,
+          [BFLITE_URIS.LIBRARY_STATUS]: createStatusProperty(linkAndLabelProperties),
+        }),
+      }),
     },
   },
 };
