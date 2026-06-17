@@ -4,30 +4,35 @@ export const RESOURCE_TEMPLATE_IDS: Record<string, string> = {
   'lde:Profile:Work': 'Work',
   'lde:Profile:Instance': 'Instance',
   'lde:Profile:Hub': 'Hub',
+  'lde:Profile:Authority': 'Authority',
 };
 
 export enum BibframeEntitiesMap {
   'http://bibfra.me/vocab/lite/Work' = 'work',
   'http://bibfra.me/vocab/lite/Instance' = 'instance',
   'http://bibfra.me/vocab/lite/Hub' = 'hub',
+  '_authority' = 'authority',
 }
 
 export const PROFILE_BFIDS = {
   WORK: 'lde:Profile:Work',
   INSTANCE: 'lde:Profile:Instance',
   HUB: 'lde:Profile:Hub',
+  AUTHORITY: 'lde:Profile:Authority',
 };
 
 export enum BibframeEntities {
   INSTANCE = 'INSTANCE',
   WORK = 'WORK',
   HUB = 'HUB',
+  AUTHORITY = 'AUTHORITY',
 }
 
 export const TYPE_URIS = {
   INSTANCE: BFLITE_URIS.INSTANCE,
   WORK: BFLITE_URIS.WORK,
   HUB: BFLITE_URIS.HUB,
+  AUTHORITY: BFLITE_URIS.AUTHORITY,
 };
 
 export const CONSTRAINTS: Constraints = {

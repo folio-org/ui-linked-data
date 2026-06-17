@@ -25,4 +25,12 @@ export const DUPLICATE_RESOURCE_TEMPLATE: Record<string, ResourceTemplateMetadat
       },
     },
   ],
+  [BFLITE_URIS.AUTHORITY]: [
+    {
+      path: [BFLITE_URIS.AUTHORITY, BFLITE_URIS.NAME],
+      template: {
+        prefix: 'ld.duplicateAuthorityInBrackets',
+      },
+    },
+  ],
 };
