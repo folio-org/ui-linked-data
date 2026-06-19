@@ -22,6 +22,7 @@ export const authorityRecordSchema: RecordSchema = {
       [BFLITE_URIS.SUBORDINATE_UNIT]: stringArrayProperty,
       [BFLITE_URIS.PLACE]: stringArrayProperty,
       [BFLITE_URIS.GEOGRAPHIC_COVERAGE]: stringArrayProperty,
+      [BFLITE_URIS.NUMBER_OF_PARTS]: stringArrayProperty,
       [BFLITE_URIS.MAP]: createArrayObjectProperty({
         [BFLITE_URIS.IDENTIFIER_LCCN]: createObjectProperty({
           [BFLITE_URIS.NAME]: stringArrayProperty,
