@@ -98,6 +98,7 @@ export const BFLITE_URIS = {
   SUBORDINATE_UNIT: 'http://bibfra.me/vocab/library/subordinateUnit',
   PLACE: 'http://bibfra.me/vocab/library/place',
   GEOGRAPHIC_COVERAGE: 'http://bibfra.me/vocab/library/geographicCoverage',
+  NUMBER_OF_PARTS: 'http://bibfra.me/vocab/library/numberOfParts',
   QUALIFIER: 'http://bibfra.me/vocab/library/qualifier',
 };
 
