@@ -1,0 +1,14 @@
+@use '@/common/styles/common.scss' as *;
+
+.profile-settings-selector {
+  padding: 8px 15px 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  max-width: 915px;
+
+  label {
+    white-space: nowrap;
+  }
+}

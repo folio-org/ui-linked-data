@@ -5,17 +5,20 @@ import { type SliceState } from '../utils/slice';
 
 type ProfileState = Profile | null;
 type ProfileDTOState = ProfileDTO | null;
+type ProfileSettingsMetaState = ProfileSettingsMeta | null;
 
 export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDTO> &
   SliceState<'nextSelectedProfile', ProfileDTOState> &
   SliceState<'fullProfile', ProfileState> &
+  SliceState<'selectedProfileSettingsMeta', ProfileSettingsMetaState> &
   SliceState<'unusedComponents', ProfileSettingComponent[]> &
   SliceState<'selectedComponents', ProfileSettingComponent[]> &
   SliceState<'isClosingNext', boolean> &
   SliceState<'isSettingsActive', boolean> &
   SliceState<'profileSettings', ProfileSettingsWithDrift> &
   SliceState<'isTypeDefaultProfile', boolean> &
-  SliceState<'isModified', boolean>;
+  SliceState<'isModified', boolean> &
+  SliceState<'settingsName', string>;
 
 const STORE_NAME = 'ProfileSettings';
 
@@ -29,6 +32,9 @@ const sliceConfigs: SliceConfigs = {
   fullProfile: {
     initialValue: null,
   },
+  selectedProfileSettingsMeta: {
+    initialValue: null,
+  },
   unusedComponents: {
     initialValue: [],
   },
@@ -39,7 +45,7 @@ const sliceConfigs: SliceConfigs = {
     initialValue: false,
   },
   isSettingsActive: {
-    initialValue: true,
+    initialValue: false,
   },
   profileSettings: {
     initialValue: DEFAULT_INACTIVE_SETTINGS,
@@ -49,6 +55,9 @@ const sliceConfigs: SliceConfigs = {
   },
   isModified: {
     initialValue: false,
+  },
+  settingsName: {
+    initialValue: '',
   },
 };
 

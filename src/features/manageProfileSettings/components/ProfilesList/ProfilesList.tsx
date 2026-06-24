@@ -11,6 +11,7 @@ import { useProfileList } from '@/features/profiles';
 
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState, useUIState } from '@/store';
 
+import { useResetSettings } from '../../hooks';
 import { ResourceProfiles } from './ResourceProfiles';
 
 import './ProfilesList.scss';
@@ -23,6 +24,7 @@ export const ProfilesList = () => {
     'selectedProfile',
     'setSelectedProfile',
   ]);
+  const { resetSettings } = useResetSettings();
   const {
     isManageProfileSettingsBelowBreakpoint,
     isManageProfileSettingsShowProfiles,
@@ -62,6 +64,7 @@ export const ProfilesList = () => {
       for (const resourceType in availableProfiles) {
         if (availableProfiles[resourceType as ResourceTypeURL]?.length > 0) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
+          resetSettings();
           break;
         }
       }

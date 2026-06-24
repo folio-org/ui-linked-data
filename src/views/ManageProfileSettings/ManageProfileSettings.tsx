@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import {
   ModalCloseProfileSettings,
+  ModalCreateSavedSetting,
   ModalSaveUnusedProfileComponents,
   ProfileSettings,
   ProfilesList,
@@ -16,19 +17,23 @@ export const ManageProfileSettings = () => {
   const {
     isManageProfileSettingsUnsavedModalOpen,
     isManageProfileSettingsUnusedComponentsModalOpen,
+    isManageProfileSettingsCreateSavedSettingModalOpen,
     setIsManageProfileSettingsBelowBreakpoint,
     setIsManageProfileSettingsShowEditor,
     setIsManageProfileSettingsShowProfiles,
     setIsManageProfileSettingsUnsavedModalOpen,
     setIsManageProfileSettingsUnusedComponentsModalOpen,
+    setIsManageProfileSettingsCreateSavedSettingModalOpen,
   } = useUIState([
     'isManageProfileSettingsUnsavedModalOpen',
     'isManageProfileSettingsUnusedComponentsModalOpen',
+    'isManageProfileSettingsCreateSavedSettingModalOpen',
     'setIsManageProfileSettingsBelowBreakpoint',
     'setIsManageProfileSettingsShowEditor',
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsUnsavedModalOpen',
     'setIsManageProfileSettingsUnusedComponentsModalOpen',
+    'setIsManageProfileSettingsCreateSavedSettingModalOpen',
   ]);
 
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
@@ -76,6 +81,10 @@ export const ManageProfileSettings = () => {
       <ModalSaveUnusedProfileComponents
         isOpen={isManageProfileSettingsUnusedComponentsModalOpen}
         setIsOpen={setIsManageProfileSettingsUnusedComponentsModalOpen}
+      />
+      <ModalCreateSavedSetting
+        isOpen={isManageProfileSettingsCreateSavedSettingModalOpen}
+        setIsOpen={setIsManageProfileSettingsCreateSavedSettingModalOpen}
       />
     </>
   );

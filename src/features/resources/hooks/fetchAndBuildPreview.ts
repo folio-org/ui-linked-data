@@ -14,7 +14,8 @@ export type FetchAndBuildPreviewParams = {
   loadLookup: (uri: string) => Promise<MultiselectOption[]>;
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
-    id: string | number | undefined,
+    id: number,
+    profileId: string | number | undefined,
     profile: Profile,
     uri?: string,
   ) => Promise<ProfileSettingsWithDrift>;

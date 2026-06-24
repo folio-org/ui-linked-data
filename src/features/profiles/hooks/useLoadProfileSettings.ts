@@ -15,6 +15,7 @@ export const useLoadProfileSettings = () => {
   const queryClient = useQueryClient();
 
   const loadProfileSettings = async (
+    profileSettingsId: string | number,
     profileId: string | number | undefined,
     profile: Profile,
     resourceTypeURL?: string,
@@ -25,9 +26,9 @@ export const useLoadProfileSettings = () => {
 
     try {
       const settings = await queryClient.ensureQueryData({
-        queryKey: ['profileSettings', String(profileId)],
+        queryKey: ['profileSettings', String(profileId), profileSettingsId],
         queryFn: async () => {
-          const loadedSettings = await fetchProfileSettings(profileId);
+          const loadedSettings = await fetchProfileSettings(profileId, profileSettingsId);
           sortProfileSettingsChildren(loadedSettings);
 
           return loadedSettings;

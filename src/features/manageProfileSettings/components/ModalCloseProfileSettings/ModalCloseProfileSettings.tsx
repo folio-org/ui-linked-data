@@ -7,7 +7,7 @@ import { Modal } from '@/components/Modal';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
-import { useSaveProfileSettings } from '../../hooks';
+import { useResetSettings, useSaveProfileSettings } from '../../hooks';
 
 import './ModalCloseProfileSettings.scss';
 
@@ -26,8 +26,10 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       'setIsClosingNext',
       'nextSelectedProfile',
       'setSelectedProfile',
+      'resetSelectedProfileSettingsMeta',
       'setIsModified',
     ]);
+  const { resetSettings } = useResetSettings();
   const { setIsManageProfileSettingsShowProfiles, setIsManageProfileSettingsShowEditor } = useUIState([
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsShowEditor',
@@ -41,6 +43,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       navigate(searchResultsUri);
     } else if (nextSelectedProfile) {
       setSelectedProfile(nextSelectedProfile);
+      resetSettings();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
     }

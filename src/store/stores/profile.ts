@@ -2,6 +2,7 @@ import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFacto
 import { type SliceState } from '../utils/slice';
 
 type SelectedProfileType = Profile | null;
+type SelectedProfileSettingsType = ProfileSettings | null;
 type InitialSchemaKeyType = string | null;
 export type AvailableProfiles = {
   [key in ResourceTypeURL]: ProfileDTO[];
@@ -11,6 +12,7 @@ export type PreferredProfiles = ProfileDTO[];
 export type ProfileState = SliceState<'availableProfiles', AvailableProfiles> &
   SliceState<'preferredProfiles', PreferredProfiles> &
   SliceState<'selectedProfile', SelectedProfileType> &
+  SliceState<'selectedProfileSettings', SelectedProfileSettingsType> &
   SliceState<'initialSchemaKey', InitialSchemaKeyType> &
   SliceState<'schema', Map<string, SchemaEntry>>;
 
@@ -24,6 +26,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: null,
   },
   selectedProfile: {
+    initialValue: null,
+  },
+  selectedProfileSettings: {
     initialValue: null,
   },
   initialSchemaKey: {

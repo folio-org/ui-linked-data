@@ -17,6 +17,7 @@ import ArrowLeftIcon from '@/assets/arrow-left-16.svg?react';
 import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
 import { ProfileSettingsEditor } from '../ProfileSettingsEditor';
+import { ProfileSettingsList } from '../ProfileSettingsList';
 
 import './ProfileSettings.scss';
 
@@ -24,11 +25,14 @@ export const ProfileSettings = () => {
   const { setIsLoading } = useLoadingState();
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
-  const { selectedProfile, setFullProfile, setProfileSettings } = useManageProfileSettingsState([
-    'selectedProfile',
-    'setFullProfile',
-    'setProfileSettings',
-  ]);
+  const { selectedProfile, selectedProfileSettingsMeta, setFullProfile, setProfileSettings, resetProfileSettings } =
+    useManageProfileSettingsState([
+      'selectedProfile',
+      'selectedProfileSettingsMeta',
+      'setFullProfile',
+      'setProfileSettings',
+      'resetProfileSettings',
+    ]);
   const {
     isManageProfileSettingsBelowBreakpoint,
     isManageProfileSettingsShowEditor,
@@ -54,9 +58,20 @@ export const ProfileSettings = () => {
           setIsLoading(true);
           const profile = await loadProfile(selectedProfile.id);
           setFullProfile(profile);
-          setProfileSettings(
-            await loadProfileSettings(String(selectedProfile.id), profile, selectedProfile.resourceType),
-          );
+          if (selectedProfileSettingsMeta) {
+            if (selectedProfileSettingsMeta.id === 'default') {
+              resetProfileSettings();
+            } else {
+              setProfileSettings(
+                await loadProfileSettings(
+                  selectedProfileSettingsMeta.id,
+                  String(selectedProfile.id),
+                  profile,
+                  selectedProfile.resourceType,
+                ),
+              );
+            }
+          }
         } catch {
           addStatusMessagesItem?.(
             UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),
@@ -68,7 +83,7 @@ export const ProfileSettings = () => {
 
       initialize();
     }
-  }, [selectedProfile]);
+  }, [selectedProfile, selectedProfileSettingsMeta]);
 
   const showView =
     !isManageProfileSettingsBelowBreakpoint ||
@@ -95,6 +110,8 @@ export const ProfileSettings = () => {
       <DefaultProfileOption selectedProfile={selectedProfile} />
 
       <hr />
+
+      <ProfileSettingsList />
 
       <CustomProfileToggle />
 

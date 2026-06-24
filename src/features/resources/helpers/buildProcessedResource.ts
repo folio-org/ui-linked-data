@@ -22,7 +22,8 @@ type BuildProcessedResourceParams = {
   templateMetadata?: ResourceTemplateMetadata[];
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
-    id: string | number | undefined,
+    id: number,
+    profileId: string | number | undefined,
     profile: Profile,
     uri?: string,
   ) => Promise<ProfileSettingsWithDrift>;
@@ -59,7 +60,9 @@ export const buildProcessedResource = async ({
 
   if (!selectedProfile) return null;
 
+  // TODO how to get the settings set and not just the profile ID - new parameter i guess
   const profileSettings = await loadProfileSettings(
+    0,
     String(profileConfig.ids?.[0]),
     selectedProfile,
     getUri(resourceType),

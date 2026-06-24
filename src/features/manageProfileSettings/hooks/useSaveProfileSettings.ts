@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 
-import { saveProfileSettings } from '@/common/api/profiles.api';
+import { createProfileSettings, saveProfileSettings } from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
@@ -18,18 +18,24 @@ export const useSaveProfileSettings = () => {
     isSettingsActive,
     isTypeDefaultProfile,
     selectedProfile,
+    selectedProfileSettingsMeta,
     unusedComponents,
     selectedComponents,
+    settingsName,
     setIsModified,
     setProfileSettings,
+    setSelectedProfileSettingsMeta,
   } = useManageProfileSettingsState([
     'isSettingsActive',
     'isTypeDefaultProfile',
     'selectedProfile',
+    'selectedProfileSettingsMeta',
     'unusedComponents',
     'selectedComponents',
+    'settingsName',
     'setIsModified',
     'setProfileSettings',
+    'setSelectedProfileSettingsMeta',
   ]);
 
   const saveAndSetPreferred = async () => {
@@ -47,24 +53,39 @@ export const useSaveProfileSettings = () => {
     }
   };
 
-  const saveAndSetSettings = async () => {
-    const settingsToSave = generateSettings(selectedComponents, unusedComponents, isSettingsActive);
+  const saveAndSetSettings = async (name?: string) => {
+    const settingsToSave = generateSettings(
+      selectedComponents,
+      unusedComponents,
+      isSettingsActive,
+      name ?? settingsName,
+    );
+    let settingsMeta;
 
     try {
-      await saveProfileSettings(selectedProfile.id, settingsToSave);
+      if (!name && selectedProfileSettingsMeta) {
+        settingsMeta = selectedProfileSettingsMeta;
+        await saveProfileSettings(selectedProfile.id, settingsMeta.id, settingsToSave);
+      } else {
+        const response = await createProfileSettings(selectedProfile.id, settingsToSave);
+        const created = (await response.json()) as ProfileSettingsMeta;
+        settingsMeta = created;
+      }
       setProfileSettings({ ...settingsToSave, missingFromSettings: [] });
-      queryClient.refetchQueries({ queryKey: ['profileSettings', String(selectedProfile.id)] });
+      queryClient.refetchQueries({ queryKey: ['profileSettingsMeta', String(selectedProfile.id)] });
+      queryClient.refetchQueries({ queryKey: ['profileSettings', String(selectedProfile.id), settingsMeta.id] });
+      setSelectedProfileSettingsMeta(settingsMeta);
     } catch (error) {
       logger.error('Failed to set profile settings:', error);
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.error.saveProfileSettings'));
     }
   };
 
-  const saveSettings = async () => {
+  const saveSettings = async (name?: string) => {
     try {
       setIsLoading(true);
       await saveAndSetPreferred();
-      await saveAndSetSettings();
+      await saveAndSetSettings(name);
       setIsModified(false);
     } finally {
       setIsLoading(false);
