@@ -70,6 +70,14 @@ type AuthorityAsBrowseResultDTO = {
   isAnchor?: boolean;
 };
 
+type LDAuthorityAsSearchResultDTO = {
+  id: string;
+  label?: string;
+  type?: string;
+  lccn?: string;
+  [key: string]: string | string[] | undefined;
+};
+
 interface IApiClient {
   loadSimpleLookupData: (uris: string | string[]) => Promise<LoadSimpleLookupResponseItem[] | undefined>;
 }

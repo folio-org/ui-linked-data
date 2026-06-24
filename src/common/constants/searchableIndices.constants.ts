@@ -36,6 +36,37 @@ export const COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
     [SearchableIndex.Genre]: {
       [SearchableIndexQuerySelector.Query]: `(genreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
+    // Combined authority page options
+    [SearchableIndex.Person]: {
+      [SearchableIndexQuerySelector.Query]: `(personalName all "${SEARCH_QUERY_VALUE_PARAM}" or sftPersonalName all "${SEARCH_QUERY_VALUE_PARAM}" or saftPersonalName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Family]: {
+      [SearchableIndexQuerySelector.Query]: `(personalName all "${SEARCH_QUERY_VALUE_PARAM}" or sftPersonalName all "${SEARCH_QUERY_VALUE_PARAM}" or saftPersonalName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Organization]: {
+      [SearchableIndexQuerySelector.Query]: `(corporateName all "${SEARCH_QUERY_VALUE_PARAM}" or sftCorporateName all "${SEARCH_QUERY_VALUE_PARAM}" or saftCorporateName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Meeting]: {
+      [SearchableIndexQuerySelector.Query]: `(meetingName all "${SEARCH_QUERY_VALUE_PARAM}" or sftMeetingName all "${SEARCH_QUERY_VALUE_PARAM}" or saftMeetingName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Place]: {
+      [SearchableIndexQuerySelector.Query]: `(geographicName all "${SEARCH_QUERY_VALUE_PARAM}" or sftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}" or saftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Form]: {
+      [SearchableIndexQuerySelector.Query]: `(genreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Concept]: {
+      [SearchableIndexQuerySelector.Query]: `(keyword all "${SEARCH_QUERY_VALUE_PARAM}" or naturalId="${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Topic]: {
+      [SearchableIndexQuerySelector.Query]: `(topicalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftTopicalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftTopicalTerm all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Temporal]: {
+      [SearchableIndexQuerySelector.Query]: `(keyword all "${SEARCH_QUERY_VALUE_PARAM}" or naturalId="${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
+    [SearchableIndex.Jurisdiction]: {
+      [SearchableIndexQuerySelector.Query]: `(geographicName all "${SEARCH_QUERY_VALUE_PARAM}" or sftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}" or saftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
   },
   [SearchSegment.Browse]: {
     [SearchableIndex.PersonalName]: {
