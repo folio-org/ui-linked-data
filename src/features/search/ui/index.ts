@@ -4,6 +4,7 @@ export * from './types';
 // Components
 export { AdvancedSearchModal } from './components/AdvancedSearchModal';
 export { AuthoritiesResultList } from './components/results/authorities';
+export { AuthoritiesPageResultList } from './components/results/authorities';
 export { HubsLookupResultList, HubsResultList } from './components/results/hubs';
 export { ResourcesResultList } from './components/results/resources';
 export { Search } from './components/Search';
