@@ -71,6 +71,18 @@ describe('resourceType.accessors', () => {
       expect(result).toBe(ResourceType.hub);
     });
 
+    it('Returns authority type for the canonical authority resource-type URL', () => {
+      const result = getResourceTypeFromURL(BFLITE_URIS.AUTHORITY_RESOURCE_TYPE as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.authority);
+    });
+
+    it('Returns authority type for the internal authority record token', () => {
+      const result = getResourceTypeFromURL(BFLITE_URIS.AUTHORITY as ResourceTypeURL);
+
+      expect(result).toBe(ResourceType.authority);
+    });
+
     it('Falls back to instance for null', () => {
       const result = getResourceTypeFromURL(null);
 
