@@ -1,5 +1,6 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
 
+import { LD_AUTHORITIES_SEARCHABLE_INDICES_MAP } from '../constants';
 import { LDAuthoritiesRequestBuilder } from '../strategies/requestBuilders';
 import { LDAuthoritiesResponseTransformer } from '../strategies/responseTransformers';
 import { LDAuthoritiesResultFormatter } from '../strategies/resultFormatters';
@@ -9,7 +10,7 @@ export const authoritiesLDConfig: SearchTypeConfig = {
   id: 'authorities:ld',
 
   strategies: {
-    requestBuilder: new LDAuthoritiesRequestBuilder(),
+    requestBuilder: new LDAuthoritiesRequestBuilder(LD_AUTHORITIES_SEARCHABLE_INDICES_MAP),
     responseTransformer: new LDAuthoritiesResponseTransformer(),
     resultFormatter: new LDAuthoritiesResultFormatter(),
   },

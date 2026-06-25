@@ -1,15 +1,17 @@
 import { SEARCH_API_ENDPOINT } from '@/common/constants/api.constants';
 
-import { LD_AUTHORITY_TYPE_MAP } from '../../constants/ldAuthorityType.constants';
 import type { SearchRequestDescriptor, SearchRequestParams } from '../../types';
 import { normalizeQuery } from '../../utils';
 import { BaseRequestBuilder } from './BaseRequestBuilder';
 
 export class LDAuthoritiesRequestBuilder extends BaseRequestBuilder {
+  private readonly searchableIndicesMap?: SearchableIndicesMap;
   private readonly defaultSortBy: string;
 
-  constructor(defaultSortBy = 'title') {
+  constructor(searchableIndicesMap?: SearchableIndicesMap, defaultSortBy = 'title') {
     super(SEARCH_API_ENDPOINT.AUTHORITIES_LOCAL, true);
+
+    this.searchableIndicesMap = searchableIndicesMap;
     this.defaultSortBy = defaultSortBy;
   }
 
@@ -27,23 +29,16 @@ export class LDAuthoritiesRequestBuilder extends BaseRequestBuilder {
   }
 
   private buildQuery(searchBy: string, value: string): string {
-    const normalizedValue = normalizeQuery(value) ?? '';
-    const sort = ` sortby ${this.defaultSortBy}`;
+    const template = this.searchableIndicesMap?.search?.[searchBy as keyof SearchableIndexEntries]?.query;
+    const sortClause = ` sortby ${this.defaultSortBy}`;
 
-    if (searchBy === 'keyword') {
-      return `(keyword all "${normalizedValue}")${sort}`;
+    if (typeof template === 'string') {
+      return `${this.buildCqlFromTemplate(template, value)}${sortClause}`;
     }
 
-    if (searchBy === 'lccn' || searchBy === 'identifier') {
-      return `(lccn all "${normalizedValue}")${sort}`;
-    }
+    // Fallback for indices without a dedicated template (e.g. MARC-only options): label search
+    const escapedValue = normalizeQuery(value) ?? '';
 
-    const type = LD_AUTHORITY_TYPE_MAP[searchBy];
-
-    if (type) {
-      return `(type=="${type}" and label all "${normalizedValue}")${sort}`;
-    }
-
-    return `(label all "${normalizedValue}")${sort}`;
+    return `(label all "${escapedValue}")${sortClause}`;
   }
 }
