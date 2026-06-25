@@ -8,6 +8,8 @@ export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResu
 
     return list?.map(entry => {
       const { id = '', label = '', type = '', lccn = '' } = entry as LDAuthorityAsSearchResultDTO;
+      // TODO: specify the correct label (Local or LCNAF) when the API is ready
+      const sourceLabel = 'ld.source.localLdAuthority';
 
       return {
         __meta: {
@@ -20,7 +22,7 @@ export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResu
         type: { label: type },
         identifier: { label: lccn },
         authorized: { label: '' },
-        source: { label: 'ld.source.localLdAuthority' },
+        source: { label: sourceLabel },
       };
     });
   }

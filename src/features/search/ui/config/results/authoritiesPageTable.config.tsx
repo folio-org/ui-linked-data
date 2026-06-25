@@ -1,4 +1,8 @@
-import { AuthorityActionFormatter, AuthorityLabelFormatter } from '@/features/search/ui/formatters';
+import {
+  AuthorityActionFormatter,
+  AuthorityLabelFormatter,
+  AuthoritySourceFormatter,
+} from '@/features/search/ui/formatters';
 
 export const authoritiesPageTableConfig: SearchResultsTableConfig = {
   columns: {
@@ -32,6 +36,7 @@ export const authoritiesPageTableConfig: SearchResultsTableConfig = {
       position: 4,
       className: 'cell-fixed',
       minWidth: 200,
+      formatter: AuthoritySourceFormatter,
     },
     action: {
       label: 'ld.action',

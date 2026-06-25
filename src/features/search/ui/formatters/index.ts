@@ -4,6 +4,7 @@ export { AuthorizedFormatter } from './authorities/AuthorizedFormatter';
 export { TitleFormatter } from './authorities/TitleFormatter';
 export { AuthorityLabelFormatter } from './authorities/AuthorityLabelFormatter';
 export { AuthorityActionFormatter } from './authorities/AuthorityActionFormatter';
+export { AuthoritySourceFormatter } from './authorities/AuthoritySourceFormatter';
 
 // Hubs formatters
 export { BaseNotesFormatter } from './hubs/BaseNotesFormatter';

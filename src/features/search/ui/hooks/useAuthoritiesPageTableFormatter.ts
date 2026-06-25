@@ -22,7 +22,11 @@ export function useAuthoritiesPageTableFormatter({
   onImport,
 }: UseAuthoritiesPageTableFormatterProps): UseAuthoritiesPageTableFormatterReturn {
   const { formatMessage } = useIntl();
-  const formattedResults = useFormattedResults<SearchResultsTableRow>();
+  const formatterOptions = useMemo(
+    () => ({ notSpecifiedLabel: formatMessage({ id: 'ld.notSpecified' }) }),
+    [formatMessage],
+  );
+  const formattedResults = useFormattedResults<SearchResultsTableRow>(formatterOptions);
 
   const formattedData = useMemo(() => {
     if (!formattedResults) return [];
