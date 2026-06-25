@@ -77,7 +77,7 @@ export const useSearchActions = () => {
    */
   const onClickNewAuthority = useCallback(() => {
     onCreateNewResource({
-      resourceTypeURL: TYPE_URIS.AUTHORITY as ResourceTypeURL,
+      resourceTypeURL: TYPE_URIS.AUTHORITY_RESOURCE_TYPE as ResourceTypeURL,
       queryParams: {
         type: ResourceType.authority,
       },

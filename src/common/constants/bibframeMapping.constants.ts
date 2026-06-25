@@ -5,6 +5,7 @@ export const BFLITE_URIS = {
   WORK: 'http://bibfra.me/vocab/lite/Work',
   HUB: 'http://bibfra.me/vocab/lite/Hub',
   AUTHORITY: '_authority',
+  AUTHORITY_RESOURCE_TYPE: 'http://bibfra.me/vocab/lite/Authority',
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
