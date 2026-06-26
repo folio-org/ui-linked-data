@@ -27,30 +27,81 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
   },
   // Base-level combined SearchBy list: all options across all sources
   searchableIndices: [
-    { labelId: 'ld.keyword', value: SearchableIndex.Keyword },
-    { labelId: 'ld.identifierAll', value: SearchableIndex.Identifier },
-    { labelId: 'ld.lccn', value: SearchableIndex.LCCN },
-    { labelId: 'ld.concept', value: SearchableIndex.Concept },
-    { labelId: 'ld.family', value: SearchableIndex.Family },
-    { labelId: 'ld.form', value: SearchableIndex.Form },
-    { labelId: 'ld.jurisdiction', value: SearchableIndex.Jurisdiction },
-    { labelId: 'ld.meeting', value: SearchableIndex.Meeting },
-    { labelId: 'ld.organization', value: SearchableIndex.Organization },
-    { labelId: 'ld.person', value: SearchableIndex.Person },
-    { labelId: 'ld.place', value: SearchableIndex.Place },
-    { labelId: 'ld.subject', value: SearchableIndex.Subject },
-    { labelId: 'ld.childrensSubjectHeading', value: SearchableIndex.ChildrenSubjectHeading },
-    { labelId: 'ld.temporal', value: SearchableIndex.Temporal },
-    { labelId: 'ld.topic', value: SearchableIndex.Topic },
-    { labelId: 'ld.uniformTitle', value: SearchableIndex.UniformTitle },
-    { labelId: 'ld.nameTitle', value: SearchableIndex.NameTitle },
+    {
+      labelId: 'ld.keyword',
+      value: SearchableIndex.Keyword,
+    },
+    {
+      labelId: 'ld.identifierAll',
+      value: SearchableIndex.Identifier,
+    },
+    {
+      labelId: 'ld.lccn',
+      value: SearchableIndex.LCCN,
+    },
+    {
+      labelId: 'ld.concept',
+      value: SearchableIndex.Concept,
+    },
+    {
+      labelId: 'ld.family',
+      value: SearchableIndex.Family,
+    },
+    {
+      labelId: 'ld.form',
+      value: SearchableIndex.Form,
+    },
+    {
+      labelId: 'ld.jurisdiction',
+      value: SearchableIndex.Jurisdiction,
+    },
+    {
+      labelId: 'ld.meeting',
+      value: SearchableIndex.Meeting,
+    },
+    {
+      labelId: 'ld.organization',
+      value: SearchableIndex.Organization,
+    },
+    {
+      labelId: 'ld.person',
+      value: SearchableIndex.Person,
+    },
+    {
+      labelId: 'ld.place',
+      value: SearchableIndex.Place,
+    },
+    {
+      labelId: 'ld.subject',
+      value: SearchableIndex.Subject,
+    },
+    {
+      labelId: 'ld.childrensSubjectHeading',
+      value: SearchableIndex.ChildrenSubjectHeading,
+    },
+    {
+      labelId: 'ld.temporal',
+      value: SearchableIndex.Temporal,
+    },
+    {
+      labelId: 'ld.topic',
+      value: SearchableIndex.Topic,
+    },
+    {
+      labelId: 'ld.uniformTitle',
+      value: SearchableIndex.UniformTitle,
+    },
+    {
+      labelId: 'ld.nameTitle',
+      value: SearchableIndex.NameTitle,
+    },
   ],
 
   // Segment-specific overrides for complex-lookup (Edit page modals).
   // These override the base config and are NOT used by the Search page.
   segments: {
     search: {
-      limit: 100,
+      limit: 100, // UI shows all 100 results per page
       features: {
         hasSegments: true,
         hasSourceToggle: false,
@@ -62,24 +113,58 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
         isVisibleEmptySearchPlaceholder: true,
       },
       searchableIndices: [
-        { labelId: 'ld.keyword', value: SearchableIndex.Keyword },
-        { labelId: 'ld.identifierAll', value: SearchableIndex.Identifier },
-        { labelId: 'ld.lccn', value: SearchableIndex.LCCN },
-        { labelId: 'ld.personalName', value: SearchableIndex.PersonalName },
-        { labelId: 'ld.corporateName', value: SearchableIndex.CorporateConferenceName },
-        { labelId: 'ld.geographicName', value: SearchableIndex.GeographicName },
-        { labelId: 'ld.nameTitle', value: SearchableIndex.NameTitle },
-        { labelId: 'ld.uniformTitle', value: SearchableIndex.UniformTitle },
-        { labelId: 'ld.subject', value: SearchableIndex.Subject },
-        { labelId: 'ld.childrensSubjectHeading', value: SearchableIndex.ChildrenSubjectHeading },
-        { labelId: 'ld.genre', value: SearchableIndex.Genre },
+        {
+          labelId: 'ld.keyword',
+          value: SearchableIndex.Keyword,
+        },
+        {
+          labelId: 'ld.identifierAll',
+          value: SearchableIndex.Identifier,
+        },
+        {
+          labelId: 'ld.lccn',
+          value: SearchableIndex.LCCN,
+        },
+        {
+          labelId: 'ld.personalName',
+          value: SearchableIndex.PersonalName,
+        },
+        {
+          labelId: 'ld.corporateName',
+          value: SearchableIndex.CorporateConferenceName,
+        },
+        {
+          labelId: 'ld.geographicName',
+          value: SearchableIndex.GeographicName,
+        },
+        {
+          labelId: 'ld.nameTitle',
+          value: SearchableIndex.NameTitle,
+        },
+        {
+          labelId: 'ld.uniformTitle',
+          value: SearchableIndex.UniformTitle,
+        },
+        {
+          labelId: 'ld.subject',
+          value: SearchableIndex.Subject,
+        },
+        {
+          labelId: 'ld.childrensSubjectHeading',
+          value: SearchableIndex.ChildrenSubjectHeading,
+        },
+        {
+          labelId: 'ld.genre',
+          value: SearchableIndex.Genre,
+        },
       ],
     },
 
     browse: {
-      limit: 100,
+      limit: 100, // UI shows all 100 results per page
       features: {
         hasSegments: true,
+        // Disable source toggle in browse segment
         hasSourceToggle: false,
         hasAdvancedSearch: false,
         isLoopedPagination: true,
@@ -88,13 +173,34 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
         isVisibleEmptySearchPlaceholder: true,
       },
       searchableIndices: [
-        { labelId: 'ld.personalName', value: SearchableIndex.PersonalName },
-        { labelId: 'ld.corporateName', value: SearchableIndex.CorporateConferenceName },
-        { labelId: 'ld.geographicName', value: SearchableIndex.GeographicName },
-        { labelId: 'ld.nameTitle', value: SearchableIndex.NameTitle },
-        { labelId: 'ld.uniformTitle', value: SearchableIndex.UniformTitle },
-        { labelId: 'ld.subject', value: SearchableIndex.Subject },
-        { labelId: 'ld.genre', value: SearchableIndex.Genre },
+        {
+          labelId: 'ld.personalName',
+          value: SearchableIndex.PersonalName,
+        },
+        {
+          labelId: 'ld.corporateName',
+          value: SearchableIndex.CorporateConferenceName,
+        },
+        {
+          labelId: 'ld.geographicName',
+          value: SearchableIndex.GeographicName,
+        },
+        {
+          labelId: 'ld.nameTitle',
+          value: SearchableIndex.NameTitle,
+        },
+        {
+          labelId: 'ld.uniformTitle',
+          value: SearchableIndex.UniformTitle,
+        },
+        {
+          labelId: 'ld.subject',
+          value: SearchableIndex.Subject,
+        },
+        {
+          labelId: 'ld.genre',
+          value: SearchableIndex.Genre,
+        },
       ],
     },
   },

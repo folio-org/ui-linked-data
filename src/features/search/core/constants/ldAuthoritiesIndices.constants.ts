@@ -7,50 +7,34 @@ import { SearchableIndex, SearchableIndexQuerySelector } from '@/common/constant
  * - Type-based indices (person, organization, ...) constrain by `type` and match the label.
  *   The `sortby` clause is appended by the request builder, not baked into the templates.
  */
+
+const typeLabelEntry = (type: string) => ({
+  [SearchableIndexQuerySelector.Query]: `(type=="${type}" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
+});
+
 export const LD_AUTHORITIES_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
     [SearchableIndex.Keyword]: {
       [SearchableIndexQuerySelector.Query]: `(keyword all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
+    // Identifier intentionally uses the same lccn query as LCCN
     [SearchableIndex.Identifier]: {
       [SearchableIndexQuerySelector.Query]: `(lccn all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
     [SearchableIndex.LCCN]: {
       [SearchableIndexQuerySelector.Query]: `(lccn all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
-    [SearchableIndex.Concept]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="concept" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Family]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="family" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Form]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="form" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Jurisdiction]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="jurisdiction" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Meeting]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="meeting" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Organization]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="organization" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Person]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="person" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Place]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="place" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Subject]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="concept" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Temporal]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="temporal" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Topic]: {
-      [SearchableIndexQuerySelector.Query]: `(type=="topic" and label all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
+    [SearchableIndex.Concept]: typeLabelEntry('concept'),
+    [SearchableIndex.Family]: typeLabelEntry('family'),
+    [SearchableIndex.Form]: typeLabelEntry('form'),
+    [SearchableIndex.Jurisdiction]: typeLabelEntry('jurisdiction'),
+    [SearchableIndex.Meeting]: typeLabelEntry('meeting'),
+    [SearchableIndex.Organization]: typeLabelEntry('organization'),
+    [SearchableIndex.Person]: typeLabelEntry('person'),
+    [SearchableIndex.Place]: typeLabelEntry('place'),
+    [SearchableIndex.Subject]: typeLabelEntry('subject'),
+    [SearchableIndex.Temporal]: typeLabelEntry('temporal'),
+    [SearchableIndex.Topic]: typeLabelEntry('topic'),
   },
   [SearchSegment.Browse]: {},
 };
