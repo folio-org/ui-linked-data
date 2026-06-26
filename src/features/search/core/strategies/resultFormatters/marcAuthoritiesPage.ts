@@ -21,7 +21,8 @@ export class MarcAuthoritiesPageResultFormatter implements IResultFormatter<Sear
         },
         label: { label: headingRef, className: 'title' },
         type: { label: headingType },
-        identifier: { label: lccn || naturalId },
+        lccn: { label: lccn || naturalId },
+        otherIdentifier: { label: '' },
         authorized: { label: authRefType },
         source: { label: sourceName || options?.notSpecifiedLabel || sourceFileId },
       };

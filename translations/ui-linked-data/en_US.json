@@ -304,6 +304,7 @@
   "ld.source.locChildrensSubject": "Local LoC Children's Subject heading",
   "ld.label": "Label",
   "ld.identifier": "Identifier",
+  "ld.otherIdentifier": "Other Identifier",
   "ld.concept": "Concept",
   "ld.form": "Form",
   "ld.place": "Place",

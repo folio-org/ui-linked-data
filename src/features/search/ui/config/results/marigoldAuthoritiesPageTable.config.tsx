@@ -4,7 +4,7 @@ import {
   AuthoritySourceFormatter,
 } from '@/features/search/ui/formatters';
 
-export const authoritiesPageTableConfig: SearchResultsTableConfig = {
+export const marigoldAuthoritiesPageTableConfig: SearchResultsTableConfig = {
   columns: {
     label: {
       label: 'ld.label',
@@ -31,22 +31,16 @@ export const authoritiesPageTableConfig: SearchResultsTableConfig = {
       className: 'cell-fixed',
       minWidth: 160,
     },
-    authorized: {
-      label: 'ld.authorizedReference',
-      position: 4,
-      className: 'cell-fixed',
-      minWidth: 150,
-    },
     source: {
       label: 'ld.source',
-      position: 5,
+      position: 4,
       className: 'cell-fixed',
       minWidth: 200,
       formatter: AuthoritySourceFormatter,
     },
     action: {
       label: 'ld.action',
-      position: 6,
+      position: 5,
       className: 'cell-fixed',
       minWidth: 100,
       maxWidth: 'max-content',

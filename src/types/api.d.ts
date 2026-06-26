@@ -70,12 +70,17 @@ type AuthorityAsBrowseResultDTO = {
   isAnchor?: boolean;
 };
 
+type LDAuthorityIdentifier = {
+  value: string;
+  type: string;
+};
+
 type LDAuthorityAsSearchResultDTO = {
   id: string;
   label?: string;
-  type?: string;
-  lccn?: string;
-  [key: string]: string | string[] | undefined;
+  types?: string[];
+  identifiers?: LDAuthorityIdentifier[];
+  tenantId?: string;
 };
 
 interface IApiClient {
