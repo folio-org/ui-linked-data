@@ -1123,7 +1123,7 @@ describe('useSearchControlsHandlers', () => {
       const params = updaterFn(new URLSearchParams());
 
       expect(params.get(SearchParam.SEGMENT)).toBe('authorities');
-      expect(params.has(SearchParam.SOURCE)).toBe(false);
+      expect(params.has(SearchParam.SOURCE)).toBe(true);
       expect(params.has(SearchParam.QUERY)).toBe(false);
       expect(params.has(SearchParam.SEARCH_BY)).toBe(false);
     });
