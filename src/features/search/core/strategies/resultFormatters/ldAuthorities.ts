@@ -3,14 +3,12 @@ import { createCompositeKeyBuilder } from '../../utils';
 
 const parseTypeLabel = (typeUri: string): string => {
   const lastSlash = typeUri.lastIndexOf('/');
+
   return lastSlash !== -1 ? typeUri.slice(lastSlash + 1) : typeUri;
 };
 
-const formatLccn = (identifiers?: LDAuthorityIdentifier[]): string =>
-  identifiers
-    ?.filter(i => i.type === 'LCCN')
-    .map(i => i.value.trim())
-    .join(', ') ?? '';
+const formatIdentifiers = (identifiers?: LDAuthorityIdentifier[]): string =>
+  identifiers?.map(i => i.value.trim()).join(', ') ?? '';
 
 export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResultsTableRow> {
   format(data: unknown[]): SearchResultsTableRow[] {
@@ -21,7 +19,7 @@ export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResu
       const { id = '', label = '', types, identifiers } = entry;
 
       const typeLabel = types?.map(parseTypeLabel).join(', ') ?? '';
-      const lccnLabel = formatLccn(identifiers);
+      const identifiersLabel = formatIdentifiers(identifiers);
 
       return {
         __meta: {
@@ -32,8 +30,7 @@ export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResu
         },
         label: { label, className: 'title' },
         type: { label: typeLabel },
-        lccn: { label: lccnLabel },
-        otherIdentifier: { label: '' },
+        identifiers: { label: identifiersLabel },
         authorized: { label: '' },
         source: { label: '' },
       };

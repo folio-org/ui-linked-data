@@ -14,9 +14,7 @@ const typeLabelEntry = (type: string) => ({
 
 export const LD_AUTHORITIES_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
-    [SearchableIndex.Keyword]: {
-      [SearchableIndexQuerySelector.Query]: `(keyword all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
+    [SearchableIndex.Keyword]: typeLabelEntry('keyword'),
     // Identifier intentionally uses the same lccn query as LCCN
     [SearchableIndex.Identifier]: {
       [SearchableIndexQuerySelector.Query]: `(lccn all "${SEARCH_QUERY_VALUE_PARAM}")`,

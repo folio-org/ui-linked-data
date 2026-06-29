@@ -14,7 +14,7 @@ export const SOURCE_OPTIONS: SourceOption[] = [
 export const AUTHORITIES_SOURCE_OPTIONS: SourceOption[] = [
   {
     value: 'ld',
-    labelId: 'ld.source.localLdAuthority',
+    labelId: 'ld.source.localLDAuthority',
   },
   {
     value: 'marc',
