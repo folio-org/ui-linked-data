@@ -4,11 +4,11 @@ import { createCompositeKeyBuilder } from '../../utils';
 const parseTypeLabel = (typeUri: string): string => {
   const lastSlash = typeUri.lastIndexOf('/');
 
-  return lastSlash !== -1 ? typeUri.slice(lastSlash + 1) : typeUri;
+  return lastSlash === -1 ? typeUri : typeUri.slice(lastSlash + 1);
 };
 
 const formatIdentifiers = (identifiers?: LDAuthorityIdentifier[]): string =>
-  identifiers?.map(i => i.value.trim()).join(', ') ?? '';
+  identifiers?.map(({ value }) => value.trim()).join(', ') ?? '';
 
 export class LDAuthoritiesResultFormatter implements IResultFormatter<SearchResultsTableRow> {
   format(data: unknown[]): SearchResultsTableRow[] {

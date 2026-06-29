@@ -7,11 +7,8 @@ interface AuthorityLabelFormatterProps {
   onTitleClick?: (id: string) => void;
 }
 
-export const AuthorityLabelFormatter: FC<AuthorityLabelFormatterProps> = ({ row }) => {
+export const AuthorityLabelFormatter: FC<AuthorityLabelFormatterProps> = ({ row, onTitleClick }) => {
   const title = row.label?.label as string;
-
-  // TODO: add event handler to display preview
-  const onTitleClick = () => {};
 
   if (!title) {
     return <span />;
@@ -21,7 +18,7 @@ export const AuthorityLabelFormatter: FC<AuthorityLabelFormatterProps> = ({ row 
     <Button
       type={ButtonType.Link}
       className="authority-link"
-      onClick={onTitleClick}
+      onClick={() => onTitleClick?.(row.__meta.id)}
       data-testid={`authority-preview-link-${row.__meta.id}`}
     >
       {title}
