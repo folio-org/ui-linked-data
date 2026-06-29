@@ -3,6 +3,8 @@ import { HubsLookupResultFormatter } from './hubLookup';
 import { ResourcesResultFormatter } from './resources';
 
 export * from './authorities';
+export * from './ldAuthorities';
+export * from './marcAuthoritiesPage';
 export * from './hubLookup';
 export * from './hub';
 export * from './hubLocal';

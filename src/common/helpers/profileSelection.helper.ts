@@ -1,32 +1,36 @@
-import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import { profileWarningsByName } from '@/configs';
+import { getProfileLabelId, getResourceTypeFromURL } from '@/configs/resourceTypes';
 
-export const getLabelId = ({
-  labels: { workSet, instanceSet, workChange, instanceChange, defaultLabel },
-  profileSelectionType: { action, resourceTypeURL },
-}: {
-  labels: {
-    workSet?: string;
-    instanceSet?: string;
-    workChange?: string;
-    instanceChange?: string;
-    defaultLabel: string;
-  };
-  profileSelectionType: ProfileSelectionType;
-}) => {
-  const isWorkResourceType = resourceTypeURL === TYPE_URIS.WORK;
-  let labelId;
+/**
+ * Generic, type-agnostic translation ids for the profile-selection modal.
+ * Each message uses a `{type}` placeholder filled with the resource-type name,
+ * so adding a new resource type requires no new label keys here.
+ */
+export const PROFILE_SELECTION_LABEL_IDS = {
+  titleSet: 'ld.newType',
+  titleChange: 'ld.changeTypeProfile',
+  select: 'ld.modal.chooseResourceProfile.typeProfile',
+  setAsDefault: 'ld.setDefaultTypeProfile',
+  submitSet: 'ld.create.base',
+  submitChange: 'ld.change',
+} as const;
 
-  if (action === 'set') {
-    labelId = isWorkResourceType ? workSet : instanceSet;
-  } else if (action === 'change') {
-    labelId = isWorkResourceType ? workChange : instanceChange;
-  } else {
-    labelId = defaultLabel;
-  }
+/**
+ * Returns the translation id for the human-readable resource-type name
+ * (e.g. 'ld.work', 'ld.authority') resolved from a resource-type URL. Used to
+ * fill the `{type}` placeholder in profile-selection labels.
+ */
+export const getResourceTypeLabelId = (resourceTypeURL?: ResourceTypeURL): string =>
+  getProfileLabelId(getResourceTypeFromURL(resourceTypeURL ?? null));
 
-  return labelId;
-};
+/**
+ * Resolves the modal title and submit-button translation ids for a given
+ * profile-selection action.
+ */
+export const getProfileSelectionMessageIds = ({ action }: ProfileSelectionType) => ({
+  titleId: action === 'set' ? PROFILE_SELECTION_LABEL_IDS.titleSet : PROFILE_SELECTION_LABEL_IDS.titleChange,
+  submitId: action === 'set' ? PROFILE_SELECTION_LABEL_IDS.submitSet : PROFILE_SELECTION_LABEL_IDS.submitChange,
+});
 
 export const getWarningByProfileNames = (
   resourceTypeURL: ResourceTypeURL,
