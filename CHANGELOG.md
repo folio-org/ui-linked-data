@@ -9,12 +9,14 @@
 * Refactor imports and add import boundary rules. Refs [UILD-816].
 * Fix regression issues that appeared after refactoring. Refs [UILD-816], [UILD-827].
 * Add Authority edit page. Refs [UILD-826].
+* Extend Search page with Authority search and create options. Refs [UILD-825].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 [UILD-816]:https://folio-org.atlassian.net/browse/UILD-816
 [UILD-821]:https://folio-org.atlassian.net/browse/UILD-821
 [UILD-827]:https://folio-org.atlassian.net/browse/UILD-827
 [UILD-826]:https://folio-org.atlassian.net/browse/UILD-826
+[UILD-825]:https://folio-org.atlassian.net/browse/UILD-825
 
 ## 2.0.4 (2026-06-03)
 * Fix default profile type persistence across edit form and profile settings. Fixes [UILD-820].
