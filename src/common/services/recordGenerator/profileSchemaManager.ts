@@ -30,7 +30,7 @@ export class ProfileSchemaManager implements IProfileSchemaManager {
 
     if (parentPath && parentPath.length > 0) {
       return entries.filter(entry => {
-        if (entry.path.length < parentPath.length) return false;
+        if (entry.path.length !== parentPath.length + 1) return false;
 
         for (let i = 0; i < parentPath.length; i++) {
           if (entry.path[i] !== parentPath[i]) return false;
