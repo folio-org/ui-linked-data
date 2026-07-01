@@ -80,7 +80,6 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       setIsCreating(false);
       resetSettings();
       setSelectedProfileSettingsMeta(nextSelectedSettingsMeta);
-      setSettingsName('');
       setIsEditingSettingsNext(false);
       setNextSelectedSettingsMeta(null);
     }
