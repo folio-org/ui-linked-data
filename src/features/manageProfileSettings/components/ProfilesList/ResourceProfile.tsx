@@ -12,11 +12,13 @@ type ResourceProfileProps = {
 };
 
 export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected }) => {
-  const { setNextSelectedProfile, setSelectedProfile, isModified } = useManageProfileSettingsState([
-    'setNextSelectedProfile',
-    'setSelectedProfile',
-    'isModified',
-  ]);
+  const { setNextSelectedProfile, setSelectedProfile, resetSelectedProfileSettingsMeta, isModified } =
+    useManageProfileSettingsState([
+      'setNextSelectedProfile',
+      'setSelectedProfile',
+      'resetSelectedProfileSettingsMeta',
+      'isModified',
+    ]);
   const {
     setIsManageProfileSettingsUnsavedModalOpen,
     setIsManageProfileSettingsShowProfiles,
@@ -36,6 +38,7 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
       setSelectedProfile(profile);
+      resetSelectedProfileSettingsMeta();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
     }

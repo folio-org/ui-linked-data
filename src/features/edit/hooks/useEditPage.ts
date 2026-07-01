@@ -141,6 +141,21 @@ export const useEditPage = () => {
     [processResource, applyToStores, setIsLoading, addStatusMessagesItem],
   );
 
+  const applyUpdatedSettingsToResource = useCallback(
+    async (profileSettingsId: string) => {
+      try {
+        setIsLoading(true);
+
+        const result = await processResource({ profileSettingsId });
+
+        if (result) applyToStores({ result, record: null, withReference: true });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [processResource, applyToStores, setIsLoading],
+  );
+
   const fetchRefRecord = useCallback(
     async (recordId: string, entityId: BibframeEntities) => {
       try {
@@ -254,5 +269,5 @@ export const useEditPage = () => {
     ],
   );
 
-  return { initNewResource, loadResource };
+  return { initNewResource, loadResource, applyUpdatedSettingsToResource };
 };
