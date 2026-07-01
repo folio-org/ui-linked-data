@@ -2,7 +2,12 @@ import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
-import { getLabelId, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
+import {
+  PROFILE_SELECTION_LABEL_IDS,
+  getProfileSelectionMessageIds,
+  getResourceTypeLabelId,
+  isProfilePreferred,
+} from '@/common/helpers/profileSelection.helper';
 import { Modal } from '@/components/Modal';
 import { Select, SelectValue } from '@/components/Select';
 
@@ -124,43 +129,13 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
       }) as SelectValue[];
     };
 
-    const title = formatMessage({
-      id: getLabelId({
-        labels: {
-          workChange: 'ld.changeWorkProfile',
-          instanceChange: 'ld.changeInstanceProfile',
-          workSet: 'ld.newWork',
-          instanceSet: 'ld.newInstance',
-          defaultLabel: 'ld.newInstance',
-        },
-        profileSelectionType,
-      }),
-    });
-    const labelSelect = formatMessage({
-      id: getLabelId({
-        labels: {
-          workChange: 'ld.modal.chooseResourceProfile.workProfile',
-          instanceChange: 'ld.modal.chooseResourceProfile.instanceProfile',
-          workSet: 'ld.modal.chooseResourceProfile.workProfile',
-          instanceSet: 'ld.modal.chooseResourceProfile.instanceProfile',
-          defaultLabel: 'ld.resourceProfile',
-        },
-        profileSelectionType,
-      }),
-    });
-    const labelSetAsDefault = formatMessage({
-      id: getLabelId({
-        labels: {
-          workChange: 'ld.modal.chooseResourceProfile.setDefaultWorkProfile',
-          instanceChange: 'ld.modal.chooseResourceProfile.setDefaultInstanceProfile',
-          workSet: 'ld.modal.chooseResourceProfile.setDefaultWorkProfile',
-          instanceSet: 'ld.modal.chooseResourceProfile.setDefaultInstanceProfile',
-          defaultLabel: 'ld.modal.chooseResourceProfile.setAsDefault',
-        },
-        profileSelectionType,
-      }),
-    });
-    const labelSubmit = formatMessage({ id: profileSelectionType.action === 'set' ? 'ld.create.base' : 'ld.change' });
+    const typeLabel = formatMessage({ id: getResourceTypeLabelId(resourceTypeURL) });
+    const { titleId, submitId } = getProfileSelectionMessageIds(profileSelectionType);
+
+    const title = formatMessage({ id: titleId }, { type: typeLabel });
+    const labelSelect = formatMessage({ id: PROFILE_SELECTION_LABEL_IDS.select }, { type: typeLabel });
+    const labelSetAsDefault = formatMessage({ id: PROFILE_SELECTION_LABEL_IDS.setAsDefault }, { type: typeLabel });
+    const labelSubmit = formatMessage({ id: submitId });
     const labelSettingsSelect = formatMessage({ id: 'ld.savedSettings' });
 
     return (

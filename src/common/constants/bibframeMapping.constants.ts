@@ -4,6 +4,8 @@ export const BFLITE_URIS = {
   INSTANCE: 'http://bibfra.me/vocab/lite/Instance',
   WORK: 'http://bibfra.me/vocab/lite/Work',
   HUB: 'http://bibfra.me/vocab/lite/Hub',
+  AUTHORITY: '_authority',
+  AUTHORITY_RESOURCE_TYPE: 'http://bibfra.me/vocab/lite/Authority',
   NAME: 'http://bibfra.me/vocab/lite/name',
   LABEL: 'http://bibfra.me/vocab/lite/label',
   LINK: 'http://bibfra.me/vocab/lite/link',
@@ -89,6 +91,16 @@ export const BFLITE_URIS = {
   DISSERTATION_ID: 'http://bibfra.me/vocab/library/dissertationID',
   BOOKS: 'http://bibfra.me/vocab/library/Books',
   CONTINUING_RESOURCES: 'http://bibfra.me/vocab/library/ContinuingResources',
+  NUMERATION: 'http://bibfra.me/vocab/library/numeration',
+  TITLES: 'http://bibfra.me/vocab/library/titles',
+  ATTRIBUTION: 'http://bibfra.me/vocab/library/attribution',
+  NAME_ALTERNATIVE: 'http://bibfra.me/vocab/lite/nameAlternative',
+  AFFILIATION: 'http://bibfra.me/vocab/scholar/affiliation',
+  SUBORDINATE_UNIT: 'http://bibfra.me/vocab/library/subordinateUnit',
+  PLACE: 'http://bibfra.me/vocab/library/place',
+  GEOGRAPHIC_COVERAGE: 'http://bibfra.me/vocab/library/geographicCoverage',
+  NUMBER_OF_PARTS: 'http://bibfra.me/vocab/library/numberOfParts',
+  QUALIFIER: 'http://bibfra.me/vocab/library/qualifier',
 };
 
 export const NON_BF_RECORD_ELEMENTS = {
@@ -143,6 +155,12 @@ export const BLOCKS_BFLITE = {
     uri: BFLITE_URIS.HUB,
     referenceKey: '',
     resourceType: ResourceType.hub,
+    reference: undefined,
+  },
+  AUTHORITY: {
+    uri: BFLITE_URIS.AUTHORITY,
+    referenceKey: '',
+    resourceType: ResourceType.authority,
     reference: undefined,
   },
 };

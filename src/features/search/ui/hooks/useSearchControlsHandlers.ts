@@ -247,9 +247,13 @@ export const useSearchControlsHandlers = ({
       const updatedState = { ...currentState.navigationState } as Record<string, unknown>;
       updatedState[SearchParam.SEGMENT] = newSegment;
 
-      // Restore source from target draft if exists
-      if (existingDraft?.source) {
-        updatedState[SearchParam.SOURCE] = existingDraft.source;
+      // Restore source from the target draft if it exists, otherwise seed the
+      // segment's default source (e.g. 'authorities' -> 'ld', 'hubs' -> 'libraryOfCongress').
+      // Mirrors handleReset so the segment's default source is always established.
+      const targetSource = existingDraft?.source ?? getDefaultSourceForSegment(newSegment);
+
+      if (targetSource) {
+        updatedState[SearchParam.SOURCE] = targetSource;
       } else {
         delete updatedState[SearchParam.SOURCE];
       }
@@ -271,8 +275,8 @@ export const useSearchControlsHandlers = ({
             params.set(SearchParam.QUERY, normalizeQuery(restoredDraft.query) ?? '');
             params.set(SearchParam.SEARCH_BY, restoredDraft.searchBy);
 
-            if (restoredDraft.source) {
-              params.set(SearchParam.SOURCE, restoredDraft.source);
+            if (targetSource) {
+              params.set(SearchParam.SOURCE, targetSource);
             }
           }
 
@@ -332,7 +336,7 @@ export const useSearchControlsHandlers = ({
     // fall back to the current core config id so default segment is included
     // in the URL for URL flow.
     const segment = (navState?.[SearchParam.SEGMENT] as string) ?? coreConfigRef.current?.id ?? '';
-    const source = (navState?.[SearchParam.SOURCE] as string) ?? undefined;
+    const source = (navState?.[SearchParam.SOURCE] as string) ?? getDefaultSourceForSegment(segment) ?? undefined;
 
     // Resolve the effective configs for the current segment + source
     const effectiveCoreConfig = resolveCoreConfig(segment, source) ?? coreConfigRef.current;

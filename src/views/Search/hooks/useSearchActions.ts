@@ -72,12 +72,25 @@ export const useSearchActions = () => {
     });
   }, [onCreateNewResource]);
 
+  /**
+   * Navigates to create a new Authority resource
+   */
+  const onClickNewAuthority = useCallback(() => {
+    onCreateNewResource({
+      resourceTypeURL: TYPE_URIS.AUTHORITY_RESOURCE_TYPE as ResourceTypeURL,
+      queryParams: {
+        type: ResourceType.authority,
+      },
+    });
+  }, [onCreateNewResource]);
+
   return {
     handlePreviewMultiple,
     handleImportInstances,
     handleImportHubs,
     onClickNewWork,
     onClickNewHub,
+    onClickNewAuthority,
     navigateToManageProfileSettings,
   };
 };
