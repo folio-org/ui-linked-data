@@ -83,16 +83,21 @@ export const ProfileSettingsList = () => {
   };
 
   return (
-    <div data-testid="profile-settings-selector-section" className="profile-settings-selector">
-      <Button type={ButtonType.Highlighted} label="Create" onClick={handleCreate} />
+    <div data-testid="profile-settings-select-section" className="profile-settings-select">
+      <Button
+        type={ButtonType.Highlighted}
+        label={<FormattedMessage id="ld.create.base" />}
+        onClick={handleCreate}
+        data-testid="profile-settings-select-create"
+      />
 
-      <label id="profile-settings-selector-label" htmlFor="profile-settings-selector">
+      <label id="profile-settings-select-label" htmlFor="profile-settings-select">
         <FormattedMessage id="ld.profileSettings.savedSettings" />
       </label>
       <Select
-        ariaLabelledBy="profile-settings-selector-label"
-        data-testid="profile-settings-selector"
-        id="profile-settings-selector"
+        ariaLabelledBy="profile-settings-select-label"
+        data-testid="profile-settings-select"
+        id="profile-settings-select"
         value={String(selectedProfileSettingsMeta?.id || '')}
         options={settingsMetaOptions}
         onChange={handleChange}
