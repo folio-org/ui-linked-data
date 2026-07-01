@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { Button, ButtonType } from '@/components/Button';
@@ -14,7 +15,6 @@ import { useLoadingState, useManageProfileSettingsState, useStatusState, useUISt
 
 import ArrowLeftIcon from '@/assets/arrow-left-16.svg?react';
 
-import { CustomProfileToggle } from '../CustomProfileToggle';
 import { DefaultProfileOption } from '../DefaultProfileOption';
 import { ProfileSettingsEditor } from '../ProfileSettingsEditor';
 import { ProfileSettingsList } from '../ProfileSettingsList';
@@ -59,7 +59,7 @@ export const ProfileSettings = () => {
           const profile = await loadProfile(selectedProfile.id);
           setFullProfile(profile);
           if (selectedProfileSettingsMeta) {
-            if (selectedProfileSettingsMeta.id === 'default') {
+            if (selectedProfileSettingsMeta.id === PROFILE_SETTINGS_DEFAULT_OPTION) {
               resetProfileSettings();
             } else {
               setProfileSettings(
@@ -112,8 +112,6 @@ export const ProfileSettings = () => {
       <hr />
 
       <ProfileSettingsList />
-
-      <CustomProfileToggle />
 
       <ProfileSettingsEditor />
     </div>

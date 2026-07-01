@@ -24,7 +24,7 @@ export const ProfilesList = () => {
     'selectedProfile',
     'setSelectedProfile',
   ]);
-  const { resetSettings } = useResetSettings();
+  const { resetSettingsExceptModified } = useResetSettings();
   const {
     isManageProfileSettingsBelowBreakpoint,
     isManageProfileSettingsShowProfiles,
@@ -64,7 +64,7 @@ export const ProfilesList = () => {
       for (const resourceType in availableProfiles) {
         if (availableProfiles[resourceType as ResourceTypeURL]?.length > 0) {
           setSelectedProfile(availableProfiles[resourceType as ResourceTypeURL][0]);
-          resetSettings();
+          resetSettingsExceptModified();
           break;
         }
       }

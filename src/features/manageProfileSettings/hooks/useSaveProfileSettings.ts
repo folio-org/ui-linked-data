@@ -1,7 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
 
 import { createProfileSettings, saveProfileSettings } from '@/common/api/profiles.api';
+import { ApiErrorCodes } from '@/common/constants/api.constants';
 import { StatusType } from '@/common/constants/status.constants';
+import { checkHasErrorOfCodeType } from '@/common/helpers/api.helper';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
@@ -15,6 +17,7 @@ export const useSaveProfileSettings = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const {
+    isCreating,
     isSettingsActive,
     isTypeDefaultProfile,
     selectedProfile,
@@ -22,10 +25,12 @@ export const useSaveProfileSettings = () => {
     unusedComponents,
     selectedComponents,
     settingsName,
+    setIsCreating,
     setIsModified,
     setProfileSettings,
     setSelectedProfileSettingsMeta,
   } = useManageProfileSettingsState([
+    'isCreating',
     'isSettingsActive',
     'isTypeDefaultProfile',
     'selectedProfile',
@@ -33,6 +38,7 @@ export const useSaveProfileSettings = () => {
     'unusedComponents',
     'selectedComponents',
     'settingsName',
+    'setIsCreating',
     'setIsModified',
     'setProfileSettings',
     'setSelectedProfileSettingsMeta',
@@ -53,23 +59,17 @@ export const useSaveProfileSettings = () => {
     }
   };
 
-  const saveAndSetSettings = async (name?: string) => {
-    const settingsToSave = generateSettings(
-      selectedComponents,
-      unusedComponents,
-      isSettingsActive,
-      name ?? settingsName,
-    );
-    let settingsMeta;
+  const saveAndSetSettings = async () => {
+    const settingsToSave = generateSettings(selectedComponents, unusedComponents, isSettingsActive, settingsName);
+    let settingsMeta: ProfileSettingsMeta;
 
     try {
-      if (!name && selectedProfileSettingsMeta) {
+      if (!isCreating && selectedProfileSettingsMeta) {
         settingsMeta = selectedProfileSettingsMeta;
         await saveProfileSettings(selectedProfile.id, settingsMeta.id, settingsToSave);
       } else {
-        const response = await createProfileSettings(selectedProfile.id, settingsToSave);
-        const created = (await response.json()) as ProfileSettingsMeta;
-        settingsMeta = created;
+        settingsMeta = await createProfileSettings(selectedProfile.id, settingsToSave);
+        setIsCreating(false);
       }
       setProfileSettings({ ...settingsToSave, missingFromSettings: [] });
       queryClient.refetchQueries({ queryKey: ['profileSettingsMeta', String(selectedProfile.id)] });
@@ -77,15 +77,23 @@ export const useSaveProfileSettings = () => {
       setSelectedProfileSettingsMeta(settingsMeta);
     } catch (error) {
       logger.error('Failed to set profile settings:', error);
-      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.error.saveProfileSettings'));
+      let errKey = 'ld.error.saveProfileSettings';
+      if ((error as ApiError).errors) {
+        if (checkHasErrorOfCodeType(error as ApiError, ApiErrorCodes.ProfileSettingsNameNotUnique)) {
+          errKey = `ld.${ApiErrorCodes.ProfileSettingsNameNotUnique}`;
+        } else if (checkHasErrorOfCodeType(error as ApiError, ApiErrorCodes.NotBlank)) {
+          errKey = 'ld.error.profileSettingsNameNotBlank';
+        }
+      }
+      addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, errKey));
     }
   };
 
-  const saveSettings = async (name?: string) => {
+  const saveSettings = async () => {
     try {
       setIsLoading(true);
       await saveAndSetPreferred();
-      await saveAndSetSettings(name);
+      await saveAndSetSettings();
       setIsModified(false);
     } finally {
       setIsLoading(false);

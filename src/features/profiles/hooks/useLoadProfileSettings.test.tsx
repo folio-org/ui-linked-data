@@ -87,7 +87,7 @@ describe('useLoadProfileSettings', () => {
       const settings = await result.current.loadProfileSettings(1, 1, profile);
 
       expect(settings).toBe(newProfileSettingsWithDrift);
-      expect(fetchProfileSettings).toHaveBeenCalledWith(1);
+      expect(fetchProfileSettings).toHaveBeenCalledWith(1, 1);
     });
 
     test('recomputes drift for each resource type while reusing cached settings', async () => {
@@ -129,7 +129,7 @@ describe('useLoadProfileSettings', () => {
       const settings = await result.current.loadProfileSettings(1, 1, profile);
 
       expect(settings).toBe(DEFAULT_INACTIVE_SETTINGS);
-      expect(fetchProfileSettings).toHaveBeenCalledWith(1);
+      expect(fetchProfileSettings).toHaveBeenCalledWith(1, 1);
       expect(addStatusMessagesItem).toHaveBeenCalled();
     });
   });

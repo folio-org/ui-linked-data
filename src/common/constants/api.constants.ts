@@ -49,6 +49,8 @@ export enum ApiErrorCodes {
   RequiredPrimaryMainTitle = 'required_primary_main_title',
   LccnDoesNotMatchPattern = 'lccn_does_not_match_pattern',
   LccnNotUnique = 'lccn_not_unique',
+  ProfileSettingsNameNotUnique = 'profile_settings_name_not_unique',
+  NotBlank = 'must not be blank',
   FailedDependency = 'failed_dependency',
   NotFound = 'not_found',
   Mapping = 'mapping',

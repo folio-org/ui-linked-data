@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import { ModalChooseProfile } from './ModalChooseProfile';
 
@@ -13,6 +14,17 @@ const mockProfileSelectionType = {
   action: 'set',
   resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
 } as ProfileSelectionType;
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: { retry: false },
+    mutations: { retry: false },
+  },
+});
+
+const renderWithProviders = (component: React.ReactNode) => {
+  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
+};
 
 describe('ModalChooseProfile', () => {
   const onCancel = jest.fn();
@@ -28,7 +40,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('renders modal component with profile selection', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -43,11 +55,11 @@ describe('ModalChooseProfile', () => {
     expect(screen.getByTestId('modal-choose-profile-content')).toBeInTheDocument();
 
     // Check that the profile select is rendered with correct options
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     expect(selectElement).toBeInTheDocument();
 
     // Check that the dropdown has all the profile options
-    const options = screen.getAllByRole('option');
+    const options = within(selectElement).getAllByRole('option');
     expect(options).toHaveLength(mockProfiles.length);
     expect(options[0]).toHaveValue('profile_1');
     expect(options[1]).toHaveValue('profile_2');
@@ -55,7 +67,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('selects the first profile by default', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -66,11 +78,11 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    expect(screen.getByRole('combobox')).toHaveValue('profile_1');
+    expect(screen.getByTestId('select-profile')).toHaveValue('profile_1');
   });
 
   test('changes selected profile when user selects different option', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -81,14 +93,14 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
 
     expect(selectElement).toHaveValue('profile_2');
   });
 
   test('toggles the "set as default" checkbox', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -114,7 +126,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onSubmit with selected profile id when submit button is clicked', async () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -125,17 +137,17 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_2', false);
+      expect(onSubmit).toHaveBeenCalledWith('profile_2', 'default', false);
     });
   });
 
   test('calls onCancel when cancel button is clicked', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -151,7 +163,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onClose when modal is closed', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -167,7 +179,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('does not render when isOpen is false', () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <ModalChooseProfile
         isOpen={false}
         profileSelectionType={mockProfileSelectionType}
@@ -182,7 +194,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onSubmit with correct profile id when form is submitted without manual selection', async () => {
-    const { rerender } = render(
+    const { rerender } = renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -194,20 +206,22 @@ describe('ModalChooseProfile', () => {
     );
 
     rerender(
-      <ModalChooseProfile
-        isOpen={true}
-        profileSelectionType={mockProfileSelectionType}
-        onCancel={onCancel}
-        onSubmit={onSubmit}
-        onClose={onClose}
-        profiles={mockProfiles}
-      />,
+      <QueryClientProvider client={queryClient}>
+        <ModalChooseProfile
+          isOpen={true}
+          profileSelectionType={mockProfileSelectionType}
+          onCancel={onCancel}
+          onSubmit={onSubmit}
+          onClose={onClose}
+          profiles={mockProfiles}
+        />
+      </QueryClientProvider>,
     );
 
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_1', false);
+      expect(onSubmit).toHaveBeenCalledWith('profile_1', 'default', false);
       expect(onSubmit).not.toHaveBeenCalledWith('0');
       expect(onSubmit).not.toHaveBeenCalledWith(undefined);
     });
@@ -218,7 +232,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -241,7 +255,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
     ];
 
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -264,7 +278,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_3', name: 'Test Profile 3', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -277,7 +291,7 @@ describe('ModalChooseProfile', () => {
       />,
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     const checkbox = screen.getByRole('checkbox');
 
     // Initially profile_1 is selected and not in preferred profiles
@@ -296,7 +310,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('checkbox is unchecked when no preferred profiles provided', () => {
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -317,7 +331,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    render(
+    renderWithProviders(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}

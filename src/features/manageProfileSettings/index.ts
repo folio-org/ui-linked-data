@@ -1,9 +1,7 @@
-export { CustomProfileToggle } from './components/CustomProfileToggle';
 export { DefaultProfileOption } from './components/DefaultProfileOption';
 export { ManageProfileSettingsControlPane } from './components/ManageProfileSettingsControlPane';
 export { ManageProfileSettingsControls } from './components/ManageProfileSettingsControls';
 export { ModalCloseProfileSettings } from './components/ModalCloseProfileSettings';
-export { ModalCreateSavedSetting } from './components/ModalCreateSavedSetting';
 export { ModalSaveUnusedProfileComponents } from './components/ModalSaveUnusedProfileComponents';
 export { ProfileSettings } from './components/ProfileSettings';
 export { ProfileSettingsList } from './components/ProfileSettingsList';

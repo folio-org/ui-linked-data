@@ -5,7 +5,7 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 
-import { savePreferredProfile, saveProfileSettings } from '@/common/api/profiles.api';
+import { createProfileSettings, savePreferredProfile } from '@/common/api/profiles.api';
 
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
 
@@ -15,6 +15,7 @@ jest.mock('@/common/api/profiles.api', () => ({
   deletePreferredProfile: jest.fn(),
   savePreferredProfile: jest.fn(),
   saveProfileSettings: jest.fn(),
+  createProfileSettings: jest.fn(),
 }));
 
 const createWrapper = () => {
@@ -43,6 +44,7 @@ describe('useSaveProfileSettings', () => {
     it('shows an error when saving preferred profile fails', async () => {
       const error = new Error('Failed to save preferred profiles');
       (savePreferredProfile as jest.Mock).mockRejectedValue(error);
+      (createProfileSettings as jest.Mock).mockResolvedValue({ id: 'meta-one' });
 
       setInitialGlobalState([
         {
@@ -80,7 +82,7 @@ describe('useSaveProfileSettings', () => {
 
     it('shows an error when saving profile settings fails', async () => {
       const error = new Error('Failed to save profile settings');
-      (saveProfileSettings as jest.Mock).mockRejectedValue(error);
+      (createProfileSettings as jest.Mock).mockRejectedValue(error);
 
       setInitialGlobalState([
         {
@@ -142,6 +144,7 @@ describe('useSaveProfileSettings', () => {
           },
         },
       ]);
+      (createProfileSettings as jest.Mock).mockResolvedValue({ id: 'meta-one' });
 
       const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
       await act(async () => {

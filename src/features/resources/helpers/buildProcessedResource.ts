@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import {
   getAdjustedRecordContents,
@@ -17,12 +18,13 @@ type BuildProcessedResourceParams = {
   pipeline: SchemaPipelineServices;
   record?: RecordEntry;
   profileIdParam?: string | null;
+  profileSettingsIdParam?: string | null;
   typeParam?: string | null;
   asClone?: boolean;
   templateMetadata?: ResourceTemplateMetadata[];
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
-    id: number,
+    id: string | number,
     profileId: string | number | undefined,
     profile: Profile,
     uri?: string,
@@ -33,6 +35,7 @@ export const buildProcessedResource = async ({
   pipeline,
   record,
   profileIdParam = null,
+  profileSettingsIdParam = null,
   typeParam = null,
   asClone = false,
   templateMetadata,
@@ -60,9 +63,8 @@ export const buildProcessedResource = async ({
 
   if (!selectedProfile) return null;
 
-  // TODO how to get the settings set and not just the profile ID - new parameter i guess
   const profileSettings = await loadProfileSettings(
-    0,
+    profileSettingsIdParam ?? PROFILE_SETTINGS_DEFAULT_OPTION,
     String(profileConfig.ids?.[0]),
     selectedProfile,
     getUri(resourceType),

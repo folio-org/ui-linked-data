@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { DndContext, DragOverlay, MeasuringStrategy, useSensor, useSensors } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import classNames from 'classnames';
+
+import { Input } from '@/components/Input';
 
 import { useManageProfileSettingsState } from '@/store';
 
@@ -28,6 +30,7 @@ import {
 import { ComponentType } from './BaseComponent';
 import { ComponentList } from './ComponentList';
 import { DraggingComponent } from './DraggingComponent';
+import { ResetComponents } from './ResetComponents';
 import { SelectedComponent } from './SelectedComponent';
 import { UnusedComponent } from './UnusedComponent';
 
@@ -48,18 +51,27 @@ export const ProfileSettingsEditor = () => {
     unusedComponents,
     selectedComponents,
     isSettingsActive,
+    settingsName,
+    isCreating,
     setIsSettingsActive,
     setUnusedComponents,
     setSelectedComponents,
+    setSettingsName,
+    setIsModified,
   } = useManageProfileSettingsState([
     'fullProfile',
     'profileSettings',
     'unusedComponents',
     'selectedComponents',
     'isSettingsActive',
+    'settingsName',
+    'isCreating',
     'setIsSettingsActive',
     'setUnusedComponents',
     'setSelectedComponents',
+    'setSettingsName',
+    'setIsModified',
+    'setIsCreating',
   ]);
 
   const updateState = ({
@@ -119,6 +131,11 @@ export const ProfileSettingsEditor = () => {
     startDrag,
   });
 
+  const handleNameChange = (evt: ChangeEvent<HTMLInputElement, Element>) => {
+    setSettingsName(evt.target.value);
+    setIsModified(true);
+  };
+
   useEffect(() => {
     if (fullProfile && profileSettings) {
       const profileChildren = getProfileChildren(fullProfile);
@@ -136,11 +153,11 @@ export const ProfileSettingsEditor = () => {
   }, [fullProfile, profileSettings]);
 
   useEffect(() => {
-    if (!isSettingsActive) {
+    if (!isSettingsActive && profileComponents.length > 0) {
       setSelectedComponents(profileComponents);
       setUnusedComponents([]);
     }
-  }, [isSettingsActive]);
+  }, [profileComponents, isSettingsActive]);
 
   useEffect(() => {
     return () => {
@@ -150,6 +167,17 @@ export const ProfileSettingsEditor = () => {
 
   return (
     <div data-testid="profile-settings-editor" className="components-editor-wrapper">
+      <div className="settings-name-edit">
+        <label>
+          <FormattedMessage
+            id={isCreating ? 'ld.profileSettings.creatingSettingsName' : 'ld.profileSettings.editingSettingsName'}
+          />
+          <Input value={settingsName} onChange={handleNameChange} />
+        </label>
+      </div>
+
+      <ResetComponents />
+
       <div className="components-editor">
         <DndContext
           sensors={sensors}

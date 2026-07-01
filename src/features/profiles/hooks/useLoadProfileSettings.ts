@@ -1,7 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 
 import { fetchProfileSettings } from '@/common/api/profiles.api';
-import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import {
+  DEFAULT_INACTIVE_SETTINGS,
+  PROFILE_SETTINGS_DEFAULT_OPTION,
+} from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { detectDrift } from '@/common/helpers/profileSettingsDrift.helper';
 import { sortProfileSettingsChildren } from '@/common/helpers/profileSettingsSort.helper';
@@ -20,7 +23,7 @@ export const useLoadProfileSettings = () => {
     profile: Profile,
     resourceTypeURL?: string,
   ) => {
-    if (profileId === undefined) {
+    if (profileId === undefined || profileSettingsId === PROFILE_SETTINGS_DEFAULT_OPTION) {
       return DEFAULT_INACTIVE_SETTINGS;
     }
 

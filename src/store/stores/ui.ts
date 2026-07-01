@@ -30,7 +30,6 @@ export type UIState = SliceState<'isAdvancedSearchOpen', boolean> &
   SliceState<'isManageProfileSettingsUnsavedModalOpen', boolean> &
   SliceState<'isManageProfileSettingsUnusedComponentsModalOpen', boolean> &
   SliceState<'isManageProfileSettingsUnusedFieldsModalOpen', boolean> &
-  SliceState<'isManageProfileSettingsCreateSavedSettingModalOpen', boolean> &
   SliceState<'isManageProfileSettingsBelowBreakpoint', boolean> &
   SliceState<'isManageProfileSettingsShowProfiles', boolean> &
   SliceState<'isManageProfileSettingsShowEditor', boolean>;
@@ -90,9 +89,6 @@ const sliceConfigs: SliceConfigs = {
     initialValue: false,
   },
   isManageProfileSettingsUnusedFieldsModalOpen: {
-    initialValue: false,
-  },
-  isManageProfileSettingsCreateSavedSettingModalOpen: {
     initialValue: false,
   },
   isManageProfileSettingsBelowBreakpoint: {

@@ -7,18 +7,18 @@ import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useStatusState } from '@/store';
 
-export const useLoadProfileSettingsMeta = (profileId: string | number) => {
+export const useLoadProfileSettingsMeta = (profileId: string | number | null) => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const result = useQuery<ProfileSettingsMetaList>({
     queryKey: ['profileSettingsMeta', String(profileId)],
     queryFn: async () => {
-      return fetchAllSettingsForProfile(profileId);
+      return fetchAllSettingsForProfile(profileId!);
     },
     staleTime: Infinity,
+    enabled: !!profileId,
   });
   if (result.error) {
     logger.error('Error fetching profile settings metadata', result.error);
-    // TODO new string
     addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.cantLoadProfileSettings'));
   }
   return result;

@@ -1,19 +1,28 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { getLabelId, isProfilePreferred } from '@/common/helpers/profileSelection.helper';
 import { Modal } from '@/components/Modal';
 import { Select, SelectValue } from '@/components/Select';
 
+import { useLoadProfileSettingsMeta } from '../../hooks';
 import { WarningMessages } from './WarningMessages';
 
 import './ModalChooseProfile.scss';
+
+const metaToOption = (meta: ProfileSettingsMeta) => {
+  return {
+    label: meta.name,
+    value: String(meta.id),
+  };
+};
 
 interface ModalChooseProfileProps {
   isOpen: boolean;
   profileSelectionType: ProfileSelectionType;
   onCancel: VoidFunction;
-  onSubmit: (id: string | number, isDefault?: boolean) => void;
+  onSubmit: (profileId: string | number, profileSettingsId: string | number, isDefault?: boolean) => void;
   onClose: VoidFunction;
   profiles: ProfileDTO[];
   selectedProfileId?: string | number | null;
@@ -35,10 +44,24 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
   }) => {
     const { formatMessage } = useIntl();
     const [selectedValue, setSelectedValue] = useState<string | number>(selectedProfileId ?? profiles?.[0]?.id);
+    const [selectedSettingsValue, setSelectedSettingsValue] = useState<string | number>(
+      PROFILE_SETTINGS_DEFAULT_OPTION,
+    );
 
     const [isDefault, setIsDefault] = useState(() =>
       isProfilePreferred({ profileId: selectedProfileId ?? profiles?.[0]?.id, preferredProfiles, resourceTypeURL }),
     );
+
+    const SETTINGS_OPTION_DEFAULT = [
+      {
+        label: formatMessage({ id: 'ld.profileSettings.defaultSettings' }),
+        value: PROFILE_SETTINGS_DEFAULT_OPTION,
+      },
+    ];
+    const { data: settingsMeta } = useLoadProfileSettingsMeta(selectedValue);
+    const settingsMetaOptions = useMemo(() => {
+      return settingsMeta ? SETTINGS_OPTION_DEFAULT.concat(settingsMeta.map(metaToOption)) : SETTINGS_OPTION_DEFAULT;
+    }, [SETTINGS_OPTION_DEFAULT, settingsMeta]);
 
     useEffect(() => {
       if (profiles && profiles.length > 0 && !selectedValue) {
@@ -60,18 +83,35 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
       setIsDefault(isProfilePreferred({ profileId: newValue, preferredProfiles, resourceTypeURL }));
     };
 
+    const onSettingsChange = (selected: SelectValue) => {
+      const newValue = selected.value;
+
+      setSelectedSettingsValue(newValue);
+    };
+
     const handleSubmit = () => {
-      onSubmit(selectedValue, isDefault);
+      onSubmit(selectedValue, selectedSettingsValue, isDefault);
     };
 
     const getProfileById = (id: string | number) => {
       return profiles.find(profile => profile.id === id);
     };
 
+    const getProfileSettingById = (id: string | number) => {
+      return settingsMeta?.find(settingMeta => settingMeta.id === id);
+    };
+
     const profileIdToSelectValue = (id: string | number) => {
       return {
         value: id,
         label: getProfileById(id)?.name,
+      } as SelectValue;
+    };
+
+    const profileSettingsIdToSelectValue = (id: string | number) => {
+      return {
+        value: id.toString(),
+        label: getProfileSettingById(id)?.name,
       } as SelectValue;
     };
 
@@ -121,6 +161,7 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
       }),
     });
     const labelSubmit = formatMessage({ id: profileSelectionType.action === 'set' ? 'ld.create.base' : 'ld.change' });
+    const labelSettingsSelect = formatMessage({ id: 'ld.savedSettings' });
 
     return (
       <Modal
@@ -145,6 +186,7 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
             <Select
               name={labelSelect}
               id="select-profile"
+              data-testid="select-profile"
               onChange={onChange}
               value={profileIdToSelectValue(selectedValue)}
               options={profilesAsOptions()}
@@ -164,6 +206,21 @@ export const ModalChooseProfile: FC<ModalChooseProfileProps> = memo(
               <span>{labelSetAsDefault}</span>
             </label>
           </div>
+
+          {profileSelectionType.action === 'set' && (
+            <div className="modal-content-controls-block">
+              <h5>{labelSettingsSelect}</h5>
+              <Select
+                name={labelSettingsSelect}
+                id="select-profile-settings"
+                data-testid="select-profile-settings"
+                onChange={onSettingsChange}
+                value={profileSettingsIdToSelectValue(selectedSettingsValue)}
+                options={settingsMetaOptions}
+                disabled={settingsMetaOptions.length === 1}
+              ></Select>
+            </div>
+          )}
 
           {profileSelectionType.action === 'change' && (
             <WarningMessages

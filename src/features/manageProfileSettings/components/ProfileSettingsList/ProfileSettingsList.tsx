@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
+import { BASE_SETTINGS_OPTIONS } from '@/common/constants/profileSettings.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Select, SelectValue } from '@/components/Select';
 
@@ -20,40 +21,71 @@ const metaToOption = (meta: ProfileSettingsMeta) => {
 };
 
 export const ProfileSettingsList = () => {
-  const { formatMessage } = useIntl();
-  const SETTINGS_OPTION_DEFAULT = [
-    {
-      label: formatMessage({ id: 'ld.profileSettings.defaultSettings' }),
-      value: 'default',
-    },
-  ];
-
-  const { selectedProfile, selectedProfileSettingsMeta, setSelectedProfileSettingsMeta, setSettingsName } =
-    useManageProfileSettingsState([
-      'selectedProfile',
-      'selectedProfileSettingsMeta',
-      'setSelectedProfileSettingsMeta',
-      'setSettingsName',
-    ]);
-  const { setIsManageProfileSettingsCreateSavedSettingModalOpen } = useUIState([
-    'setIsManageProfileSettingsCreateSavedSettingModalOpen',
+  const {
+    isModified,
+    selectedProfile,
+    selectedProfileSettingsMeta,
+    setSelectedProfileSettingsMeta,
+    setSettingsName,
+    setIsCreating,
+    setIsCreatingSettingsNext,
+    setIsEditingSettingsNext,
+    setNextSelectedSettingsMeta,
+  } = useManageProfileSettingsState([
+    'isModified',
+    'selectedProfile',
+    'selectedProfileSettingsMeta',
+    'setSelectedProfileSettingsMeta',
+    'setSettingsName',
+    'setIsCreating',
+    'setIsCreatingSettingsNext',
+    'setIsEditingSettingsNext',
+    'setNextSelectedSettingsMeta',
   ]);
+
   const { resetSettings } = useResetSettings();
+
+  const { setIsManageProfileSettingsUnsavedModalOpen } = useUIState(['setIsManageProfileSettingsUnsavedModalOpen']);
+
   const { data: settingsMeta } = useLoadProfileSettingsMeta(selectedProfile.id);
 
   const settingsMetaOptions = useMemo(() => {
-    return settingsMeta ? SETTINGS_OPTION_DEFAULT.concat(settingsMeta.map(metaToOption)) : SETTINGS_OPTION_DEFAULT;
-  }, [SETTINGS_OPTION_DEFAULT, settingsMeta]);
+    return settingsMeta ? BASE_SETTINGS_OPTIONS.concat(settingsMeta.map(metaToOption)) : BASE_SETTINGS_OPTIONS;
+  }, [settingsMeta]);
 
   const handleChange = (selected: SelectValue) => {
-    resetSettings();
-    const settingMeta = settingsMeta?.find(meta => String(meta.id) === selected.value);
-    setSelectedProfileSettingsMeta(settingMeta || null);
-    setSettingsName(settingMeta?.name || '');
+    if (selected.value !== '') {
+      const settingMeta = settingsMeta?.find(meta => String(meta.id) === selected.value);
+
+      if (isModified) {
+        setIsEditingSettingsNext(true);
+        setNextSelectedSettingsMeta(settingMeta ?? null);
+        setIsManageProfileSettingsUnsavedModalOpen(true);
+      } else {
+        setIsCreating(false);
+        resetSettings();
+
+        setSelectedProfileSettingsMeta(settingMeta ?? null);
+        setSettingsName(settingMeta?.name ?? '');
+      }
+    }
+  };
+
+  const handleCreate = () => {
+    if (isModified) {
+      setIsCreatingSettingsNext(true);
+      setIsManageProfileSettingsUnsavedModalOpen(true);
+    } else {
+      setIsCreating(true);
+      setSelectedProfileSettingsMeta(null);
+      setSettingsName('');
+    }
   };
 
   return (
     <div data-testid="profile-settings-selector-section" className="profile-settings-selector">
+      <Button type={ButtonType.Highlighted} label="Create" onClick={handleCreate} />
+
       <label id="profile-settings-selector-label" htmlFor="profile-settings-selector">
         <FormattedMessage id="ld.profileSettings.savedSettings" />
       </label>
@@ -61,14 +93,10 @@ export const ProfileSettingsList = () => {
         ariaLabelledBy="profile-settings-selector-label"
         data-testid="profile-settings-selector"
         id="profile-settings-selector"
-        value={String(selectedProfileSettingsMeta?.id || 'default')}
+        value={String(selectedProfileSettingsMeta?.id || '')}
         options={settingsMetaOptions}
         onChange={handleChange}
-      />
-      <Button
-        type={ButtonType.Highlighted}
-        label="New"
-        onClick={() => setIsManageProfileSettingsCreateSavedSettingModalOpen(true)}
+        disabled={settingsMetaOptions.length === 0}
       />
     </div>
   );

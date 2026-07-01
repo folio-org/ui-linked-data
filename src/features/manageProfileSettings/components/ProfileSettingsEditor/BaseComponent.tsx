@@ -1,10 +1,11 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import classNames from 'classnames';
 
+import { useDismissMenu } from '@/common/hooks/useDismissMenu';
 import { Button, ButtonType } from '@/components/Button';
 
 import ArrowDown from '@/assets/arrow-down-16.svg?react';
@@ -48,48 +49,14 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  const [isMenuEnabled, setIsMenuEnabled] = useState(false);
 
-  const toggleIsMenuEnabled = () => {
-    setIsMenuEnabled(prev => !prev);
-  };
+  const { isOpen: isMenuEnabled, toggle: toggleIsMenuEnabled } = useDismissMenu(menuRef);
 
   useEffect(() => {
     if (isMenuEnabled && menuRef.current) {
       menuRef.current.focus();
     }
   }, [isMenuEnabled]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        setIsMenuEnabled(false);
-      }
-    };
-
-    const handleFocusOutside = (event: FocusEvent) => {
-      if (!event.relatedTarget || (ref.current && !ref.current.contains(event.relatedTarget as Node))) {
-        setIsMenuEnabled(false);
-      }
-    };
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (ref.current && event.key === 'Escape') {
-        setIsMenuEnabled(false);
-        ref.current.focus();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('focusout', handleFocusOutside);
-    document.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('focusout', handleFocusOutside);
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, []);
 
   return (
     <div

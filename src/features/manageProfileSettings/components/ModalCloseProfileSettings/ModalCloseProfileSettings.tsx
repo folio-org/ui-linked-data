@@ -20,15 +20,40 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
-  const { isClosingNext, setIsClosingNext, nextSelectedProfile, setSelectedProfile, setIsModified } =
-    useManageProfileSettingsState([
-      'isClosingNext',
-      'setIsClosingNext',
-      'nextSelectedProfile',
-      'setSelectedProfile',
-      'resetSelectedProfileSettingsMeta',
-      'setIsModified',
-    ]);
+  const {
+    isClosingNext,
+    setIsClosingNext,
+    nextSelectedProfile,
+    setNextSelectedProfile,
+    setSelectedProfile,
+    setIsModified,
+    setIsCreating,
+    isCreatingSettingsNext,
+    setIsCreatingSettingsNext,
+    isEditingSettingsNext,
+    setIsEditingSettingsNext,
+    nextSelectedSettingsMeta,
+    setNextSelectedSettingsMeta,
+    setSelectedProfileSettingsMeta,
+    setSettingsName,
+  } = useManageProfileSettingsState([
+    'isClosingNext',
+    'setIsClosingNext',
+    'nextSelectedProfile',
+    'setNextSelectedProfile',
+    'setSelectedProfile',
+    'resetSelectedProfileSettingsMeta',
+    'setIsModified',
+    'setIsCreating',
+    'isCreatingSettingsNext',
+    'setIsCreatingSettingsNext',
+    'isEditingSettingsNext',
+    'setIsEditingSettingsNext',
+    'nextSelectedSettingsMeta',
+    'setNextSelectedSettingsMeta',
+    'setSelectedProfileSettingsMeta',
+    'setSettingsName',
+  ]);
   const { resetSettings } = useResetSettings();
   const { setIsManageProfileSettingsShowProfiles, setIsManageProfileSettingsShowEditor } = useUIState([
     'setIsManageProfileSettingsShowProfiles',
@@ -46,11 +71,27 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       resetSettings();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
+    } else if (isCreatingSettingsNext) {
+      setIsCreating(true);
+      setSelectedProfileSettingsMeta(null);
+      setSettingsName('');
+      setIsCreatingSettingsNext(false);
+    } else if (isEditingSettingsNext) {
+      setIsCreating(false);
+      resetSettings();
+      setSelectedProfileSettingsMeta(nextSelectedSettingsMeta);
+      setSettingsName('');
+      setIsEditingSettingsNext(false);
+      setNextSelectedSettingsMeta(null);
     }
   };
 
   const handleClose = () => {
     setIsClosingNext(false);
+    setIsCreatingSettingsNext(false);
+    setIsEditingSettingsNext(false);
+    setNextSelectedProfile(null);
+    setNextSelectedSettingsMeta(null);
     setIsOpen(false);
   };
 

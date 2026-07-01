@@ -23,9 +23,6 @@ jest.mock('@/features/profiles', () => ({
   ...jest.requireActual('@/features/profiles'),
   useLoadProfileSettings: jest.fn(),
 }));
-jest.mock('../CustomProfileToggle', () => ({
-  CustomProfileToggle: () => <div data-testid="custom-profile-toggle" />,
-}));
 jest.mock('../DefaultProfileOption', () => ({
   DefaultProfileOption: () => <div data-testid="default-profile-option" />,
 }));
@@ -73,6 +70,9 @@ describe('ProfileSettings', () => {
                 resourceType: mockWorkResourceTypeUrl,
               }
             : null,
+          selectedProfileSettingsMeta: {
+            id: 'meta-one',
+          },
         },
       },
       {
@@ -152,7 +152,7 @@ describe('ProfileSettings', () => {
     renderComponent(true);
 
     await waitFor(() => {
-      expect(mockLoadProfileSettings).toHaveBeenCalledWith('one', profile, mockWorkResourceTypeUrl);
+      expect(mockLoadProfileSettings).toHaveBeenCalledWith('meta-one', 'one', profile, mockWorkResourceTypeUrl);
     });
   });
 });

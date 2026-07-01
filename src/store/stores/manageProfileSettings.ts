@@ -14,11 +14,15 @@ export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDT
   SliceState<'unusedComponents', ProfileSettingComponent[]> &
   SliceState<'selectedComponents', ProfileSettingComponent[]> &
   SliceState<'isClosingNext', boolean> &
+  SliceState<'isCreatingSettingsNext', boolean> &
+  SliceState<'isEditingSettingsNext', boolean> &
+  SliceState<'nextSelectedSettingsMeta', ProfileSettingsMetaState> &
   SliceState<'isSettingsActive', boolean> &
   SliceState<'profileSettings', ProfileSettingsWithDrift> &
   SliceState<'isTypeDefaultProfile', boolean> &
   SliceState<'isModified', boolean> &
-  SliceState<'settingsName', string>;
+  SliceState<'settingsName', string> &
+  SliceState<'isCreating', boolean>;
 
 const STORE_NAME = 'ProfileSettings';
 
@@ -44,6 +48,15 @@ const sliceConfigs: SliceConfigs = {
   isClosingNext: {
     initialValue: false,
   },
+  isCreatingSettingsNext: {
+    initialValue: false,
+  },
+  isEditingSettingsNext: {
+    initialValue: false,
+  },
+  nextSelectedSettingsMeta: {
+    initialValue: null,
+  },
   isSettingsActive: {
     initialValue: false,
   },
@@ -58,6 +71,9 @@ const sliceConfigs: SliceConfigs = {
   },
   settingsName: {
     initialValue: '',
+  },
+  isCreating: {
+    initialValue: true,
   },
 };
 

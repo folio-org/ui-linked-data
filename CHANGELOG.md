@@ -8,11 +8,13 @@
 * Refactor services providers and simple lookup data loading. Refs [UILD-816].
 * Refactor imports and add import boundary rules. Refs [UILD-816].
 * Fix regression issues that appeared after refactoring. Refs [UILD-816], [UILD-827].
+* Fix multiple settings per profile. Refs [UILD-780].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
 [UILD-816]:https://folio-org.atlassian.net/browse/UILD-816
 [UILD-821]:https://folio-org.atlassian.net/browse/UILD-821
 [UILD-827]:https://folio-org.atlassian.net/browse/UILD-827
+[UILD-780]:https://folio-org.atlassian.net/browse/UILD-780
 
 ## 2.0.4 (2026-06-03)
 * Fix default profile type persistence across edit form and profile settings. Fixes [UILD-820].

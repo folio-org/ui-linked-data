@@ -62,11 +62,11 @@ export const fetchProfileSettings = (profileId: string | number, profileSettings
     url: `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}/${profileSettingsId}`,
   }) as Promise<ProfileSettings>;
 
-export const createProfileSettings = (profileId: string | number, settings: ProfileSettings) => {
+export const createProfileSettings = async (profileId: string | number, settings: ProfileSettings) => {
   const url = `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}`;
   const body = JSON.stringify(settings);
 
-  return baseApi.request({
+  const response = await baseApi.request({
     url,
     requestParams: {
       method: 'POST',
@@ -76,6 +76,8 @@ export const createProfileSettings = (profileId: string | number, settings: Prof
       },
     },
   });
+
+  return response?.json();
 };
 
 export const saveProfileSettings = (
