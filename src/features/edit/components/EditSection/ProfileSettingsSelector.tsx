@@ -1,5 +1,5 @@
-import { useRef } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useMemo, useRef } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useSearchParams } from 'react-router-dom';
 
 import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
@@ -15,14 +15,27 @@ import { useInputsState, useProfileState } from '@/store';
 import Settings from '@/assets/settings.svg?react';
 
 export const ProfileSettingsSelector = () => {
+  const { formatMessage } = useIntl();
   const ref = useRef<HTMLDivElement>(null);
   const [searchParams] = useSearchParams();
   const { record } = useInputsState(['record']);
-  const { setSelectedProfileSettingsId } = useProfileState(['setSelectedProfileSettingsId']);
+  const { selectedProfileSettingsId, setSelectedProfileSettingsId } = useProfileState([
+    'selectedProfileSettingsId',
+    'setSelectedProfileSettingsId',
+  ]);
   const recordProfileId = getRecordProfileId(record);
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
   const selectedProfileId = recordProfileId ?? profileIdParam;
+  const basicOption = [
+    {
+      id: PROFILE_SETTINGS_DEFAULT_OPTION,
+      name: formatMessage({ id: 'ld.profileDefaults' }),
+    },
+  ] as ProfileSettingsMetaList;
   const { data: profileSettings } = useLoadProfileSettingsMeta(selectedProfileId);
+  const profileSettingsOptions = useMemo(() => {
+    return profileSettings ? basicOption.concat(profileSettings) : basicOption;
+  }, [basicOption, profileSettings]);
 
   const { isOpen: isMenuEnabled, setIsOpen: setIsMenuEnabled, toggle: toggleIsMenuEnabled } = useDismissMenu(ref);
 
@@ -46,22 +59,14 @@ export const ProfileSettingsSelector = () => {
           <li id="selector-title" role="none">
             <FormattedMessage id="ld.applyProfileSettings" />
           </li>
-          <li role="none">
-            <Button
-              type={ButtonType.Text}
-              label={<FormattedMessage id="ld.profileDefaults" />}
-              role="menuitem"
-              onClick={() => handleSettingClick(PROFILE_SETTINGS_DEFAULT_OPTION)}
-              tabbable={isMenuEnabled}
-            />
-          </li>
-          {profileSettings?.map(profileSetting => {
+          {profileSettingsOptions?.map(profileSetting => {
             return (
               <li key={profileSetting.id} role="none">
                 <Button
                   type={ButtonType.Text}
                   label={profileSetting.name}
                   role="menuitem"
+                  disabled={profileSetting.id.toString() === selectedProfileSettingsId}
                   onClick={() => handleSettingClick(profileSetting.id)}
                   tabbable={isMenuEnabled}
                 />
