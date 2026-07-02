@@ -55,17 +55,17 @@ export const AUTHORITIES_LOC_CHILDREN_SEARCHABLE_INDICES_MAP: SearchableIndicesM
     [SearchableIndex.Form]: {
       [SearchableIndexQuerySelector.Query]: `((genreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftGenreTerm all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
     },
-    [SearchableIndex.Concept]: {
-      [SearchableIndexQuerySelector.Query]: `((keyword all "${SEARCH_QUERY_VALUE_PARAM}" or naturalId="${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
+    [SearchableIndex.ComplexSubject]: {
+      [SearchableIndexQuerySelector.Query]: `((complexSubjectTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftComplexSubjectTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftComplexSubjectTerm all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
     },
     [SearchableIndex.Topic]: {
       [SearchableIndexQuerySelector.Query]: `((topicalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftTopicalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftTopicalTerm all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
     },
     [SearchableIndex.Temporal]: {
-      [SearchableIndexQuerySelector.Query]: `((keyword all "${SEARCH_QUERY_VALUE_PARAM}" or naturalId="${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
+      [SearchableIndexQuerySelector.Query]: `((temporalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or sftTemporalTerm all "${SEARCH_QUERY_VALUE_PARAM}" or saftTemporalTerm all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
     },
     [SearchableIndex.Jurisdiction]: {
-      [SearchableIndexQuerySelector.Query]: `((geographicName all "${SEARCH_QUERY_VALUE_PARAM}" or sftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}" or saftGeographicName all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
+      [SearchableIndexQuerySelector.Query]: `((corporateName all "${SEARCH_QUERY_VALUE_PARAM}" or sftCorporateName all "${SEARCH_QUERY_VALUE_PARAM}" or saftCorporateName all "${SEARCH_QUERY_VALUE_PARAM}") and subjectHeadings=="b")`,
     },
   },
   // TODO: change the type to get rid of this old "Search" and "Browse" structure.
