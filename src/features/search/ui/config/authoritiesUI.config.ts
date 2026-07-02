@@ -36,14 +36,6 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
       value: SearchableIndex.Identifier,
     },
     {
-      labelId: 'ld.lccn',
-      value: SearchableIndex.LCCN,
-    },
-    {
-      labelId: 'ld.concept',
-      value: SearchableIndex.Concept,
-    },
-    {
       labelId: 'ld.family',
       value: SearchableIndex.Family,
     },
@@ -72,20 +64,16 @@ export const authoritiesUIConfig: SearchTypeUIConfig = {
       value: SearchableIndex.Place,
     },
     {
-      labelId: 'ld.subject',
-      value: SearchableIndex.Subject,
-    },
-    {
-      labelId: 'ld.childrensSubjectHeading',
-      value: SearchableIndex.ChildrenSubjectHeading,
-    },
-    {
       labelId: 'ld.temporal',
       value: SearchableIndex.Temporal,
     },
     {
       labelId: 'ld.topic',
       value: SearchableIndex.Topic,
+    },
+    {
+      labelId: 'ld.complexSubject',
+      value: SearchableIndex.ComplexSubject,
     },
     {
       labelId: 'ld.uniformTitle',
