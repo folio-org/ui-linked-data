@@ -16,7 +16,6 @@ export enum SearchableIndex {
   Title = 'title',
   Contributor = 'contributor',
   // LD Authority / combined authority SearchBy options
-  Concept = 'concept',
   Family = 'family',
   Form = 'form',
   Jurisdiction = 'jurisdiction',
@@ -26,6 +25,7 @@ export enum SearchableIndex {
   Place = 'place',
   Temporal = 'temporal',
   Topic = 'topic',
+  ComplexSubject = 'complexSubject',
 }
 
 export enum SearchableIndexQuerySelector {

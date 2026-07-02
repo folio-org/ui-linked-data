@@ -11,6 +11,7 @@
 * Add Authority edit page. Refs [UILD-826].
 * Extend Search page with Authority search and create options. Refs [UILD-825].
 * Fix field collision in the record generation. Fixes [UILD-838].
+* Update language used for importing works/instances. Refs [UILD-839].
 * Fix multiple settings per profile. Refs [UILD-780].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
@@ -20,6 +21,7 @@
 [UILD-826]:https://folio-org.atlassian.net/browse/UILD-826
 [UILD-825]:https://folio-org.atlassian.net/browse/UILD-825
 [UILD-838]:https://folio-org.atlassian.net/browse/UILD-838
+[UILD-839]:https://folio-org.atlassian.net/browse/UILD-839
 [UILD-780]:https://folio-org.atlassian.net/browse/UILD-780
 
 ## 2.0.4 (2026-06-03)

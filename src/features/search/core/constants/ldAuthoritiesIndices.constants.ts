@@ -15,14 +15,9 @@ const typeLabelEntry = (type: string) => ({
 export const LD_AUTHORITIES_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
     [SearchableIndex.Keyword]: typeLabelEntry('keyword'),
-    // Identifier intentionally uses the same lccn query as LCCN
     [SearchableIndex.Identifier]: {
-      [SearchableIndexQuerySelector.Query]: `(lccn all "${SEARCH_QUERY_VALUE_PARAM}")`,
+      [SearchableIndexQuerySelector.Query]: `(identifier all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
-    [SearchableIndex.LCCN]: {
-      [SearchableIndexQuerySelector.Query]: `(lccn all "${SEARCH_QUERY_VALUE_PARAM}")`,
-    },
-    [SearchableIndex.Concept]: typeLabelEntry('concept'),
     [SearchableIndex.Family]: typeLabelEntry('family'),
     [SearchableIndex.Form]: typeLabelEntry('form'),
     [SearchableIndex.Jurisdiction]: typeLabelEntry('jurisdiction'),
@@ -30,9 +25,11 @@ export const LD_AUTHORITIES_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
     [SearchableIndex.Organization]: typeLabelEntry('organization'),
     [SearchableIndex.Person]: typeLabelEntry('person'),
     [SearchableIndex.Place]: typeLabelEntry('place'),
-    [SearchableIndex.Subject]: typeLabelEntry('subject'),
     [SearchableIndex.Temporal]: typeLabelEntry('temporal'),
     [SearchableIndex.Topic]: typeLabelEntry('topic'),
+    [SearchableIndex.ComplexSubject]: typeLabelEntry('complexSubject'),
+    [SearchableIndex.UniformTitle]: typeLabelEntry('uniformTitle'),
+    [SearchableIndex.NameTitle]: typeLabelEntry('nameTitle'),
   },
   [SearchSegment.Browse]: {},
 };

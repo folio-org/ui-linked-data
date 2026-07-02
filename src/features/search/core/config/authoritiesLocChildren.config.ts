@@ -1,6 +1,6 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
 
-import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '../constants';
+import { AUTHORITIES_LOC_CHILDREN_SEARCHABLE_INDICES_MAP } from '../constants/authoritiesLocChildren.constants';
 import { AuthoritiesSearchRequestBuilder } from '../strategies/requestBuilders';
 import { AuthoritiesSearchResponseTransformer } from '../strategies/responseTransformers';
 import { AuthoritiesSourceEnricher } from '../strategies/resultEnrichers';
@@ -11,7 +11,7 @@ export const authoritiesLocChildrenConfig: SearchTypeConfig = {
   id: 'authorities:locChildren',
 
   strategies: {
-    requestBuilder: new AuthoritiesSearchRequestBuilder(COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP),
+    requestBuilder: new AuthoritiesSearchRequestBuilder(AUTHORITIES_LOC_CHILDREN_SEARCHABLE_INDICES_MAP),
     responseTransformer: new AuthoritiesSearchResponseTransformer(),
     resultFormatter: new MarcAuthoritiesPageResultFormatter(),
     resultEnricher: new AuthoritiesSourceEnricher(),

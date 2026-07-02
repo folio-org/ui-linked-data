@@ -2,6 +2,8 @@ import { FC } from 'react';
 
 import { Button, ButtonType } from '@/components/Button';
 
+import './AuthorityLabelFormatter.scss';
+
 interface AuthorityLabelFormatterProps {
   row: SearchResultsTableRow;
   onTitleClick?: (id: string) => void;
