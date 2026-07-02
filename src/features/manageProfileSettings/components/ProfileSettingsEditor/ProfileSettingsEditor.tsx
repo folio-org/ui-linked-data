@@ -172,7 +172,7 @@ export const ProfileSettingsEditor = () => {
           <FormattedMessage
             id={isCreating ? 'ld.profileSettings.creatingSettingsName' : 'ld.profileSettings.editingSettingsName'}
           />
-          <Input value={settingsName} onChange={handleNameChange} />
+          <Input value={settingsName} onChange={handleNameChange} data-testid="settings-name" />
         </label>
       </div>
 

@@ -15,15 +15,31 @@ const mockProfileSelectionType = {
   resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
 } as ProfileSelectionType;
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { retry: false },
-    mutations: { retry: false },
-  },
-});
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
 
-const renderWithProviders = (component: React.ReactNode) => {
-  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
+  queryClient.setQueryData(
+    ['profileSettingsMeta', 'profile_1'],
+    [
+      {
+        id: 1,
+        name: 'one',
+      },
+      {
+        id: 2,
+        name: 'two',
+      },
+    ],
+  );
+
+  return ({ children }: { children: React.ReactNode }) => {
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  };
 };
 
 describe('ModalChooseProfile', () => {
@@ -40,7 +56,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('renders modal component with profile selection', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -49,6 +65,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     // Check that modal content is rendered
@@ -67,7 +84,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('selects the first profile by default', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -76,13 +93,14 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     expect(screen.getByTestId('select-profile')).toHaveValue('profile_1');
   });
 
   test('changes selected profile when user selects different option', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -91,6 +109,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const selectElement = screen.getByTestId('select-profile');
@@ -100,7 +119,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('toggles the "set as default" checkbox', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -109,6 +128,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -126,7 +146,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onSubmit with selected profile id when submit button is clicked', async () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -135,6 +155,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const selectElement = screen.getByTestId('select-profile');
@@ -147,7 +168,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onCancel when cancel button is clicked', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -156,6 +177,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
@@ -163,7 +185,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('calls onClose when modal is closed', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -172,6 +194,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     fireEvent.click(screen.getByTestId('modal-overlay'));
@@ -179,7 +202,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('does not render when isOpen is false', () => {
-    const { container } = renderWithProviders(
+    const { container } = render(
       <ModalChooseProfile
         isOpen={false}
         profileSelectionType={mockProfileSelectionType}
@@ -188,13 +211,14 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     expect(container.firstChild).toBeNull();
   });
 
   test('calls onSubmit with correct profile id when form is submitted without manual selection', async () => {
-    const { rerender } = renderWithProviders(
+    const { rerender } = render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -203,19 +227,18 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={[]}
       />,
+      { wrapper: createWrapper() },
     );
 
     rerender(
-      <QueryClientProvider client={queryClient}>
-        <ModalChooseProfile
-          isOpen={true}
-          profileSelectionType={mockProfileSelectionType}
-          onCancel={onCancel}
-          onSubmit={onSubmit}
-          onClose={onClose}
-          profiles={mockProfiles}
-        />
-      </QueryClientProvider>,
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+      />,
     );
 
     fireEvent.click(screen.getByTestId('modal-button-submit'));
@@ -232,7 +255,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -244,6 +267,7 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -255,7 +279,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
     ];
 
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -267,6 +291,7 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -278,7 +303,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_3', name: 'Test Profile 3', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -289,6 +314,7 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
     const selectElement = screen.getByTestId('select-profile');
@@ -310,7 +336,7 @@ describe('ModalChooseProfile', () => {
   });
 
   test('checkbox is unchecked when no preferred profiles provided', () => {
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -320,6 +346,7 @@ describe('ModalChooseProfile', () => {
         profiles={mockProfiles}
         selectedProfileId="profile_1"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -331,7 +358,7 @@ describe('ModalChooseProfile', () => {
       { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
     ];
 
-    renderWithProviders(
+    render(
       <ModalChooseProfile
         isOpen={true}
         profileSelectionType={mockProfileSelectionType}
@@ -342,9 +369,33 @@ describe('ModalChooseProfile', () => {
         selectedProfileId="profile_1"
         preferredProfiles={preferredProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
+  });
+
+  test('changing the selected settings changes the submitted settings ID', async () => {
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    fireEvent.change(screen.getByTestId('select-profile-settings'), { target: { value: '2' } });
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith('profile_1', '2', false);
+    });
   });
 });
