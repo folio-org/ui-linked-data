@@ -25,7 +25,12 @@ import {
   resolveResourceType,
 } from '@/configs/resourceTypes';
 
-import { type ProcessedResource, generateResourceQueryOptions, useResourceProcessing } from '@/features/resources/';
+import {
+  type ProcessedResource,
+  generateResourceQueryOptions,
+  useRecordGeneration,
+  useResourceProcessing,
+} from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -70,6 +75,7 @@ export const useEditPage = () => {
     'setCurrentlyEditedEntityBfid',
     'setCurrentlyPreviewedEntityBfid',
   ]);
+  const { generateRecord } = useRecordGeneration();
 
   const applyEntityBfids = useCallback(
     (record?: RecordEntry | null, withReference?: boolean) => {
@@ -146,14 +152,21 @@ export const useEditPage = () => {
       try {
         setIsLoading(true);
 
-        const result = await processResource({ profileSettingsId });
+        // Pass along current user values, but do not save to store as a record
+        const record = generateRecord({});
+        const result = await processResource({ record: record ?? undefined, profileSettingsId });
 
         if (result) applyToStores({ result, record: null, withReference: true });
+      } catch (error) {
+        logger.error('Error occurred while applying profile settings to a resource', error);
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorApplyingProfileSettings'),
+        );
       } finally {
         setIsLoading(false);
       }
     },
-    [processResource, applyToStores, setIsLoading],
+    [generateRecord, processResource, applyToStores, setIsLoading],
   );
 
   const fetchRefRecord = useCallback(

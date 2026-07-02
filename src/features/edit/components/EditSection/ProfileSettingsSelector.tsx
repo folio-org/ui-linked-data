@@ -32,14 +32,14 @@ export const ProfileSettingsSelector = () => {
   };
 
   return (
-    <div className="profile-settings-select" ref={ref}>
+    <div className="profile-settings-selector" ref={ref}>
       <Button ariaHaspopup="menu" ariaExpanded={isMenuEnabled} onClick={toggleIsMenuEnabled}>
         <Settings />
       </Button>
       {isMenuEnabled && (
         <ul
-          data-testid="profile-settings-select-menu"
-          className="profile-settings-select-menu"
+          data-testid="profile-settings-selector-menu"
+          className="profile-settings-selector-menu"
           role="menu" // NOSONAR
           aria-labelledby="selector-title"
         >

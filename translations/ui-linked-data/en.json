@@ -29,6 +29,7 @@
   "ld.errorLoadingResource": "Error loading resource",
   "ld.errorLoadingProfiles": "Error loading profiles",
   "ld.errorLoadingProfileSettings": "Error loading profile settings",
+  "ld.errorApplyingProfileSettings": "Error applying profile settings",
   "ld.actions": "Actions",
   "ld.action": "Action",
   "ld.isbnLccn": "ISBN/LCCN",
