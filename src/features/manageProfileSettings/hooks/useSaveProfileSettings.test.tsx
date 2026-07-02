@@ -5,7 +5,9 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 
-import { createProfileSettings, savePreferredProfile } from '@/common/api/profiles.api';
+import { createProfileSettings, savePreferredProfile, saveProfileSettings } from '@/common/api/profiles.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { UserNotificationFactory } from '@/common/services/userNotification';
 
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
 
@@ -16,6 +18,11 @@ jest.mock('@/common/api/profiles.api', () => ({
   savePreferredProfile: jest.fn(),
   saveProfileSettings: jest.fn(),
   createProfileSettings: jest.fn(),
+}));
+jest.mock('@/common/services/userNotification', () => ({
+  UserNotificationFactory: {
+    createMessage: jest.fn(),
+  },
 }));
 
 const createWrapper = () => {
@@ -116,6 +123,129 @@ describe('useSaveProfileSettings', () => {
       });
 
       expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+    });
+
+    it('shows a specific error for non-unique names', async () => {
+      const error = { errors: [{ code: 'profile_settings_name_not_unique' }] } as ApiError;
+      (createProfileSettings as jest.Mock).mockRejectedValue(error);
+
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: [],
+          },
+        },
+        {
+          store: useManageProfileSettingsState,
+          state: {
+            selectedProfile: {
+              id: 'another',
+              name: 'another',
+              resourceType: 'for-type',
+            },
+            isTypeDefaultProfile: true,
+          },
+        },
+        {
+          store: useStatusState,
+          state: {
+            addStatusMessagesItem: mockAddStatusMessagesItem,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      await act(async () => {
+        await result.current.saveSettings();
+      });
+
+      expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(
+        StatusType.error,
+        'ld.profile_settings_name_not_unique',
+      );
+    });
+
+    it('shows a specific error for blank names', async () => {
+      const error = { errors: [{ code: 'must not be blank' }] } as ApiError;
+      (createProfileSettings as jest.Mock).mockRejectedValue(error);
+
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: [],
+          },
+        },
+        {
+          store: useManageProfileSettingsState,
+          state: {
+            selectedProfile: {
+              id: 'another',
+              name: 'another',
+              resourceType: 'for-type',
+            },
+            isTypeDefaultProfile: true,
+          },
+        },
+        {
+          store: useStatusState,
+          state: {
+            addStatusMessagesItem: mockAddStatusMessagesItem,
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      await act(async () => {
+        await result.current.saveSettings();
+      });
+
+      expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(
+        StatusType.error,
+        'ld.error.profileSettingsNameNotBlank',
+      );
+    });
+
+    it('updates an existing profile setting', async () => {
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: [],
+          },
+        },
+        {
+          store: useManageProfileSettingsState,
+          state: {
+            selectedProfile: {
+              id: 'another',
+              name: 'another',
+              resourceType: 'for-type',
+            },
+            isTypeDefaultProfile: true,
+            isCreating: false,
+            selectedProfileSettingsMeta: {
+              id: 'thing',
+              name: 'settings-thing',
+            },
+            settingsName: 'settings-thing',
+          },
+        },
+      ]);
+
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      await act(async () => {
+        await result.current.saveSettings();
+      });
+
+      expect(saveProfileSettings).toHaveBeenCalledWith('another', 'thing', {
+        active: false,
+        children: [],
+        name: 'settings-thing',
+      });
     });
 
     it('shows loading at start and removes it at end', async () => {
