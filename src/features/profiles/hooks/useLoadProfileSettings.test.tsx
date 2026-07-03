@@ -64,7 +64,7 @@ describe('useLoadProfileSettings', () => {
       const profile = [] as Profile;
 
       const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
-      const settings = await result.current.loadProfileSettings(undefined, profile);
+      const settings = await result.current.loadProfileSettings(1, undefined, profile);
 
       expect(settings).toBe(DEFAULT_INACTIVE_SETTINGS);
       expect(fetchProfileSettings).not.toHaveBeenCalled();
@@ -84,10 +84,10 @@ describe('useLoadProfileSettings', () => {
       (detectDrift as jest.Mock).mockReturnValue(newProfileSettingsWithDrift);
 
       const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
-      const settings = await result.current.loadProfileSettings(1, profile);
+      const settings = await result.current.loadProfileSettings(1, 1, profile);
 
       expect(settings).toBe(newProfileSettingsWithDrift);
-      expect(fetchProfileSettings).toHaveBeenCalledWith(1);
+      expect(fetchProfileSettings).toHaveBeenCalledWith(1, 1);
     });
 
     test('recomputes drift for each resource type while reusing cached settings', async () => {
@@ -111,8 +111,8 @@ describe('useLoadProfileSettings', () => {
       (detectDrift as jest.Mock).mockReturnValueOnce(instanceSettings).mockReturnValueOnce(workSettings);
 
       const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
-      const first = await result.current.loadProfileSettings(1, profile, mockInstanceResourceTypeUrl);
-      const second = await result.current.loadProfileSettings(1, profile, mockWorkResourceTypeUrl);
+      const first = await result.current.loadProfileSettings(1, 1, profile, mockInstanceResourceTypeUrl);
+      const second = await result.current.loadProfileSettings(1, 1, profile, mockWorkResourceTypeUrl);
 
       expect(first).toBe(instanceSettings);
       expect(second).toBe(workSettings);
@@ -126,10 +126,10 @@ describe('useLoadProfileSettings', () => {
       (fetchProfileSettings as jest.Mock).mockRejectedValue('error');
 
       const { result } = renderHook(useLoadProfileSettings, { wrapper: createWrapper() });
-      const settings = await result.current.loadProfileSettings(1, profile);
+      const settings = await result.current.loadProfileSettings(1, 1, profile);
 
       expect(settings).toBe(DEFAULT_INACTIVE_SETTINGS);
-      expect(fetchProfileSettings).toHaveBeenCalledWith(1);
+      expect(fetchProfileSettings).toHaveBeenCalledWith(1, 1);
       expect(addStatusMessagesItem).toHaveBeenCalled();
     });
   });

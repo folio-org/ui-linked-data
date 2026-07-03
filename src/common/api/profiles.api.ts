@@ -2,7 +2,7 @@ import {
   PROFILE_API_ENDPOINT,
   PROFILE_METADATA_API_ENDPOINT,
   PROFILE_PREFERRED_API_ENDPOINT,
-  PROFILE_SETTINGS_API_ENDPOINT,
+  PROFILE_SETTINGS_PATH,
 } from '@/common/constants/api.constants';
 
 import baseApi from './base.api';
@@ -52,19 +52,46 @@ export const deletePreferredProfile = (resourceType: ResourceTypeURL) => {
   });
 };
 
-export const fetchProfileSettings = (profileId: string | number) =>
+export const fetchAllSettingsForProfile = (profileId: string | number) =>
   baseApi.getJson({
-    url: `${PROFILE_SETTINGS_API_ENDPOINT}/${profileId}`,
+    url: `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}`,
+  }) as Promise<ProfileSettingsMetaList>;
+
+export const fetchProfileSettings = (profileId: string | number, profileSettingsId: string | number) =>
+  baseApi.getJson({
+    url: `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}/${profileSettingsId}`,
   }) as Promise<ProfileSettings>;
 
-export const saveProfileSettings = (profileId: string | number, settings: ProfileSettings) => {
-  const url = `${PROFILE_SETTINGS_API_ENDPOINT}/${profileId}`;
+export const createProfileSettings = async (profileId: string | number, settings: ProfileSettings) => {
+  const url = `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}`;
+  const body = JSON.stringify(settings);
+
+  const response = await baseApi.request({
+    url,
+    requestParams: {
+      method: 'POST',
+      body,
+      headers: {
+        'content-type': 'application/json',
+      },
+    },
+  });
+
+  return response?.json();
+};
+
+export const saveProfileSettings = (
+  profileId: string | number,
+  profileSettingsId: string | number,
+  settings: ProfileSettings,
+) => {
+  const url = `${PROFILE_API_ENDPOINT}/${profileId}/${PROFILE_SETTINGS_PATH}/${profileSettingsId}`;
   const body = JSON.stringify(settings);
 
   return baseApi.request({
     url,
     requestParams: {
-      method: 'POST',
+      method: 'PUT',
       body,
       headers: {
         'content-type': 'application/json',

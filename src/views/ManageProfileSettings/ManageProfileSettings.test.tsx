@@ -124,13 +124,13 @@ describe('ManageProfileSettings', () => {
       const component = screen.getByTestId('component-test:childC');
       const nudgeUpButton = within(component).getByTestId('nudge-up');
 
-      expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeDisabled();
 
       fireEvent.click(nudgeUpButton);
       fireEvent.click(nudgeUpButton);
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeEnabled();
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childA'));
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childB'));
       });
@@ -146,13 +146,13 @@ describe('ManageProfileSettings', () => {
       const component = screen.getByTestId('component-test:childA');
       const nudgeDownButton = within(component).getByTestId('nudge-down');
 
-      expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeDisabled();
 
       fireEvent.click(nudgeDownButton);
       fireEvent.click(nudgeDownButton);
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeEnabled();
         expect(screen.getByTestId('component-test:childB')).toAppearBefore(screen.getByTestId('component-test:childA'));
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childA'));
       });
@@ -172,7 +172,7 @@ describe('ManageProfileSettings', () => {
       const component = screen.getByTestId('component-test:childB');
       const menuButton = within(component).getByTestId('activate-menu');
 
-      expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeDisabled();
 
       fireEvent.click(menuButton);
       fireEvent.click(within(component).getByTestId('move-action'));
@@ -182,7 +182,7 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(within(component).getByTestId('move-action'));
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeEnabled();
         const section = screen.getByTestId('selected-component-list');
         expect(within(section).getByTestId('component-test:childB')).toBeInTheDocument();
         expect(screen.getByTestId('component-test:childA')).toAppearBefore(screen.getByTestId('component-test:childB'));
@@ -200,21 +200,21 @@ describe('ManageProfileSettings', () => {
       const component = screen.getByTestId('component-test:childC');
       const menuButton = within(component).getByTestId('activate-menu');
 
-      expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeDisabled();
 
       fireEvent.click(menuButton);
       fireEvent.click(within(component).getByTestId('move-action'));
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeEnabled();
         const section = screen.getByTestId('unused-component-list');
         expect(within(section).getByTestId('component-test:childC')).toBeInTheDocument();
       });
     });
   });
 
-  describe('toggle between default and custom', () => {
-    it('clears all settings when toggled from custom to default', () => {
+  describe('reset components', () => {
+    it('clears all changes to components when clicked', () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
       waitFor(() => {
@@ -225,7 +225,7 @@ describe('ManageProfileSettings', () => {
       const nudgeComponent = screen.getByTestId('component-test:childC');
       const nudgeUpButton = within(nudgeComponent).getByTestId('nudge-up');
 
-      expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeDisabled();
 
       fireEvent.click(nudgeUpButton);
 
@@ -233,16 +233,16 @@ describe('ManageProfileSettings', () => {
       const moveComponent = screen.getByTestId('component-test:childA');
       const menuButton = within(moveComponent).getByTestId('activate-menu');
 
-      expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+      expect(screen.getByTestId('reset-components')).toBeEnabled();
 
       fireEvent.click(menuButton);
       fireEvent.click(within(moveComponent).getByTestId('move-action'));
 
-      // toggle back to default
-      fireEvent.click(screen.getByTestId('settings-active-default'));
+      // reset to default
+      fireEvent.click(screen.getByTestId('reset-components'));
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).not.toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeDisabled();
         const section = screen.getByTestId('selected-component-list');
         expect(within(section).getByTestId('component-test:childA')).toBeInTheDocument();
         expect(within(section).getByTestId('component-test:childB')).toBeInTheDocument();
@@ -267,7 +267,7 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(within(component).getByTestId('move-action'));
 
       waitFor(() => {
-        expect(screen.getByTestId('settings-active-custom')).toBeChecked();
+        expect(screen.getByTestId('reset-components')).toBeEnabled();
       });
 
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[1]);

@@ -57,6 +57,7 @@ export enum QueryParams {
   Source = 'source',
   SourceUri = 'sourceUri',
   ProfileId = 'profileId',
+  ProfileSettingsId = 'profileSettingsId',
 }
 
 export enum SearchQueryParams {

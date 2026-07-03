@@ -9,7 +9,7 @@ import * as buildProcessedResourceModule from '../helpers/buildProcessedResource
 import { useResourceProcessing } from './useResourceProcessing';
 
 jest.mock('react-router-dom', () => ({
-  useSearchParams: () => [new URLSearchParams('type=work&profileId=123'), jest.fn()],
+  useSearchParams: () => [new URLSearchParams('type=work&profileId=123&profileSettingsId=456'), jest.fn()],
 }));
 
 jest.mock('../helpers/buildProcessedResource', () => ({
@@ -66,7 +66,7 @@ describe('useResourceProcessing', () => {
     (getEditingRecordBlocks as jest.Mock).mockReturnValue(undefined);
   });
 
-  it('calls buildProcessedResource with typeParam and profileIdParam from URL', async () => {
+  it('calls buildProcessedResource with typeParam, profileIdParam, and profileSettingsIdParam from URL', async () => {
     const { result } = renderHook(() => useResourceProcessing(), { wrapper });
 
     await result.current.processResource({});
@@ -75,6 +75,7 @@ describe('useResourceProcessing', () => {
       expect.objectContaining({
         typeParam: 'work',
         profileIdParam: '123',
+        profileSettingsIdParam: '456',
       }),
     );
   });

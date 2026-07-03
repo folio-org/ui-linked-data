@@ -30,6 +30,8 @@ jest.mock('../../hooks/useSaveProfileSettings', () => ({
 
 describe('ModalCloseProfileSettings', () => {
   const mockSetSelectedProfile = jest.fn();
+  const mockSetIsCreating = jest.fn();
+  const mockSetSelectedProfileSettingsMeta = jest.fn();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -55,6 +57,17 @@ describe('ModalCloseProfileSettings', () => {
     renderComponent();
 
     expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
+  });
+
+  it('when closing modal, do not save or navigate', async () => {
+    renderComponent();
+
+    fireEvent.click(screen.getByLabelText('ld.aria.modal.close'));
+
+    await waitFor(() => {
+      expect(mockUseNavigate).not.toHaveBeenCalled();
+      expect(mockSaveSettings).not.toHaveBeenCalled();
+    });
   });
 
   it('when closing view, continue without saving sets up view close', async () => {
@@ -164,6 +177,57 @@ describe('ModalCloseProfileSettings', () => {
       expect(mockSetSelectedProfile).toHaveBeenCalled();
       expect(mockSetIsManageProfileSettingsShowEditor).toHaveBeenCalledWith(true);
       expect(mockSetIsManageProfileSettingsShowProfiles).toHaveBeenCalledWith(false);
+    });
+  });
+
+  it('when creating new settings next, move to creating mode with no settings meta selected', async () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: false,
+          nextSelectedProfile: null,
+          isCreatingSettingsNext: true,
+          setIsCreating: mockSetIsCreating,
+          setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(mockSetIsCreating).toHaveBeenCalledWith(true);
+      expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(null);
+    });
+  });
+
+  it('when editing existing settings next, move to editing mode with next settings meta selected ', async () => {
+    const settingsMeta = { id: 'meta' };
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsState,
+        state: {
+          isClosingNext: false,
+          nextSelectedProfile: null,
+          isCreatingSettingsNext: false,
+          isEditingSettingsNext: true,
+          nextSelectedSettingsMeta: settingsMeta,
+          setIsCreating: mockSetIsCreating,
+          setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(mockSetIsCreating).toHaveBeenCalledWith(false);
+      expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(settingsMeta);
     });
   });
 });

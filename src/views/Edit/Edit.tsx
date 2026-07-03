@@ -9,12 +9,12 @@ import { hasSplitLayout, mapToResourceType } from '@/configs/resourceTypes';
 import { EditPreview, EditSection, ModalViewMarc, useEditPage, useResetRecordStatus } from '@/features/edit';
 import { useRecordNavigation } from '@/features/resources';
 
-import { useLoadingState, useMarcPreviewState, useUIState } from '@/store';
+import { useLoadingState, useMarcPreviewState, useProfileState, useUIState } from '@/store';
 
 import './Edit.scss';
 
 export const Edit = () => {
-  const { initNewResource, loadResource } = useEditPage();
+  const { initNewResource, loadResource, applyUpdatedSettingsToResource } = useEditPage();
   const { clearRecordState } = useRecordNavigation();
   const resourceId = useParams().resourceId;
   const { basicValue: marcPreviewData, resetBasicValue: resetMarcPreviewData } = useMarcPreviewState([
@@ -23,6 +23,7 @@ export const Edit = () => {
   ]);
   const { resetHasShownAuthorityWarning } = useUIState(['resetHasShownAuthorityWarning']);
   const { setIsLoading, setIsPreviewLoading } = useLoadingState(['setIsLoading', 'setIsPreviewLoading']);
+  const { selectedProfileSettingsId } = useProfileState(['selectedProfileSettingsId']);
   const [searchParams] = useSearchParams();
   const cloneOfParam = searchParams.get(QueryParams.CloneOf);
   const typeParam = searchParams.get(QueryParams.Type);
@@ -65,6 +66,12 @@ export const Edit = () => {
   useEffect(() => {
     resetHasShownAuthorityWarning();
   }, [resourceId]);
+
+  useEffect(() => {
+    if (selectedProfileSettingsId) {
+      applyUpdatedSettingsToResource(selectedProfileSettingsId);
+    }
+  }, [selectedProfileSettingsId]);
 
   return (
     <div data-testid="edit-page" className="edit-page">

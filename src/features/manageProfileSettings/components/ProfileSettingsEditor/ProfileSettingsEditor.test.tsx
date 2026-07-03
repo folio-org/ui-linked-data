@@ -2,7 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { MemoryRouter } from 'react-router-dom';
 
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
@@ -11,6 +11,8 @@ import { useManageProfileSettingsStore } from '@/store';
 import { ProfileSettingsEditor } from './ProfileSettingsEditor';
 
 describe('ProfileSettingsEditor', () => {
+  const mockSetSettingsName = jest.fn();
+
   it('renders with no state', async () => {
     render(
       <MemoryRouter>
@@ -153,5 +155,34 @@ describe('ProfileSettingsEditor', () => {
     expect(within(unused).getByText('Child A')).toBeInTheDocument();
     expect(within(selected).getByText('1. Child B')).toBeInTheDocument();
     expect(screen.queryByText('ld.unusedComponents.allUsed')).not.toBeInTheDocument();
+  });
+
+  it('responds to settings name change', () => {
+    const initialName = 'initial-name';
+    const newName = 'new-name';
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          settingsName: initialName,
+          setSettingsName: mockSetSettingsName,
+        },
+      },
+    ]);
+
+    render(
+      <MemoryRouter>
+        <ProfileSettingsEditor />
+      </MemoryRouter>,
+    );
+
+    const nameInput = screen.getByTestId('settings-name');
+    expect(nameInput).toHaveValue(initialName);
+
+    fireEvent.change(nameInput, { target: { value: newName } });
+
+    waitFor(() => {
+      expect(mockSetSettingsName).toHaveBeenCalledWith(newName);
+    });
   });
 });

@@ -3,3 +3,12 @@ export const DEFAULT_INACTIVE_SETTINGS: ProfileSettingsWithDrift = {
   children: [],
   missingFromSettings: [],
 };
+
+export const PROFILE_SETTINGS_DEFAULT_OPTION = 'default';
+
+export const BASE_SETTINGS_OPTIONS = [
+  {
+    label: '',
+    value: '',
+  },
+];

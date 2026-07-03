@@ -185,10 +185,11 @@ describe('profileSave', () => {
         },
       ];
 
-      const result = generateSettings(selectedComponents, unusedComponents, true);
+      const result = generateSettings(selectedComponents, unusedComponents, true, 'some-name');
 
       expect(result).toEqual({
         active: true,
+        name: 'some-name',
         children: [
           {
             id: 'selected-1',

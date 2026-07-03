@@ -19,6 +19,7 @@ import type { ProcessedResource } from '../types';
 
 type ProcessResourceParams = {
   record?: RecordEntry;
+  profileSettingsId?: string;
   asClone?: boolean;
 };
 
@@ -26,6 +27,7 @@ export const useResourceProcessing = () => {
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get(QueryParams.Type);
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
+  const profileSettingsIdParam = searchParams.get(QueryParams.ProfileSettingsId);
 
   const sharedInfra = useContext(SharedInfraContext);
   const queryClient = useQueryClient();
@@ -35,7 +37,11 @@ export const useResourceProcessing = () => {
   const { formatMessage } = useIntl();
 
   const processResource = useCallback(
-    async ({ record, asClone = false }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
+    async ({
+      record,
+      profileSettingsId,
+      asClone = false,
+    }: ProcessResourceParams = {}): Promise<ProcessedResource | null> => {
       const loadLookup = (uri: string) => queryClient.ensureQueryData(generateLookupQueryOptions(uri));
       const pipeline = createSchemaPipeline(sharedInfra, loadLookup);
 
@@ -53,6 +59,7 @@ export const useResourceProcessing = () => {
         pipeline,
         record,
         profileIdParam,
+        profileSettingsIdParam: profileSettingsId ?? profileSettingsIdParam,
         typeParam,
         asClone,
         templateMetadata,
@@ -60,7 +67,16 @@ export const useResourceProcessing = () => {
         loadProfileSettings,
       });
     },
-    [typeParam, profileIdParam, sharedInfra, queryClient, loadProfile, loadProfileSettings, formatMessage],
+    [
+      typeParam,
+      profileIdParam,
+      profileSettingsIdParam,
+      sharedInfra,
+      queryClient,
+      loadProfile,
+      loadProfileSettings,
+      formatMessage,
+    ],
   );
 
   return { processResource };

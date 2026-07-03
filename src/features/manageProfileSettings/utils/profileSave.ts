@@ -58,6 +58,7 @@ export const generateSettings = (
   selectedComponents: ProfileSettingComponent[],
   unusedComponents: ProfileSettingComponent[],
   isSettingsActive: boolean,
+  name: string,
 ) => {
   const settingsChildren = [] as ProfileSettingsChildProperties[];
 
@@ -78,6 +79,7 @@ export const generateSettings = (
   });
 
   return {
+    name: name,
     active: isSettingsActive,
     children: settingsChildren,
   } as ProfileSettings;

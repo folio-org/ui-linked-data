@@ -2,6 +2,19 @@
 
 .components-editor-wrapper {
   container-type: inline-size;
+
+  .settings-name-edit {
+    max-width: 915px;
+    padding: 0 15px 15px;
+
+    label {
+      white-space: nowrap;
+    }
+  }
+
+  .reset-components {
+    padding: 0 15px 15px;
+  }
 }
 
 .components-editor {

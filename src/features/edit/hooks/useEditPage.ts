@@ -14,7 +14,12 @@ import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 import { getProfileBfid, getReference, hasReference, mapToResourceType } from '@/configs/resourceTypes';
 
-import { type ProcessedResource, generateResourceQueryOptions, useResourceProcessing } from '@/features/resources/';
+import {
+  type ProcessedResource,
+  generateResourceQueryOptions,
+  useRecordGeneration,
+  useResourceProcessing,
+} from '@/features/resources/';
 
 import { useInputsState, useLoadingState, useProfileState, useStatusState, useUIState } from '@/store';
 
@@ -53,6 +58,7 @@ export const useEditPage = () => {
     'setCurrentlyEditedEntityBfid',
     'setCurrentlyPreviewedEntityBfid',
   ]);
+  const { generateRecord } = useRecordGeneration();
 
   const applyEntityBfids = useCallback(
     (record?: RecordEntry | null) => {
@@ -121,6 +127,28 @@ export const useEditPage = () => {
       }
     },
     [processResource, applyToStores, setIsLoading, addStatusMessagesItem],
+  );
+
+  const applyUpdatedSettingsToResource = useCallback(
+    async (profileSettingsId: string) => {
+      try {
+        setIsLoading(true);
+
+        // Pass along current user values, but do not save to store as a record
+        const record = generateRecord({});
+        const result = await processResource({ record: record ?? undefined, profileSettingsId });
+
+        if (result) applyToStores(result, null);
+      } catch (error) {
+        logger.error('Error occurred while applying profile settings to a resource', error);
+        addStatusMessagesItem?.(
+          UserNotificationFactory.createMessage(StatusType.error, 'ld.errorApplyingProfileSettings'),
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [generateRecord, processResource, applyToStores, setIsLoading],
   );
 
   const fetchRefRecord = useCallback(
@@ -220,5 +248,5 @@ export const useEditPage = () => {
     ],
   );
 
-  return { initNewResource, loadResource };
+  return { initNewResource, loadResource, applyUpdatedSettingsToResource };
 };

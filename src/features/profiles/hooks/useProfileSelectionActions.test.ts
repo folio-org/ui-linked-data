@@ -53,6 +53,7 @@ describe('useProfileSelectionActions', () => {
   const mockSetPreferredProfiles = jest.fn();
   const mockQueryParams = { param: 'value' };
   const mockProfileId = 'profile-123';
+  const mockProfileSettingsId = 'settings-456';
   const mockResourceTypeURL = 'test-resource-type' as ResourceTypeURL;
   const mockGeneratedURL = '/generated-url';
   const mockProfileName = 'Test Profile';
@@ -131,7 +132,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
@@ -149,7 +150,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(getProfileNameById).toHaveBeenCalledWith({
@@ -180,7 +181,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(mockSetIsLoading).toHaveBeenCalledWith(true);
@@ -196,7 +197,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(savePreferredProfile).not.toHaveBeenCalled();
@@ -218,7 +219,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
@@ -241,13 +242,14 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(generatePageURL).toHaveBeenCalledWith({
         url: ROUTES.RESOURCE_CREATE.uri,
         queryParams: mockQueryParams,
         profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
       });
       expect(mockNavigateToEditPage).toHaveBeenCalledWith(mockGeneratedURL);
       expect(mockResetModalState).toHaveBeenCalled();
@@ -265,7 +267,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: mockProfileId });
@@ -285,7 +287,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(mockChangeRecordProfile).toHaveBeenCalledWith({ profileId: mockProfileId });
@@ -305,7 +307,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
@@ -325,6 +327,7 @@ describe('useProfileSelectionActions', () => {
         url: ROUTES.RESOURCE_CREATE.uri,
         queryParams: mockQueryParams,
         profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
       });
       expect(mockNavigateToEditPage).toHaveBeenCalledWith(mockGeneratedURL);
       expect(mockResetModalState).toHaveBeenCalled();
@@ -343,7 +346,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, true);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, true);
       });
 
       expect(savePreferredProfile).toHaveBeenCalledWith(mockProfileId, mockResourceTypeURL);
@@ -377,7 +380,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(deletePreferredProfile).toHaveBeenCalledWith(mockResourceTypeURL);
@@ -397,7 +400,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(deletePreferredProfile).not.toHaveBeenCalled();
@@ -417,7 +420,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(mockSetIsLoading).toHaveBeenCalledWith(true);
@@ -438,7 +441,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(deletePreferredProfile).toHaveBeenCalledWith(mockResourceTypeURL);
@@ -467,7 +470,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(deletePreferredProfile).toHaveBeenCalledWith(mockResourceTypeURL);
@@ -478,6 +481,7 @@ describe('useProfileSelectionActions', () => {
         url: ROUTES.RESOURCE_CREATE.uri,
         queryParams: mockQueryParams,
         profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
       });
       expect(mockNavigateToEditPage).toHaveBeenCalledWith(mockGeneratedURL);
       expect(mockResetModalState).toHaveBeenCalled();
@@ -498,7 +502,7 @@ describe('useProfileSelectionActions', () => {
       );
 
       await act(async () => {
-        await result.current.handleSubmit(mockProfileId, false);
+        await result.current.handleSubmit(mockProfileId, mockProfileSettingsId, false);
       });
 
       expect(deletePreferredProfile).toHaveBeenCalledWith(mockResourceTypeURL);

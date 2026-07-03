@@ -23,9 +23,6 @@ jest.mock('@/features/profiles', () => ({
   ...jest.requireActual('@/features/profiles'),
   useLoadProfileSettings: jest.fn(),
 }));
-jest.mock('../CustomProfileToggle', () => ({
-  CustomProfileToggle: () => <div data-testid="custom-profile-toggle" />,
-}));
 jest.mock('../DefaultProfileOption', () => ({
   DefaultProfileOption: () => <div data-testid="default-profile-option" />,
 }));
@@ -39,6 +36,7 @@ describe('ProfileSettings', () => {
   const mockAddStatusMessagesItem = jest.fn();
   const mockSetIsLoading = jest.fn();
   const mockLoadProfileSettings = jest.fn();
+  const mockResetProfileSettings = jest.fn();
 
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -61,7 +59,7 @@ describe('ProfileSettings', () => {
     });
   });
 
-  const renderComponent = (selected: boolean) => {
+  const renderComponent = (selected: boolean, defaultMeta: boolean) => {
     setInitialGlobalState([
       {
         store: useManageProfileSettingsState,
@@ -73,6 +71,10 @@ describe('ProfileSettings', () => {
                 resourceType: mockWorkResourceTypeUrl,
               }
             : null,
+          selectedProfileSettingsMeta: {
+            id: defaultMeta ? 'default' : 'meta-one',
+          },
+          resetProfileSettings: mockResetProfileSettings,
         },
       },
       {
@@ -99,13 +101,13 @@ describe('ProfileSettings', () => {
   };
 
   it('does not render if selected profile is missing', async () => {
-    renderComponent(false);
+    renderComponent(false, false);
 
     expect(screen.queryByTestId('profile-settings')).not.toBeInTheDocument();
   });
 
   it('renders when profile selected', () => {
-    renderComponent(true);
+    renderComponent(true, false);
 
     expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
   });
@@ -114,7 +116,7 @@ describe('ProfileSettings', () => {
     const error = new Error('Failed to load profile');
     (fetchProfile as jest.Mock).mockRejectedValue(error);
 
-    renderComponent(true);
+    renderComponent(true, false);
 
     await waitFor(() => {
       expect(mockSetIsLoading).toHaveBeenCalledWith(true);
@@ -132,7 +134,7 @@ describe('ProfileSettings', () => {
     (fetchProfile as jest.Mock).mockResolvedValue([]);
     mockLoadProfileSettings.mockRejectedValue(error);
 
-    renderComponent(true);
+    renderComponent(true, false);
 
     await waitFor(() => {
       expect(mockSetIsLoading).toHaveBeenCalledWith(true);
@@ -149,10 +151,18 @@ describe('ProfileSettings', () => {
     const profile = [] as Profile;
     (fetchProfile as jest.Mock).mockResolvedValue(profile);
 
-    renderComponent(true);
+    renderComponent(true, false);
 
     await waitFor(() => {
-      expect(mockLoadProfileSettings).toHaveBeenCalledWith('one', profile, mockWorkResourceTypeUrl);
+      expect(mockLoadProfileSettings).toHaveBeenCalledWith('meta-one', 'one', profile, mockWorkResourceTypeUrl);
+    });
+  });
+
+  it('resets profile settings if settings ID is set to default', async () => {
+    renderComponent(true, true);
+
+    await waitFor(() => {
+      expect(mockResetProfileSettings).toHaveBeenCalled();
     });
   });
 });
