@@ -46,7 +46,12 @@ export const ProfileSettingsSelector = () => {
 
   return (
     <div className="profile-settings-selector" ref={ref}>
-      <Button ariaHaspopup="menu" ariaExpanded={isMenuEnabled} onClick={toggleIsMenuEnabled}>
+      <Button
+        data-testid="profile-settings-selector-button"
+        ariaHaspopup="menu"
+        ariaExpanded={isMenuEnabled}
+        onClick={toggleIsMenuEnabled}
+      >
         <Settings />
       </Button>
       {isMenuEnabled && (

@@ -26,6 +26,7 @@ jest.mock('react-router-dom', () => ({
 
 const mockProcessResource = jest.fn();
 const mockFetchQuery = jest.fn();
+const mockGenerateRecord = jest.fn();
 const mockResourceQueryOptions = jest.fn((id: string) => ({ queryKey: ['resource', id] }));
 
 jest.mock('@tanstack/react-query', () => ({
@@ -36,6 +37,7 @@ jest.mock('@tanstack/react-query', () => ({
 
 jest.mock('@/features/resources', () => ({
   generateResourceQueryOptions: (id: string) => mockResourceQueryOptions(id),
+  useRecordGeneration: () => ({ generateRecord: mockGenerateRecord }),
   useResourceProcessing: () => ({ processResource: mockProcessResource }),
 }));
 
@@ -407,6 +409,56 @@ describe('useEditPage', () => {
 
       // original record is passed so the linked work preview remains visible
       expect(mockSetRecord).toHaveBeenCalledWith(mockRecord);
+    });
+  });
+
+  describe('applyUpdatedSettingsToResource', () => {
+    const mockProfileSettingsId = 'settings-id';
+    it('calls generateRecord, processResource and applies result to stores on success', async () => {
+      mockProcessResource.mockResolvedValue(mockProcessedResource);
+      mockGenerateRecord.mockReturnValue(null);
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.applyUpdatedSettingsToResource(mockProfileSettingsId);
+      });
+
+      expect(mockSetIsLoading).toHaveBeenCalledWith(true);
+      expect(mockGenerateRecord).toHaveBeenCalledWith({});
+      expect(mockProcessResource).toHaveBeenCalledWith({ profileSettingsId: mockProfileSettingsId });
+      expect(mockSetSchema).toHaveBeenCalledWith(mockProcessedResource.schema);
+      expect(mockSetUserValues).toHaveBeenCalledWith(mockProcessedResource.userValues);
+      expect(mockSetIsLoading).toHaveBeenCalledWith(false);
+    });
+
+    it('does not apply to stores when processResource returns null', async () => {
+      mockProcessResource.mockResolvedValue(null);
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.applyUpdatedSettingsToResource(mockProfileSettingsId);
+      });
+
+      expect(mockSetSchema).not.toHaveBeenCalled();
+    });
+
+    it('reports error status message when processResource throws', async () => {
+      mockProcessResource.mockRejectedValue(new Error('load error'));
+
+      const { result } = renderHook(() => useEditPage());
+
+      await act(async () => {
+        await result.current.applyUpdatedSettingsToResource(mockProfileSettingsId);
+      });
+
+      expect(UserNotificationFactory.createMessage).toHaveBeenCalledWith(
+        StatusType.error,
+        'ld.errorApplyingProfileSettings',
+      );
+      expect(mockAddStatusMessagesItem).toHaveBeenCalled();
+      expect(mockSetIsLoading).toHaveBeenCalledWith(false);
     });
   });
 });
