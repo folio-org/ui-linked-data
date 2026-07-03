@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 import { getProfileConfig } from '@/common/helpers/profile.helper';
 import {
   getAdjustedRecordContents,
@@ -17,12 +18,14 @@ type BuildProcessedResourceParams = {
   pipeline: SchemaPipelineServices;
   record?: RecordEntry;
   profileIdParam?: string | null;
+  profileSettingsIdParam?: string | null;
   typeParam?: string | null;
   asClone?: boolean;
   templateMetadata?: ResourceTemplateMetadata[];
   loadProfile: (id: string | number) => Promise<Profile>;
   loadProfileSettings: (
-    id: string | number | undefined,
+    id: string | number,
+    profileId: string | number | undefined,
     profile: Profile,
     uri?: string,
   ) => Promise<ProfileSettingsWithDrift>;
@@ -32,6 +35,7 @@ export const buildProcessedResource = async ({
   pipeline,
   record,
   profileIdParam = null,
+  profileSettingsIdParam = null,
   typeParam = null,
   asClone = false,
   templateMetadata,
@@ -60,6 +64,7 @@ export const buildProcessedResource = async ({
   if (!selectedProfile) return null;
 
   const profileSettings = await loadProfileSettings(
+    profileSettingsIdParam ?? PROFILE_SETTINGS_DEFAULT_OPTION,
     String(profileConfig.ids?.[0]),
     selectedProfile,
     getUri(resourceType),

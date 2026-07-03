@@ -84,12 +84,12 @@ export const useProfileSelectionActions = ({
     }
   };
 
-  const handleCreateResource = (profileId: string | number) => {
-    const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId });
+  const handleCreateResource = (profileId: string | number, profileSettingsId: string | number) => {
+    const url = generatePageURL({ url: ROUTES.RESOURCE_CREATE.uri, queryParams, profileId, profileSettingsId });
     navigateToEditPage(url);
   };
 
-  const handleSubmit = async (profileId: string | number, isDefault?: boolean) => {
+  const handleSubmit = async (profileId: string | number, profileSettingsId: string | number, isDefault?: boolean) => {
     // If "set as default" is checked, save preferred profile
     if (isDefault) {
       await handleSetProfileAsDefault(profileId);
@@ -100,7 +100,7 @@ export const useProfileSelectionActions = ({
     resetModalState();
 
     if (action === 'set') {
-      handleCreateResource(profileId);
+      handleCreateResource(profileId, profileSettingsId);
     } else {
       try {
         await changeRecordProfile({ profileId });

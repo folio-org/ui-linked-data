@@ -125,11 +125,13 @@ describe('ProfilesList', () => {
   it('selecting a profile opens a confirmation modal if modified', () => {
     renderComponent(true, true, false);
 
+    const firstProfile = screen.getByRole('button', { name: 'One Work Profile' });
+    expect(firstProfile.parentElement).toHaveClass('selected');
+
     const instanceProfile = screen.getByRole('button', { name: 'One Instance Profile' });
     fireEvent.click(instanceProfile);
 
-    const workProfile = screen.getByRole('button', { name: 'One Work Profile' });
-    expect(workProfile.parentElement).toHaveClass('selected');
+    expect(firstProfile.parentElement).toHaveClass('selected');
     expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
   });
 });

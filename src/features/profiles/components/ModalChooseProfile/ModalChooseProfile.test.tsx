@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import { ModalChooseProfile } from './ModalChooseProfile';
 
@@ -13,6 +14,33 @@ const mockProfileSelectionType = {
   action: 'set',
   resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
 } as ProfileSelectionType;
+
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+  queryClient.setQueryData(
+    ['profileSettingsMeta', 'profile_1'],
+    [
+      {
+        id: 1,
+        name: 'one',
+      },
+      {
+        id: 2,
+        name: 'two',
+      },
+    ],
+  );
+
+  return ({ children }: { children: React.ReactNode }) => {
+    return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  };
+};
 
 describe('ModalChooseProfile', () => {
   const onCancel = jest.fn();
@@ -37,17 +65,18 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     // Check that modal content is rendered
     expect(screen.getByTestId('modal-choose-profile-content')).toBeInTheDocument();
 
     // Check that the profile select is rendered with correct options
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     expect(selectElement).toBeInTheDocument();
 
     // Check that the dropdown has all the profile options
-    const options = screen.getAllByRole('option');
+    const options = within(selectElement).getAllByRole('option');
     expect(options).toHaveLength(mockProfiles.length);
     expect(options[0]).toHaveValue('profile_1');
     expect(options[1]).toHaveValue('profile_2');
@@ -64,9 +93,10 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
-    expect(screen.getByRole('combobox')).toHaveValue('profile_1');
+    expect(screen.getByTestId('select-profile')).toHaveValue('profile_1');
   });
 
   test('changes selected profile when user selects different option', () => {
@@ -79,9 +109,10 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
 
     expect(selectElement).toHaveValue('profile_2');
@@ -97,6 +128,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -123,14 +155,15 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     fireEvent.change(selectElement, { target: { value: 'profile_2' } });
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_2', false);
+      expect(onSubmit).toHaveBeenCalledWith('profile_2', 'default', false);
     });
   });
 
@@ -144,6 +177,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
@@ -160,6 +194,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     fireEvent.click(screen.getByTestId('modal-overlay'));
@@ -176,6 +211,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={mockProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     expect(container.firstChild).toBeNull();
@@ -191,6 +227,7 @@ describe('ModalChooseProfile', () => {
         onClose={onClose}
         profiles={[]}
       />,
+      { wrapper: createWrapper() },
     );
 
     rerender(
@@ -207,7 +244,7 @@ describe('ModalChooseProfile', () => {
     fireEvent.click(screen.getByTestId('modal-button-submit'));
 
     await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith('profile_1', false);
+      expect(onSubmit).toHaveBeenCalledWith('profile_1', 'default', false);
       expect(onSubmit).not.toHaveBeenCalledWith('0');
       expect(onSubmit).not.toHaveBeenCalledWith(undefined);
     });
@@ -230,6 +267,7 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -253,6 +291,7 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -275,9 +314,10 @@ describe('ModalChooseProfile', () => {
         preferredProfiles={preferredProfiles}
         resourceTypeURL="http://bibfra.me/vocab/lite/Work"
       />,
+      { wrapper: createWrapper() },
     );
 
-    const selectElement = screen.getByRole('combobox');
+    const selectElement = screen.getByTestId('select-profile');
     const checkbox = screen.getByRole('checkbox');
 
     // Initially profile_1 is selected and not in preferred profiles
@@ -306,6 +346,7 @@ describe('ModalChooseProfile', () => {
         profiles={mockProfiles}
         selectedProfileId="profile_1"
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
@@ -328,9 +369,33 @@ describe('ModalChooseProfile', () => {
         selectedProfileId="profile_1"
         preferredProfiles={preferredProfiles}
       />,
+      { wrapper: createWrapper() },
     );
 
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
+  });
+
+  test('changing the selected settings changes the submitted settings ID', async () => {
+    render(
+      <ModalChooseProfile
+        isOpen={true}
+        profileSelectionType={mockProfileSelectionType}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+        onClose={onClose}
+        profiles={mockProfiles}
+        selectedProfileId="profile_1"
+      />,
+      { wrapper: createWrapper() },
+    );
+
+    fireEvent.change(screen.getByTestId('select-profile-settings'), { target: { value: '2' } });
+
+    fireEvent.click(screen.getByTestId('modal-button-submit'));
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith('profile_1', '2', false);
+    });
   });
 });

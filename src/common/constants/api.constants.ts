@@ -9,7 +9,7 @@ export const INVENTORY_API_ENDPOINT = '/linked-data/inventory-instance';
 export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const PROFILE_METADATA_API_ENDPOINT = '/linked-data/profile/metadata';
 export const PROFILE_PREFERRED_API_ENDPOINT = '/linked-data/profile/preferred';
-export const PROFILE_SETTINGS_API_ENDPOINT = '/linked-data/profile/settings';
+export const PROFILE_SETTINGS_PATH = 'settings';
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
 export const IMPORT_JSON_URL_API_ENDPOINT = '/linked-data/import/url';
@@ -50,6 +50,8 @@ export enum ApiErrorCodes {
   RequiredPrimaryMainTitle = 'required_primary_main_title',
   LccnDoesNotMatchPattern = 'lccn_does_not_match_pattern',
   LccnNotUnique = 'lccn_not_unique',
+  ProfileSettingsNameNotUnique = 'profile_settings_name_not_unique',
+  NotBlank = 'must not be blank',
   FailedDependency = 'failed_dependency',
   NotFound = 'not_found',
   Mapping = 'mapping',
