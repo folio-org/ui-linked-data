@@ -14,7 +14,9 @@ const typeLabelEntry = (type: string) => ({
 
 export const LD_AUTHORITIES_SEARCHABLE_INDICES_MAP: SearchableIndicesMap = {
   [SearchSegment.Search]: {
-    [SearchableIndex.Keyword]: typeLabelEntry('keyword'),
+    [SearchableIndex.Keyword]: {
+      [SearchableIndexQuerySelector.Query]: `(keyword all "${SEARCH_QUERY_VALUE_PARAM}")`,
+    },
     [SearchableIndex.Identifier]: {
       [SearchableIndexQuerySelector.Query]: `(identifier all "${SEARCH_QUERY_VALUE_PARAM}")`,
     },
