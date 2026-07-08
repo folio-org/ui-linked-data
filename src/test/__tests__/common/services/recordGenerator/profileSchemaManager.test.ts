@@ -92,7 +92,7 @@ describe('ProfileSchemaManager', () => {
       const deepEntry = {
         uuid: 'uuid_deep',
         uriBFLite: 'uri_1',
-        path: ['parent_1', 'child_1', 'grandchild_1'],
+        path: ['parent_1', 'child_1', 'grandchild_1', 'greatgrandchild_1'],
       } as SchemaEntry;
       const schemaWithDeepEntry = new Map([...mockSchema, ['uuid_deep', deepEntry]]);
 
@@ -102,6 +102,21 @@ describe('ProfileSchemaManager', () => {
 
       expect(result).toEqual([mockEntry_1]);
       expect(result).not.toContain(deepEntry);
+    });
+
+    it('does return grandchild entries that share a URI with a direct child', () => {
+      const deepEntry = {
+        uuid: 'uuid_deep',
+        uriBFLite: 'uri_1',
+        path: ['parent_1', 'child_1', 'grandchild_1'],
+      } as SchemaEntry;
+      const schemaWithDeepEntry = new Map([...mockSchema, ['uuid_deep', deepEntry]]);
+
+      manager.init(schemaWithDeepEntry);
+
+      const result = manager.findSchemaEntriesByUriBFLite('uri_1', ['parent_1']);
+
+      expect(result).toEqual([mockEntry_1, deepEntry]);
     });
   });
 

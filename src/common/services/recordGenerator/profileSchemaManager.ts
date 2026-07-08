@@ -30,7 +30,13 @@ export class ProfileSchemaManager implements IProfileSchemaManager {
 
     if (parentPath && parentPath.length > 0) {
       return entries.filter(entry => {
-        if (entry.path.length !== parentPath.length + 1) return false;
+        // Only filter for direct or direct + 1 children of the parent path.
+        // Anything beyond is more likely to be associated to a sub-resource
+        // and should not leak into a root resource property sharing the same URI.
+        const entryPathLength = entry.path.length;
+        const childMinPathLength = parentPath.length + 1;
+        const childMaxPathLength = parentPath.length + 2;
+        if (entryPathLength < childMinPathLength || entryPathLength > childMaxPathLength) return false;
 
         for (let i = 0; i < parentPath.length; i++) {
           if (entry.path[i] !== parentPath[i]) return false;
