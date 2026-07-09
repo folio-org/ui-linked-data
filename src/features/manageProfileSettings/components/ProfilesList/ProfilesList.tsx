@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
-import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getUri } from '@/configs/resourceTypes';
+import { RESOURCE_TYPE_REGISTRY, getProfileLabelId, getResourceTypeUri } from '@/configs/resourceTypes';
 
 import { useProfileList } from '@/features/profiles';
 
@@ -94,7 +94,7 @@ export const ProfilesList = () => {
             <ResourceProfiles
               key={type}
               labelId={getProfileLabelId(type)}
-              profiles={availableProfiles[getUri(type) as ResourceTypeURL]}
+              profiles={availableProfiles[getResourceTypeUri(type) as ResourceTypeURL]}
             />
           );
         })}

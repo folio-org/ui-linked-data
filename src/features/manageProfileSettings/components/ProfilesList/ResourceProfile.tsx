@@ -6,19 +6,20 @@ import { Button, ButtonType } from '@/components/Button';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
+import { useResetSettings } from '../../hooks';
+
 type ResourceProfileProps = {
   profile: ProfileDTO;
   selected: boolean;
 };
 
 export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected }) => {
-  const { setNextSelectedProfile, setSelectedProfile, resetSelectedProfileSettingsMeta, isModified } =
-    useManageProfileSettingsState([
-      'setNextSelectedProfile',
-      'setSelectedProfile',
-      'resetSelectedProfileSettingsMeta',
-      'isModified',
-    ]);
+  const { isModified, resetIsCreating, setNextSelectedProfile, setSelectedProfile } = useManageProfileSettingsState([
+    'isModified',
+    'resetIsCreating',
+    'setNextSelectedProfile',
+    'setSelectedProfile',
+  ]);
   const {
     setIsManageProfileSettingsUnsavedModalOpen,
     setIsManageProfileSettingsShowProfiles,
@@ -28,6 +29,7 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsShowEditor',
   ]);
+  const { resetSettings } = useResetSettings();
 
   const handleClick = () => {
     if (selected) {
@@ -38,7 +40,8 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
       setSelectedProfile(profile);
-      resetSelectedProfileSettingsMeta();
+      resetSettings();
+      resetIsCreating();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
     }
