@@ -11,6 +11,7 @@ import { StatusType } from '@/common/constants/status.constants';
 import {
   getAdjustedRecordContents,
   getPrimaryEntitiesFromRecord,
+  preserveReferenceData,
   unwrapRecordValuesFromCommonContainer,
   wrapRecordValuesWithCommonContainer,
 } from '@/common/helpers/record.helper';
@@ -45,6 +46,10 @@ type ApplyToStoresProps = {
   withReference?: boolean;
 };
 
+type ApplyToProfileAndInputStoresProps = {
+  result: ProcessedResource;
+};
+
 export const useEditPage = () => {
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get(QueryParams.Type);
@@ -61,12 +66,15 @@ export const useEditPage = () => {
     'setInitialSchemaKey',
     'setSchema',
   ]);
-  const { setUserValues, setSelectedRecordBlocks, setSelectedEntries, setRecord } = useInputsState([
-    'setUserValues',
-    'setSelectedRecordBlocks',
-    'setSelectedEntries',
-    'setRecord',
-  ]);
+  const { record, selectedRecordBlocks, setUserValues, setSelectedRecordBlocks, setSelectedEntries, setRecord } =
+    useInputsState([
+      'record',
+      'selectedRecordBlocks',
+      'setUserValues',
+      'setSelectedRecordBlocks',
+      'setSelectedEntries',
+      'setRecord',
+    ]);
   const { setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState([
     'setIsRecordEdited',
     'addStatusMessagesItem',
@@ -99,8 +107,8 @@ export const useEditPage = () => {
     [resourceType, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid],
   );
 
-  const applyToStores = useCallback(
-    ({ result, record, withReference }: ApplyToStoresProps) => {
+  const applyToProfileAndInputStores = useCallback(
+    ({ result }: ApplyToProfileAndInputStoresProps) => {
       setSelectedProfile(result.selectedProfile ?? null);
       setSchema(result.schema);
       setInitialSchemaKey(result.initKey);
@@ -108,21 +116,19 @@ export const useEditPage = () => {
       setSelectedEntries(result.selectedEntries);
       setSelectedRecordBlocks(result.selectedRecordBlocks);
       selectedEntriesService.set(result.selectedEntries);
+    },
+    [setSelectedProfile, setSchema, setInitialSchemaKey, setUserValues, setSelectedEntries, setSelectedRecordBlocks],
+  );
+
+  const applyToStores = useCallback(
+    ({ result, record, withReference }: ApplyToStoresProps) => {
+      applyToProfileAndInputStores({ result });
 
       if (record !== undefined) setRecord(record);
 
       applyEntityBfids(record, withReference);
     },
-    [
-      setSelectedProfile,
-      setSchema,
-      setInitialSchemaKey,
-      setUserValues,
-      setSelectedEntries,
-      setSelectedRecordBlocks,
-      setRecord,
-      applyEntityBfids,
-    ],
+    [applyToProfileAndInputStores, setRecord, applyEntityBfids],
   );
 
   const initNewResource = useCallback(
@@ -152,11 +158,13 @@ export const useEditPage = () => {
       try {
         setIsLoading(true);
 
-        // Pass along current user values, but do not save to store as a record
-        const record = generateRecord({});
-        const result = await processResource({ record: record ?? undefined, profileSettingsId });
+        // Build a record based on current input.
+        const generated = generateRecord({});
+        // Augment it with the reference data from the current record if needed.
+        const fullRecord = preserveReferenceData(generated, record, selectedRecordBlocks);
+        const result = await processResource({ record: fullRecord ?? undefined, profileSettingsId });
 
-        if (result) applyToStores({ result, record: null, withReference: true });
+        if (result) applyToProfileAndInputStores({ result });
       } catch (error) {
         logger.error('Error occurred while applying profile settings to a resource', error);
         addStatusMessagesItem?.(
@@ -166,7 +174,7 @@ export const useEditPage = () => {
         setIsLoading(false);
       }
     },
-    [generateRecord, processResource, applyToStores, setIsLoading],
+    [generateRecord, processResource, preserveReferenceData, applyToProfileAndInputStores, setIsLoading],
   );
 
   const fetchRefRecord = useCallback(
