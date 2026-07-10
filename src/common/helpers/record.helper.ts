@@ -170,3 +170,22 @@ export const getRecordProfileId = (record?: RecordEntry<RecursiveRecordSchema> |
 
   return selectedProfileId;
 };
+
+export const preserveReferenceData = (
+  generated: RecordEntry | null | undefined,
+  source: RecordEntry | null | undefined,
+  blocks?: SelectedRecordBlocks,
+) => {
+  // Skip merging if generated is effectively empty.
+  if (generated && Object.keys(generated.resource).length === 0) return source;
+
+  const block = blocks?.block;
+  const refKey = blocks?.reference?.key;
+  const refData = block && refKey ? source?.resource?.[block]?.[refKey] : undefined;
+
+  if (!generated || !refData || !generated.resource?.[block!]) return generated;
+
+  const merged = cloneDeep(generated);
+  merged.resource[block!][refKey!] = refData;
+  return merged;
+};

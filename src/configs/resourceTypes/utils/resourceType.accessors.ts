@@ -56,6 +56,10 @@ export const getUri = (type: ResourceTypeInput): string => {
   return getResourceTypeConfig(type).uri;
 };
 
+export const getResourceTypeUri = (type: ResourceTypeInput): string => {
+  return getResourceTypeConfig(type).resourceTypeUri ?? getResourceTypeConfig(type).uri;
+};
+
 export const getDefaultProfileId = (type: ResourceTypeInput): number => {
   return getResourceTypeConfig(type).defaultProfileId;
 };
