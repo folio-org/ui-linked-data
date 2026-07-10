@@ -8,7 +8,7 @@ import { BLOCKS_BFLITE } from '@/common/constants/bibframeMapping.constants';
 import { ResourceType } from '@/common/constants/record.constants';
 import { QueryParams, ROUTES } from '@/common/constants/routes.constants';
 import { StatusType } from '@/common/constants/status.constants';
-import { getPrimaryEntitiesFromRecord } from '@/common/helpers/record.helper';
+import { getPrimaryEntitiesFromRecord, preserveReferenceData } from '@/common/helpers/record.helper';
 import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
@@ -28,6 +28,16 @@ type LoadResourceOptions = {
   ref?: string | null;
 };
 
+type ApplyToStoresProps = {
+  result: ProcessedResource;
+  record?: RecordEntry | null;
+  withReference?: boolean;
+};
+
+type ApplyToProfileAndInputStoresProps = {
+  result: ProcessedResource;
+};
+
 export const useEditPage = () => {
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get(QueryParams.Type);
@@ -44,12 +54,15 @@ export const useEditPage = () => {
     'setInitialSchemaKey',
     'setSchema',
   ]);
-  const { setUserValues, setSelectedRecordBlocks, setSelectedEntries, setRecord } = useInputsState([
-    'setUserValues',
-    'setSelectedRecordBlocks',
-    'setSelectedEntries',
-    'setRecord',
-  ]);
+  const { record, selectedRecordBlocks, setUserValues, setSelectedRecordBlocks, setSelectedEntries, setRecord } =
+    useInputsState([
+      'record',
+      'selectedRecordBlocks',
+      'setUserValues',
+      'setSelectedRecordBlocks',
+      'setSelectedEntries',
+      'setRecord',
+    ]);
   const { setIsRecordEdited: setIsEdited, addStatusMessagesItem } = useStatusState([
     'setIsRecordEdited',
     'addStatusMessagesItem',
@@ -82,8 +95,8 @@ export const useEditPage = () => {
     [resourceType, setCurrentlyEditedEntityBfid, setCurrentlyPreviewedEntityBfid],
   );
 
-  const applyToStores = useCallback(
-    (result: ProcessedResource, record?: RecordEntry | null) => {
+  const applyToProfileAndInputStores = useCallback(
+    ({ result }: ApplyToProfileAndInputStoresProps) => {
       setSelectedProfile(result.selectedProfile ?? null);
       setSchema(result.schema);
       setInitialSchemaKey(result.initKey);
@@ -91,21 +104,19 @@ export const useEditPage = () => {
       setSelectedEntries(result.selectedEntries);
       setSelectedRecordBlocks(result.selectedRecordBlocks);
       selectedEntriesService.set(result.selectedEntries);
+    },
+    [setSelectedProfile, setSchema, setInitialSchemaKey, setUserValues, setSelectedEntries, setSelectedRecordBlocks],
+  );
+
+  const applyToStores = useCallback(
+    ({ result, record }: ApplyToStoresProps) => {
+      applyToProfileAndInputStores({ result });
 
       if (record !== undefined) setRecord(record);
 
       applyEntityBfids(record);
     },
-    [
-      setSelectedProfile,
-      setSchema,
-      setInitialSchemaKey,
-      setUserValues,
-      setSelectedEntries,
-      setSelectedRecordBlocks,
-      setRecord,
-      applyEntityBfids,
-    ],
+    [applyToProfileAndInputStores, setRecord, applyEntityBfids],
   );
 
   const initNewResource = useCallback(
@@ -117,7 +128,7 @@ export const useEditPage = () => {
 
         if (isCancelled()) return;
 
-        if (result) applyToStores(result, null);
+        if (result) applyToStores({ result, record: null });
       } catch {
         if (!isCancelled()) {
           addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, 'ld.errorFetching'));
@@ -134,11 +145,13 @@ export const useEditPage = () => {
       try {
         setIsLoading(true);
 
-        // Pass along current user values, but do not save to store as a record
-        const record = generateRecord({});
-        const result = await processResource({ record: record ?? undefined, profileSettingsId });
+        // Build a record based on current input.
+        const generated = generateRecord({});
+        // Augment it with the reference data from the current record if needed.
+        const fullRecord = preserveReferenceData(generated, record, selectedRecordBlocks);
+        const result = await processResource({ record: fullRecord ?? undefined, profileSettingsId });
 
-        if (result) applyToStores(result, null);
+        if (result) applyToProfileAndInputStores({ result });
       } catch (error) {
         logger.error('Error occurred while applying profile settings to a resource', error);
         addStatusMessagesItem?.(
@@ -148,7 +161,7 @@ export const useEditPage = () => {
         setIsLoading(false);
       }
     },
-    [generateRecord, processResource, applyToStores, setIsLoading],
+    [generateRecord, processResource, preserveReferenceData, applyToProfileAndInputStores, setIsLoading],
   );
 
   const fetchRefRecord = useCallback(
@@ -224,7 +237,7 @@ export const useEditPage = () => {
         // Instance clones retain the original record so the linked work preview remains visible.
         const isWorkClone = asClone && resourceType === ResourceType.work;
 
-        applyToStores(result, isWorkClone ? null : record);
+        applyToStores({ result, record: isWorkClone ? null : record });
 
         if (resourceId && !asClone) setIsEdited(false);
       } catch {
