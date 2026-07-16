@@ -100,7 +100,6 @@ export const useSaveProfileSettings = () => {
       }
       addStatusMessagesItem?.(UserNotificationFactory.createMessage(StatusType.error, errKey));
     }
-    return;
   };
 
   const saveAndSetPreferredProfileSetting = async (settingsMeta: ProfileSettingsMeta | undefined) => {

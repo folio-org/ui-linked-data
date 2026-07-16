@@ -2,6 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { MemoryRouter } from 'react-router-dom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
@@ -13,12 +14,26 @@ import { ProfileSettingsEditor } from './ProfileSettingsEditor';
 describe('ProfileSettingsEditor', () => {
   const mockSetSettingsName = jest.fn();
 
-  it('renders with no state', async () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  const renderComponent = () => {
     render(
       <MemoryRouter>
-        <ProfileSettingsEditor />
+        <QueryClientProvider client={queryClient}>
+          <ProfileSettingsEditor />
+        </QueryClientProvider>
       </MemoryRouter>,
     );
+  };
+
+  afterEach(() => {
+    queryClient.clear();
+  });
+
+  it('renders with no state', async () => {
+    renderComponent();
 
     expect(screen.getByTestId('profile-settings-editor')).toBeInTheDocument();
   });
@@ -49,11 +64,7 @@ describe('ProfileSettingsEditor', () => {
       },
     ]);
 
-    render(
-      <MemoryRouter>
-        <ProfileSettingsEditor />
-      </MemoryRouter>,
-    );
+    renderComponent();
 
     const section = screen.getByTestId('selected-component-list');
     expect(within(section).getByText('1. Child')).toBeInTheDocument();
@@ -91,11 +102,7 @@ describe('ProfileSettingsEditor', () => {
       },
     ]);
 
-    render(
-      <MemoryRouter>
-        <ProfileSettingsEditor />
-      </MemoryRouter>,
-    );
+    renderComponent();
 
     const section = screen.getByTestId('unused-component-list');
     expect(within(section).getByText('Child')).toBeInTheDocument();
@@ -144,11 +151,7 @@ describe('ProfileSettingsEditor', () => {
       },
     ]);
 
-    render(
-      <MemoryRouter>
-        <ProfileSettingsEditor />
-      </MemoryRouter>,
-    );
+    renderComponent();
 
     const unused = screen.getByTestId('unused-component-list');
     const selected = screen.getByTestId('selected-component-list');
@@ -170,11 +173,7 @@ describe('ProfileSettingsEditor', () => {
       },
     ]);
 
-    render(
-      <MemoryRouter>
-        <ProfileSettingsEditor />
-      </MemoryRouter>,
-    );
+    renderComponent();
 
     const nameInput = screen.getByTestId('settings-name');
     expect(nameInput).toHaveValue(initialName);

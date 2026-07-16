@@ -180,8 +180,8 @@ export const ProfileSettingsEditor = () => {
       </div>
 
       <DefaultProfileSettingsOption
-        selectedProfileId={selectedProfile.id}
-        selectedProfileSettingsId={profileSettings.id}
+        selectedProfileId={selectedProfile?.id}
+        selectedProfileSettingsId={profileSettings?.id}
       />
 
       <ResetComponents />

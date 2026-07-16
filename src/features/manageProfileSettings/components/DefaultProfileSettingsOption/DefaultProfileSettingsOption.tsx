@@ -25,10 +25,10 @@ export const DefaultProfileSettingsOption: FC<DefaultProfileSettingsOptionProps>
 
   useEffect(() => {
     if (defaultProfileSettings) {
-      const exists = defaultProfileSettings.find(
+      const exists = defaultProfileSettings.some(
         pref => pref.id === selectedProfileSettingsId && pref.profileId === selectedProfileId,
       );
-      setIsPreferredProfileSettings(!!exists);
+      setIsPreferredProfileSettings(exists);
     }
   }, [selectedProfileId, selectedProfileSettingsId, defaultProfileSettings, setIsPreferredProfileSettings]);
 
