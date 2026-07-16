@@ -359,6 +359,7 @@
   "ld.selectedComponents": "Selected components",
   "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order.",
   "ld.setDefaultTypeProfile": "Set as my default {type} profile",
+  "ld.setDefaultProfileSettings": "Set as my default profile settings for this profile",
   "ld.aria.nudgeComponentUp": "Move component up",
   "ld.aria.nudgeComponentDown": "Move component down",
   "ld.aria.moveComponentOptions": "Move component options",
@@ -385,6 +386,5 @@
   "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message.",
   "ld.types.books": "Books",
   "ld.types.continuingResources": "Serials Work",
-  "ld.savedSettings": "Saved settings for this profile",
   "ld.profileDefaults": "Profile defaults"
 }

@@ -27,6 +27,7 @@ import {
   getProfileChildren,
   getSettingsChildren,
 } from '../../utils';
+import { DefaultProfileSettingsOption } from '../DefaultProfileSettingsOption';
 import { ComponentType } from './BaseComponent';
 import { ComponentList } from './ComponentList';
 import { DraggingComponent } from './DraggingComponent';
@@ -47,6 +48,7 @@ export const ProfileSettingsEditor = () => {
 
   const {
     fullProfile,
+    selectedProfile,
     profileSettings,
     unusedComponents,
     selectedComponents,
@@ -60,6 +62,7 @@ export const ProfileSettingsEditor = () => {
     setIsModified,
   } = useManageProfileSettingsState([
     'fullProfile',
+    'selectedProfile',
     'profileSettings',
     'unusedComponents',
     'selectedComponents',
@@ -175,6 +178,11 @@ export const ProfileSettingsEditor = () => {
           <Input value={settingsName} onChange={handleNameChange} data-testid="settings-name" />
         </label>
       </div>
+
+      <DefaultProfileSettingsOption
+        selectedProfileId={selectedProfile.id}
+        selectedProfileSettingsId={profileSettings.id}
+      />
 
       <ResetComponents />
 

@@ -27,7 +27,6 @@ export const useResourceProcessing = () => {
   const [searchParams] = useSearchParams();
   const typeParam = searchParams.get(QueryParams.Type);
   const profileIdParam = searchParams.get(QueryParams.ProfileId);
-  const profileSettingsIdParam = searchParams.get(QueryParams.ProfileSettingsId);
 
   const sharedInfra = useContext(SharedInfraContext);
   const queryClient = useQueryClient();
@@ -59,24 +58,16 @@ export const useResourceProcessing = () => {
         pipeline,
         record,
         profileIdParam,
-        profileSettingsIdParam: profileSettingsId ?? profileSettingsIdParam,
+        profileSettingsId,
         typeParam,
         asClone,
         templateMetadata,
+        queryClient,
         loadProfile,
         loadProfileSettings,
       });
     },
-    [
-      typeParam,
-      profileIdParam,
-      profileSettingsIdParam,
-      sharedInfra,
-      queryClient,
-      loadProfile,
-      loadProfileSettings,
-      formatMessage,
-    ],
+    [typeParam, profileIdParam, sharedInfra, queryClient, loadProfile, loadProfileSettings, formatMessage],
   );
 
   return { processResource };

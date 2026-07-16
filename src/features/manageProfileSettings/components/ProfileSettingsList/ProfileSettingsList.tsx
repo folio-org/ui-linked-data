@@ -30,6 +30,7 @@ export const ProfileSettingsList = () => {
     setIsCreating,
     setIsCreatingSettingsNext,
     setIsEditingSettingsNext,
+    setIsPreferredProfileSettings,
     setNextSelectedSettingsMeta,
   } = useManageProfileSettingsState([
     'isModified',
@@ -40,6 +41,7 @@ export const ProfileSettingsList = () => {
     'setIsCreating',
     'setIsCreatingSettingsNext',
     'setIsEditingSettingsNext',
+    'setIsPreferredProfileSettings',
     'setNextSelectedSettingsMeta',
   ]);
 
@@ -79,6 +81,7 @@ export const ProfileSettingsList = () => {
       setIsCreating(true);
       setSelectedProfileSettingsMeta(null);
       setSettingsName('');
+      setIsPreferredProfileSettings(false);
     }
   };
 

@@ -36,6 +36,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     setNextSelectedSettingsMeta,
     setSelectedProfileSettingsMeta,
     setSettingsName,
+    setIsPreferredProfileSettings,
   } = useManageProfileSettingsState([
     'isClosingNext',
     'setIsClosingNext',
@@ -53,6 +54,7 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
     'setNextSelectedSettingsMeta',
     'setSelectedProfileSettingsMeta',
     'setSettingsName',
+    'setIsPreferredProfileSettings',
   ]);
   const { resetSettings } = useResetSettings();
   const { setIsManageProfileSettingsShowProfiles, setIsManageProfileSettingsShowEditor } = useUIState([
@@ -75,11 +77,13 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       setIsCreating(true);
       setSelectedProfileSettingsMeta(null);
       setSettingsName('');
+      setIsPreferredProfileSettings(false);
       setIsCreatingSettingsNext(false);
     } else if (isEditingSettingsNext) {
       setIsCreating(false);
       resetSettings();
       setSelectedProfileSettingsMeta(nextSelectedSettingsMeta);
+      setSettingsName(nextSelectedSettingsMeta?.name ?? '');
       setIsEditingSettingsNext(false);
       setNextSelectedSettingsMeta(null);
     }

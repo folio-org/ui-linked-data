@@ -10,6 +10,7 @@ import { ProfileSettingsList } from './ProfileSettingsList';
 describe('ProfileSettingsList', () => {
   const mockSetIsManageProfileSettingsUnsavedModalOpen = jest.fn();
   const mockSetIsCreating = jest.fn();
+  const mockSetIsPreferredProfileSettings = jest.fn();
   const renderComponent = (modified: boolean) => {
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -40,6 +41,7 @@ describe('ProfileSettingsList', () => {
           },
           isModified: modified,
           setIsCreating: mockSetIsCreating,
+          setIsPreferredProfileSettings: mockSetIsPreferredProfileSettings,
         },
       },
       {
@@ -71,6 +73,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -82,6 +85,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).toHaveBeenCalledWith(true);
+      expect(mockSetIsPreferredProfileSettings).toHaveBeenCalledWith(false);
     });
   });
 
@@ -94,6 +98,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -105,6 +110,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -116,6 +122,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).toHaveBeenCalledWith(false);
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 });

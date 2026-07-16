@@ -1,6 +1,7 @@
 import { deletePreferredProfile, savePreferredProfile } from '@/common/api/profiles.api';
+import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
 
-import { determinePreferredAction, generateSettings } from './profileSave';
+import { determinePreferredAction, determinePreferredSettingsAction, generateSettings } from './profileSave';
 
 jest.mock('@/common/api/profiles.api', () => ({
   deletePreferredProfile: jest.fn(),
@@ -163,6 +164,108 @@ describe('profileSave', () => {
     });
   });
 
+  describe('determinePreferredSettingsAction', () => {
+    const mockUpdate = jest.fn();
+    const mockRemove = jest.fn();
+    const mockProfileId = 100;
+    const mockProfileSettingsId = 24;
+    const mockPreferredProfileSettings = [
+      {
+        id: mockProfileSettingsId,
+        profileId: mockProfileId,
+        name: 'preferred',
+      },
+    ];
+
+    it('skips any action when preferred profile settings remains the same', async () => {
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
+        preferredProfileSettings: mockPreferredProfileSettings,
+        isPreferredProfileSettings: true,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockRemove).not.toHaveBeenCalled();
+      expect(mockUpdate).not.toHaveBeenCalled();
+    });
+
+    it('skips any action when no preferred profile settings and none set', async () => {
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
+        preferredProfileSettings: [],
+        isPreferredProfileSettings: false,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockRemove).not.toHaveBeenCalled();
+      expect(mockUpdate).not.toHaveBeenCalled();
+    });
+
+    it('removes preferred profile setting when previously set but now unset', async () => {
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
+        preferredProfileSettings: mockPreferredProfileSettings,
+        isPreferredProfileSettings: false,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockRemove).toHaveBeenCalledWith({ profileId: mockProfileId });
+      expect(mockUpdate).not.toHaveBeenCalled();
+    });
+
+    it('removes preferred profile setting when trying to set to default', async () => {
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: PROFILE_SETTINGS_DEFAULT_OPTION,
+        preferredProfileSettings: mockPreferredProfileSettings,
+        isPreferredProfileSettings: true,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockRemove).toHaveBeenCalledWith({ profileId: mockProfileId });
+      expect(mockUpdate).not.toHaveBeenCalled();
+    });
+
+    it('updates preferred profile setting when given a new profile setting', async () => {
+      const alternateProfileSettingsId = 846;
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: alternateProfileSettingsId,
+        preferredProfileSettings: mockPreferredProfileSettings,
+        isPreferredProfileSettings: true,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockUpdate).toHaveBeenCalledWith({
+        profileId: mockProfileId,
+        profileSettingsId: alternateProfileSettingsId,
+      });
+      expect(mockRemove).not.toHaveBeenCalled();
+    });
+
+    it('updates preferred profile setting when none previously set', async () => {
+      determinePreferredSettingsAction({
+        profileId: mockProfileId,
+        profileSettingsId: mockProfileSettingsId,
+        preferredProfileSettings: [],
+        isPreferredProfileSettings: true,
+        remove: mockRemove,
+        update: mockUpdate,
+      });
+
+      expect(mockUpdate).toHaveBeenCalledWith({ profileId: mockProfileId, profileSettingsId: mockProfileSettingsId });
+      expect(mockRemove).not.toHaveBeenCalled();
+    });
+  });
+
   describe('generateSettings', () => {
     it('generates expected settings from selected and unused components', async () => {
       const unusedComponents = [
@@ -185,9 +288,10 @@ describe('profileSave', () => {
         },
       ];
 
-      const result = generateSettings(selectedComponents, unusedComponents, true, 'some-name');
+      const result = generateSettings(22, selectedComponents, unusedComponents, true, 'some-name');
 
       expect(result).toEqual({
+        profileId: 22,
         active: true,
         name: 'some-name',
         children: [
