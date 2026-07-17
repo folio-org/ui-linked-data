@@ -386,5 +386,6 @@
   "ld.visibleByDrift": "This component is shown because it is missing from your settings. Manage profile settings for this profile and save your update to clear this message.",
   "ld.types.books": "Books",
   "ld.types.continuingResources": "Serials Work",
-  "ld.profileDefaults": "Profile defaults"
+  "ld.profileDefaults": "Profile Defaults",
+  "ld.preferred": "preferred"
 }

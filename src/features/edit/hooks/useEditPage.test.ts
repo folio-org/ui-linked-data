@@ -65,6 +65,7 @@ jest.mock('@/common/hooks/useSchemaPipeline', () => ({
 
 const mockSetIsLoading = jest.fn();
 const mockSetSelectedProfile = jest.fn();
+const mockSetSelectedProfileSettingsId = jest.fn();
 const mockSetInitialSchemaKey = jest.fn();
 const mockSetSchema = jest.fn();
 const mockSetUserValues = jest.fn();
@@ -86,6 +87,7 @@ const setupStores = () => {
       store: useProfileStore,
       state: {
         setSelectedProfile: mockSetSelectedProfile,
+        setSelectedProfileSettingsId: mockSetSelectedProfileSettingsId,
         setInitialSchemaKey: mockSetInitialSchemaKey,
         setSchema: mockSetSchema,
       },

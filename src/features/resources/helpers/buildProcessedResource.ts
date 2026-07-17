@@ -72,9 +72,11 @@ export const buildProcessedResource = async ({
   const preferredProfileSettings = profileSettingsId
     ? []
     : await queryClient?.ensureQueryData(preferredProfileSettingsOptions(selectedProfileId));
+  const selectedProfileSettingsId =
+    profileSettingsId ?? preferredProfileSettings?.[0]?.id ?? PROFILE_SETTINGS_DEFAULT_OPTION;
 
   const profileSettings = await loadProfileSettings(
-    profileSettingsId ?? preferredProfileSettings?.[0]?.id ?? PROFILE_SETTINGS_DEFAULT_OPTION,
+    selectedProfileSettingsId,
     selectedProfileId,
     selectedProfile,
     getUri(resourceType),
@@ -127,6 +129,7 @@ export const buildProcessedResource = async ({
     selectedEntries: pipeline.selectedEntriesService.get(),
     selectedRecordBlocks,
     selectedProfile,
+    selectedProfileSettingsId,
     title: getRecordTitle(recordData as RecordEntry),
     entities: record ? getPrimaryEntitiesFromRecord(record) : undefined,
     referenceIds: record ? getReferenceIdsRaw(record) : undefined,
