@@ -32,6 +32,16 @@ describe('ProfileSettingsList', () => {
         },
       ],
     );
+    queryClient.setQueryData(
+      ['preferredProfileSettings', '3'],
+      [
+        {
+          id: 18,
+          profileId: 3,
+          name: 'eighteen',
+        },
+      ],
+    );
     setInitialGlobalState([
       {
         store: useManageProfileSettingsStore,
@@ -63,6 +73,16 @@ describe('ProfileSettingsList', () => {
     renderComponent(false);
 
     expect(screen.getByTestId('profile-settings-select-section')).toBeInTheDocument();
+  });
+
+  it('labels the preferred setting in the options list', async () => {
+    renderComponent(false);
+
+    const selectInput = screen.getByTestId('profile-settings-select');
+
+    await fireEvent.change(selectInput, { target: { value: '18' } });
+
+    expect(screen.getByRole('option', { selected: true })).toHaveTextContent(/ld\.preferred/);
   });
 
   it('opens a confirmation modal when attempting to create while modified', async () => {

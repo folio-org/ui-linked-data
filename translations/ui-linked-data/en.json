@@ -359,7 +359,7 @@
   "ld.selectedComponents": "Selected components",
   "ld.selectedComponents.description": "Drag or use move buttons to place components in the desired order.",
   "ld.setDefaultTypeProfile": "Set as my default {type} profile",
-  "ld.setDefaultProfileSettings": "Set as my default profile settings for this profile",
+  "ld.setDefaultProfileSettings": "Set as my preferred profile settings for this profile",
   "ld.aria.nudgeComponentUp": "Move component up",
   "ld.aria.nudgeComponentDown": "Move component down",
   "ld.aria.moveComponentOptions": "Move component options",
