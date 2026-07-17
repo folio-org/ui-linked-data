@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { deletePreferredProfileSettings, savePreferredProfileSettings } from '@/common/api/profiles.api';
+import { StatusType } from '@/common/constants/status.constants';
+import { logger } from '@/common/services/logger';
+import { UserNotificationFactory } from '@/common/services/userNotification';
+
+import { useStatusState } from '@/store';
 
 export interface SavePreferredProfileSettingsParams {
   profileId: string | number;
@@ -13,6 +18,7 @@ export interface DeletePreferredProfileSettingsParams {
 
 export const usePreferredProfileSettingsMutations = () => {
   const queryClient = useQueryClient();
+  const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
 
   const updateMutation = useMutation<Response, Error, SavePreferredProfileSettingsParams>({
     mutationFn: async ({ profileId, profileSettingsId }) => {
@@ -23,8 +29,11 @@ export const usePreferredProfileSettingsMutations = () => {
         queryKey: ['preferredProfileSettings', String(variables.profileId)],
       });
     },
-    onError: () => {
-      // handle error
+    onError: error => {
+      logger.error('Failed to save preferred profile settings', error);
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.error.updatePreferredProfileSettings'),
+      );
     },
   });
 
@@ -35,8 +44,11 @@ export const usePreferredProfileSettingsMutations = () => {
     onSuccess: (_data, variables) => {
       queryClient.setQueryData(['preferredProfileSettings', String(variables.profileId)], []);
     },
-    onError: () => {
-      // TODO handle error
+    onError: error => {
+      logger.error('Failed to delete preferred profile settings', error);
+      addStatusMessagesItem?.(
+        UserNotificationFactory.createMessage(StatusType.error, 'ld.error.updatePreferredProfileSettings'),
+      );
     },
   });
 

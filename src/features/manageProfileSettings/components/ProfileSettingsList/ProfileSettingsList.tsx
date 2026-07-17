@@ -58,12 +58,12 @@ export const ProfileSettingsList = () => {
     const settingsWithDefault = settingsMeta
       ? BASE_SETTINGS_OPTIONS.concat(settingsMeta.map(metaToOption))
       : BASE_SETTINGS_OPTIONS;
-    settingsWithDefault.map(option => {
+    return settingsWithDefault.map(option => {
       if (option.value === preferredProfileSettings?.find(p => p.profileId === selectedProfile.id)?.id.toString()) {
         option.label += ' (' + formatMessage({ id: 'ld.preferred' }) + ')';
       }
+      return option;
     });
-    return settingsWithDefault;
   }, [settingsMeta, preferredProfileSettings, selectedProfile]);
 
   const handleChange = (selected: SelectValue) => {
