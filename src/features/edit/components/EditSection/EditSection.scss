@@ -98,6 +98,21 @@
       padding-bottom: 5px;
     }
 
+    .setting-current {
+      font-weight: 700;
+    }
+
+    .setting-default {
+      font-style: italic;
+    }
+
+    .setting-preferred {
+      span {
+        text-transform: uppercase;
+        font-size: 90%;
+      }
+    }
+
     &-menu {
       position: absolute;
       list-style: none;

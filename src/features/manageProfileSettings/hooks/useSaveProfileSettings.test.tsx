@@ -5,7 +5,12 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 
-import { createProfileSettings, savePreferredProfile, saveProfileSettings } from '@/common/api/profiles.api';
+import {
+  createProfileSettings,
+  savePreferredProfile,
+  savePreferredProfileSettings,
+  saveProfileSettings,
+} from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
@@ -18,6 +23,7 @@ jest.mock('@/common/api/profiles.api', () => ({
   savePreferredProfile: jest.fn(),
   saveProfileSettings: jest.fn(),
   createProfileSettings: jest.fn(),
+  savePreferredProfileSettings: jest.fn(),
 }));
 jest.mock('@/common/services/userNotification', () => ({
   UserNotificationFactory: {
@@ -34,9 +40,12 @@ const createWrapper = () => {
     },
   });
 
-  return ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-  );
+  return {
+    queryClient,
+    wrapper: ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    ),
+  };
 };
 
 describe('useSaveProfileSettings', () => {
@@ -79,7 +88,8 @@ describe('useSaveProfileSettings', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });
@@ -117,7 +127,8 @@ describe('useSaveProfileSettings', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });
@@ -155,7 +166,8 @@ describe('useSaveProfileSettings', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });
@@ -197,7 +209,8 @@ describe('useSaveProfileSettings', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });
@@ -236,7 +249,8 @@ describe('useSaveProfileSettings', () => {
         },
       ]);
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });
@@ -245,7 +259,48 @@ describe('useSaveProfileSettings', () => {
         active: false,
         children: [],
         name: 'settings-thing',
+        profileId: 'another',
       });
+    });
+
+    it('updates preferred profile setting', async () => {
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: [],
+          },
+        },
+        {
+          store: useManageProfileSettingsState,
+          state: {
+            selectedProfile: {
+              id: 'another',
+              name: 'another',
+              resourceType: 'for-type',
+            },
+            isTypeDefaultProfile: true,
+            isCreating: false,
+            isPreferredProfileSettings: true,
+            selectedProfileSettingsMeta: {
+              id: 44,
+              profileId: 'another',
+              name: 'settings-thing',
+            },
+            settingsName: 'settings-thing',
+          },
+        },
+      ]);
+
+      const { queryClient, wrapper } = createWrapper();
+      queryClient.setQueryData(['preferredProfileSettings', 'another'], []);
+
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
+      await act(async () => {
+        await result.current.saveSettings();
+      });
+
+      expect(savePreferredProfileSettings).toHaveBeenCalledWith('another', 44);
     });
 
     it('shows loading at start and removes it at end', async () => {
@@ -276,7 +331,8 @@ describe('useSaveProfileSettings', () => {
       ]);
       (createProfileSettings as jest.Mock).mockResolvedValue({ id: 'meta-one' });
 
-      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper: createWrapper() });
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
       await act(async () => {
         await result.current.saveSettings();
       });

@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { BASE_SETTINGS_OPTIONS } from '@/common/constants/profileSettings.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Select, SelectValue } from '@/components/Select';
 
-import { useLoadProfileSettingsMeta } from '@/features/profiles';
+import { useLoadProfileSettingsMeta, usePreferredProfileSettings } from '@/features/profiles';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
@@ -30,6 +30,7 @@ export const ProfileSettingsList = () => {
     setIsCreating,
     setIsCreatingSettingsNext,
     setIsEditingSettingsNext,
+    setIsPreferredProfileSettings,
     setNextSelectedSettingsMeta,
   } = useManageProfileSettingsState([
     'isModified',
@@ -40,6 +41,7 @@ export const ProfileSettingsList = () => {
     'setIsCreating',
     'setIsCreatingSettingsNext',
     'setIsEditingSettingsNext',
+    'setIsPreferredProfileSettings',
     'setNextSelectedSettingsMeta',
   ]);
 
@@ -47,11 +49,22 @@ export const ProfileSettingsList = () => {
 
   const { setIsManageProfileSettingsUnsavedModalOpen } = useUIState(['setIsManageProfileSettingsUnsavedModalOpen']);
 
+  const { formatMessage } = useIntl();
+
   const { data: settingsMeta } = useLoadProfileSettingsMeta(selectedProfile.id);
+  const { data: preferredProfileSettings } = usePreferredProfileSettings(selectedProfile.id);
 
   const settingsMetaOptions = useMemo(() => {
-    return settingsMeta ? BASE_SETTINGS_OPTIONS.concat(settingsMeta.map(metaToOption)) : BASE_SETTINGS_OPTIONS;
-  }, [settingsMeta]);
+    const settingsWithDefault = settingsMeta
+      ? BASE_SETTINGS_OPTIONS.concat(settingsMeta.map(metaToOption))
+      : BASE_SETTINGS_OPTIONS;
+    return settingsWithDefault.map(option => {
+      if (option.value === preferredProfileSettings?.find(p => p.profileId === selectedProfile.id)?.id.toString()) {
+        option.label += ' (' + formatMessage({ id: 'ld.preferred' }) + ')';
+      }
+      return option;
+    });
+  }, [settingsMeta, preferredProfileSettings, selectedProfile]);
 
   const handleChange = (selected: SelectValue) => {
     if (selected.value !== '') {
@@ -79,6 +92,7 @@ export const ProfileSettingsList = () => {
       setIsCreating(true);
       setSelectedProfileSettingsMeta(null);
       setSettingsName('');
+      setIsPreferredProfileSettings(false);
     }
   };
 

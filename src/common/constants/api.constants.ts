@@ -10,6 +10,7 @@ export const PROFILE_API_ENDPOINT = '/linked-data/profile';
 export const PROFILE_METADATA_API_ENDPOINT = '/linked-data/profile/metadata';
 export const PROFILE_PREFERRED_API_ENDPOINT = '/linked-data/profile/preferred';
 export const PROFILE_SETTINGS_PATH = 'settings';
+export const PREFERRED_PROFILE_SETTINGS_PATH = `preferred`;
 export const AUTHORITY_ASSIGNMENT_CHECK_API_ENDPOINT = '/linked-data/authority-assignment-check';
 export const IMPORT_JSON_FILE_API_ENDPOINT = '/linked-data/import/file';
 export const IMPORT_JSON_URL_API_ENDPOINT = '/linked-data/import/url';

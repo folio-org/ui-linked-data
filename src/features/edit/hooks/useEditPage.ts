@@ -49,8 +49,9 @@ export const useEditPage = () => {
   const { selectedEntriesService } = useSchemaPipeline();
 
   const { setIsLoading } = useLoadingState(['setIsLoading']);
-  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
+  const { setSelectedProfile, setSelectedProfileSettingsId, setInitialSchemaKey, setSchema } = useProfileState([
     'setSelectedProfile',
+    'setSelectedProfileSettingsId',
     'setInitialSchemaKey',
     'setSchema',
   ]);
@@ -98,6 +99,7 @@ export const useEditPage = () => {
   const applyToProfileAndInputStores = useCallback(
     ({ result }: ApplyToProfileAndInputStoresProps) => {
       setSelectedProfile(result.selectedProfile ?? null);
+      setSelectedProfileSettingsId(result.selectedProfileSettingsId?.toString() ?? null);
       setSchema(result.schema);
       setInitialSchemaKey(result.initKey);
       setUserValues(result.userValues);

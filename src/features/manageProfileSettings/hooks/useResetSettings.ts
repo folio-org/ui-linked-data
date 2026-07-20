@@ -8,6 +8,7 @@ export const useResetSettings = () => {
     resetProfileSettings,
     resetSettingsName,
     resetNextSelectedProfile,
+    resetIsPreferredProfileSettings,
   } = useManageProfileSettingsState();
 
   const resetSettings = () => {
@@ -17,6 +18,7 @@ export const useResetSettings = () => {
 
   const resetSettingsExceptModified = () => {
     resetIsSettingsActive();
+    resetIsPreferredProfileSettings();
     resetSettingsName();
     resetSelectedProfileSettingsMeta();
     resetProfileSettings();

@@ -32,6 +32,8 @@ describe('ModalCloseProfileSettings', () => {
   const mockSetSelectedProfile = jest.fn();
   const mockSetIsCreating = jest.fn();
   const mockSetSelectedProfileSettingsMeta = jest.fn();
+  const mockSetIsPreferredProfileSettings = jest.fn();
+  const mockSetSettingsName = jest.fn();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -190,6 +192,7 @@ describe('ModalCloseProfileSettings', () => {
           isCreatingSettingsNext: true,
           setIsCreating: mockSetIsCreating,
           setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+          setIsPreferredProfileSettings: mockSetIsPreferredProfileSettings,
         },
       },
     ]);
@@ -201,11 +204,12 @@ describe('ModalCloseProfileSettings', () => {
     await waitFor(() => {
       expect(mockSetIsCreating).toHaveBeenCalledWith(true);
       expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(null);
+      expect(mockSetIsPreferredProfileSettings).toHaveBeenCalledWith(false);
     });
   });
 
   it('when editing existing settings next, move to editing mode with next settings meta selected ', async () => {
-    const settingsMeta = { id: 'meta' };
+    const settingsMeta = { id: 'meta', name: 'edit-name' };
     setInitialGlobalState([
       {
         store: useManageProfileSettingsState,
@@ -217,6 +221,7 @@ describe('ModalCloseProfileSettings', () => {
           nextSelectedSettingsMeta: settingsMeta,
           setIsCreating: mockSetIsCreating,
           setSelectedProfileSettingsMeta: mockSetSelectedProfileSettingsMeta,
+          setSettingsName: mockSetSettingsName,
         },
       },
     ]);
@@ -228,6 +233,7 @@ describe('ModalCloseProfileSettings', () => {
     await waitFor(() => {
       expect(mockSetIsCreating).toHaveBeenCalledWith(false);
       expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(settingsMeta);
+      expect(mockSetSettingsName).toHaveBeenCalledWith('edit-name');
     });
   });
 });

@@ -7,9 +7,11 @@ import { checkHasErrorOfCodeType } from '@/common/helpers/api.helper';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
+import { usePreferredProfileSettings, usePreferredProfileSettingsMutations } from '@/features/profiles';
+
 import { useLoadingState, useManageProfileSettingsState, useProfileState, useStatusState } from '@/store';
 
-import { determinePreferredAction, generateSettings } from '../utils';
+import { determinePreferredAction, determinePreferredSettingsAction, generateSettings } from '../utils';
 
 export const useSaveProfileSettings = () => {
   const queryClient = useQueryClient();
@@ -18,6 +20,7 @@ export const useSaveProfileSettings = () => {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const {
     isCreating,
+    isPreferredProfileSettings,
     isSettingsActive,
     isTypeDefaultProfile,
     selectedProfile,
@@ -31,6 +34,7 @@ export const useSaveProfileSettings = () => {
     setSelectedProfileSettingsMeta,
   } = useManageProfileSettingsState([
     'isCreating',
+    'isPreferredProfileSettings',
     'isSettingsActive',
     'isTypeDefaultProfile',
     'selectedProfile',
@@ -43,6 +47,8 @@ export const useSaveProfileSettings = () => {
     'setProfileSettings',
     'setSelectedProfileSettingsMeta',
   ]);
+  const { data: preferredProfileSettings } = usePreferredProfileSettings(selectedProfile?.id);
+  const { removePreferredProfileSettings, updatePreferredProfileSettings } = usePreferredProfileSettingsMutations();
 
   const saveAndSetPreferred = async () => {
     const preferredAction = determinePreferredAction(selectedProfile, preferredProfiles, isTypeDefaultProfile);
@@ -60,7 +66,13 @@ export const useSaveProfileSettings = () => {
   };
 
   const saveAndSetSettings = async () => {
-    const settingsToSave = generateSettings(selectedComponents, unusedComponents, isSettingsActive, settingsName);
+    const settingsToSave = generateSettings(
+      selectedProfile.id,
+      selectedComponents,
+      unusedComponents,
+      isSettingsActive,
+      settingsName,
+    );
     let settingsMeta: ProfileSettingsMeta;
 
     try {
@@ -71,10 +83,11 @@ export const useSaveProfileSettings = () => {
         settingsMeta = await createProfileSettings(selectedProfile.id, settingsToSave);
         setIsCreating(false);
       }
-      setProfileSettings({ ...settingsToSave, missingFromSettings: [] });
+      setProfileSettings({ ...settingsToSave, missingFromSettings: [], id: settingsMeta.id });
       queryClient.refetchQueries({ queryKey: ['profileSettingsMeta', String(selectedProfile.id)] });
       queryClient.refetchQueries({ queryKey: ['profileSettings', String(selectedProfile.id), settingsMeta.id] });
       setSelectedProfileSettingsMeta(settingsMeta);
+      return settingsMeta;
     } catch (error) {
       logger.error('Failed to set profile settings:', error);
       let errKey = 'ld.error.saveProfileSettings';
@@ -89,11 +102,28 @@ export const useSaveProfileSettings = () => {
     }
   };
 
+  const saveAndSetPreferredProfileSetting = async (settingsMeta: ProfileSettingsMeta | undefined) => {
+    if (settingsMeta) {
+      determinePreferredSettingsAction({
+        profileId: selectedProfile.id,
+        profileSettingsId: settingsMeta.id,
+        preferredProfileSettings,
+        isPreferredProfileSettings,
+        remove: removePreferredProfileSettings,
+        update: updatePreferredProfileSettings,
+      });
+    }
+    // If an undefined settingsMeta is being passed in, there was an error preceding it,
+    // so no additional error message should be shown. Do nothing, the user needs to
+    // fix something else before this will be tried again.
+  };
+
   const saveSettings = async () => {
     try {
       setIsLoading(true);
       await saveAndSetPreferred();
-      await saveAndSetSettings();
+      const settingsMeta = await saveAndSetSettings();
+      await saveAndSetPreferredProfileSetting(settingsMeta);
       setIsModified(false);
     } finally {
       setIsLoading(false);

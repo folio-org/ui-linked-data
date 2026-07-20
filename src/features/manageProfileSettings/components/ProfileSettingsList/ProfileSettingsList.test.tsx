@@ -10,6 +10,7 @@ import { ProfileSettingsList } from './ProfileSettingsList';
 describe('ProfileSettingsList', () => {
   const mockSetIsManageProfileSettingsUnsavedModalOpen = jest.fn();
   const mockSetIsCreating = jest.fn();
+  const mockSetIsPreferredProfileSettings = jest.fn();
   const renderComponent = (modified: boolean) => {
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -31,6 +32,16 @@ describe('ProfileSettingsList', () => {
         },
       ],
     );
+    queryClient.setQueryData(
+      ['preferredProfileSettings', '3'],
+      [
+        {
+          id: 18,
+          profileId: 3,
+          name: 'eighteen',
+        },
+      ],
+    );
     setInitialGlobalState([
       {
         store: useManageProfileSettingsStore,
@@ -40,6 +51,7 @@ describe('ProfileSettingsList', () => {
           },
           isModified: modified,
           setIsCreating: mockSetIsCreating,
+          setIsPreferredProfileSettings: mockSetIsPreferredProfileSettings,
         },
       },
       {
@@ -63,6 +75,16 @@ describe('ProfileSettingsList', () => {
     expect(screen.getByTestId('profile-settings-select-section')).toBeInTheDocument();
   });
 
+  it('labels the preferred setting in the options list', async () => {
+    renderComponent(false);
+
+    const selectInput = screen.getByTestId('profile-settings-select');
+
+    await fireEvent.change(selectInput, { target: { value: '18' } });
+
+    expect(screen.getByRole('option', { selected: true })).toHaveTextContent(/ld\.preferred/);
+  });
+
   it('opens a confirmation modal when attempting to create while modified', async () => {
     renderComponent(true);
 
@@ -71,6 +93,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -82,6 +105,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).toHaveBeenCalledWith(true);
+      expect(mockSetIsPreferredProfileSettings).toHaveBeenCalledWith(false);
     });
   });
 
@@ -94,6 +118,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -105,6 +130,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
       expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 
@@ -116,6 +142,7 @@ describe('ProfileSettingsList', () => {
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetIsCreating).toHaveBeenCalledWith(false);
+      expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
 });

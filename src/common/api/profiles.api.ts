@@ -1,4 +1,5 @@
 import {
+  PREFERRED_PROFILE_SETTINGS_PATH,
   PROFILE_API_ENDPOINT,
   PROFILE_METADATA_API_ENDPOINT,
   PROFILE_PREFERRED_API_ENDPOINT,
@@ -96,6 +97,38 @@ export const saveProfileSettings = (
       headers: {
         'content-type': 'application/json',
       },
+    },
+  });
+};
+
+export const fetchPreferredProfileSettings = (profileId: string | number) =>
+  baseApi.getJson({
+    url: `${PROFILE_API_ENDPOINT}/${profileId}/${PREFERRED_PROFILE_SETTINGS_PATH}`,
+  }) as Promise<ProfileSettingsMetaList>;
+
+export const savePreferredProfileSettings = (profileId: string | number, profileSettingsId: number) => {
+  const url = `${PROFILE_API_ENDPOINT}/${profileId}/${PREFERRED_PROFILE_SETTINGS_PATH}`;
+  const body = JSON.stringify({ profileSettingsId });
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'POST',
+      body,
+      headers: {
+        'content-type': 'application/json',
+      },
+    },
+  });
+};
+
+export const deletePreferredProfileSettings = (profileId: string | number) => {
+  const url = `${PROFILE_API_ENDPOINT}/${profileId}/${PREFERRED_PROFILE_SETTINGS_PATH}`;
+
+  return baseApi.request({
+    url,
+    requestParams: {
+      method: 'DELETE',
     },
   });
 };

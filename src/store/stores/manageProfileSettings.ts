@@ -20,6 +20,7 @@ export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDT
   SliceState<'isSettingsActive', boolean> &
   SliceState<'profileSettings', ProfileSettingsWithDrift> &
   SliceState<'isTypeDefaultProfile', boolean> &
+  SliceState<'isPreferredProfileSettings', boolean> &
   SliceState<'isModified', boolean> &
   SliceState<'settingsName', string> &
   SliceState<'isCreating', boolean>;
@@ -64,6 +65,9 @@ const sliceConfigs: SliceConfigs = {
     initialValue: DEFAULT_INACTIVE_SETTINGS,
   },
   isTypeDefaultProfile: {
+    initialValue: false,
+  },
+  isPreferredProfileSettings: {
     initialValue: false,
   },
   isModified: {

@@ -19,7 +19,11 @@ describe('ProfileSettingsSelector', () => {
   const mockProfileId = 'profile-id';
   const mockSetSelectedProfileSettingsId = jest.fn();
 
-  const renderComponent = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  const renderComponent = (withOptions: boolean) => {
     setInitialGlobalState([
       {
         store: useProfileStore,
@@ -30,22 +34,23 @@ describe('ProfileSettingsSelector', () => {
       },
     ]);
 
-    const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } },
-    });
     queryClient.setQueryData(
       ['profileSettingsMeta', mockProfileId],
-      [
-        {
-          id: 15,
-          name: 'fifteen',
-        },
-        {
-          id: 32,
-          name: 'thirty-two',
-        },
-      ],
+      withOptions
+        ? [
+            {
+              id: 15,
+              name: 'fifteen',
+            },
+            {
+              id: 32,
+              name: 'thirty-two',
+            },
+          ]
+        : [],
     );
+
+    queryClient.setQueryData(['preferredProfileSettings', mockProfileId], [{ profileId: mockProfileId, id: 15 }]);
 
     return render(
       <QueryClientProvider client={queryClient}>
@@ -56,14 +61,30 @@ describe('ProfileSettingsSelector', () => {
     );
   };
 
+  afterEach(() => {
+    queryClient?.clear();
+  });
+
   it('renders the component', () => {
-    renderComponent();
+    mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+    renderComponent(true);
 
     expect(screen.getByTestId('profile-settings-selector-button')).toBeInTheDocument();
   });
 
+  it('does not render the component when no options', () => {
+    mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+    renderComponent(false);
+
+    expect(screen.queryByTestId('profile-settings-selector-button')).not.toBeInTheDocument();
+  });
+
   it('clicking button shows menu', () => {
-    renderComponent();
+    mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+    renderComponent(true);
 
     fireEvent.click(screen.getByTestId('profile-settings-selector-button'));
 
@@ -73,7 +94,7 @@ describe('ProfileSettingsSelector', () => {
   it('profile setting currently in use is disabled', async () => {
     mockGetRecordProfileId.mockReturnValue(mockProfileId);
 
-    renderComponent();
+    renderComponent(true);
 
     fireEvent.click(screen.getByTestId('profile-settings-selector-button'));
 
@@ -82,10 +103,22 @@ describe('ProfileSettingsSelector', () => {
     });
   });
 
+  it('preferred profile setting shows a label', async () => {
+    mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+    renderComponent(true);
+
+    fireEvent.click(screen.getByTestId('profile-settings-selector-button'));
+
+    await waitFor(() => {
+      expect(screen.getByText('ld.preferred')).toBeInTheDocument();
+    });
+  });
+
   it('clicking a setting selects it', async () => {
     mockGetRecordProfileId.mockReturnValue(mockProfileId);
 
-    renderComponent();
+    renderComponent(true);
 
     fireEvent.click(screen.getByTestId('profile-settings-selector-button'));
     fireEvent.click(screen.getByText('fifteen'));
