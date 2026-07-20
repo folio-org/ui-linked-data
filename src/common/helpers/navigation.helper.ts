@@ -41,12 +41,10 @@ export const generatePageURL = ({
   url,
   queryParams,
   profileId,
-  profileSettingsId,
 }: {
   url: string;
   queryParams: Record<QueryParams, string>;
   profileId: string | number;
-  profileSettingsId?: string | number;
 }) => {
   const urlParams = new URLSearchParams();
 
@@ -60,10 +58,6 @@ export const generatePageURL = ({
 
   if (profileId) {
     urlParams.set(QueryParams.ProfileId, profileId.toString());
-  }
-
-  if (profileSettingsId) {
-    urlParams.set(QueryParams.ProfileSettingsId, profileSettingsId.toString());
   }
 
   const paramString = urlParams.toString();

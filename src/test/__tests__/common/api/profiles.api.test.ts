@@ -2,11 +2,14 @@ import baseApi from '@/common/api/base.api';
 import {
   createProfileSettings,
   deletePreferredProfile,
+  deletePreferredProfileSettings,
   fetchAllSettingsForProfile,
+  fetchPreferredProfileSettings,
   fetchProfile,
   fetchProfileSettings,
   fetchProfiles,
   savePreferredProfile,
+  savePreferredProfileSettings,
   saveProfileSettings,
 } from '@/common/api/profiles.api';
 
@@ -256,6 +259,66 @@ describe('profiles.api', () => {
         headers: {
           'content-type': 'application/json',
         },
+      },
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  test('fetchPreferredProfileSettings', async () => {
+    const profileId = 105;
+    const testResult = [
+      {
+        profileId,
+        profileSettingsId: 2003,
+        name: 'fetch-test-name',
+      },
+    ];
+
+    jest.spyOn(baseApi, 'getJson').mockResolvedValue(testResult);
+
+    const result = await fetchPreferredProfileSettings(profileId);
+
+    expect(baseApi.getJson).toHaveBeenCalledWith({
+      url: `/linked-data/profile/${profileId}/preferred`,
+    });
+
+    expect(result).toEqual(testResult);
+  });
+
+  test('savePreferredProfileSettings', async () => {
+    const profileId = 98;
+    const profileSettingsId = 22;
+    const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 201 });
+
+    jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+    const result = await savePreferredProfileSettings(profileId, profileSettingsId);
+
+    expect(baseApi.request).toHaveBeenCalledWith({
+      url: `/linked-data/profile/${profileId}/preferred`,
+      requestParams: {
+        method: 'POST',
+        body: JSON.stringify({ profileSettingsId }),
+        headers: {
+          'content-type': 'application/json',
+        },
+      },
+    });
+    expect(result).toEqual(mockResponse);
+  });
+
+  test('deletePreferredProfileSettings', async () => {
+    const profileId = '341';
+    const mockResponse = new Response(JSON.stringify({ ok: true }), { status: 204 });
+
+    jest.spyOn(baseApi, 'request').mockResolvedValue(mockResponse);
+
+    const result = await deletePreferredProfileSettings(profileId);
+
+    expect(baseApi.request).toHaveBeenCalledWith({
+      url: `/linked-data/profile/${profileId}/preferred`,
+      requestParams: {
+        method: 'DELETE',
       },
     });
     expect(result).toEqual(mockResponse);
