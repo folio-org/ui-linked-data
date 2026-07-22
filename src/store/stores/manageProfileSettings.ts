@@ -1,4 +1,4 @@
-import { DEFAULT_INACTIVE_SETTINGS } from '@/common/constants/profileSettings.constants';
+import { DEFAULT_INACTIVE_SETTINGS, ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 
 import { type SliceConfigs, createStoreFactory } from '../utils/createStoreFactory';
 import { type SliceState } from '../utils/slice';
@@ -23,7 +23,7 @@ export type ManageProfileSettingsState = SliceState<'selectedProfile', ProfileDT
   SliceState<'isPreferredProfileSettings', boolean> &
   SliceState<'isModified', boolean> &
   SliceState<'settingsName', string> &
-  SliceState<'isCreating', boolean>;
+  SliceState<'mode', ProfileSettingsMode>;
 
 const STORE_NAME = 'ProfileSettings';
 
@@ -76,8 +76,8 @@ const sliceConfigs: SliceConfigs = {
   settingsName: {
     initialValue: '',
   },
-  isCreating: {
-    initialValue: true,
+  mode: {
+    initialValue: ProfileSettingsMode.Landing,
   },
 };
 

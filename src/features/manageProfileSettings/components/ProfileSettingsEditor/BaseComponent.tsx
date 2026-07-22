@@ -31,6 +31,7 @@ type BaseComponentProps = {
 export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, type, upFn, downFn, moveFn }) => {
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
+  const menuContainerRef = useRef<HTMLUListElement>(null);
   const dataRef = useRef<HTMLDivElement>(null);
   const { formatMessage } = useIntl();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -50,11 +51,11 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
     transition,
   };
 
-  const { isOpen: isMenuEnabled, toggle: toggleIsMenuEnabled } = useDismissMenu(menuRef);
+  const { isOpen: isMenuEnabled, toggle: toggleIsMenuEnabled } = useDismissMenu(menuContainerRef);
 
   useEffect(() => {
-    if (isMenuEnabled && menuRef.current) {
-      menuRef.current.focus();
+    if (isMenuEnabled) {
+      (menuRef.current ?? menuContainerRef.current)?.focus();
     }
   }, [isMenuEnabled]);
 
@@ -85,6 +86,8 @@ export const BaseComponent: FC<BaseComponentProps> = ({ size, index, component, 
               className="move-menu"
               role="menu" // NOSONAR
               aria-label={formatMessage({ id: 'ld.aria.moveComponentOptions' })}
+              ref={menuContainerRef}
+              tabIndex={-1}
             >
               <li className="move-menu-content" role="none">
                 {component.mandatory ? (

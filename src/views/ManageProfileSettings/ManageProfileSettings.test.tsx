@@ -121,6 +121,12 @@ describe('ManageProfileSettings', () => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
+      });
+
       const component = screen.getByTestId('component-test:childC');
       const nudgeUpButton = within(component).getByTestId('nudge-up');
 
@@ -141,6 +147,12 @@ describe('ManageProfileSettings', () => {
 
       waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childA')).toBeInTheDocument();
       });
 
       const component = screen.getByTestId('component-test:childA');
@@ -167,6 +179,12 @@ describe('ManageProfileSettings', () => {
 
       waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childB')).toBeInTheDocument();
       });
 
       const component = screen.getByTestId('component-test:childB');
@@ -197,6 +215,12 @@ describe('ManageProfileSettings', () => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
+      });
+
       const component = screen.getByTestId('component-test:childC');
       const menuButton = within(component).getByTestId('activate-menu');
 
@@ -219,6 +243,12 @@ describe('ManageProfileSettings', () => {
 
       waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
       });
 
       // nudge
@@ -253,11 +283,15 @@ describe('ManageProfileSettings', () => {
 
   describe('modals', () => {
     it('shows a modal when changing profiles with unsaved changes', () => {
-      // deselect a component
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
       waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
         expect(screen.getByTestId('component-test:childB')).toBeInTheDocument();
       });
 

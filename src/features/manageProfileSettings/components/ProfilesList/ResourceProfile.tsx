@@ -14,9 +14,9 @@ type ResourceProfileProps = {
 };
 
 export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected }) => {
-  const { isModified, resetIsCreating, setNextSelectedProfile, setSelectedProfile } = useManageProfileSettingsState([
+  const { isModified, resetMode, setNextSelectedProfile, setSelectedProfile } = useManageProfileSettingsState([
     'isModified',
-    'resetIsCreating',
+    'resetMode',
     'setNextSelectedProfile',
     'setSelectedProfile',
   ]);
@@ -41,7 +41,7 @@ export const ResourceProfile: FC<ResourceProfileProps> = ({ profile, selected })
     } else {
       setSelectedProfile(profile);
       resetSettings();
-      resetIsCreating();
+      resetMode();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
     }

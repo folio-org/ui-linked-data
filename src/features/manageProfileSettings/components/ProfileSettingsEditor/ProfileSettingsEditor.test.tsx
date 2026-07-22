@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 import { useManageProfileSettingsStore } from '@/store';
@@ -35,7 +36,71 @@ describe('ProfileSettingsEditor', () => {
   it('renders with no state', async () => {
     renderComponent();
 
-    expect(screen.getByTestId('profile-settings-editor')).toBeInTheDocument();
+    expect(screen.getByTestId('profile-settings-editor-landing')).toBeInTheDocument();
+  });
+
+  it('renders in creating mode', () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          fullProfile: [
+            {
+              id: 'profile',
+              type: AdvancedFieldType.block,
+              displayName: 'Profile',
+              children: ['child'],
+            },
+            {
+              id: 'child',
+              type: AdvancedFieldType.simple,
+              displayName: 'Child',
+            },
+          ],
+          profileSettings: {
+            active: false,
+            children: [],
+          },
+          mode: ProfileSettingsMode.Creating,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    expect(screen.getByText('ld.profileSettings.creatingSettingsName')).toBeInTheDocument();
+  });
+
+  it('renders in editing mode', () => {
+    setInitialGlobalState([
+      {
+        store: useManageProfileSettingsStore,
+        state: {
+          fullProfile: [
+            {
+              id: 'profile',
+              type: AdvancedFieldType.block,
+              displayName: 'Profile',
+              children: ['child'],
+            },
+            {
+              id: 'child',
+              type: AdvancedFieldType.simple,
+              displayName: 'Child',
+            },
+          ],
+          profileSettings: {
+            active: false,
+            children: [],
+          },
+          mode: ProfileSettingsMode.Editing,
+        },
+      },
+    ]);
+
+    renderComponent();
+
+    expect(screen.getByText('ld.profileSettings.editingSettingsName')).toBeInTheDocument();
   });
 
   it('renders with inactive settings', () => {
@@ -60,6 +125,7 @@ describe('ProfileSettingsEditor', () => {
             active: false,
             children: [],
           },
+          mode: ProfileSettingsMode.Creating,
         },
       },
     ]);
@@ -98,6 +164,7 @@ describe('ProfileSettingsEditor', () => {
               },
             ],
           },
+          mode: ProfileSettingsMode.Creating,
         },
       },
     ]);
@@ -147,6 +214,7 @@ describe('ProfileSettingsEditor', () => {
               },
             ],
           },
+          mode: ProfileSettingsMode.Creating,
         },
       },
     ]);
@@ -169,6 +237,7 @@ describe('ProfileSettingsEditor', () => {
         state: {
           settingsName: initialName,
           setSettingsName: mockSetSettingsName,
+          mode: ProfileSettingsMode.Creating,
         },
       },
     ]);

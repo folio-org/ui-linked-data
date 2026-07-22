@@ -182,4 +182,15 @@ describe('BaseComponent', () => {
       expect(screen.queryByTestId('move-menu')).not.toBeInTheDocument();
     });
   });
+
+  it('focuses the menu container when the only menu item is disabled (mandatory component)', async () => {
+    const mockComponent = makeComponent(true);
+    renderComponent(<SelectedComponent component={mockComponent} size={2} index={1} />, mockComponent);
+
+    fireEvent.click(screen.getByTestId('activate-menu'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('move-menu')).toHaveFocus();
+    });
+  });
 });

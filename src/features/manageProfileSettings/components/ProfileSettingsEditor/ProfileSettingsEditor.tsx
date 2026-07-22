@@ -5,6 +5,7 @@ import { DndContext, DragOverlay, MeasuringStrategy, useSensor, useSensors } fro
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import classNames from 'classnames';
 
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { Input } from '@/components/Input';
 
 import { useManageProfileSettingsState } from '@/store';
@@ -54,7 +55,7 @@ export const ProfileSettingsEditor = () => {
     selectedComponents,
     isSettingsActive,
     settingsName,
-    isCreating,
+    mode,
     setIsSettingsActive,
     setUnusedComponents,
     setSelectedComponents,
@@ -68,13 +69,12 @@ export const ProfileSettingsEditor = () => {
     'selectedComponents',
     'isSettingsActive',
     'settingsName',
-    'isCreating',
+    'mode',
     'setIsSettingsActive',
     'setUnusedComponents',
     'setSelectedComponents',
     'setSettingsName',
     'setIsModified',
-    'setIsCreating',
   ]);
 
   const updateState = ({
@@ -168,12 +168,24 @@ export const ProfileSettingsEditor = () => {
     };
   });
 
+  if (mode === ProfileSettingsMode.Landing) {
+    return (
+      <div data-testid="profile-settings-editor-landing" className="profile-settings-editor-landing">
+        <FormattedMessage id="ld.profileSettings.editorLanding" />
+      </div>
+    );
+  }
+
   return (
     <div data-testid="profile-settings-editor" className="components-editor-wrapper">
       <div className="settings-name-edit">
         <label>
           <FormattedMessage
-            id={isCreating ? 'ld.profileSettings.creatingSettingsName' : 'ld.profileSettings.editingSettingsName'}
+            id={
+              mode === ProfileSettingsMode.Creating
+                ? 'ld.profileSettings.creatingSettingsName'
+                : 'ld.profileSettings.editingSettingsName'
+            }
           />
           <Input value={settingsName} onChange={handleNameChange} data-testid="settings-name" />
         </label>

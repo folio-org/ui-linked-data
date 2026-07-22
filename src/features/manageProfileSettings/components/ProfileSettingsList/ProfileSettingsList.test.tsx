@@ -3,13 +3,15 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
+
 import { useManageProfileSettingsStore, useUIStore } from '@/store';
 
 import { ProfileSettingsList } from './ProfileSettingsList';
 
 describe('ProfileSettingsList', () => {
   const mockSetIsManageProfileSettingsUnsavedModalOpen = jest.fn();
-  const mockSetIsCreating = jest.fn();
+  const mockSetMode = jest.fn();
   const mockSetIsPreferredProfileSettings = jest.fn();
   const renderComponent = (modified: boolean) => {
     const queryClient = new QueryClient({
@@ -50,7 +52,7 @@ describe('ProfileSettingsList', () => {
             id: 3,
           },
           isModified: modified,
-          setIsCreating: mockSetIsCreating,
+          setMode: mockSetMode,
           setIsPreferredProfileSettings: mockSetIsPreferredProfileSettings,
         },
       },
@@ -92,7 +94,7 @@ describe('ProfileSettingsList', () => {
 
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
-      expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetMode).not.toHaveBeenCalled();
       expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
@@ -104,7 +106,7 @@ describe('ProfileSettingsList', () => {
 
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
-      expect(mockSetIsCreating).toHaveBeenCalledWith(true);
+      expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Creating);
       expect(mockSetIsPreferredProfileSettings).toHaveBeenCalledWith(false);
     });
   });
@@ -117,7 +119,7 @@ describe('ProfileSettingsList', () => {
 
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
-      expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetMode).not.toHaveBeenCalled();
       expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
@@ -129,7 +131,7 @@ describe('ProfileSettingsList', () => {
 
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
-      expect(mockSetIsCreating).not.toHaveBeenCalled();
+      expect(mockSetMode).not.toHaveBeenCalled();
       expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });
@@ -141,7 +143,7 @@ describe('ProfileSettingsList', () => {
 
     waitFor(() => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
-      expect(mockSetIsCreating).toHaveBeenCalledWith(false);
+      expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Editing);
       expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
     });
   });

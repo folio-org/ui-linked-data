@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { createProfileSettings, saveProfileSettings } from '@/common/api/profiles.api';
 import { ApiErrorCodes } from '@/common/constants/api.constants';
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { checkHasErrorOfCodeType } from '@/common/helpers/api.helper';
 import { logger } from '@/common/services/logger';
@@ -19,7 +20,7 @@ export const useSaveProfileSettings = () => {
   const { setIsLoading } = useLoadingState(['setIsLoading']);
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
   const {
-    isCreating,
+    mode,
     isPreferredProfileSettings,
     isSettingsActive,
     isTypeDefaultProfile,
@@ -28,12 +29,12 @@ export const useSaveProfileSettings = () => {
     unusedComponents,
     selectedComponents,
     settingsName,
-    setIsCreating,
+    setMode,
     setIsModified,
     setProfileSettings,
     setSelectedProfileSettingsMeta,
   } = useManageProfileSettingsState([
-    'isCreating',
+    'mode',
     'isPreferredProfileSettings',
     'isSettingsActive',
     'isTypeDefaultProfile',
@@ -42,7 +43,7 @@ export const useSaveProfileSettings = () => {
     'unusedComponents',
     'selectedComponents',
     'settingsName',
-    'setIsCreating',
+    'setMode',
     'setIsModified',
     'setProfileSettings',
     'setSelectedProfileSettingsMeta',
@@ -76,12 +77,12 @@ export const useSaveProfileSettings = () => {
     let settingsMeta: ProfileSettingsMeta;
 
     try {
-      if (!isCreating && selectedProfileSettingsMeta) {
+      if (mode === ProfileSettingsMode.Editing && selectedProfileSettingsMeta) {
         settingsMeta = selectedProfileSettingsMeta;
         await saveProfileSettings(selectedProfile.id, settingsMeta.id, settingsToSave);
       } else {
         settingsMeta = await createProfileSettings(selectedProfile.id, settingsToSave);
-        setIsCreating(false);
+        setMode(ProfileSettingsMode.Editing);
       }
       setProfileSettings({ ...settingsToSave, missingFromSettings: [], id: settingsMeta.id });
       queryClient.refetchQueries({ queryKey: ['profileSettingsMeta', String(selectedProfile.id)] });
@@ -122,8 +123,10 @@ export const useSaveProfileSettings = () => {
     try {
       setIsLoading(true);
       await saveAndSetPreferred();
-      const settingsMeta = await saveAndSetSettings();
-      await saveAndSetPreferredProfileSetting(settingsMeta);
+      if (mode === ProfileSettingsMode.Creating || mode === ProfileSettingsMode.Editing) {
+        const settingsMeta = await saveAndSetSettings();
+        await saveAndSetPreferredProfileSetting(settingsMeta);
+      }
       setIsModified(false);
     } finally {
       setIsLoading(false);
