@@ -11,6 +11,7 @@ import {
   savePreferredProfileSettings,
   saveProfileSettings,
 } from '@/common/api/profiles.api';
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { StatusType } from '@/common/constants/status.constants';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
@@ -55,6 +56,45 @@ describe('useSaveProfileSettings', () => {
 
     afterEach(() => {
       jest.resetAllMocks();
+    });
+
+    it('only saves preferred profile when in settings editor is in landing mode', async () => {
+      setInitialGlobalState([
+        {
+          store: useProfileState,
+          state: {
+            preferredProfiles: [],
+          },
+        },
+        {
+          store: useManageProfileSettingsState,
+          state: {
+            selectedProfile: {
+              id: 'another',
+              name: 'another',
+              resourceType: 'for-type',
+            },
+            isTypeDefaultProfile: true,
+            mode: ProfileSettingsMode.Landing,
+          },
+        },
+        {
+          store: useStatusState,
+          state: {
+            addStatusMessagesItem: mockAddStatusMessagesItem,
+          },
+        },
+      ]);
+
+      const { wrapper } = createWrapper();
+      const { result } = renderHook(() => useSaveProfileSettings(), { wrapper });
+      await act(async () => {
+        await result.current.saveSettings();
+      });
+
+      expect(savePreferredProfile).toHaveBeenCalled();
+      expect(saveProfileSettings).not.toHaveBeenCalled();
+      expect(createProfileSettings).not.toHaveBeenCalled();
     });
 
     it('shows an error when saving preferred profile fails', async () => {
@@ -117,6 +157,7 @@ describe('useSaveProfileSettings', () => {
               resourceType: 'for-type',
             },
             isTypeDefaultProfile: true,
+            mode: ProfileSettingsMode.Editing,
           },
         },
         {
@@ -156,6 +197,7 @@ describe('useSaveProfileSettings', () => {
               resourceType: 'for-type',
             },
             isTypeDefaultProfile: true,
+            mode: ProfileSettingsMode.Creating,
           },
         },
         {
@@ -199,6 +241,7 @@ describe('useSaveProfileSettings', () => {
               resourceType: 'for-type',
             },
             isTypeDefaultProfile: true,
+            mode: ProfileSettingsMode.Creating,
           },
         },
         {
@@ -239,7 +282,7 @@ describe('useSaveProfileSettings', () => {
               resourceType: 'for-type',
             },
             isTypeDefaultProfile: true,
-            isCreating: false,
+            mode: ProfileSettingsMode.Editing,
             selectedProfileSettingsMeta: {
               id: 'thing',
               name: 'settings-thing',
@@ -280,7 +323,7 @@ describe('useSaveProfileSettings', () => {
               resourceType: 'for-type',
             },
             isTypeDefaultProfile: true,
-            isCreating: false,
+            mode: ProfileSettingsMode.Editing,
             isPreferredProfileSettings: true,
             selectedProfileSettingsMeta: {
               id: 44,

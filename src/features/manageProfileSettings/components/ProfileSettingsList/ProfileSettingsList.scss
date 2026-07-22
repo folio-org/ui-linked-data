@@ -11,4 +11,8 @@
   label {
     white-space: nowrap;
   }
+
+  button {
+    flex-shrink: 0;
+  }
 }

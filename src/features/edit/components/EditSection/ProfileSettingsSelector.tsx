@@ -39,8 +39,8 @@ export const ProfileSettingsSelector = () => {
     return profileSettings ? basicOption.concat(profileSettings) : basicOption;
   }, [basicOption, profileSettings]);
 
-  const hasOptions = useMemo(() => {
-    return (profileSettings?.length ?? 0) > 0;
+  const hasNoOptions = useMemo(() => {
+    return (profileSettings?.length ?? 0) === 0;
   }, [profileSettings]);
 
   const { isOpen: isMenuEnabled, setIsOpen: setIsMenuEnabled, toggle: toggleIsMenuEnabled } = useDismissMenu(ref);
@@ -83,7 +83,9 @@ export const ProfileSettingsSelector = () => {
     );
   };
 
-  return hasOptions ? (
+  if (hasNoOptions) return <></>;
+
+  return (
     <div className="profile-settings-selector" ref={ref}>
       <Button
         data-testid="profile-settings-selector-button"
@@ -122,7 +124,5 @@ export const ProfileSettingsSelector = () => {
         </ul>
       )}
     </div>
-  ) : (
-    <></>
   );
 };

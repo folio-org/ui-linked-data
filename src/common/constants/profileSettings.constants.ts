@@ -12,3 +12,9 @@ export const BASE_SETTINGS_OPTIONS = [
     value: '',
   },
 ];
+
+export enum ProfileSettingsMode {
+  Landing = 'landing',
+  Creating = 'creating',
+  Editing = 'editing',
+}

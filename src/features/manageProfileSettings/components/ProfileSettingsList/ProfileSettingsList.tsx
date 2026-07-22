@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { BASE_SETTINGS_OPTIONS } from '@/common/constants/profileSettings.constants';
+import { BASE_SETTINGS_OPTIONS, ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { Button, ButtonType } from '@/components/Button';
 import { Select, SelectValue } from '@/components/Select';
 
@@ -27,7 +27,7 @@ export const ProfileSettingsList = () => {
     selectedProfileSettingsMeta,
     setSelectedProfileSettingsMeta,
     setSettingsName,
-    setIsCreating,
+    setMode,
     setIsCreatingSettingsNext,
     setIsEditingSettingsNext,
     setIsPreferredProfileSettings,
@@ -38,7 +38,7 @@ export const ProfileSettingsList = () => {
     'selectedProfileSettingsMeta',
     'setSelectedProfileSettingsMeta',
     'setSettingsName',
-    'setIsCreating',
+    'setMode',
     'setIsCreatingSettingsNext',
     'setIsEditingSettingsNext',
     'setIsPreferredProfileSettings',
@@ -75,7 +75,7 @@ export const ProfileSettingsList = () => {
         setNextSelectedSettingsMeta(settingMeta ?? null);
         setIsManageProfileSettingsUnsavedModalOpen(true);
       } else {
-        setIsCreating(false);
+        setMode(ProfileSettingsMode.Editing);
         resetSettings();
 
         setSelectedProfileSettingsMeta(settingMeta ?? null);
@@ -89,7 +89,7 @@ export const ProfileSettingsList = () => {
       setIsCreatingSettingsNext(true);
       setIsManageProfileSettingsUnsavedModalOpen(true);
     } else {
-      setIsCreating(true);
+      setMode(ProfileSettingsMode.Creating);
       setSelectedProfileSettingsMeta(null);
       setSettingsName('');
       setIsPreferredProfileSettings(false);
@@ -98,12 +98,9 @@ export const ProfileSettingsList = () => {
 
   return (
     <div data-testid="profile-settings-select-section" className="profile-settings-select">
-      <Button
-        type={ButtonType.Highlighted}
-        label={<FormattedMessage id="ld.create.base" />}
-        onClick={handleCreate}
-        data-testid="profile-settings-select-create"
-      />
+      <Button type={ButtonType.Primary} onClick={handleCreate} data-testid="profile-settings-select-create">
+        <FormattedMessage id="ld.profileSettings.createNewSettings" />
+      </Button>
 
       <label id="profile-settings-select-label" htmlFor="profile-settings-select">
         <FormattedMessage id="ld.profileSettings.savedSettings" />

@@ -52,37 +52,50 @@ export const ProfileSettings = () => {
   };
 
   useEffect(() => {
-    if (selectedProfile) {
-      const initialize = async () => {
-        try {
-          setIsLoading(true);
-          const profile = await loadProfile(selectedProfile.id);
-          setFullProfile(profile);
-          if (selectedProfileSettingsMeta) {
-            if (selectedProfileSettingsMeta.id === PROFILE_SETTINGS_DEFAULT_OPTION) {
-              resetProfileSettings();
-            } else {
-              setProfileSettings(
-                await loadProfileSettings(
-                  selectedProfileSettingsMeta.id,
-                  String(selectedProfile.id),
-                  profile,
-                  selectedProfile.resourceType,
-                ),
-              );
-            }
+    if (!selectedProfile) return;
+
+    let cancelled = false;
+
+    const initialize = async () => {
+      try {
+        setIsLoading(true);
+        const profile = await loadProfile(selectedProfile.id);
+
+        if (cancelled) return;
+
+        setFullProfile(profile);
+        if (selectedProfileSettingsMeta) {
+          if (selectedProfileSettingsMeta.id === PROFILE_SETTINGS_DEFAULT_OPTION) {
+            resetProfileSettings();
+          } else {
+            const settings = await loadProfileSettings(
+              selectedProfileSettingsMeta.id,
+              String(selectedProfile.id),
+              profile,
+              selectedProfile.resourceType,
+            );
+
+            if (cancelled) return;
+
+            setProfileSettings(settings);
           }
-        } catch {
+        }
+      } catch {
+        if (!cancelled) {
           addStatusMessagesItem?.(
             UserNotificationFactory.createMessage(StatusType.error, 'ld.errorLoadingProfileSettings'),
           );
-        } finally {
-          setIsLoading(false);
         }
-      };
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
 
-      initialize();
-    }
+    initialize();
+
+    return () => {
+      cancelled = true;
+    };
   }, [selectedProfile, selectedProfileSettingsMeta]);
 
   const showView =

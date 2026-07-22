@@ -371,6 +371,8 @@
   "ld.profileSettings.creatingSettingsName": "Creating new profile settings with name",
   "ld.profileSettings.editingSettingsName": "Editing profile settings with name",
   "ld.profileSettings.resetComponents": "Reset components",
+  "ld.profileSettings.createNewSettings": "Create new settings",
+  "ld.profileSettings.editorLanding": "Create new profile settings with 'Create new settings,' or select saved profile settings from the list to edit.",
   "ld.importHub.header.title": "Import hub - {title}",
   "ld.importHub.fetchingFromUri": "Fetching hub from {uri}...",
   "ld.profileSettings.announce.instructions": "To pick up a component, press space or enter.  While dragging, use the arrow keys to move the component either up and down within each list or left and right to the other list. Press space or enter again to drop the component in its new position, or press escape to cancel.",
