@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Pagination } from '@/components/Pagination';
 
@@ -13,6 +14,19 @@ describe('Pagination', () => {
     render(<Pagination {...props} currentPage={0} totalPages={2} />);
 
     expect(getByTestId('pagination')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['first page', { currentPage: 0, totalPages: 2 }],
+      ['last page', { currentPage: 1, totalPages: 2 }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<Pagination {...props} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
   describe('counts', () => {

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as profileSelectionHelper from '@/common/helpers/profileSelection.helper';
 
@@ -136,5 +137,93 @@ describe('WarningMessages', () => {
     expect(screen.getByTestId('formatted-message-ld.warning.message_2')).toBeInTheDocument();
     expect(screen.getByTestId('formatted-message-ld.warning.message_3')).toBeInTheDocument();
     expect(profileSelectionHelper.getWarningByProfileNames).toHaveBeenCalledWith('work', 'Monograph', 'Rare Books');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'warnings exist',
+        () => (profileSelectionHelper.getWarningByProfileNames as jest.Mock).mockReturnValue(['ld.warning.message1']),
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: mockProfiles,
+          selectedProfileId: '1',
+          selectedValue: '2',
+        },
+      ],
+      [
+        'no warnings',
+        () => (profileSelectionHelper.getWarningByProfileNames as jest.Mock).mockReturnValue(null),
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: mockProfiles,
+          selectedProfileId: '1',
+          selectedValue: '2',
+        },
+      ],
+      [
+        'action is not change',
+        () => {},
+        {
+          profileSelectionType: { ...mockProfileSelectionType, action: 'set' as ProfileSelectionActionType },
+          profiles: mockProfiles,
+          selectedProfileId: '1',
+          selectedValue: '2',
+        },
+      ],
+      [
+        'selectedProfileId and selectedValue are the same',
+        () => {},
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: mockProfiles,
+          selectedProfileId: '1',
+          selectedValue: '1',
+        },
+      ],
+      [
+        'selectedProfileId is null',
+        () => {},
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: mockProfiles,
+          selectedProfileId: null,
+          selectedValue: '2',
+        },
+      ],
+      [
+        'profiles are not found',
+        () => (profileSelectionHelper.getWarningByProfileNames as jest.Mock).mockReturnValue([]),
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: [] as ProfileDTO[],
+          selectedProfileId: '1',
+          selectedValue: '2',
+        },
+      ],
+      [
+        'multiple warning messages',
+        () =>
+          (profileSelectionHelper.getWarningByProfileNames as jest.Mock).mockReturnValue([
+            'ld.warning.message_1',
+            'ld.warning.message_2',
+            'ld.warning.message_3',
+          ]),
+        {
+          profileSelectionType: mockProfileSelectionType,
+          profiles: mockProfiles,
+          selectedProfileId: '1',
+          selectedValue: '3',
+        },
+      ],
+    ])('has no accessibility violations when %s', async (_description, setup, props) => {
+      setup();
+
+      const { container } = render(<WarningMessages {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

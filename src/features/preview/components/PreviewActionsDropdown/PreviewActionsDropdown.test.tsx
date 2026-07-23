@@ -3,6 +3,7 @@ import { onCreateNewResource } from '@/test/__mocks__/common/hooks/useNavigateTo
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PreviewActionsDropdown } from './PreviewActionsDropdown';
 
@@ -26,6 +27,20 @@ describe('PreviewActionsDropdown', () => {
         type: entityType,
         refId: referenceId,
       },
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(
+        <BrowserRouter>
+          <PreviewActionsDropdown entityType={entityType} referenceId={referenceId} />
+        </BrowserRouter>,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

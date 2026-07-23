@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore } from '@/store';
 
@@ -130,5 +131,28 @@ describe('SearchBySelect', () => {
 
     const select = screen.getByTestId('id-search-select');
     expect(select).toHaveAttribute('id', 'id-search-select');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['searchBy is "keyword"', 'keyword'],
+      ['searchBy is "title"', 'title'],
+    ])('has no accessibility violations when %s', async (_description, searchBy) => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            searchBy,
+            setSearchBy: jest.fn(),
+          },
+        },
+      ]);
+
+      const { container } = render(<SearchBySelect />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

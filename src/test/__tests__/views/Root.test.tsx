@@ -8,6 +8,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Root } from '@/views';
 
@@ -26,7 +27,7 @@ describe('Root', () => {
       },
     ]);
 
-    render(
+    return render(
       <BrowserRouter basename="/">
         <Routes>
           <Route path="/" element={<Root />} />
@@ -48,5 +49,18 @@ describe('Root', () => {
     renderRootComponent(true);
 
     expect(getByTestId('loading-component')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default', false],
+      ['loading', true],
+    ])('has no accessibility violations when %s', async (_description, isLoading) => {
+      const { container } = renderRootComponent(isLoading);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

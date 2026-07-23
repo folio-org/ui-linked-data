@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useUIStore } from '@/store';
 
@@ -256,5 +257,34 @@ describe('RootControls', () => {
     const { container } = render(<RootControls />);
 
     expect(container.querySelector('.search-pane-content')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['not collapsed', false, {}],
+      ['collapsed', true, {}],
+      [
+        'showFilters with filtersComponent',
+        false,
+        { showFilters: true, filtersComponent: <div data-testid="filters">Filters</div> },
+      ],
+      ['custom className', false, { className: 'custom-class' }],
+    ])('has no accessibility violations when %s', async (_description, isSearchPaneCollapsed, props) => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed,
+            setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+          },
+        },
+      ]);
+
+      const { container } = render(<RootControls {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

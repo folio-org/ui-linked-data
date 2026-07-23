@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalWarning } from './ModalWarning';
 
@@ -64,5 +65,18 @@ describe('ModalWarning', () => {
     });
 
     expect(props.onClose).toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['isOpen is false', { isOpen: false }],
+      ['isOpen is true', {}],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<ModalWarning {...props} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

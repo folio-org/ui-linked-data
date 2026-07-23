@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Modal } from '@/components/Modal';
 
@@ -50,6 +51,22 @@ describe('Modal', () => {
     render(<Modal {...updatedProps} />);
 
     expect(screen.queryByTestId('modal-cancel-button')).not.toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['renders null', { isOpen: false }],
+      ['renders Modal component', {}],
+      ['renders Modal with custom test id', { 'data-testid': 'custom-modal-id' }],
+      ['renders submit button when not hidden', { submitButtonHidden: false, submitButtonLabel: 'Submit' }],
+      ['renders Modal component without a cancel button', { cancelButtonHidden: true }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<Modal {...props} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 
   describe('event handlers', () => {

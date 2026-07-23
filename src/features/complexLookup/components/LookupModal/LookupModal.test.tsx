@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { LookupModal } from './LookupModal';
 
@@ -99,6 +100,24 @@ describe('LookupModal', () => {
       screen.getByTestId('modal-close').click();
 
       expect(mockOnClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['open with string title', { isOpen: true, title: 'Test Title' }],
+      ['closed', { isOpen: false, title: 'Test Title' }],
+      ['open with ReactElement title', { isOpen: true, title: <span data-testid="custom-title">Custom Title</span> }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(
+        <LookupModal onClose={mockOnClose} {...overrides}>
+          <div>Test Content</div>
+        </LookupModal>,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TitleFormatter } from './TitleFormatter';
 
@@ -48,5 +49,27 @@ describe('TitleFormatter', () => {
     fireEvent.click(button);
 
     expect(onTitleClick).toHaveBeenCalledWith(row.__meta.id, row.title.label, row.subclass.label);
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'isMissingMatchQuery is true',
+        {
+          ...defaultRow,
+          __meta: { ...defaultRow.__meta, isAnchor: true },
+          subclass: { label: '' },
+          authorized: { label: '' },
+          authoritySource: { label: '' },
+        },
+      ],
+      ['isMissingMatchQuery is false', { ...defaultRow, __meta: { ...defaultRow.__meta, isAnchor: false } }],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<TitleFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

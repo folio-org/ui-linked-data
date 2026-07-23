@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DatePicker } from '@/components/DatePicker/DatePicker';
 
@@ -39,5 +40,20 @@ describe('DatePicker Component', () => {
     const input = screen.getByPlaceholderText('Select a date');
 
     expect(input).toHaveAttribute('name', 'datePicker');
+  });
+
+  describe('accessibility', () => {
+    const baseProps = { id: 'test-date', value: '2024-11-11', onChange: () => {} };
+
+    test.each([
+      ['default', {}],
+      ['with placeholder and name', { placeholder: 'Select a date', name: 'datePicker' }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<DatePicker {...baseProps} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

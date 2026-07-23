@@ -1,6 +1,7 @@
 import { Fragment, ReactNode } from 'react';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DuplicateGroupContainer } from './DuplicateGroupContainer';
 
@@ -26,14 +27,16 @@ describe('DuplicateGroupContainer', () => {
   const { getByText, getByTestId, queryByText } = screen;
   const toggleButton = () => fireEvent.click(getByTestId('expand-collapse-button'));
 
+  let container: HTMLElement;
+
   beforeEach(() => {
-    render(
+    ({ container } = render(
       <DuplicateGroupContainer
         entry={mockEntry as SchemaEntry}
         generateComponent={({ uuid }) => <div key={uuid}>{uuid}</div>}
         twins={[mockClonedByUuid]}
       />,
-    );
+    ));
   });
 
   test('toggles collapsible component and shows the number of entries', () => {
@@ -44,5 +47,13 @@ describe('DuplicateGroupContainer', () => {
     toggleButton();
 
     expect(getByText(mockClonedByUuid)).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

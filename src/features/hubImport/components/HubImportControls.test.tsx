@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubImportControls } from './HubImportControls';
 
@@ -35,7 +36,7 @@ describe('HubImportControls', () => {
   });
 
   const renderComponent = () => {
-    render(
+    return render(
       <BrowserRouter>
         <HubImportControls />
       </BrowserRouter>,
@@ -73,5 +74,15 @@ describe('HubImportControls', () => {
     fireEvent.click(screen.getByTestId('continue-hub-import-button'));
 
     expect(mockImportHubForEdit).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

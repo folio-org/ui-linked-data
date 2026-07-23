@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubLinkFormatter } from './HubLinkFormatter';
 
@@ -129,5 +130,23 @@ describe('HubLinkFormatter', () => {
     expect(span).toBeInTheDocument();
     expect(span?.tagName.toLowerCase()).toBe('span');
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['title and URI are present', defaultRow],
+      ['title is missing', { ...defaultRow, hub: { label: '', uri: 'test_hub_url' } }],
+      ['URI is missing', { ...defaultRow, hub: { label: 'Test Hub Label', uri: '' } }],
+      ['title and URI are missing', { ...defaultRow, hub: { label: '', uri: '' } }],
+      ['hub data is undefined', { ...defaultRow, hub: { label: undefined, uri: undefined } }],
+      ['title only, URI is undefined', { ...defaultRow, hub: { label: 'Title Only', uri: undefined } }],
+      ['URI only, title is undefined', { ...defaultRow, hub: { label: undefined, uri: 'test_hub_url_2' } }],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<HubLinkFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

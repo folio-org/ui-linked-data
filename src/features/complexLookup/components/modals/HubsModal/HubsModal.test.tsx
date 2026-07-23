@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
 
@@ -279,6 +280,39 @@ describe('HubsModal', () => {
         onAssign: mockOnAssign,
         onClose: mockOnClose,
       });
+    });
+  });
+
+  describe('accessibility', () => {
+    const baseHubPreviewProps = {
+      handleHubAssign: mockHandleHubAssign,
+      isAssigning: false,
+      isHubPreviewOpen: false,
+      isPreviewLoading: false,
+      previewData: null,
+      previewMeta: null,
+      handleHubTitleClick: jest.fn(),
+      handleCloseHubPreview: jest.fn(),
+      handleHubPreviewAssign: jest.fn(),
+    };
+
+    test.each([
+      ['modal open with search results', {}, {}],
+      ['modal closed', { isOpen: false }, {}],
+      ['isAssigning is true', {}, { isAssigning: true }],
+    ])('has no accessibility violations when %s', async (_description, componentProps, hubPreviewOverrides) => {
+      (ComplexLookupHooks.useModalWithHubPreview as jest.Mock).mockReturnValue({
+        hubPreviewProps: { ...baseHubPreviewProps, ...hubPreviewOverrides },
+        handleModalClose: mockHandleModalClose,
+      });
+
+      const { container } = renderWithProviders(
+        <HubsModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} {...componentProps} />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

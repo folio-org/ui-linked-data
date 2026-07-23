@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import type { Row } from '@/components/Table';
 
@@ -124,5 +125,25 @@ describe('InstanceSelectCtlFormatter', () => {
     );
 
     expect(container.firstChild).toHaveClass('row-select-container');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['instance is not selected', []],
+      ['instance is selected', ['456', '123', '789']],
+    ])('has no accessibility violations when %s', async (_description, selectedInstances) => {
+      const { container } = render(
+        <InstanceSelectCtlFormatter
+          row={mockRow}
+          formatMessage={formatMessage}
+          onToggleSelect={onToggleSelect}
+          selectedInstances={selectedInstances}
+        />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

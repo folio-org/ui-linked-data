@@ -6,6 +6,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useComparisonData } from '@/features/comparison/hooks';
 
@@ -164,5 +165,18 @@ describe('Comparison', () => {
     fireEvent.click(getByTestId('backward-button'));
 
     expect(getAllByText(1)[0]).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no comparison items are selected', [] as StoreWithState[], []],
+      ['only one resource is selected', baseMockState, undefined],
+    ])('has no accessibility violations when %s', async (_description, stateArgs, comparisonItems) => {
+      const { container } = renderWithState(stateArgs, comparisonItems);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

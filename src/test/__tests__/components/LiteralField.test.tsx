@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LiteralField } from '@/components/LiteralField';
@@ -10,7 +11,7 @@ const { getByTestId } = screen;
 
 describe('Literal Field', () => {
   function renderComponent() {
-    render(<LiteralField uuid={uuid} onChange={onChangeFn} />);
+    return render(<LiteralField uuid={uuid} onChange={onChangeFn} />);
   }
 
   test('triggers handleOnChange', () => {
@@ -24,5 +25,15 @@ describe('Literal Field', () => {
     fireEvent.change(getByTestId('literal-field'), event);
 
     expect(onChangeFn).toHaveBeenCalledWith(uuid, [{ label: event.target.value }]);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

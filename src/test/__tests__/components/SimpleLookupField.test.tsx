@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 
 import { SimpleLookupField } from '@/components/SimpleLookupField';
 
@@ -78,6 +79,19 @@ describe('Simple lookup field', () => {
       expect(queryByText('value-1')).not.toBeInTheDocument();
       expect(queryByText('value-2')).not.toBeInTheDocument();
       expect(await findByText('value-3')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['multi select', true],
+      ['single select', false],
+    ])('has no accessibility violations when %s', async (_description, isMulti) => {
+      const { container } = renderScreen(isMulti);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

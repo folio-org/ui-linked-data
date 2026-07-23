@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { InputsWrapper } from './InputsWrapper';
 
@@ -54,5 +55,15 @@ describe('InputsWrapper', () => {
 
     const wrapper = container.querySelector('.inputs');
     expect(wrapper?.tagName).toBe('DIV');
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(<InputsWrapper />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

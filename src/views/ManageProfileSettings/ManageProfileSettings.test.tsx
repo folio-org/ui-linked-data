@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { fetchPreferredProfiles, fetchProfile, fetchProfileSettings, fetchProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
@@ -85,12 +86,14 @@ describe('ManageProfileSettings', () => {
     children: [],
   };
 
+  let container: HTMLElement;
+
   beforeEach(() => {
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
     (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
     (fetchProfileSettings as jest.Mock).mockResolvedValue(mockProfileSettings);
-    renderComponent();
+    ({ container } = renderComponent());
   });
 
   afterEach(() => {
@@ -385,6 +388,14 @@ describe('ManageProfileSettings', () => {
         expect(screen.getByTestId('profiles-list')).not.toBeVisible();
         expect(screen.getByTestId('profile-settings')).toBeVisible();
       });
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubsContent } from './HubsContent';
 
@@ -100,6 +101,20 @@ describe('HubsContent', () => {
 
       expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
       expect(screen.getByTestId('hubs-lookup-result-list')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default', {}],
+      ['handleHubTitleClick provided', { handleHubTitleClick: mockHandleHubTitleClick }],
+      ['isAssigning is true', { isAssigning: true }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<HubsContent {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

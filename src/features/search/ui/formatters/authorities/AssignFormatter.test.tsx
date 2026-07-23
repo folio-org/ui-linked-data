@@ -1,5 +1,6 @@
 import { fireEvent } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthRefType } from '@/common/constants/search.constants';
 
@@ -62,5 +63,35 @@ describe('AssignFormatter', () => {
     );
 
     expect(queryByTestId('assign-button-2')).toBeNull();
+  });
+
+  describe('accessibility', () => {
+    const authorizedRow = {
+      authorized: { label: AuthRefType.Authorized },
+      __meta: { id: '1' },
+      title: { label: 'Title 1' },
+      subclass: { label: 'Subclass 1' },
+    };
+    const unauthorizedRow = {
+      authorized: { label: AuthRefType.AuthRef },
+      __meta: { id: '2' },
+      title: { label: 'Title 2' },
+      subclass: { label: 'Subclass 2' },
+    };
+
+    test.each([
+      ['renders disabled Button', authorizedRow, true],
+      ['does not render Button when not authorized', unauthorizedRow, false],
+    ])('has no accessibility violations when %s', async (_description, testRow, checkFailedIdResult) => {
+      mockCheckFailedId.mockReturnValue(checkFailedIdResult);
+
+      const { container } = render(
+        AssignFormatter({ row: testRow, onAssign: mockOnAssign, checkFailedId: mockCheckFailedId }),
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

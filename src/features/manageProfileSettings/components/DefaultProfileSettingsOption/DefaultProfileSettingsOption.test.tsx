@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { fetchPreferredProfileSettings } from '@/common/api/profiles.api';
 import { PROFILE_SETTINGS_DEFAULT_OPTION } from '@/common/constants/profileSettings.constants';
@@ -133,5 +134,29 @@ describe('DefaultProfileSettingsOption', () => {
       expect(mockSetIsModified).toHaveBeenCalledWith(true);
       expect(screen.getByTestId('default-profile-settings-control')).not.toBeChecked();
     });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['settings match preferred settings', mockProfileId, mockProfileSettingsId, mockPreferredProfileSettings],
+      ['profile is undefined', null, PROFILE_SETTINGS_DEFAULT_OPTION, mockPreferredProfileSettings],
+      ['selected settings not preferred', mockProfileId, mockProfileSettingsId, mockAlternatePreferredProfileSettings],
+      ['no preferred settings', mockProfileId, mockProfileSettingsId, []],
+    ] as const)(
+      'has no accessibility violations when %s',
+      async (_description, profileId, profileSettingsId, mockReturn) => {
+        (fetchPreferredProfileSettings as jest.Mock).mockReturnValue(mockReturn);
+
+        const { container } = renderComponent(profileId, profileSettingsId);
+
+        await waitFor(() => {
+          expect(screen.getByTestId('default-profile-settings-control')).toBeInTheDocument();
+        });
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

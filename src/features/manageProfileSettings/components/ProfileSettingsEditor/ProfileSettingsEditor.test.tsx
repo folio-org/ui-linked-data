@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
@@ -20,7 +21,7 @@ describe('ProfileSettingsEditor', () => {
   });
 
   const renderComponent = () => {
-    render(
+    return render(
       <MemoryRouter>
         <QueryClientProvider client={queryClient}>
           <ProfileSettingsEditor />
@@ -251,6 +252,186 @@ describe('ProfileSettingsEditor', () => {
 
     waitFor(() => {
       expect(mockSetSettingsName).toHaveBeenCalledWith(newName);
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no state', () => {}],
+      [
+        'creating mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsStore,
+              state: {
+                fullProfile: [
+                  {
+                    id: 'profile',
+                    type: AdvancedFieldType.block,
+                    displayName: 'Profile',
+                    children: ['child'],
+                  },
+                  {
+                    id: 'child',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child',
+                  },
+                ],
+                profileSettings: {
+                  active: false,
+                  children: [],
+                },
+                mode: ProfileSettingsMode.Creating,
+              },
+            },
+          ]),
+      ],
+      [
+        'editing mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsStore,
+              state: {
+                fullProfile: [
+                  {
+                    id: 'profile',
+                    type: AdvancedFieldType.block,
+                    displayName: 'Profile',
+                    children: ['child'],
+                  },
+                  {
+                    id: 'child',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child',
+                  },
+                ],
+                profileSettings: {
+                  active: false,
+                  children: [],
+                },
+                mode: ProfileSettingsMode.Editing,
+              },
+            },
+          ]),
+      ],
+      [
+        'inactive settings',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsStore,
+              state: {
+                fullProfile: [
+                  {
+                    id: 'profile',
+                    type: AdvancedFieldType.block,
+                    displayName: 'Profile',
+                    children: ['child'],
+                  },
+                  {
+                    id: 'child',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child',
+                  },
+                ],
+                profileSettings: {
+                  active: false,
+                  children: [],
+                },
+                mode: ProfileSettingsMode.Creating,
+              },
+            },
+          ]),
+      ],
+      [
+        'active settings but none in use',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsStore,
+              state: {
+                fullProfile: [
+                  {
+                    id: 'profile',
+                    type: AdvancedFieldType.block,
+                    displayName: 'Profile',
+                    children: ['child'],
+                  },
+                  {
+                    id: 'child',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child',
+                  },
+                ],
+                profileSettings: {
+                  active: true,
+                  children: [
+                    {
+                      id: 'child',
+                      visible: false,
+                    },
+                  ],
+                },
+                mode: ProfileSettingsMode.Creating,
+              },
+            },
+          ]),
+      ],
+      [
+        'active settings with some in use',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsStore,
+              state: {
+                fullProfile: [
+                  {
+                    id: 'profile',
+                    type: AdvancedFieldType.block,
+                    displayName: 'Profile',
+                    children: ['childA', 'childB'],
+                  },
+                  {
+                    id: 'childA',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child A',
+                  },
+                  {
+                    id: 'childB',
+                    type: AdvancedFieldType.simple,
+                    displayName: 'Child B',
+                  },
+                ],
+                profileSettings: {
+                  active: true,
+                  children: [
+                    {
+                      id: 'childB',
+                      visible: true,
+                      order: 1,
+                    },
+                    {
+                      id: 'childA',
+                      visible: false,
+                      order: 2,
+                    },
+                  ],
+                },
+                mode: ProfileSettingsMode.Creating,
+              },
+            },
+          ]),
+      ],
+    ])('has no accessibility violations when %s', async (_description, setup) => {
+      setup();
+
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

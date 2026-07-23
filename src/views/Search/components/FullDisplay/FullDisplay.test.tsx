@@ -6,6 +6,7 @@ import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Edit } from '@/views';
 import { FullDisplay } from '@/views/Search/components/FullDisplay';
@@ -39,6 +40,8 @@ jest.mock('react-intl', () => ({
 }));
 
 describe('FullDisplay', () => {
+  let container: HTMLElement;
+
   beforeEach(() => {
     mockUseResourcePreviewQuery.mockImplementation((id: string) => ({
       data:
@@ -77,7 +80,7 @@ describe('FullDisplay', () => {
       },
     ];
 
-    return render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />);
+    ({ container } = render(<RouterProvider router={createMemoryRouter(routes, { initialEntries: ['/'] })} />));
   });
 
   const { getByTestId, getAllByTestId } = screen;
@@ -97,6 +100,14 @@ describe('FullDisplay', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('edit-page')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });
