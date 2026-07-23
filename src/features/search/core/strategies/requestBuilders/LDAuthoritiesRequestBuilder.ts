@@ -8,7 +8,7 @@ export class LDAuthoritiesRequestBuilder extends BaseRequestBuilder {
   private readonly searchableIndicesMap?: SearchableIndicesMap;
   private readonly defaultSortBy: string;
 
-  constructor(searchableIndicesMap?: SearchableIndicesMap, defaultSortBy = 'title') {
+  constructor(searchableIndicesMap?: SearchableIndicesMap, defaultSortBy = 'label') {
     super(SEARCH_API_ENDPOINT.AUTHORITIES_LOCAL, true);
 
     this.searchableIndicesMap = searchableIndicesMap;
