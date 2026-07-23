@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Tooltip } from '@/components/Tooltip';
 
@@ -125,5 +126,27 @@ describe('Tooltip', () => {
     expect(button.parentElement).toHaveClass('custom-trigger');
     fireEvent.click(button);
     expect(screen.getByTestId('tooltip-trigger__content')).toHaveClass('custom-content');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default', {}],
+      ['with custom class names', { className: 'custom-trigger', contentClassName: 'custom-content' }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(
+        <Tooltip
+          content={tooltipContent}
+          triggerContent={triggerContent}
+          triggerOpenAriaLabel={ariaLabelOpen}
+          triggerCloseAriaLabel={ariaLabelClose}
+          data-testid="tooltip-trigger"
+          {...overrides}
+        />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

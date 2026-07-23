@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useUIStore } from '@/store';
 
@@ -200,5 +201,25 @@ describe('MetaControls', () => {
 
     const wrapper = container.querySelector('.meta-controls');
     expect(wrapper?.tagName).toBe('DIV');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['advanced search closed', { isAdvancedSearchOpen: false, setIsAdvancedSearchOpen: mockSetIsAdvancedSearchOpen }],
+      ['advanced search open', { isAdvancedSearchOpen: true, setIsAdvancedSearchOpen: mockSetIsAdvancedSearchOpen }],
+    ])('has no accessibility violations when %s', async (_description, state) => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state,
+        },
+      ]);
+
+      const { container } = render(<MetaControls />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

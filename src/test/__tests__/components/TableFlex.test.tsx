@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TableFlex } from '@/components/Table/TableFlex';
 
@@ -16,8 +17,12 @@ describe('TableFlex Component', () => {
   const onRowClick = jest.fn();
   const onHeaderCellClick = jest.fn();
 
+  let container: HTMLElement;
+
   beforeEach(() => {
-    render(<TableFlex header={header} data={data} onRowClick={onRowClick} onHeaderCellClick={onHeaderCellClick} />);
+    ({ container } = render(
+      <TableFlex header={header} data={data} onRowClick={onRowClick} onHeaderCellClick={onHeaderCellClick} />,
+    ));
   });
 
   test('renders TableFlex component', () => {
@@ -55,5 +60,13 @@ describe('TableFlex Component', () => {
     fireEvent.keyDown(tableRow, { key: 'Enter', code: 'Enter', charCode: 13 });
 
     expect(onRowClick).toHaveBeenCalledWith(data[0]);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

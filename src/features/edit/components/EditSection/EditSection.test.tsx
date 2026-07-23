@@ -8,6 +8,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { routes } from '@/App';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
@@ -457,6 +458,16 @@ describe('EditSection', () => {
 
       const section = getByTestId('field-with-meta-controls-uuid14');
       expect(within(section).getByPlaceholderText('ld.placeholder.processing')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderScreen();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

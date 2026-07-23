@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
@@ -53,5 +54,15 @@ describe('ManageProfileSettingsControlPane', () => {
     fireEvent.click(screen.getByTestId('nav-close-button'));
 
     expect(setIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderComponent(false);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

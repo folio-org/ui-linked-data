@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { BrowserRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useInputsStore, useProfileStore, useUIStore } from '@/store';
 
@@ -42,6 +43,8 @@ const schema = new Map([
 describe('Preview', () => {
   const { getAllByTestId, getByText } = screen;
 
+  let container: HTMLElement;
+
   beforeEach(() => {
     setInitialGlobalState([
       {
@@ -58,11 +61,11 @@ describe('Preview', () => {
       },
     ]);
 
-    return render(
+    ({ container } = render(
       <BrowserRouter>
         <Preview />
       </BrowserRouter>,
-    );
+    ));
   });
 
   test('renders Preview component if a profile is selected', () => {
@@ -75,5 +78,13 @@ describe('Preview', () => {
 
   test('renders user values if an entry has no children', () => {
     expect(getByText('uuid1-label')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

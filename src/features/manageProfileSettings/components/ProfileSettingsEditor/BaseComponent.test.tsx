@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { DndContext } from '@dnd-kit/core';
 import { SortableContext } from '@dnd-kit/sortable';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DraggingComponent } from './DraggingComponent';
 import { SelectedComponent } from './SelectedComponent';
@@ -191,6 +192,42 @@ describe('BaseComponent', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('move-menu')).toHaveFocus();
+    });
+  });
+
+  describe('accessibility', () => {
+    const mandatoryComponent = makeComponent(true);
+    const optionalComponent = makeComponent(false);
+
+    test.each([
+      ['UnusedComponent', <UnusedComponent component={optionalComponent} />, optionalComponent],
+      [
+        'SelectedComponent with both nudge buttons',
+        <SelectedComponent component={optionalComponent} size={3} index={2} />,
+        optionalComponent,
+      ],
+      [
+        'SelectedComponent at top of list with only nudge down button',
+        <SelectedComponent component={optionalComponent} size={3} index={1} />,
+        optionalComponent,
+      ],
+      [
+        'SelectedComponent at bottom of list with only nudge up button',
+        <SelectedComponent component={optionalComponent} size={3} index={3} />,
+        optionalComponent,
+      ],
+      [
+        'mandatory SelectedComponent',
+        <SelectedComponent component={mandatoryComponent} size={1} index={1} />,
+        mandatoryComponent,
+      ],
+      ['DraggingComponent', <DraggingComponent component={optionalComponent} />, optionalComponent],
+    ] as const)('has no accessibility violations when rendering %s', async (_description, node, component) => {
+      const { container } = renderComponent(node, component);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

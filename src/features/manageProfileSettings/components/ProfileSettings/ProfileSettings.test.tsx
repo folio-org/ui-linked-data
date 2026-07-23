@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { fetchProfile } from '@/common/api/profiles.api';
 import { StatusType } from '@/common/constants/status.constants';
@@ -345,6 +346,19 @@ describe('ProfileSettings', () => {
       expect(mockAddStatusMessagesItem).not.toHaveBeenCalled();
       expect(mockSetIsLoading).not.toHaveBeenCalled();
       expect(useManageProfileSettingsState.getState().fullProfile).toEqual(profileTwo);
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['selected profile missing', false, false],
+      ['profile selected', true, false],
+    ])('has no accessibility violations when %s', async (_description, selected, defaultMeta) => {
+      const { container } = renderComponent(selected, defaultMeta);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

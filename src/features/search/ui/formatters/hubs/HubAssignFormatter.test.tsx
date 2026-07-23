@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubAssignFormatter } from './HubAssignFormatter';
 
@@ -169,5 +170,18 @@ describe('HubAssignFormatter', () => {
       },
       true,
     );
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['external hub', defaultRow],
+      ['local hub', { ...defaultRow, __meta: { ...defaultRow.__meta, isLocal: true } }],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<HubAssignFormatter row={row} onAssign={mockOnAssign} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

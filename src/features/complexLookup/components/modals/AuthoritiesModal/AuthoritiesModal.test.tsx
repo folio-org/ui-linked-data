@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSchemaPipeline } from '@/common/hooks/useSchemaPipeline';
 
@@ -469,6 +470,59 @@ describe('AuthoritiesModal', () => {
           resetMarcPreviewMetadata: expect.any(Function),
         }),
       });
+    });
+  });
+
+  describe('accessibility', () => {
+    const baseAuthoritiesModalLogicReturn = {
+      isMarcPreviewOpen: false,
+      isMarcLoading: false,
+      authoritiesData: {
+        onSegmentEnter: mockOnSegmentEnter,
+      },
+      handleTitleClick: mockHandleTitleClick,
+      handleAuthoritiesAssign: mockHandleAuthoritiesAssign,
+      handleCloseMarcPreview: mockHandleCloseMarcPreview,
+      handleResetMarcPreview: jest.fn(),
+      checkFailedId: undefined,
+      cleanup: {
+        setIsMarcPreviewOpen: mockSetIsMarcPreviewOpen,
+        resetPreview: mockResetPreview,
+        resetMarcPreviewData: mockResetComplexValue,
+        resetMarcPreviewMetadata: mockResetMetadata,
+      },
+    };
+
+    test.each([
+      ['modal open with search results', {}, {}],
+      ['modal closed', { isOpen: false }, {}],
+      ['MARC preview is open', {}, { isMarcPreviewOpen: true, isMarcLoading: false }],
+      ['MARC preview is loading', {}, { isMarcPreviewOpen: true, isMarcLoading: true }],
+      [
+        'modal config with notSpecified label',
+        {
+          modalConfig: {
+            labels: {
+              button: { base: 'ld.assignAuthority', change: 'ld.change' },
+              notSpecified: 'ld.notSpecified',
+            },
+          } as unknown as ModalConfig,
+        },
+        {},
+      ],
+    ])('has no accessibility violations when %s', async (_description, componentProps, hookOverrides) => {
+      (ComplexLookupHooks.useAuthoritiesModalLogic as jest.Mock).mockReturnValue({
+        ...baseAuthoritiesModalLogicReturn,
+        ...hookOverrides,
+      });
+
+      const { container } = render(
+        <AuthoritiesModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} {...componentProps} />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

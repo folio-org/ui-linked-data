@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HeaderCell } from '@/components/Table/HeaderCell';
 
@@ -99,6 +100,23 @@ describe('HeaderCell', () => {
 
     test('does not throw when clicked without onHeaderCellClick', () => {
       expect(() => expectClickBehavior()).not.toThrow();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default', {}],
+      ['td element', { elementType: 'td' as const }],
+      ['JSX label', { label: <span data-testid="jsx-label">JSX Label</span> }],
+      ['undefined label', { label: undefined }],
+      ['clickable', { onHeaderCellClick: () => {} }],
+      ['custom className', { className: 'custom-class' }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = renderHeaderCell(overrides);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
@@ -47,7 +48,7 @@ describe('HubImportNavPane', () => {
   const renderComponent = (hubData?: RecordEntry) => {
     mockUseHubQuery.mockReturnValue({ data: hubData ?? null });
 
-    render(
+    return render(
       <BrowserRouter>
         <HubImportNavPane />
       </BrowserRouter>,
@@ -85,5 +86,18 @@ describe('HubImportNavPane', () => {
 
     const closeButton = screen.getByTestId('nav-close-button');
     expect(closeButton).toHaveAttribute('aria-label');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['with record', mockRecord],
+      ['without record', undefined],
+    ])('has no accessibility violations when %s', async (_description, hubData) => {
+      const { container } = renderComponent(hubData);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

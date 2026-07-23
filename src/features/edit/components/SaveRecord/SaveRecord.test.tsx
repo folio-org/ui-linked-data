@@ -4,6 +4,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useStatusStore } from '@/store';
 
@@ -18,7 +19,7 @@ describe('SaveRecord', () => {
       },
     ]);
 
-    render(
+    return render(
       <BrowserRouter>
         <SaveRecord primary />
       </BrowserRouter>,
@@ -44,5 +45,18 @@ describe('SaveRecord', () => {
     fireEvent.click(screen.getByTestId('save-record-and-close'));
 
     expect(saveRecord).toHaveBeenCalledTimes(1);
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['enabled', true],
+      ['disabled', false],
+    ])('has no accessibility violations when %s', async (_description, isRecordEdited) => {
+      const { container } = renderSaveRecordComponent(isRecordEdited);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

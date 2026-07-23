@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ComplexLookupSelectedItem } from './ComplexLookupSelectedItem';
 
@@ -55,5 +56,18 @@ describe('ComplexLookupSelectedItem', () => {
 
     expect(container).toHaveClass('complex-lookup-selected-withWarning');
     expect(container).not.toHaveClass('complex-lookup-selected-embedded');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default props', {}],
+      ['noWarningValue is false', { noWarningValue: false }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = renderComponent(overrides);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

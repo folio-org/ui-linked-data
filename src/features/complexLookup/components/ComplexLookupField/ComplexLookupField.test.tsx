@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ComplexLookupType } from '@/features/complexLookup/constants/complexLookup.constants';
 
@@ -275,6 +276,58 @@ describe('ComplexLookupField', () => {
           lookupType: undefined,
         }),
       );
+    });
+  });
+
+  describe('accessibility', () => {
+    const twoValues = [
+      { id: '1', label: 'Item 1', meta: {} },
+      { id: '2', label: 'Item 2', meta: {} },
+    ];
+
+    test.each([
+      [
+        'read-only input when isNew is false',
+        { entry: { ...defaultEntry, layout: { ...defaultEntry.layout, isNew: false } } },
+        {},
+      ],
+      [
+        'read-only input with formatted value',
+        {
+          entry: { ...defaultEntry, layout: { ...defaultEntry.layout, isNew: false } },
+          value: twoValues,
+        },
+        { localValue: twoValues },
+      ],
+      ['interactive field with button', { entry: defaultEntry }, {}],
+      [
+        'selected items when value exists',
+        { entry: defaultEntry, value: twoValues },
+        { localValue: twoValues, buttonLabelId: 'ld.change' },
+      ],
+      ['modal open', { entry: defaultEntry }, { isModalOpen: true }],
+      [
+        'modal open with initialQuery',
+        { entry: defaultEntry, value: [{ id: '1', label: 'Test Query', meta: {} }] },
+        { localValue: [{ id: '1', label: 'Test Query', meta: {} }], isModalOpen: true },
+      ],
+      ['modalConfig is null', { entry: defaultEntry }, { modalConfig: null, isModalOpen: true }],
+      [
+        'lookupType is undefined',
+        { entry: { ...defaultEntry, layout: { ...defaultEntry.layout, api: undefined } } },
+        {},
+      ],
+    ])('has no accessibility violations when %s', async (_description, componentProps, hookOverrides) => {
+      (ComplexLookupHooks.useComplexLookupField as jest.Mock).mockReturnValue({
+        ...defaultHookReturn,
+        ...hookOverrides,
+      });
+
+      const { container } = render(<ComplexLookupField onChange={mockOnChange} {...componentProps} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

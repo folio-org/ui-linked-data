@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import { axe } from 'jest-axe';
 
 import * as importApi from '@/common/api/import.api';
 import { ImportFilterTypes, ImportModes } from '@/common/constants/import.constants';
@@ -57,7 +58,7 @@ describe('ModalImport', () => {
         },
       },
     ]);
-    render(
+    return render(
       <BrowserRouter>
         <ModalImport />
       </BrowserRouter>,
@@ -357,6 +358,20 @@ describe('ModalImport', () => {
       await user.click(screen.getByTestId('modal-button-submit'));
       await jest.advanceTimersToNextTimerAsync();
       expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default import window', undefined],
+      ['hub import', ImportFilterTypes.Hub],
+      ['instance import', ImportFilterTypes.Instance],
+    ])('has no accessibility violations when %s', async (_description, filterType) => {
+      const { container } = renderComponent(filterType);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

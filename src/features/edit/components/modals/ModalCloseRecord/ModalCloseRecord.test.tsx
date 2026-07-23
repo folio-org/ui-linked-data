@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalCloseRecord } from './ModalCloseRecord';
 
@@ -9,12 +10,16 @@ describe('ModalCloseRecord', () => {
   const onSubmit = jest.fn();
   const onClose = jest.fn();
 
+  let container: HTMLElement;
+
   beforeAll(() => {
     createModalContainer();
   });
 
   beforeEach(() => {
-    render(<ModalCloseRecord isOpen={true} onCancel={onCancel} onSubmit={onSubmit} onClose={onClose} />);
+    ({ container } = render(
+      <ModalCloseRecord isOpen={true} onCancel={onCancel} onSubmit={onSubmit} onClose={onClose} />,
+    ));
   });
 
   test('renders modal component', () => {
@@ -33,5 +38,13 @@ describe('ModalCloseRecord', () => {
     fireEvent.click(screen.getByTestId('modal-button-cancel'));
 
     expect(onCancel).toHaveBeenCalledTimes(1);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

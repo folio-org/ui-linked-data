@@ -1,4 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DropdownItemType } from '@/common/constants/uiElements.constants';
 import { Dropdown } from '@/components/Dropdown';
@@ -86,5 +87,38 @@ describe('Dropdown', () => {
 
     expect(getByText('item.label')).toBeInTheDocument();
     expect(getByText('Custom Component')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    const itemsWithContent: DropdownItems = [
+      {
+        id: 'group_1',
+        labelId: 'groupLabel',
+        data: [
+          {
+            id: 'testItem_1',
+            type: DropdownItemType.basic,
+            labelId: 'item.label',
+            action: jest.fn(),
+          },
+          {
+            id: 'testItem_2',
+            type: DropdownItemType.customComponent,
+            renderComponent: (key: string | number) => <div key={key}>Custom Component</div>,
+          },
+        ],
+      },
+    ];
+
+    test.each([
+      ['empty items', items],
+      ['basic and custom items', itemsWithContent],
+    ])('has no accessibility violations when %s', async (_description, dropdownItems) => {
+      const { container } = render(<Dropdown labelId={labelId} items={dropdownItems} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { IntlProvider } from 'react-intl';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useMarcPreviewStore, useUIStore } from '@/store';
 
@@ -185,5 +186,34 @@ describe('MarcPreview', () => {
       const assignButton = screen.getByTestId('marc-preview-assign-button');
       expect(assignButton).not.toBeDisabled();
     });
+  });
+
+  describe('accessibility', () => {
+    beforeEach(() => {
+      mockCheckFailedId.mockReturnValue(true);
+    });
+
+    test.each([
+      ['open with marc data and metadata', true, marcPreviewData, marcPreviewMetadata, {}],
+      ['isMarcPreviewOpen is false', false, marcPreviewData, marcPreviewMetadata, {}],
+      ['marcPreviewData is null', true, null, marcPreviewMetadata, {}],
+      ['assign button is provided', true, marcPreviewData, marcPreviewMetadata, { onAssign: mockOnAssign }],
+      [
+        'assign button is disabled via checkFailedId',
+        true,
+        marcPreviewData,
+        marcPreviewMetadata,
+        { onAssign: mockOnAssign, checkFailedId: mockCheckFailedId },
+      ],
+    ])(
+      'has no accessibility violations when %s',
+      async (_description, isMarcPreviewOpen, marcData, metadata, props) => {
+        const { container } = renderComponent(isMarcPreviewOpen, marcData, metadata, props);
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

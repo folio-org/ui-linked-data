@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthorityLabelFormatter } from './AuthorityLabelFormatter';
 
@@ -34,5 +35,19 @@ describe('AuthorityLabelFormatter', () => {
 
     const button = screen.getByRole('button');
     expect(() => fireEvent.click(button)).not.toThrow();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['title is absent', makeRow('')],
+      ['title is present', makeRow('Shakespeare, William', 'auth-42')],
+      ['row id is set', makeRow('Some Title', 'auth-99')],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<AuthorityLabelFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

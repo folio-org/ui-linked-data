@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as useAuthoritiesPageTableFormatterModule from '@/features/search/ui/hooks/useAuthoritiesPageTableFormatter';
 
@@ -75,5 +76,15 @@ describe('AuthoritiesPageResultList', () => {
     capturedOnEdit?.('auth-99');
 
     expect(mockNavigateWithState).toHaveBeenCalledWith('/linked-data/resources/auth-99/edit');
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(<AuthoritiesPageResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

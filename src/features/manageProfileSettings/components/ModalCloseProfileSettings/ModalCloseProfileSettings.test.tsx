@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 
@@ -270,6 +271,40 @@ describe('ModalCloseProfileSettings', () => {
       expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Editing);
       expect(mockSetSelectedProfileSettingsMeta).toHaveBeenCalledWith(settingsMeta);
       expect(mockSetSettingsName).toHaveBeenCalledWith('edit-name');
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default state', () => {}],
+      [
+        'not in landing mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsState,
+              state: { mode: ProfileSettingsMode.Editing },
+            },
+          ]),
+      ],
+      [
+        'in landing mode',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useManageProfileSettingsState,
+              state: { mode: ProfileSettingsMode.Landing },
+            },
+          ]),
+      ],
+    ])('has no accessibility violations when %s', async (_description, setup) => {
+      setup();
+
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

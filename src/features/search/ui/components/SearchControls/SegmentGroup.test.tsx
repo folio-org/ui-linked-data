@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchParam } from '@/features/search/core';
 
@@ -148,5 +149,45 @@ describe('SegmentGroup', () => {
     const group = container.querySelector('.search-segments');
     expect(group).toBeInTheDocument();
     expect(group?.classList).toContain('search-segments');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no parentPath specified', '', {}, {}],
+      [
+        'current segment matches parent path',
+        'authorities',
+        { [SearchParam.SEGMENT]: 'authorities' },
+        { parentPath: 'authorities' },
+      ],
+      [
+        'current segment does not match parent path',
+        'resources',
+        { [SearchParam.SEGMENT]: 'resources' },
+        { parentPath: 'authorities' },
+      ],
+      ['custom className provided', '', {}, { className: 'custom-class' }],
+    ])(
+      'has no accessibility violations when %s',
+      async (_description, currentSegment, navigationStateOverrides, props) => {
+        mockCurrentSegment = currentSegment;
+        setInitialGlobalState([
+          {
+            store: useSearchStore,
+            state: { navigationState: navigationStateOverrides, setNavigationState },
+          },
+        ]);
+
+        const { container } = render(
+          <SegmentGroup {...props}>
+            <button role="tab">Segment</button>
+          </SegmentGroup>,
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

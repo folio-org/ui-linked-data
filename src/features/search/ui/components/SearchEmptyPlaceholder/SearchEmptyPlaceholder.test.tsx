@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchEmptyPlaceholder } from './SearchEmptyPlaceholder';
 
@@ -37,5 +38,20 @@ describe('SearchEmptyPlaceholder', () => {
 
     const placeholderDiv = container.querySelector('.empty-placeholder');
     expect(placeholderDiv).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no props', {}],
+      ['custom labelId', { labelId: 'ld.enterSearchCriteria' }],
+      ['custom className', { className: 'custom-class' }],
+      ['labelId and className', { labelId: 'ld.noResults', className: 'custom-empty' }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = render(<SearchEmptyPlaceholder {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

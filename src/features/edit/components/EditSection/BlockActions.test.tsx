@@ -5,6 +5,7 @@ import * as Router from 'react-router-dom';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
@@ -185,5 +186,44 @@ describe('BlockActions', () => {
 
     const button = await findByText('ld.inventoryView');
     expect(button.closest('button')).toBeDisabled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['Instance entry in edit mode', () => renderBlockActions(instanceEntry)],
+      [
+        'create mode',
+        () => {
+          setInitialGlobalState([
+            {
+              store: useInputsState,
+              state: { selectedRecordBlocks: { block: 'test-block' } },
+            },
+          ]);
+
+          jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'resource_1' });
+
+          return render(
+            <RouterProvider
+              router={createMemoryRouter(
+                [
+                  {
+                    path: ROUTES.RESOURCE_CREATE.uri,
+                    element: <BlockActions entry={instanceEntry} />,
+                  },
+                ],
+                { initialEntries: [ROUTES.RESOURCE_CREATE.uri] },
+              )}
+            />,
+          );
+        },
+      ],
+    ])('has no accessibility violations for %s', async (_description, renderFn) => {
+      const { container } = renderFn();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

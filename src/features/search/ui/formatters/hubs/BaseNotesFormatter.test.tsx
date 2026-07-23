@@ -1,6 +1,7 @@
 import { IntlProvider } from 'react-intl';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { BaseNotesFormatter } from './BaseNotesFormatter';
 
@@ -103,6 +104,25 @@ describe('BaseNotesFormatter', () => {
       renderWithIntl(<BaseNotesFormatter row={mockRowWithEmptyObject} fieldKey="rda" />);
 
       expect(screen.getByText('-')).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['auth label exists', mockRowWithAuthLabel, 'auth'],
+      ['auth label is undefined', mockRowWithoutAuthLabel, 'auth'],
+      ['auth label is null', mockRowWithNullLabels, 'auth'],
+      ['auth object is empty', mockRowWithEmptyObject, 'auth'],
+      ['rda label exists', mockRowWithRdaLabel, 'rda'],
+      ['rda label is undefined', mockRowWithoutRdaLabel, 'rda'],
+      ['rda label is null', mockRowWithNullLabels, 'rda'],
+      ['rda object is empty', mockRowWithEmptyObject, 'rda'],
+    ] as const)('has no accessibility violations when %s', async (_description, row, fieldKey) => {
+      const { container } = renderWithIntl(<BaseNotesFormatter row={row} fieldKey={fieldKey} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

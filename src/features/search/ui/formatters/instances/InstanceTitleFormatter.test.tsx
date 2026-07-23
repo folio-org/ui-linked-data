@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { FullDisplayType } from '@/common/constants/uiElements.constants';
 import type { Row } from '@/components/Table';
@@ -159,5 +160,33 @@ describe('InstanceTitleFormatter', () => {
     );
 
     expect(screen.getByTestId('preview-button__123')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default state', { selectedInstances: [], activePreviewIds: [] }],
+      [
+        'instance is selected and shows comparison index',
+        { selectedInstances: ['999', '123', '456'], activePreviewIds: ['999', '123'] },
+      ],
+      ['instance is not selected', { selectedInstances: ['999', '456'], activePreviewIds: ['999'] }],
+      [
+        'fullDisplayComponentType is Comparison',
+        {
+          selectedInstances: ['123'],
+          activePreviewIds: ['123'],
+          fullDisplayComponentType: FullDisplayType.Comparison,
+        },
+      ],
+      ['single preview not in comparison mode', { selectedInstances: ['123'], activePreviewIds: ['123'] }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(
+        <InstanceTitleFormatter row={mockRow} formatMessage={formatMessage} onPreview={onPreview} {...overrides} />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

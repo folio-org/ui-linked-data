@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalChooseProfile } from './ModalChooseProfile';
 
@@ -332,5 +333,61 @@ describe('ModalChooseProfile', () => {
 
     const checkbox = screen.getByRole('checkbox');
     expect(checkbox).not.toBeChecked();
+  });
+
+  describe('accessibility', () => {
+    const baseProps = {
+      isOpen: true,
+      profileSelectionType: mockProfileSelectionType,
+      onCancel,
+      onSubmit,
+      onClose,
+      profiles: mockProfiles,
+    };
+
+    test.each([
+      ['default profile selection', {}],
+      [
+        'checkbox checked for preferred profile',
+        {
+          selectedProfileId: 'profile_1',
+          preferredProfiles: [
+            { id: 'profile_1', name: 'Test Profile 1', resourceType: 'http://bibfra.me/vocab/lite/Work' },
+          ],
+          resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
+        },
+      ],
+      [
+        'checkbox unchecked for non-preferred profile',
+        {
+          selectedProfileId: 'profile_1',
+          preferredProfiles: [
+            { id: 'profile_2', name: 'Test Profile 2', resourceType: 'http://bibfra.me/vocab/lite/Instance' },
+          ],
+          resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
+        },
+      ],
+      ['no preferred profiles provided', { selectedProfileId: 'profile_1' }],
+      [
+        'no resourceTypeURL provided',
+        {
+          selectedProfileId: 'profile_1',
+          preferredProfiles: [
+            {
+              id: 'profile_1',
+              name: 'Test Profile 1',
+              resourceType: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
+            },
+          ],
+        },
+      ],
+      ['isOpen is false', { isOpen: false }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<ModalChooseProfile {...baseProps} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

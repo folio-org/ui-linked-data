@@ -4,6 +4,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore, useUIStore } from '@/store';
 
@@ -205,5 +206,15 @@ describe('AdvancedSearchModal', () => {
 
     expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
     expect(setSearchParams).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderModal();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

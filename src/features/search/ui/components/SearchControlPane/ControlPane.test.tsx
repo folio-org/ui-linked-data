@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { IntlProvider } from 'react-intl';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useUIStore } from '@/store';
 
@@ -121,5 +122,50 @@ describe('ControlPane', () => {
     const controlPane = container.querySelector('.search-control-pane');
 
     expect(controlPane).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['children provided', { children: <div data-testid="test-child">Test Child</div> }],
+      ['label provided', { label: 'Test Label' }],
+      ['subLabel shown', { label: 'Test Label', subLabel: <span>Test SubLabel</span>, showSubLabel: true }],
+      ['subLabel hidden', { subLabel: <span>Test SubLabel</span>, showSubLabel: false }],
+      ['custom close button', { renderCloseButton: () => <button data-testid="close-button">Close</button> }],
+      ['label as ReactElement', { label: <span data-testid="custom-label">Custom Label</span> }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: false,
+            setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+          },
+        },
+      ]);
+
+      const { container } = renderWithIntl(<ControlPane {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    test('has no accessibility violations when pane is collapsed', async () => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state: {
+            isSearchPaneCollapsed: true,
+            setIsSearchPaneCollapsed: mockSetIsSearchPaneCollapsed,
+          },
+        },
+      ]);
+
+      const { container } = renderWithIntl(<ControlPane />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

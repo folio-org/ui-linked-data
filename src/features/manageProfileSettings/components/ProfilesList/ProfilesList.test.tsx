@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { fetchProfiles } from '@/common/api/profiles.api';
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
@@ -133,5 +134,21 @@ describe('ProfilesList', () => {
 
     expect(firstProfile.parentElement).toHaveClass('selected');
     expect(mockSetIsManageProfileSettingsUnsavedModalOpen).toHaveBeenCalledWith(true);
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['pre-set profiles', true, false, false],
+      ['profiles fail to load', false, false, true],
+    ])(
+      'has no accessibility violations when %s',
+      async (_description, presetProfiles, isModified, fetchProfileError) => {
+        const { container } = renderComponent(presetProfiles, isModified, fetchProfileError);
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

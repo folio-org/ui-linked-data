@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { ROUTES } from '@/common/constants/routes.constants';
@@ -49,5 +50,15 @@ describe('EditControlPane', () => {
     const { container } = renderWrapper();
 
     expect(container.querySelector('.heading')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderWrapper();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

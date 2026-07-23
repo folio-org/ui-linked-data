@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useProfileStore } from '@/store';
 
@@ -126,6 +127,21 @@ describe('ProfileSettingsSelector', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('profile-settings-selector-menu')).not.toBeInTheDocument();
       expect(mockSetSelectedProfileSettingsId).toHaveBeenCalledWith('15');
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['with options', true],
+      ['without options', false],
+    ])('has no accessibility violations when %s', async (_description, withOptions) => {
+      mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+      const { container } = renderComponent(withOptions);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

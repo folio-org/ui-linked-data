@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Input } from '@/components/Input';
 
@@ -9,9 +10,10 @@ describe('Input', () => {
   const onChange = jest.fn();
   const onPressEnter = jest.fn();
   let inputElement: HTMLElement;
+  let container: HTMLElement;
 
   beforeEach(() => {
-    render(
+    ({ container } = render(
       <Input
         placeholder={placeholder}
         value={value}
@@ -19,7 +21,7 @@ describe('Input', () => {
         onChange={onChange}
         onPressEnter={onPressEnter}
       />,
-    );
+    ));
 
     inputElement = screen.getByTestId(testId);
   });
@@ -42,5 +44,13 @@ describe('Input', () => {
     fireEvent.keyDown(inputElement, { key: 'NumpadEnter' });
 
     expect(onPressEnter).toHaveBeenCalledTimes(2);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });
