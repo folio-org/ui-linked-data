@@ -102,13 +102,14 @@ describe('ManageProfileSettings', () => {
 
   let container: HTMLElement;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
     (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
     (fetchProfileSettings as jest.Mock).mockResolvedValue(mockProfileSettings);
     (fetchAllSettingsForProfile as jest.Mock).mockResolvedValue(mockAllSettingsForProfile);
     ({ container } = renderComponent());
+    await screen.findByTestId('manage-profile-settings');
   });
 
   afterEach(() => {
