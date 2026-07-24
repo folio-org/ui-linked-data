@@ -13,7 +13,7 @@ describe('LDAuthoritiesRequestBuilder', () => {
       });
 
       expect(result.url).toBe('/search/linked-data/authorities');
-      expect(result.urlParams.query).toBe('(label all "Shakespeare") sortby title');
+      expect(result.urlParams.query).toBe('(label all "Shakespeare") sortby label');
       expect(result.urlParams.limit).toBe('100');
       expect(result.sameOrigin).toBe(true);
     });
@@ -21,7 +21,7 @@ describe('LDAuthoritiesRequestBuilder', () => {
     it('defaults searchBy to keyword when not provided', () => {
       const result = builder.build({ query: 'test', limit: 50 });
 
-      expect(result.urlParams.query).toBe('(label all "test") sortby title');
+      expect(result.urlParams.query).toBe('(label all "test") sortby label');
     });
 
     it('includes offset when greater than 0', () => {
@@ -49,14 +49,14 @@ describe('LDAuthoritiesRequestBuilder', () => {
       const builder = new LDAuthoritiesRequestBuilder(mockMap);
       const result = builder.build({ query: 'Shakespeare', searchBy: 'personalName', limit: 100 });
 
-      expect(result.urlParams.query).toBe('personalName all "Shakespeare" sortby title');
+      expect(result.urlParams.query).toBe('personalName all "Shakespeare" sortby label');
     });
 
     it('falls back to label query when searchBy is not in map', () => {
       const builder = new LDAuthoritiesRequestBuilder(mockMap);
       const result = builder.build({ query: 'test', searchBy: 'unknownField', limit: 100 });
 
-      expect(result.urlParams.query).toBe('(label all "test") sortby title');
+      expect(result.urlParams.query).toBe('(label all "test") sortby label');
     });
   });
 
