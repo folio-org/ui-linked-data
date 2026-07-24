@@ -33,7 +33,12 @@ describe('Dropdown Field', () => {
 
   describe('accessibility', () => {
     test('has no accessibility violations', async () => {
-      const { container } = renderComponent();
+      const { container } = render(
+        <div>
+          <div id="label">label</div>
+          <DropdownField options={options} uuid={uuid} onChange={onChangeFn} value={options[0]} htmlId="label" />
+        </div>,
+      );
 
       const results = await axe(container);
 

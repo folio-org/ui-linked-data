@@ -16,7 +16,7 @@ describe('Accordion', () => {
 
   describe('accessibility', () => {
     test('has no accessibility violations', async () => {
-      const { container } = render(<Accordion children={mockContent} />);
+      const { container } = render(<Accordion children={mockContent} title="test" />);
 
       const results = await axe(container);
 

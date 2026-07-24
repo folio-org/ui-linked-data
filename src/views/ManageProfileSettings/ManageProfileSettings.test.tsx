@@ -5,7 +5,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
-import { fetchPreferredProfiles, fetchProfile, fetchProfileSettings, fetchProfiles } from '@/common/api/profiles.api';
+import {
+  fetchAllSettingsForProfile,
+  fetchPreferredProfiles,
+  fetchProfile,
+  fetchProfileSettings,
+  fetchProfiles,
+} from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
@@ -16,6 +22,7 @@ jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
+  fetchAllSettingsForProfile: jest.fn(),
 }));
 
 const renderComponent = () => {
@@ -85,6 +92,13 @@ describe('ManageProfileSettings', () => {
     active: false,
     children: [],
   };
+  const mockAllSettingsForProfile = [
+    {
+      id: 1,
+      profileId: 'one-profile',
+      name: 'one',
+    },
+  ];
 
   let container: HTMLElement;
 
@@ -93,6 +107,7 @@ describe('ManageProfileSettings', () => {
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
     (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
     (fetchProfileSettings as jest.Mock).mockResolvedValue(mockProfileSettings);
+    (fetchAllSettingsForProfile as jest.Mock).mockResolvedValue(mockAllSettingsForProfile);
     ({ container } = renderComponent());
   });
 

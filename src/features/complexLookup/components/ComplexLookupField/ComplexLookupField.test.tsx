@@ -35,12 +35,6 @@ jest.mock('../ComplexLookupSelectedItem', () => ({
   ),
 }));
 
-jest.mock('@/components/Input', () => ({
-  Input: ({ value, disabled, ...props }: { value?: string; disabled?: boolean; [key: string]: unknown }) => (
-    <input value={value} disabled={disabled} {...props} />
-  ),
-}));
-
 const MockModal = ({
   isOpen,
   onClose,
@@ -68,9 +62,10 @@ describe('ComplexLookupField', () => {
   const mockHandleAssign = jest.fn();
   const mockHandleDelete = jest.fn();
 
+  const testHtmlId = 'test-html-id';
   const defaultEntry: SchemaEntry = {
     uuid: 'test-uuid',
-    htmlId: 'test-html-id',
+    htmlId: testHtmlId,
     layout: {
       api: ComplexLookupType.Hub,
       isNew: true,
@@ -323,7 +318,12 @@ describe('ComplexLookupField', () => {
         ...hookOverrides,
       });
 
-      const { container } = render(<ComplexLookupField onChange={mockOnChange} {...componentProps} />);
+      const { container } = render(
+        <div>
+          <div id={testHtmlId}>{testHtmlId}</div>
+          <ComplexLookupField onChange={mockOnChange} {...componentProps} />
+        </div>,
+      );
 
       const results = await axe(container);
 

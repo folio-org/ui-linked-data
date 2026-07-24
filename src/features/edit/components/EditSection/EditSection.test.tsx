@@ -14,7 +14,7 @@ import { routes } from '@/App';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 import { ServicesProvider } from '@/providers';
 
-import { useInputsStore, useProfileStore, useUIStore } from '@/store';
+import { useInputsStore, useLoadingStateStore, useProfileStore, useUIStore } from '@/store';
 
 const userValues = {
   uuid3: {
@@ -121,6 +121,7 @@ const schema = new Map([
     {
       bfid: 'uuid3Bfid',
       displayName: 'uuid3',
+      htmlId: 'uuid3-html',
       type: AdvancedFieldType.simple,
       path: ['uuid0', 'uuid2', 'uuid3'],
       uuid: 'uuid3',
@@ -131,6 +132,7 @@ const schema = new Map([
     {
       bfid: 'uuid4Bfid',
       displayName: 'uuid4',
+      htmlId: 'uuid4-html',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid4'],
       uuid: 'uuid4',
@@ -141,6 +143,7 @@ const schema = new Map([
     {
       bfid: 'uuid5Bfid',
       displayName: 'uuid5',
+      htmlId: 'uuid5-html',
       type: AdvancedFieldType.complex,
       path: ['uuid0', 'uuid2', 'uuid5'],
       uuid: 'uuid5',
@@ -152,6 +155,7 @@ const schema = new Map([
       bfid: 'uuid6Bfid',
       uriBFLite: 'uuid6Uri',
       displayName: 'uuid6',
+      htmlId: 'uuid6-html',
       type: AdvancedFieldType.dropdown,
       path: ['uuid0', 'uuid2', 'uuid6'],
       uuid: 'uuid6',
@@ -195,6 +199,7 @@ const schema = new Map([
     {
       bfid: 'uuid10Bfid',
       displayName: 'uuid10',
+      htmlId: 'uuid10-html',
       uriBFLite: 'uuid10Uri',
       type: AdvancedFieldType.enumerated,
       path: ['uuid0', 'uuid2', 'uuid10'],
@@ -231,6 +236,7 @@ const schema = new Map([
       bfid: 'uuid13Bfid',
       uriBFLite: 'uuid13Uri',
       displayName: 'uuid13',
+      htmlId: 'uuid13-html',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid13'],
       uuid: 'uuid13',
@@ -253,6 +259,7 @@ const schema = new Map([
     {
       bfid: 'uuid15Bfid',
       displayName: 'uuid15',
+      htmlId: 'uuid15-html',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid15'],
       uuid: 'uuid15',
@@ -264,6 +271,7 @@ const schema = new Map([
     {
       bfid: 'uuid16Bfid',
       displayName: 'uuid16',
+      htmlId: 'uuid16-html',
       type: AdvancedFieldType.literal,
       path: ['uuid0', 'uuid2', 'uuid16'],
       uuid: 'uuid16',
@@ -309,6 +317,15 @@ describe('EditSection', () => {
       {
         store: useUIStore,
         state: { currentlyEditedEntityBfid: new Set(['lde:Profile:Instance']) },
+      },
+      // mock away changing loading state, not being tested and affects accessibility
+      // by hiding nav elements
+      {
+        store: useLoadingStateStore,
+        state: {
+          isLoading: false,
+          setIsLoading: jest.fn(),
+        },
       },
     ]);
 
@@ -386,7 +403,7 @@ describe('EditSection', () => {
       const { findByTestId } = renderScreen();
       const parentElement = await findByTestId('field-with-meta-controls-uuid6');
 
-      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
+      fireEvent.click(within(parentElement).getByTestId('uuid6-html--addDuplicate'));
 
       expect(await findByTestId('duplicate-group-clone-amount')).toBeInTheDocument();
     });
@@ -395,7 +412,7 @@ describe('EditSection', () => {
       const { getByTestId, findAllByText, findByTestId } = renderScreen();
       const parentElement = getByTestId('field-with-meta-controls-uuid6');
 
-      fireEvent.click(within(parentElement).getByTestId('--addDuplicate'));
+      fireEvent.click(within(parentElement).getByTestId('uuid6-html--addDuplicate'));
 
       await findByTestId('duplicate-group-clone-amount');
 

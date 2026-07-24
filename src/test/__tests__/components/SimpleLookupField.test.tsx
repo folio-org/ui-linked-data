@@ -29,7 +29,15 @@ describe('Simple lookup field', () => {
 
     return render(
       <QueryClientProvider client={queryClient}>
-        <SimpleLookupField uri="lookupUri" uuid="uuid1" onChange={() => {}} value={initialValue} isMulti={isMulti} />
+        <div id="label">label</div>
+        <SimpleLookupField
+          uri="lookupUri"
+          uuid="uuid1"
+          onChange={() => {}}
+          value={initialValue}
+          isMulti={isMulti}
+          htmlId="label"
+        />
       </QueryClientProvider>,
     );
   };

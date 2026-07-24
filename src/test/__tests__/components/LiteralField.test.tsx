@@ -29,7 +29,13 @@ describe('Literal Field', () => {
 
   describe('accessibility', () => {
     test('has no accessibility violations', async () => {
-      const { container } = renderComponent();
+      // In practice, a valid htmlId is passed to this component.
+      const { container } = render(
+        <div>
+          <div id="label">Label</div>
+          <LiteralField uuid={uuid} onChange={onChangeFn} htmlId="label" />
+        </div>,
+      );
 
       const results = await axe(container);
 

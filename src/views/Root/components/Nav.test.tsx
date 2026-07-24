@@ -4,6 +4,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Nav } from './Nav';
 
+// No direct accessibility test. Largely composed of conditional
+// children that are tested separately.
+
 const mockNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({

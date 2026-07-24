@@ -6,13 +6,7 @@ import type { Row } from '@/components/Table';
 import { InstanceSelectCtlFormatter } from './InstanceSelectCtlFormatter';
 
 describe('InstanceSelectCtlFormatter', () => {
-  const formatMessage = jest.fn((descriptor, values) => {
-    if (descriptor.id === 'ld.aria.table.selectRow') {
-      return `Select row for ${values?.title}`;
-    }
-    return descriptor.id;
-  });
-
+  const formatMessage = jest.fn();
   const onToggleSelect = jest.fn();
 
   const mockRow: Row = {
@@ -22,6 +16,12 @@ describe('InstanceSelectCtlFormatter', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    formatMessage.mockImplementation((descriptor, values) => {
+      if (descriptor.id === 'ld.aria.table.selectRow') {
+        return `Select row for ${values?.title}`;
+      }
+      return descriptor.id;
+    });
   });
 
   test('renders checkbox input', () => {

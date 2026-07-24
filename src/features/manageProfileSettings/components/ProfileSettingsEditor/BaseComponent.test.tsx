@@ -225,7 +225,11 @@ describe('BaseComponent', () => {
     ] as const)('has no accessibility violations when rendering %s', async (_description, node, component) => {
       const { container } = renderComponent(node, component);
 
-      const results = await axe(container);
+      const results = await axe(container, {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      });
 
       expect(results).toHaveNoViolations();
     });

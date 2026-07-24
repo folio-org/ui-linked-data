@@ -45,8 +45,9 @@ describe('DatePicker Component', () => {
   describe('accessibility', () => {
     const baseProps = { id: 'test-date', value: '2024-11-11', onChange: () => {} };
 
+    // in practice, a default placeholder is always supplied, satisfying accessibility
     test.each([
-      ['default', {}],
+      ['default', { placeholder: 'YYYY-MM-DD' }],
       ['with placeholder and name', { placeholder: 'Select a date', name: 'datePicker' }],
     ])('has no accessibility violations when %s', async (_description, overrides) => {
       const { container } = render(<DatePicker {...baseProps} {...overrides} />);

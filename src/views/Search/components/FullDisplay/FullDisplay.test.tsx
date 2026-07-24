@@ -2,7 +2,6 @@ import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
 import '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
-import { Fragment, ReactNode } from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
@@ -23,21 +22,6 @@ jest.mock('@/features/resources', () => ({
 const mockUseResourcePreviewQuery = useResourcePreviewQuery as jest.Mock;
 
 jest.mock('@/common/constants/build.constants', () => ({ IS_EMBEDDED_MODE: false }));
-
-jest.mock('react-intl', () => ({
-  FormattedMessage: ({ id, values }: never) => {
-    return (
-      <div id={id}>
-        {Object.entries(values ?? {})?.map(([k, v]) => (
-          <Fragment key={k}>{v as ReactNode}</Fragment>
-        ))}
-      </div>
-    );
-  },
-  useIntl: () => ({
-    formatMessage: ({ id }: { id: string }) => id,
-  }),
-}));
 
 describe('FullDisplay', () => {
   let container: HTMLElement;

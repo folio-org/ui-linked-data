@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { axe } from 'jest-axe';
 
 import { InputsWrapper } from './InputsWrapper';
+
+// No direct accessibility test. Children are tested for this, and the
+// wrapper itself does not include any elements affecting accessibility.
 
 jest.mock('../../providers/SearchProvider', () => ({
   useSearchContext: () => ({
@@ -55,15 +57,5 @@ describe('InputsWrapper', () => {
 
     const wrapper = container.querySelector('.inputs');
     expect(wrapper?.tagName).toBe('DIV');
-  });
-
-  describe('accessibility', () => {
-    test('has no accessibility violations', async () => {
-      const { container } = render(<InputsWrapper />);
-
-      const results = await axe(container);
-
-      expect(results).toHaveNoViolations();
-    });
   });
 });
