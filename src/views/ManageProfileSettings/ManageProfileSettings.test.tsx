@@ -408,10 +408,30 @@ describe('ManageProfileSettings', () => {
   });
 
   describe('accessibility', () => {
-    test('has no accessibility violations', async () => {
+    test('basic render has no accessibility violations', async () => {
       const results = await axe(container);
 
       expect(results).toHaveNoViolations();
     });
+
+    /* UILD-847: ProfileSettings button requires aria-label
+    test('settings render has no accessibility violations', async () => {
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
+      });
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+    */
   });
 });
