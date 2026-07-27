@@ -225,5 +225,15 @@ describe('BlockActions', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations for clicking toggle', async () => {
+      const { container, findByTestId } = renderBlockActions(instanceEntry);
+
+      fireEvent.click(await findByTestId('block-actions-toggle'));
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

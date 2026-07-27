@@ -221,5 +221,26 @@ describe('MetaControls', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when opens advanced search modal button is clicked', async () => {
+      setInitialGlobalState([
+        {
+          store: useUIStore,
+          state: {
+            isAdvancedSearchOpen: false,
+            setIsAdvancedSearchOpen: mockSetIsAdvancedSearchOpen,
+          },
+        },
+      ]);
+
+      const { container } = render(<MetaControls />);
+
+      const advancedButton = screen.getByText('ld.advanced');
+      fireEvent.click(advancedButton);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

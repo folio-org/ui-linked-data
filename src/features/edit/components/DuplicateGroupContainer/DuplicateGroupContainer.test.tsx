@@ -55,5 +55,13 @@ describe('DuplicateGroupContainer', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations after toggling once', async () => {
+      toggleButton();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

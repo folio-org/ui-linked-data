@@ -373,5 +373,15 @@ describe('ModalImport', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations in URL import mode', async () => {
+      const { container } = renderComponent();
+
+      fireEvent.change(screen.getByTestId('modal-import-mode-selector'), { target: { value: ImportModes.JsonUrl } });
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

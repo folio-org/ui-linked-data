@@ -216,5 +216,19 @@ describe('AuthoritiesResultList', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when useFormattedResults returns undefined', async () => {
+      mockUseFormattedResults.mockReturnValue(undefined);
+      mockUseTableFormatter.mockReturnValue({
+        formattedData: mockFormattedData,
+        listHeader: mockListHeader,
+      });
+
+      const { container } = render(<AuthoritiesResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

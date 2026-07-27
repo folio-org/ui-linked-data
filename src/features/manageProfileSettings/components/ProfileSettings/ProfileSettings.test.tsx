@@ -353,6 +353,7 @@ describe('ProfileSettings', () => {
     test.each([
       ['selected profile missing', false, false],
       ['profile selected', true, false],
+      ['profile selected and non-default settings', true, true],
     ])('has no accessibility violations when %s', async (_description, selected, defaultMeta) => {
       const { container } = renderComponent(selected, defaultMeta);
 

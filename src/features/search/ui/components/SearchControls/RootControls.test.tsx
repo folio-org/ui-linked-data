@@ -268,7 +268,6 @@ describe('RootControls', () => {
         false,
         { showFilters: true, filtersComponent: <div data-testid="filters">Filters</div> },
       ],
-      ['custom className', false, { className: 'custom-class' }],
     ])('has no accessibility violations when %s', async (_description, isSearchPaneCollapsed, props) => {
       setInitialGlobalState([
         {

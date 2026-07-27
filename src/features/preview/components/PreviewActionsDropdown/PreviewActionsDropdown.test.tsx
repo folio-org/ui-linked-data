@@ -42,5 +42,19 @@ describe('PreviewActionsDropdown', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when dropdown opened', async () => {
+      const { container, getByRole } = render(
+        <BrowserRouter>
+          <PreviewActionsDropdown entityType={entityType} referenceId={referenceId} />
+        </BrowserRouter>,
+      );
+
+      fireEvent.click(getByRole('button'));
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

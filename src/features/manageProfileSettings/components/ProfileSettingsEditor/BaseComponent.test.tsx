@@ -233,5 +233,40 @@ describe('BaseComponent', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when clicking non-mandatory context menu', async () => {
+      const mockComponent = makeComponent(false);
+      const { container } = renderComponent(<UnusedComponent component={mockComponent} />, mockComponent);
+
+      expect(screen.getByTestId('activate-menu')).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId('activate-menu'));
+
+      const results = await axe(container, {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      });
+
+      expect(results).toHaveNoViolations();
+    });
+
+    test('has no accessibility violations when clicking mandatory context menu', async () => {
+      const mockComponent = makeComponent(true);
+      const { container } = renderComponent(
+        <SelectedComponent component={mockComponent} size={1} index={1} />,
+        mockComponent,
+      );
+
+      expect(screen.getByTestId('activate-menu')).toBeInTheDocument();
+      fireEvent.click(screen.getByTestId('activate-menu'));
+
+      const results = await axe(container, {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      });
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

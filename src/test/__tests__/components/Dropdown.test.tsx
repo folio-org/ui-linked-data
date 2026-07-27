@@ -120,5 +120,37 @@ describe('Dropdown', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when toggling', async () => {
+      const dropdownItems: DropdownItems = [
+        {
+          id: 'group_1',
+          labelId: 'groupLabel',
+          data: [
+            {
+              id: 'testItem_1',
+              type: DropdownItemType.basic,
+              labelId: 'item.label',
+              action: jest.fn(),
+            },
+            {
+              id: 'testItem_2',
+              type: DropdownItemType.customComponent,
+              renderComponent: (key: string | number) => <div key={key}>Custom Component</div>,
+            },
+          ],
+        },
+      ];
+
+      const { container, getByRole } = render(<Dropdown labelId={labelId} items={dropdownItems} />);
+
+      const button = getByRole('button');
+
+      fireEvent.click(button);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

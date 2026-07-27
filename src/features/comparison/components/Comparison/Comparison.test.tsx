@@ -178,5 +178,15 @@ describe('Comparison', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when clicking dropdown', async () => {
+      const { container, getByTestId } = renderWithState(baseMockState);
+
+      fireEvent.click(getByTestId('preview-actions-dropdown'));
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

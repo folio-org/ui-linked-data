@@ -148,5 +148,25 @@ describe('Tooltip', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when clicking to show', async () => {
+      const { container } = render(
+        <Tooltip
+          content={tooltipContent}
+          triggerContent={triggerContent}
+          triggerOpenAriaLabel={ariaLabelOpen}
+          triggerCloseAriaLabel={ariaLabelClose}
+          data-testid="tooltip-trigger"
+        />,
+      );
+
+      const button = screen.getByRole('button', { name: ariaLabelOpen });
+
+      fireEvent.click(button);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

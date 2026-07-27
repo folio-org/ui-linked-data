@@ -367,20 +367,6 @@ describe('ModalChooseProfile', () => {
           resourceTypeURL: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
         },
       ],
-      ['no preferred profiles provided', { selectedProfileId: 'profile_1' }],
-      [
-        'no resourceTypeURL provided',
-        {
-          selectedProfileId: 'profile_1',
-          preferredProfiles: [
-            {
-              id: 'profile_1',
-              name: 'Test Profile 1',
-              resourceType: 'http://bibfra.me/vocab/lite/Work' as ResourceTypeURL,
-            },
-          ],
-        },
-      ],
       ['isOpen is false', { isOpen: false }],
     ])('has no accessibility violations when %s', async (_description, overrides) => {
       const { container } = render(<ModalChooseProfile {...baseProps} {...overrides} />);

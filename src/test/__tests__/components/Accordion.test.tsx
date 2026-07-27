@@ -22,5 +22,15 @@ describe('Accordion', () => {
 
       expect(results).toHaveNoViolations();
     });
+
+    test('has no accessibility violations when closed', async () => {
+      const { container, getByTestId } = render(<Accordion children={mockContent} title="test" />);
+
+      fireEvent.click(getByTestId('accordion-toggle-button'));
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });
