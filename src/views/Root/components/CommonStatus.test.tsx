@@ -4,6 +4,8 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+// import { axe } from 'jest-axe';
+
 import { StatusType } from '@/common/constants/status.constants';
 
 import { useStatusStore } from '@/store';
@@ -120,4 +122,26 @@ describe('CommonStatus', () => {
     expect(getStatusMessagesCount(container)).toBe(1);
     expect(screen.getByText('ld.rdUpdateSuccess')).toBeInTheDocument();
   });
+
+  /* // UILD-845: Message close button requires aria-label
+  describe('accessibility', () => {
+    test.each([
+      ['no status messages', []],
+      [
+        'status messages present',
+        [
+          { id: '01', type: StatusType.success, message: 'test message 1' },
+          { id: '02', type: StatusType.error, message: 'test message 2' },
+          { id: '03', type: StatusType.warning, message: 'test message 3' },
+        ],
+      ],
+    ])('has no accessibility violations when %s', async (_description, statusMessages) => {
+      const { container } = renderComponent(statusMessages);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+  */
 });

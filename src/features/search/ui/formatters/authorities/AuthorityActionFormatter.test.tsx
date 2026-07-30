@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthorityActionFormatter } from './AuthorityActionFormatter';
 
@@ -83,5 +84,23 @@ describe('AuthorityActionFormatter', () => {
     render(<AuthorityActionFormatter row={makeRow('marc-safe', false)} />);
 
     expect(() => fireEvent.click(screen.getByTestId('authority-import-marc-safe'))).not.toThrow();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['LD authority with edit button', { row: makeRow('ld-1', true), onEdit: mockOnEdit, onImport: mockOnImport }],
+      ['LD authority without import button', { row: makeRow('ld-3', true), onEdit: mockOnEdit }],
+      [
+        'MARC authority with import/edit button',
+        { row: makeRow('marc-1', false), onEdit: mockOnEdit, onImport: mockOnImport },
+      ],
+      ['MARC authority without edit button', { row: makeRow('marc-3', false), onImport: mockOnImport }],
+    ])('has no accessibility violations when %s', async (_description, props) => {
+      const { container } = render(<AuthorityActionFormatter {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as UseCommittedSearchParams from '../../hooks/useCommittedSearchParams';
 import * as SearchProvider from '../../providers/SearchProvider';
@@ -151,5 +152,29 @@ describe('SearchPagination', () => {
     renderWithRouter(<SearchPagination isLooped={true} />);
 
     expect(screen.getByTestId('pagination')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['data exists', {}, {}, {}],
+      [
+        'offset and data variant',
+        { results: { items: [], totalRecords: 50, pageMetadata: { totalElements: 50, totalPages: 5 } } },
+        { offset: 20 },
+        {},
+      ],
+      ['custom showCount prop', {}, {}, { showCount: false }],
+      ['custom isLooped prop', {}, {}, { isLooped: true }],
+      ['pageMetadata is null', { results: { items: [], totalRecords: 0, pageMetadata: null } }, {}, {}],
+    ])('has no accessibility violations when %s', async (_description, contextOverrides, paramsOverrides, props) => {
+      mockUseSearchContext(contextOverrides);
+      mockUseCommittedSearchParams(paramsOverrides);
+
+      const { container } = renderWithRouter(<SearchPagination {...props} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as useFormattedResultsHook from '@/features/search/ui/hooks/useFormattedResults';
 import * as useTableFormatterHook from '@/features/search/ui/hooks/useTableFormatter';
@@ -129,5 +130,21 @@ describe('HubsLookupResultList', () => {
         data: [],
       }),
     );
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      mockUseFormattedResults.mockReturnValue(mockData);
+      mockUseTableFormatter.mockReturnValue({
+        formattedData: mockFormattedData,
+        listHeader: mockListHeader,
+      });
+
+      const { container } = render(<HubsLookupResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -5,6 +5,8 @@ import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
+//import { axe } from 'jest-axe';
+
 import { useProfileStore } from '@/store';
 
 import { ProfileSettingsSelector } from './ProfileSettingsSelector';
@@ -128,4 +130,30 @@ describe('ProfileSettingsSelector', () => {
       expect(mockSetSelectedProfileSettingsId).toHaveBeenCalledWith('15');
     });
   });
+
+  /* UILD-846: Dropdown toggle button profile-settings-selector-button requires an aria-label
+  describe('accessibility', () => {
+    test('has no accessibility violations when closed', async () => {
+      mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+      const { container } = renderComponent(true);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    test('has no accessibility violations when open', async () => {
+      mockGetRecordProfileId.mockReturnValue(mockProfileId);
+
+      const { container } = renderComponent(true);
+
+      fireEvent.click(screen.getByTestId('profile-settings-selector-button'));
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+  });
+  */
 });

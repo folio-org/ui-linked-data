@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthRefType } from '@/common/constants/search.constants';
 
@@ -31,5 +32,18 @@ describe('AuthorizedFormatter', () => {
     const labelElement = getByText('Not Authorized');
 
     expect(labelElement.tagName.toLowerCase()).toBe('span');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['authorized', { ...defaultRow, authorized: { label: AuthRefType.Authorized } }],
+      ['not authorized', { ...defaultRow, authorized: { label: 'Not Authorized' } }],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<AuthorizedFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

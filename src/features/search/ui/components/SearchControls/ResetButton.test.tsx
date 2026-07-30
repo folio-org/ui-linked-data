@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore } from '@/store';
 
@@ -223,5 +224,33 @@ describe('ResetButton', () => {
 
     const button = screen.getByTestId('id-search-reset-button');
     expect(button).toHaveAttribute('aria-label');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['query exists', 'test query', ['/']],
+      ['query is empty', '', ['/']],
+      ['advanced search is active', '', ['/?query=title+adj+value']],
+      ['query empty and no advanced search active', '', ['/?query=some+query&searchBy=title']],
+    ])('has no accessibility violations when %s', async (_description, query, initialEntries) => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query,
+          },
+        },
+      ]);
+
+      const { container } = render(
+        <MemoryRouter initialEntries={initialEntries}>
+          <ResetButton />
+        </MemoryRouter>,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

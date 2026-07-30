@@ -6,6 +6,7 @@ import '@/test/__mocks__/features/resources/hooks/useRecordMutations.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useInputsStore } from '@/store';
 
@@ -43,7 +44,7 @@ describe('DeleteRecord', () => {
   });
 
   test('renders disabled "Delete record" button for Edit resource page', () => {
-    checkButtonDisabledState.mockReturnValue('/test_url');
+    checkButtonDisabledState.mockReturnValue(true);
 
     renderComponent(mockedRecord);
 
@@ -65,5 +66,21 @@ describe('DeleteRecord', () => {
     fireEvent.click(getButtonElement());
 
     expect(openModal).toHaveBeenCalledTimes(1);
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['not disabled', undefined, mockedRecord],
+      ['disabled for Edit resource page', true, mockedRecord],
+      ['disabled for Create resource page', undefined, null],
+    ])('has no accessibility violations when %s', async (_description, disabledStateReturn, recordState) => {
+      checkButtonDisabledState.mockReturnValue(disabledStateReturn);
+
+      const { container } = renderComponent(recordState);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

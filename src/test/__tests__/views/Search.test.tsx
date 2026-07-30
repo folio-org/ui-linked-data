@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 import * as BuildConstants from '@/common/constants/build.constants';
@@ -52,9 +53,11 @@ const renderWithProviders = (component: React.ReactNode) => {
 };
 
 describe('Search', () => {
+  let container: HTMLElement;
+
   beforeEach(() => {
     queryClient.clear();
-    renderWithProviders(<Search />);
+    ({ container } = renderWithProviders(<Search />));
   });
 
   test('renders Search component', () => {
@@ -122,6 +125,14 @@ describe('Search', () => {
       fireEvent.click(screen.getByTestId('resources-actions-dropdown__option-ld.manageProfileSettings'));
 
       expect(navigateToManageProfileSettings).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

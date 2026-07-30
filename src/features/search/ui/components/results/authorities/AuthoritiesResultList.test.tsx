@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
 import * as useTableFormatterHook from '../../../hooks/useTableFormatter';
@@ -199,5 +200,35 @@ describe('AuthoritiesResultList', () => {
         data: [],
       }),
     );
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      mockUseFormattedResults.mockReturnValue(mockData);
+      mockUseTableFormatter.mockReturnValue({
+        formattedData: mockFormattedData,
+        listHeader: mockListHeader,
+      });
+
+      const { container } = render(<AuthoritiesResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    test('has no accessibility violations when useFormattedResults returns undefined', async () => {
+      mockUseFormattedResults.mockReturnValue(undefined);
+      mockUseTableFormatter.mockReturnValue({
+        formattedData: mockFormattedData,
+        listHeader: mockListHeader,
+      });
+
+      const { container } = render(<AuthoritiesResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

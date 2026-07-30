@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { RDANotesFormatter } from './RDANotesFormatter';
 
@@ -73,5 +74,26 @@ describe('RDANotesFormatter', () => {
     const baseFormatter = getByTestId('base-notes-formatter');
     expect(baseFormatter).toHaveAttribute('data-field-key', 'rda');
     expect(baseFormatter).toHaveTextContent(JSON.stringify(emptyRow));
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default row data', defaultRow],
+      [
+        'custom row data',
+        {
+          __meta: { id: 'custom_id_456' },
+          rda: { notes: ['Custom note'], additionalData: 'test' },
+          hub: { label: 'Custom Hub', uri: 'test_custom_url' },
+        },
+      ],
+      ['empty row data', { __meta: { id: 'empty_id' } }],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<RDANotesFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

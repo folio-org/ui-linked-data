@@ -1,6 +1,7 @@
 import { MemoryRouter } from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ExternalResourcePreview } from '@/views';
 
@@ -41,5 +42,20 @@ describe('ExternalResourcePreview', () => {
     renderComponent();
 
     expect(screen.getByTestId('preview-fields')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['loading', { data: null, isLoading: true }],
+      ['loaded', { data: { schema: new Map(), userValues: {}, initKey: 'key' }, isLoading: false }],
+    ])('has no accessibility violations when %s', async (_description, mockReturn) => {
+      mockUseResourcePreviewQuery.mockReturnValue(mockReturn);
+
+      const { container } = renderComponent();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

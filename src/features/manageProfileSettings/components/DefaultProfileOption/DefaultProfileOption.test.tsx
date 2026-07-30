@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { fetchPreferredProfiles } from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
@@ -126,6 +127,29 @@ describe('DefaultProfileOption', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('type-default-setting')).toBeChecked();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['not cached, string id profile', false, mockProfile, mockPreferredProfiles],
+      ['cached, string id profile', true, mockProfile, undefined],
+      ['cached, number id profile', true, numberIdProfile, undefined],
+      ['not cached, number id profile', false, numberIdProfile, [alphaIdProfile]],
+    ] as const)('has no accessibility violations when %s', async (_description, cached, selected, mockReturn) => {
+      if (mockReturn) {
+        (fetchPreferredProfiles as jest.Mock).mockReturnValue(mockReturn);
+      }
+
+      const { container } = renderComponent(cached, selected);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('type-default-setting')).toBeInTheDocument();
+      });
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

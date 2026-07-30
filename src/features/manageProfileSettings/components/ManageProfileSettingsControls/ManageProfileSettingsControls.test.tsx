@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { MemoryRouter } from 'react-router-dom';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
@@ -122,6 +123,19 @@ describe('ManageProfileSettingsControls', () => {
     waitFor(() => {
       expect(mockSaveSettings).toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no modifications, no unused components', false, false],
+      ['modifications exist', true, false],
+    ])('has no accessibility violations when %s', async (_description, isModified, hasUnused) => {
+      const { container } = renderComponent(isModified, hasUnused);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

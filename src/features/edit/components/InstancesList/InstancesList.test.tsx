@@ -4,6 +4,7 @@ import { navigateToEditPage } from '@/test/__mocks__/common/hooks/useNavigateToE
 import { BrowserRouter } from 'react-router-dom';
 
 import { fireEvent, render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as RecordFormatter from '@/common/helpers/recordFormatting.helper';
 
@@ -81,5 +82,15 @@ describe('InstancesList', () => {
     fireEvent.click(getByTestId('edit-button__mockId'));
 
     expect(navigateToEditPage).toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderWithProps();
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

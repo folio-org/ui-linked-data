@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { SearchParam } from '@/features/search/core';
 
@@ -242,5 +243,41 @@ describe('Segment', () => {
 
       expect(mockOnSegmentChange).not.toHaveBeenCalled();
     });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['renders button with derived label from path', '', {}, { path: 'resources' }],
+      ['renders button with custom labelId', '', {}, { path: 'resources', labelId: 'custom.label' }],
+      [
+        'renders custom children instead of label',
+        '',
+        {},
+        { path: 'resources', children: <span>Custom Content</span> },
+      ],
+      ['derives label from composite path', '', {}, { path: 'authorities:search' }],
+      ['active segment is highlighted', 'resources', { [SearchParam.SEGMENT]: 'resources' }, { path: 'resources' }],
+    ])(
+      'has no accessibility violations when %s',
+      async (_description, currentSegment, navigationStateOverrides, props) => {
+        mockCurrentSegment = currentSegment;
+        setInitialGlobalState([
+          {
+            store: useSearchStore,
+            state: { navigationState: navigationStateOverrides, setNavigationState },
+          },
+        ]);
+
+        const { container } = render(
+          <div role="tablist">
+            <Segment {...props} />
+          </div>,
+        );
+
+        const results = await axe(container);
+
+        expect(results).toHaveNoViolations();
+      },
+    );
   });
 });

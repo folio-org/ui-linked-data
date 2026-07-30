@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ROUTES } from '@/common/constants/routes.constants';
 
@@ -502,5 +503,162 @@ describe('ProfileSelectionManager', () => {
     expect(screen.getByTestId('modal-choose-profile-content')).toBeInTheDocument();
     // ModalWarning should not be visible
     expect(screen.queryByTestId('modal-profile-warning')).not.toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['default state', () => {}],
+      [
+        'modal closed',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useUIState,
+              state: {
+                isProfileSelectionModalOpen: false,
+                setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+              },
+            },
+          ]),
+      ],
+      [
+        'action is "set"',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useUIState,
+              state: {
+                isProfileSelectionModalOpen: true,
+                setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+                profileSelectionType: {
+                  action: 'set',
+                  resourceTypeURL: 'work',
+                },
+              },
+            },
+            {
+              store: useProfileState,
+              state: {
+                availableProfiles: {
+                  work: [
+                    { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+                    { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+                  ],
+                },
+              },
+            },
+          ]),
+      ],
+      [
+        'action is "change" with a record profile',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useUIState,
+              state: {
+                isProfileSelectionModalOpen: true,
+                setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+                profileSelectionType: {
+                  action: 'change',
+                  resourceTypeURL: 'work',
+                },
+              },
+            },
+            {
+              store: useProfileState,
+              state: {
+                availableProfiles: {
+                  work: [
+                    { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+                    { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+                  ],
+                },
+              },
+            },
+            {
+              store: useInputsState,
+              state: {
+                record: { profileId: 'profile_2' },
+              },
+            },
+          ]),
+      ],
+      [
+        'isEditedRecordChange is true',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useUIState,
+              state: {
+                isProfileSelectionModalOpen: true,
+                setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+                profileSelectionType: {
+                  action: 'change',
+                  resourceTypeURL: 'work',
+                },
+              },
+            },
+            {
+              store: useProfileState,
+              state: {
+                availableProfiles: {
+                  work: [
+                    { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+                    { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+                  ],
+                },
+              },
+            },
+            {
+              store: useStatusState,
+              state: {
+                isRecordEdited: true,
+              },
+            },
+          ]),
+      ],
+      [
+        'isEditedRecordChange is false',
+        () =>
+          setInitialGlobalState([
+            {
+              store: useUIState,
+              state: {
+                isProfileSelectionModalOpen: true,
+                setIsProfileSelectionModalOpen: mockSetIsProfileSelectionModalOpen,
+                profileSelectionType: {
+                  action: 'change',
+                  resourceTypeURL: 'work',
+                },
+              },
+            },
+            {
+              store: useProfileState,
+              state: {
+                availableProfiles: {
+                  work: [
+                    { id: 'profile_1', name: 'Test Profile 1', resourceTypeURL: 'work' },
+                    { id: 'profile_2', name: 'Test Profile 2', resourceTypeURL: 'work' },
+                  ],
+                },
+              },
+            },
+            {
+              store: useStatusState,
+              state: {
+                isRecordEdited: false,
+              },
+            },
+          ]),
+      ],
+    ])('has no accessibility violations when %s', async (_description, setup) => {
+      setup();
+
+      const { container } = renderWithProviders(<ProfileSelectionManager />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

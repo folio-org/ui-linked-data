@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useManageProfileSettingsStore } from '@/store';
 
@@ -57,6 +58,28 @@ describe('ResetComponents', () => {
     await waitFor(() => {
       expect(screen.getByTestId('reset-components')).toBeDisabled();
       expect(mockResetProfileSettings).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no changes made to components', false],
+      ['changes made to components', true],
+    ])('has no accessibility violations when %s', async (_description, isSettingsActive) => {
+      setInitialGlobalState([
+        {
+          store: useManageProfileSettingsStore,
+          state: {
+            isSettingsActive,
+          },
+        },
+      ]);
+
+      const { container } = render(<ResetComponents />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { Table } from '@/components/Table';
 
@@ -30,9 +31,13 @@ describe('Table', () => {
   const onHeaderCellClick = jest.fn();
   const onRowClick = jest.fn();
 
-  beforeEach(() =>
-    render(<Table header={mockHeader} data={mockData} onHeaderCellClick={onHeaderCellClick} onRowClick={onRowClick} />),
-  );
+  let container: HTMLElement;
+
+  beforeEach(() => {
+    ({ container } = render(
+      <Table header={mockHeader} data={mockData} onHeaderCellClick={onHeaderCellClick} onRowClick={onRowClick} />,
+    ));
+  });
 
   it('renders Table', () => {
     expect(screen.getByTestId('table')).toBeInTheDocument();
@@ -60,5 +65,13 @@ describe('Table', () => {
 
   it('renders empty cell if no corresponding entry exists in data arg', () => {
     expect(screen.getByTestId(mockHeader.nonExistent.label)).toBeEmptyDOMElement();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

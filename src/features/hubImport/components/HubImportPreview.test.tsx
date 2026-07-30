@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import * as routerDom from 'react-router-dom';
 
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { TYPE_URIS } from '@/common/constants/bibframe.constants';
 
@@ -67,7 +68,7 @@ describe('HubImportPreview', () => {
       error: null,
     });
 
-    render(
+    return render(
       <BrowserRouter>
         <HubImportPreview />
       </BrowserRouter>,
@@ -120,5 +121,19 @@ describe('HubImportPreview', () => {
 
     expect(screen.getByTestId('loading-component')).toBeInTheDocument();
     expect(screen.queryByTestId('preview-component')).not.toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each<[string, RecordEntry | null | undefined, boolean]>([
+      ['loading with no record', null, true],
+      ['loaded with record', mockRecord, false],
+      ['loading with record', mockRecord, true],
+    ])('has no accessibility violations when %s', async (_description, record, isLoading) => {
+      const { container } = renderComponent(record, isLoading);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { DateRange } from '@/components/DateRange';
 
@@ -61,5 +62,18 @@ describe('DateRange Component', () => {
     fireEvent.click(applyButton);
 
     expect(mockSubmit).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['with facet', { facet: 'testFacet' }],
+      ['without facet', {}],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<DateRange onSubmit={jest.fn()} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

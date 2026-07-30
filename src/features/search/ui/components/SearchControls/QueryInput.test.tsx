@@ -1,6 +1,7 @@
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { useSearchStore } from '@/store';
 
@@ -164,5 +165,25 @@ describe('QueryInput', () => {
 
     const input = screen.getByTestId('id-search-input');
     expect(input).toHaveAttribute('aria-label');
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      setInitialGlobalState([
+        {
+          store: useSearchStore,
+          state: {
+            query: 'test query',
+            setQuery: jest.fn(),
+          },
+        },
+      ]);
+
+      const { container } = render(<QueryInput />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

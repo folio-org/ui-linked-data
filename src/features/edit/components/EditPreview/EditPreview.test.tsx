@@ -3,6 +3,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PROFILE_BFIDS } from '@/common/constants/bibframe.constants';
 import { ResourceType } from '@/common/constants/record.constants';
@@ -42,6 +43,8 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('EditPreview', () => {
+  let container: HTMLElement;
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
@@ -69,13 +72,13 @@ describe('EditPreview', () => {
       },
     ]);
 
-    render(
+    ({ container } = render(
       <RouterProvider
         router={createMemoryRouter([{ path: '/resources/create', element: <EditPreview /> }], {
           initialEntries: ['/resources/create?type=work'],
         })}
       />,
-    );
+    ));
   });
 
   const { getByTestId } = screen;
@@ -117,5 +120,13 @@ describe('EditPreview', () => {
 
     // After navigation, selection is reset -> instances list shown again
     expect(view.getByTestId('instances-list')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

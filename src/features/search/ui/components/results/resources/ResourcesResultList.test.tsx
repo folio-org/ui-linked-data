@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as useFormattedResultsHook from '../../../hooks/useFormattedResults';
 import { ResourcesResultList } from './ResourcesResultList';
@@ -89,5 +90,26 @@ describe('ResourcesResultList', () => {
     render(<ResourcesResultList />);
 
     expect(screen.getByTestId('result-entry-123')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'entries exist',
+        [
+          { id: '1', title: 'Test Work 1', author: 'Author 1' } as WorkAsSearchResultDTO,
+          { id: '2', title: 'Test Work 2', author: 'Author 2' } as WorkAsSearchResultDTO,
+        ],
+      ],
+      ['no data', undefined],
+    ])('has no accessibility violations when %s', async (_description, data) => {
+      mockUseFormattedResults.mockReturnValue(data);
+
+      const { container } = render(<ResourcesResultList />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -1,6 +1,7 @@
 import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalUncontrolledAuthorities } from './ModalUncontrolledAuthorities';
 
@@ -12,12 +13,14 @@ describe('ModalUncontrolledAuthorities', () => {
     onClose: jest.fn(),
   };
 
+  let container: HTMLElement;
+
   beforeAll(() => {
     createModalContainer();
   });
 
   beforeEach(() => {
-    render(<ModalUncontrolledAuthorities {...props} />);
+    ({ container } = render(<ModalUncontrolledAuthorities {...props} />));
   });
 
   test('renders modal component with warning message', () => {
@@ -49,5 +52,13 @@ describe('ModalUncontrolledAuthorities', () => {
     fireEvent.click(screen.getByTestId('modal-overlay'));
 
     expect(props.onClose).toHaveBeenCalledTimes(1);
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { HubActionFormatter } from './HubActionFormatter';
 
@@ -201,5 +202,40 @@ describe('HubActionFormatter', () => {
 
     // Should not throw error
     expect(importButton).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      [
+        'isLocal is true',
+        {
+          __meta: { id: 'token_1', key: 'key_1', isAnchor: false, isLocal: true },
+          hub: { label: 'Local Hub', uri: 'http://example.com/hub_1', className: 'hub-title' },
+          source: { label: 'ld.source.libraryOfCongress.local', className: 'hub-source' },
+        },
+      ],
+      [
+        'isLocal is false',
+        {
+          __meta: { id: 'token_2', key: 'key_2', isAnchor: false, isLocal: false },
+          hub: { label: 'Remote Hub', uri: 'http://example.com/hub_2', className: 'hub-title' },
+          source: { label: 'ld.source.libraryOfCongress', className: 'hub-source' },
+        },
+      ],
+      [
+        'isLocal is undefined',
+        {
+          __meta: { id: 'token_3', key: 'key_3', isAnchor: false },
+          hub: { label: 'Hub Without isLocal', uri: 'http://example.com/hub_3', className: 'hub-title' },
+          source: { label: 'ld.source.libraryOfCongress', className: 'hub-source' },
+        },
+      ],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<HubActionFormatter row={row} onEdit={mockOnEdit} onImport={mockOnImport} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

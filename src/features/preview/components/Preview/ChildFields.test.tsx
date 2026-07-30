@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { checkShouldGroupWrap } from '@/common/helpers/preview.helper';
 
@@ -56,5 +57,18 @@ describe('ChildFields', () => {
     render(<ChildFields {...defaultProps} isGroupable={true} />);
 
     expect(checkShouldGroupWrap).not.toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['no entryChildren provided', { entryChildren: undefined }],
+      ['isGroupable is true', { isGroupable: true }],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(<ChildFields {...defaultProps} {...overrides} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

@@ -11,6 +11,7 @@ import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/s
 import * as Router from 'react-router-dom';
 
 import { act, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
 import { Edit } from '@/views';
@@ -125,6 +126,18 @@ describe('Edit', () => {
 
     await waitFor(() => {
       expect(applyUpdatedSettingsToResource).toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
+
+      const { container } = await renderComponent(monograph as unknown as ProfileEntry);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

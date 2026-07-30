@@ -1,5 +1,6 @@
 import { fireEvent, screen } from '@testing-library/dom';
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { PreviewExternalResourcePane } from '@/views/ExternalResource/components/PreviewExternalResourcePane';
 
@@ -50,5 +51,20 @@ describe('PreviewExternalResourcePane', () => {
     fireEvent.click(screen.getByTestId('nav-close-button'));
 
     expect(navigate).toHaveBeenCalled();
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['query data is available', { data: { record: mockRecord } }],
+      ['query has no data', { data: null }],
+    ])('has no accessibility violations when %s', async (_description, queryResult) => {
+      mockUseResourcePreviewQuery.mockReturnValue(queryResult);
+
+      const { container } = render(<PreviewExternalResourcePane />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

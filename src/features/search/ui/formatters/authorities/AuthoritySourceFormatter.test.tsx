@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { AuthoritySourceFormatter } from './AuthoritySourceFormatter';
 
@@ -51,5 +52,38 @@ describe('AuthoritySourceFormatter', () => {
     const { container } = render(<AuthoritySourceFormatter row={row} />);
 
     expect(container.querySelector('span')).toHaveTextContent('MeSH');
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['label is empty', makeRow()],
+      [
+        'LD authority',
+        makeRow({
+          __meta: { id: 'ld-1', key: 'k', isAnchor: false, isLD: true },
+          source: { label: 'ld.source.linkedData' },
+        }),
+      ],
+      [
+        'MARC authority with text label',
+        makeRow({
+          __meta: { id: 'marc-1', key: 'k', isAnchor: false, isLD: false },
+          source: { label: 'LC Name Authority File' },
+        }),
+      ],
+      [
+        'MARC authority with plain span',
+        makeRow({
+          __meta: { id: 'marc-2', key: 'k', isAnchor: false, isLD: false },
+          source: { label: 'MeSH' },
+        }),
+      ],
+    ])('has no accessibility violations when %s', async (_description, row) => {
+      const { container } = render(<AuthoritySourceFormatter row={row} />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

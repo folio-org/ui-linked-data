@@ -3,8 +3,15 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
-import { fetchPreferredProfiles, fetchProfile, fetchProfileSettings, fetchProfiles } from '@/common/api/profiles.api';
+import {
+  fetchAllSettingsForProfile,
+  fetchPreferredProfiles,
+  fetchProfile,
+  fetchProfileSettings,
+  fetchProfiles,
+} from '@/common/api/profiles.api';
 import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
@@ -15,6 +22,7 @@ jest.mock('@/common/api/profiles.api', () => ({
   fetchPreferredProfiles: jest.fn(),
   fetchProfile: jest.fn(),
   fetchProfileSettings: jest.fn(),
+  fetchAllSettingsForProfile: jest.fn(),
 }));
 
 const renderComponent = () => {
@@ -84,13 +92,24 @@ describe('ManageProfileSettings', () => {
     active: false,
     children: [],
   };
+  const mockAllSettingsForProfile = [
+    {
+      id: 1,
+      profileId: 'one-profile',
+      name: 'one',
+    },
+  ];
 
-  beforeEach(() => {
+  let container: HTMLElement;
+
+  beforeEach(async () => {
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
     (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
     (fetchProfileSettings as jest.Mock).mockResolvedValue(mockProfileSettings);
-    renderComponent();
+    (fetchAllSettingsForProfile as jest.Mock).mockResolvedValue(mockAllSettingsForProfile);
+    ({ container } = renderComponent());
+    await screen.findByTestId('manage-profile-settings');
   });
 
   afterEach(() => {
@@ -386,5 +405,33 @@ describe('ManageProfileSettings', () => {
         expect(screen.getByTestId('profile-settings')).toBeVisible();
       });
     });
+  });
+
+  describe('accessibility', () => {
+    test('basic render has no accessibility violations', async () => {
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+
+    /* UILD-847: ProfileSettings button requires aria-label
+    test('settings render has no accessibility violations', async () => {
+      fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
+
+      waitFor(() => {
+        expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
+      });
+
+      fireEvent.click(screen.getByTestId('profile-settings-select-create'));
+
+      waitFor(() => {
+        expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
+      });
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
+    */
   });
 });

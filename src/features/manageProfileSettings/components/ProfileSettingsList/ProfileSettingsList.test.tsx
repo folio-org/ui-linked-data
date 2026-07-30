@@ -2,6 +2,7 @@ import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 
@@ -145,6 +146,16 @@ describe('ProfileSettingsList', () => {
       expect(mockSetIsManageProfileSettingsUnsavedModalOpen).not.toHaveBeenCalled();
       expect(mockSetMode).toHaveBeenCalledWith(ProfileSettingsMode.Editing);
       expect(mockSetIsPreferredProfileSettings).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = renderComponent(false);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });

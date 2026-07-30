@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { RecordControls } from './RecordControls';
 
@@ -16,5 +17,15 @@ describe('RecordControls', () => {
 
     expect(getByTestId('save-record-component')).toBeInTheDocument();
     expect(getByTestId('close-record-component')).toBeInTheDocument();
+  });
+
+  describe('accessibility', () => {
+    test('has no accessibility violations', async () => {
+      const { container } = render(<RecordControls />);
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
+    });
   });
 });

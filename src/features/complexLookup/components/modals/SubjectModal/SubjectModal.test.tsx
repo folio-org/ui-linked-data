@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { axe } from 'jest-axe';
 
 import { ModalConfig } from '@/features/complexLookup/configs/modalRegistry';
 import * as ComplexLookupHooks from '@/features/complexLookup/hooks';
@@ -371,6 +372,29 @@ describe('SubjectModal', () => {
 
       expect(mockHandleCloseMarcPreview).toHaveBeenCalledTimes(1);
       expect(mockHandleCloseHubPreview).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('accessibility', () => {
+    test.each([
+      ['modal open with search results', {}],
+      ['modal closed', { isOpen: false }],
+      [
+        'complex flow with entry and context provided',
+        {
+          entry: { uuid: 'entry_1' } as SchemaEntry,
+          lookupContext: 'test-context',
+          modalConfig: { type: 'authorities' } as unknown as ModalConfig,
+        },
+      ],
+    ])('has no accessibility violations when %s', async (_description, overrides) => {
+      const { container } = render(
+        <SubjectModal isOpen={true} onClose={mockOnClose} onAssign={mockOnAssign} {...overrides} />,
+      );
+
+      const results = await axe(container);
+
+      expect(results).toHaveNoViolations();
     });
   });
 });
