@@ -294,6 +294,7 @@
   "ld.importTryAgain": "Try again",
   "ld.importTimedout": "Import failed to complete in time",
   "ld.importDefaultWorkType": "Default work type if none found",
+  "ld.dropzoneFileRemove": "Remove file {filename} from upload list",
   "ld.resourceProfile": "Resource profile",
   "ld.newType": "New {type}",
   "ld.changeTypeProfile": "Change {type} profile",
@@ -390,5 +391,8 @@
   "ld.types.books": "Books",
   "ld.types.continuingResources": "Serials Work",
   "ld.profileDefaults": "Profile Defaults",
-  "ld.preferred": "preferred"
+  "ld.preferred": "preferred",
+  "ld.dismissNotification": "Dismiss notification",
+  "ld.toggleProfileSettingsSelection": "Toggle custom profile settings selection menu",
+  "ld.backToProfilesList": "Back to profiles list"
 }

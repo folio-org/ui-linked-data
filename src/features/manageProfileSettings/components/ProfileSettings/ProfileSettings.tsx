@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -22,6 +22,7 @@ import { ProfileSettingsList } from '../ProfileSettingsList';
 import './ProfileSettings.scss';
 
 export const ProfileSettings = () => {
+  const { formatMessage } = useIntl();
   const { setIsLoading } = useLoadingState();
   const { loadProfile } = useLoadProfile();
   const { loadProfileSettings } = useLoadProfileSettings();
@@ -106,7 +107,12 @@ export const ProfileSettings = () => {
       <div className="nav">
         <div className="nav-block nav-block-fixed-height">
           {isManageProfileSettingsBelowBreakpoint && (
-            <Button data-testid="back-to-profiles-list" type={ButtonType.Icon} onClick={handleBack}>
+            <Button
+              data-testid="back-to-profiles-list"
+              type={ButtonType.Icon}
+              onClick={handleBack}
+              ariaLabel={formatMessage({ id: 'ld.backToProfilesList' })}
+            >
               <ArrowLeftIcon />
             </Button>
           )}

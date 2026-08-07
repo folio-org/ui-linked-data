@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { useIntl } from 'react-intl';
 
 import { Button, ButtonType } from '@/components/Button';
 
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
+  const { formatMessage } = useIntl();
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString();
   };
@@ -26,7 +28,12 @@ export const DropzoneFile: FC<Props> = ({ file, onRemoveFile }) => {
         </span>
         <span className="date">{formatTimestamp(file.lastModified)}</span>
       </span>
-      <Button type={ButtonType.Icon} onClick={() => onRemoveFile(file)} data-testid="dropzone-file-remove">
+      <Button
+        type={ButtonType.Icon}
+        onClick={() => onRemoveFile(file)}
+        data-testid="dropzone-file-remove"
+        ariaLabel={formatMessage({ id: 'ld.dropzoneFileRemove' }, { filename: file.name })}
+      >
         <Trash16 />
       </Button>
     </div>

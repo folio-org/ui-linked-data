@@ -1,7 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-
-// import { axe } from 'jest-axe';
+import { axe } from 'jest-axe';
 
 import { Dropzone } from '@/components/Dropzone';
 
@@ -10,17 +9,16 @@ describe('Dropzone', () => {
   const acceptableFile = new File(['{}'], 'resources.json', { type: 'application/json' });
   const rejectableFile = new File([''], 'not-json.txt', { type: 'text/plain' });
 
-  // let container: HTMLElement;
+  let container: HTMLElement;
 
   beforeEach(() => {
     let files: File[] = [];
-    //let rerender: ReturnType<typeof render>['rerender'];
+    let rerender: ReturnType<typeof render>['rerender'];
     const setFiles = (f: File[]) => {
       files = f;
       rerender(<Dropzone {...{ files, setFiles }} />);
     };
-    // ({ rerender, container } = render(<Dropzone {...{ files, setFiles }} />));
-    const { rerender } = render(<Dropzone {...{ files, setFiles }} />);
+    ({ rerender, container } = render(<Dropzone {...{ files, setFiles }} />));
   });
 
   test('renders dropzone', () => {
@@ -61,7 +59,6 @@ describe('Dropzone', () => {
     expect(screen.queryByTestId('dropzone-file')).not.toBeInTheDocument();
   });
 
-  /* UILD-844: DropzoneFile remove button requires an aria-label
   describe('accessibility', () => {
     test('has no accessibility violations', async () => {
       const results = await axe(container);
@@ -69,5 +66,4 @@ describe('Dropzone', () => {
       expect(results).toHaveNoViolations();
     });
   });
-  */
 });

@@ -414,7 +414,6 @@ describe('ManageProfileSettings', () => {
       expect(results).toHaveNoViolations();
     });
 
-    /* UILD-847: ProfileSettings button requires aria-label
     test('settings render has no accessibility violations', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
@@ -432,6 +431,5 @@ describe('ManageProfileSettings', () => {
 
       expect(results).toHaveNoViolations();
     });
-    */
   });
 });
