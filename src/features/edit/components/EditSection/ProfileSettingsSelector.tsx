@@ -91,6 +91,7 @@ export const ProfileSettingsSelector = () => {
         data-testid="profile-settings-selector-button"
         ariaHaspopup="menu"
         ariaExpanded={isMenuEnabled}
+        ariaLabel={formatMessage({ id: 'ld.toggleProfileSettingsSelection' })}
         onClick={toggleIsMenuEnabled}
       >
         <Settings />
