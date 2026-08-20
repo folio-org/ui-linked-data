@@ -69,7 +69,7 @@ export const ProfilesList = () => {
         }
       }
     }
-  }, [availableProfiles]);
+  }, [availableProfiles, isManageProfileSettingsBelowBreakpoint, isManageProfileSettingsShowEditor, selectedProfile]);
 
   const showView =
     !isManageProfileSettingsBelowBreakpoint ||

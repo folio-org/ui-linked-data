@@ -15,6 +15,7 @@
 * Fix multiple settings per profile. Refs [UILD-780].
 * Add accessibility tests. Refs [UILD-841].
 * Add accessible labels to buttons. Refs [UILD-855].
+* Address ManageProfileSettings tests and missing dependencies. Fixes [UILD-859].
 * Fix authority labels not rendering. Refs [UILD-842].
 
 [UILD-744]:https://folio-org.atlassian.net/browse/UILD-744
@@ -28,6 +29,7 @@
 [UILD-780]:https://folio-org.atlassian.net/browse/UILD-780
 [UILD-841]:https://folio-org.atlassian.net/browse/UILD-841
 [UILD-855]:https://folio-org.atlassian.net/browse/UILD-855
+[UILD-859]:https://folio-org.atlassian.net/browse/UILD-859
 [UILD-842]:https://folio-org.atlassian.net/browse/UILD-842
 
 ## 2.0.4 (2026-06-03)

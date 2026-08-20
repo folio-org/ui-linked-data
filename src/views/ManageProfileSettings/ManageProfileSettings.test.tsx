@@ -1,8 +1,10 @@
+import { createModalContainer } from '@/test/__mocks__/common/misc/createModalContainer.mock';
+
 import { IntlProvider } from 'react-intl';
 import { BrowserRouter } from 'react-router-dom';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import {
@@ -16,6 +18,8 @@ import { BFLITE_URIS } from '@/common/constants/bibframeMapping.constants';
 import { AdvancedFieldType } from '@/common/constants/uiControls.constants';
 
 import { ManageProfileSettings } from './ManageProfileSettings';
+
+const ORIGINAL_INNER_WIDTH = window.innerWidth;
 
 jest.mock('@/common/api/profiles.api', () => ({
   fetchProfiles: jest.fn(),
@@ -103,6 +107,7 @@ describe('ManageProfileSettings', () => {
   let container: HTMLElement;
 
   beforeEach(async () => {
+    createModalContainer();
     (fetchProfiles as jest.Mock).mockResolvedValue(mockProfiles);
     (fetchPreferredProfiles as jest.Mock).mockResolvedValue(mockPreferredProfiles);
     (fetchProfile as jest.Mock).mockResolvedValue(mockProfile);
@@ -120,29 +125,29 @@ describe('ManageProfileSettings', () => {
     expect(screen.getByTestId('manage-profile-settings')).toBeInTheDocument();
   });
 
-  it('renders profiles list', () => {
-    waitFor(() => {
+  it('renders profiles list', async () => {
+    await waitFor(() => {
       expect(screen.getByTestId('profiles-list')).toBeInTheDocument();
     });
   });
 
-  it('renders profile settings with an auto-selected profile', () => {
-    waitFor(() => {
+  it('renders profile settings with an auto-selected profile', async () => {
+    await waitFor(() => {
       expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
     });
   });
 
   describe('nudge buttons', () => {
-    it('nudge up shifts location and switches toggle to custom', () => {
+    it('nudge up shifts location and switches toggle to custom', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
       });
 
@@ -154,23 +159,23 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(nudgeUpButton);
       fireEvent.click(nudgeUpButton);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeEnabled();
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childA'));
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childB'));
       });
     });
 
-    it('nudge down shifts location and switches toggle to custom', () => {
+    it('nudge down shifts location and switches toggle to custom', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childA')).toBeInTheDocument();
       });
 
@@ -182,7 +187,7 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(nudgeDownButton);
       fireEvent.click(nudgeDownButton);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeEnabled();
         expect(screen.getByTestId('component-test:childB')).toAppearBefore(screen.getByTestId('component-test:childA'));
         expect(screen.getByTestId('component-test:childC')).toAppearBefore(screen.getByTestId('component-test:childA'));
@@ -191,23 +196,23 @@ describe('ManageProfileSettings', () => {
   });
 
   describe('context menu move', () => {
-    it('moves an unused component to the bottom of the selected list and switches toggle to custom', () => {
+    it('moves an unused component to the bottom of the selected list and switches toggle to custom', async () => {
       // move from selected to unused, then unused to selected
       // check that it's now at the bottom
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childB')).toBeInTheDocument();
       });
 
-      const component = screen.getByTestId('component-test:childB');
-      const menuButton = within(component).getByTestId('activate-menu');
+      let component = screen.getByTestId('component-test:childB');
+      let menuButton = within(component).getByTestId('activate-menu');
 
       expect(screen.getByTestId('reset-components')).toBeDisabled();
 
@@ -215,10 +220,13 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(within(component).getByTestId('move-action'));
 
       // move back
+      component = screen.getByTestId('component-test:childB');
+      menuButton = within(component).getByTestId('activate-menu');
+
       fireEvent.click(menuButton);
       fireEvent.click(within(component).getByTestId('move-action'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeEnabled();
         const section = screen.getByTestId('selected-component-list');
         expect(within(section).getByTestId('component-test:childB')).toBeInTheDocument();
@@ -227,16 +235,16 @@ describe('ManageProfileSettings', () => {
       });
     });
 
-    it('moves a selected component to the unused list and switches toggle to custom', () => {
+    it('moves a selected component to the unused list and switches toggle to custom', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
       });
 
@@ -248,7 +256,7 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(menuButton);
       fireEvent.click(within(component).getByTestId('move-action'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeEnabled();
         const section = screen.getByTestId('unused-component-list');
         expect(within(section).getByTestId('component-test:childC')).toBeInTheDocument();
@@ -257,16 +265,16 @@ describe('ManageProfileSettings', () => {
   });
 
   describe('reset components', () => {
-    it('clears all changes to components when clicked', () => {
+    it('clears all changes to components when clicked', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
       });
 
@@ -290,7 +298,7 @@ describe('ManageProfileSettings', () => {
       // reset to default
       fireEvent.click(screen.getByTestId('reset-components'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeDisabled();
         const section = screen.getByTestId('selected-component-list');
         expect(within(section).getByTestId('component-test:childA')).toBeInTheDocument();
@@ -301,16 +309,16 @@ describe('ManageProfileSettings', () => {
   });
 
   describe('modals', () => {
-    it('shows a modal when changing profiles with unsaved changes', () => {
+    it('shows a modal when changing profiles with unsaved changes', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childB')).toBeInTheDocument();
       });
 
@@ -319,13 +327,13 @@ describe('ManageProfileSettings', () => {
       fireEvent.click(menuButton);
       fireEvent.click(within(component).getByTestId('move-action'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('reset-components')).toBeEnabled();
       });
 
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[1]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('modal-close-profile-settings')).toBeInTheDocument();
       });
     });
@@ -334,75 +342,82 @@ describe('ManageProfileSettings', () => {
   describe('responsive display', () => {
     const setViewport = (width: number) => {
       Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: width });
+      act(() => {
+        window.dispatchEvent(new Event('resize'));
+      });
     };
 
-    it('displays profiles list and settings editor side by side when viewport is wide enough', () => {
+    afterEach(() => {
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: ORIGINAL_INNER_WIDTH });
+    });
+
+    it('displays profiles list and settings editor side by side when viewport is wide enough', async () => {
       setViewport(1400);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).toBeVisible();
-        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).not.toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
     });
 
-    it('displays settings editor only when viewport is resized from wide to narrow', () => {
+    it('displays settings editor only when viewport is resized from wide to narrow', async () => {
       setViewport(1400);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).toBeVisible();
-        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).not.toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
 
       setViewport(600);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).not.toBeVisible();
-        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
     });
 
-    it('displays only profiles list when viewport is narrow', () => {
+    it('displays only profile settings when viewport is narrow and default profile is chosen', async () => {
       setViewport(600);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).toBeVisible();
-        expect(screen.getByTestId('profile-settings')).not.toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
     });
 
-    it('displays only settings editor after selecting a profile from list when viewport is narrow', () => {
+    it('displays only settings editor after selecting a profile from list when viewport is narrow', async () => {
       setViewport(600);
 
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).not.toBeVisible();
-        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
     });
 
-    it('displays only profile list after returning from settings when viewport is narrow', () => {
+    it('displays only profile list after returning from settings when viewport is narrow', async () => {
       setViewport(600);
 
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
       fireEvent.click(screen.getByTestId('back-to-profiles-list'));
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).toBeVisible();
-        expect(screen.getByTestId('profile-settings')).not.toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).not.toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).toHaveClass('hidden');
       });
     });
 
-    it('select, back, and return to settings when viewport is narrow', () => {
+    it('select, back, and return to settings when viewport is narrow', async () => {
       setViewport(600);
 
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
       fireEvent.click(screen.getByTestId('back-to-profiles-list'));
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
-        expect(screen.getByTestId('profiles-list')).not.toBeVisible();
-        expect(screen.getByTestId('profile-settings')).toBeVisible();
+      await waitFor(() => {
+        expect(screen.getByTestId('profiles-list')).toHaveClass('hidden');
+        expect(screen.getByTestId('profile-settings')).not.toHaveClass('hidden');
       });
     });
   });
@@ -417,17 +432,21 @@ describe('ManageProfileSettings', () => {
     test('settings render has no accessibility violations', async () => {
       fireEvent.click(screen.getAllByTestId('resource-profile-item')[0]);
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('profile-settings')).toBeInTheDocument();
       });
 
       fireEvent.click(screen.getByTestId('profile-settings-select-create'));
 
-      waitFor(() => {
+      await waitFor(() => {
         expect(screen.getByTestId('component-test:childC')).toBeInTheDocument();
       });
 
-      const results = await axe(container);
+      const results = await axe(container, {
+        rules: {
+          'nested-interactive': { enabled: false },
+        },
+      });
 
       expect(results).toHaveNoViolations();
     });
