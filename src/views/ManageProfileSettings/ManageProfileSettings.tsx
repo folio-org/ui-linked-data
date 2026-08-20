@@ -60,7 +60,7 @@ export const ManageProfileSettings = () => {
       setIsManageProfileSettingsShowProfiles(true);
       setIsManageProfileSettingsShowEditor(true);
     }
-  }, [viewportWidth]);
+  }, [selectedProfile, viewportWidth]);
 
   return (
     <>
