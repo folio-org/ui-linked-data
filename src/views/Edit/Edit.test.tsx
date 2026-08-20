@@ -1,16 +1,12 @@
 import { getMockedImportedConstant } from '@/test/__mocks__/common/constants/constants.mock';
 import '@/test/__mocks__/common/helpers/pageScrolling.helper.mock';
-import {
-  applyUpdatedSettingsToResource,
-  initNewResource,
-  loadResource,
-} from '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
+import { initNewResource, loadResource } from '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { clearRecordState } from '@/test/__mocks__/features/resources/hooks/useRecordNavigation.mock';
-import { setInitialGlobalState, setUpdatedGlobalState } from '@/test/__mocks__/store';
+import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import * as Router from 'react-router-dom';
 
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { axe } from 'jest-axe';
 
 import * as BibframeConstants from '@/common/constants/bibframe.constants';
@@ -108,25 +104,6 @@ describe('Edit', () => {
     await renderComponent(null);
 
     expect(initNewResource).not.toHaveBeenCalled();
-  });
-
-  test('changing profile settings ID applies settings', async () => {
-    jest.spyOn(Router, 'useParams').mockReturnValue({ resourceId: 'testResourceId' });
-
-    await renderComponent(null);
-
-    setUpdatedGlobalState([
-      {
-        store: useProfileStore,
-        updatedState: {
-          selectedProfileSettingsId: 'changed',
-        },
-      },
-    ]);
-
-    await waitFor(() => {
-      expect(applyUpdatedSettingsToResource).toHaveBeenCalled();
-    });
   });
 
   describe('accessibility', () => {

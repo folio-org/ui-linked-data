@@ -26,7 +26,6 @@ export const ComplexLookupSelectedItem: FC<ComplexLookupSelectedItemProps> = ({
 
   return (
     <div
-      key={id}
       className={classNames([
         'complex-lookup-selected',
         IS_EMBEDDED_MODE && 'complex-lookup-selected-embedded',
