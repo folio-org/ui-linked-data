@@ -2,12 +2,13 @@ import { FC } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
+import { ProfileSettingsMode } from '@/common/constants/profileSettings.constants';
 import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Modal } from '@/components/Modal';
 
 import { useManageProfileSettingsState, useUIState } from '@/store';
 
-import { useSaveProfileSettings } from '../../hooks';
+import { useResetSettings, useSaveProfileSettings } from '../../hooks';
 
 import './ModalCloseProfileSettings.scss';
 
@@ -20,14 +21,45 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
-  const { isClosingNext, setIsClosingNext, nextSelectedProfile, setSelectedProfile, setIsModified } =
-    useManageProfileSettingsState([
-      'isClosingNext',
-      'setIsClosingNext',
-      'nextSelectedProfile',
-      'setSelectedProfile',
-      'setIsModified',
-    ]);
+  const {
+    mode,
+    isClosingNext,
+    setIsClosingNext,
+    nextSelectedProfile,
+    setNextSelectedProfile,
+    setSelectedProfile,
+    setIsModified,
+    setMode,
+    isCreatingSettingsNext,
+    setIsCreatingSettingsNext,
+    isEditingSettingsNext,
+    setIsEditingSettingsNext,
+    nextSelectedSettingsMeta,
+    setNextSelectedSettingsMeta,
+    setSelectedProfileSettingsMeta,
+    setSettingsName,
+    setIsPreferredProfileSettings,
+  } = useManageProfileSettingsState([
+    'mode',
+    'isClosingNext',
+    'setIsClosingNext',
+    'nextSelectedProfile',
+    'setNextSelectedProfile',
+    'setSelectedProfile',
+    'resetSelectedProfileSettingsMeta',
+    'setIsModified',
+    'setMode',
+    'isCreatingSettingsNext',
+    'setIsCreatingSettingsNext',
+    'isEditingSettingsNext',
+    'setIsEditingSettingsNext',
+    'nextSelectedSettingsMeta',
+    'setNextSelectedSettingsMeta',
+    'setSelectedProfileSettingsMeta',
+    'setSettingsName',
+    'setIsPreferredProfileSettings',
+  ]);
+  const { resetSettings } = useResetSettings();
   const { setIsManageProfileSettingsShowProfiles, setIsManageProfileSettingsShowEditor } = useUIState([
     'setIsManageProfileSettingsShowProfiles',
     'setIsManageProfileSettingsShowEditor',
@@ -41,13 +73,33 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       navigate(searchResultsUri);
     } else if (nextSelectedProfile) {
       setSelectedProfile(nextSelectedProfile);
+      resetSettings();
       setIsManageProfileSettingsShowProfiles(false);
       setIsManageProfileSettingsShowEditor(true);
+      setMode(ProfileSettingsMode.Landing);
+    } else if (isCreatingSettingsNext) {
+      setMode(ProfileSettingsMode.Creating);
+      setSelectedProfileSettingsMeta(null);
+      setSettingsName('');
+      setIsPreferredProfileSettings(false);
+      setIsCreatingSettingsNext(false);
+    } else if (isEditingSettingsNext) {
+      setMode(ProfileSettingsMode.Editing);
+      resetSettings();
+      setSelectedProfileSettingsMeta(nextSelectedSettingsMeta);
+      setSettingsName(nextSelectedSettingsMeta?.name ?? '');
+      setIsPreferredProfileSettings(false);
+      setIsEditingSettingsNext(false);
+      setNextSelectedSettingsMeta(null);
     }
   };
 
   const handleClose = () => {
     setIsClosingNext(false);
+    setIsCreatingSettingsNext(false);
+    setIsEditingSettingsNext(false);
+    setNextSelectedProfile(null);
+    setNextSelectedSettingsMeta(null);
     setIsOpen(false);
   };
 
@@ -77,9 +129,11 @@ export const ModalCloseProfileSettings: FC<ModalCloseProfileSettingsProps> = ({ 
       <p>
         <FormattedMessage id="ld.unsavedProfilePrompt" />
       </p>
-      <p>
-        <FormattedMessage id="ld.unsavedProfileNote" />
-      </p>
+      {mode !== ProfileSettingsMode.Landing && (
+        <p>
+          <FormattedMessage id="ld.unsavedProfileNote" />
+        </p>
+      )}
     </Modal>
   );
 };

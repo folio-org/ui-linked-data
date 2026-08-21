@@ -20,8 +20,7 @@ export class UserValuesService implements IUserValues {
 
   constructor(
     private userValues: UserValues,
-    private readonly apiClient: IApiClient,
-    private readonly cacheService: ILookupCacheService,
+    private readonly loadLookup: (uri: string) => Promise<MultiselectOption[]>,
   ) {
     this.set(userValues);
     this.initialize();
@@ -54,7 +53,7 @@ export class UserValuesService implements IUserValues {
 
   private initialize() {
     this.literalUserValueService = new LiteralUserValueService();
-    this.simpleLookupUserValueService = new SimpleLookupUserValueService(this.apiClient, this.cacheService);
+    this.simpleLookupUserValueService = new SimpleLookupUserValueService(this.loadLookup);
     this.complexLookupUserValueService = new ComplexLookupUserValueService();
     this.enumeratedUserValueService = new EnumeratedUserValueService();
   }
@@ -80,6 +79,8 @@ export class UserValuesService implements IUserValues {
   }
 
   private async generateValue() {
+    this.generatedValue = undefined;
+
     try {
       const typedValue = { ...this.value } as UserValueDTO;
       this.generatedValue = await this.userValueFactory?.generate({ ...typedValue, uuid: this.key, type: this.type });

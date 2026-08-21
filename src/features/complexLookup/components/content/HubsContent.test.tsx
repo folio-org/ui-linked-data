@@ -6,7 +6,7 @@ jest.mock('@/components/Loading', () => ({
   Loading: () => <div data-testid="loading">Loading...</div>,
 }));
 
-jest.mock('@/features/search/ui/components/Search', () => {
+jest.mock('@/features/search/ui', () => {
   const MockSearch = Object.assign(
     ({ children }: { children: React.ReactNode }) => <div data-testid="search">{children}</div>,
     {
@@ -20,23 +20,22 @@ jest.mock('@/features/search/ui/components/Search', () => {
     },
   );
 
-  return { Search: MockSearch };
+  return {
+    Search: MockSearch,
+    HubsLookupResultList: ({
+      context,
+      onAssign,
+    }: {
+      context: string;
+      onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+    }) => (
+      <div data-testid="hubs-lookup-result-list">
+        <span>{context}</span>
+        <button onClick={() => onAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>
+      </div>
+    ),
+  };
 });
-
-jest.mock('@/features/search/ui', () => ({
-  HubsLookupResultList: ({
-    context,
-    onAssign,
-  }: {
-    context: string;
-    onAssign: (record: ComplexLookupAssignRecordDTO) => void;
-  }) => (
-    <div data-testid="hubs-lookup-result-list">
-      <span>{context}</span>
-      <button onClick={() => onAssign({ id: 'hub_1', title: 'Hub 1' })}>Assign Hub</button>
-    </div>
-  ),
-}));
 
 describe('HubsContent', () => {
   const mockHandleHubAssign = jest.fn();

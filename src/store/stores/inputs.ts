@@ -6,7 +6,7 @@ export type SelectedRecordBlocksState = SelectedRecordBlocks | undefined;
 export type SelectedEntriesState = string[];
 
 export type InputsState = SliceState<'userValues', UserValues> &
-  SliceState<'previewContent', PreviewContent[]> &
+  SliceState<'activePreviewIds', string[]> &
   SliceState<'record', RecordState> &
   SliceState<'selectedRecordBlocks', SelectedRecordBlocksState> &
   SliceState<'selectedEntries', SelectedEntriesState>;
@@ -18,7 +18,7 @@ const sliceConfigs: SliceConfigs = {
     initialValue: {},
     singleItem: { type: {} as UserValue },
   },
-  previewContent: {
+  activePreviewIds: {
     initialValue: [],
   },
   record: {

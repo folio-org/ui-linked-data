@@ -133,7 +133,7 @@ describe('useTableFormatter', () => {
     const onEdit = jest.fn();
     const onToggleSelect = jest.fn();
     const selectedInstances = ['1', '2'];
-    const previewContent = [{ id: '1' }];
+    const activePreviewIds = ['1'];
 
     renderHook(() =>
       useTableFormatter({
@@ -147,7 +147,7 @@ describe('useTableFormatter', () => {
         onEdit,
         onToggleSelect,
         selectedInstances,
-        previewContent,
+        activePreviewIds,
         fullDisplayComponentType: FullDisplayType.Comparison,
       }),
     );
@@ -162,7 +162,7 @@ describe('useTableFormatter', () => {
         onEdit,
         onToggleSelect,
         selectedInstances,
-        previewContent,
+        activePreviewIds,
         fullDisplayComponentType: FullDisplayType.Comparison,
       }),
     );

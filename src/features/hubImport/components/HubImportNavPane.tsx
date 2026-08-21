@@ -1,16 +1,19 @@
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
+import { QueryParams } from '@/common/constants/routes.constants';
 import { getRecordTitle } from '@/common/helpers/record.helper';
 import { useBackToSearchUri } from '@/common/hooks/useBackToSearchUri';
 import { Button, ButtonType } from '@/components/Button';
 
-import { useInputsState } from '@/store';
-
 import Times16 from '@/assets/times-16.svg?react';
 
+import { useHubQuery } from '../hooks';
+
 export const HubImportNavPane = () => {
-  const { record } = useInputsState(['record']);
+  const [searchParams] = useSearchParams();
+  const sourceUri = searchParams.get(QueryParams.SourceUri);
+  const { data } = useHubQuery({ hubUri: sourceUri ?? undefined, enabled: !!sourceUri });
   const navigate = useNavigate();
   const searchResultsUri = useBackToSearchUri();
   const { formatMessage } = useIntl();
@@ -20,7 +23,7 @@ export const HubImportNavPane = () => {
   };
 
   const closeButtonLabel = formatMessage({ id: 'ld.aria.hubImport.close' });
-  const headerLabel = formatMessage({ id: 'ld.importHub.header.title' }, { title: record && getRecordTitle(record) });
+  const headerLabel = formatMessage({ id: 'ld.importHub.header.title' }, { title: data && getRecordTitle(data) });
 
   return (
     <div className="nav-block nav-block-fixed-height">

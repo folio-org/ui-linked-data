@@ -11,7 +11,7 @@ export const useSearchCleanup = () => {
   const { dispatchDropNavigateToOriginEvent } = useContainerEvents();
   const { resetSelectedInstances } = useSearchState(['resetSelectedInstances']);
   const { resetFullDisplayComponentType } = useUIState(['resetFullDisplayComponentType']);
-  const { resetPreviewContent } = useInputsState(['resetPreviewContent']);
+  const { resetActivePreviewIds } = useInputsState(['resetActivePreviewIds']);
 
   // Dispatch navigation event on mount
   dispatchDropNavigateToOriginEvent();
@@ -21,7 +21,7 @@ export const useSearchCleanup = () => {
     return () => {
       resetFullDisplayComponentType();
       resetSelectedInstances();
-      resetPreviewContent();
+      resetActivePreviewIds();
     };
-  }, [resetFullDisplayComponentType, resetSelectedInstances, resetPreviewContent]);
+  }, [resetFullDisplayComponentType, resetSelectedInstances, resetActivePreviewIds]);
 };

@@ -3,9 +3,9 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import { SOURCE_TYPES } from '@/common/constants/lookup.constants';
 import { Button, ButtonType } from '@/components/Button';
-import { Preview } from '@/components/Preview';
 
 import { HubPreviewData, HubPreviewMeta } from '@/features/complexLookup/types/hubPreview.types';
+import { Preview } from '@/features/preview';
 import { ControlPane } from '@/features/search/ui';
 
 import Times16 from '@/assets/times-16.svg?react';

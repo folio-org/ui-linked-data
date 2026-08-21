@@ -25,9 +25,6 @@ jest.mock('@/common/hooks/useNavigateWithSearchState', () => ({
 
 jest.mock('@/common/helpers/navigation.helper', () => ({
   generateEditResourceUrl: (id: string) => `/resources/${id}/edit`,
-}));
-
-jest.mock('@/features/hubImport', () => ({
   generateHubImportPreviewUrl: (uri: string) => `/hub-import?sourceUri=${uri}`,
 }));
 

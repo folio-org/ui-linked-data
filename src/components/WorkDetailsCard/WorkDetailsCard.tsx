@@ -7,10 +7,9 @@ import classNames from 'classnames';
 import { IS_DISABLED_FOR_ALPHA } from '@/common/constants/feature.constants';
 import { Classifications } from '@/common/constants/search.constants';
 import { generateEditResourceUrl } from '@/common/helpers/navigation.helper';
+import { getTitle } from '@/common/helpers/search.helper';
 import { useNavigateToEditPage } from '@/common/hooks/useNavigateToEditPage';
 import { Button, ButtonType } from '@/components/Button';
-
-import { getTitle } from '@/features/search/core';
 
 import CaretDown from '@/assets/caret-down.svg?react';
 

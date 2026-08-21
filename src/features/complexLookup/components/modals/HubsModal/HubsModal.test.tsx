@@ -39,7 +39,7 @@ jest.mock('@/components/Loading', () => ({
 
 let capturedSearchOnSubmitCallback: (() => void) | undefined;
 
-jest.mock('@/features/search/ui/components/Search', () => {
+jest.mock('@/features/search/ui', () => {
   const MockSearch = Object.assign(
     ({ children, onSubmitCallback }: { children: React.ReactNode; onSubmitCallback?: () => void }) => {
       capturedSearchOnSubmitCallback = onSubmitCallback;
@@ -61,24 +61,23 @@ jest.mock('@/features/search/ui/components/Search', () => {
     },
   );
 
-  return { Search: MockSearch };
+  return {
+    Search: MockSearch,
+    HubsLookupResultList: ({
+      context,
+      onAssign,
+    }: {
+      context: string;
+      onAssign: (record: ComplexLookupAssignRecordDTO) => void;
+    }) => (
+      <div data-testid="hubs-lookup-result-list">
+        <span>{context}</span>
+        <button onClick={() => onAssign({ id: 'hub-1', title: 'Hub 1' })}>Assign Hub</button>
+      </div>
+    ),
+    SOURCE_OPTIONS: [],
+  };
 });
-
-jest.mock('@/features/search/ui', () => ({
-  HubsLookupResultList: ({
-    context,
-    onAssign,
-  }: {
-    context: string;
-    onAssign: (record: ComplexLookupAssignRecordDTO) => void;
-  }) => (
-    <div data-testid="hubs-lookup-result-list">
-      <span>{context}</span>
-      <button onClick={() => onAssign({ id: 'hub-1', title: 'Hub 1' })}>Assign Hub</button>
-    </div>
-  ),
-  SOURCE_OPTIONS: [],
-}));
 
 const queryClient = new QueryClient({
   defaultOptions: {

@@ -23,10 +23,10 @@ jest.mock('@/common/services/userNotification', () => ({
   },
 }));
 
-const mockGetRecordAndInitializeParsing = jest.fn();
-jest.mock('@/common/hooks/useRecordControls', () => ({
-  useRecordControls: () => ({
-    getRecordAndInitializeParsing: mockGetRecordAndInitializeParsing,
+const mockProcessResource = jest.fn();
+jest.mock('@/features/resources/hooks/useResourceProcessing', () => ({
+  useResourceProcessing: () => ({
+    processResource: mockProcessResource,
   }),
 }));
 
@@ -65,7 +65,7 @@ describe('useHubQuery', () => {
       },
     ]);
 
-    mockGetRecordAndInitializeParsing.mockResolvedValue(undefined);
+    mockProcessResource.mockResolvedValue({ schema: {}, userValues: {}, initKey: 'test-key', selectedEntries: [] });
     (getHubByUri as jest.Mock).mockResolvedValue(mockRecord);
   });
 
@@ -81,10 +81,7 @@ describe('useHubQuery', () => {
         hubUri: 'https://id.loc.gov/resources/hubs/hub_123.json',
         signal: expect.any(AbortSignal),
       });
-      expect(mockGetRecordAndInitializeParsing).toHaveBeenCalledWith({
-        cachedRecord: mockRecord,
-        errorMessage: 'ld.errorFetchingHubForPreview',
-      });
+      expect(mockProcessResource).toHaveBeenCalledWith({ record: mockRecord });
       expect(result.current.data).toBe(mockRecord);
       expect(result.current.isError).toBe(false);
     });

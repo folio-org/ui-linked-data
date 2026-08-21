@@ -13,7 +13,14 @@ jest.mock('react-intl', () => {
       }
 
       if (values) {
-        return (Object.values(values) as [FC]).map((v: FC, key) => ({ ...v, key }));
+        const valueArray = Object.values(values);
+        const reactElements = valueArray.filter(
+          (value): value is object => value !== null && typeof value === 'object' && '$$typeof' in (value as object),
+        );
+
+        if (reactElements.length === 0) return id;
+
+        return reactElements.map((value: any, key) => ({ ...value, key }));
       }
 
       return id;

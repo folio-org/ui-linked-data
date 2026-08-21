@@ -1,6 +1,5 @@
 import { SearchableIndex as SearchableIndexEnum } from '@/common/constants/searchableIndex.constants';
-
-import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '@/features/complexLookup/configs';
+import { COMPLEX_LOOKUP_SEARCHABLE_INDICES_MAP } from '@/common/constants/searchableIndices.constants';
 
 import { AuthoritiesSearchRequestBuilder } from '../strategies/requestBuilders';
 import { AuthoritiesSearchResponseTransformer } from '../strategies/responseTransformers';

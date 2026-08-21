@@ -10,13 +10,16 @@ type ISchemaService = import('@/common/services/schema/schema.interface').ISchem
 type ISchemaGeneratorService = import('@/common/services/schema/schemaGenerator.interface').ISchemaGenerator;
 type IRecordGeneratorService = import('@/common/services/recordGenerator/recordGenerator.interface').IRecordGenerator;
 
-type ServicesParams = {
-  selectedEntriesService?: ISelectedEntriesService;
-  userValuesService?: IUserValuesService;
-  schemaWithDuplicatesService?: ISchemaWithDuplicatesService;
-  lookupCacheService?: ILookupCacheService;
-  recordNormalizingService?: IRecordNormalizingService;
-  recordToSchemaMappingService?: IRecordToSchemaMappingService;
-  schemaGeneratorService?: ISchemaGeneratorService;
-  recordGeneratorService?: IRecordGeneratorService;
+type SharedInfraServices = {
+  commonStatusService: ICommonStatus;
+};
+
+type SchemaPipelineServices = {
+  selectedEntriesService: ISelectedEntriesService;
+  userValuesService: IUserValuesService;
+  schemaWithDuplicatesService: ISchemaWithDuplicatesService;
+  recordNormalizingService: IRecordNormalizingService;
+  recordToSchemaMappingService: IRecordToSchemaMappingService;
+  schemaGeneratorService: ISchemaGeneratorService;
+  recordGeneratorService: IRecordGeneratorService;
 };

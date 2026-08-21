@@ -1,0 +1,1 @@
+export { ModalViewMarc } from './ModalViewMarc';

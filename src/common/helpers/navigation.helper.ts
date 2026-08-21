@@ -4,6 +4,10 @@ import { ForceNavigateToDest, QueryParams, ROUTES, ROUTE_PATH } from '@/common/c
 
 export const generateEditResourceUrl = (resourceId?: string | number) => `/resources/${resourceId}/edit`;
 
+export const generateHubImportPreviewUrl = (hubUri: string): string => {
+  return `${ROUTES.HUB_IMPORT_PREVIEW.uri}?${QueryParams.SourceUri}=${encodeURIComponent(hubUri)}`;
+};
+
 export const getForceNavigateToDest = (pathname: string, search?: string): ForceNavigateToDest | undefined => {
   const navigatingToCreatePage = matchPath(ROUTES.RESOURCE_CREATE.uri, pathname) && search;
 

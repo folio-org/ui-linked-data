@@ -65,7 +65,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={[]}
-        previewContent={[]}
+        activePreviewIds={[]}
       />,
     );
 
@@ -79,7 +79,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={[]}
-        previewContent={[]}
+        activePreviewIds={[]}
       />,
     );
 
@@ -96,7 +96,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={['999', '123', '456']}
-        previewContent={[{ id: '999' }, { id: '123' }]}
+        activePreviewIds={['999', '123']}
       />,
     );
 
@@ -111,7 +111,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={['999', '456']}
-        previewContent={[{ id: '999' }]}
+        activePreviewIds={['999']}
       />,
     );
 
@@ -125,7 +125,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={['123']}
-        previewContent={[{ id: '123' }]}
+        activePreviewIds={['123']}
         fullDisplayComponentType={FullDisplayType.Comparison}
       />,
     );
@@ -140,7 +140,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={['123']}
-        previewContent={[{ id: '123' }]}
+        activePreviewIds={['123']}
       />,
     );
 
@@ -154,7 +154,7 @@ describe('InstanceTitleFormatter', () => {
         formatMessage={formatMessage}
         onPreview={onPreview}
         selectedInstances={[]}
-        previewContent={[]}
+        activePreviewIds={[]}
       />,
     );
 

@@ -1,14 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
 import { getHubByUri, normalizeExternalHubUri } from '@/common/api/hub.api';
 import { StatusType } from '@/common/constants/status.constants';
-import { useRecordControls } from '@/common/hooks/useRecordControls';
 import { logger } from '@/common/services/logger';
 import { UserNotificationFactory } from '@/common/services/userNotification';
 
-import { useStatusState } from '@/store';
+import { type ProcessedResource, useResourceProcessing } from '@/features/resources';
+
+import { useInputsState, useProfileState, useStatusState } from '@/store';
 
 interface UseHubQueryParams {
   hubUri?: string;
@@ -17,6 +18,7 @@ interface UseHubQueryParams {
 
 interface UseHubQueryResult {
   data: RecordEntry | undefined;
+  processed: ProcessedResource | undefined;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -24,14 +26,29 @@ interface UseHubQueryResult {
   refetch: () => Promise<void>;
 }
 
+type HubQueryData = {
+  hubRecord: RecordEntry;
+  processed: ProcessedResource;
+};
+
 export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseHubQueryResult {
   const { addStatusMessagesItem } = useStatusState(['addStatusMessagesItem']);
-  const { getRecordAndInitializeParsing } = useRecordControls();
+  const { processResource } = useResourceProcessing();
+  const { setSelectedProfile, setInitialSchemaKey, setSchema } = useProfileState([
+    'setSelectedProfile',
+    'setInitialSchemaKey',
+    'setSchema',
+  ]);
+  const { setUserValues, setSelectedEntries, setSelectedRecordBlocks } = useInputsState([
+    'setUserValues',
+    'setSelectedEntries',
+    'setSelectedRecordBlocks',
+  ]);
 
   const queryKey = ['hub', hubUri];
 
   const queryFn = useCallback(
-    async ({ signal }: { signal: AbortSignal }): Promise<RecordEntry | undefined> => {
+    async ({ signal }: { signal: AbortSignal }): Promise<HubQueryData | undefined> => {
       if (!hubUri) {
         return undefined;
       }
@@ -43,13 +60,13 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
           signal,
         });
 
-        // Initialize record for preview
-        await getRecordAndInitializeParsing({
-          cachedRecord: hubRecord,
-          errorMessage: 'ld.errorFetchingHubForPreview',
-        });
+        const processed = await processResource({ record: hubRecord });
 
-        return hubRecord;
+        if (!processed) {
+          throw new Error('ld.errorFetchingHubForPreview');
+        }
+
+        return { hubRecord, processed };
       } catch (error) {
         // Don't show error for cancelled requests
         if (error instanceof Error && error.name === 'AbortError') {
@@ -63,19 +80,19 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
         throw error;
       }
     },
-    [hubUri, addStatusMessagesItem, getRecordAndInitializeParsing],
+    [hubUri, addStatusMessagesItem, processResource],
   );
 
   const shouldEnable = enabled && !!hubUri;
 
   const {
-    data,
+    data: queryData,
     isLoading,
     isFetching,
     isError,
     error,
     refetch: queryRefetch,
-  } = useQuery<RecordEntry | undefined>({
+  } = useQuery<HubQueryData | undefined>({
     queryKey,
     queryFn,
     enabled: shouldEnable,
@@ -85,6 +102,26 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    if (!queryData) return;
+
+    const { processed } = queryData;
+    setSelectedProfile(processed.selectedProfile ?? null);
+    setSchema(processed.schema);
+    setInitialSchemaKey(processed.initKey);
+    setUserValues(processed.userValues);
+    setSelectedEntries(processed.selectedEntries);
+    setSelectedRecordBlocks(processed.selectedRecordBlocks);
+  }, [
+    queryData,
+    setSelectedProfile,
+    setSchema,
+    setInitialSchemaKey,
+    setUserValues,
+    setSelectedEntries,
+    setSelectedRecordBlocks,
+  ]);
+
   const refetch = useCallback(async () => {
     if (hubUri) {
       await queryRefetch();
@@ -92,7 +129,8 @@ export function useHubQuery({ hubUri, enabled = true }: UseHubQueryParams): UseH
   }, [queryRefetch, hubUri]);
 
   return {
-    data,
+    data: queryData?.hubRecord,
+    processed: queryData?.processed,
     isLoading,
     isFetching,
     isError,
