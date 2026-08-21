@@ -1,6 +1,6 @@
 # Change history for ui-linked-data
 
-## 3.0.0 (IN PROGRESS)
+## 2.0.5 (2026-08-24)
 * Refactor record control hooks. Refs [UILD-744].
 * Refactor resource processing and preview loading. Refs [UILD-744].
 * Refactor resource loading. Refs [UILD-816].
