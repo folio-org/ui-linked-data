@@ -1,3 +1,4 @@
+import { applyUpdatedSettingsToResource } from '@/test/__mocks__/features/edit/hooks/useEditPage.mock';
 import { setInitialGlobalState } from '@/test/__mocks__/store';
 
 import { MemoryRouter } from 'react-router-dom';
@@ -116,7 +117,7 @@ describe('ProfileSettingsSelector', () => {
     });
   });
 
-  it('clicking a setting selects it', async () => {
+  it('clicking a setting selects it and applies the updated settings to the resource', async () => {
     mockGetRecordProfileId.mockReturnValue(mockProfileId);
 
     renderComponent(true);
@@ -127,6 +128,7 @@ describe('ProfileSettingsSelector', () => {
     await waitFor(() => {
       expect(screen.queryByTestId('profile-settings-selector-menu')).not.toBeInTheDocument();
       expect(mockSetSelectedProfileSettingsId).toHaveBeenCalledWith('15');
+      expect(applyUpdatedSettingsToResource).toHaveBeenCalledWith('15');
     });
   });
 

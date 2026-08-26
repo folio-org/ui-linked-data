@@ -14,6 +14,8 @@ import { useInputsState, useProfileState } from '@/store';
 
 import Settings from '@/assets/settings.svg?react';
 
+import { useEditPage } from '../../hooks';
+
 export const ProfileSettingsSelector = () => {
   const { formatMessage } = useIntl();
   const ref = useRef<HTMLDivElement>(null);
@@ -34,6 +36,7 @@ export const ProfileSettingsSelector = () => {
   ] as ProfileSettingsMetaList;
   const { data: profileSettings } = useLoadProfileSettingsMeta(selectedProfileId);
   const { data: preferredProfileSettings } = usePreferredProfileSettings(selectedProfileId);
+  const { applyUpdatedSettingsToResource } = useEditPage();
 
   const profileSettingsOptions = useMemo(() => {
     return profileSettings ? basicOption.concat(profileSettings) : basicOption;
@@ -48,6 +51,7 @@ export const ProfileSettingsSelector = () => {
   const handleSettingClick = async (profileSettingsId: string | number) => {
     setIsMenuEnabled(false);
     setSelectedProfileSettingsId(profileSettingsId.toString());
+    await applyUpdatedSettingsToResource(profileSettingsId.toString());
   };
 
   const isPreferred = (profileSetting: ProfileSettingsMeta) => {
