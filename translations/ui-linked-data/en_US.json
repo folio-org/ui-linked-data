@@ -353,5 +353,10 @@
   "ld.duplicateHubInBrackets": "(DUPLICATE HUB)",
   "ld.inventoryView": "Inventory View",
   "ld.field.dissertation": "Dissertation",
-  "ld.errorAssigningAuthority.general": "Error assigning authority"
+  "ld.errorAssigningAuthority.general": "Error assigning authority",
+  "ld.importFileEmptyError": "Your file is empty. Please provide a file with JSON contents.",
+  "ld.importNoResourcesWarning": "Import ran successfully but no resources were imported. Review the import log or check for appropriate resource types.",
+  "ld.importNoUrlError": "No URL was provided. Please try again with a URL.",
+  "ld.newAuthority": "New authority",
+  "ld.duplicateAuthorityInBrackets": "(DUPLICATE AUTHORITY)"
 }
